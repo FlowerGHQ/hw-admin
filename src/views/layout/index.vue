@@ -16,7 +16,7 @@
                         <span v-show="!collapsed">{{item.meta.title}}</span>
                     </template>
                     <template v-for="i of item.children">
-                        <template v-if="!i.hidden && $auth(i.meta.auth)">
+                        <template v-if="!i.hidden && $auth(...i.auth)">
                             <a-menu-item :key="item.path + '/' + i.path"
                                 @click="handleLink(item.path + '/' + i.path)" v-if="showMenuItem(i)">
                                 <span>{{i.meta.title}}</span>
@@ -97,6 +97,7 @@ export default {
                     return i
                 })
             })
+            console.log('showList:', showList)
             return showList
         },
     },

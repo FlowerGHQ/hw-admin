@@ -38,6 +38,34 @@ const routes = [
             },
         ]
     },
+    {   // 维修单
+        path: '/maintain',
+        component: Layout,
+        meta: {
+            title: '维修单管理',
+            icon: 'i_s_dashboard',
+            // auth: ['dashboard'],
+            // roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'maintain-list',
+                name: 'MaintainList',
+                component: () => import('@/views/maintain/maintain-list.vue'),
+                meta: {
+                    title: '维修单列表',
+                }
+            },
+            {
+                path: 'maintain-detail',
+                name: 'MaintainDetail',
+                component: () => import('@/views/maintain/maintain-edit.vue'),
+                meta: {
+                    title: '维修单编辑',
+                }
+            },
+        ]
+    },
 ];
 
 export default routes;
