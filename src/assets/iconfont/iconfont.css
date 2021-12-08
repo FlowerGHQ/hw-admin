@@ -1,0 +1,151 @@
+@font-face {
+  font-family: "icon"; /* Project id 2792721 */
+  src: url('iconfont.woff2?t=1638944182668') format('woff2'),
+       url('iconfont.woff?t=1638944182668') format('woff'),
+       url('iconfont.ttf?t=1638944182668') format('truetype');
+}
+
+.icon {
+  font-family: "icon" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.i_lock:before {
+  content: "\e6b1";
+}
+
+.i_user:before {
+  content: "\e6b2";
+}
+
+.i_wait_delivery:before {
+  content: "\e6b0";
+}
+
+.i_create_stock_out:before {
+  content: "\e6a9";
+}
+
+.i_item_intercept:before {
+  content: "\e6aa";
+}
+
+.i_money_affirm:before {
+  content: "\e6ab";
+}
+
+.i_wait_acceptance:before {
+  content: "\e6ac";
+}
+
+.i_service_result:before {
+  content: "\e6ad";
+}
+
+.i_service_guidance:before {
+  content: "\e6ae";
+}
+
+.i_service_create:before {
+  content: "\e6af";
+}
+
+.i_eyes:before {
+  content: "\e650";
+}
+
+.i_click:before {
+  content: "\e6a4";
+}
+
+.i_s_finance:before {
+  content: "\e6a5";
+}
+
+.i_s_order:before {
+  content: "\e6a6";
+}
+
+.i_s_shop:before {
+  content: "\e6a7";
+}
+
+.i_s_stock:before {
+  content: "\e6a8";
+}
+
+.i_s_aftermarket:before {
+  content: "\e6a0";
+}
+
+.i_s_commodity:before {
+  content: "\e6a1";
+}
+
+.i_s_operating:before {
+  content: "\e6a2";
+}
+
+.i_s_dashboard:before {
+  content: "\e6a3";
+}
+
+.i_point:before {
+  content: "\e69f";
+}
+
+.i_close_b:before {
+  content: "\e69d";
+}
+
+.i_close:before {
+  content: "\e69e";
+}
+
+.i_hint:before {
+  content: "\e69a";
+}
+
+.i_search:before {
+  content: "\e69b";
+}
+
+.i_bell:before {
+  content: "\e69c";
+}
+
+.i_add:before {
+  content: "\e698";
+}
+
+.i_upload:before {
+  content: "\e699";
+}
+
+.i_more:before {
+  content: "\e694";
+}
+
+.i_back:before {
+  content: "\e697";
+}
+
+.i_trian_down:before {
+  content: "\e695";
+}
+
+.i_trian_up:before {
+  content: "\e696";
+}
+
+.i_arrow_down:before {
+  content: "\e691";
+}
+
+.i_arrow_up:before {
+  content: "\e692";
+}
+
