@@ -1,7 +1,25 @@
-# Vue 3 + Vite
+启动指令 npm run dev
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
-## Recommended IDE Setup
-
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+列表页结构
+```html
+<div id="MaintainList">
+    <div class="list-container">
+        <div class="title-container"></div>
+        <div class="tabs-container colorful"></div>
+        <div class="search-container"></div>
+        <div class="table-container"></div>
+        <div class="paging-container"></div>
+    </div>
+    <template class="modal-container">
+        <a-modal v-model="modelShow" title="" class="" :after-close='handleModelClose'>
+            <div class="modal-content">
+                <div class="form-item">
+                    <div class="key"></div>
+                    <div class="value"></div>
+                </div>
+            </div>
+        </a-modal>
+    </template>
+</div>
+```
