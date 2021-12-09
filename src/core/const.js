@@ -1,4 +1,4 @@
-// import moment from 'moment';
+import moment from 'moment';
 
 let OSS_POINT = 'http://rebuildsoft-smartwork.oss-cn-hangzhou.aliyuncs.com'
 let URL_POINT = 'http://api.eos.rebuildsoft.com'
@@ -36,7 +36,7 @@ let Const = {
         KEY_FIELD_DISPLAY: 'field.display',
     },
 
-    /* TIME_PICKER_DEFAULT_VALUE: {
+    TIME_PICKER_DEFAULT_VALUE: {
         B_TO_B: {
             defaultValue: [
                 moment().seconds(0).minute(0).hour(0),
@@ -49,7 +49,7 @@ let Const = {
                 moment().seconds(59).minute(59).hour(23)
             ],
         }
-    }, */
+    },
 
     ACCOUNT: {
         TYPE: {
