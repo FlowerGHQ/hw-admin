@@ -1,39 +1,26 @@
 <template>
-<div id="MaintainList">
+<div id="DistributorList">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">维修工单</div>
+            <div class="title-area">经销商列表</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新增工单</a-button>
+                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建经销商</a-button>
             </div>
-        </div>
-        <div class="tabs-container colorful">
-            <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
-                <a-tab-pane :key="item.key" v-for="item of statusList">
-                    <template #tab>
-                        <div class="tabs-title">{{item.text}}<span :class="item.color">{{item.value}}</span></div>
-                    </template>
-                </a-tab-pane>
-            </a-tabs>
         </div>
         <div class="search-container">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">工单编号:</div>
+                    <div class="key">经销商名称:</div>
                     <div class="value">
-                        <a-input placeholder="请输入工单编号" v-model:value="searchForm.sn" @keydown.enter='handleSearch'/>
+                        <a-input placeholder="请输入经销商名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">零部件编号:</div>
+                    <div class="key">国家:</div>
                     <div class="value">
-                        <a-input placeholder="请输入零部件编号" v-model:value="searchForm.part_code" @keydown.enter='handleSearch'/>
-                    </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">车架编号:</div>
-                    <div class="value">
-                        <a-input placeholder="请输入车架编号" v-model:value="searchForm.car_code" @keydown.enter='handleSearch'/>
+                        <a-select placeholder="请选择国家" v-model:value="searchForm.country" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
+                            <a-select-option v-for="item of countryList" :key="item.value" :value="item.value">{{item.text}}</a-select-option>
+                        </a-select>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
@@ -100,7 +87,7 @@
 <script>
 import Core from '../../core';
 export default {
-    name: 'MaintainList',
+    name: 'DistributorList',
     components: {},
     props: {},
     data() {
@@ -115,47 +102,25 @@ export default {
 
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            statusList: [
-                {text: '全  部', value: '99', color: 'primary', key: '0'},
-                {text: '待分配', value: '29', color: 'red',     key: '1'},
-                {text: '待确认', value: '30', color: 'orange',  key: '2'},
-                {text: '待检测', value: '30', color: 'yellow',  key: '3'},
-                {text: '维修中', value: '30', color: 'blue',    key: '4'},
-                {text: '已完成', value: '30', color: 'green',   key: '5'},
-                {text: '异  常', value: '30', color: 'grey',    key: '6'},
-            ],
+            countryList: [],
             create_time: [],
             searchForm: {
-                sn: '',
-                status: undefined,
-                item_type: 0,
-                type: 0,
-                subject: 0,
+                name: '',
+                country: undefined,
             },
-            filteredInfo: null,
-
-            tableFields: [],
             tableData: [],
         };
     },
     watch: {},
     computed: {
         tableColumns() {
-            let { filteredInfo } = this;
-            filteredInfo = filteredInfo || {};
             let columns = [
-                { title: '工单编号', dataIndex: 'sn', },
-                { title: '产品类型', dataIndex: 'item_type',
-                    filters: Core.Const.ITEM.TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.item_type || null },
-                { title: '维修方式', dataIndex: 'type',
-                    filters: Core.Const.MAINTAIN.TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.type || null },
-                { title: '维修类别', dataIndex: 'subject',
-                    filters: Core.Const.MAINTAIN.SUBJECT_LIST, filterMultiple: false, filteredValue: filteredInfo.subject || null },
-                { title: '接单人',   dataIndex: 'jiesanren', key: 'item' },
-                { title: '关联客户', dataIndex: 'guanliankehu', key: 'item' },
+                { title: '经销商', dataIndex: 'name' },
+                { title: '国家', dataIndex: 'country' },
+                { title: '手机号', dataIndex: 'phone' },
+                { title: '最近登录', dataIndex: 'last_login_time', key: 'time' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
-                { title: '实施时间', dataIndex: 'working_time', key: 'time' },
-                { title: '订单状态', dataIndex: 'status', fixed: 'right' },
+                { title: '操作', dataIndex: 'handle', fixed: 'right' },
             ]
             return columns
         },
@@ -169,13 +134,13 @@ export default {
             switch (type) {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/maintain/maintain-edit",
+                        path: "/distributor/distributor-edit",
                         query: { id: item.id }
                     })
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/maintain/maintain-detail",
+                        path: "/distributor/distributor-detail",
                         query: { id: item.id }
                     })
                     break;
@@ -195,28 +160,22 @@ export default {
             this.pageChange(1);
         },
         handleSearchReset() {  // 重置搜索
-            console.log('handleSearchReset:')
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.filteredInfo = null
-
             console.log('this.searchForm:', this.searchForm)
             this.create_time = []
             this.pageChange(1);
         },
         handleTableChange(page, filters, sorter) {
             console.log('handleTableChange filters:', filters)
-            this.filteredInfo = filters;
             for (const key in filters) {
                 this.searchForm[key] = filters[key] ? filters[key][0] : 0
             }
-            console.log('this.searchForm:', this.searchForm)
-            console.log('this.tableColumns:', this.tableColumns)
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             this.loading = false;
-
-            Core.Api.Repair.list({
+            return
+            Core.Api.Item.list({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
@@ -237,7 +196,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#MaintainList {
+#DistributorList {
     .status-tag {
         width: 50px;
         height: 22px;

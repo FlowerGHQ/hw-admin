@@ -299,6 +299,18 @@ const Util = {
 /* =============== 通用过滤器 ================ */
 
 
+/* =============== 维修单 ================ */
+    maintainStatusFilter(val, to = 'word') {
+        const statusMap = Const.MAINTAIN.STATUS_MAP
+        const statusColorMap = Const.MAINTAIN.STATUS_COLOR_MAP
+        switch (to) {
+            case 'word':
+                return statusMap[val] || '未知'
+            case 'color':
+                return statusColorMap[val] || 'grey'
+        }
+    },
+/* =============== 维修单 ================ */
 
 }
 
