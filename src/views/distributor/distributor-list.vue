@@ -18,7 +18,7 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">国家:</div>
                     <div class="value">
-                         <a-select placeholder="请选择国家" v-model:value="searchForm.country" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
+                        <a-select placeholder="请选择国家" v-model:value="searchForm.country" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
                             <a-select-option v-for="item in countryList" :key="item.label" :value="item.label">{{item.label}}</a-select-option>
                         </a-select>
                     </div>
