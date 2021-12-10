@@ -6,8 +6,8 @@ import {message,notification,Modal} from 'ant-design-vue';
 // 引入样式
 import '@/assets/styles/reset.css';
 import 'ant-design-vue/dist/antd.less';
-import '@/assets/styles/public.less';
 import '@/assets/iconfont/iconfont.css';
+import '@/assets/styles/public.less';
 
 const app = createApp(App)
 

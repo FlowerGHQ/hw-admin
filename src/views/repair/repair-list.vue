@@ -1,5 +1,5 @@
 <template>
-<div id="MaintainList">
+<div id="RepairList">
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">维修工单</div>
@@ -33,7 +33,7 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">车架编号:</div>
                     <div class="value">
-                        <a-input placeholder="请输入车架编号" v-model:value="searchForm.car_code" @keydown.enter='handleSearch'/>
+                        <a-input placeholder="请输入车架编号" v-model:value="searchForm.vehicle_no" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
@@ -53,21 +53,28 @@
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
-                <template #bodyCell="{ column, text }">
+                <template #bodyCell="{ column, text , record}">
                     <template v-if="column.dataIndex === 'sn'">
                         <a-tooltip placement="top" :title='text'>
-                            <a-button type="link" @click="routerChange('detail', record)">{{text}}</a-button>
+                            <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                         </a-tooltip>
                     </template>
                     <template v-if="column.dataIndex === 'status'">
-                        <div class="status status-bg status-tag" :class="$Util.maintainStatusFilter(text,'color')">
-                            {{$Util.maintainStatusFilter(text)}}
+                        <div class="status status-bg status-tag" :class="$Util.repairStatusFilter(text,'color')">
+                            {{$Util.repairStatusFilter(text)}}
                         </div>
                     </template>
+                    <template v-if="column.dataIndex === 'type'">
+                        {{$Util.repairTypeFilter(text)}}
+                    </template>
+                    <template v-if="column.dataIndex === 'channel'">
+                        {{$Util.repairChannelFilter(text)}}
+                    </template>
+                    <template v-if="column.dataIndex === 'repair_method'">
+                        {{$Util.repairMethodFilter(text)}}
+                    </template>
                     <template v-if="column.dataIndex === 'item_type'">
-                        <div class="status status-bg status-tag">
-                            {{$Util.maintainItemTypeFilter(text)}}
-                        </div>
+                        {{$Util.itemTypeFilter(text)}}
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
@@ -105,7 +112,7 @@
 <script>
 import Core from '../../core';
 export default {
-    name: 'MaintainList',
+    name: 'RepairList',
     components: {},
     props: {},
     data() {
@@ -150,12 +157,13 @@ export default {
             filteredInfo = filteredInfo || {};
             let columns = [
                 { title: '工单编号', dataIndex: 'sn', },
+                { title: '工单名称', dataIndex: 'name', key: 'tip_item' },
                 { title: '产品类型', dataIndex: 'item_type',
                     filters: Core.Const.ITEM.TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.item_type || null },
-                { title: '维修方式', dataIndex: 'type',
-                    filters: Core.Const.MAINTAIN.TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.type || null },
-                { title: '维修类别', dataIndex: 'subject',
-                    filters: Core.Const.MAINTAIN.SUBJECT_LIST, filterMultiple: false, filteredValue: filteredInfo.subject || null },
+                { title: '维修方式', dataIndex: 'channel',
+                    filters: Core.Const.REPAIR.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.type || null },
+                { title: '维修类别', dataIndex: 'repair_method',
+                    filters: Core.Const.REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.subject || null },
                 { title: '接单人',   dataIndex: 'jiesanren', key: 'item' },
                 { title: '关联客户', dataIndex: 'guanliankehu', key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
@@ -170,22 +178,24 @@ export default {
     },
     methods: {
         routerChange(type, item = {}) {
+            console.log('routerChange item:', item)
             let routeUrl = ''
             switch (type) {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/maintain/maintain-edit",
+                        path: "/repair/repair-edit",
                         query: { id: item.id }
                     })
+                    window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/maintain/maintain-detail",
+                        path: "/repair/repair-detail",
                         query: { id: item.id }
                     })
+                    window.open(routeUrl.href, '_blank')
                     break;
             }
-            window.open(routeUrl.href, '_blank')
         },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
@@ -242,7 +252,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#MaintainList {
+#RepairList {
     .status-tag {
         width: 50px;
         height: 22px;

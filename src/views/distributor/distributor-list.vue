@@ -40,15 +40,15 @@
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
-                <template #bodyCell="{ column, text }">
+                <template #bodyCell="{ column, text , record}">
                     <template v-if="column.dataIndex === 'sn'">
                         <a-tooltip placement="top" :title='text'>
                             <a-button type="link" @click="routerChange('detail', record)">{{text}}</a-button>
                         </a-tooltip>
                     </template>
                     <template v-if="column.dataIndex === 'status'">
-                        <div class="status status-bg status-tag" :class="$Util.maintainStatusFilter(text,'color')">
-                            {{$Util.maintainStatusFilter(text)}}
+                        <div class="status status-bg status-tag" :class="$Util.repairStatusFilter(text,'color')">
+                            {{$Util.repairStatusFilter(text)}}
                         </div>
                     </template>
                     <template v-if="column.key === 'item'">
