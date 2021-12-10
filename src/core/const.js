@@ -2,19 +2,21 @@ import moment from 'moment';
 
 let OSS_POINT = 'http://rebuildsoft-smartwork.oss-cn-hangzhou.aliyuncs.com'
 let URL_POINT = 'http://api.eos.rebuildsoft.com'
+// let   EXPORT_POINT = 'http://api.eos.rebuildsoft.com/admin/1'
 
 switch (window.location.hostname) {
     case 'eos.rebuildsoft.com':
 		URL_POINT = 'http://api.eos.rebuildsoft.com'
+        // EXPORT_POINT = 'http://api.eos.rebuildsoft.com/admin/1'
         break;
-    case 'localhost':
-    case '10.0.0.227':
-    case '10.0.0.230':
-    case '10.0.0.195':
-    case '10.0.0.135':
-    case '10.0.0.149':
+        case 'localhost':
+        case '10.0.0.227':
+        case '10.0.0.230':
+        case '10.0.0.195':
+        case '10.0.0.135':
+        case '10.0.0.39':
 		// URL_POINT = 'http://10.0.0.226:8083'  // 谢耀圣
-		// URL_POINT = 'http://10.0.0.149:8083'  // 徐伟
+		URL_POINT = 'http://10.0.0.39:8083'  // 徐伟
         break;
 }
 
