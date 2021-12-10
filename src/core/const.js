@@ -80,6 +80,42 @@ let Const = {
             30: '经销商',
         },
     },
+    ITEM: {
+        TYPE_LIST: [ // 产品类型
+            // { text: '全部', value: 0 },
+            { text: '车辆', value: 1 },
+            { text: '电池', value: 2 },
+            { text: '其他', value: 3 },
+        ],
+    },
+    MAINTAIN: {
+        TYPE_LIST: [ // 维修方式
+            { text: '上门', value: 1 },
+            { text: '到店', value: 2 },
+            { text: '寄修', value: 3 },
+        ],
+        SUBJECT_LIST: [ // 维修类别
+            { text: '保养', value: 1 },
+            { text: '维修', value: 2 },
+        ],
+
+        STATUS_MAP: {
+            1: '待分配',
+            2: '待确认',
+            3: '待检测',
+            4: '维修中',
+            5: '已完成',
+            6: '异常',
+        },
+        STATUS_COLOR_MAP: {
+            1: 'red',
+            2: 'orange',
+            3: 'yellow',
+            4: 'blue',
+            5: 'green',
+            6: 'grey',
+        }
+    }
 };
 
 export default Const;

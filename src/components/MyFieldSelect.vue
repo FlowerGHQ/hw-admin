@@ -1,9 +1,9 @@
 <template>
 <div class="MyFieldSelect field-select" @click="handleFieldSelectShow" :class="hasTabsSearch ? 'has-tabs-search' : ''">
     <a-tooltip title="选择要显示的字段"><i class="icon i_eyes"/></a-tooltip>
-    <a-modal v-model="fieldVisible" title="请选择要显示的字段" class="field-select-modal" :width="630" :after-close='handleFieldSelectClose'>
+    <a-modal v-model:visible="fieldVisible" title="请选择要显示的字段" class="field-select-modal" :width="630" :after-close='handleFieldSelectClose'>
         <div class="modal-content">
-            <a-checkbox-group v-model="fieldKeys" :options="fieldList" />
+            <a-checkbox-group v-model:value="fieldKeys" :options="fieldList" />
         </div>
         <template #footer>
             <a-button type="primary" @click="handleFieldSelectConfirm">确定</a-button>
@@ -38,6 +38,7 @@ export default {
             default: false
         }
     },
+    emits: ['change'],
     data() {
         return {
             columns: [], // 实际展示的列
@@ -56,7 +57,8 @@ export default {
         } else {
             this.columns = Core.Util.deepCopy(this.tableColumns)
         }
-        this.$emit('change', this.columns)
+        console.log('this.columns:', this.columns)
+        this.$emit('change', this.columns.map(i=>i.dataIndex), this.columns)
     },
     mounted() {},
     methods: {
@@ -84,7 +86,7 @@ export default {
             this.columns = this.tableColumns.filter(item => this.fieldKeys.includes(item.dataIndex))
 
             Core.Data.setFieldDisplay(this.tableKey, this.fieldKeys)
-            this.$emit('change', this.columns)
+            this.$emit('change', this.fieldKeys, this.columns)
             this.handleFieldSelectClose();
         },
     },

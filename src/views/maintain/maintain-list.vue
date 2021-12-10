@@ -51,14 +51,18 @@
             </div>
         </div>
         <div class="table-container">
-            <MyFieldSelect table-key='MaintainList' :necessary-key='["sn", "status"]' :table-columns="tableColumnsTemp" @change='(columns) => tableColumns = columns'/>
-            <a-table :columns="$Util.tableFieldsFilter(tableColumns, loginType)" :data-source="tableData" :scroll="{ x: true }"
-                :row-key="record => record.id" :loading='loading' :pagination='false' @change="handleTableChange">
+            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
                 <template #bodyCell="{ column, text }">
                     <template v-if="column.dataIndex === 'sn'">
                         <a-tooltip placement="top" :title='text'>
                             <a-button type="link" @click="routerChange('detail', record)">{{text}}</a-button>
                         </a-tooltip>
+                    </template>
+                    <template v-if="column.dataIndex === 'status'">
+                        <div class="status status-bg status-tag" :class="$Util.maintainStatusFilter(text,'color')">
+                            {{$Util.maintainStatusFilter(text)}}
+                        </div>
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
@@ -74,31 +78,31 @@
                 </template>
             </a-table>
         </div>
-        <!-- <div class="paging-container"></div> -->
+        <div class="paging-container">
+            <a-pagination
+                v-model:current="currPage"
+                :page-size='pageSize'
+                :total="total"
+                show-quick-jumper
+                show-size-changer
+                show-less-items
+                :show-total="total => `共${total}条`"
+                :hide-on-single-page='false'
+                :pageSizeOptions="['10', '20', '30', '40']"
+                @change="pageChange"
+                @showSizeChange="pageSizeChange"
+            />
+        </div>
     </div>
 </div>
 </template>
 
 <script>
 import Core from '../../core';
-import MyFieldSelect from '@/components/MyFieldSelect.vue'
 
-const tableColumns = [
-    { title: '工单编号', dataIndex: 'sn', },
-    { title: '产品类型', dataIndex: 'item_type', filters: [{ text: '车辆', value: 1}, { text: '电池', value: 2}]},
-    { title: '维修方式', dataIndex: 'type',},
-    { title: '维修类别', dataIndex: 'subject', },
-    { title: '接单人',   dataIndex: 'jiesanren', key: 'item', },
-    { title: '关联客户', dataIndex: 'guanliankehu', key: 'item', },
-    { title: '创建时间', dataIndex: 'create_time', key: 'time', },
-    { title: '实施时间', dataIndex: 'working_time', key: 'time', },
-    { title: '订单状态', dataIndex: 'status', fixed: 'right', },
-];
 export default {
     name: 'MaintainList',
-    components: {
-        MyFieldSelect,
-    },
+    components: {},
     props: {},
     data() {
         return {
@@ -113,30 +117,52 @@ export default {
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             statusList: [
-                {text: '全  部', value: '99', color: 'primary', key: '1'},
-                {text: '待分配', value: '29', color: 'red',     key: '2'},
-                {text: '待确认', value: '30', color: 'orange',  key: '3'},
-                {text: '待检测', value: '30', color: 'yellow',  key: '4'},
-                {text: '维修中', value: '30', color: 'blue',    key: '5'},
-                {text: '已完成', value: '30', color: 'green',   key: '6'},
-                {text: '异  常', value: '30', color: 'grey',    key: '7'},
+                {text: '全  部', value: '99', color: 'primary', key: '0'},
+                {text: '待分配', value: '29', color: 'red',     key: '1'},
+                {text: '待确认', value: '30', color: 'orange',  key: '2'},
+                {text: '待检测', value: '30', color: 'yellow',  key: '3'},
+                {text: '维修中', value: '30', color: 'blue',    key: '4'},
+                {text: '已完成', value: '30', color: 'green',   key: '5'},
+                {text: '异  常', value: '30', color: 'grey',    key: '6'},
             ],
             create_time: [],
             searchForm: {
                 sn: '',
                 status: undefined,
-                item_type: undefined,
+                item_type: 0,
+                type: 0,
+                subject: 0,
             },
-            tableColumnsTemp: tableColumns,
-            tableColumns: [],
+            filteredInfo: null,
+
+            tableFields: [],
             tableData: [],
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        tableColumns() {
+            let { filteredInfo } = this;
+            filteredInfo = filteredInfo || {};
+            let columns = [
+                { title: '工单编号', dataIndex: 'sn', },
+                { title: '产品类型', dataIndex: 'item_type',
+                    filters: Core.Const.ITEM.TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.item_type || null },
+                { title: '维修方式', dataIndex: 'type',
+                    filters: Core.Const.MAINTAIN.TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.type || null },
+                { title: '维修类别', dataIndex: 'subject',
+                    filters: Core.Const.MAINTAIN.SUBJECT_LIST, filterMultiple: false, filteredValue: filteredInfo.subject || null },
+                { title: '接单人',   dataIndex: 'jiesanren', key: 'item' },
+                { title: '关联客户', dataIndex: 'guanliankehu', key: 'item' },
+                { title: '创建时间', dataIndex: 'create_time', key: 'time' },
+                { title: '实施时间', dataIndex: 'working_time', key: 'time' },
+                { title: '订单状态', dataIndex: 'status', fixed: 'right' },
+            ]
+            return columns
+        },
+    },
     mounted() {
-        // this.getTableData();
-        this.tableData = [{sn : 123456}];
+        this.getTableData();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -161,7 +187,8 @@ export default {
             this.currPage = curr
             this.getTableData()
         },
-        pageSizeChange(size) {  // 页码尺寸改变
+        pageSizeChange(current, size) {  // 页码尺寸改变
+            console.log('pageSizeChange size:', size)
             this.pageSize = size
             this.getTableData()
         },
@@ -169,15 +196,27 @@ export default {
             this.pageChange(1);
         },
         handleSearchReset() {  // 重置搜索
-            Object.assign(this.$data.searchForm, this.$options.data().searchForm)
+            console.log('handleSearchReset:')
+            Object.assign(this.searchForm, this.$options.data().searchForm)
+            this.filteredInfo = null
+
+            console.log('this.searchForm:', this.searchForm)
             this.create_time = []
             this.pageChange(1);
         },
-        handleTableChange() {
-
+        handleTableChange(page, filters, sorter) {
+            console.log('handleTableChange filters:', filters)
+            this.filteredInfo = filters;
+            for (const key in filters) {
+                this.searchForm[key] = filters[key] ? filters[key][0] : 0
+            }
+            console.log('this.searchForm:', this.searchForm)
+            console.log('this.tableColumns:', this.tableColumns)
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
+            this.loading = false;
+            return
             Core.Api.Item.list({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
@@ -200,5 +239,13 @@ export default {
 
 <style lang="less" scoped>
 #MaintainList {
+    .status-tag {
+        width: 50px;
+        height: 22px;
+        line-height: 22px;
+        border-radius: 12px;
+        font-size: @fz_sm;
+        text-align: center;
+    }
 }
 </style>
