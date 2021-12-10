@@ -89,24 +89,46 @@ let Const = {
     },
 
     REPAIR: {
-        TYPE_LIST: [ // 工单分类
+        // 工单分类
+        TYPE_LIST: [
             { text: '维修工单', value: 1 }, // 普通工单
             { text: '特批订单', value: 2 },
         ],
-        CHANNEL_LIST: [ // 维修方式
+        TYPE_MAP: {
+            1: '维修工单',
+            2: '特批订单',
+        },
+        // 维修方式
+        CHANNEL_LIST: [
             { text: '上门', value: 1 },
             { text: '到店', value: 2 },
             { text: '寄修', value: 3 },
         ],
-        METHOD_LIST: [ // 维修类别
+        CHANNEL_MAP: {
+            1: '上门',
+            2: '到店',
+            3: '寄修',
+        },
+        // 维修类别
+        METHOD_LIST: [
             { text: '维修', value: 1 },
             { text: '更换', value: 2 },
         ],
+        METHOD_MAP: {
+            1: '维修',
+            2: '更换',
+        },
+        // 优先级
         PRIORITY_LIST: [
             { text: '高', value: 1 },
             { text: '中', value: 2 },
             { text: '低', value: 3 },
         ],
+        PRIORITY_MAP: {
+            1: '高',
+            2: '中',
+            3: '低',
+        },
 
         STATUS_MAP: {
             10: '待分配',

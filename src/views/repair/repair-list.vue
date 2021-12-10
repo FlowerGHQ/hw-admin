@@ -53,10 +53,10 @@
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
-                <template #bodyCell="{ column, text }">
+                <template #bodyCell="{ column, text , record}">
                     <template v-if="column.dataIndex === 'sn'">
                         <a-tooltip placement="top" :title='text'>
-                            <a-button type="link" @click="routerChange('detail', record)">{{text}}</a-button>
+                            <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                         </a-tooltip>
                     </template>
                     <template v-if="column.dataIndex === 'status'">
@@ -64,10 +64,17 @@
                             {{$Util.repairStatusFilter(text)}}
                         </div>
                     </template>
+                    <template v-if="column.dataIndex === 'type'">
+                        {{$Util.repairTypeFilter(text)}}
+                    </template>
+                    <template v-if="column.dataIndex === 'channel'">
+                        {{$Util.repairChannelFilter(text)}}
+                    </template>
+                    <template v-if="column.dataIndex === 'repair_method'">
+                        {{$Util.repairMethodFilter(text)}}
+                    </template>
                     <template v-if="column.dataIndex === 'item_type'">
-                        <div class="status status-bg status-tag">
-                            {{$Util.repairItemTypeFilter(text)}}
-                        </div>
+                        {{$Util.itemTypeFilter(text)}}
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
@@ -150,11 +157,12 @@ export default {
             filteredInfo = filteredInfo || {};
             let columns = [
                 { title: '工单编号', dataIndex: 'sn', },
+                { title: '工单名称', dataIndex: 'name', key: 'tip_item' },
                 { title: '产品类型', dataIndex: 'item_type',
                     filters: Core.Const.ITEM.TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.item_type || null },
-                { title: '维修方式', dataIndex: 'type',
+                { title: '维修方式', dataIndex: 'channel',
                     filters: Core.Const.REPAIR.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.type || null },
-                { title: '维修类别', dataIndex: 'subject',
+                { title: '维修类别', dataIndex: 'repair_method',
                     filters: Core.Const.REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.subject || null },
                 { title: '接单人',   dataIndex: 'jiesanren', key: 'item' },
                 { title: '关联客户', dataIndex: 'guanliankehu', key: 'item' },
@@ -170,6 +178,7 @@ export default {
     },
     methods: {
         routerChange(type, item = {}) {
+            console.log('routerChange item:', item)
             let routeUrl = ''
             switch (type) {
                 case 'edit':  // 编辑

@@ -298,32 +298,40 @@ const Util = {
     },
 /* =============== 通用过滤器 ================ */
 
-/* =============== 商品 ================ */
-itemTypeFilter(val) {
-    const statusColorMap = Const.ITEM.TYPE_MAP
-    return statusColorMap[val] || '未知'        
-},
 
-/* =============== 维修单 ================ */
+/* =============== 商品 ================ */
+    itemTypeFilter(val) {
+        const MAP = Const.ITEM.TYPE_MAP
+        return MAP[val] || '未知'
+    },
+/* =============== 商品 ================ */
 
 /* =============== 维修单 ================ */
     repairStatusFilter(val, to = 'word') {
-        const statusMap = Const.REPAIR.STATUS_MAP
-        const statusColorMap = Const.REPAIR.STATUS_COLOR_MAP
+        const MAP = Const.REPAIR.STATUS_MAP
+        const COLOR_MAP = Const.REPAIR.STATUS_COLOR_MAP
         switch (to) {
             case 'word':
-                return statusMap[val] || '未知'
+                return MAP[val] || '未知'
             case 'color':
-                return statusColorMap[val] || 'grey'
+                return COLOR_MAP[val] || 'grey'
         }
     },
-    repairItemTypeFilter(val) {
-        const statusColorMap = Const.ITEM.TYPE_MAP
-        return statusColorMap[val] || '未知'        
-    },
     repairTypeFilter(val) {
-        const statusColorMap = Const.REPAIR.TYPE_MAP
-        return statusColorMap[val] || '未知'        
+        const MAP = Const.REPAIR.TYPE_MAP
+        return MAP[val] || '未知'
+    },
+    repairChannelFilter(val) {
+        const MAP = Const.REPAIR.CHANNEL_MAP
+        return MAP[val] || '未知'
+    },
+    repairMethodFilter(val) {
+        const MAP = Const.REPAIR.METHOD_MAP
+        return MAP[val] || '未知'
+    },
+    repairpPiorityFilter(val) {
+        const MAP = Const.REPAIR.PRIORITY_MAP
+        return MAP[val] || '未知'
     },
 /* =============== 维修单 ================ */
 

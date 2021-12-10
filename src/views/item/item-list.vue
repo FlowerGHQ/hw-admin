@@ -40,7 +40,7 @@
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
-                <template #bodyCell="{ column, text }">
+                <template #bodyCell="{ column, text , record}">
                     <template v-if="column.dataIndex === 'sn'">
                         <a-tooltip placement="top" :title='text'>
                             <a-button type="link" @click="routerChange('detail', record)">{{text}}</a-button>
