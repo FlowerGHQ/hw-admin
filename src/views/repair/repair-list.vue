@@ -177,15 +177,16 @@ export default {
                         path: "/repair/repair-edit",
                         query: { id: item.id }
                     })
+                    window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
                         path: "/repair/repair-detail",
                         query: { id: item.id }
                     })
+                    window.open(routeUrl.href, '_blank')
                     break;
             }
-            window.open(routeUrl.href, '_blank')
         },
         pageChange(curr) {  // 页码改变
             this.currPage = curr

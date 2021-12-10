@@ -7,13 +7,8 @@ switch (window.location.hostname) {
     case 'eos.rebuildsoft.com':
 		URL_POINT = 'http://api.eos.rebuildsoft.com'
         break;
-    case 'localhost':
-    case '10.0.0.227':
-    case '10.0.0.230':
-    case '10.0.0.195':
-    case '10.0.0.135':
-    case '10.0.0.149':
-		// URL_POINT = 'http://10.0.0.226:8083'  // 谢耀圣
+    default:
+		URL_POINT = 'http://10.0.0.198:8083'  // 谢耀圣
 		// URL_POINT = 'http://10.0.0.149:8083'  // 徐伟
         break;
 }
