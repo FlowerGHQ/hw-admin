@@ -62,9 +62,6 @@
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
-                    <!-- <template v-slot:action>
-                        <a href="javascript:;">Delete</a>
-                    </template> -->
                 </template>
             </a-table>
         </div>
@@ -145,15 +142,16 @@ export default {
                         path: "/item/item-edit",
                         query: { id: item.id }
                     })
+                    window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/distributor/distributor-detail",
+                        path: "/item/item-detail",
                         query: { id: item.id }
                     })
+                    window.open(routeUrl.href, '_blank')
                     break;
             }
-            window.open(routeUrl.href, '_blank')
         },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
@@ -204,14 +202,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#ItemList {
-    .status-tag {
-        width: 50px;
-        height: 22px;
-        line-height: 22px;
-        border-radius: 12px;
-        font-size: @fz_sm;
-        text-align: center;
-    }
-}
+#ItemList {}
 </style>

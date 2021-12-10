@@ -71,7 +71,7 @@
 
     <div class="form-btns">
       <a-button type="primary" @click="handleSubmit">确定</a-button>
-      <a-button @click="routerChange('back')">取消</a-button>
+      <a-button type="primary" ghost @click="routerChange('back')">取消</a-button>
     </div>
   </div>
 </template>
@@ -188,21 +188,21 @@ export default {
 
 <style lang="less">
 #ItemEdit {
-  .form-block {
-    .form-content {
-      .form-item {
-        .value.input-number {
-          .ant-input-number {
-            width: 120px;
-          }
-          span {
-            font-size: 14px;
-            line-height: 20px;
-            padding-left: 10px;
-          }
+    .form-block {
+        .form-content {
+            .form-item {
+                .value.input-number {
+                    .ant-input-number {
+                        width: 120px;
+                    }
+                    > span {
+                        font-size: 14px;
+                        padding-left: 10px;
+                        color: #323233;
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }
 </style>
