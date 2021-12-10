@@ -1,5 +1,5 @@
 <template>
-<div id="MaintainEdit" class="edit-container">
+<div id="RepairEdit" class="edit-container">
     <div class="title-container"><div class="title-area">{{form.id ? '编辑工单' : '新建工单'}}</div></div>
     <div class="form-block"> <!-- 工单内容 -->
         <div class="form-title"><div class="title">工单内容</div></div>
@@ -7,7 +7,7 @@
             <div class="form-item required">
                 <div class="key">工单分类</div>
                 <div class="value">
-                    <a-radio-group v-model="form.type" :disabled="form.id">
+                    <a-radio-group v-model:value="form.type" :disabled="form.id">
                         <a-radio v-for="item of typeList" :key="item.value" :value="item.value" >{{item.text}}</a-radio>
                     </a-radio-group>
                 </div>
@@ -100,7 +100,7 @@
             <div class="form-item">
                 <div class="key">维修地址</div>
                 <div class="value">
-                    <a-cascader v-model:value="form.customer_address" :options="addressOptions" placeholder="请选择省/市/区县"
+                    <a-cascader v-model:value="customer_address" :options="addressOptions" placeholder="请选择省/市/区县"
                         :field-names="{ label: 'name', value: 'code' , children: 'children'}" :show-search="{ filter }"/>
                 </div>
             </div>
@@ -130,7 +130,7 @@
                     </a-select>
                 </div>
                 <div class="sp">
-                    <a-button type="link" @click="routerChange('customer')">新建员工</a-button>
+                    <a-button type="link" @click="routerChange('staff')">新建员工</a-button>
                 </div>
             </div>
             <div class="form-item">
@@ -165,9 +165,9 @@
 import Core from '../../core';
 import axios from 'axios';
 
-const MAINTAIN = Core.Const.MAINTAIN
+const REPAIR = Core.Const.REPAIR
 export default {
-    name: 'MaintainEdit',
+    name: 'RepairEdit',
     components: {},
     props: {},
     data() {
@@ -177,14 +177,15 @@ export default {
             loading: false,
             detail: {}, // 工单详情
 
-            typeList: MAINTAIN.TYPE_LIST, // 工单分类
-            methodList: MAINTAIN.METHOD_LIST, // 维修类别
-            channelList: MAINTAIN.CHANNEL_LIST, // 维修方式
-            priorityList: MAINTAIN.PRIORITY_LIST, // 紧急程度
+            typeList: REPAIR.TYPE_LIST, // 工单分类
+            methodList: REPAIR.METHOD_LIST, // 维修类别
+            channelList: REPAIR.CHANNEL_LIST, // 维修方式
+            priorityList: REPAIR.PRIORITY_LIST, // 紧急程度
             itemTypeList: Core.Const.ITEM.TYPE_LIST, // 产品类型
             addressOptions: [], // 地址选择
             customerList: [], // 车主列表
             staffList: [], // 员工列表
+            customer_address: [],
             form: {
                 id: '',
 
@@ -201,7 +202,7 @@ export default {
                 customer_name: "",  // 相关客户-名称
                 customer_phone: "", // 客户电话
                 customer_email: "", // 客户邮箱
-                customer_address: [], // 维修地址
+                customer_address: "", // 维修地址
                 customer_detail_address: "", // 详细地址
                 remark: "", // 工单备注
 
@@ -221,7 +222,7 @@ export default {
                 "parent_type": 0,
                 "results": 0,
                 */
-            }
+            },
         };
     },
     watch: {},
@@ -229,7 +230,7 @@ export default {
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0
         if (this.form.id) {
-            this.getMaintainDetail();
+            this.getRepairDetail();
         }
         this.getCustomerList();
         this.getStaffList();
@@ -249,46 +250,68 @@ export default {
                     this.addressOptions = response.data.zh;
                 })
         },
+        // 地址选择搜索
         addressFilter(inputValue, path) {
             return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
         },
-
+        // 页面跳转
         routerChange(type, item) {
             switch (type) {
                 case 'back':
                     this.$router.go(-1)
                     break;
+                case 'customer':  // 新建客户
+                    routeUrl = this.$router.resolve({
+                        path: "/repair/repair-edit",
+                    })
+                    break;
+                case 'staff':  // 详情
+                    routeUrl = this.$router.resolve({
+                        path: "/repair/repair-edit",
+                    })
+                    break;
             }
         },
         // 获取工单详情
-        getMaintainDetail() {
+        getRepairDetail() {
             this.loading = true;
-            Core.Api.Maintain.detail({
+            Core.Api.Repair.detail({
                 id: this.form.id,
             }).then(res => {
-                console.log('getMaintainDetail res', res)
+                console.log('getRepairDetail res', res)
                 this.detail = res.detail
+                let address = res.detail.customer_address
                 for (const key in this.form) {
                     this.form[key] = res.detail[key]
                 }
+                if (address) {
+                    this.customer_address = address.split('/')
+                } else {
+                    this.customer_address = []
+                }
             }).catch(err => {
-                console.log('getMaintainDetail err', err)
+                console.log('getRepairDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
+        // 表单提交
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
+            form.customer_address = this.customer_address.join('/')
             console.log('handleSubmit form:', form)
-            let checkRes = this.checkFormInput();
+            let checkRes = this.checkFormInput(form);
             if (!checkRes) { return }
-            Core.Api.Maintain.save(form).then(() => {
+
+            let apiName = form.id ? 'update' : 'create'
+            Core.Api.Repair[apiName](form).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
         },
+        // 检查表单输入
         checkFormInput(form) {
             if (!form.type) {
                 this.$message.warning('请选择工单分类')
@@ -339,13 +362,13 @@ export default {
                     this.$message.warning('请选择工单负责人')
                     return 0
                 }
-                return 1
             }
+            return 1
         },
     }
 };
 </script>
 
 <style lang="less" scoped>
-// #MaintainEdit {}
+// #RepairEdit {}
 </style>

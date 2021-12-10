@@ -49,10 +49,11 @@ const apiList = {
         list: ['PostJson', 'distributor/list'], // 列表
         save: ['PostJson', 'distributor/save'], // 编辑
     },
+
     Repair: {
         list: ['PostJson', 'repair/list'], // 列表
-        save: ['PostJson', 'repair/save'], // 列表
-        update: ['PostJson', 'repair/update'], // 列表
+        create: ['PostJson', 'repair/save'],   // 新建工单
+        update: ['PostJson', 'repair/update'], // 完善工单
     }
 
 };

@@ -86,8 +86,14 @@ let Const = {
             { text: '电池', value: 2 },
             { text: '其他', value: 3 },
         ],
+        TYPE_MAP: {
+            1: '车辆',
+            2: '电池',
+            3: '其他',
+        },
     },
-    MAINTAIN: {
+
+    REPAIR: {
         TYPE_LIST: [ // 工单分类
             { text: '维修工单', value: 1 }, // 普通工单
             { text: '特批订单', value: 2 },
@@ -108,20 +114,20 @@ let Const = {
         ],
 
         STATUS_MAP: {
-            1: '待分配',
-            2: '待确认',
-            3: '待检测',
-            4: '维修中',
-            5: '已完成',
-            6: '异常',
+            10: '待分配',
+            20: '待确认',
+            30: '待检测',
+            40: '维修中',
+            50: '已完成',
+            60: '异常',
         },
         STATUS_COLOR_MAP: {
-            1: 'red',
-            2: 'orange',
-            3: 'yellow',
-            4: 'blue',
-            5: 'green',
-            6: 'grey',
+            10: 'red',
+            20: 'orange',
+            30: 'yellow',
+            40: 'blue',
+            50: 'green',
+            60: 'grey',
         }
     }
 };

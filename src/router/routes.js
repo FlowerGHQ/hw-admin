@@ -39,7 +39,7 @@ const routes = [
         ]
     },
     {   // 维修单
-        path: '/maintain',
+        path: '/repair',
         component: Layout,
         meta: {
             title: '维修单管理',
@@ -49,17 +49,17 @@ const routes = [
         },
         children: [
             {
-                path: 'maintain-list',
-                name: 'MaintainList',
-                component: () => import('@/views/maintain/maintain-list.vue'),
+                path: 'repair-list',
+                name: 'RepairList',
+                component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
                     title: '维修单列表',
                 }
             },
             {
-                path: 'maintain-edit',
-                name: 'MaintainEdit',
-                component: () => import('@/views/maintain/maintain-edit.vue'),
+                path: 'repair-edit',
+                name: 'RepairEdit',
+                component: () => import('@/views/repair/repair-edit.vue'),
                 meta: {
                     title: '维修单编辑',
                 }

@@ -47,8 +47,8 @@
                         </a-tooltip>
                     </template>
                     <template v-if="column.dataIndex === 'status'">
-                        <div class="status status-bg status-tag" :class="$Util.maintainStatusFilter(text,'color')">
-                            {{$Util.maintainStatusFilter(text)}}
+                        <div class="status status-bg status-tag" :class="$Util.repairStatusFilter(text,'color')">
+                            {{$Util.repairStatusFilter(text)}}
                         </div>
                     </template>
                     <template v-if="column.key === 'item'">

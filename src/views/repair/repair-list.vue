@@ -1,5 +1,5 @@
 <template>
-<div id="MaintainList">
+<div id="RepairList">
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">维修工单</div>
@@ -60,8 +60,13 @@
                         </a-tooltip>
                     </template>
                     <template v-if="column.dataIndex === 'status'">
-                        <div class="status status-bg status-tag" :class="$Util.maintainStatusFilter(text,'color')">
-                            {{$Util.maintainStatusFilter(text)}}
+                        <div class="status status-bg status-tag" :class="$Util.repairStatusFilter(text,'color')">
+                            {{$Util.repairStatusFilter(text)}}
+                        </div>
+                    </template>
+                    <template v-if="column.dataIndex === 'item_type'">
+                        <div class="status status-bg status-tag">
+                            {{$Util.repairItemTypeFilter(text)}}
                         </div>
                     </template>
                     <template v-if="column.key === 'item'">
@@ -100,7 +105,7 @@
 <script>
 import Core from '../../core';
 export default {
-    name: 'MaintainList',
+    name: 'RepairList',
     components: {},
     props: {},
     data() {
@@ -148,9 +153,9 @@ export default {
                 { title: '产品类型', dataIndex: 'item_type',
                     filters: Core.Const.ITEM.TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.item_type || null },
                 { title: '维修方式', dataIndex: 'type',
-                    filters: Core.Const.MAINTAIN.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.type || null },
+                    filters: Core.Const.REPAIR.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.type || null },
                 { title: '维修类别', dataIndex: 'subject',
-                    filters: Core.Const.MAINTAIN.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.subject || null },
+                    filters: Core.Const.REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.subject || null },
                 { title: '接单人',   dataIndex: 'jiesanren', key: 'item' },
                 { title: '关联客户', dataIndex: 'guanliankehu', key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
@@ -169,13 +174,13 @@ export default {
             switch (type) {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/maintain/maintain-edit",
+                        path: "/repair/repair-edit",
                         query: { id: item.id }
                     })
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/maintain/maintain-detail",
+                        path: "/repair/repair-detail",
                         query: { id: item.id }
                     })
                     break;
@@ -237,7 +242,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#MaintainList {
+#RepairList {
     .status-tag {
         width: 50px;
         height: 22px;
