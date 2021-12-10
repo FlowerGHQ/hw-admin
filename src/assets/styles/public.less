@@ -404,6 +404,18 @@
 
 }
 
+// 输入框
+input.ant-input, textarea.ant-input {
+    border-color: @BC_N;
+    box-sizing: border-box;
+    border-radius: 4px;
+    font-size: @fz_sm;
+    line-height: 22px !important;
+}
+span.ant-input-password {
+    border-color: @BC_N;
+    border-radius: 4px;
+}
 .ant-input-number {
     &.phone-input {
         .ant-input-number-handler-wrap {
@@ -411,19 +423,33 @@
         }
     }
 }
-
-input.ant-input {
-    border-color: @BC_N;
-    box-sizing: border-box;
-    border-radius: 4px;
-    font-size: @fz_sm;
-    line-height: 22px;
+// 单选框
+.ant-radio-group {
+    font-size: 12px;
+    .ant-radio-wrapper {
+        height: 32px;
+        font-size: 12px;
+        line-height: 16px;
+        color: #363D42;
+    }
 }
-span.ant-input-password {
-    border-color: @BC_N;
-    border-radius: 4px;
+// 选择框
+div.ant-select:not(.ant-select-customize-input) {
+    .ant-select-selector {
+        border: 1px solid @BC_N;
+        font-size: @fz_sm;
+        line-height: 22px;
+        border-radius: 4px;
+    }
 }
-.ant-picker.ant-picker-range {
+// 层级选择框
+.ant-cascader-picker {
+    .ant-cascader-picker-label {
+        font-size: 12px;
+    }
+}
+// 时间选择
+div.ant-picker {
     border: 1px solid @BC_N;
     box-sizing: border-box;
     border-radius: 4px;
@@ -431,7 +457,6 @@ span.ant-input-password {
         input {
             line-height: 22px;
             font-size: @fz_sm;
-            text-align: center;
         }
     }
     .ant-picker-range-separator {
@@ -450,13 +475,15 @@ span.ant-input-password {
         color: rgba(0, 0, 0, 0.25);
     }
 }
-div.ant-select:not(.ant-select-customize-input) {
-    .ant-select-selector {
-        border: 1px solid @BC_N;
-        font-size: @fz_sm;
-        line-height: 22px;
+.ant-picker.ant-picker-range {
+    .ant-picker-input {
+        input {
+            text-align: center;
+        }
     }
 }
+
+
 
 /* =================== ant组件重写 =================== */
 
@@ -527,19 +554,24 @@ i.icon {
     .value {
         width: calc(~'100% - 86px');
         min-width: 200px;
-        > .ant-input, .ant-select, .ant-picker-range {
+        > .ant-input, > .ant-select, > .ant-picker,
+        > .ant-cascader-picker {
             width: 100%;
         }
     }
     &.textarea {
         align-items: flex-start;
+        .key {
+            line-height: 32px;
+        }
         .value {
             position: relative;
             .content-length {
+                font-size: @fz_sm;
                 position: absolute;
                 color: #bfbfbf;
                 bottom: 3px;
-                right: 30px;
+                right: 10px;
             }
         }
     }
@@ -894,20 +926,23 @@ i.icon {
         background: #F8FAFC;
         border-radius: 6px;
         box-sizing: border-box;
-        padding: 24px 0 8px 120px;
+        padding: 24px 0 8px 0;
         display: flex;
         .form-title {
+            width: 20%;
+            padding-left: 11%;
+            box-sizing: border-box;
             font-weight: 500;
             font-size: 14px;
             line-height: 20px;
             color: #363D42;
-            width: 120px;
         }
         .form-content {
-            width: calc(~'100% - 120px');
+            width: 80%;
         }
         .form-item {
             margin-bottom: 16px;
+            position: relative;
             .key {
                 width: 86px;
                 color: #8090A6;
@@ -915,6 +950,14 @@ i.icon {
             .value {
                 width: calc(~'100% - 86px');
                 max-width: 420px;
+            }
+            .sp {
+                position: relative;
+                font-size: 12px;
+                margin-left: 14px;
+                .ant-btn {
+                    font-size: 12px;
+                }
             }
         }
     }

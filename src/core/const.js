@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 let OSS_POINT = 'http://rebuildsoft-smartwork.oss-cn-hangzhou.aliyuncs.com'
 let URL_POINT = 'http://api.eos.rebuildsoft.com'
@@ -39,14 +39,14 @@ let Const = {
     TIME_PICKER_DEFAULT_VALUE: {
         B_TO_B: {
             defaultValue: [
-                moment().seconds(0).minute(0).hour(0),
-                moment().seconds(0).minute(0).hour(0)
+                dayjs().second(0).minute(0).hour(0),
+                dayjs().second(0).minute(0).hour(0)
             ],
         },
         B_TO_E: {
             defaultValue: [
-                moment().seconds(0).minute(0).hour(0),
-                moment().seconds(59).minute(59).hour(23)
+                dayjs().second(0).minute(0).hour(0),
+                dayjs().second(59).minute(59).hour(23)
             ],
         }
     },
@@ -82,21 +82,29 @@ let Const = {
     },
     ITEM: {
         TYPE_LIST: [ // 产品类型
-            // { text: '全部', value: 0 },
             { text: '车辆', value: 1 },
             { text: '电池', value: 2 },
             { text: '其他', value: 3 },
         ],
     },
     MAINTAIN: {
-        TYPE_LIST: [ // 维修方式
+        TYPE_LIST: [ // 工单分类
+            { text: '维修工单', value: 1 }, // 普通工单
+            { text: '特批订单', value: 2 },
+        ],
+        CHANNEL_LIST: [ // 维修方式
             { text: '上门', value: 1 },
             { text: '到店', value: 2 },
             { text: '寄修', value: 3 },
         ],
-        SUBJECT_LIST: [ // 维修类别
-            { text: '保养', value: 1 },
-            { text: '维修', value: 2 },
+        METHOD_LIST: [ // 维修类别
+            { text: '维修', value: 1 },
+            { text: '更换', value: 2 },
+        ],
+        PRIORITY_LIST: [
+            { text: '高', value: 1 },
+            { text: '中', value: 2 },
+            { text: '低', value: 3 },
         ],
 
         STATUS_MAP: {
