@@ -66,6 +66,47 @@ const routes = [
             },
         ]
     },
+    {   // 经销商
+        path: '/distributor',
+        component: Layout,
+        redirect: '/distributor/distributor-list',
+        name: 'DistributorManagement',
+        meta: {
+            title: '经销商管理',
+            icon: 'i_s_dashboard',
+            // auth: ['dashboard'],
+            // roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'distributor-list',
+                name: 'DistributorList',
+                component: () => import('@/views/distributor/distributor-list.vue'),
+                meta: {
+                    title: '经销商列表',
+                }
+            },
+            {
+                path: 'distributor-edit',
+                name: 'DistributorEdit',
+                component: () => import('@/views/distributor/distributor-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '经销商编辑',
+                }
+            },
+
+            {
+                path: 'distributor-detail',
+                name: 'DistributorDetail',
+                component: () => import('@/views/distributor/distributor-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '经销商详情',
+                }
+            },
+        ]
+    },
 ];
 
 export default routes;
