@@ -44,15 +44,18 @@ const apiList = {
         delete: ['PostJson', 'auth/role-delete'], // 角色删除
         userMenu: ['PostJson', 'auth/user-menu'], // 角色删除
     },
-    Distributor: { // 经销商
-        detail: ['PostJson', 'distributor/detail'], // 详情
-        list: ['PostJson', 'distributor/list'], // 列表
-        save: ['PostJson', 'distributor/save'], // 编辑
+    Dealers: { // 经销商
+        list: ['PostJson', 'dealers/list'], // 列表
+        save: ['PostJson', 'dealers/save'], // 编辑
+        detail: ['PostJson', 'dealers/detail'], // 详情
+        update: ['PostJson', 'dealers/update'], // 更新
+        delete: ['PostJson', 'dealers/delete'], // 删除
     },
+
     Repair: {
         list: ['PostJson', 'repair/list'], // 列表
-        save: ['PostJson', 'repair/save'], // 列表
-        update: ['PostJson', 'repair/update'], // 列表
+        create: ['PostJson', 'repair/save'],   // 新建工单
+        update: ['PostJson', 'repair/update'], // 完善工单
     }
 
 };

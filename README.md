@@ -3,7 +3,7 @@
 
 列表页结构
 ```html
-<div id="MaintainList">
+<div id="RepairList">
     <div class="list-container">
         <div class="title-container"></div>
         <div class="tabs-container colorful"></div>

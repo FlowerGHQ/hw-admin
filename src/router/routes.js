@@ -39,8 +39,10 @@ const routes = [
         ]
     },
     {   // 维修单
-        path: '/maintain',
+        path: '/repair',
         component: Layout,
+        name: 'RepairManagement',
+        redirect: '/repair/repair-list',
         meta: {
             title: '维修单管理',
             icon: 'i_s_dashboard',
@@ -49,17 +51,18 @@ const routes = [
         },
         children: [
             {
-                path: 'maintain-list',
-                name: 'MaintainList',
-                component: () => import('@/views/maintain/maintain-list.vue'),
+                path: 'repair-list',
+                name: 'RepairList',
+                component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
                     title: '维修单列表',
                 }
             },
             {
-                path: 'maintain-edit',
-                name: 'MaintainEdit',
-                component: () => import('@/views/maintain/maintain-edit.vue'),
+                path: 'repair-edit',
+                name: 'RepairEdit',
+                component: () => import('@/views/repair/repair-edit.vue'),
+                hidden: true,
                 meta: {
                     title: '维修单编辑',
                 }

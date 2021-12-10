@@ -40,15 +40,15 @@
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
-                <template #bodyCell="{ column, text }">
+                <template #bodyCell="{ column, text , record}">
                     <template v-if="column.dataIndex === 'sn'">
                         <a-tooltip placement="top" :title='text'>
                             <a-button type="link" @click="routerChange('detail', record)">{{text}}</a-button>
                         </a-tooltip>
                     </template>
                     <template v-if="column.dataIndex === 'status'">
-                        <div class="status status-bg status-tag" :class="$Util.maintainStatusFilter(text,'color')">
-                            {{$Util.maintainStatusFilter(text)}}
+                        <div class="status status-bg status-tag" :class="$Util.repairStatusFilter(text,'color')">
+                            {{$Util.repairStatusFilter(text)}}
                         </div>
                     </template>
                     <template v-if="column.key === 'item'">
@@ -62,6 +62,9 @@
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
+                    <!-- <template v-slot:action>
+                        <a href="javascript:;">Delete</a>
+                    </template> -->
                 </template>
             </a-table>
         </div>
@@ -121,6 +124,11 @@ export default {
                 { title: '最近登录', dataIndex: 'last_login_time', key: 'time' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '操作', dataIndex: 'handle', fixed: 'right' },
+                // {
+                //     title: 'Action',
+                //     key: 'action',
+                //     scopedSlots: { customRender: 'action' },
+                // },
             ]
             return columns
         },
