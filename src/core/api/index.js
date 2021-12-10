@@ -48,7 +48,13 @@ const apiList = {
         detail: ['PostJson', 'distributor/detail'], // 详情
         list: ['PostJson', 'distributor/list'], // 列表
         save: ['PostJson', 'distributor/save'], // 编辑
+    },
+    Repair: {
+        list: ['PostJson', 'repair/list'], // 列表
+        save: ['PostJson', 'repair/save'], // 列表
+        update: ['PostJson', 'repair/update'], // 列表
     }
+
 };
 
 export default new Api(baseUrl, apiList);
