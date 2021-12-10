@@ -62,6 +62,9 @@
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
+                    <!-- <template v-slot:action>
+                        <a href="javascript:;">Delete</a>
+                    </template> -->
                 </template>
             </a-table>
         </div>
@@ -121,6 +124,11 @@ export default {
                 { title: '最近登录', dataIndex: 'last_login_time', key: 'time' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '操作', dataIndex: 'handle', fixed: 'right' },
+                // {
+                //     title: 'Action',
+                //     key: 'action',
+                //     scopedSlots: { customRender: 'action' },
+                // },
             ]
             return columns
         },

@@ -4,11 +4,9 @@ let OSS_POINT = 'http://rebuildsoft-smartwork.oss-cn-hangzhou.aliyuncs.com'
 let URL_POINT = 'http://api.eos.rebuildsoft.com'
 
 switch (window.location.hostname) {
-    case 'eos.rebuildsoft.com':
-		URL_POINT = 'http://api.eos.rebuildsoft.com'
-        break;
     default:
-		URL_POINT = 'http://10.0.0.198:8083'  // 谢耀圣
+		URL_POINT = 'http://10.0.0.175:8083'  // 谢耀圣
+		// URL_POINT = 'http://10.0.0.198:8083'  // 谢耀圣
 		// URL_POINT = 'http://10.0.0.149:8083'  // 徐伟
         break;
 }
