@@ -1,5 +1,6 @@
 <template>
 <div id="ItemDetail">
+
 </div>
 </template>
 

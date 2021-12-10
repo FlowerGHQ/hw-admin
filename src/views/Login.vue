@@ -84,7 +84,7 @@ export default {
                 console.log('handleLogin apiName res', res)
                 Core.Data.setToken(res.token);
                 Core.Data.setLoginType(this.loginForm.user_type);
-                Core.Data.setUser(res.account);
+              //  Core.Data.setUser(res.account);
 
                 Core.Data.setAuthority('')
                 let userType = ''
@@ -92,7 +92,7 @@ export default {
                 switch (this.loginForm.user_type) {
                     case LOGIN_TYPE.ADMIN:
                         userType = 'ADMIN'
-                        role = res.account.role
+                   //     role = res.account.role
                         break;
                     case LOGIN_TYPE.AGENT:
                         userType = 'AGENT'
@@ -102,8 +102,9 @@ export default {
                         break;
                 }
                 Core.Data.setUserType(userType);
-                console.log(res.account)
-                this.getAuthority(userType, role, res.user.id);
+                this.$router.replace({ path: '/dashboard' })
+          //      console.log(res.account)
+          //      this.getAuthority(userType, role, res.user.id);
             });
         },
 

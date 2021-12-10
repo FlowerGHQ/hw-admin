@@ -2,9 +2,9 @@
 <div id="ItemList">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">经销商列表</div>
+            <div class="title-area">产品列表</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建经销商</a-button>
+                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建产品</a-button>
             </div>
         </div>
         <div class="search-container">
@@ -142,7 +142,7 @@ export default {
             switch (type) {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/distributor/distributor-edit",
+                        path: "/item/item-edit",
                         query: { id: item.id }
                     })
                     break;
