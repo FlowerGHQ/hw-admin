@@ -1,6 +1,6 @@
 <template>
 <div id="DistributorEdit" class="edit-container">
-    <div class="title-container">{{form.id ? '编辑经销商' : '新建经销商'}}</div>
+    <div class="title-container"><div class="title-area">{{form.id ? '编辑经销商' : '新建经销商'}}</div></div>
     <div class="form-block">
         <div class="form-title">
             <div class="title-colorful">基本信息</div>
@@ -42,7 +42,7 @@
     </div>
     <div class="form-btns">
         <a-button @click="handleSubmit" type="primary">确定</a-button>
-        <a-button @click="routerChange('back')">取消</a-button>
+        <a-button @click="routerChange('back')" type="primary" ghost="">取消</a-button>
     </div>
 </div>
 </template>

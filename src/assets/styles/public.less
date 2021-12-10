@@ -413,11 +413,15 @@
 }
 
 input.ant-input {
-    border: 1px solid @BC_N;
+    border-color: @BC_N;
     box-sizing: border-box;
     border-radius: 4px;
     font-size: @fz_sm;
     line-height: 22px;
+}
+span.ant-input-password {
+    border-color: @BC_N;
+    border-radius: 4px;
 }
 .ant-picker.ant-picker-range {
     border: 1px solid @BC_N;
@@ -883,70 +887,45 @@ i.icon {
 .edit-container { // 编辑页
     background: @BG_N;
     box-sizing: border-box;
-    padding: 18px 24px 60px 50px;
-    .title-colorful {
-        font-size: 16px;
-        font-weight: 500;
-        color: @TC_T;
-        height: 40px;
-        line-height: 40px;
-        display: inline-block;
+    border-radius: 6px;
 
-        &::before {
-            content: '';
-            display: inline-block;
-            width:4px;
-            height:16px;
-            background: @BG_P;
-            position: relative;
-            left: 0px;
-            top: 2px;
-            margin-right: 14px;
-        }
-    }
-    .form-info {
-        width: 100%;
-        border-bottom: 1px solid #E8E8E8;
-        .main {
-            font-size: 18px;
-            font-weight: 500;
-            color: #3C3C3C;
-            line-height: 25px;
-            padding-bottom: 8px;
-        }
-        .sub {
-            font-size: 14px;
-            font-weight: 400;
-            color: @TC_N;
-            line-height: 22px;
-            padding-bottom: 10px;
-            span + span {
-                margin-left: 20px;
-            }
-        }
-    }
     .form-block { // 新增页 分块
+        margin: 0 20px 20px;
+        background: #F8FAFC;
+        border-radius: 6px;
+        box-sizing: border-box;
+        padding: 24px 0 8px 120px;
+        display: flex;
         .form-title {
-            .fsb();
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 20px;
+            color: #363D42;
+            width: 120px;
         }
-        // .form-content {}
-    }
-    .form-content {
-        padding-top: 24px;
+        .form-content {
+            width: calc(~'100% - 120px');
+        }
         .form-item {
-            margin-bottom: 34px;
+            margin-bottom: 16px;
             .key {
-                width: 100px;
+                width: 86px;
+                color: #8090A6;
             }
             .value {
-                width: calc(~'100% - 100px');
-                max-width: 500px;
+                width: calc(~'100% - 86px');
+                max-width: 420px;
             }
         }
     }
     .form-btns {
-        padding-top: 26px;
-        padding-left: 100px;
+        border: 1px solid #EDF1F4;
+        padding: 20px 0 20px 268px;
+        .ant-btn {
+            width: 100px;
+            height: 32px;
+            border-radius: 2px;
+        }
     }
 }
 
