@@ -13,11 +13,11 @@
               </a-radio-group>
             </a-form-item>
 
-            <a-form-item label="工单名称" required class="typeLabel">
+            <a-form-item label="工单名称"  :colon="false" required class="typeLabel">
               <a-input v-model:value="form.name" placeholder="最多输入100字符" class="boxOne"/>
             </a-form-item>
 
-            <a-form-item label="问题描述" required class="typeLabel">
+            <a-form-item label="问题描述" :colon="false" required class="typeLabel">
               <a-textarea v-model:value="form.desc" :rows="5"  placeholder="请输入内容" class="boxtwo"/>
             </a-form-item>
           </a-form>
@@ -25,7 +25,7 @@
         <div class="form">
           <div class="contentTitle">车主信息</div>
           <a-form :model="form" :label-col="15" :wrapper-col="12" class="formContent">
-            <a-form-item label="维修方式" required class="typeLabel">
+            <a-form-item label="维修方式"  :colon="false" required class="typeLabel">
               <a-radio-group v-model:value="form.channel">
                 <a-radio :value="1" class="formRadio">上门</a-radio>
                 <a-radio :value="2" class="formRadio">到店</a-radio>
@@ -33,7 +33,7 @@
               </a-radio-group>
             </a-form-item>
 
-            <a-form-item label="产品类型" required class="typeLabel">
+            <a-form-item label="产品类型"  :colon="false" required class="typeLabel">
               <a-radio-group v-model:value="form.item_type">
                 <a-radio :value="1" class="formRadio">车辆</a-radio>
                 <a-radio :value="2" class="formRadio">电池</a-radio>
@@ -41,14 +41,14 @@
               </a-radio-group>
             </a-form-item>
 
-            <a-form-item label="维修类别" required class="typeLabel">
+            <a-form-item label="维修类别" :colon="false" required class="typeLabel">
               <a-radio-group v-model:value="form.repair_method">
                 <a-radio :value="1" class="formRadio">维修</a-radio>
                 <a-radio :value="2" class="formRadio">保养</a-radio>
               </a-radio-group>
             </a-form-item>
 
-            <a-form-item label="车辆编号" required class="typeLabel">
+            <a-form-item label="车辆编号" :colon="false" required class="typeLabel">
               <a-input v-model:value="form.vehicle_code" placeholder="请输入车辆编号" class="boxOne"/>
             </a-form-item>
           </a-form>
