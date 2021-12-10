@@ -298,6 +298,13 @@ const Util = {
     },
 /* =============== 通用过滤器 ================ */
 
+/* =============== 商品 ================ */
+itemTypeFilter(val) {
+    const statusColorMap = Const.ITEM.TYPE_MAP
+    return statusColorMap[val] || '未知'        
+},
+
+/* =============== 维修单 ================ */
 
 /* =============== 维修单 ================ */
     maintainStatusFilter(val, to = 'word') {
@@ -309,6 +316,14 @@ const Util = {
             case 'color':
                 return statusColorMap[val] || 'grey'
         }
+    },
+    maintainItemTypeFilter(val) {
+        const statusColorMap = Const.ITEM.TYPE_MAP
+        return statusColorMap[val] || '未知'        
+    },
+    maintainTypeFilter(val) {
+        const statusColorMap = Const.MAINTAIN.TYPE_MAP
+        return statusColorMap[val] || '未知'        
     },
 /* =============== 维修单 ================ */
 

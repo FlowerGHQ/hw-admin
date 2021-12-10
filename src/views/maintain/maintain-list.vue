@@ -64,6 +64,11 @@
                             {{$Util.maintainStatusFilter(text)}}
                         </div>
                     </template>
+                    <template v-if="column.dataIndex === 'item_type'">
+                        <div class="status status-bg status-tag">
+                            {{$Util.maintainItemTypeFilter(text)}}
+                        </div>
+                    </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
                     </template>
