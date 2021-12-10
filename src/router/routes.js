@@ -57,8 +57,8 @@ const routes = [
                 }
             },
             {
-                path: 'maintain-detail',
-                name: 'MaintainDetail',
+                path: 'maintain-edit',
+                name: 'MaintainEdit',
                 component: () => import('@/views/maintain/maintain-edit.vue'),
                 meta: {
                     title: '维修单编辑',

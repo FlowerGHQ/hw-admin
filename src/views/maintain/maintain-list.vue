@@ -99,7 +99,6 @@
 
 <script>
 import Core from '../../core';
-
 export default {
     name: 'MaintainList',
     components: {},
