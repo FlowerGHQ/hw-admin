@@ -51,9 +51,10 @@ const apiList = {
     },
 
     Repair: {
-        list: ['PostJson', 'repair/list'], // 列表
+        list: ['PostJson', 'repair/list'], // 工单列表
         create: ['PostJson', 'repair/save'],   // 新建工单
         update: ['PostJson', 'repair/update'], // 完善工单
+        detail: ['PostJson', 'repair/detail'], // 工单详情
     }
 
 };
