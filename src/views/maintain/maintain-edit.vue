@@ -57,7 +57,7 @@
 
 
       <div class="formBtns">
-        <a-button type="primary" class="formBtnYes">提交</a-button>
+        <a-button type="primary" class="formBtnYes" @click="save">提交</a-button>
         <a-button class="formBtnNo">取消</a-button>
       </div>
     </div>
@@ -65,6 +65,7 @@
 </template>
 
 <script>
+import Core from '../../core';
 export default {
   name: 'MaintainEdit',
   components: {},
@@ -88,6 +89,13 @@ export default {
   },
   methods: {
     save() {
+        var form = this.form
+        Core.Api.Repair.save({
+            ...form,
+
+        }).then(
+            
+        )
     }
   }
 };

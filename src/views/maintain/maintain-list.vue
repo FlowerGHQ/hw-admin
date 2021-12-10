@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">维修工单</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新增商品</a-button>
+                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新增工单</a-button>
             </div>
         </div>
         <div class="tabs-container colorful">
@@ -215,8 +215,8 @@ export default {
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             this.loading = false;
-            return
-            Core.Api.Item.list({
+
+            Core.Api.Repair.list({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
