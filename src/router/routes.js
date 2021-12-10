@@ -67,6 +67,15 @@ const routes = [
                     title: '维修单编辑',
                 }
             },
+            {
+                path: 'repair-detail',
+                name: 'RepairDetail',
+                component: () => import('@/views/repair/repair-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '维修单详情',
+                }
+            },
         ]
     },
     {   // 经销商

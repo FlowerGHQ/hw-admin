@@ -329,7 +329,7 @@ const Util = {
         const MAP = Const.REPAIR.METHOD_MAP
         return MAP[val] || '未知'
     },
-    repairpPiorityFilter(val) {
+    repairPriorityFilter(val) {
         const MAP = Const.REPAIR.PRIORITY_MAP
         return MAP[val] || '未知'
     },

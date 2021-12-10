@@ -56,11 +56,11 @@ const apiList = {
         list: ['PostJson', 'repair/list'], // 列表
         save: ['PostJson', 'repair/save'], // 列表
         update: ['PostJson', 'repair/update'], // 列表
+        detail: ['PostJson', 'repair/detail'], // 工单详情
     },
     Item: {
         save: ['PostJson', 'item/save'],
-        create: ['PostJson', 'repair/save'],   // 新建工单
-        update: ['PostJson', 'repair/update'], // 完善工单
+
     }
 
 };
