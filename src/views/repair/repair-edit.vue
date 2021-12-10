@@ -66,7 +66,7 @@
             <div class="form-item required">
                 <div class="key">车辆编号</div>
                 <div class="value">
-                    <a-input v-model:value="form.vehicle_code" placeholder="请输入车辆编号"/>
+                    <a-input v-model:value="form.vehicle_no" placeholder="请输入车辆编号"/>
                 </div>
             </div>
         </div>
@@ -196,7 +196,7 @@ export default {
                 channel: 1, // 维修方式、维修途径
                 item_type: 1, // 产品类型
                 repair_method: 1, // 维修类别
-                vehicle_code: '', // 车辆编号
+                vehicle_no: '', // 车辆编号
 
                 customer_id: undefined,  // 相关客户-id
                 customer_name: "",  // 相关客户-名称
@@ -337,7 +337,7 @@ export default {
                 this.$message.warning('请选择维修类别')
                 return 0
             }
-            if (!form.vehicle_code) {
+            if (!form.vehicle_no) {
                 this.$message.warning('请输入车辆编号')
                 return 0
             }

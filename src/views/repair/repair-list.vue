@@ -33,7 +33,7 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">车架编号:</div>
                     <div class="value">
-                        <a-input placeholder="请输入车架编号" v-model:value="searchForm.car_code" @keydown.enter='handleSearch'/>
+                        <a-input placeholder="请输入车架编号" v-model:value="searchForm.vehicle_no" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">

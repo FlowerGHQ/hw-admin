@@ -41,6 +41,8 @@ const routes = [
     {   // 维修单
         path: '/repair',
         component: Layout,
+        name: 'RepairManagement',
+        redirect: '/repair/repair-list',
         meta: {
             title: '维修单管理',
             icon: 'i_s_dashboard',
@@ -60,6 +62,7 @@ const routes = [
                 path: 'repair-edit',
                 name: 'RepairEdit',
                 component: () => import('@/views/repair/repair-edit.vue'),
+                hidden: true,
                 meta: {
                     title: '维修单编辑',
                 }
