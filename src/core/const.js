@@ -5,9 +5,9 @@ let URL_POINT = 'http://api.eos.rebuildsoft.com'
 
 switch (window.location.hostname) {
     default:
-		// URL_POINT = 'http://10.0.0.175:8083'  // 谢耀圣
 		URL_POINT = 'http://10.0.0.198:8083'  // 谢耀圣
 		// URL_POINT = 'http://10.0.0.149:8083'  // 徐伟
+        URL_POINT = 'http://10.0.0.39:8083'  // yao
         break;
 }
 

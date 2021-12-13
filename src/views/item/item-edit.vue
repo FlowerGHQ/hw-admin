@@ -52,21 +52,20 @@
         <div class="form-item required">
           <div class="key">标准售价</div>
           <div class="value input-number">
-            <a-input-number v-model:value="form.price" :min="0" :precision="2"   placeholder="0.00"/>
+            <a-input-number v-model:value="form.price" :min="0" :precision="2" placeholder="0.00"/>
             <span>元</span>
           </div>
         </div>
         <div class="form-item required">
           <div class="key">批发价格</div>
           <div class="value input-number">
-            <a-input-number v-model:value="form.original_price" :min="0" :precision="2"  placeholder="0.00"/>
+            <a-input-number v-model:value="form.original_price" :min="0" :precision="2" placeholder="0.00"/>
             <span>元</span>
           </div>
         </div>
 
       </div>
     </div>
-
 
 
     <div class="form-btns">
@@ -118,27 +117,13 @@ export default {
         case 'detail':  // 详情
           routeUrl = this.$router.resolve({
             path: "/item/item-detail",
-            query: { id: item.id }
+            query: {id: item.id}
           })
           window.open(routeUrl.href, '_self')
           break;
       }
     },
 
-
-    go(type) {
-      let url = ''
-      switch (type) {
-        case "detail" :
-          url = '****/*/item-detail';
-          break;
-        case "list":
-          url = '****/*/item-list';
-          break;
-
-      }
-      window.open(url, "_self")
-    },
     /*getDistributorDetail() {
       this.loading = true;
       Core.Api.Distributor.detail({
@@ -176,13 +161,16 @@ export default {
 
       Core.Api.Item.save(form).then((res) => {
         this.$message.success('保存成功')
-       // this.routerChange('back')
-        go("detail");
+        this.routerChange('back')
       }).catch(err => {
         console.log('handleSubmit err:', err)
       })
-    }
+    },
+
+
   }
+
+
 };
 </script>
 

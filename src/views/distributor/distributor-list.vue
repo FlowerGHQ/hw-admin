@@ -18,8 +18,8 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">国家:</div>
                     <div class="value">
-                        <a-select placeholder="请选择国家" v-model:value="searchForm.country" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
-                            <a-select-option v-for="item in countryList" :key="item.label" :value="item.label">{{item.label}}</a-select-option>
+                         <a-select placeholder="请选择国家" v-model:value="searchForm.country" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
+                            <a-select-option v-for="(item,index) of countryList" :key="index" :value="item.label">{{item.label}}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
@@ -40,7 +40,7 @@
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
-                <template #bodyCell="{ column, text , record}">
+                <template #bodyCell="{ column, text , record }">
                     <template v-if="column.dataIndex === 'sn'">
                         <a-tooltip placement="top" :title='text'>
                             <a-button type="link" @click="routerChange('detail', record)">{{text}}</a-button>
@@ -63,8 +63,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type="link" @click="routerChange('edit',record)">修改</a-button>
-                        <a-button type="link" @click="handleDelete(record.id)">删除</a-button>
+                        <a-button type='link' @click="routerChange('edit', record)"> <i class="icon i_edit"/> 编辑</a-button>
+                        <a-button type='link' @click="handleDelete(record.id)"> <i class="icon i_delete"/> 删除</a-button>
                     </template>
                 </template>
             </a-table>
@@ -955,7 +955,6 @@ export default {
         },
         routerChange(type, item = {}) {
             console.log(item)
-            return
             let routeUrl = ''
             switch (type) {
                 case 'edit':  // 编辑
@@ -963,15 +962,16 @@ export default {
                         path: "/distributor/distributor-edit",
                         query: { id: item.id }
                     })
+                    window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
                         path: "/distributor/distributor-detail",
                         query: { id: item.id }
                     })
+                    window.open(routeUrl.href, '_blank')
                     break;
             }
-            window.open(routeUrl.href, '_blank')
         },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
@@ -999,7 +999,6 @@ export default {
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-            this.loading = false;
             // return
             Core.Api.Dealers.list({
                 ...this.searchForm,
@@ -1008,11 +1007,11 @@ export default {
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
-                console.log("getTableData -> res", res)
+                console.log("getTableData res", res)
                 this.total = res.count;
                 this.tableData = res.list;
             }).catch(err => {
-                console.log('getTableData -> err', err)
+                console.log('getTableData err', err)
             }).finally(() => {
                 this.loading = false;
             });
