@@ -18,7 +18,7 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">国家:</div>
                     <div class="value">
-                         <a-select placeholder="请选择国家" v-model:value="searchForm.country" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
+                        <a-select placeholder="请选择国家" v-model:value="searchForm.country" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
                             <a-select-option v-for="item in countryList" :key="item.label" :value="item.label">{{item.label}}</a-select-option>
                         </a-select>
                     </div>
@@ -63,11 +63,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <!-- <a @click="routerChange('edit',record)">修改</a> -->
-                        <a @click="routerChange('edit',record)">修改</a>
-                    </template>
-                    <template v-if="column.key === 'operation'">
-                        <a @click="delete(record.id)">删除</a>
+                        <a-button type="link" @click="routerChange('edit',record)">修改</a-button>
+                        <a-button type="link" @click="handleDelete(record.id)">删除</a-button>
                     </template>
                 </template>
             </a-table>
@@ -935,7 +932,7 @@ export default {
                 { title: '手机号', dataIndex: 'phone' },
                 { title: '最近登录', dataIndex: 'last_login_time', key: 'time' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
-                // { title: '操作', dataIndex: 'handle', fixed: 'right' }, 
+                // { title: '操作', dataIndex: 'handle', fixed: 'right' },
                 { title: '操作', key: 'operation', fixed: 'right', width: 100, },
             ]
             return columns
@@ -945,7 +942,7 @@ export default {
         this.getTableData();
     },
     methods: {
-        delete(id){
+        handleDelete(id){
             Core.Api.Dealers.delete({
                 id
             }).then(res => {
@@ -1025,14 +1022,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#DistributorList {
-    .status-tag {
-        width: 50px;
-        height: 22px;
-        line-height: 22px;
-        border-radius: 12px;
-        font-size: @fz_sm;
-        text-align: center;
-    }
-}
+// #DistributorList {}
 </style>

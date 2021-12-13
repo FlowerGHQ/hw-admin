@@ -1,62 +1,56 @@
 <template>
-<a-layout id="layout-container">
-    <a-layout-sider class="layout-sider" v-model="collapsed">
-        <div class="logo" @click="collapsed = !collapsed" :class="{'collapsed': collapsed}">
+<a-layout id="Layout">
+    <a-layout-header class="layout-header">
+        <div class="header-logo" @click="collapsed = !collapsed" :class="{'collapsed': collapsed}">
             <div class="title">浩万平台</div>
         </div>
-        <a-menu theme="light" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" mode="inline" :inlineCollapsed='collapsed'>
-            <template v-for="item of showList">
-                <a-menu-item :key="item.path" v-if="$auth(...item.auth) && item.children.length === 1" @click="handleLink(item.path)" >
-                    <i class='icon' :class="item.meta.icon"/>
-                    <span :class="{'collapsed-title': collapsed}">{{item.meta.title}}</span>
-                </a-menu-item>
-                <a-sub-menu :key="item.path" v-else-if="$auth(...item.auth)">
-                    <template #title>
+        <div class="header-right">
+            <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
+                <a-button class="user-info" type="link">
+                    <a-avatar class="user-avatar" v-if="user.avatar" :src="$Util.imageFilter(user.avatar)" icon="user" :size='30'/>
+                    <span class="user-name">{{user.username}}</span>
+                </a-button>
+                <template #overlay>
+                    <a-menu>
+                        <a-menu-item>
+                            <a-button type="link" @click="handleLogout" class="menu-item-btn">退 出</a-button>
+                        </a-menu-item>
+                    </a-menu>
+                </template>
+            </a-dropdown>
+        </div>
+    </a-layout-header>
+    <a-layout class="layout-container" :class="{longer: collapsed}">
+        <a-layout-sider class="layout-sider" v-model="collapsed" width="144px" theme='light'>
+            <a-menu theme="light" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" mode="inline" :inlineCollapsed='collapsed'>
+                <template v-for="item of showList">
+                    <a-menu-item :key="item.path" v-if="$auth(...item.auth) && item.children.length === 1" @click="handleLink(item.path)" >
                         <i class='icon' :class="item.meta.icon"/>
-                        <span v-show="!collapsed">{{item.meta.title}}</span>
-                    </template>
-                    <template v-for="i of item.children">
-                        <template v-if="!i.hidden && $auth(...i.auth)">
-                            <a-menu-item :key="item.path + '/' + i.path"
-                                @click="handleLink(item.path + '/' + i.path)" v-if="showMenuItem(i)">
-                                <span>{{i.meta.title}}</span>
-                            </a-menu-item>
+                        <span :class="{'collapsed-title': collapsed}">{{item.meta.title}}</span>
+                    </a-menu-item>
+                    <a-sub-menu :key="item.path" v-else-if="$auth(...item.auth)">
+                        <template #title>
+                            <i class='icon' :class="item.meta.icon"/>
+                            <span v-show="!collapsed">{{item.meta.title}}</span>
                         </template>
-                    </template>
-                </a-sub-menu>
-            </template>
-        </a-menu>
-    </a-layout-sider>
-    <a-layout class="layout-main" :class="{longer: collapsed}">
-        <a-layout-header class="layout-header">
-            <MyBreadcrumb class="header-left"/>
-            <div class="header-right">
-                <div class="header-item">
-                    <i class="icon i_search"></i>
-                </div>
-                <div class="header-item">
-                    <i class="icon i_bell"></i>
-                </div>
-                <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
-                    <a-button class="user-info" type="link">
-                        <a-avatar class="user-avatar" v-if="user.avatar" :src="$Util.imageFilter(user.avatar)" icon="user" :size='30'/>
-                        <span class="user-name">{{user.username}}</span>
-                    </a-button>
-                    <template #overlay>
-                        <a-menu>
-                            <a-menu-item>
-                                <a-button type="link" @click="handleLogout" class="menu-item-btn">退 出</a-button>
-                            </a-menu-item>
-                        </a-menu>
-                    </template>
-                </a-dropdown>
-            </div>
-        </a-layout-header>
-        <a-layout-content class="layout-content">
-            <div class="main-container">
+                        <template v-for="i of item.children">
+                            <template v-if="!i.hidden && $auth(...i.auth)">
+                                <a-menu-item :key="item.path + '/' + i.path"
+                                    @click="handleLink(item.path + '/' + i.path)" v-if="showMenuItem(i)">
+                                    <span>{{i.meta.title}}</span>
+                                </a-menu-item>
+                            </template>
+                        </template>
+                    </a-sub-menu>
+                </template>
+            </a-menu>
+        </a-layout-sider>
+        <a-layout class="layout-main" :class="{longer: collapsed}">
+            <MyBreadcrumb class="layout-breadcrumb"/>
+            <a-layout-content class="layout-content">
                 <router-view></router-view>
-            </div>
-        </a-layout-content>
+            </a-layout-content>
+        </a-layout>
     </a-layout>
 </a-layout>
 </template>
@@ -157,6 +151,7 @@ export default {
 #layout-container {
     background: @BG_body;
     .layout-sider {
+        width: 144px;
         overflow-y: auto;
         overflow-x: hidden;
         height: 100vh;
@@ -273,12 +268,12 @@ export default {
     }
     .layout-main {
         height: 100vh;
-        margin-left: 200px;
-        width: calc(~"100% - 200px");
+        margin-left: 144px;
+        width: calc(~"100% - 144px");
         .layout-header {
             .fsb();
             height: 64px;
-            width: calc(~"100% - 200px");
+            width: calc(~"100% - 144px");
             background: @BG_N;
             box-shadow: 0px 1px 4px 0px @BG_shadow;
             padding: 0 24px;
@@ -344,6 +339,29 @@ export default {
 .account-action-menu {
     ul.ant-dropdown-menu {
         width: 100px;
+    }
+}
+#Layout {
+    background: @BG_body;
+    height: 100vh;
+    .layout-header {
+        height: 50px;
+        background: #FFFFFF;
+        border-bottom: 1px solid rgba(82, 91, 103, 0.2);
+        .fsb();
+    }
+    .layout-container {
+        height: calc(~'100% - 50px');
+        overflow-y: auto;
+    }
+    .layout-sider {
+        height: 100%;
+    }
+    .layout-breadcrumb {
+
+    }
+    .layout-content {
+        margin: 16px;
     }
 }
 </style>

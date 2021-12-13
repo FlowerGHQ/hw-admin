@@ -52,15 +52,24 @@ const apiList = {
         delete: ['PostJson', 'dealers/delete'], // 删除
     },
 
-    Repair: {
+    Repair: { // 维修单
         list: ['PostJson', 'repair/list'], // 列表
         save: ['PostJson', 'repair/save'], // 列表
         update: ['PostJson', 'repair/update'], // 列表
         detail: ['PostJson', 'repair/detail'], // 工单详情
     },
-    Item: {
+    Item: { // 商品
         save: ['PostJson', 'item/save'],
+        list: ['PostJson', 'item/list'],
+        detail: ['PostJson', 'item/detail'],
+        detele: ['PostJson', 'item/detele'],
+    },
+    Warehouse: {
+        save: ['PostJson', 'warehouse/save'],
+        update: ['PostJson', 'warehouse/update'], // 列表
 
+        list: ['PostJson', 'warehouse/list'],
+        detele: ['PostJson', 'warehouse/detele'],
     }
 
 };
