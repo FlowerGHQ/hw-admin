@@ -1025,14 +1025,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#DistributorList {
-    .status-tag {
-        width: 50px;
-        height: 22px;
-        line-height: 22px;
-        border-radius: 12px;
-        font-size: @fz_sm;
-        text-align: center;
-    }
-}
+// #DistributorList {}
 </style>

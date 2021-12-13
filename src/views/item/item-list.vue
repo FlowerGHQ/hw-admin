@@ -1,84 +1,71 @@
 <template>
 <div id="ItemList">
-    <div class="list-container">
-        <div class="title-container">
-            <div class="title-area">产品列表</div>
-            <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建产品</a-button>
+    <div class="item-header-container">
+        <a-tabs v-model:activeKey="searchForm.type" @change="handleCategoryChange">
+            <a-tab-pane key="1" tab="全部"></a-tab-pane>
+            <a-tab-pane key="2" tab="车辆"></a-tab-pane>
+            <a-tab-pane key="3" tab="备件"></a-tab-pane>
+            <a-tab-pane key="4" tab="配饰"></a-tab-pane>
+            <template #rightExtra>
+                <a-input class="search" v-model="searchForm.name" placeholder="商品名称">
+                    <template #prefix><i class="icon i_search"/></template>
+                </a-input>
+                <a-popover trigger="click" class="popover">
+                    <template #content>
+                        <p>收藏</p>
+                    </template>
+                    <a-button type="link"><i class="icon i_collect"/></a-button>
+                </a-popover>
+                <a-popover trigger="click" class="popover">
+                    <template #content>
+                        <p>购物车</p>
+                    </template>
+                    <a-button type="link"><i class="icon i_cart"/></a-button>
+                </a-popover>
+                <a-button type="primary" class="add" @click="routerChange('edit')"><i class="icon i_add"/>新增商品</a-button>
+            </template>
+        </a-tabs>
+    </div>
+    <div class="item-content-container">
+        <div class="category-container">
+            <div class="category-title">车辆</div>
+            <div class="category-content">
+                <CategoryTree :categoryTree='categoryTree' @change='handleCategoryChange'/>
             </div>
         </div>
-        <div class="search-container">
-            <a-row class="search-area">
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">经销商名称:</div>
-                    <div class="value">
-                        <a-input placeholder="请输入经销商名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
-                    </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">国家:</div>
-                    <div class="value">
-                        <a-select placeholder="请选择国家" v-model:value="searchForm.country" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
-                            <a-select-option v-for="item of countryList" :key="item.value" :value="item.value">{{item.text}}</a-select-option>
-                        </a-select>
-                    </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
-                    <div class="key">创建时间:</div>
-                    <div class="value">
-                        <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime">
-                            <template #suffixIcon><i class="icon i_calendar"></i> </template>
-                        </a-range-picker>
-                    </div>
-                </a-col>
-            </a-row>
-            <div class="btn-area">
-                <a-button @click="handleSearch" type="primary">查询</a-button>
-                <a-button @click="handleSearchReset">重置</a-button>
+        <div class="item-content">
+            <div class="switch-btn">
+                <a-radio-group v-model:value="pageType">
+                    <a-radio-button value="agora"><i class="icon i_agora"/></a-radio-button>
+                    <a-radio-button value="list"><i class="icon i_list"/></a-radio-button>
+                </a-radio-group>
             </div>
-        </div>
-        <div class="table-container">
-            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
-                <template #bodyCell="{ column, text , record}">
-                    <template v-if="column.dataIndex === 'sn'">
-                        <a-tooltip placement="top" :title='text'>
-                            <a-button type="link" @click="routerChange('detail', record)">{{text}}</a-button>
-                        </a-tooltip>
-                    </template>
-                    <template v-if="column.dataIndex === 'status'">
-                        <div class="status status-bg status-tag" :class="$Util.repairStatusFilter(text,'color')">
-                            {{$Util.repairStatusFilter(text)}}
-                        </div>
-                    </template>
-                    <template v-if="column.key === 'item'">
-                        {{ text || '-'}}
-                    </template>
-                    <template v-if="column.key === 'tip_item'">
-                        <a-tooltip placement="top" :title='text'>
-                            <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
-                        </a-tooltip>
-                    </template>
-                    <template v-if="column.key === 'time'">
-                        {{ $Util.timeFilter(text) }}
-                    </template>
-                </template>
-            </a-table>
-        </div>
-        <div class="paging-container">
-            <a-pagination
-                v-model:current="currPage"
-                :page-size='pageSize'
-                :total="total"
-                show-quick-jumper
-                show-size-changer
-                show-less-items
-                :show-total="total => `共${total}条`"
-                :hide-on-single-page='false'
-                :pageSizeOptions="['10', '20', '30', '40']"
-                @change="pageChange"
-                @showSizeChange="pageSizeChange"
-            />
+            <div class="list-container">
+                <div class="list-item" v-for="item of tableData" :key="item.id">
+                    <div class="cover">
+                        <img :src="$Util.imageFilter(item.logo)" />
+                    </div>
+                    <p class="sub">{{item.code}}</p>
+                    <p class="name">{{item.name}}</p>
+                    <p class="desc"></p>
+                    <p class="price">{{$Util.countFilter(item.price)}}￥</p>
+                </div>
+            </div>
+            <div class="paging-container">
+                <a-pagination
+                    v-model:current="currPage"
+                    :page-size='pageSize'
+                    :total="total"
+                    show-quick-jumper
+                    show-size-changer
+                    show-less-items
+                    :show-total="total => `共${total}条`"
+                    :hide-on-single-page='false'
+                    :pageSizeOptions="['10', '20', '30', '40']"
+                    @change="pageChange"
+                    @showSizeChange="pageSizeChange"
+                />
+            </div>
         </div>
     </div>
 </div>
@@ -86,9 +73,32 @@
 
 <script>
 import Core from '../../core';
+import CategoryTree from '../../components/CategoryTree.vue'
+function dig(path = '0', level = 3) {
+    const list = [];
+
+    for (let i = 0; i < 10; i += 1) {
+        const key = `${path}-${i}`;
+        const treeNode = {
+            title: key,
+            key,
+        };
+
+        if (level > 0) {
+            treeNode.children = dig(key, level - 1);
+        }
+
+        list.push(treeNode);
+    }
+
+    return list;
+}
+
 export default {
     name: 'ItemList',
-    components: {},
+    components: {
+        CategoryTree,
+    },
     props: {},
     data() {
         return {
@@ -101,35 +111,21 @@ export default {
             total: 0,
 
             // 搜索
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            countryList: [],
-            create_time: [],
+            categoryTree: dig(),
             searchForm: {
                 name: '',
-                country: undefined,
+                category_id: '',
             },
+            expandedKeys: [],
+            selectedKeys: [],
+
             tableData: [],
+
+            pageType: 'list',
         };
     },
     watch: {},
-    computed: {
-        tableColumns() {
-            let columns = [
-                { title: '经销商', dataIndex: 'name' },
-                { title: '国家', dataIndex: 'country' },
-                { title: '手机号', dataIndex: 'phone' },
-                { title: '最近登录', dataIndex: 'last_login_time', key: 'time' },
-                { title: '创建时间', dataIndex: 'create_time', key: 'time' },
-                { title: '操作', dataIndex: 'handle', fixed: 'right' },
-                // {
-                //     title: 'Action',
-                //     key: 'action',
-                //     scopedSlots: { customRender: 'action' },
-                // },
-            ]
-            return columns
-        },
-    },
+    computed: {},
     mounted() {
         this.getTableData();
     },
@@ -162,37 +158,23 @@ export default {
             this.pageSize = size
             this.getTableData()
         },
-        handleSearch() {  // 搜索
-            this.pageChange(1);
-        },
-        handleSearchReset() {  // 重置搜索
-            Object.assign(this.searchForm, this.$options.data().searchForm)
-            console.log('this.searchForm:', this.searchForm)
-            this.create_time = []
-            this.pageChange(1);
-        },
-        handleTableChange(page, filters, sorter) {
-            console.log('handleTableChange filters:', filters)
-            for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : 0
-            }
+        handleCategoryChange(category, categories) {
+            this.searchForm.category_id = category
+            this.pageChange(1)
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-            this.loading = false;
-            return
             Core.Api.Item.list({
-                ...this.searchForm,
-                begin_time: this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
+                category_id: this.searchForm.category_id,
+                name: this.searchForm.name,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
-                console.log("getTableData -> res", res)
+                console.log("getTableData res:", res)
                 this.total = res.count;
-                this.tableData = res.list;
+                this.tableData = [...res.list, ...res.list, ...res.list, ...res.list];
             }).catch(err => {
-                console.log('getTableData -> err', err)
+                console.log('getTableData err:', err)
             }).finally(() => {
                 this.loading = false;
             });
@@ -201,6 +183,110 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-#ItemList {}
+<style lang="less">
+#ItemList {
+    background-color: #fff;
+    border-radius: 6px;
+    overflow: hidden;
+    .item-header-container {
+        .ant-tabs.ant-tabs-top {
+            .ant-tabs-nav {
+                margin-bottom: 0;
+                .ant-tabs-nav-list {
+                    .ant-tabs-tab {
+                        padding: 18px 12px;
+                        font-size: 16px;
+                        line-height: 22px;
+                        color: #1A1A1A;
+                        margin-left: 44px;
+                        &.ant-tabs-tab-active .ant-tabs-tab-btn {
+                            color: #1A1A1A;
+                        }
+                    }
+                    .ant-tabs-ink-bar {
+                        background: #000;
+                    }
+                }
+                .ant-tabs-extra-content {
+                    .fcc();
+                    padding-right: 44px;
+                    .search {
+                        width: 180px;
+                        height: 36px;
+                        background: #F5F5F5;
+                        border-radius: 20px;
+                        border: 0;
+                        .icon.i_search {
+                            font-size: 16px;
+                            padding-right: 4px;
+                        }
+                        .ant-input {
+                            background-color: transparent;
+                            font-size: 14px;
+                        }
+                    }
+                    .popover {
+                        margin-left: 20px;
+                        i.icon {
+                            font-size: 20px;
+                            color: #2B2B2B;
+                        }
+                    }
+                    .add {
+                        margin-left: 20px;
+                    }
+                }
+            }
+        }
+    }
+    .item-content-container {
+        display: flex;
+        width: 100%;
+        .category-container {
+            width: 260px;
+            box-sizing: border-box;
+            padding-left: 44px;
+            .category-title {
+                font-size: 24px;
+                font-weight: 500;
+                color: #111111;
+                line-height: 28px;
+                padding: 44px 0 33px;
+            }
+            .category-content {
+                .ant-menu.ant-menu-root {
+                    border-right: 0;
+                    margin-left: -24px;
+                }
+            }
+        }
+        .item-content {
+            width: calc(~'100% - 260px');
+            .switch-btn {
+                padding: 25px 44px 0;
+                text-align: right;
+            }
+            .list-container {
+                margin-top: 32px;
+                display: flex;
+                flex-wrap: wrap;
+                .list-item {
+                    margin: 0 40px 60px;
+                    width: calc(~'100% / 3 - 80px');
+                    height: calc(~'100% / 3 - 80px');
+                    .cover {
+                        img {
+                            width: 100%;
+                        }
+                    }
+                }
+
+            }
+            .paging-container {
+                padding-right: 44px;
+            }
+
+        }
+    }
+}
 </style>
