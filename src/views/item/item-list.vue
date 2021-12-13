@@ -10,18 +10,12 @@
                 <a-input class="search" v-model="searchForm.name" placeholder="商品名称">
                     <template #prefix><i class="icon i_search"/></template>
                 </a-input>
-                <a-popover trigger="click" class="popover">
-                    <template #content>
-                        <p>收藏</p>
-                    </template>
-                    <a-button type="link"><i class="icon i_collect"/></a-button>
-                </a-popover>
-                <a-popover trigger="click" class="popover">
-                    <template #content>
-                        <p>购物车</p>
-                    </template>
-                    <a-button type="link"><i class="icon i_cart"/></a-button>
-                </a-popover>
+                <a-tooltip title="查看收藏夹" class="popover">
+                    <a-button type="link" @click="routerChange('favorite')"><i class="icon i_collect"/></a-button>
+                </a-tooltip>
+                <a-tooltip title="查看购物车" class="popover">
+                    <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>
+                </a-tooltip>
                 <a-button type="primary" class="add" @click="routerChange('edit')"><i class="icon i_add"/>新增商品</a-button>
             </template>
         </a-tabs>
@@ -41,15 +35,15 @@
                 </a-radio-group>
             </div>
             <div class="list-container">
-                <div class="list-item" v-for="item of tableData" :key="item.id">
+                <div class="list-item" v-for="item of tableData" :key="item.id" @click="routerChange('detail', item)">
                     <div class="cover">
                         <img :src="$Util.imageFilter(item.logo) || item_defult_img" />
                     </div>
                     <p class="sub">{{item.code}}</p>
                     <p class="name">{{item.name}}</p>
-                    <p class="desc"> </p>
+                    <p class="desc">&nbsp;</p>
                     <p class="price">￥{{$Util.countFilter(item.price)}}</p>
-                    <a-button class="btn" type="primary" ghost >添加到购物车</a-button>
+                    <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">添加到购物车</a-button>
                 </div>
             </div>
             <div class="paging-container">
@@ -150,6 +144,13 @@ export default {
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
+                case 'favorite':  // 收藏夹
+                case 'shop_cart':  // 购物车
+                    routeUrl = this.$router.resolve({
+                        path: "/item/shop-cart-list",
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
             }
         },
         pageChange(curr) {  // 页码改变
@@ -165,7 +166,7 @@ export default {
             this.searchForm.category_id = category
             this.pageChange(1)
         },
-        getTableData() {  // 获取 表格 数据
+        getTableData() { // 获取 商品 数据
             this.loading = true;
             Core.Api.Item.list({
                 category_id: this.searchForm.category_id,
@@ -182,6 +183,20 @@ export default {
                 this.loading = false;
             });
         },
+        getShopCartData() { // 获取 购物车 数据
+            Core.Api.ShopCart.list()
+        },
+
+
+        handleCartAdd(item) { // 添加到购物车
+            Core.Api.ShopCart.save({
+                item_id: item.id,
+                amount: 1,
+                price: item.price
+            }).then(res => {
+                this.$message.success('添加成功')
+            })
+        }
     }
 };
 </script>
@@ -274,8 +289,13 @@ export default {
                 display: flex;
                 flex-wrap: wrap;
                 .list-item {
+                    cursor: pointer;
                     margin: 0 40px 60px;
                     width: calc(~'100% / 3 - 80px');
+                    color: #111111;
+                    font-weight: 500;
+                    font-size: 14px;
+                    line-height: 16px;
                     .cover {
                         height: calc(~'(100vw - 144px - 10px - 32px - 260px) / 3 - 80px');
                         background-color: #F5F5F5;
@@ -288,31 +308,23 @@ export default {
                     .sub {
                         margin: 15px 0 5px;
                         font-size: 12px;
-                        font-weight: 500;
-                        color: #111111;
                         line-height: 14px;
                     }
                     .name {
                         padding-top: 5px;
                         border-top: 1px solid #E6EAEE;
-                        font-size: 14px;
-                        font-weight: 500;
-                        color: #111111;
-                        line-height: 16px;
                     }
                     .desc, .price {
                         margin: 5px 0;
-                        font-size: 14px;
                         color: #757575;
-                        line-height: 16px;
+                        font-weight: 400;
                     }
                     .btn {
                         width: 100%;
                         height: 55px;
-                        border-radius: 12px 12px 12px 12px;
+                        border-radius: 12px;
                         border: 1px solid @primary;
                         margin-top: 22px;
-                        font-size: 14px;
                         font-weight: 500;
                         color: @primary;
                         &:hover {

@@ -64,12 +64,24 @@ const apiList = {
         detail: ['PostJson', 'item/detail'],
         detele: ['PostJson', 'item/detele'],
     },
-    Warehouse: {
+    Warehouse: { // 仓库
         save: ['PostJson', 'warehouse/save'],
         update: ['PostJson', 'warehouse/update'], // 列表
 
         list: ['PostJson', 'warehouse/list'],
         detele: ['PostJson', 'warehouse/detele'],
+    },
+    ShopCart: { // 购物车
+        save: ['PostJson', 'shopping-cart/save'],
+        list: ['PostJson', 'shopping-cart/list'],
+        clear: ['PostJson', 'shopping-cart/clear'],
+        detail: ['GetJson', 'shopping-cart/detail'],
+        detele: ['PostJson', 'shopping-cart/detele'],
+    },
+    Favorite: { // 收藏夹
+        add: ['PostJson', 'shopping-cart/create'],
+        list: ['PostJson', 'shopping-cart/list-user'],
+        remove: ['PostJson', 'shopping-cart/detele'],
     }
 
 };

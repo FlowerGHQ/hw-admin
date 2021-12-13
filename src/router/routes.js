@@ -183,7 +183,7 @@ const routes = [
                 name: 'ItemList',
                 component: () => import('@/views/item/item-list.vue'),
                 meta: {
-                    title: '商品列表',
+                    title: '采购',
                 }
             },
             {
@@ -204,6 +204,14 @@ const routes = [
                 meta: {
                     title: '商品详情',
                     parent: '/item/item-list',
+                }
+            },
+            {
+                path: 'shop-cart-list',
+                name: 'ShopCartList',
+                component: () => import('@/views/item/shop-cart-list.vue'),
+                meta: {
+                    title: '购物车',
                 }
             },
         ]

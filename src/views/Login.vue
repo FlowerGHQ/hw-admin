@@ -43,7 +43,6 @@ export default {
             TYPE_MAP: {
                 10: 'admin',
                 20: 'agent',
-                30: 'dealer',
             },
             loginTypeList: Core.Const.LOGIN.TYPE_LIST,
 
@@ -84,32 +83,31 @@ export default {
                 console.log('handleLogin apiName res', res)
                 Core.Data.setToken(res.token);
                 Core.Data.setLoginType(this.loginForm.user_type);
-              //  Core.Data.setUser(res.account);
+                Core.Data.setToken(res.token);
 
                 Core.Data.setAuthority('')
                 let userType = ''
-                let role = ''
                 switch (this.loginForm.user_type) {
                     case LOGIN_TYPE.ADMIN:
                         userType = 'ADMIN'
-                   //     role = res.account.role
                         break;
                     case LOGIN_TYPE.AGENT:
                         userType = 'AGENT'
                         break;
-                    case LOGIN_TYPE.DEALER:
-                        userType = 'DEALER'
+                    case LOGIN_TYPE.STORE:
+                        userType = 'STORE'
                         break;
                 }
                 Core.Data.setUserType(userType);
-                this.$router.replace({ path: '/dashboard' })
-          //      console.log(res.account)
-          //      this.getAuthority(userType, role, res.user.id);
+                this.getAuthority(userType, res.user.id);
             });
         },
 
-        async getAuthority(userType, role, userId) {
+        async getAuthority(userType, userId) {
             let authorityMap = {}
+            authorityMap[userType] = true
+            this.$router.replace({ path: '/dashboard' })
+            return
             Core.Api.AuthRole.userMenu({id: userId}).then(res =>{
                 console.log('getAuthority res', res)
                 res.list.forEach(it => {
@@ -120,7 +118,6 @@ export default {
                 this.$router.replace({ path: '/dashboard' })
             })
 
-            authorityMap[userType] = true
         }
     }
 };
@@ -193,7 +190,7 @@ export default {
                 transform: translateX(-50%);
                 transition: left .3s ease;
             }
-            &.dealer::after {
+            &.agent::after {
                 left: 25%;
             }
             &.admin::after {
