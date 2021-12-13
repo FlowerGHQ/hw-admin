@@ -27,7 +27,7 @@
             <div class="form-item required">
                 <div class="key">邮箱:</div>
                 <div class="value">
-                    <a-input v-model:value="form.mail" placeholder="请输入经销商邮箱"/>
+                    <a-input v-model:value="form.email" placeholder="请输入经销商邮箱"/>
                 </div>
             </div>
             <div class="form-item required">
@@ -66,7 +66,7 @@ export default {
                 name: '',
                 password: '',
                 phone: '',
-                mail: '',
+                email: '',
                 country: undefined,
             }
         };
@@ -90,6 +90,7 @@ export default {
         },
         getDistributorDetail() {
             this.loading = true;
+            console.log("id",this.form.id)
             Core.Api.Dealers.detail({
                 id: this.form.id,
             }).then(res => {
@@ -117,7 +118,7 @@ export default {
             if (!form.phone) {
                 return this.$message.warning('请输入经销商手机号')
             }
-            if (!form.mail) {
+            if (!form.email) {
                 return this.$message.warning('请输入经销商邮箱')
             }
             if (!form.country) {
