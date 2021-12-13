@@ -1,6 +1,6 @@
 <template>
 <div class="PageHeader">
-    <a-breadcrumb separator="/" class="breadcrumb" v-if="levelList.length >= 2">
+    <a-breadcrumb separator="/" class="breadcrumb" v-if="levelList.length">
         <a-breadcrumb-item v-for="(item,index) in levelList" :key="item.path" class="breadcrumb-item">
             <span v-if="index == levelList.length - 1">{{item.meta.title}}</span>
             <a v-else @click.prevent="handleLink(item)">{{item.meta.title}}</a>
@@ -44,7 +44,7 @@ export default {
                     levelList.splice(i+1, 1)
                 }
             }
-            /* let lastLevel = levelList[levelList.length - 1]
+            let lastLevel = levelList[levelList.length - 1]
             if (lastLevel && lastLevel.meta && lastLevel.meta.parent) {
                 let list = {
                     path: lastLevel.meta.parent,
@@ -53,8 +53,8 @@ export default {
                         auth: '',
                     }
                 }
-                levelList.splice(levelList.length - 1, 0, list)
-            } */
+                // levelList.splice(levelList.length - 1, 0, list)å
+            }
 
             this.levelList = levelList
         },

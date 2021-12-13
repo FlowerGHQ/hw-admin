@@ -65,6 +65,7 @@ const routes = [
                 hidden: true,
                 meta: {
                     title: '维修单编辑',
+                    parent: '/repair/repair-list',
                 }
             },
             {
@@ -74,6 +75,7 @@ const routes = [
                 hidden: true,
                 meta: {
                     title: '维修单详情',
+                    parent: '/repair/repair-list',
                 }
             },
         ]
@@ -105,6 +107,7 @@ const routes = [
                 hidden: true,
                 meta: {
                     title: '经销商编辑',
+                    parent: '/distributor/distributor-list',
                 }
             },
 
@@ -115,6 +118,7 @@ const routes = [
                 hidden: true,
                 meta: {
                     title: '经销商详情',
+                    parent: '/distributor/distributor-list',
                 }
             },
         ]
@@ -136,7 +140,7 @@ const routes = [
                 name: 'WarehouseList',
                 component: () => import('@/views/warehouse/warehouse-list.vue'),
                 meta: {
-                    title: '经销商列表',
+                    title: '仓库列表',
                 }
             },
             {
@@ -145,17 +149,19 @@ const routes = [
                 component: () => import('@/views/warehouse/warehouse-edit.vue'),
                 hidden: true,
                 meta: {
-                    title: '经销商编辑',
+                    title: '仓库编辑',
+                    parent: '/warehouse/warehouse-list',
                 }
             },
 
             {
-                path: 'distributor-detail',
-                name: 'DistributorDetail',
-                component: () => import('@/views/distributor/distributor-detail.vue'),
+                path: 'warehouse-detail',
+                name: 'WarehouseDetail',
+                component: () => import('@/views/warehouse/warehouse-detail.vue'),
                 hidden: true,
                 meta: {
-                    title: '经销商详情',
+                    title: '仓库详情',
+                    parent: '/warehouse/warehouse-list',
                 }
             },
         ]
@@ -187,9 +193,9 @@ const routes = [
                 hidden: true,
                 meta: {
                     title: '商品编辑',
+                    parent: '/item/item-list',
                 }
             },
-
             {
                 path: 'item-detail',
                 name: 'ItemDetail',
@@ -197,6 +203,7 @@ const routes = [
                 hidden: true,
                 meta: {
                     title: '商品详情',
+                    parent: '/item/item-list',
                 }
             },
         ]

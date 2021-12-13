@@ -352,7 +352,6 @@ export default {
     }
     .layout-container {
         height: calc(~'100% - 50px');
-        overflow-y: auto;
     }
     .layout-sider {
         height: 100%;
@@ -361,7 +360,10 @@ export default {
 
     }
     .layout-content {
-        margin: 16px;
+        padding: 16px;
+        box-sizing: border-box;
+        height: calc(~"100% - 38px");
+        overflow-y: auto;
     }
 }
 </style>

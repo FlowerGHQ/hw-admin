@@ -43,12 +43,13 @@
             <div class="list-container">
                 <div class="list-item" v-for="item of tableData" :key="item.id">
                     <div class="cover">
-                        <img :src="$Util.imageFilter(item.logo)" />
+                        <img :src="$Util.imageFilter(item.logo) || item_defult_img" />
                     </div>
                     <p class="sub">{{item.code}}</p>
                     <p class="name">{{item.name}}</p>
-                    <p class="desc"></p>
-                    <p class="price">{{$Util.countFilter(item.price)}}￥</p>
+                    <p class="desc"> </p>
+                    <p class="price">￥{{$Util.countFilter(item.price)}}</p>
+                    <a-button class="btn" type="primary" ghost >添加到购物车</a-button>
                 </div>
             </div>
             <div class="paging-container">
@@ -73,6 +74,7 @@
 
 <script>
 import Core from '../../core';
+import item_defult_img from '@images/item_defult_img.png'
 import CategoryTree from '../../components/CategoryTree.vue'
 function dig(path = '0', level = 3) {
     const list = [];
@@ -102,6 +104,7 @@ export default {
     props: {},
     data() {
         return {
+            item_defult_img,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -172,7 +175,7 @@ export default {
             }).then(res => {
                 console.log("getTableData res:", res)
                 this.total = res.count;
-                this.tableData = [...res.list, ...res.list, ...res.list, ...res.list];
+                this.tableData = res.list;
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {
@@ -273,10 +276,47 @@ export default {
                 .list-item {
                     margin: 0 40px 60px;
                     width: calc(~'100% / 3 - 80px');
-                    height: calc(~'100% / 3 - 80px');
                     .cover {
+                        height: calc(~'(100vw - 144px - 10px - 32px - 260px) / 3 - 80px');
+                        background-color: #F5F5F5;
                         img {
                             width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                        }
+                    }
+                    .sub {
+                        margin: 15px 0 5px;
+                        font-size: 12px;
+                        font-weight: 500;
+                        color: #111111;
+                        line-height: 14px;
+                    }
+                    .name {
+                        padding-top: 5px;
+                        border-top: 1px solid #E6EAEE;
+                        font-size: 14px;
+                        font-weight: 500;
+                        color: #111111;
+                        line-height: 16px;
+                    }
+                    .desc, .price {
+                        margin: 5px 0;
+                        font-size: 14px;
+                        color: #757575;
+                        line-height: 16px;
+                    }
+                    .btn {
+                        width: 100%;
+                        height: 55px;
+                        border-radius: 12px 12px 12px 12px;
+                        border: 1px solid @primary;
+                        margin-top: 22px;
+                        font-size: 14px;
+                        font-weight: 500;
+                        color: @primary;
+                        &:hover {
+                            background-color: @primary_l !important;
                         }
                     }
                 }
