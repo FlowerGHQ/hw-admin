@@ -127,15 +127,22 @@ export default {
         this.getTableData();
     },
     methods: {
-        handleDelete(id){
-            Core.Api.Dealers.delete({
-                id: id,
-            }).then(res => {
-                console.log("delete -> res", res)
-            }).catch(err => {
-                console.log('delete -> err', err)
-            }).finally(() => {
-                this.loading = false;
+        handleDelete(id) {
+            let _this = this;
+            // console.log("handleDelete id", id)
+            this.$confirm({
+                title: '确定要删除该经销商吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Dealers.delete({id}).then(() => {
+                        _this.$message.success('删除成功');
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete -> err", err);
+                    })
+                },
             });
         },
         routerChange(type, item = {}) {
