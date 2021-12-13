@@ -9,7 +9,8 @@ class ApiBase {
 
     static getMark() {
         const LOGIN_TYPE = Const.LOGIN.TYPE
-        const loginType = Data.getUserType();
+        const loginType = Data.getLoginType();
+        console.log('loginType:', loginType)
         let mark = 'admin/1'
         switch (loginType) {
             case LOGIN_TYPE.ADMIN:

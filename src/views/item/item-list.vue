@@ -13,10 +13,35 @@
                 <a-tooltip title="查看收藏夹" class="popover">
                     <a-button type="link" @click="routerChange('favorite')"><i class="icon i_collect"/></a-button>
                 </a-tooltip>
-                <a-tooltip title="查看购物车" class="popover">
-                    <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>
-                </a-tooltip>
-                <a-button type="primary" class="add" @click="routerChange('edit')"><i class="icon i_add"/>新增商品</a-button>
+
+                <a-popover v-model:visible="briefVisible" trigger='click'>
+                    <template #content>
+                        <div class="shop-cart-brief">
+                            <div class="tip">
+                                <i class="icon i_check_c"/>已加入购物车
+                            </div>
+                            <div class="item" v-for="item of briefList" :key="item.id">
+                                <div class="cover">
+                                    <img :src="$Util.imageFilter(item.logo) || item_defult_img" />
+                                </div>
+                                <div class="desc">
+                                    <p>{{item.name}}</p>
+                                    <span>{{item.code}}</span>
+                                    <p class="price">￥{{$Util.countFilter(item.price)}}</p>
+                                </div>
+                            </div>
+                            <div class="btns">
+                                <a-button class='ghost' @click="routerChange('shop_cart')">查看购物车({{briefCount}})</a-button>
+                                <a-button class='black' @click="routerChange('settle')">结算</a-button>
+                            </div>
+                        </div>
+                    </template>
+                    <a-tooltip title="查看购物车" class="popover">
+                        <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>
+                    </a-tooltip>
+                </a-popover>
+
+                <a-button type="primary" class="add" @click="routerChange('edit')" v-if="$auth('ADMIN')"><i class="icon i_add"/>新增商品</a-button>
             </template>
         </a-tabs>
     </div>
@@ -27,7 +52,7 @@
                 <CategoryTree :categoryTree='categoryTree' @change='handleCategoryChange'/>
             </div>
         </div>
-        <div class="item-content">
+        <div class="item-content" v-if="tableData.length">
             <div class="switch-btn">
                 <a-radio-group v-model:value="pageType">
                     <a-radio-button value="agora"><i class="icon i_agora"/></a-radio-button>
@@ -62,6 +87,7 @@
                 />
             </div>
         </div>
+        <SimpleImageEmpty class="item-content-empty" v-else desc="暂无满足搜索条件的商品"/>
     </div>
 </div>
 </template>
@@ -70,6 +96,8 @@
 import Core from '../../core';
 import item_defult_img from '@images/item_defult_img.png'
 import CategoryTree from '../../components/CategoryTree.vue'
+import SimpleImageEmpty from '../../components/SimpleImageEmpty.vue'
+
 function dig(path = '0', level = 3) {
     const list = [];
 
@@ -93,6 +121,7 @@ function dig(path = '0', level = 3) {
 export default {
     name: 'ItemList',
     components: {
+        SimpleImageEmpty,
         CategoryTree,
     },
     props: {},
@@ -100,12 +129,14 @@ export default {
         return {
             item_defult_img,
             loginType: Core.Data.getLoginType(),
+            pageType: 'list',
             // 加载
             loading: false,
             // 分页
             currPage: 1,
             pageSize: 20,
             total: 0,
+            tableData: [],
 
             // 搜索
             categoryTree: dig(),
@@ -113,18 +144,18 @@ export default {
                 name: '',
                 category_id: '',
             },
-            expandedKeys: [],
-            selectedKeys: [],
 
-            tableData: [],
-
-            pageType: 'list',
+            // 购物车简略面板
+            briefVisible: false,
+            briefList: [],
+            briefCount: 0,
         };
     },
     watch: {},
     computed: {},
     mounted() {
         this.getTableData();
+        // this.getShopCartData();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -183,8 +214,14 @@ export default {
                 this.loading = false;
             });
         },
+
         getShopCartData() { // 获取 购物车 数据
-            Core.Api.ShopCart.list()
+            Core.Api.ShopCart.list().then(res => {
+                console.log('res:', res)
+                this.briefVisible = true
+                this.briefList = res.list;
+                this.briefCount = res.count;
+            })
         },
 
 
@@ -195,6 +232,7 @@ export default {
                 price: item.price
             }).then(res => {
                 this.$message.success('添加成功')
+                this.getShopCartData();
             })
         }
     }
@@ -339,6 +377,13 @@ export default {
             }
 
         }
+        .item-content-empty {
+            width: calc(~'100% - 260px - 32px');
+            .flex(center);
+        }
     }
+}
+.shop-cart-brief {
+
 }
 </style>

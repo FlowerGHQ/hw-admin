@@ -84,6 +84,7 @@ export default {
                 Core.Data.setToken(res.token);
                 Core.Data.setLoginType(this.loginForm.user_type);
                 Core.Data.setToken(res.token);
+                Core.Data.setUser(res.user.account);
 
                 Core.Data.setAuthority('')
                 let userType = ''
