@@ -34,7 +34,7 @@
                 <div class="key">国家:</div>
                 <div class="value">
                     <a-select v-model:value="form.country" placeholder="请选择国家">
-                        <a-select-option v-for="item of countryList" :key="item.label" :value="item.label">{{item.label}}</a-select-option>
+                        <a-select-option v-for="item of countryList" :key="item.name" :value="item.name">{{item.name}}</a-select-option>
                     </a-select>
                 </div>
             </div>

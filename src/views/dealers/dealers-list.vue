@@ -19,7 +19,7 @@
                     <div class="key">国家:</div>
                     <div class="value">
                         <a-select placeholder="请选择国家" v-model:value="searchForm.country" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
-                            <a-select-option v-for="(item,index) of countryList" :key="index" :value="item.label">{{item.label}}</a-select-option>
+                            <a-select-option v-for="(item,index) of countryList" :key="index" :value="item.name">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
