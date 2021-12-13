@@ -1,11 +1,9 @@
 <template>
 <div id="ItemList">
     <div class="item-header-container">
-        <a-tabs v-model:activeKey="searchForm.type" @change="handleCategoryChange">
-            <a-tab-pane key="1" tab="全部"></a-tab-pane>
-            <a-tab-pane key="2" tab="车辆"></a-tab-pane>
-            <a-tab-pane key="3" tab="备件"></a-tab-pane>
-            <a-tab-pane key="4" tab="配饰"></a-tab-pane>
+        <a-tabs v-model:activeKey="firstLevelId" @change="handleCategoryChange">
+            <a-tab-pane :key="0" tab="全部"></a-tab-pane>
+            <a-tab-pane v-for="item of categoryList" :key="item.id" :tab="item.name"></a-tab-pane>
             <template #rightExtra>
                 <a-input class="search" v-model="searchForm.name" placeholder="商品名称">
                     <template #prefix><i class="icon i_search"/></template>
@@ -44,11 +42,11 @@
             </template>
         </a-tabs>
     </div>
-    <div class="item-content-container">
-        <div class="category-container">
-            <div class="category-title">车辆</div>
+    <div class="item-content-container" :class="firstLevelId ? '' : 'full-content'">
+        <div class="category-container" v-if="firstLevelId">
+            <div class="category-title">{{firstLevelName}}</div>
             <div class="category-content">
-                <CategoryTree :categoryTree='categoryTree' @change='handleCategoryChange'/>
+                <CategoryTree :parentId='firstLevelId' @change='handleCategoryChange'/>
             </div>
         </div>
         <div class="item-content" v-if="tableData.length">
@@ -98,25 +96,6 @@ import item_defult_img from '@images/item_defult_img.png'
 import CategoryTree from '../../components/CategoryTree.vue'
 import SimpleImageEmpty from '../../components/SimpleImageEmpty.vue'
 
-function dig(path = '0', level = 3) {
-    const list = [];
-
-    for (let i = 0; i < 10; i += 1) {
-        const key = `${path}-${i}`;
-        const treeNode = {
-            title: key,
-            key,
-        };
-
-        if (level > 0) {
-            treeNode.children = dig(key, level - 1);
-        }
-
-        list.push(treeNode);
-    }
-
-    return list;
-}
 
 export default {
     name: 'ItemList',
@@ -139,7 +118,9 @@ export default {
             tableData: [],
 
             // 搜索
-            categoryTree: dig(),
+            categoryList: [],
+            firstLevelId: 0,
+            firstLevelName: '',
             searchForm: {
                 name: '',
                 category_id: '',
@@ -155,6 +136,7 @@ export default {
     computed: {},
     mounted() {
         this.getTableData();
+        this.getCategoryList()
     },
     methods: {
         routerChange(type, item = {}) {
@@ -200,6 +182,9 @@ export default {
         },
         handleCategoryChange(category, categories) {
             this.searchForm.category_id = category
+            if ( this.firstLevelId && category === this.firstLevelId) {
+                this.firstLevelName = this.categoryList.find(i => i.id === category).name
+            }
             this.pageChange(1)
         },
         getTableData() { // 获取 商品 数据
@@ -229,7 +214,6 @@ export default {
             })
         },
 
-
         handleCartAdd(item) { // 添加到购物车
             console.log('handleCartAdd item:', item)
             Core.Api.ShopCart.save({
@@ -240,6 +224,14 @@ export default {
                 console.log('res:', res)
                 this.$message.success('添加成功')
                 this.getShopCartData();
+            })
+        },
+
+        getCategoryList() {
+            Core.Api.ItemCategory.tree({
+                id: 0,
+            }).then(res => {
+                this.categoryList = res.list
             })
         }
     }
@@ -391,6 +383,14 @@ export default {
         .item-content-empty {
             width: calc(~'100% - 260px - 32px');
             .flex(center);
+        }
+        &.full-content {
+            .item-content, .item-content-empty {
+                width: 100%;
+                .list-container .list-item .cover {
+                    height: calc(~'(100vw - 144px - 10px - 32px) / 3 - 80px');
+                }
+            }
         }
     }
 }

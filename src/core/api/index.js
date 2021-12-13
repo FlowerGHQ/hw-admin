@@ -66,10 +66,9 @@ const apiList = {
     },
     ItemCategory: { // 商品分类
         list: ['PostJson', 'item-category/list'],
-        save:   ['PostJson', 'item-category/save'],
-        update: ['PostJson', 'item-category/update'],
-        detail: ['PostJson', 'item-category/detail'],
-        detele: ['PostJson', 'item-category/detele'],
+        save: ['PostJson', 'item-category/save'],
+        tree: ['PostJson', 'item-category/tree'],
+        delete: ['PostJson', 'item-category/delete'],
     },
     Warehouse: { // 仓库
         save: ['PostJson', 'warehouse/save'],

@@ -70,32 +70,32 @@
             <div class="title">图片信息</div>
         </div>
         <div class="form-content">
-            <div class="form-item required">
+            <div class="form-item required img-upload">
                 <div class="key">商品封面</div>
-                <div class="value img-upload">
+                <div class="value">
                     <a-upload name="file" class="image-uploader"
                         list-type="picture-card" accept='image/*'
-                        :file-list="upload.fileList" :action="upload.action"
+                        :file-list="upload.coverList" :action="upload.action"
                         :headers="upload.headers" :data='upload.data'
                         :before-upload="handleImgCheck"
-                        @change="handleImgChange">
-                        <div class="image-inner" v-if="upload.fileList.length < 1">
+                        @change="handleCoverChange">
+                        <div class="image-inner" v-if="upload.coverList.length < 1">
                             <i class="icon i_upload"/>
                         </div>
                     </a-upload>
                     <div class="tip">建议尺寸：800*800像素</div>
                 </div>
             </div>
-            <div class="form-item required">
+            <div class="form-item required img-upload">
                 <div class="key">商品详情图</div>
-                <div class="value img-upload">
+                <div class="value">
                     <a-upload name="file" class="image-uploader"
                         list-type="picture-card" accept='image/*'
-                        :file-list="upload.fileList" :action="upload.action"
+                        :file-list="upload.detailList" :action="upload.action"
                         :headers="upload.headers" :data='upload.data'
                         :before-upload="handleImgCheck"
-                        @change="handleImgChange">
-                        <div class="image-inner" v-if="upload.fileList.length < 10">
+                        @change="handleDetailChange">
+                        <div class="image-inner" v-if="upload.detailList.length < 10">
                             <i class="icon i_upload"/>
                         </div>
                     </a-upload>
@@ -231,9 +231,13 @@ export default {
             return isCanUpType && isLt10M;
         },
         // 上传图片
-        handleImgChange({ file, fileList }) {
-            this.upload.fileList = fileList
-            console.log("handleCardImport -> status:", file.status, "file:", file)
+        handleCoverChange({ file, fileList }) {
+            this.upload.coverList = fileList
+            console.log("handleCoverChange status:", file.status, "file:", file)
+        },
+        handleDetailChange({ file, fileList }) {
+            this.upload.detailList = fileList
+            console.log("handleDetailChange status:", file.status, "file:", file)
         },
     }
 };

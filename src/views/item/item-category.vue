@@ -23,7 +23,8 @@
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
+                :row-key="record => record.id"  :pagination='false' v-model:expandedRowKeys='expandedRowKeys'
+                @expand='handleExpandedChange'>
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.dataIndex === 'sn'">
                         <a-tooltip placement="top" :title='text'>
@@ -42,8 +43,9 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('edit', record)"> <i class="icon i_edit"/> 编辑</a-button>
-                        <a-button type='link' @click="handleDelete(record.id)"> <i class="icon i_delete"/> 删除</a-button>
+                        <a-button type='link' @click="handleModalShow(record, record)"> <i class="icon i_edit"/> 编辑</a-button>
+                        <a-button type='link' @click="handleModalShow({parent_id: record.id}, null,record)"> <i class="icon i_add"/> 新增子分类</a-button>
+                        <a-button type='link' @click="handleDelete(record)"> <i class="icon i_delete"/> 删除</a-button>
                     </template>
                 </template>
             </a-table>
@@ -84,7 +86,9 @@ export default {
             tableData: [],
 
             modalVisible: false,
-            modalParent: {},
+            expandedRowKeys: [],
+            editNode: null,
+            parentNode: null,
             editForm: {
                 id: '',
                 parent_id: '',
@@ -103,81 +107,143 @@ export default {
         },
     },
     mounted() {
-        this.getTableData();
+        this.getDataByParent();
     },
     methods: {
-        handleDelete(id){
-            this.loading = false;
-            Core.Api.ItemCategory.delete({id}).then(res => {
-                console.log("handleDelete res", res)
-                this.$message.success('删除成功')
-            }).catch(err => {
-                console.log('handleDelete err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-        pageChange(curr) {  // 页码改变
-            this.currPage = curr
-            this.getTableData()
-        },
-        pageSizeChange(current, size) {  // 页码尺寸改变
-            console.log('pageSizeChange size:', size)
-            this.pageSize = size
-            this.getTableData()
-        },
         handleSearch() {  // 搜索
-            this.getTableData();
+            this.expandedRowKeys = []
+            this.getDataById();
         },
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.getTableData();
+            this.expandedRowKeys = []
+            this.getDataById();
         },
-        getTableData(parent_id = 0, target) {  // 获取 表格 数据
+        getDataByParent(parent_id = 0, parentNode, node) {  // 通过父节点获取子级数据
+            console.log('getDataByParent parent_id:', parent_id, 'parentNode', parentNode)
             this.loading = true;
-            Core.Api.ItemCategory.list({
+            Core.Api.ItemCategory.tree({
                 page: 0,
-                parent_id: parent_id
+                parent_id: parent_id,
             }).then(res => {
+                res.list.forEach(item => {
+                    item.has_children ? item.children = [] : item.children = null
+                });
+                console.log('getDataByParent res.list:', res.list)
                 if (parent_id === 0) {
                     this.tableData = res.list;
-                } else {
-                    target.children = res.list
+                } else if (parentNode) {
+                    parentNode.children = res.list
+                }
+                if (!res.list.length) {
+                    this.handleSearch();
                 }
             }).catch(err => {
-                console.log('getTableData err', err)
+                console.log('getDataByParent err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
+        getDataById(id = 0, node) {  // 通过本节点获取本级数据
+            console.log('getDataById id:', id, 'node', node)
+            this.loading = true;
+            Core.Api.ItemCategory.tree({
+                page: 0,
+                id: id,
+            }).then(res => {
+                res.list.forEach(item => {
+                    item.has_children ? item.children = [] : item.children = null
+                });
+                if (id === 0) {
+                    this.tableData = res.list;
+                } else if (node) {
+                    node = res.list
+                }
+                console.log('getDataById res.list:', res.list)
+            }).catch(err => {
+                console.log('getDataById err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        handleExpandedChange(expanded, record) {
+            console.log('handleExpandedChange expanded:', expanded, 'record', record)
+            if (expanded) {
+                this.getDataByParent(record.id, record)
+                this.expandedRowKeys.push(record.id)
+            } else {
+                let index = this.expandedRowKeys.indexOf(record.id)
+                this.expandedRowKeys.splice(index, 1)
+                record.children = []
+            }
+        },
 
-
-        handleModalShow({parent_id = 0, id, name}, parent = null) {
+        handleModalShow({parent_id = 0, id, name}, node = null, parent = null) {
             this.editForm = {
                 id: id,
                 name: name,
                 parent_id: parent_id,
             }
-            this.modalVisible = true
+            console.log('this.editForm:', this.editForm)
             this.parentNode = parent
+            this.editNode = node
+            this.modalVisible = true
         },
         handleModalSubmit() {
             let form = Core.Util.deepCopy(this.editForm)
             if (!form.name) {
                 return this.$message.warning('请输入分类名称')
             }
-            let apiName = form.id ? 'update' : 'save'
             this.loading = true
-            Core.Api.ItemCategory[apiName](form).then(res => {
+            Core.Api.ItemCategory.save(form).then(res => {
                 this.$message.success('保存成功')
-                this.getTableData(form.parent_id, this.parentNode)
+                if (form.id) {
+                    this.getDataById(form.id, this.editNode)
+                } else {
+                    this.getDataByParent(form.parent_id, this.parentNode)
+                }
+                if (form.parent_id !== 0) {
+                    let index = this.expandedRowKeys.indexOf(form.parent_id)
+                    this.expandedRowKeys.splice(index, 1)
+                } else {
+                    this.expandedRowKeys = []
+                }
+                this.modalVisible = false
             }).catch(err => {
                 console.log('handleModalSubmit err:', err)
             }).finally(() => {
                 this.loading = false
             })
 
-        }
+        },
+
+        handleDelete(record){
+            this.loading = false;
+            let _this = this
+            this.$confirm({
+                title: `确定要删分类[${record.name}]吗？`,
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.ItemCategory.delete({
+                        id: record.id,
+                    }).then(res => {
+                        console.log("handleDelete res", res)
+                        _this.$message.success('删除成功')
+                        if (record.parent_id !== 0) {
+                            let index = _this.expandedRowKeys.indexOf(record.parent_id)
+                            _this.expandedRowKeys.splice(index, 1)
+                        }
+                        _this.getDataByParent(record.parent_id)
+                    }).catch(err => {
+                        console.log('handleDelete err', err)
+                    }).finally(() => {
+                        _this.loading = false;
+                    });
+                },
+            });
+        },
     }
 };
 </script>
