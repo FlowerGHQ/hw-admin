@@ -64,6 +64,13 @@ const apiList = {
         detail: ['PostJson', 'item/detail'],
         detele: ['PostJson', 'item/detele'],
     },
+    ItemCategory: { // 商品分类
+        list: ['PostJson', 'item-category/list'],
+        save:   ['PostJson', 'item-category/save'],
+        update: ['PostJson', 'item-category/update'],
+        detail: ['PostJson', 'item-category/detail'],
+        detele: ['PostJson', 'item-category/detele'],
+    },
     Warehouse: { // 仓库
         save: ['PostJson', 'warehouse/save'],
         update: ['PostJson', 'warehouse/update'], // 列表

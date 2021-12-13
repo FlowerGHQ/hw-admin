@@ -10,38 +10,37 @@
                 <a-input class="search" v-model="searchForm.name" placeholder="商品名称">
                     <template #prefix><i class="icon i_search"/></template>
                 </a-input>
-                <a-tooltip title="查看收藏夹" class="popover">
-                    <a-button type="link" @click="routerChange('favorite')"><i class="icon i_collect"/></a-button>
-                </a-tooltip>
-
-                <a-popover v-model:visible="briefVisible" trigger='click'>
-                    <template #content>
-                        <div class="shop-cart-brief">
-                            <div class="tip">
-                                <i class="icon i_check_c"/>已加入购物车
-                            </div>
-                            <div class="item" v-for="item of briefList" :key="item.id">
-                                <div class="cover">
-                                    <img :src="$Util.imageFilter(item.logo) || item_defult_img" />
-                                </div>
-                                <div class="desc">
-                                    <p>{{item.name}}</p>
-                                    <span>{{item.code}}</span>
-                                    <p class="price">￥{{$Util.countFilter(item.price)}}</p>
-                                </div>
-                            </div>
-                            <div class="btns">
-                                <a-button class='ghost' @click="routerChange('shop_cart')">查看购物车({{briefCount}})</a-button>
-                                <a-button class='black' @click="routerChange('settle')">结算</a-button>
-                            </div>
-                        </div>
-                    </template>
-                    <a-tooltip title="查看购物车" class="popover">
-                        <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>
-                    </a-tooltip>
-                </a-popover>
-
                 <a-button type="primary" class="add" @click="routerChange('edit')" v-if="$auth('ADMIN')"><i class="icon i_add"/>新增商品</a-button>
+                <template v-else>
+                    <a-tooltip title="查看收藏夹" class="popover">
+                        <a-button type="link" @click="routerChange('favorite')"><i class="icon i_collect"/></a-button>
+                    </a-tooltip>
+                    <a-popover v-model:visible="briefVisible" arrow-point-at-center placement="bottomRight" trigger='click'>
+                        <template #content>
+                            <div class="shop-cart-brief">
+                                <div class="icon i_close" @click="briefVisible = false"></div>
+                                <div class="tip">
+                                    <i class="icon i_check_c"/>已加入购物车
+                                </div>
+                                <div class="item" v-for="item of briefList" :key="item.id">
+                                    <img class="cover" :src="$Util.imageFilter(item.logo) || item_defult_img" />
+                                    <div class="desc">
+                                        <p>{{item.name}}</p>
+                                        <span>{{item.code}}</span>
+                                        <p class="price">￥{{$Util.countFilter(item.price)}}</p>
+                                    </div>
+                                </div>
+                                <div class="btns">
+                                    <a-button class='btn ghost' @click="routerChange('shop_cart')">查看购物车({{briefCount}})</a-button>
+                                    <a-button class='btn black' @click="routerChange('settle')">结算</a-button>
+                                </div>
+                            </div>
+                        </template>
+                        <a-tooltip title="查看购物车" class="popover">
+                            <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>
+                        </a-tooltip>
+                    </a-popover>
+                </template>
             </template>
         </a-tabs>
     </div>
@@ -53,12 +52,12 @@
             </div>
         </div>
         <div class="item-content" v-if="tableData.length">
-            <div class="switch-btn">
+            <!-- <div class="switch-btn">
                 <a-radio-group v-model:value="pageType">
                     <a-radio-button value="agora"><i class="icon i_agora"/></a-radio-button>
                     <a-radio-button value="list"><i class="icon i_list"/></a-radio-button>
                 </a-radio-group>
-            </div>
+            </div> -->
             <div class="list-container">
                 <div class="list-item" v-for="item of tableData" :key="item.id" @click="routerChange('detail', item)">
                     <div class="cover">
@@ -68,7 +67,8 @@
                     <p class="name">{{item.name}}</p>
                     <p class="desc">&nbsp;</p>
                     <p class="price">￥{{$Util.countFilter(item.price)}}</p>
-                    <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">添加到购物车</a-button>
+                    <a-button class="btn" type="primary" ghost @click.stop="routerChange('edit', item)" v-if="$auth('ADMIN')">编辑商品</a-button>
+                    <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)" v-else>添加到购物车</a-button>
                 </div>
             </div>
             <div class="paging-container">
@@ -155,7 +155,6 @@ export default {
     computed: {},
     mounted() {
         this.getTableData();
-        // this.getShopCartData();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -179,6 +178,12 @@ export default {
                 case 'shop_cart':  // 购物车
                     routeUrl = this.$router.resolve({
                         path: "/item/shop-cart-list",
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'settle':  // 结算
+                    routeUrl = this.$router.resolve({
+                        path: "/item/item-settle",
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -217,20 +222,22 @@ export default {
 
         getShopCartData() { // 获取 购物车 数据
             Core.Api.ShopCart.list().then(res => {
-                console.log('res:', res)
+                console.log('getShopCartData res:', res)
                 this.briefVisible = true
-                this.briefList = res.list;
+                this.briefList = [res.list[0] || {}]
                 this.briefCount = res.count;
             })
         },
 
 
         handleCartAdd(item) { // 添加到购物车
+            console.log('handleCartAdd item:', item)
             Core.Api.ShopCart.save({
                 item_id: item.id,
                 amount: 1,
                 price: item.price
             }).then(res => {
+                console.log('res:', res)
                 this.$message.success('添加成功')
                 this.getShopCartData();
             })
@@ -330,12 +337,14 @@ export default {
                     cursor: pointer;
                     margin: 0 40px 60px;
                     width: calc(~'100% / 3 - 80px');
+                    min-width: 250px;
                     color: #111111;
                     font-weight: 500;
                     font-size: 14px;
                     line-height: 16px;
                     .cover {
                         height: calc(~'(100vw - 144px - 10px - 32px - 260px) / 3 - 80px');
+                        min-height: 250px;
                         background-color: #F5F5F5;
                         img {
                             width: 100%;
@@ -344,11 +353,13 @@ export default {
                         }
                     }
                     .sub {
+                        .ell();
                         margin: 15px 0 5px;
                         font-size: 12px;
                         line-height: 14px;
                     }
                     .name {
+                        .ell();
                         padding-top: 5px;
                         border-top: 1px solid #E6EAEE;
                     }
@@ -384,6 +395,81 @@ export default {
     }
 }
 .shop-cart-brief {
-
+    position: relative;
+    padding: 12px 6px 10px;
+    .icon.i_close {
+        cursor: pointer;
+        position: absolute;
+        font-size: 14px;
+        color: #111;
+        top: 0;
+        right: 0;
+    }
+    .tip {
+        font-size: 15px;
+        color: #272727;
+        line-height: 18px;
+        margin-bottom: 22px;
+        .icon.i_check_c {
+            color: #37D347;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+    }
+    .item {
+        display: flex;
+        .cover {
+            width: 78px;
+            height: 78px;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+        .desc {
+            width: calc(~'100% - 78px - 20px');
+            display: flex;
+            flex-direction: column;
+            font-size: 14px;
+            line-height: 16px;
+            p {
+                font-weight: 500;
+                line-height: 16px;
+                margin: 0;
+            }
+            span {
+                font-weight: 400;
+                color: #757575;
+                margin: 10px 0 8px;
+            }
+            .price {
+                font-weight: 400;
+                color: #111111;
+            }
+        }
+    }
+    .btns {
+        margin-top: 72px;
+        .btn {
+            width: 172px;
+            height: 55px;
+            border-radius: 12px;
+            font-size: 15px;
+            &.ghost {
+                background: #FFFFFF;
+                border: 1px solid #E5E8EB;
+                color: #111111;
+                &:hover {
+                    background: rgba(17, 17, 17, 0.1);
+                }
+            }
+            &.black {
+                background: #111111;
+                border: 1px solid #111111;
+                color: #FFFFFF;
+                &:hover {
+                    background: rgba(17, 17, 17, 0.9);
+                }
+            }
+        }
+    }
 }
 </style>

@@ -193,6 +193,7 @@ const routes = [
                 hidden: true,
                 meta: {
                     title: '商品编辑',
+                    roles: [LOGIN_TYPE.ADMIN],
                     parent: '/item/item-list',
                 }
             },
@@ -211,7 +212,26 @@ const routes = [
                 name: 'ShopCartList',
                 component: () => import('@/views/item/shop-cart-list.vue'),
                 meta: {
+                    roles: [LOGIN_TYPE.AGENT],
                     title: '购物车',
+                }
+            },
+            {
+                path: 'item-settle',
+                name: 'ItemSettle',
+                component: () => import('@/views/item/item-settle.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.AGENT],
+                    title: '结算',
+                }
+            },
+            {
+                path: 'item-category',
+                name: 'ItemCategory',
+                component: () => import('@/views/item/item-category.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.ADMIN],
+                    title: '商品分类',
                 }
             },
         ]
