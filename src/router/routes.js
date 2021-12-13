@@ -67,6 +67,15 @@ const routes = [
                     title: '维修单编辑',
                 }
             },
+            {
+                path: 'repair-detail',
+                name: 'RepairDetail',
+                component: () => import('@/views/repair/repair-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '维修单详情',
+                }
+            },
         ]
     },
     {   // 经销商
@@ -93,6 +102,47 @@ const routes = [
                 path: 'distributor-edit',
                 name: 'DistributorEdit',
                 component: () => import('@/views/distributor/distributor-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '经销商编辑',
+                }
+            },
+
+            {
+                path: 'distributor-detail',
+                name: 'DistributorDetail',
+                component: () => import('@/views/distributor/distributor-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '经销商详情',
+                }
+            },
+        ]
+    },
+    {   // 仓库
+        path: '/warehouse',
+        component: Layout,
+        redirect: '/warehouse/warehouse-list',
+        name: 'WarehouseManagement',
+        meta: {
+            title: '仓库管理',
+            icon: 'i_s_dashboard',
+            // auth: ['dashboard'],
+            // roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'warehouse-list',
+                name: 'WarehouseList',
+                component: () => import('@/views/warehouse/warehouse-list.vue'),
+                meta: {
+                    title: '经销商列表',
+                }
+            },
+            {
+                path: 'warehouse-edit',
+                name: 'WarehouseEdit',
+                component: () => import('@/views/warehouse/warehouse-edit.vue'),
                 hidden: true,
                 meta: {
                     title: '经销商编辑',

@@ -1,13 +1,12 @@
 <template>
-<div id="ItemDetail">
-
+<div id="DistributorDetail">
 </div>
 </template>
 
 <script>
 import Core from '../../core';
 export default {
-    name: 'ItemDetail',
+    name: 'DistributorDetail',
     components: {},
     props: {},
     data() {
@@ -26,5 +25,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #ItemDetail {}
+// #DistributorDetail {}
 </style>

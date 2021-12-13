@@ -932,7 +932,7 @@ export default {
                 { title: '手机号', dataIndex: 'phone' },
                 { title: '最近登录', dataIndex: 'last_login_time', key: 'time' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
-                // { title: '操作', dataIndex: 'handle', fixed: 'right' }, 
+                // { title: '操作', dataIndex: 'handle', fixed: 'right' },
                 { title: '操作', key: 'operation', fixed: 'right', width: 100, },
             ]
             return columns
@@ -1021,14 +1021,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#DistributorList {
-    .status-tag {
-        width: 50px;
-        height: 22px;
-        line-height: 22px;
-        border-radius: 12px;
-        font-size: @fz_sm;
-        text-align: center;
-    }
-}
+// #DistributorList {}
 </style>

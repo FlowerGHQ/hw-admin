@@ -241,10 +241,12 @@ const Util = {
 /* =============== 通用过滤器 ================ */
     imageFilter(item) {
         if (!item) {
-            return console.warn("imageFilter 没有找到图像")
+            console.warn("imageFilter 没有找到图像")
+            return
         }
         if (typeof item !== 'string') {
-            return console.warn('imageFilter 请传入字符串', item)
+            console.warn('imageFilter 请传入字符串', item)
+            return
         }
 
         if (item.includes("http")) {
@@ -329,7 +331,7 @@ const Util = {
         const MAP = Const.REPAIR.METHOD_MAP
         return MAP[val] || '未知'
     },
-    repairpPiorityFilter(val) {
+    repairPriorityFilter(val) {
         const MAP = Const.REPAIR.PRIORITY_MAP
         return MAP[val] || '未知'
     },
