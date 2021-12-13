@@ -81,10 +81,10 @@ const routes = [
         ]
     },
     {   // 经销商
-        path: '/distributor',
+        path: '/dealers',
         component: Layout,
-        redirect: '/distributor/distributor-list',
-        name: 'DistributorManagement',
+        redirect: '/dealers/dealers-list',
+        name: 'DealersManagement',
         meta: {
             title: '经销商管理',
             icon: 'i_s_dashboard',
@@ -93,32 +93,32 @@ const routes = [
         },
         children: [
             {
-                path: 'distributor-list',
-                name: 'DistributorList',
-                component: () => import('@/views/distributor/distributor-list.vue'),
+                path: 'dealers-list',
+                name: 'DealersList',
+                component: () => import('@/views/dealers/dealers-list.vue'),
                 meta: {
                     title: '经销商列表',
                 }
             },
             {
-                path: 'distributor-edit',
-                name: 'DistributorEdit',
-                component: () => import('@/views/distributor/distributor-edit.vue'),
+                path: 'dealers-edit',
+                name: 'DealersEdit',
+                component: () => import('@/views/dealers/dealers-edit.vue'),
                 hidden: true,
                 meta: {
                     title: '经销商编辑',
-                    parent: '/distributor/distributor-list',
+                    parent: '/dealers/dealers-list',
                 }
             },
 
             {
-                path: 'distributor-detail',
-                name: 'DistributorDetail',
-                component: () => import('@/views/distributor/distributor-detail.vue'),
+                path: 'dealers-detail',
+                name: 'DealersDetail',
+                component: () => import('@/views/dealers/dealers-detail.vue'),
                 hidden: true,
                 meta: {
                     title: '经销商详情',
-                    parent: '/distributor/distributor-list',
+                    parent: '/dealers/dealers-list',
                 }
             },
         ]

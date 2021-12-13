@@ -1,5 +1,5 @@
 <template>
-<div id="DistributorList">
+<div id="DealersList">
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">经销商列表</div>
@@ -86,7 +86,7 @@
 <script>
 import Core from '../../core';
 export default {
-    name: 'DistributorList',
+    name: 'DealersList',
     components: {},
     props: {},
     data() {
@@ -129,7 +129,7 @@ export default {
     methods: {
         handleDelete(id){
             Core.Api.Dealers.delete({
-                id
+                id: id,
             }).then(res => {
                 console.log("delete -> res", res)
             }).catch(err => {
@@ -144,14 +144,14 @@ export default {
             switch (type) {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/distributor/distributor-edit",
+                        path: "/dealers/dealers-edit",
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/distributor/distributor-detail",
+                        path: "/dealers/dealers-detail",
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_blank')
@@ -205,5 +205,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #DistributorList {}
+// #DealersList {}
 </style>
