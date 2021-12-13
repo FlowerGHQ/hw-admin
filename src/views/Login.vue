@@ -99,13 +99,17 @@ export default {
                         break;
                 }
                 Core.Data.setUserType(userType);
-                this.getAuthority(userType, res.user.id);
+                this.getAuthority(userType, res.user.id, res.user.flag_admin);
             });
         },
 
-        async getAuthority(userType, userId) {
+        async getAuthority(userType, userId, flag_admin) {
             let authorityMap = {}
             authorityMap[userType] = true
+            if (flag_admin) {
+                authorityMap['MANMGE'] = true
+            }
+            Core.Data.setAuthority(authorityMap)
             this.$router.replace({ path: '/dashboard' })
             return
             Core.Api.AuthRole.userMenu({id: userId}).then(res =>{

@@ -15,8 +15,11 @@ class ApiBase {
             case LOGIN_TYPE.ADMIN:
                 mark = 'admin/1'
                 break;
-            case LOGIN_TYPE.DEALER:
-                mark = 'dealer/1'
+            case LOGIN_TYPE.AGENT:
+                mark = 'agent/1'
+                break;
+            case LOGIN_TYPE.STORE:
+                mark = 'store/1'
                 break;
         }
         return mark
@@ -36,7 +39,7 @@ class ApiBase {
         let mark = ApiBase.getMark()
         const token = Data.getToken()
 
-        const commonModule = ['Common']
+        const commonModule = ['Common', 'Common1']
         const openModule = ['Open']
         if (commonModule.includes(moduleName)) { mark = 'core/1' }
         if (openModule.includes(moduleName)) { mark = 'open/1' }

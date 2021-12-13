@@ -19,6 +19,8 @@ const apiList = {
         userInfo: ['Get', 'system/info'], // 获取当前登录账号的账户信息
         migrate: ['Post', 'migrate/order'], // 获取当前登录账号的账户信息
     },
+    Common1: {},
+    
     Export: { // 导出
         templateExport: ['PostJson', 'item-media-package/export'],
     },

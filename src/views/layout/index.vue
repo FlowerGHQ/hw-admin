@@ -126,6 +126,7 @@ export default {
         this.selectedKeys = ['/' + this.$route.path.split('/')[1]];
     },
     mounted() {
+        this.$auth('MANMGE')
     },
     methods: {
         handleLink(path) {
