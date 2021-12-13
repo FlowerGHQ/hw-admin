@@ -63,6 +63,13 @@ const apiList = {
         list: ['PostJson', 'item/list'],
         detail: ['PostJson', 'item/detail'],
         detele: ['PostJson', 'item/detele'],
+    },
+    Warehouse: {
+        save: ['PostJson', 'warehouse/save'],
+        update: ['PostJson', 'warehouse/update'], // 列表
+
+        list: ['PostJson', 'warehouse/list'],
+        detele: ['PostJson', 'warehouse/detele'],
     }
 
 };

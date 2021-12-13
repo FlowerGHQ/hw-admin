@@ -63,11 +63,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <!-- <a @click="routerChange('edit',record)">修改</a> -->
-                        <a @click="routerChange('edit',record)">修改</a>
-                    </template>
-                    <template v-if="column.key === 'operation'">
-                        <a @click="delete(record.id)">删除</a>
+                        <a-button type="link" @click="routerChange('edit',record)">修改</a-button>
+                        <a-button type="link" @click="handleDelete(record.id)">删除</a-button>
                     </template>
                 </template>
             </a-table>
@@ -935,7 +932,7 @@ export default {
                 { title: '手机号', dataIndex: 'phone' },
                 { title: '最近登录', dataIndex: 'last_login_time', key: 'time' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
-                // { title: '操作', dataIndex: 'handle', fixed: 'right' }, 
+                // { title: '操作', dataIndex: 'handle', fixed: 'right' },
                 { title: '操作', key: 'operation', fixed: 'right', width: 100, },
             ]
             return columns
@@ -945,7 +942,7 @@ export default {
         this.getTableData();
     },
     methods: {
-        delete(id){
+        handleDelete(id){
             Core.Api.Dealers.delete({
                 id
             }).then(res => {
