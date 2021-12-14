@@ -1,32 +1,28 @@
 <template>
-  <div id="WarehouseList">
+  <div id="CustomerList">
     <div class="list-container">
       <div class="title-container">
-        <div class="title-area">仓库列表</div>
+        <div class="title-area">客户列表</div>
         <div class="btns-area">
-          <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建仓库</a-button>
+          <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建客户</a-button>
         </div>
       </div>
       <div class="search-container">
         <a-row class="search-area">
-          <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
-            <div class="key">仓库名称:</div>
+          <a-col :xs='24' :sm='24' :xl="6" :xxl='6' class="search-item">
+            <div class="key">客户名称：</div>
             <div class="value">
-              <a-input placeholder="请输入仓库名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+              <a-input placeholder="请输入客户名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
             </div>
           </a-col>
-<!--          <a-col :xs='24' :sm='24' :xl="6" :xxl='6' class="search-item">-->
-<!--            <div class="key">国家:</div>-->
-<!--            <div class="value">-->
-<!--              <a-select  @change="handleCountryChange">-->
-<!--                <a-select-option v-for="country of countryData" :key="country">-->
-<!--                  {{ country }}-->
-<!--                </a-select-option>-->
-<!--              </a-select>-->
-<!--            </div>-->
-<!--          </a-col>-->
+          <a-col :xs='24' :sm='24' :xl="6" :xxl='6' class="search-item">
+            <div class="key">客户电话：</div>
+            <div class="value">
+              <a-input placeholder="请输入客户电话" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
+            </div>
+          </a-col>
           <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
-            <div class="key">创建时间:</div>
+            <div class="key">创建时间：</div>
             <div class="value">
               <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
                               :show-time="defaultTime">
@@ -87,7 +83,7 @@ const provinceData = ['China'];
 import Core from '../../core';
 
 export default {
-  name: 'WarehouseList',
+  name: 'CustomerList',
   components: {},
   props: {},
   data() {
@@ -104,7 +100,7 @@ export default {
       create_time: [],
       searchForm: {
         name: '',
-        country: undefined,
+        phone:'',
       },
       tableData: [],
 
@@ -115,11 +111,9 @@ export default {
     tableColumns() {
       let columns = [
         {title: '名称', dataIndex: 'name', key:'detail'},
-        {title: '省份', dataIndex: 'province'},
-        {title: '城市', dataIndex: 'city'},
-        {title: '区（县）', dataIndex: 'county'},
+        {title: '电话', dataIndex: 'phone'},
+        {title: '邮箱', dataIndex: 'email'},
         {title: '地址', dataIndex: 'address'},
-        // {title: '类型', dataIndex: 'type', key: 'type'},
         {title: '创建时间', dataIndex: 'create_time', key: 'time'},
         // { title: '操作', dataIndex: 'handle', fixed: 'right' },
         {title: '操作', key: 'operation', fixed: 'right', width: 100,},
@@ -132,11 +126,8 @@ export default {
     this.getTableData();
   },
   methods: {
-    handleCountryChange(value) {
-      this.searchForm.country = this.countryData[value]
-    },
     handleDelete(id) {
-      Core.Api.Warehouse.delete({
+      Core.Api.Customer.delete({
         id
       }).then(res => {
         console.log("delete -> res", res)
@@ -153,17 +144,10 @@ export default {
       switch (type) {
         case 'edit':  // 编辑
           routeUrl = this.$router.resolve({
-            path: "/warehouse/warehouse-edit",
+            path: "/customer/customer-edit",
             query: {id: item.id}
           })
           window.open(routeUrl.href, '_self')
-          break;
-        case 'detail':  // 详情
-          routeUrl = this.$router.resolve({
-            path: "/warehouse/warehouse-detail",
-            query: {id: item.id}
-          })
-          window.open(routeUrl.href, '_blank')
           break;
       }
     },
@@ -195,7 +179,7 @@ export default {
       this.loading = true;
       this.loading = false;
       // return
-      Core.Api.Warehouse.list({
+      Core.Api.Customer.list({
         ...this.searchForm,
         begin_time: this.create_time[0] || '',
         end_time: this.create_time[1] || '',
