@@ -38,6 +38,15 @@
                         </a-range-picker>
                     </div>
                 </a-col>
+                <!-- <a-form-item label="创建时间">
+                    <a-date-picker
+                        v-model:value="create_time"
+                        show-time
+                        type="date"
+                        placeholder="创建时间"
+                        style="width: 100%"
+                    />
+                </a-form-item> -->
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">产品名称:</div>
                     <div class="value">
@@ -86,6 +95,10 @@
                     </template>
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
+                    </template>
+                    <template v-if="column.key === 'operation'">
+                        <a-button type='link' @click="routerChange('edit', record)"> <i class="icon i_edit"/> 再次购买</a-button>
+                        <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_detail"/> 订单详情</a-button>
                     </template>
                 </template>
             </a-table>
@@ -155,10 +168,10 @@ export default {
             let columns = [
                 { title: '订单编号', dataIndex: 'sn', },
                 { title: '商品', dataIndex: 'name', key: 'tip_item' },
-                { title: '价格', dataIndex: 'price' },
+                { title: '价格', dataIndex: 'price', key: 'item'  },
                 { title: '订单状态', dataIndex: 'remark' },
                 { title: '下单时间', dataIndex: 'create_time', key: 'time' },
-                { title: '操作',   dataIndex: 'jiesanren', key: 'item' },
+                { title: '操作', key: 'operation', fixed: 'right', width: 100, }
             ]
             return columns
         },
