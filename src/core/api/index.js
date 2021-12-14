@@ -32,6 +32,9 @@ const apiList = {
         statusUpdate: ['PostJson', 'account/status-update'], // 更新账户状态1=启用2=禁用
         roleAssign: ['PostJson','account/role-assign'],
     },
+	User: {
+		list: ['PostJson', 'user/list'], // 账户列表
+	},
     AuthRole: {
         authTree: ['PostJson', 'auth/menu-list-tree'], // 权限树
         list: ['PostJson', 'auth/role-list'], // 角色列表
@@ -54,9 +57,11 @@ const apiList = {
 
     Repair: { // 维修单
         list: ['PostJson', 'repair/list'], // 列表
-        save: ['PostJson', 'repair/save'], // 列表
-        update: ['PostJson', 'repair/update'], // 列表
+	    create: ['PostJson', 'repair/save'], // 列表
+	    hand: ['PostJson', 'repair/hand'], // 列表
         detail: ['PostJson', 'repair/detail'], // 工单详情
+	    check: ['PostJson', 'repair/check'], // 工单详情
+        statusList: ['PostJson', 'repair/status-list'], // 工单详情
     },
     Item: { // 商品
         save: ['PostJson', 'item/save'],

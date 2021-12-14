@@ -55,7 +55,10 @@
                 :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
                 <template #bodyCell="{ column, text , record}">
                     <template v-if="column.dataIndex === 'sn'">
-                        <a-tooltip placement="top" :title='text'>
+                        <a-tooltip placement="top" :title='text' v-if="record.status == 10">
+                            <a-button type="link" @click="routerChange('edit', record)">{{text || '-'}}</a-button>
+                        </a-tooltip>
+                        <a-tooltip placement="top" :title='text' v-else>
                             <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                         </a-tooltip>
                     </template>
@@ -128,13 +131,13 @@ export default {
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             statusList: [
-                {text: '全  部', value: '99', color: 'primary', key: '0'},
-                {text: '待分配', value: '29', color: 'red',     key: '1'},
-                {text: '待确认', value: '30', color: 'orange',  key: '2'},
-                {text: '待检测', value: '30', color: 'yellow',  key: '3'},
-                {text: '维修中', value: '30', color: 'blue',    key: '4'},
-                {text: '已完成', value: '30', color: 'green',   key: '5'},
-                {text: '异  常', value: '30', color: 'grey',    key: '6'},
+                {text: '全  部', value: '0', color: 'primary', key: '0'},
+                {text: '待分配', value: '0', color: 'red',     key: '10'},
+                {text: '待确认', value: '0', color: 'orange',  key: '20'},
+                {text: '待检测', value: '0', color: 'yellow',  key: '30'},
+                {text: '维修中', value: '0', color: 'blue',    key: '50'},
+                {text: '已完成', value: '0', color: 'green',   key: '60'},
+                {text: '异  常', value: '0', color: 'grey',    key: '6'},
             ],
             create_time: [],
             searchForm: {
@@ -175,6 +178,7 @@ export default {
     },
     mounted() {
         this.getTableData();
+        this.getStatusList()
     },
     methods: {
         routerChange(type, item = {}) {
@@ -229,7 +233,6 @@ export default {
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-            this.loading = false;
 
             Core.Api.Repair.list({
                 ...this.searchForm,
@@ -241,6 +244,30 @@ export default {
                 console.log("getTableData -> res", res)
                 this.total = res.count;
                 this.tableData = res.list;
+            }).catch(err => {
+                console.log('getTableData -> err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+         getStatusList() {  // 获取 表格 数据
+            this.loading = true;
+            Core.Api.Repair.statusList({
+
+            }).then(res => {
+                console.log("getTableData -> res", res)
+                var totle = 0
+
+                this.statusList.forEach(statusItem =>{
+                    res.status_list.forEach(status =>{
+                        if(statusItem.key == status.status ){
+                            statusItem.value = status.amount
+                            totle += status.amount
+                        }
+                    })
+                })
+                console.log(totle)
+                this.statusList[0].value = totle
             }).catch(err => {
                 console.log('getTableData -> err', err)
             }).finally(() => {

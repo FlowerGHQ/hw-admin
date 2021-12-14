@@ -335,6 +335,10 @@ const Util = {
         const MAP = Const.REPAIR.PRIORITY_MAP
         return MAP[val] || '未知'
     },
+	repairItemTypeFilter(val) {
+		const MAP = Const.REPAIR.ITEM_TYPE_MAP
+		return MAP[val] || '未知'
+	},
 /* =============== 维修单 ================ */
 
 }
