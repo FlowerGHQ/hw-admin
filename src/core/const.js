@@ -5,8 +5,8 @@ let URL_POINT = 'http://api.eos.rebuildsoft.com'
 
 switch (window.location.hostname) {
     default:
-		URL_POINT = 'http://10.0.0.198:8083'  // 谢耀圣
-		// URL_POINT = 'http://10.0.0.149:8083'  // 徐伟
+		// URL_POINT = 'http://10.0.0.198:8083'  // 谢耀圣
+		URL_POINT = 'http://10.0.0.205:8083'  // 徐伟
         // URL_POINT = 'http://10.0.0.39:8083'  // yao
         break;
 }
@@ -1412,13 +1412,13 @@ let Const = {
             ADMIN: 10,      // 管理员
             AGENT: 20,      // 代理商
             STORE: 30,      // 门店
-            CUSTOMER: 40,   // 终端用户
+	        REPAIR_WORKER: 40 // 门店
         },
         TYPE_MAP: {
             10:  'ADMIN',
             20:  'AGENT',
             30:  'STORE',
-            40:  'CUSTOMER',
+            40:  'REPAIR_WORKER',
         },
     },
     LOGIN: {
@@ -1491,6 +1491,17 @@ let Const = {
             2: '中',
             3: '低',
         },
+	    // 优先级
+	    ITEM_TYPE_LIST: [
+		    { text: '车辆', value: 1 },
+		    { text: '电池', value: 2 },
+		    { text: '其他', value: 3 },
+	    ],
+	    ITEM_TYPE_MAP: {
+		    1: '车辆',
+		    2: '电池',
+		    3: '其他',
+	    },
 
         STATUS_MAP: {
             10: '待分配',
@@ -1507,7 +1518,16 @@ let Const = {
             40: 'blue',
             50: 'green',
             60: 'grey',
-        }
+        },
+	    STATUS: {
+		    WAIT_DISTRIBUTION:10,
+		    WAIT_CHECK:20,
+		    WAIT_DETECTION:30,
+		    WAIT_REPAIR:40,
+		    REPAIR_END:50,
+
+
+	    }
     }
 };
 

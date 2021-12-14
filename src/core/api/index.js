@@ -67,9 +67,11 @@ const apiList = {
 
     Repair: { // 维修单
         list: ['PostJson', 'repair/list'], // 列表
-        save: ['PostJson', 'repair/save'], // 列表
-        update: ['PostJson', 'repair/update'], // 列表
+	    create: ['PostJson', 'repair/save'], // 列表
+	    hand: ['PostJson', 'repair/hand'], // 列表
         detail: ['PostJson', 'repair/detail'], // 工单详情
+	    check: ['PostJson', 'repair/check'], // 工单详情
+        statusList: ['PostJson', 'repair/status-list'], // 工单详情
     },
 
     Item: { // 商品
@@ -77,6 +79,19 @@ const apiList = {
         list: ['PostJson', 'item/list'],
         detail: ['PostJson', 'item/detail'],
         delete: ['PostJson', 'item/delete'],
+    },
+    ItemCategory: { // 商品分类
+        list: ['PostJson', 'item-category/list'],
+        save: ['PostJson', 'item-category/save'],
+        tree: ['PostJson', 'item-category/tree'],
+        delete: ['PostJson', 'item-category/delete'],
+    },
+    Warehouse: { // 仓库
+        save: ['PostJson', 'warehouse/save'],
+        update: ['PostJson', 'warehouse/update'],
+        detail: ['PostJson', 'warehouse/detail'],
+        list: ['PostJson', 'warehouse/list'],
+        delete: ['PostJson', 'warehouse/delete'],
     },
     ShopCart: { // 购物车
         save: ['PostJson', 'shopping-cart/save'],
@@ -86,15 +101,19 @@ const apiList = {
         delete: ['PostJson', 'shopping-cart/delete'],
     },
     Favorite: { // 收藏夹
-        add: ['PostJson', 'favorite/create'],
-        list: ['PostJson', 'favorite/list-user'],
-        remove: ['PostJson', 'favorite/delete'],
+        add: ['PostJson', 'shopping-cart/create'],
+        list: ['PostJson', 'shopping-cart/list-user'],
+        remove: ['PostJson', 'shopping-cart/delete'],
     },
-    Receive: { // 配送地址
-        list: ['PostJson', 'receive-info/list'],
-        save: ['PostJson', 'receive-info/save'],
-        detail: ['PostJson', 'receive-info/detail'],
+    Customer: { // 客户管理
+        list: ['PostJson', 'customer/list'],
+        save: ['PostJson', 'customer/save'],
+        update: ['PostJson', 'customer/update'],
+        detail: ['PostJson', 'customer/detail'],
+        delete: ['PostJson', 'customer/delete'],
+
     },
+
     Purchase: { // 采购订单
         list: ['PostJson', 'purchase-order/list'], // 采购订单列表
         cancel: ['PostJson', 'purchase-order/cancel'], // 取消采购订单

@@ -1,21 +1,33 @@
 <template>
-  <div id="WarehouseEdit" class="edit-container">
+  <div id="CustomerEdit" class="edit-container">
     <div class="title-container">
-      <div class="title-area">{{ form.id ? '编辑仓库' : '新建仓库' }}</div>
+      <div class="title-area">{{ form.id ? '客户编辑' : '新建客户' }}</div>
     </div>
     <div class="form-block">
       <div class="form-title">
         <div class="title-colorful">基本信息</div>
       </div>
       <div class="form-content">
-        <div class="form-item required" >
-          <div class="key">仓库名称：</div>
+        <div class="form-item required">
+          <div class="key">客户名称：</div>
           <div class="value">
-            <a-input v-model:value="form.name" placeholder="请输入仓库名称"/>
+            <a-input v-model:value="form.name" placeholder="请输入客户名称"/>
           </div>
         </div>
         <div class="form-item required">
-          <div class="key">仓库地址：</div>
+          <div class="key">客户电话：</div>
+          <div class="value">
+            <a-input v-model:value="form.phone" placeholder="请输入客户电话"/>
+          </div>
+        </div>
+        <div class="form-item required">
+          <div class="key">客户邮箱：</div>
+          <div class="value">
+            <a-input v-model:value="form.email" placeholder="请输入客户邮箱"/>
+          </div>
+        </div>
+        <div class="form-item required">
+          <div class="key">客户地址：</div>
           <div class="value">
             <a-cascader v-model:value="form.address" :options="form.addressOptions" placeholder="请选择省/市/区县"
                         :field-names="{ label: 'name', value: 'code' , children: 'children'}"
@@ -27,7 +39,7 @@
           <div class="value">
             <a-input v-model:value="form.detail_address" placeholder="请输入详细地址"/>
           </div>
-        </div>
+      </div>
       </div>
     </div>
     <div class="form-btns">
@@ -41,7 +53,7 @@
 import Core from '../../core';
 
 export default {
-  name: 'WarehouseEdit',
+  name: 'CustomerEdit',
   components: {},
   props: {},
   data() {
@@ -54,12 +66,10 @@ export default {
       form: {
         id: '',
         name: '',
-        province: '',
-        city: '',
-        address: [],
-        addressOptions: [],
-        detail_address:[],
-
+        phone: '',
+        email: '',
+        address: '',
+        detail_address:'',
       },
     };
   },
@@ -69,7 +79,7 @@ export default {
   mounted() {
     this.form.id = Number(this.$route.query.id) || 0
     if (this.form.id) {
-      this.getWarehouseDetail();
+      this.getCustomerDetail();
     }
   },
   methods: {
@@ -80,18 +90,18 @@ export default {
           break;
       }
     },
-    getWarehouseDetail() {
+    getCustomerDetail() {
       this.loading = true;
-      Core.Api.Warehouse.detail({
+      Core.Api.Customer.detail({
         id: this.form.id,
       }).then(res => {
-        console.log('getWarehouseDetail res', res)
+        console.log('getCustomerDetail res', res)
         this.detail = res.detail
         for (const key in this.form) {
           this.form[key] = res.detail[key]
         }
       }).catch(err => {
-        console.log('getWarehouseDetail err', err)
+        console.log('getCustomerDetail err', err)
       }).finally(() => {
         this.loading = false;
       });
@@ -100,16 +110,19 @@ export default {
       let form = Core.Util.deepCopy(this.form)
       // if (!form.id) {
       //   if (!form.name) {
-      //     return this.$message.warning('请输入仓库名称')
+      //     return this.$message.warning('请输入客户名称')
       //   }
-      //   if (!form.province) {
+      //   if (!form.phone) {
+      //     return this.$message.warning('请输入客户电话')
+      //   }
+      //   if (!form.address) {
       //     return this.$message.warning('请选择省/市/区（县）')
       //   }
       // }
-      // if (!form.address) {
+      // if (!form.detail_address) {
       //   return this.$message.warning('请输入详细地址')
       // }
-      Core.Api.Warehouse.save(form).then(() => {
+      Core.Api.Customer.save(form).then(() => {
         this.$message.success('保存成功')
         this.routerChange('back')
       }).catch(err => {

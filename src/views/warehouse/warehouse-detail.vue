@@ -1,4 +1,3 @@
-<template>
 <div id="DistributorDetail">
 </div>
 </template>
