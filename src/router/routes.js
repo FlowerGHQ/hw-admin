@@ -110,7 +110,6 @@ const routes = [
                     parent: '/dealers/dealers-list',
                 }
             },
-
             {
                 path: 'dealers-detail',
                 name: 'DealersDetail',
@@ -153,7 +152,6 @@ const routes = [
                     parent: '/warehouse/warehouse-list',
                 }
             },
-
             {
                 path: 'warehouse-detail',
                 name: 'WarehouseDetail',
@@ -212,6 +210,48 @@ const routes = [
                 component: () => import('@/views/item/shop-cart-list.vue'),
                 meta: {
                     title: '购物车',
+                }
+            },
+        ]
+    },
+    {   // 员工管理
+        path: '/user',
+        component: Layout,
+        redirect: '/user/user-list',
+        name: 'UserManagement',
+        meta: {
+            title: '员工管理',
+            icon: 'i_s_dashboard',
+            // auth: ['dashboard'],
+            // roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'user-list',
+                name: 'UserList',
+                component: () => import('@/views/user/user-list.vue'),
+                meta: {
+                    title: '员工列表',
+                }
+            },
+            {
+                path: 'user-edit',
+                name: 'UserEdit',
+                component: () => import('@/views/user/user-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '员工编辑',
+                    parent: '/user/user-list',
+                }
+            },
+            {
+                path: 'user-detail',
+                name: 'ItemDetail',
+                component: () => import('@/views/user/user-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '员工详情',
+                    parent: '/user/user-list',
                 }
             },
         ]

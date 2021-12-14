@@ -54,10 +54,19 @@
                             <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
                         </a-tooltip>
                     </template>
+                    <template v-if="column.key === 'item'">
+                        {{ text || '-'}}
+                    </template>
+                    <template v-if="column.key === 'tip_item'">
+                        <a-tooltip placement="top" :title='text'>
+                            <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
+                        </a-tooltip>
+                    </template>
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
+                        <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_edit"/> 详情</a-button>
                         <a-button type='link' @click="routerChange('edit', record)"> <i class="icon i_edit"/> 编辑</a-button>
                         <a-button type='link' @click="handleDelete(record.id)"> <i class="icon i_delete"/> 删除</a-button>
                     </template>
@@ -161,7 +170,8 @@ export default {
                         path: "/dealers/dealers-detail",
                         query: { id: item.id }
                     })
-                    window.open(routeUrl.href, '_blank')
+                    // window.open(routeUrl.href, '_blank') // 新页
+                    window.open(routeUrl.href, '_self') // 当前页
                     break;
             }
         },
