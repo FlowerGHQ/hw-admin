@@ -51,6 +51,15 @@
                 </div>
             </div>
             <div class="config-content select-mode" v-else>
+                <div class="select-item" v-for="item of receiveList" :key='item.id'>
+                    <div class="info">
+                        <i class="icon i_point"/>
+                        <div class="desc">
+                            <p>{{}}</p>
+                        </div>
+                    </div>
+                    <div class="btn"></div>
+                </div>
             </div>
         </div>
         <div class="config-item pay">
@@ -107,11 +116,10 @@ export default {
                 this.editMode = res.list.length ? false : true
             })
         },
-        handleAddressSelect(province, city, county) {
-            this.form.province = province
-            this.form.city = city
-            this.form.county = county
-            console.log('handleAddressSelect this.form:', this.form)
+        handleAddressSelect(address = []) {
+            this.form.province = address[0]
+            this.form.city = address[1]
+            this.form.county = address[2]
         },
         handleConfigSave() {
             let form = Core.Util.deepCopy(this.form)
@@ -172,14 +180,20 @@ export default {
                 box-sizing: border-box;
                 padding: 32px 34px 30px;
                 border: 1px solid #E6EAEE;
+                &.edit-mode {
+                    .form-item.btn {
+                        margin-top: 30px;
+                        .ant-btn {
+                            border-radius: 0;
+                            height: 34px;
+                        }
+                    }
+                }
                 &.select-mode {
                     min-height: 428px;
-                }
-                .form-item.btn {
-                    margin-top: 30px;
-                    .ant-btn {
-                        border-radius: 0;
-                        height: 34px;
+                    overflow: auto;
+                    .select-item {
+
                     }
                 }
             }

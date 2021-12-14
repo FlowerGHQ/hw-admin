@@ -71,13 +71,12 @@ export default {
         },
         handleChange(value, selectedOptions) {
             console.log('handleChange value:', value)
-            this.$emit('change', ...value)
+            this.$emit('change', value)
         }
     },
 }
 </script>
 
 <style lang='less' scoped>
-.AddressCascader {
-}
+// .AddressCascader {}
 </style>
