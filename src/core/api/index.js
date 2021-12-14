@@ -121,6 +121,15 @@ const apiList = {
 
         itemList: ['PostJson', 'purchase-order-item/list'], // 采购订单明细列表
     },
+    Store: { // 门店管理
+        list: ['PostJson', 'store/list'],
+        save: ['PostJson', 'store/save'],
+        update: ['PostJson', 'store/update'],
+        detail: ['PostJson', 'store/detail'],
+        delete: ['PostJson', 'store/delete'],
+    },
+
+
 };
 
 export default new Api(baseUrl, apiList);

@@ -1,33 +1,18 @@
 <template>
-  <div id="CustomerList">
+  <div id="StoreList">
     <div class="list-container">
       <div class="title-container">
-        <div class="title-area">客户列表</div>
+        <div class="title-area">门店列表</div>
         <div class="btns-area">
-          <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建客户</a-button>
+          <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建门店</a-button>
         </div>
       </div>
       <div class="search-container">
         <a-row class="search-area">
           <a-col :xs='24' :sm='24' :xl="6" :xxl='6' class="search-item">
-            <div class="key">客户名称：</div>
+            <div class="key">门店名称：</div>
             <div class="value">
-              <a-input placeholder="请输入客户名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
-            </div>
-          </a-col>
-          <a-col :xs='24' :sm='24' :xl="6" :xxl='6' class="search-item">
-            <div class="key">客户电话：</div>
-            <div class="value">
-              <a-input placeholder="请输入客户电话" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
-            </div>
-          </a-col>
-          <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
-            <div class="key">创建时间：</div>
-            <div class="value">
-              <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
-                              :show-time="defaultTime">
-                <template #suffixIcon><i class="icon i_calendar"></i></template>
-              </a-range-picker>
+              <a-input placeholder="请输入门店名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
             </div>
           </a-col>
         </a-row>
@@ -79,7 +64,7 @@ const provinceData = ['China'];
 import Core from '../../core';
 
 export default {
-  name: 'CustomerList',
+  name: 'StoreList',
   components: {},
   props: {},
   data() {
@@ -107,9 +92,7 @@ export default {
     tableColumns() {
       let columns = [
         {title: '名称', dataIndex: 'name', key:'detail'},
-        {title: '电话', dataIndex: 'phone'},
-        {title: '邮箱', dataIndex: 'email'},
-        {title: '地址', dataIndex: 'address'},
+        {title: 'logo', dataIndex: 'logo'},
         {title: '创建时间', dataIndex: 'create_time', key: 'time'},
         // { title: '操作', dataIndex: 'handle', fixed: 'right' },
         {title: '操作', key: 'operation', fixed: 'right', width: 100,},
@@ -123,7 +106,7 @@ export default {
   },
   methods: {
     handleDelete(id) {
-      Core.Api.Customer.delete({
+      Core.Api.Store.delete({
         id
       }).then(res => {
         console.log("delete -> res", res)
@@ -135,12 +118,12 @@ export default {
       });
     },
     routerChange(type, item = {}) {
-      console.log(item)
+      console.log('item', item)
       let routeUrl = ''
       switch (type) {
         case 'edit':  // 编辑
           routeUrl = this.$router.resolve({
-            path: "/customer/customer-edit",
+            path: "/store/store-edit",
             query: {id: item.id}
           })
           window.open(routeUrl.href, '_self')
@@ -175,7 +158,7 @@ export default {
       this.loading = true;
       this.loading = false;
       // return
-      Core.Api.Customer.list({
+      Core.Api.Store.list({
         ...this.searchForm,
         begin_time: this.create_time[0] || '',
         end_time: this.create_time[1] || '',

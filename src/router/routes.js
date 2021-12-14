@@ -1,4 +1,5 @@
 import Const from "../core/const"
+
 const LOGIN_TYPE = Const.LOGIN.TYPE
 
 import Layout from '../views/layout/index.vue';
@@ -338,6 +339,40 @@ const routes = [
                 }
             },
         ]
+    },
+    {   // 门店管理
+        path: '/store',
+        component: Layout,
+        redirect: '/store/store-list',
+        name: 'StoreManagement',
+        meta: {
+            title: '门店管理',
+            icon: 'i_s_dashboard',
+            // auth: ['dashboard'],
+            // roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'store-list',
+                name: 'StoreList',
+                component: () => import('@/views/store/store-list.vue'),
+                meta: {
+                    title: '门店列表',
+                }
+            },
+            {
+                path: 'store-edit',
+                name: 'StoreEdit',
+                component: () => import('@/views/store/store-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '新建门店',
+                    parent: '/store/store-list',
+                }
+
+            },
+        ]
+
     },
 ];
 
