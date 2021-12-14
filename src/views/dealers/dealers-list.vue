@@ -1,5 +1,5 @@
 <template>
-<div id="DistributorList">
+<div id="DealersList">
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">经销商列表</div>
@@ -19,7 +19,7 @@
                     <div class="key">国家:</div>
                     <div class="value">
                         <a-select placeholder="请选择国家" v-model:value="searchForm.country" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
-                            <a-select-option v-for="(item,index) of countryList" :key="index" :value="item.label">{{item.label}}</a-select-option>
+                            <a-select-option v-for="(item,index) of countryList" :key="index" :value="item.name">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
@@ -54,10 +54,19 @@
                             <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
                         </a-tooltip>
                     </template>
+                    <template v-if="column.key === 'item'">
+                        {{ text || '-'}}
+                    </template>
+                    <template v-if="column.key === 'tip_item'">
+                        <a-tooltip placement="top" :title='text'>
+                            <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
+                        </a-tooltip>
+                    </template>
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
+                        <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_edit"/> 详情</a-button>
                         <a-button type='link' @click="routerChange('edit', record)"> <i class="icon i_edit"/> 编辑</a-button>
                         <a-button type='link' @click="handleDelete(record.id)"> <i class="icon i_delete"/> 删除</a-button>
                     </template>
@@ -86,7 +95,7 @@
 <script>
 import Core from '../../core';
 export default {
-    name: 'DistributorList',
+    name: 'DealersList',
     components: {},
     props: {},
     data() {
@@ -127,15 +136,22 @@ export default {
         this.getTableData();
     },
     methods: {
-        handleDelete(id){
-            Core.Api.Dealers.delete({
-                id
-            }).then(res => {
-                console.log("delete -> res", res)
-            }).catch(err => {
-                console.log('delete -> err', err)
-            }).finally(() => {
-                this.loading = false;
+        handleDelete(id) {
+            let _this = this;
+            // console.log("handleDelete id", id)
+            this.$confirm({
+                title: '确定要删除该经销商吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Dealers.delete({id}).then(() => {
+                        _this.$message.success('删除成功');
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete -> err", err);
+                    })
+                },
             });
         },
         routerChange(type, item = {}) {
@@ -144,17 +160,18 @@ export default {
             switch (type) {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/distributor/distributor-edit",
+                        path: "/dealers/dealers-edit",
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/distributor/distributor-detail",
+                        path: "/dealers/dealers-detail",
                         query: { id: item.id }
                     })
-                    window.open(routeUrl.href, '_blank')
+                    // window.open(routeUrl.href, '_blank') // 新页
+                    window.open(routeUrl.href, '_self') // 当前页
                     break;
             }
         },
@@ -205,5 +222,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #DistributorList {}
+// #DealersList {}
 </style>

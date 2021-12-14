@@ -1,5 +1,5 @@
 <template>
-<div id="DistributorEdit" class="edit-container">
+<div id="DealersEdit" class="edit-container">
     <div class="title-container"><div class="title-area">{{form.id ? '编辑经销商' : '新建经销商'}}</div></div>
     <div class="form-block">
         <div class="form-title">
@@ -34,7 +34,7 @@
                 <div class="key">国家:</div>
                 <div class="value">
                     <a-select v-model:value="form.country" placeholder="请选择国家">
-                        <a-select-option v-for="item of countryList" :key="item.label" :value="item.label">{{item.label}}</a-select-option>
+                        <a-select-option v-for="item of countryList" :key="item.name" :value="item.name">{{item.name}}</a-select-option>
                     </a-select>
                 </div>
             </div>
@@ -51,7 +51,7 @@
 import Core from '../../core';
 
 export default {
-    name: 'DistributorEdit',
+    name: 'DealersEdit',
     components: {},
     props: {},
     data() {
@@ -77,7 +77,7 @@ export default {
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0
         if (this.form.id) {
-            this.getDistributorDetail();
+            this.getDealersDetail();
         }
     },
     methods: {
@@ -88,19 +88,19 @@ export default {
                     break;
             }
         },
-        getDistributorDetail() {
+        getDealersDetail() {
             this.loading = true;
             console.log("id",this.form.id)
             Core.Api.Dealers.detail({
                 id: this.form.id,
             }).then(res => {
-                console.log('getDistributorDetail res', res)
+                console.log('getDealersDetail res', res)
                 this.detail = res.detail
                 for (const key in this.form) {
                     this.form[key] = res.detail[key]
                 }
             }).catch(err => {
-                console.log('getDistributorDetail err', err)
+                console.log('getDealersDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
@@ -136,5 +136,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #DistributorEdit {}
+// #DealersEdit {}
 </style>

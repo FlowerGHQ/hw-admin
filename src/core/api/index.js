@@ -51,7 +51,6 @@ const apiList = {
         update: ['PostJson', 'dealers/update'], // 更新
         delete: ['PostJson', 'dealers/delete'], // 删除
     },
-
     Repair: { // 维修单
         list: ['PostJson', 'repair/list'], // 列表
         save: ['PostJson', 'repair/save'], // 列表
@@ -62,28 +61,20 @@ const apiList = {
         save: ['PostJson', 'item/save'],
         list: ['PostJson', 'item/list'],
         detail: ['PostJson', 'item/detail'],
-        detele: ['PostJson', 'item/detele'],
-    },
-    ItemCategory: { // 商品分类
-        list: ['PostJson', 'item-category/list'],
-        tree: ['PostJson', 'item-category/tree'],
-        save: ['PostJson', 'item-category/save'],
-        update: ['PostJson', 'item-category/update'],
-        delete: ['PostJson', 'item-category/delete'],
+        delete: ['PostJson', 'item/delete'],
     },
     Warehouse: { // 仓库
         save: ['PostJson', 'warehouse/save'],
-        update: ['PostJson', 'warehouse/update'], // 列表
-
+        update: ['PostJson', 'warehouse/update'],
         list: ['PostJson', 'warehouse/list'],
-        detele: ['PostJson', 'warehouse/detele'],
+        delete: ['PostJson', 'warehouse/delete'],
     },
     ShopCart: { // 购物车
         save: ['PostJson', 'shopping-cart/save'],
         list: ['PostJson', 'shopping-cart/list'],
         clear: ['PostJson', 'shopping-cart/clear'],
         detail: ['GetJson', 'shopping-cart/detail'],
-        remove: ['PostJson', 'shopping-cart/delete'],
+        delete: ['PostJson', 'shopping-cart/delete'],
     },
     Favorite: { // 收藏夹
         add: ['PostJson', 'favorite/create'],
@@ -98,6 +89,12 @@ const apiList = {
         detailByUid: ['PostJson', 'purchase-order/detail-uid'], // 采购订单详情
 
         itemList: ['PostJson', 'purchase-order-item/list'], // 采购订单明细列表
+    },
+    User: { // 员工
+        save: ['PostJson', 'user/save'],
+        list: ['PostJson', 'user/list'],
+        detail: ['PostJson', 'user/detail'],
+        delete: ['PostJson', 'user/delete'],
     }
 
 

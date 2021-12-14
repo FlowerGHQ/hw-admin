@@ -81,10 +81,10 @@ const routes = [
         ]
     },
     {   // 经销商
-        path: '/distributor',
+        path: '/dealers',
         component: Layout,
-        redirect: '/distributor/distributor-list',
-        name: 'DistributorManagement',
+        redirect: '/dealers/dealers-list',
+        name: 'DealersManagement',
         meta: {
             title: '经销商管理',
             icon: 'i_s_dashboard',
@@ -93,32 +93,31 @@ const routes = [
         },
         children: [
             {
-                path: 'distributor-list',
-                name: 'DistributorList',
-                component: () => import('@/views/distributor/distributor-list.vue'),
+                path: 'dealers-list',
+                name: 'DealersList',
+                component: () => import('@/views/dealers/dealers-list.vue'),
                 meta: {
                     title: '经销商列表',
                 }
             },
             {
-                path: 'distributor-edit',
-                name: 'DistributorEdit',
-                component: () => import('@/views/distributor/distributor-edit.vue'),
+                path: 'dealers-edit',
+                name: 'DealersEdit',
+                component: () => import('@/views/dealers/dealers-edit.vue'),
                 hidden: true,
                 meta: {
                     title: '经销商编辑',
-                    parent: '/distributor/distributor-list',
+                    parent: '/dealers/dealers-list',
                 }
             },
-
             {
-                path: 'distributor-detail',
-                name: 'DistributorDetail',
-                component: () => import('@/views/distributor/distributor-detail.vue'),
+                path: 'dealers-detail',
+                name: 'DealersDetail',
+                component: () => import('@/views/dealers/dealers-detail.vue'),
                 hidden: true,
                 meta: {
                     title: '经销商详情',
-                    parent: '/distributor/distributor-list',
+                    parent: '/dealers/dealers-list',
                 }
             },
         ]
@@ -153,7 +152,6 @@ const routes = [
                     parent: '/warehouse/warehouse-list',
                 }
             },
-
             {
                 path: 'warehouse-detail',
                 name: 'WarehouseDetail',
@@ -252,6 +250,48 @@ const routes = [
                 meta: {
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN],
                     title: '采购订单详情',
+                }
+            },
+        ]
+    },
+    {   // 员工管理
+        path: '/user',
+        component: Layout,
+        redirect: '/user/user-list',
+        name: 'UserManagement',
+        meta: {
+            title: '员工管理',
+            icon: 'i_s_dashboard',
+            // auth: ['dashboard'],
+            // roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'user-list',
+                name: 'UserList',
+                component: () => import('@/views/user/user-list.vue'),
+                meta: {
+                    title: '员工列表',
+                }
+            },
+            {
+                path: 'user-edit',
+                name: 'UserEdit',
+                component: () => import('@/views/user/user-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '员工编辑',
+                    parent: '/user/user-list',
+                }
+            },
+            {
+                path: 'user-detail',
+                name: 'ItemDetail',
+                component: () => import('@/views/user/user-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '员工详情',
+                    parent: '/user/user-list',
                 }
             },
         ]
