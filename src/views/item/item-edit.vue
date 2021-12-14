@@ -11,7 +11,7 @@
             <div class="form-item required">
                 <div class="key">商品名称</div>
                 <div class="value">
-                    <a-input v-model:value="form.name" placeholder="最多输入100字符"/>
+                    <a-input v-model:value="form.name" placeholder="请输入商品名称(最多输入50字符)" :maxlength='50'/>
                 </div>
             </div>
             <div class="form-item required">
@@ -23,7 +23,8 @@
             <div class="form-item required">
                 <div class="key">商品分类</div>
                 <div class="value">
-                    <a-input v-model:value="form.type" placeholder="最多输入100字符"/>
+                    <CategoryTreeSelect @change="(val) => {form.category_id = val}"
+                        :category='item_category' :category-id='form.category_id' v-if="form.id !== ''"/>
                 </div>
             </div>
             <!-- <div class="form-item required">
@@ -113,10 +114,11 @@
 
 <script>
 import Core from '../../core';
+import CategoryTreeSelect from '../../components/ItemCategory/CategoryTreeSelect.vue'
 
 export default {
     name: 'ItemEdit',
-    components: {},
+    components: {CategoryTreeSelect},
     props: {},
     data() {
         return {
@@ -128,11 +130,11 @@ export default {
                 id: '',
                 name: '',
                 code: '',
-                type: '',
+                category_id: undefined,
                 price: undefined,
                 original_price: undefined,
             },
-
+            item_category: {},
             upload: {
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
                 coverList: [],
@@ -144,18 +146,18 @@ export default {
                     token: Core.Data.getToken(),
                     type: 'img',
                 },
-            }
+            },
         };
     },
     watch: {},
     computed: {},
-
-    mounted() {
+    created() {
         this.form.id = Number(this.$route.query.id) || 0
         if (this.form.id) {
             this.getItemDetail();
         }
     },
+    mounted() {},
     methods: {
         routerChange(type, item) {
             let routeUrl
@@ -183,6 +185,7 @@ export default {
                 for (const key in this.form) {
                     this.form[key] = res[key]
                 }
+                this.item_category = res.category
                 this.form.price = Core.Util.countFilter(res.price)
                 this.form.original_price = Core.Util.countFilter(res.original_price)
             }).catch(err => {
@@ -201,7 +204,7 @@ export default {
             if (!form.code) {
                 return this.$message.warning('请输入商品编码')
             }
-            if (!form.type) {
+            if (!form.category_id) {
                 return this.$message.warning('请选择商品分类')
             }
             if (!form.price) {
@@ -210,6 +213,8 @@ export default {
             if (!form.original_price) {
                 return this.$message.warning('请输入商品批发价格')
             }
+            form.price = Math.round(form.price * 100)
+            form.original_price = Math.round(form.original_price * 100)
             Core.Api.Item.save(form).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')

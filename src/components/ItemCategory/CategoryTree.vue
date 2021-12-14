@@ -6,7 +6,7 @@
         @expand='handleExpandedChange' :indentSize='24'>
         <template #bodyCell="{ column, text , record }">
             <template v-if="column.dataIndex === 'name'">
-                <div class="name">{{text}}</div>
+                <div class="name" :class="record.id === selectKeys ? 'active' : ''" @click="handleSelect(record)">{{text}}</div>
             </template>
         </template>
     </a-table>
@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import SimpleImageEmpty from './SimpleImageEmpty.vue'
-import Core from '../core';
+import SimpleImageEmpty from '../SimpleImageEmpty.vue'
+import Core from '../../core';
 
 export default {
     components: {
@@ -27,11 +27,15 @@ export default {
             default: 0
         }
     },
+    emit: ['change'],
     data() {
         return {
             tableData: [],
             tableColumns: [{ title: '分类名称', dataIndex: 'name', width: '100%' }],
             expandedRowKeys: [],
+
+            selectKeys: '',
+
         }
     },
     watch: {
@@ -45,7 +49,6 @@ export default {
     },
     methods: {
         getDataByParent(parent_id = 0, parentNode) {  // 通过父节点获取子级数据
-            console.log('getDataByParent parent_id:', parent_id, 'parentNode', parentNode)
             this.loading = true;
             Core.Api.ItemCategory.tree({
                 page: 0,
@@ -67,16 +70,21 @@ export default {
             });
         },
         handleExpandedChange(expanded, record) {
-            console.log('handleExpandedChange expanded:', expanded, 'record', record)
+            console.log('expanded, record:', expanded, record)
             if (expanded) {
                 this.getDataByParent(record.id, record)
                 this.expandedRowKeys.push(record.id)
             } else {
                 let index = this.expandedRowKeys.indexOf(record.id)
                 this.expandedRowKeys.splice(index, 1)
-                record.children = []
             }
         },
+
+        handleSelect(record) {
+            if (record.id === this.selectKeys) { return }
+            this.selectKeys = record.id
+            this.$emit('change', record.id)
+        }
     },
 }
 </script>
@@ -104,8 +112,6 @@ export default {
                     background-color: transparent;
                     color: @TC_P;
                 }
-                .ant-table-row-indent {
-                }
                 .ant-table-row-expand-icon {
                     margin: 0;
                     position: absolute;
@@ -116,6 +122,9 @@ export default {
                 .name {
                     min-width: 0;
                     width: 100%;
+                    &.active {
+                        color: @TC_P;
+                    }
                 }
             }
             &.ant-table-row-level-0 {

@@ -93,9 +93,8 @@
 <script>
 import Core from '../../core';
 import item_defult_img from '@images/item_defult_img.png'
-import CategoryTree from '../../components/CategoryTree.vue'
+import CategoryTree from '../../components/ItemCategory/CategoryTree.vue'
 import SimpleImageEmpty from '../../components/SimpleImageEmpty.vue'
-
 
 export default {
     name: 'ItemList',
@@ -180,7 +179,8 @@ export default {
             this.pageSize = size
             this.getTableData()
         },
-        handleCategoryChange(category, categories) {
+        handleCategoryChange(category) {
+            console.log('handleCategoryChange category:', category)
             this.searchForm.category_id = category
             if ( this.firstLevelId && category === this.firstLevelId) {
                 this.firstLevelName = this.categoryList.find(i => i.id === category).name
