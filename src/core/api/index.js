@@ -32,9 +32,6 @@ const apiList = {
         statusUpdate: ['PostJson', 'account/status-update'], // 更新账户状态1=启用2=禁用
         roleAssign: ['PostJson','account/role-assign'],
     },
-	User: {
-		list: ['PostJson', 'user/list'], // 账户列表
-	},
     AuthRole: {
         authTree: ['PostJson', 'auth/menu-list-tree'], // 权限树
         list: ['PostJson', 'auth/role-list'], // 角色列表
