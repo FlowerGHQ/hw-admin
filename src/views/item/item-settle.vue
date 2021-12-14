@@ -40,7 +40,7 @@
                 <div class="form-item">
                     <div class="key">邮箱地址</div>
                     <div class="value">
-                        <a-input v-model:value="form.mail" placeholder="请输入收货人邮箱"/>
+                        <a-input v-model:value="form.email" placeholder="请输入收货人邮箱"/>
                     </div>
                 </div>
                 <div class="form-item btn">
@@ -55,11 +55,17 @@
                     <div class="info">
                         <i class="icon i_point"/>
                         <div class="desc">
-                            <p>{{}}</p>
+                            <p>{{item.name}} {{item.phone}}</p>
+                            <p>{{item.email}}</p>
+                            <p>{{item.province}} {{item.city}} {{item.county}} {{item.address}}</p>
                         </div>
                     </div>
-                    <div class="btn"></div>
+                    <div class="btn">
+                        <a-button type="link" @click="handleConfigEdit(item)">编辑</a-button>
+                    </div>
                 </div>
+                <a-button type="link" @click="handleConfigEdit(item)">添加新地址</a-button>
+                <a-button type="primary" class="orange" @click="handleConfigEdit(item)">添加新地址</a-button>
             </div>
         </div>
         <div class="config-item pay">
@@ -140,6 +146,24 @@ export default {
                 this.loading = false
             })
         },
+        handleConfigEdit(item) {
+            if (item) {
+                this.form = Core.Util.deepCopy(item)
+            } else {
+                this.form = {
+                    name: '',
+                    phone: '',
+                    country: undefined,
+                    province: '',
+                    city: '',
+                    county: '',
+                    address: '',
+                    email: '',
+                }
+            }
+            this.editMode = true
+        }
+
     }
 };
 </script>
@@ -192,8 +216,23 @@ export default {
                 &.select-mode {
                     min-height: 428px;
                     overflow: auto;
+                    .ant-btn-link {
+                        color: #757575;
+                        border-bottom: 1px solid #757575;
+                        border-radius: 0;
+                        height: 24px;
+                        &:hover {
+                            opacity: 0.8;
+                        }
+                    }
                     .select-item {
-
+                        .fsb();
+                        .info {
+                            .fac();
+                            .icon.i_point {
+                                
+                            }
+                        }
                     }
                 }
             }
