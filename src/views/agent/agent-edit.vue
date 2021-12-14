@@ -1,5 +1,5 @@
 <template>
-<div id="DealersEdit" class="edit-container">
+<div id="AgentEdit" class="edit-container">
     <div class="title-container"><div class="title-area">{{form.id ? '编辑经销商' : '新建经销商'}}</div></div>
     <div class="form-block">
         <div class="form-title">
@@ -51,7 +51,7 @@
 import Core from '../../core';
 
 export default {
-    name: 'DealersEdit',
+    name: 'AgentEdit',
     components: {},
     props: {},
     data() {
@@ -77,7 +77,7 @@ export default {
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0
         if (this.form.id) {
-            this.getDealersDetail();
+            this.getAgentDetail();
         }
     },
     methods: {
@@ -88,19 +88,19 @@ export default {
                     break;
             }
         },
-        getDealersDetail() {
+        getAgentDetail() {
             this.loading = true;
             console.log("id",this.form.id)
-            Core.Api.Dealers.detail({
+            Core.Api.Agent.detail({
                 id: this.form.id,
             }).then(res => {
-                console.log('getDealersDetail res', res)
+                console.log('getAgentDetail res', res)
                 this.detail = res.detail
                 for (const key in this.form) {
                     this.form[key] = res.detail[key]
                 }
             }).catch(err => {
-                console.log('getDealersDetail err', err)
+                console.log('getAgentDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
@@ -124,7 +124,7 @@ export default {
             if (!form.country) {
                 return this.$message.warning('请选择经销商国家')
             }
-            Core.Api.Dealers.save(form).then(() => {
+            Core.Api.Agent.save(form).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
             }).catch(err => {
@@ -136,5 +136,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #DealersEdit {}
+// #AgentEdit {}
 </style>

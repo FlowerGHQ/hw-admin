@@ -7,7 +7,7 @@
             <a-descriptions-item label="邮箱">{{form.email}}</a-descriptions-item>
         </a-descriptions>
     </div>
-    <div id="DealersDetail">
+    <div id="AgentDetail">
         <a-tabs v-model:activeKey="activeKey">
             <a-tab-pane key="1" tab="员工管理" @click="ToUser"><UserList :query="form"/><!--员工列表页面组件--></a-tab-pane>
             <a-tab-pane key="2" tab="订单列表">Content of Tab Pane 2</a-tab-pane>
@@ -17,11 +17,11 @@
 </template>
 
 <script>
-import UserList from '@/views/dealers/components/UserList.vue';
+import UserList from '@/views/agent/components/UserList.vue';
 import { defineComponent, ref } from 'vue';
 import Core from '../../core';
 export default {
-    name: 'DealersDetail',
+    name: 'AgentDetail',
     components: { UserList },
     props: {},
     data() {
@@ -59,16 +59,16 @@ export default {
         getUserDetail(){
             this.loading = true;
             console.log("id",this.form.id)
-            Core.Api.Dealers.detail({
+            Core.Api.Agent.detail({
                 id: this.form.id,
             }).then(res => {
-                console.log('getDealersDetail res', res)
+                console.log('getAgentDetail res', res)
                 this.detail = res.detail
                 for (const key in this.form) {
                     this.form[key] = res.detail[key]
                 }
             }).catch(err => {
-                console.log('getDealersDetail err', err)
+                console.log('getAgentDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
@@ -79,5 +79,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #DealersDetail {}
+// #AgentDetail {}
 </style>

@@ -81,10 +81,10 @@ const routes = [
         ]
     },
     {   // 经销商
-        path: '/dealers',
+        path: '/agent',
         component: Layout,
-        redirect: '/dealers/dealers-list',
-        name: 'DealersManagement',
+        redirect: '/agent/agent-list',
+        name: 'AgentManagement',
         meta: {
             title: '经销商管理',
             icon: 'i_s_dashboard',
@@ -93,31 +93,31 @@ const routes = [
         },
         children: [
             {
-                path: 'dealers-list',
-                name: 'DealersList',
-                component: () => import('@/views/dealers/dealers-list.vue'),
+                path: 'agent-list',
+                name: 'AgentList',
+                component: () => import('@/views/agent/agent-list.vue'),
                 meta: {
                     title: '经销商列表',
                 }
             },
             {
-                path: 'dealers-edit',
-                name: 'DealersEdit',
-                component: () => import('@/views/dealers/dealers-edit.vue'),
+                path: 'agent-edit',
+                name: 'AgentEdit',
+                component: () => import('@/views/agent/agent-edit.vue'),
                 hidden: true,
                 meta: {
                     title: '经销商编辑',
-                    parent: '/dealers/dealers-list',
+                    parent: '/agent/agent-list',
                 }
             },
             {
-                path: 'dealers-detail',
-                name: 'DealersDetail',
-                component: () => import('@/views/dealers/dealers-detail.vue'),
+                path: 'agent-detail',
+                name: 'AgentDetail',
+                component: () => import('@/views/agent/agent-detail.vue'),
                 hidden: true,
                 meta: {
                     title: '经销商详情',
-                    parent: '/dealers/dealers-list',
+                    parent: '/agent/agent-list',
                 }
             },
         ]
