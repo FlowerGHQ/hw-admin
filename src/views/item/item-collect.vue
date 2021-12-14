@@ -26,13 +26,13 @@
         </div>
         <div class="settle-content">
             <div class="title-area">摘要</div>
-            <div class="settle-item">
-                <div class="name"></div>
-                <div class="price"></div>
+            <div class="settle-item" v-for="item of shopCartList" :key="item.id">
+                <p class="name">{{item.item ? item.item.name : '-'}}</p>
+                <span class="price">{{$Util.countFilter(item.price*item.amount)}}￥</span>
             </div>
             <div class="settle-item sum">
-                <div class="name">总计</div>
-                <div class="price"></div>
+                <p class="name">总计</p>
+                <span class="price">{{sum_price}}￥</span>
             </div>
             <a-button type="primary" ghost @click="routerChange('settle')">结算</a-button>
         </div>
@@ -83,7 +83,15 @@ export default {
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        sum_price() {
+            let sum = 0
+            for (const item of this.shopCartList) {
+                sum += item.price * item.amount
+            }
+            return Core.Util.countFilter(sum)
+        }
+    },
     mounted() {
         this.getShopCartList();
         this.getFavoriteList();
@@ -212,6 +220,7 @@ export default {
         display: flex;
         flex-wrap: wrap;
         align-items: flex-start;
+        + .list-container { margin-top: 76px; }
         .title-area {
             width: 100%;
             font-size: 24px;
@@ -246,12 +255,16 @@ export default {
                     justify-content: space-between;
                     align-items: flex-start;
                     .name {
+                        .ell();
+                        max-width: calc(~'100% - 100px');
                         font-size: 14px;
                         font-weight: 500;
                         color: #111111;
                         line-height: 16px;
                     }
                     .sub {
+                        .ell();
+                        width: 100%;
                         font-size: 14px;
                         font-weight: 400;
                         color: #757575;
@@ -306,9 +319,26 @@ export default {
                 margin-bottom: 24px;
                 margin-top: 22px;
             }
-        }
-        + .list-container {
-            margin-top: 76px;
+            .settle-item {
+                width: 100%;
+                .fsb();
+                font-size: 16px;
+                color: #000000;
+                line-height: 19px;
+                margin: 8px 0;
+                &.sum {
+                    font-weight: 500;
+                    padding: 16px 0;
+                    border-top: 1px solid #E6EAEE;
+                    border-bottom: 1px solid #E6EAEE;
+                    margin: 14px 0 34px;
+                }
+            }
+            .ant-btn-primary {
+                width: 100%;
+                height: 55px;
+                border-radius: 12px;
+            }
         }
         &.favorite-container {
             .btns {

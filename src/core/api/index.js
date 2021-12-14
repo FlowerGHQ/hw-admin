@@ -89,7 +89,17 @@ const apiList = {
         add: ['PostJson', 'favorite/create'],
         list: ['PostJson', 'favorite/list-user'],
         remove: ['PostJson', 'favorite/delete'],
+    },
+    Purchase: { // 采购订单
+        list: ['PostJson', 'purchase-order/list'], // 采购订单列表
+        cancel: ['PostJson', 'purchase-order/cancel'], // 取消采购订单
+        create: ['PostJson', 'purchase-order/create'], // 创建采购订单
+        detail: ['PostJson', 'purchase-order/detail'], // 采购订单详情
+        detailByUid: ['PostJson', 'purchase-order/detail-uid'], // 采购订单详情
+
+        itemList: ['PostJson', 'purchase-order-item/list'], // 采购订单明细列表
     }
+
 
 };
 

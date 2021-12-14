@@ -248,6 +248,7 @@ const routes = [
                 path: 'purchase-order-detail',
                 name: 'PurchaseOrderDetail',
                 component: () => import('@/views/item/purchase-order-detail.vue'),
+                hidden: true,
                 meta: {
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN],
                     title: '采购订单详情',

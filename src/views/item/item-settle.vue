@@ -1,6 +1,5 @@
 <template>
-<div id="ItemSettle">
-ItemSettle
+<div id="ItemSettle" class="list-container">
 </div>
 </template>
 
