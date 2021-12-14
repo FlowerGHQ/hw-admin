@@ -351,6 +351,9 @@
                     }
                 }
             }
+            .ant-table-row-expand-icon {
+                margin: 0 8px 0 0;
+            }
         }
     }
     .ant-table-placeholder {
@@ -486,9 +489,9 @@ div.ant-picker {
     }
 }
 
-
-
 /* =================== ant组件重写 =================== */
+
+
 
 .status {
     &.red, .red { color: @red; }
@@ -581,6 +584,9 @@ i.icon {
             }
         }
     }
+    &.img-upload {
+        align-items: flex-start;
+    }
 }
 
 .form-item {
@@ -654,6 +660,9 @@ i.icon {
     .ant-upload.ant-upload-select-picture-card,
     .ant-upload-list-picture-card-container {
         background: @BG_upload;
+        width: 78px;
+        height: 78px;
+        border-color: #E5E8EB;
         .ant-upload-list-item {
             padding: 0;
             margin: 0;
@@ -667,6 +676,7 @@ i.icon {
             }
         }
         &:hover {
+            border-color: @BC_P;
             .icon.i_upload {
                 color: @TC_P;
             }
@@ -680,15 +690,19 @@ i.icon {
     &.small {
         .ant-upload.ant-upload-select-picture-card,
         .ant-upload-list-picture-card-container {
-            width: 80px;
-            height: 80px;
+            width: 60px;
+            height: 60px;
             .ant-upload-list-item {
-                width: 80px;
-                height: 80px;
+                width: 60px;
+                height: 60px;
                 padding: 0;
                 margin: 0;
             }
         }
+    }
+    + .tip {
+        color: #8090A6;
+        font-size: 10px;
     }
 }
 

@@ -1,39 +1,61 @@
 <template>
 <div id="ItemList">
     <div class="item-header-container">
-        <a-tabs v-model:activeKey="searchForm.type" @change="handleCategoryChange">
-            <a-tab-pane key="1" tab="全部"></a-tab-pane>
-            <a-tab-pane key="2" tab="车辆"></a-tab-pane>
-            <a-tab-pane key="3" tab="备件"></a-tab-pane>
-            <a-tab-pane key="4" tab="配饰"></a-tab-pane>
+        <a-tabs v-model:activeKey="firstLevelId" @change="handleCategoryChange">
+            <a-tab-pane :key="0" tab="全部"></a-tab-pane>
+            <a-tab-pane v-for="item of categoryList" :key="item.id" :tab="item.name"></a-tab-pane>
             <template #rightExtra>
-                <a-input class="search" v-model="searchForm.name" placeholder="商品名称">
+                <a-input class="search" v-model="searchForm.name" placeholder="商品名称" @change="pageChange(1)">
                     <template #prefix><i class="icon i_search"/></template>
                 </a-input>
-                <a-tooltip title="查看收藏夹" class="popover">
-                    <a-button type="link" @click="routerChange('favorite')"><i class="icon i_collect"/></a-button>
-                </a-tooltip>
-                <a-tooltip title="查看购物车" class="popover">
-                    <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>
-                </a-tooltip>
-                <a-button type="primary" class="add" @click="routerChange('edit')"><i class="icon i_add"/>新增商品</a-button>
+                <a-button type="primary" class="add" @click="routerChange('edit')" v-if="$auth('ADMIN')"><i class="icon i_add"/>新增商品</a-button>
+                <template v-else>
+                    <a-tooltip title="查看收藏夹" class="popover">
+                        <a-button type="link" @click="routerChange('favorite')"><i class="icon i_collect"/></a-button>
+                    </a-tooltip>
+                    <a-popover v-model:visible="briefVisible" arrow-point-at-center placement="bottomRight" trigger='click'>
+                        <template #content>
+                            <div class="shop-cart-brief">
+                                <div class="icon i_close" @click="briefVisible = false"></div>
+                                <div class="tip">
+                                    <i class="icon i_check_c"/>已加入购物车
+                                </div>
+                                <div class="item" v-for="item of briefList" :key="item.id">
+                                    <img class="cover" :src="$Util.imageFilter(item.item.logo) || item_defult_img" />
+                                    <div class="desc">
+                                        <p>{{item.item.name}}</p>
+                                        <span>{{item.item.code}}</span>
+                                        <p class="price">￥{{$Util.countFilter(item.price)}}</p>
+                                    </div>
+                                </div>
+                                <div class="btns">
+                                    <a-button class='btn ghost' @click="routerChange('shop_cart')">查看购物车({{briefCount}})</a-button>
+                                    <a-button class='btn black' @click="routerChange('settle')">结算</a-button>
+                                </div>
+                            </div>
+                        </template>
+                        <a-tooltip title="查看购物车" class="popover">
+                            <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>
+                        </a-tooltip>
+                    </a-popover>
+                </template>
             </template>
         </a-tabs>
     </div>
-    <div class="item-content-container">
-        <div class="category-container">
-            <div class="category-title">车辆</div>
+    <div class="item-content-container" :class="firstLevelId ? '' : 'full-content'">
+        <div class="category-container" v-if="firstLevelId">
+            <div class="category-title">{{firstLevelName}}</div>
             <div class="category-content">
-                <CategoryTree :categoryTree='categoryTree' @change='handleCategoryChange'/>
+                <CategoryTree :parentId='firstLevelId' @change='handleCategoryChange'/>
             </div>
         </div>
-        <div class="item-content">
-            <div class="switch-btn">
+        <div class="item-content" v-if="tableData.length">
+            <!-- <div class="switch-btn">
                 <a-radio-group v-model:value="pageType">
                     <a-radio-button value="agora"><i class="icon i_agora"/></a-radio-button>
                     <a-radio-button value="list"><i class="icon i_list"/></a-radio-button>
                 </a-radio-group>
-            </div>
+            </div> -->
             <div class="list-container">
                 <div class="list-item" v-for="item of tableData" :key="item.id" @click="routerChange('detail', item)">
                     <div class="cover">
@@ -43,7 +65,8 @@
                     <p class="name">{{item.name}}</p>
                     <p class="desc">&nbsp;</p>
                     <p class="price">￥{{$Util.countFilter(item.price)}}</p>
-                    <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">添加到购物车</a-button>
+                    <a-button class="btn" type="primary" ghost @click.stop="routerChange('edit', item)" v-if="$auth('ADMIN')">编辑商品</a-button>
+                    <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)" v-else>添加到购物车</a-button>
                 </div>
             </div>
             <div class="paging-container">
@@ -62,6 +85,7 @@
                 />
             </div>
         </div>
+        <SimpleImageEmpty class="item-content-empty" v-else desc="暂无满足搜索条件的商品"/>
     </div>
 </div>
 </template>
@@ -69,30 +93,13 @@
 <script>
 import Core from '../../core';
 import item_defult_img from '@images/item_defult_img.png'
-import CategoryTree from '../../components/CategoryTree.vue'
-function dig(path = '0', level = 3) {
-    const list = [];
-
-    for (let i = 0; i < 10; i += 1) {
-        const key = `${path}-${i}`;
-        const treeNode = {
-            title: key,
-            key,
-        };
-
-        if (level > 0) {
-            treeNode.children = dig(key, level - 1);
-        }
-
-        list.push(treeNode);
-    }
-
-    return list;
-}
+import CategoryTree from '../../components/ItemCategory/CategoryTree.vue'
+import SimpleImageEmpty from '../../components/SimpleImageEmpty.vue'
 
 export default {
     name: 'ItemList',
     components: {
+        SimpleImageEmpty,
         CategoryTree,
     },
     props: {},
@@ -100,31 +107,35 @@ export default {
         return {
             item_defult_img,
             loginType: Core.Data.getLoginType(),
+            pageType: 'list',
             // 加载
             loading: false,
             // 分页
             currPage: 1,
             pageSize: 20,
             total: 0,
+            tableData: [],
 
             // 搜索
-            categoryTree: dig(),
+            categoryList: [],
+            firstLevelId: 0,
+            firstLevelName: '',
             searchForm: {
                 name: '',
                 category_id: '',
             },
-            expandedKeys: [],
-            selectedKeys: [],
 
-            tableData: [],
-
-            pageType: 'list',
+            // 购物车简略面板
+            briefVisible: false,
+            briefList: [],
+            briefCount: 0,
         };
     },
     watch: {},
     computed: {},
     mounted() {
         this.getTableData();
+        this.getCategoryList()
     },
     methods: {
         routerChange(type, item = {}) {
@@ -138,16 +149,22 @@ export default {
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':  // 详情
-                    routeUrl = this.$router.resolve({
+                    /* routeUrl = this.$router.resolve({
                         path: "/item/item-detail",
                         query: { id: item.id }
                     })
-                    window.open(routeUrl.href, '_blank')
+                    window.open(routeUrl.href, '_blank') */
                     break;
                 case 'favorite':  // 收藏夹
                 case 'shop_cart':  // 购物车
                     routeUrl = this.$router.resolve({
-                        path: "/item/shop-cart-list",
+                        path: "/item/item-collect",
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'settle':  // 结算
+                    routeUrl = this.$router.resolve({
+                        path: "/item/item-settle",
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -162,8 +179,12 @@ export default {
             this.pageSize = size
             this.getTableData()
         },
-        handleCategoryChange(category, categories) {
+        handleCategoryChange(category) {
+            console.log('handleCategoryChange category:', category)
             this.searchForm.category_id = category
+            if ( this.firstLevelId && category === this.firstLevelId) {
+                this.firstLevelName = this.categoryList.find(i => i.id === category).name
+            }
             this.pageChange(1)
         },
         getTableData() { // 获取 商品 数据
@@ -183,18 +204,34 @@ export default {
                 this.loading = false;
             });
         },
+
         getShopCartData() { // 获取 购物车 数据
-            Core.Api.ShopCart.list()
+            Core.Api.ShopCart.list().then(res => {
+                console.log('getShopCartData res:', res)
+                this.briefVisible = true
+                this.briefList = [res.list[0] || {}]
+                this.briefCount = res.count;
+            })
         },
 
-
         handleCartAdd(item) { // 添加到购物车
+            console.log('handleCartAdd item:', item)
             Core.Api.ShopCart.save({
                 item_id: item.id,
                 amount: 1,
                 price: item.price
             }).then(res => {
+                console.log('res:', res)
                 this.$message.success('添加成功')
+                this.getShopCartData();
+            })
+        },
+
+        getCategoryList() {
+            Core.Api.ItemCategory.tree({
+                id: 0,
+            }).then(res => {
+                this.categoryList = res.list
             })
         }
     }
@@ -292,12 +329,14 @@ export default {
                     cursor: pointer;
                     margin: 0 40px 60px;
                     width: calc(~'100% / 3 - 80px');
+                    min-width: 250px;
                     color: #111111;
                     font-weight: 500;
                     font-size: 14px;
                     line-height: 16px;
                     .cover {
                         height: calc(~'(100vw - 144px - 10px - 32px - 260px) / 3 - 80px');
+                        min-height: 250px;
                         background-color: #F5F5F5;
                         img {
                             width: 100%;
@@ -306,11 +345,13 @@ export default {
                         }
                     }
                     .sub {
+                        .ell();
                         margin: 15px 0 5px;
                         font-size: 12px;
                         line-height: 14px;
                     }
                     .name {
+                        .ell();
                         padding-top: 5px;
                         border-top: 1px solid #E6EAEE;
                     }
@@ -338,6 +379,96 @@ export default {
                 padding-right: 44px;
             }
 
+        }
+        .item-content-empty {
+            width: calc(~'100% - 260px - 32px');
+            .flex(center);
+        }
+        &.full-content {
+            .item-content, .item-content-empty {
+                width: 100%;
+                .list-container .list-item .cover {
+                    height: calc(~'(100vw - 144px - 10px - 32px) / 3 - 80px');
+                }
+            }
+        }
+    }
+}
+.shop-cart-brief {
+    position: relative;
+    padding: 12px 6px 10px;
+    .icon.i_close {
+        cursor: pointer;
+        position: absolute;
+        font-size: 14px;
+        color: #111;
+        top: 0;
+        right: 0;
+    }
+    .tip {
+        font-size: 15px;
+        color: #272727;
+        line-height: 18px;
+        margin-bottom: 22px;
+        .icon.i_check_c {
+            color: #37D347;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+    }
+    .item {
+        display: flex;
+        .cover {
+            width: 78px;
+            height: 78px;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+        .desc {
+            width: calc(~'100% - 78px - 20px');
+            display: flex;
+            flex-direction: column;
+            font-size: 14px;
+            line-height: 16px;
+            p {
+                font-weight: 500;
+                line-height: 16px;
+                margin: 0;
+            }
+            span {
+                font-weight: 400;
+                color: #757575;
+                margin: 10px 0 8px;
+            }
+            .price {
+                font-weight: 400;
+                color: #111111;
+            }
+        }
+    }
+    .btns {
+        margin-top: 72px;
+        .btn {
+            width: 172px;
+            height: 55px;
+            border-radius: 12px;
+            font-size: 15px;
+            &.ghost {
+                background: #FFFFFF;
+                border: 1px solid #E5E8EB;
+                color: #111111;
+                &:hover {
+                    background: rgba(17, 17, 17, 0.1);
+                }
+            }
+            &.black {
+                background: #111111;
+                border: 1px solid #111111;
+                color: #FFFFFF;
+                &:hover {
+                    background: rgba(17, 17, 17, 0.9);
+                }
+            }
         }
     }
 }

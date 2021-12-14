@@ -9,7 +9,7 @@ class ApiBase {
 
     static getMark() {
         const LOGIN_TYPE = Const.LOGIN.TYPE
-        const loginType = Data.getUserType();
+        const loginType = Data.getLoginType();
         let mark = 'admin/1'
         switch (loginType) {
             case LOGIN_TYPE.ADMIN:
@@ -39,10 +39,11 @@ class ApiBase {
         let mark = ApiBase.getMark()
         const token = Data.getToken()
 
-        const commonModule = ['Common', 'Common1']
-        const openModule = ['Open']
+        const commonModule = ['Common']
         if (commonModule.includes(moduleName)) { mark = 'core/1' }
-        if (openModule.includes(moduleName)) { mark = 'open/1' }
+        
+        const adminModule = ['Item']
+        if (adminModule.includes(moduleName)) { mark = 'admin/1' }
 
         let fullUrl = `${this.baseUrl}/${mark}/${config[1]}`;
         if (moduleName == 'Export') {

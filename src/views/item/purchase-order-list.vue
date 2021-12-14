@@ -1,16 +1,11 @@
+
 <template>
-<div>
-    <SimpleImageEmpty/>
-</div>
+<div id=""></div>
 </template>
 
 <script>
-import SimpleImageEmpty from './SimpleImageEmpty.vue'
-
 export default {
-    components: {
-        SimpleImageEmpty,
-    },
+    components: {},
     props: {},
     data() {
         return {
@@ -18,11 +13,12 @@ export default {
     },
     watch: {},
     computed: {},
-    onLoad(o) {},
-    onShow() {},
+    created() {},
+    mounted() {},
     methods: {},
 }
 </script>
 
 <style lang='scss' scoped>
+
 </style>

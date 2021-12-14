@@ -191,6 +191,7 @@ const routes = [
                 hidden: true,
                 meta: {
                     title: '商品编辑',
+                    roles: [LOGIN_TYPE.ADMIN],
                     parent: '/item/item-list',
                 }
             },
@@ -205,11 +206,49 @@ const routes = [
                 }
             },
             {
-                path: 'shop-cart-list',
-                name: 'ShopCartList',
-                component: () => import('@/views/item/shop-cart-list.vue'),
+                path: 'item-collect',
+                name: 'ItemCollect',
+                component: () => import('@/views/item/item-collect.vue'),
                 meta: {
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
                     title: '购物车',
+                }
+            },
+            {
+                path: 'item-settle',
+                name: 'ItemSettle',
+                component: () => import('@/views/item/item-settle.vue'),
+                hidden: true,
+                meta: {
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
+                    title: '结算',
+                }
+            },
+            {
+                path: 'item-category',
+                name: 'ItemCategory',
+                component: () => import('@/views/item/item-category.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.ADMIN],
+                    title: '商品分类',
+                }
+            },
+            {
+                path: 'purchase-order-list',
+                name: 'PurchaseOrderList',
+                component: () => import('@/views/item/purchase-order-list.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN],
+                    title: '采购订单',
+                }
+            },
+            {
+                path: 'purchase-order-detail',
+                name: 'PurchaseOrderDetail',
+                component: () => import('@/views/item/purchase-order-detail.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN],
+                    title: '采购订单详情',
                 }
             },
         ]

@@ -2,16 +2,18 @@
 <a-layout id="Layout">
     <a-layout-header class="layout-header">
         <div class="header-logo" @click="collapsed = !collapsed" :class="{'collapsed': collapsed}">
-            <div class="title">浩万平台</div>
+            <img src="@images/header-logo.png" alt="浩万" />
         </div>
         <div class="header-right">
             <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
                 <a-button class="user-info" type="link">
-                    <a-avatar class="user-avatar" v-if="user.avatar" :src="$Util.imageFilter(user.avatar)" icon="user" :size='30'/>
+                    <a-avatar class="user-avatar" :src="$Util.imageFilter(user.avatar)" :size='30'>
+                        <i class="icon i_user"/>
+                    </a-avatar>
                     <span class="user-name">{{user.username}}</span>
                 </a-button>
                 <template #overlay>
-                    <a-menu>
+                    <a-menu style="text-align: center;">
                         <a-menu-item>
                             <a-button type="link" @click="handleLogout" class="menu-item-btn">退 出</a-button>
                         </a-menu-item>
@@ -149,7 +151,7 @@ export default {
 </script>
 
 <style lang="less">
-#layout-container {
+/* #layout-container {
     background: @BG_body;
     .layout-sider {
         width: 144px;
@@ -217,7 +219,6 @@ export default {
                     }
                 }
                 &-track {
-                    /*滚动条内部轨道*/
                     background: @scrollbar-track;
                 }
             }
@@ -273,6 +274,7 @@ export default {
         width: calc(~"100% - 144px");
         .layout-header {
             .fsb();
+            padding: 0 20px;
             height: 64px;
             width: calc(~"100% - 144px");
             background: @BG_N;
@@ -331,7 +333,7 @@ export default {
             }
         }
     }
-}
+} */
 .ant-menu-inline-collapsed-tooltip {
     i.icon {
         display: none;
@@ -349,7 +351,41 @@ export default {
         height: 50px;
         background: #FFFFFF;
         border-bottom: 1px solid rgba(82, 91, 103, 0.2);
+        padding: 0 20px;
         .fsb();
+        .header-logo {
+            img {
+                width: 115px;
+                height: 30px;
+            }
+        }
+        .user-info {
+            height: 100%;
+            .fac();
+            &:hover .user-name {
+                color: @TC_P;
+            }
+            .icon.i_user {
+                margin: 0;
+            }
+        }
+        .user-name {
+            margin-left: 10px;
+            color: @TC_header_name;
+        }
+        .header-item {
+            width: 64px;
+            height: 100%;
+            cursor: pointer;
+            .fjc();
+            i.icon {
+                font-size: 14px;
+                color: @TC_header_item;
+            }
+            &:hover i.icon {
+                color: @TC_P;
+            }
+        }
     }
     .layout-container {
         height: calc(~'100% - 50px');
