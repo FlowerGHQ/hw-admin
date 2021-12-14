@@ -245,10 +245,9 @@ export default {
         },
         // 获取 地址选择列表
         getRoughlyAddressList() {
-            axios.get('/ext/region-code.json')
-                .then(response => {
-                    this.addressOptions = response.data.zh;
-                })
+            axios.get('/ext/province-city-county.json').then(response => {
+                this.addressOptions = response.data;
+            })
         },
         // 地址选择搜索
         addressFilter(inputValue, path) {
