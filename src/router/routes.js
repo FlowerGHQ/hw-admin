@@ -208,9 +208,9 @@ const routes = [
                 }
             },
             {
-                path: 'shop-cart-list',
-                name: 'ShopCartList',
-                component: () => import('@/views/item/shop-cart-list.vue'),
+                path: 'item-collect',
+                name: 'ItemCollect',
+                component: () => import('@/views/item/item-collect.vue'),
                 meta: {
                     roles: [LOGIN_TYPE.AGENT],
                     title: '购物车',

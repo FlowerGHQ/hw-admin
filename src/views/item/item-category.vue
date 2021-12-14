@@ -195,7 +195,8 @@ export default {
                 return this.$message.warning('请输入分类名称')
             }
             this.loading = true
-            Core.Api.ItemCategory.save(form).then(res => {
+            let apiName = form.id ? 'update' : 'save';
+            Core.Api.ItemCategory[apiName](form).then(res => {
                 this.$message.success('保存成功')
                 if (form.id) {
                     this.getDataById(form.id, this.editNode)

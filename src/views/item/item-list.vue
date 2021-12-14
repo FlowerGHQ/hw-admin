@@ -5,7 +5,7 @@
             <a-tab-pane :key="0" tab="全部"></a-tab-pane>
             <a-tab-pane v-for="item of categoryList" :key="item.id" :tab="item.name"></a-tab-pane>
             <template #rightExtra>
-                <a-input class="search" v-model="searchForm.name" placeholder="商品名称">
+                <a-input class="search" v-model="searchForm.name" placeholder="商品名称" @change="pageChange(1)">
                     <template #prefix><i class="icon i_search"/></template>
                 </a-input>
                 <a-button type="primary" class="add" @click="routerChange('edit')" v-if="$auth('ADMIN')"><i class="icon i_add"/>新增商品</a-button>
@@ -21,10 +21,10 @@
                                     <i class="icon i_check_c"/>已加入购物车
                                 </div>
                                 <div class="item" v-for="item of briefList" :key="item.id">
-                                    <img class="cover" :src="$Util.imageFilter(item.logo) || item_defult_img" />
+                                    <img class="cover" :src="$Util.imageFilter(item.item.logo) || item_defult_img" />
                                     <div class="desc">
-                                        <p>{{item.name}}</p>
-                                        <span>{{item.code}}</span>
+                                        <p>{{item.item.name}}</p>
+                                        <span>{{item.item.code}}</span>
                                         <p class="price">￥{{$Util.countFilter(item.price)}}</p>
                                     </div>
                                 </div>
@@ -149,16 +149,16 @@ export default {
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':  // 详情
-                    routeUrl = this.$router.resolve({
+                    /* routeUrl = this.$router.resolve({
                         path: "/item/item-detail",
                         query: { id: item.id }
                     })
-                    window.open(routeUrl.href, '_blank')
+                    window.open(routeUrl.href, '_blank') */
                     break;
                 case 'favorite':  // 收藏夹
                 case 'shop_cart':  // 购物车
                     routeUrl = this.$router.resolve({
-                        path: "/item/shop-cart-list",
+                        path: "/item/item-collect",
                     })
                     window.open(routeUrl.href, '_self')
                     break;

@@ -66,8 +66,9 @@ const apiList = {
     },
     ItemCategory: { // 商品分类
         list: ['PostJson', 'item-category/list'],
-        save: ['PostJson', 'item-category/save'],
         tree: ['PostJson', 'item-category/tree'],
+        save: ['PostJson', 'item-category/save'],
+        update: ['PostJson', 'item-category/update'],
         delete: ['PostJson', 'item-category/delete'],
     },
     Warehouse: { // 仓库
@@ -82,12 +83,12 @@ const apiList = {
         list: ['PostJson', 'shopping-cart/list'],
         clear: ['PostJson', 'shopping-cart/clear'],
         detail: ['GetJson', 'shopping-cart/detail'],
-        detele: ['PostJson', 'shopping-cart/detele'],
+        remove: ['PostJson', 'shopping-cart/delete'],
     },
     Favorite: { // 收藏夹
-        add: ['PostJson', 'shopping-cart/create'],
-        list: ['PostJson', 'shopping-cart/list-user'],
-        remove: ['PostJson', 'shopping-cart/detele'],
+        add: ['PostJson', 'favorite/create'],
+        list: ['PostJson', 'favorite/list-user'],
+        remove: ['PostJson', 'favorite/delete'],
     }
 
 };
