@@ -1400,7 +1400,7 @@ let Const = {
             "pinyin": "jbbw"
         }
     ] */
-    COUNTRY_LIST: [
+    COUNTRY_LIST: [ // 国家列表
         {
             "short": "CN",
             "name": "中国",
@@ -1410,7 +1410,7 @@ let Const = {
         },
     ],
 
-    USER: {// 员工
+    USER: { // 员工、账号、用户
         TYPE: {
             ADMIN: 10,      // 管理员
             AGENT: 20,      // 代理商
@@ -1426,7 +1426,7 @@ let Const = {
             100: '顾客',
         },
     },
-    LOGIN: {
+    LOGIN: { // 登录
         TYPE: {
             ADMIN: 10,     // 管理员
             AGENT: 20,     // 代理商
@@ -1501,16 +1501,16 @@ let Const = {
             3: '低',
         },
 	    // 优先级
-	    ITEM_TYPE_LIST: [
-		    { text: '车辆', value: 1 },
-		    { text: '电池', value: 2 },
-		    { text: '其他', value: 3 },
-	    ],
-	    ITEM_TYPE_MAP: {
-		    1: '车辆',
-		    2: '电池',
-		    3: '其他',
-	    },
+        ITEM_TYPE_LIST: [
+            { text: '车辆', value: 1 },
+            { text: '电池', value: 2 },
+            { text: '其他', value: 3 },
+        ],
+        ITEM_TYPE_MAP: {
+            1: '车辆',
+            2: '电池',
+            3: '其他',
+        },
         STATUS_MAP: {
             10: '待分配',
             20: '待确认',
@@ -1528,11 +1528,11 @@ let Const = {
             60: 'grey',
         },
         STATUS: {
-            WAIT_DISTRIBUTION:10,
-            WAIT_CHECK:20,
-            WAIT_DETECTION:30,
-            WAIT_REPAIR:40,
-            REPAIR_END:50,
+            WAIT_DISTRIBUTION: 10,
+            WAIT_CHECK: 20,
+            WAIT_DETECTION: 30,
+            WAIT_REPAIR: 40,
+            REPAIR_END: 50,
         }
     },
     PURCHASE: { // 采购订单
@@ -1553,6 +1553,13 @@ let Const = {
         },
 
     },
+
+	ACTION_LOG: {
+		SOURCE_TYPE:{
+			PURCHASE_ORDER: 10,
+			REPAIR_ORDER: 20,
+		}
+	},
 };
 
 export default Const;

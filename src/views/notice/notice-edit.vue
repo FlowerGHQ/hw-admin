@@ -1,7 +1,7 @@
 <template>
-  <div id="WarehouseEdit" class="edit-container">
+  <div id="NoticeEdit" class="edit-container">
     <div class="title-container">
-      <div class="title-area">{{ form.id ? '编辑仓库' : '新建仓库' }}</div>
+      <div class="title-area">{{ form.id ? '编辑系统' : '新建系统' }}</div>
     </div>
     <div class="form-block">
       <div class="form-title">
@@ -9,13 +9,13 @@
       </div>
       <div class="form-content">
         <div class="form-item required">
-          <div class="key">仓库名称：</div>
+          <div class="key">系统类型：</div>
           <div class="value">
-            <a-input v-model:value="form.name" placeholder="请输入仓库名称"/>
+            <a-input v-model:value="form.name" placeholder="请选择系统类型"/>
           </div>
         </div>
         <div class="form-item required">
-          <div class="key">仓库地址：</div>
+          <div class="key">系统内容：</div>
           <div class="value">
             <a-cascader v-model:value="form.address" :options="form.addressOptions" placeholder="请选择省/市/区县"
                         :field-names="{ label: 'name', value: 'code' , children: 'children'}"
@@ -69,7 +69,7 @@ export default {
   mounted() {
     this.form.id = Number(this.$route.query.id) || 0
     if (this.form.id) {
-      this.getWarehouseDetail();
+      this.getNoticeDetail();
     }
   },
   methods: {
@@ -80,18 +80,18 @@ export default {
           break;
       }
     },
-    getWarehouseDetail() {
+    getNoticeDetail() {
       this.loading = true;
-      Core.Api.Warehouse.detail({
+      Core.Api.Notice.detail({
         id: this.form.id,
       }).then(res => {
-        console.log('getWarehouseDetail res', res)
+        console.log('getNoticeDetail res', res)
         this.detail = res.detail
         for (const key in this.form) {
           this.form[key] = res.detail[key]
         }
       }).catch(err => {
-        console.log('getWarehouseDetail err', err)
+        console.log('getNoticeDetail err', err)
       }).finally(() => {
         this.loading = false;
       });
@@ -110,7 +110,7 @@ export default {
       //     return this.$message.warning('请输入详细地址')
       //   }
       // }
-      Core.Api.Warehouse.save(form).then(() => {
+      Core.Api.Notice.save(form).then(() => {
         this.$message.success('保存成功')
         this.routerChange('back')
       }).catch(err => {
@@ -122,5 +122,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #Warehouse Edit {}
+// #NoticeEdit {}
 </style>
