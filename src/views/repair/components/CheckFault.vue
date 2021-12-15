@@ -66,7 +66,7 @@
                                     </div>
                                     <div class="right">
                                         <div class="staff" v-if="detail.repair_user_id">
-                                            <a-button type="primary" @click='routerChange("detail")'>添加</a-button>
+                                            <ItemSelect @change="handleAddFailItem" :disabled-checked='failData.map(i => i.id)' style="margin-bottom: 12px;"/>
                                         </div>
                                     </div>
                                 </div>
@@ -74,12 +74,12 @@
                                     <a-table :columns="failColumns" :data-source="failData" :scroll="{ x: true }"
                                              :row-key="record => record.id"  :pagination='false' size="small"
                                              :indentSize='24'>
-                                        <template #bodyCell="{ column, text , record }">
+                                        <template #bodyCell="{ column, text , record ,index}">
                                             <template v-if="column.dataIndex === 'name'">
 
                                             </template>
                                             <template v-if="column.dataIndex === 'operation'">
-                                                <a-button type="primary" @click='routerChange("detail", record)'>删除</a-button>
+                                                <a-button type="primary" @click='deleteFailItem(record, index)'>删除</a-button>
                                             </template>
                                         </template>
                                     </a-table>
@@ -94,12 +94,13 @@
                                     </div>
                                     <div class="right">
                                         <div class="staff" v-if="detail.repair_user_id">
-                                            <a-button type="primary" @click='failHandle("detail")'>添加</a-button>
+<!--                                            <ItemSelect />-->
+                                            <ItemSelect @change="handleAddExchangeItem" :disabled-checked='exchangeData.map(i => i.id)' style="margin-bottom: 12px;"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="panel-content">
-                                    <a-table :columns="failColumns" :data-source="failData" :scroll="{ x: true }"
+                                    <a-table :columns="failColumns" :data-source="exchangeData" :scroll="{ x: true }"
                                              :row-key="record => record.id"  :pagination='false' size="small"
                                              :indentSize='24'>
                                         <template #bodyCell="{ column, text , record }">
@@ -107,7 +108,7 @@
 
                                             </template>
                                             <template v-if="column.dataIndex === 'operation'">
-                                                <a-button type="primary" @click='routerChange("detail", record)'>删除</a-button>
+                                                <a-button type="primary" @click='deleteExchangeItem("detail", record)'>删除</a-button>
                                             </template>
                                         </template>
                                     </a-table>
@@ -115,70 +116,19 @@
                             </div>
                         </a-col>
                     </a-row>
-
                 </a-collapse-panel>
                 <a-collapse-panel key="3" header="This is panel header 3" collapsible="disabled">
                 </a-collapse-panel>
             </a-collapse>
         </div>
     </div>
-    <template class="modal-container">
-        <a-modal v-model:visible="modalFailShow" width="860px" title="更换分新增分类" @ok="addFailList">
-            <div class="search-container">
-                <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :md='12' class="search-item">
-                        <div class="key"><span>商品编码:</span></div>
-                        <div class="value">
-                            <a-input placeholder="请输入商品编码" v-model:value="searchItemForm.code" @keydown.native.enter='handleItemSearch'/>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :md='12' class="search-item">
-                        <div class="key"><span>商品名称:</span></div>
-                        <div class="value">
-                            <a-input placeholder="请输入商品名称" v-model:value="searchItemForm.name" @keydown.native.enter='handleItemSearch'/>
-                        </div>
-                    </a-col>
-                </a-row>
-                <div class="btn-area">
-                    <a-button @click="handleItemSearch" type="primary">查询</a-button>
-                    <a-button @click="handleItemSearchReset()">重置</a-button>
-                </div>
-            </div>
 
-            <div class="table-container">
-                <a-table :columns="itemColumns" :data-source="itemDate" :scroll="{ x: true }"
-                         :row-key="record => record.id"  :pagination='false' size="small"
-                         :row-selection="{ selectedRowKeys: itemSelected, onChange: onSelectChange }"
-                         :indentSize='24'>
-                    <template #bodyCell="{ column, text , record }">
-                        <template v-if="column.dataIndex === 'name'">
-
-                        </template>
-                    </template>
-                </a-table>
-            </div>
-            <div class="paging-container">
-                <a-pagination
-                    v-model:current="itemCurrPage"
-                    :page-size='itemPageSize'
-                    :total="itemTotal"
-                    show-quick-jumper
-                    show-size-changer
-                    show-less-items
-                    :show-total="total => `共${total}条`"
-                    :hide-on-single-page='false'
-                    :pageSizeOptions="['10', '20', '30', '40']"
-                    @change="pageItemChange"
-                    @showSizeChange="pageItemSizeChange"
-                />
-            </div>
-        </a-modal>
-    </template>
 </div>
 </template>
 
 <script>
 import Core from '../../../core';
+import ItemSelect from '@/components/ItemSelect.vue';
 import axios from 'axios';
 const REPAIR = Core.Const.REPAIR
 const faultOptions = [
@@ -207,7 +157,9 @@ const itemColumns = [
 ]
 export default {
     name: 'RepairDetail',
-    components: {},
+    components: {
+        ItemSelect
+    },
     props: {},
     data() {
         return {
@@ -219,8 +171,9 @@ export default {
             faultOptions: faultOptions,
             failColumns: failColumns,
 
-            failData: [{name: "前车灯", 数量: 1}],
-            changeItemData:[],
+            failData: [],
+            changeItemData: [],
+            exchangeData: [],
             itemCurrPage: 1,
             itemPageSize: 20,
             itemDate:[],
@@ -292,10 +245,19 @@ export default {
                 this.loading = false;
             });
         },
-        failHandle() {
+        failHandle(type) {
+            switch (type){
+                case "fail":
+
+                    break;
+                case "exchange":
+
+                    break;
+            }
             this.modalFailShow = true
         },
         addFailList() {
+
             this.itemSelectedRowItems.forEach(it =>{
                 console.log(it.name)
                 this.failData.push(it)
@@ -334,6 +296,27 @@ export default {
             console.log("selectedRows", selectedRows)
             this.itemSelected = selectedRowKeys
             this.itemSelectedRowItems = selectedRows
+        },
+
+        handleAddFailItem(ids, items) {
+            console.log('handleAddItem items:', items)
+            this.failData.push(...items)
+            console.log('failData items:', this.failData)
+            this.failData.map(i =>{
+                console.log('failData items:', i.id)
+            })
+        },
+        // 添加要寄回的商品
+        handleAddExchangeItem(ids, items) {
+            console.log('handleAddItem items:', items)
+            this.exchangeData.push(...items)
+            console.log('failData items:', this.failData)
+        },
+        deleteFailItem(item, index) {
+            this.failData.removeItem(index)
+        },
+        deleteExchangeItem(item, index) {
+            this.exchangeData.removeItem(item)
         }
     }
 };

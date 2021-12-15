@@ -24,60 +24,16 @@
                 </div>
                 <div class="panel-content">
                     <div class="info-item">
-                        <div class="key">工单名称</div>
-                        <div class="value">{{detail.name || '-'}}</div>
+                        <div class="key">创建人</div>
+                        <div class="value">{{detail.operator_name || '-'}}</div>
                     </div>
-
-                    <div class="info-item">
-                        <div class="key">优先级</div>
-                        <div class="value">{{$Util.repairPriorityFilter(detail.priority)}}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">维修方式</div>
-                        <div class="value">{{$Util.repairChannelFilter(detail.channel) || '-'}}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">产品类别</div>
-                        <div class="value">{{$Util.repairItemTypeFilter(detail.item_type) || '-'}}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">维修类别</div>
-                        <div class="value">{{$Util.repairMethodFilter(detail.repair_method) || '-'}}</div>
-                    </div>
-                </div>
-                <div class="panel-content">
                     <div class="info-item">
                         <div class="key">相关客户</div>
                         <div class="value">{{detail.customer_name || '-'}}</div>
                     </div>
                     <div class="info-item">
-                        <div class="key">客户电话</div>
-                        <div class="value">{{detail.customer_phone || '-'}}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">客户邮箱</div>
-                        <div class="value">{{detail.customer_email || '-'}}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">车辆编号</div>
-                        <div class="value">{{ item_code || '-'}}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">地址</div>
-                        <div class="value">{{detail.customer_address + detail.customer_detail_address || '-'}}</div>
-                    </div>
-
-                </div>
-                <div class="panel-content">
-                    <div class="info-item">
-                        <div class="key">问题描述</div>
-                        <div class="value">{{detail.desc|| '-'}}</div>
-                    </div>
-
-
-                    <div class="info-item">
-                        <div class="key">创建人</div>
-                        <div class="value">{{detail.operator_name || '-'}}</div>
+                        <div class="key">优先级</div>
+                        <div class="value">{{$Util.repairPriorityFilter(detail.priority)}}</div>
                     </div>
                     <div class="info-item">
                         <div class="key">创建时间</div>
@@ -86,10 +42,6 @@
                     <div class="info-item">
                         <div class="key">实施时间</div>
                         <div class="value">{{$Util.timeFilter(detail.finish_time) || '-'}}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">完成时间</div>
-                        <div class="value">{{$Util.timeFilter(detail.plan_time) || '-'}}</div>
                     </div>
                 </div>
             </div>
@@ -104,7 +56,63 @@
                 </a-steps>
             </div>
             <div class="form-container">
+                <CheckFault  :id='id' :detail='detail'  />
                 <CheckFault  :id='id' :detail='detail' v-if="active == 'CheckFault'" />
+                <div class="info">
+                    <a-collapse v-model:activeKey="activeKey" :expand-icon-position="expandIconPosition">
+                        <a-collapse-panel key="1" header="详细信息">
+                            <div class="panel-content">
+                                <div class="info-item">
+                                    <div class="key">工单名称</div>
+                                    <div class="value">{{detail.name || '-'}}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="key">问题描述</div>
+                                    <div class="value">{{detail.desc|| '-'}}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="key">完成时间</div>
+                                    <div class="value">{{$Util.timeFilter(detail.plan_time) || '-'}}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="key">维修方式</div>
+                                    <div class="value">{{$Util.repairChannelFilter(detail.channel) || '-'}}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="key">产品类别</div>
+                                    <div class="value">{{$Util.repairItemTypeFilter(detail.item_type) || '-'}}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="key">维修类别</div>
+                                    <div class="value">{{$Util.repairMethodFilter(detail.repair_method) || '-'}}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="key">客户电话</div>
+                                    <div class="value">{{detail.customer_phone || '-'}}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="key">客户邮箱</div>
+                                    <div class="value">{{detail.customer_email || '-'}}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="key">车辆编号</div>
+                                    <div class="value">{{ item_code || '-'}}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="key">地址</div>
+                                    <div class="value">{{detail.customer_address + detail.customer_detail_address || '-'}}</div>
+                                </div>
+                            </div>
+                        </a-collapse-panel>
+                        <a-collapse-panel key="1" header="操作记录">
+                            <a-table class="OrderItemTable item_table"
+                                     :columns="actionLogColumns" :data-source="actionLogList" :scroll="{ x: true }"
+                                     :row-key="record => record.id" :loading='actionLogLoading' :pagination='false'
+                                    >
+                            </a-table>
+                        </a-collapse-panel>
+                    </a-collapse>
+                </div>
             </div>
         </div>
     </div>
@@ -130,14 +138,12 @@ const faultOptions = [
     { label: '轮胎故障', value: '轮胎故障' },
     { label: '轮胎故障', value: '轮胎故障' },
 ];
-const failColumns = [
-    { title: '商品名称', dataIndex: 'name' },
-    { title: '数量', dataIndex: 'amount'  },
-    { title: '操作', dataIndex: 'operation'  },
-]
-const itemColumns = [
-    { title: '商品名称', dataIndex: 'name' },
-    { title: '编码', dataIndex: 'code'  },
+const actionLogColumns = [
+    { title: '操作类型', dataIndex: 'name' },
+    { title: '操作人', dataIndex: 'code'  },
+    { title: '工单编号', dataIndex: 'uid'  },
+    { title: '操作时间', dataIndex: 'time'  },
+    { title: '备注', dataIndex: 'remark'  },
 ]
 
 export default {
@@ -154,7 +160,6 @@ export default {
             id: '',
             detail: {}, // 工单详情
             faultOptions: faultOptions,
-            failColumns: failColumns,
 
             failData: [{name: "前车灯", 数量: 1}],
             active: null,
@@ -167,7 +172,9 @@ export default {
             itemSelectedRowItems: [],
             faultList: [],
             modalFailShow: true,
-            itemColumns: itemColumns,
+            actionLogList: [],
+            actionLogLoading: false,
+            actionLogColumns: actionLogColumns,
             searchItemForm: {
                 code:"",
                 name:"",
