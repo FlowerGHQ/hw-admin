@@ -9,8 +9,8 @@
     </div>
     <div id="AgentDetail">
         <a-tabs v-model:activeKey="activeKey">
-            <a-tab-pane key="1" tab="员工管理" @click="ToUser"><UserList :query="form"/><!--员工列表页面组件--></a-tab-pane>
-            <a-tab-pane key="2" tab="订单列表">Content of Tab Pane 2</a-tab-pane>
+            <a-tab-pane key="1" tab="员工管理"><UserList :query="form"/><!--员工列表页面组件--></a-tab-pane>
+            <a-tab-pane key="2" tab="订单列表"><PurchaseList :query="form"/><!--采购订单页面组件--></a-tab-pane>
             <a-tab-pane key="3" tab="。。。。">Content of Tab Pane 3</a-tab-pane>
         </a-tabs>
     </div>
@@ -18,11 +18,12 @@
 
 <script>
 import UserList from '@/views/agent/components/UserList.vue';
+import PurchaseList from '@/views/agent/components/PurchaseOrderList.vue';
 import { defineComponent, ref } from 'vue';
 import Core from '../../core';
 export default {
     name: 'AgentDetail',
-    components: { UserList },
+    components: { UserList , PurchaseList },
     props: {},
     data() {
         return {
@@ -51,11 +52,11 @@ export default {
         }
     },
     methods: {
-        //点击查看日志按钮，传递item对象
-        ToUser() {
-            //传参对象内容
-            this.queryLog.jobId = item.jobId; 
-        },
+        // //点击查看日志按钮，传递item对象
+        // ToUser() {
+        //     //传参对象内容
+        //     this.queryLog.jobId = item.jobId; 
+        // },
         getUserDetail(){
             this.loading = true;
             console.log("id",this.form.id)

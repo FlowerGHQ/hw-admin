@@ -116,7 +116,7 @@
 </template>
 
 <script>
-import Core from '../../core';
+import Core from '../../../core';
 export default {
     name: 'PurchaseList',
     components: {},
@@ -256,4 +256,11 @@ export default {
         text-align: center;
     }
 }
+.btn-area{
+        white-space: nowrap;
+        min-width: 210px;
+        display: flex;
+        justify-content: flex-end;
+        // padding-bottom: 50px;
+    }
 </style>

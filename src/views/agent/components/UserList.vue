@@ -38,6 +38,11 @@
                                 <a-button type="link" @click="routerChange('detail', record)">{{text}}</a-button>
                             </a-tooltip>
                         </template>
+                        <template v-if="column.dataIndex === 'type'">
+                            <div class="status status-bg status-tag" :class="$Util.UserTypeFilter(text,'color')">
+                                {{$Util.UserTypeFilter(text)}}
+                            </div>
+                        </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-'}}
                         </template>
@@ -213,5 +218,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #UserList {}
+#UserList {
+    .status-tag {
+        width: 50px;
+        height: 22px;
+        line-height: 22px;
+        border-radius: 12px;
+        font-size: @fz_sm;
+        text-align: center;
+    }
+}
 </style>

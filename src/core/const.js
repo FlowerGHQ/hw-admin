@@ -1451,6 +1451,23 @@ let Const = {
         },
     },
 
+    USER: { // 员工
+        TYPE_MAP: {
+            10: '管理员',
+            20: '代理商',
+            30: '门店',
+            40: '门店',
+            100: '顾客',
+        },
+        TYPE_COLOR_MAP: {
+            10: 'red',
+            20: 'yellow',
+            30: 'orange',
+            40: 'green',
+            100: 'blue',
+        },
+    },
+
     REPAIR: { // 维修工单
         // 工单分类
         TYPE_LIST: [
