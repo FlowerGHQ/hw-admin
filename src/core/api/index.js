@@ -109,6 +109,7 @@ const apiList = {
         list: ['PostJson', 'receive-info/list'],
         save: ['PostJson', 'receive-info/save'],
         detail: ['PostJson', 'receive-info/detail'],
+        delete: ['PostJson', 'receive-info/delete'],
     },
     Purchase: { // 采购订单
         list: ['PostJson', 'purchase-order/list'], // 采购订单列表
