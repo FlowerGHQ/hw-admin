@@ -43,9 +43,6 @@ class ApiBase {
 
         const commonModule = ['Common']
         if (commonModule.includes(moduleName)) { mark = 'core/1' }
-        
-        const adminModule = ['Item']
-        if (adminModule.includes(moduleName)) { mark = 'admin/1' }
 
         let fullUrl = `${this.baseUrl}/${mark}/${config[1]}`;
         if (moduleName == 'Export') {

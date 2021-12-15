@@ -4,7 +4,7 @@
     <div class="config-list">
         <div class="config-item receive">
             <div class="config-title">1.配送选项</div>
-            <div class="config-content edit-mode" v-if="editMode || true">
+            <div class="config-content edit-mode" v-if="editMode">
                 <div class="form-item required">
                     <div class="key">姓名</div>
                     <div class="value">
@@ -47,11 +47,13 @@
                     <div class="key"></div>
                     <div class="value">
                         <a-button type="primary" @click="handleConfigSave">保存并继续</a-button>
+                        <a-button type="link" @click="handleConfigCancel" v-if="receiveList.length">取消编辑</a-button>
                     </div>
                 </div>
             </div>
             <div class="config-content select-mode" v-else>
-                <div class="select-item" v-for="item of receiveList" :key='item.id'>
+                <div class="select-item" :class="selectIndex === item.id ? 'active' : ''"
+                    v-for="item of receiveList" :key='item.id' @click="handleConfigSelect(item)">
                     <div class="info">
                         <i class="icon i_point"/>
                         <div class="desc">
@@ -61,11 +63,14 @@
                         </div>
                     </div>
                     <div class="btn">
-                        <a-button type="link" @click="handleConfigEdit(item)">编辑</a-button>
+                        <a-button type="link" @click.stop="handleConfigEdit(item)">编辑</a-button>
+                        <a-button type="link" @click.stop="handleConfigDelete(item)">删除</a-button>
                     </div>
                 </div>
-                <a-button type="link" @click="handleConfigEdit(item)">添加新地址</a-button>
-                <a-button type="primary" class="orange" @click="handleConfigEdit(item)">添加新地址</a-button>
+                <div class="add">
+                    <a-button type="link" @click="handleConfigEdit()">添加新地址</a-button>
+                </div>
+                <a-button type="primary" class="orange" @click="handleCreateOrder()">下单</a-button>
             </div>
         </div>
         <div class="config-item pay">
@@ -73,12 +78,39 @@
             <!-- <div class="config-content"></div> -->
         </div>
     </div>
-    <div class="item-list"></div>
+    <div class="settel-item">
+        <div class="item-title">
+            <span>在您的购物车中</span>
+            <a-button type="link" @click="routerChange('back')">编辑</a-button>
+        </div>
+        <div class="item-content">
+            <div class="price-item" v-for="item of shopCartList" :key="item.id">
+                <p class="name">{{item.item ? item.item.name : '-'}}</p>
+                <span class="price">{{$Util.countFilter(item.price*item.amount)}}￥</span>
+            </div>
+            <div class="price-item sum">
+                <p class="name">总计</p>
+                <span class="price">{{sum_price}}￥</span>
+            </div>
+            <div class="sub-title">预计送达</div>
+            <div class="item-item" v-for="item of shopCartList" :key="item.id">
+                <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '') || item_defult_img" />
+                <div class="info">
+                    <p>{{item.item ? item.item.name : '-'}}</p>
+                    <span>商品编码：{{item.item ? item.item.code : '-'}}</span>
+                    <span>购买数量：{{item.amount}}</span>
+                    <span>商品单价：￥{{$Util.countFilter(item.price)}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </template>
 
 <script>
 import Core from '../../core';
+import item_defult_img from '@images/item_defult_img.png'
+
 import AddressCascader from '../../components/common/AddressCascader.vue'
 export default {
     name: 'ItemSettle',
@@ -86,6 +118,7 @@ export default {
     props: {},
     data() {
         return {
+            item_defult_img,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -94,6 +127,7 @@ export default {
             selectIndex: '',
 
             countryList: Core.Const.COUNTRY_LIST,
+            editMode: false,
             form: {
                 name: '',
                 phone: '',
@@ -105,15 +139,38 @@ export default {
                 email: '',
             },
 
-            editMode: false,
+            shopCartList: [],
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        sum_price() {
+            let sum = 0
+            for (const item of this.shopCartList) {
+                sum += item.price * item.amount
+            }
+            return Core.Util.countFilter(sum)
+        }
+    },
     mounted() {
         this.getReceiveList()
+        this.getShopCartList()
     },
     methods: {
+        routerChange(type, item) {
+            let routeUrl
+            switch (type) {
+                case 'back':
+                    this.$router.go(-1)
+                    break;
+                case 'order':  // 详情
+                    routeUrl = this.$router.resolve({
+                        path: "/item/purchase-order-list",
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+            }
+        },
         // 获取已保存的 地址信息列表
         getReceiveList() {
             Core.Api.Receive.list().then(res => {
@@ -122,11 +179,54 @@ export default {
                 this.editMode = res.list.length ? false : true
             })
         },
+        // 获取购物车列表
+        getShopCartList() {
+            Core.Api.ShopCart.list().then(res => {
+                console.log('getShopCartList res:', res)
+                this.shopCartList = res.list
+            })
+        },
+
         handleAddressSelect(address = []) {
             this.form.province = address[0]
             this.form.city = address[1]
             this.form.county = address[2]
         },
+
+        // 切换到编辑状态
+        handleConfigEdit(item) {
+            console.log('handleConfigEdit item:', item)
+            if (item) {
+                this.form = Core.Util.deepCopy(item)
+            } else {
+                Object.assign(this.form, this.$options.data().form)
+            }
+            this.editMode = true
+        },
+        // 取消编辑
+        handleConfigCancel() {
+            this.editMode = false
+            Object.assign(this.form, this.$options.data().form)
+        },
+        // 删除配置
+        handleConfigDelete(item) {
+            let _this = this
+            this.$confirm({
+                title: '确定要删除该配送选项吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Receive.delete({id: item.id}).then(() => {
+                        _this.$message.success('删除成功');
+                        _this.getReceiveList();
+                    }).catch(err => {
+                        console.log("handleConfigDelete err", err);
+                    })
+                },
+            });
+        },
+        // 保存配置
         handleConfigSave() {
             let form = Core.Util.deepCopy(this.form)
             if (!form.name) {
@@ -146,24 +246,39 @@ export default {
                 this.loading = false
             })
         },
-        handleConfigEdit(item) {
-            if (item) {
-                this.form = Core.Util.deepCopy(item)
-            } else {
-                this.form = {
-                    name: '',
-                    phone: '',
-                    country: undefined,
-                    province: '',
-                    city: '',
-                    county: '',
-                    address: '',
-                    email: '',
-                }
-            }
-            this.editMode = true
-        }
 
+        // 选择配置
+        handleConfigSelect(item) {
+            this.selectIndex = item.id
+        },
+
+        // 创建订单
+        handleCreateOrder() {
+            if (!this.selectIndex) {
+                return this.$message.warning('请选择本次下单的配送选项')
+            }
+            Core.Api.Purchase.create({
+                price: Math.round(this.sum_price * 100),
+                charge: Math.round(this.sum_price * 100),
+                remark: '',
+                receive_info_id: this.selectIndex,
+                item_list: this.shopCartList.map(item => ({
+                    item_code: item.item.item_code,
+                    amount: item.amount,
+                    charge: item.amount * item.price,
+                    price: item.amount * item.price,
+                    item_id: item.item_id,
+                    unit_price: item.price,
+                }))
+            }).then(res => {
+                this.$message.success('下单成功');
+                this.routerChange('order');
+                this.handleClearShopCart()
+            })
+        },
+        handleClearShopCart() {
+            Core.Api.ShopCart.clear()
+        }
     }
 };
 </script>
@@ -173,6 +288,22 @@ export default {
     padding: 60px 105px 150px;
     display: flex;
     flex-wrap: wrap;
+    .ant-btn-link {
+        color: #757575;
+        border-bottom: 1px solid #757575;
+        border-radius: 0;
+        height: 22px;
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+    .ant-btn.orange {
+        width: 112px;
+        height: 40px;
+        background: #F4752E;
+        border-radius: 2px;
+        border-color: #F4752E;
+    }
     .title-area {
         font-size: 24px;
         font-weight: 500;
@@ -207,7 +338,11 @@ export default {
                 &.edit-mode {
                     .form-item.btn {
                         margin-top: 30px;
-                        .ant-btn {
+                        .value {
+                            display: flex;
+                            align-items: center;
+                        }
+                        .ant-btn-primary {
                             border-radius: 0;
                             height: 34px;
                         }
@@ -216,31 +351,129 @@ export default {
                 &.select-mode {
                     min-height: 428px;
                     overflow: auto;
-                    .ant-btn-link {
-                        color: #757575;
-                        border-bottom: 1px solid #757575;
-                        border-radius: 0;
-                        height: 24px;
-                        &:hover {
-                            opacity: 0.8;
-                        }
-                    }
                     .select-item {
                         .fsb();
+                        cursor: pointer;
+                        border-radius: 2px;
+                        border: 1px solid #E5E8EB;
+                        margin-bottom: 20px;
+                        padding: 11px 20px;
+                        box-sizing: border-box;
+                        transition: border-color 0.3s ease;
                         .info {
+                            width: calc(~'100% - 64px');
                             .fac();
                             .icon.i_point {
-                                
+                                width: 30px;
+                                box-sizing: border-box;
+                                font-size: 16px;
+                                padding-right: 16px;
+                            }
+                            .desc {
+                                width: calc(~'100% - 30px');
+                                font-size: 14px;
+                                font-weight: 400;
+                                p {
+                                    .ell();
+                                    color: #181818;
+                                    line-height: 20px;
+                                    + p {
+                                        margin-top: 4px;
+                                    }
+                                }
                             }
                         }
+                        .btn {
+                            width: 64px;
+                            .fac(flex-end);
+                        }
+                        &.active {
+                            border-color: @BC_P;
+                            .icon.i_point {
+                                color: @TC_P;
+                            }
+                        }
+                    }
+                    .add {
+                        display: flex;
+                        justify-content: flex-end;
+                        margin-bottom: 10px;
                     }
                 }
             }
         }
-
     }
-    .item-list {
+    .settel-item {
         width: 30%;
+        .item-title {
+            height: 56px;
+            line-height: 56px;
+            background: #F8FAFC;
+            font-size: 20px;
+            font-weight: 500;
+            color: #252526;
+            padding: 0 20px;
+            .fsb();
+        }
+        .item-content {
+            border: 1px solid #E6EAEE;
+            padding: 22px 20px 32px;
+        }
+        .price-item {
+            width: 100%;
+            .fsb();
+            font-size: 14px;
+            color: #111111;
+            line-height: 20px;
+            margin-bottom: 4px;
+            &.sum {
+                line-height: 22px;
+                margin: 10px 0 0;
+                padding-bottom: 22px;
+                border-bottom: 1px solid #E6EAEE;
+                p {
+                    font-size: 16px;
+                    color: #000000;
+                    font-weight: 500;
+                }
+                span {
+                    color: #F4752E;
+                }
+            }
+        }
+        .sub-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #111111;
+            line-height: 19px;
+            padding: 20px 0 24px;
+        }
+        .item-item {
+            display: flex;
+            margin-bottom: 40px;
+            .cover {
+                width: 60px;
+                height: 60px;
+                background: #F3F3F3;
+            }
+            .info {
+                width: calc(~'100% - 60px');
+                padding-left: 20px;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                line-height: 20px;
+                font-size: 14px;
+                p {
+                    color: #111111;
+                    margin-bottom: 8px;
+                }
+                span {
+                    color: #757575;
+                }
+            }
+        }
+
     }
 }
 </style>
