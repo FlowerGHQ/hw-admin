@@ -18,13 +18,13 @@ const routes = [
             title: '登录',
         }
     },
-    {   // 时效看板
+    {   // 看板
         path: '/dashboard',
         component: Layout,
         // hidden: true,
         meta: {
             title: '时效看板',
-            icon: 'i_s_dashboard',
+            icon: 'i_s_temp',
             // auth: ['dashboard'],
             // roles: [LOGIN_TYPE.ADMIN],
         },
@@ -46,7 +46,7 @@ const routes = [
         redirect: '/repair/repair-list',
         meta: {
             title: '维修单管理',
-            icon: 'i_s_dashboard',
+            icon: 'i_s_temp',
             // auth: ['dashboard'],
             // roles: [LOGIN_TYPE.ADMIN],
         },
@@ -88,7 +88,7 @@ const routes = [
         name: 'AgentManagement',
         meta: {
             title: '经销商管理',
-            icon: 'i_s_dashboard',
+            icon: 'i_s_temp',
             // auth: ['dashboard'],
             // roles: [LOGIN_TYPE.ADMIN],
         },
@@ -130,7 +130,7 @@ const routes = [
         name: 'WarehouseManagement',
         meta: {
             title: '仓库管理',
-            icon: 'i_s_dashboard',
+            icon: 'i_s_temp',
             // auth: ['dashboard'],
             // roles: [LOGIN_TYPE.ADMIN],
         },
@@ -172,7 +172,7 @@ const routes = [
         name: 'ItemManagement',
         meta: {
             title: '商品管理',
-            icon: 'i_s_dashboard',
+            icon: 'i_s_temp',
             // auth: ['dashboard'],
             // roles: [LOGIN_TYPE.ADMIN],
         },
@@ -183,6 +183,7 @@ const routes = [
                 component: () => import('@/views/item/item-list.vue'),
                 meta: {
                     title: '采购',
+                    is_sub_menu: true
                 }
             },
             {
@@ -213,6 +214,7 @@ const routes = [
                 meta: {
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
                     title: '购物车',
+                    is_sub_menu: true,
                 }
             },
             {
@@ -232,6 +234,7 @@ const routes = [
                 meta: {
                     roles: [LOGIN_TYPE.ADMIN],
                     title: '商品分类',
+                    is_sub_menu: true,
                 }
             },
             {
@@ -241,6 +244,7 @@ const routes = [
                 meta: {
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN],
                     title: '采购订单',
+                    is_sub_menu: true,
                 }
             },
             {
@@ -262,7 +266,7 @@ const routes = [
         name: 'UserManagement',
         meta: {
             title: '员工管理',
-            icon: 'i_s_dashboard',
+            icon: 'i_s_temp',
             // auth: ['dashboard'],
             // roles: [LOGIN_TYPE.ADMIN],
         },
@@ -304,7 +308,7 @@ const routes = [
         name: 'CustomerManagement',
         meta: {
             title: '客户管理',
-            icon: 'i_s_dashboard',
+            icon: 'i_s_temp',
             // auth: ['dashboard'],
             // roles: [LOGIN_TYPE.ADMIN],
         },
@@ -347,7 +351,7 @@ const routes = [
         name: 'StoreManagement',
         meta: {
             title: '门店管理',
-            icon: 'i_s_dashboard',
+            icon: 'i_s_temp',
             // auth: ['dashboard'],
             // roles: [LOGIN_TYPE.ADMIN],
         },

@@ -101,9 +101,9 @@ const apiList = {
         delete: ['PostJson', 'shopping-cart/delete'],
     },
     Favorite: { // 收藏夹
-        add: ['PostJson', 'shopping-cart/create'],
-        list: ['PostJson', 'shopping-cart/list-user'],
-        remove: ['PostJson', 'shopping-cart/delete'],
+        add: ['PostJson', 'favorite/create'],
+        list: ['PostJson', 'favorite/list-user'],
+        remove: ['PostJson', 'favorite/delete'],
     },
     Receive: { // 配送地址
         list: ['PostJson', 'receive-info/list'],

@@ -22,9 +22,9 @@
                     ￥{{$Util.countFilter(item.price)}}
                 </div>
             </div>
-            <SimpleImageEmpty v-if="!shopCartList.length" />
+            <SimpleImageEmpty v-if="!shopCartList.length" desc='您的购物车中暂无商品'/>
         </div>
-        <div class="settle-content">
+        <div class="settle-content" v-if="shopCartList.length">
             <div class="title-area">摘要</div>
             <div class="settle-item" v-for="item of shopCartList" :key="item.id">
                 <p class="name">{{item.item ? item.item.name : '-'}}</p>
@@ -55,7 +55,7 @@
                     ￥{{$Util.countFilter(item.price)}}
                 </div>
             </div>
-            <SimpleImageEmpty v-if="!favoriteList.length" />
+            <SimpleImageEmpty v-if="!favoriteList.length" desc='您的收藏夹中暂无商品'/>
         </div>
     </div>
 </div>

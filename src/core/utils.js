@@ -198,12 +198,10 @@ const Util = {
      * @param {Number} type 乘法/除法 false=除法 true=乘法
      */
     countFilter(val = 0 ,divisor = 100, dp = 2, type = false) {
-        console.log('countFilter', val, divisor, dp, type);
         if (val == 0) { return 0 }
         if (type) {
             return parseFloat((val * divisor).toFixed(dp))
         } else {
-            console.log('countFilter', parseFloat((val / divisor).toFixed(dp)));
             return parseFloat((val / divisor).toFixed(dp))
         }
     },
