@@ -262,19 +262,14 @@ const Util = {
     },
 
     addressFilter(obj, type = 1) {
-        const province = obj.province || '';
-        const city = obj.city || '';
-        const county = obj.county || '';
-        const detail = obj.address || '';
-        if (!province && !city && !county && !detail) {
+        let { province, city, county, address } = obj
+        if (!province && !city && !county && !address) {
             return '-'
         }
         switch (type) {
             case 1:
-                if (!province && !city && !county && !detail) return '-';
-                return `${province} ${city} ${county} ${detail}`;
+                return `${province} ${city} ${county} ${address}`;
             case 2:
-                if (!province && !city && !county) return '-';
                 return `${province} ${city} ${county}`
         }
     },

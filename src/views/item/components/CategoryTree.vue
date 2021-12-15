@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import SimpleImageEmpty from '../SimpleImageEmpty.vue'
-import Core from '../../core';
+import SimpleImageEmpty from '@/components/SimpleImageEmpty.vue'
+import Core from '../../../core';
 
 export default {
     components: {
@@ -35,7 +35,6 @@ export default {
             expandedRowKeys: [],
 
             selectKeys: '',
-
         }
     },
     watch: {

@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import Core from '../../core';
+import Core from '../../../core';
 
 export default {
     components: {},

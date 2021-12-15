@@ -1,25 +1,14 @@
-启动指令 npm run dev
+todo:
+    维修单详情页 样式
+    维修单编辑页 时间回填
+    维修单结算页 样式
 
+    商品与商品分类的 config
+    商品详情页
+    商品的图片上传
+    采购订单 详情页
 
-列表页结构
-```html
-<div id="RepairList">
-    <div class="list-container">
-        <div class="title-container"></div>
-        <div class="tabs-container colorful"></div>
-        <div class="search-container"></div>
-        <div class="table-container"></div>
-        <div class="paging-container"></div>
-    </div>
-    <template class="modal-container">
-        <a-modal v-model="modelShow" title="" class="" :after-close='handleModelClose'>
-            <div class="modal-content">
-                <div class="form-item">
-                    <div class="key"></div>
-                    <div class="value"></div>
-                </div>
-            </div>
-        </a-modal>
-    </template>
-</div>
-```
+    维修单结算页 打印与下载
+    门店详情页 与 经销商详情页 的 数量统计
+    采购订单 模拟支付
+

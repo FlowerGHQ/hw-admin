@@ -24,15 +24,7 @@
                         <a-input placeholder="请输入工单编号" v-model:value="searchForm.sn" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
-                <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">车辆编号:</div>
-                    <div class="value">
-                        <a-input placeholder="请输入零部件编号" v-model:value="searchForm.part_code" @keydown.enter='handleSearch'/>
-                    </div>
-                </a-col> -->
-            <!-- </a-row>
-            <a-row class="search-area"> -->
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">下单时间:</div>
                     <div class="value">
                         <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime">
@@ -40,12 +32,6 @@
                         </a-range-picker>
                     </div>
                 </a-col>
-                <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">产品名称:</div>
-                    <div class="value">
-                        <a-input placeholder="请输入车架编号" v-model:value="searchForm.vehicle_no" @keydown.enter='handleSearch'/>
-                    </div>
-                </a-col> -->
             </a-row>
             <div class="btn-area">
                 <a-button @click="handleSearch" type="primary">查询</a-button>
@@ -90,8 +76,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('edit', record)"> <i class="icon i_edit"/> 再次购买</a-button>
-                        <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_detail"/> 订单详情</a-button>
+                        <a-button type='link' @click="routerChange('edit', record)"> <i class="icon i_cart"/> 再次购买</a-button>
+                        <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_detail"/> 详情</a-button>
                     </template>
                 </template>
             </a-table>
@@ -232,11 +218,11 @@ export default {
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
-                console.log("getTableData -> res", res)
+                console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
             }).catch(err => {
-                console.log('getTableData -> err', err)
+                console.log('getTableData err:', err)
             }).finally(() => {
                 this.loading = false;
             });

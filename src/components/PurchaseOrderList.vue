@@ -147,11 +147,11 @@ export default {
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
-                console.log("getTableData -> res", res)
+                console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
             }).catch(err => {
-                console.log('getTableData -> err', err)
+                console.log('getTableData err:', err)
             }).finally(() => {
                 this.loading = false;
             });
