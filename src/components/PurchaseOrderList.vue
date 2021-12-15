@@ -3,9 +3,6 @@
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">采购订单</div>
-            <!-- <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新增工单</a-button>
-            </div> -->
         </div>
         <div class="tabs-container colorful">
             <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
@@ -15,42 +12,6 @@
                     </template>
                 </a-tab-pane>
             </a-tabs>
-        </div>
-        <div class="search-container">
-            <a-row class="search-area">
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">订单编号:</div>
-                    <div class="value">
-                        <a-input placeholder="请输入工单编号" v-model:value="searchForm.sn" @keydown.enter='handleSearch'/>
-                    </div>
-                </a-col>
-                <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">车辆编号:</div>
-                    <div class="value">
-                        <a-input placeholder="请输入零部件编号" v-model:value="searchForm.part_code" @keydown.enter='handleSearch'/>
-                    </div>
-                </a-col> -->
-            <!-- </a-row>
-            <a-row class="search-area"> -->
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">下单时间:</div>
-                    <div class="value">
-                        <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime">
-                            <template #suffixIcon><i class="icon i_calendar"></i> </template>
-                        </a-range-picker>
-                    </div>
-                </a-col>
-                <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">产品名称:</div>
-                    <div class="value">
-                        <a-input placeholder="请输入车架编号" v-model:value="searchForm.vehicle_no" @keydown.enter='handleSearch'/>
-                    </div>
-                </a-col> -->
-            </a-row>
-            <div class="btn-area">
-                <a-button @click="handleSearch" type="primary">查询</a-button>
-                <a-button @click="handleSearchReset">重置</a-button>
-            </div>
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -69,9 +30,6 @@
                             {{$Util.puechaseStatusFilter(text)}}
                         </div>
                     </template>
-                    <!-- <template v-if="column.dataIndex === 'channel'">
-                        {{$Util.purchaseChannelFilter(text)}}
-                    </template> -->
                     <template v-if="column.dataIndex === 'purchase_method'">
                         {{$Util.purchaseMethodFilter(text)}}
                     </template>
@@ -116,11 +74,21 @@
 </template>
 
 <script>
-import Core from '../../core';
+import Core from '../core';
 export default {
     name: 'PurchaseList',
     components: {},
-    props: {},
+    props: {
+        orgId: {
+            type: Number,
+        },
+        agentId: {
+            type: Number,
+        },
+        storeId: {
+            type: Number,
+        }
+    },
     data() {
         return {
             loginType: Core.Data.getLoginType(),
@@ -147,7 +115,6 @@ export default {
                 subject: 0,
             },
             filteredInfo: null,
-
             tableFields: [],
             tableData: [],
         };
@@ -200,35 +167,12 @@ export default {
             this.pageSize = size
             this.getTableData()
         },
-        handleSearch() {  // 搜索
-            this.pageChange(1);
-        },
-        handleSearchReset() {  // 重置搜索
-            console.log('handleSearchReset:')
-            Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.filteredInfo = null
-
-            console.log('this.searchForm:', this.searchForm)
-            this.create_time = []
-            this.pageChange(1);
-        },
-        handleTableChange(page, filters, sorter) {
-            console.log('handleTableChange filters:', filters)
-            this.filteredInfo = filters;
-            for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : 0
-            }
-            console.log('this.searchForm:', this.searchForm)
-            console.log('this.tableColumns:', this.tableColumns)
-        },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             this.loading = false;
 
             Core.Api.Purchase.list({
-                ...this.searchForm,
-                begin_time: this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
+                org_id: this.orgId,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -256,4 +200,11 @@ export default {
         text-align: center;
     }
 }
+.btn-area{
+        white-space: nowrap;
+        min-width: 210px;
+        display: flex;
+        justify-content: flex-end;
+        // padding-bottom: 50px;
+    }
 </style>

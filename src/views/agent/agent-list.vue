@@ -1,5 +1,5 @@
 <template>
-<div id="DealersList">
+<div id="AgentList">
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">经销商列表</div>
@@ -66,7 +66,7 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_edit"/> 详情</a-button>
+                        <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_detail"/> 详情</a-button>
                         <a-button type='link' @click="routerChange('edit', record)"> <i class="icon i_edit"/> 编辑</a-button>
                         <a-button type='link' @click="handleDelete(record.id)"> <i class="icon i_delete"/> 删除</a-button>
                     </template>
@@ -95,7 +95,7 @@
 <script>
 import Core from '../../core';
 export default {
-    name: 'DealersList',
+    name: 'AgentList',
     components: {},
     props: {},
     data() {
@@ -145,7 +145,7 @@ export default {
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Dealers.delete({id}).then(() => {
+                    Core.Api.Agent.delete({id}).then(() => {
                         _this.$message.success('删除成功');
                         _this.getTableData();
                     }).catch(err => {
@@ -160,14 +160,14 @@ export default {
             switch (type) {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/dealers/dealers-edit",
+                        path: "/agent/agent-edit",
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/dealers/dealers-detail",
+                        path: "/agent/agent-detail",
                         query: { id: item.id }
                     })
                     // window.open(routeUrl.href, '_blank') // 新页
@@ -201,7 +201,7 @@ export default {
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-            Core.Api.Dealers.list({
+            Core.Api.Agent.list({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
@@ -222,5 +222,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #DealersList {}
+// #AgentList {}
 </style>

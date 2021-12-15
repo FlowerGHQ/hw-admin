@@ -8,7 +8,7 @@
         <div class="title-colorful">基本信息</div>
       </div>
       <div class="form-content">
-        <div class="form-item required" >
+        <div class="form-item required">
           <div class="key">仓库名称：</div>
           <div class="value">
             <a-input v-model:value="form.name" placeholder="请输入仓库名称"/>
@@ -58,7 +58,7 @@ export default {
         city: '',
         address: [],
         addressOptions: [],
-        detail_address:[],
+        detail_address: [],
 
       },
     };
@@ -105,9 +105,10 @@ export default {
       //   if (!form.province) {
       //     return this.$message.warning('请选择省/市/区（县）')
       //   }
-      // }
-      // if (!form.address) {
-      //   return this.$message.warning('请输入详细地址')
+      //
+      //   if (!form.address) {
+      //     return this.$message.warning('请输入详细地址')
+      //   }
       // }
       Core.Api.Warehouse.save(form).then(() => {
         this.$message.success('保存成功')

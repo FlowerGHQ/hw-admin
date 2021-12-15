@@ -5,10 +5,11 @@ let URL_POINT = 'http://api.eos.rebuildsoft.com'
 
 switch (window.location.hostname) {
     default:
-		// URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
+		URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
 		// URL_POINT = 'http://10.0.0.205:8083' // 徐伟
+		// URL_POINT = 'http://10.0.0.149:8083' // 徐伟
         // URL_POINT = 'http://10.0.0.39:8083'  // 姚志宇
-        URL_POINT = 'http://10.0.0.155:8083' // 戚哲康
+        // URL_POINT = 'http://10.0.0.155:8083' // 戚哲康
         break;
 }
 
@@ -1451,6 +1452,23 @@ let Const = {
         },
     },
 
+    USER: { // 员工
+        TYPE_MAP: {
+            10: '管理员',
+            20: '代理商',
+            30: '门店',
+            40: '门店',
+            100: '顾客',
+        },
+        TYPE_COLOR_MAP: {
+            10: 'red',
+            20: 'yellow',
+            30: 'orange',
+            40: 'green',
+            100: 'blue',
+        },
+    },
+
     REPAIR: { // 维修工单
         // 工单分类
         TYPE_LIST: [
@@ -1503,7 +1521,6 @@ let Const = {
 		    2: '电池',
 		    3: '其他',
 	    },
-
         STATUS_MAP: {
             10: '待分配',
             20: '待确认',
@@ -1529,7 +1546,24 @@ let Const = {
 
 
 	    }
-    }
+    },
+    PURCHASE: { // 采购订单
+        STATUS_MAP: {
+            0: '未知',
+            100: '待支付',
+            200: '已支付',
+            300: '交易成功',
+            400: '已关闭',
+        },
+        STATUS_COLOR_MAP: {
+            0: 'red',
+            100: 'yellow',
+            200: 'orange',
+            300: 'green',
+            400: 'blue',
+        },
+
+    },
 };
 
 export default Const;

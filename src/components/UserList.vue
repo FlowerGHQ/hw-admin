@@ -7,28 +7,6 @@
                     <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新增员工</a-button>
                 </div>
             </div>
-            <!-- <div class="search-container">
-                <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">员工名称:</div>
-                        <div class="value">
-                            <a-input placeholder="请输入员工名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
-                        <div class="key">创建时间:</div>
-                        <div class="value">
-                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime">
-                                <template #suffixIcon><i class="icon i_calendar"></i> </template>
-                            </a-range-picker>
-                        </div>
-                    </a-col>
-                </a-row>
-                <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">查询</a-button>
-                    <a-button @click="handleSearchReset">重置</a-button>
-                </div>
-            </div> -->
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
@@ -37,6 +15,11 @@
                             <a-tooltip placement="top" :title='text'>
                                 <a-button type="link" @click="routerChange('detail', record)">{{text}}</a-button>
                             </a-tooltip>
+                        </template>
+                        <template v-if="column.dataIndex === 'type'">
+                            <div class="status status-bg status-tag" :class="$Util.UserTypeFilter(text,'color')">
+                                {{$Util.UserTypeFilter(text)}}
+                            </div>
                         </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-'}}
@@ -76,23 +59,19 @@
 </template>
 
 <script>
-import Core from '../../../core';
+import Core from '../core';
 export default {
     name: 'UserList',
     components: {},
     props: {
-        query: {
-            type: Object,
-            default: function () {
-                let obj = {
-                    pageNum: 1,
-                    numPerPage: 10,
-                    dateFrom: '',
-                    dateTo: '',
-                    jobId: ''
-                };
-                return obj;
-            }
+        orgId: {
+            type: Number,
+        },
+        agentId: {
+            type: Number,
+        },
+        storeId: {
+            type: Number,
         }
     },
     data() {
@@ -104,13 +83,7 @@ export default {
             currPage: 1,
             pageSize: 20,
             total: 0,
-            // 搜索
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            create_time: [],
-            searchForm: {
-                name: '',
-                country: undefined,
-            },
+            
             tableData: [],
         };
     },
@@ -175,27 +148,10 @@ export default {
             this.pageSize = size
             this.getTableData()
         },
-        handleSearch() {  // 搜索
-            this.pageChange(1);
-        },
-        handleSearchReset() {  // 重置搜索
-            Object.assign(this.searchForm, this.$options.data().searchForm)
-            console.log('this.searchForm:', this.searchForm)
-            this.create_time = []
-            this.pageChange(1);
-        },
-        handleTableChange(page, filters, sorter) {
-            console.log('handleTableChange filters:', filters)
-            for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : 0
-            }
-        },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             Core.Api.User.list({
-                ...this.searchForm,
-                begin_time: this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
+                org_id: this.orgId,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -213,5 +169,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #UserList {}
+#UserList {
+    .status-tag {
+        width: 50px;
+        height: 22px;
+        line-height: 22px;
+        border-radius: 12px;
+        font-size: @fz_sm;
+        text-align: center;
+    }
+}
 </style>
