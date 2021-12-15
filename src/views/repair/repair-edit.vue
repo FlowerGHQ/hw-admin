@@ -136,13 +136,13 @@
             <div class="form-item">
                 <div class="key">计划时间</div>
                 <div class="value">
-                    <a-date-picker v-model:value="form.plan_time"/>
+                    <a-date-picker v-model:value="form.plan_time" @change="aaa"  format="YYYY-MM-DD" valueFormat="x"/>
                 </div>
             </div>
             <div class="form-item">
                 <div class="key">完成时间</div>
                 <div class="value">
-                    <a-date-picker v-model:value="form.finish_time"/>
+                    <a-date-picker v-model:value="form.finish_time" @change="aaa" format="YYYY-MM-DD" valueFormat="x" />
                 </div>
             </div>
             <div>{{form.plan_time }}</div>
@@ -295,7 +295,6 @@ export default {
     methods: {
         aaa(e) {
             console.log(e)
-          console.log(this.form.plan_time)
         },
         // 获取 车主列表
         getCustomerList() {
@@ -409,6 +408,7 @@ export default {
                 } else {
                     this.customer_address = []
                 }
+                this.form.plan_time /=1000
 
             }).catch(err => {
                 console.log('getRepairDetail err', err)

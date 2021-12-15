@@ -1562,7 +1562,13 @@ let Const = {
         },
 
     },
+	ACTION_LOG: {
+		SOURCE_TYPE:{
+			PURCHASE_ORDER: 10,
+			REPAIR_ORDER: 20,
+		}
 
+	},
 };
 
 export default Const;

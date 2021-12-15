@@ -60,6 +60,8 @@ const apiList = {
     },
     Customer: { // 客户管理
         list: ['PostJson', 'customer/list'],
+	    listByName: ['PostJson', 'customer/list-by-name'],
+
         save: ['PostJson', 'customer/save'],
         update: ['PostJson', 'customer/update'],
         detail: ['PostJson', 'customer/detail'],
@@ -81,6 +83,9 @@ const apiList = {
 	    check: ['PostJson', 'repair/check'], // 工单详情
         statusList: ['PostJson', 'repair/status-list'], // 工单详情
     },
+	RepairItem: { // 维修单
+		saveList: ['PostJson', 'repair-order-item/save-list'], // 列表
+	},
 
     Item: { // 商品
         save: ['PostJson', 'item/save'],
@@ -133,6 +138,10 @@ const apiList = {
         detail: ['PostJson', 'sys-message/detail'],
         delete: ['PostJson', 'sys-message/delete'],
     },
+	ActionLog: {
+		list: ['PostJson', 'action-log/list'],
+
+	},
 
 };
 
