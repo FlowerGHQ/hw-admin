@@ -16,7 +16,7 @@
                 </a-tab-pane>
             </a-tabs>
         </div>
-        <div class="search-container">
+        <div class="search-container" style="display: block;">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">订单编号:</div>
@@ -30,7 +30,9 @@
                         <a-input placeholder="请输入零部件编号" v-model:value="searchForm.part_code" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
+            </a-row>
+            <a-row class="search-area">
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">创建时间:</div>
                     <div class="value">
                         <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime">
@@ -38,15 +40,6 @@
                         </a-range-picker>
                     </div>
                 </a-col>
-                <!-- <a-form-item label="创建时间">
-                    <a-date-picker
-                        v-model:value="create_time"
-                        show-time
-                        type="date"
-                        placeholder="创建时间"
-                        style="width: 100%"
-                    />
-                </a-form-item> -->
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">产品名称:</div>
                     <div class="value">
@@ -68,13 +61,13 @@
                             <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                         </a-tooltip>
                     </template>
-                    <template v-if="column.dataIndex === 'status'">
-                        <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text,'color')">
-                            {{$Util.purchaseStatusFilter(text)}}
+                    <template v-if="column.dataIndex === 'name'">
+                        <div>
+                            {{text}}
                         </div>
                     </template>
-                    <template v-if="column.dataIndex === 'type'">
-                        {{$Util.purchaseTypeFilter(text)}}
+                    <template v-if="column.dataIndex === 'price'">
+                        ￥{{$Util.countFilter(text)}}
                     </template>
                     <template v-if="column.dataIndex === 'channel'">
                         {{$Util.purchaseChannelFilter(text)}}
@@ -169,7 +162,7 @@ export default {
                 { title: '订单编号', dataIndex: 'sn', },
                 { title: '商品', dataIndex: 'name', key: 'tip_item' },
                 { title: '价格', dataIndex: 'price', key: 'item'  },
-                { title: '订单状态', dataIndex: 'remark' },
+                { title: '订单状态', dataIndex: 'status' },
                 { title: '下单时间', dataIndex: 'create_time', key: 'time' },
                 { title: '操作', key: 'operation', fixed: 'right', width: 100, }
             ]
