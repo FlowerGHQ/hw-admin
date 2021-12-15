@@ -48,7 +48,7 @@
             </a-menu>
         </a-layout-sider>
         <a-layout class="layout-main" :class="{longer: collapsed}">
-            <MyBreadcrumb class="layout-breadcrumb"/>
+            <!-- <MyBreadcrumb class="layout-breadcrumb"/> -->
             <a-layout-content class="layout-content">
                 <router-view></router-view>
             </a-layout-content>
@@ -399,7 +399,8 @@ export default {
     .layout-content {
         padding: 16px;
         box-sizing: border-box;
-        height: calc(~"100% - 38px");
+        height: 100%;
+        // height: calc(~"100% - 38px");
         overflow-y: auto;
     }
 }

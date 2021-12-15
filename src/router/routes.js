@@ -1,4 +1,5 @@
 import Const from "../core/const"
+
 const LOGIN_TYPE = Const.LOGIN.TYPE
 
 import Layout from '../views/layout/index.vue';
@@ -295,6 +296,83 @@ const routes = [
                 }
             },
         ]
+    },
+    {   // 客户管理
+        path: '/customer',
+        component: Layout,
+        redirect: '/customer/customer-list',
+        name: 'CustomerManagement',
+        meta: {
+            title: '客户管理',
+            icon: 'i_s_dashboard',
+            // auth: ['dashboard'],
+            // roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'customer-list',
+                name: 'CustomerList',
+                component: () => import('@/views/customer/customer-list.vue'),
+                meta: {
+                    title: '客户列表',
+                }
+            },
+            {
+                path: 'customer-edit',
+                name: 'CustomerEdit',
+                component: () => import('@/views/customer/customer-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '新建客户',
+                    parent: '/customer/customer-list',
+                }
+            },
+
+            {
+                path: 'customer-detail',
+                name: 'CustomerDetail',
+                component: () => import('@/views/customer/customer-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '客户详情',
+                    parent: '/customer/customer-list',
+                }
+            },
+        ]
+    },
+    {   // 门店管理
+        path: '/store',
+        component: Layout,
+        redirect: '/store/store-list',
+        name: 'StoreManagement',
+        meta: {
+            title: '门店管理',
+            icon: 'i_s_dashboard',
+            // auth: ['dashboard'],
+            // roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'store-list',
+                name: 'StoreList',
+                component: () => import('@/views/store/store-list.vue'),
+                meta: {
+                    title: '门店列表',
+                }
+            },
+            {
+                path: 'store-edit',
+                name: 'StoreEdit',
+                component: () => import('@/views/store/store-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '新建门店',
+                    parent: '/store/store-list',
+                }
+
+            },
+        ]
+
     },
 ];
 

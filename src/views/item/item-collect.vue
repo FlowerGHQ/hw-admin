@@ -338,6 +338,7 @@ export default {
                 width: 100%;
                 height: 55px;
                 border-radius: 12px;
+                font-weight: 500;
             }
         }
         &.favorite-container {

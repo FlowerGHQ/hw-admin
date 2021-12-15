@@ -36,6 +36,8 @@ class ApiBase {
     }
 
     http(config, moduleName, args = {}) {
+        console.log('config', config)
+
         let mark = ApiBase.getMark()
         const token = Data.getToken()
 
@@ -49,6 +51,7 @@ class ApiBase {
         if (moduleName == 'Export') {
             return fullUrl + '?' + ApiBase.stringify({token, ...args})
         }
+        console.log('config[0]', config[0])
         switch(config[0]) {
             case 'PostJson':
                 return ajax({
