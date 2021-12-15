@@ -7,7 +7,16 @@
       <div class="form-title">
         <div class="title-colorful">基本信息</div>
       </div>
-      <div class="form-content">
+      <div class="form-content" >
+        <div class="form-item required" v-if="loginType == LOGIN_TYPE.ADMIN" >
+          <div class="key">经销商：</div>
+          <div class="value">
+            <a-select v-model:value="form.agent_id" placeholder="请选择经销商">
+              <a-select-option v-for="agent of agentList" :key="agent.id" :value="agent.id">{{agent.name}}</a-select-option>
+            </a-select>
+
+          </div>
+        </div>
         <div class="form-item required">
           <div class="key">门店名称：</div>
           <div class="value">
@@ -49,14 +58,17 @@ export default {
   data() {
     return {
       loginType: Core.Data.getLoginType(),
+      LOGIN_TYPE: Core.Const.LOGIN.TYPE,
       // 加载
       loading: false,
       detail: {},
       customer_address: [],
       form: {
         id: '',
+        agent_id: '',
         name: '',
         logo: '',
+        type:0,
       },
       upload: {
         action: Core.Const.NET.FILE_UPLOAD_END_POINT,
@@ -69,6 +81,7 @@ export default {
           type: 'img',
         },
       },
+      agentList: []
     };
   },
   watch: {},
@@ -79,6 +92,11 @@ export default {
     if (this.form.id) {
       this.getStoreDetail();
     }
+    let loginType = Core.Data.getLoginType()
+    if (loginType === Core.Const.LOGIN.TYPE.ADMIN) {
+      this.getAgentList();
+    }
+
   },
   methods: {
     routerChange(type, item) {
@@ -137,7 +155,17 @@ export default {
     handleLogoChange({file, fileList}) {
       this.upload.imgList = fileList
       console.log("handleCoverChange status:", file.status, "file:", file)
+
     },
+    getAgentList() {
+      Core.Api.Agent.listName().then(res => {
+        console.log(res)
+        this.agentList = res.list
+      }).catch(err => {
+        console.log('handleSubmit err:', err)
+      })
+
+    }
   }
 }
 </script>

@@ -406,7 +406,7 @@ const routes = [
         name: 'NoticeManagement',
         meta: {
             title: '系统消息',
-            icon: 'i_s_dashboard',
+            icon: 'i_s_temp',
             // auth: ['dashboard'],
             // roles: [LOGIN_TYPE.ADMIN],
         },

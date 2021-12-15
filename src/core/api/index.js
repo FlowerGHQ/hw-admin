@@ -52,6 +52,7 @@ const apiList = {
     },
     Agent: { // 经销商
         list: ['PostJson', 'agent/list'], // 列表
+        listName:['PostJson','agent/list-name'],//名称列表
         save: ['PostJson', 'agent/save'], // 编辑
         detail: ['PostJson', 'agent/detail'], // 详情
         update: ['PostJson', 'agent/update'], // 更新
@@ -126,11 +127,11 @@ const apiList = {
         detail: ['PostJson', 'store/detail'],
         delete: ['PostJson', 'store/delete'],
     },
-    notice: { // 系统消息
-        list: ['PostJson', 'notice/list'],
-        save: ['PostJson', 'notice/save'],
-        detail: ['PostJson', 'notice/detail'],
-        delete: ['PostJson', 'notice/delete'],
+    Notice: { // 系统消息
+        list: ['PostJson', 'sys-message/list'],
+        save: ['PostJson', 'sys-message/save'],
+        detail: ['PostJson', 'sys-message/detail'],
+        delete: ['PostJson', 'sys-message/delete'],
     },
 
 };
