@@ -170,7 +170,6 @@ export default {
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             this.loading = false;
-
             Core.Api.Purchase.list({
                 org_id: this.orgId,
                 page: this.currPage,

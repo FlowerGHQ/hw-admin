@@ -43,7 +43,7 @@ const routes = [
         path: '/repair',
         component: Layout,
         name: 'RepairManagement',
-        redirect: '/repair/repair-list',
+        redirect: '/repair/repair-invoice',
         meta: {
             title: '维修单管理',
             icon: 'i_s_temp',
@@ -51,35 +51,45 @@ const routes = [
             // roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
+            // {
+            //     path: 'repair-list',
+            //     name: 'RepairList',
+            //     component: () => import('@/views/repair/repair-list.vue'),
+            //     meta: {
+            //         title: '维修单列表',
+            //     }
+            // },
+            // {
+            //     path: 'repair-edit',
+            //     name: 'RepairEdit',
+            //     component: () => import('@/views/repair/repair-edit.vue'),
+            //     hidden: true,
+            //     meta: {
+            //         title: '维修单编辑',
+            //         parent: '/repair/repair-list',
+            //     }
+            // },
+            // {
+            //     path: 'repair-detail',
+            //     name: 'RepairDetail',
+            //     component: () => import('@/views/repair/repair-detail.vue'),
+            //     // hidden: true,
+            //     meta: {
+            //         title: '维修单详情',
+            //         // parent: '/repair/repair-list',
+            //     }
+            // },
             {
-                path: 'repair-list',
-                name: 'RepairList',
-                component: () => import('@/views/repair/repair-list.vue'),
-                meta: {
-                    title: '维修单列表',
-                }
-            },
-            {
-                path: 'repair-edit',
-                name: 'RepairEdit',
-                component: () => import('@/views/repair/repair-edit.vue'),
-                hidden: true,
-                meta: {
-                    title: '维修单编辑',
-                    parent: '/repair/repair-list',
-                }
-            },
-            {
-                path: 'repair-detail',
+                path: 'repair-invoice',
                 name: 'RepairDetail',
-                component: () => import('@/views/repair/repair-detail.vue'),
-                hidden: true,
+                component: () => import('@/views/repair/repair-invoice.vue'),
+                // hidden: true,
                 meta: {
                     title: '维修单详情',
-                    parent: '/repair/repair-list',
+                    // parent: '/repair/repair-list',
                 }
             },
-        ]
+       ]
     },
     {   // 经销商
         path: '/agent',
