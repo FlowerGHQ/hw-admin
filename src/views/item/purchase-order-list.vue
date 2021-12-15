@@ -16,7 +16,7 @@
                 </a-tab-pane>
             </a-tabs>
         </div>
-        <div class="search-container" style="display: block;">
+        <div class="search-container">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">订单编号:</div>
@@ -24,28 +24,28 @@
                         <a-input placeholder="请输入工单编号" v-model:value="searchForm.sn" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">车辆编号:</div>
                     <div class="value">
                         <a-input placeholder="请输入零部件编号" v-model:value="searchForm.part_code" @keydown.enter='handleSearch'/>
                     </div>
-                </a-col>
-            </a-row>
-            <a-row class="search-area">
+                </a-col> -->
+            <!-- </a-row>
+            <a-row class="search-area"> -->
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">创建时间:</div>
+                    <div class="key">下单时间:</div>
                     <div class="value">
                         <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime">
                             <template #suffixIcon><i class="icon i_calendar"></i> </template>
                         </a-range-picker>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">产品名称:</div>
                     <div class="value">
                         <a-input placeholder="请输入车架编号" v-model:value="searchForm.vehicle_no" @keydown.enter='handleSearch'/>
                     </div>
-                </a-col>
+                </a-col> -->
             </a-row>
             <div class="btn-area">
                 <a-button @click="handleSearch" type="primary">查询</a-button>
@@ -54,24 +54,24 @@
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
+                :row-key="record => record.id" :pagination='false' @change="handleTableChange">
                 <template #bodyCell="{ column, text , record}">
                     <template v-if="column.dataIndex === 'sn'">
                         <a-tooltip placement="top" :title='text'>
                             <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                         </a-tooltip>
                     </template>
-                    <template v-if="column.dataIndex === 'name'">
-                        <div>
-                            {{text}}
-                        </div>
-                    </template>
                     <template v-if="column.dataIndex === 'price'">
                         ￥{{$Util.countFilter(text)}}
                     </template>
-                    <template v-if="column.dataIndex === 'channel'">
-                        {{$Util.purchaseChannelFilter(text)}}
+                    <template v-if="column.dataIndex === 'status'">
+                        <div class="status status-bg status-tag" :class="$Util.puechaseStatusFilter(text,'color')">
+                            {{$Util.puechaseStatusFilter(text)}}
+                        </div>
                     </template>
+                    <!-- <template v-if="column.dataIndex === 'channel'">
+                        {{$Util.purchaseChannelFilter(text)}}
+                    </template> -->
                     <template v-if="column.dataIndex === 'purchase_method'">
                         {{$Util.purchaseMethodFilter(text)}}
                     </template>
@@ -130,7 +130,6 @@ export default {
             currPage: 1,
             pageSize: 20,
             total: 0,
-
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             statusList: [
@@ -160,8 +159,7 @@ export default {
             filteredInfo = filteredInfo || {};
             let columns = [
                 { title: '订单编号', dataIndex: 'sn', },
-                { title: '商品', dataIndex: 'name', key: 'tip_item' },
-                { title: '价格', dataIndex: 'price', key: 'item'  },
+                { title: '价格', dataIndex: 'price'  },
                 { title: '订单状态', dataIndex: 'status' },
                 { title: '下单时间', dataIndex: 'create_time', key: 'time' },
                 { title: '操作', key: 'operation', fixed: 'right', width: 100, }
@@ -258,4 +256,11 @@ export default {
         text-align: center;
     }
 }
+.btn-area{
+        white-space: nowrap;
+        min-width: 210px;
+        display: flex;
+        justify-content: flex-end;
+        // padding-bottom: 50px;
+    }
 </style>

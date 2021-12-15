@@ -197,11 +197,13 @@ const Util = {
      * @param {Number} dp 保留几位小数 默认为2
      * @param {Number} type 乘法/除法 false=除法 true=乘法
      */
-    countFilter(val = 0 ,divisor = 100, dp = 2, type= false) {
+    countFilter(val = 0 ,divisor = 100, dp = 2, type = false) {
+        console.log('countFilter', val, divisor, dp, type);
         if (val == 0) { return 0 }
         if (type) {
             return parseFloat((val * divisor).toFixed(dp))
         } else {
+            console.log('countFilter', parseFloat((val / divisor).toFixed(dp)));
             return parseFloat((val / divisor).toFixed(dp))
         }
     },
@@ -340,6 +342,19 @@ const Util = {
 		return MAP[val] || '未知'
 	},
 /* =============== 维修单 ================ */
+/* =============== 采购单 ================ */
+puechaseStatusFilter(val, to = 'word') {
+    const MAP = Const.PURCHASE.STATUS_MAP
+    const COLOR_MAP = Const.PURCHASE.STATUS_COLOR_MAP
+    switch (to) {
+        case 'word':
+            return MAP[val] || '未知'
+        case 'color':
+            return COLOR_MAP[val] || 'grey'
+    }
+},
+/* =============== 采购单 ================ */
+
 
 }
 

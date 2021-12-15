@@ -1503,7 +1503,6 @@ let Const = {
 		    2: '电池',
 		    3: '其他',
 	    },
-
         STATUS_MAP: {
             10: '待分配',
             20: '待确认',
@@ -1529,7 +1528,24 @@ let Const = {
 
 
 	    }
-    }
+    },
+    PURCHASE: { // 采购订单
+        STATUS_MAP: {
+            0: '未知',
+            100: '待支付',
+            200: '已支付',
+            300: '交易成功',
+            400: '已关闭',
+        },
+        STATUS_COLOR_MAP: {
+            0: 'red',
+            100: 'yellow',
+            200: 'orange',
+            300: 'green',
+            400: 'blue',
+        },
+
+    },
 };
 
 export default Const;
