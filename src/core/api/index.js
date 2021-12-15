@@ -56,7 +56,7 @@ const apiList = {
         detail: ['PostJson', 'agent/detail'], // 详情
         update: ['PostJson', 'agent/update'], // 更新
         delete: ['PostJson', 'agent/delete'], // 删除
-
+    },
     Customer: { // 客户管理
         list: ['PostJson', 'customer/list'],
         save: ['PostJson', 'customer/save'],
@@ -125,7 +125,6 @@ const apiList = {
         detail: ['PostJson', 'store/detail'],
         delete: ['PostJson', 'store/delete'],
     },
-
 
 };
 
