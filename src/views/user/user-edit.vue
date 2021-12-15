@@ -9,31 +9,19 @@
             <div class="form-item required">
                 <div class="key">员工名:</div>
                 <div class="value">
-                    <a-input v-model:value="form.name" placeholder="请输入员工"/>
+                    <a-input v-model:value="form.name" placeholder="请输入员工名"/>
                 </div>
             </div>
-            <div class="form-item required">
+            <div class="form-item required" v-if="!form.id">
                 <div class="key">账号:</div>
                 <div class="value">
                     <a-input v-model:value="form.username" placeholder="请输入账号"/>
                 </div>
             </div>
-            <div class="form-item required">
+            <div class="form-item required" v-if="!form.id">
                 <div class="key">密码:</div>
                 <div class="value">
-                    <a-input v-model:value="form.password" placeholder="请输入密码"/>
-                </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">类型:</div>
-                <div class="value">
-                    <!-- <a-input v-model:value="form.password" placeholder="请选择类型"/> -->
-                    <a-select v-model:value="form.password" placeholder="请选择类型">
-                        <a-select-option value="10">管理员</a-select-option>
-                        <a-select-option value="20">代理商</a-select-option>
-                        <a-select-option value="30">门店</a-select-option>
-                        <a-select-option value="40">终端用户</a-select-option>
-                    </a-select>
+                    <a-input-password v-model:value="form.password" placeholder="请输入密码"/>
                 </div>
             </div>
             <div class="form-item required">
@@ -52,7 +40,7 @@
     </div>
     <div class="form-btns">
         <a-button @click="handleSubmit" type="primary">确定</a-button>
-        <a-button @click="routerChange('back')" type="primary" ghost="">取消</a-button>
+        <a-button @click="routerChange('back')" type="primary" ghost>取消</a-button>
     </div>
 </div>
 </template>
@@ -69,13 +57,14 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
+            user_id: '',
             detail: {},
+            type: '',
             form: {
                 id: '',
                 name: '',
                 username: '',
                 password: '',
-                type: '',
                 phone: '',
                 email: '',
             }
@@ -83,10 +72,10 @@ export default {
     },
     watch: {},
     computed: {},
-
-    mounted() {
-        this.form.id = Number(this.$route.query.id) || 0
-        if (this.form.id) {
+    created() {
+        this.user_id = Number(this.$route.query.id) || 0
+        this.type = Number(this.$route.query.type) || 0
+        if (this.user_id) {
             this.getUserDetail();
         }
     },
@@ -100,12 +89,12 @@ export default {
         },
         getUserDetail() {
             this.loading = true;
-            console.log("id",this.form.id)
             Core.Api.User.detail({
-                id: this.form.id,
+                id: this.user_id,
             }).then(res => {
                 console.log('getUserDetail res', res)
                 this.detail = res.detail
+                this.type = res.detail.type
                 for (const key in this.form) {
                     this.form[key] = res.detail.account[key]
                 }
@@ -128,16 +117,17 @@ export default {
                     return this.$message.warning('请输入密码')
                 }
             }
-            if (!form.type) {
-                return this.$message.warning('请输入员工类型')
-            }
             if (!form.phone) {
                 return this.$message.warning('请输入员工手机号')
             }
             if (!form.email) {
                 return this.$message.warning('请输入员工邮箱')
             }
-            Core.Api.Account.save(form).then(() => {
+            let apiName = form.id ? 'update' : 'save'
+            Core.Api.Account[apiName]({
+                ...form,
+                type: this.type
+            }).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
             }).catch(err => {

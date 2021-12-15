@@ -331,7 +331,7 @@ export default {
             this.staffShow = true
             Core.Api.User.list({
                 page: 0,
-                type: Core.Const.ACCOUNT.TYPE.REPAIR_WORKER,
+                type: Core.Const.USER.TYPE.WORKER,
             }).then(res => {
                 this.staffList = res.list
             }).finally(() => {

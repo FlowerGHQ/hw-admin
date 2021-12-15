@@ -2,20 +2,12 @@
 <div id="AgentEdit" class="edit-container">
     <div class="title-container"><div class="title-area">{{form.id ? '编辑经销商' : '新建经销商'}}</div></div>
     <div class="form-block">
-        <div class="form-title">
-            <div class="title-colorful">基本信息</div>
-        </div>
+        <div class="form-title"><div class="title">基本信息</div></div>
         <div class="form-content">
-            <div class="form-item required" v-if="!form.id">
+            <div class="form-item required">
                 <div class="key">经销商名:</div>
                 <div class="value">
                     <a-input v-model:value="form.name" placeholder="请输入经销商"/>
-                </div>
-            </div>
-            <div class="form-item required" v-if="!form.id">
-                <div class="key">密码:</div>
-                <div class="value">
-                    <a-input-password v-model:value="form.password" placeholder="请输入密码"/>
                 </div>
             </div>
             <div class="form-item required">
@@ -64,7 +56,6 @@ export default {
             form: {
                 id: '',
                 name: '',
-                password: '',
                 phone: '',
                 email: '',
                 country: undefined,
@@ -107,13 +98,8 @@ export default {
         },
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
-            if (!form.id) {
-                if (!form.name) {
-                    return this.$message.warning('请输入经销商名')
-                }
-                if (!form.password) {
-                    return this.$message.warning('请输入密码')
-                }
+            if (!form.name) {
+                return this.$message.warning('请输入经销商名')
             }
             if (!form.phone) {
                 return this.$message.warning('请输入经销商手机号')

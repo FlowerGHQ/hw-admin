@@ -109,6 +109,7 @@ export default {
                 } else {
                     this.selectedKeys = ['/' + path[0]]
                 }
+                console.log('this.selectedKeys:', this.selectedKeys)
             }
         }
     },

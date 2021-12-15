@@ -1,61 +1,59 @@
 <template>
-    <div id="UserList">
-        <div class="list-container">
-            <div class="title-container">
-                <div class="title-area">员工列表</div>
-                <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新增员工</a-button>
-                </div>
-            </div>
-            <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                    :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
-                    <template #bodyCell="{ column, text , record }">
-                        <template v-if="column.dataIndex === 'sn'">
-                            <a-tooltip placement="top" :title='text'>
-                                <a-button type="link" @click="routerChange('detail', record)">{{text}}</a-button>
-                            </a-tooltip>
-                        </template>
-                        <template v-if="column.dataIndex === 'type'">
-                            <div class="status status-bg status-tag" :class="$Util.UserTypeFilter(text,'color')">
-                                {{$Util.UserTypeFilter(text)}}
-                            </div>
-                        </template>
-                        <template v-if="column.key === 'item'">
-                            {{ text || '-'}}
-                        </template>
-                        <template v-if="column.key === 'tip_item'">
-                            <a-tooltip placement="top" :title='text'>
-                                <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
-                            </a-tooltip>
-                        </template>
-                        <template v-if="column.key === 'time'">
-                            {{ $Util.timeFilter(text) }}
-                        </template>
-                        <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="routerChange('edit', record)"> <i class="icon i_edit"/> 编辑</a-button>
-                            <a-button type='link' @click="handleDelete(record.id)"> <i class="icon i_delete"/> 删除</a-button>
-                        </template>
-                    </template>
-                </a-table>
-            </div>
-            <div class="paging-container">
-                <a-pagination
-                    v-model:current="currPage"
-                    :page-size='pageSize'
-                    :total="total"
-                    show-quick-jumper
-                    show-size-changer
-                    show-less-items
-                    :show-total="total => `共${total}条`"
-                    :hide-on-single-page='false'
-                    :pageSizeOptions="['10', '20', '30', '40']"
-                    @change="pageChange"
-                    @showSizeChange="pageSizeChange"
-                />
+<div class="UserList">
+    <div class="list-container">
+        <div class="title-container">
+            <div class="title-area">员工列表</div>
+            <div class="btns-area">
+                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新增员工</a-button>
             </div>
         </div>
+        <div class="table-container">
+            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
+                <template #bodyCell="{ column, text , record }">
+                    <template v-if="column.dataIndex === 'sn'">
+                        <a-tooltip placement="top" :title='text'>
+                            <a-button type="link" @click="routerChange('detail', record)">{{text}}</a-button>
+                        </a-tooltip>
+                    </template>
+                    <template v-if="column.dataIndex === 'type'">
+                        {{$Util.userTypeFilter(text)}}
+                    </template>
+                    <template v-if="column.key === 'item'">
+                        {{ text || '-'}}
+                    </template>
+                    <template v-if="column.key === 'tip_item'">
+                        <a-tooltip placement="top" :title='text'>
+                            <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
+                        </a-tooltip>
+                    </template>
+                    <template v-if="column.key === 'time'">
+                        {{ $Util.timeFilter(text) }}
+                    </template>
+                    <template v-if="column.key === 'operation'">
+                        <a-button type='link' @click="routerChange('edit', record)"> <i class="icon i_edit"/> 编辑</a-button>
+                        <a-button type='link' @click="handleDelete(record.id)"> <i class="icon i_delete"/> 删除</a-button>
+                    </template>
+                </template>
+            </a-table>
+        </div>
+        <div class="paging-container">
+            <a-pagination
+                v-model:current="currPage"
+                :page-size='pageSize'
+                :total="total"
+                show-quick-jumper
+                show-size-changer
+                show-less-items
+                :show-total="total => `共${total}条`"
+                :hide-on-single-page='false'
+                :pageSizeOptions="['10', '20', '30', '40']"
+                @change="pageChange"
+                @showSizeChange="pageSizeChange"
+            />
+        </div>
     </div>
+</div>
 </template>
 
 <script>
@@ -83,7 +81,7 @@ export default {
             currPage: 1,
             pageSize: 20,
             total: 0,
-            
+
             tableData: [],
         };
     },
@@ -108,17 +106,6 @@ export default {
         this.getTableData();
     },
     methods: {
-        handleDelete(id){
-            Core.Api.User.delete({
-                id: id,
-            }).then(res => {
-                console.log("delete -> res", res)
-            }).catch(err => {
-                console.log('delete -> err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
         routerChange(type, item = {}) {
             console.log(item)
             let routeUrl = ''
@@ -164,12 +151,24 @@ export default {
                 this.loading = false;
             });
         },
+
+        handleDelete(id){
+            Core.Api.User.delete({
+                id: id,
+            }).then(res => {
+                console.log("delete -> res", res)
+            }).catch(err => {
+                console.log('delete -> err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
     }
 };
 </script>
 
 <style lang="less" scoped>
-#UserList {
+.UserList {
     .status-tag {
         width: 50px;
         height: 22px;

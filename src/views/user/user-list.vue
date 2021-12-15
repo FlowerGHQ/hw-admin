@@ -1,83 +1,73 @@
 <template>
-    <div id="UserList">
-        <div class="list-container">
-            <div class="title-container">
-                <div class="title-area">员工列表</div>
-                <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新增员工</a-button>
-                </div>
-            </div>
-            <!-- <div class="search-container">
-                <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">员工名称:</div>
-                        <div class="value">
-                            <a-input placeholder="请输入员工名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
-                        <div class="key">创建时间:</div>
-                        <div class="value">
-                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime">
-                                <template #suffixIcon><i class="icon i_calendar"></i> </template>
-                            </a-range-picker>
-                        </div>
-                    </a-col>
-                </a-row>
-                <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">查询</a-button>
-                    <a-button @click="handleSearchReset">重置</a-button>
-                </div>
-            </div> -->
-            <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                    :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
-                    <template #bodyCell="{ column, text , record }">
-                        <template v-if="column.dataIndex === 'sn'">
-                            <a-tooltip placement="top" :title='text'>
-                                <a-button type="link" @click="routerChange('detail', record)">{{text}}</a-button>
-                            </a-tooltip>
-                        </template>
-                        <template v-if="column.dataIndex === 'type'">
-                            <div class="status status-bg status-tag" :class="$Util.UserTypeFilter(text,'color')">
-                                {{$Util.UserTypeFilter(text)}}
-                            </div>
-                        </template>
-                       <template v-if="column.key === 'item'">
-                            {{ text || '-'}}
-                        </template>
-                        <template v-if="column.key === 'tip_item'">
-                            <a-tooltip placement="top" :title='text'>
-                                <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
-                            </a-tooltip>
-                        </template>
-                        <template v-if="column.key === 'time'">
-                            {{ $Util.timeFilter(text) }}
-                        </template>
-                        <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="routerChange('edit', record)"> <i class="icon i_edit"/> 编辑</a-button>
-                            <a-button type='link' @click="handleDelete(record.id)"> <i class="icon i_delete"/> 删除</a-button>
-                        </template>
-                    </template>
-                </a-table>
-            </div>
-            <div class="paging-container">
-                <a-pagination
-                    v-model:current="currPage"
-                    :page-size='pageSize'
-                    :total="total"
-                    show-quick-jumper
-                    show-size-changer
-                    show-less-items
-                    :show-total="total => `共${total}条`"
-                    :hide-on-single-page='false'
-                    :pageSizeOptions="['10', '20', '30', '40']"
-                    @change="pageChange"
-                    @showSizeChange="pageSizeChange"
-                />
+<div id="UserList">
+    <div class="list-container">
+        <div class="title-container">
+            <div class="title-area">员工列表</div>
+            <div class="btns-area">
+                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新增员工</a-button>
             </div>
         </div>
+        <div class="search-container">
+            <a-row class="search-area">
+                <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
+                    <div class="key">创建时间:</div>
+                    <div class="value">
+                        <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime">
+                            <template #suffixIcon><i class="icon i_calendar"></i> </template>
+                        </a-range-picker>
+                    </div>
+                </a-col>
+            </a-row>
+            <div class="btn-area">
+                <a-button @click="handleSearch" type="primary">查询</a-button>
+                <a-button @click="handleSearchReset">重置</a-button>
+            </div>
+        </div>
+        <div class="table-container">
+            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                :row-key="record => record.id"  :pagination='false'>
+                <template #bodyCell="{ column, text , record }">
+                    <template v-if="column.dataIndex === 'type'">
+                        {{$Util.userTypeFilter(text)}}
+                    </template>
+                    <template v-if="column.dataIndex === 'flag_admin'">
+                        {{ text ? '是' : '否' }}
+                    </template>
+                    <template v-if="column.key === 'item'">
+                        {{ text || '-'}}
+                    </template>
+                    <template v-if="column.key === 'tip_item'">
+                        <a-tooltip placement="top" :title='text'>
+                            <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
+                        </a-tooltip>
+                    </template>
+                    <template v-if="column.key === 'time'">
+                        {{ $Util.timeFilter(text) }}
+                    </template>
+                    <template v-if="column.key === 'operation'">
+                        <a-button type='link' @click="routerChange('edit', record)"> <i class="icon i_edit"/> 编辑</a-button>
+                        <a-button type='link' @click="handleDelete(record.id)"> <i class="icon i_delete"/> 删除</a-button>
+                    </template>
+                </template>
+            </a-table>
+        </div>
+        <div class="paging-container">
+            <a-pagination
+                v-model:current="currPage"
+                :page-size='pageSize'
+                :total="total"
+                show-quick-jumper
+                show-size-changer
+                show-less-items
+                :show-total="total => `共${total}条`"
+                :hide-on-single-page='false'
+                :pageSizeOptions="['10', '20', '30', '40']"
+                @change="pageChange"
+                @showSizeChange="pageSizeChange"
+            />
+        </div>
     </div>
+</div>
 </template>
 
 <script>
@@ -98,52 +88,27 @@ export default {
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
-            searchForm: {
-                name: '',
-                country: undefined,
-            },
+
             tableData: [],
-        };
-    },
-    watch: {},
-    computed: {
-        tableColumns() {
-            let columns = [
+            tableColumns: [
                 { title: '姓名', dataIndex: ['account', 'name'], key: 'item' },
                 { title: '账号', dataIndex: ['account', 'username'], key: 'item' },
-                { title: '手机号', dataIndex: ['account', 'phone'] },
-                { title: '邮箱', dataIndex: ['account', 'email'] },
+                { title: '手机号', dataIndex: ['account', 'phone'], key: 'item' },
+                { title: '邮箱', dataIndex: ['account', 'email'], key: 'item' },
                 { title: '类型', dataIndex: 'type' },
                 { title: '是否为管理员', dataIndex: 'flag_admin' },
                 { title: '最近登录', dataIndex: ['account', 'last_login_time'], key: 'time' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '操作', key: 'operation', fixed: 'right', width: 100, },
             ]
-            return columns
-        },
+        };
     },
+    watch: {},
+    computed: {},
     mounted() {
         this.getTableData();
     },
     methods: {
-        handleDelete(id){
-            let _this = this;
-            // console.log("handleDelete id", id)
-            this.$confirm({
-                title: '确定要删除该员工吗？',
-                okText: '确定',
-                okType: 'danger',
-                cancelText: '取消',
-                onOk() {
-                    Core.Api.User.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
-                        _this.getTableData();
-                    }).catch(err => {
-                        console.log("handleDelete -> err", err);
-                    })
-                },
-            });
-        },
         routerChange(type, item = {}) {
             console.log(item)
             let routeUrl = ''
@@ -151,7 +116,7 @@ export default {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/user/user-edit",
-                        query: { id: item.id }
+                        query: { id: item.id, type: this.loginType }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -160,7 +125,6 @@ export default {
                         path: "/user/user-detail",
                         query: { id: item.id }
                     })
-                    // window.open(routeUrl.href, '_blank')
                     window.open(routeUrl.href, '_self')
                     break;
             }
@@ -178,21 +142,13 @@ export default {
             this.pageChange(1);
         },
         handleSearchReset() {  // 重置搜索
-            Object.assign(this.searchForm, this.$options.data().searchForm)
-            console.log('this.searchForm:', this.searchForm)
             this.create_time = []
             this.pageChange(1);
-        },
-        handleTableChange(page, filters, sorter) {
-            console.log('handleTableChange filters:', filters)
-            for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : 0
-            }
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             Core.Api.User.list({
-                ...this.searchForm,
+                type: this.loginType,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
                 page: this.currPage,
@@ -207,19 +163,28 @@ export default {
                 this.loading = false;
             });
         },
+
+        handleDelete(id) {
+            let _this = this;
+            this.$confirm({
+                title: '确定要删除该员工吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.User.delete({id}).then(() => {
+                        _this.$message.success('删除成功');
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete -> err", err);
+                    })
+                },
+            });
+        },
     }
 };
 </script>
 
 <style lang="less" scoped>
-#UserList {
-    .status-tag {
-        width: 50px;
-        height: 22px;
-        line-height: 22px;
-        border-radius: 12px;
-        font-size: @fz_sm;
-        text-align: center;
-    }
-}
+// #UserList {}
 </style>
