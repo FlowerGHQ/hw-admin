@@ -1,155 +1,150 @@
 <template>
-<div id="RepairDetail">
-    <div class="list-container">
-        <div class="title-container">
-            <div class="title-area">工单详情</div>
-            <div class="btns-area">
-                <a-button type="primary" ghost @click="repairCheck()" v-if="detail.status == Core.Const.REPAIR.STATUS.WAIT_CHECK"><i class="icon i_edit"/>确定</a-button>
-                <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
-                <a-button type="danger" ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button>
-            </div>
-        </div>
-        <div class="gray-panel info">
-            <div class="panel-title">
-                <div class="left">
-                    <span>工单编号</span> {{detail.uid}}
+    <div id="RepairDetail">
+        <div class="list-container">
+            <div class="title-container">
+                <div class="title-area">工单详情</div>
+                <div class="btns-area">
+                    <a-button type="primary" ghost @click="repairCheck()" v-if="detail.status == Core.Const.REPAIR.STATUS.WAIT_CHECK"><i class="icon i_edit"/>确定</a-button>
+                    <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
+                    <a-button type="danger" ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button>
                 </div>
-                <div class="right">
-                    <div class="staff" v-if="detail.repair_user_id">员工：{{detail.repair_user_name || '-'}}</div>
-                    <div class="status">
-                        <i class="icon i_point" :class="$Util.repairStatusFilter(detail.status,'color')"/>
-                        {{$Util.repairStatusFilter(detail.status)}}
+            </div>
+            <div class="gray-panel info">
+                <div class="panel-title">
+                    <div class="left">
+                        <span>工单编号</span> {{detail.uid}}
+                    </div>
+                    <div class="right">
+                        <div class="staff" v-if="detail.repair_user_id">员工：{{detail.repair_user_name || '-'}}</div>
+                        <div class="status">
+                            <i class="icon i_point" :class="$Util.repairStatusFilter(detail.status,'color')"/>
+                            {{$Util.repairStatusFilter(detail.status)}}
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div class="info-item">
+                        <div class="key">工单名称</div>
+                        <div class="value">{{detail.name || '-'}}</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="key">优先级</div>
+                        <div class="value">{{$Util.repairPriorityFilter(detail.priority)}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">维修方式</div>
+                        <div class="value">{{$Util.repairChannelFilter(detail.channel) || '-'}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">产品类别</div>
+                        <div class="value">{{$Util.repairItemTypeFilter(detail.item_type) || '-'}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">维修类别</div>
+                        <div class="value">{{$Util.repairMethodFilter(detail.repair_method) || '-'}}</div>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div class="info-item">
+                        <div class="key">相关客户</div>
+                        <div class="value">{{detail.customer_name || '-'}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">客户电话</div>
+                        <div class="value">{{detail.customer_phone || '-'}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">客户邮箱</div>
+                        <div class="value">{{detail.customer_email || '-'}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">车辆编号</div>
+                        <div class="value">{{ item_code || '-'}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">地址</div>
+                        <div class="value">{{detail.customer_address + detail.customer_detail_address || '-'}}</div>
+                    </div>
+
+                </div>
+                <div class="panel-content">
+                    <div class="info-item">
+                        <div class="key">问题描述</div>
+                        <div class="value">{{detail.desc|| '-'}}</div>
+                    </div>
+
+
+                    <div class="info-item">
+                        <div class="key">创建人</div>
+                        <div class="value">{{detail.operator_name || '-'}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">创建时间</div>
+                        <div class="value">{{$Util.timeFilter(detail.create_time) || '-'}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">实施时间</div>
+                        <div class="value">{{$Util.timeFilter(detail.finish_time) || '-'}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">完成时间</div>
+                        <div class="value">{{$Util.timeFilter(detail.plan_time) || '-'}}</div>
                     </div>
                 </div>
             </div>
-            <div class="panel-content">
-                <div class="info-item">
-                    <div class="key">工单名称</div>
-                    <div class="value">{{detail.name || '-'}}</div>
-                </div>
-
-                <div class="info-item">
-                    <div class="key">优先级</div>
-                    <div class="value">{{$Util.repairPriorityFilter(detail.priority)}}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">维修方式</div>
-                    <div class="value">{{$Util.repairChannelFilter(detail.channel) || '-'}}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">产品类别</div>
-                    <div class="value">{{$Util.repairItemTypeFilter(detail.item_type) || '-'}}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">维修类别</div>
-                    <div class="value">{{$Util.repairMethodFilter(detail.repair_method) || '-'}}</div>
-                </div>
+            <div class="steps-container">
+                <a-steps>
+                    <a-step v-for="(item, index) of stepsList" :key="index" :status="item.status" :title="item.title">
+                        <template #icon>
+                            <span v-if="item.status == 'finish'" class="circle icon i_click"/>
+                            <span v-else class="circle">{{index + 1}}</span>
+                        </template>
+                    </a-step>
+                </a-steps>
             </div>
-            <div class="panel-content">
-                <div class="info-item">
-                    <div class="key">相关客户</div>
-                    <div class="value">{{detail.customer_name || '-'}}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">客户电话</div>
-                    <div class="value">{{detail.customer_phone || '-'}}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">客户邮箱</div>
-                    <div class="value">{{detail.customer_email || '-'}}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">车辆编号</div>
-                    <div class="value">{{ item_code || '-'}}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">地址</div>
-                    <div class="value">{{detail.customer_address + detail.customer_detail_address || '-'}}</div>
-                </div>
-
+            <div class="form-container">
+                <CheckFault  :id='id' :detail='detail' v-if="active == 'CheckFault'" />
             </div>
-            <div class="panel-content">
-                <div class="info-item">
-                    <div class="key">问题描述</div>
-                    <div class="value">{{detail.desc|| '-'}}</div>
-                </div>
-
-
-                <div class="info-item">
-                    <div class="key">创建人</div>
-                    <div class="value">{{detail.operator_name || '-'}}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">创建时间</div>
-                    <div class="value">{{$Util.timeFilter(detail.create_time) || '-'}}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">实施时间</div>
-                    <div class="value">{{$Util.timeFilter(detail.finish_time) || '-'}}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">完成时间</div>
-                    <div class="value">{{$Util.timeFilter(detail.plan_time) || '-'}}</div>
-                </div>
-            </div>
-        </div>
-        <div class="steps-container">
-            <a-steps>
-                <a-step v-for="(item, index) of stepsList" :key="index" :status="item.status" :title="item.title">
-                    <template #icon>
-                        <span v-if="item.status == 'finish'" class="circle icon i_click"/>
-                        <span v-else class="circle">{{index + 1}}</span>
-                    </template>
-                </a-step>
-            </a-steps>
-        </div>
-        <div class="collapse-container">
-            <a-collapse v-model:activeKey="activeKey" :expand-icon-position="expandIconPosition">
-                <a-collapse-panel key="1" header="This is panel header 1">
-                    <div class="gray-panel info">
-                        <div class="panel-title">
-                            <div class="left">
-                                <span>工单编号</span> {{detail.uid}}
-                            </div>
-                            <div class="right">
-                                <div class="staff" v-if="detail.repair_user_id">员工：{{detail.repair_user_name || '-'}}</div>
-                                <div class="status">
-                                    <i class="icon i_point" :class="$Util.repairStatusFilter(detail.status,'color')"/>
-                                    {{$Util.repairStatusFilter(detail.status)}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel-content">
-                            <div class="info-item">
-                                <div class="key">工单名称</div>
-                                <div class="value">{{detail.name || '-'}}</div>
-                            </div>
-
-                            <div class="info-item">
-                                <div class="key">优先级</div>
-                                <div class="value">{{$Util.repairPriorityFilter(detail.priority)}}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                </a-collapse-panel>
-                <a-collapse-panel key="2" header="This is panel header 2">
-                </a-collapse-panel>
-                <a-collapse-panel key="3" header="This is panel header 3" collapsible="disabled">
-                </a-collapse-panel>
-            </a-collapse>
         </div>
     </div>
-</div>
 </template>
 
 <script>
 import Core from '../../core';
 import axios from 'axios';
+import CheckFault from './components/CheckFault.vue';
 const REPAIR = Core.Const.REPAIR
+const faultOptions = [
+    { label: '电池故障', value: '电池故障' },
+    { label: '发动机故障', value: '发动机故障' },
+    { label: '轮胎故障', value: '轮胎故障' },
+    { label: '轮胎故障', value: '轮胎故障' },
+    { label: '轮胎故障', value: '轮胎故障' },
+    { label: '轮胎故障', value: '轮胎故障' },
+    { label: '轮胎故障', value: '轮胎故障' },
+    { label: '轮胎故障', value: '轮胎故障' },
+    { label: '轮胎故障', value: '轮胎故障' },
+    { label: '轮胎故障', value: '轮胎故障' },
+    { label: '轮胎故障', value: '轮胎故障' },
+    { label: '轮胎故障', value: '轮胎故障' },
+    { label: '轮胎故障', value: '轮胎故障' },
+];
+const failColumns = [
+    { title: '商品名称', dataIndex: 'name' },
+    { title: '数量', dataIndex: 'amount'  },
+    { title: '操作', dataIndex: 'operation'  },
+]
+const itemColumns = [
+    { title: '商品名称', dataIndex: 'name' },
+    { title: '编码', dataIndex: 'code'  },
+]
+
 export default {
     name: 'RepairDetail',
-    components: {},
+    components: {
+        CheckFault
+    },
     props: {},
     data() {
         return {
@@ -158,6 +153,25 @@ export default {
             loading: false,
             id: '',
             detail: {}, // 工单详情
+            faultOptions: faultOptions,
+            failColumns: failColumns,
+
+            failData: [{name: "前车灯", 数量: 1}],
+            active: null,
+            changeItemData:[],
+            itemCurrPage: 1,
+            itemPageSize: 20,
+            itemDate:[],
+            itemTotal: 0,
+            itemSelected: [],
+            itemSelectedRowItems: [],
+            faultList: [],
+            modalFailShow: true,
+            itemColumns: itemColumns,
+            searchItemForm: {
+                code:"",
+                name:"",
+            },
             Core: Core,
             stepsList: [
                 {status: 'finish', title: '已分配工单'},
@@ -172,6 +186,7 @@ export default {
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         this.getRepairDetail();
+        this.handleItemSearch()
     },
     methods: {
         // 页面跳转
@@ -196,7 +211,10 @@ export default {
             window.open(routeUrl.href, '_self')
         },
         repairCheck(){
-            Core.Api.Repair.check({})
+            console.log("faultList", this.faultList)
+            console.log("failData", this.failData)
+
+            // Core.Api.Repair.check({})
         },
         // 获取工单详情
         getRepairDetail() {
@@ -212,6 +230,49 @@ export default {
                 this.loading = false;
             });
         },
+        failHandle() {
+            this.modalFailShow = true
+        },
+        addFailList() {
+            this.itemSelectedRowItems.forEach(it =>{
+                console.log(it.name)
+                this.failData.push(it)
+            })
+
+            this.modalFailShow = false
+        },
+        handleItemSearch() {
+            Core.Api.Item.list({
+                ...this.searchItemForm
+            }).then(res => {
+                console.log('getRepairDetail res', res)
+                this.itemDate = res.list
+                this.itemTotal = res.count
+            }).catch(err => {
+                console.log('getRepairDetail err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        handleItemSearchReset() {
+            Object.assign(this.searchItemForm, this.$options.data().searchItemForm)
+            this.pageItemChange(1)
+        },
+        pageItemChange(curr) {  // 页码改变
+            this.itemCurrPage = curr
+            this.handleItemSearch()
+        },
+        pageItemSizeChange(current, size) {  // 页码尺寸改变
+            console.log('pageSizeChange size:', size)
+            this.itemPageSize = size
+            this.handleItemSearch()
+        },
+        onSelectChange(selectedRowKeys, selectedRows) {
+            console.log("selectedRowKeys", selectedRowKeys)
+            console.log("selectedRows", selectedRows)
+            this.itemSelected = selectedRowKeys
+            this.itemSelectedRowItems = selectedRows
+        }
     }
 };
 </script>
