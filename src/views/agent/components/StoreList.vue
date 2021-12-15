@@ -1,34 +1,29 @@
 <template>
-<div class="UserList gray-panel no-margin">
+<div class="StoreList gray-panel no-margin">
     <div class="panel-title">
-        <div class="title">员工列表</div>
+        <div class="title">门店列表</div>
     </div>
     <div class="list-container">
         <div class="table-container">
-            <a-button type="primary" ghost @click="routerChange('edit')" style="margin-bottom: 10px;"><i class="icon i_add"/>新增员工</a-button>
+            <a-button type="primary" ghost @click="routerChange('edit')" style="margin-bottom: 10px;"><i class="icon i_add"/>新增门店</a-button>
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false'>
                 <template #bodyCell="{ column, text , record }">
-                    <template v-if="column.dataIndex === 'type'">
-                        {{$Util.userTypeFilter(text)}}
-                    </template>
-                    <template v-if="column.dataIndex === 'flag_admin'">
-                        {{ text ? '是' : '否' }}
-                    </template>
-                    <template v-if="column.key === 'item'">
-                        {{ text || '-'}}
-                    </template>
-                    <template v-if="column.key === 'tip_item'">
-                        <a-tooltip placement="top" :title='text'>
-                            <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
-                        </a-tooltip>
+                    <template v-if="column.key === 'detail'">
+                        <div class="table-img">
+                            <a-image :width="30" :height="30" :src="$Util.imageFilter(record.logo)" fallback='无'/>
+                            <a-tooltip placement="top" :title='text'>
+                                <a-button type="link" @click="routerChange('detail', record)" style="margin-left: 6px;">{{text || '-'}}</a-button>
+                            </a-tooltip>
+                        </div>
                     </template>
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('edit', record)"> <i class="icon i_edit"/> 编辑</a-button>
-                        <a-button type='link' @click="handleDelete(record.id)"> <i class="icon i_delete"/> 删除</a-button>
+                        <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
+                        <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改</a-button>
+                        <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button>
                     </template>
                 </template>
             </a-table>
@@ -53,7 +48,7 @@
 </template>
 
 <script>
-import Core from '../core';
+import Core from '../../../core';
 export default {
     name: 'UserList',
     components: {},
@@ -75,44 +70,34 @@ export default {
             pageSize: 20,
             total: 0,
 
+            tableColumns: [
+                {title: '门店名称', dataIndex: 'name', key:'detail'},
+                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
+                {title: '操作', key: 'operation', fixed: 'right'},
+            ],
+
             tableData: [],
         };
     },
     watch: {},
-    computed: {
-        tableColumns() {
-            let columns = [
-                { title: '姓名', dataIndex: ['account', 'name'], key: 'item' },
-                { title: '账号', dataIndex: ['account', 'username'], key: 'item' },
-                { title: '手机号', dataIndex: ['account', 'phone'] },
-                { title: '邮箱', dataIndex: ['account', 'email'] },
-                { title: '类型', dataIndex: 'type' },
-                { title: '是否为管理员', dataIndex: 'flag_admin' },
-                { title: '最近登录', dataIndex: ['account', 'last_login_time'], key: 'time' },
-                { title: '创建时间', dataIndex: 'create_time', key: 'time' },
-                { title: '操作', key: 'operation', fixed: 'right'},
-            ]
-            return columns
-        },
-    },
+    computed: {},
     mounted() {
         this.getTableData();
     },
     methods: {
         routerChange(type, item = {}) {
-            console.log(item)
             let routeUrl = ''
             switch (type) {
-                case 'edit':  // 编辑
+                case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/user/user-edit",
-                        query: { id: item.id, type: this.type , org_id: this.orgId}
+                        path: "/store/store-edit",
+                        query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
-                case 'detail':  // 详情
+                case 'detail':    // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/user/user-detail",
+                        path: "/store/store-detail",
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_blank')
@@ -130,7 +115,7 @@ export default {
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-            Core.Api.User.list({
+            Core.Api.Store.list({
                 org_id: this.orgId,
                 type: this.type,
                 page: this.currPage,
@@ -149,16 +134,16 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该员工吗？',
+                title: '确定要删除该门店吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.User.delete({id}).then(() => {
+                    Core.Api.Store.delete({id}).then(() => {
                         _this.$message.success('删除成功');
                         _this.getTableData();
                     }).catch(err => {
-                        console.log("handleDelete -> err", err);
+                        console.log("handleDelete err", err);
                     })
                 },
             });
@@ -168,7 +153,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.UserList {
+.StoreList {
     .table-container {
         margin-top: 10px;
     }

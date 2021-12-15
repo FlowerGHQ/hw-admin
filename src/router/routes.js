@@ -182,13 +182,21 @@ const routes = [
                 component: () => import('@/views/store/store-edit.vue'),
                 hidden: true,
                 meta: {
-                    title: '新建门店',
+                    title: '门店编辑',
                     parent: '/store/store-list',
                 }
-
+            },
+            {
+                path: 'store-detail',
+                name: 'StoreDetail',
+                component: () => import('@/views/store/store-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '门店详情',
+                    parent: '/store/store-list',
+                }
             },
         ]
-
     },
     {   // 仓库
         path: '/warehouse',
@@ -408,17 +416,6 @@ const routes = [
                     title: '员工详情',
                     parent: '/user/user-list',
                 }
-            },
-            {
-                path: 'store-detail',
-                name: 'StoreDetail',
-                component: () => import('@/views/store/store-detail.vue'),
-                hidden: true,
-                meta: {
-                    title: '门店详情',
-                    parent: '/store/store-list',
-                }
-
             },
         ]
 

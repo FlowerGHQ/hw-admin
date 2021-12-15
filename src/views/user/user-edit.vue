@@ -36,6 +36,15 @@
                     <a-input v-model:value="form.email" placeholder="请输入员工邮箱"/>
                 </div>
             </div>
+            <!-- <div class="form-item" v-if="loginType < type">
+                <div class="key">管理权限:</div>
+                <div class="value">
+                    <a-radio-group v-model:value="form.flag_admin" >
+                        <a-radio :value="0">无</a-radio>
+                        <a-radio :value="1">有</a-radio>
+                    </a-radio-group>
+                </div>
+            </div> -->
         </div>
     </div>
     <div class="form-btns">
@@ -58,8 +67,11 @@ export default {
             // 加载
             loading: false,
             user_id: '',
-            detail: {},
+            org_id: '',
             type: '',
+
+            detail: {},
+
             form: {
                 id: '',
                 name: '',
@@ -67,14 +79,16 @@ export default {
                 password: '',
                 phone: '',
                 email: '',
+                // flag_admin: 0,
             }
         };
     },
     watch: {},
     computed: {},
     created() {
-        this.user_id = Number(this.$route.query.id) || 0
         this.type = Number(this.$route.query.type) || 0
+        this.user_id = Number(this.$route.query.id) || 0
+        this.org_id = Number(this.$route.query.org_id) || 0
         if (this.user_id) {
             this.getUserDetail();
         }
@@ -95,9 +109,11 @@ export default {
                 console.log('getUserDetail res', res)
                 this.detail = res.detail
                 this.type = res.detail.type
+                this.org_id = res.detail.org_id
                 for (const key in this.form) {
                     this.form[key] = res.detail.account[key]
                 }
+                this.form.flag_admin = res.detail.flag_admin
             }).catch(err => {
                 console.log('getUserDetail err', err)
             }).finally(() => {
@@ -126,7 +142,8 @@ export default {
             let apiName = form.id ? 'update' : 'save'
             Core.Api.Account[apiName]({
                 ...form,
-                type: this.type
+                type: this.type,
+                org_id: this.org_id,
             }).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')

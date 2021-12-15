@@ -52,7 +52,7 @@ const apiList = {
     },
     Agent: { // 经销商
         list: ['PostJson', 'agent/list'], // 列表
-        listName:['PostJson','agent/list-name'],//名称列表
+        listAll: ['PostJson','agent/list-name'], //选择用的 名称列表 无分页
         save: ['PostJson', 'agent/save'], // 编辑
         detail: ['PostJson', 'agent/detail'], // 详情
         update: ['PostJson', 'agent/update'], // 更新
@@ -60,8 +60,7 @@ const apiList = {
     },
     Customer: { // 客户管理
         list: ['PostJson', 'customer/list'],
-	    listByName: ['PostJson', 'customer/list-by-name'],
-
+        listByName: ['PostJson', 'customer/list-by-name'],
         save: ['PostJson', 'customer/save'],
         update: ['PostJson', 'customer/update'],
         detail: ['PostJson', 'customer/detail'],

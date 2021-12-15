@@ -2,6 +2,10 @@ import Data from './data';
 import Const from './const';
 import dayjs from "dayjs";
 
+import defult_img from '@images/defult_img.png'
+import defult_org from '@images/defult_org.png'
+import defult_item from '@images/defult_item.png'
+
 const Util = {
 /* =============== 通用方法 ================ */
     /**
@@ -239,14 +243,15 @@ const Util = {
 /* =============== 数值 ================ */
 
 /* =============== 通用过滤器 ================ */
-    imageFilter(item) {
-        if (!item) {
+    imageFilter(item, default_type = 1) {
+        if (!item || typeof item !== 'string') {
             console.warn("imageFilter 没有找到图像")
-            return
-        }
-        if (typeof item !== 'string') {
-            console.warn('imageFilter 请传入字符串', item)
-            return
+            let map = {
+                1: defult_img,
+                2: defult_item,
+                3: defult_org,
+            }
+            return map[default_type]
         }
 
         if (item.includes("http")) {
@@ -308,6 +313,7 @@ const Util = {
     },
 /* =============== 商品 ================ */
 
+
 /* =============== 维修单 ================ */
     repairStatusFilter(val, to = 'word') {
         const MAP = Const.REPAIR.STATUS_MAP
@@ -341,6 +347,7 @@ const Util = {
 	},
 /* =============== 维修单 ================ */
 
+
 /* =============== 采购单 ================ */
     puechaseStatusFilter(val, to = 'word') {
         const MAP = Const.PURCHASE.STATUS_MAP
@@ -353,7 +360,6 @@ const Util = {
         }
     },
 /* =============== 采购单 ================ */
-
 
 
 /* =============== 员工/账号/用户 ================ */

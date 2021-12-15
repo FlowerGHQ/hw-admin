@@ -21,7 +21,7 @@
                                     <i class="icon i_check_c"/>已加入购物车
                                 </div>
                                 <div class="item" v-for="item of briefList" :key="item.id">
-                                    <img class="cover" :src="$Util.imageFilter(item.item.logo) || item_defult_img" />
+                                    <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
                                     <div class="desc">
                                         <p>{{item.item.name}}</p>
                                         <span>{{item.item.code}}</span>
@@ -59,7 +59,7 @@
             <div class="list-container">
                 <div class="list-item" v-for="item of tableData" :key="item.id" @click="routerChange('detail', item)">
                     <div class="cover">
-                        <img :src="$Util.imageFilter(item.logo) || item_defult_img" />
+                        <img :src="$Util.imageFilter(item.logo, 2)" />
                     </div>
                     <p class="sub">{{item.code}}</p>
                     <p class="name">{{item.name}}</p>
@@ -92,8 +92,7 @@
 
 <script>
 import Core from '../../core';
-import item_defult_img from '@images/item_defult_img.png'
-import CategoryTree from '../../components/ItemCategory/CategoryTree.vue'
+import CategoryTree from './components/CategoryTree.vue'
 import SimpleImageEmpty from '../../components/SimpleImageEmpty.vue'
 
 export default {
@@ -105,7 +104,6 @@ export default {
     props: {},
     data() {
         return {
-            item_defult_img,
             loginType: Core.Data.getLoginType(),
             pageType: 'list',
             // 加载

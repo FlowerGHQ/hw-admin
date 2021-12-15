@@ -114,7 +114,7 @@
 
 <script>
 import Core from '../../core';
-import CategoryTreeSelect from '../../components/ItemCategory/CategoryTreeSelect.vue'
+import CategoryTreeSelect from './components/CategoryTreeSelect.vue'
 
 export default {
     name: 'ItemEdit',

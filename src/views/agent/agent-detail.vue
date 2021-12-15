@@ -1,34 +1,84 @@
 <template>
 <div id="AgentDetail">
-    <div>
-        <a-descriptions>
-            <a-descriptions-item label="姓名">{{detail.name}}</a-descriptions-item>
-            <a-descriptions-item label="国家">{{detail.country}}</a-descriptions-item>
-            <a-descriptions-item label="手机号">{{detail.phone}}</a-descriptions-item>
-            <a-descriptions-item label="邮箱">{{detail.email}}</a-descriptions-item>
-        </a-descriptions>
+    <div class="title-container">
+        <div class="title-area">经销商详情</div>
+        <div class="btns-area">
+            <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
+            <a-button type="primary" ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button>
+        </div>
     </div>
-    <a-tabs v-model:activeKey="activeKey">
-        <a-tab-pane key="UserList" tab="员工管理">
-            <UserList :orgId="agent_id" v-if="activeKey === 'UserList'"/>
-        </a-tab-pane>
-        <a-tab-pane key="PurchaseList" tab="订单列表">
-            <PurchaseList :agentId="agent_id"  v-if="activeKey === 'PurchaseList'"/>
-        </a-tab-pane>
-    </a-tabs>
+    <div class="gray-panel">
+        <div class="panel-content desc-container">
+            <div class="desc-title">
+                <div class="title-area">
+                    <img :src="$Util.imageFilter(detail.logo, 3)" />
+                    <span class="title">{{detail.name}}</span>
+                </div>
+            </div>
+            <a-row class="desc-detail has-logo">
+                <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                    <span class="key">手机号：</span>
+                    <span class="value">{{detail.phone}}</span>
+                </a-col>
+                <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                    <span class="key">邮箱：</span>
+                    <span class="value">{{detail.email}}</span>
+                </a-col>
+                <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                    <span class="key">国家：</span>
+                    <span class="value">{{detail.country}}</span>
+                </a-col>
+                <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                    <span class="key">创建时间：</span>
+                    <span class="value">{{$Util.timeFilter(detail.create_time)}}</span>
+                </a-col>
+            </a-row>
+            <div class='desc-stat'>
+                <a-statistic title="门店数" :value="0" />
+                <a-divider type="vertical" />
+                <a-statistic title="员工数" :value="0"/>
+                <a-divider type="vertical" />
+                <a-statistic title="累计营收" :value="0" :precision="2" prefix='￥'/>
+                <a-divider type="vertical" />
+                <a-statistic title="总订单数" :value="0" />
+            </div>
+        </div>
+    </div>
+    <div class="tabs-container">
+        <a-tabs v-model:activeKey="activeKey">
+            <a-tab-pane key="UserList" tab="员工管理">
+                <UserList :orgId="agent_id" :type="USER_TYPE.AGENT" v-if="activeKey === 'UserList'"/>
+            </a-tab-pane>
+            <a-tab-pane key="UserList" tab="门店管理" v-if="loginType == USER_TYPE.ADMIN">
+                <StoreList :orgId="agent_id" :type="USER_TYPE.AGENT" v-if="activeKey === 'UserList'"/>
+            </a-tab-pane>
+            <a-tab-pane key="PurchaseList" tab="订单列表">
+                <PurchaseList :orgId="agent_id"  v-if="activeKey === 'PurchaseList'"/>
+            </a-tab-pane>
+        </a-tabs>
+    </div>
 </div>
 </template>
 
 <script>
+import Core from '../../core';
+
 import UserList from '@/components/UserList.vue';
 import PurchaseList from '@/components/PurchaseOrderList.vue';
-import Core from '../../core';
+import StoreList from './components/StoreList.vue';
+
+const USER_TYPE = Core.Const.USER.TYPE;
 export default {
     name: 'AgentDetail',
-    components: { UserList , PurchaseList },
+    components: {
+        UserList,
+        StoreList,
+        PurchaseList,
+    },
     props: {},
     data() {
         return {
+            USER_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
