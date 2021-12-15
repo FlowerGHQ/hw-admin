@@ -385,6 +385,62 @@ const routes = [
                 }
 
             },
+            {
+                path: 'store-detail',
+                name: 'StoreDetail',
+                component: () => import('@/views/store/store-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '门店详情',
+                    parent: '/store/store-list',
+                }
+
+            },
+        ]
+
+    },
+    {   // 系统消息
+        path: '/notice',
+        component: Layout,
+        redirect: '/notice/notice-list',
+        name: 'NoticeManagement',
+        meta: {
+            title: '系统消息',
+            icon: 'i_s_dashboard',
+            // auth: ['dashboard'],
+            // roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'notice-list',
+                name: 'NoticeList',
+                component: () => import('@/views/notice/notice-list.vue'),
+                meta: {
+                    title: '系统列表',
+                }
+            },
+            {
+                path: 'notice-edit',
+                name: 'NoticeEdit',
+                component: () => import('@/views/notice/notice-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '新增系统',
+                    parent: '/notice/notice-list',
+                }
+
+            },
+            {
+                path: 'notice-detail',
+                name: 'NoticeDetail',
+                component: () => import('@/views/notice/notice-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '系统详情',
+                    parent: '/notice/notice-list',
+                }
+
+            },
         ]
 
     },

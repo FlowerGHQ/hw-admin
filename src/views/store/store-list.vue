@@ -29,11 +29,14 @@
             <template v-if="column.key === 'detail'">
               {{ text }}
             </template>
+            <template v-if="column.key === 'img'">
 
+            </template>
             <template v-if="column.key === 'time'">
               {{ $Util.timeFilter(text) }}
             </template>
             <template v-if="column.key === 'operation'">
+              <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_detail"/> 详情</a-button>
               <a-button type="link" @click="routerChange('edit',record)">修改</a-button>
               <a-button type="link" @click="handleDelete(record.id)">删除</a-button>
             </template>
@@ -92,7 +95,7 @@ export default {
     tableColumns() {
       let columns = [
         {title: '名称', dataIndex: 'name', key:'detail'},
-        {title: 'logo', dataIndex: 'logo'},
+        {title: 'logo', dataIndex: 'logo', key:'img'},
         {title: '创建时间', dataIndex: 'create_time', key: 'time'},
         // { title: '操作', dataIndex: 'handle', fixed: 'right' },
         {title: '操作', key: 'operation', fixed: 'right', width: 100,},
@@ -127,6 +130,13 @@ export default {
             query: {id: item.id}
           })
           window.open(routeUrl.href, '_self')
+          break;
+        case 'detail':  // 详情
+          routeUrl = this.$router.resolve({
+            path: "/store/store-detail",
+            query: { id: item.id }
+          })
+          window.open(routeUrl.href, '_self') // 当前页
           break;
       }
     },

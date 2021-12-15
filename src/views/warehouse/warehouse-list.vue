@@ -49,9 +49,9 @@
               {{ text }}
             </template>
 
-            <template v-if="column.key === 'type'">
-              {{ this.gettype(text) }}
-            </template>
+<!--            <template v-if="column.key === 'type'">-->
+<!--              {{ this.gettype(text) }}-->
+<!--            </template>-->
 
             <template v-if="column.key === 'time'">
               {{ $Util.timeFilter(text) }}

@@ -72,7 +72,10 @@ export default {
         },
         storeId: {
             type: Number,
-        }
+        },
+        type:{
+          type:Number,
+        },
     },
     data() {
         return {
@@ -152,6 +155,7 @@ export default {
             this.loading = true;
             Core.Api.User.list({
                 org_id: this.orgId,
+                type: this.type,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {

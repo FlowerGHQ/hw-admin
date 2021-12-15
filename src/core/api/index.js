@@ -126,6 +126,12 @@ const apiList = {
         detail: ['PostJson', 'store/detail'],
         delete: ['PostJson', 'store/delete'],
     },
+    notice: { // 系统消息
+        list: ['PostJson', 'notice/list'],
+        save: ['PostJson', 'notice/save'],
+        detail: ['PostJson', 'notice/detail'],
+        delete: ['PostJson', 'notice/delete'],
+    },
 
 };
 

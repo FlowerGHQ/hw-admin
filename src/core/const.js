@@ -1543,8 +1543,6 @@ let Const = {
 		    WAIT_DETECTION:30,
 		    WAIT_REPAIR:40,
 		    REPAIR_END:50,
-
-
 	    }
     },
     PURCHASE: { // 采购订单
@@ -1564,6 +1562,7 @@ let Const = {
         },
 
     },
+
 };
 
 export default Const;

@@ -106,20 +106,21 @@ export default {
     },
     handleSubmit() {
       let form = Core.Util.deepCopy(this.form)
-      // if (!form.id) {
-      //   if (!form.name) {
-      //     return this.$message.warning('请输入门店名称')
-      //   }
-      //   if (!form.logo) {
-      //     return this.$message.warning('请添加logo图片')
-      //   }
-      // }
-      Core.Api.Store.save(form).then(() => {
-        this.$message.success('保存成功')
-        this.routerChange('back')
-      }).catch(err => {
-        console.log('handleSubmit err:', err)
-      })
+      if (!form.id) {
+        if (!form.name) {
+          return this.$message.warning('请输入门店名称')
+        }
+        //   if (!form.logo) {
+        //     return this.$message.warning('请添加logo图片')
+        //   }
+        // }
+        Core.Api.Store.save(form).then(() => {
+          this.$message.success('保存成功')
+          this.routerChange('back')
+        }).catch(err => {
+          console.log('handleSubmit err:', err)
+        })
+      }
     },
     handleImgCheck(file) {
       const isCanUpType = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'].includes(file.type)
@@ -137,9 +138,8 @@ export default {
       this.upload.imgList = fileList
       console.log("handleCoverChange status:", file.status, "file:", file)
     },
-
   }
-};
+}
 </script>
 
 <style lang="less" scoped>
