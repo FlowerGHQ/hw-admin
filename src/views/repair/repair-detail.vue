@@ -8,7 +8,7 @@
                 <a-button type="primary" @click="handleRepairCheck()" v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_check_c"/>确定</a-button>
 
                 <a-button type="primary" @click="routerChange('invoice')" v-if="detail.status == STATUS.REPAIR_END"><i class="icon i_edit"/>结算</a-button>
-                <a-button type="primary" @click="handleRepairRepairShow()" v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_edit"/>维修完成</a-button>
+                <a-button type="primary" @click="handleResultShow()" v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_edit"/>维修完成</a-button>
 
                 <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
                 <!-- <a-button type="danger" ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button> -->
