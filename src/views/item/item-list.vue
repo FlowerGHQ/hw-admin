@@ -147,19 +147,11 @@ export default {
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':  // 详情
-<<<<<<< HEAD
                     routeUrl = this.$router.resolve({
                         path: "/item/item-detail",
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_self')
-=======
-                     routeUrl = this.$router.resolve({
-                        path: "/item/item-detail",
-                        query: { id: item.id }
-                    })
-                    window.open(routeUrl.href, '_blank')
->>>>>>> a3221c30315daf916d71040c6c7f31929b8db777
                     break;
                 case 'favorite':  // 收藏夹
                 case 'shop_cart':  // 购物车
