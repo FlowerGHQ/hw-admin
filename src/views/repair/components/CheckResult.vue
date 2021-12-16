@@ -1,101 +1,45 @@
 <template>
-<div id="RepairDetail">
-    <div class="list-container">
-        <div class="collapse-container">
-            <a-collapse v-model:activeKey="activeKey" :expand-icon-position="expandIconPosition">
-                <a-collapse-panel key="1" header="故障确认">
-                    <div class="gray-panel info">
-                        <div class="panel-title">
-                        </div>
-                        <div class="panel-content">
-                            <div class="staff">车辆故障</div>
-                        </div>
-                        <div class="panel-content">
-                            <div v-for="fault in faultList">
-                                {{$Util.repairFaultOptionsListFilter(fault.item_fault_type)}}
-                            </div>
-                        </div>
-
-                    </div>
-
-                </a-collapse-panel>
-                <a-collapse-panel key="2" header="零部件更换">
-                    <a-row>
-                        <a-col :span="12">
-                            <div class="gray-panel info" >
-                                <div class="panel-title">
-                                    <div class="left">
-                                        <div class="staff">共{{faultList.length}}个故障</div>
-                                    </div>
-                                </div>
-                                <div class="panel-content">
-                                        <a-table :columns="failColumns" :data-source="failList" :scroll="{ x: true }"
-                                                 :row-key="record => record.id"  :pagination='false' size="small"
-                                                 :indentSize='24'>
-                                            <template #bodyCell="{ column, text , record ,index}">
-                                                <template v-if="column.dataIndex === 'item_fault_type'">
-                                                    {{$Util.repairFaultOptionsListFilter(text)}}
-                                                </template>
-
-                                                <template v-if="column.dataIndex === 'amount'">
-                                                    {{text}}件
-                                                </template>
-                                            </template>
-                                        </a-table>
-
-                                </div>
-                            </div>
-                        </a-col>
-                        <a-col :span="12">
-                            <div class="gray-panel info" >
-                                <div class="panel-title">
-                                    <div class="left">
-                                        <div class="staff">共{{faultList.length}}个故障</div>
-                                    </div>
-                                </div>
-                                <div class="panel-content">
-                                    <a-table :columns="failColumns" :data-source="exchangeList" :scroll="{ x: true }"
-                                             :row-key="record => record.id"  :pagination='false' size="small"
-                                             :indentSize='24'>
-                                        <template #bodyCell="{ column, text , record ,index}">
-                                            <template v-if="column.dataIndex === 'item_fault_type'">
-                                                {{$Util.repairFaultOptionsListFilter(text)}}
-                                            </template>
-
-                                            <template v-if="column.dataIndex === 'amount'">
-                                                {{text}}件
-                                            </template>
-                                        </template>
-                                    </a-table>
-
-                                </div>
-                            </div>
-                        </a-col>
-                    </a-row>
-                </a-collapse-panel>
-            </a-collapse>
+<div class="CheckResult">
+<a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
+    <template #expandIcon ><i class="icon i_expan_l"/> </template>
+    <a-collapse-panel key="affirm" header="故障确认" class="gray-collapse-panel">
+        <div class="panel-content affirm">
+            <div class="title">
+                <i class="icon i_warning"/>共{{faultList.length}}个故障
+            </div>
+            <div class="fault_select">
+                <a-checkbox v-for="(value,key) in faultMap" :key='key' :value='key' :checked="faultList.includes(Number(key))" :disabled="true">
+                    {{value}}
+                </a-checkbox>
+            </div>
         </div>
-    </div>
-
+    </a-collapse-panel>
+    <a-collapse-panel key="change" header="零部件更换" class="gray-collapse-panel">
+        <div class="panel-content change">
+            <a-table :columns="tableColumns" :data-source="failList" :row-key="record => record.id" :pagination='false' size="small">
+                <template #bodyCell="{ column, text }">
+                    <template v-if="column.dataIndex === 'item_fault_type'">{{faultMap[text]}}</template>
+                    <template v-if="column.dataIndex === 'amount'">{{text}}件</template>
+                </template>
+            </a-table>
+            <a-table :columns="tableColumns" :data-source="exchangeList" :row-key="record => record.id"  :pagination='false' size="small">
+                <template #bodyCell="{ column, text }">
+                    <template v-if="column.dataIndex === 'item_fault_type'">{{faultMap[text]}}</template>
+                    <template v-if="column.dataIndex === 'amount'">{{text}}件</template>
+                </template>
+            </a-table>
+        </div>
+    </a-collapse-panel>
+</a-collapse>
 </div>
 </template>
 
 <script>
 import Core from '../../../core';
 import ItemSelect from '@/components/ItemSelect.vue';
-import axios from 'axios';
-const failColumns = [
-    { title: '故障原因', dataIndex: 'item_fault_type' },
-    { title: '商品名称', dataIndex: 'item_name' },
-    { title: '数量', dataIndex: 'amount'  },
 
-]
-const itemColumns = [
-    { title: '商品名称', dataIndex: 'name' },
-    { title: '编码', dataIndex: 'code'  },
-]
 export default {
-    name: 'RepairDetail',
+    name: 'CheckResult',
     components: {
         ItemSelect
     },
@@ -107,17 +51,18 @@ export default {
             loading: false,
             id: '',
             detail: {}, // 工单详情
-            failColumns: failColumns,
+            tableColumns: [
+                { title: '故障原因', dataIndex: 'item_fault_type' },
+                { title: '商品名称', dataIndex: 'item_name' },
+                { title: '数量', dataIndex: 'amount'  },
+            ],
+
+            activeKey: ['affirm', 'change'],
+            faultMap: Core.Const.REPAIR.FAULT_OPTIONS_MAP,
+            faultList: [],
 
             failList: [],
             exchangeList: [],
-            faultList: [],
-            itemColumns: itemColumns,
-            searchItemForm: {
-                code:"",
-                name:"",
-            },
-            Core: Core,
         };
     },
     watch: {},
@@ -129,8 +74,6 @@ export default {
         this.getRepairFaultList()
     },
     methods: {
-        // 页面跳转
-        // 获取工单详情
         getRepairDetail() {
             this.loading = true;
             Core.Api.Repair.detail({
@@ -144,83 +87,51 @@ export default {
                 this.loading = false;
             });
         },
-        getRepairItemList() {
-           Core.Api.RepairItem.list({
-               repair_order_id: this.id
-           }).then(res => {
-               res.list.forEach(it => {
-                   it.item_name = it.item.name
-                   if(it.type == Core.Const.REPAIR_ITEM.TYPE.ADD){
-                       this.failList.push(it)
-                   }
-                   if(it.type == Core.Const.REPAIR_ITEM.TYPE.REPLACE){
-                       this.exchangeList.push(it)
-                   }
 
-               })
-           })
-        },
         getRepairFaultList(){
             Core.Api.RepairItem.faultList({
                 repair_order_id: this.id
             }).then(res => {
-                console.log(res.fault_list)
-                this.faultList = res.fault_list
+                console.log('getRepairFaultList res.fault_list', res.fault_list)
+                this.faultList = res.fault_list.map(i => i.item_fault_type)
+                console.log('getRepairFaultList this.faultList', this.faultList)
             })
         },
 
-
+        getRepairItemList() {
+            Core.Api.RepairItem.list({
+                repair_order_id: this.id
+            }).then(res => {
+                let failList = []
+                let exchangeList = []
+                res.list.forEach(it => {
+                    it.item_name = it.item.name
+                    if (it.type == Core.Const.REPAIR_ITEM.TYPE.ADD) {
+                        failList.push(it)
+                    }
+                    if (it.type == Core.Const.REPAIR_ITEM.TYPE.REPLACE) {
+                        exchangeList.push(it)
+                    }
+                })
+                console.log('this.failList:', this.failList)
+                console.log('this.exchangeList:', this.exchangeList)
+                this.failList = failList
+                this.exchangeList = exchangeList
+            })
+        },
     }
 };
 </script>
 
-<style lang="less" scoped>
-#RepairDetail {
-    .ant-collapse-content-box {
-        padding: 0px;
-    }
-    .gray-panel.info {
-
-        .left {
-            font-size: 12px;
-            color: #465670;
-            span {
-                color: #A5ACB8;
-            }
+<style lang="less">
+.CheckResult {
+    .panel-content.change {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        .ant-table-wrapper {
+            width: calc(~'50% - 10px');
         }
-        .right {
-            .fcc();
-            font-size: 12px;
-            .staff {
-                color: rgba(0, 0, 0, 0.85);
-                margin-right: 12px;
-                font-weight: 500;
-            }
-            .status {
-                .fcc();
-                .i_point {
-                    margin-right: 6px;
-                }
-            }
-        }
-        .panel-content {
-            .fsb(flex-start);
-            padding-bottom: 15px;
-        }
-        .info-item {
-            flex: 1;
-            font-size: 12px;
-            .key {
-                color: #8090A6;
-            }
-            .value {
-                margin-top: 10px;
-                color: #363D42;
-            }
-        }
-    }
-    .steps-container {
-        margin: 20px;
     }
 }
 </style>

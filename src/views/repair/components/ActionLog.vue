@@ -5,16 +5,21 @@
         <div class="panel-content">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :loading='loading' :pagination='false'>
-                <template v-if="column.key === 'item'">
-                    {{ text || '-'}}
-                </template>
-                <template v-if="column.key === 'tip_item'">
-                    <a-tooltip placement="top" :title='text'>
-                        <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
-                    </a-tooltip>
-                </template>
-                <template v-if="column.key === 'time'">
-                    {{ $Util.timeFilter(text) }}
+                <template #bodyCell="{ column, text }">
+                    <template v-if="column.dataIndex === 'type'">
+                        {{ $Util.actionLogTypeFilter(text) }}
+                    </template>
+                    <template v-if="column.key === 'item'">
+                        {{ text || '-'}}
+                    </template>
+                    <template v-if="column.key === 'tip_item'">
+                        <a-tooltip placement="top" :title='text'>
+                            <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
+                        </a-tooltip>
+                    </template>
+                    <template v-if="column.key === 'time'">
+                        {{ $Util.timeFilter(text) }}
+                    </template>
                 </template>
             </a-table>
             <div class="paging-container afe">
@@ -63,9 +68,9 @@ export default {
 
             tableData: [],
             tableColumns: [
-                { title: '操作类型', dataIndex: 'name', key: 'item' },
-                { title: '操作人', dataIndex: 'code', key: 'item' },
-                { title: '工单编号', dataIndex: 'uid', key: 'item' },
+                { title: '操作类型', dataIndex: 'type' },
+                { title: '操作人', dataIndex: ['user', 'account','name'], key: 'item' },
+                { title: '工单编号', dataIndex: 'source_uid', key: 'item' },
                 { title: '操作时间', dataIndex: 'create_time', key: 'time' },
                 { title: '备注', dataIndex: 'remark', key: 'tip_item' },
             ],
@@ -94,11 +99,11 @@ export default {
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
-                console.log("getTableData res", res)
+                console.log("ActionLog res", res)
                 this.total = res.count;
                 this.tableData = res.list;
             }).catch(err => {
-                console.log('getTableData err', err)
+                console.log('ActionLog err', err)
             }).finally(() => {
                 this.loading = false;
             });

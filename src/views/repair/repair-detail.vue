@@ -4,10 +4,10 @@
         <div class="title-container">
             <div class="title-area">工单详情</div>
             <div class="btns-area">
-                <a-button type="primary" @click="repairDetection()" v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_check_c"/>提交</a-button>
+                <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_check_c"/>提交</a-button>
                 <a-button type="primary" @click="handleRepairCheck()" v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_check_c"/>确定</a-button>
 
-                <a-button type="primary" @click="routerChange('invoice')" v-if="detail.status == STATUS.REPAIR_END"><i class="icon i_edit"/>结算</a-button>
+                <a-button type="primary" @click="routerChange('invoice')" v-if="detail.status == STATUS.REPAIR_END">查看结算单</a-button>
                 <a-button type="primary" @click="handleRepairRepairShow()" v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_edit"/>维修完成</a-button>
 
                 <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
@@ -50,7 +50,8 @@
                 </div>
             </div>
         </div>
-        <div class="steps-container">
+        <MySteps :stepsList='stepsList' :current='currStep'/>
+        <!-- <div class="steps-container">
             <a-steps>
                 <a-step v-for="(item, index) of stepsList" :key="index" :status="item.status" :title="item.title">
                     <template #icon>
@@ -60,10 +61,10 @@
                 </a-step>
             </a-steps>
         </div>
-
+        -->
         <div class="form-container">
-            <CheckFault :id='id' :detail='detail' ref="CheckFault" />
-            <CheckResult :id='id' :detail='detail' ref="CheckResult" />
+            <CheckFault :id='id' :detail='detail' @submit="getRepairDetail"/>
+            <CheckResult :id='id' :detail='detail' />
             <RepairInfo :id='id' :detail='detail' />
             <ActionLog :id='id' :detail='detail' />
         </div>
@@ -97,6 +98,7 @@ import CheckFault from './components/CheckFault.vue';
 import CheckResult from './components/CheckResult.vue';
 import RepairInfo from './components/RepairInfo.vue';
 import ActionLog from './components/ActionLog.vue';
+import MySteps from '@/components/MySteps.vue';
 
 const REPAIR = Core.Const.REPAIR
 
@@ -107,6 +109,7 @@ export default {
         CheckResult,
         RepairInfo,
         ActionLog,
+        MySteps,
     },
     props: {},
     data() {
@@ -116,7 +119,7 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            id: '',
+            id: 0,
             detail: {}, // 工单详情
 
             resultsList: Core.Const.REPAIR.RESULTS_LIST,
@@ -128,16 +131,17 @@ export default {
             },
 
             stepsList: [
-                {status: 'finish', title: '已分配工单'},
-                {status: 'process', title: '确认中...'},
-                {status: 'wait', title: '待检测维修'},
-                {status: 'wait', title: '工单完成'},
+                { title: '已分配工单' },
+                { title: '确认中...' },
+                { title: '待检测维修' },
+                { title: '工单完成' },
             ],
+            currStep: 1,
         };
     },
     watch: {},
     computed: {},
-    mounted() {
+    created() {
         this.id = Number(this.$route.query.id) || 0
         this.getRepairDetail();
     },
@@ -163,20 +167,11 @@ export default {
                 case 'invoice':  // 工单列表
                     routeUrl = this.$router.resolve({
                         path: "/repair/repair-invoice",
+                        query: { id: this.id },
                     })
                     break;
             }
             window.open(routeUrl.href, '_self')
-        },
-        // 工单确认
-        handleRepairCheck() {
-            Core.Api.Repair.check({id: this.id}).then(() => {
-                this.$message.success('操作成功')
-                this.getRepairDetail()
-            })
-        },
-        repairDetection() {
-            this.$refs.CheckFault.repairDetection();
         },
 
         // 获取工单详情
@@ -194,6 +189,21 @@ export default {
             });
         },
 
+        handleFaultSubmit() {
+            this.$refs.CheckFault.handleFaultSubmit();
+        },
+
+        // 工单确认
+        handleRepairCheck() {
+            Core.Api.Repair.check({id: this.id}).then(() => {
+                this.$message.success('操作成功')
+                this.getRepairDetail()
+            })
+        },
+
+        handleResultShow(){
+            this.modalFailShow = true
+        },
         handleResultSubmit() {
             Core.Api.Repair.repair({
                 id: this.id,
@@ -207,18 +217,12 @@ export default {
                 this.modalFailShow = false
             });
         },
-        handleResultShow(){
-            this.modalFailShow = true
-        },
     }
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 #RepairDetail {
-    .ant-collapse-content-box {
-        padding: 0px;
-    }
     .gray-panel.info {
         .left {
             font-size: 12px;
@@ -258,8 +262,27 @@ export default {
             }
         }
     }
+    .panel-content.affirm {
+        > .title {
+            color: #DD5D5D;
+            margin-bottom: 24px;
+            i.icon {
+                margin-right: 12px;
+            }
+        }
+        .fault_select {
+            width: 100%;
+            padding-left: 12px;
+            .ant-checkbox-wrapper {
+                width: 25%;
+                margin-left: 0;
+                margin-bottom: 18px;
+            }
+        }
+    }
     .steps-container {
-        margin: 20px;
+        padding: 0 20px;
+        margin-bottom: 20px;
     }
 }
 </style>

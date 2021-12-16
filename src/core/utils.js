@@ -342,9 +342,11 @@ const Util = {
 	},
 	repairFaultOptionsListFilter(val) {
 		const MAP = Const.REPAIR.FAULT_OPTIONS_MAP
-
 		return MAP[val] || '未知'
 	},
+    actionLogTypeFilter(val) {
+        return val
+    },
 /* =============== 维修单 ================ */
 
 
@@ -368,6 +370,10 @@ const Util = {
         return MAP[val] || '未知'
     },
 /* =============== 员工/账号/用户 ================ */
+
+
+
+
 }
 
 export default Util

@@ -4,64 +4,51 @@
         <div class="title-content">
             <div class="title">结算清单 Invoice</div>
             <p>结算编号</p>
-            <span>{{detrail.uid}}</span>
+            <span>{{detail.uid || '-'}}</span>
             <p>交易日期</p>
-            <span>{{$Util.timeFormat(detrail.create_time)}}</span>
+            <span>{{$Util.timeFormat(detail.create_time, 'YYYY/MM/DD') || '-'}}</span>
         </div>
         <div class="info-content">
             <div class="info-block">
                 <div class="title">托修方</div>
-                <p>车主姓名：{{赵启平}}</p>
-                <p>车牌号码：{{赵启平}}</p>
-                <p>产品型号：{{赵启平}}</p>
-                <p>送修日期：{{赵启平}}</p>
-                <p>送修里程：{{赵启平}}</p>
+                <p>车主姓名：{{detail.customer_name}}</p>
+                <p>车牌号码：{{detail.item_code}}</p>
+                <p>产品型号：{{detail.item_code}}</p>
+                <p>送修日期：{{$Util.timeFormat(detail.create_time)}}</p>
                 <div class="title">联系电话</div>
-                <p>11{{联系电话}}</p>
+                <p>{{detail.customer_phone}}</p>
             </div>
             <div class="info-block">
                 <div class="title">维修门店</div>
-                <p>11{{维修门店}}</p>
+                <p>{{detail.store_name}}</p>
                 <div class="title">联系电话</div>
-                <p>11{{联系电话}}</p>
+                <p>{{detail.store_phone}}</p>
             </div>
             <div class="info-block">
                 <div class="title">送修方</div>
-                <p>送修人:{{送修人}}</p>
-                <p>送修类别:{{送修类别}}</p>
+                <p>送修人:{{detail.repair_user_name}}</p>
+                <p>送修类别:{{$Util.repairChannelFilter(detail.channel)}}</p>
                 <div class="title">联系电话</div>
-                <p>11{{联系电话}}</p>
+                <p>{{detail.repair_user_phone}}</p>
             </div>
         </div>
         <div class="item-content">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
-                <template #bodyCell="{ column, text , record }">
-                    <template v-if="column.dataIndex === 'sn'">
-                        <a-tooltip placement="top" :title='text'>
-                            <a-button type="link" @click="routerChange('detail', record)">{{text}}</a-button>
-                        </a-tooltip>
-                    </template>
-                    <template v-if="column.dataIndex === 'type'">
-                        <div class="status status-bg status-tag" :class="$Util.UserTypeFilter(text,'color')">
-                            {{$Util.UserTypeFilter(text)}}
-                        </div>
-                    </template>
+                :row-key="record => record.id"  :pagination='false'>
+                <template #bodyCell="{ column, text, record }">
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
                     </template>
-                    <template v-if="column.key === 'tip_item'">
-                        <a-tooltip placement="top" :title='text'>
-                            <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
-                        </a-tooltip>
+                    <template v-if="column.dataIndex === 'price'">
+                        {{ $Util.countFilter(text) }}
                     </template>
-                    <template v-if="column.key === 'time'">
-                        {{ $Util.timeFilter(text) }}
+                    <template v-if="column.dataIndex === 'sum_price'">
+                        {{ $Util.countFilter(record.price * record.amount) }}
                     </template>
                 </template>
             </a-table>
-            <div class="count">
-                <p>总金额<i>¥{{111}}</i></p>
+            <div class="sum-price">
+                <p>总金额</p> <span>￥{{$Util.countFilter(sum_price)}}</span>
             </div>
         </div>
     </div>
@@ -88,16 +75,23 @@ export default {
 
             tableData: [],
             tableColumns: [
-                { title: '维修材料', dataIndex: ['account', 'name'], key: 'item' },
-                { title: '单位', dataIndex: ['account', 'username'], key: 'item' },
-                { title: '数量', dataIndex: ['account', 'phone'] },
-                { title: '单价', dataIndex: ['account', 'email'] },
-                { title: '金额（元）', dataIndex: 'type' },
+                { title: '维修材料', dataIndex: ['item', 'name'], key: 'item' },
+                { title: '数量', dataIndex: 'amount', key: 'item' },
+                { title: '单价', dataIndex: 'price' },
+                { title: '金额（元）', dataIndex: 'sum_price' },
             ]
         }
     },
     watch: {},
-    computed: {},
+    computed: {
+        sum_price() {
+            let sum = 0
+            this.tableData.forEach(item => {
+                sum += item.amount * item.price
+            })
+            return sum
+        }
+    },
     mounted() {
         this.getRepairDetail();
         this.getTableData();
@@ -106,7 +100,10 @@ export default {
         routerChange(type, item = {}) {
             switch (type) {
                 case 'back':  // 编辑
-                    this.$router.go(-1)
+                    routeUrl = this.$router.resolve({
+                        path: "/repair/repair-detail",
+                        query: { id: this.id },
+                    })
                     break;
             }
         },
@@ -145,47 +142,86 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 #RepairInvoice {
     padding: 20px 184px 0 126px;
     box-sizing: border-box;
     .content {
         border-radius: 1px;
         border: 1px solid #E6EAEE;
-        .title-contents {
+        padding: 30px 32px 100px;
+        box-sizing: border-box;
+        .title-content {
             background: #F8FAFC;
+            padding: 35px 0 32px 50px;
+            box-sizing: border-box;
+            font-size: 12px;
+            line-height: 17px;
+            .title {
+                font-size: 18px;
+                line-height: 25px;
+                color: #000022;
+            }
+            p {
+                padding-top: 18px;
+                margin-bottom: 4px;
+                font-weight: 600;
+                color: #000022;
+            }
+            span {
+                color: #465670;
+            }
         }
         .info-content {
-            // text-align: center;
-            // width: 890px;
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
-            padding-bottom: 20px;
-            // padding-left: 60px;
+            padding-bottom: 30px;
             .info-block {
                 flex: 1;
+                padding-left: 50px;
+                display: flex;
+                flex-direction: column;
+                .title {
+                    line-height: 17px;
+                    font-size: 12px;
+                    font-weight: 500;
+                    color: #000022;
+                    margin-bottom: 14px;
+                    margin-top: 30px;
+                }
+                p {
+                    font-size: 12px;
+                    line-height: 17px;
+                    color: #8090A6;
+                    + p {
+                        margin-top: 8px;
+                    }
+                }
             }
         }
         .item-content {
-            border-radius: 1px;
-            opacity: 1;
-            border: 1px solid #E6EAEE;
-        }
-        .count {
-            margin-top: 20px;
-            float: right;
-            width: 368px;
-            height: 2px;
-            background: #000022;
-            opacity: 0.9;
-            p {
-                padding-top: 20px;
-                font-size: 12px;
-                font-weight: 500;
-                color: #000022;
-                line-height: 14px;
-                i {
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            .ant-table-wrapper {
+                width: 100%;
+            }
+            .ant-table {
+                th.ant-table-cell {
+                    background-color: #F8FAFC !important;
+                }
+            }
+            .sum-price {
+                margin-top: 20px;
+                margin-right: 80px;
+                width: 368px;
+                height: 2px;
+                opacity: 0.9;
+                border-top: 2px solid #000022;
+                .fsb();
+                p, span {
+                    padding-top: 25px;
                     font-size: 12px;
                     font-weight: 500;
                     color: #000022;
@@ -194,9 +230,12 @@ export default {
             }
         }
     }
-    .bottom {
-        margin-top: 60px;
-        margin-bottom: 20px;
+    .btn-area {
+        margin-top: 30px;
+        margin-bottom: 30px;
+        .ant-btn {
+            border-radius: 2px;
+        }
     }
 }
 </style>

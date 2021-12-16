@@ -1,308 +1,209 @@
 <template>
-<div id="RepairDetail">
-    <div class="list-container">
-        <div class="collapse-container">
-            <a-collapse v-model:activeKey="activeKey" :expand-icon-position="expandIconPosition">
-                <a-collapse-panel key="1" header="故障确认">
-                    <div class="gray-panel info">
-                        <div class="panel-title">
-                        </div>
-                        <div class="panel-content">
-                            <div class="staff">车辆故障</div>
-                        </div>
-                        <div class="panel-content">
-                            <a-checkbox-group v-model:value="faultList" @change="faultListChange" :style="{width: '100%'}">
-                                <a-row>
-                                    <a-col :span="4">
-                                        <a-checkbox value="1" name="电池故障">
-                                            电池故障
-                                        </a-checkbox>
-                                    </a-col>
-                                    <a-col :span="4">
-                                        <a-checkbox value="2" name="发动机故障">
-                                            发动机故障
-                                        </a-checkbox>
-                                    </a-col>
-                                    <a-col :span="4">
-                                        <a-checkbox value="3" name="轮胎故障">
-                                            轮胎故障
-                                        </a-checkbox>
-                                    </a-col>
-                                    <a-col :span="4">
-                                        <a-checkbox value="4" name="刹车故障">
-                                            刹车故障
-                                        </a-checkbox>
-                                    </a-col>
-                                    <a-col :span="4">
-                                        <a-checkbox value="5" name="转向灯故障">
-                                            转向灯故障
-                                        </a-checkbox>
-                                    </a-col>
-                                    <a-col :span="4">
-                                        <a-checkbox value="6" name="仪表盘故障">
-                                            仪表盘故障
-                                        </a-checkbox>
-                                    </a-col>
-                                    <a-col :span="4">
-                                        <a-checkbox value="7" name="尾灯故障">
-                                            尾灯故障
-                                        </a-checkbox>
-                                    </a-col>
-                                </a-row>
-
-                            </a-checkbox-group>
-                        </div>
-                    </div>
-                </a-collapse-panel>
-                <a-collapse-panel key="2" header="零部件更换">
-                    <a-row>
-                        <a-col :span="12">
-                            <div class="gray-panel info" >
-                                <div class="panel-title">
-                                    <div class="left">
-                                        <div class="staff">共{{faultListHandle.length}}个故障</div>
-                                    </div>
-                                </div>
-                                <div class="panel-content">
-                                    <a-list size="small" bordered v-for="fault in faultListHandle">
-                                        <div>
-                                            {{fault.name}}<ItemSelect @change="handleAddFailItem" :fault-name="fault.name" :disabled-checked='failData[fault.name].map(i => i.id)' style="margin-bottom: 12px;"/>
-                                        </div>
-                                        <a-table :columns="failColumns" :data-source="failData[fault.name]" :scroll="{ x: true }"
-                                                 :row-key="record => record.id"  :pagination='false' size="small"
-                                                 :indentSize='24'>
-                                            <template #bodyCell="{ column, text , record ,index}">
-                                                <a-input-number v-model:value="record.amount"
-                                                                :min="0" :precision="0" placeholder="请输入"
-                                                                :formatter="value => value ? `${value}件` : value"
-                                                                :parser="value => value.replace('件', '')"
-                                                                v-if="column.dataIndex === 'amount'"
-                                                />
-                                                <template v-if="column.dataIndex === 'name'">
-
-                                                </template>
-                                                <template v-if="column.dataIndex === 'operation'">
-                                                    <a-button @click="deleteFailItem(index, fault.name)">删除</a-button>
-                                                </template>
-                                            </template>
-                                        </a-table>
-                                    </a-list>
-
-                                </div>
-                            </div>
-                        </a-col>
-                        <a-col :span="12">
-                            <div class="gray-panel info" >
-                                <div class="panel-title">
-                                    <div class="left">
-                                        <div class="staff">共{{faultListHandle.length}}个故障</div>
-                                    </div>
-                                </div>
-                                <div class="panel-content">
-                                    <a-list size="small" bordered v-for="fault in faultListHandle">
-                                        <div>
-                                            {{fault.name}}<ItemSelect @change="handleAddExchangeItem" :fault-name="fault.name" :disabled-checked='exchangeData[fault.name].map(i => i.id)' style="margin-bottom: 12px;"/>
-                                        </div>
-                                        <a-table :columns="failColumns" :data-source="exchangeData[fault.name]" :scroll="{ x: true }"
-                                                 :row-key="record => record.id"  :pagination='false' size="small"
-                                                 :indentSize='24'>
-                                            <template #bodyCell="{ column, text , record ,index}">
-                                                <a-input-number v-model:value="record.amount"
-                                                                :min="0" :precision="0" placeholder="请输入"
-                                                                :formatter="value => value ? `${value}件` : value"
-                                                                :parser="value => value.replace('件', '')"
-                                                                v-if="column.dataIndex === 'amount'"
-                                                />
-                                                <template v-if="column.dataIndex === 'name'">
-
-                                                </template>
-                                                <template v-if="column.dataIndex === 'operation'">
-                                                    <a-button @click="deleteExchangeItem(index, fault.name)">删除</a-button>
-                                                </template>
-                                            </template>
-                                        </a-table>
-                                    </a-list>
-
-                                </div>
-                            </div>
-                        </a-col>
-                    </a-row>
+<div class="CheckFault">
+<a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
+    <template #expandIcon ><i class="icon i_expan_l"/> </template>
+    <a-collapse-panel key="affirm" header="故障确认" class="gray-collapse-panel">
+        <div class="panel-content affirm">
+            <div class="title">
+                <i class="icon i_warning"/>共{{faultSelect.length}}个故障
+            </div>
+            <a-checkbox-group class="fault_select" v-model:value="faultSelect" @change="handleFaultSelect">
+                <a-checkbox v-for="(value,key) in faultMap" :key='key' :value='key'>
+                    {{value}}
+                </a-checkbox>
+            </a-checkbox-group>
+        </div>
+    </a-collapse-panel>
+    <a-collapse-panel key="change" header="零部件更换" class="gray-collapse-panel">
+        <div class="panel-content change" >
+            <a-collapse v-model:activeKey="failActive" ghost class="collapse-item">
+                <a-collapse-panel v-for="fault of faultSelect" :key="fault" :header="faultMap[fault]">
+                    <template #extra>
+                        <ItemSelect btnType='link' @change="handleAddFailItem" :fault-name="fault" :disabled-checked='failData[fault].map(i => i.id)'/>
+                    </template>
+                    <a-table :columns="tableColumns" :data-source="failData[fault]"
+                        :row-key="record => record.id"  :pagination='false' size="small">
+                        <template #bodyCell="{ column , record ,index}">
+                            <template v-if="column.dataIndex === 'amount'">
+                                <a-input-number v-model:value="record.amount" :min="0" :precision="0" placeholder="请输入"/> 件
+                            </template>
+                            <template v-if="column.dataIndex === 'operation'">
+                                <a-button type="link" @click="handleFailItemDelete(index, fault)"><i class="icon i_delete"/> 移除</a-button>
+                            </template>
+                        </template>
+                    </a-table>
                 </a-collapse-panel>
             </a-collapse>
+            <a-collapse v-model:activeKey="exchangeActive" ghost class="collapse-item">
+                <a-collapse-panel v-for="fault of faultSelect" :key="fault" :header="faultMap[fault]">
+                    <template #extra>
+                        <ItemSelect btnType='link' @change="handleAddExchangeItem" :fault-name="fault" :disabled-checked='exchangeData[fault].map(i => i.id)'/>
+                    </template>
+                    <a-table :columns="tableColumns" :data-source="exchangeData[fault]"
+                        :row-key="record => record.id" :pagination='false' size="small">
+                        <template #bodyCell="{ column , record ,index}">
+                            <a-input-number v-model:value="record.amount"
+                                :min="0" :precision="0" placeholder="请输入"
+                                :formatter="value => value ? `${value}件` : value"
+                                :parser="value => value.replace('件', '')"
+                                v-if="column.dataIndex === 'amount'"
+                            />
+                            <template v-if="column.dataIndex === 'operation'">
+                                <a-button type="link" @click="handleExchangeItemDelete(index, fault)"><i class="icon i_delete"/> 移除</a-button>
+                            </template>
+                        </template>
+                    </a-table>
+                </a-collapse-panel>
+            </a-collapse>
+            <div class="submit-btn">
+                <a-button type="primary" @click="handleFaultSubmit()"><i class="icon i_check_c"/>提交</a-button>
+            </div>
         </div>
-    </div>
-
+    </a-collapse-panel>
+</a-collapse>
 </div>
 </template>
 
 <script>
 import Core from '../../../core';
 import ItemSelect from '@/components/ItemSelect.vue';
-import axios from 'axios';
-const failColumns = [
-    { title: '商品名称', dataIndex: 'name' },
-    { title: '数量', dataIndex: 'amount'  },
-    { title: '操作', dataIndex: 'operation'  },
-]
-const itemColumns = [
-    { title: '商品名称', dataIndex: 'name' },
-    { title: '编码', dataIndex: 'code'  },
-]
+
 export default {
     name: 'RepairDetail',
     components: {
         ItemSelect
     },
-    props: {},
+    props: {
+        id: {
+            type: Number
+        },
+        detail: {
+            type: Object
+        }
+    },
     data() {
         return {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            id: '',
-            detail: {}, // 工单详情
-            failColumns: failColumns,
+            activeKey: ['affirm'],
+
+            faultMap: Core.Const.REPAIR.FAULT_OPTIONS_MAP,
+
+            tableColumns: [
+                { title: '商品名称', dataIndex: 'name' },
+                { title: '数量', dataIndex: 'amount'  },
+                { title: '操作', dataIndex: 'operation' },
+            ],
+
+            faultSelect: [],
 
             failData: {},
-            exchangeData: [],
-            faultList: [],
-            faultListHandle: [],
-            itemColumns: itemColumns,
-            Core: Core,
-            stepsList: [
-                {status: 'finish', title: '已分配工单'},
-                {status: 'process', title: '确认中...'},
-                {status: 'wait', title: '待检测维修'},
-                {status: 'wait', title: '工单完成'},
-            ],
+            failActive: '',
+
+            exchangeData: {},
+            exchangeActive: '',
         };
     },
     watch: {},
     computed: {},
-    mounted() {
-        this.id = Number(this.$route.query.id) || 0
-        this.getRepairDetail();
-    },
     methods: {
-        // 获取工单详情
-        getRepairDetail() {
-            this.loading = true;
-            Core.Api.Repair.detail({
-                id: this.id,
-            }).then(res => {
-                console.log('getRepairDetail res', res)
-                this.detail = res
-            }).catch(err => {
-                console.log('getRepairDetail err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-
-        handleAddFailItem(ids, items, name) {
-            console.log('handleAddItem items:', name)
-            this.failData[name].push(...items)
-            console.log('failData items:', this.failData)
-            this.failData[name].map(i =>{
-                console.log('failData items:', i.id)
+        // 故障选择
+        handleFaultSelect(val) {
+            console.log('handleFaultSelect val:', val)
+            if (val.length) {
+                if (!this.activeKey.includes('change')) {
+                    this.activeKey.push('change')
+                }
+            }
+            this.faultSelect.forEach(it => {
+                this.failData[it] = this.failData[it] || []
+                this.exchangeData[it] = this.exchangeData[it] || []
             })
         },
-        // 添加要寄回的商品
-        handleAddExchangeItem(ids, items,name) {
-            console.log('handleAddItem items:', items)
-            this.exchangeData[name].push(...items)
-            console.log('failData items:', this.failData)
+
+        // 添加商品
+        handleAddFailItem(ids, items, name) {
+            console.log('handleAddFailItem items:', name)
+            this.failData[name].push(...items)
+            console.log('handleAddFailItem failData items:', this.failData)
         },
-        deleteFailItem(index, name) {
+        handleAddExchangeItem(ids, items,name) {
+            console.log('handleAddExchangeItem items:', items)
+            this.exchangeData[name].push(...items)
+            console.log('handleAddExchangeItem exchangeData items:', this.exchangeData)
+        },
+
+        // 移除商品
+        handleFailItemDelete(index, name) {
             this.failData[name].splice(index, 1)
         },
-        deleteExchangeItem(index, name) {
+        handleExchangeItemDelete(index, name) {
             this.exchangeData[name].splice(index, 1)
         },
-        faultListChange(){
-            this.faultListHandle = []
-            console.log(this.faultList)
-            this.faultList.forEach(it =>{
-                this.faultListHandle.push({name: it})
-                this.failData[it] = []
-                this.exchangeData[it] = []
-            })
 
-        },
-        repairDetection(){
+        // 提交故障
+        handleFaultSubmit() {
             let itemList = []
-            let fault = ""
-            this.faultList.forEach(fault => {
-                this.failData[fault].forEach(it => {
-                    it.item_fault_type = fault
-                    it.type = 1
+            this.faultSelect.forEach(fault => {
+                this.failData[fault].forEach(item => {
+                    item.item_fault_type = fault
+                    item.type = 1
                     itemList.push(it)
                 })
-                this.exchangeData[fault].forEach(it => {
-                    it.item_fault_type = fault
-                    it.type = 2
+                this.exchangeData[fault].forEach(item => {
+                    item.item_fault_type = fault
+                    item.type = 2
                     itemList.push(it)
                 })
             })
-
             Core.Api.RepairItem.saveList({
                 repair_order_id: this.id,
                 item_list: itemList
-            }).then(
-                this.getRepairDetail()
-            )
+            }).then(() => {
+                this.$message.success('操作成功');
+                this.$emit('submit')
+            })
         }
     }
 };
 </script>
 
-<style lang="less" scoped>
-#RepairDetail {
-    .ant-collapse-content-box {
-        padding: 0px;
-    }
-    .gray-panel.info {
-
-        .left {
-            font-size: 12px;
-            color: #465670;
-            span {
-                color: #A5ACB8;
+<style lang="less">
+.CheckFault {
+    .panel-content.change {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        .collapse-item {
+            width: calc(~'50% - 10px');
+            .ant-collapse-item {
+                margin-bottom: 10px;
+                .ant-collapse-content-box {
+                    padding: 0;
+                    .ant-table-thead {
+                        display: none;
+                    }
+                }
             }
-        }
-        .right {
-            .fcc();
-            font-size: 12px;
-            .staff {
-                color: rgba(0, 0, 0, 0.85);
-                margin-right: 12px;
-                font-weight: 500;
-            }
-            .status {
-                .fcc();
-                .i_point {
-                    margin-right: 6px;
+            .ant-collapse-header {
+                background-color: #F5F8FA;
+                height: 40px;
+                .fac();
+                width: 100%;
+                position: relative;
+                .ant-collapse-extra {
+                    position: absolute;
+                    right: 12px;
                 }
             }
         }
-        .panel-content {
-            .fsb(flex-start);
-            padding-bottom: 15px;
+        .submit-btn {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
         }
-        .info-item {
-            flex: 1;
-            font-size: 12px;
-            .key {
-                color: #8090A6;
-            }
-            .value {
-                margin-top: 10px;
-                color: #363D42;
-            }
-        }
-    }
-    .steps-container {
-        margin: 20px;
     }
 }
 </style>

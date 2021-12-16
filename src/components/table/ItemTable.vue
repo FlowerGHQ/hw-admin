@@ -1,5 +1,5 @@
 <template>
-    <a-table class="OrderItemTable item_table"
+    <a-table
         :columns="columns" :data-source="dataList" :scroll="{ x: true }"
         :row-key="record => record.id" :loading='loading' :pagination='false'
         :row-selection="checkMode ? rowSelection : null">
@@ -65,6 +65,7 @@ export default {
     },
     computed: {
         rowSelection() {
+            console.log('this.disabledChecked:', this.disabledChecked)
             return {
                 type: this.radioMode ? 'radio' : 'checkbox',
                 selectedRowKeys: this.selectedRowKeys,
@@ -82,7 +83,7 @@ export default {
                 },
                 getCheckboxProps: record => ({
                     props: {
-                        disabled: this.disabledChecked.includes(record.item_id)
+                        disabled: this.disabledChecked.includes(record.id)
                     },
                 }),
             };
@@ -101,13 +102,13 @@ export default {
                     })
                     break;
                 case 'detail_item':  // 商品编辑
-                  routeUrl = this.$router.resolve({
-                    path: "/item/item-detail",
-                    query: {
-                      id: item.item_id
-                    }
-                  })
-                  break;
+                    routeUrl = this.$router.resolve({
+                        path: "/item/item-detail",
+                        query: {
+                            id: item.item_id
+                        }
+                    })
+                    break;
             }
             window.open(routeUrl.href, '_blank')
         },

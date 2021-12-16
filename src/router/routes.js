@@ -89,7 +89,7 @@ const routes = [
                     parent: '/repair/repair-list',
                 }
             },
-       ]
+        ]
     },
     {   // 经销商管理 - 平台端
         path: '/agent',
