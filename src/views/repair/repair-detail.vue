@@ -58,6 +58,7 @@
             </div>
             <div class="form-container">
                 <CheckFault  :id='id' :detail='detail' ref="CheckFault"  />
+                <CheckResult  :id='id' :detail='detail' ref="CheckResult"  />
                 <div class="info">
                     <a-collapse v-model:activeKey="activeKey" :expand-icon-position="expandIconPosition">
                         <a-collapse-panel key="1" header="详细信息">
@@ -122,6 +123,8 @@
 import Core from '../../core';
 import axios from 'axios';
 import CheckFault from './components/CheckFault.vue';
+import CheckResult from './components/CheckResult.vue';
+
 const REPAIR = Core.Const.REPAIR
 const faultOptions = [
     { label: '电池故障', value: '电池故障' },
@@ -149,7 +152,8 @@ const actionLogColumns = [
 export default {
     name: 'RepairDetail',
     components: {
-        CheckFault
+        CheckFault,
+        CheckResult
     },
     props: {},
     data() {

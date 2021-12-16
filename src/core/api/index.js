@@ -84,6 +84,8 @@ const apiList = {
     },
 	RepairItem: { // 维修单
 		saveList: ['PostJson', 'repair-order-item/save-list'], // 列表
+		list: ['PostJson', 'repair-order-item/list'], // 列表
+		faultList: ['PostJson', 'repair-order-item/fault-list'], // 列表
 	},
 
     Item: { // 商品

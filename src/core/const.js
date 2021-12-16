@@ -1533,9 +1533,37 @@ let Const = {
             WAIT_DETECTION: 30,
             WAIT_REPAIR: 40,
             REPAIR_END: 50,
-        }
+        },
+	    FAULT_OPTIONS_LIST : [
+		    { label: '电池故障', value: '1' },
+		    { label: '发动机故障', value: '2' },
+		    { label: '轮胎故障', value: '3' },
+		    { label: '刹车故障', value: '4' },
+		    { label: '转向灯故障', value: '5' },
+		    { label: '仪表盘故障', value: '6' },
+		    { label: '尾灯故障', value: '7' },
+	    ],
+	    FAULT_OPTIONS_MAP :{
+			1: "电池故障",
+		    2: "发动机故障",
+		    3: "轮胎故障",
+		    4: "刹车故障",
+		    5: "转向灯故障",
+		    6: "仪表盘故障",
+		    7: "尾灯故障",
+
+	    },
+
     },
-    PURCHASE: { // 采购订单
+	REPAIR_ITEM: {//维修商品
+		TYPE:{
+			ADD: 1,
+			REPLACE:2,
+		}
+
+	},
+
+	PURCHASE: { // 采购订单
         STATUS_MAP: {
             '0' : '未知',
             '100': '待支付',
