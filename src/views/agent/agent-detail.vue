@@ -1,5 +1,5 @@
 <template>
-<div id="AgentDetail">
+<div id="AgentDetail" class='list-container'>
     <div class="title-container">
         <div class="title-area">经销商详情</div>
         <div class="btns-area">
@@ -49,8 +49,8 @@
             <a-tab-pane key="UserList" tab="员工管理">
                 <UserList :orgId="agent_id" :type="USER_TYPE.AGENT" v-if="activeKey === 'UserList'"/>
             </a-tab-pane>
-            <a-tab-pane key="UserList" tab="门店管理" v-if="loginType == USER_TYPE.ADMIN">
-                <StoreList :orgId="agent_id" :type="USER_TYPE.AGENT" v-if="activeKey === 'UserList'"/>
+            <a-tab-pane key="StoreList" tab="门店管理" v-if="loginType == USER_TYPE.ADMIN">
+                <StoreList :orgId="agent_id" :type="USER_TYPE.AGENT" v-if="activeKey === 'StoreList'"/>
             </a-tab-pane>
             <a-tab-pane key="PurchaseList" tab="订单列表">
                 <PurchaseList :orgId="agent_id"  v-if="activeKey === 'PurchaseList'"/>
