@@ -52,9 +52,7 @@
 
                             </a-checkbox-group>
                         </div>
-
                     </div>
-
                 </a-collapse-panel>
                 <a-collapse-panel key="2" header="零部件更换">
                     <a-row>
@@ -64,11 +62,6 @@
                                     <div class="left">
                                         <div class="staff">共{{faultListHandle.length}}个故障</div>
                                     </div>
-<!--                                    <div class="right">-->
-<!--                                        <div class="staff" v-if="detail.repair_user_id">-->
-<!--                                            <ItemSelect @change="handleAddFailItem" :disabled-checked='failData.map(i => i.id)' style="margin-bottom: 12px;"/>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
                                 </div>
                                 <div class="panel-content">
                                     <a-list size="small" bordered v-for="fault in faultListHandle">
@@ -104,11 +97,6 @@
                                     <div class="left">
                                         <div class="staff">共{{faultListHandle.length}}个故障</div>
                                     </div>
-                                    <!--                                    <div class="right">-->
-                                    <!--                                        <div class="staff" v-if="detail.repair_user_id">-->
-                                    <!--                                            <ItemSelect @change="handleAddFailItem" :disabled-checked='failData.map(i => i.id)' style="margin-bottom: 12px;"/>-->
-                                    <!--                                        </div>-->
-                                    <!--                                    </div>-->
                                 </div>
                                 <div class="panel-content">
                                     <a-list size="small" bordered v-for="fault in faultListHandle">
@@ -151,26 +139,6 @@
 import Core from '../../../core';
 import ItemSelect from '@/components/ItemSelect.vue';
 import axios from 'axios';
-const REPAIR = Core.Const.REPAIR
-const faultOptions = [
-    { label: '电池故障', value: '电池故障' },
-    { label: '发动机故障', value: '发动机故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-];
-const failNameColumns = [
-    { title: '故障名称', dataIndex: 'name' },
-    { title: '操作', dataIndex: 'operation'  },
-]
 const failColumns = [
     { title: '商品名称', dataIndex: 'name' },
     { title: '数量', dataIndex: 'amount'  },
@@ -193,27 +161,13 @@ export default {
             loading: false,
             id: '',
             detail: {}, // 工单详情
-            faultOptions: faultOptions,
             failColumns: failColumns,
-            failNameColumns: failNameColumns,
 
             failData: {},
-            changeItemData: [],
             exchangeData: [],
-            itemCurrPage: 1,
-            itemPageSize: 20,
-            itemDate:[],
-            itemTotal: 0,
-            itemSelected: [],
-            itemSelectedRowItems: [],
             faultList: [],
             faultListHandle: [],
-            modalFailShow: true,
             itemColumns: itemColumns,
-            searchItemForm: {
-                code:"",
-                name:"",
-            },
             Core: Core,
             stepsList: [
                 {status: 'finish', title: '已分配工单'},
@@ -228,36 +182,8 @@ export default {
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         this.getRepairDetail();
-        this.handleItemSearch()
     },
     methods: {
-        // 页面跳转
-        routerChange(type, item) {
-            let routeUrl
-            switch (type) {
-                case 'back':
-                    this.$router.go(-1)
-                    break;
-                case 'edit':  // 编辑工单
-                    routeUrl = this.$router.resolve({
-                        path: "/repair/repair-edit",
-                        query: { id: this.id },
-                    })
-                    break;
-                case 'list':  // 工单列表
-                    routeUrl = this.$router.resolve({
-                        path: "/repair/repair-list",
-                    })
-                    break;
-            }
-            window.open(routeUrl.href, '_self')
-        },
-        repairCheck(){
-            console.log("faultList", this.faultList)
-            console.log("failData", this.failData)
-
-            // Core.Api.Repair.check({})
-        },
         // 获取工单详情
         getRepairDetail() {
             this.loading = true;
@@ -271,49 +197,6 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
-        },
-        failHandle(type) {
-            switch (type){
-                case "fail":
-
-                    break;
-                case "exchange":
-
-                    break;
-            }
-            this.modalFailShow = true
-        },
-        handleItemSearch() {
-            Core.Api.Item.list({
-                ...this.searchItemForm
-            }).then(res => {
-                console.log('getRepairDetail res', res)
-                this.itemDate = res.list
-                this.itemTotal = res.count
-            }).catch(err => {
-                console.log('getRepairDetail err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-        handleItemSearchReset() {
-            Object.assign(this.searchItemForm, this.$options.data().searchItemForm)
-            this.pageItemChange(1)
-        },
-        pageItemChange(curr) {  // 页码改变
-            this.itemCurrPage = curr
-            this.handleItemSearch()
-        },
-        pageItemSizeChange(current, size) {  // 页码尺寸改变
-            console.log('pageSizeChange size:', size)
-            this.itemPageSize = size
-            this.handleItemSearch()
-        },
-        onSelectChange(selectedRowKeys, selectedRows) {
-            console.log("selectedRowKeys", selectedRowKeys)
-            console.log("selectedRows", selectedRows)
-            this.itemSelected = selectedRowKeys
-            this.itemSelectedRowItems = selectedRows
         },
 
         handleAddFailItem(ids, items, name) {
@@ -346,10 +229,6 @@ export default {
             })
 
         },
-        setTableDate(res) {
-            this.tableData = res
-        },
-
         repairDetection(){
             let itemList = []
             let fault = ""

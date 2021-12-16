@@ -163,14 +163,14 @@ export default {
             switch (type) {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/purchase/purchase-edit",
+                        path: "/item/purchase-edit",
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/purchase/purchase-detail",
+                        path: "/item/purchase-order-detail",
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_blank')
