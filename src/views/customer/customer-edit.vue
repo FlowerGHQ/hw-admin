@@ -115,14 +115,16 @@ export default {
             if (!form.phone) {
                 return this.$message.warning('请输入客户电话')
             }
+          if (!form.email) {
+            return this.$message.warning('请输入客户邮箱')
+          }
             if (!form.address) {
                 return this.$message.warning('请选择省/市/区（县）')
             }
             if (!form.detail_address) {
                 return this.$message.warning('请输入详细地址')
             }
-            let apiName = form.id ? 'update' : 'save'
-            Core.Api.Customer[apiName](form).then(() => {
+            Core.Api.Customer.save(form).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
             }).catch(err => {
