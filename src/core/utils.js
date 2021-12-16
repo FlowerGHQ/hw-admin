@@ -340,6 +340,11 @@ const Util = {
 		const MAP = Const.REPAIR.ITEM_TYPE_MAP
 		return MAP[val] || '未知'
 	},
+	repairFaultOptionsListFilter(val) {
+		const MAP = Const.REPAIR.FAULT_OPTIONS_MAP
+
+		return MAP[val] || '未知'
+	},
 /* =============== 维修单 ================ */
 
 
