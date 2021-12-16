@@ -5,7 +5,7 @@ let URL_POINT = 'http://api.eos.rebuildsoft.com'
 
 switch (window.location.hostname) {
     default:
-		URL_POINT = 'http://10.0.0.39:8083' // 谢耀圣
+		URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
 		// URL_POINT = 'http://10.0.0.205:8083' // 徐伟
 		// URL_POINT = 'http://10.0.0.149:8083' // 徐伟
         // URL_POINT = 'http://10.0.0.39:8083'  // 姚志宇
@@ -1586,24 +1586,8 @@ let Const = {
             '400': 'blue',
             '-400': 'blue',
         },
-		PAY_METHOD:{
-			1: "支付宝",
-			2: "微信",
-		},
-
 
     },
-	WAYBILL: {
-		TYPE: {
-			IN: 1,
-			OUT: 2,
-		},
-		TARGET_TYPE: {
-			PURCHASE_ORDER: 10
-		},
-
-	},
-
 
 	ACTION_LOG: {
 		SOURCE_TYPE:{
