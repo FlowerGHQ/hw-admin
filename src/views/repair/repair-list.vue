@@ -21,7 +21,7 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">工单编号:</div>
                     <div class="value">
-                        <a-input placeholder="请输入工单编号" v-model:value="searchForm.sn" @keydown.enter='handleSearch'/>
+                        <a-input placeholder="请输入工单编号" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -141,7 +141,7 @@ export default {
             ],
             create_time: [],
             searchForm: {
-                sn: '',
+                uid: '',
                 status: undefined,
                 item_type: 0,
                 type: 0,
