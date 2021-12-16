@@ -4,7 +4,7 @@
         <div class="title-area">经销商详情</div>
         <div class="btns-area">
             <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
-            <a-button type="primary" ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button>
+            <a-button type="primary" ghost @click="handleDelete(agent_id)"><i class="icon i_delete"/>删除</a-button>
         </div>
     </div>
     <div class="gray-panel">
@@ -84,7 +84,6 @@ export default {
             loading: false,
             //标签页
             activeKey: 'UserList',
-
             agent_id: '',
             detail: {}
         };
@@ -96,6 +95,44 @@ export default {
         this.getAgentDetail();
     },
     methods: {
+        routerChange(type) {
+            let routeUrl = ''
+            switch (type) {
+                case 'edit':  // 编辑
+                    routeUrl = this.$router.resolve({
+                        path: "/agent/agent-edit",
+                        query: { id: this.agent_id }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'list':  // liebiao
+                    routeUrl = this.$router.resolve({
+                        path: "/agent/agent-list",
+                        query: { id: this.agent_id }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+            }
+        },
+        // 删除 经销商
+        handleDelete(id) {
+            let _this = this;
+            this.$confirm({
+                title: '确定要删除该经销商吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    // console.log(this.agent_id);
+                    Core.Api.Agent.delete({id}).then(() => {
+                        _this.$message.success('删除成功');
+                        _this.routerChange('list');
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
         getAgentDetail(){
             this.loading = true;
             Core.Api.Agent.detail({

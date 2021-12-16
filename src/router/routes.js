@@ -73,10 +73,10 @@ const routes = [
                 path: 'repair-detail',
                 name: 'RepairDetail',
                 component: () => import('@/views/repair/repair-detail.vue'),
-                // hidden: true,
+                hidden: true,
                 meta: {
                     title: '维修单详情',
-                    // parent: '/repair/repair-list',
+                    parent: '/repair/repair-list',
                 }
             },
             // {
