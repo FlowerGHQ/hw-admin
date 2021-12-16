@@ -54,7 +54,7 @@
                                     </div>
                                 </div>
                                 <div class="panel-content">
-                                    <a-table :columns="failColumns" :data-source="exchangeData" :scroll="{ x: true }"
+                                    <a-table :columns="failColumns" :data-source="exchangeList" :scroll="{ x: true }"
                                              :row-key="record => record.id"  :pagination='false' size="small"
                                              :indentSize='24'>
                                         <template #bodyCell="{ column, text , record ,index}">
@@ -84,20 +84,6 @@
 import Core from '../../../core';
 import ItemSelect from '@/components/ItemSelect.vue';
 import axios from 'axios';
-const REPAIR = Core.Const.REPAIR
-const faultOptions = [
-    { label: '电池故障', value: '1' },
-    { label: '发动机故障', value: '2' },
-    { label: '轮胎故障', value: '3' },
-    { label: '刹车故障', value: '4' },
-    { label: '转向灯故障', value: '5' },
-    { label: '仪表盘故障', value: '6' },
-    { label: '尾灯故障', value: '7' },
-];
-const failNameColumns = [
-    { title: '故障名称', dataIndex: 'name' },
-    { title: '操作', dataIndex: 'operation'  },
-]
 const failColumns = [
     { title: '故障原因', dataIndex: 'item_fault_type' },
     { title: '商品名称', dataIndex: 'item_name' },
@@ -121,35 +107,17 @@ export default {
             loading: false,
             id: '',
             detail: {}, // 工单详情
-            faultOptions: faultOptions,
             failColumns: failColumns,
-            failNameColumns: failNameColumns,
 
             failList: [],
             exchangeList: [],
-            changeItemData: [],
-            exchangeData: [],
-            itemCurrPage: 1,
-            itemPageSize: 20,
-            itemDate:[],
-            itemTotal: 0,
-            itemSelected: [],
-            itemSelectedRowItems: [],
             faultList: [],
-            faultListHandle: [],
-            modalFailShow: true,
             itemColumns: itemColumns,
             searchItemForm: {
                 code:"",
                 name:"",
             },
             Core: Core,
-            stepsList: [
-                {status: 'finish', title: '已分配工单'},
-                {status: 'process', title: '确认中...'},
-                {status: 'wait', title: '待检测维修'},
-                {status: 'wait', title: '工单完成'},
-            ],
         };
     },
     watch: {},
@@ -159,36 +127,9 @@ export default {
         this.getRepairDetail();
         this.getRepairItemList();
         this.getRepairFaultList()
-        this.handleItemSearch();
     },
     methods: {
         // 页面跳转
-        routerChange(type, item) {
-            let routeUrl
-            switch (type) {
-                case 'back':
-                    this.$router.go(-1)
-                    break;
-                case 'edit':  // 编辑工单
-                    routeUrl = this.$router.resolve({
-                        path: "/repair/repair-edit",
-                        query: { id: this.id },
-                    })
-                    break;
-                case 'list':  // 工单列表
-                    routeUrl = this.$router.resolve({
-                        path: "/repair/repair-list",
-                    })
-                    break;
-            }
-            window.open(routeUrl.href, '_self')
-        },
-        repairCheck(){
-            console.log("faultList", this.faultList)
-            console.log("failData", this.failData)
-
-            // Core.Api.Repair.check({})
-        },
         // 获取工单详情
         getRepairDetail() {
             this.loading = true;
@@ -202,17 +143,6 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
-        },
-        failHandle(type) {
-            switch (type){
-                case "fail":
-
-                    break;
-                case "exchange":
-
-                    break;
-            }
-            this.modalFailShow = true
         },
         getRepairItemList() {
            Core.Api.RepairItem.list({
@@ -239,19 +169,6 @@ export default {
             })
         },
 
-        handleItemSearch() {
-            Core.Api.Item.list({
-                ...this.searchItemForm
-            }).then(res => {
-                console.log('getRepairDetail res', res)
-                this.itemDate = res.list
-                this.itemTotal = res.count
-            }).catch(err => {
-                console.log('getRepairDetail err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
 
     }
 };
