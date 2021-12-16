@@ -221,7 +221,6 @@ export default {
         padding: 0px;
     }
     .gray-panel.info {
-
         .left {
             font-size: 12px;
             color: #465670;
