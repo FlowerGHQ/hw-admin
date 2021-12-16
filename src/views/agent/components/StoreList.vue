@@ -100,7 +100,7 @@ export default {
                         path: "/store/store-detail",
                         query: { id: item.id }
                     })
-                    window.open(routeUrl.href, '_blank')
+                    window.open(routeUrl.href, '_self')
                     break;
             }
         },

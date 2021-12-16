@@ -24,7 +24,7 @@
                     <a-input-password v-model:value="form.password" placeholder="请输入密码"/>
                 </div>
             </div>
-            <div class="form-item required">
+            <div class="form-item required" v-if="!form.id">
                 <div class="key">手机号:</div>
                 <div class="value">
                     <a-input v-model:value="form.phone" placeholder="请输入员工手机号"/>
