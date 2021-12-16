@@ -79,16 +79,16 @@ const routes = [
                     parent: '/repair/repair-list',
                 }
             },
-            // {
-            //     path: 'repair-invoice',
-            //     name: 'RepairDetail',
-            //     component: () => import('@/views/repair/repair-invoice.vue'),
-            //     // hidden: true,
-            //     meta: {
-            //         title: '维修单详情1',
-            //         // parent: '/repair/repair-list',
-            //     }
-            // },
+            {
+                path: 'repair-invoice',
+                name: 'RepairInvoice',
+                component: () => import('@/views/repair/repair-invoice.vue'),
+                hidden: true,
+                meta: {
+                    title: '维修单详情',
+                    parent: '/repair/repair-list',
+                }
+            },
        ]
     },
     {   // 经销商管理 - 平台端

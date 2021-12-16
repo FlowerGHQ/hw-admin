@@ -4,7 +4,9 @@
             <div class="title-container">
                 <div class="title-area">工单详情</div>
                 <div class="btns-area">
-                    <a-button type="primary" ghost @click="repairDetection()" v-if="detail.status == Core.Const.REPAIR.STATUS.REPAIR_END"><i class="icon i_edit"/>结算</a-button>
+
+                    <a-button type="primary" ghost @click="repairRepairEnd()" v-if="detail.status == Core.Const.REPAIR.STATUS.REPAIR_END"><i class="icon i_edit"/>结算</a-button>
+
                     <a-button type="primary" ghost @click="repairRepairShow()" v-if="detail.status == Core.Const.REPAIR.STATUS.WAIT_REPAIR"><i class="icon i_edit"/>维修完成</a-button>
                     <a-button type="primary" ghost @click="repairDetection()" v-if="detail.status == Core.Const.REPAIR.STATUS.WAIT_DETECTION"><i class="icon i_edit"/>提交</a-button>
                     <a-button type="primary" ghost @click="repairCheck()" v-if="detail.status == Core.Const.REPAIR.STATUS.WAIT_CHECK"><i class="icon i_edit"/>确定</a-button>
@@ -261,6 +263,9 @@ export default {
         },
         repairRepairShow(){
             this.modalFailShow = true
+        },
+        repairRepairEnd(){
+            this.$router.push('/repair/repair-invoice?id=' + this.id)
         },
         // 获取工单详情
         getRepairDetail() {
