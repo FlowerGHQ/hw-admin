@@ -18,7 +18,6 @@ export default {
     props: {
         defaultAddress: {
             type: Array,
-            default: () => {return []}
         }
     },
     emit: ['change'],

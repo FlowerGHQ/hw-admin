@@ -69,27 +69,27 @@ const routes = [
                     parent: '/repair/repair-list',
                 }
             },
-            // {
-            //     path: 'repair-detail',
-            //     name: 'RepairDetail',
-            //     component: () => import('@/views/repair/repair-detail.vue'),
-            //     // hidden: true,
-            //     meta: {
-            //         title: '维修单详情',
-            //         // parent: '/repair/repair-list',
-            //     }
-            // },
             {
-                path: 'repair-invoice',
+                path: 'repair-detail',
                 name: 'RepairDetail',
-                component: () => import('@/views/repair/repair-invoice.vue'),
-                // hidden: true,
+                component: () => import('@/views/repair/repair-detail.vue'),
+                hidden: true,
                 meta: {
-                    title: '维修单详情1',
-                    // parent: '/repair/repair-list',
+                    title: '维修单详情',
+                    parent: '/repair/repair-list',
                 }
             },
-       ]
+            {
+                path: 'repair-invoice',
+                name: 'RepairInvoice',
+                component: () => import('@/views/repair/repair-invoice.vue'),
+                hidden: true,
+                meta: {
+                    title: '维修单结算',
+                    parent: '/repair/repair-list',
+                }
+            },
+        ]
     },
     {   // 经销商管理 - 平台端
         path: '/agent',

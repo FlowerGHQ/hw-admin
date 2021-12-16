@@ -4,10 +4,10 @@
             <div class="title-container">
                 <div class="title-area">工单详情</div>
                 <div class="btns-area">
-                    <a-button type="primary" ghost @click="repairDetection()" v-if="detail.status == Core.Const.REPAIR.STATUS.WAIT_DETECTION"><i class="icon i_edit"/>提交</a-button>
-                    <a-button type="primary" ghost @click="repairCheck()" v-if="detail.status == Core.Const.REPAIR.STATUS.WAIT_CHECK"><i class="icon i_edit"/>确定</a-button>
+                    <a-button type="primary" @click="repairDetection()" v-if="detail.status == Core.Const.REPAIR.STATUS.WAIT_DETECTION"><i class="icon i_check_c"/>提交</a-button>
+                    <a-button type="primary" @click="repairCheck()" v-if="detail.status == Core.Const.REPAIR.STATUS.WAIT_CHECK"><i class="icon i_check_c"/>确定</a-button>
                     <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
-<!--                    <a-button type="danger" ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button>-->
+                    <!-- <a-button type="danger" ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button> -->
                 </div>
             </div>
             <div class="gray-panel info">

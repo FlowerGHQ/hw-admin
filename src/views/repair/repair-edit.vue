@@ -7,7 +7,7 @@
             <div class="form-item required">
                 <div class="key">工单分类</div>
                 <div class="value">
-                    <a-radio-group v-model:value="form.type" :disabled="form.id">
+                    <a-radio-group v-model:value="form.type" :disabled="!!form.id">
                         <a-radio v-for="item of typeList" :key="item.value" :value="item.value" >{{item.text}}</a-radio>
                     </a-radio-group>
                 </div>
@@ -77,7 +77,7 @@
             <div class="form-item required">
                 <div class="key">相关客户</div>
                 <div class="value">
-                    <a-select placeholder="请选择相关客户" v-model:value="form.customer_id" @change="handleCustomer" show-search option-filter-prop="children" allow-clear>
+                    <a-select placeholder="请选择相关客户" v-model:value="form.customer_id" @change="handleCustomerSelect" show-search option-filter-prop="children">
                         <a-select-option v-for="(item,index) of customerList" :key="index" :value="item.id">{{item.name}}</a-select-option>
                     </a-select>
                 </div>
@@ -100,8 +100,7 @@
             <div class="form-item">
                 <div class="key">维修地址</div>
                 <div class="value">
-                    <a-cascader v-model:value="customer_address" :options="addressOptions" placeholder="请选择省/市/区县"
-                        :field-names="{ label: 'name', value: 'code' , children: 'children'}" :show-search="{ filter }"/>
+                    <AddressCascader @change='handleAddressSelect' :default-address='[form.customer_province, form.customer_city, form.customer_county]'/>
                 </div>
             </div>
             <div class="form-item" :class="form.channel == 1 ? 'required' : ''">
@@ -136,16 +135,15 @@
             <div class="form-item">
                 <div class="key">计划时间</div>
                 <div class="value">
-                    <a-date-picker v-model:value="form.plan_time" @change="aaa"  format="YYYY-MM-DD" valueFormat="x"/>
+                    <a-date-picker v-model:value="form.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>
                 </div>
             </div>
             <div class="form-item">
                 <div class="key">完成时间</div>
                 <div class="value">
-                    <a-date-picker v-model:value="form.finish_time" @change="aaa" format="YYYY-MM-DD" valueFormat="x" />
+                    <a-date-picker v-model:value="form.finish_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>
                 </div>
             </div>
-            <div>{{form.plan_time }}</div>
             <div class="form-item textarea">
                 <div class="key">维修备注</div>
                 <div class="value">
@@ -159,60 +157,18 @@
         <a-button @click="handleSubmit" type="primary">确定</a-button>
         <a-button @click="routerChange('back')">取消</a-button>
     </div>
-        <template class="modal-container">
-                <a-modal v-model:visible="customerShow"
-                         class="warehouse-edit-modal" :after-close='customerEditClose' @ok="customerUpdate">
-                      <div class="modal-content">
-                            <div class="form-item required">
-                              <div class="key">姓名:</div>
-                            <div class="value">
-                              <a-input v-model:value="customerForm.name" placeholder="请输入姓名"/>
-                            </div>
-                      </div>
-                      <div class="form-item required">
-                            <div class="key">手机号:</div>
-                            <div class="value">
-                              <a-input v-model:value="customerForm.phone" placeholder="请输入手机号" />
-                            </div>
-                      </div>
-                      <div class="form-item required">
-                            <div class="key">邮箱:</div>
-                            <div class="value">
-                              <a-input v-model:value="customerForm.email" placeholder="请输入邮箱"/>
-                            </div>
-                      </div>
-                      <div class="form-item">
-                          <div class="key">维修地址</div>
-                          <div class="value">
-                              <a-cascader v-model:value="customerForm.address" :options="addressOptions" placeholder="请选择省/市/区县"
-                                          :field-names="{ label: 'name', value: 'code' , children: 'children'}" :show-search="{ filter }"/>
-                          </div>
-                      </div>
-                      <div class="form-item required">
-                            <div class="key">详细地址:</div>
-                            <div class="value">
-                              <a-input v-model:value="customerForm.detail_address" placeholder="请输入详细地址"/>
-                            </div>
-                      </div>
-                  </div>
-
-        </a-modal>
-  </template>
-
-
 </div>
 </template>
 
 <script>
 import Core from '../../core';
-import axios from 'axios';
-import Util from "../../core/utils";
-
+import dayjs from 'dayjs';
 const REPAIR = Core.Const.REPAIR
+import AddressCascader from '@/components/common/AddressCascader.vue'
 
 export default {
     name: 'RepairEdit',
-    components: {},
+    components: { AddressCascader },
     props: {},
     data() {
         return {
@@ -226,22 +182,9 @@ export default {
             channelList: REPAIR.CHANNEL_LIST, // 维修方式
             priorityList: REPAIR.PRIORITY_LIST, // 紧急程度
             itemTypeList: Core.Const.ITEM.TYPE_LIST, // 产品类型
-            addressOptions: [], // 地址选择
-            customerShow: false,
             customerList: [], // 车主列表
-
-            customerName: undefined,// 车主姓名
             staffList: [], // 员工列表
-            customer_address: [],
-            customerForm: {
-                name: "",  // 相关客户-名称
-                phone: "", // 客户电话
-                email: "", // 客户邮箱
-                address: "", // 维修地址
-                detail_address: "", // 详细地址
-            },
-            repairUserNameList:[],
-            repairUserName: undefined,// 车主姓名
+
             form: {
                 id: '',
 
@@ -258,13 +201,15 @@ export default {
                 customer_name: "",  // 相关客户-名称
                 customer_phone: "", // 客户电话
                 customer_email: "", // 客户邮箱
+                customer_province: "", // 维修地址
+                customer_city: "", // 维修地址
+                customer_county: "", // 维修地址
                 customer_address: "", // 维修地址
-                customer_detail_address: "", // 详细地址
                 remark: "", // 工单备注
 
                 repair_user_id: undefined, // 工单负责人
-                plan_time: 0, // 计划时间
-                finish_time: 0, // 完成时间
+                plan_time: undefined, // 计划时间
+                finish_time: undefined, // 完成时间
                 repair_message: "", // 处理信息、工单备注
                 priority: 0, // 紧急程度
 
@@ -290,103 +235,45 @@ export default {
         }
         this.getCustomerList();
         this.getStaffList();
-        this.getRoughlyAddressList();
     },
     methods: {
-        aaa(e) {
-            console.log(e)
-        },
-        // 获取 车主列表
-        getCustomerList() {
-            Core.Api.Customer.listByName({
-                page:0
-            }).then(res => {
-                this.customerList = res.list
-            })
-        },
-        // 获取 车主列表
-        getRepairUserNameList(value) {
-            Core.Api.Customer.listByName({
-                name: value
-            }).then(res => {
-                this.repairUserNameList = res.list
-            })
-        },
-        customerUpdate() {
-            this.customerShow = true
-            let customerForm = Core.Util.deepCopy(this.customerForm)
-            customerForm.address = this.customerForm.address.join('/')
-            Core.Api.Customer.save({
-                ...customerForm
-            }).then(res => {
-                this.customerList = res.list
-            }).finally(() => {
-                this.customerShow = false
-            });
-
-        },
-        // 获取 员工列表
-        getStaffList() {
-            this.staffShow = true
-            Core.Api.User.list({
-                page: 0,
-                type: Core.Const.USER.TYPE.WORKER,
-            }).then(res => {
-                this.staffList = res.list
-            }).finally(() => {
-                this.staffShow = false
-            });
-
-        },
-        handleCustomer(id) {
-            this.customerList.forEach(customr =>{
-                if (id === customr.id){
-                    this.form.customer_id = id
-                    this.form.customer_name = customr.name
-                    this.form.customer_phone = customr.phone
-                    this.form.customer_email = customr.email
-                    this.form.customer_address = customr.address
-                    this.form.customer_detail_address = customr.detail_address
-                }
-            })
-            if (this.form.customer_address) {
-                this.customer_address = this.form.customer_address.split('/')
-            } else {
-                this.customer_address = []
-            }
-
-        },
-        handleRepairUserName(id) {
-            this.form.repair_user_id = id
-        },
-        // 获取 地址选择列表
-        getRoughlyAddressList() {
-            axios.get('/ext/province-city-county.json').then(response => {
-                this.addressOptions = response.data;
-            })
-        },
-        // 地址选择搜索
-        addressFilter(inputValue, path) {
-            return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
-        },
         // 页面跳转
         routerChange(type, item) {
+            let routeUrl
             switch (type) {
                 case 'back':
                     this.$router.go(-1)
                     break;
                 case 'customer':  // 新建客户
-                    this.customerShow = true
-                    // routeUrl = this.$router.resolve({
-                    //     path: "/repair/repair-edit",
-                    // })
+                    routeUrl = this.$router.resolve({
+                        path: "/customer/customer-edit",
+                    })
+                    window.open(routeUrl.href, '_blank')
                     break;
                 case 'staff':  // 详情
-                    // routeUrl = this.$router.resolve({
-                    //     path: "/repair/repair-edit",
-                    // })
+                    routeUrl = this.$router.resolve({
+                        path: "/user/user-edit",
+                        query: { type: this.loginType }
+                    })
+                    window.open(routeUrl.href, '_blank')
                     break;
             }
+        },
+
+        // 获取 车主列表
+        getCustomerList() {
+            Core.Api.Customer.listByName().then(res => {
+                this.customerList = res.list
+            })
+        },
+        // 获取 员工列表
+        getStaffList() {
+            Core.Api.User.list({
+                page: 0,
+                type: Core.Const.USER.TYPE.WORKER,
+            }).then(res => {
+                this.staffList = res.list
+            });
         },
         // 获取工单详情
         getRepairDetail() {
@@ -396,30 +283,28 @@ export default {
             }).then(res => {
                 console.log('getRepairDetail res', res)
                 this.detail = res.detail
-                // let address = res.detail.customer_address
-                console.log(res)
                 this.form.id = res.id
-                this.getCustomerList(res.customer_name, res.customer_id)
                 for (const key in this.form) {
                     this.form[key] = res[key]
                 }
-                if (this.form.customer_address){
-                    this.customer_address = this.form.customer_address.split('/')
-                } else {
-                    this.customer_address = []
-                }
-                this.form.plan_time /=1000
-
+                this.form.customer_id = this.form.customer_id || undefined
+                this.form.repair_user_id = this.form.repair_user_id || undefined
+                this.form.plan_time = this.form.plan_time ? dayjs.unix(this.form.plan_time).format('YYYY-MM-DD HH:mm:ss') : undefined
+                this.form.finish_time = this.form.finish_time ? dayjs.unix(this.form.finish_time).format('YYYY-MM-DD HH:mm:ss') : undefined
             }).catch(err => {
                 console.log('getRepairDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
+
         // 表单提交
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
-            form.customer_address = this.customer_address.join('/')
+
+            form.plan_time = form.plan_time ? dayjs(form.plan_time).unix() : 0
+            form.finish_time = form.finish_time ? dayjs(form.finish_time).unix() : 0
+
             console.log('handleSubmit form:', form)
             let checkRes = this.checkFormInput(form);
             if (!checkRes) { return }
@@ -486,8 +371,23 @@ export default {
             }
             return 1
         },
-        customerEditClose() {
-            this.customerShow = false
+
+        // 选择客户
+        handleCustomerSelect(id) {
+            let item = this.customerList.find(i => i.id === id)
+            this.form.customer_name = item.name
+            this.form.customer_phone = item.phone
+            this.form.customer_email = item.email
+            this.form.customer_province = item.province
+            this.form.customer_city = item.city
+            this.form.customer_county = item.county
+            this.form.customer_address = item.address
+        },
+
+        handleAddressSelect(address) {
+            this.form.customer_province = address[0]
+            this.form.customer_city = address[1]
+            this.form.customer_county = address[2]
         }
     }
 };

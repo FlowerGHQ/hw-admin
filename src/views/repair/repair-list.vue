@@ -54,7 +54,7 @@
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
                 <template #bodyCell="{ column, text , record}">
-                    <template v-if="column.dataIndex === 'sn'">
+                    <template v-if="column.key === 'detail'">
                         <a-tooltip placement="top" :title='text' v-if="record.status == 10">
                             <a-button type="link" @click="routerChange('edit', record)">{{text || '-'}}</a-button>
                         </a-tooltip>
@@ -159,7 +159,7 @@ export default {
             let { filteredInfo } = this;
             filteredInfo = filteredInfo || {};
             let columns = [
-                { title: '工单编号', dataIndex: 'sn', },
+                { title: '工单编号', dataIndex: 'uid', key: 'detail' },
                 { title: '工单名称', dataIndex: 'name', key: 'tip_item' },
                 { title: '产品类型', dataIndex: 'item_type',
                     filters: Core.Const.ITEM.TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.item_type || null },
