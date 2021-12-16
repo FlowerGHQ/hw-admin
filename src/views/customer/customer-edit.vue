@@ -124,8 +124,7 @@ export default {
             if (!form.detail_address) {
                 return this.$message.warning('请输入详细地址')
             }
-            let apiName = form.id ? 'update' : 'save'
-            Core.Api.Customer[apiName](form).then(() => {
+            Core.Api.Customer.save(form).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
             }).catch(err => {
