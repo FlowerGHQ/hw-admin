@@ -1,50 +1,39 @@
 <template>
     <div id="ItemDetail" class='list-container'>
         <div class="content">
-            <!-- <div v-for="(item,i) in comRecords" :key="i" class="comRecords">
-                <div style="display:inline-block;width:50px;">
-                  <img style="width:50px;margin-bottom:40px;" :src="item.avatar" />
+            <div class="title">商品详情</div>
+            <div class="content-top" >
+                <div class="info-block">
+                    <img :src="$Util.imageFilter(detail.imgs ? detail.imgs : '', 2)" />
                 </div>
-                <div style="display:inline-block;width:320px;margin-left:10px;">
-                  <h3 align="left">11{{item.employees}}</h3>
-                  <p align="left">11{{item.record.slice(0,15)}}</p>
-                  <el-popover
-                    placement="top-start"
-                    width="200"
-                    trigger="hover">
-                    <p align="left">11{{item.record}}</p>
-                  </el-popover>
-                  <span>{{item.gmtCreate}}</span>
-                </div>
-            </div> -->
-            <div class="top-dis" >
-                <div class="title">商品详情</div>
-                <div >
-                    <div>
-                        <img :src="detail.imgs" />
-                    </div>
-                    <div>
-                        <p>商品名:{{detail.name}}</p>
-                        <p>{{detail.price}}</p>
-                    </div>
+                <div class="info-block">
+                    <p>商品名:{{detail.name}}</p>
+                    <p>{{detail.price}}</p>
                 </div>
             </div>
-            <div class="middle-dis">
+            <div class="content-middle">
                 <div class="info-block">
                     <div class="title">详情信息</div>
-                    <p>商品编码：{{detail.code}}</p>
-                    <!-- <p>商品货号：{{detail.config}}</p> -->
-                    <p>商品分类：{{detail.category_id}}</p>
+                    <p>商品编码：</p>
+                    <p class="data">{{detail.code}}</p>
+                    <!-- <p>商品货号：</p>
+                    <p class="data">{{detail.config}}</p> -->
+                    <p>商品分类：</p>
+                    <p class="data">{{detail.category_id}}</p>
                     <!-- <p>商品品牌：{{detail.brand}}</p> -->
                 </div>
                 <div class="info-block">
-                    <!-- <p>商品条码：{{detail.name}}</p> -->
-                    <!-- <p>生产商：  {{detail.name}}</p> -->
-                    <p>上架日期：{{detail.createTime}}</p>
-                    <!-- <p>上架员工：{{detail.name}}</p> -->
+                    <!-- <p>商品条码：</p>
+                    <p class="data">{{detail.name}}</p> -->
+                    <!-- <p>生产商： </p>
+                    <p class="data">{{detail.name}}</p> -->
+                    <p>上架日期：</p>
+                    <p class="data">{{detail.createTime}}</p>
+                    <!-- <p>上架员工：</p>
+                    <p class="data">{{detail.name}}</p> -->
                 </div>
             </div>
-            <div class="bottom-tab">
+            <div class="content-bottom">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
                     <template #bodyCell="{ column, text , record }">
@@ -215,56 +204,65 @@ export default {
 #ItemDetail {
     padding: 20px 184px 0 126px;
     box-sizing: border-box;
+    width: 1264px;
+    height: 1726px;
+    // border-radius: 6px 6px 6px 6px;
     .content {
-        border-radius: 1px;
-        border: 1px solid #E6EAEE;
-        .top-dis {
-            // width: 890px;
-            height: 209px;
-            background: #F8FAFC;
-            border-radius: 0px 0px 0px 0px;
-            opacity: 0.9;
+        // border-radius: 1px;
+        .content-top {
+            height: 160px;
+            margin-top: 20px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+           .info-block{
+                flex: 1;
+            }
         }
-        .middle-dis {
-            // text-align: center;
-            // width: 890px;
+        .content-middle {
+            height: 285px;
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
             padding-bottom: 20px;
-            // padding-left: 60px;
             .info-block {
                 flex: 1;
             }
         }
-        .bottom-tab {
-            // width: 890px;
-            // height: 900px;
-            border-radius: 1px 1px 1px 1px;
+        .content-bottom {
+            // width: 1224px;
+            height: 438px;
+            background: #F8FAFC;
+            border-radius: 4px 4px 4px 4px;
             opacity: 1;
-            border: 1px solid #E6EAEE;
         }
     }
     .bottom {
-        margin-top: 60px;
-        margin-bottom: 20px;
+        margin-bottom: 0px;
     }
 }
 .title{
-    padding-top: 20px;
     font-size: 12px;
-    font-family: PingFang SC-Medium, PingFang SC;
     font-weight: 500;
     color: #000022;
-    line-height: 14px;
+    line-height: 17px;
 }
-p {
-    width: 96px;
+.data {
+    // width: 24px;
     height: 17px;
     font-size: 12px;
-    font-family: PingFang SC-Regular, PingFang SC;
     font-weight: 400;
+    color: #363D42;
+    line-height: 17px;
+}
+p{
+    // width: 48px;
+    height: 17px;
+    font-size: 12px;
     color: #8090A6;
-    line-height: 14px;
+    line-height: 17px;
+}
+img{
+    width: 100px;
 }
 </style>

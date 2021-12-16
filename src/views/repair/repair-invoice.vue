@@ -159,20 +159,16 @@ export default {
             background: #F8FAFC;
         }
         .info-content {
-            // text-align: center;
-            // width: 890px;
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
             padding-bottom: 20px;
-            // padding-left: 60px;
             .info-block {
                 flex: 1;
             }
         }
         .item-content {
             border-radius: 1px;
-            opacity: 1;
             border: 1px solid #E6EAEE;
         }
         .count {
@@ -187,12 +183,12 @@ export default {
                 font-size: 12px;
                 font-weight: 500;
                 color: #000022;
-                line-height: 14px;
+                line-height: 17px;
                 i {
                     font-size: 12px;
                     font-weight: 500;
                     color: #000022;
-                    line-height: 14px;
+                    line-height: 17px;
                 }
             }
         }
