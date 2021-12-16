@@ -1586,8 +1586,24 @@ let Const = {
             '400': 'blue',
             '-400': 'blue',
         },
+		PAY_METHOD:{
+			1: "支付宝",
+			2: "微信",
+		},
+
 
     },
+	WAYBILL: {
+		TYPE: {
+			IN: 1,
+			OUT: 2,
+		},
+		TARGET_TYPE: {
+			PURCHASE_ORDER: 10
+		},
+
+	},
+
 
 	ACTION_LOG: {
 		SOURCE_TYPE:{
