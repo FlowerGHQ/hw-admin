@@ -43,7 +43,7 @@ const routes = [
         path: '/repair',
         component: Layout,
         name: 'RepairManagement',
-        redirect: '/repair/repair-lsit',
+        redirect: '/repair/repair-list',
         meta: {
             title: '维修单管理',
             icon: 'i_s_temp',
