@@ -359,6 +359,10 @@ const Util = {
                 return COLOR_MAP[val + ''] || 'grey'
         }
     },
+	puechasePayMethodFilter(val) {
+		const MAP = Const.PURCHASE.PAY_METHOD
+		return MAP[val] || '未知'
+	},
 /* =============== 采购单 ================ */
 
 

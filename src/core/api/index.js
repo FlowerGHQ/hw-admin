@@ -145,6 +145,11 @@ const apiList = {
 		list: ['PostJson', 'action-log/list'],
 
 	},
+	Waybill:{
+		detailByTarget: ['PostJson', 'waybill/detail-by-target'],
+		queryLogistics: ['PostJson', 'waybill/query-logistics'],
+
+	},
 
 };
 

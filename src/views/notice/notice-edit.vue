@@ -1,7 +1,7 @@
 <template>
   <div id="NoticeEdit" class="edit-container">
     <div class="title-container">
-      <div class="title-area">{{ form.id ? '编辑系统' : '新建系统' }}</div>
+      <div class="title-area">{{ form.id ? '编辑消息' : '新建消息' }}</div>
     </div>
     <div class="form-block">
       <div class="form-title">
@@ -9,13 +9,13 @@
       </div>
       <div class="form-content">
         <div class="form-item required">
-          <div class="key">系统类型：</div>
+          <div class="key">消息类型：</div>
           <div class="value">
-            <a-input v-model:value="form.name" placeholder="请选择系统类型"/>
+            <a-input v-model:value="form.name" placeholder="请选择消息类型"/>
           </div>
         </div>
         <div class="form-item required">
-          <div class="key">系统内容：</div>
+          <div class="key">消息内容：</div>
           <div class="value">
             <a-cascader v-model:value="form.address" :options="form.addressOptions" placeholder="请选择省/市/区县"
                         :field-names="{ label: 'name', value: 'code' , children: 'children'}"
