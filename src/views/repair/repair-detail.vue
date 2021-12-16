@@ -4,6 +4,10 @@
             <div class="title-container">
                 <div class="title-area">工单详情</div>
                 <div class="btns-area">
+
+                    <a-button type="primary" ghost @click="repairRepairEnd()" v-if="detail.status == Core.Const.REPAIR.STATUS.REPAIR_END"><i class="icon i_edit"/>结算</a-button>
+
+                    <a-button type="primary" ghost @click="repairRepairShow()" v-if="detail.status == Core.Const.REPAIR.STATUS.WAIT_REPAIR"><i class="icon i_edit"/>维修完成</a-button>
                     <a-button type="primary" ghost @click="repairDetection()" v-if="detail.status == Core.Const.REPAIR.STATUS.WAIT_DETECTION"><i class="icon i_edit"/>提交</a-button>
                     <a-button type="primary" ghost @click="repairCheck()" v-if="detail.status == Core.Const.REPAIR.STATUS.WAIT_CHECK"><i class="icon i_edit"/>确定</a-button>
                     <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
@@ -116,6 +120,26 @@
                 </div>
             </div>
         </div>
+        <template class="modal-container">
+            <a-modal v-model:visible="modalFailShow" width="600px" title="商品" @ok="repairRepair">
+                <div class="modal-content">
+                    <div class="form-item">
+                        <div class="key">维修结果</div>
+                        <div class="value">
+                            <a-select v-model:value="repairForm.results" placeholder="请选择维修结果">
+                                <a-select-option v-for="results of resultsList" :key="results.value" :value="results.value">{{results.name}}</a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                    <div class="form-item" v-if="repairForm.results == Core.Const.REPAIR.RESULTS.FAIL">
+                        <div class="key">失败原因</div>
+                        <div class="value">
+                            <a-input v-model:value="repairForm.fail_remark" placeholder="请输入失败原因"/>
+                        </div>
+                    </div>
+                </div>
+            </a-modal>
+        </template>
     </div>
 </template>
 
@@ -126,21 +150,6 @@ import CheckFault from './components/CheckFault.vue';
 import CheckResult from './components/CheckResult.vue';
 
 const REPAIR = Core.Const.REPAIR
-const faultOptions = [
-    { label: '电池故障', value: '电池故障' },
-    { label: '发动机故障', value: '发动机故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-    { label: '轮胎故障', value: '轮胎故障' },
-];
 const actionLogColumns = [
     { title: '操作类型', dataIndex: 'name' },
     { title: '操作人', dataIndex: 'code'  },
@@ -163,7 +172,7 @@ export default {
             loading: false,
             id: '',
             detail: {}, // 工单详情
-            faultOptions: faultOptions,
+            resultsList: Core.Const.REPAIR.RESULTS_LIST,
 
             failData: [{name: "前车灯", 数量: 1}],
             active: null,
@@ -175,13 +184,17 @@ export default {
             itemSelected: [],
             itemSelectedRowItems: [],
             faultList: [],
-            modalFailShow: true,
+            modalFailShow: false,
             actionLogList: [],
             actionLogLoading: false,
             actionLogColumns: actionLogColumns,
             searchItemForm: {
                 code:"",
                 name:"",
+            },
+            repairForm: {
+                results: undefined,
+                fail_remark: undefined,
             },
             Core: Core,
             stepsList: [
@@ -234,6 +247,25 @@ export default {
         },
         repairDetection() {
             this.$refs.CheckFault.repairDetection();
+        },
+        repairRepair() {
+            Core.Api.Repair.repair({
+                id: this.id,
+            }).then(res => {
+                console.log('getRepairDetail res', res)
+                this.detail = res
+            }).catch(err => {
+                console.log('getRepairDetail err', err)
+            }).finally(() => {
+                this.loading = false;
+                this.modalFailShow = false
+            });
+        },
+        repairRepairShow(){
+            this.modalFailShow = true
+        },
+        repairRepairEnd(){
+            this.$router.push('/repair/repair-invoice?id=' + this.id)
         },
         // 获取工单详情
         getRepairDetail() {

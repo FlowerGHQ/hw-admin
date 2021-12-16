@@ -27,11 +27,6 @@
                                     <div class="left">
                                         <div class="staff">共{{faultList.length}}个故障</div>
                                     </div>
-<!--                                    <div class="right">-->
-<!--                                        <div class="staff" v-if="detail.repair_user_id">-->
-<!--                                            <ItemSelect @change="handleAddFailItem" :disabled-checked='failData.map(i => i.id)' style="margin-bottom: 12px;"/>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
                                 </div>
                                 <div class="panel-content">
                                         <a-table :columns="failColumns" :data-source="failList" :scroll="{ x: true }"
@@ -57,11 +52,6 @@
                                     <div class="left">
                                         <div class="staff">共{{faultList.length}}个故障</div>
                                     </div>
-                                    <!--                                    <div class="right">-->
-                                    <!--                                        <div class="staff" v-if="detail.repair_user_id">-->
-                                    <!--                                            <ItemSelect @change="handleAddFailItem" :disabled-checked='failData.map(i => i.id)' style="margin-bottom: 12px;"/>-->
-                                    <!--                                        </div>-->
-                                    <!--                                    </div>-->
                                 </div>
                                 <div class="panel-content">
                                     <a-table :columns="failColumns" :data-source="exchangeData" :scroll="{ x: true }"
