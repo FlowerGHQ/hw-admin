@@ -2,17 +2,17 @@
   <div id="NoticeList">
     <div class="list-container">
       <div class="title-container">
-        <div class="title-area">系统列表</div>
+        <div class="title-area">消息列表</div>
         <div class="btns-area">
-          <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建系统</a-button>
+          <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建消息</a-button>
         </div>
       </div>
       <div class="search-container">
         <a-row class="search-area">
           <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
-            <div class="key">系统类型:</div>
+            <div class="key">消息类型:</div>
             <div class="value">
-              <a-input placeholder="请输入系统类型" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+              <a-input placeholder="请输入消息类型" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
             </div>
           </a-col>
           <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">

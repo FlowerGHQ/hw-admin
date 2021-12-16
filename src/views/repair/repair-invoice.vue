@@ -61,7 +61,7 @@
 <script>
 import Core from '../../core';
 export default {
-    name: 'UserList',
+    name: 'RepairInvoice',
     components: {},
     props: {},
     data() {
@@ -93,6 +93,7 @@ export default {
         }
     },
     mounted() {
+        this.id = Number(this.$route.query.id) || 0
         this.getRepairDetail();
         this.getTableData();
     },
@@ -122,6 +123,7 @@ export default {
             });
         },
         getTableData() {  // 获取 表格 数据
+            console.log(this.id);
             this.loading = true;
             Core.Api.RepairItem.list({
                 repair_order_id: this.id
@@ -225,7 +227,7 @@ export default {
                     font-size: 12px;
                     font-weight: 500;
                     color: #000022;
-                    line-height: 14px;
+                    line-height: 17px;
                 }
             }
         }

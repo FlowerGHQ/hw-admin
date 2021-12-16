@@ -361,6 +361,10 @@ const Util = {
                 return COLOR_MAP[val + ''] || 'grey'
         }
     },
+	puechasePayMethodFilter(val) {
+		const MAP = Const.PURCHASE.PAY_METHOD
+		return MAP[val] || '未知'
+	},
 /* =============== 采购单 ================ */
 
 
@@ -372,8 +376,12 @@ const Util = {
 /* =============== 员工/账号/用户 ================ */
 
 
-
-
+/* =============== 物流信息 ================ */
+	waybillCompanyFilter(key) {
+		const MAP = Const.WAYBILL.COMPANY_MAP
+		return MAP[key] || '未知物流公司'
+	}
+/* =============== 物流信息 ================ */
 }
 
 export default Util
