@@ -1553,7 +1553,14 @@ let Const = {
 		    7: "尾灯故障",
 
 	    },
-
+		RESULTS_LIST: [
+			{ name: '成功', value: '1' },
+			{ name: '失败', value: '2' },
+		],
+	    RESULTS: {
+		    SUCCESS:1,
+		    FAIL:2,
+	    },
     },
 	REPAIR_ITEM: {//维修商品
 		TYPE:{
