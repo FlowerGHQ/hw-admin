@@ -1586,8 +1586,37 @@ let Const = {
             '400': 'blue',
             '-400': 'blue',
         },
+		PAY_METHOD:{
+			1: "支付宝",
+			2: "微信",
+		},
 
-    },
+	},
+	WAYBILL:{
+		TYPE: {
+			IN: 1,
+			OUT: 2,
+		},
+		TARGET_TYPE: {
+			PURCHASE_ORDER: 10
+		},
+
+		COMPANY_MAP: {
+			'EMS': 'EMS',
+			'JD': '京东物流',
+			'STO': '申通快递',
+			'YTO': '圆通速递',
+			'ZTO': '中通快递',
+			'HTKY': '百世快递',
+			'BSKY': '百世快运',
+			'YUNDA': '韵达快递',
+			'DEPPON': '德邦快递',
+			'SFEXPRESS': '顺丰速运',
+			'CHINAPOST': '邮政包裹',
+			'KYEXPRESS': '跨越速运',
+		},
+	},
+
 
 	ACTION_LOG: {
 		SOURCE_TYPE:{

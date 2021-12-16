@@ -372,6 +372,12 @@ const Util = {
         return MAP[val] || '未知'
     },
 /* =============== 员工/账号/用户 ================ */
+/* =============== 员工/账号/用户 ================ */
+	waybillCompanyFilter(key) {
+		const MAP = Const.WAYBILL.COMPANY_MAP
+		return MAP[key] || '未知物流公司'
+	}
+/* =============== 员工/账号/用户 ================ */
 }
 
 export default Util
