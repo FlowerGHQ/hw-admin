@@ -115,6 +115,9 @@ export default {
             if (!form.phone) {
                 return this.$message.warning('请输入客户电话')
             }
+          if (!form.email) {
+            return this.$message.warning('请输入客户邮箱')
+          }
             if (!form.address) {
                 return this.$message.warning('请选择省/市/区（县）')
             }
