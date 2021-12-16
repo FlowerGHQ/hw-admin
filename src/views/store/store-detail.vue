@@ -1,60 +1,98 @@
 <template>
-  <div id="StoreDetail">
-    <a-descriptions>
-      <a-descriptions-item label="门店名称">{{detail.name}}</a-descriptions-item>
-    </a-descriptions>
-  </div>
-  <div id="AgentDetail">
-    <a-tabs v-model:activeKey="activeKey">
-      <a-tab-pane key="UserList" tab="账号管理"><UserList :orgId="store_id"  :type="REPAIR_STATUS.WAIT_DETECTION"/><!--账号列表页面组件--></a-tab-pane>
-      <a-tab-pane key="PurchaseList" tab="订单列表"><PurchaseList :agentId="store_id"/><!--采购订单页面组件--></a-tab-pane>
-      <a-tab-pane key="Ulist" tab="维修工管理"><UserList :orgId="store_id" :type="REPAIR_STATUS.WAIT_REPAIR"/><!--维修工列表页面组件--></a-tab-pane>
-    </a-tabs>
-  </div>
+<div id="StoreDetail" class="list-container">
+    <div class="title-container">
+        <div class="title-area">门店详情</div>
+        <div class="btns-area">
+            <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
+            <a-button type="primary" ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button>
+        </div>
+    </div>
+    <div class="gray-panel">
+        <div class="panel-content desc-container">
+            <div class="desc-title">
+                <div class="title-area">
+                    <img :src="$Util.imageFilter(detail.logo, 3)" />
+                    <span class="title">{{detail.name}}</span>
+                </div>
+            </div>
+            <a-row class="desc-detail has-logo">
+                <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                    <span class="key">创建时间：</span>
+                    <span class="value">{{$Util.timeFilter(detail.create_time)}}</span>
+                </a-col>
+            </a-row>
+            <div class='desc-stat'>
+                <a-statistic title="员工数量" :value="0"/>
+                <a-divider type="vertical" />
+                <a-statistic title="维修工数量" :value="0" />
+                <a-divider type="vertical" />
+                <a-statistic title="累计营收" :value="0" :precision="2" prefix='￥'/>
+                <a-divider type="vertical" />
+                <a-statistic title="总订单数" :value="0" />
+            </div>
+        </div>
+    </div>
+    <div class="tabs-container">
+        <a-tabs v-model:activeKey="activeKey">
+            <a-tab-pane key="UserList" tab="员工管理">
+                <UserList :orgId="store_id" :type="USER_TYPE.STORE" v-if="activeKey == 'UserList'"/>
+            </a-tab-pane>
+            <a-tab-pane key="WorkerList" tab="维修工管理">
+                <UserList :orgId="store_id" :type="USER_TYPE.WORKER" v-if="activeKey == 'WorkerList'"/>
+            </a-tab-pane>
+            <a-tab-pane key="PurchaseList" tab="订单列表">
+                <PurchaseList :orgId="store_id" v-if="activeKey == 'PurchaseList'"/>
+            </a-tab-pane>
+        </a-tabs>
+    </div>
+</div>
 </template>
 
 <script>
+import Core from '../../core';
+
 import UserList from '@/components/UserList.vue';
 import PurchaseList from '@/components/PurchaseOrderList.vue';
-import Core from '../../core';
-import Const from '../../core/const';
+
+const USER_TYPE = Core.Const.USER.TYPE;
 export default {
-  name: 'StoreDetail',
-  components: { UserList , PurchaseList },
-  props: {},
-  data() {
-    return {
-      loginType: Core.Data.getLoginType(),
-      // 加载
-      loading: false,
-      //标签页
-      activeKey: 'UserList',
-      store_id: '',
-      detail: {},
-      REPAIR_STATUS: Const.REPAIR.STATUS
-    };
-  },
-  watch: {},
-  computed: {},
-  created() {
-    this.store_id = Number(this.$route.query.id) || 0
-    this.getStoreDetail();
-  },
-  methods: {
-    getStoreDetail(){
-      this.loading = true;
-      Core.Api.Store.detail({
-        id: this.store_id,
-      }).then(res => {
-        console.log('getStoreDetail res', res)
-        this.detail = res.detail
-      }).catch(err => {
-        console.log('getStoreDetail err', err)
-      }).finally(() => {
-        this.loading = false;
-      });
+    name: 'StoreDetail',
+    components: { UserList , PurchaseList },
+    props: {},
+    data() {
+        return {
+            USER_TYPE,
+            loginType: Core.Data.getLoginType(),
+            // 加载
+            loading: false,
+            //标签页
+            activeKey: 'UserList',
+
+            store_id: '',
+            detail: {},
+        };
     },
-  }
+    watch: {},
+    computed: {},
+    created() {
+        this.store_id = Number(this.$route.query.id) || 0
+        this.getStoreDetail();
+    },
+    methods: {
+        getStoreDetail(){
+            this.loading = true;
+            Core.Api.Store.detail({
+                id: this.store_id,
+            }).then(res => {
+                console.log('getStoreDetail res', res)
+                this.detail = res.detail
+            }).catch(err => {
+                console.log('getStoreDetail err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+    }
 };
 </script>
 

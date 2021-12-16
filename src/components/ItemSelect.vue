@@ -65,6 +65,10 @@ export default {
             type: Number,
             default: 0,
         },
+        faultName:{
+            type: String,
+            default: ''
+        },
         disabledChecked: {
             type: Array,
 
@@ -117,8 +121,9 @@ export default {
             this.selectItems = []
         },
         handleConfirm() {
-            console.log('handleConfirm this.selectItems:', this.selectItems)
-            this.$emit('change', this.selectItemIds, this.selectItems)
+            console.log('handleConfirm this.faultName:', this.selectItems)
+
+            this.$emit('change', this.selectItemIds, this.selectItems, this.faultName)
             this.modalShow = false
         },
 

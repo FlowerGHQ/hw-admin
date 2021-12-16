@@ -2,6 +2,10 @@ import Data from './data';
 import Const from './const';
 import dayjs from "dayjs";
 
+import defult_img from '@images/defult_img.png'
+import defult_org from '@images/defult_org.png'
+import defult_item from '@images/defult_item.png'
+
 const Util = {
 /* =============== 通用方法 ================ */
     /**
@@ -239,14 +243,15 @@ const Util = {
 /* =============== 数值 ================ */
 
 /* =============== 通用过滤器 ================ */
-    imageFilter(item) {
-        if (!item) {
+    imageFilter(item, default_type = 1) {
+        if (!item || typeof item !== 'string') {
             console.warn("imageFilter 没有找到图像")
-            return
-        }
-        if (typeof item !== 'string') {
-            console.warn('imageFilter 请传入字符串', item)
-            return
+            let map = {
+                1: defult_img,
+                2: defult_item,
+                3: defult_org,
+            }
+            return map[default_type]
         }
 
         if (item.includes("http")) {
@@ -257,19 +262,14 @@ const Util = {
     },
 
     addressFilter(obj, type = 1) {
-        const province = obj.province || '';
-        const city = obj.city || '';
-        const county = obj.county || '';
-        const detail = obj.address || '';
-        if (!province && !city && !county && !detail) {
+        let { province, city, county, address } = obj
+        if (!province && !city && !county && !address) {
             return '-'
         }
         switch (type) {
             case 1:
-                if (!province && !city && !county && !detail) return '-';
-                return `${province} ${city} ${county} ${detail}`;
+                return `${province} ${city} ${county} ${address}`;
             case 2:
-                if (!province && !city && !county) return '-';
                 return `${province} ${city} ${county}`
         }
     },
@@ -308,6 +308,7 @@ const Util = {
     },
 /* =============== 商品 ================ */
 
+
 /* =============== 维修单 ================ */
     repairStatusFilter(val, to = 'word') {
         const MAP = Const.REPAIR.STATUS_MAP
@@ -341,32 +342,27 @@ const Util = {
 	},
 /* =============== 维修单 ================ */
 
-/* =============== 采购单 ================ */
-puechaseStatusFilter(val, to = 'word') {
-    const MAP = Const.PURCHASE.STATUS_MAP
-    const COLOR_MAP = Const.PURCHASE.STATUS_COLOR_MAP
-    switch (to) {
-        case 'word':
-            return MAP[val] || '未知'
-        case 'color':
-            return COLOR_MAP[val] || 'grey'
-    }
-},
-/* =============== 采购单 ================ */
 
 /* =============== 采购单 ================ */
-UserTypeFilter(val, to = 'word') {
-    const MAP = Const.USER.TYPE_MAP
-    const COLOR_MAP = Const.USER.TYPE_COLOR_MAP
-    switch (to) {
-        case 'word':
-            return MAP[val] || '未知'
-        case 'color':
-            return COLOR_MAP[val] || 'grey'
-    }
-},
+    puechaseStatusFilter(val, to = 'word') {
+        const MAP = Const.PURCHASE.STATUS_MAP
+        const COLOR_MAP = Const.PURCHASE.STATUS_COLOR_MAP
+        switch (to) {
+            case 'word':
+                return MAP[val + ''] || '未知'
+            case 'color':
+                return COLOR_MAP[val + ''] || 'grey'
+        }
+    },
 /* =============== 采购单 ================ */
 
+
+/* =============== 员工/账号/用户 ================ */
+    userTypeFilter(val) {
+        const MAP = Const.USER.TYPE_MAP
+        return MAP[val] || '未知'
+    },
+/* =============== 员工/账号/用户 ================ */
 }
 
 export default Util

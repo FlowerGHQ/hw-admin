@@ -91,7 +91,7 @@ const routes = [
             },
        ]
     },
-    {   // 经销商
+    {   // 经销商管理 - 平台端
         path: '/agent',
         component: Layout,
         redirect: '/agent/agent-list',
@@ -100,7 +100,7 @@ const routes = [
             title: '经销商管理',
             icon: 'i_s_temp',
             // auth: ['dashboard'],
-            // roles: [LOGIN_TYPE.ADMIN],
+            roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
             {
@@ -109,6 +109,7 @@ const routes = [
                 component: () => import('@/views/agent/agent-list.vue'),
                 meta: {
                     title: '经销商列表',
+                    roles: [LOGIN_TYPE.ADMIN],
                 }
             },
             {
@@ -119,6 +120,7 @@ const routes = [
                 meta: {
                     title: '经销商编辑',
                     parent: '/agent/agent-list',
+                    roles: [LOGIN_TYPE.ADMIN],
                 }
             },
             {
@@ -129,6 +131,69 @@ const routes = [
                 meta: {
                     title: '经销商详情',
                     parent: '/agent/agent-list',
+                }
+            },
+        ]
+    },
+    {   // 经销商管理 - 经销商端
+        path: '/agent/agent-detail-sp',
+        component: Layout,
+        meta: {
+            title: '经销商管理',
+            icon: 'i_s_temp',
+            roles: [LOGIN_TYPE.AGENT],
+        },
+        children: [
+            {
+                path: '',
+                name: 'AgentManagementSp',
+                component: () => import('@/views/agent/agent-detail.vue'),
+                meta: {
+                    title: '经销商详情',
+                    roles: [LOGIN_TYPE.AGENT],
+                    is_sub_menu: true
+                }
+            },
+        ]
+    },
+    {   // 门店管理
+        path: '/store',
+        component: Layout,
+        redirect: '/store/store-list',
+        name: 'StoreManagement',
+        meta: {
+            title: '门店管理',
+            icon: 'i_s_temp',
+            // auth: ['dashboard'],
+            // roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'store-list',
+                name: 'StoreList',
+                component: () => import('@/views/store/store-list.vue'),
+                meta: {
+                    title: '门店列表',
+                }
+            },
+            {
+                path: 'store-edit',
+                name: 'StoreEdit',
+                component: () => import('@/views/store/store-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '门店编辑',
+                    parent: '/store/store-list',
+                }
+            },
+            {
+                path: 'store-detail',
+                name: 'StoreDetail',
+                component: () => import('@/views/store/store-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '门店详情',
+                    parent: '/store/store-list',
                 }
             },
         ]
@@ -269,48 +334,6 @@ const routes = [
             },
         ]
     },
-    {   // 员工管理
-        path: '/user',
-        component: Layout,
-        redirect: '/user/user-list',
-        name: 'UserManagement',
-        meta: {
-            title: '员工管理',
-            icon: 'i_s_temp',
-            // auth: ['dashboard'],
-            // roles: [LOGIN_TYPE.ADMIN],
-        },
-        children: [
-            {
-                path: 'user-list',
-                name: 'UserList',
-                component: () => import('@/views/user/user-list.vue'),
-                meta: {
-                    title: '员工列表',
-                }
-            },
-            {
-                path: 'user-edit',
-                name: 'UserEdit',
-                component: () => import('@/views/user/user-edit.vue'),
-                hidden: true,
-                meta: {
-                    title: '员工编辑',
-                    parent: '/user/user-list',
-                }
-            },
-            {
-                path: 'user-detail',
-                name: 'ItemDetail',
-                component: () => import('@/views/user/user-detail.vue'),
-                hidden: true,
-                meta: {
-                    title: '员工详情',
-                    parent: '/user/user-list',
-                }
-            },
-        ]
-    },
     {   // 客户管理
         path: '/customer',
         component: Layout,
@@ -354,47 +377,45 @@ const routes = [
             },
         ]
     },
-    {   // 门店管理
-        path: '/store',
+    {   // 员工管理
+        path: '/user',
         component: Layout,
-        redirect: '/store/store-list',
-        name: 'StoreManagement',
+        redirect: '/user/user-list',
+        name: 'UserManagement',
         meta: {
-            title: '门店管理',
+            title: '员工管理',
             icon: 'i_s_temp',
             // auth: ['dashboard'],
             // roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
             {
-                path: 'store-list',
-                name: 'StoreList',
-                component: () => import('@/views/store/store-list.vue'),
+                path: 'user-list',
+                name: 'UserList',
+                component: () => import('@/views/user/user-list.vue'),
                 meta: {
-                    title: '门店列表',
+                    title: '员工列表',
                 }
             },
             {
-                path: 'store-edit',
-                name: 'StoreEdit',
-                component: () => import('@/views/store/store-edit.vue'),
+                path: 'user-edit',
+                name: 'UserEdit',
+                component: () => import('@/views/user/user-edit.vue'),
                 hidden: true,
                 meta: {
-                    title: '新建门店',
-                    parent: '/store/store-list',
+                    title: '员工编辑',
+                    parent: '/user/user-list',
                 }
-
             },
             {
-                path: 'store-detail',
-                name: 'StoreDetail',
-                component: () => import('@/views/store/store-detail.vue'),
+                path: 'user-detail',
+                name: 'ItemDetail',
+                component: () => import('@/views/user/user-detail.vue'),
                 hidden: true,
                 meta: {
-                    title: '门店详情',
-                    parent: '/store/store-list',
+                    title: '员工详情',
+                    parent: '/user/user-list',
                 }
-
             },
         ]
 
@@ -406,7 +427,7 @@ const routes = [
         name: 'NoticeManagement',
         meta: {
             title: '系统消息',
-            icon: 'i_s_dashboard',
+            icon: 'i_s_temp',
             // auth: ['dashboard'],
             // roles: [LOGIN_TYPE.ADMIN],
         },
@@ -442,7 +463,6 @@ const routes = [
 
             },
         ]
-
     },
 ];
 

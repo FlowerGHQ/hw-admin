@@ -52,6 +52,7 @@ const apiList = {
     },
     Agent: { // 经销商
         list: ['PostJson', 'agent/list'], // 列表
+        listAll: ['PostJson','agent/list-name'], //选择用的 名称列表 无分页
         save: ['PostJson', 'agent/save'], // 编辑
         detail: ['PostJson', 'agent/detail'], // 详情
         update: ['PostJson', 'agent/update'], // 更新
@@ -59,6 +60,7 @@ const apiList = {
     },
     Customer: { // 客户管理
         list: ['PostJson', 'customer/list'],
+        listByName: ['PostJson', 'customer/list-by-name'],
         save: ['PostJson', 'customer/save'],
         update: ['PostJson', 'customer/update'],
         detail: ['PostJson', 'customer/detail'],
@@ -80,6 +82,9 @@ const apiList = {
 	    check: ['PostJson', 'repair/check'], // 工单详情
         statusList: ['PostJson', 'repair/status-list'], // 工单详情
     },
+	RepairItem: { // 维修单
+		saveList: ['PostJson', 'repair-order-item/save-list'], // 列表
+	},
 
     Item: { // 商品
         save: ['PostJson', 'item/save'],
@@ -126,12 +131,16 @@ const apiList = {
         detail: ['PostJson', 'store/detail'],
         delete: ['PostJson', 'store/delete'],
     },
-    notice: { // 系统消息
-        list: ['PostJson', 'notice/list'],
-        save: ['PostJson', 'notice/save'],
-        detail: ['PostJson', 'notice/detail'],
-        delete: ['PostJson', 'notice/delete'],
+    Notice: { // 系统消息
+        list: ['PostJson', 'sys-message/list'],
+        save: ['PostJson', 'sys-message/save'],
+        detail: ['PostJson', 'sys-message/detail'],
+        delete: ['PostJson', 'sys-message/delete'],
     },
+	ActionLog: {
+		list: ['PostJson', 'action-log/list'],
+
+	},
 
 };
 

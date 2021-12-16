@@ -114,7 +114,7 @@
 
 <script>
 import Core from '../../core';
-import CategoryTreeSelect from '../../components/ItemCategory/CategoryTreeSelect.vue'
+import CategoryTreeSelect from './components/CategoryTreeSelect.vue'
 
 export default {
     name: 'ItemEdit',
@@ -188,6 +188,25 @@ export default {
                 this.item_category = res.category
                 this.form.price = Core.Util.countFilter(res.price)
                 this.form.original_price = Core.Util.countFilter(res.original_price)
+                if (this.form.logo) {
+                    this.upload.coverList = [{
+                        uid: 1,
+                        name: this.form.logo,
+                        url: Core.Const.NET.FILE_URL_PREFIX + this.form.logo,
+                        short_path: this.form.logo,
+                        status: 'done',
+                    }]
+                }
+                if (this.form.imgs) {
+                    let imgs = this.form.imgs.split(',')
+                    this.upload.detailList = imgs.map((item, index) => ({
+                        uid: index + 1,
+                        name: item,
+                        url: Core.Const.NET.FILE_URL_PREFIX + item,
+                        short_path: item,
+                        status: 'done',
+                    }))
+                }
             }).catch(err => {
                 console.log('getItemDetail err', err)
             }).finally(() => {
@@ -198,6 +217,18 @@ export default {
         // 保存、新建 商品
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
+            if (this.upload.coverList.length) {
+                let coverList = this.upload.coverList.map(item => {
+                    return item.short_path || item.response.data.filename
+                })
+                form.logo = coverList[0]
+            }
+            if (this.upload.detailList.length) {
+                let detailList = this.upload.detailList.map(item => {
+                    return item.short_path || item.response.data.filename
+                })
+                form.imgs = detailList.join(',')
+            }
             if (!form.name) {
                 return this.$message.warning('请输入商品名称')
             }

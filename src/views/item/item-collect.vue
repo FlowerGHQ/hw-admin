@@ -4,7 +4,7 @@
         <div class="title-area">购物车</div>
         <div class="list-content">
             <div class="list-item" v-for="item of shopCartList" :key="item.id">
-                <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '') || item_defult_img" />
+                <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
                 <div class="info">
                     <div class="name">{{item.item ? item.item.name : '-'}}</div>
                     <div class="sub">{{item.item ? item.item.code : '-'}}</div>
@@ -41,7 +41,7 @@
         <div class="title-area">收藏夹</div>
         <div class="list-content">
             <div class="list-item" v-for="item of favoriteList" :key="item.id">
-                <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '') || item_defult_img" />
+                <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
                 <div class="info">
                     <div class="name">{{item.item ? item.item.name : '-'}}</div>
                     <div class="sub">{{item.item ? item.item.code : '-'}}</div>
@@ -62,7 +62,6 @@
 </template>
 
 <script>
-import item_defult_img from '@images/item_defult_img.png'
 import SimpleImageEmpty from '../../components/SimpleImageEmpty.vue'
 import Core from '../../core';
 export default {
@@ -71,7 +70,6 @@ export default {
     props: {},
     data() {
         return {
-            item_defult_img,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,

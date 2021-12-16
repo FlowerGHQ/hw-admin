@@ -40,10 +40,7 @@ export default {
     data() {
         return {
             LOGIN_TYPE,
-            TYPE_MAP: {
-                10: 'admin',
-                20: 'agent',
-            },
+            TYPE_MAP: Core.Const.LOGIN.TYPE_MAP,
             loginTypeList: Core.Const.LOGIN.TYPE_LIST,
 
             loginForm: {
@@ -85,26 +82,24 @@ export default {
                 Core.Data.setLoginType(this.loginForm.user_type);
                 Core.Data.setToken(res.token);
                 Core.Data.setUser(res.user.account);
+                Core.Data.setOrgId(res.user.org_id);
 
-                Core.Data.setAuthority('')
-                let userType = ''
-                switch (this.loginForm.user_type) {
+                let userType = this.TYPE_MAP[this.loginForm.user_type]
+                /* switch (this.loginForm.user_type) {
                     case LOGIN_TYPE.ADMIN:
-                        userType = 'ADMIN'
                         break;
                     case LOGIN_TYPE.AGENT:
-                        userType = 'AGENT'
                         break;
                     case LOGIN_TYPE.STORE:
-                        userType = 'STORE'
                         break;
-                }
+                } */
                 Core.Data.setUserType(userType);
                 this.getAuthority(userType, res.user.id, res.user.flag_admin);
             });
         },
 
         async getAuthority(userType, userId, flag_admin) {
+            Core.Data.setAuthority('')
             let authorityMap = {}
             authorityMap[userType] = true
             if (flag_admin) {
@@ -179,6 +174,7 @@ export default {
                 line-height: 24px;
                 padding: 10px;
                 transition: color 0.3s ease;
+                flex: 1;
                 &.active {
                     color: @TC_P;
                 }
@@ -195,11 +191,14 @@ export default {
                 transform: translateX(-50%);
                 transition: left .3s ease;
             }
-            &.agent::after {
-                left: 25%;
+            &.STORE::after {
+                left: calc(~'100% / 6');
             }
-            &.admin::after {
-                left: 75%;
+            &.AGENT::after {
+                left: 50%;
+            }
+            &.ADMIN::after {
+                left: calc(~'100% / 6 * 5');
             }
         }
         .form-item {

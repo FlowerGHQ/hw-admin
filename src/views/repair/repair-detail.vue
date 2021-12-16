@@ -4,9 +4,10 @@
             <div class="title-container">
                 <div class="title-area">工单详情</div>
                 <div class="btns-area">
+                    <a-button type="primary" ghost @click="repairDetection()" v-if="detail.status == Core.Const.REPAIR.STATUS.WAIT_DETECTION"><i class="icon i_edit"/>提交</a-button>
                     <a-button type="primary" ghost @click="repairCheck()" v-if="detail.status == Core.Const.REPAIR.STATUS.WAIT_CHECK"><i class="icon i_edit"/>确定</a-button>
                     <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
-                    <a-button type="danger" ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button>
+<!--                    <a-button type="danger" ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button>-->
                 </div>
             </div>
             <div class="gray-panel info">
@@ -56,8 +57,7 @@
                 </a-steps>
             </div>
             <div class="form-container">
-                <CheckFault  :id='id' :detail='detail'  />
-                <CheckFault  :id='id' :detail='detail' v-if="active == 'CheckFault'" />
+                <CheckFault  :id='id' :detail='detail' ref="CheckFault"  />
                 <div class="info">
                     <a-collapse v-model:activeKey="activeKey" :expand-icon-position="expandIconPosition">
                         <a-collapse-panel key="1" header="详细信息">
@@ -104,7 +104,7 @@
                                 </div>
                             </div>
                         </a-collapse-panel>
-                        <a-collapse-panel key="1" header="操作记录">
+                        <a-collapse-panel key="2" header="操作记录">
                             <a-table class="OrderItemTable item_table"
                                      :columns="actionLogColumns" :data-source="actionLogList" :scroll="{ x: true }"
                                      :row-key="record => record.id" :loading='actionLogLoading' :pagination='false'
@@ -193,7 +193,8 @@ export default {
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         this.getRepairDetail();
-        this.handleItemSearch()
+        this.handleItemSearch();
+        this.getActionLogList();
     },
     methods: {
         // 页面跳转
@@ -217,11 +218,18 @@ export default {
             }
             window.open(routeUrl.href, '_self')
         },
-        repairCheck(){
+        repairCheck() {
             console.log("faultList", this.faultList)
             console.log("failData", this.failData)
 
-            // Core.Api.Repair.check({})
+            Core.Api.Repair.check({
+                id: this.id
+            }).then(
+                this.getRepairDetail()
+            )
+        },
+        repairDetection() {
+            this.$refs.CheckFault.repairDetection();
         },
         // 获取工单详情
         getRepairDetail() {
@@ -237,6 +245,22 @@ export default {
                 this.loading = false;
             });
         },
+        // 获取操作记录
+        getActionLogList() {
+            this.loading = true;
+            Core.Api.ActionLog.list({
+                source_id: this.id,
+                source_type: this.Core.Const.ACTION_LOG.SOURCE_TYPE.REPAIR_ORDER
+            }).then(res => {
+                console.log('getRepairDetail res', res)
+                this.actionLogList = res.list
+            }).catch(err => {
+                console.log('getRepairDetail err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+
         failHandle() {
             this.modalFailShow = true
         },
@@ -274,12 +298,6 @@ export default {
             this.itemPageSize = size
             this.handleItemSearch()
         },
-        onSelectChange(selectedRowKeys, selectedRows) {
-            console.log("selectedRowKeys", selectedRowKeys)
-            console.log("selectedRows", selectedRows)
-            this.itemSelected = selectedRowKeys
-            this.itemSelectedRowItems = selectedRows
-        }
     }
 };
 </script>

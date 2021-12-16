@@ -11,40 +11,40 @@
                             <div class="staff">车辆故障</div>
                         </div>
                         <div class="panel-content">
-                            <a-checkbox-group @change="" v-model:value="faultList" :style="{width: '100%'}">
+                            <a-checkbox-group v-model:value="faultList" @change="faultListChange" :style="{width: '100%'}">
                                 <a-row>
                                     <a-col :span="4">
-                                        <a-checkbox value="电池故障">
+                                        <a-checkbox value="1" name="电池故障">
                                             电池故障
                                         </a-checkbox>
                                     </a-col>
                                     <a-col :span="4">
-                                        <a-checkbox value="发动机故障">
+                                        <a-checkbox value="2" name="发动机故障">
                                             发动机故障
                                         </a-checkbox>
                                     </a-col>
                                     <a-col :span="4">
-                                        <a-checkbox value="轮胎故障">
+                                        <a-checkbox value="3" name="轮胎故障">
                                             轮胎故障
                                         </a-checkbox>
                                     </a-col>
                                     <a-col :span="4">
-                                        <a-checkbox value="刹车故障">
+                                        <a-checkbox value="4" name="刹车故障">
                                             刹车故障
                                         </a-checkbox>
                                     </a-col>
                                     <a-col :span="4">
-                                        <a-checkbox value="转向灯故障">
+                                        <a-checkbox value="5" name="转向灯故障">
                                             转向灯故障
                                         </a-checkbox>
                                     </a-col>
                                     <a-col :span="4">
-                                        <a-checkbox value="仪表盘故障">
+                                        <a-checkbox value="6" name="仪表盘故障">
                                             仪表盘故障
                                         </a-checkbox>
                                     </a-col>
                                     <a-col :span="4">
-                                        <a-checkbox value="尾灯故障">
+                                        <a-checkbox value="7" name="尾灯故障">
                                             尾灯故障
                                         </a-checkbox>
                                     </a-col>
@@ -62,27 +62,39 @@
                             <div class="gray-panel info" >
                                 <div class="panel-title">
                                     <div class="left">
-                                        <div class="staff">共{{failData.length}}个故障</div>
+                                        <div class="staff">共{{faultListHandle.length}}个故障</div>
                                     </div>
-                                    <div class="right">
-                                        <div class="staff" v-if="detail.repair_user_id">
-                                            <ItemSelect @change="handleAddFailItem" :disabled-checked='failData.map(i => i.id)' style="margin-bottom: 12px;"/>
-                                        </div>
-                                    </div>
+<!--                                    <div class="right">-->
+<!--                                        <div class="staff" v-if="detail.repair_user_id">-->
+<!--                                            <ItemSelect @change="handleAddFailItem" :disabled-checked='failData.map(i => i.id)' style="margin-bottom: 12px;"/>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
                                 </div>
                                 <div class="panel-content">
-                                    <a-table :columns="failColumns" :data-source="failData" :scroll="{ x: true }"
-                                             :row-key="record => record.id"  :pagination='false' size="small"
-                                             :indentSize='24'>
-                                        <template #bodyCell="{ column, text , record ,index}">
-                                            <template v-if="column.dataIndex === 'name'">
+                                    <a-list size="small" bordered v-for="fault in faultListHandle">
+                                        <div>
+                                            {{fault.name}}<ItemSelect @change="handleAddFailItem" :fault-name="fault.name" :disabled-checked='failData[fault.name].map(i => i.id)' style="margin-bottom: 12px;"/>
+                                        </div>
+                                        <a-table :columns="failColumns" :data-source="failData[fault.name]" :scroll="{ x: true }"
+                                                 :row-key="record => record.id"  :pagination='false' size="small"
+                                                 :indentSize='24'>
+                                            <template #bodyCell="{ column, text , record ,index}">
+                                                <a-input-number v-model:value="record.amount"
+                                                                :min="0" :precision="0" placeholder="请输入"
+                                                                :formatter="value => value ? `${value}件` : value"
+                                                                :parser="value => value.replace('件', '')"
+                                                                v-if="column.dataIndex === 'amount'"
+                                                />
+                                                <template v-if="column.dataIndex === 'name'">
 
+                                                </template>
+                                                <template v-if="column.dataIndex === 'operation'">
+                                                    <a-button @click="deleteFailItem(index, fault.name)">删除</a-button>
+                                                </template>
                                             </template>
-                                            <template v-if="column.dataIndex === 'operation'">
-                                                <a-button type="primary" @click='deleteFailItem(record, index)'>删除</a-button>
-                                            </template>
-                                        </template>
-                                    </a-table>
+                                        </a-table>
+                                    </a-list>
+
                                 </div>
                             </div>
                         </a-col>
@@ -90,34 +102,43 @@
                             <div class="gray-panel info" >
                                 <div class="panel-title">
                                     <div class="left">
-                                        <div class="staff">共{{failData.length}}个故障</div>
+                                        <div class="staff">共{{faultListHandle.length}}个故障</div>
                                     </div>
-                                    <div class="right">
-                                        <div class="staff" v-if="detail.repair_user_id">
-<!--                                            <ItemSelect />-->
-                                            <ItemSelect @change="handleAddExchangeItem" :disabled-checked='exchangeData.map(i => i.id)' style="margin-bottom: 12px;"/>
-                                        </div>
-                                    </div>
+                                    <!--                                    <div class="right">-->
+                                    <!--                                        <div class="staff" v-if="detail.repair_user_id">-->
+                                    <!--                                            <ItemSelect @change="handleAddFailItem" :disabled-checked='failData.map(i => i.id)' style="margin-bottom: 12px;"/>-->
+                                    <!--                                        </div>-->
+                                    <!--                                    </div>-->
                                 </div>
                                 <div class="panel-content">
-                                    <a-table :columns="failColumns" :data-source="exchangeData" :scroll="{ x: true }"
-                                             :row-key="record => record.id"  :pagination='false' size="small"
-                                             :indentSize='24'>
-                                        <template #bodyCell="{ column, text , record }">
-                                            <template v-if="column.dataIndex === 'name'">
+                                    <a-list size="small" bordered v-for="fault in faultListHandle">
+                                        <div>
+                                            {{fault.name}}<ItemSelect @change="handleAddExchangeItem" :fault-name="fault.name" :disabled-checked='exchangeData[fault.name].map(i => i.id)' style="margin-bottom: 12px;"/>
+                                        </div>
+                                        <a-table :columns="failColumns" :data-source="exchangeData[fault.name]" :scroll="{ x: true }"
+                                                 :row-key="record => record.id"  :pagination='false' size="small"
+                                                 :indentSize='24'>
+                                            <template #bodyCell="{ column, text , record ,index}">
+                                                <a-input-number v-model:value="record.amount"
+                                                                :min="0" :precision="0" placeholder="请输入"
+                                                                :formatter="value => value ? `${value}件` : value"
+                                                                :parser="value => value.replace('件', '')"
+                                                                v-if="column.dataIndex === 'amount'"
+                                                />
+                                                <template v-if="column.dataIndex === 'name'">
 
+                                                </template>
+                                                <template v-if="column.dataIndex === 'operation'">
+                                                    <a-button @click="deleteExchangeItem(index, fault.name)">删除</a-button>
+                                                </template>
                                             </template>
-                                            <template v-if="column.dataIndex === 'operation'">
-                                                <a-button type="primary" @click='deleteExchangeItem("detail", record)'>删除</a-button>
-                                            </template>
-                                        </template>
-                                    </a-table>
+                                        </a-table>
+                                    </a-list>
+
                                 </div>
                             </div>
                         </a-col>
                     </a-row>
-                </a-collapse-panel>
-                <a-collapse-panel key="3" header="This is panel header 3" collapsible="disabled">
                 </a-collapse-panel>
             </a-collapse>
         </div>
@@ -146,6 +167,10 @@ const faultOptions = [
     { label: '轮胎故障', value: '轮胎故障' },
     { label: '轮胎故障', value: '轮胎故障' },
 ];
+const failNameColumns = [
+    { title: '故障名称', dataIndex: 'name' },
+    { title: '操作', dataIndex: 'operation'  },
+]
 const failColumns = [
     { title: '商品名称', dataIndex: 'name' },
     { title: '数量', dataIndex: 'amount'  },
@@ -170,8 +195,9 @@ export default {
             detail: {}, // 工单详情
             faultOptions: faultOptions,
             failColumns: failColumns,
+            failNameColumns: failNameColumns,
 
-            failData: [],
+            failData: {},
             changeItemData: [],
             exchangeData: [],
             itemCurrPage: 1,
@@ -181,6 +207,7 @@ export default {
             itemSelected: [],
             itemSelectedRowItems: [],
             faultList: [],
+            faultListHandle: [],
             modalFailShow: true,
             itemColumns: itemColumns,
             searchItemForm: {
@@ -256,15 +283,6 @@ export default {
             }
             this.modalFailShow = true
         },
-        addFailList() {
-
-            this.itemSelectedRowItems.forEach(it =>{
-                console.log(it.name)
-                this.failData.push(it)
-            })
-
-            this.modalFailShow = false
-        },
         handleItemSearch() {
             Core.Api.Item.list({
                 ...this.searchItemForm
@@ -298,25 +316,62 @@ export default {
             this.itemSelectedRowItems = selectedRows
         },
 
-        handleAddFailItem(ids, items) {
-            console.log('handleAddItem items:', items)
-            this.failData.push(...items)
+        handleAddFailItem(ids, items, name) {
+            console.log('handleAddItem items:', name)
+            this.failData[name].push(...items)
             console.log('failData items:', this.failData)
-            this.failData.map(i =>{
+            this.failData[name].map(i =>{
                 console.log('failData items:', i.id)
             })
         },
         // 添加要寄回的商品
-        handleAddExchangeItem(ids, items) {
+        handleAddExchangeItem(ids, items,name) {
             console.log('handleAddItem items:', items)
-            this.exchangeData.push(...items)
+            this.exchangeData[name].push(...items)
             console.log('failData items:', this.failData)
         },
-        deleteFailItem(item, index) {
-            this.failData.removeItem(index)
+        deleteFailItem(index, name) {
+            this.failData[name].splice(index, 1)
         },
-        deleteExchangeItem(item, index) {
-            this.exchangeData.removeItem(item)
+        deleteExchangeItem(index, name) {
+            this.exchangeData[name].splice(index, 1)
+        },
+        faultListChange(){
+            this.faultListHandle = []
+            console.log(this.faultList)
+            this.faultList.forEach(it =>{
+                this.faultListHandle.push({name: it})
+                this.failData[it] = []
+                this.exchangeData[it] = []
+            })
+
+        },
+        setTableDate(res) {
+            this.tableData = res
+        },
+
+        repairDetection(){
+            let itemList = []
+            let fault = ""
+            this.faultList.forEach(fault => {
+                this.failData[fault].forEach(it => {
+                    it.item_fault_type = fault
+                    it.type = 1
+                    itemList.push(it)
+                })
+                this.exchangeData[fault].forEach(it => {
+                    it.item_fault_type = fault
+                    it.type = 2
+                    itemList.push(it)
+                })
+            })
+
+            Core.Api.RepairItem.saveList({
+                repair_order_id: this.id,
+                item_list: itemList
+            }).then(
+                this.getRepairDetail()
+            )
         }
     }
 };

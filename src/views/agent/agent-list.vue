@@ -41,7 +41,7 @@
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
                 <template #bodyCell="{ column, text , record }">
-                    <template v-if="column.dataIndex === 'sn'">
+                    <template v-if="column.dataIndex === 'name'">
                         <a-tooltip placement="top" :title='text'>
                             <a-button type="link" @click="routerChange('detail', record)">{{text}}</a-button>
                         </a-tooltip>
@@ -136,24 +136,6 @@ export default {
         this.getTableData();
     },
     methods: {
-        handleDelete(id) {
-            let _this = this;
-            // console.log("handleDelete id", id)
-            this.$confirm({
-                title: '确定要删除该经销商吗？',
-                okText: '确定',
-                okType: 'danger',
-                cancelText: '取消',
-                onOk() {
-                    Core.Api.Agent.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
-                        _this.getTableData();
-                    }).catch(err => {
-                        console.log("handleDelete -> err", err);
-                    })
-                },
-            });
-        },
         routerChange(type, item = {}) {
             console.log(item)
             let routeUrl = ''
@@ -193,6 +175,7 @@ export default {
             this.create_time = []
             this.pageChange(1);
         },
+        // 表格筛选
         handleTableChange(page, filters, sorter) {
             console.log('handleTableChange filters:', filters)
             for (const key in filters) {
@@ -215,6 +198,24 @@ export default {
                 console.log('getTableData err', err)
             }).finally(() => {
                 this.loading = false;
+            });
+        },
+        // 删除 经销商
+        handleDelete(id) {
+            let _this = this;
+            this.$confirm({
+                title: '确定要删除该经销商吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Agent.delete({id}).then(() => {
+                        _this.$message.success('删除成功');
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
             });
         },
     }

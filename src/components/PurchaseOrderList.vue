@@ -1,18 +1,9 @@
- <template>
-<div id="PurchaseList">
+<template>
+<div class="PurchaseList  gray-panel no-margin">
+    <div class="panel-title">
+        <div class="title">采购订单</div>
+    </div>
     <div class="list-container">
-        <div class="title-container">
-            <div class="title-area">采购订单</div>
-        </div>
-        <div class="tabs-container colorful">
-            <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
-                <a-tab-pane :key="item.key" v-for="item of statusList">
-                    <template #tab>
-                        <div class="tabs-title">{{item.text}}<span :class="item.color">{{item.value}}</span></div>
-                    </template>
-                </a-tab-pane>
-            </a-tabs>
-        </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :pagination='false' @change="handleTableChange">
@@ -100,12 +91,6 @@ export default {
             total: 0,
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            statusList: [
-                {text: '全  部', value: '99', color: 'primary',  key: '0'},
-                {text: '待支付', value: '29', color: 'primary',  key: '1'},
-                {text: '待发货', value: '30', color: 'primary',  key: '2'},
-                {text: '待收货', value: '30', color: 'primary',  key: '3'},
-            ],
             create_time: [],
             searchForm: {
                 sn: '',
@@ -114,25 +99,19 @@ export default {
                 type: 0,
                 subject: 0,
             },
-            filteredInfo: null,
-            tableFields: [],
+
+            tableColumns: [
+                { title: '订单编号', dataIndex: 'sn', },
+                { title: '价格', dataIndex: 'price'  },
+                { title: '订单状态', dataIndex: 'status' },
+                { title: '下单时间', dataIndex: 'create_time', key: 'time' },
+                { title: '操作', key: 'operation', fixed: 'right'}
+            ],
             tableData: [],
         };
     },
     watch: {},
     computed: {
-        tableColumns() {
-            let { filteredInfo } = this;
-            filteredInfo = filteredInfo || {};
-            let columns = [
-                { title: '订单编号', dataIndex: 'sn', },
-                { title: '价格', dataIndex: 'price'  },
-                { title: '订单状态', dataIndex: 'status' },
-                { title: '下单时间', dataIndex: 'create_time', key: 'time' },
-                { title: '操作', key: 'operation', fixed: 'right', width: 100, }
-            ]
-            return columns
-        },
     },
     mounted() {
         this.getTableData();
@@ -142,16 +121,9 @@ export default {
             console.log('routerChange item:', item)
             let routeUrl = ''
             switch (type) {
-                case 'edit':  // 编辑
-                    routeUrl = this.$router.resolve({
-                        path: "/purchase/purchase-edit",
-                        query: { id: item.id }
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/purchase/purchase-detail",
+                        path: "/item/purchase-order-detail",
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_blank')
@@ -175,11 +147,11 @@ export default {
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
-                console.log("getTableData -> res", res)
+                console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
             }).catch(err => {
-                console.log('getTableData -> err', err)
+                console.log('getTableData err:', err)
             }).finally(() => {
                 this.loading = false;
             });

@@ -94,7 +94,7 @@
             </div>
             <div class="sub-title">预计送达</div>
             <div class="item-item" v-for="item of shopCartList" :key="item.id">
-                <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '') || item_defult_img" />
+                <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
                 <div class="info">
                     <p>{{item.item ? item.item.name : '-'}}</p>
                     <span>商品编码：{{item.item ? item.item.code : '-'}}</span>
@@ -109,7 +109,6 @@
 
 <script>
 import Core from '../../core';
-import item_defult_img from '@images/item_defult_img.png'
 
 import AddressCascader from '../../components/common/AddressCascader.vue'
 export default {
@@ -118,7 +117,6 @@ export default {
     props: {},
     data() {
         return {
-            item_defult_img,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,

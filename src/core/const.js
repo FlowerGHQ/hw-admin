@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-let OSS_POINT = 'http://rebuildsoft-smartwork.oss-cn-hangzhou.aliyuncs.com'
+let OSS_POINT = 'http://rebuild-mel-erp.oss-cn-hangzhou.aliyuncs.com'
 let URL_POINT = 'http://api.eos.rebuildsoft.com'
 
 switch (window.location.hostname) {
@@ -24,6 +24,7 @@ let Const = {
         KEY_PREFIX: 'haowan.admin.data.',
         KEY_TOKEN: 'token',
         KEY_USER: 'user',
+        KEY_ORG_ID: 'org.id',
         KEY_LOGIN_TYPE: 'login.type',
         KEY_USER_TYPE: 'user.type',
         KEY_AUTHORITY_LIST: 'authority.list',
@@ -1399,7 +1400,7 @@ let Const = {
             "pinyin": "jbbw"
         }
     ] */
-    COUNTRY_LIST: [
+    COUNTRY_LIST: [ // 国家列表
         {
             "short": "CN",
             "name": "中国",
@@ -1409,33 +1410,39 @@ let Const = {
         },
     ],
 
-    ACCOUNT: {
+    USER: { // 员工、账号、用户
         TYPE: {
             ADMIN: 10,      // 管理员
             AGENT: 20,      // 代理商
             STORE: 30,      // 门店
-	        REPAIR_WORKER: 40 // 门店
+	        WORKER: 40,     // 维修工
+	        CUSTOMER: 100,  // 顾客
         },
         TYPE_MAP: {
-            10:  'ADMIN',
-            20:  'AGENT',
-            30:  'STORE',
-            40:  'REPAIR_WORKER',
+            10: '平台方',
+            20: '代理商',
+            30: '门店',
+            40: '维修工',
+            100: '顾客',
         },
     },
-    LOGIN: {
+    LOGIN: { // 登录
         TYPE: {
             ADMIN: 10,     // 管理员
             AGENT: 20,     // 代理商
             STORE: 30,     // 门店
         },
         TYPE_LIST: [
+            { value: 30 ,text: '门店'},
             { value: 20 ,text: '代理商'},
-            { value: 10 ,text: '管理员'},
+            { value: 10 ,text: '平台方'},
         ],
         TYPE_MAP: {
-            10: '管理员',
-            20: '代理商',
+            10:  'ADMIN',
+            20:  'AGENT',
+            30:  'STORE',
+            40:  'WORKER',
+            100: 'CUSTOMER',
         },
     },
 
@@ -1449,23 +1456,6 @@ let Const = {
             1: '车辆',
             2: '电池',
             3: '其他',
-        },
-    },
-
-    USER: { // 员工
-        TYPE_MAP: {
-            10: '管理员',
-            20: '代理商',
-            30: '门店',
-            40: '门店',
-            100: '顾客',
-        },
-        TYPE_COLOR_MAP: {
-            10: 'red',
-            20: 'yellow',
-            30: 'orange',
-            40: 'green',
-            100: 'blue',
         },
     },
 
@@ -1511,16 +1501,16 @@ let Const = {
             3: '低',
         },
 	    // 优先级
-	    ITEM_TYPE_LIST: [
-		    { text: '车辆', value: 1 },
-		    { text: '电池', value: 2 },
-		    { text: '其他', value: 3 },
-	    ],
-	    ITEM_TYPE_MAP: {
-		    1: '车辆',
-		    2: '电池',
-		    3: '其他',
-	    },
+        ITEM_TYPE_LIST: [
+            { text: '车辆', value: 1 },
+            { text: '电池', value: 2 },
+            { text: '其他', value: 3 },
+        ],
+        ITEM_TYPE_MAP: {
+            1: '车辆',
+            2: '电池',
+            3: '其他',
+        },
         STATUS_MAP: {
             10: '待分配',
             20: '待确认',
@@ -1537,32 +1527,39 @@ let Const = {
             50: 'green',
             60: 'grey',
         },
-	    STATUS: {
-		    WAIT_DISTRIBUTION:10,
-		    WAIT_CHECK:20,
-		    WAIT_DETECTION:30,
-		    WAIT_REPAIR:40,
-		    REPAIR_END:50,
-	    }
+        STATUS: {
+            WAIT_DISTRIBUTION: 10,
+            WAIT_CHECK: 20,
+            WAIT_DETECTION: 30,
+            WAIT_REPAIR: 40,
+            REPAIR_END: 50,
+        }
     },
     PURCHASE: { // 采购订单
         STATUS_MAP: {
-            0: '未知',
-            100: '待支付',
-            200: '已支付',
-            300: '交易成功',
-            400: '已关闭',
+            '0' : '未知',
+            '100': '待支付',
+            '200': '已支付',
+            '300': '交易成功',
+            '400': '已关闭',
         },
         STATUS_COLOR_MAP: {
-            0: 'red',
-            100: 'yellow',
-            200: 'orange',
-            300: 'green',
-            400: 'blue',
+            '0': 'red',
+            '100': 'yellow',
+            '200': 'orange',
+            '300': 'green',
+            '400': 'blue',
+            '-400': 'blue',
         },
 
     },
 
+	ACTION_LOG: {
+		SOURCE_TYPE:{
+			PURCHASE_ORDER: 10,
+			REPAIR_ORDER: 20,
+		}
+	},
 };
 
 export default Const;
