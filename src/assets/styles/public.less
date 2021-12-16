@@ -832,6 +832,9 @@ p {
     &.with-operate {
         justify-content: space-between;
     }
+    &.afe {
+        align-items: flex-end;
+    }
 }
 
 .edit-container { // 编辑页
@@ -905,11 +908,13 @@ p {
             font-weight: 500;
             font-size: 12px;
             color: #000000;
-            padding-bottom: 14px;
         }
         .icon.i_expen {
             font-size: 14px;
             color: #8090A6;
+        }
+        + .panel-content {
+            margin-top: 14px;
         }
     }
     .panel-content {
@@ -918,7 +923,8 @@ p {
         padding: 20px;
     }
 }
-.desc-container { // 详情页 信息展示
+
+.desc-container { // 详情页 信息展示 横向
     background: @BG_N;
     box-sizing: border-box;
     padding: 20px 6px;
@@ -1010,6 +1016,25 @@ p {
         }
     }
 }
+.info-container { // 详情页 信息展示 竖向
+    .info-item {
+        font-size: 12px;
+        margin-bottom: 23px;
+        .key {
+            color: #9A9EA5;
+            line-height: 17px;
+        }
+        .value {
+            .ell();
+            margin-top: 10px;
+            color: #202A3B;
+            padding-left: 15px;
+            line-height: 17px;
+        }
+    }
+}
+
+
 
 .tabs-container { // 详情页的tabs 与 列表页的 tabs
     padding: 0 20px;
@@ -1097,6 +1122,40 @@ p {
                         color: @TC_P;
                     }
                 }
+            }
+        }
+    }
+}
+
+.ant-collapse {
+    .ant-collapse-item.gray-collapse-panel { // 灰底的 可折叠 面板
+        background: #F8FAFC;
+        box-shadow: 0px 1px 2px rgba(23, 32, 48, 0.06);
+        border-radius: 4px;
+        margin: 0 20px 20px;
+        padding: 14px;
+        .ant-collapse-header {
+            padding: 0 0 0 10px;
+            font-weight: 500;
+            font-size: 12px;
+            color: #000000;
+            .icon.i_expan_l {
+                font-size: 14px;
+                color: #8090A6;
+                transition: transform 0.3s ease;
+            }
+        }
+        .ant-collapse-content .ant-collapse-content-box {
+            padding: 14px 0 0 0;
+        }
+        .panel-content {
+            background: #FFFFFF;
+            border-radius: 4px;
+            padding: 20px;
+        }
+        &.ant-collapse-item-active {
+            .ant-collapse-header .icon.i_expan_l {
+                transform: translateY(-50%) rotate(180deg);
             }
         }
     }
