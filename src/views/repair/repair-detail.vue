@@ -140,7 +140,6 @@ export default {
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         this.getRepairDetail();
-        this.handleItemSearch();
     },
     methods: {
         // 页面跳转

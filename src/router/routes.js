@@ -85,11 +85,11 @@ const routes = [
                 component: () => import('@/views/repair/repair-invoice.vue'),
                 hidden: true,
                 meta: {
-                    title: '维修单结算',
+                    title: '维修单详情',
                     parent: '/repair/repair-list',
                 }
             },
-        ]
+       ]
     },
     {   // 经销商管理 - 平台端
         path: '/agent',
