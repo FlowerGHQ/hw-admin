@@ -126,6 +126,7 @@ const apiList = {
         detail: ['PostJson', 'purchase-order/detail'], // 采购订单详情
         detailByUid: ['PostJson', 'purchase-order/detail-uid'], // 采购订单详情
         itemList: ['PostJson', 'purchase-order-item/list'], // 采购订单明细列表
+        itemByIdList: ['PostJson', 'purchase-order-item/list-by-item-id'], // 采购订单明细列表
     },
     Store: { // 门店管理
         list: ['PostJson', 'store/list'],

@@ -409,7 +409,7 @@ const routes = [
             },
             {
                 path: 'user-detail',
-                name: 'ItemDetail',
+                name: 'UserDetail',
                 component: () => import('@/views/user/user-detail.vue'),
                 hidden: true,
                 meta: {
