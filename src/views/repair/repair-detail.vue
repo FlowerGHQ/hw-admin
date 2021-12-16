@@ -163,6 +163,7 @@ export default {
                 case 'invoice':  // 工单列表
                     routeUrl = this.$router.resolve({
                         path: "/repair/repair-invoice",
+                        query: { id: this.id },
                     })
                     break;
             }

@@ -64,6 +64,9 @@ export default {
     orgId: {
       type: Number,
     },
+    orgType: {
+      type: Number,
+    },
     type: {
       type: Number,
     },
@@ -112,7 +115,7 @@ export default {
         case 'edit':  // 编辑
           routeUrl = this.$router.resolve({
             path: "/user/user-edit",
-            query: {id: item.id, type: this.type, org_id: this.orgId}
+            query: {id: item.id, type: this.type, org_id: this.orgId, org_type: this.orgType}
           })
           window.open(routeUrl.href, '_self')
           break;
@@ -138,6 +141,7 @@ export default {
       this.loading = true;
       Core.Api.User.list({
         org_id: this.orgId,
+        org_type: this.orgType,
         type: this.type,
         page: this.currPage,
         page_size: this.pageSize

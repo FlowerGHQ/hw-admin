@@ -22,9 +22,9 @@
                 </a-col>
             </a-row>
             <div class='desc-stat'>
-                <a-statistic title="员工数量" :value="0"/>
+                <a-statistic title="员工数量" :value="detail.user_count"/>
                 <a-divider type="vertical" />
-                <a-statistic title="维修工数量" :value="0" />
+                <a-statistic title="维修工数量" :value="detail.repair_worker_count" />
                 <a-divider type="vertical" />
                 <a-statistic title="累计营收" :value="0" :precision="2" prefix='￥'/>
                 <a-divider type="vertical" />
@@ -35,10 +35,10 @@
     <div class="tabs-container">
         <a-tabs v-model:activeKey="activeKey">
             <a-tab-pane key="UserList" tab="员工管理">
-                <UserList :orgId="store_id" :type="USER_TYPE.STORE" v-if="activeKey == 'UserList'"/>
+                <UserList :orgType="USER_TYPE.STORE" :orgId="store_id" :type="USER_TYPE.STORE" v-if="activeKey == 'UserList'"/>
             </a-tab-pane>
             <a-tab-pane key="WorkerList" tab="维修工管理">
-                <UserList :orgId="store_id" :type="USER_TYPE.WORKER" v-if="activeKey == 'WorkerList'"/>
+                <UserList :orgType="USER_TYPE.WORKER" :orgId="store_id" :type="USER_TYPE.WORKER" v-if="activeKey == 'WorkerList'"/>
             </a-tab-pane>
             <a-tab-pane key="PurchaseList" tab="订单列表">
                 <PurchaseList :orgId="store_id" v-if="activeKey == 'PurchaseList'"/>

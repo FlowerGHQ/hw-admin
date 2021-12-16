@@ -127,7 +127,6 @@ export default {
             currPage: 1,
             pageSize: 20,
             total: 0,
-
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             statusList: [
@@ -197,7 +196,7 @@ export default {
                         path: "/repair/repair-detail",
                         query: { id: item.id }
                     })
-                    window.open(routeUrl.href, '_blank')
+                    window.open(routeUrl.href, '_self')
                     break;
             }
         },

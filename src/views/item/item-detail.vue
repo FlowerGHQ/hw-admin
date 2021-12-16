@@ -149,7 +149,6 @@ export default {
             });
         },
         routerChange(type, item = {}) {
-            console.log(item)
             let routeUrl = ''
             switch (type) {
                 case 'edit':  // 编辑

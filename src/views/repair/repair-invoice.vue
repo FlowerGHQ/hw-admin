@@ -4,33 +4,33 @@
         <div class="title-content">
             <div class="title">结算清单 Invoice</div>
             <p>结算编号</p>
-            <span>{{detrail.uid}}</span>
+            <span>{{detail.item_code}}</span>
             <p>交易日期</p>
-            <span>{{$Util.timeFormat(detrail.create_time)}}</span>
+            <span>{{$Util.timeFormat(detail.finish_time)}}</span>
         </div>
         <div class="info-content">
             <div class="info-block">
                 <div class="title">托修方</div>
-                <p>车主姓名：{{赵启平}}</p>
-                <p>车牌号码：{{赵启平}}</p>
-                <p>产品型号：{{赵启平}}</p>
-                <p>送修日期：{{赵启平}}</p>
-                <p>送修里程：{{赵启平}}</p>
+                <p>车主姓名：{{detail.repair_user_name}}</p>
+                <p>车牌号码：{{detail.repair_user_id}}</p>
+                <p>产品型号：{{detail.repair_method}}</p>
+                <p>送修日期：{{$Util.timeFormat(detail.plan_time)}}</p>
+                <p>送修里程：{{detail.amount}}</p>
                 <div class="title">联系电话</div>
-                <p>11{{联系电话}}</p>
+                <p>{{detail.phone}}</p>
             </div>
             <div class="info-block">
                 <div class="title">维修门店</div>
-                <p>11{{维修门店}}</p>
+                <p>{{detail.store_id}}</p>
                 <div class="title">联系电话</div>
-                <p>11{{联系电话}}</p>
+                <p>{{detail.phone}}</p>
             </div>
             <div class="info-block">
                 <div class="title">送修方</div>
-                <p>送修人:{{送修人}}</p>
-                <p>送修类别:{{送修类别}}</p>
+                <p>送修人:{{detail.user_id}}</p>
+                <p>送修类别:{{detail.item_type}}</p>
                 <div class="title">联系电话</div>
-                <p>11{{联系电话}}</p>
+                <p>{{detail.phone}}</p>
             </div>
         </div>
         <div class="item-content">
@@ -74,7 +74,7 @@
 <script>
 import Core from '../../core';
 export default {
-    name: 'UserList',
+    name: 'RepairInvoice',
     components: {},
     props: {},
     data() {
@@ -84,7 +84,8 @@ export default {
             loading: false,
 
             id: '',
-            detail: {},
+            detail: { 'phone' : '2000',
+                      'mileage' : '2000'},
 
             tableData: [],
             tableColumns: [
@@ -92,13 +93,14 @@ export default {
                 { title: '单位', dataIndex: ['account', 'username'], key: 'item' },
                 { title: '数量', dataIndex: ['account', 'phone'] },
                 { title: '单价', dataIndex: ['account', 'email'] },
-                { title: '金额（元）', dataIndex: 'type' },
+                { title: '金额（元）', dataIndex: 'price' },
             ]
         }
     },
     watch: {},
     computed: {},
     mounted() {
+        this.id = Number(this.$route.query.id) || 0
         this.getRepairDetail();
         this.getTableData();
     },
@@ -125,6 +127,7 @@ export default {
             });
         },
         getTableData() {  // 获取 表格 数据
+            console.log(this.id);
             this.loading = true;
             Core.Api.RepairItem.list({
                 repair_order_id: this.id
