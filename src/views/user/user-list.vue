@@ -162,6 +162,7 @@ export default {
     getTableData() {  // 获取 表格 数据
       this.loading = true;
       Core.Api.User.list({
+        ...this.form,
         type: this.loginType,
         begin_time: this.create_time[0] || '',
         end_time: this.create_time[1] || '',
