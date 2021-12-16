@@ -37,10 +37,11 @@
 
 <script>
 import Core from '../../core';
+import AddressCascader from '../../components/common/AddressCascader.vue'
 
 export default {
     name: 'WarehouseEdit',
-    components: {},
+    components: { AddressCascader },
     props: {},
     data() {
         return {
