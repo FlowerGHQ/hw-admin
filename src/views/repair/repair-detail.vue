@@ -136,10 +136,11 @@ export default {
 
 
             stepsList: [
-                { title: '已分配工单' },
-                { title: '确认中...' },
-                { title: '待检测维修' },
-                { title: '工单完成' },
+                { title: '分配工单' },
+                { title: '员工确认' },
+                { title: '检测维修' },
+                { title: '维修' },
+                { title: '结算' },
             ],
             currStep: 1,
         };
@@ -190,13 +191,32 @@ export default {
                 this.detail = res
                 this.getRepairItemList();
                 this.getRepairFaultList();
+                this.step(this.detail.status)
             }).catch(err => {
                 console.log('getRepairDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
-
+        step(status){
+            switch (status){
+                case REPAIR.STATUS.WAIT_DISTRIBUTION:
+                    this.currStep = 0;
+                    break;
+                case REPAIR.STATUS.WAIT_CHECK:
+                    this.currStep = 1;
+                    break;
+                case REPAIR.STATUS.WAIT_DETECTION:
+                    this.currStep = 2;
+                    break;
+                case REPAIR.STATUS.WAIT_REPAIR:
+                    this.currStep = 3;
+                    break;
+                case REPAIR.STATUS.REPAIR_END:
+                    this.currStep = 4;
+                    break;
+            }
+        },
         handleFaultSubmit() {
             this.$refs.CheckFault.handleFaultSubmit();
         },
