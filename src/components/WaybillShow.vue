@@ -96,7 +96,8 @@ export default {
                 company_uid: this.companyUid,
                 uid: this.uid,
             }).then(res =>{
-                this.$emit('change', 'WaybillShow')
+                this.$emit('change')
+                this.$message.success('修改成功')
                 this.updateShow = false
             })
 

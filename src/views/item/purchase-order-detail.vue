@@ -7,7 +7,7 @@
                     <a-button type="primary" @click="handlePurchaseStatus('payment')" v-if="detail.status == PURCHASE.STATUS.WAIT_PAY && $auth('ADMIN')" ><i class="icon i_check_c"/>付款</a-button>
                     <a-button type="primary" @click="handlePurchaseStatus('deliver')"  v-if="detail.status == PURCHASE.STATUS.WAIT_DELIVER && $auth('ADMIN')" ><i class="icon i_check_c"/>发货</a-button>
                     <a-button type="primary" @click="handlePurchaseStatus('takeDeliver')"  v-if="detail.status == PURCHASE.STATUS.WAIT_TAKE_DELIVER && $auth('AGENT', 'STORE')" ><i class="icon i_edit"/>确认收货</a-button>
-                    <a-button type="primary" @click="handlePurchaseStatus('review')" v-if="detail.status == PURCHASE.STATUS.WAIT_REVIEW && $auth('AGENT', 'STORE')"  ><i class="icon i_edit"/>评论</a-button>
+                    <a-button type="primary" @click="handlePurchaseStatus('review')" v-if="detail.status == PURCHASE.STATUS.DEAL_SUCCESS && detail.flag_review == PURCHASE.FLAG_REVIEW.SUCCESS && $auth('AGENT', 'STORE')"  ><i class="icon i_edit"/>评论</a-button>
                     <a-button type="primary" @click="handlePurchaseStatus('cancel')"  v-if="detail.status == PURCHASE.STATUS.WAIT_PAY && $auth('AGENT', 'STORE')" ><i class="icon i_edit"/>关闭</a-button>
 
                 </div>
@@ -117,7 +117,7 @@
                                         <div class="key">物流信息</div>
 <!--                                        <div class="value">{{waybill.uid}}</div>-->
                                         <div class="value">
-                                            <WaybillShow v-if="waybillInfo" :detail='waybill' :list='waybillInfo.list' :can-edit="$auth('ADMIN')"/>
+                                            <WaybillShow v-if="waybillInfo" @change="getWaybill" :detail='waybill' :list='waybillInfo.list' :can-edit="$auth('ADMIN')"/>
                                             <template v-else>暂无物流信息</template>
                                         </div>
 
@@ -232,8 +232,7 @@ export default {
                 {status: '100', title: '支付'},
                 {status: '200', title: '发货'},
                 {status: '300', title: '收货'},
-                {status: '400', title: '评论'},
-                {status: '500', title: '交易完成'},
+                {status: '400', title: '交易完成'},
             ],
         };
     },
