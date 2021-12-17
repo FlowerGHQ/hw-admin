@@ -108,6 +108,7 @@ export default {
 
       tableColumns: [
         {title: '门店名称', dataIndex: 'name', key: 'detail'},
+        {title: '所属经销商', dataIndex: 'agent_name', key: 'name'},
         {title: '联系人姓名', dataIndex: 'contact_name', key:'name'},
         {title: '联系人电话', dataIndex: 'contact_phone',key:'phone'},
         {title: '创建时间', dataIndex: 'create_time', key: 'time'},
