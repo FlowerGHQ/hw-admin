@@ -15,11 +15,20 @@
               <a-input placeholder="请输入门店名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
             </div>
           </a-col>
+          <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+            <div class="key">经销商：</div>
+            <div class="value">
+              <a-select placeholder="请选择国家" v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
+                  <a-select-option v-for="(item,index) of agentList" :key="index" :value="item.name">{{item.name}}</a-select-option>
+              </a-select>
+              <!-- <a-input placeholder="请选择经销商" v-model:value="searchForm.agent_id" @keydown.enter='handleSearch'/> -->
+            </div>
+          </a-col>
           <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
             <div class="key">创建时间：</div>
             <div class="value">
               <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
-                              :show-time="defaultTime">
+                :show-time="defaultTime">
                 <template #suffixIcon><i class="icon i_calendar"/></template>
               </a-range-picker>
             </div>
@@ -104,25 +113,25 @@ export default {
         name: '',
         contact_name:'',
         contact_phone:'',
+        agent_id: undefined,
       },
-
       tableColumns: [
         {title: '门店名称', dataIndex: 'name', key: 'detail'},
-        // {title: '所属经销商', dataIndex: 'agent_name', key: 'name'},
+        {title: '所属经销商', dataIndex: 'agent_name', key: 'name'},
         {title: '联系人姓名', dataIndex: 'contact_name', key:'name'},
         {title: '联系人电话', dataIndex: 'contact_phone',key:'phone'},
         {title: '创建时间', dataIndex: 'create_time', key: 'time'},
         {title: '操作', key: 'operation', fixed: 'right'},
-
       ],
       tableData: [],
-
+      agentList: {},
     };
   },
   watch: {},
   computed: {},
   mounted() {
-    this.getTableData();
+    this.getTableData();// 获取表哥表格数据
+    this.getAgentData();// 获取叫嚣上列表
   },
   methods: {
     routerChange(type, item = {}) {
@@ -182,6 +191,19 @@ export default {
         this.tableData = res.list;
       }).catch(err => {
         console.log('getTableData err', err)
+      }).finally(() => {
+        this.loading = false;
+      });
+    },
+    getAgentData() {    // 获取 经销商 数据
+      this.loading = true;
+      Core.Api.Agent.list({
+        parent_id: 0
+      }).then(res => {
+        console.log("getAgentData res", res)
+        this.agentList = res.list;
+      }).catch(err => {
+        console.log('getAgentData err', err)
       }).finally(() => {
         this.loading = false;
       });
