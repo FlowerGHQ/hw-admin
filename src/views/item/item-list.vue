@@ -166,7 +166,7 @@ export default {
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: this.$auth('ADMIN') ? "/item/item-detail" : '/purchase/item-diaplay',
+                        path: this.$auth('ADMIN') ? "/item/item-detail" : '/purchase/item-display',
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_self')
