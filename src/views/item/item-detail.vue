@@ -171,15 +171,12 @@ export default {
         .info-block-top{
             padding-right: 20px;
             img {
-                // margin-left: 20px;
-                // margin-top: 20px;
                 width: 120px;
                 height: 120px;
                 background: #F3F3F3;
                 border-radius: 4px 4px 4px 4px;
             }
             .p1{
-                // margin-top: 20px;
                 height: 28px;
                 font-size: 16px;
                 color: rgba(0, 0, 0, 0.85);
