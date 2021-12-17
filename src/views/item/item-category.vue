@@ -44,7 +44,7 @@
                     </template>
                     <template v-if="column.key === 'operation'">
                         <a-button type='link' @click="handleModalShow(record, record)"> <i class="icon i_edit"/> 编辑名称</a-button>
-                        <a-button type='link' @click="handleConfigShow(record)"> <i class="icon i_hint"/> 商品配置</a-button>
+                        <a-button type='link' @click="routerChange(record)"> <i class="icon i_hint"/> 商品配置</a-button>
                         <a-button type='link' @click="handleModalShow({parent_id: record.id}, null,record)"> <i class="icon i_add"/> 新增子分类</a-button>
                         <a-button type='link' @click="handleDelete(record)"> <i class="icon i_delete"/> 删除</a-button>
                     </template>
@@ -94,11 +94,6 @@ export default {
                 parent_id: '',
                 name: '',
             },
-
-            configForm: {
-                id: '',
-                config: [],
-            },
         };
     },
     watch: {},
@@ -115,6 +110,18 @@ export default {
         this.getDataByParent();
     },
     methods: {
+        routerChange(type, item = {}) {
+            let routeUrl = ''
+            switch (type) {
+                case 'config':  // 详情
+                    routeUrl = this.$router.resolve({
+                        path: "/item/item-category-config",
+                        query: { id: item.id }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+            }
+        },
         handleSearch() {  // 搜索
             this.expandedRowKeys = []
             this.getDataById();
@@ -253,13 +260,6 @@ export default {
                 },
             });
         },
-
-        // 编辑分类配置
-        handleConfigShow() {
-
-        },
-        handleConfigSubmit() {
-        }
     }
 };
 </script>

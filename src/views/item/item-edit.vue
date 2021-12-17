@@ -129,6 +129,8 @@ export default {
             form: {
                 id: '',
                 name: '',
+                logo: '',
+                imgs: '',
                 code: '',
                 category_id: undefined,
                 price: undefined,

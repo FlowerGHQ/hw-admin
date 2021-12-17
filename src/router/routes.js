@@ -314,6 +314,16 @@ const routes = [
                     is_sub_menu: true,
                 }
             },
+            {
+                path: 'item-category-config',
+                name: 'ItemCategoryConfig',
+                component: () => import('@/views/item/item-category-config.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.ADMIN],
+                    title: '商品分类配置',
+                    is_sub_menu: true,
+                }
+            },
         ]
     },
     {   // 商品- 经销商端 && 门店端

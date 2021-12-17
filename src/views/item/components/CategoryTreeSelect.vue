@@ -24,7 +24,7 @@ export default {
             type: Number,
         },
         category: {
-            type: String,
+            type: Object,
         },
         placeholder: {
             type: String,
