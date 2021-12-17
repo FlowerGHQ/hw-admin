@@ -250,6 +250,7 @@ const routes = [
                     parent: '/warehouse/warehouse-list',
                 }
             },
+<<<<<<< HEAD
             // {
             //     path: 'warehouse-detail',
             //     name: 'WarehouseDetail',
@@ -260,6 +261,8 @@ const routes = [
             //         parent: '/warehouse/warehouse-list',
             //     }
             // },
+=======
+>>>>>>> 5643925d489e8d38e2f198f06262fe1ed5c49237
         ]
     },
     {   // 商品 - 平台端
@@ -443,6 +446,7 @@ const routes = [
                     parent: '/customer/customer-list',
                 }
             },
+<<<<<<< HEAD
 
             // {
             //     path: 'customer-detail',
@@ -454,6 +458,8 @@ const routes = [
             //         parent: '/customer/customer-list',
             //     }
             // },
+=======
+>>>>>>> 5643925d489e8d38e2f198f06262fe1ed5c49237
         ]
     },
     {   // 员工管理
@@ -508,7 +514,7 @@ const routes = [
             title: '系统消息',
             icon: 'i_s_temp',
             // auth: ['dashboard'],
-            // roles: [LOGIN_TYPE.ADMIN],
+            roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
             {
@@ -530,6 +536,7 @@ const routes = [
                 }
 
             },
+<<<<<<< HEAD
             // {
             //     path: 'notice-detail',
             //     name: 'NoticeDetail',
@@ -540,6 +547,9 @@ const routes = [
             //         parent: '/notice/notice-list',
             //     }
             // },
+=======
+
+>>>>>>> 5643925d489e8d38e2f198f06262fe1ed5c49237
         ]
     },
 ];

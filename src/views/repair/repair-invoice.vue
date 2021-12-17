@@ -99,6 +99,7 @@ export default {
     },
     methods: {
         routerChange(type, item = {}) {
+            let routeUrl
             switch (type) {
                 case 'back':  // 编辑
                     routeUrl = this.$router.resolve({
@@ -107,6 +108,7 @@ export default {
                     })
                     break;
             }
+            window.open(routeUrl.href, '_self')
         },
         // 获取工单详情
         getRepairDetail() {

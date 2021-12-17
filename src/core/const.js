@@ -1516,8 +1516,8 @@ let Const = {
             20: '待确认',
             30: '待检测',
             40: '维修中',
-            50: '已完成',
-            60: '异常',
+            50: '维修完成',
+            60: '已结算',
         },
         STATUS_COLOR_MAP: {
             10: 'red',
@@ -1528,11 +1528,12 @@ let Const = {
             60: 'grey',
         },
         STATUS: {
-            WAIT_DISTRIBUTION: 10,
+	        WAIT_DISTRIBUTION: 10,
             WAIT_CHECK: 20,
-            WAIT_DETECTION: 30,
-            WAIT_REPAIR: 40,
-            REPAIR_END: 50,
+	        WAIT_DETECTION: 30,
+	        WAIT_REPAIR: 40,
+	        REPAIR_END: 50,
+	        SETTLEMENT: 60,
         },
         FAULT_OPTIONS_LIST : [
             { label: '电池故障', value: '1' },
@@ -1661,7 +1662,18 @@ let Const = {
 		SOURCE_TYPE:{
 			PURCHASE_ORDER: 10,
 			REPAIR_ORDER: 20,
-		}
+		},
+		ACTION_LOG_TYPE_MAP: {
+			101: '维修单创建',
+			102: '维修单信息完善/修改',
+			103: '维修单删除',
+			104: '二次上门',
+			201: '维修单确认',
+			301: '维修检测',
+			401: '维修完成',
+			501: '结算完成',
+			1001: '订单转移',
+		},
 	},
 };
 
