@@ -152,8 +152,7 @@ export default {
                         path: "/agent/agent-detail",
                         query: { id: item.id }
                     })
-                    // window.open(routeUrl.href, '_blank') // 新页
-                    window.open(routeUrl.href, '_self') // 当前页
+                    window.open(routeUrl.href, '_self')
                     break;
             }
         },

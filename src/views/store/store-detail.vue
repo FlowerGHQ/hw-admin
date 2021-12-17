@@ -13,13 +13,18 @@
                 <div class="title-area">
                     <img :src="$Util.imageFilter(detail.logo, 3)" />
                     <span class="title">{{detail.name}}</span>
-                </div>
+               </div>
             </div>
             <a-row class="desc-detail has-logo">
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                     <span class="key">创建时间：</span>
                     <span class="value">{{$Util.timeFilter(detail.create_time)}}</span>
                 </a-col>
+                <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                    <span class="key">所属经销商：</span>
+                    <a @click="routerChange('agent-detail', detail)">{{detail.agent_name}}</a>
+                </a-col>
+
             </a-row>
             <div class='desc-stat'>
                 <a-statistic title="员工数量" :value="detail.user_count"/>
@@ -96,6 +101,14 @@ export default {
                     })
                     window.open(routeUrl.href, '_self')
                     break;
+                case 'agent-detail':  // 详情
+                    routeUrl = this.$router.resolve({
+                        path: "/agent/agent-detail",
+                        query: { id: this.detail.agent_id }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+
             }
         },
         // 删除门店
