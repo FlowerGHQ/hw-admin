@@ -364,7 +364,11 @@ const Util = {
     },
 	puechasePayMethodFilter(val) {
 		const MAP = Const.PURCHASE.PAY_METHOD
-		return MAP[val] || '未知'
+		return MAP[val] || '-'
+	},
+	puechaseFlagReviewFilter(val) {
+		const MAP = Const.PURCHASE.FLAG_REVIEW_MAP
+		return MAP[val] || '-'
 	},
 /* =============== 采购单 ================ */
 

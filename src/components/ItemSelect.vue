@@ -1,6 +1,6 @@
 <template>
     <a-button @click="handleModalShow" :ghost='ghost' :type="btnType">{{btnText}}</a-button>
-    <a-modal title="添加商品" v-model:visible="modalShow" :after-close='handleModalClose' width='860px' @ok="handleConfirm">
+    <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px' @ok="handleConfirm">
         <div class="search-container">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :md='12' class="search-item">

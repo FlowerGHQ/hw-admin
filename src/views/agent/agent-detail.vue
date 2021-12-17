@@ -51,7 +51,7 @@
     <div class="tabs-container">
         <a-tabs v-model:activeKey="activeKey">
             <a-tab-pane key="UserList" tab="员工管理">
-                <UserList :orgId="agent_id" :type="USER_TYPE.AGENT" v-if="activeKey === 'UserList'"/>
+                <UserList :orgId="agent_id" :orgType="ORG_TYPE.AGENT" :type="USER_TYPE.AGENT" v-if="activeKey === 'UserList'"/>
             </a-tab-pane>
             <a-tab-pane key="StoreList" tab="门店管理" v-if="loginType == USER_TYPE.ADMIN">
                 <StoreList :orgId="agent_id" :type="USER_TYPE.AGENT" v-if="activeKey === 'StoreList'"/>
@@ -83,6 +83,7 @@ export default {
     data() {
         return {
             USER_TYPE,
+            ORG_TYPE: Core.Const.USER.ORG_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,

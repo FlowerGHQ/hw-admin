@@ -8,7 +8,8 @@
                 <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_check_c"/>提交</a-button>
 
 
-                <a-button type="primary" @click="routerChange('invoice')" v-if="detail.status == STATUS.REPAIR_END">查看结算单</a-button>
+                <a-button type="primary" @click="routerChange('invoice')" v-if="detail.status == STATUS.REPAIR_END || detail.status == STATUS.SETTLEMENT ">查看结算单</a-button>
+                <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END ">结算</a-button>
                 <a-button type="primary" @click="handleResultShow()" v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_edit"/>维修完成</a-button>
 
                 <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_edit"/>编辑</a-button>
@@ -31,7 +32,7 @@
             <div class="panel-content">
                 <div class="info-item">
                     <div class="key">创建人</div>
-                    <div class="value">{{detail.operator_name || '-'}}</div>
+                    <div class="value">{{detail.user_name || '-'}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">相关客户</div>
@@ -136,10 +137,11 @@ export default {
 
 
             stepsList: [
-                { title: '已分配工单' },
-                { title: '确认中...' },
-                { title: '待检测维修' },
-                { title: '工单完成' },
+                { title: '分配工单' },
+                { title: '员工确认' },
+                { title: '检测维修' },
+                { title: '维修' },
+                { title: '结算' },
             ],
             currStep: 1,
         };
@@ -190,15 +192,40 @@ export default {
                 this.detail = res
                 this.getRepairItemList();
                 this.getRepairFaultList();
+                this.step(this.detail.status)
             }).catch(err => {
                 console.log('getRepairDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
-
+        step(status){
+            switch (status){
+                case REPAIR.STATUS.WAIT_DISTRIBUTION:
+                    this.currStep = 0;
+                    break;
+                case REPAIR.STATUS.WAIT_CHECK:
+                    this.currStep = 1;
+                    break;
+                case REPAIR.STATUS.WAIT_DETECTION:
+                    this.currStep = 2;
+                    break;
+                case REPAIR.STATUS.WAIT_REPAIR:
+                    this.currStep = 3;
+                    break;
+                case REPAIR.STATUS.REPAIR_END:
+                    this.currStep = 4;
+                    break;
+            }
+        },
         handleFaultSubmit() {
             this.$refs.CheckFault.handleFaultSubmit();
+        },
+        handleSettlement(){
+            Core.Api.Repair.settlement({id: this.id}).then(() => {
+                this.$message.success('操作成功')
+                this.getRepairDetail()
+            })
         },
 
         // 工单确认

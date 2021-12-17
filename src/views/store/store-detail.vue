@@ -44,10 +44,10 @@
     <div class="tabs-container">
         <a-tabs v-model:activeKey="activeKey">
             <a-tab-pane key="UserList" tab="员工管理">
-                <UserList :orgType="USER_TYPE.STORE" :orgId="store_id" :type="USER_TYPE.STORE" v-if="activeKey == 'UserList'"/>
+                <UserList :orgType="ORG_TYPE.STORE" :orgId="store_id" :type="USER_TYPE.STORE" v-if="activeKey == 'UserList'"/>
             </a-tab-pane>
             <a-tab-pane key="WorkerList" tab="维修工管理">
-                <UserList :orgType="USER_TYPE.WORKER" :orgId="store_id" :type="USER_TYPE.WORKER" v-if="activeKey == 'WorkerList'"/>
+                <UserList :orgType="ORG_TYPE.STORE" :orgId="store_id"  :type="USER_TYPE.WORKER" v-if="activeKey == 'WorkerList'"/>
             </a-tab-pane>
             <a-tab-pane key="PurchaseList" tab="订单列表">
                 <PurchaseList :orgId="store_id" v-if="activeKey == 'PurchaseList'"/>
@@ -71,6 +71,7 @@ export default {
     data() {
         return {
             USER_TYPE,
+            ORG_TYPE: Core.Const.USER.ORG_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,

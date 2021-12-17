@@ -14,8 +14,11 @@
             <template v-if="column.dataIndex === 'type'">
               {{ $Util.userTypeFilter(text) }}
             </template>
-            <template v-if="column.dataIndex === 'flag_admin'">
-              {{ text ? '是' : '否' }}
+            <template v-if="column.dataIndex === 'flag_admin' && $auth('ADMIN') == true">
+              <a-switch v-model:checked="record.flag_admin" checked-children="启用" un-checked-children="禁用" @click="swichChange(record)" :checkedValue="1" :unCheckedValue="0"/>
+            </template>
+            <template v-if="column.dataIndex === 'flag_admin' && $auth('ADMIN') == false">
+              {{ text }}
             </template>
             <template v-if="column.key === 'item'">
               {{ text || '-' }}
@@ -83,7 +86,7 @@ export default {
       currPage: 1,
       pageSize: 20,
       total: 0,
-
+      // 表格数据
       tableData: [],
     };
   },
@@ -108,6 +111,25 @@ export default {
     this.getTableData();
   },
   methods: {
+    swichChange(recond){
+      this.loading = true;
+      let aid = 1;
+      if (recond.flag_admin) {
+        aid = 0;
+      }
+      console.log("rec-----", recond);
+      Core.Api.User.setAdmin({
+        id: recond.id,
+        flag_admin: 1
+      }).then(res => {
+        console.log("swichChange res", res)
+        this.getTableData();
+      }).catch(err => {
+        console.log('swichChange err', err)
+      }).finally(() => {
+        this.loading = false;
+      });
+    },
     routerChange(type, item = {}) {
       console.log(item)
       let routeUrl = ''
@@ -155,7 +177,6 @@ export default {
         this.loading = false;
       });
     },
-
     handleDelete(id) {
       let _this = this;
       this.$confirm({
