@@ -18,8 +18,7 @@
           <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
             <div class="key">创建时间:</div>
             <div class="value">
-              <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
-                              :show-time="defaultTime">
+              <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
                 <template #suffixIcon><i class="icon i_calendar"></i></template>
               </a-range-picker>
             </div>

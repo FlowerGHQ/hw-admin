@@ -23,18 +23,18 @@
                         </a-select>
                     </div>
                 </a-col>
-              <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                <div class="key">状态:</div>
-                <div class="value">
-                  <a-select  v-model:value="searchForm.status" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
-                    <a-select-option v-for="(item,index) of statusList" :key="index" :value="item.value">{{item.name}}</a-select-option>
-                  </a-select>
-                </div>
-              </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">状态:</div>
+                    <div class="value">
+                        <a-select  v-model:value="searchForm.status" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
+                            <a-select-option v-for="(item,index) of statusList" :key="index" :value="item.value">{{item.text}}</a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">创建时间:</div>
                     <div class="value">
-                        <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime">
+                        <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
                             <template #suffixIcon><i class="icon i_calendar"></i> </template>
                         </a-range-picker>
                     </div>
@@ -70,16 +70,21 @@
                             <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
                         </a-tooltip>
                     </template>
-                  <template v-if="column.key === 'status'">
-                    {{ text == 0 ? '禁用' : '启用' }}
-                  </template>
+                    <template v-if="column.dataIndex === 'status'">
+                        <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
+                            {{ text ? '启用中' : '已禁用' }}
+                        </div>
+                    </template>
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
                         <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_detail"/> 详情</a-button>
                         <a-button type='link' @click="routerChange('edit', record)"> <i class="icon i_edit"/> 编辑</a-button>
-                        <a-button type='link' @click="updateStatus(record.id)"> <i class="icon i_delete"/> {{record.status == 0 ?"启用": "禁用"}}</a-button>
+                        <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
+                            <template v-if="record.status"><i class="icon i_forbidden"/>禁用</template>
+                            <template v-else><i class="icon i_enable"/>启用</template>
+                        </a-button>
                     </template>
                 </template>
             </a-table>
@@ -128,10 +133,8 @@ export default {
                 country: undefined,
             },
             tableData: [],
-            statusList: [
-                {name: "禁用", value: 0},
-                {name: "启用", value: 1},
-            ]
+            statusList: Core.Const.ORG_STATUS_LIST,
+
         };
     },
     watch: {},
@@ -234,18 +237,23 @@ export default {
                 },
             });
         },
-        updateStatus(id) {
+        handleStatusChange(record) {
             let _this = this;
-            Core.Api.Agent.updateStatus({id}).then(() => {
-                _this.getTableData();
-            }).catch(err => {
-                console.log("handleDelete err", err);
-             })
+            this.$confirm({
+                title: `确定要${record.status ? '禁用' : '启用'}该经销商吗？`,
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Agent.updateStatus({id:record.id}).then(() => {
+                        _this.$message.success(`${record.status ? '禁用' : '启用'}成功`);
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleStatusChange err", err);
+                    })
+                },
+            });
         }
-
-
-
-
     }
 };
 </script>

@@ -3,7 +3,7 @@
     <div class="panel-title">
         <div class="title">采购订单</div>
     </div>
-    <div class="list-container">
+    <div class="panel-content">
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :pagination='false' @change="handleTableChange">
@@ -162,14 +162,7 @@ export default {
 
 <style lang="less" scoped>
 #PurchaseList {
-    .status-tag {
-        width: 72px;
-        height: 22px;
-        line-height: 22px;
-        border-radius: 12px;
-        font-size: @fz_sm;
-        text-align: center;
-    }
+    
 }
 .btn-area{
         white-space: nowrap;

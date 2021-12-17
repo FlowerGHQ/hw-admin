@@ -1446,6 +1446,11 @@ let Const = {
         },
     },
 
+    ORG_STATUS_LIST: [
+        { text: "禁用", value: 0 },
+        { text: "启用", value: 1 },
+    ],
+
     ITEM: { // 商品
         TYPE_LIST: [ // 产品类型
             { text: '车辆', value: 1 },

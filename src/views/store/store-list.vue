@@ -15,10 +15,10 @@
               <a-input placeholder="请输入门店名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
             </div>
           </a-col>
-          <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+          <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
             <div class="key">经销商：</div>
             <div class="value">
-              <a-select placeholder="请选择国家" v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
+              <a-select placeholder="请选择经销商" v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
                   <a-select-option v-for="(item,index) of agentList" :key="index" :value="item.name">{{item.name}}</a-select-option>
               </a-select>
               <!-- <a-input placeholder="请选择经销商" v-model:value="searchForm.agent_id" @keydown.enter='handleSearch'/> -->
@@ -27,16 +27,15 @@
           <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
             <div class="key">状态:</div>
             <div class="value">
-              <a-select  v-model:value="searchForm.status" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
-                <a-select-option v-for="(item,index) of statusList" :key="index" :value="item.value">{{item.name}}</a-select-option>
+              <a-select  v-model:value="searchForm.status" @change="handleSearch" allow-clear>
+                <a-select-option v-for="(item,index) of statusList" :key="index" :value="item.value">{{item.text}}</a-select-option>
               </a-select>
             </div>
           </a-col>
           <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
             <div class="key">创建时间：</div>
             <div class="value">
-              <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
-                :show-time="defaultTime">
+              <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
                 <template #suffixIcon><i class="icon i_calendar"/></template>
               </a-range-picker>
             </div>
@@ -71,13 +70,18 @@
             <template v-if="column.key === 'time'">
               {{ $Util.timeFilter(text) }}
             </template>
-            <template v-if="column.key === 'status'">
-              {{ text == 0 ? '禁用' : '启用' }}
+            <template v-if="column.dataIndex === 'status'">
+                <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
+                    {{ text ? '启用中' : '已禁用' }}
+                </div>
             </template>
             <template v-if="column.key === 'operation'">
               <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
               <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改</a-button>
-              <a-button type='link' @click="updateStatus(record.id)"> <i class="icon i_delete"/> {{record.status == 0 ?"启用": "禁用"}}</a-button>
+              <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
+                  <template v-if="record.status"><i class="icon i_forbidden"/>禁用</template>
+                  <template v-else><i class="icon i_enable"/>启用</template>
+              </a-button>
             </template>
           </template>
         </a-table>
@@ -133,15 +137,12 @@ export default {
         {title: '联系人姓名', dataIndex: 'contact_name', key:'name'},
         {title: '联系人电话', dataIndex: 'contact_phone',key:'phone'},
         {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-        { title: '状态', dataIndex: 'status', key: 'status' },
+        {title: '状态', dataIndex: 'status', key: 'status' },
         {title: '操作', key: 'operation', fixed: 'right'},
       ],
       tableData: [],
-      agentList: {},
-      statusList: [
-        {name: "禁用", value: 0},
-        {name: "启用", value: 1},
-      ]
+      agentList: [],
+      statusList: Core.Const.ORG_STATUS_LIST,
     };
   },
   watch: {},
@@ -243,13 +244,22 @@ export default {
         },
       });
     },
-    updateStatus(id) {
-      let _this = this;
-      Core.Api.Store.updateStatus({id}).then(() => {
-        _this.getTableData();
-      }).catch(err => {
-        console.log("handleDelete err", err);
-      })
+    handleStatusChange(record) {
+        let _this = this;
+        this.$confirm({
+            title: `确定要${record.status ? '禁用' : '启用'}该门店吗？`,
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk() {
+                Core.Api.Store.updateStatus({id:record.id}).then(() => {
+                    _this.$message.success(`${record.status ? '禁用' : '启用'}成功`);
+                    _this.getTableData();
+                }).catch(err => {
+                    console.log("handleStatusChange err", err);
+                })
+            },
+        });
     }
   }
 };

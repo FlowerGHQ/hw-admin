@@ -185,7 +185,9 @@ export default {
             let apiName = form.id ? 'update' : 'save';
             Core.Api.ItemCategory[apiName](form).then(res => {
                 this.$message.success('保存成功')
-                if (form.id) {
+                if (form.parent_id == 0) {
+                    this.getDataById()
+                } else if (form.id) {
                     this.getDataById(form.id, this.editNode)
                 } else {
                     this.getDataByParent(form.parent_id, this.parentNode)

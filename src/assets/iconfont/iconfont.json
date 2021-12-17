@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "16801555",
+      "name": "ban",
+      "font_class": "forbidden",
+      "unicode": "e64c",
+      "unicode_decimal": 58956
+    },
+    {
+      "icon_id": "16801556",
+      "name": "enable",
+      "font_class": "enable",
+      "unicode": "e64d",
+      "unicode_decimal": 58957
+    },
+    {
       "icon_id": "16506296",
       "name": "detail",
       "font_class": "detail",
