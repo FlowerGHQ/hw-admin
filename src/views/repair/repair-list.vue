@@ -39,7 +39,7 @@
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">创建时间:</div>
                     <div class="value">
-                        <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime">
+                        <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
                             <template #suffixIcon><i class="icon i_calendar"></i> </template>
                         </a-range-picker>
                     </div>
@@ -271,14 +271,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#RepairList {
-    .status-tag {
-        width: 72px;
-        height: 22px;
-        line-height: 22px;
-        border-radius: 12px;
-        font-size: @fz_sm;
-        text-align: center;
-    }
-}
+// #RepairList {}
 </style>

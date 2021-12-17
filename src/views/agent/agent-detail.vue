@@ -1,10 +1,14 @@
 <template>
 <div id="AgentDetail" class='list-container'>
     <div class="title-container">
-        <div class="title-area">经销商详情</div>
-        <div class="btns-area">
+        <div class="title-area">经销商详情 <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>{{detail.status ? '启用中' : '已禁用'}}</a-tag></div>
+        <div class="btns-area" v-if="$auth('ADMIN')">
             <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
-            <a-button type="primary" ghost @click="handleDelete(agent_id)"><i class="icon i_delete"/>删除</a-button>
+            <!-- <a-button type="primary" ghost @click="handleDelete(agent_id)"><i class="icon i_delete"/>删除</a-button> -->
+            <a-button :type="detail.status ? 'danger' : 'primary'" ghost @click="handleStatusChange()">
+                <template v-if="detail.status"><i class="icon i_forbidden"/>禁用</template>
+                <template v-else><i class="icon i_enable"/>启用</template>
+            </a-button>
         </div>
     </div>
     <div class="gray-panel">
@@ -115,6 +119,19 @@ export default {
                     break;
             }
         },
+        getAgentDetail() {
+            this.loading = true;
+            Core.Api.Agent.detail({
+                id: this.agent_id,
+            }).then(res => {
+                console.log('getAgentDetail res', res)
+                this.detail = res.detail
+            }).catch(err => {
+                console.log('getAgentDetail err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
         // 删除 经销商
         handleDelete(id) {
             let _this = this;
@@ -134,19 +151,23 @@ export default {
                 },
             });
         },
-        getAgentDetail(){
-            this.loading = true;
-            Core.Api.Agent.detail({
-                id: this.agent_id,
-            }).then(res => {
-                console.log('getAgentDetail res', res)
-                this.detail = res.detail
-            }).catch(err => {
-                console.log('getAgentDetail err', err)
-            }).finally(() => {
-                this.loading = false;
+        handleStatusChange() {
+            let _this = this;
+            this.$confirm({
+                title: `确定要${_this.detail.status ? '禁用' : '启用'}该经销商吗？`,
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Agent.updateStatus({id:_this.detail.id}).then(() => {
+                        _this.$message.success(`${_this.detail.status ? '禁用' : '启用'}成功`);
+                        _this.getAgentDetail();
+                    }).catch(err => {
+                        console.log("handleStatusChange err", err);
+                    })
+                },
             });
-        },
+        }
     }
 };
 </script>

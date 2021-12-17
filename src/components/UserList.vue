@@ -3,7 +3,7 @@
     <div class="panel-title">
       <div class="title">员工列表</div>
     </div>
-    <div class="list-container">
+    <div class="panel-content">
       <div class="table-container">
         <a-button type="primary" ghost @click="routerChange('edit')" style="margin-bottom: 10px;"><i
             class="icon i_add"/>新增员工
@@ -201,7 +201,7 @@ export default {
 <style lang="less" scoped>
 .UserList {
   .table-container {
-    margin-top: 10px;
+    margin-top: -10px;
   }
 }
 </style>

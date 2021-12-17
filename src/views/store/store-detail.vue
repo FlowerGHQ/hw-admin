@@ -1,10 +1,14 @@
 <template>
 <div id="StoreDetail" class="list-container">
     <div class="title-container">
-        <div class="title-area">门店详情</div>
-        <div class="btns-area">
+        <div class="title-area">门店详情 <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>{{detail.status ? '启用中' : '已禁用'}}</a-tag></div>
+        <div class="btns-area" v-if="$auth('ADMIN')">
             <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
-            <a-button type="primary" ghost @click="handleDelete(store_id)"><i class="icon i_delete"/>删除</a-button>
+            <!-- <a-button type="primary" ghost @click="handleDelete(store_id)"><i class="icon i_delete"/>删除</a-button> -->
+            <a-button :type="detail.status ? 'danger' : 'primary'" ghost @click="handleStatusChange()">
+                <template v-if="detail.status"><i class="icon i_forbidden"/>禁用</template>
+                <template v-else><i class="icon i_enable"/>启用</template>
+            </a-button>
         </div>
     </div>
     <div class="gray-panel">
@@ -13,7 +17,7 @@
                 <div class="title-area">
                     <img :src="$Util.imageFilter(detail.logo, 3)" />
                     <span class="title">{{detail.name}}</span>
-               </div>
+                </div>
             </div>
             <a-row class="desc-detail has-logo">
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
@@ -144,6 +148,23 @@ export default {
                 this.loading = false;
             });
         },
+        handleStatusChange() {
+            let _this = this;
+            this.$confirm({
+                title: `确定要${_this.detail.status ? '禁用' : '启用'}该门店吗？`,
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Store.updateStatus({id:_this.detail.id}).then(() => {
+                        _this.$message.success(`${_this.detail.status ? '禁用' : '启用'}成功`);
+                        _this.getStoreDetail();
+                    }).catch(err => {
+                        console.log("handleStatusChange err", err);
+                    })
+                },
+            });
+        }
     }
 };
 </script>

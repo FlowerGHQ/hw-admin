@@ -503,6 +503,7 @@ const routes = [
         component: Layout,
         redirect: '/notice/notice-list',
         name: 'NoticeManagement',
+        hidden: true,
         meta: {
             title: '系统消息',
             icon: 'i_s_temp',

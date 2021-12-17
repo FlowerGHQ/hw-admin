@@ -3,7 +3,7 @@
     <div class="panel-title">
         <div class="title">门店列表</div>
     </div>
-    <div class="list-container">
+    <div class="panel-content">
         <div class="table-container">
             <a-button type="primary" ghost @click="routerChange('edit')" style="margin-bottom: 10px;"><i class="icon i_add"/>新增门店</a-button>
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -20,10 +20,19 @@
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
+                    <template v-if="column.dataIndex === 'status'">
+                        <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
+                            {{ text ? '启用中' : '已禁用' }}
+                        </div>
+                    </template>
                     <template v-if="column.key === 'operation'">
                         <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
                         <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改</a-button>
-                        <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button>
+                        <!-- <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button> -->
+                        <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
+                            <template v-if="record.status"><i class="icon i_forbidden"/>禁用</template>
+                            <template v-else><i class="icon i_enable"/>启用</template>
+                        </a-button>
                     </template>
                 </template>
             </a-table>
@@ -73,6 +82,7 @@ export default {
             tableColumns: [
                 {title: '门店名称', dataIndex: 'name', key:'detail'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
+                {title: '状态', dataIndex: 'status', key: 'status' },
                 {title: '操作', key: 'operation', fixed: 'right'},
             ],
 
@@ -119,7 +129,8 @@ export default {
                 org_id: this.orgId,
                 type: this.type,
                 page: this.currPage,
-                page_size: this.pageSize
+                page_size: this.pageSize,
+                status: 1,
             }).then(res => {
                 console.log("getTableData res", res)
                 this.total = res.count;
@@ -148,6 +159,24 @@ export default {
                 },
             });
         },
+
+        handleStatusChange(record) {
+            let _this = this;
+            this.$confirm({
+                title: `确定要${record.status ? '禁用' : '启用'}该门店吗？`,
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Store.updateStatus({id:record.id}).then(() => {
+                        _this.$message.success(`${record.status ? '禁用' : '启用'}成功`);
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleStatusChange err", err);
+                    })
+                },
+            });
+        }
     }
 };
 </script>
@@ -155,7 +184,7 @@ export default {
 <style lang="less" scoped>
 .StoreList {
     .table-container {
-        margin-top: 10px;
+        margin-top: -10px;
     }
 }
 </style>
