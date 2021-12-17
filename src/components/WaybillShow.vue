@@ -1,39 +1,44 @@
 <template>
 <div class="WaybillShow">
     <div class="main">
-        <span>{{$Util.waybillCompanyFilter(detail.companyUid)}}({{detail.uid}})</span>
+        <span>{{$Util.waybillCompanyFilter(detail.company_uid)}}({{detail.uid}})</span>
         <a-button type="link" @click="handleDetailShow">查看物流详情</a-button>
         <a-button type="link" v-if="canEdit" @click='handleUpdateShow'>修改物流信息</a-button>
     </div>
     <div class="desc">{{last.status}}</div>
     <div class="time">{{last.time}}</div>
-    <a-modal v-model:visible="detailShow" title="物流详情" class="waybill-show-modal">
-        <div class="modal-content">
-            <a-steps progress-dot direction="vertical">
-                <a-step v-for="(item,index) of list" :key="index" :title="item.time" :description="item.status" />
-            </a-steps>
-        </div>
-        <template #footer>
-            <a-button key="back" @click="detailShow = false">关闭</a-button>
-        </template>
-    </a-modal>
-    <a-modal v-model:visible="updateShow" title="编辑验收备注" class="remark-detail-modal" :ok="updateWaybill">
-        <div class="form-item">
-            <div class="key">物流公司:</div>
-            <div class="value">
-                <a-select v-model:visible="companyUid" placeholder="请选择物流公司" show-search option-filter-prop="children">
-                    <a-select-option v-for="(val,key) in companyMap" :key="key" :value="key" >{{val}}</a-select-option>
-                </a-select>
+    <template class="modal-container">
+        <a-modal v-model:visible="detailShow" title="物流详情" class="waybill-show-modal">
+            <div class="modal-content">
+                <a-steps progress-dot direction="vertical">
+                    <a-step v-for="(item,index) of list" :key="index" :title="item.time" :description="item.status" />
+                </a-steps>
             </div>
-        </div>
-        <div class="form-item">
-            <div class="key">物流单号:</div>
-            <div class="value">
-                <a-input v-model="sn" placeholder="请输入物流单号"/>
+            <template #footer>
+                <a-button key="back" @click="detailShow = false">关闭</a-button>
+            </template>
+        </a-modal>
+        <a-modal v-model:visible="updateShow" title="编辑验收备注" class="remark-detail-modal" :ok="updateWaybill">
+            <div class="form-item">
+                <div class="key">物流公司:</div>
+                <div class="value">
+                    <a-select v-model:value="companyUid" placeholder="请选择物流公司" >
+                        <a-select-option v-for="(val,key) in companyMap" :key="key" :value="key" >{{val}}</a-select-option>
+                    </a-select>
+                </div>
             </div>
-        </div>
-
-    </a-modal>
+            <div class="form-item">
+                <div class="key">物流单号:</div>
+                <div class="value">
+                    <a-input v-model:value="uid" placeholder="请输入物流单号"/>
+                </div>
+            </div>
+            <template #footer>
+                <a-button key="back" @click="updateShow = false">关闭</a-button>
+                <a-button type="primary"  @click="updateWaybill">提交</a-button>
+            </template>
+        </a-modal>
+    </template>
 </div>
 </template>
 
@@ -61,7 +66,7 @@ export default {
         return {
             companyMap: WAYBILL.COMPANY_MAP,
             detailShow: false,
-            sn: "",
+            uid: "",
             companyUid: '',
             updateShow: false,
 
@@ -75,8 +80,8 @@ export default {
     },
     created() {},
     mounted() {
-        this.companyUid = this.detail.companyUid
-        this.sn = this.detail.sn
+        this.companyUid = this.detail.company_uid
+        this.uid = this.detail.uid
     },
     methods: {
         handleDetailShow() {
@@ -89,7 +94,7 @@ export default {
             Core.Api.Waybill.update({
                 id: this.detail.id,
                 company_uid: this.companyUid,
-                sn: this.sn,
+                uid: this.uid,
             }).then(res =>{
                 this.$emit('change', 'WaybillShow')
                 this.updateShow = false
