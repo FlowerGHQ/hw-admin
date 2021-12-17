@@ -5,7 +5,7 @@
                 <div class="title-area">采购订单详情</div>
                 <div class="btns-area">
                     <a-button type="primary" @click="handlePurchaseStatus('payment')" v-if="detail.status == PURCHASE.STATUS.WAIT_PAY && $auth('ADMIN')" ><i class="icon i_check_c"/>付款</a-button>
-                    <a-button type="primary" @click="handlePurchaseStatus('deliver')"  v-if="detail.status == PURCHASE.STATUS.WAIT_DELIVER && $auth()" ><i class="icon i_check_c"/>发货</a-button>
+                    <a-button type="primary" @click="handlePurchaseStatus('deliver')"  v-if="detail.status == PURCHASE.STATUS.WAIT_DELIVER && $auth('ADMIN')" ><i class="icon i_check_c"/>发货</a-button>
                     <a-button type="primary" @click="handlePurchaseStatus('takeDeliver')"  v-if="detail.status == PURCHASE.STATUS.WAIT_TAKE_DELIVER && $auth('AGENT', 'STORE')" ><i class="icon i_edit"/>确认收货</a-button>
                     <a-button type="primary" @click="handlePurchaseStatus('review')" v-if="detail.status == PURCHASE.STATUS.WAIT_REVIEW && $auth('AGENT', 'STORE')"  ><i class="icon i_edit"/>评论</a-button>
                     <a-button type="primary" @click="handlePurchaseStatus('cancel')"  v-if="detail.status == PURCHASE.STATUS.WAIT_PAY && $auth('AGENT', 'STORE')" ><i class="icon i_edit"/>关闭</a-button>
@@ -233,7 +233,7 @@ export default {
                 {status: '200', title: '发货'},
                 {status: '300', title: '收货'},
                 {status: '400', title: '评论'},
-                {status: '500', title: '交易成功'},
+                {status: '500', title: '交易完成'},
             ],
         };
     },

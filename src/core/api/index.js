@@ -84,6 +84,7 @@ const apiList = {
 	    check: ['PostJson', 'repair/check'], // 检查
         statusList: ['PostJson', 'repair/status-list'], // 保存
 	    repair: ['PostJson', 'repair/repair'], // 维修结束
+	    settlement: ['PostJson', 'repair/settlement'], // 维修结束
     },
 	RepairItem: { // 维修单
 		saveList: ['PostJson', 'repair-order-item/save-list'], // 列表

@@ -124,7 +124,7 @@ export default {
                 {text: '待发货', value: '0', color: 'orange',  key: '200'},
                 {text: '已发货', value: '0', color: 'primary',  key: '300'},
                 {text: '待评论', value: '0', color: 'blue',  key: '400'},
-                {text: '交易成功', value: '0', color: 'green',  key: '500'},
+                {text: '交易完成', value: '0', color: 'green',  key: '500'},
                 {text: '交易关闭', value: '0', color: 'grey',  key: '1000'},
             ],
             create_time: [],

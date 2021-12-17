@@ -364,7 +364,7 @@ const Util = {
     },
 	puechasePayMethodFilter(val) {
 		const MAP = Const.PURCHASE.PAY_METHOD
-		return MAP[val] || '未知'
+		return MAP[val] || '-'
 	},
 /* =============== 采购单 ================ */
 
