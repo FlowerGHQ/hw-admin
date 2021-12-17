@@ -13,9 +13,9 @@
                     <a-tooltip title="查看收藏夹" class="popover">
                         <a-button type="link" @click="routerChange('favorite')"><i class="icon i_collect"/></a-button>
                     </a-tooltip>
-                    <a-popover v-model:visible="briefVisible" arrow-point-at-center placement="bottomRight" trigger='click'>
+                    <a-popover v-model:visible="briefVisible" arrow-point-at-center placement="bottomRight" trigger='click' overlayClassName='shop-cart-brief-content'>
                         <template #content>
-                            <div class="shop-cart-brief">
+                            <div class="shop-cart-brief" :class="briefVisible ? 'show' : 'hidden'">
                                 <div class="icon i_close" @click="briefVisible = false"></div>
                                 <div class="tip">
                                     <i class="icon i_check_c"/>已加入购物车
@@ -87,6 +87,24 @@
         </div>
         <SimpleImageEmpty class="item-content-empty" v-else desc="暂无满足搜索条件的商品"/>
     </div>
+    <!-- <div class="shop-cart-brief" :class="briefVisible ? 'show' : 'hidden'">
+        <div class="icon i_close" @click="briefVisible = false"></div>
+        <div class="tip">
+            <i class="icon i_check_c"/>已加入购物车
+        </div>
+        <div class="item" v-for="item of briefList" :key="item.id">
+            <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
+            <div class="desc">
+                <p>{{item.item.name}}</p>
+                <span>{{item.item.code}}</span>
+                <p class="price">￥{{$Util.countFilter(item.price)}}</p>
+            </div>
+        </div>
+        <div class="btns">
+            <a-button class='btn ghost' @click="routerChange('shop_cart')">查看购物车({{briefCount}})</a-button>
+            <a-button class='btn black' @click="routerChange('settle')">结算</a-button>
+        </div>
+    </div> -->
 </div>
 </template>
 
@@ -147,6 +165,7 @@ export default {
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':  // 详情
+                    if (!this.$auth('ADMIN')) { return }
                     routeUrl = this.$router.resolve({
                         path: "/item/item-detail",
                         query: { id: item.id }
@@ -156,13 +175,13 @@ export default {
                 case 'favorite':  // 收藏夹
                 case 'shop_cart':  // 购物车
                     routeUrl = this.$router.resolve({
-                        path: "/item/item-collect",
+                        path: "/purchase/item-collect",
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'settle':  // 结算
                     routeUrl = this.$router.resolve({
-                        path: "/item/item-settle",
+                        path: "/purchase/item-settle",
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -392,16 +411,27 @@ export default {
         }
     }
 }
+.shop-cart-brief-content {
+    visibility: hidden;
+    .ant-popover-arrow {
+        display: none;
+    }
+}
 .shop-cart-brief {
-    position: relative;
-    padding: 12px 6px 10px;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+    visibility: visible;
+    background-color: #fff;
+    position: fixed;
+    right: 56px;
+    top: 126px;
+    padding: 22px;
     .icon.i_close {
         cursor: pointer;
         position: absolute;
         font-size: 14px;
         color: #111;
-        top: 0;
-        right: 0;
+        top: 22px;
+        right: 22px;
     }
     .tip {
         font-size: 15px;
@@ -445,7 +475,7 @@ export default {
         }
     }
     .btns {
-        margin-top: 72px;
+        margin-top: 52px;
         .btn {
             width: 172px;
             height: 55px;
@@ -468,6 +498,15 @@ export default {
                 }
             }
         }
+    }
+
+    &.show {
+        opacity: 1;
+        display: block;
+    }
+    &.hidden {
+        opacity: 0;
+        display: none;
     }
 }
 </style>

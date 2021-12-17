@@ -48,7 +48,7 @@ const routes = [
             title: '维修单管理',
             icon: 'i_s_temp',
             // auth: ['dashboard'],
-            // roles: [LOGIN_TYPE.ADMIN],
+            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
         },
         children: [
             {
@@ -240,7 +240,7 @@ const routes = [
             },
         ]
     },
-    {   // 商品
+    {   // 商品 - 平台端
         path: '/item',
         component: Layout,
         redirect: '/item/item-list',
@@ -248,8 +248,7 @@ const routes = [
         meta: {
             title: '商品管理',
             icon: 'i_s_temp',
-            // auth: ['dashboard'],
-            // roles: [LOGIN_TYPE.ADMIN],
+            roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
             {
@@ -257,7 +256,8 @@ const routes = [
                 name: 'ItemList',
                 component: () => import('@/views/item/item-list.vue'),
                 meta: {
-                    title: '采购',
+                    title: '商品列表',
+                    roles: [LOGIN_TYPE.ADMIN],
                     is_sub_menu: true
                 }
             },
@@ -279,7 +279,42 @@ const routes = [
                 hidden: true,
                 meta: {
                     title: '商品详情',
+                    roles: [LOGIN_TYPE.ADMIN],
                     parent: '/item/item-list',
+                }
+            },
+            {
+                path: 'item-category',
+                name: 'ItemCategory',
+                component: () => import('@/views/item/item-category.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.ADMIN],
+                    title: '商品分类',
+                    is_sub_menu: true,
+                }
+            },
+        ]
+    },
+    {   // 商品- 经销商端 && 门店端
+        path: '/purchase',
+        component: Layout,
+        redirect: '/purchase/item-list',
+        name: 'PurchaseManagement',
+        meta: {
+            title: '采购管理',
+            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN],
+            auth: ['AGENT', 'STORE'],
+            icon: 'i_s_temp',
+        },
+        children: [
+            {
+                path: 'item-list',
+                name: 'ItemListSp',
+                component: () => import('@/views/item/item-list.vue'),
+                meta: {
+                    title: '采购',
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
+                    is_sub_menu: true
                 }
             },
             {
@@ -300,16 +335,6 @@ const routes = [
                 meta: {
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
                     title: '结算',
-                }
-            },
-            {
-                path: 'item-category',
-                name: 'ItemCategory',
-                component: () => import('@/views/item/item-category.vue'),
-                meta: {
-                    roles: [LOGIN_TYPE.ADMIN],
-                    title: '商品分类',
-                    is_sub_menu: true,
                 }
             },
             {

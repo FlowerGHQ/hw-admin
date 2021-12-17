@@ -48,10 +48,8 @@
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
-                        <template v-if="column.key === 'tip_item'">
-                            <a-tooltip placement="top" :title='text'>
-                                <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
-                            </a-tooltip>
+                        <template v-if="column.dataIndex === 'address'">
+                            {{ $Util.addressFilter(record) }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -110,7 +108,7 @@ export default {
                 {title: '名称', dataIndex: 'name', key:'detail'},
                 {title: '电话', dataIndex: 'phone', key:'item'},
                 {title: '邮箱', dataIndex: 'email', key:'item'},
-                {title: '地址', dataIndex: 'address', key:'tip_item'},
+                {title: '地址', dataIndex: 'address'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ],

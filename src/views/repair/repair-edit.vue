@@ -106,7 +106,7 @@
             <div class="form-item" :class="form.channel == 1 ? 'required' : ''">
                 <div class="key">详细地址</div>
                 <div class="value">
-                    <a-input v-model:value="form.customer_detail_address" placeholder="请输入详细地址"/>
+                    <a-input v-model:value="form.customer_address" placeholder="请输入详细地址"/>
                 </div>
             </div>
             <div class="form-item textarea">
@@ -360,7 +360,7 @@ export default {
                     this.$message.warning('请输入客户邮箱')
                     return 0
                 }
-                if (form.channel == 1 && !form.customer_detail_address) {
+                if (form.channel == 1 && !form.customer_address) {
                     this.$message.warning('请输入详细地址')
                     return 0
                 }

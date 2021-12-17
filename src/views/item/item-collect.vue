@@ -100,7 +100,7 @@ export default {
             switch (type) {
                 case 'settle':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/item/item-settle",
+                        path: "/purchase/item-settle",
                     })
                     window.open(routeUrl.href, '_self')
                     break;

@@ -380,7 +380,7 @@ const Util = {
 	waybillCompanyFilter(key) {
 		const MAP = Const.WAYBILL.COMPANY_MAP
 		return MAP[key] || '未知物流公司'
-	}
+	},
 /* =============== 物流信息 ================ */
 }
 

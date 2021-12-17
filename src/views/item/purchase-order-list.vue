@@ -161,16 +161,9 @@ export default {
             console.log('routerChange item:', item)
             let routeUrl = ''
             switch (type) {
-                case 'edit':  // 编辑
-                    routeUrl = this.$router.resolve({
-                        path: "/item/purchase-edit",
-                        query: { id: item.id }
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/item/purchase-order-detail",
+                        path: "/purchase/purchase-order-detail",
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_blank')

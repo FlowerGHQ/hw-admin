@@ -163,7 +163,7 @@ export default {
                     break;
                 case 'order':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/item/purchase-order-list",
+                        path: "/purchase/purchase-order-list",
                     })
                     window.open(routeUrl.href, '_self')
                     break;

@@ -11,7 +11,7 @@
             </span>
             <div class="text">
                 <p class="title">{{item.title}}</p>
-                <span class="time" v-if="item.time">{{$Util.timefilter(item.time)}}</span>
+                <span class="time" v-if="item.time">{{ $Util.timeFilter(item.time) }}</span>
             </div>
         </div>
     </div>
@@ -19,7 +19,6 @@
 </template>
 
 <script>
-
 export default {
     props: {
         stepsList: {
@@ -59,7 +58,6 @@ export default {
                 border-radius: 0 20px 20px 0;
                 border-right: 1px solid transparent;
             }
-            
             .symbol {
                 .fcc();
                 width: 20px;
@@ -77,6 +75,14 @@ export default {
                 font-size: 12px;
                 line-height: 17px;
                 color: #363D42;
+                .time {
+                    font-size: 10px;
+                    font-weight: 400;
+                    color: #8090A6;
+                    transform: scale(20%);
+                    font-weight: 100;
+                    letter-spacing: -1px;
+                }
             }
             &::after {
                 content: '';
@@ -115,6 +121,9 @@ export default {
                 }
                 .text {
                     color: #FFFFFF;
+                    .time {
+                        color: #FFFFFF;
+                    }
                 }
                 &::after {
                     border-color: #006EF9;

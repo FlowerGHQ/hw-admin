@@ -22,12 +22,6 @@
                         :show-search="{ filter }"/>
           </div>
         </div>
-        <div class="form-item ">
-          <div class="key"></div>
-          <div class="value">
-            <a-input v-model:value="form.detail_address" placeholder="请输入详细地址"/>
-          </div>
-        </div>
       </div>
     </div>
     <div class="form-btns">
@@ -50,16 +44,9 @@ export default {
       // 加载
       loading: false,
       detail: {},
-      customer_address: [],
       form: {
         id: '',
         name: '',
-        province: '',
-        city: '',
-        address: [],
-        addressOptions: [],
-        detail_address: [],
-
       },
     };
   },

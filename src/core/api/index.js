@@ -98,6 +98,7 @@ const apiList = {
     ItemCategory: { // 商品分类
         list: ['PostJson', 'item-category/list'],
         save: ['PostJson', 'item-category/save'],
+        update: ['PostJson', 'item-category/update'],
         tree: ['PostJson', 'item-category/tree'],
         delete: ['PostJson', 'item-category/delete'],
     },
@@ -106,7 +107,7 @@ const apiList = {
         list: ['PostJson', 'shopping-cart/list'],
         clear: ['PostJson', 'shopping-cart/clear'],
         detail: ['GetJson', 'shopping-cart/detail'],
-        delete: ['PostJson', 'shopping-cart/delete'],
+        remove: ['PostJson', 'shopping-cart/delete'],
     },
     Favorite: { // 收藏夹
         add: ['PostJson', 'favorite/create'],

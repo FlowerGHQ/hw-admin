@@ -29,13 +29,13 @@
                 <div class="form-item required">
                     <div class="key">客户地址：</div>
                     <div class="value">
-                        <AddressCascader @change='handleAddressSelect' :default-address='address'/>
+                        <AddressCascader @change='handleAddressSelect' :default-address='[form.province, form.city, form.county]'/>
                     </div>
                 </div>
                 <div class="form-item ">
                     <div class="key"></div>
                     <div class="value">
-                        <a-input v-model:value="form.detail_address" placeholder="请输入详细地址"/>
+                        <a-input v-model:value="form.address" placeholder="请输入详细地址"/>
                     </div>
                 </div>
             </div>
@@ -66,16 +66,15 @@ export default {
                 name: '',
                 phone: '',
                 email: '',
+                province: '',
+                city: '',
+                county: '',
                 address: '',
-                detail_address: '',
             },
         };
     },
     watch: {},
     computed: {
-        address() {
-            return this.form.address.split("/")
-        }
     },
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0
@@ -115,14 +114,11 @@ export default {
             if (!form.phone) {
                 return this.$message.warning('请输入客户电话')
             }
-          if (!form.email) {
-            return this.$message.warning('请输入客户邮箱')
-          }
-            if (!form.address) {
-                return this.$message.warning('请选择省/市/区（县）')
+            if (!form.email) {
+                return this.$message.warning('请输入客户邮箱')
             }
-            if (!form.detail_address) {
-                return this.$message.warning('请输入详细地址')
+            if (!form.province || !form.city || !form.county || !form.address) {
+                return this.$message.warning('请完善客户地址')
             }
             Core.Api.Customer.save(form).then(() => {
                 this.$message.success('保存成功')
@@ -133,7 +129,9 @@ export default {
         },
 
         handleAddressSelect(address = []) {
-            this.form.address = address.join('/')
+            this.form.province = address[0]
+            this.form.city = address[1]
+            this.form.county = address[2]
         },
     }
 };

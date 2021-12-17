@@ -24,7 +24,7 @@
                         <a-input placeholder="请输入工单编号" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">零部件编号:</div>
                     <div class="value">
                         <a-input placeholder="请输入零部件编号" v-model:value="searchForm.part_code" @keydown.enter='handleSearch'/>
@@ -35,7 +35,7 @@
                     <div class="value">
                         <a-input placeholder="请输入车架编号" v-model:value="searchForm.vehicle_no" @keydown.enter='handleSearch'/>
                     </div>
-                </a-col>
+                </a-col> -->
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">创建时间:</div>
                     <div class="value">
@@ -53,7 +53,7 @@
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
-                <template #bodyCell="{ column, text , record}">
+                <template #bodyCell="{ column, text , record }">
                     <template v-if="column.key === 'detail'">
                         <a-tooltip placement="top" :title='text' v-if="record.status == 10">
                             <a-button type="link" @click="routerChange('edit', record)">{{text || '-'}}</a-button>
@@ -75,9 +75,6 @@
                     </template>
                     <template v-if="column.dataIndex === 'repair_method'">
                         {{$Util.repairMethodFilter(text)}}
-                    </template>
-                    <template v-if="column.dataIndex === 'item_type'">
-                        {{$Util.itemTypeFilter(text)}}
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
@@ -142,9 +139,8 @@ export default {
             searchForm: {
                 uid: '',
                 status: undefined,
-                item_type: 0,
-                type: 0,
-                subject: 0,
+                channel: '',
+                repair_method: '',
             },
             filteredInfo: null,
 
@@ -160,12 +156,10 @@ export default {
             let columns = [
                 { title: '工单编号', dataIndex: 'uid', key: 'detail' },
                 { title: '工单名称', dataIndex: 'name', key: 'tip_item' },
-                { title: '产品类型', dataIndex: 'item_type',
-                    filters: Core.Const.ITEM.TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.item_type || null },
                 { title: '维修方式', dataIndex: 'channel',
-                    filters: Core.Const.REPAIR.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.type || null },
+                    filters: Core.Const.REPAIR.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.channel || null },
                 { title: '维修类别', dataIndex: 'repair_method',
-                    filters: Core.Const.REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.subject || null },
+                    filters: Core.Const.REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.repair_method || null },
                 { title: '接单人',   dataIndex: 'jiesanren', key: 'item' },
                 { title: '关联客户', dataIndex: 'guanliankehu', key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
@@ -177,7 +171,7 @@ export default {
     },
     mounted() {
         this.getTableData();
-        this.getStatusList()
+        this.getStatusStat()
     },
     methods: {
         routerChange(type, item = {}) {
@@ -217,7 +211,6 @@ export default {
             Object.assign(this.searchForm, this.$options.data().searchForm)
             this.filteredInfo = null
 
-            console.log('this.searchForm:', this.searchForm)
             this.create_time = []
             this.pageChange(1);
         },
@@ -227,12 +220,11 @@ export default {
             for (const key in filters) {
                 this.searchForm[key] = filters[key] ? filters[key][0] : 0
             }
-            console.log('this.searchForm:', this.searchForm)
-            console.log('this.tableColumns:', this.tableColumns)
+            this.pageChange(1);
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-
+            console.log('this.searchForm:', this.searchForm)
             Core.Api.Repair.list({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
@@ -249,26 +241,24 @@ export default {
                 this.loading = false;
             });
         },
-         getStatusList() {  // 获取 表格 数据
+         getStatusStat() {  // 获取 表格 数据
             this.loading = true;
-            Core.Api.Repair.statusList({
+            Core.Api.Repair.statusList().then(res => {
+                console.log("getStatusStat res:", res)
+                let total = 0
 
-            }).then(res => {
-                console.log("getTableData res:", res)
-                var totle = 0
-
-                this.statusList.forEach(statusItem =>{
-                    res.status_list.forEach(status =>{
-                        if(statusItem.key == status.status ){
-                            statusItem.value = status.amount
-                            totle += status.amount
+                this.statusList.forEach(statusItem => {
+                    res.status_list.forEach(item => {
+                        if ( statusItem.key == item.status) {
+                            statusItem.value = item.amount
+                            total += item.amount
                         }
                     })
                 })
-                console.log(totle)
-                this.statusList[0].value = totle
+                console.log(total)
+                this.statusList[0].value = total
             }).catch(err => {
-                console.log('getTableData err:', err)
+                console.log('getStatusStat err:', err)
             }).finally(() => {
                 this.loading = false;
             });

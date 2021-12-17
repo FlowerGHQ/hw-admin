@@ -123,7 +123,7 @@ export default {
             switch (type) {
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/item/purchase-order-detail",
+                        path: "/purchase/purchase-order-detail",
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_blank')
