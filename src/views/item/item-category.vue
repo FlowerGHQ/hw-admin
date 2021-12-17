@@ -7,20 +7,6 @@
                 <a-button type="primary" @click="handleModalShow({})"><i class="icon i_add"/>新增分类</a-button>
             </div>
         </div>
-        <div class="search-container">
-            <a-row class="search-area">
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">分类名称:</div>
-                    <div class="value">
-                        <a-input placeholder="请输入分类名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
-                    </div>
-                </a-col>
-            </a-row>
-            <div class="btn-area">
-                <a-button @click="handleSearch" type="primary">查询</a-button>
-                <a-button @click="handleSearchReset">重置</a-button>
-            </div>
-        </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false' v-model:expandedRowKeys='expandedRowKeys'
@@ -73,10 +59,7 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            // 搜索
-            searchForm: {
-                name: '',
-            },
+
             tableData: [],
 
             expandedRowKeys: [],
@@ -118,11 +101,6 @@ export default {
             }
         },
         handleSearch() {  // 搜索
-            this.expandedRowKeys = []
-            this.getDataById();
-        },
-        handleSearchReset() {  // 重置搜索
-            Object.assign(this.searchForm, this.$options.data().searchForm)
             this.expandedRowKeys = []
             this.getDataById();
         },
