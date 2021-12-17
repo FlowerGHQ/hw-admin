@@ -15,7 +15,7 @@
               {{ $Util.userTypeFilter(text) }}
             </template>
             <template v-if="column.dataIndex === 'flag_admin' && $auth('ADMIN') == true">
-              <a-switch v-model:checked="record.flag_admin" checked-children="启用" un-checked-children="禁用" @click="swichChange(record)" :checkedValue="1" :unCheckedValue="0"/>
+              <a-switch v-model:checked="record.flag_admin" checked-children="启用" un-checked-children="禁用" @click="swichChange(record)" :checkedValue="Core.Const.IS_ADMIN.TRUE" :unCheckedValue="Core.Const.IS_ADMIN.FALSE"/>
             </template>
             <template v-if="column.dataIndex === 'flag_admin' && $auth('ADMIN') == false">
               {{ text }}

@@ -5,10 +5,10 @@ let URL_POINT = 'http://api.eos.rebuildsoft.com'
 
 switch (window.location.hostname) {
     default:
-		// URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
+		URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
 		// URL_POINT = 'http://10.0.0.205:8083' // 徐伟
 		// URL_POINT = 'http://10.0.0.149:8083' // 徐伟
-        URL_POINT = 'http://10.0.0.39:8083'  // 姚志宇
+        // URL_POINT = 'http://10.0.0.39:8083'  // 姚志宇
         // URL_POINT = 'http://10.0.0.155:8083' // 戚哲康
         break;
 }
@@ -1676,6 +1676,11 @@ let Const = {
 			501: '结算完成',
 			1001: '订单转移',
 		},
+	},
+
+	IS_ADMIN: {
+        TRUE: 1,
+        FALSE: 0,
 	},
 };
 
