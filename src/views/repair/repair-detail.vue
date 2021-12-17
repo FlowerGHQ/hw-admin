@@ -31,7 +31,7 @@
             <div class="panel-content">
                 <div class="info-item">
                     <div class="key">创建人</div>
-                    <div class="value">{{detail.operator_name || '-'}}</div>
+                    <div class="value">{{detail.user_name || '-'}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">相关客户</div>

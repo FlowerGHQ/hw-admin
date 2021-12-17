@@ -83,6 +83,7 @@
                 </div>
                 <div class="sp">
                     <a-button type="link" @click="routerChange('customer')">新建客户</a-button>
+                    <a-button type="link" @click="getCustomerList('refresh')">刷新</a-button>
                 </div>
             </div>
             <div class="form-item required">
@@ -130,6 +131,7 @@
                 </div>
                 <div class="sp">
                     <a-button type="link" @click="routerChange('staff')">新建员工</a-button>
+                    <a-button type="link" @click="getStaffList('refresh')">刷新</a-button>
                 </div>
             </div>
             <div class="form-item">
@@ -261,18 +263,24 @@ export default {
         },
 
         // 获取 车主列表
-        getCustomerList() {
+        getCustomerList(val) {
             Core.Api.Customer.list().then(res => {
                 this.customerList = res.list
+                if (val == 'refresh'){
+                    this.$message.success('刷新成功')
+                }
             })
         },
         // 获取 员工列表
-        getStaffList() {
+        getStaffList(val) {
             Core.Api.User.list({
                 page: 0,
                 type: Core.Const.USER.TYPE.WORKER,
             }).then(res => {
                 this.staffList = res.list
+                if (val == 'refresh'){
+                    this.$message.success('刷新成功')
+                }
             });
         },
         // 获取工单详情
