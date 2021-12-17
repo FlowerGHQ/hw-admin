@@ -23,6 +23,14 @@
                         </a-select>
                     </div>
                 </a-col>
+              <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                <div class="key">状态:</div>
+                <div class="value">
+                  <a-select  v-model:value="searchForm.status" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
+                    <a-select-option v-for="(item,index) of statusList" :key="index" :value="item.value">{{item.name}}</a-select-option>
+                  </a-select>
+                </div>
+              </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">创建时间:</div>
                     <div class="value">
@@ -62,13 +70,16 @@
                             <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
                         </a-tooltip>
                     </template>
+                  <template v-if="column.key === 'status'">
+                    {{ text == 0 ? '禁用' : '启用' }}
+                  </template>
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
                         <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_detail"/> 详情</a-button>
                         <a-button type='link' @click="routerChange('edit', record)"> <i class="icon i_edit"/> 编辑</a-button>
-                        <a-button type='link' @click="handleDelete(record.id)"> <i class="icon i_delete"/> 删除</a-button>
+                        <a-button type='link' @click="updateStatus(record.id)"> <i class="icon i_delete"/> {{record.status == 0 ?"启用": "禁用"}}</a-button>
                     </template>
                 </template>
             </a-table>
@@ -113,9 +124,14 @@ export default {
             create_time: [],
             searchForm: {
                 name: '',
+                status: 1,
                 country: undefined,
             },
             tableData: [],
+            statusList: [
+                {name: "禁用", value: 0},
+                {name: "启用", value: 1},
+            ]
         };
     },
     watch: {},
@@ -127,6 +143,7 @@ export default {
                 { title: '手机号', dataIndex: 'phone' },
                 { title: '最近登录', dataIndex: 'last_login_time', key: 'time' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
+                { title: '状态', dataIndex: 'status', key: 'status' },
                 { title: '操作', key: 'operation', fixed: 'right', width: 100, },
             ]
             return columns
@@ -217,6 +234,18 @@ export default {
                 },
             });
         },
+        updateStatus(id) {
+            let _this = this;
+            Core.Api.Agent.updateStatus({id}).then(() => {
+                _this.getTableData();
+            }).catch(err => {
+                console.log("handleDelete err", err);
+             })
+        }
+
+
+
+
     }
 };
 </script>

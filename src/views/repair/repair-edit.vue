@@ -77,7 +77,7 @@
             <div class="form-item required">
                 <div class="key">相关客户</div>
                 <div class="value">
-                    <a-select placeholder="请选择相关客户" v-model:value="form.customer_id" @change="handleCustomerSelect" show-search option-filter-prop="children">
+                    <a-select placeholder="请选择相关客户" v-model:value="form.customer_id" @change="handleCustomerSelect" show-search  >
                         <a-select-option v-for="(item,index) of customerList" :key="index" :value="item.id">{{item.name}}</a-select-option>
                     </a-select>
                 </div>
@@ -262,7 +262,7 @@ export default {
 
         // 获取 车主列表
         getCustomerList() {
-            Core.Api.Customer.listByName().then(res => {
+            Core.Api.Customer.list().then(res => {
                 this.customerList = res.list
             })
         },

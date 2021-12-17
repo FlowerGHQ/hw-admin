@@ -57,6 +57,7 @@ const apiList = {
         detail: ['PostJson', 'agent/detail'], // 详情
         update: ['PostJson', 'agent/update'], // 更新
         delete: ['PostJson', 'agent/delete'], // 删除
+        updateStatus: ['PostJson', 'agent/update-status'], // 禁用
     },
     Customer: { // 客户管理
         list: ['PostJson', 'customer/list'],
@@ -141,6 +142,7 @@ const apiList = {
         update: ['PostJson', 'store/update'],
         detail: ['PostJson', 'store/detail'],
         delete: ['PostJson', 'store/delete'],
+        updateStatus: ['PostJson', 'store/update-status'], // 禁用
     },
     Notice: { // 系统消息
         list: ['PostJson', 'sys-message/list'],

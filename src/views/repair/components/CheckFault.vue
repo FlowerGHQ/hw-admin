@@ -149,12 +149,12 @@ export default {
                 this.failData[fault].forEach(item => {
                     item.item_fault_type = fault
                     item.type = 1
-                    itemList.push(it)
+                    itemList.push(item)
                 })
                 this.exchangeData[fault].forEach(item => {
                     item.item_fault_type = fault
                     item.type = 2
-                    itemList.push(it)
+                    itemList.push(item)
                 })
             })
             Core.Api.RepairItem.saveList({

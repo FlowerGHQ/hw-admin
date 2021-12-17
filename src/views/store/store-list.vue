@@ -24,6 +24,14 @@
               <!-- <a-input placeholder="请选择经销商" v-model:value="searchForm.agent_id" @keydown.enter='handleSearch'/> -->
             </div>
           </a-col>
+          <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+            <div class="key">状态:</div>
+            <div class="value">
+              <a-select  v-model:value="searchForm.status" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
+                <a-select-option v-for="(item,index) of statusList" :key="index" :value="item.value">{{item.name}}</a-select-option>
+              </a-select>
+            </div>
+          </a-col>
           <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
             <div class="key">创建时间：</div>
             <div class="value">
@@ -63,10 +71,13 @@
             <template v-if="column.key === 'time'">
               {{ $Util.timeFilter(text) }}
             </template>
+            <template v-if="column.key === 'status'">
+              {{ text == 0 ? '禁用' : '启用' }}
+            </template>
             <template v-if="column.key === 'operation'">
               <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
               <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改</a-button>
-              <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button>
+              <a-button type='link' @click="updateStatus(record.id)"> <i class="icon i_delete"/> {{record.status == 0 ?"启用": "禁用"}}</a-button>
             </template>
           </template>
         </a-table>
@@ -111,6 +122,7 @@ export default {
       create_time: [],
       searchForm: {
         name: '',
+        status: 1,
         contact_name:'',
         contact_phone:'',
         agent_id: undefined,
@@ -121,10 +133,15 @@ export default {
         {title: '联系人姓名', dataIndex: 'contact_name', key:'name'},
         {title: '联系人电话', dataIndex: 'contact_phone',key:'phone'},
         {title: '创建时间', dataIndex: 'create_time', key: 'time'},
+        { title: '状态', dataIndex: 'status', key: 'status' },
         {title: '操作', key: 'operation', fixed: 'right'},
       ],
       tableData: [],
       agentList: {},
+      statusList: [
+        {name: "禁用", value: 0},
+        {name: "启用", value: 1},
+      ]
     };
   },
   watch: {},
@@ -226,6 +243,14 @@ export default {
         },
       });
     },
+    updateStatus(id) {
+      let _this = this;
+      Core.Api.Store.updateStatus({id}).then(() => {
+        _this.getTableData();
+      }).catch(err => {
+        console.log("handleDelete err", err);
+      })
+    }
   }
 };
 </script>
