@@ -250,16 +250,16 @@ const routes = [
                     parent: '/warehouse/warehouse-list',
                 }
             },
-            {
-                path: 'warehouse-detail',
-                name: 'WarehouseDetail',
-                component: () => import('@/views/warehouse/warehouse-detail.vue'),
-                hidden: true,
-                meta: {
-                    title: '仓库详情',
-                    parent: '/warehouse/warehouse-list',
-                }
-            },
+            // {
+            //     path: 'warehouse-detail',
+            //     name: 'WarehouseDetail',
+            //     component: () => import('@/views/warehouse/warehouse-detail.vue'),
+            //     hidden: true,
+            //     meta: {
+            //         title: '仓库详情',
+            //         parent: '/warehouse/warehouse-list',
+            //     }
+            // },
         ]
     },
     {   // 商品 - 平台端
@@ -444,16 +444,16 @@ const routes = [
                 }
             },
 
-            {
-                path: 'customer-detail',
-                name: 'CustomerDetail',
-                component: () => import('@/views/customer/customer-detail.vue'),
-                hidden: true,
-                meta: {
-                    title: '客户详情',
-                    parent: '/customer/customer-list',
-                }
-            },
+            // {
+            //     path: 'customer-detail',
+            //     name: 'CustomerDetail',
+            //     component: () => import('@/views/customer/customer-detail.vue'),
+            //     hidden: true,
+            //     meta: {
+            //         title: '客户详情',
+            //         parent: '/customer/customer-list',
+            //     }
+            // },
         ]
     },
     {   // 员工管理
@@ -530,17 +530,16 @@ const routes = [
                 }
 
             },
-            {
-                path: 'notice-detail',
-                name: 'NoticeDetail',
-                component: () => import('@/views/notice/notice-detail.vue'),
-                hidden: true,
-                meta: {
-                    title: '系统详情',
-                    parent: '/notice/notice-list',
-                }
-
-            },
+            // {
+            //     path: 'notice-detail',
+            //     name: 'NoticeDetail',
+            //     component: () => import('@/views/notice/notice-detail.vue'),
+            //     hidden: true,
+            //     meta: {
+            //         title: '系统详情',
+            //         parent: '/notice/notice-list',
+            //     }
+            // },
         ]
     },
 ];
