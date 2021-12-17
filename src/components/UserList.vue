@@ -14,9 +14,11 @@
             <template v-if="column.dataIndex === 'type'">
               {{ $Util.userTypeFilter(text) }}
             </template>
-            <template v-if="column.dataIndex === 'flag_admin'">
-              <!-- $auth('ADMIN') == true ? {{ text ? '是' : '否' }} : {{ text ? '是' : '否' }} -->
-              <a-switch v-model:checked="checked1" checked-children="启用" un-checked-children="禁用" :change="swichChange(recond)"/>
+            <template v-if="column.dataIndex === 'flag_admin' && $auth('ADMIN') == true">
+              <a-switch v-model:checked="record.flag_admin" checked-children="启用" un-checked-children="禁用" @click="swichChange(record)" :checkedValue="1" :unCheckedValue="0"/>
+            </template>
+            <template v-if="column.dataIndex === 'flag_admin' && $auth('ADMIN') == false">
+              {{ text }}
             </template>
             <template v-if="column.key === 'item'">
               {{ text || '-' }}
@@ -84,8 +86,6 @@ export default {
       currPage: 1,
       pageSize: 20,
       total: 0,
-      // 滑块
-      checked1: true,
       // 表格数据
       tableData: [],
     };
@@ -112,14 +112,20 @@ export default {
   },
   methods: {
     swichChange(recond){
-      // this.loading = true;
-      Core.Api.User.setAdmin({recond}).then(res => {
+      this.loading = true;
+      let aid = 1;
+      if (recond.flag_admin) {
+        aid = 0;
+      }
+      console.log("rec-----", recond);
+      Core.Api.User.setAdmin({
+        id: recond.id,
+        flag_admin: 1
+      }).then(res => {
         console.log("swichChange res", res)
-        // this.total = res.count;
-        // this.tableData = res.list;
         this.getTableData();
       }).catch(err => {
-        console.log('getTableData err', err)
+        console.log('swichChange err', err)
       }).finally(() => {
         this.loading = false;
       });
@@ -171,7 +177,6 @@ export default {
         this.loading = false;
       });
     },
-
     handleDelete(id) {
       let _this = this;
       this.$confirm({
