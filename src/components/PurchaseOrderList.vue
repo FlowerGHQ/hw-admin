@@ -163,7 +163,7 @@ export default {
 <style lang="less" scoped>
 #PurchaseList {
     .status-tag {
-        width: 50px;
+        width: 72px;
         height: 22px;
         line-height: 22px;
         border-radius: 12px;
