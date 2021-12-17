@@ -18,7 +18,7 @@
           <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
             <div class="key">经销商：</div>
             <div class="value">
-              <a-select placeholder="请选择国家" v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
+              <a-select placeholder="请选择经销商" v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
                   <a-select-option v-for="(item,index) of agentList" :key="index" :value="item.name">{{item.name}}</a-select-option>
               </a-select>
               <!-- <a-input placeholder="请选择经销商" v-model:value="searchForm.agent_id" @keydown.enter='handleSearch'/> -->

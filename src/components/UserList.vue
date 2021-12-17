@@ -15,7 +15,8 @@
               {{ $Util.userTypeFilter(text) }}
             </template>
             <template v-if="column.dataIndex === 'flag_admin'">
-              {{ text ? '是' : '否' }}
+              <!-- $auth('ADMIN') == true ? {{ text ? '是' : '否' }} : {{ text ? '是' : '否' }} -->
+              <a-switch v-model:checked="checked1" checked-children="启用" un-checked-children="禁用" :change="swichChange(recond)"/>
             </template>
             <template v-if="column.key === 'item'">
               {{ text || '-' }}
@@ -83,7 +84,9 @@ export default {
       currPage: 1,
       pageSize: 20,
       total: 0,
-
+      // 滑块
+      checked1: true,
+      // 表格数据
       tableData: [],
     };
   },
@@ -108,6 +111,19 @@ export default {
     this.getTableData();
   },
   methods: {
+    swichChange(recond){
+      // this.loading = true;
+      Core.Api.User.setAdmin({recond}).then(res => {
+        console.log("swichChange res", res)
+        // this.total = res.count;
+        // this.tableData = res.list;
+        this.getTableData();
+      }).catch(err => {
+        console.log('getTableData err', err)
+      }).finally(() => {
+        this.loading = false;
+      });
+    },
     routerChange(type, item = {}) {
       console.log(item)
       let routeUrl = ''
