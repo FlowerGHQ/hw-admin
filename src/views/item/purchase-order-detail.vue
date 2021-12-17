@@ -4,11 +4,11 @@
             <div class="title-container">
                 <div class="title-area">采购订单详情</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handlePurchaseStatus('payment')" v-if="detail.status == Core.Const.PURCHASE.STATUS.WAIT_PAY" ><i class="icon i_check_c"/>付款</a-button>
-                    <a-button type="primary" @click="handlePurchaseStatus('deliver')"  v-if="detail.status == Core.Const.PURCHASE.STATUS.WAIT_DELIVER" ><i class="icon i_check_c"/>发货</a-button>
-                    <a-button type="primary" @click="handlePurchaseStatus('takeDeliver')"  v-if="detail.status == Core.Const.PURCHASE.STATUS.WAIT_TAKE_DELIVER" ><i class="icon i_edit"/>确认收货</a-button>
-                    <a-button type="primary" @click="handlePurchaseStatus('review')" v-if="detail.status == Core.Const.PURCHASE.STATUS.WAIT_REVIEW"  ><i class="icon i_edit"/>评论</a-button>
-                    <a-button type="primary" @click="handlePurchaseStatus('cancel')"  v-if="detail.status == Core.Const.PURCHASE.STATUS.WAIT_PAY" ><i class="icon i_edit"/>关闭</a-button>
+                    <a-button type="primary" @click="handlePurchaseStatus('payment')" v-if="detail.status == PURCHASE.STATUS.WAIT_PAY && $auth('ADMIN')" ><i class="icon i_check_c"/>付款</a-button>
+                    <a-button type="primary" @click="handlePurchaseStatus('deliver')"  v-if="detail.status == PURCHASE.STATUS.WAIT_DELIVER && $auth()" ><i class="icon i_check_c"/>发货</a-button>
+                    <a-button type="primary" @click="handlePurchaseStatus('takeDeliver')"  v-if="detail.status == PURCHASE.STATUS.WAIT_TAKE_DELIVER && $auth('AGENT', 'STORE')" ><i class="icon i_edit"/>确认收货</a-button>
+                    <a-button type="primary" @click="handlePurchaseStatus('review')" v-if="detail.status == PURCHASE.STATUS.WAIT_REVIEW && $auth('AGENT', 'STORE')"  ><i class="icon i_edit"/>评论</a-button>
+                    <a-button type="primary" @click="handlePurchaseStatus('cancel')"  v-if="detail.status == PURCHASE.STATUS.WAIT_PAY && $auth('AGENT', 'STORE')" ><i class="icon i_edit"/>关闭</a-button>
 
                 </div>
             </div>
@@ -115,10 +115,12 @@
                                     </div>
                                     <div class="info-item">
                                         <div class="key">物流信息</div>
-                                        <div class="value">{{waybill.uid}}</div>
-                                        <div class="value">{{waybill.companyUid}}</div>
-                                        <WaybillShow v-if="waybillInfo" :detail='waybill' :list='waybillInfo.list' :can-edit='true'/>
-                                        <template v-else>暂无物流信息</template>
+<!--                                        <div class="value">{{waybill.uid}}</div>-->
+                                        <div class="value">
+                                            <WaybillShow v-if="waybillInfo" :detail='waybill' :list='waybillInfo.list' :can-edit="$auth('ADMIN')"/>
+                                            <template v-else>暂无物流信息</template>
+                                        </div>
+
 <!--                                        <div class="value">{{waybillInfo}}</div>-->
                                     </div>
                                 </a-col>
@@ -199,6 +201,7 @@ export default {
     data() {
         return {
             loginType: Core.Data.getLoginType(),
+            PURCHASE: Core.Const.PURCHASE,
             // 加载
             loading: false,
             id: '',
@@ -256,22 +259,22 @@ export default {
         },
         getWaybill() {
             Core.Api.Waybill.detailByTarget({
-                targetId: this.id,
-                targetType: Core.Const.WAYBILL.TARGET_TYPE.PURCHASE_ORDER,
+                target_id: this.id,
+                target_type: Core.Const.WAYBILL.TARGET_TYPE.PURCHASE_ORDER,
                 type: Core.Const.WAYBILL.TYPE.OUT,
             }).then(res => {
-                this.waybill = res
-                this.getWaybillInfo(this.waybill.uid, this.waybill.companyUid)
+                this.waybill = res.detail
+                this.getWaybillInfo(this.waybill.uid, this.waybill.company_uid)
                 // this.getWaybillInfo("JD0060147134468", this.waybill.companyUid)
             }).catch(err => {
                 console.log('getRepairDetail err', err)
             }).finally(() => {
             });
         },
-        getWaybillInfo(uid, companyUid) {
+        getWaybillInfo(uid, company_uid) {
             Core.Api.Waybill.queryLogistics({
                 uid: uid,
-                company_uid: companyUid,
+                company_uid: company_uid,
             }).then(res => {
                 this.waybillInfo = JSON.parse(res.waybill).result
                 console.log('waybillInfo', this.waybillInfo)
@@ -284,7 +287,7 @@ export default {
         },
         handlePurchaseItemSearch() {
             Core.Api.Purchase.itemList({
-                id: this.id
+                order_id: this.id
             }).then(res => {
                 this.totle_amount = 0
                 this.totle_charge = 0
