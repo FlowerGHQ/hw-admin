@@ -141,8 +141,9 @@ export default {
             Core.Data.setUser('');
             Core.Data.setAuthority('');
             this.$router.replace('/login');
-            Core.Api.Common.logout();
-            Core.Data.setToken('');
+            Core.Api.Common.logout().finally(() => {
+                Core.Data.setToken('');
+            });
         },
     }
 };

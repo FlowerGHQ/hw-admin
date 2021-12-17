@@ -156,7 +156,7 @@ const routes = [
             },
         ]
     },
-    {   // 门店管理
+    {   // 门店管理 - 平台端&经销商端
         path: '/store',
         component: Layout,
         redirect: '/store/store-list',
@@ -165,7 +165,7 @@ const routes = [
             title: '门店管理',
             icon: 'i_s_temp',
             // auth: ['dashboard'],
-            // roles: [LOGIN_TYPE.ADMIN],
+            roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.AGENT],
         },
         children: [
             {
@@ -198,6 +198,27 @@ const routes = [
             },
         ]
     },
+    {   // 门店管理 - 门店端
+        path: '/store/store-detail-sp',
+        component: Layout,
+        meta: {
+            title: '门店管理',
+            icon: 'i_s_temp',
+            roles: [LOGIN_TYPE.STORE],
+        },
+        children: [
+            {
+                path: '',
+                name: 'StoreManagementSp',
+                component: () => import('@/views/store/store-detail.vue'),
+                meta: {
+                    title: '门店详情',
+                    roles: [LOGIN_TYPE.STORE],
+                    is_sub_menu: true
+                }
+            },
+        ]
+    },
     {   // 仓库
         path: '/warehouse',
         component: Layout,
@@ -207,7 +228,7 @@ const routes = [
             title: '仓库管理',
             icon: 'i_s_temp',
             // auth: ['dashboard'],
-            // roles: [LOGIN_TYPE.ADMIN],
+            roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
             {

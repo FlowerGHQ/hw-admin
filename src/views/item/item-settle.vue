@@ -25,14 +25,14 @@
                         </a-select>
                     </div>
                 </div>
-                <div class="form-item">
-                    <div class="key">大致地址</div>
+                <div class="form-item required">
+                    <div class="key">收货地址</div>
                     <div class="value">
                         <AddressCascader @change='handleAddressSelect' :default-address='[form.province, form.city, form.county]'/>
                     </div>
                 </div>
-                <div class="form-item required">
-                    <div class="key">详细地址</div>
+                <div class="form-item">
+                    <div class="key"></div>
                     <div class="value">
                         <a-input v-model:value="form.address" placeholder="请输入详细地址"/>
                     </div>
@@ -233,7 +233,7 @@ export default {
             if (!form.phone) {
                 return this.$message.warning('请输入收货人联系方式')
             }
-            if (!form.address) {
+            if (!form.province || !form.city || !form.county || !form.address) {
                 return this.$message.warning('请输入收货地址')
             }
             this.loading = true

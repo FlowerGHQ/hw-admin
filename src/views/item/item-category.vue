@@ -43,7 +43,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="handleModalShow(record, record)"> <i class="icon i_edit"/> 编辑</a-button>
+                        <a-button type='link' @click="handleModalShow(record, record)"> <i class="icon i_edit"/> 编辑名称</a-button>
+                        <a-button type='link' @click="handleConfigShow(record)"> <i class="icon i_hint"/> 商品配置</a-button>
                         <a-button type='link' @click="handleModalShow({parent_id: record.id}, null,record)"> <i class="icon i_add"/> 新增子分类</a-button>
                         <a-button type='link' @click="handleDelete(record)"> <i class="icon i_delete"/> 删除</a-button>
                     </template>
@@ -78,21 +79,25 @@ export default {
             // 加载
             loading: false,
             // 搜索
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            create_time: [],
             searchForm: {
                 name: '',
             },
             tableData: [],
 
-            modalVisible: false,
             expandedRowKeys: [],
+
             editNode: null,
             parentNode: null,
+            modalVisible: false,
             editForm: {
                 id: '',
                 parent_id: '',
                 name: '',
+            },
+
+            configForm: {
+                id: '',
+                config: [],
             },
         };
     },
@@ -166,6 +171,7 @@ export default {
                 this.loading = false;
             });
         },
+        // 节点展开与关不
         handleExpandedChange(expanded, record) {
             console.log('handleExpandedChange expanded:', expanded, 'record', record)
             if (expanded) {
@@ -178,6 +184,7 @@ export default {
             }
         },
 
+        // 编辑与新增子类
         handleModalShow({parent_id = 0, id, name}, node = null, parent = null) {
             this.editForm = {
                 id: id,
@@ -189,7 +196,7 @@ export default {
             this.editNode = node
             this.modalVisible = true
         },
-        handleModalSubmit() {
+        handleModal() {
             let form = Core.Util.deepCopy(this.editForm)
             if (!form.name) {
                 return this.$message.warning('请输入分类名称')
@@ -218,6 +225,7 @@ export default {
 
         },
 
+        // 删除分类
         handleDelete(record){
             this.loading = false;
             let _this = this
@@ -245,6 +253,13 @@ export default {
                 },
             });
         },
+
+        // 编辑分类配置
+        handleConfigShow() {
+
+        },
+        handleConfigSubmit() {
+        }
     }
 };
 </script>
