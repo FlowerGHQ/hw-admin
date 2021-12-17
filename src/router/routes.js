@@ -131,6 +131,7 @@ const routes = [
                 meta: {
                     title: '经销商详情',
                     parent: '/agent/agent-list',
+                    roles: [LOGIN_TYPE.ADMIN],
                 }
             },
         ]
