@@ -171,7 +171,7 @@ export default {
     },
     mounted() {
         this.getTableData();
-        this.getStatusStat()
+        this.getStatusStat();
     },
     methods: {
         routerChange(type, item = {}) {

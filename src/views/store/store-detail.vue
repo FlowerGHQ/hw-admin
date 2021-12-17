@@ -4,7 +4,7 @@
         <div class="title-area">门店详情</div>
         <div class="btns-area">
             <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
-            <a-button type="primary" ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button>
+            <a-button type="primary" ghost @click="handleDelete(store_id)"><i class="icon i_delete"/>删除</a-button>
         </div>
     </div>
     <div class="gray-panel">
@@ -79,6 +79,44 @@ export default {
         this.getStoreDetail();
     },
     methods: {
+        routerChange(type) {
+            let routeUrl = ''
+            switch (type) {
+                case 'edit':  // 编辑
+                    routeUrl = this.$router.resolve({
+                        path: "/store/store-edit",
+                        query: { id: this.store_id }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'list':  // 列表
+                    routeUrl = this.$router.resolve({
+                        path: "/store/store-list",
+                        query: { id: this.store_id }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+            }
+        },
+        // 删除门店
+        handleDelete(id) {
+            let _this = this;
+            this.$confirm({
+                title: '确定要删除该门店吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    console.log(_this.store_id);
+                    Core.Api.Store.delete({id}).then(() => {
+                        _this.$message.success('删除成功');
+                        _this.routerChange('list');
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
         getStoreDetail(){
             this.loading = true;
             Core.Api.Store.detail({

@@ -1570,25 +1570,49 @@ let Const = {
 	},
 
 	PURCHASE: { // 采购订单
+		STATUS: {
+			INIT: 0 ,
+			WAIT_PAY: 100 ,
+			WAIT_DELIVER: 200 ,
+			WAIT_TAKE_DELIVER: 300 ,
+			WAIT_REVIEW: 400 ,
+			DEAL_SUCCESS: 500 ,
+			CLOSE: 1000 ,
+
+
+			'0' : '未知',
+			'100': '待支付',
+			'200': '待发货',
+			'300': '已发货',
+			'400': '待评论',
+			'500': '交易成功',
+			'1000': '交易关闭',
+		},
         STATUS_MAP: {
             '0' : '未知',
             '100': '待支付',
-            '200': '已支付',
-            '300': '交易成功',
-            '400': '已关闭',
+            '200': '待发货',
+            '300': '已发货',
+            '400': '待评论',
+	        '500': '交易成功',
+	        '1000': '交易关闭',
         },
         STATUS_COLOR_MAP: {
             '0': 'red',
             '100': 'yellow',
             '200': 'orange',
-            '300': 'green',
+            '300': 'primary',
             '400': 'blue',
-            '-400': 'blue',
+	        '500': 'green',
         },
 		PAY_METHOD:{
 			1: "支付宝",
 			2: "微信",
 		},
+		PAY_METHOD_LIST:[
+			{ name: '支付宝', value: '1' },
+			{ name: '微信', value: '2' },
+		],
 
 	},
 	WAYBILL:{
@@ -1614,6 +1638,22 @@ let Const = {
 			'CHINAPOST': '邮政包裹',
 			'KYEXPRESS': '跨越速运',
 		},
+		COMPANY_LIST: [
+			{ name: 'EMS', value: 'EMS' },
+			{ name: '京东物流', value: 'JD' },
+			{ name: '申通快递', value: 'STO' },
+			{ name: '圆通速递', value: 'YTO' },
+			{ name: '中通快递', value: 'ZTO' },
+			{ name: '百世快递', value: 'HTKY' },
+			{ name: '百世快运', value: 'BSKY' },
+			{ name: '韵达快递', value: 'YUNDA' },
+			{ name: '德邦快递', value: 'DEPPON' },
+			{ name: '顺丰速运', value: 'SFEXPRESS' },
+			{ name: '邮政包裹', value: 'CHINAPOST' },
+			{ name: '跨越速运', value: 'KYEXPRESS' },
+
+
+		],
 	},
 
 

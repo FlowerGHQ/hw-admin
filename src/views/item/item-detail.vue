@@ -1,82 +1,82 @@
 <template>
-    <div id="ItemDetail" class='list-container'>
-        <div class="content">
-            <div class="title">商品详情</div>
-            <div class="content-top" >
-                <div class="info-block">
-                    <img :src="$Util.imageFilter(detail.imgs ? detail.imgs : '', 2)" />
-                </div>
-                <div class="info-block">
-                    <p>商品名:{{detail.name}}</p>
-                    <p>{{detail.price}}</p>
+    <div id="ItemDetail">
+        <div class="list-container">
+            <div class="title-container">
+                <div class="title-area">商品详情</div>
+                <div class="btns-area">
+                    <a-button type="primary" @click="routerChange('edit')"  ><i class="icon i_edit"/>编辑</a-button>
+                    <a-button type="primary" @click="handleDelete(this.id)"  ><i class="icon i_edit"/>删除</a-button>                
                 </div>
             </div>
-            <div class="content-middle">
-                <div class="info-block">
-                    <div class="title">详情信息</div>
-                    <p>商品编码：</p>
-                    <p class="data">{{detail.code}}</p>
-                    <!-- <p>商品货号：</p>
-                    <p class="data">{{detail.config}}</p> -->
-                    <p>商品分类：</p>
-                    <p class="data">{{detail.category_id}}</p>
-                    <!-- <p>商品品牌：{{detail.brand}}</p> -->
-                </div>
-                <div class="info-block">
-                    <!-- <p>商品条码：</p>
-                    <p class="data">{{detail.name}}</p> -->
-                    <!-- <p>生产商： </p>
-                    <p class="data">{{detail.name}}</p> -->
-                    <p>上架日期：</p>
-                    <p class="data">{{detail.createTime}}</p>
-                    <!-- <p>上架员工：</p>
-                    <p class="data">{{detail.name}}</p> -->
+            <div class="gray-panel">
+                <div class="panel-content">
+                    <div class="content-top">
+                        <div class="info-block-top">
+                            <img :src="$Util.imageFilter(detail.logo ? detail.logo : '', 2)" />
+                        </div>
+                        <div class="info-block-top">
+                            <p class="p1">商品名:{{detail.name}}</p>
+                            <p class="p2">{{detail.price}}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="content-bottom">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                    :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
-                    <template #bodyCell="{ column, text , record }">
-                        <template v-if="column.dataIndex === 'sn'">
-                            <a-tooltip placement="top" :title='text'>
-                                <a-button type="link" @click="routerChange('detail', record)">{{text}}</a-button>
-                            </a-tooltip>
-                        </template>
-                       <template v-if="column.key === 'item'">
-                            {{ text || '-'}}
-                        </template>
-                        <template v-if="column.key === 'time'">
-                            {{ $Util.timeFilter(text) }}
-                        </template>
-                    </template>
-                </a-table>
+            <div class="form-container">
+                <div class="info">
+                    <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
+                    <template #expandIcon ><i class="icon i_expan_l"/> </template>
+                        <a-collapse-panel key="PurchaseInfo" header="详情信息" class="gray-collapse-panel">
+                            <a-row class="panel-content info-container">
+                                <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
+                                    <div class="info-item">
+                                        <div class="key">商品编码</div>
+                                        <div class="value">{{detail.code || '-'}}</div>
+                                    </div>
+                                    <!-- <div class="info-item">
+                                        <div class="key">商品货号</div>
+                                        <div class="value">{{detail.config || '-'}}</div>
+                                    </div> -->
+                                    <div class="info-item">
+                                        <div class="key">商品分类</div>
+                                        <div class="value">{{detail.category_id || '-'}}</div>
+                                    </div>
+                                    <!-- <div class="info-item">
+                                        <div class="key">商品品牌</div>
+                                        <div class="value">{{detail.brand || '-'}}</div>
+                                    </div> -->
+                                </a-col>
+                                <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
+                                    <!-- <div class="info-item">
+                                        <div class="key">商品条码：</div>
+                                        <div class="value">{{detail.category_id || '-'}}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="key">生产商：</div>
+                                        <div class="value">{{detail.category_id || '-'}}</div>
+                                    </div> -->
+                                    <div class="info-item">
+                                        <div class="key">上架日期</div>
+                                        <div class="value">{{$Util.timeFilter(detail.create_time) || '-'}}</div>
+                                    </div>
+                                    <!-- <div class="info-item">
+                                        <div class="key">上架员工:</div>
+                                        <div class="value">{{detail.name || '-'}}</div>
+                                    </div> -->
+                                </a-col>
+                            </a-row>
+                        </a-collapse-panel>
+                    </a-collapse>
+                </div>
             </div>
-            <div class="paging-container">
-                <a-pagination
-                    v-model:current="currPage"
-                    :page-size='pageSize'
-                    :total="total"
-                    show-quick-jumper
-                    show-size-changer
-                    show-less-items
-                    :show-total="total => `共${total}条`"
-                    :hide-on-single-page='false'
-                    :pageSizeOptions="['10', '20', '30', '40']"
-                    @change="pageChange"
-                    @showSizeChange="pageSizeChange"
-                />
-            </div>
-        </div>
-        <div class="bottom">
-            <a-button type="primary" @click="onSubmit">保存并下载</a-button>
-            <a-button style="margin-left: 10px">返回详情</a-button>
         </div>
     </div>
 </template>
+
 <script>
 import Core from '../../core';
+
 export default {
-    name: 'ItemDetail',
+    name: 'RepairDetail',
     components: {},
     props: {},
     data() {
@@ -84,46 +84,23 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            // 分页
-            currPage: 1,
-            pageSize: 20,
-            total: 0,
-            id: 0,
-            // 搜索
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            create_time: [],
-            searchForm: {
-                id: '',
-                name: '',
-            },
-            detail:{},
-            tableData: [],
+            id: '',
+            detail: {}, // 采购单详情
+            activeKey:0,
         };
     },
     watch: {},
-    computed: {
-        tableColumns() {
-            let columns = [
-                { title: '用户名', dataIndex: 'purchaser', key: 'item' },
-                { title: '订单编号', dataIndex: 'item_code', key: 'item' },
-                // { title: '联系方式', dataIndex: 'charge' },
-                { title: '下单时间', dataIndex: 'create_time', key: 'time' },
-                // { title: '备注', dataIndex: 'type' },
-            ]
-            return columns
-        },
-    },
+    computed: {},
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         this.getItemDetail();
-        this.getTableData();
     },
     methods: {
         handleDelete(id){
             let _this = this;
-            // console.log("handleDelete id", id)
+            console.log("handleDelete id", id)
             this.$confirm({
-                title: '确定要删除该员工吗？',
+                title: '确定要删除该商品吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',
@@ -139,21 +116,24 @@ export default {
         },
         routerChange(type, item = {}) {
             let routeUrl = ''
+            let _this = this;
             switch (type) {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/user/user-edit",
-                        query: { id: item.id }
+                        path: "/item/item-edit",
+                        query: { id: this.id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/user/user-detail",
-                        query: { id: item.id }
+                        path: "/item/item-detail",
+                        query: { id: this.id }
                     })
-                    // window.open(routeUrl.href, '_blank')
                     window.open(routeUrl.href, '_self')
+                    break;
+                case 'back':
+                    this.$router.go(-1)
                     break;
             }
         },
@@ -179,90 +159,39 @@ export default {
                 this.loading = false;
             });
         },
-        getTableData() {  // 获取 表格 数据
-            this.loading = true;
-            // this.loading = false;
-            Core.Api.Purchase.itemByIdList({
-                item_id: this.id,
-                page: this.currPage,
-                page_size: this.pageSize
-            }).then(res => {
-                console.log("getTableData res:", res)
-                this.total = res.count;
-                this.tableData = res.list;
-            }).catch(err => {
-                console.log('getTableData err:', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
     }
 };
 </script>
 
 <style lang="less" scoped>
 #ItemDetail {
-    padding: 20px 184px 0 126px;
-    box-sizing: border-box;
-    width: 1264px;
-    height: 1726px;
-    // border-radius: 6px 6px 6px 6px;
-    .content {
-        // border-radius: 1px;
-        .content-top {
-            height: 160px;
-            margin-top: 20px;
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-           .info-block{
-                flex: 1;
+    .content-top {
+        padding-bottom: 0 20px;
+        display: flex;
+        .info-block-top{
+            padding-right: 20px;
+            img {
+                width: 120px;
+                height: 120px;
+                background: #F3F3F3;
+                border-radius: 4px 4px 4px 4px;
+            }
+            .p1{
+                height: 28px;
+                font-size: 16px;
+                color: rgba(0, 0, 0, 0.85);
+                line-height: 28px;
+            }
+            .p2{
+                height: 20px;
+                font-size: 14px;
+                font-weight: 500;
+                color: #F4752E;
+                line-height: 20px;
+                padding-top: 20px;
             }
         }
-        .content-middle {
-            height: 285px;
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            padding-bottom: 20px;
-            .info-block {
-                flex: 1;
-            }
-        }
-        .content-bottom {
-            // width: 1224px;
-            height: 438px;
-            background: #F8FAFC;
-            border-radius: 4px 4px 4px 4px;
-            opacity: 1;
-        }
-    }
-    .bottom {
-        margin-bottom: 0px;
     }
 }
-.title{
-    font-size: 12px;
-    font-weight: 500;
-    color: #000022;
-    line-height: 17px;
-}
-.data {
-    // width: 24px;
-    height: 17px;
-    font-size: 12px;
-    font-weight: 400;
-    color: #363D42;
-    line-height: 17px;
-}
-p{
-    // width: 48px;
-    height: 17px;
-    font-size: 12px;
-    color: #8090A6;
-    line-height: 17px;
-}
-img{
-    width: 100px;
-}
+
 </style>

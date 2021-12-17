@@ -34,9 +34,9 @@
                 </a-col>
             </a-row>
             <div class='desc-stat'>
-                <a-statistic title="门店数" :value="0" />
+                <a-statistic title="门店数" :value="detail.store_count" />
                 <a-divider type="vertical" />
-                <a-statistic title="员工数" :value="0"/>
+                <a-statistic title="员工数" :value="detail.user_count"/>
                 <a-divider type="vertical" />
                 <a-statistic title="累计营收" :value="0" :precision="2" prefix='￥'/>
                 <a-divider type="vertical" />

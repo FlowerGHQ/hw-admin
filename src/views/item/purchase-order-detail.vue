@@ -4,11 +4,11 @@
             <div class="title-container">
                 <div class="title-area">采购订单详情</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="" ><i class="icon i_check_c"/>付款</a-button>
-                    <a-button type="primary" @click=""  ><i class="icon i_check_c"/>发货</a-button>
-                    <a-button type="primary" @click=""  ><i class="icon i_edit"/>确认收货</a-button>
-                    <a-button type="primary" @click=""  ><i class="icon i_edit"/>评论</a-button>
-                    <a-button type="primary" @click=""  ><i class="icon i_edit"/>关闭</a-button>
+                    <a-button type="primary" @click="handlePurchaseStatus('payment')" v-if="detail.status == Core.Const.PURCHASE.STATUS.WAIT_PAY" ><i class="icon i_check_c"/>付款</a-button>
+                    <a-button type="primary" @click="handlePurchaseStatus('deliver')"  v-if="detail.status == Core.Const.PURCHASE.STATUS.WAIT_DELIVER" ><i class="icon i_check_c"/>发货</a-button>
+                    <a-button type="primary" @click="handlePurchaseStatus('takeDeliver')"  v-if="detail.status == Core.Const.PURCHASE.STATUS.WAIT_TAKE_DELIVER" ><i class="icon i_edit"/>确认收货</a-button>
+                    <a-button type="primary" @click="handlePurchaseStatus('review')" v-if="detail.status == Core.Const.PURCHASE.STATUS.WAIT_REVIEW"  ><i class="icon i_edit"/>评论</a-button>
+                    <a-button type="primary" @click="handlePurchaseStatus('cancel')"  v-if="detail.status == Core.Const.PURCHASE.STATUS.WAIT_PAY" ><i class="icon i_edit"/>关闭</a-button>
 
                 </div>
             </div>
@@ -16,7 +16,7 @@
                 <a-steps>
                     <a-step v-for="(item, index) of stepsList" :key="index" :status="item.status" :title="item.title">
                         <template #icon>
-                            <span v-if="item.status == 'finish'" class="circle icon i_click"/>
+                            <span v-if="item.status == detail.status" class="circle icon i_click"/>
                             <span v-else class="circle">{{index + 1}}</span>
                         </template>
                     </a-step>
@@ -129,22 +129,44 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="modalFailShow" width="600px" title="商品" @ok="">
+            <a-modal v-model:visible="paymentShow" width="600px" title="支付" @ok="handlePayment">
                 <div class="modal-content">
-                    <div class="form-item">
-                        <div class="key">维修结果</div>
+                    <div class="form-item required">
+                        <div class="key">支付方式</div>
                         <div class="value">
-<!--                            <a-select v-model:value="repairForm.results" placeholder="请选择维修结果">-->
-<!--                                <a-select-option v-for="results of resultsList" :key="results.value" :value="results.value">{{results.name}}</a-select-option>-->
-<!--                            </a-select>-->
+                            <a-select v-model:value="form.pay_method" placeholder="请选择支付方式">
+                                <a-select-option v-for="pay of payMethodList" :key="pay.value" :value="pay.value">{{pay.name}}</a-select-option>
+                            </a-select>
                         </div>
                     </div>
-<!--                    <div class="form-item" v-if="repairForm.results == Core.Const.REPAIR.RESULTS.FAIL">-->
-<!--                        <div class="key">失败原因</div>-->
-<!--                        <div class="value">-->
-<!--                            <a-input v-model:value="repairForm.fail_remark" placeholder="请输入失败原因"/>-->
-<!--                        </div>-->
-<!--                    </div>-->
+                </div>
+            </a-modal>
+            <a-modal v-model:visible="deliverShow" width="600px" title="发货" @ok="handleDeliver">
+                <div class="modal-content">
+                    <div class="form-item required">
+                        <div class="key">快递公司</div>
+                        <div class="value">
+                            <a-select v-model:value="form.company_uid" placeholder="请选择快递公司">
+                                <a-select-option v-for="company of companyUidList" :key="company.value" :value="company.value">{{company.name}}</a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                    <div class="form-item required" >
+                        <div class="key">快递单号</div>
+                        <div class="value">
+                            <a-input v-model:value="form.waybill_uid" placeholder="请输入快递单号"/>
+                        </div>
+                    </div>
+                </div>
+            </a-modal>
+            <a-modal v-model:visible="reviewShow" width="600px" title="评价" @ok="handleReview">
+                <div class="modal-content">
+                    <div class="form-item">
+                        <div class="key">评论</div>
+                        <div class="value">
+                            <a-input v-model:value="form.review" placeholder="请输入评论"/>
+                        </div>
+                    </div>
                 </div>
             </a-modal>
         </template>
@@ -159,7 +181,6 @@ import PurchaseInfo from "./components/PurchaseInfo.vue"
 import WaybillShow from "@/components/WaybillShow.vue"
 
 
-const REPAIR = Core.Const.REPAIR
 const purchaseItemColumns = [
     { title: '商品', dataIndex: 'item_name' },
     { title: '单价', dataIndex: 'unit_price'  },
@@ -186,19 +207,30 @@ export default {
             active: null,
             waybill: '',
             waybillInfo: '',
-            modalFailShow: false,
+            paymentShow: false,
+            deliverShow: false,
+            reviewShow: false,
             totle_amount: 0,
             totle_price: 0,
             totle_charge: 0,
+            payMethodList: Core.Const.PURCHASE.PAY_METHOD_LIST,
+            companyUidList: Core.Const.WAYBILL.COMPANY_LIST,
+            form: {
+                pay_method: undefined,
+                company_uid: undefined,
+                waybill_uid: '',
+                review: '',
+            },
             purchaseItemList: [],
             purchaseLoading: false,
             purchaseItemColumns: purchaseItemColumns,
             Core: Core,
             stepsList: [
-                {status: 'finish', title: '已分配工单'},
-                {status: 'process', title: '确认中...'},
-                {status: 'wait', title: '待检测维修'},
-                {status: 'wait', title: '工单完成'},
+                {status: '100', title: '支付'},
+                {status: '200', title: '发货'},
+                {status: '300', title: '收货'},
+                {status: '400', title: '评论'},
+                {status: '500', title: '交易成功'},
             ],
         };
     },
@@ -211,14 +243,12 @@ export default {
         this.getWaybill()
     },
     methods: {
-        repairDetection() {
-            this.$refs.CheckFault.repairDetection();
-        },
         getPurchaseInfo() {
             Core.Api.Purchase.detail({
                 id: this.id
             }).then(res => {
                 this.detail = res
+                console.log('getRepairDetail err', res)
             }).catch(err => {
                 console.log('getRepairDetail err', err)
             }).finally(() => {
@@ -271,6 +301,91 @@ export default {
                 this.loading = false;
             });
         },
+        handlePurchaseStatus(val) {
+            switch (val){
+                case "payment":
+                    this.paymentShow = true
+                    break;
+                case "deliver":
+                    this.deliverShow = true
+                    break;
+                case "takeDeliver":
+                    Core.Api.Purchase.takeDeliver({
+                        id: this.id
+                    }).then(res => {
+                        this.$message.success('收货成功')
+                        this.getPurchaseInfo()
+                    }).catch(err => {
+                        console.log('getRepairDetail err', err)
+                    }).finally(() => {
+                        this.loading = false;
+                    });
+                    break;
+                case "review":
+                    this.reviewShow = true
+                    break;
+                case "cancel":
+                    Core.Api.Purchase.cancel({
+                        id: this.id
+                    }).then(res => {
+                        this.getPurchaseInfo()
+                    }).catch(err => {
+                        this.$message.success('取消成功')
+                        console.log('getRepairDetail err', err)
+                    }).finally(() => {
+                        this.loading = false;
+                    });
+                    break;
+            }
+        },
+        handlePayment(){
+            Core.Api.Purchase.payment({
+                id: this.id,
+                ...this.form
+            }).then(res => {
+                this.getPurchaseInfo()
+                this.paymentShow = false
+            }).catch(err => {
+                console.log('getRepairDetail err', err)
+                this.$message.success('支付成功')
+            }).finally(() => {
+                this.loading = false;
+
+            });
+        },
+        handleDeliver(){
+            Core.Api.Purchase.deliver({
+                id: this.id,
+                ...this.form
+            }).then(res => {
+                this.getPurchaseInfo()
+                this.deliverShow = false
+                this.$message.success('发货成功')
+            }).catch(err => {
+                console.log('getRepairDetail err', err)
+            }).finally(() => {
+                this.loading = false;
+
+            });
+        },
+        handleReview(){
+            Core.Api.Purchase.review({
+                id: this.id,
+                ...this.form
+            }).then(res => {
+                this.getPurchaseInfo()
+                this.$message.success('评论成功')
+                this.reviewShow = false
+            }).catch(err => {
+                console.log('getRepairDetail err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+
+
+
+
     }
 };
 </script>
