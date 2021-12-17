@@ -5,8 +5,9 @@
             <a-tab-pane :key="0" tab="全部"></a-tab-pane>
             <a-tab-pane v-for="item of categoryList" :key="item.id" :tab="item.name"></a-tab-pane>
             <template #rightExtra>
-                <a-input class="search" v-model:value="searchForm.name" placeholder="商品名称" @keydown.enter="pageChange(1)">
-                    <template #prefix><i class="icon i_search" @click="pageChange(1)"/></template>
+                <a-input class="search" v-model:value="searchForm.name" placeholder="商品名称" @pressEnter="handleSearch" >
+                    <template #prefix><i class="icon i_search" @click="handleSearch"/></template>
+                    <template #suffix><i class="icon i_close_b" @click="handleNameReset" v-if="searchForm.name"/></template>
                 </a-input>
                 <a-button type="primary" class="add" @click="routerChange('edit')" v-if="$auth('ADMIN')"><i class="icon i_add"/>新增商品</a-button>
                 <template v-else>
@@ -177,6 +178,13 @@ export default {
             this.pageSize = size
             this.getTableData()
         },
+        handleSearch() {  // 搜索
+            this.pageChange(1);
+        },
+        handleNameReset() {  // 重置名称
+            this.searchForm.name = ''
+            this.pageChange(1);
+        },
         handleCategoryChange(category) {
             console.log('handleCategoryChange category:', category)
             this.searchForm.category_id = category
@@ -187,7 +195,6 @@ export default {
         },
         getTableData() { // 获取 商品 数据
             this.loading = true;
-                console.log('this.searchForm.name:', this.searchForm.name)
             Core.Api.Item.list({
                 category_id: this.searchForm.category_id,
                 name: this.searchForm.name,
@@ -273,6 +280,13 @@ export default {
                         .icon.i_search {
                             font-size: 16px;
                             padding-right: 4px;
+                        }
+                        .icon.i_close_b {
+                            font-size: 14px;
+                            color: rgba(0, 0, 0, 0.25);
+                            &:hover {
+                                color: rgba(0, 0, 0, 0.45);
+                            }
                         }
                         .ant-input {
                             background-color: transparent;
