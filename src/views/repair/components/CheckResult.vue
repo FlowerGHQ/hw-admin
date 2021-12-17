@@ -46,7 +46,6 @@ export default {
     props: {
         id: {
             type: Number,
-            default: () => {return {}}
         },
         detail: {
             type: Object,
@@ -70,7 +69,6 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            id: '',
             // detail: {}, // 工单详情
             tableColumns: [
                 { title: '故障原因', dataIndex: 'item_fault_type' },

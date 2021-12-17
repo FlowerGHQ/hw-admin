@@ -5,12 +5,12 @@
         <a-row class="panel-content info-container">
             <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                 <div class="info-item">
-                    <div class="key">创建人</div>
-                    <div class="value">{{detail.operator_name || '-'}}</div>
+                    <div class="key">工单名称</div>
+                    <div class="value">{{detail.name || '-'}}</div>
                 </div>
                 <div class="info-item">
-                    <div class="key">相关客户</div>
-                    <div class="value">{{detail.customer_name || '-'}}</div>
+                    <div class="key">问题描述</div>
+                    <div class="value">{{detail.desc || '-'}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">优先级</div>

@@ -12,10 +12,7 @@
                     <div class="key">所属经销商</div>
                     <div class="value">
                         <a-select v-model:value="form.agent_id" placeholder="请选择所属经销商">
-                            <a-select-option v-for="agent of agentList" :key="agent.id" :value="agent.id">{{
-                                    agent.name
-                                }}
-                            </a-select-option>
+                            <a-select-option v-for="agent of agentList" :key="agent.id" :value="agent.id">{{ agent.name }}</a-select-option>
                         </a-select>
                     </div>
                 </div>
@@ -102,9 +99,9 @@ export default {
     },
     watch: {},
     computed: {},
-
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0
+        this.form.agent_id = Number(this.$route.query.agent_id) || 0
         if (this.form.id) {
             this.getStoreDetail();
         }

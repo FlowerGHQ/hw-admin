@@ -152,7 +152,13 @@ export default {
         handleSubmit() {
             let config = Core.Util.deepCopy(this.config)
             console.log('handleSubmit config:', config)
+            let keys = []
             for (const item of config) {
+                if (keys.includes(item.key)) {
+                    return this.$message.warning('配置项的键值不可重复')
+                } else {
+                    keys.push(item.key)
+                }
                 if (!item.name) {
                     return this.$message.warning('请输入配置项名称')
                 }

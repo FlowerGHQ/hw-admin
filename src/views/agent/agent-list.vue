@@ -26,7 +26,7 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">状态:</div>
                     <div class="value">
-                        <a-select  v-model:value="searchForm.status" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
+                        <a-select v-model:value="searchForm.status" @change="handleSearch">
                             <a-select-option v-for="(item,index) of statusList" :key="index" :value="item.value">{{item.text}}</a-select-option>
                         </a-select>
                     </div>
@@ -144,10 +144,9 @@ export default {
                 { title: '经销商', dataIndex: 'name' },
                 { title: '国家', dataIndex: 'country' },
                 { title: '手机号', dataIndex: 'phone' },
-                { title: '最近登录', dataIndex: 'last_login_time', key: 'time' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '状态', dataIndex: 'status', key: 'status' },
-                { title: '操作', key: 'operation', fixed: 'right', width: 100, },
+                { title: '操作', key: 'operation', fixed: 'right'},
             ]
             return columns
         },

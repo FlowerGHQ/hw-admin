@@ -332,9 +332,15 @@ const Util = {
         const MAP = Const.REPAIR.METHOD_MAP
         return MAP[val] || '未知'
     },
-    repairPriorityFilter(val) {
+    repairPriorityFilter(val, to = 'word') {
         const MAP = Const.REPAIR.PRIORITY_MAP
-        return MAP[val] || '未知'
+        const COLOR_MAP = Const.REPAIR.PRIORITY_COLOR_MAP
+        switch (to) {
+            case 'word':
+                return MAP[val] || '未知'
+            case 'color':
+                return COLOR_MAP[val] || 'grey'
+        }
     },
 	repairItemTypeFilter(val) {
 		const MAP = Const.REPAIR.ITEM_TYPE_MAP
@@ -345,8 +351,8 @@ const Util = {
 		return MAP[val] || '未知'
 	},
     actionLogTypeFilter(val) {
-	    const MAP = Const.ACTION_LOG.ACTION_LOG_TYPE_MAP
-	    return MAP[val] || '未知'
+        const MAP = Const.ACTION_LOG.ACTION_LOG_TYPE_MAP
+        return MAP[val] || '未知'
     },
 /* =============== 维修单 ================ */
 

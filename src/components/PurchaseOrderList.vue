@@ -6,7 +6,7 @@
     <div class="panel-content">
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                :row-key="record => record.id" :pagination='false' @change="handleTableChange">
+                :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text , record}">
                     <template v-if="column.dataIndex === 'sn'">
                         <a-tooltip placement="top" :title='text'>
@@ -39,8 +39,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('edit', record)"> <i class="icon i_edit"/> 再次购买</a-button>
-                        <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_detail"/> 订单详情</a-button>
+                        <a-button type='link' @click="routerChange('edit', record)"> <i class="icon i_cart"/> 再次购买</a-button>
+                        <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_detail"/> 详情</a-button>
                     </template>
                 </template>
             </a-table>

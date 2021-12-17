@@ -12,7 +12,7 @@
                     </a-radio-group>
                 </div>
             </div>
-            <div class="form-item">
+            <div class="form-item required">
                 <div class="key">紧急程度</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.priority">
@@ -44,14 +44,6 @@
                 <div class="value">
                     <a-radio-group v-model:value="form.channel">
                         <a-radio v-for="item of channelList" :key="item.value" :value="item.value" >{{item.text}}</a-radio>
-                    </a-radio-group>
-                </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">产品类型</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.item_type">
-                        <a-radio v-for="item of itemTypeList" :key="item.value" :value="item.value" >{{item.text}}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
@@ -183,7 +175,6 @@ export default {
             methodList: REPAIR.METHOD_LIST, // 维修类别
             channelList: REPAIR.CHANNEL_LIST, // 维修方式
             priorityList: REPAIR.PRIORITY_LIST, // 紧急程度
-            itemTypeList: Core.Const.ITEM.TYPE_LIST, // 产品类型
             customerList: [], // 车主列表
             staffList: [], // 员工列表
 
@@ -195,7 +186,6 @@ export default {
                 desc: '', // 问题描述
 
                 channel: 1, // 维修方式、维修途径
-                item_type: 1, // 产品类型
                 repair_method: 1, // 维修类别
                 item_code: '', // 车辆编号
 
@@ -331,6 +321,10 @@ export default {
                 this.$message.warning('请选择工单分类')
                 return 0
             }
+            if (!form.priority) {
+                this.$message.warning('请选择工单紧急程度')
+                return 0
+            }
             if (!form.name) {
                 this.$message.warning('请输入工单名称')
                 return 0
@@ -341,10 +335,6 @@ export default {
             }
             if (!form.channel) {
                 this.$message.warning('请选择维修方式')
-                return 0
-            }
-            if (!form.item_type) {
-                this.$message.warning('请选择产品类型')
                 return 0
             }
             if (!form.repair_method) {

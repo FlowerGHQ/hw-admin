@@ -12,7 +12,6 @@
             <div class="info-block">
                 <div class="title">托修方</div>
                 <p>车主姓名：{{detail.customer_name}}</p>
-                <p>车牌号码：{{detail.item_code}}</p>
                 <p>产品型号：{{detail.item_code}}</p>
                 <p>送修日期：{{$Util.timeFormat(detail.create_time)}}</p>
                 <div class="title">联系电话</div>

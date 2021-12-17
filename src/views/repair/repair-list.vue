@@ -70,6 +70,11 @@
                     <template v-if="column.dataIndex === 'type'">
                         {{$Util.repairTypeFilter(text)}}
                     </template>
+                    <template v-if="column.dataIndex === 'priority'">
+                        <div class="status status-bg status-tag smell" :class="$Util.repairPriorityFilter(text,'color')">
+                            {{$Util.repairPriorityFilter(text)}}
+                        </div>
+                    </template>
                     <template v-if="column.dataIndex === 'channel'">
                         {{$Util.repairChannelFilter(text)}}
                     </template>
@@ -111,6 +116,7 @@
 
 <script>
 import Core from '../../core';
+const STATUS = Core.Const.REPAIR.STATUS
 export default {
     name: 'RepairList',
     components: {},
@@ -128,13 +134,12 @@ export default {
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             statusList: [
                 {text: '全  部', value: '0', color: 'primary', key: '0'},
-                {text: '待分配', value: '0', color: 'red',     key: '10'},
-                {text: '待确认', value: '0', color: 'orange',  key: '20'},
-                {text: '待检测', value: '0', color: 'yellow',  key: '30'},
-                {text: '维修中', value: '0', color: 'blue',    key: '40'},
-                {text: '维修完成', value: '0', color: 'green',   key: '50'},
-                {text: '已结算', value: '0', color: 'green',   key: '60'},
-                // {text: '异  常', value: '0', color: 'grey',    key: '6'},
+                {text: '待分配', value: '0', color: 'red',     key: STATUS.WAIT_DISTRIBUTION },
+                {text: '待确认', value: '0', color: 'orange',  key: STATUS.WAIT_CHECK },
+                {text: '待检测', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
+                {text: '维修中', value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
+                {text: '已维修', value: '0', color: 'green',   key: STATUS.REPAIR_END },
+                {text: '已结算', value: '0', color: 'grey',    key: STATUS.SETTLEMENT },
             ],
             create_time: [],
             searchForm: {
@@ -157,6 +162,7 @@ export default {
             let columns = [
                 { title: '工单编号', dataIndex: 'uid', key: 'detail' },
                 { title: '工单名称', dataIndex: 'name', key: 'tip_item' },
+                { title: '紧急程度', dataIndex: 'priority' },
                 { title: '维修方式', dataIndex: 'channel',
                     filters: Core.Const.REPAIR.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.channel || null },
                 { title: '维修类别', dataIndex: 'repair_method',

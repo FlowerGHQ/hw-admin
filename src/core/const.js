@@ -1457,16 +1457,6 @@ let Const = {
     ],
 
     ITEM: { // 商品
-        TYPE_LIST: [ // 产品类型
-            { text: '车辆', value: 1 },
-            { text: '电池', value: 2 },
-            { text: '其他', value: 3 },
-        ],
-        TYPE_MAP: {
-            1: '车辆',
-            2: '电池',
-            3: '其他',
-        },
     },
 
     REPAIR: { // 维修工单
@@ -1510,23 +1500,26 @@ let Const = {
             2: '中',
             3: '低',
         },
-	    // 优先级
-        ITEM_TYPE_LIST: [
-            { text: '车辆', value: 1 },
-            { text: '电池', value: 2 },
-            { text: '其他', value: 3 },
-        ],
-        ITEM_TYPE_MAP: {
-            1: '车辆',
-            2: '电池',
-            3: '其他',
+        PRIORITY_COLOR_MAP: {
+            1: 'red',
+            2: 'blue',
+            3: 'green',
+        },
+	    // 状态
+        STATUS: {
+            WAIT_DISTRIBUTION: 10,
+            WAIT_CHECK: 20,
+            WAIT_DETECTION: 30,
+            WAIT_REPAIR: 40,
+            REPAIR_END: 50,
+            SETTLEMENT: 60,
         },
         STATUS_MAP: {
             10: '待分配',
             20: '待确认',
             30: '待检测',
             40: '维修中',
-            50: '维修完成',
+            50: '已维修',
             60: '已结算',
         },
         STATUS_COLOR_MAP: {
@@ -1537,23 +1530,7 @@ let Const = {
             50: 'green',
             60: 'grey',
         },
-        STATUS: {
-	        WAIT_DISTRIBUTION: 10,
-            WAIT_CHECK: 20,
-	        WAIT_DETECTION: 30,
-	        WAIT_REPAIR: 40,
-	        REPAIR_END: 50,
-	        SETTLEMENT: 60,
-        },
-        FAULT_OPTIONS_LIST : [
-            { label: '电池故障', value: '1' },
-            { label: '发动机故障', value: '2' },
-            { label: '轮胎故障', value: '3' },
-            { label: '刹车故障', value: '4' },
-            { label: '转向灯故障', value: '5' },
-            { label: '仪表盘故障', value: '6' },
-            { label: '尾灯故障', value: '7' },
-        ],
+        // 故障类型
         FAULT_OPTIONS_MAP :{
             1: "电池故障",
             2: "发动机故障",
@@ -1563,24 +1540,42 @@ let Const = {
             6: "仪表盘故障",
             7: "尾灯故障",
         },
+        // 维修结果
 		RESULTS_LIST: [
 			{ name: '成功', value: '1' },
 			{ name: '失败', value: '2' },
 		],
-	    RESULTS: {
-		    SUCCESS:1,
-		    FAIL:2,
-	    },
+        RESULTS: {
+            SUCCESS: 1,
+            FAIL: 2,
+        },
     },
-	REPAIR_ITEM: {//维修商品
-		TYPE:{
+	REPAIR_ITEM: { //维修商品
+		TYPE: {
 			ADD: 1,
-			REPLACE:2,
+			REPLACE: 2,
 		}
-
+	},
+    ACTION_LOG: { // 操作记录
+		SOURCE_TYPE:{
+			PURCHASE_ORDER: 10,
+			REPAIR_ORDER: 20,
+		},
+		ACTION_LOG_TYPE_MAP: {
+			101: '维修单创建',
+			102: '维修单信息完善/修改',
+			103: '维修单删除',
+			104: '二次上门',
+			201: '维修单确认',
+			301: '维修检测',
+			401: '维修完成',
+			501: '结算完成',
+			1001: '订单转移',
+		},
 	},
 
 	PURCHASE: { // 采购订单
+        // 状态
 		STATUS: {
 			INIT: 0 ,
 			WAIT_PAY: 100 ,
@@ -1606,6 +1601,7 @@ let Const = {
             '300': 'blue',
             '400': 'green',
         },
+        // 支付方式
 		PAY_METHOD:{
 			1: "支付宝",
 			2: "微信",
@@ -1614,6 +1610,7 @@ let Const = {
 			{ name: '支付宝', value: '1' },
 			{ name: '微信', value: '2' },
 		],
+        // 评论
 		FLAG_REVIEW: {
 			SUCCESS : 1
 		},
@@ -1621,9 +1618,9 @@ let Const = {
 			'1': '已评论',
 			'0': '未评论',
 		},
-
 	},
-	WAYBILL:{
+
+	WAYBILL:{ // 物流
 		TYPE: {
 			IN: 1,
 			OUT: 2,
@@ -1659,33 +1656,7 @@ let Const = {
 			{ name: '顺丰速运', value: 'SFEXPRESS' },
 			{ name: '邮政包裹', value: 'CHINAPOST' },
 			{ name: '跨越速运', value: 'KYEXPRESS' },
-
-
 		],
-	},
-
-
-	ACTION_LOG: {
-		SOURCE_TYPE:{
-			PURCHASE_ORDER: 10,
-			REPAIR_ORDER: 20,
-		},
-		ACTION_LOG_TYPE_MAP: {
-			101: '维修单创建',
-			102: '维修单信息完善/修改',
-			103: '维修单删除',
-			104: '二次上门',
-			201: '维修单确认',
-			301: '维修检测',
-			401: '维修完成',
-			501: '结算完成',
-			1001: '订单转移',
-		},
-	},
-
-	IS_ADMIN: {
-        TRUE: 1,
-        FALSE: 0,
 	},
 };
 

@@ -176,7 +176,7 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该门店吗？',
+                title: '确定要删除该仓库吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',
