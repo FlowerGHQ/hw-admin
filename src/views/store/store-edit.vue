@@ -8,7 +8,7 @@
         <div class="title">基本信息</div>
       </div>
       <div class="form-content">
-        <div class="form-item required" v-if="loginType == LOGIN_TYPE.ADMIN">
+        <div class="form-item required" v-if="loginType == LOGIN_TYPE.ADMIN && !form.id">
           <div class="key">所属经销商</div>
           <div class="value">
             <a-select v-model:value="form.agent_id" placeholder="请选择所属经销商">
