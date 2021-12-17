@@ -1581,35 +1581,25 @@ let Const = {
 			WAIT_PAY: 100 ,
 			WAIT_DELIVER: 200 ,
 			WAIT_TAKE_DELIVER: 300 ,
-			WAIT_REVIEW: 400 ,
-			DEAL_SUCCESS: 500 ,
+			DEAL_SUCCESS: 400 ,
 			CLOSE: 1000 ,
 
 
-			'0' : '未知',
-			'100': '待支付',
-			'200': '待发货',
-			'300': '已发货',
-			'400': '待评论',
-			'500': '交易成功',
-			'1000': '交易关闭',
 		},
         STATUS_MAP: {
             '0' : '未知',
             '100': '待支付',
             '200': '待发货',
             '300': '已发货',
-            '400': '待评论',
-	        '500': '交易成功',
+	        '400': '交易完成',
 	        '1000': '交易关闭',
         },
         STATUS_COLOR_MAP: {
             '0': 'red',
             '100': 'yellow',
             '200': 'orange',
-            '300': 'primary',
-            '400': 'blue',
-	        '500': 'green',
+            '300': 'blue',
+            '400': 'green',
         },
 		PAY_METHOD:{
 			1: "支付宝",
@@ -1619,6 +1609,13 @@ let Const = {
 			{ name: '支付宝', value: '1' },
 			{ name: '微信', value: '2' },
 		],
+		FLAG_REVIEW: {
+			SUCCESS : 1
+		},
+		FLAG_REVIEW_MAP: {
+			'1': '已评论',
+			'0': '未评论',
+		},
 
 	},
 	WAYBILL:{

@@ -8,7 +8,8 @@
                 <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_check_c"/>提交</a-button>
 
 
-                <a-button type="primary" @click="routerChange('invoice')" v-if="detail.status == STATUS.REPAIR_END">查看结算单</a-button>
+                <a-button type="primary" @click="routerChange('invoice')" v-if="detail.status == STATUS.REPAIR_END || detail.status == STATUS.SETTLEMENT ">查看结算单</a-button>
+                <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END ">结算</a-button>
                 <a-button type="primary" @click="handleResultShow()" v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_edit"/>维修完成</a-button>
 
                 <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_edit"/>编辑</a-button>
@@ -219,6 +220,12 @@ export default {
         },
         handleFaultSubmit() {
             this.$refs.CheckFault.handleFaultSubmit();
+        },
+        handleSettlement(){
+            Core.Api.Repair.settlement({id: this.id}).then(() => {
+                this.$message.success('操作成功')
+                this.getRepairDetail()
+            })
         },
 
         // 工单确认

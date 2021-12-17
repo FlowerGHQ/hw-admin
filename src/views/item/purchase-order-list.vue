@@ -55,11 +55,12 @@
                             {{$Util.puechaseStatusFilter(text)}}
                         </div>
                     </template>
-                    <!-- <template v-if="column.dataIndex === 'channel'">
-                        {{$Util.purchaseChannelFilter(text)}}
-                    </template> -->
+
+                    <template v-if="column.dataIndex === 'flag_review'">
+                        {{$Util.puechaseFlagReviewFilter(text)}}
+                    </template>
                     <template v-if="column.dataIndex === 'purchase_method'">
-                        {{$Util.purchaseMethodFilter(text)}}
+                        {{$Util.puechasePayMethodFilter(text)}}
                     </template>
                     <template v-if="column.dataIndex === 'item_type'">
                         {{$Util.itemTypeFilter(text)}}
@@ -123,8 +124,7 @@ export default {
                 {text: '待支付', value: '0', color: 'yellow',  key: '100'},
                 {text: '待发货', value: '0', color: 'orange',  key: '200'},
                 {text: '已发货', value: '0', color: 'primary',  key: '300'},
-                {text: '待评论', value: '0', color: 'blue',  key: '400'},
-                {text: '交易成功', value: '0', color: 'green',  key: '500'},
+                {text: '交易完成', value: '0', color: 'green',  key: '400'},
                 {text: '交易关闭', value: '0', color: 'grey',  key: '1000'},
             ],
             create_time: [],
@@ -150,6 +150,7 @@ export default {
                 { title: '订单编号', dataIndex: 'sn', },
                 { title: '价格', dataIndex: 'price'  },
                 { title: '订单状态', dataIndex: 'status' },
+                { title: '是否已评论', dataIndex: 'flag_review' },
                 { title: '下单时间', dataIndex: 'create_time', key: 'time' },
                 { title: '操作', key: 'operation', fixed: 'right', width: 100, }
             ]
