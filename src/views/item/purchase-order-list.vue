@@ -119,10 +119,13 @@ export default {
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             statusList: [
-                {text: '全  部', value: '99', color: 'primary',  key: '0'},
-                {text: '待支付', value: '29', color: 'primary',  key: '1'},
-                {text: '待发货', value: '30', color: 'primary',  key: '2'},
-                {text: '待收货', value: '30', color: 'primary',  key: '3'},
+                {text: '全  部', value: '0', color: 'primary',  key: '0'},
+                {text: '待支付', value: '0', color: 'yellow',  key: '100'},
+                {text: '待发货', value: '0', color: 'orange',  key: '200'},
+                {text: '已发货', value: '0', color: 'primary',  key: '300'},
+                {text: '待评论', value: '0', color: 'blue',  key: '400'},
+                {text: '交易成功', value: '0', color: 'green',  key: '500'},
+                {text: '交易关闭', value: '0', color: 'grey',  key: '1000'},
             ],
             create_time: [],
             searchForm: {
@@ -155,6 +158,7 @@ export default {
     },
     mounted() {
         this.getTableData();
+        this.getStatusStat();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -216,6 +220,28 @@ export default {
                 this.tableData = res.list;
             }).catch(err => {
                 console.log('getTableData err:', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        getStatusStat() {  // 获取 表格 数据
+            this.loading = true;
+            Core.Api.Purchase.statusList().then(res => {
+                console.log("getStatusStat res:", res)
+                let total = 0
+
+                this.statusList.forEach(statusItem => {
+                    res.status_list.forEach(item => {
+                        if ( statusItem.key == item.status) {
+                            statusItem.value = item.amount
+                            total += item.amount
+                        }
+                    })
+                })
+                console.log(total)
+                this.statusList[0].value = total
+            }).catch(err => {
+                console.log('getStatusStat err:', err)
             }).finally(() => {
                 this.loading = false;
             });

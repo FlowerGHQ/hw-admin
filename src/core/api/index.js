@@ -128,6 +128,11 @@ const apiList = {
         detailByUid: ['PostJson', 'purchase-order/detail-uid'], // 采购订单详情
         itemList: ['PostJson', 'purchase-order-item/list'], // 采购订单明细列表
         itemByIdList: ['PostJson', 'purchase-order-item/list-by-item-id'], // 采购订单明细列表
+	    payment: ['PostJson', 'purchase-order/payment'], // 支付订单
+	    deliver: ['PostJson', 'purchase-order/deliver'], // 订单发货
+	    takeDeliver: ['PostJson', 'purchase-order/take-deliver'], // 确认收货
+	    review: ['PostJson', 'purchase-order/review'], // 评论
+	    statusList: ['PostJson', 'purchase-order/status-list'], // 保存
     },
     Store: { // 门店管理
         list: ['PostJson', 'store/list'],
