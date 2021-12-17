@@ -19,7 +19,7 @@
             <a-collapse v-model:activeKey="failActive" ghost class="collapse-item">
                 <a-collapse-panel v-for="fault of faultSelect" :key="fault" :header="faultMap[fault]">
                     <template #extra>
-                        <ItemSelect btnType='link' @change="handleAddFailItem" :fault-name="fault" :disabled-checked='failData[fault].map(i => i.id)'/>
+                        <ItemSelect btnType='link' @change="handleAddFailItem" :fault-name="fault" :disabled-checked='failData[fault].map(i => i.id)' btn-text="添加商品"/>
                     </template>
                     <a-table :columns="tableColumns" :data-source="failData[fault]"
                         :row-key="record => record.id"  :pagination='false' size="small">
@@ -37,7 +37,7 @@
             <a-collapse v-model:activeKey="exchangeActive" ghost class="collapse-item">
                 <a-collapse-panel v-for="fault of faultSelect" :key="fault" :header="faultMap[fault]">
                     <template #extra>
-                        <ItemSelect btnType='link' @change="handleAddExchangeItem" :fault-name="fault" :disabled-checked='exchangeData[fault].map(i => i.id)'/>
+                        <ItemSelect btnType='link' @change="handleAddExchangeItem" :fault-name="fault" :disabled-checked='exchangeData[fault].map(i => i.id)' btn-text="更换商品"/>
                     </template>
                     <a-table :columns="tableColumns" :data-source="exchangeData[fault]"
                         :row-key="record => record.id" :pagination='false' size="small">
@@ -55,9 +55,9 @@
                     </a-table>
                 </a-collapse-panel>
             </a-collapse>
-            <div class="submit-btn">
-                <a-button type="primary" @click="handleFaultSubmit()"><i class="icon i_check_c"/>提交</a-button>
-            </div>
+<!--            <div class="submit-btn">-->
+<!--                <a-button type="primary" @click="handleFaultSubmit()"><i class="icon i_check_c"/>提交</a-button>-->
+<!--            </div>-->
         </div>
     </a-collapse-panel>
 </a-collapse>

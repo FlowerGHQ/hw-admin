@@ -63,11 +63,13 @@ export default {
     props: {},
     data() {
         return {
+            USER_TYPE: Core.Const.USER.TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
             user_id: '',
             org_id: '',
+            org_type: '',
             type: '',
 
             detail: {},
@@ -110,6 +112,7 @@ export default {
                 this.detail = res.detail
                 this.type = res.detail.type
                 this.org_id = res.detail.org_id
+                this.org_type = res.detail.org_type
                 for (const key in this.form) {
                     this.form[key] = res.detail.account[key]
                 }
@@ -139,11 +142,14 @@ export default {
             if (!form.email) {
                 return this.$message.warning('请输入员工邮箱')
             }
-            let apiName = form.id ? 'update' : 'save'
-            Core.Api.Account[apiName]({
+            this.org_type = this.type
+            if (this.type == this.USER_TYPE.WORKER) this.org_type = this.USER_TYPE.STORE
+
+            Core.Api.Account.save({
                 ...form,
                 type: this.type,
                 org_id: this.org_id,
+                org_type: this.org_type
             }).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
