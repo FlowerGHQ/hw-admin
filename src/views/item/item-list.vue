@@ -5,8 +5,8 @@
             <a-tab-pane :key="0" tab="全部"></a-tab-pane>
             <a-tab-pane v-for="item of categoryList" :key="item.id" :tab="item.name"></a-tab-pane>
             <template #rightExtra>
-                <a-input class="search" v-model="searchForm.name" placeholder="商品名称" @change="pageChange(1)">
-                    <template #prefix><i class="icon i_search"/></template>
+                <a-input class="search" v-model:value="searchForm.name" placeholder="商品名称" @keydown.enter="pageChange(1)">
+                    <template #prefix><i class="icon i_search" @click="pageChange(1)"/></template>
                 </a-input>
                 <a-button type="primary" class="add" @click="routerChange('edit')" v-if="$auth('ADMIN')"><i class="icon i_add"/>新增商品</a-button>
                 <template v-else>
@@ -87,24 +87,6 @@
         </div>
         <SimpleImageEmpty class="item-content-empty" v-else desc="暂无满足搜索条件的商品"/>
     </div>
-    <!-- <div class="shop-cart-brief" :class="briefVisible ? 'show' : 'hidden'">
-        <div class="icon i_close" @click="briefVisible = false"></div>
-        <div class="tip">
-            <i class="icon i_check_c"/>已加入购物车
-        </div>
-        <div class="item" v-for="item of briefList" :key="item.id">
-            <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
-            <div class="desc">
-                <p>{{item.item.name}}</p>
-                <span>{{item.item.code}}</span>
-                <p class="price">￥{{$Util.countFilter(item.price)}}</p>
-            </div>
-        </div>
-        <div class="btns">
-            <a-button class='btn ghost' @click="routerChange('shop_cart')">查看购物车({{briefCount}})</a-button>
-            <a-button class='btn black' @click="routerChange('settle')">结算</a-button>
-        </div>
-    </div> -->
 </div>
 </template>
 
@@ -205,6 +187,7 @@ export default {
         },
         getTableData() { // 获取 商品 数据
             this.loading = true;
+                console.log('this.searchForm.name:', this.searchForm.name)
             Core.Api.Item.list({
                 category_id: this.searchForm.category_id,
                 name: this.searchForm.name,
@@ -317,6 +300,7 @@ export default {
             width: 260px;
             box-sizing: border-box;
             padding-left: 44px;
+            padding-bottom: 44px;
             .category-title {
                 font-size: 24px;
                 font-weight: 500;

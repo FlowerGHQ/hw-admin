@@ -40,6 +40,7 @@ export default {
     watch: {
         parentId(n) {
             this.getDataByParent(n)
+            this.selectKeys = ''
         }
     },
     computed: {},
