@@ -318,15 +318,26 @@ const routes = [
                 path: 'item-category-config',
                 name: 'ItemCategoryConfig',
                 component: () => import('@/views/item/item-category-config.vue'),
+                hidden: true,
                 meta: {
                     roles: [LOGIN_TYPE.ADMIN],
                     title: '商品分类配置',
                     is_sub_menu: true,
                 }
             },
+            {
+                path: 'purchase-order-list',
+                name: 'PurchaseOrderListAdmin',
+                component: () => import('@/views/item/purchase-order-list.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN],
+                    title: '采购订单',
+                    is_sub_menu: true,
+                }
+            },
         ]
     },
-    {   // 商品- 经销商端 && 门店端
+    {   // 商品&采购 - 经销商端 && 门店端
         path: '/purchase',
         component: Layout,
         redirect: '/purchase/item-list',
@@ -344,6 +355,17 @@ const routes = [
                 component: () => import('@/views/item/item-list.vue'),
                 meta: {
                     title: '采购',
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
+                    is_sub_menu: true
+                }
+            },
+            {
+                path: 'item-display',
+                name: 'ItemDisplay',
+                component: () => import('@/views/item/item-display.vue'),
+                hidden: true,
+                meta: {
+                    title: '商品详情',
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
                     is_sub_menu: true
                 }

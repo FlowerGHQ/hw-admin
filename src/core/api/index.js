@@ -101,6 +101,7 @@ const apiList = {
         update: ['PostJson', 'item-category/update'],
         tree: ['PostJson', 'item-category/tree'],
         delete: ['PostJson', 'item-category/delete'],
+        detail: ['PostJson', 'item-category/detail'],
     },
     ShopCart: { // 购物车
         save: ['PostJson', 'shopping-cart/save'],

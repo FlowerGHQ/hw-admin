@@ -26,11 +26,6 @@
                 :row-key="record => record.id"  :pagination='false' v-model:expandedRowKeys='expandedRowKeys'
                 @expand='handleExpandedChange'>
                 <template #bodyCell="{ column, text , record }">
-                    <template v-if="column.dataIndex === 'sn'">
-                        <a-tooltip placement="top" :title='text'>
-                            <a-button type="link" @click="routerChange('detail', record)">{{text}}</a-button>
-                        </a-tooltip>
-                    </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
                     </template>
@@ -44,7 +39,7 @@
                     </template>
                     <template v-if="column.key === 'operation'">
                         <a-button type='link' @click="handleModalShow(record, record)"> <i class="icon i_edit"/> 编辑名称</a-button>
-                        <a-button type='link' @click="routerChange(record)"> <i class="icon i_hint"/> 商品配置</a-button>
+                        <a-button type='link' @click="routerChange('config', record)"> <i class="icon i_hint"/> 商品配置</a-button>
                         <a-button type='link' @click="handleModalShow({parent_id: record.id}, null,record)"> <i class="icon i_add"/> 新增子分类</a-button>
                         <a-button type='link' @click="handleDelete(record)"> <i class="icon i_delete"/> 删除</a-button>
                     </template>
@@ -203,7 +198,7 @@ export default {
             this.editNode = node
             this.modalVisible = true
         },
-        handleModal() {
+        handleModalSubmit() {
             let form = Core.Util.deepCopy(this.editForm)
             if (!form.name) {
                 return this.$message.warning('请输入分类名称')

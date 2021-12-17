@@ -23,7 +23,7 @@
             <div class="form-item required">
                 <div class="key">商品分类</div>
                 <div class="value">
-                    <CategoryTreeSelect @change="(val) => {form.category_id = val}"
+                    <CategoryTreeSelect @change="handleCategorySelect"
                         :category='item_category' :category-id='form.category_id' v-if="form.id !== ''"/>
                 </div>
             </div>
@@ -71,7 +71,7 @@
             <div class="title">图片信息</div>
         </div>
         <div class="form-content">
-            <div class="form-item required img-upload">
+            <div class="form-item img-upload">
                 <div class="key">商品封面</div>
                 <div class="value">
                     <a-upload name="file" class="image-uploader"
@@ -87,7 +87,7 @@
                     <div class="tip">建议尺寸：800*800像素</div>
                 </div>
             </div>
-            <div class="form-item required img-upload">
+            <div class="form-item img-upload">
                 <div class="key">商品详情图</div>
                 <div class="value">
                     <a-upload name="file" class="image-uploader"
@@ -101,6 +101,35 @@
                         </div>
                     </a-upload>
                     <div class="tip">建议尺寸：800*800像素</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-block" v-if="form.category_id && configTemp.length">
+        <div class="form-title">
+            <div class="title">商品配置</div>
+        </div>
+        <div class="form-content">
+            <div v-for="(item, index) of configTemp" :key="index" :class="{'form-item':true, required: item.required, textarea: item.type === 'textarea'}">
+                <div class="key">{{item.name}}</div>
+                <div class="value">
+                    <template v-if="item.type == 'input'">
+                        <a-input :placeholder="`请输入${item.name}`" v-model:value="form.config[index].value"/>
+                    </template>
+                    <template v-if="item.type == 'textarea'">
+                        <a-textarea :placeholder="`请输入${item.name}`" v-model:value="form.config[index].value" :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500'/>
+                        <span class="content-length">{{form.config[index].value.length}}/500</span>
+                    </template>
+                    <template v-if="item.type == 'select'">
+                        <a-select :placeholder="`请选择${item.name}`" v-model:value="form.config[index].value" show-search option-filter-prop="children">
+                            <a-select-option v-for="(val,i) of item.select" :key="i" :value="val" >{{val}}</a-select-option>
+                        </a-select>
+                    </template>
+                    <template v-if="item.type == 'radio'">
+                        <a-radio-group  v-model:value="form.config[index].value">
+                            <a-radio v-for="(val,i) of item.select" :key="i" :value="val" >{{val}}</a-radio>
+                        </a-radio-group>
+                    </template>
                 </div>
             </div>
         </div>
@@ -135,8 +164,10 @@ export default {
                 category_id: undefined,
                 price: undefined,
                 original_price: undefined,
+                config: '',
             },
             item_category: {},
+            configTemp: [],
             upload: {
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
                 coverList: [],
@@ -184,10 +215,31 @@ export default {
             }).then(res => {
                 console.log('getItemDetail res', res)
                 this.detail = res
+                let config = []
+                let _config = []
+
+                this.item_category = res.category
+                try { this.configTemp = JSON.parse(res.category.config) } catch (err) { this.configTemp = [] }
+                try { _config = JSON.parse(res.config) } catch (err) { _config = [] }
+
+                for (let i = 0; i < this.configTemp.length; i++) {
+                    const item = this.configTemp[i];
+                    config.push({
+                        name: item.name,
+                        key: item.key,
+                        value: item.type === 'select' ? undefined : '',
+                    })
+                }
+                for (let i = 0; i < config.length; i++) {
+                    const target = config[i];
+                    let _target = _config.find(item => item.key === target.key)
+                    target.value = _target ? _target.value : ''
+                }
+
                 for (const key in this.form) {
                     this.form[key] = res[key]
                 }
-                this.item_category = res.category
+                this.form.config = config
                 this.form.price = Core.Util.countFilter(res.price)
                 this.form.original_price = Core.Util.countFilter(res.original_price)
                 if (this.form.logo) {
@@ -246,6 +298,16 @@ export default {
             if (!form.original_price) {
                 return this.$message.warning('请输入商品批发价格')
             }
+            if (this.configTemp.length) {
+                for (let i = 0; i < this.configTemp.length; i++) {
+                    let item = this.configTemp[i]
+                    if (item.required && !form.config[i].value) {
+
+                        return this.$message.warning(`请${['select','radio'].includes(item.type) ? '选择' : '输入'}${item.name}`)
+                    }
+                }
+            }
+            form.config = JSON.stringify(form.config)
             form.price = Math.round(form.price * 100)
             form.original_price = Math.round(form.original_price * 100)
             Core.Api.Item.save(form).then(() => {
@@ -277,6 +339,34 @@ export default {
             this.upload.detailList = fileList
             console.log("handleDetailChange status:", file.status, "file:", file)
         },
+
+        handleCategorySelect(val, node) {
+            this.form.category_id = val
+            this.item_category = node
+            try {
+                this.configTemp = JSON.parse(node.config)
+            } catch (error) {
+                this.configTemp = []
+            }
+
+            let _config = Core.Util.deepCopy(this.form.config)
+            let config = []
+            for (let i = 0; i < this.configTemp.length; i++) {
+                const item = this.configTemp[i];
+                config.push({
+                    name: item.name,
+                    key: item.key,
+                    value: item.type === 'select' ? undefined : '',
+                })
+            }
+            for (let i = 0; i < config.length; i++) {
+                const target = config[i];
+                let _target = _config.find(item => item.key === target.key)
+                target.value = _target ? _target.value : ''
+            }
+            console.log('handleCategorySelect config:', config)
+            this.form.config = config
+        }
     }
 };
 </script>

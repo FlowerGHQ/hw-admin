@@ -68,6 +68,7 @@ export default {
                     key: item.id,
                     value: item.id,
                     title: item.name,
+                    config: item.config,
                     isLeaf: !item.has_children,
                 }))
                 this.treeData = list
@@ -99,7 +100,7 @@ export default {
 
         handleSelect(value, node, extra) {
             console.log('handleSelect value, node, extra:', value, node, extra)
-            this.$emit('change', value)
+            this.$emit('change', value, node)
         }
     },
 }
