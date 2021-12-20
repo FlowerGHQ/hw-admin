@@ -1418,14 +1418,14 @@ let Const = {
     USER: { // 员工、账号、用户
         TYPE: {
             ADMIN: 10,      // 管理员
-            AGENT: 20,      // 代理商
+            AGENT: 20,      // 经销商
             STORE: 30,      // 门店
 	        WORKER: 40,     // 维修工
 	        CUSTOMER: 100,  // 顾客
         },
         TYPE_MAP: {
             10: '平台方',
-            20: '代理商',
+            20: '经销商',
             30: '门店',
             40: '维修工',
             100: '顾客',
@@ -1434,12 +1434,12 @@ let Const = {
     LOGIN: { // 登录
         TYPE: {
             ADMIN: 10,     // 管理员
-            AGENT: 20,     // 代理商
+            AGENT: 20,     // 经销商
             STORE: 30,     // 门店
         },
         TYPE_LIST: [
             { value: 30 ,text: '门店'},
-            { value: 20 ,text: '代理商'},
+            { value: 20 ,text: '经销商'},
             { value: 10 ,text: '平台方'},
         ],
         TYPE_MAP: {
