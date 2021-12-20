@@ -24,9 +24,15 @@
                         <a-table :columns="purchaseItemColumns" :data-source="purchaseItemList" :scroll="{ x: true }"
                             :row-key="record => record.id" :loading='purchaseLoading' :pagination='false'>
                             <template #bodyCell="{ column, text , record}">
-                                <template v-if="column.dataIndex === 'item_name'">
-                                    <a-image :width="30" :height="30" :src="$Util.imageFilter(record.item ? record.item.logo : '', 2)"/>
-                                    {{record.item.name}}
+                                <template v-if="column.dataIndex === 'item'">
+                                    <div class="table-img">
+                                        <a-image :width="30" :height="30" :src="$Util.imageFilter(text ? text.logo : '', 2)"/>
+                                        <a-tooltip placement="top" :title='text.name'>
+                                            <a-button type="link" @click="routerChange('detail', text)" style="margin-left: 6px;">
+                                                {{text ? text.name : '-'}}
+                                            </a-button>
+                                        </a-tooltip>
+                                    </div>
                                 </template>
                                 <template v-if="column.dataIndex === 'amount'">
                                     {{record.amount}} 件
@@ -161,7 +167,7 @@ import WaybillShow from "@/components/WaybillShow.vue"
 import MySteps from "@/components/MySteps.vue"
 
 const purchaseItemColumns = [
-    { title: '商品', dataIndex: 'item_name' },
+    { title: '商品', dataIndex: 'item' },
     { title: '数量', dataIndex: 'amount'},
     { title: '单价', dataIndex: 'unit_price', key: 'money'},
     { title: '售价', dataIndex: 'price', key: 'money'},
@@ -233,6 +239,18 @@ export default {
         this.getWaybill()
     },
     methods: {
+        routerChange(type, item = {}) {
+            let routeUrl = ''
+            switch (type) {
+                case 'detail':        // 详情
+                    routeUrl = this.$router.resolve({
+                        path: this.$auth('ADMIN') ? "/item/item-detail" : '/purchase/item-display',
+                        query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+            }
+        },
         getPurchaseInfo() {
             Core.Api.Purchase.detail({
                 id: this.id
