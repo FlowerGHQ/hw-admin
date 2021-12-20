@@ -125,7 +125,9 @@ export default {
         },
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
+            let judge = "update"
             if (!form.id) {
+                judge = "save"
                 if (!form.name) {
                     return this.$message.warning('请输入员工名')
                 }
@@ -144,8 +146,8 @@ export default {
             }
             this.org_type = this.type
             if (this.type == this.USER_TYPE.WORKER) this.org_type = this.USER_TYPE.STORE
-
-            Core.Api.Account.save({
+            console.log(forms)
+            Core.Api.Account[judge]({
                 ...form,
                 type: this.type,
                 org_id: this.org_id,
