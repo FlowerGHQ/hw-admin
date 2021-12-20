@@ -71,7 +71,7 @@ export default {
     data() {
         return {
             USER_TYPE,
-            ORG_TYPE: Core.Const.USER.ORG_TYPE,
+            ORG_TYPE: Core.Const.LOGIN.TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,

@@ -1423,11 +1423,6 @@ let Const = {
 	        WORKER: 40,     // 维修工
 	        CUSTOMER: 100,  // 顾客
         },
-        ORG_TYPE: {
-            ADMIN: 10,      // 管理员
-            AGENT: 20,      // 代理商
-            STORE: 30,      // 门店
-        },
         TYPE_MAP: {
             10: '平台方',
             20: '代理商',
