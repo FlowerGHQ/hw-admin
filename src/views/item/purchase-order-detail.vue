@@ -16,8 +16,6 @@
                 <MySteps :stepsList='stepsList' :current='currStep'/>
             </div>
         </div>
-
-
         <div class="form-container">
             <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
                 <template #expandIcon ><i class="icon i_expan_l"/> </template>
@@ -27,9 +25,11 @@
                             :row-key="record => record.id" :loading='purchaseLoading' :pagination='false'>
                             <template #bodyCell="{ column, text , record}">
                                 <template v-if="column.dataIndex === 'item_name'">
-                                    <img :src="$Util.imageFilter(record.item.logo, 2)" :width="50"  />
+                                    <a-image :width="30" :height="30" :src="$Util.imageFilter(record.item ? record.item.logo : '', 2)"/>
                                     {{record.item.name}}
-                                    数量:{{record.amount}}
+                                </template>
+                                <template v-if="column.dataIndex === 'amount'">
+                                    {{record.amount}} 件
                                 </template>
                                 <template v-if="column.key === 'money'">
                                     {{$Util.countFilter(text)}}元
@@ -38,13 +38,12 @@
                             <template #summary>
                                 <a-table-summary>
                                     <a-table-summary-row>
-                                        <a-table-summary-cell :index="0" :col-span="2">总数量:{{totle_amount}}件</a-table-summary-cell>
-                                        <a-table-summary-cell :index="3" :col-span="1">总售价:{{$Util.countFilter(totle_price)}}元</a-table-summary-cell>
-                                        <a-table-summary-cell :index="4" :col-span="1">总实付金额:{{$Util.countFilter(totle_charge)}}元</a-table-summary-cell>
+                                        <a-table-summary-cell :index="0" :col-span="3">总数量:{{totle_amount}}件</a-table-summary-cell>
+                                        <a-table-summary-cell :index="4" :col-span="1">总售价:{{$Util.countFilter(totle_price)}}元</a-table-summary-cell>
+                                        <a-table-summary-cell :index="5" :col-span="1">总实付金额:{{$Util.countFilter(totle_charge)}}元</a-table-summary-cell>
                                     </a-table-summary-row>
                                 </a-table-summary>
                             </template>
-
                         </a-table>
                     </div>
                 </a-collapse-panel>
@@ -91,7 +90,7 @@
                                 <div class="value" v-else>-</div>
                             </div>
                         </a-col>
-                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
+                        <a-col :xs='24' :sm='24' :lg='12' :xl='16' :xxl='12' class="info-block">
                             <div class="info-item">
                                 <div class="key">联系方式</div>
                                 <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.phone || '-'}}</div>
@@ -163,6 +162,7 @@ import MySteps from "@/components/MySteps.vue"
 
 const purchaseItemColumns = [
     { title: '商品', dataIndex: 'item_name' },
+    { title: '数量', dataIndex: 'amount'},
     { title: '单价', dataIndex: 'unit_price', key: 'money'},
     { title: '售价', dataIndex: 'price', key: 'money'},
     { title: '实际金额（元）', dataIndex: 'charge', key: 'money'},

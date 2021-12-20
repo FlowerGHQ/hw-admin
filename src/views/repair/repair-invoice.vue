@@ -52,7 +52,7 @@
         </div>
     </div>
     <div class="btn-area">
-        <a-button type="primary" @click="handleExport">保存并下载</a-button>
+        <a-button type="primary" @click="routerChange('export')">保存并下载</a-button>
         <a-button type="primary" @click="routerChange('back')" ghost>返回详情</a-button>
     </div>
 </div>
@@ -100,9 +100,9 @@ export default {
         routerChange(type, item = {}) {
             let routeUrl
             switch (type) {
-                case 'back':  // 编辑
+                case 'export':  // 导出页面
                     routeUrl = this.$router.resolve({
-                        path: "/repair/repair-detail",
+                        path: "/repair/invoice-download",
                         query: { id: this.id },
                     })
                     window.open(routeUrl.href, '_self')

@@ -109,21 +109,23 @@ export default {
 <style lang='less'>
 .WaybillShow {
     .main {
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 500;
         color: #3C3C3C;
         line-height: 20px;
 
         .ant-btn {
             height: 20px;
+            font-size: 12px;
+            margin-left: 8px;
         }
     }
     .desc, .time {
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 400;
         color: #6C6C6C;
         line-height: 20px;
-        margin: 8px 0 9px;
+        margin: 6px 0;
     }
 }
 .waybill-show-modal {
