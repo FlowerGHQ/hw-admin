@@ -17,7 +17,7 @@
                         <a-switch :checked="!!record.flag_admin" checked-children="是" un-checked-children="否" @click="handleManagerChange(record)"/>
                     </template>
                     <template v-if="column.dataIndex === 'flag_admin' && $auth('ADMIN') == false">
-                        {{ text }}
+                        {{ text == 1 ? "是" : "否" }}
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}

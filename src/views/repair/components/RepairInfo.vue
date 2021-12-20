@@ -28,14 +28,6 @@
                     <div class="key">车辆编号</div>
                     <div class="value">{{detail.item_code || '-'}}</div>
                 </div>
-                <div class="info-item">
-                    <div class="key">创建人</div>
-                    <div class="value">{{detail.user_name || '-'}}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">创建时间</div>
-                    <div class="value">{{$Util.timeFilter(detail.create_time) || '-'}}</div>
-                </div>
             </a-col>
             <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
 
@@ -57,10 +49,7 @@
                     <div class="key">客户地址</div>
                     <div class="value">{{detail.customer_province + detail.customer_city + detail.customer_county + detail.customer_address || '-'}}</div>
                 </div>
-                <div class="info-item">
-                    <div class="key">优先级</div>
-                    <div class="value">{{$Util.repairPriorityFilter(detail.priority)}}</div>
-                </div>
+
 
 
                 <div class="info-item">
@@ -70,10 +59,6 @@
                 <div class="info-item">
                     <div class="key">维修信息</div>
                     <div class="value">{{detail.repair_message || '-'}}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">实施时间</div>
-                    <div class="value">{{$Util.timeFilter(detail.finish_time) || '-'}}</div>
                 </div>
 
             </a-col>

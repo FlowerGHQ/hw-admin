@@ -13,7 +13,7 @@
                     <div class="key">员工名称:</div>
                     <div class="value">
                         <div class="value">
-                            <a-input placeholder="请输入员工名称" v-model:value="form.name" @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入员工名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </div>
                 </a-col>
@@ -97,7 +97,7 @@ export default {
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
-            form: {
+            searchForm: {
                 name:''
             },
 
@@ -154,14 +154,14 @@ export default {
             this.pageChange(1);
         },
         handleSearchReset() {    // 重置搜索
-            this.form.name =[]
+            Object.assign(this.searchForm, this.$options.data().searchForm)
             this.create_time = []
             this.pageChange(1);
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
             Core.Api.User.list({
-                name: this.form.name,
+                name: this.searchForm.name,
                 type: this.loginType,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
