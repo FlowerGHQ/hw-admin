@@ -285,6 +285,7 @@ export default {
                 for (const key in this.form) {
                     this.form[key] = res[key]
                 }
+                console.log(this.form.customer_county)
                 this.form.customer_id = this.form.customer_id || undefined
                 this.form.repair_user_id = this.form.repair_user_id || undefined
                 this.form.plan_time = this.form.plan_time ? dayjs.unix(this.form.plan_time).format('YYYY-MM-DD HH:mm:ss') : undefined

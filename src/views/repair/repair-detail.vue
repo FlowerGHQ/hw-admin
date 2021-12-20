@@ -4,13 +4,15 @@
         <div class="title-container">
             <div class="title-area">工单详情</div>
             <div class="btns-area">
+                <a-button type="primary" @click="handleSecondDoor()" ><i class="icon i_check_c"/>二次上门</a-button>
+                <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.account_id == User.id"><i class="icon i_check_c"/>转单</a-button>
                 <a-button type="primary" @click="handleRepairCheck()" v-if="detail.status == STATUS.WAIT_CHECK && detail.account_id == User.id"><i class="icon i_check_c"/>确定</a-button>
-                <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_check_c"/>提交</a-button>
+                <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION && detail.account_id == User.id"><i class="icon i_check_c"/>提交</a-button>
 
 
                 <a-button type="primary" @click="routerChange('invoice')" v-if="detail.status == STATUS.REPAIR_END || detail.status == STATUS.SETTLEMENT ">查看结算单</a-button>
                 <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END ">结算</a-button>
-                <a-button type="primary" @click="handleResultShow()" v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_edit"/>维修完成</a-button>
+                <a-button type="primary" @click="handleResultShow()" v-if="detail.status == STATUS.WAIT_REPAIR && detail.account_id == User.id"><i class="icon i_edit"/>维修完成</a-button>
 
                 <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_edit"/>编辑</a-button>
                 <!-- <a-button type="danger" ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button> -->
@@ -90,6 +92,38 @@
                 </div>
             </div>
         </a-modal>
+        <a-modal v-model:visible="secondDoorShow" width="600px" title="维修结果" @ok="handleSecondDoorSubmit">
+            <div class="form-item">
+                <div class="key">计划时间</div>
+                <div class="value">
+                    <a-date-picker v-model:value="repairForm.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>
+                </div>
+            </div>
+            <div class="form-item">
+                <div class="key">完成时间</div>
+                <div class="value">
+                    <a-date-picker v-model:value="repairForm.finish_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>
+                </div>
+            </div>
+        </a-modal>
+        <a-modal v-model:visible="modalFailShow" width="600px" title="维修结果" @ok="handleResultSubmit">
+            <div class="modal-content">
+                <div class="form-item">
+                    <div class="key">维修结果</div>
+                    <div class="value">
+                        <a-select v-model:value="repairForm.results" placeholder="请选择维修结果">
+                            <a-select-option v-for="results of resultsList" :key="results.value" :value="results.value">{{results.name}}</a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item" v-if="repairForm.results == REPAIR.RESULTS.FAIL">
+                    <div class="key">失败原因</div>
+                    <div class="value">
+                        <a-input v-model:value="repairForm.fail_remark" placeholder="请输入失败原因"/>
+                    </div>
+                </div>
+            </div>
+        </a-modal>
     </template>
 </div>
 </template>
@@ -101,6 +135,7 @@ import CheckResult from './components/CheckResult.vue';
 import RepairInfo from './components/RepairInfo.vue';
 import ActionLog from './components/ActionLog.vue';
 import MySteps from '@/components/MySteps.vue';
+import dayjs from "dayjs";
 
 const REPAIR = Core.Const.REPAIR
 const User = Core.Data.getUser();
@@ -128,9 +163,13 @@ export default {
             resultsList: Core.Const.REPAIR.RESULTS_LIST,
 
             modalFailShow: false,
+            secondDoorShow: false,
             repairForm: {
                 results: undefined,
                 fail_remark: undefined,
+                plan_time: undefined,
+                finish_time: undefined,
+
             },
             faultList:[],
             failList:[],
@@ -250,6 +289,29 @@ export default {
             }).finally(() => {
                 this.loading = false;
                 this.modalFailShow = false
+            });
+        },
+        handleSecondDoor(){
+            this.secondDoorShow = true
+            this.repairForm.plan_time = this.detail.plan_time ? dayjs.unix(this.detail.plan_time).format('YYYY-MM-DD HH:mm:ss') : undefined
+            this.repairForm.finish_time = this.detail.finish_time ? dayjs.unix(this.detail.finish_time).format('YYYY-MM-DD HH:mm:ss') : undefined
+        },
+        handleSecondDoorSubmit() {
+            let repairForm = Core.Util.deepCopy(this.repairForm)
+            repairForm.plan_time = repairForm.plan_time ? dayjs(repairForm.plan_time).unix() : 0
+            repairForm.finish_time = repairForm.finish_time ? dayjs(repairForm.finish_time).unix() : 0
+            Core.Api.Repair.secondDoor({
+                id: this.detail.id,
+                ...repairForm
+            }).then(res => {
+                this.getRepairDetail()
+            }).catch(err => {
+                console.log('getRepairDetail err', err)
+            }).finally(() => {
+                this.repairForm.plan_time = undefined
+                this.repairForm.finish_time = undefined
+                this.loading = false;
+                this.secondDoorShow = false
             });
         },
         getRepairFaultList(){
