@@ -30,7 +30,7 @@
                 </div>
                 <div class="info-item">
                     <div class="key">创建人</div>
-                    <div class="value">{{detail.operator_name || '-'}}</div>
+                    <div class="value">{{detail.user_name || '-'}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">创建时间</div>
@@ -55,7 +55,7 @@
                 </div>
                 <div class="info-item">
                     <div class="key">客户地址</div>
-                    <div class="value">{{detail.customer_address || '-'}}</div>
+                    <div class="value">{{detail.customer_province + detail.customer_city + detail.customer_county + detail.customer_address || '-'}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">优先级</div>
@@ -65,11 +65,11 @@
 
                 <div class="info-item">
                     <div class="key">工单备注</div>
-                    <div class="value">{{remark || '-'}}</div>
+                    <div class="value">{{detail.remark || '-'}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">维修信息</div>
-                    <div class="value">{{repair_message || '-'}}</div>
+                    <div class="value">{{detail.repair_message || '-'}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">实施时间</div>
