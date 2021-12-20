@@ -6,6 +6,7 @@ let URL_POINT = 'https://eos-api.hw.innotick.com'
 switch (window.location.hostname) {
     case 'eos.hw.innotick.com':
 		URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服
+		break;
 	case "10.0.0.205" :
 		URL_POINT = 'http://10.0.0.205:8083' // 徐伟
 		break;
