@@ -47,7 +47,7 @@
         <div class="category-container" v-if="firstLevelId">
             <div class="category-title">{{firstLevelName}}</div>
             <div class="category-content">
-                <CategoryTree :parentId='firstLevelId' @change='handleCategoryChange'/>
+                <CategoryTree :parentId='firstLevelId' @change='handleCategoryChange' ref="CategoryTree"/>
             </div>
         </div>
         <div class="item-content" v-if="tableData.length">
@@ -190,6 +190,9 @@ export default {
             this.searchForm.category_id = category
             if ( this.firstLevelId && category === this.firstLevelId) {
                 this.firstLevelName = this.categoryList.find(i => i.id === category).name
+                this.$nextTick(() => {
+                    this.$refs.CategoryTree.handleReset();
+                })
             }
             this.pageChange(1)
         },

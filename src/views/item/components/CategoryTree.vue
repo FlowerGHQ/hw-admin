@@ -39,6 +39,7 @@ export default {
     },
     watch: {
         parentId(n) {
+            console.log('parentId:', n)
             this.getDataByParent(n)
             this.selectKeys = ''
         }
@@ -84,6 +85,10 @@ export default {
             if (record.id === this.selectKeys) { return }
             this.selectKeys = record.id
             this.$emit('change', record.id)
+        },
+
+        handleReset() {
+            this.selectKeys = '';
         }
     },
 }
