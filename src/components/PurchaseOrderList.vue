@@ -144,7 +144,7 @@ export default {
             this.loading = true;
             this.loading = false;
             Core.Api.Purchase.list({
-                org_id: this.orgId,
+                store_id: this.orgId,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
