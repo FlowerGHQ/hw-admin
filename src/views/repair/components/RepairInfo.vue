@@ -13,39 +13,69 @@
                     <div class="value">{{detail.desc || '-'}}</div>
                 </div>
                 <div class="info-item">
-                    <div class="key">优先级</div>
-                    <div class="value">{{$Util.repairPriorityFilter(detail.priority)}}</div>
+                    <div class="key">工单分类</div>
+                    <div class="value">{{$Util.repairTypeFilter(detail.type)}}</div>
                 </div>
                 <div class="info-item">
-                    <div class="key">创建时间</div>
-                    <div class="value">{{$Util.timeFilter(detail.create_time) || '-'}}</div>
+                    <div class="key">维修方式</div>
+                    <div class="value">{{$Util.repairChannelFilter(detail.channel)}}</div>
                 </div>
                 <div class="info-item">
-                    <div class="key">实施时间</div>
-                    <div class="value">{{$Util.timeFilter(detail.finish_time) || '-'}}</div>
+                    <div class="key">维修类别</div>
+                    <div class="value">{{$Util.repairMethodFilter(detail.repair_method) || '-'}}</div>
                 </div>
-            </a-col>
-            <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
+                <div class="info-item">
+                    <div class="key">车辆编号</div>
+                    <div class="value">{{detail.item_code || '-'}}</div>
+                </div>
                 <div class="info-item">
                     <div class="key">创建人</div>
                     <div class="value">{{detail.operator_name || '-'}}</div>
                 </div>
                 <div class="info-item">
+                    <div class="key">创建时间</div>
+                    <div class="value">{{$Util.timeFilter(detail.create_time) || '-'}}</div>
+                </div>
+            </a-col>
+            <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
+
+
+
+                <div class="info-item">
                     <div class="key">相关客户</div>
                     <div class="value">{{detail.customer_name || '-'}}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">客户电话</div>
+                    <div class="value">{{detail.customer_phone || '-'}}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">客户邮箱</div>
+                    <div class="value">{{detail.customer_email || '-'}}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">客户地址</div>
+                    <div class="value">{{detail.customer_address || '-'}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">优先级</div>
                     <div class="value">{{$Util.repairPriorityFilter(detail.priority)}}</div>
                 </div>
+
+
                 <div class="info-item">
-                    <div class="key">创建时间</div>
-                    <div class="value">{{$Util.timeFilter(detail.create_time) || '-'}}</div>
+                    <div class="key">工单备注</div>
+                    <div class="value">{{remark || '-'}}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">维修信息</div>
+                    <div class="value">{{repair_message || '-'}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">实施时间</div>
                     <div class="value">{{$Util.timeFilter(detail.finish_time) || '-'}}</div>
                 </div>
+
             </a-col>
         </a-row>
     </a-collapse-panel>
