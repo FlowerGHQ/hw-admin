@@ -1,7 +1,7 @@
 <template>
 <div id="Login">
     <div class="login-header">
-        <span class="text">融界后台管理系统</span>
+        <span class="text">浩万后台管理系统</span>
     </div>
     <div class="login-container">
         <div class="form-title">账号登录</div>
@@ -59,7 +59,7 @@ export default {
         if (Core.Data.getLoginType()) {
             this.loginForm.user_type = Core.Data.getLoginType();
         } else {
-            this.loginForm.user_type = LOGIN_TYPE.DEALER;
+            this.loginForm.user_type = LOGIN_TYPE.AGENT;
         }
     },
     mounted() {},
