@@ -69,7 +69,7 @@
             <div class="form-item required">
                 <div class="key">相关客户</div>
                 <div class="value">
-                    <a-select placeholder="请选择相关客户" v-model:value="form.customer_id" @change="handleCustomerSelect" show-search  >
+                    <a-select placeholder="请选择相关客户" v-model:value="form.customer_id" @change="handleCustomerSelect" show-search  :disabled="detail.status == REPAIR.STATUS.WAIT_CHECK">
                         <a-select-option v-for="(item,index) of customerList" :key="index" :value="item.id">{{item.name}}</a-select-option>
                     </a-select>
                 </div>
@@ -169,7 +169,9 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            detail: {}, // 工单详情
+            detail: {
+                status: 0,
+            }, // 工单详情
 
             typeList: REPAIR.TYPE_LIST, // 工单分类
             methodList: REPAIR.METHOD_LIST, // 维修类别
@@ -177,7 +179,7 @@ export default {
             priorityList: REPAIR.PRIORITY_LIST, // 紧急程度
             customerList: [], // 车主列表
             staffList: [], // 员工列表
-
+            REPAIR,
             form: {
                 id: '',
 
@@ -232,6 +234,7 @@ export default {
         // 页面跳转
         routerChange(type, item) {
             let routeUrl
+            let WORKER = Core.Const.USER.TYPE.WORKER
             switch (type) {
                 case 'back':
                     this.$router.go(-1)
@@ -245,8 +248,9 @@ export default {
                 case 'staff':  // 详情
                     routeUrl = this.$router.resolve({
                         path: "/user/user-edit",
-                        query: { type: this.loginType }
+                        query: { type: WORKER}
                     })
+
                     window.open(routeUrl.href, '_blank')
                     break;
             }
@@ -266,6 +270,8 @@ export default {
             Core.Api.User.list({
                 page: 0,
                 type: Core.Const.USER.TYPE.WORKER,
+                org_id: this.orgId,
+                org_type: this.orgType,
             }).then(res => {
                 this.staffList = res.list
                 if (val == 'refresh'){
@@ -280,12 +286,11 @@ export default {
                 id: this.form.id,
             }).then(res => {
                 console.log('getRepairDetail res', res)
-                this.detail = res.detail
+                this.detail = res
                 this.form.id = res.id
                 for (const key in this.form) {
                     this.form[key] = res[key]
                 }
-                console.log(this.form.customer_county)
                 this.form.customer_id = this.form.customer_id || undefined
                 this.form.repair_user_id = this.form.repair_user_id || undefined
                 this.form.plan_time = this.form.plan_time ? dayjs.unix(this.form.plan_time).format('YYYY-MM-DD HH:mm:ss') : undefined
@@ -303,13 +308,13 @@ export default {
 
             form.plan_time = form.plan_time ? dayjs(form.plan_time).unix() : 0
             form.finish_time = form.finish_time ? dayjs(form.finish_time).unix() : 0
-
             console.log('handleSubmit form:', form)
             let checkRes = this.checkFormInput(form);
             if (!checkRes) { return }
 
             let apiName = form.id ? 'hand' : 'create'
             Core.Api.Repair[apiName](form).then(() => {
+
                 this.$message.success('保存成功')
                 this.routerChange('back')
             }).catch(err => {
@@ -351,14 +356,6 @@ export default {
                     this.$message.warning('请选择相关客户')
                     return 0
                 }
-                if (!form.customer_phone) {
-                    this.$message.warning('请输入客户电话')
-                    return 0
-                }
-                if (!form.customer_email) {
-                    this.$message.warning('请输入客户邮箱')
-                    return 0
-                }
                 if (form.channel == 1 && !form.customer_address) {
                     this.$message.warning('请输入详细地址')
                     return 0
@@ -367,6 +364,23 @@ export default {
                     this.$message.warning('请选择工单负责人')
                     return 0
                 }
+                if (!form.customer_name) {
+                    this.$message.warning('请选择客户名称')
+                    return 0
+                }
+                if (!form.customer_phone) {
+                    this.$message.warning('请选择客户电话')
+                    return 0
+                }
+                if (!form.customer_email) {
+                    this.$message.warning('请输入客户邮箱')
+                    return 0
+                }
+                if (!form.customer_province && !form.customer_county && !form.customer_county ) {
+                    this.$message.warning('请选择客户地址')
+                    return 0
+                }
+
             }
             return 1
         },
