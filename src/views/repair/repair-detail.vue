@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">工单详情</div>
             <div class="btns-area">
-                <a-button type="primary" @click="handleRepairCheck()" v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_check_c"/>确定</a-button>
+                <a-button type="primary" @click="handleRepairCheck()" v-if="detail.status == STATUS.WAIT_CHECK && detail.account_id == User.id"><i class="icon i_check_c"/>确定</a-button>
                 <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_check_c"/>提交</a-button>
 
 
@@ -103,7 +103,7 @@ import ActionLog from './components/ActionLog.vue';
 import MySteps from '@/components/MySteps.vue';
 
 const REPAIR = Core.Const.REPAIR
-
+const User = Core.Data.getUser();
 export default {
     name: 'RepairDetail',
     components: {
@@ -116,6 +116,7 @@ export default {
     props: {},
     data() {
         return {
+            User,
             REPAIR,
             STATUS: REPAIR.STATUS,
             loginType: Core.Data.getLoginType(),
@@ -151,7 +152,7 @@ export default {
     created() {
         this.id = Number(this.$route.query.id) || 0
         this.getRepairDetail();
-
+        console.log(User.id)
     },
     methods: {
         // 页面跳转
