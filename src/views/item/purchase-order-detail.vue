@@ -395,5 +395,5 @@ export default {
 </script>
 
 <style lang="less">
-#PurchaseOrderDetail {}
+// #PurchaseOrderDetail {}
 </style>

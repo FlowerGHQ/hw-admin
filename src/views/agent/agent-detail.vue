@@ -5,7 +5,7 @@
         <div class="btns-area" v-if="$auth('ADMIN')">
             <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
             <!-- <a-button type="primary" ghost @click="handleDelete(agent_id)"><i class="icon i_delete"/>删除</a-button> -->
-            <a-button :type="detail.status ? 'danger' : 'primary'" ghost @click="handleStatusChange()">
+            <a-button :type="detail.status ? 'default' : 'primary'" :danger="detail.status ? true : false" ghost @click="handleStatusChange()">
                 <template v-if="detail.status"><i class="icon i_forbidden"/>禁用</template>
                 <template v-else><i class="icon i_enable"/>启用</template>
             </a-button>
@@ -53,6 +53,9 @@
             <a-tab-pane key="UserList" tab="员工管理">
                 <UserList :orgId="agent_id" :orgType="ORG_TYPE.AGENT" :type="USER_TYPE.AGENT" v-if="activeKey === 'UserList'"/>
             </a-tab-pane>
+            <a-tab-pane key="WorkerList" tab="维修工管理">
+                <UserList :orgId="agent_id" :orgType="ORG_TYPE.AGENT" :type="USER_TYPE.WORKER" v-if="activeKey === 'WorkerList'"/>
+            </a-tab-pane>
             <a-tab-pane key="StoreList" tab="门店管理" v-if="loginType == USER_TYPE.ADMIN">
                 <StoreList :orgId="agent_id" :type="USER_TYPE.AGENT" v-if="activeKey === 'StoreList'"/>
             </a-tab-pane>
@@ -83,7 +86,7 @@ export default {
     data() {
         return {
             USER_TYPE,
-            ORG_TYPE: Core.Const.USER.ORG_TYPE,
+            ORG_TYPE: Core.Const.LOGIN.TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,

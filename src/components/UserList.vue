@@ -1,12 +1,12 @@
 <template>
 <div class="UserList gray-panel no-margin">
     <div class="panel-title">
-        <div class="title">员工列表</div>
+        <div class="title">{{type == USER_TYPE.WORKER ? '维修工' : '员工'}}列表</div>
     </div>
     <div class="panel-content">
         <div class="table-container">
             <a-button type="primary" ghost @click="routerChange('edit')" style="margin-bottom: 10px;">
-                <i class="icon i_add"/>新增员工
+                <i class="icon i_add"/>新增{{type == USER_TYPE.WORKER ? '维修工' : '员工'}}
             </a-button>
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text , record }">
@@ -58,6 +58,7 @@
 
 <script>
 import Core from '../core';
+const USER_TYPE = Core.Const.USER.TYPE
 
 export default {
     name: 'UserList',
@@ -78,6 +79,7 @@ export default {
     },
     data() {
         return {
+            USER_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
