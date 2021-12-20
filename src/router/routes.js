@@ -93,7 +93,6 @@ const routes = [
     },
     {   // 维修单 结算下载
         path: '/repair/invoice-download',
-        component: Layout,
         name: 'RepairInvoiceExport',
         component: () => import('@/views/repair/repair-invoice.vue'),
         hidden: true,
