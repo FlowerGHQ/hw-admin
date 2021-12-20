@@ -1,13 +1,14 @@
 import dayjs from 'dayjs';
 
 let OSS_POINT = 'http://rebuild-mel-erp.oss-cn-hangzhou.aliyuncs.com'
-let URL_POINT = 'http://api.eos.rebuildsoft.com'
+let URL_POINT = 'http://eos-api.hw.innotick.com'
 
 switch (window.location.hostname) {
+    case 'eos.hw.innotick.com':
+		URL_POINT = 'http://eos-api.hw.innotick.com' // 正式服
 	case "10.0.0.205" :
 		URL_POINT = 'http://10.0.0.205:8083' // 徐伟
 		break;
-
 	default:
 		// URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
 		URL_POINT = 'http://10.0.0.109:8083' // 谢耀圣
@@ -17,6 +18,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.0.0.155:8083' // 戚哲康
         break;
 }
+
 
 let Const = {
     NET: {
