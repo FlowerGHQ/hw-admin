@@ -105,9 +105,16 @@ export default {
                         path: "/repair/repair-detail",
                         query: { id: this.id },
                     })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'back':  // 编辑
+                    routeUrl = this.$router.resolve({
+                        path: "/repair/repair-detail",
+                        query: { id: this.id },
+                    })
+                    window.open(routeUrl.href, '_self')
                     break;
             }
-            window.open(routeUrl.href, '_self')
         },
         // 获取工单详情
         getRepairDetail() {

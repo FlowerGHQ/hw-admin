@@ -5,7 +5,7 @@
                 <div class="title-area">商品详情</div>
                 <div class="btns-area">
                     <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
-                    <a-button type="danger" ghost @click="handleDelete()"><i class="icon i_edit"/>删除</a-button>
+                    <a-button type="danger" ghost @click="handleDelete()"><i class="icon i_delete"/>删除</a-button>
                 </div>
             </div>
             <div class="gray-panel">
@@ -124,7 +124,7 @@ export default {
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.User.delete({id: _this.id}).then(() => {
+                    Core.Api.Item.delete({id: _this.id}).then(() => {
                         _this.$message.success('删除成功');
                         _this.routerChange('back');
                     }).catch(err => {

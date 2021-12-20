@@ -91,6 +91,17 @@ const routes = [
             },
         ]
     },
+    {   // 维修单 结算下载
+        path: '/repair/invoice-download',
+        component: Layout,
+        name: 'RepairInvoiceExport',
+        component: () => import('@/views/repair/repair-invoice.vue'),
+        hidden: true,
+        meta: {
+            title: '维修单结算',
+            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
+        },
+    },
     {   // 经销商管理 - 平台端
         path: '/agent',
         component: Layout,
