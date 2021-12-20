@@ -126,7 +126,7 @@ export default {
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             Core.Api.Store.list({
-                org_id: this.orgId,
+                agent_id: this.orgId,
                 type: this.type,
                 page: this.currPage,
                 page_size: this.pageSize,

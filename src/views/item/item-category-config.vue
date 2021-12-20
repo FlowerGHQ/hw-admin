@@ -200,9 +200,8 @@ export default {
         }
         .select-input {
             display: flex;
-                margin-top: 8px;
-            + .select-input {
-            }
+            margin-top: 8px;
+            // + .select-input {}
             .ant-btn-link {
                 margin-left: 12px;
             }
