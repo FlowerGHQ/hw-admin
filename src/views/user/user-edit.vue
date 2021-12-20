@@ -146,7 +146,7 @@ export default {
             }
             this.org_type = this.type
             if (this.type == this.USER_TYPE.WORKER) this.org_type = this.USER_TYPE.STORE
-            console.log(forms)
+            // console.log(judge)
             Core.Api.Account[judge]({
                 ...form,
                 type: this.type,
