@@ -100,8 +100,8 @@
                             <div class="info-item">
                                 <div class="key">物流信息</div>
                                 <div class="value">
-                                    <WaybillShow v-if="waybillInfo" @change="getWaybill" :detail='waybill' :list='waybillInfo.list' :can-edit="$auth('ADMIN')"/>
-                                    <template v-else>暂无物流信息</template>
+                                    <WaybillShow v-if="waybillInfo && detail.status != PURCHASE.STATUS.CLOSE && detail.status != PURCHASE.STATUS.WAIT_PAY && detail.status != PURCHASE.STATUS.INIT && detail.status != PURCHASE.STATUS.WAIT_DELIVER" @change="getWaybill" :detail='waybill' :list='waybillInfo.list' :can-edit="$auth('ADMIN')" />
+                                    <template >暂无物流信息</template>
                                 </div>
                             </div>
                         </a-col>
