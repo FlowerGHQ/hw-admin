@@ -145,6 +145,8 @@ export default {
             this.loading = false;
             Core.Api.Purchase.list({
                 org_id: this.orgId,
+                store_id:this.storeId,
+                agent_id:this.agentId,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {

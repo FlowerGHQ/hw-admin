@@ -37,7 +37,7 @@
                 <a-divider type="vertical" />
                 <a-statistic title="累计营收" :value="0" :precision="2" prefix='￥'/>
                 <a-divider type="vertical" />
-                <a-statistic title="总订单数" :value="0" />
+                <a-statistic title="总订单数" :value="detail.order_count" />
             </div>
         </div>
     </div>
@@ -50,7 +50,7 @@
                 <UserList :orgType="ORG_TYPE.STORE" :orgId="store_id"  :type="USER_TYPE.WORKER" v-if="activeKey == 'WorkerList'"/>
             </a-tab-pane>
             <a-tab-pane key="PurchaseList" tab="订单列表">
-                <PurchaseList :orgId="store_id" v-if="activeKey == 'PurchaseList'"/>
+                <PurchaseList :storeId="store_id" v-if="activeKey == 'PurchaseList'"/>
             </a-tab-pane>
         </a-tabs>
     </div>
