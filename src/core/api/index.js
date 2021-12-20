@@ -140,6 +140,7 @@ const apiList = {
     },
     Store: { // 门店管理
         list: ['PostJson', 'store/list'],
+        listAll: ['PostJson', 'store/list-name'],
         save: ['PostJson', 'store/save'],
         update: ['PostJson', 'store/update'],
         detail: ['PostJson', 'store/detail'],
@@ -154,7 +155,6 @@ const apiList = {
     },
 	ActionLog: {
 		list: ['PostJson', 'action-log/list'],
-
 	},
 	Waybill:{
 		detailByTarget: ['PostJson', 'waybill/detail-by-target'],

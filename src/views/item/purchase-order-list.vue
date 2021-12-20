@@ -25,10 +25,19 @@
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
-                    <div class="key">经销商：</div>
+                    <div class="key">所属经销商：</div>
                     <div class="value">
-                        <a-select placeholder="请选择经销商" v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
+                        <a-select placeholder="请选择所属经销商" v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
                             <a-select-option v-for="(item,index) of agentList" :key="index" :value="item.id">{{item.name}}</a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'AGENT')">
+                    <div class="key">所属门店：</div>
+                    <div class="value">
+                        <a-select v-model:value="searchForm.store_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear
+                            :placeholder="searchForm.agent_id ? '请选择所属门店' : '请先选择所属经销商'" :disabled="!searchForm.agent_id">
+                            <a-select-option v-for="(item,index) of storeList" :key="index" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
@@ -135,20 +144,27 @@ export default {
                 {text: '交易完成', value: '0', color: 'green',  key: '400'},
                 {text: '交易关闭', value: '0', color: 'grey',  key: '1000'},
             ],
+            agentList: [],
+            storeList: [],
             create_time: [],
             searchForm: {
                 sn: '',
                 status: undefined,
                 item_type: 0,
+                agent_id: undefined,
+                store_id: undefined,
                 type: 0,
                 subject: 0,
             },
             filteredInfo: null,
-
             tableData: [],
         };
     },
-    watch: {},
+    watch: {
+        'searchForm.agent_id': function(n) {
+            this.getStoreList()
+        },
+    },
     computed: {
         tableColumns() {
             let columns = [
@@ -173,6 +189,11 @@ export default {
         this.getStatusStat();
         if (this.$auth('ADMIN')) {
             this.getAgentList()
+        } else if (this.$auth('AGENT')) {
+            this.searchForm.agent_id = Core.Data.getOrgId()
+            this.getStoreList()
+        } else if (this.$auth('STORE')) {
+            this.searchForm.store_id = Core.Data.getOrgId()
         }
     },
     methods: {
@@ -202,22 +223,21 @@ export default {
             this.pageChange(1);
         },
         handleSearchReset() {  // 重置搜索
-            console.log('handleSearchReset:')
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.filteredInfo = null
-
-            console.log('this.searchForm:', this.searchForm)
+            if (this.$auth('AGENT')) {
+                this.searchForm.agent_id = Core.Data.getOrgId()
+            } else if (this.$auth('STORE')) {
+                this.searchForm.store_id = Core.Data.getOrgId()
+            }
             this.create_time = []
             this.pageChange(1);
         },
         handleTableChange(page, filters, sorter) {
             console.log('handleTableChange filters:', filters)
-            this.filteredInfo = filters;
+            // this.filteredInfo = filters;
             for (const key in filters) {
                 this.searchForm[key] = filters[key] ? filters[key][0] : 0
             }
-            console.log('this.searchForm:', this.searchForm)
-            console.log('this.tableColumns:', this.tableColumns)
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
@@ -239,13 +259,26 @@ export default {
                 this.loading = false;
             });
         },
-        getAgentList() {        // 获取 经销商 数据
+        getAgentList() { // 获取 经销商 数据
             this.loading = true;
             Core.Api.Agent.listAll().then(res => {
                 console.log("getAgentList res", res)
                 this.agentList = res.list;
             }).catch(err => {
                 console.log('getAgentList err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        getStoreList() { // 获取 门店 数据
+            this.loading = true;
+            Core.Api.Store.listAll({
+                agent_id: this.searchForm.agent_id
+            }).then(res => {
+                console.log("getStoreList res", res)
+                this.storeList = res.list;
+            }).catch(err => {
+                console.log('getStoreList err', err)
             }).finally(() => {
                 this.loading = false;
             });
