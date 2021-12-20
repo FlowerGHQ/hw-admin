@@ -101,7 +101,7 @@ export default {
     computed: {},
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0
-        this.form.agent_id = Number(this.$route.query.agent_id) || 0
+        this.form.agent_id = Number(this.$route.query.agent_id) || undefined
         if (this.form.id) {
             this.getStoreDetail();
         }
