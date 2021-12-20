@@ -44,7 +44,7 @@ import Core from '@/core';
 
 export default {
     components: {
-        ItemTable: () => import('@/components/table/ItemTable'),
+        ItemTable: () => import('@/components/table/ItemTable.vue'),
     },
     props: {
         btnText: {
