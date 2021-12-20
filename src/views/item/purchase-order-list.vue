@@ -1,4 +1,4 @@
- <template>
+<template>
 <div id="PurchaseList">
     <div class="list-container">
         <div class="title-container">
@@ -22,6 +22,14 @@
                     <div class="key">订单编号:</div>
                     <div class="value">
                         <a-input placeholder="请输入工单编号" v-model:value="searchForm.sn" @keydown.enter='handleSearch'/>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
+                    <div class="key">经销商：</div>
+                    <div class="value">
+                        <a-select placeholder="请选择经销商" v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
+                            <a-select-option v-for="(item,index) of agentList" :key="index" :value="item.id">{{item.name}}</a-select-option>
+                        </a-select>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
@@ -137,29 +145,35 @@ export default {
             },
             filteredInfo: null,
 
-            tableFields: [],
             tableData: [],
         };
     },
     watch: {},
     computed: {
         tableColumns() {
-            let { filteredInfo } = this;
-            filteredInfo = filteredInfo || {};
             let columns = [
                 { title: '订单编号', dataIndex: 'sn', },
-                { title: '价格', dataIndex: 'price'  },
+                { title: '价格', dataIndex: 'price' },
                 { title: '订单状态', dataIndex: 'status' },
                 { title: '是否已评论', dataIndex: 'flag_review' },
                 { title: '下单时间', dataIndex: 'create_time', key: 'time' },
-                { title: '操作', key: 'operation', fixed: 'right', width: 100, }
+                { title: '操作', key: 'operation', fixed: 'right'}
             ]
+            if (this.$auth('ADMIN', 'AGENT')) {
+                columns.splice(2, 0, {title: '所属门店', dataIndex: 'store_name', key: 'item'})
+            }
+            if (this.$auth('ADMIN')) {
+                columns.splice(2, 0, {title: '所属运营商', dataIndex: 'agent_name', key: 'item'})
+            }
             return columns
-        },
+        }
     },
     mounted() {
         this.getTableData();
         this.getStatusStat();
+        if (this.$auth('ADMIN')) {
+            this.getAgentList()
+        }
     },
     methods: {
         routerChange(type, item = {}) {
@@ -225,7 +239,18 @@ export default {
                 this.loading = false;
             });
         },
-        getStatusStat() {  // 获取 表格 数据
+        getAgentList() {        // 获取 经销商 数据
+            this.loading = true;
+            Core.Api.Agent.listAll().then(res => {
+                console.log("getAgentList res", res)
+                this.agentList = res.list;
+            }).catch(err => {
+                console.log('getAgentList err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        getStatusStat() {  // 获取 状态统计 数据
             this.loading = true;
             Core.Api.Purchase.statusList().then(res => {
                 console.log("getStatusStat res:", res)

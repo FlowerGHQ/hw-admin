@@ -47,7 +47,7 @@
                                 </a-col>
                                 <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                                     <div class="info-item" v-for="(item, index) of config" :key="index">
-                                        <div class="key">item.name</div>
+                                        <div class="key">{{item.name}}</div>
                                         <div class="value">{{item.value || '-'}}</div>
                                     </div>
                                 </a-col>

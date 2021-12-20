@@ -60,10 +60,7 @@
                                 </a-tooltip>
                             </div>
                         </template>
-                        <template v-if="column.key === 'name'">
-                            {{ text || '-' }}
-                        </template>
-                        <template v-if="column.key === 'phone'">
+                        <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'time'">
@@ -141,8 +138,8 @@ export default {
         tableColumns() {
             let tableColumns = [
                 {title: '门店名称', dataIndex: 'name', key: 'detail'},
-                {title: '联系人姓名', dataIndex: 'contact_name', key:'name'},
-                {title: '联系人电话', dataIndex: 'contact_phone',key:'phone'},
+                {title: '联系人姓名', dataIndex: 'contact_name', key:'item'},
+                {title: '联系人电话', dataIndex: 'contact_phone',key:'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '状态', dataIndex: 'status', key: 'status' },
                 {title: '操作', key: 'operation', fixed: 'right'},
