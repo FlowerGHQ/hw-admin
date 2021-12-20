@@ -171,6 +171,7 @@ export default {
                     Core.Api.Store.updateStatus({id:record.id}).then(() => {
                         _this.$message.success(`${record.status ? '禁用' : '启用'}成功`);
                         _this.getTableData();
+                        _this.$emit('change')// 刷新父组件
                     }).catch(err => {
                         console.log("handleStatusChange err", err);
                     })
