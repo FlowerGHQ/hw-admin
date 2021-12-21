@@ -209,12 +209,14 @@ export default {
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'edit':  // 再来一单
-                    this.handleRecreate(item);
-                    routeUrl = this.$router.resolve({
-                        path: "/purchase/item-collect",
-                        query: { id: item.id }
-                    })
-                    window.open(routeUrl.href, '_self')
+                    if (item.status === 400) {
+                        this.handleRecreate(item);
+                        routeUrl = this.$router.resolve({
+                            path: "/purchase/item-collect",
+                            query: { id: item.id }
+                        })
+                        window.open(routeUrl.href, '_self')
+                    }
                     break;
             }
         },
