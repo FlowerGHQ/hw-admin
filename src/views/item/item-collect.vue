@@ -137,26 +137,15 @@ export default {
             })
         },
 
-        async getItemDetail(item) {  // 获取 详情 数据
-            try {
-                let res = await Core.Api.Item.detail({id: item.item_id})
-                console.log("getItemDetail res", res)
-                return res.in_favorite
-            } catch(err) {
-                return false
-            }
-        },
-
         // 结算
         handleSettle() {
         },
 
         // 从购物车移至收藏
-        async handleMoveToFavorite(item) {
+        handleMoveToFavorite(item) {
             console.log("handleMoveToFavorite item", item)
             let _this = this
-            let in_favorite = await this.getItemDetail(item)
-            if (in_favorite) {
+            if (item.item.in_favorite) {
                 return this.$message.warning('该商品已在收藏夹中')
             }
             this.$confirm({
