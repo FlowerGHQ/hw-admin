@@ -30,6 +30,14 @@
                             <template v-if="column.key === 'money'">
                                 {{$Util.countFilter(text)}}元
                             </template>
+                            <template v-if="column.dataIndex === 'totle_price'">
+                                <span v-if="record.amount !=undefined">
+                                    {{$Util.countFilter(record.price * record.amount)}}元
+                                </span>
+                                <span v-else>
+                                    0元
+                                </span>
+                            </template>
                             <template v-if="column.dataIndex === 'operation'">
                                 <a-button type="link" @click="handleFailItemDelete(index, fault)"><i class="icon i_delete"/> 移除</a-button>
                             </template>
@@ -53,6 +61,15 @@
                             />
                             <template v-if="column.key === 'money'">
                                 {{$Util.countFilter(text)}}元
+                            </template>
+                            <template v-if="column.dataIndex === 'totle_price'">
+                                <span v-if="record.amount !=undefined">
+                                    {{$Util.countFilter(record.price * record.amount)}}元
+                                </span>
+                                <span v-else>
+                                    0元
+                                </span>
+
                             </template>
                             <template v-if="column.dataIndex === 'operation'">
                                 <a-button type="link" @click="handleExchangeItemDelete(index, fault)"><i class="icon i_delete"/> 移除</a-button>
@@ -100,6 +117,7 @@ export default {
                 { title: '商品名称', dataIndex: 'name' },
                 { title: '数量', dataIndex: 'amount'  },
                 { title: '金额', dataIndex: 'price' , key: 'money'},
+                { title: '金额', dataIndex: 'totle_price' },
                 { title: '操作', dataIndex: 'operation' },
             ],
 
