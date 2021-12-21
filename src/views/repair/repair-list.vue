@@ -170,7 +170,7 @@ export default {
                     filters: Core.Const.REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.repair_method || null },
                 { title: '维修门店',   dataIndex: 'store_name', key: 'item' },
                 { title: '维修门店电话',   dataIndex: 'store_phone', key: 'item' },
-                { title: '接单人',   dataIndex: 'user_name', key: 'item' },
+                { title: '创建人',   dataIndex: 'user_name', key: 'item' },
                 { title: '关联客户', dataIndex: 'customer_name', key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '实施时间', dataIndex: 'working_time', key: 'time' },
