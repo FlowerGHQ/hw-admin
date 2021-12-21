@@ -7,6 +7,15 @@
         </div>
         <div class="form-content">
             <div class="form-item required">
+                <div class="key">类型：</div>
+                <div class="value">
+                    <a-select    v-model:value="type" @change="handleTypeSelect" placeholder="请选择员工类型" allow-clear>
+                        <a-select-option  key="20" :value="loginType">普通员工</a-select-option>
+                        <a-select-option  key="40" value="40">维修工</a-select-option>
+                    </a-select>
+                </div>
+            </div>
+            <div class="form-item required">
                 <div class="key">员工名:</div>
                 <div class="value">
                     <a-input v-model:value="form.name" placeholder="请输入员工名"/>
@@ -68,8 +77,8 @@ export default {
             // 加载
             loading: false,
             user_id: '',
-            org_id: '',
-            org_type: '',
+            org_id: Core.Data.getOrgId(),
+            org_type: Core.Data.getLoginType(),
             type: '',
 
             detail: {},
@@ -90,7 +99,8 @@ export default {
     created() {
         this.type = Number(this.$route.query.type) || 0
         this.user_id = Number(this.$route.query.id) || 0
-        this.org_id = Number(this.$route.query.org_id) || 0
+        this.org_id = Number(this.$route.query.org_id) || Core.Data.getOrgId()
+        this.org_type = Number(this.$route.query.org_type) || Core.Data.getOrgType()
         if (this.user_id) {
             this.getUserDetail();
         }
@@ -123,6 +133,9 @@ export default {
                 this.loading = false;
             });
         },
+        handleTypeSelect(val) {
+            this.type = val
+        },
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
             let judge = "update"
@@ -144,8 +157,6 @@ export default {
             if (!form.email) {
                 return this.$message.warning('请输入员工邮箱')
             }
-            this.org_type = this.type
-            if (this.type == this.USER_TYPE.WORKER) this.org_type = this.USER_TYPE.STORE
             // console.log(judge)
             Core.Api.Account[judge]({
                 ...form,

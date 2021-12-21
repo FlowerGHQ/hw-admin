@@ -32,6 +32,7 @@ let Const = {
         KEY_TOKEN: 'token',
         KEY_USER: 'user',
         KEY_ORG_ID: 'org.id',
+        KEY_ORG_TYPE: 'org.type',
         KEY_LOGIN_TYPE: 'login.type',
         KEY_USER_TYPE: 'user.type',
         KEY_AUTHORITY_LIST: 'authority.list',

@@ -83,6 +83,7 @@ export default {
                 Core.Data.setToken(res.token);
                 Core.Data.setUser(res.user.account);
                 Core.Data.setOrgId(res.user.org_id);
+                Core.Data.setOrgType(res.user.org_type);
 
                 let userType = this.TYPE_MAP[this.loginForm.user_type]
                 /* switch (this.loginForm.user_type) {
