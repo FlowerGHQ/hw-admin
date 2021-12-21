@@ -122,7 +122,7 @@
                     </a-select>
                 </div>
                 <div class="sp">
-                    <a-button type="link" @click="routerChange('staff')">新建员工</a-button>
+<!--                    <a-button type="link" @click="routerChange('staff')">新建员工</a-button>-->
                     <a-button type="link" @click="getStaffList('refresh')">刷新</a-button>
                 </div>
             </div>
