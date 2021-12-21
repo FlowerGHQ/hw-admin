@@ -152,7 +152,7 @@ export default {
         },
 
         // 从购物车移至收藏
-        async handleMoveToFavorite(item) {
+        handleMoveToFavorite(item) {
             console.log("handleMoveToFavorite item", item)
             let _this = this
             let in_favorite = await this.getItemDetail(item)
@@ -171,8 +171,10 @@ export default {
                     } catch(err) {
                         console.log('handleMoveToFavorite err:', err)
                     } finally {
-                        _this.getShopCartList();
-                        _this.getFavoriteList();
+                        // setTimeout(() => {
+                            _this.getShopCartList();
+                            _this.getFavoriteList();
+                        // }, 1000)
                     }
                 },
             });
