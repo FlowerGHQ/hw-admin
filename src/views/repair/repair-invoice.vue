@@ -12,7 +12,7 @@
             <div class="info-block">
                 <div class="title">托修方</div>
                 <p>车主姓名：{{detail.customer_name}}</p>
-                <p>产品型号：{{detail.item_code}}</p>
+                <p>车辆编号：{{detail.item_code}}</p>
                 <p>送修日期：{{$Util.timeFormat(detail.create_time)}}</p>
                 <div class="title">联系电话</div>
                 <p>{{detail.customer_phone}}</p>
@@ -25,8 +25,8 @@
             </div>
             <div class="info-block">
                 <div class="title">送修方</div>
-                <p>送修人:{{detail.repair_user_name}}</p>
-                <p>送修类别:{{$Util.repairChannelFilter(detail.channel)}}</p>
+                <p>送修人：{{detail.repair_user_name}}</p>
+                <p>送修类别：{{$Util.repairChannelFilter(detail.channel)}}</p>
                 <div class="title">联系电话</div>
                 <p>{{detail.repair_user_phone}}</p>
             </div>

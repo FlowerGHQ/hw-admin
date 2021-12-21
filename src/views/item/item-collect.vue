@@ -160,8 +160,10 @@ export default {
                     } catch(err) {
                         console.log('handleMoveToFavorite err:', err)
                     } finally {
-                        _this.getShopCartList();
-                        _this.getFavoriteList();
+                        // setTimeout(() => {
+                            _this.getShopCartList();
+                            _this.getFavoriteList();
+                        // }, 1000)
                     }
                 },
             });

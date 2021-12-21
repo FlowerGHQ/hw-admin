@@ -5,7 +5,7 @@
         :row-selection="checkMode ? rowSelection : null">
         <template #bodyCell="{ column , record ,index,text}">
             <template v-if="column.key === 'money'">
-                {{$Util.countFilter(text)}}元
+                ￥{{$Util.countFilter(text)}}
             </template>
         </template>
     </a-table>

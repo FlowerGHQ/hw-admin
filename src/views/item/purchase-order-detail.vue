@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">采购订单详情</div>
             <div class="btns-area">
-                <a-button type="primary" @click="handlePurchaseStatus('payment')" v-if="detail.status == PURCHASE.STATUS.WAIT_PAY && $auth('ADMIN')" ><i class="icon i_check_c"/>付款</a-button>
+                <a-button type="primary" @click="handlePurchaseStatus('payment')" v-if="detail.status == PURCHASE.STATUS.WAIT_PAY && $auth('ADMIN')" ><i class="icon i_check_c"/>已收款</a-button>
                 <a-button type="primary" @click="handlePurchaseStatus('deliver')"  v-if="detail.status == PURCHASE.STATUS.WAIT_DELIVER && $auth('ADMIN')" ><i class="icon i_check_c"/>发货</a-button>
                 <a-button type="primary" @click="handlePurchaseStatus('takeDeliver')"  v-if="detail.status == PURCHASE.STATUS.WAIT_TAKE_DELIVER && $auth('AGENT', 'STORE')" ><i class="icon i_edit"/>确认收货</a-button>
                 <a-button type="primary" @click="handlePurchaseStatus('review')" v-if="detail.status == PURCHASE.STATUS.DEAL_SUCCESS && detail.flag_review == PURCHASE.FLAG_REVIEW.SUCCESS && $auth('AGENT', 'STORE')"  ><i class="icon i_edit"/>评论</a-button>
@@ -249,6 +249,12 @@ export default {
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
+                case 'list':
+                    routeUrl = this.$router.resolve({
+                        path: '/item/purchase-order-list',
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
             }
         },
         getPurchaseInfo() {
@@ -336,9 +342,10 @@ export default {
                     Core.Api.Purchase.cancel({
                         id: this.id
                     }).then(res => {
-                        this.getPurchaseInfo()
-                    }).catch(err => {
                         this.$message.success('取消成功')
+                        // this.getPurchaseInfo()
+                        this.routerChange("list")
+                    }).catch(err => {
                         console.log('getRepairDetail err', err)
                     }).finally(() => {
                         this.loading = false;
