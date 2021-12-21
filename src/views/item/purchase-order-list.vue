@@ -217,7 +217,7 @@ export default {
                     break;
             }
         },
-        handleRecreate(record){ // 再来一单
+        handleRecreate(item){ // 再来一单
             this.loading = true;
             console.log("item.id:"+item.id);
             Core.Api.Purchase.recreate({
@@ -225,7 +225,7 @@ export default {
             }).then(res => {
                 console.log("handleRecreate res:", res)
                 this.$message.success('添加成功');
-                routerChange('edit', record)
+                this.routerChange('edit', item)
             }).catch(err => {
                 console.log('handleRecreate err:', err)
             }).finally(() => {
