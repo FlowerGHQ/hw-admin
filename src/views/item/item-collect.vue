@@ -144,6 +144,9 @@ export default {
         // 从购物车移至收藏
         async handleMoveToFavorite(item) {
             let _this = this
+            if (item.in_favorite) {
+                return this.$message.warning('该商品已在收藏夹中')
+            }
             this.$confirm({
                 title: `确定要将商品${item.item ? '['+item.item.name+']' : ''}移动至收藏夹吗？`,
                 okText: '确定',

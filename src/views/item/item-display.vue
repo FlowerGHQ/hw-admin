@@ -85,6 +85,9 @@ export default {
         },
         // 收藏商品
         hanldeAddToFavorite() {
+            if (this.detail.in_favorite) {
+                return this.$message.warning('该商品已在收藏夹中')
+            }
             Core.Api.Favorite.add({
                 item_id: this.detail.id,
                 price: this.detail.price

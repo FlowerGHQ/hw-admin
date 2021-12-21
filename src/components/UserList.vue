@@ -105,6 +105,9 @@ export default {
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
+            if (this.type == USER_TYPE.WORKER) { // 维修工不显示管理员
+                columns.splice(5, 1)
+            }
             return columns
         },
     },

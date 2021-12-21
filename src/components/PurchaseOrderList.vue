@@ -129,7 +129,29 @@ export default {
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
+                case 'edit':  // 再来一单
+                    this.handleRecreate(item);
+                    routeUrl = this.$router.resolve({
+                        path: "/purchase/item-collect",
+                        query: { id: item.id }
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
             }
+        },
+        handleRecreate(item){ // 再来一单
+            this.loading = true;
+            console.log("item.id:"+item.id);
+            Core.Api.Purchase.recreate({
+                id: item.id,
+            }).then(res => {
+                console.log("handleRecreate res:", res)
+                this.$message.success('添加成功');
+            }).catch(err => {
+                console.log('handleRecreate err:', err)
+            }).finally(() => {
+                this.loading = false;
+            });
         },
         pageChange(curr) {  // 页码改变
             this.currPage = curr

@@ -138,6 +138,7 @@ const apiList = {
 	    takeDeliver: ['PostJson', 'purchase-order/take-deliver'], // 确认收货
 	    review: ['PostJson', 'purchase-order/review'], // 评论
 	    statusList: ['PostJson', 'purchase-order/status-list'], // 保存
+	    recreate: ['PostJson', 'purchase-order/recreate'], // 再来一单
     },
     Store: { // 门店管理
         list: ['PostJson', 'store/list'],
