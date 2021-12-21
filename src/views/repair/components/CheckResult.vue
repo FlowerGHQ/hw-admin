@@ -19,21 +19,21 @@
             <a-table :columns="tableColumns" :data-source="failList" :row-key="record => record.id" :pagination='false' size="small">
                 <template #bodyCell="{ column,record, text }">
                     <template v-if="column.key === 'money'">
-                        {{$Util.countFilter(text)}}元
+                        ￥{{$Util.countFilter(text)}}
                     </template>
                     <template v-if="column.dataIndex === 'item_fault_type'">{{faultMap[text]}}</template>
                     <template v-if="column.dataIndex === 'amount'">{{text}}件</template>
-                    <template v-if="column.dataIndex === 'totle_price'"> {{$Util.countFilter(record.price * record.amount)}}元</template>
+                    <template v-if="column.dataIndex === 'totle_price'"> ￥{{$Util.countFilter(record.price * record.amount)}}</template>
                 </template>
             </a-table>
             <a-table :columns="tableColumns" :data-source="exchangeList" :row-key="record => record.id"  :pagination='false' size="small">
                 <template #bodyCell="{ column,record, text }">
                     <template v-if="column.key === 'money'">
-                        {{$Util.countFilter(text)}}元
+                        ￥{{$Util.countFilter(text)}}
                     </template>
                     <template v-if="column.dataIndex === 'item_fault_type'">{{faultMap[text]}}</template>
                     <template v-if="column.dataIndex === 'amount'">{{text}}件</template>
-                    <template v-if="column.dataIndex === 'totle_price'"> {{$Util.countFilter(record.price * record.amount)}}元</template>
+                    <template v-if="column.dataIndex === 'totle_price'"> ￥{{$Util.countFilter(record.price * record.amount)}}</template>
 
                 </template>
             </a-table>
