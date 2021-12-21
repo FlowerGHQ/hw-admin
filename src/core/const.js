@@ -1451,6 +1451,11 @@ let Const = {
             40:  'WORKER',
             100: 'CUSTOMER',
         },
+	    ORG_TYPE: {
+		    ADMIN: 10,
+		    AGENT: 20,
+		    STORE: 30,
+	    },
     },
 
     ORG_STATUS_LIST: [
@@ -1515,6 +1520,7 @@ let Const = {
             WAIT_REPAIR: 40,
             REPAIR_END: 50,
             SETTLEMENT: 60,
+	        TRANSFER: 100,
         },
         STATUS_MAP: {
             10: '待分配',
@@ -1523,6 +1529,7 @@ let Const = {
             40: '维修中',
             50: '已维修',
             60: '已结算',
+	        100: '已转单',
         },
         STATUS_COLOR_MAP: {
             10: 'red',
@@ -1531,6 +1538,7 @@ let Const = {
             40: 'blue',
             50: 'green',
             60: 'grey',
+	        100: 'grey',
         },
         // 故障类型
         FAULT_OPTIONS_MAP :{

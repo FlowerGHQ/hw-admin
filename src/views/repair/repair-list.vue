@@ -140,6 +140,7 @@ export default {
                 {text: '维修中', value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
                 {text: '已维修', value: '0', color: 'green',   key: STATUS.REPAIR_END },
                 {text: '已结算', value: '0', color: 'grey',    key: STATUS.SETTLEMENT },
+                {text: '已转单', value: '0', color: 'grey',    key: STATUS.TRANSFER },
             ],
             create_time: [],
             searchForm: {
@@ -169,10 +170,10 @@ export default {
                     filters: Core.Const.REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.repair_method || null },
                 { title: '维修门店',   dataIndex: 'store_name', key: 'item' },
                 { title: '维修门店电话',   dataIndex: 'store_phone', key: 'item' },
-                { title: '接单人',   dataIndex: 'user_name', key: 'item' },
+                { title: '创建人',   dataIndex: 'user_name', key: 'item' },
                 { title: '关联客户', dataIndex: 'customer_name', key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
-                { title: '实施时间', dataIndex: 'working_time', key: 'time' },
+                { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
                 { title: '订单状态', dataIndex: 'status', fixed: 'right' },
             ]
             return columns
@@ -252,7 +253,14 @@ export default {
         },
          getStatusStat() {  // 获取 表格 数据
             this.loading = true;
-            Core.Api.Repair.statusList().then(res => {
+            Core.Api.Repair.statusList({
+                ...this.searchForm,
+                begin_time: this.create_time[0] || '',
+                end_time: this.create_time[1] || '',
+                page: this.currPage,
+                page_size: this.pageSize
+                }
+            ).then(res => {
                 console.log("getStatusStat res:", res)
                 let total = 0
 
