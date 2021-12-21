@@ -21,7 +21,8 @@
     </div>
     <div class="btn-content">
         <a-button type="primary" @click="hanldeAddToShopCart">添加到购物车</a-button>
-        <a-button type="primary" ghost @click="hanldeAddToFavorite">收藏商品</a-button>
+        <a-button type="primary" ghost @click="hanldeAddToFavorite" v-if="!detail.in_favorite">收藏商品</a-button>
+        <a-button type="primary" ghost @click="hanldeAddToFavorite" v-if="detail.in_favorite">已收藏</a-button>
     </div>
 </div>
 </template>
