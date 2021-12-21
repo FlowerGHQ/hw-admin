@@ -24,9 +24,9 @@
                 <p>{{detail.repair_phone}}</p>
             </div>
             <div class="info-block">
-                <div class="title">送修方</div>
-                <p>送修人：{{detail.repair_user_name}}</p>
-                <p>送修类别：{{$Util.repairChannelFilter(detail.channel)}}</p>
+                <div class="title">维修方</div>
+                <p>维修人：{{detail.repair_user_name}}</p>
+                <p>维修类别：{{$Util.repairChannelFilter(detail.channel)}}</p>
                 <div class="title">联系电话</div>
                 <p>{{detail.repair_user_phone}}</p>
             </div>
