@@ -3,7 +3,7 @@
     <div class="info-content">
         <p class="name">{{detail.name}}</p>
         <p class="code">商品编号：{{detail.code}}</p>
-        <p class="price">{{$Util.countFilter(detail.price)}}￥</p>
+        <p class="price">￥{{$Util.countFilter(detail.price)}}</p>
         <p class="category">{{category.name}}</p>
         <div class="desc" v-if="config && config.length">
             <p v-for="(item, index) of config" :key="index">{{item.name}}： {{item.value}}</p>

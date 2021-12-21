@@ -28,11 +28,11 @@
             <div class="title-area">摘要</div>
             <div class="settle-item" v-for="item of shopCartList" :key="item.id">
                 <p class="name">{{item.item ? item.item.name : '-'}}</p>
-                <span class="price">{{$Util.countFilter(item.price*item.amount)}}￥</span>
+                <span class="price">￥{{$Util.countFilter(item.price*item.amount)}}</span>
             </div>
             <div class="settle-item sum">
                 <p class="name">总计</p>
-                <span class="price">{{sum_price}}￥</span>
+                <span class="price">￥{{sum_price}}</span>
             </div>
             <a-button type="primary" ghost @click="routerChange('settle')">结算</a-button>
         </div>

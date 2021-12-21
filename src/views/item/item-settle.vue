@@ -86,11 +86,11 @@
         <div class="item-content">
             <div class="price-item" v-for="item of shopCartList" :key="item.id">
                 <p class="name">{{item.item ? item.item.name : '-'}}</p>
-                <span class="price">{{$Util.countFilter(item.price*item.amount)}}￥</span>
+                <span class="price">￥{{$Util.countFilter(item.price*item.amount)}}</span>
             </div>
             <div class="price-item sum">
                 <p class="name">总计</p>
-                <span class="price">{{sum_price}}￥</span>
+                <span class="price">￥{{sum_price}}</span>
             </div>
             <div class="sub-title">预计送达</div>
             <div class="item-item" v-for="item of shopCartList" :key="item.id">
