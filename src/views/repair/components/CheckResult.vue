@@ -17,21 +17,24 @@
     <a-collapse-panel key="change" header="零部件更换" class="gray-collapse-panel">
         <div class="panel-content change">
             <a-table :columns="tableColumns" :data-source="failList" :row-key="record => record.id" :pagination='false' size="small">
-                <template #bodyCell="{ column, text }">
+                <template #bodyCell="{ column,record, text }">
                     <template v-if="column.key === 'money'">
                         {{$Util.countFilter(text)}}元
                     </template>
                     <template v-if="column.dataIndex === 'item_fault_type'">{{faultMap[text]}}</template>
                     <template v-if="column.dataIndex === 'amount'">{{text}}件</template>
+                    <template v-if="column.dataIndex === 'totle_price'"> {{$Util.countFilter(record.price * record.amount)}}元</template>
                 </template>
             </a-table>
             <a-table :columns="tableColumns" :data-source="exchangeList" :row-key="record => record.id"  :pagination='false' size="small">
-                <template #bodyCell="{ column, text }">
+                <template #bodyCell="{ column,record, text }">
                     <template v-if="column.key === 'money'">
                         {{$Util.countFilter(text)}}元
                     </template>
                     <template v-if="column.dataIndex === 'item_fault_type'">{{faultMap[text]}}</template>
                     <template v-if="column.dataIndex === 'amount'">{{text}}件</template>
+                    <template v-if="column.dataIndex === 'totle_price'"> {{$Util.countFilter(record.price * record.amount)}}元</template>
+
                 </template>
             </a-table>
         </div>
@@ -81,6 +84,7 @@ export default {
                 { title: '商品名称', dataIndex: 'item_name' },
                 { title: '金额', dataIndex: 'price', key:'money' },
                 { title: '数量', dataIndex: 'amount'  },
+                { title: '总价', dataIndex: 'totle_price'  },
             ],
 
             activeKey: ['affirm', 'change'],
