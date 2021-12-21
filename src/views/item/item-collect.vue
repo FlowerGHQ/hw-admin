@@ -14,7 +14,8 @@
                         <a-input-number v-model:value="editCount" :min="1" :precision="0" autofocus @blur="handleCountEditBlur(item)"/>
                     </div>
                     <div class="btns">
-                        <a-button type="link" @click="handleMoveToFavorite(item)">移至收藏</a-button>
+                        <a-button type="link" @click="handleMoveToFavorite(item)" v-if="!item.item.in_favorite">移至收藏</a-button>
+                        <a-button type="link" v-if="item.item.in_favorite">已收藏</a-button>
                         <a-button type="link" @click="handleShopCartRemove(item)">删除</a-button>
                     </div>
                 </div>
@@ -48,8 +49,8 @@
                     <div class="subject"></div>
                     <div class="btns">
                         <a-button type="link" @click="handleFavoriteRemove(item)">删除收藏</a-button>
-                        <a-button type="primary" ghost @click="handleMoveToShopCart(item)" v-if="item.item.in_favorite">添加到购物车</a-button>
-                        <a-button type="primary" ghost v-if="!item.item.in_favorite">已添加到购物车</a-button>
+                        <a-button type="primary" ghost @click="handleMoveToShopCart(item)" v-if="!item.item.in_shopping_cart">添加到购物车</a-button>
+                        <a-button type="primary" ghost v-if="item.item.in_favorite">已添加到购物车</a-button>
                     </div>
                 </div>
                 <div class="price">
