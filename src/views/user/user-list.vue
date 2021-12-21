@@ -17,6 +17,16 @@
                         </div>
                     </div>
                 </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">类型:</div>
+                    <div class="value">
+                        <a-select    v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择员工类型" allow-clear>
+                            <a-select-option  key="20" :value="loginType">普通员工</a-select-option>
+                            <a-select-option  key="40" value="40">维修工</a-select-option>
+                        </a-select>
+                    </div>
+                 </a-col>
+
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">创建时间:</div>
                     <div class="value">
@@ -98,7 +108,10 @@ export default {
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
             searchForm: {
-                name:''
+                name:'',
+                type: undefined,
+                org_id: Core.Data.getOrgId(),
+                org_type: Core.Data.getOrgType()
             },
             // 表格数据
             tableData: [],
@@ -166,7 +179,9 @@ export default {
             this.loading = true;
             Core.Api.User.list({
                 name: this.searchForm.name,
-                type: this.loginType,
+                type: this.searchForm.type,
+                org_id: this.searchForm.org_id,
+                org_type: this.searchForm.org_type,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
                 page: this.currPage,

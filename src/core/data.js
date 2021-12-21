@@ -98,6 +98,13 @@ class StorageHandler {
         return this.getItem(Const.DATA.KEY_ORG_ID)
     }
 
+    setOrgType(value) {
+        this.setItem(Const.DATA.KEY_ORG_TYPE, value);
+    }
+    getOrgType() {
+        return this.getItem(Const.DATA.KEY_ORG_TYPE)
+    }
+
     setUserType(value) {
         this.setItem(Const.DATA.KEY_USER_TYPE, value);
     }

@@ -5,9 +5,11 @@
             <img src="@images/header-logo.png" alt="浩万" />
         </div>
         <div class="header-right">
-            <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
-                <a-button class="user-info" type="link">
-                    <a-avatar class="user-avatar" :src="$Util.imageFilter(user.avatar)" :size='30'>
+          <span>{{USER_TYPE[loginType]}}端</span>
+          <a-divider type="vertical" />
+          <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
+              <a-button class="user-info" type="link">
+                  <a-avatar class="user-avatar" :src="$Util.imageFilter(user.avatar)" :size='30'>
                         <i class="icon i_user"/>
                     </a-avatar>
                     <span class="user-name">{{user.username}}</span>
@@ -68,7 +70,7 @@ export default {
     data() {
         return {
             loginType: Core.Data.getLoginType(),
-
+            USER_TYPE: Core.Const.USER.TYPE_MAP,
             collapsed: false,
             openKeys: [],
             selectedKeys: [],
@@ -169,6 +171,10 @@ export default {
         border-bottom: 1px solid rgba(82, 91, 103, 0.2);
         padding: 0 20px;
         .fsb();
+        .header-right {
+          .fcc();
+        }
+
         .header-logo {
             img {
                 width: 115px;
