@@ -20,9 +20,10 @@
         </a-carousel>
     </div>
     <div class="btn-content">
-        <a-button type="primary" @click="hanldeAddToShopCart">添加到购物车</a-button>
+        <a-button type="primary" @click="hanldeAddToShopCart" v-if="!detail.in_favorite">添加到购物车</a-button>
+        <a-button type="primary" v-if="detail.in_favorite">已添加</a-button>
         <a-button type="primary" ghost @click="hanldeAddToFavorite" v-if="!detail.in_favorite">收藏商品</a-button>
-        <a-button type="primary" ghost @click="hanldeAddToFavorite" v-if="detail.in_favorite">已收藏</a-button>
+        <a-button type="primary" ghost v-if="detail.in_favorite">已收藏</a-button>
     </div>
 </div>
 </template>
