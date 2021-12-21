@@ -48,7 +48,8 @@
                     <div class="subject"></div>
                     <div class="btns">
                         <a-button type="link" @click="handleFavoriteRemove(item)">删除收藏</a-button>
-                        <a-button type="primary" ghost @click="handleMoveToShopCart(item)">添加到购物车</a-button>
+                        <a-button type="primary" ghost @click="handleMoveToShopCart(item)" v-if="item.item.in_favorite">添加到购物车</a-button>
+                        <a-button type="primary" ghost v-if="!item.item.in_favorite">已添加到购物车</a-button>
                     </div>
                 </div>
                 <div class="price">
@@ -145,9 +146,6 @@ export default {
         handleMoveToFavorite(item) {
             console.log("handleMoveToFavorite item", item)
             let _this = this
-            if (item.item.in_favorite) {
-                return this.$message.warning('该商品已在收藏夹中')
-            }
             this.$confirm({
                 title: `确定要将商品${item.item ? '['+item.item.name+']' : ''}移动至收藏夹吗？`,
                 okText: '确定',
