@@ -4,17 +4,16 @@
         <div class="title-container">
             <div class="title-area">工单详情</div>
             <div class="btns-area">
-                <a-button type="primary" @click="handleSecondDoor()" ><i class="icon i_edit"/>二次上门</a-button>
-                <!-- <a-button type="primary" @click="handleTransfer()" ><i class="icon i_edit"/>转单</a-button> -->
+                <a-button type="primary" @click="handleSecondDoor()" ><i class="icon i_edit"/>二次维修</a-button>
+                <template v-if="detail.account_id == User.id || $auth('MANMGE')">
+                    <a-button type="primary" @click="handleTransfer()"    v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_check_c"/>转单</a-button>
+                    <a-button type="primary" @click="handleRepairCheck()" v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_check_c"/>确定</a-button>
+                    <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_check_c"/>提交</a-button>
+                    <a-button type="primary" @click="handleResultShow()"  v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_edit"/>维修完成</a-button>
+                </template>
 
-               <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_CHECK && detail.account_id == User.id"><i class="icon i_check_c"/>转单</a-button>
-                <a-button type="primary" @click="handleRepairCheck()" v-if="detail.status == STATUS.WAIT_CHECK && detail.account_id == User.id"><i class="icon i_check_c"/>确定</a-button>
-                <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION && detail.account_id == User.id"><i class="icon i_check_c"/>提交</a-button>
-
-
-                <a-button type="primary" @click="routerChange('invoice')" v-if="detail.status == STATUS.REPAIR_END || detail.status == STATUS.SETTLEMENT ">查看结算单</a-button>
-                <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END ">结算</a-button>
-                <a-button type="primary" @click="handleResultShow()" v-if="detail.status == STATUS.WAIT_REPAIR && detail.account_id == User.id"><i class="icon i_edit"/>维修完成</a-button>
+                <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END">结算</a-button>
+                <a-button type="primary" @click="routerChange('invoice')" v-if="detail.status == STATUS.SETTLEMENT ">查看结算单</a-button>
 
                 <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_edit"/>编辑</a-button>
                 <!-- <a-button type="danger" ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button> -->
