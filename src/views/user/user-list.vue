@@ -100,7 +100,7 @@ export default {
             searchForm: {
                 name:''
             },
-
+            // 表格数据
             tableData: [],
             tableColumns: [
                 {title: '姓名', dataIndex: ['account', 'name'], key: 'item'},
@@ -112,13 +112,17 @@ export default {
                 {title: '最近登录', dataIndex: ['account', 'last_login_time'], key: 'time'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right', width: 100,},
-            ]
+            ],
+            // 账户参数获取
+            orgId: 0,
         };
     },
     watch: {},
     computed: {},
     mounted() {
         this.getTableData();
+        this.orgId = Core.Data.getOrgId();
+        console.log("orgId"+this.orgId);
     },
     methods: {
         routerChange(type, item = {}) {
@@ -128,7 +132,7 @@ export default {
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/user/user-edit",
-                        query: {id: item.id, type: this.loginType}
+                        query: {id: item.id ,org_id: this.orgId ,type: this.loginType}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
