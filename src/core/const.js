@@ -1456,6 +1456,7 @@ let Const = {
 		    AGENT: 20,
 		    STORE: 30,
 	    },
+
     },
 
     ORG_STATUS_LIST: [
@@ -1487,6 +1488,10 @@ let Const = {
             2: '到店',
             3: '寄修',
         },
+	    ORG_TYPE_LIST: [
+		    { text: '经销商', value: 20 },
+		    { text: '门店', value: 30 },
+	    ],
         // 维修类别
         METHOD_LIST: [
             { text: '维修', value: 1 },

@@ -19,9 +19,9 @@
             </div>
             <div class="info-block">
                 <div class="title">维修门店</div>
-                <p>{{detail.store_name}}</p>
+                <p>{{detail.repair_name}}</p>
                 <div class="title">联系电话</div>
-                <p>{{detail.store_phone}}</p>
+                <p>{{detail.repair_phone}}</p>
             </div>
             <div class="info-block">
                 <div class="title">送修方</div>

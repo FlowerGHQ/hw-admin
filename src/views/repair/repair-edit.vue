@@ -81,25 +81,25 @@
             <div class="form-item required">
                 <div class="key">客户电话</div>
                 <div class="value">
-                    <a-input v-model:value="form.customer_phone" placeholder="请输入客户电话"/>
+                    <a-input v-model:value="form.customer_phone" placeholder="请输入客户电话" disabled/>
                 </div>
             </div>
             <div class="form-item required">
                 <div class="key">客户邮箱</div>
                 <div class="value">
-                    <a-input v-model:value="form.customer_email" placeholder="请输入客户邮箱"/>
+                    <a-input v-model:value="form.customer_email" placeholder="请输入客户邮箱" disabled/>
                 </div>
             </div>
             <div class="form-item">
                 <div class="key">维修地址</div>
                 <div class="value">
-                    <AddressCascader @change='handleAddressSelect' :default-address='[form.customer_province, form.customer_city, form.customer_county]'/>
+                    <AddressCascader @change='handleAddressSelect' :default-address='[form.customer_province, form.customer_city, form.customer_county]' disabled/>
                 </div>
             </div>
             <div class="form-item" :class="form.channel == 1 ? 'required' : ''">
                 <div class="key">详细地址</div>
                 <div class="value">
-                    <a-input v-model:value="form.customer_address" placeholder="请输入详细地址"/>
+                    <a-input v-model:value="form.customer_address" placeholder="请输入详细地址" disabled/>
                 </div>
             </div>
             <div class="form-item textarea">
