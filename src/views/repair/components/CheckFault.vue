@@ -28,14 +28,14 @@
                                 <a-input-number v-model:value="record.amount" :min="0" :precision="0" placeholder="请输入"/> 件
                             </template>
                             <template v-if="column.key === 'money'">
-                                {{$Util.countFilter(text)}}元
+                                ￥{{$Util.countFilter(text)}}
                             </template>
                             <template v-if="column.dataIndex === 'totle_price'">
                                 <span v-if="record.amount !=undefined">
-                                    {{$Util.countFilter(record.price * record.amount)}}元
+                                    ￥{{$Util.countFilter(record.price * record.amount)}}
                                 </span>
                                 <span v-else>
-                                    0元
+                                    ￥0
                                 </span>
                             </template>
                             <template v-if="column.dataIndex === 'operation'">
@@ -60,14 +60,14 @@
                                 v-if="column.dataIndex === 'amount'"
                             />
                             <template v-if="column.key === 'money'">
-                                {{$Util.countFilter(text)}}元
+                                ￥{{$Util.countFilter(text)}}
                             </template>
                             <template v-if="column.dataIndex === 'totle_price'">
                                 <span v-if="record.amount !=undefined">
-                                    {{$Util.countFilter(record.price * record.amount)}}元
+                                    ￥{{$Util.countFilter(record.price * record.amount)}}
                                 </span>
                                 <span v-else>
-                                    0元
+                                    ￥0
                                 </span>
 
                             </template>
