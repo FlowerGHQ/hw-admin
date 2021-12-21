@@ -85,7 +85,8 @@ export default {
     watch: {},
     computed: {},
     created() {
-        this.store_id = Number(this.$route.query.id) || 0
+        // this.store_id = Number(this.$route.query.id) || 0
+        this.store_id = Core.Data.getOrgId();
         this.getStoreDetail();
     },
     methods: {

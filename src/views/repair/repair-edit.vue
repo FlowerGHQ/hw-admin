@@ -267,11 +267,12 @@ export default {
         },
         // 获取 员工列表
         getStaffList(val) {
+            console.log(Core.Data.getUser().org_type)
             Core.Api.User.list({
                 page: 0,
                 type: Core.Const.USER.TYPE.WORKER,
                 org_id: Core.Data.getOrgId(),
-                org_type: Core.Data.getUser().org_type,
+                org_type: Core.Data.getOrgType(),
             }).then(res => {
                 this.staffList = res.list
                 if (val == 'refresh'){
