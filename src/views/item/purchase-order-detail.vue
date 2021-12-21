@@ -86,13 +86,13 @@
                     <a-row class="panel-content info-container">
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                             <div class="info-item">
-                                <div class="key">配送地址</div>
-                                <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.country + detail.receive_info.province + detail.receive_info.city + detail.receive_info.county + detail.receive_info.address || '-'}}</div>
+                                <div class="key">收货人</div>
+                                <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.name || '-'}}</div>
                                 <div class="value" v-else>-</div>
                             </div>
                             <div class="info-item">
-                                <div class="key">接受人</div>
-                                <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.name || '-'}}</div>
+                                <div class="key">收货地址</div>
+                                <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.country + detail.receive_info.province + detail.receive_info.city + detail.receive_info.county + detail.receive_info.address || '-'}}</div>
                                 <div class="value" v-else>-</div>
                             </div>
                         </a-col>

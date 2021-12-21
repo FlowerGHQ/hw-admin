@@ -3,8 +3,8 @@
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">工单详情</div>
-            <div class="btns-area">
-                <a-button type="primary" @click="handleSecondDoor()" ><i class="icon i_edit"/>二次维修</a-button>
+            <div class="btns-area" v-if="detail.org_type == OrgType">
+                <a-button type="primary" @click="handleSecondDoor()" v-if="detail.status == STATUS.WAIT_CHECK || detail.status == STATUS.WAIT_DETECTION || detail.status == STATUS.WAIT_REPAIR" ><i class="icon i_edit"/>二次维修</a-button>
                 <template v-if="detail.account_id == User.id || $auth('MANMGE')">
                     <a-button type="primary" @click="handleTransfer()"    v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_check_c"/>转单</a-button>
                     <a-button type="primary" @click="handleRepairCheck()" v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_check_c"/>确定</a-button>
@@ -100,12 +100,12 @@
                     <a-date-picker v-model:value="repairForm.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>
                 </div>
             </div>
-            <div class="form-item">
-                <div class="key">完成时间</div>
-                <div class="value">
-                    <a-date-picker v-model:value="repairForm.finish_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>
-                </div>
-            </div>
+<!--            <div class="form-item">-->
+<!--                <div class="key">完成时间</div>-->
+<!--                <div class="value">-->
+<!--                    <a-date-picker v-model:value="repairForm.finish_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>-->
+<!--                </div>-->
+<!--            </div>-->
         </a-modal>
         <a-modal v-model:visible="transferShow" width="600px" title="转单" @ok="handleTransferSubmit">
             <div class="modal-content">
@@ -142,6 +142,7 @@ import dayjs from "dayjs";
 
 const REPAIR = Core.Const.REPAIR
 const User = Core.Data.getUser();
+const OrgType = Core.Data.getOrgType();
 export default {
     name: 'RepairDetail',
     components: {
@@ -155,6 +156,7 @@ export default {
     data() {
         return {
             User,
+            OrgType,
             REPAIR,
             STATUS: REPAIR.STATUS,
             loginType: Core.Data.getLoginType(),
@@ -172,7 +174,7 @@ export default {
                 results: undefined,
                 fail_remark: undefined,
                 plan_time: undefined,
-                finish_time: undefined,
+                // finish_time: undefined,
 
             },
             staffList: [],
@@ -300,12 +302,12 @@ export default {
         handleSecondDoor(){
             this.secondDoorShow = true
             this.repairForm.plan_time = this.detail.plan_time ? dayjs.unix(this.detail.plan_time).format('YYYY-MM-DD HH:mm:ss') : undefined
-            this.repairForm.finish_time = this.detail.finish_time ? dayjs.unix(this.detail.finish_time).format('YYYY-MM-DD HH:mm:ss') : undefined
+            // this.repairForm.finish_time = this.detail.finish_time ? dayjs.unix(this.detail.finish_time).format('YYYY-MM-DD HH:mm:ss') : undefined
         },
         handleSecondDoorSubmit() {
             let repairForm = Core.Util.deepCopy(this.repairForm)
             repairForm.plan_time = repairForm.plan_time ? dayjs(repairForm.plan_time).unix() : 0
-            repairForm.finish_time = repairForm.finish_time ? dayjs(repairForm.finish_time).unix() : 0
+            // repairForm.finish_time = repairForm.finish_time ? dayjs(repairForm.finish_time).unix() : 0
             Core.Api.Repair.secondDoor({
                 id: this.detail.id,
                 ...repairForm
@@ -315,7 +317,7 @@ export default {
                 console.log('getRepairDetail err', err)
             }).finally(() => {
                 this.repairForm.plan_time = undefined
-                this.repairForm.finish_time = undefined
+                // this.repairForm.finish_time = undefined
                 this.loading = false;
                 this.secondDoorShow = false
             });
@@ -342,6 +344,7 @@ export default {
         getStoreList() {
             Core.Api.Store.list({
                 page: 0,
+                status: 1,
             }).then(res => {
                 this.storeList = res.list
             });

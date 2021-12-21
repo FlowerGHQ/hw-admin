@@ -3,6 +3,11 @@
         :columns="columns" :data-source="dataList" :scroll="{ x: true }"
         :row-key="record => record.id" :loading='loading' :pagination='false'
         :row-selection="checkMode ? rowSelection : null">
+        <template #bodyCell="{ column , record ,index,text}">
+            <template v-if="column.key === 'money'">
+                {{$Util.countFilter(text)}}元
+            </template>
+        </template>
     </a-table>
 </template>
 
