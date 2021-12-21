@@ -75,7 +75,8 @@ export default {
             loading: false,
 
             editCount: '',
-
+            // 商品详情
+            detail: {},
             shopCartList: [],
             favoriteList: [],
         };
@@ -118,7 +119,6 @@ export default {
                 this.favoriteList = res.list
             })
         },
-
         handleCountEditShow(item) {
             item.editMode = !item.editMode
             this.editCount = item.amount
@@ -137,24 +137,36 @@ export default {
             })
         },
 
+        async getItemDetail(item) {  // 获取 详情 数据
+            try {
+                let res = await Core.Api.Item.detail({id: item.item_id})
+                console.log("getItemDetail res", res)
+                return res.in_favorite
+            } catch(err) {
+                return false
+            }
+        },
+
         // 结算
         handleSettle() {
         },
 
         // 从购物车移至收藏
         async handleMoveToFavorite(item) {
+            console.log("handleMoveToFavorite item", item)
             let _this = this
-            if (item.in_favorite) {
+            let in_favorite = await this.getItemDetail(item)
+            if (in_favorite) {
                 return this.$message.warning('该商品已在收藏夹中')
             }
             this.$confirm({
                 title: `确定要将商品${item.item ? '['+item.item.name+']' : ''}移动至收藏夹吗？`,
                 okText: '确定',
                 cancelText: '取消',
-                onOk() {
+                async onOk() {
                     try {
-                        Core.Api.Favorite.add({item_id: item.item_id,price: item.price})
-                        Core.Api.ShopCart.remove({id: item.id})
+                        await Core.Api.Favorite.add({item_id: item.item_id,price: item.price})
+                        await Core.Api.ShopCart.remove({id: item.id})
                         _this.$message.success('操作成功')
                     } catch(err) {
                         console.log('handleMoveToFavorite err:', err)

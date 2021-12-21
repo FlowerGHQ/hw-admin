@@ -145,7 +145,6 @@ export default {
                 id: item.id,
             }).then(res => {
                 console.log("handleRecreate res:", res)
-                this.$message.success('添加成功');
                 this.routerChange('edit', item)
             }).catch(err => {
                 console.log('handleRecreate err:', err)

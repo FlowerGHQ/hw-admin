@@ -95,6 +95,7 @@ export default {
             }).then(res => {
                 console.log('hanldeAddToFavorite res:', res)
                 this.$message.success('添加成功')
+                this.getItemDetail();
             })
         },
 
