@@ -270,8 +270,8 @@ export default {
             Core.Api.User.list({
                 page: 0,
                 type: Core.Const.USER.TYPE.WORKER,
-                org_id: this.orgId,
-                org_type: this.orgType,
+                org_id: Core.Data.getOrgId(),
+                org_type: Core.Data.getUser().org_type,
             }).then(res => {
                 this.staffList = res.list
                 if (val == 'refresh'){

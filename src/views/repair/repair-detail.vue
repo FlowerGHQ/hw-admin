@@ -4,8 +4,10 @@
         <div class="title-container">
             <div class="title-area">工单详情</div>
             <div class="btns-area">
-                <a-button type="primary" @click="handleSecondDoor()" ><i class="icon i_check_c"/>二次上门</a-button>
-                <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.account_id == User.id"><i class="icon i_check_c"/>转单</a-button>
+                <a-button type="primary" @click="handleSecondDoor()" ><i class="icon i_edit"/>二次上门</a-button>
+                <!-- <a-button type="primary" @click="handleTransfer()" ><i class="icon i_edit"/>转单</a-button> -->
+
+               <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_CHECK && detail.account_id == User.id"><i class="icon i_check_c"/>转单</a-button>
                 <a-button type="primary" @click="handleRepairCheck()" v-if="detail.status == STATUS.WAIT_CHECK && detail.account_id == User.id"><i class="icon i_check_c"/>确定</a-button>
                 <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION && detail.account_id == User.id"><i class="icon i_check_c"/>提交</a-button>
 
@@ -106,20 +108,22 @@
                 </div>
             </div>
         </a-modal>
-        <a-modal v-model:visible="modalFailShow" width="600px" title="维修结果" @ok="handleResultSubmit">
+        <a-modal v-model:visible="transferShow" width="600px" title="转单" @ok="handleTransferSubmit">
             <div class="modal-content">
-                <div class="form-item">
-                    <div class="key">维修结果</div>
+                <div class="form-item required">
+                    <div class="key">门店</div>
                     <div class="value">
-                        <a-select v-model:value="repairForm.results" placeholder="请选择维修结果">
-                            <a-select-option v-for="results of resultsList" :key="results.value" :value="results.value">{{results.name}}</a-select-option>
+                        <a-select v-model:value="repairForm.store_id" placeholder="请选择门店" @change="getStaffList">
+                            <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
                 </div>
-                <div class="form-item" v-if="repairForm.results == REPAIR.RESULTS.FAIL">
-                    <div class="key">失败原因</div>
+                <div class="form-item required">
+                    <div class="key">工单负责人</div>
                     <div class="value">
-                        <a-input v-model:value="repairForm.fail_remark" placeholder="请输入失败原因"/>
+                        <a-select v-model:value="repairForm.repair_user_id" placeholder="请选择工单负责人">
+                            <a-select-option v-for="item of staffList" :key="item.id" :value="item.id">{{item.account.name}}</a-select-option>
+                        </a-select>
                     </div>
                 </div>
             </div>
@@ -164,6 +168,7 @@ export default {
 
             modalFailShow: false,
             secondDoorShow: false,
+            transferShow: false,
             repairForm: {
                 results: undefined,
                 fail_remark: undefined,
@@ -171,9 +176,11 @@ export default {
                 finish_time: undefined,
 
             },
-            faultList:[],
-            failList:[],
-            exchangeList:[],
+            staffList: [],
+            storeList: [],
+            faultList: [],
+            failList: [],
+            exchangeList: [],
 
 
             stepsList: [
@@ -312,6 +319,45 @@ export default {
                 this.repairForm.finish_time = undefined
                 this.loading = false;
                 this.secondDoorShow = false
+            });
+        },
+        handleTransfer() {
+            this.transferShow = true
+            this.getStoreList()
+        },
+        handleTransferSubmit() {
+            let repairForm = Core.Util.deepCopy(this.repairForm)
+            Core.Api.Repair.transfer({
+                id: this.detail.id,
+                ...repairForm
+            }).then(res => {
+                this.getRepairDetail()
+            }).catch(err => {
+                console.log('getRepairDetail err', err)
+            }).finally(() => {
+                this.loading = false;
+                this.transferShow = false
+            });
+        },
+
+        getStoreList() {
+            Core.Api.Store.list({
+                page: 0,
+            }).then(res => {
+                this.storeList = res.list
+            });
+        },
+        // 获取 员工列表
+        getStaffList(val) {
+            Core.Api.User.list({
+                page: 0,
+                type: Core.Const.USER.TYPE.WORKER,
+                org_id: this.repairForm.store_id,
+                org_type: Core.Const.LOGIN.ORG_TYPE.STORE,
+                store_id: val,
+            }).then(res => {
+                this.staffList = res.list
+                this.repairForm.repair_user_id = undefined
             });
         },
         getRepairFaultList(){
