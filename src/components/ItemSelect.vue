@@ -89,8 +89,8 @@ export default {
 
             tableColumns: [
                 { title: '商品名', dataIndex: 'name', scopedSlots: { customRender: 'name' } },
-                { title: '商品编码', dataIndex: 'item_code', scopedSlots: { customRender: 'item' }, },
-                { title: '标准售价', dataIndex: 'price', scopedSlots: { customRender: 'money' }, },
+                { title: '商品编码', dataIndex: 'code', scopedSlots: { customRender: 'item' }, },
+                { title: '标准售价', dataIndex: 'price', key: 'money', },
             ],
             tableData: [],
 

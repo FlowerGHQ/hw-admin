@@ -132,12 +132,12 @@
                     <a-date-picker v-model:value="form.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>
                 </div>
             </div>
-            <div class="form-item">
-                <div class="key">完成时间</div>
-                <div class="value">
-                    <a-date-picker v-model:value="form.finish_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>
-                </div>
-            </div>
+<!--            <div class="form-item">-->
+<!--                <div class="key">完成时间</div>-->
+<!--                <div class="value">-->
+<!--                    <a-date-picker v-model:value="form.finish_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>-->
+<!--                </div>-->
+<!--            </div>-->
             <div class="form-item textarea">
                 <div class="key">维修备注</div>
                 <div class="value">
@@ -203,7 +203,7 @@ export default {
 
                 repair_user_id: undefined, // 工单负责人
                 plan_time: undefined, // 计划时间
-                finish_time: undefined, // 完成时间
+                // finish_time: undefined, // 完成时间
                 repair_message: "", // 处理信息、工单备注
                 priority: 0, // 紧急程度
 
@@ -295,7 +295,7 @@ export default {
                 this.form.customer_id = this.form.customer_id || undefined
                 this.form.repair_user_id = this.form.repair_user_id || undefined
                 this.form.plan_time = this.form.plan_time ? dayjs.unix(this.form.plan_time).format('YYYY-MM-DD HH:mm:ss') : undefined
-                this.form.finish_time = this.form.finish_time ? dayjs.unix(this.form.finish_time).format('YYYY-MM-DD HH:mm:ss') : undefined
+                // this.form.finish_time = this.form.finish_time ? dayjs.unix(this.form.finish_time).format('YYYY-MM-DD HH:mm:ss') : undefined
             }).catch(err => {
                 console.log('getRepairDetail err', err)
             }).finally(() => {
@@ -308,7 +308,7 @@ export default {
             let form = Core.Util.deepCopy(this.form)
 
             form.plan_time = form.plan_time ? dayjs(form.plan_time).unix() : 0
-            form.finish_time = form.finish_time ? dayjs(form.finish_time).unix() : 0
+            // form.finish_time = form.finish_time ? dayjs(form.finish_time).unix() : 0
             console.log('handleSubmit form:', form)
             let checkRes = this.checkFormInput(form);
             if (!checkRes) { return }
