@@ -225,6 +225,12 @@ export default {
         currStep() {
             for (let i = 0; i < this.stepsList.length; i++) {
                 const item = this.stepsList[i];
+                if (this.detail.status == Core.Const.PURCHASE.STATUS.CLOSE){
+                    this.stepsList= [
+                        {status: '100', title: '取消'},
+                    ]
+                    return i
+                }
                 if (item.status == this.detail.status) {
                     return i
                 }
