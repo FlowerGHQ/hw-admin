@@ -78,15 +78,14 @@ export default {
             //标签页
             activeKey: 'UserList',
 
-            store_id: '',
+            store_id: Core.Data.getOrgId(),
             detail: {},
         };
     },
     watch: {},
     computed: {},
     created() {
-        // this.store_id = Number(this.$route.query.id) || 0
-        this.store_id = Core.Data.getOrgId();
+        this.store_id = Number(this.$route.query.id) || Core.Data.getOrgId()
         this.getStoreDetail();
     },
     methods: {

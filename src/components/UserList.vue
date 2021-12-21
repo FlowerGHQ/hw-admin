@@ -13,11 +13,11 @@
                     <template v-if="column.dataIndex === 'type'">
                         {{ $Util.userTypeFilter(text) }}
                     </template>
-                    <template v-if="column.dataIndex === 'flag_admin' && $auth('ADMIN') == true">
-                        <a-switch :checked="!!record.flag_admin" checked-children="是" un-checked-children="否" @click="handleManagerChange(record)"/>
-                    </template>
-                    <template v-if="column.dataIndex === 'flag_admin' && $auth('ADMIN') == false">
-                        {{ text == 1 ? "是" : "否" }}
+                    <template v-if="column.dataIndex === 'flag_admin'">
+                        <template v-if="loginType < type">
+                            <a-switch :checked="!!record.flag_admin" checked-children="是" un-checked-children="否" @click="handleManagerChange(record)"/>
+                        </template>
+                        <template v-else>{{ text ? "是" : "否" }}</template>
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}
