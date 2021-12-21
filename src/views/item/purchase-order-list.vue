@@ -94,7 +94,7 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('edit', record)"> <i class="icon i_cart"/> 再次购买</a-button>
+                        <a-button type='link' @click="handleRecreate(record)"> <i class="icon i_cart"/> 再次购买</a-button>
                         <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_detail"/> 详情</a-button>
                     </template>
                 </template>
@@ -208,19 +208,16 @@ export default {
                     })
                     window.open(routeUrl.href, '_self')
                     break;
-                case 'edit':  // 再来一单
-                    if (item.status === 400) {
-                        this.handleRecreate(item);
-                        routeUrl = this.$router.resolve({
-                            path: "/purchase/item-collect",
-                            query: { id: item.id }
-                        })
-                        window.open(routeUrl.href, '_self')
-                    }
+                case 'edit':  // 购物车
+                    routeUrl = this.$router.resolve({
+                        path: "/purchase/item-collect",
+                        query: { id: item.id }
+                    })
+                    window.open(routeUrl.href, '_self')
                     break;
             }
         },
-        handleRecreate(item){ // 再来一单
+        handleRecreate(record){ // 再来一单
             this.loading = true;
             console.log("item.id:"+item.id);
             Core.Api.Purchase.recreate({
@@ -228,6 +225,7 @@ export default {
             }).then(res => {
                 console.log("handleRecreate res:", res)
                 this.$message.success('添加成功');
+                routerChange('edit', record)
             }).catch(err => {
                 console.log('handleRecreate err:', err)
             }).finally(() => {
