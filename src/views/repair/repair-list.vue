@@ -173,7 +173,7 @@ export default {
                 { title: '创建人',   dataIndex: 'user_name', key: 'item' },
                 { title: '关联客户', dataIndex: 'customer_name', key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
-                { title: '实施时间', dataIndex: 'working_time', key: 'time' },
+                { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
                 { title: '订单状态', dataIndex: 'status', fixed: 'right' },
             ]
             return columns
