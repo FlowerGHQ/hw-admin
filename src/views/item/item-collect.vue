@@ -50,7 +50,7 @@
                     <div class="btns">
                         <a-button type="link" @click="handleFavoriteRemove(item)">删除收藏</a-button>
                         <a-button type="primary" ghost @click="handleMoveToShopCart(item)" v-if="!item.item.in_shopping_cart">添加到购物车</a-button>
-                        <a-button type="primary" ghost v-if="item.item.in_favorite">已添加到购物车</a-button>
+                        <a-button type="primary" ghost v-if="item.item.in_shopping_cart">已添加到购物车</a-button>
                     </div>
                 </div>
                 <div class="price">
@@ -176,7 +176,8 @@ export default {
             }).then(res => {
                 console.log('res:', res)
                 this.$message.success('添加成功')
-                this.getShopCartList();
+                this.getShopCartList()
+                this.getFavoriteList()
             })
         },
 
@@ -192,6 +193,7 @@ export default {
                     Core.Api.Favorite.remove({id:item.id}).then(() => {
                         _this.$message.success('移出成功')
                         _this.getFavoriteList()
+                        _this.getShopCartList()
                     })
                 },
             });
@@ -208,6 +210,7 @@ export default {
                     Core.Api.ShopCart.remove({id:item.id}).then(() => {
                         _this.$message.success('移出成功')
                         _this.getShopCartList()
+                        _this.getFavoriteList()
                     })
                 },
             });
