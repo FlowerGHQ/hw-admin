@@ -59,9 +59,9 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            continentsList: Core.Const.CONTINENTS_LIST, // 大洲
+            continentList: Core.Const.CONTINENT_LIST, // 大洲
             countryList: Core.Const.COUNTRY_LIST, // 国家
-            countryOptions: Core.Const.CONTINENTS_COUNTRY_LIST, // 大洲>国家
+            countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
 
             country_cascader: [],
             detail: {},
@@ -71,7 +71,7 @@ export default {
                 phone: '',
                 email: '',
                 country: undefined,
-                continents: undefined,
+                continent: undefined,
             }
         };
     },
@@ -104,7 +104,7 @@ export default {
                     this.form[key] = res.detail[key]
                 }
                 // 回显大洲国家
-                this.country_cascader[0] = this.detail.continents || ''
+                this.country_cascader[0] = this.detail.continent || ''
                 this.country_cascader[1] = this.detail.country || ''
             }).catch(err => {
                 console.log('getAgentDetail err', err)
@@ -113,7 +113,7 @@ export default {
             });
         },
         handleSubmit() {
-            this.form.continents = this.country_cascader[0] || ''
+            this.form.continent = this.country_cascader[0] || ''
             this.form.country = this.country_cascader[1] || ''
             let form = Core.Util.deepCopy(this.form)
             if (!form.name) {

@@ -213,6 +213,7 @@ export default {
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
             console.log('this.searchForm:', this.searchForm)
+            this.country_cascader = []
             this.create_time = []
             this.pageChange(1);
         },

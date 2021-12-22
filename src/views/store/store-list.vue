@@ -208,6 +208,7 @@ export default {
         },
         handleSearchReset() {        // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
+            this.country_cascader = []
             this.create_time = []
             this.pageChange(1);
         },
