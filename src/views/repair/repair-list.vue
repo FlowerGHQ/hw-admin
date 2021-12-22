@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">维修工单</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新增工单</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('AGENT')||$auth('STORE')"><i class="icon i_add" />新增工单</a-button>
             </div>
         </div>
         <div class="tabs-container colorful">
