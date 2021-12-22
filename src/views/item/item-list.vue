@@ -345,16 +345,17 @@ export default {
                 .list-item {
                     cursor: pointer;
                     margin: 0 40px 60px;
-                    width: calc(~'100% / 3 - 80px');
-                    min-width: 250px;
+                    width: 247px;
                     color: #111111;
                     font-weight: 500;
                     font-size: 14px;
                     line-height: 16px;
                     .cover {
-                        height: calc(~'(100vw - 144px - 10px - 32px - 260px) / 3 - 80px');
-                        min-height: 250px;
+                        width: 247px;
+                        height: 247px;
                         background-color: #F5F5F5;
+                        .fcc();
+                        overflow: hidden;
                         img {
                             width: 100%;
                             height: 100%;
@@ -398,15 +399,11 @@ export default {
 
         }
         .item-content-empty {
-            width: calc(~'100% - 260px - 32px');
             .flex(center);
         }
         &.full-content {
             .item-content, .item-content-empty {
                 width: 100%;
-                .list-container .list-item .cover {
-                    height: calc(~'(100vw - 144px - 10px - 32px) / 3 - 80px');
-                }
             }
         }
     }
