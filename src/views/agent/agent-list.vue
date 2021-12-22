@@ -15,12 +15,32 @@
                         <a-input placeholder="请输入经销商名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
+                <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
+                    <div class="key">大洲：</div>
+                    <div class="value">
+                        <a-select placeholder="请选择大洲" v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
+                            <a-select-option v-for="(item,index) of countryList" :key="index" :value="item.id">{{item.name}}</a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">国家:</div>
                     <div class="value">
                         <a-select placeholder="请选择国家" v-model:value="searchForm.country" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
                             <a-select-option v-for="(item,index) of countryList" :key="index" :value="item.name">{{item.name}}</a-select-option>
                         </a-select>
+                    </div>
+                </a-col> -->
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">地区:</div>
+                    <div class="value">
+                        <a-cascader 
+                            placeholder="请选择大洲/国家" 
+                            v-model:value="country_cascader" 
+                            :options="countryOptions"
+                            @change="handleSearch" 
+                            :field-names="{ label: 'value', value: 'value' , children: 'children'}"
+                            />
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -125,12 +145,15 @@ export default {
             total: 0,
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            countryList: Core.Const.COUNTRY_LIST,
+            continentsList: Core.Const.CONTINENTS_LIST, // 大洲
+            countryList: Core.Const.COUNTRY_LIST, // 国家
+            countryOptions: Core.Const.CONTINENTS_COUNTRY_LIST, // 大洲>国家
+
             create_time: [],
+            country_cascader: [],
             searchForm: {
                 name: '',
                 status: 1,
-                country: undefined,
             },
             tableData: [],
             statusList: Core.Const.ORG_STATUS_LIST,
@@ -204,6 +227,8 @@ export default {
             this.loading = true;
             Core.Api.Agent.list({
                 ...this.searchForm,
+                continents: this.country_cascader[0] || '',
+                country: this.country_cascader[1] || '',
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
                 page: this.currPage,

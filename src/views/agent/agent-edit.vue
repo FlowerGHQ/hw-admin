@@ -25,9 +25,17 @@
             <div class="form-item required">
                 <div class="key">国家:</div>
                 <div class="value">
-                    <a-select v-model:value="form.country" placeholder="请选择国家">
+                    <!-- <a-select v-model:value="form.country" placeholder="请选择国家">
                         <a-select-option v-for="item of countryList" :key="item.name" :value="item.name">{{item.name}}</a-select-option>
-                    </a-select>
+                    </a-select> -->
+                    <a-cascader 
+                        placeholder="请选择大洲/国家" 
+                        v-model:value="country_cascader" 
+                        :options="countryOptions"
+                        @change="handleSearch" 
+                        :field-names="{ label: 'value', value: 'value' , children: 'children'}"
+                        />
+
                 </div>
             </div>
         </div>
@@ -51,7 +59,11 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            countryList: Core.Const.COUNTRY_LIST,
+            continentsList: Core.Const.CONTINENTS_LIST, // 大洲
+            countryList: Core.Const.COUNTRY_LIST, // 国家
+            countryOptions: Core.Const.CONTINENTS_COUNTRY_LIST, // 大洲>国家
+
+            country_cascader: [],
             detail: {},
             form: {
                 id: '',
@@ -59,6 +71,7 @@ export default {
                 phone: '',
                 email: '',
                 country: undefined,
+                continents: undefined,
             }
         };
     },
@@ -90,6 +103,9 @@ export default {
                 for (const key in this.form) {
                     this.form[key] = res.detail[key]
                 }
+                // 回显大洲国家
+                this.country_cascader[0] = this.detail.continents || ''
+                this.country_cascader[1] = this.detail.country || ''
             }).catch(err => {
                 console.log('getAgentDetail err', err)
             }).finally(() => {
@@ -97,6 +113,8 @@ export default {
             });
         },
         handleSubmit() {
+            this.form.continents = this.country_cascader[0] || ''
+            this.form.country = this.country_cascader[1] || ''
             let form = Core.Util.deepCopy(this.form)
             if (!form.name) {
                 return this.$message.warning('请输入经销商名')
