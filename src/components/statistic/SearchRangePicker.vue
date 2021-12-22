@@ -21,7 +21,7 @@ import dayjs from 'dayjs';
 export default {
     name: 'SearchRangePicker',
     components: {
-        SimpleImageEmpty: () => import('../SimpleImageEmpty')
+        SimpleImageEmpty: () => import('../SimpleImageEmpty.vue')
     },
     props: {
         storeSelect: {
