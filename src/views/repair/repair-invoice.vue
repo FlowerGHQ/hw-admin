@@ -239,7 +239,8 @@ export default {
                 }
             }
             .sum-price {
-                width: 100%;
+                margin-left: 16px;
+                width: 70%;
                 height: 2px;
                 opacity: 0.9;
                 border-top: 2px solid #000022;
