@@ -16,7 +16,7 @@
                 <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END">结算</a-button>
                 <a-button type="primary" @click="routerChange('invoice')" v-if="detail.status == STATUS.SETTLEMENT ">查看结算单</a-button>
 
-                <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_edit"/>编辑</a-button>
+                <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_CHECK || detail.status == STATUS.WAIT_DISTRIBUTION"><i class="icon i_edit"/>编辑</a-button>
                 <!-- <a-button type="danger" ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button> -->
             </div>
         </div>
@@ -49,6 +49,10 @@
                 <div class="info-item">
                     <div class="key">创建时间</div>
                     <div class="value">{{$Util.timeFilter(detail.create_time) || '-'}}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">计划时间</div>
+                    <div class="value">{{$Util.timeFilter(detail.plan_time) || '-'}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">实施时间</div>
@@ -337,6 +341,7 @@ export default {
         },
         handleTransferSubmit() {
             let repairForm = Core.Util.deepCopy(this.repairForm)
+            repairForm.plan_time = 0
             Core.Api.Repair.transfer({
                 id: this.detail.id,
                 ...repairForm
