@@ -11,7 +11,7 @@
                 <div class="value">
                     <a-select    v-model:value="type" @change="handleTypeSelect" placeholder="请选择员工类型" allow-clear>
                         <a-select-option  key="20" :value="loginType">普通员工</a-select-option>
-                        <a-select-option  key="40" value="40">维修工</a-select-option>
+                        <a-select-option  key="40" :value="Core.Const.LOGIN.ORG_TYPE.REPAIR">维修工</a-select-option>
                     </a-select>
                 </div>
             </div>

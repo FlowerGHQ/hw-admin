@@ -1459,6 +1459,7 @@ let Const = {
 		    ADMIN: 10,
 		    AGENT: 20,
 		    STORE: 30,
+		    REPAIR: 40,
 	    },
 
     },
@@ -1624,12 +1625,15 @@ let Const = {
 		PAY_METHOD:{
 			1: "支付宝",
 			2: "微信",
+			3: "银行转账",
 		},
 		PAY_METHOD_LIST:[
 			{ name: '支付宝', value: '1' },
 			{ name: '微信', value: '2' },
+			{ name: '银行转账', value: '3' },
+
 		],
-        // 评论
+			// 评论
 		FLAG_REVIEW: {
 			SUCCESS : 1
 		},

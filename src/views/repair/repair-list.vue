@@ -86,8 +86,8 @@
                     <template v-if="column.dataIndex === 'channel'">
                         {{$Util.repairChannelFilter(text)}}
                     </template>
-                    <template v-if="column.dataIndex === 'repair_user_org_type'">
-                        {{record.repair_name}}
+                    <template v-if="column.dataIndex === 'repair_name'">
+                        {{text}}
                     </template>
                     <template v-if="column.dataIndex === 'repair_method'">
                         {{$Util.repairMethodFilter(text)}}
@@ -183,8 +183,7 @@ export default {
                 { title: '维修类别', dataIndex: 'repair_method',
                     filters: Core.Const.REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.repair_method || null },
                 // { title: '维修门店/经销商',   dataIndex: 'store_name', key: 'item' },
-                { title: '维修门店/经销商',   dataIndex: 'repair_user_org_type',
-                     filters: Core.Const.REPAIR.ORG_TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.repair_user_org_type || null },
+                { title: '维修门店/经销商',   dataIndex: 'repair_name',},
                 { title: '维修门店电话',   dataIndex: 'repair_phone', key: 'item' },
                 { title: '创建人',   dataIndex: 'user_name', key: 'item' },
                 { title: '关联客户', dataIndex: 'customer_name', key: 'item' },
