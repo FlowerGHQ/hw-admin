@@ -1,8 +1,7 @@
 <template>
 <div class="SearchRangePicker">
-    <a-radio-group class="org-type" v-model:value="org_type" @change="handleChange">
-        <a-radio-button v-for="item of org_type_list" :key="item.value"
-            class="type-item" :value="item.value">{{item.text}}</a-radio-button>
+    <a-radio-group class="org-type" v-model:value="org_type" @change="handleChange" v-if="org_type_list">
+        <a-radio-button class="type-item" v-for="item of org_type_list" :key="item.value" :value="item.value">{{item.text}}</a-radio-button>
     </a-radio-group>
 
     <a-range-picker v-model="time" @change="handleChange" :allowClear="false"/>
@@ -21,7 +20,6 @@ import dayjs from 'dayjs';
 export default {
     name: 'SearchRangePicker',
     components: {
-        SimpleImageEmpty: () => import('../SimpleImageEmpty')
     },
     props: {
         storeSelect: {
@@ -34,11 +32,6 @@ export default {
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_E,
 
             org_type: 0,
-            org_type_list: [
-                {value: 0, text: '全部'},
-                {value: 2, text: '经销商'},
-                {value: 3, text: '门店'},
-            ],
             time_type_list: [
                 {value: 1, text: '今日'},
                 {value: 2, text: '本周'},
@@ -47,6 +40,24 @@ export default {
 
             time: [],
         }
+    },
+    computed: {
+        org_type_list() {
+            let list = null
+            if (this.$auth('ADMIN')) {
+                list = [
+                    {value: 0, text: '全部'},
+                    {value: 1, text: '经销商'},
+                    {value: 2, text: '门店'},
+                ]
+            } else if (this.$auth('AGENT')) {
+                list = [
+                    {value: 0, text: '全部'},
+                    {value: 2, text: '门店'},
+                ]
+            }
+            return list
+        },
     },
     mounted() {
         this.time = [moment().subtract(7, 'days'), moment()]
@@ -85,7 +96,13 @@ export default {
     .org-type {
         margin-right: 20px;
         .type-item {
-            padding: 0 16px;
+            width: 88px;
+            text-align: center;
+            border-color: #EAECF2;
+            box-shadow: 0 0 0 0;
+            &::after, &::before {
+                background-color: #EAECF2;
+            }
             &:hover {
                 color: @TC_P;
             }
@@ -94,6 +111,9 @@ export default {
                 background: @BG_N;
                 border-color: @BC_P;
                 box-shadow: 0;
+                &::after, &::before {
+                    background-color: @BC_P;
+                }
             }
         }
     }

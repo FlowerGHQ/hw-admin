@@ -4,7 +4,6 @@
         <div class="title-container">
             <div class="title-area">工单详情</div>
             <div class="btns-area" v-if="detail.org_type == OrgType && ($auth('AGENT')||$auth('STORE'))">
-<!--            <div class="btns-area">-->
                 <a-button type="primary" @click="handleSecondDoor()" v-if="detail.status == STATUS.WAIT_CHECK || detail.status == STATUS.WAIT_DETECTION || detail.status == STATUS.WAIT_REPAIR" ><i class="icon i_edit"/>二次维修</a-button>
                 <template v-if="detail.account_id == User.id || $auth('MANMGE')">
                     <a-button type="primary" @click="handleTransfer()"    v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_check_c"/>转单</a-button>
@@ -17,7 +16,6 @@
                 <a-button type="primary" @click="routerChange('invoice')" v-if="detail.status == STATUS.SETTLEMENT ">查看结算单</a-button>
 
                 <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_edit"/>编辑</a-button>
-                <!-- <a-button type="danger" ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button> -->
             </div>
         </div>
         <div class="gray-panel info">
