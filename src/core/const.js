@@ -318,7 +318,8 @@ let Const = {
 		],
 			// 评论
 		FLAG_REVIEW: {
-			SUCCESS : 1
+			SUCCESS : 1,
+			FAIL:0,
 		},
 		FLAG_REVIEW_MAP: {
 			'1': '已评论',
