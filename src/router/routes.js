@@ -48,7 +48,7 @@ const routes = [
             title: '维修单管理',
             icon: 'i_s_temp',
             // auth: ['dashboard'],
-            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
+            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN],
         },
         children: [
             {
