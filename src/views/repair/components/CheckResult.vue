@@ -8,9 +8,7 @@
                 <i class="icon i_warning"/>共{{faultList.length}}个故障
             </div>
             <div class="fault_select">
-                <a-checkbox v-for="(value,key) in faultMap" :key='key' :value='key' :checked="faultList.includes(Number(key))" :disabled="true">
-                    {{value}}
-                </a-checkbox>
+                <div class="item" v-for="(item,index) of faultList" :key="index">{{faultMap[item]}}</div>
             </div>
         </div>
     </a-collapse-panel>
@@ -105,12 +103,13 @@ export default {
                 { title: '故障原因', dataIndex: 'item_fault_type' },
                 { title: '商品名称', dataIndex: 'item_name' },
                 { title: '金额', dataIndex: 'price', key:'money' },
-                { title: '数量', dataIndex: 'amount'  },
+                { title: '数量', dataIndex: 'amount' },
                 { title: '总价', dataIndex: 'totle_price'  },
             ],
 
             activeKey: ['affirm', 'change'],
             faultMap: Core.Const.REPAIR.FAULT_OPTIONS_MAP,
+
             // faultList: [],
             //
             // failList: [],
@@ -120,7 +119,6 @@ export default {
     watch: {},
     computed: {},
     mounted() {
-        console.log(this.failTotle)
         // this.id = Number(this.$route.query.id) || 0
         // this.getRepairDetail();
         // this.getRepairItemList();
@@ -178,6 +176,16 @@ export default {
 
 <style lang="less">
 .CheckResult {
+    .panel-content.affirm {
+        .fault_select {
+            display: flex;
+            .item {
+                margin-right: 20px;
+                font-size: 12px;
+                color: #202B3B;
+            }
+        }
+    }
     .panel-content.change {
         display: flex;
         justify-content: space-between;

@@ -196,7 +196,7 @@ export default {
             stepsList: [
                 { title: '分配工单' },
                 { title: '员工确认' },
-                { title: '检测维修' },
+                { title: '检测' },
                 { title: '维修' },
                 { title: '结算' },
             ],

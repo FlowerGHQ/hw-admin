@@ -24,7 +24,7 @@ const routes = [
         // hidden: true,
         meta: {
             title: '时效看板',
-            icon: 'i_s_temp',
+            icon: 'i_s_dashboard',
             // auth: ['dashboard'],
             // roles: [LOGIN_TYPE.ADMIN],
         },
@@ -46,7 +46,7 @@ const routes = [
         redirect: '/repair/repair-list',
         meta: {
             title: '维修单管理',
-            icon: 'i_s_temp',
+            icon: 'i_s_repair',
             // auth: ['dashboard'],
             roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN],
         },
@@ -108,7 +108,7 @@ const routes = [
         name: 'AgentManagement',
         meta: {
             title: '经销商管理',
-            icon: 'i_s_temp',
+            icon: 'i_s_agent',
             // auth: ['dashboard'],
             roles: [LOGIN_TYPE.ADMIN],
         },
@@ -151,7 +151,7 @@ const routes = [
         component: Layout,
         meta: {
             title: '经销商管理',
-            icon: 'i_s_temp',
+            icon: 'i_s_agent',
             roles: [LOGIN_TYPE.AGENT],
         },
         children: [
@@ -174,7 +174,7 @@ const routes = [
         name: 'StoreManagement',
         meta: {
             title: '门店管理',
-            icon: 'i_s_temp',
+            icon: 'i_s_store',
             // auth: ['dashboard'],
             roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.AGENT],
         },
@@ -214,7 +214,7 @@ const routes = [
         component: Layout,
         meta: {
             title: '门店管理',
-            icon: 'i_s_temp',
+            icon: 'i_s_store',
             roles: [LOGIN_TYPE.STORE],
         },
         children: [
@@ -237,7 +237,7 @@ const routes = [
         name: 'WarehouseManagement',
         meta: {
             title: '仓库管理',
-            icon: 'i_s_temp',
+            icon: 'i_s_warehouse',
             // auth: ['dashboard'],
             roles: [LOGIN_TYPE.ADMIN],
         },
@@ -279,7 +279,7 @@ const routes = [
         name: 'ItemManagement',
         meta: {
             title: '商品管理',
-            icon: 'i_s_temp',
+            icon: 'i_s_item',
             roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
@@ -357,7 +357,7 @@ const routes = [
             title: '采购管理',
             roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN],
             auth: ['AGENT', 'STORE'],
-            icon: 'i_s_temp',
+            icon: 'i_s_item',
         },
         children: [
             {
@@ -430,7 +430,7 @@ const routes = [
         name: 'CustomerManagement',
         meta: {
             title: '客户管理',
-            icon: 'i_s_temp',
+            icon: 'i_s_customer',
             // auth: ['dashboard'],
             // roles: [LOGIN_TYPE.ADMIN],
         },
@@ -472,7 +472,7 @@ const routes = [
         name: 'UserManagement',
         meta: {
             title: '员工管理',
-            icon: 'i_s_temp',
+            icon: 'i_s_user',
             // auth: ['dashboard'],
             // roles: [LOGIN_TYPE.ADMIN],
         },

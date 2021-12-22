@@ -1,10 +1,10 @@
 <template>
 <div class="SearchRangePicker">
-    <a-radio-group class="org-type" v-model:value="org_type" @change="handleChange" v-if="org_type_list">
+    <a-radio-group class="org-type" v-model:value="org_type" @change="handleChange()" v-if="org_type_list">
         <a-radio-button class="type-item" v-for="item of org_type_list" :key="item.value" :value="item.value">{{item.text}}</a-radio-button>
     </a-radio-group>
 
-    <a-range-picker v-model="time" @change="handleChange" :allowClear="false"/>
+    <a-range-picker v-model:value="time" @change="handleChange()" :allowClear="false"/>
     <!-- <div class="time-type">
         <div v-for="item of time_type_list" :key="item.value" class="type-item"
             @click="handleTimeAreaChange(item.value)">{{item.text}}</div>
@@ -19,14 +19,9 @@ import dayjs from 'dayjs';
 
 export default {
     name: 'SearchRangePicker',
-    components: {
-    },
-    props: {
-        storeSelect: {
-            type: Boolean,
-            default: false
-        }
-    },
+    components: {},
+    props: {},
+    emit: ['search'],
     data() {
         return {
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_E,
@@ -62,7 +57,6 @@ export default {
     mounted() {
         this.time = [moment().subtract(7, 'days'), moment()]
         this.handleChange();
-
     },
     methods: {
         // 时间范围快速选择
@@ -76,13 +70,22 @@ export default {
         },
 
         handleChange() {
+            let begin_time = moment(this.time[0])
+            let end_time = moment((this.time[1]))
             let data = {
                 org_type: this.org_type,
-                begin_time: moment(this.time[0]).startOf('day').unix(),
-                end_time: moment((this.time[1])).endOf('day').unix(),
+                begin_time: begin_time.startOf('day').unix(),
+                end_time: end_time.endOf('day').unix(),
             }
-            console.log('handleChange data:', data)
-            this.$emit('change', data)
+            let diff = end_time.diff(begin_time, 'days')
+
+            let dateList = [begin_time.format('YYYY-MM-DD')]
+            for (let i = 1; i <= diff; i++) {
+                dateList.push(moment(begin_time).add(i, 'days').format('YYYY-MM-DD'))
+            }
+
+            console.log('handleChange data:', data, dateList)
+            this.$emit('search', data, dateList)
         },
     }
 }

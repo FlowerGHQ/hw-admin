@@ -6,6 +6,62 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "26721185",
+      "name": "s_warehouse",
+      "font_class": "s_warehouse",
+      "unicode": "e6b8",
+      "unicode_decimal": 59064
+    },
+    {
+      "icon_id": "26721186",
+      "name": "s_item",
+      "font_class": "s_item",
+      "unicode": "e6b9",
+      "unicode_decimal": 59065
+    },
+    {
+      "icon_id": "26721187",
+      "name": "s_customer",
+      "font_class": "s_customer",
+      "unicode": "e6ba",
+      "unicode_decimal": 59066
+    },
+    {
+      "icon_id": "26721188",
+      "name": "s_dashboard",
+      "font_class": "s_dashboard",
+      "unicode": "e6bb",
+      "unicode_decimal": 59067
+    },
+    {
+      "icon_id": "26721189",
+      "name": "s_repair",
+      "font_class": "s_repair",
+      "unicode": "e6bc",
+      "unicode_decimal": 59068
+    },
+    {
+      "icon_id": "26721190",
+      "name": "s_agent",
+      "font_class": "s_agent",
+      "unicode": "e6bd",
+      "unicode_decimal": 59069
+    },
+    {
+      "icon_id": "26721191",
+      "name": "s_store",
+      "font_class": "s_store",
+      "unicode": "e6be",
+      "unicode_decimal": 59070
+    },
+    {
+      "icon_id": "26721192",
+      "name": "s_user",
+      "font_class": "s_user",
+      "unicode": "e6bf",
+      "unicode_decimal": 59071
+    },
+    {
       "icon_id": "26717543",
       "name": "order",
       "font_class": "order",

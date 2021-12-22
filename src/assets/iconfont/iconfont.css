@@ -1,8 +1,8 @@
 @font-face {
   font-family: "icon"; /* Project id 3000141 */
-  src: url('iconfont.woff2?t=1640168454022') format('woff2'),
-       url('iconfont.woff?t=1640168454022') format('woff'),
-       url('iconfont.ttf?t=1640168454022') format('truetype');
+  src: url('iconfont.woff2?t=1640177491257') format('woff2'),
+       url('iconfont.woff?t=1640177491257') format('woff'),
+       url('iconfont.ttf?t=1640177491257') format('truetype');
 }
 
 .icon {
@@ -11,6 +11,38 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.i_s_warehouse:before {
+  content: "\e6b8";
+}
+
+.i_s_item:before {
+  content: "\e6b9";
+}
+
+.i_s_customer:before {
+  content: "\e6ba";
+}
+
+.i_s_dashboard:before {
+  content: "\e6bb";
+}
+
+.i_s_repair:before {
+  content: "\e6bc";
+}
+
+.i_s_agent:before {
+  content: "\e6bd";
+}
+
+.i_s_store:before {
+  content: "\e6be";
+}
+
+.i_s_user:before {
+  content: "\e6bf";
 }
 
 .i_order:before {
