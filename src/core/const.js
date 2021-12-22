@@ -10,6 +10,9 @@ switch (window.location.hostname) {
 	case "10.0.0.205" :
 		URL_POINT = 'http://10.0.0.205:8083' // 徐伟
 		break;
+    case "10.0.0.107" :
+        URL_POINT = 'https://eos-api.hw.innotick.com' // 徐伟
+        break;
 	default:
 		// URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
 		URL_POINT = 'http://10.0.0.109:8083' // 谢耀圣

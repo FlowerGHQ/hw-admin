@@ -24,6 +24,14 @@
                         <a-input placeholder="请输入工单编号" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">门店</div>
+                    <div class="value">
+                        <a-select v-model:value="searchForm.org_id" placeholder="请选择门店" @change="handleSearch">
+                            <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
                 <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">零部件编号:</div>
                     <div class="value">
@@ -55,10 +63,10 @@
                 :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.key === 'detail'">
-                        <a-tooltip placement="top" :title='text' v-if="record.status == 10">
-                            <a-button type="link" @click="routerChange('edit', record)">{{text || '-'}}</a-button>
-                        </a-tooltip>
-                        <a-tooltip placement="top" :title='text' v-else>
+<!--                        <a-tooltip placement="top" :title='text' v-if="record.status == 10">-->
+<!--                            <a-button type="link" @click="routerChange('edit', record)">{{text || '-'}}</a-button>-->
+<!--                        </a-tooltip>-->
+                        <a-tooltip placement="top" :title='text' >
                             <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                         </a-tooltip>
                     </template>
@@ -146,8 +154,10 @@ export default {
                 {text: '已转单', value: '0', color: 'grey',    key: STATUS.TRANSFER },
             ],
             create_time: [],
+            storeList: [],
             searchForm: {
                 uid: '',
+                org_id:undefined,
                 status: undefined,
                 channel: '',
                 repair_method: '',
@@ -187,6 +197,7 @@ export default {
     },
     mounted() {
         this.getTableData();
+        this.getStoreList();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -229,6 +240,15 @@ export default {
             this.create_time = []
             this.pageChange(1);
         },
+        getStoreList() {
+            Core.Api.Store.list({
+                page: 0,
+                status: 1,
+            }).then(res => {
+                this.storeList = res.list
+                this.storeList.push({id:-1,name:"经销商"})
+            });
+        },
         handleTableChange(page, filters, sorter) {
             console.log('handleTableChange filters:', filters)
             this.filteredInfo = filters;
@@ -240,6 +260,14 @@ export default {
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             console.log('this.searchForm:', this.searchForm)
+            if (this.searchForm.org_id == -1){
+                // this.searchForm.org_id = 0
+                this.searchForm.org_type = Core.Const.LOGIN.ORG_TYPE.AGENT
+            }
+            if (this.searchForm.org_id > 0){
+
+                this.searchForm.org_type = Core.Const.LOGIN.ORG_TYPE.STORE
+            }
             Core.Api.Repair.list({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
@@ -259,6 +287,7 @@ export default {
         },
          getStatusStat() {  // 获取 表格 数据
             this.loading = true;
+             Object.assign(this.statusList, this.$options.data().statusList)
             Core.Api.Repair.statusList({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
