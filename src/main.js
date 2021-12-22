@@ -17,4 +17,5 @@ app.config.globalProperties.$auth = Util.auth
 app.config.globalProperties.$message = message
 app.config.globalProperties.$notification = notification
 app.config.globalProperties.$confirm = Modal.confirm
+
 app.use(router).mount('#app')

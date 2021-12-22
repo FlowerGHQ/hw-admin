@@ -7,7 +7,7 @@
                 <a-button type="primary" @click="handlePurchaseStatus('payment')" v-if="detail.status == PURCHASE.STATUS.WAIT_PAY && $auth('ADMIN')" ><i class="icon i_check_c"/>已收款</a-button>
                 <a-button type="primary" @click="handlePurchaseStatus('deliver')"  v-if="detail.status == PURCHASE.STATUS.WAIT_DELIVER && $auth('ADMIN')" ><i class="icon i_check_c"/>发货</a-button>
                 <a-button type="primary" @click="handlePurchaseStatus('takeDeliver')"  v-if="detail.status == PURCHASE.STATUS.WAIT_TAKE_DELIVER && $auth('AGENT', 'STORE')" ><i class="icon i_edit"/>确认收货</a-button>
-                <a-button type="primary" @click="handlePurchaseStatus('review')" v-if="detail.status == PURCHASE.STATUS.DEAL_SUCCESS && detail.flag_review == PURCHASE.FLAG_REVIEW.SUCCESS && $auth('AGENT', 'STORE')"  ><i class="icon i_edit"/>评论</a-button>
+                <a-button type="primary" @click="handlePurchaseStatus('review')" v-if="detail.status == PURCHASE.STATUS.DEAL_SUCCESS && detail.flag_review == PURCHASE.FLAG_REVIEW.FAIL && $auth('AGENT', 'STORE')"  ><i class="icon i_edit"/>评论</a-button>
                 <a-button type="primary" @click="handlePurchaseStatus('cancel')"  v-if="detail.status == PURCHASE.STATUS.WAIT_PAY && $auth('AGENT', 'STORE')" ><i class="icon i_edit"/>关闭</a-button>
             </div>
         </div>
@@ -78,6 +78,10 @@
                             <div class="info-item">
                                 <div class="key">支付方式</div>
                                 <div class="value">{{$Util.puechasePayMethodFilter(detail.pay_method) || '-'}}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="key">评论</div>
+                                <div class="value">{{detail.review || '-'}}</div>
                             </div>
                         </a-col>
                     </a-row>

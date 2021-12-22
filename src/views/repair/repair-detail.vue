@@ -3,19 +3,20 @@
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">工单详情</div>
-            <div class="btns-area" v-if="detail.org_type == OrgType && ($auth('AGENT')||$auth('STORE'))">
-                <a-button type="primary" @click="handleSecondDoor()" v-if="detail.status == STATUS.WAIT_CHECK || detail.status == STATUS.WAIT_DETECTION || detail.status == STATUS.WAIT_REPAIR" ><i class="icon i_edit"/>二次维修</a-button>
-                <template v-if="detail.account_id == User.id || $auth('MANMGE')">
-                    <a-button type="primary" @click="handleTransfer()"    v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_check_c"/>转单</a-button>
-                    <a-button type="primary" @click="handleRepairCheck()" v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_check_c"/>确定</a-button>
-                    <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_check_c"/>提交</a-button>
-                    <a-button type="primary" @click="handleResultShow()"  v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_edit"/>维修完成</a-button>
+            <div class="btns-area">
+                <template  v-if="detail.org_type == OrgType && ($auth('AGENT')||$auth('STORE'))">
+                    <a-button type="primary" @click="handleSecondDoor()" v-if="detail.status == STATUS.WAIT_CHECK || detail.status == STATUS.WAIT_DETECTION || detail.status == STATUS.WAIT_REPAIR" ><i class="icon i_edit"/>二次维修</a-button>
+                    <template v-if="detail.account_id == User.id || $auth('MANMGE')">
+                        <a-button type="primary" @click="handleTransfer()"    v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_check_c"/>转单</a-button>
+                        <a-button type="primary" @click="handleRepairCheck()" v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_check_c"/>确定</a-button>
+                        <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_check_c"/>提交</a-button>
+                        <a-button type="primary" @click="handleResultShow()"  v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_edit"/>维修完成</a-button>
+                    </template>
+                    <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END">结算</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" ghost v-if="detail.status == STATUS.WAIT_CHECK || detail.status == STATUS.WAIT_DISTRIBUTION"><i class="icon i_edit"/>编辑</a-button>
+                    <!-- <a-button type="danger" ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button> -->
                 </template>
-
-                <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END">结算</a-button>
-                <a-button type="primary" @click="routerChange('invoice')" v-if="detail.status == STATUS.SETTLEMENT ">查看结算单</a-button>
-
-                <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_edit"/>编辑</a-button>
+                <a-button type="primary" @click="routerChange('invoice')" v-if="detail.status == STATUS.SETTLEMENT">查看结算单</a-button>
             </div>
         </div>
         <div class="gray-panel info">
@@ -47,6 +48,10 @@
                 <div class="info-item">
                     <div class="key">创建时间</div>
                     <div class="value">{{$Util.timeFilter(detail.create_time) || '-'}}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">计划时间</div>
+                    <div class="value">{{$Util.timeFilter(detail.plan_time) || '-'}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">实施时间</div>
@@ -335,6 +340,7 @@ export default {
         },
         handleTransferSubmit() {
             let repairForm = Core.Util.deepCopy(this.repairForm)
+            repairForm.plan_time = 0
             Core.Api.Repair.transfer({
                 id: this.detail.id,
                 ...repairForm

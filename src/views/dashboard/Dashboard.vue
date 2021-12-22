@@ -129,6 +129,20 @@ export default {
                     break;
             }
         },
+        handleTimeChange(data) {
+            this.org_type = data.org_type
+            this.getStatData();
+            this.getPurchaseChart();
+            this.getPurchaseRank();
+            this.getRepairRank();
+            this.getRepairChart();
+        },
+
+        getStatData() {},
+        getPurchaseChart() {},
+        getPurchaseRank() {},
+        getRepairRank() {},
+        getRepairChart() {},
     }
 };
 </script>

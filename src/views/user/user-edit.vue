@@ -6,10 +6,10 @@
             <div class="title-colorful">基本信息</div>
         </div>
         <div class="form-content">
-            <div class="form-item required">
+            <div class="form-item required" v-if="!form.id">
                 <div class="key">类型：</div>
                 <div class="value">
-                    <a-select    v-model:value="type" @change="handleTypeSelect" placeholder="请选择员工类型" allow-clear>
+                    <a-select    v-model:value="type" @change="handleTypeSelect" placeholder="请选择员工类型" allow-clear >
                         <a-select-option  key="20" :value="type">普通员工</a-select-option>
                         <a-select-option  key="40" :value="ORG_TYPE.REPAIR">维修工</a-select-option>
                     </a-select>

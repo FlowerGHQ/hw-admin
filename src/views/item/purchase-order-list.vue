@@ -94,7 +94,7 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="handleRecreate(record)"> <i class="icon i_cart"/> 再次购买</a-button>
+                        <a-button type='link' @click="handleRecreate(record)" v-if='loginType != USER_TYPE.ADMIN'>  <i class="icon i_cart"/> 再次购买</a-button>
                         <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_detail"/> 详情</a-button>
                     </template>
                 </template>
@@ -128,6 +128,7 @@ export default {
     data() {
         return {
             loginType: Core.Data.getLoginType(),
+            USER_TYPE: Core.Const.USER.TYPE,
             // 加载
             loading: false,
             // 分页

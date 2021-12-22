@@ -39,10 +39,10 @@
                         {{ text || '-'}}
                     </template>
                     <template v-if="column.dataIndex === 'price'">
-                        {{ $Util.countFilter(text) }}
+                        {{ $Util.countFilter(text) }}￥
                     </template>
                     <template v-if="column.dataIndex === 'sum_price'">
-                        {{ $Util.countFilter(record.price * record.amount) }}
+                        {{ $Util.countFilter(record.price * record.amount) }}￥
                     </template>
                 </template>
                 <template #summary>
