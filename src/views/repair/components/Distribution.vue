@@ -9,7 +9,7 @@
         </div>
     <div class="panel-content" > <!-- 维修人员 -->
         <div class="form-content">
-            <div class="form-item required">
+            <div class="form-item required spitem">
                 <div class="key">工单负责人</div>
                 <div class="value">
                     <a-select v-model:value="form.repair_user_id" placeholder="请选择工单负责人">
@@ -40,11 +40,16 @@
                     <span class="content-length">{{form.repair_message.length}}/500</span>
                 </div>
             </div>
+            <div class="form-item">
+                <div class="key"></div>
+                <div class="value">
+                    <a-button @click="handleSubmit" type="primary">确定</a-button>
+                </div>
+            </div>
+
         </div>
     </div>
     <div class="form-btns">
-        <a-button @click="handleSubmit" type="primary">确定</a-button>
-        <a-button @click="routerChange('back')">取消</a-button>
     </div>
     </div>
 </div>
@@ -223,5 +228,24 @@ export default {
             width: calc(~'50% - 10px');
         }
     }
+    .form-content {
+        width: 500px;
+        padding-left: 40px;
+    }
+    .spitem {
+        position: relative;
+
+    .sp {
+        position: absolute;
+        font-size: 12px;
+        margin-left: 14px;
+        left: 100%;
+        .fcc();
+        .ant-btn {
+            font-size: 12px;
+        }
+    }
 }
+}
+
 </style>
