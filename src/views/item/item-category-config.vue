@@ -35,6 +35,7 @@
                     <a-radio-group v-model:value="item.type">
                         <a-radio value="input">输入框</a-radio>
                         <a-radio value="textarea">文本域</a-radio>
+                        <a-radio value="rich_text">富文本</a-radio>
                         <a-radio value="select">选择框</a-radio>
                         <a-radio value="radio">单选框</a-radio>
                     </a-radio-group>
@@ -70,6 +71,7 @@
 
 <script>
 import Core from '../../core';
+
 const configTemp = {
     required: 0,
     name: '',
@@ -77,6 +79,7 @@ const configTemp = {
     type: 'input',
     select: [],
 }
+
 export default {
     name: 'ItemCategoryConfig',
     components: {},

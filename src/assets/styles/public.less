@@ -582,7 +582,6 @@ p {
     .fac();
     margin-bottom: 16px;
     .key {
-        
         width: 86px;
         box-sizing: border-box;
         white-space: nowrap;
@@ -611,6 +610,12 @@ p {
                 bottom: 3px;
                 right: 10px;
             }
+        }
+    }
+    &.rich_text {
+        align-items: flex-start;
+        .key {
+            line-height: 32px;
         }
     }
     &.img-upload {
@@ -904,6 +909,11 @@ p {
                     font-size: 12px;
                 }
             }
+            &.rich_text {
+                .value {
+                    max-width: calc(~'100% - 186px');
+                }
+            }
         }
     }
     .form-btns {
@@ -1057,9 +1067,14 @@ p {
     }
 }
 .info-container { // 详情页 信息展示 竖向
+    .info-block {
+        display: flex;
+        flex-wrap: wrap;
+    }
     .info-item {
         font-size: 12px;
         margin-bottom: 23px;
+        width: 100%;
         .key {
             color: #9A9EA5;
             line-height: 17px;
@@ -1070,6 +1085,7 @@ p {
             color: #202A3B;
             padding-left: 15px;
             line-height: 17px;
+            white-space: pre-wrap;
         }
     }
 }
@@ -1197,6 +1213,16 @@ p {
             .ant-collapse-header .icon.i_expan_l {
                 transform: translateY(-50%) rotate(180deg);
             }
+        }
+    }
+}
+
+.tox.tox-tinymce {
+    border-color: @BC_N;
+    div.tox-statusbar {
+        border-color: transparent;
+        .tox-statusbar__text-container {
+            display: none;
         }
     }
 }

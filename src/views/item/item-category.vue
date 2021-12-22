@@ -50,6 +50,7 @@
 
 <script>
 import Core from '../../core';
+
 export default {
     name: 'ItemCategory',
     components: {},

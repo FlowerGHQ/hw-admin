@@ -66,6 +66,7 @@
             </div>
         </div>
     </div>
+
     <div class="form-block">
         <div class="form-title">
             <div class="title">图片信息</div>
@@ -110,7 +111,7 @@
             <div class="title">商品配置</div>
         </div>
         <div class="form-content">
-            <div v-for="(item, index) of configTemp" :key="index" :class="{'form-item':true, required: item.required, textarea: item.type === 'textarea'}">
+            <div v-for="(item, index) of configTemp" :key="index" :class="{'form-item':true, required: item.required, textarea: item.type === 'textarea', rich_text: item.type === 'rich_text'}">
                 <div class="key">{{item.name}}</div>
                 <div class="value">
                     <template v-if="item.type == 'input'">
@@ -126,9 +127,12 @@
                         </a-select>
                     </template>
                     <template v-if="item.type == 'radio'">
-                        <a-radio-group  v-model:value="form.config[index].value">
+                        <a-radio-group v-model:value="form.config[index].value">
                             <a-radio v-for="(val,i) of item.select" :key="i" :value="val" >{{val}}</a-radio>
                         </a-radio-group>
+                    </template>
+                    <template v-if="item.type == 'rich_text'">
+                        <VueTinymce v-model="form.config[index].value" :setting="tinymce_setting"/>
                     </template>
                 </div>
             </div>
@@ -144,10 +148,14 @@
 <script>
 import Core from '../../core';
 import CategoryTreeSelect from './components/CategoryTreeSelect.vue'
+import VueTinymce from '@jsdawn/vue3-tinymce';
 
 export default {
     name: 'ItemEdit',
-    components: {CategoryTreeSelect},
+    components: {
+        CategoryTreeSelect,
+        VueTinymce
+    },
     props: {},
     data() {
         return {
@@ -179,6 +187,27 @@ export default {
                     token: Core.Data.getToken(),
                     type: 'img',
                 },
+            },
+            tinymce_setting: {
+                menubar: false,  // 隐藏菜单栏
+                branding: false, // 隐藏右下角技术支持
+
+                toolbar: ' fontsizeselect forecolor backcolor | bold italic underline strikethrough | formatselect alignleft aligncenter alignright alignjustify | numlist bullist | indent outdent | superscript subscript | removeformat | fullscreen',
+                // toolbar: 'undo redo | fullscreen | formatselect alignleft aligncenter alignright alignjustify | link unlink | numlist bullist | image media table | fontsizeselect forecolor backcolor | bold italic underline strikethrough | indent outdent | superscript subscript | removeformat |',
+                toolbar_mode: 'sliding',
+
+                // quickbars_selection_toolbar:
+                // 'removeformat | bold italic underline strikethrough | fontsizeselect forecolor backcolor',
+                // plugins: 'link image media table lists fullscreen quickbars',
+
+                fontsize_formats: '12px 14px 16px 18px',
+                default_link_target: '_blank',
+                link_title: false,
+                nonbreaking_force_tab: true,
+                // 设置中文语言
+                language: 'zh_CN',
+                language_url: '/ext/tinymce_zh_CN.js',
+                content_style: 'body{font-size: 14px}'
             },
         };
     },
@@ -228,6 +257,7 @@ export default {
                         name: item.name,
                         key: item.key,
                         value: item.type === 'select' ? undefined : '',
+                        type: item.type
                     })
                 }
                 for (let i = 0; i < config.length; i++) {
@@ -271,6 +301,7 @@ export default {
         // 保存、新建 商品
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
+            console.log('form:', form)
             if (this.upload.coverList.length) {
                 let coverList = this.upload.coverList.map(item => {
                     return item.short_path || item.response.data.filename
@@ -302,7 +333,6 @@ export default {
                 for (let i = 0; i < this.configTemp.length; i++) {
                     let item = this.configTemp[i]
                     if (item.required && !form.config[i].value) {
-
                         return this.$message.warning(`请${['select','radio'].includes(item.type) ? '选择' : '输入'}${item.name}`)
                     }
                 }

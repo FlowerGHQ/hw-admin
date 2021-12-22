@@ -6,7 +6,13 @@
         <p class="price">￥{{$Util.countFilter(detail.price)}}</p>
         <p class="category">{{category.name}}</p>
         <div class="desc" v-if="config && config.length">
-            <p v-for="(item, index) of config" :key="index">{{item.name}}： {{item.value}}</p>
+            <template v-for="(item, index) of config" :key="index">
+                <p v-if="item.value">
+                    {{item.name}}：
+                    <template v-if="item.type !== 'rich_text'">{{item.value}}</template>
+                    <span v-else  v-html='item.value'></span>
+                </p>
+            </template>
         </div>
     </div>
     <div class="imgs-content">

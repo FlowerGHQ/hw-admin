@@ -15,8 +15,8 @@
                             <img :src="$Util.imageFilter(detail.logo ? detail.logo : '', 2)" />
                         </div>
                         <div class="info-block-top">
-                            <p class="p1">商品名:{{detail.name}}</p>
-                            <p class="p2">￥{{$Util.countFilter(detail.price)}}</p>
+                            <p class="name">商品名:{{detail.name}}</p>
+                            <p class="price">￥{{$Util.countFilter(detail.price)}}</p>
                         </div>
                     </div>
                 </div>
@@ -45,11 +45,15 @@
                                         <div class="value">￥{{$Util.countFilter(detail.original_price)}}</div>
                                     </div>
                                 </a-col>
-                                <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
-                                    <div class="info-item" v-for="(item, index) of config" :key="index">
-                                        <div class="key">{{item.name}}</div>
-                                        <div class="value">{{item.value || '-'}}</div>
-                                    </div>
+                                <a-col :xs='24' :sm='24' :lg='12' :xl='16' :xxl='18' class="info-block">
+                                    <template v-for="(item, index) of config" :key="index">
+                                        <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='8' class="info-item"
+                                            :class="item.type" v-if="item.value">
+                                            <div class="key">{{item.name}}</div>
+                                            <div class="value" v-if="item.type == 'rich_text'" v-html='item.value'></div>
+                                            <div class="value" v-else>{{item.value || '-'}}</div>
+                                        </a-col>
+                                    </template>
                                 </a-col>
                             </a-row>
                         </a-collapse-panel>
@@ -147,16 +151,17 @@ export default {
             img {
                 width: 120px;
                 height: 120px;
+                object-fit: cover;
                 background: #F3F3F3;
                 border-radius: 4px 4px 4px 4px;
             }
-            .p1{
+            .name {
                 height: 28px;
                 font-size: 16px;
                 color: rgba(0, 0, 0, 0.85);
                 line-height: 28px;
             }
-            .p2{
+            .price {
                 height: 20px;
                 font-size: 14px;
                 font-weight: 500;
