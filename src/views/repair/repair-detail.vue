@@ -3,8 +3,8 @@
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">工单详情</div>
-<!--            <div class="btns-area" v-if="detail.org_type == OrgType">-->
-            <div class="btns-area">
+            <div class="btns-area" v-if="detail.org_type == OrgType">
+<!--            <div class="btns-area">-->
                 <a-button type="primary" @click="handleSecondDoor()" v-if="detail.status == STATUS.WAIT_CHECK || detail.status == STATUS.WAIT_DETECTION || detail.status == STATUS.WAIT_REPAIR" ><i class="icon i_edit"/>二次维修</a-button>
                 <template v-if="detail.account_id == User.id || $auth('MANMGE')">
                     <a-button type="primary" @click="handleTransfer()"    v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_check_c"/>转单</a-button>
