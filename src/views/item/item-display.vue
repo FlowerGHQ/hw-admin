@@ -20,10 +20,11 @@
         </a-carousel>
     </div>
     <div class="btn-content">
-        <a-button type="primary" @click="hanldeAddToShopCart" v-if="!detail.in_favorite">添加到购物车</a-button>
-        <a-button type="primary" v-if="detail.in_favorite">已添加</a-button>
-        <a-button type="primary" ghost @click="hanldeAddToFavorite" v-if="!detail.in_favorite">收藏商品</a-button>
-        <a-button type="primary" ghost v-if="detail.in_favorite">已收藏</a-button>
+        <a-button type="primary" class="disabled" v-if="detail.in_shopping_cart">已在购物车中</a-button>
+        <a-button type="primary" @click="hanldeAddToShopCart" v-else>添加到购物车</a-button>
+
+        <a-button type="primary" class="disabled" ghost v-if="detail.in_favorite">已收藏</a-button>
+        <a-button type="primary" ghost @click="hanldeAddToFavorite" v-else>收藏商品</a-button>
     </div>
 </div>
 </template>
@@ -82,7 +83,8 @@ export default {
                 price: this.detail.price
             }).then(res => {
                 console.log('hanldeAddToShopCart res:', res)
-                this.$message.success('收藏成功')
+                this.$message.success('添加成功')
+                this.getItemDetail();
             })
         },
         // 收藏商品
@@ -138,6 +140,7 @@ export default {
             line-height: 22px;
             font-weight: 400;
             color: #515154;
+            white-space: pre-wrap;
             p + p {
                 margin-top: 10px;
             }
@@ -150,7 +153,7 @@ export default {
                 img {
                     width: 450px;
                     height: 450px;
-                    object-fit: fill;
+                    object-fit: cover;
                 }
             }
         }
@@ -170,7 +173,7 @@ export default {
                     background: #F5F5F5;
                 }
                 img {
-                    object-fit: fill;
+                    object-fit: cover;
                 }
             }
         }
@@ -181,19 +184,31 @@ export default {
         margin-top: 70px;
         .ant-btn {
             margin: 0;
-            width: 375px;
-            height: 55px;
+            width: 220px;
+            height: 40px;
             border-radius: 12px;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 500;
+            &.ant-btn-primary.disabled {
+                background-color: #006EF9;
+                border-color: #006CFF;
+            }
             &.ant-btn-background-ghost {
                 border: 1px solid #000000;
+                border-color: #000000;
                 color: #000000;
                 margin-top: 20px;
                 &:hover {
                     opacity: 0.7;
                 }
+                &.disabled {
+                    border-color: #000000;
+                }
             }
+            &.disabled {
+                opacity: 0.7;
+            }
+
         }
     }
 }

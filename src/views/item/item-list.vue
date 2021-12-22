@@ -35,7 +35,7 @@
                                 </div>
                             </div>
                         </template>
-                        <a-tooltip title="查看购物车" class="popover">
+                        <a-tooltip :title="`查看购物车${briefCount ? '('+briefCount+')' : ''}`" class="popover">
                             <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>
                         </a-tooltip>
                     </a-popover>
@@ -135,6 +135,7 @@ export default {
     mounted() {
         this.getTableData();
         this.getCategoryList()
+        this.getShopCartData();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -214,10 +215,10 @@ export default {
             });
         },
 
-        getShopCartData() { // 获取 购物车 数据
+        getShopCartData(flag = false) { // 获取 购物车 数据
             Core.Api.ShopCart.list().then(res => {
                 console.log('getShopCartData res:', res)
-                this.briefVisible = true
+                this.briefVisible = flag
                 this.briefList = [res.list[0] || {}]
                 this.briefCount = res.count;
             })
@@ -232,7 +233,7 @@ export default {
             }).then(res => {
                 console.log('res:', res)
                 this.$message.success('添加成功')
-                this.getShopCartData();
+                this.getShopCartData(true);
             })
         },
 
@@ -339,20 +340,20 @@ export default {
                 text-align: right;
             }
             .list-container {
-                margin-top: 32px;
+                margin: 32px 22px 0;
                 display: flex;
                 flex-wrap: wrap;
                 .list-item {
                     cursor: pointer;
-                    margin: 0 40px 60px;
-                    width: 247px;
+                    margin: 0 22px 60px;
+                    width: 180px;
                     color: #111111;
                     font-weight: 500;
                     font-size: 14px;
                     line-height: 16px;
                     .cover {
-                        width: 247px;
-                        height: 247px;
+                        width: 180px;
+                        height: 180px;
                         background-color: #F5F5F5;
                         .fcc();
                         overflow: hidden;
@@ -380,7 +381,7 @@ export default {
                     }
                     .btn {
                         width: 100%;
-                        height: 55px;
+                        height: 40px;
                         border-radius: 12px;
                         border: 1px solid @primary;
                         margin-top: 22px;
