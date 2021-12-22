@@ -45,10 +45,19 @@
                         {{ $Util.countFilter(record.price * record.amount) }}
                     </template>
                 </template>
+                <template #summary>
+                    <a-table-summary>
+                        <a-table-summary-row>
+                            <a-table-summary-cell :index="0" :col-span="2"></a-table-summary-cell>
+                            <a-table-summary-cell :index="1" :col-span="2">
+                                <div class="sum-price">
+                                    <p>总金额</p> <span>￥{{$Util.countFilter(sum_price)}}</span>
+                                </div>
+                            </a-table-summary-cell>
+                        </a-table-summary-row>
+                    </a-table-summary>
+                </template>
             </a-table>
-            <div class="sum-price">
-                <p>总金额</p> <span>￥{{$Util.countFilter(sum_price)}}</span>
-            </div>
         </div>
     </div>
     <div class="btn-area">
@@ -74,10 +83,10 @@ export default {
 
             tableData: [],
             tableColumns: [
-                { title: '维修材料', dataIndex: ['item', 'name'], key: 'item' },
-                { title: '数量', dataIndex: 'amount', key: 'item' },
-                { title: '单价', dataIndex: 'price' },
-                { title: '金额（元）', dataIndex: 'sum_price' },
+                { width: '40%', title: '维修材料', dataIndex: ['item', 'name'], key: 'item' },
+                { width: '20%', title: '数量', dataIndex: 'amount', key: 'item' },
+                { width: '20%', title: '单价', dataIndex: 'price' },
+                { width: '20%', title: '金额（元）', dataIndex: 'sum_price' },
             ]
         }
     },
@@ -222,10 +231,15 @@ export default {
                     background-color: #F8FAFC !important;
                 }
             }
+            .ant-table-summary {
+                .ant-table-cell {
+                    padding: 0;
+                    border-bottom: 1px solid transparent;
+                    height: 40px;
+                }
+            }
             .sum-price {
-                margin-top: 20px;
-                margin-right: 80px;
-                width: 368px;
+                width: 100%;
                 height: 2px;
                 opacity: 0.9;
                 border-top: 2px solid #000022;
