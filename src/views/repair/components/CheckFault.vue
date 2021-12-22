@@ -27,6 +27,7 @@
                             <template v-if="column.dataIndex === 'amount'">
                                 <a-input-number v-model:value="record.amount" :min="0" :precision="0" placeholder="请输入" @change="inputNumberFail(fault)"/> 件
                             </template>
+
                             <template v-if="column.key === 'money'">
                                 ￥{{$Util.countFilter(text)}}
                             </template>
@@ -61,13 +62,16 @@
                     <a-table :columns="tableColumns" :data-source="exchangeData[fault]"
                         :row-key="record => record.id" :pagination='false' size="small">
                         <template #bodyCell="{ column , record ,index,text}">
-                            <a-input-number v-model:value="record.amount"
-                                :min="0" :precision="0" placeholder="请输入"
-                                :formatter="value => value ? `${value}件` : value"
-                                :parser="value => value.replace('件', '')"
-                                v-if="column.dataIndex === 'amount'"
-                                            @change="inputNumberExchange(fault)"
-                            />
+<!--                            <a-input-number v-model:value="record.amount"-->
+<!--                                :min="0" :precision="0" placeholder="请输入"-->
+<!--                                :formatter="value => value ? `${value}件` : value"-->
+<!--                                :parser="value => value.replace('件', '')"-->
+<!--                                v-if="column.dataIndex === 'amount'"-->
+<!--                                            @change="inputNumberExchange(fault)"-->
+<!--                            />-->
+                            <template v-if="column.dataIndex === 'amount'">
+                                <a-input-number v-model:value="record.amount" :min="0" :precision="0" placeholder="请输入" @change="inputNumberExchange(fault)"/> 件
+                            </template>
                             <template v-if="column.key === 'money'">
                                 ￥{{$Util.countFilter(text)}}
                             </template>
