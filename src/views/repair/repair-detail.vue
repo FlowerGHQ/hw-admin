@@ -3,8 +3,8 @@
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">工单详情</div>
-            <div class="btns-area" v-if="detail.org_type == OrgType">
-<!--            <div class="btns-area">-->
+<!--            <div class="btns-area" v-if="detail.org_type == OrgType">-->
+            <div class="btns-area">
                 <a-button type="primary" @click="handleSecondDoor()" v-if="detail.status == STATUS.WAIT_CHECK || detail.status == STATUS.WAIT_DETECTION || detail.status == STATUS.WAIT_REPAIR" ><i class="icon i_edit"/>二次维修</a-button>
                 <template v-if="detail.account_id == User.id || $auth('MANMGE')">
                     <a-button type="primary" @click="handleTransfer()"    v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_check_c"/>转单</a-button>
@@ -69,8 +69,9 @@
         </div>
         -->
         <div class="form-container">
+            <Distribution :id='id' :detail='detail' @submit="getRepairDetail" ref="CheckFault"  v-if="detail.status == STATUS.WAIT_DISTRIBUTION"/>
             <CheckFault :id='id' :detail='detail' @submit="getRepairDetail" ref="CheckFault"  v-if="detail.status == STATUS.WAIT_DETECTION"/>
-            <CheckResult :id='id' :detail='detail' :faultList="faultList" :failList="failList" :exchangeList="exchangeList" :failTotle="failTotle" :exchangeTotle="exchangeTotle"  ref="CheckResult" v-if="detail.status != STATUS.WAIT_DETECTION && detail.status != STATUS.WAIT_CHECK" />
+            <CheckResult :id='id' :detail='detail' :faultList="faultList" :failList="failList" :exchangeList="exchangeList" :failTotle="failTotle" :exchangeTotle="exchangeTotle"  ref="CheckResult" v-if="detail.status != STATUS.WAIT_DISTRIBUTION && detail.status != STATUS.WAIT_DETECTION && detail.status != STATUS.WAIT_CHECK" />
             <RepairInfo :id='id' :detail='detail' />
             <ActionLog :id='id' :detail='detail' />
         </div>
@@ -137,6 +138,7 @@ import Core from '../../core';
 import CheckFault from './components/CheckFault.vue';
 import CheckResult from './components/CheckResult.vue';
 import RepairInfo from './components/RepairInfo.vue';
+import Distribution from './components/Distribution.vue';
 import ActionLog from './components/ActionLog.vue';
 import MySteps from '@/components/MySteps.vue';
 import dayjs from "dayjs";
@@ -152,6 +154,7 @@ export default {
         RepairInfo,
         ActionLog,
         MySteps,
+        Distribution,
     },
     props: {},
     data() {
@@ -353,20 +356,33 @@ export default {
                 status: 1,
             }).then(res => {
                 this.storeList = res.list
+                this.storeList.push({id:-1,name:"经销商"})
             });
         },
         // 获取 员工列表
-        getStaffList(val) {
-            Core.Api.User.list({
-                page: 0,
-                type: Core.Const.USER.TYPE.WORKER,
-                org_id: this.repairForm.store_id,
-                org_type: Core.Const.LOGIN.ORG_TYPE.STORE,
-                store_id: val,
-            }).then(res => {
-                this.staffList = res.list
-                this.repairForm.repair_user_id = undefined
-            });
+        getStaffList() {
+            if (this.repairForm.store_id == -1){
+                Core.Api.User.list({
+                    page: 0,
+                    type: Core.Const.USER.TYPE.WORKER,
+                    org_id: this.detail.agent_id,
+                    org_type: Core.Const.LOGIN.ORG_TYPE.AGENT,
+                }).then(res => {
+                    this.staffList = res.list
+                    this.repairForm.repair_user_id = undefined
+                });
+            } else{
+                Core.Api.User.list({
+                    page: 0,
+                    type: Core.Const.USER.TYPE.WORKER,
+                    org_id: this.repairForm.store_id,
+                    org_type: Core.Const.LOGIN.ORG_TYPE.STORE,
+                }).then(res => {
+                    this.staffList = res.list
+                    this.repairForm.repair_user_id = undefined
+                });
+            }
+
         },
         getRepairFaultList(){
             Core.Api.RepairItem.faultList({

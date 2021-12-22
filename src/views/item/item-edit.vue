@@ -332,12 +332,22 @@ export default {
         },
         // 上传图片
         handleCoverChange({ file, fileList }) {
-            this.upload.coverList = fileList
             console.log("handleCoverChange status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                if (file.response && file.response.code < 0) {
+                    return this.$message.error(file.response.message)
+                }
+            }
+            this.upload.coverList = fileList
         },
         handleDetailChange({ file, fileList }) {
-            this.upload.detailList = fileList
             console.log("handleDetailChange status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                if (file.response && file.response.code < 0) {
+                    return this.$message.error(file.response.message)
+                }
+            }
+            this.upload.detailList = fileList
         },
 
         handleCategorySelect(val, node) {

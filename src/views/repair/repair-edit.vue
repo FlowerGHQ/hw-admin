@@ -63,7 +63,7 @@
             </div>
         </div>
     </div>
-    <div class="form-block" v-if="form.id"> <!-- 车主信息 -->
+    <div class="form-block"> <!-- 车主信息 -->
         <div class="form-title"><div class="title">车主信息</div></div>
         <div class="form-content">
             <div class="form-item required">
@@ -106,47 +106,47 @@
                 <div class="key">工单备注</div>
                 <div class="value">
                     <a-textarea v-model:value="form.remark" placeholder="请输入工单备注" :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
-                    <span class="content-length">{{form.desc.length}}/500</span>
+                    <span class="content-length">{{form.remark.length}}/500</span>
                 </div>
             </div>
         </div>
     </div>
-    <div class="form-block" v-if="form.id"> <!-- 维修人员 -->
-        <div class="form-title"><div class="title">维修人员</div></div>
-        <div class="form-content">
-            <div class="form-item required">
-                <div class="key">工单负责人</div>
-                <div class="value">
-                    <a-select v-model:value="form.repair_user_id" placeholder="请选择工单负责人">
-                        <a-select-option v-for="item of staffList" :key="item.id" :value="item.id">{{item.account.name}}</a-select-option>
-                    </a-select>
-                </div>
-                <div class="sp">
-                    <a-button type="link" @click="routerChange('staff')">新建员工</a-button>
-                    <a-button type="link" @click="getStaffList('refresh')">刷新</a-button>
-                </div>
-            </div>
-            <div class="form-item">
-                <div class="key">计划时间</div>
-                <div class="value">
-                    <a-date-picker v-model:value="form.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>
-                </div>
-            </div>
-<!--            <div class="form-item">-->
-<!--                <div class="key">完成时间</div>-->
+<!--    <div class="form-block" > &lt;!&ndash; 维修人员 &ndash;&gt;-->
+<!--        <div class="form-title"><div class="title">维修人员</div></div>-->
+<!--        <div class="form-content">-->
+<!--            <div class="form-item required">-->
+<!--                <div class="key">工单负责人</div>-->
 <!--                <div class="value">-->
-<!--                    <a-date-picker v-model:value="form.finish_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>-->
+<!--                    <a-select v-model:value="form.repair_user_id" placeholder="请选择工单负责人">-->
+<!--                        <a-select-option v-for="item of staffList" :key="item.id" :value="item.id">{{item.account.name}}</a-select-option>-->
+<!--                    </a-select>-->
+<!--                </div>-->
+<!--                <div class="sp">-->
+<!--                    <a-button type="link" @click="routerChange('staff')">新建员工</a-button>-->
+<!--                    <a-button type="link" @click="getStaffList('refresh')">刷新</a-button>-->
 <!--                </div>-->
 <!--            </div>-->
-            <div class="form-item textarea">
-                <div class="key">维修备注</div>
-                <div class="value">
-                    <a-textarea v-model:value="form.repair_message" placeholder="请输入维修备注" :auto-size="{ minRows: 2, maxRows: 2 }" :maxlength='500'/>
-                    <span class="content-length">{{form.desc.length}}/500</span>
-                </div>
-            </div>
-        </div>
-    </div>
+<!--            <div class="form-item">-->
+<!--                <div class="key">计划时间</div>-->
+<!--                <div class="value">-->
+<!--                    <a-date-picker v-model:value="form.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--&lt;!&ndash;            <div class="form-item">&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="key">完成时间</div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="value">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <a-date-picker v-model:value="form.finish_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--            <div class="form-item textarea">-->
+<!--                <div class="key">维修备注</div>-->
+<!--                <div class="value">-->
+<!--                    <a-textarea v-model:value="form.repair_message" placeholder="请输入维修备注" :auto-size="{ minRows: 2, maxRows: 2 }" :maxlength='500'/>-->
+<!--                    <span class="content-length">{{form.desc.length}}/500</span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
     <div class="form-btns">
         <a-button @click="handleSubmit" type="primary">确定</a-button>
         <a-button @click="routerChange('back')">取消</a-button>
@@ -313,7 +313,7 @@ export default {
             let checkRes = this.checkFormInput(form);
             if (!checkRes) { return }
 
-            let apiName = form.id ? 'hand' : 'create'
+            let apiName = form.id ? 'update' : 'create'
             Core.Api.Repair[apiName](form).then(() => {
 
                 this.$message.success('保存成功')
@@ -361,10 +361,10 @@ export default {
                     this.$message.warning('请输入详细地址')
                     return 0
                 }
-                if (!form.repair_user_id) {
-                    this.$message.warning('请选择工单负责人')
-                    return 0
-                }
+                // if (!form.repair_user_id) {
+                //     this.$message.warning('请选择工单负责人')
+                //     return 0
+                // }
                 if (!form.customer_name) {
                     this.$message.warning('请选择客户名称')
                     return 0

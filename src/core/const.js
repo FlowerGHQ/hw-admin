@@ -10,6 +10,9 @@ switch (window.location.hostname) {
 	case "10.0.0.205" :
 		URL_POINT = 'http://10.0.0.205:8083' // 徐伟
 		break;
+    case "10.0.0.107" :
+        URL_POINT = 'https://eos-api.hw.innotick.com' // 徐伟
+        break;
 	default:
 		// URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
 		URL_POINT = 'http://10.0.0.109:8083' // 谢耀圣
@@ -1456,6 +1459,7 @@ let Const = {
 		    ADMIN: 10,
 		    AGENT: 20,
 		    STORE: 30,
+		    REPAIR: 40,
 	    },
 
     },
@@ -1621,12 +1625,15 @@ let Const = {
 		PAY_METHOD:{
 			1: "支付宝",
 			2: "微信",
+			3: "银行转账",
 		},
 		PAY_METHOD_LIST:[
 			{ name: '支付宝', value: '1' },
 			{ name: '微信', value: '2' },
+			{ name: '银行转账', value: '3' },
+
 		],
-        // 评论
+			// 评论
 		FLAG_REVIEW: {
 			SUCCESS : 1
 		},

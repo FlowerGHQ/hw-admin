@@ -14,8 +14,8 @@
                         <a-input-number v-model:value="editCount" :min="1" :precision="0" autofocus @blur="handleCountEditBlur(item)"/>
                     </div>
                     <div class="btns">
-                        <a-button type="link" @click="handleMoveToFavorite(item)" v-if="!item.item.in_favorite">移至收藏</a-button>
-                        <a-button type="link" v-if="item.item.in_favorite">已收藏</a-button>
+                        <a-button type="link" class="disabled" v-if="item.item.in_favorite">已收藏</a-button>
+                        <a-button type="link" @click="handleMoveToFavorite(item)" v-else>移至收藏</a-button>
                         <a-button type="link" @click="handleShopCartRemove(item)">删除</a-button>
                     </div>
                 </div>
@@ -49,8 +49,8 @@
                     <div class="subject"></div>
                     <div class="btns">
                         <a-button type="link" @click="handleFavoriteRemove(item)">删除收藏</a-button>
-                        <a-button type="primary" ghost @click="handleMoveToShopCart(item)" v-if="!item.item.in_shopping_cart">添加到购物车</a-button>
-                        <a-button type="primary" ghost v-if="item.item.in_shopping_cart">已添加到购物车</a-button>
+                        <a-button type="link" class="disabled" v-if="item.item.in_shopping_cart">已在购物车中</a-button>
+                        <a-button type="primary" ghost @click="handleMoveToShopCart(item)" v-else>添加到购物车</a-button>
                     </div>
                 </div>
                 <div class="price">
@@ -94,8 +94,7 @@ export default {
         }
     },
     mounted() {
-        this.getShopCartList();
-        this.getFavoriteList();
+        this.getList()
     },
     methods: {
         routerChange(type, item) {
@@ -108,6 +107,10 @@ export default {
                     window.open(routeUrl.href, '_self')
                     break;
             }
+        },
+        getList() {
+            this.getShopCartList();
+            this.getFavoriteList();
         },
         getShopCartList() {
             Core.Api.ShopCart.list().then(res => {
@@ -126,9 +129,7 @@ export default {
             this.editCount = item.amount
         },
         handleCountEditBlur(item) {
-            if (this.editCount === item.amount) {
-                return
-            }
+            if (this.editCount === item.amount) { return }
             let _item = Core.Util.deepCopy(item)
             _item.amount = this.editCount
             console.log('handleCountEditBlur _item:', _item)
@@ -137,10 +138,6 @@ export default {
             }).finally(() => {
                 this.editCount = ''
             })
-        },
-
-        // 结算
-        handleSettle() {
         },
 
         // 从购物车移至收藏
@@ -159,10 +156,7 @@ export default {
                     } catch(err) {
                         console.log('handleMoveToFavorite err:', err)
                     } finally {
-                        // setTimeout(() => {
-                            _this.getShopCartList();
-                            _this.getFavoriteList();
-                        // }, 1000)
+                        _this.getList();
                     }
                 },
             });
@@ -174,13 +168,10 @@ export default {
                 amount: 1,
                 price: item.price
             }).then(res => {
-                console.log('res:', res)
                 this.$message.success('添加成功')
-                this.getShopCartList()
-                this.getFavoriteList()
+                this.getList()
             })
         },
-
         // 从收藏夹移出
         handleFavoriteRemove(item) {
             let _this = this
@@ -192,8 +183,7 @@ export default {
                 onOk() {
                     Core.Api.Favorite.remove({id:item.id}).then(() => {
                         _this.$message.success('移出成功')
-                        _this.getFavoriteList()
-                        _this.getShopCartList()
+                        _this.getList()
                     })
                 },
             });
@@ -209,8 +199,7 @@ export default {
                 onOk() {
                     Core.Api.ShopCart.remove({id:item.id}).then(() => {
                         _this.$message.success('移出成功')
-                        _this.getShopCartList()
-                        _this.getFavoriteList()
+                        _this.getList()
                     })
                 },
             });
@@ -307,6 +296,11 @@ export default {
                         &:hover {
                             opacity: 0.8;
                         }
+                        &.disabled {
+                            border-color:  transparent;
+                            opacity: 0.8;
+                            cursor: default;
+                        }
                     }
                     .ant-btn-primary {
                         border-radius: 12px;
@@ -332,6 +326,14 @@ export default {
                 color: #000000;
                 line-height: 19px;
                 margin: 8px 0;
+                .name {
+                    width: calc(~'100% - 100px');
+                    .ell();
+                }
+                .price {
+                    width: 100px;
+                    text-align: right;
+                }
                 &.sum {
                     font-weight: 500;
                     padding: 16px 0;
@@ -342,7 +344,7 @@ export default {
             }
             .ant-btn-primary {
                 width: 100%;
-                height: 55px;
+                height: 46px;
                 border-radius: 12px;
                 font-weight: 500;
             }

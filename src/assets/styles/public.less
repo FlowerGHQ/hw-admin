@@ -70,6 +70,14 @@
             background-color: @BG_LP;
             border-color: @BC_LP;
         }
+        &.ant-btn-background-ghost {
+            color: @TC_P;
+            border-color: @BG_P;
+            &:hover, &:focus {
+                color: @TC_LP;
+                border-color: @BC_LP;
+            }
+        }
     }
     &.ant-btn-link {
         padding: 0 !important;
@@ -943,6 +951,15 @@ p {
         .paging-container {
             margin: 0;
             height: 30px;
+        }
+    }
+    .panel-btn {
+        font-size: 12px;
+        line-height: 20px;
+        height: 30px;
+        padding: 4px 14px;
+        .icon {
+            font-size: 12px;
         }
     }
 }

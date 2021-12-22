@@ -257,7 +257,7 @@ export default {
                 border-radius: 4px;
                 box-shadow: 0 0 0 0;
                 &::after { display: none; }
-                &.ant-menu-item-selected, &:hover {
+                &.ant-menu-item-selected {
                     background-color: @BG_P;
                     .ant-menu-title-content {
                         color: @TC_InP;
@@ -265,6 +265,15 @@ export default {
                             color: @TC_InP;
                         }
                     }
+                }
+                &:hover {
+                    background-color: #F2F8FF;
+                    /* .ant-menu-title-content {
+                        color: @TC_InP;
+                        i.icon {
+                            color: @TC_InP;
+                        }
+                    } */
                 }
             }
             .ant-menu-submenu {
@@ -284,16 +293,16 @@ export default {
                         }
                     }
                     &:hover {
-                        background-color: @BG_P;
-                        .ant-menu-submenu-arrow {
-                            color: @TC_InP;
+                        background-color: #F2F8FF;
+                        /* .ant-menu-submenu-arrow {
+                            color: #F2F8FF;
                         }
                         .ant-menu-title-content {
-                            color: @TC_InP;
+                            color: #F2F8FF;
                             i.icon {
                                 color: @TC_InP;
                             }
-                        }
+                        } */
                     }
                 }
                 .ant-menu-sub {
