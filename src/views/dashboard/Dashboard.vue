@@ -1,13 +1,18 @@
 <template>
 <!-- 财务结算 -->
-<div id="Dashboard">Dashboard</div>
+<div id="Dashboard">
+    <SearchRangePicker @change='handleTimeChange'/>
+</div>
 </template>
 
 <script>
 import Core from '../../core';
+import SearchRangePicker from '@/components/statistic/SearchRangePicker.vue'
 export default {
     name: 'Dashboard',
-    components: {},
+    components: {
+        SearchRangePicker
+    },
     props: {},
     data() {
         return {};
