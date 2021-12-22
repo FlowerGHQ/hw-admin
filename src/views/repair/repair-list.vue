@@ -25,7 +25,7 @@
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">门店</div>
+                    <div class="key">门店:</div>
                     <div class="value">
                         <a-select v-model:value="searchForm.org_id" placeholder="请选择门店" @change="handleSearch">
                             <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>

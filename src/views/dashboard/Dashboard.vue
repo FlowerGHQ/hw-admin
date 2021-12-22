@@ -140,8 +140,6 @@ export default {
             }
         },
         handleTimeChange(data, dateList) {
-            console.log('handleTimeChange data:', data)
-            console.log('handleTimeChange dateList:', dateList)
             this.org_type = data.org_type
             this.dateList = dateList
             setTimeout(() => {
@@ -181,7 +179,6 @@ export default {
 
         getPurchaseChart() {
             let list = Core.Util.deepCopy(this.dateList)
-            console.log('getPurchaseChart list:', list)
             list = list.map(i => ({
                 date: i,
                 price: Math.round(Math.random() * 10000),
@@ -192,7 +189,6 @@ export default {
         },
         getRepairChart() {
             let list = Core.Util.deepCopy(this.dateList)
-            console.log('getRepairChart list:', list)
             list = list.map(i => ({
                 date: i,
                 count: Math.round(Math.random() * 100),

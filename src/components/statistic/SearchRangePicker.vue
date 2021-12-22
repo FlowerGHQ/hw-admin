@@ -5,16 +5,11 @@
     </a-radio-group>
 
     <a-range-picker v-model:value="time" @change="handleChange()" :allowClear="false"/>
-    <!-- <div class="time-type">
-        <div v-for="item of time_type_list" :key="item.value" class="type-item"
-            @click="handleTimeAreaChange(item.value)">{{item.text}}</div>
-    </div> -->
 </div>
 </template>
 
 <script>
 import Core from '../../core'
-import moment from 'moment';
 import dayjs from 'dayjs';
 
 export default {
@@ -24,14 +19,7 @@ export default {
     emit: ['search'],
     data() {
         return {
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_E,
-
             org_type: 0,
-            time_type_list: [
-                {value: 1, text: '今日'},
-                {value: 2, text: '本周'},
-                {value: 3, text: '本月'},
-            ],
 
             time: [],
         }
@@ -55,23 +43,13 @@ export default {
         },
     },
     mounted() {
-        this.time = [moment().subtract(7, 'days'), moment()]
+        this.time = [dayjs().subtract(7, 'days'), dayjs()]
         this.handleChange();
     },
     methods: {
-        // 时间范围快速选择
-        handleTimeAreaChange(val) {
-            switch (val) {
-                case 1: this.time = [moment().startOf('day'), moment().endOf('day')]; break;
-                case 2: this.time = [moment().startOf('week'), moment().endOf('week')]; break;
-                case 3: this.time = [moment().startOf('month'), moment().endOf('month')]; break;
-            }
-            this.handleChange();
-        },
-
         handleChange() {
-            let begin_time = moment(this.time[0])
-            let end_time = moment((this.time[1]))
+            let begin_time = dayjs(this.time[0])
+            let end_time = dayjs((this.time[1]))
             let data = {
                 org_type: this.org_type,
                 begin_time: begin_time.startOf('day').unix(),
@@ -81,10 +59,9 @@ export default {
 
             let dateList = [begin_time.format('YYYY-MM-DD')]
             for (let i = 1; i <= diff; i++) {
-                dateList.push(moment(begin_time).add(i, 'days').format('YYYY-MM-DD'))
+                dateList.push(dayjs(begin_time).add(i, 'days').format('YYYY-MM-DD'))
             }
-
-            console.log('handleChange data:', data, dateList)
+            // console.log('handleChange data:', data, 'dateList', dateList)
             this.$emit('search', data, dateList)
         },
     }
