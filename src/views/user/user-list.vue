@@ -20,13 +20,20 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">类型:</div>
                     <div class="value">
-                        <a-select    v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择员工类型" allow-clear>
+                        <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择员工类型" allow-clear>
                             <a-select-option  key="20" :value="loginType">普通员工</a-select-option>
                             <a-select-option  key="40" value="40">维修工</a-select-option>
                         </a-select>
                     </div>
-                 </a-col>
-
+                </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">门店:</div>
+                    <div class="value">
+                        <a-select placeholder="请选择门店" v-model:value="searchForm.store_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
+                            <a-select-option v-for="(item,index) of storeList" :key="index" :value="item.id">{{item.name}}</a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">创建时间:</div>
                     <div class="value">
@@ -110,13 +117,16 @@ export default {
             searchForm: {
                 name:'',
                 type: undefined,
+                store_id: undefined,
                 org_id: Core.Data.getOrgId(),
                 org_type: Core.Data.getOrgType()
             },
+            storeList: [],
             // 表格数据
             tableData: [],
             tableColumns: [
                 {title: '姓名', dataIndex: ['account', 'name'], key: 'item'},
+                {title: '所属门店', dataIndex: 'store_name', key: 'item'},
                 {title: '账号', dataIndex: ['account', 'username'], key: 'item'},
                 {title: '手机号', dataIndex: ['account', 'phone'], key: 'item'},
                 {title: '邮箱', dataIndex: ['account', 'email'], key: 'item'},
@@ -133,11 +143,23 @@ export default {
     watch: {},
     computed: {},
     mounted() {
+        this.getStoreList();
         this.getTableData();
         this.orgId = Core.Data.getOrgId();
         console.log("orgId"+this.orgId);
     },
     methods: {
+        getStoreList() {        // 获取 门店 数据
+            this.loading = true;
+            Core.Api.Store.list().then(res => {
+                console.log("getStoreList res", res)
+                this.storeList = res.list;
+            }).catch(err => {
+                console.log('getStoreList err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
         routerChange(type, item = {}) {
             console.log(item)
             let routeUrl = ''
