@@ -5,14 +5,14 @@
             <img src="@images/header-logo.png" alt="浩万" />
         </div>
         <div class="header-right">
-          <span>{{USER_TYPE[loginType]}}端</span>
-          <a-divider type="vertical" />
-          <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
-              <a-button class="user-info" type="link">
-                  <a-avatar class="user-avatar" :src="$Util.imageFilter(user.avatar)" :size='30'>
+            <span style="font-size: 12px;">{{USER_TYPE[loginType]}}端</span>
+            <a-divider type="vertical" />
+            <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
+                <a-button class="user-info" type="link">
+                    <a-avatar class="user-avatar" :src="$Util.imageFilter(user.avatar, 3)" :size='30'>
                         <i class="icon i_user"/>
                     </a-avatar>
-                    <span class="user-name">{{user.username}}</span>
+                    <span class="user-name">{{user.name}}</span>
                 </a-button>
                 <template #overlay>
                     <a-menu style="text-align: center;">

@@ -176,10 +176,10 @@ let Const = {
             2: '到店',
             3: '寄修',
         },
-	    ORG_TYPE_LIST: [
-		    { text: '经销商', value: 20 },
-		    { text: '门店', value: 30 },
-	    ],
+        ORG_TYPE_LIST: [
+            { text: '经销商', value: 20 },
+            { text: '门店', value: 30 },
+        ],
         // 维修类别
         METHOD_LIST: [
             { text: '维修', value: 1 },
@@ -222,16 +222,16 @@ let Const = {
             40: '维修中',
             50: '已维修',
             60: '已结算',
-	        100: '已转单',
+            100: '已转单',
         },
         STATUS_COLOR_MAP: {
             10: 'red',
             20: 'orange',
             30: 'yellow',
             40: 'blue',
-            50: 'green',
-            60: 'grey',
-	        100: 'grey',
+            50: 'light',
+            60: 'green',
+            100: 'purple',
         },
         // 故障类型
         FAULT_OPTIONS_MAP :{

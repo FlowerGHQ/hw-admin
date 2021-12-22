@@ -245,7 +245,7 @@ const Util = {
 /* =============== 通用过滤器 ================ */
     imageFilter(item, default_type = 1) {
         if (!item || typeof item !== 'string') {
-            console.warn("imageFilter 没有找到图像")
+            // console.warn("imageFilter 没有找到图像")
             let map = {
                 1: defult_img,
                 2: defult_item,

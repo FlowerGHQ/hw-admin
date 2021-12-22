@@ -517,23 +517,27 @@ div.ant-picker {
 /* =================== ant组件重写 =================== */
 
 
-
 .status {
+    &.primary, .primary { color: @primary; }
+    &.light, .light { color: @light; }
     &.red, .red { color: @red; }
     &.blue, .blue { color: @blue; }
     &.green, .green { color: @green; }
     &.yellow, .yellow { color: @yellow; }
     &.orange, .orange { color: @orange; }
+    &.purple, .purple { color: @purple; }
     &.grey, .grey, &.gray, .gray { color: @grey; }
     &-bg {
+        &.primary, .primary { background-color: @primary_l; }
+        &.light, .light { background-color: @light_l; }
         &.red, .red { background-color: @red_l; }
         &.blue, .blue { background-color: @blue_l; }
         &.green, .green { background-color: @green_l; }
         &.yellow, .yellow { background-color: @yellow_l; }
         &.orange, .orange { background-color: @orange_l; }
+        &.purple, .purple { background-color: @purple_l; }
         &.grey, .grey, &.gray, .gray { background-color: @grey_l;}
     }
-    
 }
 
 i.icon {
@@ -1172,6 +1176,10 @@ p {
                         &.yellow {
                             color: @yellow;
                             background-color: @yellow_l;
+                        }
+                        &.purple {
+                            color: @purple;
+                            background-color: @purple_l;
                         }
                     }
                 }
