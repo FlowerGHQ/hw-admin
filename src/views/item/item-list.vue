@@ -135,7 +135,9 @@ export default {
     mounted() {
         this.getTableData();
         this.getCategoryList()
-        this.getShopCartData();
+        if (!this.$auth('ADMIN')) {
+            this.getShopCartData();
+        }
     },
     methods: {
         routerChange(type, item = {}) {

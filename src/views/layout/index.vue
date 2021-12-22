@@ -257,6 +257,10 @@ export default {
                 border-radius: 4px;
                 box-shadow: 0 0 0 0;
                 &::after { display: none; }
+
+                &:hover {
+                    background-color: #F2F8FF;
+                }
                 &.ant-menu-item-selected {
                     background-color: @BG_P;
                     .ant-menu-title-content {
@@ -266,15 +270,6 @@ export default {
                         }
                     }
                 }
-                &:hover {
-                    background-color: #F2F8FF;
-                    /* .ant-menu-title-content {
-                        color: @TC_InP;
-                        i.icon {
-                            color: @TC_InP;
-                        }
-                    } */
-                }
             }
             .ant-menu-submenu {
                 border-radius: 6px;
@@ -283,6 +278,10 @@ export default {
                     padding-right: 6px;
                     margin: 0;
                     box-shadow: 0 0 0 0;
+
+                    &:hover {
+                        background-color: #F2F8FF;
+                    }
                     .ant-menu-submenu-arrow {
                         color: #6E7C94;
                         font-size: 12px;
@@ -291,18 +290,6 @@ export default {
                         &::after, &::before {
                             height: 1px;
                         }
-                    }
-                    &:hover {
-                        background-color: #F2F8FF;
-                        /* .ant-menu-submenu-arrow {
-                            color: #F2F8FF;
-                        }
-                        .ant-menu-title-content {
-                            color: #F2F8FF;
-                            i.icon {
-                                color: @TC_InP;
-                            }
-                        } */
                     }
                 }
                 .ant-menu-sub {
