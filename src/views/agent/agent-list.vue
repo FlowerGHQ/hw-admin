@@ -145,12 +145,12 @@ export default {
             total: 0,
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            continentsList: Core.Const.CONTINENTS_LIST, // 大洲
+            continentList: Core.Const.CONTINENT_LIST, // 大洲
             countryList: Core.Const.COUNTRY_LIST, // 国家
-            countryOptions: Core.Const.CONTINENTS_COUNTRY_LIST, // 大洲>国家
+            countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
 
             create_time: [],
-            country_cascader: [],
+            country_cascader: [], // 搜索框 大洲>国家
             searchForm: {
                 name: '',
                 status: 1,
@@ -227,7 +227,7 @@ export default {
             this.loading = true;
             Core.Api.Agent.list({
                 ...this.searchForm,
-                continents: this.country_cascader[0] || '',
+                continent: this.country_cascader[0] || '',
                 country: this.country_cascader[1] || '',
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',

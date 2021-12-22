@@ -26,7 +26,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">状态:</div>
                         <div class="value">
-                            <a-select    v-model:value="searchForm.status" @change="handleSearch" allow-clear>
+                            <a-select v-model:value="searchForm.status" @change="handleSearch" allow-clear>
                                 <a-select-option v-for="(item,index) of statusList" :key="index" :value="item.value">{{item.text}}</a-select-option>
                             </a-select>
                         </div>
@@ -37,6 +37,18 @@
                             <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
                                 <template #suffixIcon><i class="icon i_calendar"/></template>
                             </a-range-picker>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">地区:</div>
+                        <div class="value">
+                            <a-cascader 
+                                placeholder="请选择大洲/国家" 
+                                v-model:value="country_cascader" 
+                                :options="countryOptions"
+                                @change="handleSearch" 
+                                :field-names="{ label: 'value', value: 'value' , children: 'children'}"
+                                />
                         </div>
                     </a-col>
                 </a-row>
@@ -119,7 +131,12 @@ export default {
             total: 0,
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
+            continentList: Core.Const.CONTINENT_LIST, // 大洲
+            countryList: Core.Const.COUNTRY_LIST, // 国家
+            countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
+
             create_time: [],
+            country_cascader: [], // 搜索框 大洲>国家
             agentList: [],
             statusList: Core.Const.ORG_STATUS_LIST,
             searchForm: {
@@ -204,6 +221,8 @@ export default {
             this.loading = true;
             Core.Api.Store.list({
                 ...this.searchForm,
+                continent: this.country_cascader[0] || '',
+                country: this.country_cascader[1] || '',
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
                 page: this.currPage,
