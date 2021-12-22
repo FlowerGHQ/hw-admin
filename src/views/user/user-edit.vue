@@ -11,7 +11,7 @@
                 <div class="value">
                     <a-select    v-model:value="type" @change="handleTypeSelect" placeholder="请选择员工类型" allow-clear>
                         <a-select-option  key="20" :value="loginType">普通员工</a-select-option>
-                        <a-select-option  key="40" :value="Core.Const.LOGIN.ORG_TYPE.REPAIR">维修工</a-select-option>
+                        <a-select-option  key="40" :value="ORG_TYPE.REPAIR">维修工</a-select-option>
                     </a-select>
                 </div>
             </div>
@@ -73,6 +73,7 @@ export default {
     data() {
         return {
             USER_TYPE: Core.Const.USER.TYPE,
+            ORG_TYPE: Core.Const.LOGIN.ORG_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -80,6 +81,7 @@ export default {
             org_id: Core.Data.getOrgId(),
             org_type: Core.Data.getLoginType(),
             type: '',
+
 
             detail: {},
 
