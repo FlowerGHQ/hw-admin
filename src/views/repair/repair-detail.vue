@@ -3,7 +3,7 @@
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">工单详情</div>
-            <div class="btns-area" v-if="detail.org_type == OrgType">
+            <div class="btns-area" v-if="detail.org_type == OrgType && ($auth('AGENT')||$auth('STORE'))">
 <!--            <div class="btns-area">-->
                 <a-button type="primary" @click="handleSecondDoor()" v-if="detail.status == STATUS.WAIT_CHECK || detail.status == STATUS.WAIT_DETECTION || detail.status == STATUS.WAIT_REPAIR" ><i class="icon i_edit"/>二次维修</a-button>
                 <template v-if="detail.account_id == User.id || $auth('MANMGE')">
@@ -69,8 +69,8 @@
         </div>
         -->
         <div class="form-container">
-            <Distribution :id='id' :detail='detail' @submit="getRepairDetail" ref="CheckFault"  v-if="detail.status == STATUS.WAIT_DISTRIBUTION"/>
-            <CheckFault :id='id' :detail='detail' @submit="getRepairDetail" ref="CheckFault"  v-if="detail.status == STATUS.WAIT_DETECTION"/>
+            <Distribution :id='id' :detail='detail' @submit="getRepairDetail" ref="CheckFault"  v-if="detail.status == STATUS.WAIT_DISTRIBUTION && ($auth('AGENT')||$auth('STORE'))"/>
+            <CheckFault :id='id' :detail='detail' @submit="getRepairDetail" ref="CheckFault"  v-if="detail.status == STATUS.WAIT_DETECTION && ($auth('AGENT')||$auth('STORE'))"/>
             <CheckResult :id='id' :detail='detail' :faultList="faultList" :failList="failList" :exchangeList="exchangeList" :failTotle="failTotle" :exchangeTotle="exchangeTotle"  ref="CheckResult" v-if="detail.status != STATUS.WAIT_DISTRIBUTION && detail.status != STATUS.WAIT_DETECTION && detail.status != STATUS.WAIT_CHECK" />
             <RepairInfo :id='id' :detail='detail' />
             <ActionLog :id='id' :detail='detail' />
