@@ -122,7 +122,7 @@ export default {
             switch (type) {
                 case 'purchase':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: this.$auth('ADMIN') ? '/item/purchas-order-list' : '/purchase/purchas-order-list',
+                        path: this.$auth('ADMIN') ? '/item/purchase-order-list' : '/purchase/purchase-order-list',
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -192,6 +192,7 @@ export default {
 
         drawPurchaseChart(data) {
             if (this.purchaseChart.destroy) {
+                console.log('drawPurchaseChart destroy:', destroy)
                 this.purchaseChart.destroy()
             }
             let chart = new Chart({
@@ -255,6 +256,7 @@ export default {
         },
         drawRepairChart(data) {
             if (this.repairChart.destroy) {
+                console.log('drawRepairChart destroy:', destroy)
                 this.repairChart.destroy()
             }
             let chart = new Chart({
