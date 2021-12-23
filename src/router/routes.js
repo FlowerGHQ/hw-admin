@@ -23,7 +23,7 @@ const routes = [
         component: Layout,
         // hidden: true,
         meta: {
-            title: '时效看板',
+            title: '数据看板',
             icon: 'i_s_dashboard',
             // auth: ['dashboard'],
             // roles: [LOGIN_TYPE.ADMIN],

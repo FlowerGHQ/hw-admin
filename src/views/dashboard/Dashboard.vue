@@ -95,8 +95,8 @@ export default {
             repairChart: [],
 
             chart: {
-                purchase: '',
-                repair: ''
+                purchase: {},
+                repair: {}
             }
         };
     },
