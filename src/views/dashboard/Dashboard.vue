@@ -192,7 +192,7 @@ export default {
 
         drawPurchaseChart(data) {
             if (this.purchaseChart.destroy) {
-                console.log('drawPurchaseChart destroy:', destroy)
+                console.log('drawPurchaseChart destroy:')
                 this.purchaseChart.destroy()
             }
             let chart = new Chart({
@@ -256,7 +256,7 @@ export default {
         },
         drawRepairChart(data) {
             if (this.repairChart.destroy) {
-                console.log('drawRepairChart destroy:', destroy)
+                console.log('drawRepairChart destroy:')
                 this.repairChart.destroy()
             }
             let chart = new Chart({
