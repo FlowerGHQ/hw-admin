@@ -89,15 +89,10 @@ export default {
             },
 
             purchaseRank: [],
-            purchaseChart: [],
+            purchaseChart: {},
 
             repairRank: [],
-            repairChart: [],
-
-            chart: {
-                purchase: {},
-                repair: {}
-            }
+            repairChart: {},
         };
     },
     watch: {},
@@ -184,7 +179,6 @@ export default {
                 price: Math.round(Math.random() * 10000),
                 count: Math.round(Math.random() * 100),
             }))
-            this.purchaseChart = list
             this.drawPurchaseChart(list)
         },
         getRepairChart() {
@@ -193,13 +187,12 @@ export default {
                 date: i,
                 count: Math.round(Math.random() * 100),
             }))
-            this.repairChart = list
             this.drawRepairChart(list)
         },
 
         drawPurchaseChart(data) {
-            if (this.chart.purchase.destroy) {
-                this.chart.purchase.destroy()
+            if (this.purchaseChart.destroy) {
+                this.purchaseChart.destroy()
             }
             let chart = new Chart({
                 container: 'PurchaseOrderChart',
@@ -258,11 +251,11 @@ export default {
                 .size(2)
 
             chart.render();
-            this.chart.purchase = chart
+            this.purchaseChart = chart
         },
         drawRepairChart(data) {
-            if (this.chart.repair.destroy) {
-                this.chart.repair.destroy()
+            if (this.repairChart.destroy) {
+                this.repairChart.destroy()
             }
             let chart = new Chart({
                 container: 'RepairOrderChart',
@@ -301,7 +294,7 @@ export default {
                 .size(2)
 
             chart.render();
-            this.chart.repair = chart
+            this.repairChart = chart
         },
     }
 };
