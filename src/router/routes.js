@@ -513,7 +513,7 @@ const routes = [
         component: Layout,
         redirect: '/notice/notice-list',
         name: 'NoticeManagement',
-        hidden: true,
+        hidden: false,
         meta: {
             title: '系统消息',
             icon: 'i_s_temp',
@@ -535,21 +535,21 @@ const routes = [
                 component: () => import('@/views/notice/notice-edit.vue'),
                 hidden: true,
                 meta: {
-                    title: '新增系统',
+                    title: '新增消息',
                     parent: '/notice/notice-list',
                 }
 
             },
-            // {
-            //     path: 'notice-detail',
-            //     name: 'NoticeDetail',
-            //     component: () => import('@/views/notice/notice-detail.vue'),
-            //     hidden: true,
-            //     meta: {
-            //         title: '系统详情',
-            //         parent: '/notice/notice-list',
-            //     }
-            // },
+            {
+                path: 'notice-detail',
+                name: 'NoticeDetail',
+                component: () => import('@/views/notice/notice-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '系统详情',
+                    parent: '/notice/notice-list',
+                }
+            },
         ]
     },
 ];
