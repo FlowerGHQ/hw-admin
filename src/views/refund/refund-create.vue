@@ -29,7 +29,7 @@
                                   :headers="upload.headers" :data='upload.data'
                                   :before-upload="handleImgCheck"
                                   @change="handleLogoChange">
-                            <div class="image-inner" v-if="upload.fileList.length < 1">
+                            <div class="image-inner" v-if="upload.fileList.length < 5">
                                 <i class="icon i_upload"/>
                             </div>
                         </a-upload>
@@ -109,6 +109,18 @@ export default {
                 for (const key in this.form) {
                     this.form[key] = res.detail[key]
                 }
+                if (this.form.apply_imgs) {
+                    let imgs = this.form.apply_imgs.split(',')
+                    this.upload.fileList = imgs.map((item, index) => ({
+                        uid: index + 1,
+                        name: item,
+                        url: Core.Const.NET.FILE_URL_PREFIX + item,
+                        short_path: item,
+                        status: 'done',
+                    }))
+                }
+               // this.upload.fileList = res.detail.apply_imgs.split(",")
+
             }).catch(err => {
                 console.log('getRefundDetail err', err)
             }).finally(() => {
@@ -120,7 +132,13 @@ export default {
         },
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
-
+            console.log('form:', form)
+            if (this.upload.fileList.length) {
+                let fileList = this.upload.fileList.map(item => {
+                    return item.short_path || item.response.data.filename
+                })
+                form.apply_imgs = fileList.join(',')
+            }
             let judge = "update"
             if (!form.id) {
                 judge = "create"

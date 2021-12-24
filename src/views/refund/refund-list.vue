@@ -65,7 +65,6 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="routerChange('create',record)"><i class="icon i_edit"/> 编辑</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -145,23 +144,23 @@ export default {
         this.getTableData();
     },
     methods: {
-        handleDelete(id) {
-            let _this = this;
-            this.$confirm({
-                title: '确定要删除该消息吗？',
-                okText: '确定',
-                okType: 'danger',
-                cancelText: '取消',
-                onOk() {
-                    Core.Api.Refund.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
-                        _this.getTableData();
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
-                },
-            });
-        },
+        // handleDelete(id) {
+        //     let _this = this;
+        //     this.$confirm({
+        //         title: '确定要删除该退款记录吗？',
+        //         okText: '确定',
+        //         okType: 'danger',
+        //         cancelText: '取消',
+        //         onOk() {
+        //             Core.Api.Refund.delete({id}).then(() => {
+        //                 _this.$message.success('删除成功');
+        //                 _this.getTableData();
+        //             }).catch(err => {
+        //                 console.log("handleDelete err", err);
+        //             })
+        //         },
+        //     });
+        // },
         routerChange(type, item = {}) {
             console.log(item)
             let routeUrl = ''
@@ -175,8 +174,8 @@ export default {
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/refund/refund-detail",
-                        query: {id: item.id}
+                        path: "/purchase/purchase-order-detail",
+                        query: {id: item.order_id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
