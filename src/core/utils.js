@@ -429,6 +429,15 @@ const Util = {
         const MAP = Core.Const.NOTICE.TYPE_MAP
         return MAP[val] || '未知'
     },
+    /* =============== 退款管理 ================ */
+    refundTypeFilter(val) {
+        const MAP = Core.Const.REFUND.TYPE_MAP
+        return MAP[val] || '未知'
+    },
+    refundStatusFilter(val) {
+        const MAP = Core.Const.REFUND.STATUS_MAP
+        return MAP[val] || '未知'
+    },
 
 }
 

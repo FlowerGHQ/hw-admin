@@ -375,6 +375,33 @@ let Const = {
             20: '经销商消息'
         },
 
+    },
+    REFUND: {
+        TYPE: {
+            APPLY_BY_CUSTOMER: 100,  //用户申请
+            INITIATIVE_REFUND: 200, //后台主动退款
+        },
+        TYPE_MAP: {
+            100: '用户申请退款',
+            200: '经销商申请退款',
+        },
+        STATUS: {
+            WAIT_AUDIT: 10,    // 初始化
+            AUDIT_PASS: 20,    // 审核通过
+            SUCCESS: 40,       // 退款成功
+            AUDIT_REFUSE: '-10', // 拒绝退款
+            FAIL: '-20',         // 退款失败
+        },
+        STATUS_MAP: {
+            10: '初始化',
+            20: '审核通过',
+            40: '退款成功',
+            '-10': '拒绝退款',
+            '-20': '退款失败',
+
+        },
+
+
     }
 };
 

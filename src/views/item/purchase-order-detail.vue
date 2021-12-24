@@ -2,8 +2,9 @@
 <div id="PurchaseOrderDetail">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">采购订单详情</div>
+            <div class="title-area">商品详情</div>
             <div class="btns-area">
+                <a-button type="primary" @click="routerChange('refund')" v-if="detail.status == PURCHASE.STATUS.DEAL_SUCCESS  && $auth('AGENT', 'STORE')"  ><i class="icon i_edit"/>申请退款</a-button>
                 <a-button type="primary" @click="handlePurchaseStatus('payment')" v-if="detail.status == PURCHASE.STATUS.WAIT_PAY && $auth('ADMIN')" ><i class="icon i_check_c"/>已收款</a-button>
                 <a-button type="primary" @click="handlePurchaseStatus('deliver')"  v-if="detail.status == PURCHASE.STATUS.WAIT_DELIVER && $auth('ADMIN')" ><i class="icon i_check_c"/>发货</a-button>
                 <a-button type="primary" @click="handlePurchaseStatus('takeDeliver')"  v-if="detail.status == PURCHASE.STATUS.WAIT_TAKE_DELIVER && $auth('AGENT', 'STORE')" ><i class="icon i_edit"/>确认收货</a-button>
@@ -264,6 +265,16 @@ export default {
                         path: '/item/purchase-order-list',
                     })
                     window.open(routeUrl.href, '_blank')
+                    break;
+                case 'refund':
+                    routeUrl = this.$router.resolve({
+                        path: '/refund/refund-create',
+                        query: {
+                            order_id: this.id,
+                            money: this.detail.charge,
+                        }
+                    })
+                    window.open(routeUrl.href, '_self')
                     break;
             }
         },
