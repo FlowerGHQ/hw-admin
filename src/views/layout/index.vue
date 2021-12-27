@@ -19,6 +19,36 @@
                         <a-menu-item>
                             <a-button type="link" @click="handleLogout" class="menu-item-btn">退 出</a-button>
                         </a-menu-item>
+                        <a-menu-item>
+                            <a-button type="link" @click="handleEditShow" class="menu-item-btn">修改密码</a-button>
+                            <a-modal v-model:visible="passShow" title="修改密码" class="password-edit-modal">
+                                <div class="form-title">
+                                    <div class="form-item required">
+                                        <div class="key">旧密码:</div>
+                                        <div class="value">
+                                            <a-input-password  placeholder='请输入旧密码' v-model:value="form.old_password"  type="password" />
+
+                                        </div>
+                                    </div>
+                                    <div class="form-item required">
+                                        <div class="key">新密码:</div>
+                                        <div class="value">
+                                            <a-input-password v-model:value="form.password" placeholder="请输入新密码" type="password"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-item required" >
+                                        <div class="key">再次确认:</div>
+                                        <div class="value">
+                                            <a-input-password v-model:value="form.new_password" placeholder="请再次确认密码" type="password"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <template #footer>
+                                    <a-button key="back" @click="handleEditSubmit">确定</a-button>
+                                    <a-button @click="passShow=false" type="primary" >取消</a-button>
+                                </template>
+                            </a-modal>
+                        </a-menu-item>
                     </a-menu>
                 </template>
             </a-dropdown>
@@ -57,12 +87,13 @@
         </a-layout>
     </a-layout>
 </a-layout>
+
 </template>
 
 <script>
 import Core from '../../core';
 import routes from '@/router/routes';
-import MyBreadcrumb from './components/Breadcrumb.vue'
+import MyBreadcrumb from './components/Breadcrumb.vue';
 export default {
     components: {
         MyBreadcrumb,
@@ -74,8 +105,15 @@ export default {
             collapsed: false,
             openKeys: [],
             selectedKeys: [],
+            passShow: false,
 
-            user: Core.Data.getUser() || {}
+            user: Core.Data.getUser() || {},
+            form: {
+                id: '',
+                password: '',
+                new_password: '',
+                old_password: '',
+            }
         };
     },
     computed: {
@@ -129,6 +167,7 @@ export default {
         }
     },
     mounted() {
+        // this.getTableData();
     },
     methods: {
         handleLink(path) {
@@ -147,6 +186,36 @@ export default {
                 Core.Data.setToken('');
             });
         },
+        handleEditShow() {
+            this.passShow = true;
+        },
+
+        handleEditSubmit() {
+            let form = Core.Util.deepCopy(this.form)
+            console.log('handleLogin form:', form)
+            if (!form.old_password) {
+                return this.$message.warning('请输入旧密码')
+            }
+            if (!form.password) {
+                return this.$message.warning('请输入新密码')
+            }
+            if (!form.new_password) {
+                return this.$message.warning('请再次确认密码')
+            }
+            if (this.form.new_password !== this.form.password) {
+                this.$message.warning('两次密码输入不一致')
+                return
+            }
+            this.passShow =false
+
+            this.loading = true;
+            Core.Api.Common.updatePwd(this.form).then(() => {
+                this.$message.success('保存成功')
+                this.routerChange('back')
+            }).catch(err => {
+                console.log('handleSubmit err:', err)
+            })
+        }
     }
 };
 </script>

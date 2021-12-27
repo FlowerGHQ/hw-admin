@@ -13,6 +13,7 @@ const apiList = {
     Common: { // 公共
         login: ['PostJson', 'system/login'], // 账号登录
         logout: ['Post', 'system/logout'], // 账号登出
+        updatePwd: ['PostJson', 'system/updatePwd'], // 密码修改
 
         emailCode: ['Post', 'common/email-verification-code-send'], // 发送邮箱验证码
         phoneCode: ['Post', 'common/phone-verification-code-send'], // 发送手机验证码

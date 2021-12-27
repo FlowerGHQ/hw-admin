@@ -595,27 +595,18 @@ const routes = [
                 }
             },
             {
-                path: 'refund-update',
-                name: 'RefundUpdate',
-                component: () => import('@/views/refund/refund-update.vue'),
-                hidden: true,
-                meta: {
-                    title: '退款详情',
-                    parent: '/refund/refund-list',
-                }
-            },
-            {
                 path: 'refund-audit',
                 name: 'RefundAudit',
                 component: () => import('@/views/refund/refund-audit.vue'),
                 hidden: true,
                 meta: {
-                    title: '退款详情',
+                    title: '退款审核',
                     parent: '/refund/refund-list',
                 }
             },
         ]
     },
+
 ];
 
 export default routes;
