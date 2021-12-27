@@ -4,12 +4,16 @@
         <div class="title-container">
             <div class="title-area">商品详情</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('refund')" v-if="detail.status == PURCHASE.STATUS.DEAL_SUCCESS  && $auth('AGENT', 'STORE')"  ><i class="icon i_edit"/>申请退款</a-button>
-                <a-button type="primary" @click="handlePurchaseStatus('payment')" v-if="detail.status == PURCHASE.STATUS.WAIT_PAY && $auth('ADMIN')" ><i class="icon i_check_c"/>已收款</a-button>
-                <a-button type="primary" @click="handlePurchaseStatus('deliver')"  v-if="detail.status == PURCHASE.STATUS.WAIT_DELIVER && $auth('ADMIN')" ><i class="icon i_check_c"/>发货</a-button>
-                <a-button type="primary" @click="handlePurchaseStatus('takeDeliver')"  v-if="detail.status == PURCHASE.STATUS.WAIT_TAKE_DELIVER && $auth('AGENT', 'STORE')" ><i class="icon i_edit"/>确认收货</a-button>
-                <a-button type="primary" @click="handlePurchaseStatus('review')" v-if="detail.status == PURCHASE.STATUS.DEAL_SUCCESS && detail.flag_review == PURCHASE.FLAG_REVIEW.FAIL && $auth('AGENT', 'STORE')"  ><i class="icon i_edit"/>评论</a-button>
-                <a-button type="primary" @click="handlePurchaseStatus('cancel')"  v-if="detail.status == PURCHASE.STATUS.WAIT_PAY && $auth('AGENT', 'STORE')" ><i class="icon i_edit"/>关闭</a-button>
+                <template v-if="$auth('ADMIN')">
+                    <a-button type="primary" @click="handlePurchaseStatus('payment')" v-if="detail.status == STATUS.WAIT_PAY"><i class="icon i_received"/>已收款</a-button>
+                    <a-button type="primary" @click="handlePurchaseStatus('deliver')" v-if="detail.status == STATUS.WAIT_DELIVER"><i class="icon i_deliver"/>发货</a-button>
+                </template>
+                <template v-if="$auth('AGENT', 'STORE')">
+                    <a-button type="primary" @click="handlePurchaseStatus('received')" v-if="detail.status == STATUS.WAIT_TAKE_DELIVER"><i class="icon i_goods"/>确认收货</a-button>
+                    <a-button type="primary" @click="handlePurchaseStatus('cancel')" v-if="detail.status == STATUS.WAIT_PAY"><i class="icon i_close_c"/>关闭</a-button>
+                    <a-button type="primary" @click="handlePurchaseStatus('review')" v-if="detail.status == STATUS.DEAL_SUCCESS && detail.flag_review == PURCHASE.FLAG_REVIEW.FAIL"><i class="icon i_comment"/>评论</a-button>
+                    <a-button type="primary" @click="routerChange('refund')" ghost v-if="detail.status == STATUS.DEAL_SUCCESS"><i class="icon i_edit"/>申请退款</a-button>
+                </template>
             </div>
         </div>
         <div class="gray-panel">
@@ -170,6 +174,9 @@ import Core from '../../core';
 import PurchaseInfo from "./components/PurchaseInfo.vue"
 import WaybillShow from "@/components/WaybillShow.vue"
 import MySteps from "@/components/MySteps.vue"
+const PURCHASE = Core.Const.PURCHASE;
+const STATUS = Core.Const.PURCHASE.STATUS;
+
 
 const purchaseItemColumns = [
     { title: '商品', dataIndex: 'item' },
@@ -190,7 +197,8 @@ export default {
     data() {
         return {
             loginType: Core.Data.getLoginType(),
-            PURCHASE: Core.Const.PURCHASE,
+            PURCHASE,
+            STATUS,
             // 加载
             loading: false,
             id: '',
@@ -344,7 +352,7 @@ export default {
                 case "deliver":
                     this.deliverShow = true
                     break;
-                case "takeDeliver":
+                case "received":
                     Core.Api.Purchase.takeDeliver({
                         id: this.id
                     }).then(res => {

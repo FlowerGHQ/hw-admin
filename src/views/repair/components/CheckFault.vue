@@ -100,7 +100,7 @@
                 </a-collapse-panel>
             </a-collapse>
 <!--            <div class="submit-btn">-->
-<!--                <a-button type="primary" @click="handleFaultSubmit()"><i class="icon i_check_c"/>提交</a-button>-->
+<!--                <a-button type="primary" @click="handleFaultSubmit()"><i class="icon i_check_b"/>提交</a-button>-->
 <!--            </div>-->
         </div>
     </a-collapse-panel>

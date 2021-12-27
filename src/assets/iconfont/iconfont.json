@@ -6,6 +6,97 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "11968780",
+      "name": "minus",
+      "font_class": "minus",
+      "unicode": "e64e",
+      "unicode_decimal": 58958
+    },
+    {
+      "icon_id": "26799187",
+      "name": "edit_l",
+      "font_class": "edit_l",
+      "unicode": "e6c6",
+      "unicode_decimal": 59078
+    },
+    {
+      "icon_id": "26799188",
+      "name": "settle",
+      "font_class": "settle",
+      "unicode": "e6c7",
+      "unicode_decimal": 59079
+    },
+    {
+      "icon_id": "26799189",
+      "name": "deliver",
+      "font_class": "deliver",
+      "unicode": "e6c8",
+      "unicode_decimal": 59080
+    },
+    {
+      "icon_id": "26799190",
+      "name": "transfer",
+      "font_class": "transfer",
+      "unicode": "e6c9",
+      "unicode_decimal": 59081
+    },
+    {
+      "icon_id": "26799191",
+      "name": "submit",
+      "font_class": "submit",
+      "unicode": "e6ca",
+      "unicode_decimal": 59082
+    },
+    {
+      "icon_id": "26799192",
+      "name": "received",
+      "font_class": "received",
+      "unicode": "e6cb",
+      "unicode_decimal": 59083
+    },
+    {
+      "icon_id": "26799186",
+      "name": "goods",
+      "font_class": "goods",
+      "unicode": "e6c5",
+      "unicode_decimal": 59077
+    },
+    {
+      "icon_id": "26799181",
+      "name": "close_c",
+      "font_class": "close_c",
+      "unicode": "e6c0",
+      "unicode_decimal": 59072
+    },
+    {
+      "icon_id": "26799182",
+      "name": "comment",
+      "font_class": "comment",
+      "unicode": "e6c1",
+      "unicode_decimal": 59073
+    },
+    {
+      "icon_id": "26799183",
+      "name": "confirm",
+      "font_class": "confirm",
+      "unicode": "e6c2",
+      "unicode_decimal": 59074
+    },
+    {
+      "icon_id": "26799184",
+      "name": "completed",
+      "font_class": "completed",
+      "unicode": "e6c3",
+      "unicode_decimal": 59075
+    },
+    {
+      "icon_id": "26799185",
+      "name": "detail_l",
+      "font_class": "detail_l",
+      "unicode": "e6c4",
+      "unicode_decimal": 59076
+    },
+    {
       "icon_id": "26721185",
       "name": "s_warehouse",
       "font_class": "s_warehouse",
@@ -92,7 +183,7 @@
     {
       "icon_id": "26152768",
       "name": "check-c-o",
-      "font_class": "check_c",
+      "font_class": "check_b",
       "unicode": "e63d",
       "unicode_decimal": 58941
     },
@@ -172,13 +263,6 @@
       "font_class": "pack_up",
       "unicode": "e6ae",
       "unicode_decimal": 59054
-    },
-    {
-      "icon_id": "26356212",
-      "name": "minus",
-      "font_class": "minus",
-      "unicode": "e6af",
-      "unicode_decimal": 59055
     },
     {
       "icon_id": "26356213",
