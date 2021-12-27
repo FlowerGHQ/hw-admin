@@ -19,7 +19,7 @@
                             <div class="shop-cart-brief" :class="briefVisible ? 'show' : 'hidden'">
                                 <div class="icon i_close" @click="briefVisible = false"></div>
                                 <div class="tip">
-                                    <i class="icon i_check_c"/>已加入购物车
+                                    <i class="icon i_check_b"/>已加入购物车
                                 </div>
                                 <div class="item" v-for="item of briefList" :key="item.id">
                                     <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
@@ -438,7 +438,7 @@ export default {
         color: #272727;
         line-height: 18px;
         margin-bottom: 22px;
-        .icon.i_check_c {
+        .icon.i_check_b {
             color: #37D347;
             font-size: 12px;
             margin-right: 10px;

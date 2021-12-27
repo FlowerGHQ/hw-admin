@@ -1,8 +1,8 @@
 @font-face {
   font-family: "icon"; /* Project id 3000141 */
-  src: url('iconfont.woff2?t=1640177491257') format('woff2'),
-       url('iconfont.woff?t=1640177491257') format('woff'),
-       url('iconfont.ttf?t=1640177491257') format('truetype');
+  src: url('iconfont.woff2?t=1640570905529') format('woff2'),
+       url('iconfont.woff?t=1640570905529') format('woff'),
+       url('iconfont.ttf?t=1640570905529') format('truetype');
 }
 
 .icon {
@@ -11,6 +11,58 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.i_minus:before {
+  content: "\e64e";
+}
+
+.i_edit_l:before {
+  content: "\e6c6";
+}
+
+.i_settle:before {
+  content: "\e6c7";
+}
+
+.i_deliver:before {
+  content: "\e6c8";
+}
+
+.i_transfer:before {
+  content: "\e6c9";
+}
+
+.i_submit:before {
+  content: "\e6ca";
+}
+
+.i_received:before {
+  content: "\e6cb";
+}
+
+.i_goods:before {
+  content: "\e6c5";
+}
+
+.i_close_c:before {
+  content: "\e6c0";
+}
+
+.i_comment:before {
+  content: "\e6c1";
+}
+
+.i_confirm:before {
+  content: "\e6c2";
+}
+
+.i_completed:before {
+  content: "\e6c3";
+}
+
+.i_detail_l:before {
+  content: "\e6c4";
 }
 
 .i_s_warehouse:before {
@@ -61,7 +113,7 @@
   content: "\e61c";
 }
 
-.i_check_c:before {
+.i_check_b:before {
   content: "\e63d";
 }
 
@@ -107,10 +159,6 @@
 
 .i_pack_up:before {
   content: "\e6ae";
-}
-
-.i_minus:before {
-  content: "\e6af";
 }
 
 .i_edit:before {
