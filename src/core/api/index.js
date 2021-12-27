@@ -166,6 +166,14 @@ const apiList = {
 		update: ['PostJson', 'waybill/update'],
 
 	},
+    Refund: { // 退款管理
+        list: ['PostJson', 'order-refund-record/list'],
+        create: ['PostJson', 'order-refund-record/create'],
+        detail: ['PostJson', 'order-refund-record/detail'],
+        update: ['PostJson', 'order-refund-record/update'],
+        audit: ['PostJson', 'order-refund-record/audit'],
+
+    },
 
 };
 

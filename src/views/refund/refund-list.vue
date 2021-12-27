@@ -1,32 +1,31 @@
 <template>
-    <div id="NoticeList">
+    <div id="RefundList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">消息列表</div>
-                <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建消息</a-button>
-                </div>
+                <div class="title-area">退款列表</div>
+<!--                <div class="btns-area">-->
+<!--                    <a-button type="primary" @click="routerChange('create')"><i class="icon i_add"/>新建退款</a-button>-->
+<!--                </div>-->
             </div>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
-                        <div class="key">消息类型:</div>
+                        <div class="key">退款类型:</div>
                         <div class="value">
-                            <a-select    v-model:value="searchForm.type" @change="handleTypeSelect" placeholder="请选择消息类型" allow-clear >
-                                <a-select-option  key="10" :value="typeList.ADMIN">平台消息</a-select-option>
-                                <a-select-option  key="20" :value="typeList.AGENT">经销商消息</a-select-option>
+                            <a-select    v-model:value="searchForm.type" @change="handleTypeSelect" placeholder="请选择退款类型" allow-clear >
+                                <a-select-option  key="10" :value="typeList.APPLY_BY_CUSTOMER">用户申请退款</a-select-option>
+                                <a-select-option  key="20" :value="typeList.INITIATIVE_REFUND">后台主动退款</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
-<!--                    <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
-                        <div class="key">创建时间:</div>
+                    <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
+                        <div class="key">退款时间:</div>
                         <div class="value">
-                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
-                                            :show-time="defaultTime" :allow-clear='false'>
+                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
                                 <template #suffixIcon><i class="icon i_calendar"></i></template>
                             </a-range-picker>
                         </div>
-                    </a-col>-->
+                    </a-col>
                 </a-row>
                 <div class="btn-area">
                     <a-button @click="handleSearch" type="primary">查询</a-button>
@@ -44,16 +43,28 @@
                                 </a-button>
                             </a-tooltip>
                         </template>
+
+                        <template v-if="column.dataIndex === 'order_status'" >
+                            {{ $Util.puechaseStatusFilter(text) }}
+                        </template>
+
+                        <template v-if="column.dataIndex === 'apply_user_type'" >
+                            {{ $Util.userTypeFilter(text) }}
+                        </template>
+
                         <template v-if="column.dataIndex === 'type'" >
-                            {{ $Util.noticeTypeFilter(text) }}
+                            {{ $Util.refundTypeFilter(text) }}
+                        </template>
+
+                        <template v-if="column.dataIndex === 'status'" >
+                            {{ $Util.refundStatusFilter(text) }}
                         </template>
 
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 编辑</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button>
+                            <a-button type="link" @click="routerChange('create',record)"><i class="icon i_edit"/> 编辑</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -82,7 +93,7 @@ import Core from '../../core';
 
 
 export default {
-    name: 'NoticeList',
+    name: 'RefundList',
     components: {},
     props: {},
     data() {
@@ -97,10 +108,17 @@ export default {
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
-            typeList: Core.Const.NOTICE.TYPE,
+            typeList: Core.Const.REFUND.TYPE,
+            order_id:'',
             searchForm: {
                 id:'',
-                type:undefined,
+                order_sn: '',
+                order_status: '',
+                status: '',
+                apply_user_type: '',
+                type: undefined,
+                money: '',
+                create_time: '',
             },
             tableData: [],
 
@@ -110,8 +128,11 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: '标题', dataIndex: 'title', key: 'detail'},
-                {title: '类型', dataIndex: 'type'},
+                {title: '订单号', dataIndex: 'order_sn', key: 'detail'},
+                {title: '订单状态', dataIndex: 'order_status'},
+                {title: '退款状态', dataIndex: 'status'},
+                {title: '申请人', dataIndex: 'apply_user_type'},
+                {title: '退款类型', dataIndex: 'type'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right', width: 100,},
 
@@ -123,38 +144,38 @@ export default {
         this.getTableData();
     },
     methods: {
-        handleDelete(id) {
-            let _this = this;
-            this.$confirm({
-                title: '确定要删除该消息吗？',
-                okText: '确定',
-                okType: 'danger',
-                cancelText: '取消',
-                onOk() {
-                    Core.Api.Notice.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
-                        _this.getTableData();
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
-                },
-            });
-        },
+        // handleDelete(id) {
+        //     let _this = this;
+        //     this.$confirm({
+        //         title: '确定要删除该退款记录吗？',
+        //         okText: '确定',
+        //         okType: 'danger',
+        //         cancelText: '取消',
+        //         onOk() {
+        //             Core.Api.Refund.delete({id}).then(() => {
+        //                 _this.$message.success('删除成功');
+        //                 _this.getTableData();
+        //             }).catch(err => {
+        //                 console.log("handleDelete err", err);
+        //             })
+        //         },
+        //     });
+        // },
         routerChange(type, item = {}) {
             console.log(item)
             let routeUrl = ''
             switch (type) {
-                case 'edit':  // 编辑
+                case 'create':  // 新建
                     routeUrl = this.$router.resolve({
-                        path: "/notice/notice-edit",
+                        path: "/refund/refund-create",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/notice/notice-detail",
-                        query: {id: item.id}
+                        path: "/purchase/purchase-order-detail",
+                        query: {id: item.order_id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -191,7 +212,7 @@ export default {
             this.loading = true;
             this.loading = false;
             // return
-            Core.Api.Notice.list({
+            Core.Api.Refund.list({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
@@ -211,6 +232,6 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-// #NoticeList {}
+<style scoped>
+
 </style>

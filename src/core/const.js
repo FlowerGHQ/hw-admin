@@ -5,20 +5,20 @@ let URL_POINT = 'https://eos-api.hw.innotick.com'
 
 switch (window.location.hostname) {
     case 'eos.hw.innotick.com':
-		URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服
-		break;
-	case "10.0.0.205" :
-		URL_POINT = 'http://10.0.0.205:8083' // 徐伟
-		break;
+        URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服
+        break;
+    case "10.0.0.205" :
+        URL_POINT = 'http://10.0.0.205:8083' // 徐伟
+        break;
     case "10.0.0.197" :
     case "10.0.0.107" :
         URL_POINT = 'https://eos-api.hw.innotick.com' // 徐伟
         break;
-	default:
-		// URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
-		// URL_POINT = 'http://10.0.0.109:8083' // 谢耀圣
-		// URL_POINT = 'http://10.0.0.205:8083' // 徐伟
-		// URL_POINT = 'http://10.0.0.149:8083' // 徐伟
+    default:
+        // URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
+        // URL_POINT = 'http://10.0.0.109:8083' // 谢耀圣
+        // URL_POINT = 'http://10.0.0.205:8083' // 徐伟
+        // URL_POINT = 'http://10.0.0.149:8083' // 徐伟
         // URL_POINT = 'http://10.0.0.39:8083'  // 姚志宇
         // URL_POINT = 'http://10.0.0.155:8083' // 戚哲康
         break;
@@ -84,7 +84,7 @@ let Const = {
             "children": [{
                 "value": "中国",
                 "lable": "China",
-                }]
+            }]
         },
         {
             "value": "欧洲",
@@ -92,7 +92,7 @@ let Const = {
             "children": [{
                 "value": "法国",
                 "lable": "France",
-                }]
+            }]
         },
         {
             "value": "非洲",
@@ -100,7 +100,7 @@ let Const = {
             "children": [{
                 "value": "印度",
                 "lable": "India",
-                }]
+            }]
         },
     ],
 
@@ -109,8 +109,8 @@ let Const = {
             ADMIN: 10,      // 管理员
             AGENT: 20,      // 经销商
             STORE: 30,      // 门店
-	        WORKER: 40,     // 维修工
-	        CUSTOMER: 100,  // 顾客
+            WORKER: 40,     // 维修工
+            CUSTOMER: 100,  // 顾客
         },
         TYPE_MAP: {
             10: '平台方',
@@ -127,29 +127,29 @@ let Const = {
             STORE: 30,     // 门店
         },
         TYPE_LIST: [
-            { value: 30 ,text: '门店'},
-            { value: 20 ,text: '经销商'},
-            { value: 10 ,text: '平台方'},
+            {value: 30, text: '门店'},
+            {value: 20, text: '经销商'},
+            {value: 10, text: '平台方'},
         ],
         TYPE_MAP: {
-            10:  'ADMIN',
-            20:  'AGENT',
-            30:  'STORE',
-            40:  'WORKER',
+            10: 'ADMIN',
+            20: 'AGENT',
+            30: 'STORE',
+            40: 'WORKER',
             100: 'CUSTOMER',
         },
-	    ORG_TYPE: {
-		    ADMIN: 10,
-		    AGENT: 20,
-		    STORE: 30,
-		    REPAIR: 40,
-	    },
+        ORG_TYPE: {
+            ADMIN: 10,
+            AGENT: 20,
+            STORE: 30,
+            REPAIR: 40,
+        },
 
     },
 
     ORG_STATUS_LIST: [
-        { text: "禁用", value: 0 },
-        { text: "启用", value: 1 },
+        {text: "禁用", value: 0},
+        {text: "启用", value: 1},
     ],
 
     ITEM: { // 商品
@@ -158,8 +158,8 @@ let Const = {
     REPAIR: { // 维修工单
         // 工单分类
         TYPE_LIST: [
-            { text: '维修工单', value: 1 }, // 普通工单
-            { text: '特批订单', value: 2 },
+            {text: '维修工单', value: 1}, // 普通工单
+            {text: '特批订单', value: 2},
         ],
         TYPE_MAP: {
             1: '维修工单',
@@ -167,9 +167,9 @@ let Const = {
         },
         // 维修方式
         CHANNEL_LIST: [
-            { text: '上门', value: 1 },
-            { text: '到店', value: 2 },
-            { text: '寄修', value: 3 },
+            {text: '上门', value: 1},
+            {text: '到店', value: 2},
+            {text: '寄修', value: 3},
         ],
         CHANNEL_MAP: {
             1: '上门',
@@ -177,13 +177,13 @@ let Const = {
             3: '寄修',
         },
         ORG_TYPE_LIST: [
-            { text: '经销商', value: 20 },
-            { text: '门店', value: 30 },
+            {text: '经销商', value: 20},
+            {text: '门店', value: 30},
         ],
         // 维修类别
         METHOD_LIST: [
-            { text: '维修', value: 1 },
-            { text: '更换', value: 2 },
+            {text: '维修', value: 1},
+            {text: '更换', value: 2},
         ],
         METHOD_MAP: {
             1: '维修',
@@ -191,9 +191,9 @@ let Const = {
         },
         // 优先级
         PRIORITY_LIST: [
-            { text: '高', value: 1 },
-            { text: '中', value: 2 },
-            { text: '低', value: 3 },
+            {text: '高', value: 1},
+            {text: '中', value: 2},
+            {text: '低', value: 3},
         ],
         PRIORITY_MAP: {
             1: '高',
@@ -205,7 +205,7 @@ let Const = {
             2: 'blue',
             3: 'green',
         },
-	    // 状态
+        // 状态
         STATUS: {
             WAIT_DISTRIBUTION: 10,
             WAIT_CHECK: 20,
@@ -213,7 +213,7 @@ let Const = {
             WAIT_REPAIR: 40,
             REPAIR_END: 50,
             SETTLEMENT: 60,
-	        TRANSFER: 100,
+            TRANSFER: 100,
         },
         STATUS_MAP: {
             10: '待分配',
@@ -234,7 +234,7 @@ let Const = {
             100: 'purple',
         },
         // 故障类型
-        FAULT_OPTIONS_MAP :{
+        FAULT_OPTIONS_MAP: {
             1: "电池故障",
             2: "发动机故障",
             3: "轮胎故障",
@@ -244,58 +244,58 @@ let Const = {
             7: "尾灯故障",
         },
         // 维修结果
-		RESULTS_LIST: [
-			{ name: '成功', value: '1' },
-			{ name: '失败', value: '2' },
-		],
+        RESULTS_LIST: [
+            {name: '成功', value: '1'},
+            {name: '失败', value: '2'},
+        ],
         RESULTS: {
             SUCCESS: 1,
             FAIL: 2,
         },
     },
-	REPAIR_ITEM: { //维修商品
-		TYPE: {
-			ADD: 1,
-			REPLACE: 2,
-		}
-	},
+    REPAIR_ITEM: { //维修商品
+        TYPE: {
+            ADD: 1,
+            REPLACE: 2,
+        }
+    },
     ACTION_LOG: { // 操作记录
-		SOURCE_TYPE:{
-			PURCHASE_ORDER: 10,
-			REPAIR_ORDER: 20,
-		},
-		ACTION_LOG_TYPE_MAP: {
-			101: '维修单创建',
-			102: '维修单信息完善/修改',
-			103: '维修单删除',
-			104: '二次上门',
-			201: '维修单确认',
-			301: '维修检测',
-			401: '维修完成',
-			501: '结算完成',
-			1001: '订单转移',
-		},
-	},
+        SOURCE_TYPE: {
+            PURCHASE_ORDER: 10,
+            REPAIR_ORDER: 20,
+        },
+        ACTION_LOG_TYPE_MAP: {
+            101: '维修单创建',
+            102: '维修单信息完善/修改',
+            103: '维修单删除',
+            104: '二次上门',
+            201: '维修单确认',
+            301: '维修检测',
+            401: '维修完成',
+            501: '结算完成',
+            1001: '订单转移',
+        },
+    },
 
-	PURCHASE: { // 采购订单
+    PURCHASE: { // 采购订单
         // 状态
-		STATUS: {
-			INIT: 0 ,
-			WAIT_PAY: 100 ,
-			WAIT_DELIVER: 200 ,
-			WAIT_TAKE_DELIVER: 300 ,
-			DEAL_SUCCESS: 400 ,
-			CLOSE: 1000 ,
+        STATUS: {
+            INIT: 0,
+            WAIT_PAY: 100,
+            WAIT_DELIVER: 200,
+            WAIT_TAKE_DELIVER: 300,
+            DEAL_SUCCESS: 400,
+            CLOSE: 1000,
 
 
-		},
+        },
         STATUS_MAP: {
-            '0' : '未知',
+            '0': '未知',
             '100': '待支付',
             '200': '待发货',
             '300': '已发货',
-	        '400': '交易完成',
-	        '1000': '交易关闭',
+            '400': '交易完成',
+            '1000': '交易关闭',
         },
         STATUS_COLOR_MAP: {
             '0': 'red',
@@ -305,66 +305,104 @@ let Const = {
             '400': 'green',
         },
         // 支付方式
-		PAY_METHOD:{
-			1: "支付宝",
-			2: "微信",
-			3: "银行转账",
-		},
-		PAY_METHOD_LIST:[
-			{ name: '支付宝', value: '1' },
-			{ name: '微信', value: '2' },
-			{ name: '银行转账', value: '3' },
+        PAY_METHOD: {
+            1: "支付宝",
+            2: "微信",
+            3: "银行转账",
+        },
+        PAY_METHOD_LIST: [
+            {name: '支付宝', value: '1'},
+            {name: '微信', value: '2'},
+            {name: '银行转账', value: '3'},
 
-		],
-			// 评论
-		FLAG_REVIEW: {
-			SUCCESS : 1,
-			FAIL:0,
-		},
-		FLAG_REVIEW_MAP: {
-			'1': '已评论',
-			'0': '未评论',
-		},
-	},
+        ],
+        // 评论
+        FLAG_REVIEW: {
+            SUCCESS: 1,
+            FAIL: 0,
+        },
+        FLAG_REVIEW_MAP: {
+            '1': '已评论',
+            '0': '未评论',
+        },
+    },
 
-	WAYBILL:{ // 物流
-		TYPE: {
-			IN: 1,
-			OUT: 2,
-		},
-		TARGET_TYPE: {
-			PURCHASE_ORDER: 10
-		},
+    WAYBILL: { // 物流
+        TYPE: {
+            IN: 1,
+            OUT: 2,
+        },
+        TARGET_TYPE: {
+            PURCHASE_ORDER: 10
+        },
 
-		COMPANY_MAP: {
-			'EMS': 'EMS',
-			'JD': '京东物流',
-			'STO': '申通快递',
-			'YTO': '圆通速递',
-			'ZTO': '中通快递',
-			'HTKY': '百世快递',
-			'BSKY': '百世快运',
-			'YUNDA': '韵达快递',
-			'DEPPON': '德邦快递',
-			'SFEXPRESS': '顺丰速运',
-			'CHINAPOST': '邮政包裹',
-			'KYEXPRESS': '跨越速运',
-		},
-		COMPANY_LIST: [
-			{ name: 'EMS', value: 'EMS' },
-			{ name: '京东物流', value: 'JD' },
-			{ name: '申通快递', value: 'STO' },
-			{ name: '圆通速递', value: 'YTO' },
-			{ name: '中通快递', value: 'ZTO' },
-			{ name: '百世快递', value: 'HTKY' },
-			{ name: '百世快运', value: 'BSKY' },
-			{ name: '韵达快递', value: 'YUNDA' },
-			{ name: '德邦快递', value: 'DEPPON' },
-			{ name: '顺丰速运', value: 'SFEXPRESS' },
-			{ name: '邮政包裹', value: 'CHINAPOST' },
-			{ name: '跨越速运', value: 'KYEXPRESS' },
-		],
-	},
+        COMPANY_MAP: {
+            'EMS': 'EMS',
+            'JD': '京东物流',
+            'STO': '申通快递',
+            'YTO': '圆通速递',
+            'ZTO': '中通快递',
+            'HTKY': '百世快递',
+            'BSKY': '百世快运',
+            'YUNDA': '韵达快递',
+            'DEPPON': '德邦快递',
+            'SFEXPRESS': '顺丰速运',
+            'CHINAPOST': '邮政包裹',
+            'KYEXPRESS': '跨越速运',
+        },
+        COMPANY_LIST: [
+            {name: 'EMS', value: 'EMS'},
+            {name: '京东物流', value: 'JD'},
+            {name: '申通快递', value: 'STO'},
+            {name: '圆通速递', value: 'YTO'},
+            {name: '中通快递', value: 'ZTO'},
+            {name: '百世快递', value: 'HTKY'},
+            {name: '百世快运', value: 'BSKY'},
+            {name: '韵达快递', value: 'YUNDA'},
+            {name: '德邦快递', value: 'DEPPON'},
+            {name: '顺丰速运', value: 'SFEXPRESS'},
+            {name: '邮政包裹', value: 'CHINAPOST'},
+            {name: '跨越速运', value: 'KYEXPRESS'},
+        ],
+    },
+    NOTICE: { //系统消息
+        TYPE: {
+            ADMIN: 10,  //平台消息
+            AGENT: 20,  //经销商消息
+        },
+        TYPE_MAP: {
+            10: '平台消息',
+            20: '经销商消息'
+        },
+
+    },
+    REFUND: {
+        TYPE: {
+            APPLY_BY_CUSTOMER: 100,  //用户申请
+            INITIATIVE_REFUND: 200, //后台主动退款
+        },
+        TYPE_MAP: {
+            100: '用户申请退款',
+            200: '经销商申请退款',
+        },
+        STATUS: {
+            WAIT_AUDIT: 10,    // 初始化
+            AUDIT_PASS: 20,    // 审核通过
+            SUCCESS: 40,       // 退款成功
+            AUDIT_REFUSE: '-10', // 拒绝退款
+            FAIL: '-20',         // 退款失败
+        },
+        STATUS_MAP: {
+            10: '初始化',
+            20: '审核通过',
+            40: '退款成功',
+            '-10': '拒绝退款',
+            '-20': '退款失败',
+
+        },
+
+
+    }
 };
 
 export default Const;

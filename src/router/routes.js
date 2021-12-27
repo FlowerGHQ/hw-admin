@@ -513,7 +513,7 @@ const routes = [
         component: Layout,
         redirect: '/notice/notice-list',
         name: 'NoticeManagement',
-        hidden: true,
+        hidden: false,
         meta: {
             title: '系统消息',
             icon: 'i_s_temp',
@@ -526,7 +526,7 @@ const routes = [
                 name: 'NoticeList',
                 component: () => import('@/views/notice/notice-list.vue'),
                 meta: {
-                    title: '系统列表',
+                    title: '消息列表',
                 }
             },
             {
@@ -535,21 +535,85 @@ const routes = [
                 component: () => import('@/views/notice/notice-edit.vue'),
                 hidden: true,
                 meta: {
-                    title: '新增系统',
+                    title: '新增消息',
                     parent: '/notice/notice-list',
                 }
 
             },
-            // {
-            //     path: 'notice-detail',
-            //     name: 'NoticeDetail',
-            //     component: () => import('@/views/notice/notice-detail.vue'),
-            //     hidden: true,
-            //     meta: {
-            //         title: '系统详情',
-            //         parent: '/notice/notice-list',
-            //     }
-            // },
+            {
+                path: 'notice-detail',
+                name: 'NoticeDetail',
+                component: () => import('@/views/notice/notice-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '消息详情',
+                    parent: '/notice/notice-list',
+                }
+            },
+        ]
+    },
+    {   // 退款管理
+        path: '/refund',
+        component: Layout,
+        redirect: '/refund/refund-list',
+        name: 'RefundManagement',
+        hidden: false,
+        meta: {
+            title: '退款管理',
+            icon: 'i_s_temp',
+            // auth: ['dashboard'],
+            // roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'refund-list',
+                name: 'RefundList',
+                component: () => import('@/views/refund/refund-list.vue'),
+                meta: {
+                    title: '退款列表',
+                }
+            },
+            {
+                path: 'refund-create',
+                name: 'RefundCreate',
+                component: () => import('@/views/refund/refund-create.vue'),
+                hidden: true,
+                meta: {
+                    title: '新增退款',
+                    parent: '/refund/refund-list',
+                }
+
+            },
+            {
+                path: 'refund-detail',
+                name: 'RefundDetail',
+                component: () => import('@/views/refund/refund-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '退款详情',
+                    parent: '/refund/refund-list',
+                }
+            },
+            {
+                path: 'refund-update',
+                name: 'RefundUpdate',
+                component: () => import('@/views/refund/refund-update.vue'),
+                hidden: true,
+                meta: {
+                    title: '退款详情',
+                    parent: '/refund/refund-list',
+                }
+            },
+            {
+                path: 'refund-audit',
+                name: 'RefundAudit',
+                component: () => import('@/views/refund/refund-audit.vue'),
+                hidden: true,
+                meta: {
+                    title: '退款详情',
+                    parent: '/refund/refund-list',
+                }
+            },
         ]
     },
 ];
