@@ -1,92 +1,98 @@
 <template>
-<a-layout id="Layout">
-    <a-layout-header class="layout-header">
-        <div class="header-logo" @click="collapsed = !collapsed" :class="{'collapsed': collapsed}">
-            <img src="@images/header-logo.png" alt="浩万" />
-        </div>
-        <div class="header-right">
-            <span style="font-size: 12px;">{{USER_TYPE[loginType]}}端</span>
-            <a-divider type="vertical" />
-            <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
-                <a-button class="user-info" type="link">
-                    <a-avatar class="user-avatar" :src="$Util.imageFilter(user.avatar, 3)" :size='30'>
-                        <i class="icon i_user"/>
-                    </a-avatar>
-                    <span class="user-name">{{user.name}}</span>
-                </a-button>
-                <template #overlay>
-                    <a-menu style="text-align: center;">
-                        <a-menu-item>
-                            <a-button type="link" @click="handleLogout" class="menu-item-btn">退 出</a-button>
-                        </a-menu-item>
-                        <a-menu-item>
-                            <a-button type="link" @click="handleEditShow" class="menu-item-btn">修改密码</a-button>
-                            <a-modal v-model:visible="passShow" title="修改密码" class="password-edit-modal">
-                                <div class="form-title">
-                                    <div class="form-item required">
-                                        <div class="key">旧密码:</div>
-                                        <div class="value">
-                                            <a-input-password  placeholder='请输入旧密码' v-model:value="form.old_password"  type="password" />
+    <a-layout id="Layout">
+        <a-layout-header class="layout-header">
+            <div class="header-logo" @click="collapsed = !collapsed" :class="{'collapsed': collapsed}">
+                <img src="@images/header-logo.png" alt="浩万"/>
+            </div>
+            <div class="header-right">
+                <span style="font-size: 12px;">{{ USER_TYPE[loginType] }}端</span>
+                <a-divider type="vertical"/>
+                <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
+                    <a-button class="user-info" type="link">
+                        <a-avatar class="user-avatar" :src="$Util.imageFilter(user.avatar, 3)" :size='30'>
+                            <i class="icon i_user"/>
+                        </a-avatar>
+                        <span class="user-name">{{ user.name }}</span>
+                    </a-button>
+                    <template #overlay>
+                        <a-menu style="text-align: center;">
+                            <a-menu-item>
+                                <a-button type="link" @click="handleLogout" class="menu-item-btn">退 出</a-button>
+                            </a-menu-item>
+                            <a-menu-item>
+                                <a-button type="link" @click="handleEditShow" class="menu-item-btn">修改密码</a-button>
+                                <a-modal v-model:visible="passShow" title="修改密码" class="password-edit-modal">
+                                    <div class="form-title">
+                                        <div class="form-item required">
+                                            <div class="key">旧密码:</div>
+                                            <div class="value">
+                                                <a-input-password placeholder='请输入旧密码' v-model:value="form.old_password"
+                                                                  type="password"/>
 
+                                            </div>
+                                        </div>
+                                        <div class="form-item required">
+                                            <div class="key">新密码:</div>
+                                            <div class="value">
+                                                <a-input-password v-model:value="form.password" placeholder="请输入新密码"
+                                                                  type="password"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-item required">
+                                            <div class="key">再次确认:</div>
+                                            <div class="value">
+                                                <a-input-password v-model:value="form.new_password"
+                                                                  placeholder="请再次确认密码" type="password"/>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="form-item required">
-                                        <div class="key">新密码:</div>
-                                        <div class="value">
-                                            <a-input-password v-model:value="form.password" placeholder="请输入新密码" type="password"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-item required" >
-                                        <div class="key">再次确认:</div>
-                                        <div class="value">
-                                            <a-input-password v-model:value="form.new_password" placeholder="请再次确认密码" type="password"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <template #footer>
-                                    <a-button key="back" @click="handleEditSubmit">确定</a-button>
-                                    <a-button @click="passShow=false" type="primary" >取消</a-button>
-                                </template>
-                            </a-modal>
-                        </a-menu-item>
-                    </a-menu>
-                </template>
-            </a-dropdown>
-        </div>
-    </a-layout-header>
-    <a-layout class="layout-container">
-        <a-layout-sider class="layout-sider" v-model:collapsed="collapsed" :width="144" :collapsedWidth='64' theme='light'>
-            <a-menu theme="light" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" mode="inline" :inlineCollapsed='collapsed' :inlineIndent='8'>
-                <template v-for="item of showList">
-                    <a-menu-item :key="item.path" v-if="$auth(...item.auth) && item.children.length === 1" @click="handleLink(item.path)" >
-                        <i class='icon' :class="item.meta.icon"/>
-                        <span :class="{'collapsed-title': collapsed}">{{item.meta.title}}</span>
-                    </a-menu-item>
-                    <a-sub-menu :key="item.path" v-else-if="$auth(...item.auth)">
-                        <template #title>
+                                    <template #footer>
+                                        <a-button key="back" @click="handleEditSubmit">确定</a-button>
+                                        <a-button @click="passShow=false" type="primary">取消</a-button>
+                                    </template>
+                                </a-modal>
+                            </a-menu-item>
+                        </a-menu>
+                    </template>
+                </a-dropdown>
+            </div>
+        </a-layout-header>
+        <a-layout class="layout-container">
+            <a-layout-sider class="layout-sider" v-model:collapsed="collapsed" :width="144" :collapsedWidth='64'
+                            theme='light'>
+                <a-menu theme="light" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" mode="inline"
+                        :inlineCollapsed='collapsed' :inlineIndent='8'>
+                    <template v-for="item of showList">
+                        <a-menu-item :key="item.path" v-if="$auth(...item.auth) && item.children.length === 1"
+                                     @click="handleLink(item.path)">
                             <i class='icon' :class="item.meta.icon"/>
-                            <span v-show="!collapsed">{{item.meta.title}}</span>
-                        </template>
-                        <template v-for="i of item.children">
-                            <template v-if="!i.hidden && $auth(...i.auth)">
-                                <a-menu-item :key="item.path + '/' + i.path"
-                                    @click="handleLink(item.path + '/' + i.path)" v-if="showMenuItem(i)">
-                                    <span>{{i.meta.title}}</span>
-                                </a-menu-item>
+                            <span :class="{'collapsed-title': collapsed}">{{ item.meta.title }}</span>
+                        </a-menu-item>
+                        <a-sub-menu :key="item.path" v-else-if="$auth(...item.auth)">
+                            <template #title>
+                                <i class='icon' :class="item.meta.icon"/>
+                                <span v-show="!collapsed">{{ item.meta.title }}</span>
                             </template>
-                        </template>
-                    </a-sub-menu>
-                </template>
-            </a-menu>
-        </a-layout-sider>
-        <a-layout class="layout-main" :class="{longer: collapsed}">
-            <!-- <MyBreadcrumb class="layout-breadcrumb"/> -->
-            <a-layout-content class="layout-content">
-                <router-view></router-view>
-            </a-layout-content>
+                            <template v-for="i of item.children">
+                                <template v-if="!i.hidden && $auth(...i.auth)">
+                                    <a-menu-item :key="item.path + '/' + i.path"
+                                                 @click="handleLink(item.path + '/' + i.path)" v-if="showMenuItem(i)">
+                                        <span>{{ i.meta.title }}</span>
+                                    </a-menu-item>
+                                </template>
+                            </template>
+                        </a-sub-menu>
+                    </template>
+                </a-menu>
+            </a-layout-sider>
+            <a-layout class="layout-main" :class="{longer: collapsed}">
+                <!-- <MyBreadcrumb class="layout-breadcrumb"/> -->
+                <a-layout-content class="layout-content">
+                    <router-view></router-view>
+                </a-layout-content>
+            </a-layout>
         </a-layout>
     </a-layout>
-</a-layout>
 
 </template>
 
@@ -94,6 +100,7 @@
 import Core from '../../core';
 import routes from '@/router/routes';
 import MyBreadcrumb from './components/Breadcrumb.vue';
+
 export default {
     components: {
         MyBreadcrumb,
@@ -206,7 +213,7 @@ export default {
                 this.$message.warning('两次密码输入不一致')
                 return
             }
-            this.passShow =false
+            this.passShow = false
 
             this.loading = true;
             Core.Api.Common.updatePwd(this.form).then(() => {
@@ -226,22 +233,26 @@ export default {
         display: none;
     }
 }
+
 .account-action-menu {
     ul.ant-dropdown-menu {
         width: 100px;
     }
 }
+
 #Layout {
     background: @BG_body;
     height: 100vh;
+
     .layout-header {
         height: 50px;
         background: #FFFFFF;
         border-bottom: 1px solid rgba(82, 91, 103, 0.2);
         padding: 0 20px;
         .fsb();
+
         .header-right {
-          .fcc();
+            .fcc();
         }
 
         .header-logo {
@@ -250,39 +261,49 @@ export default {
                 height: 30px;
             }
         }
+
         .user-info {
             height: 100%;
             .fac();
+
             &:hover .user-name {
                 color: @TC_P;
             }
+
             .icon.i_user {
                 margin: 0;
             }
         }
+
         .user-name {
             margin-left: 10px;
             color: @TC_header_name;
         }
+
         .header-item {
             width: 64px;
             height: 100%;
             cursor: pointer;
             .fjc();
+
             i.icon {
                 font-size: 14px;
                 color: @TC_header_item;
             }
+
             &:hover i.icon {
                 color: @TC_P;
             }
         }
     }
+
     .layout-container {
         height: calc(~'100% - 50px');
     }
+
     .layout-sider {
         height: 100%;
+
         .ant-menu-root {
             .no-select();
             height: 100%;
@@ -293,55 +314,70 @@ export default {
             overflow-x: hidden;
             background-color: transparent;
             border-right: 0;
+
             &::-webkit-scrollbar {
                 width: 2px;
                 height: 6px;
+
                 &-thumb {
                     border-radius: 3px;
                     background-color: @scrollbar-thumb;
                     transition: background-color 0.3s;
+
                     &:hover {
                         background: @scrollbar-thumb-hover;
                     }
                 }
+
                 &-track {
                     background: @scrollbar-track;
                 }
             }
         }
+
         .ant-menu {
             .ant-menu-title-content {
                 font-size: 12px;
                 font-weight: 400;
                 color: #8090A6;
+
                 i.icon {
                     font-size: 14px;
                     color: #B9C6DD;
                     margin-right: 10px;
                 }
             }
+
             .ant-menu-item {
                 margin: 0;
                 padding-right: 6px;
                 border-radius: 4px;
                 box-shadow: 0 0 0 0;
-                &::after { display: none; }
+
+                &::after {
+                    display: none;
+                }
 
                 &:hover {
                     background-color: #F2F8FF;
                 }
+
                 &.ant-menu-item-selected {
                     background-color: @BG_P;
+
                     .ant-menu-title-content {
                         color: @TC_InP;
+
                         i.icon {
                             color: @TC_InP;
                         }
                     }
                 }
             }
+
             .ant-menu-submenu {
                 border-radius: 6px;
+
                 .ant-menu-submenu-title {
                     border-radius: 4px;
                     padding-right: 6px;
@@ -351,30 +387,37 @@ export default {
                     &:hover {
                         background-color: #F2F8FF;
                     }
+
                     .ant-menu-submenu-arrow {
                         color: #6E7C94;
                         font-size: 12px;
                         right: 8px;
                         transform: translateY(3px);
+
                         &::after, &::before {
                             height: 1px;
                         }
                     }
                 }
+
                 .ant-menu-sub {
                     background-color: transparent;
+
                     .ant-menu-title-content {
                         padding-left: 16px;
                     }
                 }
+
                 &.ant-menu-submenu-open {
                     background-color: #F3F6F8;
+
                     .ant-menu-submenu-arrow {
                         transform: translateY(-1px);
                     }
                 }
             }
         }
+
         .ant-menu-inline-collapsed {
             .ant-menu-item {
                 .collapsed-title {
@@ -383,8 +426,10 @@ export default {
             }
         }
     }
+
     .layout-breadcrumb {
     }
+
     .layout-content {
         padding: 16px;
         box-sizing: border-box;

@@ -101,6 +101,72 @@ const routes = [
             roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
         },
     },
+    {   // 分销商管理 - 平台端
+        path: '/distributor',
+        component: Layout,
+        redirect: '/distributor/distributor-list',
+        name: 'DistributorManagement',
+        meta: {
+            title: '分销商管理',
+            icon: 'i_s_distributor',
+            // auth: ['dashboard'],
+            roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'distributor-list',
+                name: 'DistributorList',
+                component: () => import('@/views/distributor/distributor-list.vue'),
+                meta: {
+                    title: '分销商列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+            {
+                path: 'distributor-edit',
+                name: 'DistributorEdit',
+                component: () => import('@/views/distributor/distributor-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '分销商编辑',
+                    parent: '/distributor/distributor-list',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+            {
+                path: 'distributor-detail',
+                name: 'DistributorDetail',
+                component: () => import('@/views/distributor/distributor-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '分销商详情',
+                    parent: '/distributor/distributor-list',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+        ]
+    },
+    {   // 分销商管理 - 分销商端
+        path: '/distributor/distributor-detail-sp',
+        component: Layout,
+        meta: {
+            title: '分销商管理',
+            icon: 'i_s_distributor',
+            roles: [LOGIN_TYPE.DISTRIBUTOR],
+        },
+        children: [
+            {
+                path: '',
+                name: 'DistributorManagementSp',
+                component: () => import('@/views/distributor/distributor-detail.vue'),
+                meta: {
+                    title: '分销商详情',
+                    roles: [LOGIN_TYPE.DISTRIBUTOR],
+                    is_sub_menu: true
+                }
+            },
+        ]
+    },
     {   // 经销商管理 - 平台端
         path: '/agent',
         component: Layout,

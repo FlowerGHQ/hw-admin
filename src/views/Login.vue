@@ -192,14 +192,18 @@ export default {
                 transform: translateX(-50%);
                 transition: left .3s ease;
             }
+
             &.STORE::after {
-                left: calc(~'100% / 6');
+                left: calc(~'100% / 8');
             }
             &.AGENT::after {
-                left: 50%;
+                left: calc(~'100% / 8 * 3');
+            }
+            &.DISTRIBUTOR::after {
+                left: calc(~'100% / 8 * 5');
             }
             &.ADMIN::after {
-                left: calc(~'100% / 6 * 5');
+                left: calc(~'100% / 8 * 7');
             }
         }
         .form-item {

@@ -15,6 +15,9 @@ class ApiBase {
             case LOGIN_TYPE.ADMIN:
                 mark = 'admin/1'
                 break;
+            case LOGIN_TYPE.DISTRIBUTOR:
+                mark = 'distributor/1'
+                break;
             case LOGIN_TYPE.AGENT:
                 mark = 'agent/1'
                 break;

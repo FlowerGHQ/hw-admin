@@ -4,6 +4,14 @@
     <div class="form-block">
         <div class="form-title"><div class="title">基本信息</div></div>
         <div class="form-content">
+            <div class="form-item required" v-if="loginType == LOGIN_TYPE.ADMIN && !form.id">
+                <div class="key">所属分销商</div>
+                <div class="value">
+                    <a-select v-model:value="form.distributor_id" placeholder="请选择所属分销商">
+                        <a-select-option v-for="distributor of distributorList" :key="distributor.id" :value="distributor.id">{{ distributor.name }}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
             <div class="form-item required">
                 <div class="key">经销商名:</div>
                 <div class="value">
@@ -32,7 +40,6 @@
                         placeholder="请选择大洲/国家" 
                         v-model:value="country_cascader" 
                         :options="countryOptions"
-                        @change="handleSearch" 
                         :field-names="{ label: 'value', value: 'value' , children: 'children'}"
                         />
 
@@ -49,6 +56,7 @@
 
 <script>
 import Core from '../../core';
+const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 
 export default {
     name: 'AgentEdit',
@@ -62,7 +70,8 @@ export default {
             continentList: Core.Const.CONTINENT_LIST, // 大洲
             countryList: Core.Const.COUNTRY_LIST, // 国家
             countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
-
+            distributorList: [],
+            LOGIN_TYPE,
             country_cascader: [],
             detail: {},
             form: {
@@ -72,6 +81,8 @@ export default {
                 email: '',
                 country: undefined,
                 continent: undefined,
+                distributor_id: undefined,
+
             }
         };
     },
@@ -80,8 +91,14 @@ export default {
 
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0
+        this.form.distributor_id = Number(this.$route.query.distributor_id) || undefined
         if (this.form.id) {
             this.getAgentDetail();
+        }
+        if (this.loginType === LOGIN_TYPE.ADMIN) {
+            this.getDistributorList();
+        } else if (this.loginType === LOGIN_TYPE.DISTRIBUTOR) {
+            this.form.distributor_id = Core.Data.getOrgId()
         }
     },
     methods: {
@@ -111,6 +128,11 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
+        },
+        getDistributorList() {
+            Core.Api.Distributor.listAll().then(res => {
+                this.distributorList = res.list
+            })
         },
         handleSubmit() {
             this.form.continent = this.country_cascader[0] || ''

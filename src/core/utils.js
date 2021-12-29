@@ -438,6 +438,10 @@ const Util = {
         const MAP = Core.Const.REFUND.STATUS_MAP
         return MAP[val] || '未知'
     },
+    distributorTypeFilter(val) {
+        const MAP = Core.Const.Distributor.TYPE_MAP
+        return MAP[val] || '未知'
+    },
 
 }
 

@@ -163,7 +163,7 @@ export default {
     watch: {},
     computed: {
         tableColumns() {
-            let columns = [
+            let tableColumns = [
                 { title: '经销商', dataIndex: 'name' },
                 { title: '国家', dataIndex: 'country' },
                 { title: '手机号', dataIndex: 'phone' },
@@ -171,7 +171,10 @@ export default {
                 { title: '状态', dataIndex: 'status', key: 'status' },
                 { title: '操作', key: 'operation', fixed: 'right'},
             ]
-            return columns
+            if (this.$auth('ADMIN')) {
+                tableColumns.splice(1, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'name'})
+            }
+            return tableColumns
         },
     },
     mounted() {

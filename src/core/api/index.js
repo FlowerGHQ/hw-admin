@@ -175,6 +175,14 @@ const apiList = {
         audit: ['PostJson', 'order-refund-record/audit'],
 
     },
+    Distributor: { // 分销商
+        list: ['PostJson', 'distributor/list'],
+        save: ['PostJson', 'distributor/save'],
+        listAll: ['PostJson','distributor/list-name'], //选择用的 名称列表 无分页
+        detail: ['PostJson', 'distributor/detail'],
+        updateStatus: ['PostJson', 'distributor/update-status'], //修改状态
+
+    },
 
 };
 

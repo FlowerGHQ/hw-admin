@@ -9,6 +9,14 @@
             </div>
             <div class="form-content">
                 <div class="form-item required" v-if="loginType == LOGIN_TYPE.ADMIN && !form.id">
+                    <div class="key">所属分销商</div>
+                    <div class="value">
+                        <a-select v-model:value="form.distributor_id" placeholder="请选择所属分销商">
+                            <a-select-option v-for="distributor of distributorList" :key="distributor.id" :value="distributor.id">{{ distributor.name }}</a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item required" v-if="loginType == LOGIN_TYPE.ADMIN && !form.id">
                     <div class="key">所属经销商</div>
                     <div class="value">
                         <a-select v-model:value="form.agent_id" placeholder="请选择所属经销商">
@@ -75,8 +83,10 @@ export default {
             loading: false,
             detail: {},
             agentList: [],
+            distributorList: [],
             form: {
                 id: '',
+                distributor_id: undefined,
                 agent_id: undefined,
                 name: '',
                 contact_name: '',
@@ -104,6 +114,9 @@ export default {
         this.form.agent_id = Number(this.$route.query.agent_id) || undefined
         if (this.form.id) {
             this.getStoreDetail();
+        }
+        if (this.loginType === LOGIN_TYPE.ADMIN) {
+            this.getDistributorList();
         }
         if (this.loginType === LOGIN_TYPE.ADMIN) {
             this.getAgentList();
@@ -146,7 +159,12 @@ export default {
             });
         },
         // 获取选择用 经销商列表
-        getAgentList() {
+        getDistributorList() {
+            Core.Api.Distributor.listAll().then(res => {
+                this.distributorList = res.list
+            })
+        },
+        getAgentList(){
             Core.Api.Agent.listAll().then(res => {
                 this.agentList = res.list
             })

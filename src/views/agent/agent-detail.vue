@@ -72,7 +72,7 @@ import Core from '../../core';
 
 import UserList from '@/components/UserList.vue';
 import PurchaseList from '@/components/PurchaseOrderList.vue';
-import StoreList from './components/StoreList.vue';
+import StoreList from '@/components/StoreList.vue';
 
 const USER_TYPE = Core.Const.USER.TYPE;
 export default {

@@ -14,6 +14,9 @@ switch (window.location.hostname) {
     case "10.0.0.107" :
         URL_POINT = 'https://eos-api.hw.innotick.com' // 徐伟
         break;
+    case "10.0.0.166" :
+        URL_POINT = 'http://10.0.0.109:8083' // 徐伟
+        break;
     default:
         // URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.109:8083' // 谢耀圣
@@ -107,6 +110,7 @@ let Const = {
     USER: { // 员工、账号、用户
         TYPE: {
             ADMIN: 10,      // 管理员
+            DISTRIBUTOR: 15, //分销商
             AGENT: 20,      // 经销商
             STORE: 30,      // 门店
             WORKER: 40,     // 维修工
@@ -114,6 +118,7 @@ let Const = {
         },
         TYPE_MAP: {
             10: '平台方',
+            15: '分销商',
             20: '经销商',
             30: '门店',
             40: '维修工',
@@ -123,16 +128,19 @@ let Const = {
     LOGIN: { // 登录
         TYPE: {
             ADMIN: 10,     // 管理员
+            DISTRIBUTOR: 15, //分销商
             AGENT: 20,     // 经销商
             STORE: 30,     // 门店
         },
         TYPE_LIST: [
             {value: 30, text: '门店'},
             {value: 20, text: '经销商'},
+            {value: 15, text: '分销商'},
             {value: 10, text: '平台方'},
         ],
         TYPE_MAP: {
             10: 'ADMIN',
+            15: 'DISTRIBUTOR',
             20: 'AGENT',
             30: 'STORE',
             40: 'WORKER',
@@ -140,6 +148,7 @@ let Const = {
         },
         ORG_TYPE: {
             ADMIN: 10,
+            DISTRIBUTOR: 15,
             AGENT: 20,
             STORE: 30,
             REPAIR: 40,
@@ -400,8 +409,16 @@ let Const = {
             '-20': '退款失败',
 
         },
-
-
+    },
+    Distributor: {
+        TYPE: {
+            INTERNAL: 1,  //国内
+            EXPORT: 2, //出口
+        },
+        TYPE_MAP: {
+            1: '国内',
+            2: '出口',
+        },
     }
 };
 

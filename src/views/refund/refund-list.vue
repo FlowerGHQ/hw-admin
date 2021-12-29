@@ -3,25 +3,27 @@
         <div class="list-container">
             <div class="title-container">
                 <div class="title-area">退款列表</div>
-<!--                <div class="btns-area">-->
-<!--                    <a-button type="primary" @click="routerChange('create')"><i class="icon i_add"/>新建退款</a-button>-->
-<!--                </div>-->
+                <!--                <div class="btns-area">-->
+                <!--                    <a-button type="primary" @click="routerChange('create')"><i class="icon i_add"/>新建退款</a-button>-->
+                <!--                </div>-->
             </div>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
                         <div class="key">退款类型:</div>
                         <div class="value">
-                            <a-select    v-model:value="searchForm.type" @change="handleTypeSelect" placeholder="请选择退款类型" allow-clear >
-                                <a-select-option  key="10" :value="typeList.APPLY_BY_CUSTOMER">用户申请退款</a-select-option>
-                                <a-select-option  key="20" :value="typeList.INITIATIVE_REFUND">后台主动退款</a-select-option>
+                            <a-select v-model:value="searchForm.type" @change="handleTypeSelect" placeholder="请选择退款类型"
+                                      allow-clear>
+                                <a-select-option key="10" :value="typeList.APPLY_BY_CUSTOMER">用户申请退款</a-select-option>
+                                <a-select-option key="20" :value="typeList.INITIATIVE_REFUND">后台主动退款</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
                         <div class="key">退款时间:</div>
                         <div class="value">
-                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
+                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
+                                            :show-time="defaultTime" :allow-clear='false'>
                                 <template #suffixIcon><i class="icon i_calendar"></i></template>
                             </a-range-picker>
                         </div>
@@ -44,19 +46,19 @@
                             </a-tooltip>
                         </template>
 
-                        <template v-if="column.dataIndex === 'order_status'" >
+                        <template v-if="column.dataIndex === 'order_status'">
                             {{ $Util.puechaseStatusFilter(text) }}
                         </template>
 
-                        <template v-if="column.dataIndex === 'apply_user_type'" >
+                        <template v-if="column.dataIndex === 'apply_user_type'">
                             {{ $Util.userTypeFilter(text) }}
                         </template>
 
-                        <template v-if="column.dataIndex === 'type'" >
+                        <template v-if="column.dataIndex === 'type'">
                             {{ $Util.refundTypeFilter(text) }}
                         </template>
 
-                        <template v-if="column.dataIndex === 'status'" >
+                        <template v-if="column.dataIndex === 'status'">
                             {{ $Util.refundStatusFilter(text) }}
                         </template>
 
@@ -64,7 +66,8 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('create',record)"><i class="icon i_edit"/> 编辑</a-button>
+                            <a-button type="link" @click="routerChange('create',record)"><i class="icon i_edit"/> 编辑
+                            </a-button>
                         </template>
                     </template>
                 </a-table>
@@ -109,9 +112,9 @@ export default {
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
             typeList: Core.Const.REFUND.TYPE,
-            order_id:'',
+            order_id: '',
             searchForm: {
-                id:'',
+                id: '',
                 order_sn: '',
                 order_status: '',
                 status: '',

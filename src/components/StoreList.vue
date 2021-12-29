@@ -57,12 +57,15 @@
 </template>
 
 <script>
-import Core from '../../../core';
+import Core from '../core';
 export default {
     name: 'UserList',
     components: {},
     props: {
-        orgId: {
+        agentId: {
+            type: Number,
+        },
+        distributorId: {
             type: Number,
         },
         type: {
@@ -79,18 +82,28 @@ export default {
             pageSize: 20,
             total: 0,
 
-            tableColumns: [
-                {title: '门店名称', dataIndex: 'name', key:'detail'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '状态', dataIndex: 'status', key: 'status' },
-                {title: '操作', key: 'operation', fixed: 'right'},
-            ],
-
-            tableData: [],
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        tableColumns() {
+            let tableColumns = [
+                {title: '门店名称', dataIndex: 'name', key: 'detail'},
+                {title: '联系人姓名', dataIndex: 'contact_name', key:'item'},
+                {title: '联系人电话', dataIndex: 'contact_phone',key:'item'},
+                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
+                {title: '状态', dataIndex: 'status', key: 'status' },
+                {title: '操作', key: 'operation', fixed: 'right'},
+            ]
+            if (this.$auth('ADMIN')) {
+                tableColumns.splice(1, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'name'})
+            }
+            if (this.$auth('ADMIN')) {
+                tableColumns.splice(2, 0, {title: '所属经销商', dataIndex: 'agent_name', key: 'name'})
+            }
+            return tableColumns
+        },
+    },
     mounted() {
         this.getTableData();
     },
@@ -101,7 +114,7 @@ export default {
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/store/store-edit",
-                        query: {id: item.id, agent_id: this.orgId}
+                        query: {id: item.id, agent_id: this.agentId, distributor_id: this.distributorId}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -126,7 +139,8 @@ export default {
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             Core.Api.Store.list({
-                agent_id: this.orgId,
+                agent_id: this.agentId,
+                distributor_id: this.distributorId,
                 type: this.type,
                 page: this.currPage,
                 page_size: this.pageSize,
