@@ -15,7 +15,7 @@
                             <a-input placeholder="请输入门店名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
                         <div class="key">所属分销商:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.distributor_id" placeholder="请选择分销商" @change="handleSearch">
@@ -123,7 +123,7 @@
 
 <script>
 import Core from '../../core';
-
+const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 export default {
     name: 'StoreList',
     components: {},
@@ -182,7 +182,9 @@ export default {
     },
     mounted() {
         this.getTableData();// 获取表格数据
-        this.getDistributorListAll();
+        if (this.loginType === LOGIN_TYPE.ADMIN) {
+            this.getDistributorListAll();
+        }
         if (this.$auth('ADMIN')) {
             this.getAgentList();
         }

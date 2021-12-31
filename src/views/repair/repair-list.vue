@@ -32,7 +32,7 @@
                         </a-select>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
                     <div class="key">所属分销商:</div>
                     <div class="value">
                         <a-select v-model:value="searchForm.distributor_id" placeholder="请选择分销商" @change="handleSearch">
@@ -136,6 +136,7 @@
 <script>
 import Core from '../../core';
 const STATUS = Core.Const.REPAIR.STATUS
+const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 export default {
     name: 'RepairList',
     components: {},
@@ -206,8 +207,10 @@ export default {
     },
     mounted() {
         this.getTableData();
+        if (this.loginType === LOGIN_TYPE.ADMIN) {
+            this.getDistributorListAll();
+        }
         this.getStoreList();
-        this.getDistributorListAll();
     },
     methods: {
         routerChange(type, item = {}) {
