@@ -72,7 +72,7 @@
         </div>
         -->
         <div class="form-container">
-            <Distribution :id='id' :detail='detail' @submit="getRepairDetail" ref="CheckFault"  v-if="detail.status == STATUS.WAIT_DISTRIBUTION && ($auth('AGENT')||$auth('STORE'))"/>
+            <Distribution :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DISTRIBUTION && ($auth('AGENT')||$auth('STORE'))"/>
             <CheckFault :id='id' :detail='detail' @submit="getRepairDetail" ref="CheckFault"  v-if="detail.status == STATUS.WAIT_DETECTION && ($auth('AGENT')||$auth('STORE'))"/>
             <CheckResult :id='id' :detail='detail' :faultList="faultList" :failList="failList" :exchangeList="exchangeList" :failTotle="failTotle" :exchangeTotle="exchangeTotle"  ref="CheckResult" v-if="detail.status != STATUS.WAIT_DISTRIBUTION && detail.status != STATUS.WAIT_DETECTION && detail.status != STATUS.WAIT_CHECK" />
             <RepairInfo :id='id' :detail='detail' />

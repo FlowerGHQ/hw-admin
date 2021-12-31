@@ -8,7 +8,7 @@
                 <i class="icon i_warning"/>共{{faultSelect.length}}个故障
             </div>
             <a-checkbox-group class="fault_select" v-model:value="faultSelect" @change="handleFaultSelect">
-                <a-checkbox v-for="(value,key) in faultMap" :key='key' :value='key'>
+                <a-checkbox v-for="(value,key) of faultMap" :key='key' :value='key'>
                     {{value}}
                 </a-checkbox>
             </a-checkbox-group>
@@ -132,8 +132,6 @@ export default {
             loading: false,
             activeKey: ['affirm'],
 
-            faultMap: Core.Const.REPAIR.FAULT_OPTIONS_MAP,
-
             tableColumns: [
                 { title: '商品名称', dataIndex: 'name' },
                 { title: '数量', dataIndex: 'amount'  },
@@ -142,7 +140,8 @@ export default {
                 { title: '操作', dataIndex: 'operation' },
             ],
 
-            faultSelect: [],
+            faultMap: {}, // 存放所有可能的故障
+            faultSelect: [], // 存放 被选中的故障
 
             failData: {},
             failTotle: {},
@@ -155,6 +154,9 @@ export default {
     },
     watch: {},
     computed: {},
+    mounted() {
+        this.getFaultData();
+    },
     methods: {
         // 故障选择
         handleFaultSelect(val) {
@@ -231,7 +233,27 @@ export default {
                 this.$message.success('操作成功');
                 this.$emit('submit')
             })
-        }
+        },
+        getFaultData() {    // 获取 故障 数据
+            this.loading = true;
+            // return
+            Core.Api.Fault.list({
+                page: 0
+            }).then(res => {
+                console.log("getFaultData res:", res)
+                let list = res.list;
+                let map = {};
+                for (const item of list) {
+                    map[item.id] = item.name
+                }
+                console.log('getFaultData faultMap:', map)
+                this.faultMap = map;
+            }).catch(err => {
+                console.log('getFaultData err:', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
     }
 };
 </script>

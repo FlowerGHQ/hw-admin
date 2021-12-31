@@ -70,6 +70,27 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
+                        <a-button type="link" @click="handleEditShow(record)" class="menu-item-btn">重置密码</a-button>
+                        <a-modal v-model:visible="passShow" title="修改密码" class="password-edit-modal" :after-close="handleEditClose">
+                            <div class="form-title">
+                                <div class="form-item required">
+                                    <div class="key">新密码:</div>
+                                    <div class="value">
+                                        <a-input-password v-model:value="form.password" placeholder="请输入新密码" />
+                                    </div>
+                                </div>
+                                <div class="form-item required">
+                                    <div class="key">再次确认:</div>
+                                    <div class="value">
+                                        <a-input-password v-model:value="form.new_password" placeholder="请再次确认密码" />
+                                    </div>
+                                </div>
+                            </div>
+                            <template #footer>
+                                <a-button key="back" @click="handleEditSubmit">确定</a-button>
+                                <a-button @click="passShow=false" type="primary">取消</a-button>
+                            </template>
+                        </a-modal>
                         <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/> 编辑</a-button>
                         <a-button type='link' @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button>
                     </template>
@@ -114,12 +135,18 @@ export default {
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
+            passShow: false,
             searchForm: {
-                name:'',
+                name: '',
                 type: undefined,
                 store_id: undefined,
                 org_id: Core.Data.getOrgId(),
-                org_type: Core.Data.getOrgType()
+                org_type: Core.Data.getOrgType(),
+            },
+            form: {
+                id: '',
+                password: '',
+                new_password: '',
             },
             storeList: [],
             // 表格数据
@@ -236,6 +263,42 @@ export default {
                 },
             });
         },
+        handleEditShow(item) {
+            this.passShow = true;
+            if (item) {
+                this.form.id = item.account_id
+            }
+        },
+        handleEditClose() {
+            this.passShow = false;
+            this.form = {
+                id: '',
+                password: '',
+                new_password: '',
+            }
+        },
+        handleEditSubmit() {
+            let form = Core.Util.deepCopy(this.form)
+            console.log('handleLogin form:', form)
+            if (!form.password) {
+                return this.$message.warning('请输入新密码')
+            }
+            if (!form.new_password) {
+                return this.$message.warning('请再次确认密码')
+            }
+            if (this.form.new_password !== this.form.password) {
+                this.$message.warning('两次密码输入不一致')
+                return
+            }
+
+            this.loading = true;
+            Core.Api.Account.resetPwd(this.form).then(() => {
+                this.$message.success('保存成功')
+                this.handleEditClose();
+            }).catch(err => {
+                console.log('handleSubmit err:', err)
+            })
+        }
     }
 };
 </script>

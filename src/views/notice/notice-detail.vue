@@ -4,7 +4,7 @@
             <div class="title-area">消息详情</div>
             <div class="btns-area">
                 <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
-                <a-button type="danger" ghost @click="handleDelete()"><i class="icon i_delete"/>删除</a-button>
+                <a-button danger @click="handleDelete()"><i class="icon i_delete"/>删除</a-button>
             </div>
         </div>
         <div class="gray-panel">

@@ -242,7 +242,7 @@ let Const = {
             60: 'green',
             100: 'purple',
         },
-        // 故障类型
+        // 故障类型 - 放弃使用
         FAULT_OPTIONS_MAP: {
             1: "电池故障",
             2: "发动机故障",

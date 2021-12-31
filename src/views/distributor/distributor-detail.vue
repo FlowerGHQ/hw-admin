@@ -37,6 +37,8 @@
                     </a-col>
                 </a-row>
                 <div class='desc-stat'>
+                    <a-statistic title="经销商数" :value="detail.agent_count" />
+                    <a-divider type="vertical" />
                     <a-statistic title="门店数" :value="detail.store_count" />
                     <a-divider type="vertical" />
                     <a-statistic title="员工数" :value="detail.user_count"/>

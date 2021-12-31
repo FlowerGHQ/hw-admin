@@ -89,6 +89,24 @@ const routes = [
                     parent: '/repair/repair-list',
                 }
             },
+            {
+                path: 'item-fault-list',
+                name: 'FaultList',
+                component: () => import('@/views/repair/item-fault-list.vue'),
+                meta: {
+                    title: '故障管理',
+                }
+            },
+            {
+                path: 'item-fault-edit',
+                name: 'FaultEdit',
+                component: () => import('@/views/repair/item-fault-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '故障编辑',
+                    parent: '/repair/item-fault-list',
+                }
+            },
         ]
     },
     {   // 维修单 结算下载
@@ -108,7 +126,7 @@ const routes = [
         name: 'DistributorManagement',
         meta: {
             title: '分销商管理',
-            icon: 'i_s_distributor',
+            icon: 'i_s_agent',
             // auth: ['dashboard'],
             roles: [LOGIN_TYPE.ADMIN],
         },
@@ -151,7 +169,7 @@ const routes = [
         component: Layout,
         meta: {
             title: '分销商管理',
-            icon: 'i_s_distributor',
+            icon: 'i_s_agent',
             roles: [LOGIN_TYPE.DISTRIBUTOR],
         },
         children: [
@@ -382,6 +400,27 @@ const routes = [
                 }
             },
             {
+                path: 'sales-area-list',
+                name: 'SalesList',
+                component: () => import('@/views/item/sales-area-list.vue'),
+                meta: {
+                    title: '销售区域',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true
+                }
+            },
+            {
+                path: 'sales-area-edit',
+                name: 'SalesEdit',
+                component: () => import('@/views/item/sales-area-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '区域编辑',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/item/sales-area-list',
+                }
+            },
+            {
                 path: 'item-category',
                 name: 'ItemCategory',
                 component: () => import('@/views/item/item-category.vue'),
@@ -583,7 +622,7 @@ const routes = [
         meta: {
             title: '系统消息',
             icon: 'i_s_temp',
-            // auth: ['dashboard'],
+            // auth: ['AGENT', 'STORE','DISTRIBUTOR'],
             roles: [LOGIN_TYPE.ADMIN],
         },
         children: [

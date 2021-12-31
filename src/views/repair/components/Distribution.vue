@@ -99,7 +99,7 @@ export default {
             loading: false,
 
             activeKey: ['affirm', 'change'],
-            faultMap: Core.Const.REPAIR.FAULT_OPTIONS_MAP,
+            // faultMap: Core.Const.REPAIR.FAULT_OPTIONS_MAP,
             staffList: [], // 员工列表
             REPAIR,
             form: {

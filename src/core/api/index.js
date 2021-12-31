@@ -110,6 +110,12 @@ const apiList = {
         delete: ['PostJson', 'item-category/delete'],
         detail: ['PostJson', 'item-category/detail'],
     },
+    SalesArea: { // 车辆销售区域
+        list: ['PostJson', 'sales-area/list'],
+        save: ['PostJson', 'sales-area/save'],
+        delete: ['PostJson', 'sales-area/delete'],
+        detail: ['PostJson', 'sales-area/detail'],
+    },
     ShopCart: { // 购物车
         save: ['PostJson', 'shopping-cart/save'],
         list: ['PostJson', 'shopping-cart/list'],
@@ -181,6 +187,13 @@ const apiList = {
         listAll: ['PostJson','distributor/list-name'], //选择用的 名称列表 无分页
         detail: ['PostJson', 'distributor/detail'],
         updateStatus: ['PostJson', 'distributor/update-status'], //修改状态
+
+    },
+    Fault: { // 故障管理
+        list: ['PostJson', 'item-fault/list'],
+        save: ['PostJson', 'item-fault/save'],
+        detail: ['PostJson', 'item-fault/detail'],
+        delete: ['PostJson', 'item-fault/delete'],
 
     },
 
