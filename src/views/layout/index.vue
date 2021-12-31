@@ -26,23 +26,19 @@
                                         <div class="form-item required">
                                             <div class="key">旧密码:</div>
                                             <div class="value">
-                                                <a-input-password placeholder='请输入旧密码' v-model:value="form.old_password"
-                                                                  type="password"/>
-
+                                                <a-input-password v-model:value="form.old_password" placeholder='请输入旧密码'/>
                                             </div>
                                         </div>
                                         <div class="form-item required">
                                             <div class="key">新密码:</div>
                                             <div class="value">
-                                                <a-input-password v-model:value="form.password" placeholder="请输入新密码"
-                                                                  type="password"/>
+                                                <a-input-password v-model:value="form.password" placeholder="请输入新密码" />
                                             </div>
                                         </div>
                                         <div class="form-item required">
                                             <div class="key">再次确认:</div>
                                             <div class="value">
-                                                <a-input-password v-model:value="form.new_password"
-                                                                  placeholder="请再次确认密码" type="password"/>
+                                                <a-input-password v-model:value="form.new_password" placeholder="请再次确认密码"/>
                                             </div>
                                         </div>
                                     </div>
@@ -63,8 +59,7 @@
                 <a-menu theme="light" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" mode="inline"
                         :inlineCollapsed='collapsed' :inlineIndent='8'>
                     <template v-for="item of showList">
-                        <a-menu-item :key="item.path" v-if="$auth(...item.auth) && item.children.length === 1"
-                                     @click="handleLink(item.path)">
+                        <a-menu-item :key="item.path" v-if="$auth(...item.auth) && item.children.length === 1" @click="handleLink(item.path)">
                             <i class='icon' :class="item.meta.icon"/>
                             <span :class="{'collapsed-title': collapsed}">{{ item.meta.title }}</span>
                         </a-menu-item>
@@ -75,8 +70,7 @@
                             </template>
                             <template v-for="i of item.children">
                                 <template v-if="!i.hidden && $auth(...i.auth)">
-                                    <a-menu-item :key="item.path + '/' + i.path"
-                                                 @click="handleLink(item.path + '/' + i.path)" v-if="showMenuItem(i)">
+                                    <a-menu-item :key="item.path + '/' + i.path" @click="handleLink(item.path + '/' + i.path)" v-if="showMenuItem(i)">
                                         <span>{{ i.meta.title }}</span>
                                     </a-menu-item>
                                 </template>

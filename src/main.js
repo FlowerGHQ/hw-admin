@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
 import Util from './core/utils'
+import i18n from './core/i18n'
 import {message,notification,Modal} from 'ant-design-vue';
 
 // 引入样式
@@ -18,4 +19,4 @@ app.config.globalProperties.$message = message
 app.config.globalProperties.$notification = notification
 app.config.globalProperties.$confirm = Modal.confirm
 
-app.use(router).mount('#app')
+app.use(router).use(i18n).mount('#app')
