@@ -13,7 +13,7 @@
                 <a-divider type="vertical"/>
                 <span style="font-size: 12px;">{{ USER_TYPE[loginType] }}端</span>
                 <a-divider type="vertical"/>
-                <a-dropdown :trigger="['click']" overlay-class-name='account-action-msenu'>
+                <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
                     <a-button class="user-info" type="link">
                         <a-avatar class="user-avatar" :src="$Util.imageFilter(user.avatar, 3)" :size='30'>
                             <template #icon><i  class="icon i_user"/></template>
@@ -66,8 +66,7 @@
                 <a-menu theme="light" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" mode="inline"
                         :inlineCollapsed='collapsed' :inlineIndent='8'>
                     <template v-for="item of showList">
-                        <a-menu-item :key="item.path" v-if="$auth(...item.auth) && item.children.length === 1"
-                                     @click="handleLink(item.path)">
+                        <a-menu-item :key="item.path" v-if="$auth(...item.auth) && item.children.length === 1" @click="handleLink(item.path)">
                             <i class='icon' :class="item.meta.icon"/>
                             <span :class="{'collapsed-title': collapsed}">{{ item.meta.title }}</span>
                         </a-menu-item>
@@ -78,8 +77,7 @@
                             </template>
                             <template v-for="i of item.children">
                                 <template v-if="!i.hidden && $auth(...i.auth)">
-                                    <a-menu-item :key="item.path + '/' + i.path"
-                                                 @click="handleLink(item.path + '/' + i.path)" v-if="showMenuItem(i)">
+                                    <a-menu-item :key="item.path + '/' + i.path" @click="handleLink(item.path + '/' + i.path)" v-if="showMenuItem(i)">
                                         <span>{{ i.meta.title }}</span>
                                     </a-menu-item>
                                 </template>

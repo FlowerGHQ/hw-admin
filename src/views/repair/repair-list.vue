@@ -32,6 +32,14 @@
                         </a-select>
                     </div>
                 </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
+                    <div class="key">所属分销商:</div>
+                    <div class="value">
+                        <a-select v-model:value="searchForm.distributor_id" placeholder="请选择分销商" @change="handleSearch">
+                            <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
                 <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">零部件编号:</div>
                     <div class="value">
@@ -128,6 +136,7 @@
 <script>
 import Core from '../../core';
 const STATUS = Core.Const.REPAIR.STATUS
+const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 export default {
     name: 'RepairList',
     components: {},
@@ -154,10 +163,12 @@ export default {
                 {text: '已转单', value: '0', color: 'purple',  key: STATUS.TRANSFER },
             ],
             create_time: [],
+            distributorList: [], // 分销商下拉框数据
             storeList: [],
             searchForm: {
                 uid: '',
                 org_id:undefined,
+                distributor_id:undefined,
                 status: undefined,
                 channel: '',
                 repair_method: '',
@@ -196,6 +207,9 @@ export default {
     },
     mounted() {
         this.getTableData();
+        if (this.loginType === LOGIN_TYPE.ADMIN) {
+            this.getDistributorListAll();
+        }
         this.getStoreList();
     },
     methods: {
@@ -246,6 +260,13 @@ export default {
             }).then(res => {
                 this.storeList = res.list
                 this.storeList.push({id:-1,name:"经销商"})
+            });
+        },
+        getDistributorListAll() {
+            Core.Api.Distributor.listAll().then(res => {
+                console.log('res.list: ', res.list);
+                this.distributorList = res.list
+                this.distributorList.push({id:-1,name:"分销商"})
             });
         },
         handleTableChange(page, filters, sorter) {
