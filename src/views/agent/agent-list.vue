@@ -10,6 +10,14 @@
         <div class="search-container">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">所属分销商:</div>
+                    <div class="value">
+                        <a-select v-model:value="searchForm.distributor_id" placeholder="请选择分销商" @change="handleSearch">
+                            <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">经销商名称:</div>
                     <div class="value">
                         <a-input placeholder="请输入经销商名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
@@ -150,10 +158,12 @@ export default {
             countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
 
             create_time: [],
+            distributorList: [], // 分销商下拉框数据
             country_cascader: [], // 搜索框 大洲>国家
             searchForm: {
                 name: '',
                 status: 1,
+                distributor_id:undefined,
             },
             tableData: [],
             statusList: Core.Const.ORG_STATUS_LIST,
@@ -179,6 +189,7 @@ export default {
     },
     mounted() {
         this.getTableData();
+        this.getDistributorListAll();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -219,6 +230,13 @@ export default {
             this.country_cascader = []
             this.create_time = []
             this.pageChange(1);
+        },
+        getDistributorListAll() {
+            Core.Api.Distributor.listAll().then(res => {
+                console.log('res.list: ', res.list);
+                this.distributorList = res.list
+                this.distributorList.push({id:-1,name:"分销商"})
+            });
         },
         // 表格筛选
         handleTableChange(page, filters, sorter) {

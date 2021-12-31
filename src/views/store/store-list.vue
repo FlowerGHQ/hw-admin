@@ -15,6 +15,14 @@
                             <a-input placeholder="请输入门店名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">所属分销商:</div>
+                        <div class="value">
+                            <a-select v-model:value="searchForm.distributor_id" placeholder="请选择分销商" @change="handleSearch">
+                                <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
+                            </a-select>
+                        </div>
+                    </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
                         <div class="key">经销商：</div>
                         <div class="value">
@@ -137,6 +145,7 @@ export default {
 
             create_time: [],
             country_cascader: [], // 搜索框 大洲>国家
+            distributorList: [], // 分销商下拉框数据
             agentList: [],
             statusList: Core.Const.ORG_STATUS_LIST,
             searchForm: {
@@ -144,6 +153,7 @@ export default {
                 status: 1,
                 contact_name:'',
                 contact_phone:'',
+                distributor_id:undefined,
                 agent_id: undefined,
             },
 
@@ -172,6 +182,7 @@ export default {
     },
     mounted() {
         this.getTableData();// 获取表格数据
+        this.getDistributorListAll();
         if (this.$auth('ADMIN')) {
             this.getAgentList();
         }
@@ -208,6 +219,13 @@ export default {
         },
         handleSearch() {        // 搜索
             this.pageChange(1);
+        },
+        getDistributorListAll() {
+            Core.Api.Distributor.listAll().then(res => {
+                console.log('res.list: ', res.list);
+                this.distributorList = res.list
+                this.distributorList.push({id:-1,name:"分销商"})
+            });
         },
         handleSearchReset() {        // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
