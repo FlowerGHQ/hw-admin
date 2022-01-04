@@ -64,6 +64,7 @@
             <div class="btn-area">
                 <a-button @click="handleSearch" type="primary">查询</a-button>
                 <a-button @click="handleSearchReset">重置</a-button>
+                <a-button @click="handleExport">导出</a-button>
             </div>
         </div>
         <div class="table-container">
@@ -213,6 +214,21 @@ export default {
         this.getStoreList();
     },
     methods: {
+        handleExport(){
+            this.loading = true;
+            console.log('this.searchForm:', this.searchForm)
+            Core.Api.Repair.export({
+                ...this.searchForm,
+                begin_time: this.create_time[0] || '',
+                end_time: this.create_time[1] || '',
+            }).then(res => {
+                console.log("handleExport res:", res)
+            }).catch(err => {
+                console.log('handleExport err:', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
         routerChange(type, item = {}) {
             console.log('routerChange item:', item)
             let routeUrl = ''
