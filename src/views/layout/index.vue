@@ -1,4 +1,5 @@
 <template>
+<a-config-provider :locale="locale">
     <a-layout id="Layout">
         <a-layout-header class="layout-header">
             <div class="header-logo" @click="collapsed = !collapsed" :class="{'collapsed': collapsed}">
@@ -87,7 +88,7 @@
             </a-layout>
         </a-layout>
     </a-layout>
-
+</a-config-provider>
 </template>
 
 <script>
@@ -95,12 +96,17 @@ import Core from '../../core';
 import routes from '@/router/routes';
 import MyBreadcrumb from './components/Breadcrumb.vue';
 
+import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
+import enUS from 'ant-design-vue/lib/locale-provider/en_US';
+
 export default {
     components: {
         MyBreadcrumb,
     },
     data() {
         return {
+            locale: zhCN,
+
             loginType: Core.Data.getLoginType(),
             USER_TYPE: Core.Const.USER.TYPE_MAP,
             collapsed: false,
@@ -151,6 +157,15 @@ export default {
                     this.selectedKeys = ['/' + path[0]]
                 }
                 console.log('this.selectedKeys:', this.selectedKeys)
+            }
+        },
+        $lang: {
+            immediate: true,
+            handler(n) {
+                switch (n) {
+                    case 'zh': this.locale = zhCN; break;
+                    case 'en': this.locale = enUS; break;
+                }
             }
         }
     },

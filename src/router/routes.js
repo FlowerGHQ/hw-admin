@@ -660,7 +660,7 @@ const routes = [
                     parent: '/refund/refund-list',
                 }
             },
-            {
+            /* {
                 path: 'refund-audit',
                 name: 'RefundAudit',
                 component: () => import('@/views/refund/refund-audit.vue'),
@@ -669,7 +669,7 @@ const routes = [
                     title: '退款审核',
                     parent: '/refund/refund-list',
                 }
-            },
+            }, */
         ]
     },
 

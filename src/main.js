@@ -13,6 +13,7 @@ import '@/assets/styles/public.less';
 
 const app = createApp(App)
 
+app.config.globalProperties.$lang = 'zh'
 app.config.globalProperties.$Util = Util
 app.config.globalProperties.$auth = Util.auth
 app.config.globalProperties.$message = message
