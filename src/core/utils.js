@@ -275,7 +275,7 @@ const Util = {
                 2: defult_item,
                 3: defult_org,
             }
-            return map[default_type]
+            return map[default_type] || ''
         }
 
         if (item.includes("http")) {

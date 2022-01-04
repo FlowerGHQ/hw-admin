@@ -6,12 +6,18 @@
                 <img src="@images/header-logo.png" alt="浩万"/>
             </div>
             <div class="header-right">
+                <a-button class="notice" type="link">
+                    <a-badge :count="un_count"  @click="routerChange('notice')">
+                        <i class="icon i_hint" />
+                    </a-badge>
+                </a-button>
+                <a-divider type="vertical"/>
                 <span style="font-size: 12px;">{{ USER_TYPE[loginType] }}端</span>
                 <a-divider type="vertical"/>
                 <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
                     <a-button class="user-info" type="link">
                         <a-avatar class="user-avatar" :src="$Util.imageFilter(user.avatar, 3)" :size='30'>
-                            <i class="icon i_user"/>
+                            <template #icon><i  class="icon i_user"/></template>
                         </a-avatar>
                         <span class="user-name">{{ user.name }}</span>
                     </a-button>
@@ -22,12 +28,13 @@
                             </a-menu-item>
                             <a-menu-item>
                                 <a-button type="link" @click="handleEditShow" class="menu-item-btn">修改密码</a-button>
-                                <a-modal v-model:visible="passShow" title="修改密码" class="password-edit-modal">
+                                <a-modal v-model:visible="passShow" title="修改密码" class="password-edit-modal" :after-close="handleEditClose">
                                     <div class="form-title">
                                         <div class="form-item required">
                                             <div class="key">旧密码:</div>
                                             <div class="value">
-                                                <a-input-password v-model:value="form.old_password" placeholder='请输入旧密码'/>
+                                                <a-input-password placeholder='请输入旧密码' v-model:value="form.old_password" />
+
                                             </div>
                                         </div>
                                         <div class="form-item required">
@@ -39,7 +46,7 @@
                                         <div class="form-item required">
                                             <div class="key">再次确认:</div>
                                             <div class="value">
-                                                <a-input-password v-model:value="form.new_password" placeholder="请再次确认密码"/>
+                                                <a-input-password v-model:value="form.new_password" placeholder="请再次确认密码" />
                                             </div>
                                         </div>
                                     </div>
@@ -120,7 +127,8 @@ export default {
                 password: '',
                 new_password: '',
                 old_password: '',
-            }
+            },
+            un_count: '', //未读消息存放数量
         };
     },
     computed: {
@@ -184,8 +192,29 @@ export default {
     },
     mounted() {
         // this.getTableData();
+        this.getUnreadCount();
     },
     methods: {
+        routerChange(type) {
+            let routeUrl = ''
+            switch (type) {
+                case 'notice':        //系统
+                    routeUrl = this.$router.resolve({
+                        path: "/notice/notice-list",
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+            }
+
+        },
+        getUnreadCount() {    // 获取 未读消息数 数据
+            Core.Api.Notice.list().then(res => {
+                console.log("getNoticeData res", res)
+                this.un_count = res.un_count;
+            }).catch(err => {
+                console.log('getNoticeData err', err)
+            })
+        },
         handleLink(path) {
             this.$router.push(path);
         },
@@ -202,10 +231,19 @@ export default {
                 Core.Data.setToken('');
             });
         },
+
         handleEditShow() {
             this.passShow = true;
         },
-
+        handleEditClose() {
+            this.passShow = false;
+            this.form = {
+                id: '',
+                password: '',
+                new_password: '',
+                old_password: '',
+            }
+        },
         handleEditSubmit() {
             let form = Core.Util.deepCopy(this.form)
             console.log('handleLogin form:', form)
@@ -222,12 +260,11 @@ export default {
                 this.$message.warning('两次密码输入不一致')
                 return
             }
-            this.passShow = false
 
             this.loading = true;
             Core.Api.Common.updatePwd(this.form).then(() => {
                 this.$message.success('保存成功')
-                this.routerChange('back')
+                this.handleEditClose();
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
@@ -262,6 +299,10 @@ export default {
 
         .header-right {
             .fcc();
+            .notice {
+                width: 50px;
+                height: 50px;
+            }
         }
 
         .header-logo {
