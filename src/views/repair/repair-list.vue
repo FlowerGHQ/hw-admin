@@ -2,9 +2,9 @@
 <div id="RepairList">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">维修工单</div>
+            <div class="title-area">{{$t('n.repair_list')}}</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('AGENT')||$auth('STORE')"><i class="icon i_add" />新增工单</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('AGENT', 'STORE')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
             </div>
         </div>
         <div class="tabs-container colorful">
@@ -25,7 +25,7 @@
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">门店:</div>
+                    <div class="key">所属门店:</div>
                     <div class="value">
                         <a-select v-model:value="searchForm.org_id" placeholder="请选择门店" @change="handleSearch">
                             <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
@@ -40,20 +40,8 @@
                         </a-select>
                     </div>
                 </a-col>
-                <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">零部件编号:</div>
-                    <div class="value">
-                        <a-input placeholder="请输入零部件编号" v-model:value="searchForm.part_code" @keydown.enter='handleSearch'/>
-                    </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">车架编号:</div>
-                    <div class="value">
-                        <a-input placeholder="请输入车架编号" v-model:value="searchForm.vehicle_no" @keydown.enter='handleSearch'/>
-                    </div>
-                </a-col> -->
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
-                    <div class="key">创建时间:</div>
+                    <div class="key">{{$t('def.create_time')}}</div>
                     <div class="value">
                         <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
                             <template #suffixIcon><i class="icon i_calendar"></i> </template>
@@ -62,8 +50,8 @@
                 </a-col>
             </a-row>
             <div class="btn-area">
-                <a-button @click="handleSearch" type="primary">查询</a-button>
-                <a-button @click="handleSearchReset">重置</a-button>
+                <a-button @click="handleSearch" type="primary">{{$t('def.search')}}</a-button>
+                <a-button @click="handleSearchReset">{{$t('def.reset')}}</a-button>
             </div>
         </div>
         <div class="table-container">
@@ -71,9 +59,6 @@
                 :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.key === 'detail'">
-<!--                        <a-tooltip placement="top" :title='text' v-if="record.status == 10">-->
-<!--                            <a-button type="link" @click="routerChange('edit', record)">{{text || '-'}}</a-button>-->
-<!--                        </a-tooltip>-->
                         <a-tooltip placement="top" :title='text' >
                             <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                         </a-tooltip>
@@ -307,15 +292,14 @@ export default {
         },
          getStatusStat() {  // 获取 表格 数据
             this.loading = true;
-             Object.assign(this.statusList, this.$options.data().statusList)
+            Object.assign(this.statusList, this.$options.data().statusList)
             Core.Api.Repair.statusList({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
                 page: this.currPage,
                 page_size: this.pageSize
-                }
-            ).then(res => {
+            }).then(res => {
                 console.log("getStatusStat res:", res)
                 let total = 0
 

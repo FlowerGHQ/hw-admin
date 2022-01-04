@@ -1,18 +1,22 @@
 <template>
-<a-config-provider :locale="locale">
+<a-config-provider :locale="lang == 'zh' ? zhCN : enUS">
     <a-layout id="Layout">
         <a-layout-header class="layout-header">
-            <div class="header-logo" @click="collapsed = !collapsed" :class="{'collapsed': collapsed}">
-                <img src="@images/header-logo.png" alt="浩万"/>
+            <div class="header-left" @click="collapsed = !collapsed" :class="{'collapsed': collapsed}">
+                <img src="@images/header-logo.png" class="logo" alt="浩万"/>
+                <a-divider type="vertical"/>
+                <a-tag color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType] }}端</a-tag>
             </div>
             <div class="header-right">
-                <a-button class="notice" type="link">
-                    <a-badge :count="un_count"  @click="routerChange('notice')">
-                        <i class="icon i_hint" />
-                    </a-badge>
+                <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
+                    <i class="icon" :class="lang =='zh' ? 'i_zh-en' : 'i_en-zh'"/>
                 </a-button>
                 <a-divider type="vertical"/>
-                <span style="font-size: 12px;">{{ USER_TYPE[loginType] }}端</span>
+                <a-button class="notice" type="link">
+                    <a-badge :count="un_count"  @click="routerChange('notice')">
+                        <i class="icon i_notify" />
+                    </a-badge>
+                </a-button>
                 <a-divider type="vertical"/>
                 <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
                     <a-button class="user-info" type="link">
@@ -112,7 +116,8 @@ export default {
     },
     data() {
         return {
-            locale: zhCN,
+            zhCN,
+            enUS,
 
             loginType: Core.Data.getLoginType(),
             USER_TYPE: Core.Const.USER.TYPE_MAP,
@@ -151,6 +156,9 @@ export default {
             console.log('showList:', showList)
             return showList
         },
+        lang() {
+            return this.$store.state.lang
+        }
     },
     watch: {
         $route: {
@@ -167,15 +175,18 @@ export default {
                 console.log('this.selectedKeys:', this.selectedKeys)
             }
         },
-        $lang: {
+        /* $lang: {
+            deep: true,
             immediate: true,
             handler(n) {
+                console.log('watch $lang:', n)
                 switch (n) {
                     case 'zh': this.locale = zhCN; break;
                     case 'en': this.locale = enUS; break;
                 }
+                console.log('this.locale:', this.locale)
             }
-        }
+        } */
     },
     created() {
         for (const item of routes) {
@@ -268,7 +279,13 @@ export default {
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
-        }
+        },
+
+        // 中英文切换
+        handleLangSwitch() {
+            this.$store.commit('switchLang')
+            this.$i18n.locale = this.$store.state.lang
+        },
     }
 };
 </script>
@@ -297,18 +314,24 @@ export default {
         padding: 0 20px;
         .fsb();
 
+        .header-left {
+            .fcc();
+            img.logo {
+                width: 115px;
+                height: 30px;
+            }
+        }
+
         .header-right {
             .fcc();
             .notice {
                 width: 50px;
                 height: 50px;
             }
-        }
-
-        .header-logo {
-            img {
-                width: 115px;
-                height: 30px;
+            .lang-switch {
+                .icon {
+                    font-size: 20px;
+                }
             }
         }
 

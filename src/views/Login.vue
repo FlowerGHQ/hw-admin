@@ -107,7 +107,9 @@ export default {
                 authorityMap['MANMGE'] = true
             }
             Core.Data.setAuthority(authorityMap)
-            this.$router.replace({ path: '/dashboard' })
+            setTimeout(() => {
+                this.$router.replace({ path: '/dashboard' })
+            }, 1000)
             return
             Core.Api.AuthRole.userMenu({id: userId}).then(res =>{
                 console.log('getAuthority res', res)

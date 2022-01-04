@@ -1,15 +1,60 @@
 import { createI18n } from 'vue-i18n'
 
 // 准备翻译的语言环境信息
+/*
+ * n：name
+ * c：const const.js
+ * def
+ */
 const messages = {
     ch: {
-        message: {
-            hello: 'こんにちは、世界'
+        n: {
+            repair: '维修工单',
+            repair_list: '维修工单',
+            repair_detail: '维修详情',
+            repair_create: '新增工单',
+
+            agent: '经销商',
+            distributor: '代理商',
+            store: '门店',
+        },
+        c: {
+        },
+        def: {
+            search: '查询',
+            reset: '重置',
+            input: '请输入',
+            select: '请选择',
+
+            cancle: '取消',
+            submit: '确定',
+
+            create_time: '创建时间'
         }
     },
     en: {
-        message: {
-            hello: 'hello world'
+        n: {
+            repair: 'Repair Order',
+            repair_list: 'Repair Order',
+            repair_detail: 'Repair Order Detail',
+            repair_create: 'Order Create',
+
+            agent: 'Agent',
+            distributor: 'Distributor',
+            store: 'Store',
+        },
+        c: {
+        },
+        def: {
+            search: 'Search',
+            reset: 'Reset',
+            input: 'please input',
+            select: 'please select',
+
+            cancle: 'Cancle',
+            submit: 'Submit',
+
+            create_time: 'CreateTime'
         }
     },
 }
