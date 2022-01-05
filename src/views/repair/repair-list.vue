@@ -202,19 +202,6 @@ export default {
     },
     methods: {
         handleExportConfirm(){ // 确认订单是否导出
-            // this.loading = true;
-            // console.log('this.searchForm:', this.searchForm)
-            // Core.Api.Repair.export({
-            //     ...this.searchForm,
-            //     begin_time: this.create_time[0] || '',
-            //     end_time: this.create_time[1] || '',
-            // }).then(res => {
-            //     console.log("handleExportConfirm res:", res)
-            // }).catch(err => {
-            //     console.log('handleExportConfirm err:', err)
-            // }).finally(() => {
-            //     this.loading = false;
-            // });
             let _this = this;
             this.$confirm({
                 title: '确认要导出吗？',
@@ -229,8 +216,18 @@ export default {
             this.exportDisabled = true;
 
             let form = this.searchForm;
-            let uid = form.uid
-            let orgId = form.org_id ? form.org_id : 0;
+            let uid = form.uid || ''
+            let type = form.type || 0
+            let status = form.status || 0
+            let distributorId = form.distributorId || 0
+            let agentId = form.agentId || 0
+            let storeId = form.storeId || 0
+            let orgId = form.org_id ? form.org_id : 0
+            let orgType = form.orgType || 0
+            let itemId = form.itemId || 0
+            let channel = form.channel || 0
+            let vehicleId = form.vehicleId || 0
+            let repairMethod = form.repairMethod || 0
             let beginTime = this.create_time[0] || ''
             let endTime   = this.create_time[1] || ''
 
@@ -240,7 +237,10 @@ export default {
             //http://10.0.0.128:8083/agent/1/repair/export-repair-order-record?token=3872b09b0ca6da80bd151e6e43f84bec
 
             let exportUrl =
-                `${fileUrl}token=${token}&uid=${uid}&org_id=${orgId}&begin_time=${beginTime}&end_time=${endTime}`
+                `${fileUrl}token=${token}&uid=${uid}&type=${type}&status=${status}&distributor_id=${distributorId}
+                &agent_id=${agentId}&store_id=${storeId}&org_id=${orgId}&org_type=${orgType}&item_id=${itemId}
+                &item_id=${itemId}&channel=${channel}&vehicle_id=${vehicleId}&repair_method=${repairMethod}
+                &begin_time=${beginTime}&end_time=${endTime}`
             console.log("handleRepairExport -> exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
