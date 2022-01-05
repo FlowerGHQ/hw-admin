@@ -1,6 +1,6 @@
 <template>
 
-<div class="CheckResult">
+<div class="Distribution">
     <div class="gray-panel info">
         <div class="panel-title">
             <div class="left">
@@ -219,7 +219,7 @@ export default {
 </script>
 
 <style lang="less">
-.CheckResult {
+.Distribution {
     .panel-content.change {
         display: flex;
         justify-content: space-between;

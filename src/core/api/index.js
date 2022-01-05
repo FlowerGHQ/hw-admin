@@ -197,6 +197,13 @@ const apiList = {
         delete: ['PostJson', 'item-fault/delete'],
 
     },
+    // Auth: { // 故障管理
+    //     list: ['PostJson', 'auth/role-list'],
+    //     save: ['PostJson', 'auth/role-save'],
+    //     detail: ['PostJson', 'auth/role-detail'],
+    //     delete: ['PostJson', 'auth/role-delete'],
+    //
+    // },
 
 };
 

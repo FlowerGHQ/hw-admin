@@ -17,12 +17,16 @@ const messages = {
             agent: '经销商',
             distributor: '代理商',
             store: '门店',
+            "故障编辑" : '故障编辑'
         },
         c: {
         },
         def: {
             search: '查询',
             reset: '重置',
+            export: '导出',
+
+
             input: '请输入',
             select: '请选择',
 
@@ -42,13 +46,15 @@ const messages = {
             agent: 'Agent',
             distributor: 'Distributor',
             store: 'Store',
+
+            "故障编辑" : 'dbascjhdb'
         },
         c: {
         },
         def: {
             search: 'Search',
             reset: 'Reset',
-            input: 'please input',
+            export: 'Export',
             select: 'please select',
 
             cancle: 'Cancle',

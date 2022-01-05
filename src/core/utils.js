@@ -362,6 +362,11 @@ const Util = {
         const MAP = Const.REPAIR.METHOD_MAP
         return MAP[val] || '未知'
     },
+    repairServiceFilter(val) {
+        console.log('repairServiceFilter', val);
+        const MAP = Const.REPAIR.SERVICE_TYPE_MAP
+        return MAP[val] || '未知'
+    },
     repairPriorityFilter(val, to = 'word') {
         const MAP = Const.REPAIR.PRIORITY_MAP
         const COLOR_MAP = Const.REPAIR.PRIORITY_COLOR_MAP
@@ -372,14 +377,14 @@ const Util = {
                 return COLOR_MAP[val] || 'grey'
         }
     },
-    repairItemTypeFilter(val) {
-        const MAP = Const.REPAIR.ITEM_TYPE_MAP
-        return MAP[val] || '未知'
-    },
-    repairFaultOptionsListFilter(val) {
-        const MAP = Const.REPAIR.FAULT_OPTIONS_MAP
-        return MAP[val] || '未知'
-    },
+    // repairItemTypeFilter(val) {
+    //     const MAP = Const.REPAIR.ITEM_TYPE_MAP
+    //     return MAP[val] || '未知'
+    // },
+    // repairFaultOptionsListFilter(val) {
+    //     const MAP = Const.REPAIR.FAULT_OPTIONS_MAP
+    //     return MAP[val] || '未知'
+    // },
     actionLogTypeFilter(val) {
         const MAP = Const.ACTION_LOG.ACTION_LOG_TYPE_MAP
         return MAP[val] || '未知'
@@ -442,6 +447,24 @@ const Util = {
         const MAP = Core.Const.Distributor.TYPE_MAP
         return MAP[val] || '未知'
     },
+    loginAuth(...arr) {
+        let loginType = Core.Data.getLoginType()
+        if (arr.indexOf(loginType) != -1) {
+            return {
+                then: function (...fun) {
+                    fun.forEach(fun => {
+                        fun()
+                    })
+                }
+            }
+        } else {
+            return {
+                then: function () {
+
+                }
+            }
+        }
+    }
 
 }
 

@@ -14,7 +14,7 @@ switch (window.location.hostname) {
     case "10.0.0.107":
         URL_POINT = 'https://eos-api.hw.innotick.com'
         break;
-    case "10.0.0.166":
+    case "10.0.0.158":
     case "10.0.0.159":
         URL_POINT = 'http://10.0.0.109:8083'
         break;
@@ -53,6 +53,7 @@ let Const = {
     },
 
     TIME_PICKER_DEFAULT_VALUE: {
+        BEGIN: dayjs().second(0).minute(0).hour(0),
         B_TO_B: {
             defaultValue: [
                 dayjs().second(0).minute(0).hour(0),
@@ -178,6 +179,15 @@ let Const = {
         TYPE_MAP: {
             1: '维修工单',
             2: '特批订单',
+        },
+        // 工单帐类
+        SERVICE_TYPE_LIST: [
+            {text: '保内维修', value: 1},
+            {text: '保外维修', value: 2},
+        ],
+        SERVICE_TYPE_MAP: {
+            1: '保内维修',
+            2: '保外维修',
         },
         // 维修方式
         CHANNEL_LIST: [

@@ -1,168 +1,185 @@
 <template>
-<div id="RepairEdit" class="edit-container">
-    <div class="title-container"><div class="title-area">{{form.id ? '编辑工单' : '新建工单'}}</div></div>
-    <div class="form-block"> <!-- 工单内容 -->
-        <div class="form-title"><div class="title">工单内容</div></div>
-        <div class="form-content">
-            <div class="form-item required">
-                <div class="key">工单分类</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.type" :disabled="!!form.id">
-                        <a-radio v-for="item of typeList" :key="item.value" :value="item.value" >{{item.text}}</a-radio>
-                    </a-radio-group>
-                </div>
+    <div id="RepairEdit" class="edit-container">
+        <div class="title-container">
+            <div class="title-area">{{ form.id ? '编辑工单' : '新建工单' }}</div>
+        </div>
+        <div class="form-block"> <!-- 工单内容 -->
+            <div class="form-title">
+                <div class="title">工单内容</div>
             </div>
-            <div class="form-item required">
-                <div class="key">紧急程度</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.priority">
-                        <a-radio v-for="item of priorityList" :key="item.value" :value="item.value" >{{item.text}}</a-radio>
-                    </a-radio-group>
+            <div class="form-content">
+                <div class="form-item required">
+                    <div class="key">工单分类</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.type" :disabled="!!form.id">
+                            <a-radio v-for="item of typeList" :key="item.value" :value="item.value">{{
+                                    item.text
+                                }}
+                            </a-radio>
+                        </a-radio-group>
+                    </div>
                 </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">工单名称</div>
-                <div class="value">
-                    <a-input v-model:value="form.name" placeholder="请输入工单名称(最多输入50个字符)" :maxlength='50'/>
+                <div class="form-item required">
+                    <div class="key">紧急程度</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.priority">
+                            <a-radio v-for="item of priorityList" :key="item.value" :value="item.value">{{
+                                    item.text
+                                }}
+                            </a-radio>
+                        </a-radio-group>
+                    </div>
                 </div>
-            </div>
+                <div class="form-item required">
+                    <div class="key">工单帐类</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.service_type" :disabled="!!form.id">
+                            <a-radio v-for="item of serviceList" :key="item.value" :value="item.value">{{
+                                    item.text
+                                }}
+                            </a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">行程公里数</div>
+                    <div class="value">
+                        <a-input-number v-model:value="form.travel_distance" :min="0"/>
+                        <span class="kilometre">公里</span>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">到港时间</div>
+                    <div class="value">
+                        <a-date-picker v-model:value="form.arrival_time" valueFormat='X' :show-time="defaultTime"
+                                       placeholder="请选择到港时间">
+                            <template #suffixIcon><i class="icon i_calendar"/></template>
+                        </a-date-picker>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">工单名称</div>
+                    <div class="value">
+                        <a-input v-model:value="form.name" placeholder="请输入工单名称(最多输入50个字符)" :maxlength='50'/>
+                    </div>
+                </div>
 
-            <div class="form-item required textarea">
-                <div class="key">问题描述</div>
-                <div class="value">
-                    <a-textarea v-model:value="form.desc" placeholder="请输入问题描述" :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500'/>
-                    <span class="content-length">{{form.desc.length}}/500</span>
+                <div class="form-item required textarea">
+                    <div class="key">问题描述</div>
+                    <div class="value">
+                        <a-textarea v-model:value="form.desc" placeholder="请输入问题描述"
+                                    :auto-size="{ minRows: 4, maxRows: 6 }"
+                                    :maxlength='500'/>
+                        <span class="content-length">{{ form.desc.length }}/500</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="form-block"> <!-- 车辆信息 -->
-        <div class="form-title"><div class="title">车辆信息</div></div>
-        <div class="form-content">
-            <div class="form-item required">
-                <div class="key">维修方式</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.channel">
-                        <a-radio v-for="item of channelList" :key="item.value" :value="item.value" >{{item.text}}</a-radio>
-                    </a-radio-group>
-                </div>
+        <div class="form-block"> <!-- 车辆信息 -->
+            <div class="form-title">
+                <div class="title">车辆信息</div>
             </div>
-            <div class="form-item required">
-                <div class="key">维修类别</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.repair_method">
-                        <a-radio v-for="item of methodList" :key="item.value" :value="item.value" >{{item.text}}</a-radio>
-                    </a-radio-group>
+            <div class="form-content">
+                <div class="form-item required">
+                    <div class="key">维修方式</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.channel">
+                            <a-radio v-for="item of channelList" :key="item.value" :value="item.value">{{ item.text }}
+                            </a-radio>
+                        </a-radio-group>
+                    </div>
                 </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">车辆编号</div>
-                <div class="value">
-                    <a-input v-model:value="form.item_code" placeholder="请输入车辆编号"/>
+                <div class="form-item required">
+                    <div class="key">维修类别</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.repair_method">
+                            <a-radio v-for="item of methodList" :key="item.value" :value="item.value">{{ item.text }}
+                            </a-radio>
+                        </a-radio-group>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="form-block"> <!-- 车主信息 -->
-        <div class="form-title"><div class="title">车主信息</div></div>
-        <div class="form-content">
-            <div class="form-item required">
-                <div class="key">相关客户</div>
-                <div class="value">
-                    <a-select placeholder="请选择相关客户" v-model:value="form.customer_id" @change="handleCustomerSelect" show-search  :disabled="detail.status == REPAIR.STATUS.WAIT_CHECK">
-                        <a-select-option v-for="(item,index) of customerList" :key="index" :value="item.id">{{item.name}}</a-select-option>
-                    </a-select>
-                </div>
-                <div class="sp">
-                    <a-button type="link" @click="routerChange('customer')">新建客户</a-button>
-                    <a-button type="link" @click="getCustomerList('refresh')">刷新</a-button>
-                </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">客户电话</div>
-                <div class="value">
-                    <a-input v-model:value="form.customer_phone" placeholder="请输入客户电话" />
-                </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">客户邮箱</div>
-                <div class="value">
-                    <a-input v-model:value="form.customer_email" placeholder="请输入客户邮箱" />
-                </div>
-            </div>
-            <div class="form-item">
-                <div class="key">维修地址</div>
-                <div class="value">
-                    <AddressCascader @change='handleAddressSelect' :default-address='[form.customer_province, form.customer_city, form.customer_county]' />
-                </div>
-            </div>
-            <div class="form-item" :class="form.channel == 1 ? 'required' : ''">
-                <div class="key">详细地址</div>
-                <div class="value">
-                    <a-input v-model:value="form.customer_address" placeholder="请输入详细地址" />
-                </div>
-            </div>
-            <div class="form-item textarea">
-                <div class="key">工单备注</div>
-                <div class="value">
-                    <a-textarea v-model:value="form.remark" placeholder="请输入工单备注" :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
-                    <span class="content-length">{{form.remark.length}}/500</span>
+                <div class="form-item required">
+                    <div class="key">车辆编号</div>
+                    <div class="value">
+                        <a-input v-model:value="form.item_code" placeholder="请输入车辆编号"/>
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="form-block"> <!-- 车主信息 -->
+            <div class="form-title">
+                <div class="title">车主信息</div>
+            </div>
+            <div class="form-content">
+                <div class="form-item required">
+                    <div class="key">相关客户</div>
+                    <div class="value">
+                        <a-select placeholder="请选择相关客户" v-model:value="form.customer_id" @change="handleCustomerSelect"
+                                  show-search
+                                  :disabled="detail.status == REPAIR.STATUS.WAIT_CHECK">
+                            <a-select-option v-for="(item,index) of customerList" :key="index" :value="item.id">
+                                {{ item.name }}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                    <div class="sp">
+                        <a-button type="link" @click="routerChange('customer')">新建客户</a-button>
+                        <a-button type="link" @click="getCustomerList('refresh')">刷新</a-button>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">客户电话</div>
+                    <div class="value">
+                        <a-input v-model:value="form.customer_phone" placeholder="请输入客户电话"/>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">客户邮箱</div>
+                    <div class="value">
+                        <a-input v-model:value="form.customer_email" placeholder="请输入客户邮箱"/>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <div class="key">维修地址</div>
+                    <div class="value">
+                        <AddressCascader @change='handleAddressSelect'
+                                         :default-address='[form.customer_province, form.customer_city, form.customer_county]'/>
+                    </div>
+                </div>
+                <div class="form-item" :class="form.channel == 1 ? 'required' : ''">
+                    <div class="key">详细地址</div>
+                    <div class="value">
+                        <a-input v-model:value="form.customer_address" placeholder="请输入详细地址"/>
+                    </div>
+                </div>
+                <div class="form-item textarea">
+                    <div class="key">工单备注</div>
+                    <div class="value">
+                        <a-textarea v-model:value="form.remark" placeholder="请输入工单备注"
+                                    :auto-size="{ minRows: 2, maxRows: 6 }"
+                                    :maxlength='500'/>
+                        <span class="content-length">{{ form.remark.length }}/500</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-btns">
+            <a-button @click="handleSubmit" type="primary">确定</a-button>
+            <a-button @click="routerChange('back')">取消</a-button>
+        </div>
     </div>
-<!--    <div class="form-block" > &lt;!&ndash; 维修人员 &ndash;&gt;-->
-<!--        <div class="form-title"><div class="title">维修人员</div></div>-->
-<!--        <div class="form-content">-->
-<!--            <div class="form-item required">-->
-<!--                <div class="key">工单负责人</div>-->
-<!--                <div class="value">-->
-<!--                    <a-select v-model:value="form.repair_user_id" placeholder="请选择工单负责人">-->
-<!--                        <a-select-option v-for="item of staffList" :key="item.id" :value="item.id">{{item.account.name}}</a-select-option>-->
-<!--                    </a-select>-->
-<!--                </div>-->
-<!--                <div class="sp">-->
-<!--                    <a-button type="link" @click="routerChange('staff')">新建员工</a-button>-->
-<!--                    <a-button type="link" @click="getStaffList('refresh')">刷新</a-button>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="form-item">-->
-<!--                <div class="key">计划时间</div>-->
-<!--                <div class="value">-->
-<!--                    <a-date-picker v-model:value="form.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--&lt;!&ndash;            <div class="form-item">&ndash;&gt;-->
-<!--&lt;!&ndash;                <div class="key">完成时间</div>&ndash;&gt;-->
-<!--&lt;!&ndash;                <div class="value">&ndash;&gt;-->
-<!--&lt;!&ndash;                    <a-date-picker v-model:value="form.finish_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>&ndash;&gt;-->
-<!--&lt;!&ndash;                </div>&ndash;&gt;-->
-<!--&lt;!&ndash;            </div>&ndash;&gt;-->
-<!--            <div class="form-item textarea">-->
-<!--                <div class="key">维修备注</div>-->
-<!--                <div class="value">-->
-<!--                    <a-textarea v-model:value="form.repair_message" placeholder="请输入维修备注" :auto-size="{ minRows: 2, maxRows: 2 }" :maxlength='500'/>-->
-<!--                    <span class="content-length">{{form.desc.length}}/500</span>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-    <div class="form-btns">
-        <a-button @click="handleSubmit" type="primary">确定</a-button>
-        <a-button @click="routerChange('back')">取消</a-button>
-    </div>
-</div>
 </template>
 
 <script>
 import Core from '../../core';
 import dayjs from 'dayjs';
+
 const REPAIR = Core.Const.REPAIR
 import AddressCascader from '@/components/common/AddressCascader.vue'
 
 export default {
     name: 'RepairEdit',
-    components: { AddressCascader },
+    components: {AddressCascader},
     props: {},
     data() {
         return {
@@ -172,9 +189,12 @@ export default {
             detail: {
                 status: 0,
             }, // 工单详情
+            create_time: [],
+            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
 
             typeList: REPAIR.TYPE_LIST, // 工单分类
             methodList: REPAIR.METHOD_LIST, // 维修类别
+            serviceList: REPAIR.SERVICE_TYPE_LIST,//工单帐类
             channelList: REPAIR.CHANNEL_LIST, // 维修方式
             priorityList: REPAIR.PRIORITY_LIST, // 紧急程度
             customerList: [], // 车主列表
@@ -186,6 +206,9 @@ export default {
                 type: 1,  // 工单分类
                 name: '', // 工单名称
                 desc: '', // 问题描述
+                service_type: '',//保内维修、保外维修
+                arrival_time: '',//到港时间
+                travel_distance: '',//行程公里数
 
                 channel: 1, // 维修方式、维修途径
                 repair_method: 1, // 维修类别
@@ -248,7 +271,7 @@ export default {
                 case 'staff':  // 详情
                     routeUrl = this.$router.resolve({
                         path: "/user/user-edit",
-                        query: { type: WORKER}
+                        query: {type: WORKER}
                     })
 
                     window.open(routeUrl.href, '_blank')
@@ -260,7 +283,7 @@ export default {
         getCustomerList(val) {
             Core.Api.Customer.list().then(res => {
                 this.customerList = res.list
-                if (val == 'refresh'){
+                if (val == 'refresh') {
                     this.$message.success('刷新成功')
                 }
             })
@@ -275,7 +298,7 @@ export default {
                 org_type: Core.Data.getOrgType(),
             }).then(res => {
                 this.staffList = res.list
-                if (val == 'refresh'){
+                if (val == 'refresh') {
                     this.$message.success('刷新成功')
                 }
             });
@@ -311,7 +334,9 @@ export default {
             // form.finish_time = form.finish_time ? dayjs(form.finish_time).unix() : 0
             console.log('handleSubmit form:', form)
             let checkRes = this.checkFormInput(form);
-            if (!checkRes) { return }
+            if (!checkRes) {
+                return
+            }
 
             let apiName = form.id ? 'update' : 'create'
             Core.Api.Repair[apiName](form).then(() => {
@@ -330,6 +355,18 @@ export default {
             }
             if (!form.priority) {
                 this.$message.warning('请选择工单紧急程度')
+                return 0
+            }
+            if (!form.service_type) {
+                this.$message.warning('请选择工单帐类')
+                return 0
+            }
+            if (!form.travel_distance) {
+                this.$message.warning('请输入行程公里数')
+                return 0
+            }
+            if (!form.arrival_time) {
+                this.$message.warning('请选择到港时间')
                 return 0
             }
             if (!form.name) {
@@ -377,7 +414,7 @@ export default {
                     this.$message.warning('请输入客户邮箱')
                     return 0
                 }
-                if (!form.customer_province && !form.customer_county && !form.customer_county ) {
+                if (!form.customer_province && !form.customer_county && !form.customer_county) {
                     this.$message.warning('请选择客户地址')
                     return 0
                 }
@@ -407,6 +444,20 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-// #RepairEdit {}
+<style lang="less">
+#app {
+    .ant-layout {
+        .ant-input-number {
+            margin-right: 10px;
+        }
+
+        .kilometre {
+            font-size: 12px;
+            line-height: 16px;
+            color: #363D42;
+        }
+    }
+}
+
+
 </style>

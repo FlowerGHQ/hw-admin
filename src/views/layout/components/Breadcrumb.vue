@@ -21,6 +21,7 @@ export default {
     },
     watch: {
         $route(route) {
+            console.log('route', route)
             this.getBreadcrumb();
         }
     },
