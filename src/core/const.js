@@ -18,6 +18,9 @@ switch (window.location.hostname) {
     case "10.0.0.159":
         URL_POINT = 'http://10.0.0.109:8083'
         break;
+    case "10.0.0.128":
+        URL_POINT = 'http://10.0.0.128:8083'
+        break;
     default:
         // URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.109:8083' // 谢耀圣

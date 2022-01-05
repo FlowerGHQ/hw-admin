@@ -52,7 +52,7 @@
             <div class="btn-area">
                 <a-button @click="handleSearch" type="primary">{{$t('def.search')}}</a-button>
                 <a-button @click="handleSearchReset">{{$t('def.reset')}}</a-button>
-                <a-button @click="handleExport">导出</a-button>
+                <a-button @click="handleExportConfirm">导出</a-button>
             </div>
         </div>
         <div class="table-container">
@@ -132,6 +132,8 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
+            // 导出
+            exportDisabled: false,
             // 分页
             currPage: 1,
             pageSize: 20,
@@ -199,20 +201,50 @@ export default {
         this.getStoreList();
     },
     methods: {
-        handleExport(){
-            this.loading = true;
-            console.log('this.searchForm:', this.searchForm)
-            Core.Api.Repair.export({
-                ...this.searchForm,
-                begin_time: this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
-            }).then(res => {
-                console.log("handleExport res:", res)
-            }).catch(err => {
-                console.log('handleExport err:', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+        handleExportConfirm(){ // 确认订单是否导出
+            // this.loading = true;
+            // console.log('this.searchForm:', this.searchForm)
+            // Core.Api.Repair.export({
+            //     ...this.searchForm,
+            //     begin_time: this.create_time[0] || '',
+            //     end_time: this.create_time[1] || '',
+            // }).then(res => {
+            //     console.log("handleExportConfirm res:", res)
+            // }).catch(err => {
+            //     console.log('handleExportConfirm err:', err)
+            // }).finally(() => {
+            //     this.loading = false;
+            // });
+            let _this = this;
+            this.$confirm({
+                title: '确认要导出吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    _this.handleRepairExport();
+                }
+            })
+        },
+        handleRepairExport() { // 订单导出
+            this.exportDisabled = true;
+
+            let form = this.searchForm;
+            let uid = form.uid
+            let orgId = form.org_id ? form.org_id : 0;
+            let beginTime = this.create_time[0] || ''
+            let endTime   = this.create_time[1] || ''
+
+            const token = Core.Data.getToken() || ''
+            // let fileUrl = Core.Const.NET.URL_POINT + '/operator/1/charge-order/export?'
+            let fileUrl = Core.Const.NET.URL_POINT + '/agent/1/repair/export-repair-order-record?'
+            //http://10.0.0.128:8083/agent/1/repair/export-repair-order-record?token=3872b09b0ca6da80bd151e6e43f84bec
+
+            let exportUrl =
+                `${fileUrl}token=${token}&uid=${uid}&org_id=${orgId}&begin_time=${beginTime}&end_time=${endTime}`
+            console.log("handleRepairExport -> exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
+
         },
         routerChange(type, item = {}) {
             console.log('routerChange item:', item)
