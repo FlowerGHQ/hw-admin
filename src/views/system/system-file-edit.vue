@@ -1,40 +1,18 @@
 <template>
-<div id="ItemEdit" class="edit-container">
+<div id="SystemFileEdit" class="edit-container">
     <div class="title-container">
         <div class="title-area">{{ form.id ? '编辑文件' : '新增文件' }}</div>
     </div>
     <div class="form-block">
         <div class="form-title">
-            <div class="title">价格信息</div>
-        </div>
-        <div class="form-content">
-            <div class="form-item required">
-                <div class="key">标准售价</div>
-                <div class="value input-number">
-                    <a-input-number v-model:value="form.price" :min="0" :precision="2" placeholder="0.00"/>
-                    <span>元</span>
-                </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">批发价格</div>
-                <div class="value input-number">
-                    <a-input-number v-model:value="form.original_price" :min="0" :precision="2" placeholder="0.00"/>
-                    <span>元</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="form-block">
-        <div class="form-title">
-            <div class="title">图片信息</div>
+            <div class="title">文件上传</div>
         </div>
         <div class="form-content">
             <div class="form-item img-upload">
-                <div class="key">文件上传</div>
+                <!-- <div class="key">文件上传</div> -->
                 <div class="value">
                     <a-upload name="file" class="image-uploader"
-                        list-type="picture-card" accept='image/*'
+                        list-type="picture-card" accept='.doc,.docx,.xlsx,.video,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document'
                         :file-list="upload.coverList" :action="upload.action"
                         :headers="upload.headers" :data='upload.data'
                         :before-upload="handleImgCheck"
@@ -43,38 +21,6 @@
                             <i class="icon i_upload"/>
                         </div>
                     </a-upload>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="form-block" v-if="form.category_id && configTemp.length">
-        <div class="form-title">
-            <div class="title">文件配置</div>
-        </div>
-        <div class="form-content">
-            <div v-for="(item, index) of configTemp" :key="index" :class="{'form-item':true, required: item.required, textarea: item.type === 'textarea', rich_text: item.type === 'rich_text'}">
-                <div class="key">{{item.name}}</div>
-                <div class="value">
-                    <template v-if="item.type == 'input'">
-                        <a-input :placeholder="`请输入${item.name}`" v-model:value="form.config[index].value"/>
-                    </template>
-                    <template v-if="item.type == 'textarea'">
-                        <a-textarea :placeholder="`请输入${item.name}`" v-model:value="form.config[index].value" :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500'/>
-                        <span class="content-length">{{form.config[index].value.length}}/500</span>
-                    </template>
-                    <template v-if="item.type == 'select'">
-                        <a-select :placeholder="`请选择${item.name}`" v-model:value="form.config[index].value" show-search option-filter-prop="children">
-                            <a-select-option v-for="(val,i) of item.select" :key="i" :value="val" >{{val}}</a-select-option>
-                        </a-select>
-                    </template>
-                    <template v-if="item.type == 'radio'">
-                        <a-radio-group v-model:value="form.config[index].value">
-                            <a-radio v-for="(val,i) of item.select" :key="i" :value="val" >{{val}}</a-radio>
-                        </a-radio-group>
-                    </template>
-                    <template v-if="item.type == 'rich_text'">
-                        <VueTinymce v-model="form.config[index].value" :setting="tinymce_setting"/>
-                    </template>
                 </div>
             </div>
         </div>
@@ -91,7 +37,7 @@ import Core from '../../core';
 import VueTinymce from '@jsdawn/vue3-tinymce';
 
 export default {
-    name: 'ItemEdit',
+    name: 'SystemFileEdit',
     components: {
         VueTinymce
     },
@@ -101,6 +47,7 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
+            detail: {}, // 回显详情
             form: {
                 id: '',
                 name: '',
@@ -144,7 +91,7 @@ export default {
     created() {
         this.form.id = Number(this.$route.query.id) || 0
         if (this.form.id) {
-            this.getItemDetail();
+            this.getSystemFileDetail();
         }
     },
     mounted() {},
@@ -164,7 +111,30 @@ export default {
                     break;
             }
         },
-
+        // 获取商品详情
+        getSystemFileDetail() {
+            this.loading = true;
+            Core.Api.System.fileDetail({
+                id: this.form.id,
+            }).then(res => {
+                console.log('getSystemFileDetail res', res)
+                this.form = res.detail
+                if (this.form.path) {
+                    this.upload.coverList = [{
+                        uid: 1,
+                        name: this.form.path,
+                        url: Core.Const.NET.FILE_URL_PREFIX + this.form.path,
+                        short_path: this.form.path,
+                        status: 'done',
+                    }]
+                }
+                console.log('this.upload.coverList: ', this.upload.coverList);
+            }).catch(err => {
+                console.log('getSystemFileDetail err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
         // 保存、新建 文件
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
@@ -173,10 +143,9 @@ export default {
                 let coverList = this.upload.coverList.map(item => {
                     return item.short_path || item.response.data.filename
                 })
-                console.log('coverList: ', coverList);
-                form.logo = coverList[0]
+                form.path = coverList[0]
             }
-            if (this.configTemp.length) { // ?
+            if (this.configTemp.length) {
                 for (let i = 0; i < this.configTemp.length; i++) {
                     let item = this.configTemp[i]
                     if (item.required && !form.config[i].value) {
@@ -184,7 +153,7 @@ export default {
                     }
                 }
             }
-            Core.Api.Item.save(form).then(() => {
+            Core.Api.System.fileSave(form).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
             }).catch(err => {
@@ -194,25 +163,31 @@ export default {
 
         // 校验图片
         handleImgCheck(file) {
-            const isCanUpType = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'].includes(file.type)
-            if (!isCanUpType) {
-                this.$message.warning('文件格式不正确');
-            }
-            const isLt10M = (file.size / 1024 / 1024) < 10;
-            if (!isLt10M) {
-                this.$message.warning('请上传小于10MB的图片');
-            }
-            return isCanUpType && isLt10M;
+            // const isCanUpType = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'].includes(file.type)
+            // if (!isCanUpType) {
+            //     this.$message.warning('文件格式不正确');
+            // }
+            // const isLt10M = (file.size / 1024 / 1024) < 10;
+            // if (!isLt10M) {
+            //     this.$message.warning('请上传小于10MB的图片');
+            // }
+            // return isCanUpType && isLt10M;
         },
         // 上传图片
         handleCoverChange({ file, fileList }) {
-            console.log("handleCoverChange status:", "file:", file)
-            console.log('fileList: ', fileList);
+            // console.log("handleCoverChange status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                if (file.response && file.response.code < 0) {
+                    return this.$message.error(file.response.message)
+                }
+            }
             this.upload.coverList = fileList
-            this.form.name = fileList[0].name
-            // this.form.path = fileList[0].path
-            // this.form.type = fileList[0].type
-
+            console.log('this.upload.coverList: ', this.upload.coverList);
+            let list = file.name.split('.')
+            if (list) {
+                this.form.name = list[0]
+                this.form.type = list[1]
+            }
         },
 
         handleCategorySelect(val, node) {
@@ -242,12 +217,13 @@ export default {
             console.log('handleCategorySelect config:', config)
             this.form.config = config
         }
+        
     }
 };
 </script>
 
 <style lang="less">
-#ItemEdit {
+#SystemFileEdit {
     .form-block {
         .form-content {
             .form-item {

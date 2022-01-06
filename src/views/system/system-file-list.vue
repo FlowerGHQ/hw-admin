@@ -13,8 +13,11 @@
                         <div class="key">文件类型:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.type" @change="handleTypeSelect" placeholder="请选择文件类型" allow-clear >
-                                <a-select-option  key="10" :value="typeList.ADMIN">平台消息</a-select-option>
-                                <a-select-option  key="20" :value="typeList.AGENT">经销商消息</a-select-option>
+                                <a-select-option  key="xlsx" :value="typeList.XLSX">xlsx</a-select-option>
+                                <a-select-option  key="word" :value="typeList.WORD">word</a-select-option>
+                                <a-select-option  key="doc" :value="typeList.DOC">doc</a-select-option>
+                                <a-select-option  key="docx" :value="typeList.DOCX">docx</a-select-option>
+                                <a-select-option  key="video" :value="typeList.VIDEO">video</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -37,17 +40,13 @@
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, text , record}">
+                    <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
                                 <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}
                                 </a-button>
                             </a-tooltip>
                         </template>
-                        <template v-if="column.dataIndex === 'type'" >
-                            {{ $Util.systemFileTypeFilter(text) }}
-                        </template>
-
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
@@ -97,7 +96,7 @@ export default {
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
-            typeList: Core.Const.NOTICE.TYPE,
+            typeList: Core.Const.SYSTEM.FILE.TYPE,
             searchForm: {
                 id:'',
                 type:undefined,
@@ -111,8 +110,8 @@ export default {
         tableColumns() {
             let columns = [
                 {title: '文件名', dataIndex: 'name', key: 'detail'},
-                {title: '文件类型', dataIndex: 'type'},
-                {title: '地址', dataIndex: 'path'},
+                {title: '文件类型', dataIndex: 'type', key: 'detail'},
+                {title: '地址', dataIndex: 'path', key: 'detail'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right', width: 100,},
             ]
@@ -131,7 +130,7 @@ export default {
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Notice.delete({id}).then(() => {
+                    Core.Api.System.fileDelete({id}).then(() => {
                         _this.$message.success('删除成功');
                         _this.getTableData();
                     }).catch(err => {
