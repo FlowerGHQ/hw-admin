@@ -16,17 +16,22 @@
             </a-collapse-panel>
             <a-collapse-panel key="change" header="零部件更换" class="gray-collapse-panel">
                 <div class="panel-content change">
-                    <a-table :columns="tableColumns" :data-source="faultList" :row-key="record => record.id"
+                    <a-table :columns="tableColumns" :data-source="failList" :row-key="record => {return JSON.stringify(record)}"
                              :pagination='false' size="small">
-                        <template #bodyCell="{ column,record, text }">
-                            <template v-if="column.key === 'money'">
+                        <template #bodyCell="{ column, record, text }">
+                            <template v-if="column.dataIndex === 'service_type'">
+                                {{ $Util.repairServiceFilter(text) }}
+                            </template>
+                            <template v-if="column.dataIndex === 'item_fault_id'">{{ faultMap[text] }}</template>
+
+                            <template v-if="column.dataIndex === 'price'">
                                 ￥{{ $Util.countFilter(text) }}
                             </template>
-                            <template v-if="column.dataIndex === 'item_fault_type'">{{ faultMap[text] }}</template>
                             <template v-if="column.dataIndex === 'amount'">{{ text }}件</template>
-                            <template v-if="column.dataIndex === 'totle_price'">
+                            <template v-if="column.key === 'totle_price' && record">
                                 ￥{{ $Util.countFilter(record.price * record.amount) }}
                             </template>
+
                         </template>
                         <template #summary>
                             <a-table-summary>
@@ -38,15 +43,16 @@
                             </a-table-summary>
                         </template>
                     </a-table>
-                    <a-table :columns="tableColumns" :data-source="exchangeList" :row-key="record => record.id"
+                    <a-table :columns="tableColumns" :data-source="exchangeList" :row-key="record => {return JSON.stringify(record)}"
                              :pagination='false' size="small">
-                        <template #bodyCell="{ column,record, text }">
-                            <template v-if="column.key === 'money'">
+                        <template #bodyCell="{ column, record, text }">
+                            <template v-if="column.dataIndex === 'item_fault_id'">{{ faultMap[text] }}</template>
+
+                            <template v-if="column.dataIndex === 'price'">
                                 ￥{{ $Util.countFilter(text) }}
                             </template>
-                            <template v-if="column.dataIndex === 'item_fault_type'">{{ faultMap[text] }}</template>
                             <template v-if="column.dataIndex === 'amount'">{{ text }}件</template>
-                            <template v-if="column.dataIndex === 'totle_price'">
+                            <template v-if="column.key === 'totle_price' && record">
                                 ￥{{ $Util.countFilter(record.price * record.amount) }}
                             </template>
 
@@ -67,6 +73,7 @@
         </a-collapse>
     </div>
 </template>
+
 
 <script>
 import Core from '../../../core';
@@ -118,11 +125,13 @@ export default {
             // 加载
             loading: false,
             tableColumns: [
-                {title: '故障原因', dataIndex: 'item_fault_type'},
-                {title: '商品名称', dataIndex: 'item_name'},
-                {title: '金额', dataIndex: 'price', key: 'money'},
+                {title: '帐类', dataIndex: 'service_type'},
+                {title: '故障原因', dataIndex: 'item_fault_id'},
+                {title: '商品名称', dataIndex: 'item_name', key: 'item'},
+                {title: '金额', dataIndex: 'price'},
                 {title: '数量', dataIndex: 'amount'},
-                {title: '总价', dataIndex: 'totle_price'},
+                {title: '工时', dataIndex: 'man_hours'},
+                {title: '总价', key: 'totle_price'},
             ],
 
             activeKey: ['affirm', 'change'],
@@ -133,6 +142,10 @@ export default {
     watch: {},
     computed: {},
     mounted() {
+        console.log('CheckResult detail', this.detail);
+        console.log('CheckResult faultList', this.faultList);
+        console.log('CheckResult failList', this.failList);
+        console.log('CheckResult exchangeList', this.exchangeList);
         this.getFaultData();
     },
     methods: {
@@ -180,8 +193,9 @@ export default {
         flex-wrap: wrap;
 
         .ant-table-wrapper {
-            width: calc(~'50% - 10px');
+            width: 100%;
         }
     }
 }
+
 </style>

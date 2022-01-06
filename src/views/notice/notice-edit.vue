@@ -139,6 +139,7 @@ export default {
             Core.Api.Notice.save(form).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
+
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })

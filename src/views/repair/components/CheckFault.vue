@@ -15,7 +15,7 @@
         </div>
     </a-collapse-panel>
     <a-collapse-panel key="change" header="零部件更换" class="gray-collapse-panel">
-        <div class="panel-content change" >
+        <div class="panel-content" >
             <a-collapse v-model:activeKey="failActive" ghost class="collapse-item">
                 <a-collapse-panel v-for="fault of faultSelect" :key="fault" :header="faultMap[fault]">
                     <template #extra>
@@ -216,12 +216,12 @@ export default {
             let itemList = []
             this.faultSelect.forEach(fault => {
                 this.failData[fault].forEach(item => {
-                    item.item_fault_type = fault
+                    item.item_fault_id = Number(fault)
                     item.type = 1
                     itemList.push(item)
                 })
                 this.exchangeData[fault].forEach(item => {
-                    item.item_fault_type = fault
+                    item.item_fault_id = Number(fault)
                     item.type = 2
                     itemList.push(item)
                 })

@@ -172,7 +172,8 @@ export default {
         };
     },
     watch: {
-        'searchForm.agent_id': function(n) {
+        'searchForm.agent_id': function(newVal, oldVal) {
+            console.log('watch searchForm.agent_id newVal', newVal)
             this.getStoreList()
         },
     },

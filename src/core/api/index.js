@@ -202,6 +202,13 @@ const apiList = {
         fileDetail: ['PostJson', 'system-file/detail'],
         fileDelete: ['PostJson', 'system-file/delete'],
     },
+    // Auth: { // 故障管理
+    //     list: ['PostJson', 'auth/role-list'],
+    //     save: ['PostJson', 'auth/role-save'],
+    //     detail: ['PostJson', 'auth/role-detail'],
+    //     delete: ['PostJson', 'auth/role-delete'],
+    //
+    // },
 
 };
 

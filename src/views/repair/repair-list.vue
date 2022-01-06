@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">{{$t('n.repair_list')}}</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('AGENT', 'STORE')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('DISTRIBUTOR', 'AGENT', 'STORE')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
             </div>
         </div>
         <div class="tabs-container colorful">
@@ -25,11 +25,19 @@
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">所属门店:</div>
+                    <div class="key">工单帐类:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.org_id" placeholder="请选择门店" @change="handleSearch">
-                            <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
+                        <a-select placeholder="请选择工单帐类" v-model:value="searchForm.service_type" @keydown.enter='handleSearch'
+                                  allow-clear>
+                            <a-select-option key="1" :value="typeList.IN_REPAIR_TIME">保内维修</a-select-option>
+                            <a-select-option key="2" :value="typeList.OUT_REPAIR_TIME">保外维修</a-select-option>
                         </a-select>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">车辆编号:</div>
+                    <div class="value">
+                        <a-input placeholder="请输入车辆编号" v-model:value="searchForm.vehicle_no" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
@@ -37,6 +45,22 @@
                     <div class="value">
                         <a-select v-model:value="searchForm.distributor_id" placeholder="请选择分销商" @change="handleSearch">
                             <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
+                    <div class="key">所属经销商:</div>
+                    <div class="value">
+                        <a-select v-model:value="searchForm.agent_id" placeholder="请选择经销商" @change="handleSearch">
+                            <a-select-option v-for="item of agentList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">所属门店:</div>
+                    <div class="value">
+                        <a-select v-model:value="searchForm.org_id" placeholder="请选择门店" @change="handleSearch">
+                            <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
@@ -52,7 +76,7 @@
             <div class="btn-area">
                 <a-button @click="handleSearch" type="primary">{{$t('def.search')}}</a-button>
                 <a-button @click="handleSearchReset">{{$t('def.reset')}}</a-button>
-                <a-button @click="handleExportConfirm">导出</a-button>
+                <a-button @click="handleExportConfirm">{{$t('def.export')}}</a-button>
             </div>
         </div>
         <div class="table-container">
@@ -153,14 +177,20 @@ export default {
             create_time: [],
             distributorList: [], // 分销商下拉框数据
             storeList: [],
+            agentList: [],
+            typeList: Core.Const.REPAIR.SERVICE_TYPE_LIST,
             searchForm: {
                 uid: '',
                 org_id:undefined,
+                agent_id: undefined,
                 distributor_id:undefined,
                 status: undefined,
                 channel: '',
                 repair_method: '',
                 repair_user_org_type:'',
+                service_type: undefined,
+                vehicle_no: '',
+
             },
             filteredInfo: null,
 
@@ -195,10 +225,23 @@ export default {
     },
     mounted() {
         this.getTableData();
-        if (this.loginType === LOGIN_TYPE.ADMIN) {
-            this.getDistributorListAll();
-        }
-        this.getStoreList();
+        Core.Util.loginAuth(LOGIN_TYPE.ADMIN).then(
+            this.getDistributorListAll
+        )
+        Core.Util.loginAuth(
+            LOGIN_TYPE.ADMIN,
+            LOGIN_TYPE.DISTRIBUTOR
+        ).then(
+            this.getAgentListAll
+        )
+        Core.Util.loginAuth(
+            LOGIN_TYPE.ADMIN,
+            LOGIN_TYPE.AGENT,
+            LOGIN_TYPE.DISTRIBUTOR
+        ).then(
+            this.getStoreList
+        )
+
     },
     methods: {
         handleExportConfirm(){ // 确认订单是否导出
@@ -293,6 +336,13 @@ export default {
             }).then(res => {
                 this.storeList = res.list
                 this.storeList.push({id:-1,name:"经销商"})
+            });
+        },
+        getAgentListAll() {
+            Core.Api.Agent.listAll().then(res => {
+                console.log('res.list: ', res.list);
+                this.agentList = res.list
+                this.agentList.push({id:-1,name:"经销商"})
             });
         },
         getDistributorListAll() {

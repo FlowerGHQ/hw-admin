@@ -4,24 +4,9 @@
             <div class="title-container">
                 <div class="title-area">故障列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('ADMIN')"><i class="icon i_add" />新增工单</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('ADMIN')"><i class="icon i_add"/>新增故障
+                    </a-button>
                 </div>
-            </div>
-            <div class="search-container">
-                <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">故障名称:</div>
-                        <div class="value">
-                            <a-input placeholder="请输入故障名称" v-model:value="searchForm.name"
-                                     @keydown.enter='handleSearch'/>
-                        </div>
-                    </a-col>
-                </a-row>
-                <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">查询</a-button>
-                    <a-button @click="handleSearchReset">重置</a-button>
-                </div>
-
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -29,7 +14,7 @@
                     <template #bodyCell="{ column, text , record}">
                         <template v-if="column.dataIndex === 'name'">
                             <a-tooltip placement="top" :title='text'>
-                                <a-button type="link" >{{ text }}</a-button>
+                                <a-button type="link">{{ text }}</a-button>
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'time'">
@@ -81,8 +66,8 @@ export default {
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
-            searchForm: {
-                name: '',
+            form: {
+                id: '',
             },
 
             tableColumns: [
@@ -141,7 +126,7 @@ export default {
             this.loading = false;
             // return
             Core.Api.Fault.list({
-                ...this.searchForm,
+                ...this.form,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
                 page: this.currPage,

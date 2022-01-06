@@ -5,6 +5,10 @@
         <a-row class="panel-content info-container">
             <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                 <div class="info-item">
+                    <div class="key">工单帐类</div>
+                    <div class="value">{{$Util.repairServiceFilter(detail.service_type || '-') }}</div>
+                </div>
+                <div class="info-item">
                     <div class="key">工单名称</div>
                     <div class="value">{{detail.name || '-'}}</div>
                 </div>

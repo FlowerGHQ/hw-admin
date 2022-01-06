@@ -34,6 +34,10 @@
             </div>
             <div class="panel-content">
                 <div class="info-item">
+                    <div class="key">工单帐类</div>
+                    <div class="value">{{$Util.repairServiceFilter(detail.service_type || '-') }}</div>
+                </div>
+                <div class="info-item">
                     <div class="key">创建人</div>
                     <div class="value">{{detail.user_name || '-'}}</div>
                 </div>
@@ -74,7 +78,7 @@
         <div class="form-container">
             <Distribution :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DISTRIBUTION && ($auth('AGENT')||$auth('STORE'))"/>
             <CheckFault :id='id' :detail='detail' @submit="getRepairDetail" ref="CheckFault"  v-if="detail.status == STATUS.WAIT_DETECTION && ($auth('AGENT')||$auth('STORE'))"/>
-            <CheckResult :id='id' :detail='detail' :faultList="faultList" :failList="failList" :exchangeList="exchangeList" :failTotle="failTotle" :exchangeTotle="exchangeTotle"  ref="CheckResult" v-if="detail.status != STATUS.WAIT_DISTRIBUTION && detail.status != STATUS.WAIT_DETECTION && detail.status != STATUS.WAIT_CHECK" />
+            <CheckResult :id='id' :detail='detail' :faultList="faultList" :failList="failList" :exchangeList="exchangeList" :failTotle="failTotle" :exchangeTotle="exchangeTotle"  ref="CheckResult" v-if="resultShow && (detail.status != STATUS.WAIT_DISTRIBUTION && detail.status != STATUS.WAIT_DETECTION && detail.status != STATUS.WAIT_CHECK)"/>
             <RepairInfo :id='id' :detail='detail' />
             <ActionLog :id='id' :detail='detail' />
         </div>
@@ -191,6 +195,7 @@ export default {
             failTotle: 0,
             exchangeTotle: 0,
             exchangeList: [],
+            resultShow: false,
 
 
             stepsList: [
@@ -247,7 +252,7 @@ export default {
             }).then(res => {
                 console.log('getRepairDetail res', res)
                 this.detail = res
-                this.getRepairItemList();
+                this.resultShow = false
                 this.getRepairFaultList();
                 this.step(this.detail.status)
             }).catch(err => {
@@ -388,13 +393,14 @@ export default {
             }
 
         },
-        getRepairFaultList(){
+        getRepairFaultList() {
             Core.Api.RepairItem.faultList({
                 repair_order_id: this.id
             }).then(res => {
-                console.log('getRepairFaultList res.fault_list', res.fault_list)
-                this.faultList = res.fault_list.map(i => i.item_fault_type)
+                console.log('getRepairFaultList res', res)
+                this.faultList = res.fault_list.map(i => i.item_fault_id)
                 console.log('getRepairFaultList this.faultList', this.faultList)
+                this.getRepairItemList();
             })
         },
 
@@ -402,6 +408,8 @@ export default {
             Core.Api.RepairItem.list({
                 repair_order_id: this.id
             }).then(res => {
+                console.log('getRepairItemList res', res)
+
                 let failList = []
                 let failTotle = 0
                 let exchangeList = []
@@ -417,14 +425,21 @@ export default {
                         exchangeTotle += it.amount * it.price
                     }
                 })
-                console.log('this.failList:', this.failList)
-                console.log('this.exchangeList:', this.exchangeList)
+
                 this.failList = failList
                 this.failTotle = failTotle
                 this.exchangeList = exchangeList
                 this.exchangeTotle = exchangeTotle
+
+                console.log('this.failList:', this.failList)
+                console.log('this.exchangeList:', this.exchangeList)
                 console.log('this.exchangeTotle:', this.exchangeTotle)
+
+                this.resultShow = true
+                console.log('this.resultShow:', this.resultShow)
+
             })
+
         },
     }
 };

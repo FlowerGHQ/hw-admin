@@ -216,7 +216,6 @@ export default {
                     window.open(routeUrl.href, '_self')
                     break;
             }
-
         },
         getUnreadCount() {    // 获取 未读消息数 数据
             Core.Api.Notice.list().then(res => {

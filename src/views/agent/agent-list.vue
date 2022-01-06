@@ -139,6 +139,7 @@
 <script>
 import Core from '../../core';
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE
+
 export default {
     name: 'AgentList',
     components: {},
@@ -168,7 +169,6 @@ export default {
             },
             tableData: [],
             statusList: Core.Const.ORG_STATUS_LIST,
-
         };
     },
     watch: {},
@@ -182,7 +182,7 @@ export default {
                 { title: '状态', dataIndex: 'status', key: 'status' },
                 { title: '操作', key: 'operation', fixed: 'right'},
             ]
-            if (this.$auth('ADMIN')) {
+            if (this.$auth('ADMIN', 'DISTRIBUTOR')) {
                 tableColumns.splice(1, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'name'})
             }
             return tableColumns
@@ -190,7 +190,7 @@ export default {
     },
     mounted() {
         this.getTableData();
-        if (this.loginType === LOGIN_TYPE.ADMIN) {
+        if (this.loginType === LOGIN_TYPE.ADMIN || LOGIN_TYPE.DISTRIBUTOR) {
             this.getDistributorListAll();
         }
     },

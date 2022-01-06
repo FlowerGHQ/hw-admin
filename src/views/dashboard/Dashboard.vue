@@ -79,6 +79,7 @@ export default {
     },
     props: {},
     data() {
+
         return {
             org_type: '',
             dateList: [],
