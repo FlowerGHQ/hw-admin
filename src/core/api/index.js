@@ -194,7 +194,12 @@ const apiList = {
         save: ['PostJson', 'item-fault/save'],
         detail: ['PostJson', 'item-fault/detail'],
         delete: ['PostJson', 'item-fault/delete'],
-
+    },
+    System: { // 系统管理
+        fileList: ['PostJson', 'system-file/list'], // 系统文件管理
+        fileSave: ['PostJson', 'system-file/save'],
+        fileDetail: ['PostJson', 'system-file/detail'],
+        fileDelete: ['PostJson', 'system-file/delete'],
     },
 };
 

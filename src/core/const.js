@@ -400,6 +400,17 @@ let Const = {
         },
 
     },
+    SYSTEM: { //系统
+        FILE: {
+            TYPE:{
+                XLSX: 'xlsx',  
+                WORD: 'word',  
+                DOC: 'doc',  
+                DOCX: 'docx',  
+                VIDEO: 'video', 
+            }
+        },
+    },
     REFUND: {
         TYPE: {
             APPLY_BY_CUSTOMER: 100,  //用户申请

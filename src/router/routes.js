@@ -704,6 +704,51 @@ const routes = [
             },
         ]
     },
+    {   // 系统管理
+        path: '/system',
+        component: Layout,
+        redirect: '/system/system-file-list',
+        name: 'SystemManagement',
+        hidden: false,
+        meta: {
+            title: '系统管理',
+            icon: 'i_s_temp',
+            // auth: ['dashboard'],
+            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+        },
+        children: [
+            {
+                path: 'system-file-list',
+                name: 'SystemFileList',
+                component: () => import('@/views/system/system-file-list.vue'),
+                meta: {
+                    title: '系统文件',
+                }
+            },
+            {
+                path: 'system-file-edit',
+                name: 'SystemFileEdit',
+                component: () => import('@/views/system/system-file-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '新增消息',
+                    parent: '/system/system-file-list',
+                }
+
+            },
+            {
+                path: 'system-file-detail',
+                name: 'SystemFileDetail',
+                component: () => import('@/views/system/system-file-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '消息详情',
+                    parent: '/system/system-file-list',
+                }
+            },
+        ]
+
+    },
     {   // 系统消息
         path: '/notice',
         component: Layout,
