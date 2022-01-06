@@ -111,15 +111,6 @@ export default {
                 this.$router.replace({ path: '/dashboard' })
             }, 1000)
             return
-            Core.Api.AuthRole.userMenu({id: userId}).then(res =>{
-                console.log('getAuthority res', res)
-                res.list.forEach(it => {
-                    authorityMap[it] = true
-                })
-                console.log('getAuthority authorityMap', authorityMap)
-                Core.Data.setAuthority(authorityMap)
-                this.$router.replace({ path: '/dashboard' })
-            })
 
         }
     }

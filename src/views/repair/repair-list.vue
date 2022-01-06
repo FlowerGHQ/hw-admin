@@ -24,16 +24,14 @@
                         <a-input placeholder="请输入工单编号" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">工单帐类:</div>
                     <div class="value">
-                        <a-select placeholder="请选择工单帐类" v-model:value="searchForm.service_type" @keydown.enter='handleSearch'
-                                  allow-clear>
-                            <a-select-option key="1" :value="typeList.IN_REPAIR_TIME">保内维修</a-select-option>
-                            <a-select-option key="2" :value="typeList.OUT_REPAIR_TIME">保外维修</a-select-option>
+                        <a-select placeholder="请选择工单帐类" v-model:value="searchForm.service_type" @keydown.enter='handleSearch' allow-clear>
+                            <a-select-option v-for="item of typeList" :key="item.value" :value="item.value">{{item.text}}</a-select-option>
                         </a-select>
                     </div>
-                </a-col>
+                </a-col> -->
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">车辆编号:</div>
                     <div class="value">
@@ -74,10 +72,12 @@
                 </a-col>
             </a-row>
             <div class="btn-area">
+                <a-button @click="handleExportConfirm">{{$t('def.export')}}</a-button>
                 <a-button @click="handleSearch" type="primary">{{$t('def.search')}}</a-button>
                 <a-button @click="handleSearchReset">{{$t('def.reset')}}</a-button>
-                <a-button @click="handleExportConfirm">{{$t('def.export')}}</a-button>
             </div>
+        </div>
+        <div class="operate-container">
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -109,6 +109,9 @@
                     </template>
                     <template v-if="column.dataIndex === 'repair_method'">
                         {{$Util.repairMethodFilter(text)}}
+                    </template>
+                    <template v-if="column.dataIndex === 'service_type'">
+                        {{$Util.repairServiceFilter(text)}}
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
@@ -188,9 +191,8 @@ export default {
                 channel: '',
                 repair_method: '',
                 repair_user_org_type:'',
-                service_type: undefined,
+                service_type: '',
                 vehicle_no: '',
-
             },
             filteredInfo: null,
 
@@ -207,6 +209,8 @@ export default {
                 { title: '工单编号', dataIndex: 'uid', key: 'detail' },
                 { title: '工单名称', dataIndex: 'name', key: 'tip_item' },
                 { title: '紧急程度', dataIndex: 'priority' },
+                { title: '工单帐类', dataIndex: 'service_type',
+                    filters: Core.Const.REPAIR.SERVICE_TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.service_type || null },
                 { title: '维修方式', dataIndex: 'channel',
                     filters: Core.Const.REPAIR.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.channel || null },
                 { title: '维修类别', dataIndex: 'repair_method',
@@ -225,15 +229,18 @@ export default {
     },
     mounted() {
         this.getTableData();
+
         Core.Util.loginAuth(LOGIN_TYPE.ADMIN).then(
             this.getDistributorListAll
         )
+
         Core.Util.loginAuth(
             LOGIN_TYPE.ADMIN,
             LOGIN_TYPE.DISTRIBUTOR
         ).then(
             this.getAgentListAll
         )
+
         Core.Util.loginAuth(
             LOGIN_TYPE.ADMIN,
             LOGIN_TYPE.AGENT,
@@ -244,51 +251,6 @@ export default {
 
     },
     methods: {
-        handleExportConfirm(){ // 确认订单是否导出
-            let _this = this;
-            this.$confirm({
-                title: '确认要导出吗？',
-                okText: '确定',
-                cancelText: '取消',
-                onOk() {
-                    _this.handleRepairExport();
-                }
-            })
-        },
-        handleRepairExport() { // 订单导出
-            this.exportDisabled = true;
-
-            let form = this.searchForm;
-            let uid = form.uid || ''
-            let type = form.type || 0
-            let status = form.status || 0
-            let distributorId = form.distributorId || 0
-            let agentId = form.agentId || 0
-            let storeId = form.storeId || 0
-            let orgId = form.org_id ? form.org_id : 0
-            let orgType = form.orgType || 0
-            let itemId = form.itemId || 0
-            let channel = form.channel || 0
-            let vehicleId = form.vehicleId || 0
-            let repairMethod = form.repairMethod || 0
-            let beginTime = this.create_time[0] || ''
-            let endTime   = this.create_time[1] || ''
-
-            const token = Core.Data.getToken() || ''
-            // let fileUrl = Core.Const.NET.URL_POINT + '/operator/1/charge-order/export?'
-            let fileUrl = Core.Const.NET.URL_POINT + '/agent/1/repair/export-repair-order-record?'
-            //http://10.0.0.128:8083/agent/1/repair/export-repair-order-record?token=3872b09b0ca6da80bd151e6e43f84bec
-
-            let exportUrl =
-                `${fileUrl}token=${token}&uid=${uid}&type=${type}&status=${status}&distributor_id=${distributorId}
-                &agent_id=${agentId}&store_id=${storeId}&org_id=${orgId}&org_type=${orgType}&item_id=${itemId}
-                &item_id=${itemId}&channel=${channel}&vehicle_id=${vehicleId}&repair_method=${repairMethod}
-                &begin_time=${beginTime}&end_time=${endTime}`
-            console.log("handleRepairExport -> exportUrl", exportUrl)
-            window.open(exportUrl, '_blank')
-            this.exportDisabled = false;
-
-        },
         routerChange(type, item = {}) {
             console.log('routerChange item:', item)
             let routeUrl = ''
@@ -329,6 +291,7 @@ export default {
             this.create_time = []
             this.pageChange(1);
         },
+
         getStoreList() {
             Core.Api.Store.list({
                 page: 0,
@@ -352,6 +315,7 @@ export default {
                 this.distributorList.push({id:-1,name:"分销商"})
             });
         },
+
         handleTableChange(page, filters, sorter) {
             console.log('handleTableChange filters:', filters)
             this.filteredInfo = filters;
@@ -388,7 +352,7 @@ export default {
                 this.getStatusStat()
             });
         },
-         getStatusStat() {  // 获取 表格 数据
+        getStatusStat() {  // 获取 状态数量
             this.loading = true;
             Object.assign(this.statusList, this.$options.data().statusList)
             Core.Api.Repair.statusList({
@@ -416,6 +380,49 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
+        },
+
+        handleExportConfirm(){ // 确认订单是否导出
+            let _this = this;
+            this.$confirm({
+                title: '确认要导出吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    _this.handleRepairExport();
+                }
+            })
+        },
+        handleRepairExport() { // 订单导出
+            this.exportDisabled = true;
+
+            let form = this.searchForm;
+            let uid = form.uid || ''
+            let type = form.type || 0
+            let status = form.status || 0
+            let distributorId = form.distributorId || 0
+            let agentId = form.agentId || 0
+            let storeId = form.storeId || 0
+            let orgId = form.org_id ? form.org_id : 0
+            let orgType = form.orgType || 0
+            let itemId = form.itemId || 0
+            let channel = form.channel || 0
+            let vehicleId = form.vehicleId || 0
+            let repairMethod = form.repairMethod || 0
+            let beginTime = this.create_time[0] || ''
+            let endTime   = this.create_time[1] || ''
+
+            const token = Core.Data.getToken() || ''
+            let fileUrl = Core.Const.NET.URL_POINT + '/agent/1/repair/export-repair-order-record?'
+
+            let exportUrl =
+                `${fileUrl}token=${token}&uid=${uid}&type=${type}&status=${status}&distributor_id=${distributorId}
+                &agent_id=${agentId}&store_id=${storeId}&org_id=${orgId}&org_type=${orgType}&item_id=${itemId}
+                &item_id=${itemId}&channel=${channel}&vehicle_id=${vehicleId}&repair_method=${repairMethod}
+                &begin_time=${beginTime}&end_time=${endTime}`
+            console.log("handleRepairExport -> exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
         },
     }
 };

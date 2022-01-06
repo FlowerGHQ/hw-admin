@@ -4,33 +4,42 @@
             <div class="title-container">
                 <div class="title-area">角色管理</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleRoleShow()" class="menu-item-btn"><i
-                        class="icon i_add"/>新建角色
-                    </a-button>
+                    <a-button type="primary" @click="handleRoleShow()" class="menu-item-btn"><i class="icon i_add"/>新建角色</a-button>
                 </div>
             </div>
+            <!-- <div class="search-container">
+                <a-row class="search-area">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
+                        <div class="key">角色名称:</div>
+                        <div class="value">
+                            <a-input placeholder="请输入角色名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                        </div>
+                    </a-col>
+                </a-row>
+                <div class="btn-area">
+                    <a-button @click="handleSearch" type="primary">查询</a-button>
+                    <a-button @click="handleSearchReset">重置</a-button>
+                </div>
+            </div> -->
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                         :row-key="record => record.id" :pagination='false'>
+                    :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.dataIndex === 'name'">
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'tip_item'">
                             <a-tooltip placement="top" :title='text'>
-                                <div class="ell" style="max-width: 30em">{{text || '-'}}</div>
+                                <div class="ell" style="max-width: 40em">{{text || '-'}}</div>
                             </a-tooltip>
                         </template>
-                        <template v-if="column.dataIndex === 'create_time'">
+                        <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="handleRoleShow(record)"><i class="icon i_edit"/> 编辑描述
-                            </a-button>
-                            <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/> 编辑权限
-                            </a-button>
-                            <a-button type='link' @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除
-                            </a-button>
+                            <a-button type='link' @click="handleRoleShow(record)"><i class="icon i_edit"/>编辑描述</a-button>
+                            <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/>设置权限</a-button>
+                            <a-button type='link' danger @click="handleDelete(record.id)"><i class="icon i_delete"/>删除</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -62,14 +71,14 @@
                 <div class="form-item textarea">
                     <div class="key">角色描述:</div>
                     <div class="value">
-                        <a-textarea v-model:value="form.remark" placeholder="请输入角色描述" :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='300'/>
-                        <span class="content-length">{{form.remark.length}}/300</span>
+                        <a-textarea v-model:value="form.remark" placeholder="请输入角色描述" :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                        <span class="content-length">{{form.remark.length}}/99</span>
                     </div>
                 </div>
             </div>
             <template class="form-btns" #footer>
                 <a-button key="back" type="primary" @click="handleRoleSubmit">确定</a-button>
-                <a-button @click="roleShow=false" >取消</a-button>
+                <a-button @click="roleShow = false">取消</a-button>
             </template>
         </a-modal>
     </div>
@@ -92,61 +101,44 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            create_time: [],
+            searchForm: {
+                name: '',
+            },
+
+            // 表格数据
+            tableData: [],
+            tableColumns: [
+                {title: '角色名称', dataIndex: 'name'},
+                {title: '角色描述', dataIndex: 'remark', key: 'tip_item' },
+                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
+                {title: '操作', key: 'operation', fixed: 'right', width: 100,},
+            ],
+            // 弹框
             roleShow: false,
             form: {
                 id: '',
                 name: '',
                 remark: '',
             },
-            storeList: [],
-            // 表格数据
-            tableData: [],
-            tableColumns: [
-                {title: '角色', dataIndex: 'name'},
-                {title: '描述', dataIndex: 'remark', key: 'tip_item' },
-                {title: '创建时间', dataIndex: 'create_time'},
-                {title: '操作', key: 'operation', fixed: 'right', width: 100,},
-            ],
-            // 账户参数获取
-            orgId: 0,
         };
     },
     watch: {},
     computed: {},
     mounted() {
         this.getTableData();
-        this.orgId = Core.Data.getOrgId();
-        console.log("orgId" + this.orgId);
     },
     methods: {
         routerChange(type, item = {}) {
             console.log(item)
             let routeUrl = ''
             switch (type) {
-                case 'detail':    // 详情
+                case 'edit':    // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/auth/auth-role-detail",
+                        path: "/auth/auth-role-edit",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
-            }
-        },
-        handleRoleShow(item) {
-            console.log('handleRoleShow item', item)
-            if (item) {
-                this.form.id = item.account_id
-            }
-            this.roleShow = true;
-        },
-        handleRoleClose() {
-            this.roleShow = false;
-            this.form = {
-                id: '',
-                name: '',
-                remark: '',
             }
         },
         pageChange(curr) {    // 页码改变
@@ -158,31 +150,18 @@ export default {
             this.pageSize = size
             this.getTableData()
         },
-        handleRoleSubmit() {
-            let form = Core.Util.deepCopy(this.form)
-            console.log('handleLogin form:', form)
-            if (!form.name) {
-                return this.$message.warning('请输入角色名称')
-            }
-            if (!form.remark) {
-                return this.$message.warning('请输入角色描述')
-            }
-
-            this.loading = true;
-            Core.Api.AuthRole.save(this.form).then(() => {
-                this.$message.success('保存成功')
-                this.handleRoleClose();
-                this.pageChange(1);
-            }).catch(err => {
-                console.log('handleRoleSubmit err:', err)
-            })
+        handleSearch() {  // 搜索
+            this.pageChange(1);
         },
+        handleSearchReset() {  // 重置搜索
+            Object.assign(this.searchForm, this.$options.data().searchForm)
+            this.pageChange(1);
+        },
+
         getTableData() {    // 获取 表格 数据
             this.loading = true;
-            Core.Api.AuthRole.list({
-                ...this.form,
-                begin_time: this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
+            Core.Api.Authority.roleList({
+                ...this.searchForm,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -196,6 +175,43 @@ export default {
             });
         },
 
+
+        // 新建角色
+        handleRoleShow(item) {
+            if (item) {
+                console.log('handleRoleShow item:', item)
+                this.form.id = item.id
+                this.form.name = item.name
+                this.form.remark = item.remark
+            }
+            this.roleShow = true;
+        },
+        handleRoleClose() {
+            this.roleShow = false;
+            this.form = {
+                id: '',
+                name: '',
+                remark: '',
+            }
+        },
+        handleRoleSubmit() {
+            let form = Core.Util.deepCopy(this.form)
+            console.log('handleRoleSubmit form:', form)
+            if (!form.name) {
+                return this.$message.warning('请输入角色名称')
+            }
+
+            this.loading = true;
+            Core.Api.Authority.roleEdit(this.form).then(() => {
+                this.$message.success('保存成功')
+                this.handleRoleClose();
+                this.getTableData();
+            }).catch(err => {
+                console.log('handleRoleSubmit err:', err)
+            })
+        },
+
+        // 删除角色
         handleDelete(id) {
             let _this = this;
             this.$confirm({
@@ -204,17 +220,15 @@ export default {
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.AuthRole.delete({id}).then(() => {
+                    Core.Api.Authority.roleDelete({id}).then(() => {
                         _this.$message.success('删除成功');
                         _this.getTableData();
-                        _this.pageChange(1);
                     }).catch(err => {
-                        console.log("handleDelete -> err", err);
+                        console.log("handleDelete err", err);
                     })
                 },
             });
         },
-
     }
 };
 </script>

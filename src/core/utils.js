@@ -1,3 +1,5 @@
+import {Modal} from 'ant-design-vue';
+
 import Data from './data';
 import Const from './const';
 import dayjs from "dayjs";
