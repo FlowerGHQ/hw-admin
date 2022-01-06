@@ -625,7 +625,7 @@ const routes = [
             title: '系统管理',
             icon: 'i_s_temp',
             // auth: ['dashboard'],
-            roles: [LOGIN_TYPE.ADMIN],
+            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
         },
         children: [
             {

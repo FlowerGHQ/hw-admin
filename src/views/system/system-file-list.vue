@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">系统文件列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建文件</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="loginType === USER_TYPE.ADMIN"><i class="icon i_add"/>新建文件</a-button>
                 </div>
             </div>
             <div class="search-container">
@@ -50,9 +50,10 @@
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
-                        <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 编辑</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button>
+                        <template v-if="column.key === 'operation'" >
+                            <a-button type="link" @click="routerChange('edit',record)" v-if="loginType === USER_TYPE.ADMIN"><i class="icon i_edit"/> 编辑</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" v-if="loginType === USER_TYPE.ADMIN"><i class="icon i_delete"/> 删除</a-button>
+                            <a-button type="link" @click="handleDownloadConfirm(record)" v-if="loginType !== USER_TYPE.ADMIN"><i class="icon i_edit"/> 下载</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -76,19 +77,22 @@
     </div>
 </template>
 <script>
-const provinceData = ['China'];
 import Core from '../../core';
 
-
+const provinceData = ['China'];
+const USER_TYPE = Core.Const.USER.TYPE;
 export default {
     name: 'NoticeList',
     components: {},
     props: {},
     data() {
         return {
+            USER_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
+            // 下载
+            downloadDisabled: false,
             // 分页
             currPage: 1,
             pageSize: 20,
@@ -122,22 +126,23 @@ export default {
         this.getTableData();
     },
     methods: {
-        handleDelete(id) {
+        handleDownloadConfirm(record){ // 下载问询
             let _this = this;
             this.$confirm({
-                title: '确定要删除该文件吗？',
+                title: '确认要下载吗？',
                 okText: '确定',
-                okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.System.fileDelete({id}).then(() => {
-                        _this.$message.success('删除成功');
-                        _this.getTableData();
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
-                },
-            });
+                    _this.handleDownload(record);
+                }
+            })
+        },
+        handleDownload(record) { // 下载
+            this.downloadDisabled = true;
+            const path = record.path
+            let fileUrl = Core.Const.NET.FILE_URL_PREFIX + path + ''
+            window.open(fileUrl, '_blank')
+            this.downloadDisabled = false;
         },
         routerChange(type, item = {}) {
             console.log(item)
@@ -185,6 +190,23 @@ export default {
             for (const key in filters) {
                 this.searchForm[key] = filters[key] ? filters[key][0] : 0
             }
+        },
+        handleDelete(id) { // 删
+            let _this = this;
+            this.$confirm({
+                title: '确定要删除该文件吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.System.fileDelete({id}).then(() => {
+                        _this.$message.success('删除成功');
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
