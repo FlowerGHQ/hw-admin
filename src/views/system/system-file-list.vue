@@ -2,9 +2,9 @@
     <div id="NoticeList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">消息列表</div>
+                <div class="title-area">系统文件列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建消息</a-button>
+                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建文件</a-button>
                 </div>
             </div>
             <div class="search-container">
@@ -18,7 +18,7 @@
                             </a-select>
                         </div>
                     </a-col>
-<!--                    <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
+                   <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
                         <div class="key">创建时间:</div>
                         <div class="value">
                             <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
@@ -26,7 +26,7 @@
                                 <template #suffixIcon><i class="icon i_calendar"></i></template>
                             </a-range-picker>
                         </div>
-                    </a-col>-->
+                    </a-col>
                 </a-row>
                 <div class="btn-area">
                     <a-button @click="handleSearch" type="primary">查询</a-button>
@@ -45,7 +45,7 @@
                             </a-tooltip>
                         </template>
                         <template v-if="column.dataIndex === 'type'" >
-                            {{ $Util.noticeTypeFilter(text) }}
+                            {{ $Util.systemFileTypeFilter(text) }}
                         </template>
 
                         <template v-if="column.key === 'time'">
@@ -110,11 +110,11 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: '标题', dataIndex: 'title', key: 'detail'},
+                {title: '文件名', dataIndex: 'name', key: 'detail'},
                 {title: '类型', dataIndex: 'type'},
+                {title: '地址', dataIndex: 'path'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right', width: 100,},
-
             ]
             return columns
         },
@@ -146,14 +146,14 @@ export default {
             switch (type) {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/notice/notice-edit",
+                        path: "/system/system-file-edit",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/notice/notice-detail",
+                        path: "/system/system-file-detail",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
@@ -189,9 +189,7 @@ export default {
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-            this.loading = false;
-            // return
-            Core.Api.Notice.list({
+            Core.Api.System.fileList({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',

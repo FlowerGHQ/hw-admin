@@ -429,6 +429,15 @@ const Util = {
         const MAP = Core.Const.NOTICE.TYPE_MAP
         return MAP[val] || '未知'
     },
+    /* =============== 系统消息 ================ */
+
+    /* =============== 系统文件 ================ */
+    systemFileTypeFilter(val) {
+        // const MAP = Core.Const.NOTICE.TYPE_MAP
+        // return MAP[val] || '未知'
+    },
+    /* =============== 系统文件 ================ */
+    
     /* =============== 退款管理 ================ */
     refundTypeFilter(val) {
         const MAP = Core.Const.REFUND.TYPE_MAP

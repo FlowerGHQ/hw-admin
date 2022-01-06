@@ -338,7 +338,7 @@ export default {
                 this.getStatusStat()
             });
         },
-         getStatusStat() {  // 获取 表格 数据
+        getStatusStat() {  // 获取 表格 数据
             this.loading = true;
             Object.assign(this.statusList, this.$options.data().statusList)
             Core.Api.Repair.statusList({
