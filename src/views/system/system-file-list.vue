@@ -10,9 +10,9 @@
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
-                        <div class="key">消息类型:</div>
+                        <div class="key">文件类型:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.type" @change="handleTypeSelect" placeholder="请选择消息类型" allow-clear >
+                            <a-select v-model:value="searchForm.type" @change="handleTypeSelect" placeholder="请选择文件类型" allow-clear >
                                 <a-select-option  key="10" :value="typeList.ADMIN">平台消息</a-select-option>
                                 <a-select-option  key="20" :value="typeList.AGENT">经销商消息</a-select-option>
                             </a-select>
@@ -111,7 +111,7 @@ export default {
         tableColumns() {
             let columns = [
                 {title: '文件名', dataIndex: 'name', key: 'detail'},
-                {title: '类型', dataIndex: 'type'},
+                {title: '文件类型', dataIndex: 'type'},
                 {title: '地址', dataIndex: 'path'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right', width: 100,},
@@ -126,7 +126,7 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该消息吗？',
+                title: '确定要删除该文件吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',

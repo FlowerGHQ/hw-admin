@@ -408,14 +408,12 @@ const Util = {
     },
     /* =============== 采购单 ================ */
 
-
     /* =============== 员工/账号/用户 ================ */
     userTypeFilter(val) {
         const MAP = Const.USER.TYPE_MAP
         return MAP[val] || '未知'
     },
     /* =============== 员工/账号/用户 ================ */
-
 
     /* =============== 物流信息 ================ */
     waybillCompanyFilter(key) {
@@ -430,13 +428,6 @@ const Util = {
         return MAP[val] || '未知'
     },
     /* =============== 系统消息 ================ */
-
-    /* =============== 系统文件 ================ */
-    systemFileTypeFilter(val) {
-        // const MAP = Core.Const.NOTICE.TYPE_MAP
-        // return MAP[val] || '未知'
-    },
-    /* =============== 系统文件 ================ */
     
     /* =============== 退款管理 ================ */
     refundTypeFilter(val) {
