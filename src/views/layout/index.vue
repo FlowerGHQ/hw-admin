@@ -55,8 +55,8 @@
                                         </div>
                                     </div>
                                     <template #footer>
-                                        <a-button key="back" @click="handleEditSubmit">确定</a-button>
-                                        <a-button @click="passShow=false" type="primary">取消</a-button>
+                                        <a-button key="back" @click="handleEditSubmit" type="primary">确定</a-button>
+                                        <a-button @click="passShow=false">取消</a-button>
                                     </template>
                                 </a-modal>
                             </a-menu-item>

@@ -348,16 +348,16 @@ const routes = [
                     parent: '/warehouse/warehouse-list',
                 }
             },
-            // {
-            //     path: 'warehouse-detail',
-            //     name: 'WarehouseDetail',
-            //     component: () => import('@/views/warehouse/warehouse-detail.vue'),
-            //     hidden: true,
-            //     meta: {
-            //         title: '仓库详情',
-            //         parent: '/warehouse/warehouse-list',
-            //     }
-            // },
+            {
+                path: 'warehouse-detail',
+                name: 'WarehouseDetail',
+                component: () => import('@/views/warehouse/warehouse-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '仓库详情',
+                    parent: '/warehouse/warehouse-list',
+                }
+            },
         ]
     },
     {   // 商品 - 平台端

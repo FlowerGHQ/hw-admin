@@ -436,7 +436,7 @@ let Const = {
 
         },
     },
-    Distributor: {
+    DISTRIBUTOR: {
         TYPE: {
             INTERNAL: 1,  //国内
             EXPORT: 2, //出口
@@ -445,7 +445,13 @@ let Const = {
             1: '国内',
             2: '出口',
         },
-    }
+    },
+
+    ATTACHMENT: {
+        TARGET_TYPE: {
+            REPAIR_ORDER: 1, //图片类型
+        }
+    },
 };
 
 export default Const;

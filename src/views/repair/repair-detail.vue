@@ -76,8 +76,9 @@
         </div>
         -->
         <div class="form-container">
-            <Distribution :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DISTRIBUTION && ($auth('AGENT')||$auth('STORE'))"/>
-            <CheckFault :id='id' :detail='detail' @submit="getRepairDetail" ref="CheckFault"  v-if="detail.status == STATUS.WAIT_DETECTION && ($auth('AGENT')||$auth('STORE'))"/>
+            <Distribution :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DISTRIBUTION && ($auth('DISTRIBUTOR')||$auth('AGENT')||$auth('STORE'))"/>
+            <CheckFault :id='id' :detail='detail' @submit="getRepairDetail" ref="CheckFault"  v-if="detail.status == STATUS.WAIT_DETECTION && ($auth('DISTRIBUTOR')||$auth('AGENT')||$auth('STORE'))"/>
+            <AttachmentFile  :target_id='id' :detail='detail' @submit="getRepairDetail" ref="AttachmentFile"  v-if="detail.status == STATUS.WAIT_DETECTION &&($auth('DISTRIBUTOR')|| $auth('AGENT')||$auth('STORE'))"/>
             <CheckResult :id='id' :detail='detail' :faultList="faultList" :failList="failList" :exchangeList="exchangeList" :failTotle="failTotle" :exchangeTotle="exchangeTotle"  ref="CheckResult" v-if="resultShow && (detail.status != STATUS.WAIT_DISTRIBUTION && detail.status != STATUS.WAIT_DETECTION && detail.status != STATUS.WAIT_CHECK)"/>
             <RepairInfo :id='id' :detail='detail' />
             <ActionLog :id='id' :detail='detail' />
@@ -149,6 +150,7 @@ import Distribution from './components/Distribution.vue';
 import ActionLog from './components/ActionLog.vue';
 import MySteps from '@/components/MySteps.vue';
 import dayjs from "dayjs";
+import AttachmentFile from './components/AttachmentFile.vue';
 
 const REPAIR = Core.Const.REPAIR
 const User = Core.Data.getUser();
@@ -156,6 +158,7 @@ const OrgType = Core.Data.getOrgType();
 export default {
     name: 'RepairDetail',
     components: {
+        AttachmentFile,
         CheckFault,
         CheckResult,
         RepairInfo,
@@ -216,6 +219,7 @@ export default {
         console.log(User.id)
     },
     methods: {
+
         // 页面跳转
         routerChange(type, item) {
             let routeUrl
@@ -487,7 +491,7 @@ export default {
         }
     }
     .panel-content.affirm {
-        > .title {
+         .title {
             color: #DD5D5D;
             margin-bottom: 24px;
             i.icon {

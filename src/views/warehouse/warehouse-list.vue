@@ -33,11 +33,11 @@
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text , record}">
-<!--                    <template v-if="column.key === 'detail'">-->
-<!--                        <a-tooltip placement="top" :title='text'>-->
-<!--                            <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>-->
-<!--                        </a-tooltip>-->
-<!--                    </template>-->
+                    <template v-if="column.key === 'detail'">
+                        <a-tooltip placement="top" :title='text'>
+                            <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
+                        </a-tooltip>
+                    </template>
                     <template v-if="column.key === 'address'">
                         {{ $Util.addressFilter(record) }}
                     </template>
@@ -95,7 +95,7 @@ export default {
             },
 
             tableColumns: [
-                {title: '仓库名称', dataIndex: 'name'},
+                {title: '仓库名称', dataIndex: 'name',key: 'detail',},
                 {title: '仓库地址', key:'address', dataIndex: 'province'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right' },
@@ -120,13 +120,13 @@ export default {
                     })
                     window.open(routeUrl.href, '_self')
                     break;
-                // case 'detail':    // 详情
-                //     routeUrl = this.$router.resolve({
-                //         path: "/warehouse/warehouse-detail",
-                //         query: {id: item.id}
-                //     })
-                //     window.open(routeUrl.href, '_blank')
-                //     break;
+                case 'detail':    // 详情
+                    routeUrl = this.$router.resolve({
+                        path: "/warehouse/warehouse-detail",
+                        query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
             }
         },
         pageChange(curr) {    // 页码改变

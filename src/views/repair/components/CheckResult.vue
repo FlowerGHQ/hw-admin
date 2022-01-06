@@ -20,7 +20,8 @@
                              :pagination='false' size="small">
                         <template #bodyCell="{ column, record, text }">
                             <template v-if="column.dataIndex === 'service_type'">
-                                {{ $Util.repairServiceFilter(text) }}
+                                {{$Util.repairServiceFilter(detail.service_type || '-') }}
+
                             </template>
                             <template v-if="column.dataIndex === 'item_fault_id'">{{ faultMap[text] }}</template>
 
@@ -36,38 +37,38 @@
                         <template #summary>
                             <a-table-summary>
                                 <a-table-summary-row>
-                                    <a-table-summary-cell :index="0" :col-span="4">合计</a-table-summary-cell>
-                                    <a-table-summary-cell :index="1" :col-span="2">￥{{ $Util.countFilter(failTotle) }}
+                                    <a-table-summary-cell :index="0" :col-span="6">合计</a-table-summary-cell>
+                                    <a-table-summary-cell :index="1" :col-span="6">￥{{ $Util.countFilter(failTotle) }}
                                     </a-table-summary-cell>
                                 </a-table-summary-row>
                             </a-table-summary>
                         </template>
                     </a-table>
-                    <a-table :columns="tableColumns" :data-source="exchangeList" :row-key="record => {return JSON.stringify(record)}"
-                             :pagination='false' size="small">
-                        <template #bodyCell="{ column, record, text }">
-                            <template v-if="column.dataIndex === 'item_fault_id'">{{ faultMap[text] }}</template>
+<!--                    <a-table :columns="tableColumns" :data-source="exchangeList" :row-key="record => {return JSON.stringify(record)}"-->
+<!--                             :pagination='false' size="small">-->
+<!--                        <template #bodyCell="{ column, record, text }">-->
+<!--                            <template v-if="column.dataIndex === 'item_fault_id'">{{ faultMap[text] }}</template>-->
 
-                            <template v-if="column.dataIndex === 'price'">
-                                ￥{{ $Util.countFilter(text) }}
-                            </template>
-                            <template v-if="column.dataIndex === 'amount'">{{ text }}件</template>
-                            <template v-if="column.key === 'totle_price' && record">
-                                ￥{{ $Util.countFilter(record.price * record.amount) }}
-                            </template>
+<!--                            <template v-if="column.dataIndex === 'price'">-->
+<!--                                ￥{{ $Util.countFilter(text) }}-->
+<!--                            </template>-->
+<!--                            <template v-if="column.dataIndex === 'amount'">{{ text }}件</template>-->
+<!--                            <template v-if="column.key === 'totle_price' && record">-->
+<!--                                ￥{{ $Util.countFilter(record.price * record.amount) }}-->
+<!--                            </template>-->
 
-                        </template>
-                        <template #summary>
-                            <a-table-summary>
-                                <a-table-summary-row>
-                                    <a-table-summary-cell :index="0" :col-span="4">合计</a-table-summary-cell>
-                                    <a-table-summary-cell :index="1" :col-span="2">
-                                        ￥{{ $Util.countFilter(exchangeTotle) }}
-                                    </a-table-summary-cell>
-                                </a-table-summary-row>
-                            </a-table-summary>
-                        </template>
-                    </a-table>
+<!--                        </template>-->
+<!--                        <template #summary>-->
+<!--                            <a-table-summary>-->
+<!--                                <a-table-summary-row>-->
+<!--                                    <a-table-summary-cell :index="0" :col-span="4">合计</a-table-summary-cell>-->
+<!--                                    <a-table-summary-cell :index="1" :col-span="2">-->
+<!--                                        ￥{{ $Util.countFilter(exchangeTotle) }}-->
+<!--                                    </a-table-summary-cell>-->
+<!--                                </a-table-summary-row>-->
+<!--                            </a-table-summary>-->
+<!--                        </template>-->
+<!--                    </a-table>-->
                 </div>
             </a-collapse-panel>
         </a-collapse>
@@ -169,6 +170,7 @@ export default {
                 this.loading = false;
             });
         },
+
     }
 };
 </script>
