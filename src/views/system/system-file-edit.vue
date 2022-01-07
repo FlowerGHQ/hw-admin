@@ -9,15 +9,14 @@
         </div>
         <div class="form-content">
             <div class="form-item img-upload">
-                <!-- <div class="key">文件上传</div> -->
                 <div class="value">
                     <a-upload name="file" class="image-uploader"
-                        list-type="picture-card" accept='.doc,.docx,.xlsx,.video,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-                        :file-list="upload.coverList" :action="upload.action"
+                        list-type="picture-card"
+                        :file-list="upload.fileList" :action="upload.action"
                         :headers="upload.headers" :data='upload.data'
                         :before-upload="handleImgCheck"
-                        @change="handleCoverChange">
-                        <div class="image-inner" v-if="upload.coverList.length < 1">
+                        @change="handleFileChange">
+                        <div class="image-inner" v-if="upload.fileList.length < 1">
                             <i class="icon i_upload"/>
                         </div>
                     </a-upload>
@@ -56,13 +55,13 @@ export default {
             configTemp: [],
             upload: {
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
-                coverList: [],
+                fileList: [],
                 headers: {
                     ContentType: false
                 },
                 data: {
                     token: Core.Data.getToken(),
-                    type: 'img',
+                    type: 'file',
                 },
             },
         };
@@ -78,17 +77,9 @@ export default {
     mounted() {},
     methods: {
         routerChange(type, item) {
-            let routeUrl
             switch (type) {
                 case 'back':
                     this.$router.go(-1)
-                    break;
-                case 'detail':  // 详情
-                    routeUrl = this.$router.resolve({
-                        path: "/item/item-detail",
-                        query: {id: item.id}
-                    })
-                    window.open(routeUrl.href, '_self')
                     break;
             }
         },
@@ -101,7 +92,7 @@ export default {
                 console.log('getSystemFileDetail res', res)
                 this.form = res.detail
                 if (this.form.path) {
-                    this.upload.coverList = [{
+                    this.upload.fileList = [{
                         uid: 1,
                         name: this.form.path,
                         url: Core.Const.NET.FILE_URL_PREFIX + this.form.path,
@@ -109,7 +100,7 @@ export default {
                         status: 'done',
                     }]
                 }
-                console.log('this.upload.coverList: ', this.upload.coverList);
+                console.log('this.upload.fileList: ', this.upload.fileList);
             }).catch(err => {
                 console.log('getSystemFileDetail err', err)
             }).finally(() => {
@@ -120,11 +111,11 @@ export default {
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
             console.log('form:', form)
-            if (this.upload.coverList.length) {
-                let coverList = this.upload.coverList.map(item => {
+            if (this.upload.fileList.length) {
+                let fileList = this.upload.fileList.map(item => {
                     return item.short_path || item.response.data.filename
                 })
-                form.path = coverList[0]
+                form.path = fileList[0]
             }
             if (this.configTemp.length) {
                 for (let i = 0; i < this.configTemp.length; i++) {
@@ -142,28 +133,29 @@ export default {
             })
         },
 
-        // 校验图片
+        // 校验文件
         handleImgCheck(file) {
-            // const isCanUpType = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'].includes(file.type)
-            // if (!isCanUpType) {
-            //     this.$message.warning('文件格式不正确');
-            // }
-            // const isLt10M = (file.size / 1024 / 1024) < 10;
-            // if (!isLt10M) {
-            //     this.$message.warning('请上传小于10MB的图片');
-            // }
-            // return isCanUpType && isLt10M;
+            console.log('handleImgCheck file.type', file.type)
+            if (file.type.includes('image/')) {
+                this.upload.data.type = 'img'
+            } else if (file.type.includes('video/')) {
+                this.upload.data.type = 'video'
+            } else if (file.type.includes('audio/')) {
+                this.upload.data.type = 'audio'
+            } else {
+                this.upload.data.type = 'file'
+            }
+            return true
         },
-        // 上传图片
-        handleCoverChange({ file, fileList }) {
-            // console.log("handleCoverChange status:", file.status, "file:", file)
+        // 上传文件
+        handleFileChange({ file, fileList }) {
+            console.log("handleFileChange status:", file.status, "file:", file)
             if (file.status == 'done') {
                 if (file.response && file.response.code < 0) {
                     return this.$message.error(file.response.message)
                 }
             }
-            this.upload.coverList = fileList
-            console.log('this.upload.coverList: ', this.upload.coverList);
+            this.upload.fileList = fileList
             let list = file.name.split('.')
             if (list) {
                 this.form.name = list[0]

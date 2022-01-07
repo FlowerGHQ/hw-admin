@@ -439,17 +439,15 @@ let Const = {
         FILE: {
             TYPE:{
                 XLSX: 'xlsx',
-                WORD: 'word',
                 DOC: 'doc',
                 DOCX: 'docx',
-                VIDEO: 'video',
+                AVI: 'avi',
             },
             TYPE_LIST: [
                 {value: 'xlsx', text: '表格'},
-                {value: 'word', text: '表格'},
-                {value: 'doc', text: '表格'},
-                {value: 'docx', text: '表格'},
-                {value: 'video', text: '表格'},
+                {value: 'doc', text: '文档(doc)'},
+                {value: 'docx', text: '文档(docx)'},
+                {value: 'avi', text: '视频'},
             ]
         },
     },
