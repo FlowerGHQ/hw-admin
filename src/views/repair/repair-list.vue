@@ -101,6 +101,9 @@
                             {{$Util.repairPriorityFilter(text)}}
                         </div>
                     </template>
+                    <template v-if="column.dataIndex === 'service_type'">
+                        {{$Util.repairServiceFilter(text)}}
+                    </template>
                     <template v-if="column.dataIndex === 'channel'">
                         {{$Util.repairChannelFilter(text)}}
                     </template>

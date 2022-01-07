@@ -469,6 +469,12 @@ let Const = {
         {list: [], select: [], key: 'notice',  name: '消息管理' },
         {list: [], select: [], key: 'system-file', name: '系统文件管理' },
     ],
+
+    ATTACHMENT: {
+        TARGET_TYPE: {
+            REPAIR_ORDER: 1, //图片类型
+        }
+    },
 };
 
 export default Const;

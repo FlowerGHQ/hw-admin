@@ -12,7 +12,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
                         <div class="key">文件类型:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.type" @change="handleTypeSelect" placeholder="请选择文件类型" allow-clear >
+                            <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择文件类型" allow-clear >
                                 <a-select-option  key="xlsx" :value="typeList.XLSX">xlsx</a-select-option>
                                 <a-select-option  key="word" :value="typeList.WORD">word</a-select-option>
                                 <a-select-option  key="doc" :value="typeList.DOC">doc</a-select-option>
@@ -21,7 +21,7 @@
                             </a-select>
                         </div>
                     </a-col>
-                   <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="16" :xxl='16' class="search-item">
                         <div class="key">创建时间:</div>
                         <div class="value">
                             <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
@@ -41,19 +41,16 @@
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record }">
-                        <template v-if="column.key === 'detail'">
-                            <a-tooltip placement="top" :title='text'>
-                                <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}
-                                </a-button>
-                            </a-tooltip>
+                        <template v-if="column.key === 'text'">
+                            {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'" >
+                            <a-button type="link" @click="handleDownloadConfirm(record)"><i class="icon i_edit"/> 下载</a-button>
                             <a-button type="link" @click="routerChange('edit',record)" v-if="loginType === USER_TYPE.ADMIN"><i class="icon i_edit"/> 编辑</a-button>
                             <a-button type="link" @click="handleDelete(record.id)" v-if="loginType === USER_TYPE.ADMIN"><i class="icon i_delete"/> 删除</a-button>
-                            <a-button type="link" @click="handleDownloadConfirm(record)" v-if="loginType !== USER_TYPE.ADMIN"><i class="icon i_edit"/> 下载</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -79,7 +76,6 @@
 <script>
 import Core from '../../core';
 
-const provinceData = ['China'];
 const USER_TYPE = Core.Const.USER.TYPE;
 export default {
     name: 'NoticeList',
@@ -103,7 +99,7 @@ export default {
             typeList: Core.Const.SYSTEM.FILE.TYPE,
             searchForm: {
                 id:'',
-                type:undefined,
+                type: undefined,
             },
             tableData: [],
 
@@ -113,9 +109,9 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: '文件名', dataIndex: 'name', key: 'detail'},
-                {title: '文件类型', dataIndex: 'type', key: 'detail'},
-                {title: '地址', dataIndex: 'path', key: 'detail'},
+                {title: '文件名', dataIndex: 'name', key: 'text'},
+                {title: '文件类型', dataIndex: 'type', key: 'text'},
+                {title: '地址', dataIndex: 'path', key: 'text'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right', width: 100,},
             ]
@@ -126,24 +122,6 @@ export default {
         this.getTableData();
     },
     methods: {
-        handleDownloadConfirm(record){ // 下载问询
-            let _this = this;
-            this.$confirm({
-                title: '确认要下载吗？',
-                okText: '确定',
-                cancelText: '取消',
-                onOk() {
-                    _this.handleDownload(record);
-                }
-            })
-        },
-        handleDownload(record) { // 下载
-            this.downloadDisabled = true;
-            const path = record.path
-            let fileUrl = Core.Const.NET.FILE_URL_PREFIX + path + ''
-            window.open(fileUrl, '_blank')
-            this.downloadDisabled = false;
-        },
         routerChange(type, item = {}) {
             console.log(item)
             let routeUrl = ''
@@ -164,9 +142,6 @@ export default {
                     break;
             }
         },
-        handleTypeSelect(val) {
-            this.type = val
-        },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
             this.getTableData()
@@ -185,29 +160,6 @@ export default {
             this.create_time = []
             this.pageChange(1);
         },
-        handleTableChange(page, filters, sorter) {
-            console.log('handleTableChange filters:', filters)
-            for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : 0
-            }
-        },
-        handleDelete(id) { // 删
-            let _this = this;
-            this.$confirm({
-                title: '确定要删除该文件吗？',
-                okText: '确定',
-                okType: 'danger',
-                cancelText: '取消',
-                onOk() {
-                    Core.Api.System.fileDelete({id}).then(() => {
-                        _this.$message.success('删除成功');
-                        _this.getTableData();
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
-                },
-            });
-        },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             Core.Api.System.fileList({
@@ -225,6 +177,43 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
+        },
+
+        handleDelete(id) { // 删
+            let _this = this;
+            this.$confirm({
+                title: '确定要删除该文件吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.System.fileDelete({id}).then(() => {
+                        _this.$message.success('删除成功');
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
+
+        handleDownloadConfirm(record){ // 下载问询
+            let _this = this;
+            this.$confirm({
+                title: '确认要下载吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    _this.handleDownload(record);
+                }
+            })
+        },
+        handleDownload(record) { // 下载
+            this.downloadDisabled = true;
+            const path = record.path
+            let fileUrl = Core.Const.NET.FILE_URL_PREFIX + path + ''
+            window.open(fileUrl, '_blank')
+            this.downloadDisabled = false;
         },
     }
 };

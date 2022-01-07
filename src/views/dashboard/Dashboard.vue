@@ -65,6 +65,20 @@
             </div>
         </div>
     </div>
+    <div class="statistic-container seven-three">
+        <div class="statistic-content">
+        </div>
+        <div class="statistic-content">
+            <div class="title-container">系统文件</div>
+            <div class="rank-container">
+                <div class="rank-item" v-for="(item,index) of systeFmileData" :key="index">
+                    <div class="number" :class="index < 3 ? 'color' : ''">{{index + 1}}</div>
+                    <div class="name">{{item.name}}</div>
+                    <a-button class="count" type="link" @click="handleDownloadConfirm(item)"><i class="icon i_edit"/>下载</a-button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </template>
 
@@ -83,6 +97,10 @@ export default {
         return {
             org_type: '',
             dateList: [],
+            // 加载
+            loading: false,
+            // 下载
+            downloadDisabled: false,
 
             stat: {
                 purchase: 2673092,
@@ -94,6 +112,9 @@ export default {
 
             repairRank: [],
             repairChart: {},
+
+            systeFmile: [],
+            systeFmileData: [],
         };
     },
     watch: {},
@@ -144,6 +165,7 @@ export default {
                 this.getPurchaseRank();
                 this.getRepairRank();
                 this.getRepairChart();
+                this.getSystemFile();
             }, 100)
         },
 
@@ -171,6 +193,40 @@ export default {
             list = list.map((item,i) => ({name: item.name, count: item.count + Math.round(Math.random() * 100)}))
 
             this.repairRank = list.reverse()
+        },
+        getSystemFile() { // 系统文件信息获取
+            this.loading = true;
+            Core.Api.System.fileList({
+                begin_time: '',
+                end_time: '',
+                page: 1,
+                page_size: 7
+            }).then(res => {
+                console.log("getSystemFile res:", res)
+                this.systeFmileData = res.list;
+            }).catch(err => {
+                console.log('getSystemFile err:', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        handleDownloadConfirm(item){ // 下载问询
+            let _this = this;
+            this.$confirm({
+                title: '确认要下载吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    _this.handleDownload(item);
+                }
+            })
+        },
+        handleDownload(item) { // 下载
+            this.downloadDisabled = true;
+            let path = item.path
+            let fileUrl = Core.Const.NET.FILE_URL_PREFIX + path + ''
+            window.open(fileUrl, '_blank')
+            this.downloadDisabled = false;
         },
 
         getPurchaseChart() {

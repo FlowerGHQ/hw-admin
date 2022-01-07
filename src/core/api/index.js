@@ -172,6 +172,7 @@ const apiList = {
 		detailByTarget: ['PostJson', 'waybill/detail-by-target'],
 		queryLogistics: ['PostJson', 'waybill/query-logistics'],
 		update: ['PostJson', 'waybill/update'],
+
 	},
     Refund: { // 退款管理
         list: ['PostJson', 'order-refund-record/list'],
@@ -196,11 +197,19 @@ const apiList = {
         delete: ['PostJson', 'item-fault/delete'],
     },
     System: { // 系统管理
-        fileList: ['PostJson', 'system-file/list'], // 系统文件管理
-        fileSave: ['PostJson', 'system-file/save'],
-        fileDetail: ['PostJson', 'system-file/detail'],
-        fileDelete: ['PostJson', 'system-file/delete'],
+        fileList: ['PostJson', 'sys-file/list'], // 系统文件管理
+        fileSave: ['PostJson', 'sys-file/save'],
+        fileDetail: ['PostJson', 'sys-file/detail'],
+        fileDelete: ['PostJson', 'sys-file/delete'],
     },
+
+    Attachment: { // 附件管理
+        list: ['PostJson', 'attachment/list'],
+        save: ['PostJson', 'attachment/save'],
+        delete: ['PostJson', 'attachment/delete'],
+        update: ['PostJson', 'attachment/update'],
+    },
+
 };
 
 export default new Api(baseUrl, apiList);

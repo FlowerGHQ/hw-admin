@@ -348,16 +348,16 @@ const routes = [
                     parent: '/warehouse/warehouse-list',
                 }
             },
-            // {
-            //     path: 'warehouse-detail',
-            //     name: 'WarehouseDetail',
-            //     component: () => import('@/views/warehouse/warehouse-detail.vue'),
-            //     hidden: true,
-            //     meta: {
-            //         title: '仓库详情',
-            //         parent: '/warehouse/warehouse-list',
-            //     }
-            // },
+            {
+                path: 'warehouse-detail',
+                name: 'WarehouseDetail',
+                component: () => import('@/views/warehouse/warehouse-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '仓库详情',
+                    parent: '/warehouse/warehouse-list',
+                }
+            },
         ]
     },
     {   // 商品 - 平台端
@@ -713,8 +713,6 @@ const routes = [
         meta: {
             title: '系统管理',
             icon: 'i_s_temp',
-            // auth: ['dashboard'],
-            roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
             {
@@ -731,18 +729,9 @@ const routes = [
                 component: () => import('@/views/system/system-file-edit.vue'),
                 hidden: true,
                 meta: {
-                    title: '新增消息',
+                    title: '系统文件编辑',
                     parent: '/system/system-file-list',
-                }
-            },
-            {
-                path: 'system-file-detail',
-                name: 'SystemFileDetail',
-                component: () => import('@/views/system/system-file-detail.vue'),
-                hidden: true,
-                meta: {
-                    title: '消息详情',
-                    parent: '/system/system-file-list',
+                    roles: [LOGIN_TYPE.ADMIN],
                 }
             },
         ]
