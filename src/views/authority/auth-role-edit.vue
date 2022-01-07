@@ -25,7 +25,15 @@
             <div class="form-title">
                 <div class="title-colorful">权限分配</div>
             </div>
-            <div class="form-content">
+            <div class="form-content long-key">
+                <template v-for="item of authItems" :key="item.key">
+                    <div class="form-item afs" v-if="item.list.length">
+                        <div class="key">{{item.name}}:</div>
+                        <div class="value">
+                            <a-checkbox-group :options="item.list" v-model:value="item.select"/>
+                        </div>
+                    </div>
+                </template>
             </div>
         </div>
         <div class="form-btns">
@@ -37,6 +45,8 @@
 
 <script>
 import Core from '../../core';
+
+const AUTH_LIST_TEMP = Core.Const.AUTH_LIST_TEMP
 
 export default {
     name: 'AuthRoleEdit',
@@ -51,6 +61,8 @@ export default {
             id: '',
             detail: {},
 
+            authItems: Core.Util.deepCopy(AUTH_LIST_TEMP),
+
             form: {
                 id: '',
                 name: '',
@@ -64,7 +76,6 @@ export default {
         this.form.id = Number(this.$route.query.id) || 0
         if (this.form.id) {
             this.getAuthRoleDetail();
-            this.getRoleSelectedAuth();
         }
         this.getAuthOptions()
     },
@@ -74,7 +85,7 @@ export default {
                 case 'back': this.$router.go(-1); break;
             }
         },
-        getAuthRoleDetail() {
+        getAuthRoleDetail() { // 获取角色详情
             this.loading = true;
             Core.Api.Authority.roleDetail({
                 id: this.form.id,
@@ -90,12 +101,23 @@ export default {
                 this.loading = false;
             });
         },
-
         getAuthOptions() { // 获取 某个身份下 可选的权限项
-            Core.Api.Authority.authOptions({
-                user_type: Core.Data.getOrgType(),
+            let apiName = this.$auth('ADMIN') ? 'allOptions' : 'authOptions'
+            Core.Api.Authority[apiName]({
+                org_type: Core.Data.getOrgType(),
             }).then(res => {
                 console.log('getAuthOptions res:', res)
+                let list = res.list
+                list.map(auth => {
+                    let key = auth.key.split('.')[0];
+                    let item = this.authItems.find(i => key === i.key);
+                    if (item) {
+                        item.list.push({ value: auth.id, label: auth.name });
+                    }
+                })
+                if (this.form.id) {
+                    this.getRoleSelectedAuth();
+                }
             }).catch(err => {
                 console.log('getAuthOptions err:', err)
             })
@@ -105,6 +127,13 @@ export default {
                 role_id: this.form.id,
             }).then(res => {
                 console.log('getRoleSelectedAuth res:', res)
+                res.list.forEach(auth => {
+                    let key = auth.key.split('.')[0];
+                    let item = this.authItems.find(i => key === i.key);
+                    if (item) {
+                        item.select.push(auth.id);
+                    }
+                })
             }).catch(err => {
                 console.log('getRoleSelectedAuth err:', err)
             })
@@ -116,9 +145,13 @@ export default {
             if (!form.name) {
                 return this.$message.warning('请输入角色名称')
             }
-            return
+            let list = []
+            for (const item of this.authItems) {
+                list.push(...item.select)
+            }
             Core.Api.Authority.roleEdit({
                 ...form,
+                authority_ids: list.join(','),
             }).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
@@ -131,5 +164,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #AuthRoleEdit {}
+#AuthRoleEdit {
+    .long-key {
+        .key {
+            width: 100px;
+        }
+        .value {
+            width: calc(~'100% - 100px');
+        }
+    }
+}
 </style>

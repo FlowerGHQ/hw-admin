@@ -454,6 +454,30 @@ div.ant-input-number {
         }
     }
 }
+// 复选框
+div.ant-checkbox-group {
+    font-size: 12px;
+    min-height: 32px;
+    .fac();
+
+    .ant-checkbox-wrapper {
+        font-size: 12px;
+        line-height: 16px;
+        color: #363D42;
+        .fac();
+        span.ant-checkbox {
+            width: 14px;
+            height: 14px;
+            .ant-checkbox-inner {
+                width: 14px;
+                height: 14px;
+                &::after {
+                    left: 2px;
+                }
+            }
+        }
+    }
+}
 // 单选框
 .ant-radio-group {
     font-size: 12px;
@@ -464,6 +488,7 @@ div.ant-input-number {
         color: #363D42;
     }
 }
+
 // 选择框
 div.ant-select:not(.ant-select-customize-input) {
     .ant-select-selector {

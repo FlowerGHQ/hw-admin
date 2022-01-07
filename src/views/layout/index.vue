@@ -8,10 +8,10 @@
                 <a-tag color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType] }}端</a-tag>
             </div>
             <div class="header-right">
-                <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
+                <!-- <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
                     <i class="icon" :class="lang =='zh' ? 'i_zh-en' : 'i_en-zh'"/>
                 </a-button>
-                <a-divider type="vertical"/>
+                <a-divider type="vertical"/> -->
                 <a-button class="notice" type="link">
                     <a-badge :count="un_count"  @click="routerChange('notice')">
                         <i class="icon i_notify" />
@@ -27,9 +27,6 @@
                     </a-button>
                     <template #overlay>
                         <a-menu style="text-align: center;">
-                            <a-menu-item>
-                                <a-button type="link" @click="handleLogout" class="menu-item-btn">退 出</a-button>
-                            </a-menu-item>
                             <a-menu-item>
                                 <a-button type="link" @click="handleEditShow" class="menu-item-btn">修改密码</a-button>
                                 <a-modal v-model:visible="passShow" title="修改密码" class="password-edit-modal" :after-close="handleEditClose">
@@ -59,6 +56,9 @@
                                         <a-button @click="passShow=false">取消</a-button>
                                     </template>
                                 </a-modal>
+                            </a-menu-item>
+                            <a-menu-item>
+                                <a-button type="link" @click="handleLogout" class="menu-item-btn">退 出</a-button>
                             </a-menu-item>
                         </a-menu>
                     </template>

@@ -21,16 +21,8 @@
                     <div class="key">类型:</div>
                     <div class="value">
                         <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择员工类型" allow-clear>
-                            <a-select-option  key="20" :value="loginType">普通员工</a-select-option>
-                            <a-select-option  key="40" value="40">维修工</a-select-option>
-                        </a-select>
-                    </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">门店:</div>
-                    <div class="value">
-                        <a-select placeholder="请选择门店" v-model:value="searchForm.store_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
-                            <a-select-option v-for="(item,index) of storeList" :key="index" :value="item.id">{{item.name}}</a-select-option>
+                            <a-select-option :value="userType">普通员工</a-select-option>
+                            <a-select-option :value="USER_TYPE.WORKER">维修工</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
@@ -49,11 +41,10 @@
             </div>
         </div>
         <div class="table-container">
-            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                              :row-key="record => record.id" :pagination='false'>
+            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.dataIndex === 'type'">
-                        {{ $Util.userTypeFilter(text) }}
+                        {{ text === USER_TYPE.WORKER ? '维修工' : '普通员工' }}
                     </template>
                     <template v-if="column.dataIndex === 'flag_admin'">
                         {{ text ? '是' : '否' }}
@@ -70,26 +61,26 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type="link" @click="handleEditShow(record)"><i class="icon i_lock"/> 重置密码</a-button>
-                        <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/> 编辑</a-button>
-                        <a-button type='link' @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button>
+                        <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/>编辑</a-button>
+                        <a-button type="link" @click="handleEditShow(record)"><i class="icon i_lock"/>重置密码</a-button>
+                        <a-button type='link' @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
                     </template>
                 </template>
             </a-table>
         </div>
         <div class="paging-container">
             <a-pagination
-                    v-model:current="currPage"
-                    :page-size='pageSize'
-                    :total="total"
-                    show-quick-jumper
-                    show-size-changer
-                    show-less-items
-                    :show-total="total => `共${total}条`"
-                    :hide-on-single-page='false'
-                    :pageSizeOptions="['10', '20', '30', '40']"
-                    @change="pageChange"
-                    @showSizeChange="pageSizeChange"
+                v-model:current="currPage"
+                :page-size='pageSize'
+                :total="total"
+                show-quick-jumper
+                show-size-changer
+                show-less-items
+                :show-total="total => `共${total}条`"
+                :hide-on-single-page='false'
+                :pageSizeOptions="['10', '20', '30', '40']"
+                @change="pageChange"
+                @showSizeChange="pageSizeChange"
             />
         </div>
     </div>
@@ -102,15 +93,15 @@
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">再次确认:</div>
+                <div class="key">确认密码:</div>
                 <div class="value">
-                    <a-input-password v-model:value="form.new_password" placeholder="请再次确认密码" />
+                    <a-input-password v-model:value="form.new_password" placeholder="请再次输入密码" />
                 </div>
             </div>
         </div>
         <template #footer>
-            <a-button key="back" @click="handleEditSubmit" type="primary">确定</a-button>
-            <a-button @click="passShow=false" >取消</a-button>
+            <a-button @click="handleEditSubmit" type="primary">确定</a-button>
+            <a-button @click="passShow=false">取消</a-button>
         </template>
     </a-modal>
 </div>
@@ -125,7 +116,9 @@ export default {
     props: {},
     data() {
         return {
-            loginType: Core.Data.getLoginType(),
+            userType: Core.Data.getLoginType(),
+            USER_TYPE: Core.Const.USER.TYPE,
+
             // 加载
             loading: false,
             // 分页
@@ -135,58 +128,43 @@ export default {
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
-            passShow: false,
             searchForm: {
                 name: '',
                 type: undefined,
-                store_id: undefined,
                 org_id: Core.Data.getOrgId(),
                 org_type: Core.Data.getOrgType(),
             },
+
+            // 表格
+            tableData: [],
+            tableColumns: [
+                {title: '员工姓名', dataIndex: ['account', 'name'], key: 'item'},
+                {title: '账号', dataIndex: ['account', 'username'], key: 'item'},
+                {title: '手机号', dataIndex: ['account', 'phone'], key: 'item'},
+                {title: '邮箱', dataIndex: ['account', 'email'], key: 'item'},
+                {title: '员工类型', dataIndex: 'type'},
+                {title: '员工角色', dataIndex: 'role_name', key: 'item'},
+                {title: '是否为管理员', dataIndex: 'flag_admin', align: 'center'},
+                {title: '最近登录', dataIndex: ['account', 'last_login_time'], key: 'time'},
+                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
+                {title: '操作', key: 'operation', fixed: 'right', width: 100,},
+            ],
+
+            // 弹框
+            passShow: false,
             form: {
                 id: '',
                 password: '',
                 new_password: '',
             },
-            storeList: [],
-            // 表格数据
-            tableData: [],
-            tableColumns: [
-                {title: '姓名', dataIndex: ['account', 'name'], key: 'item'},
-                {title: '所属门店', dataIndex: 'store_name', key: 'item'},
-                {title: '账号', dataIndex: ['account', 'username'], key: 'item'},
-                {title: '手机号', dataIndex: ['account', 'phone'], key: 'item'},
-                {title: '邮箱', dataIndex: ['account', 'email'], key: 'item'},
-                {title: '类型', dataIndex: 'type'},
-                {title: '是否为管理员', dataIndex: 'flag_admin'},
-                {title: '最近登录', dataIndex: ['account', 'last_login_time'], key: 'time'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '操作', key: 'operation', fixed: 'right', width: 100,},
-            ],
-            // 账户参数获取
-            orgId: 0,
         };
     },
     watch: {},
     computed: {},
     mounted() {
-        this.getStoreList();
         this.getTableData();
-        this.orgId = Core.Data.getOrgId();
-        console.log("orgId"+this.orgId);
     },
     methods: {
-        getStoreList() {        // 获取 门店 数据
-            this.loading = true;
-            Core.Api.Store.list().then(res => {
-                console.log("getStoreList res", res)
-                this.storeList = res.list;
-            }).catch(err => {
-                console.log('getStoreList err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
         routerChange(type, item = {}) {
             console.log(item)
             let routeUrl = ''
@@ -194,7 +172,7 @@ export default {
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/user/user-edit",
-                        query: {id: item.id ,org_id: this.orgId ,type: this.loginType}
+                        query: {id: item.id ,org_id: Core.Data.getOrgId() ,type: this.userType}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -227,10 +205,7 @@ export default {
         getTableData() {    // 获取 表格 数据
             this.loading = true;
             Core.Api.User.list({
-                name: this.searchForm.name,
-                type: this.searchForm.type,
-                org_id: this.searchForm.org_id,
-                org_type: this.searchForm.org_type,
+                ...this.searchForm,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
                 page: this.currPage,
@@ -245,7 +220,7 @@ export default {
                 this.loading = false;
             });
         },
-
+        // 删除员工
         handleDelete(id) {
             let _this = this;
             this.$confirm({
@@ -263,6 +238,7 @@ export default {
                 },
             });
         },
+        // 编辑密码
         handleEditShow(item) {
             this.passShow = true;
             if (item) {
@@ -286,13 +262,12 @@ export default {
             if (!form.new_password) {
                 return this.$message.warning('请再次确认密码')
             }
-            if (this.form.new_password !== this.form.password) {
-                this.$message.warning('两次密码输入不一致')
-                return
+            if (form.new_password !== form.password) {
+                return this.$message.warning('两次密码输入不一致')
             }
 
             this.loading = true;
-            Core.Api.Account.resetPwd(this.form).then(() => {
+            Core.Api.Account.resetPwd(form).then(() => {
                 this.$message.success('保存成功')
                 this.handleEditClose();
             }).catch(err => {
