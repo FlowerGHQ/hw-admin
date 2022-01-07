@@ -645,17 +645,6 @@ const routes = [
                     title: '新增消息',
                     parent: '/system/system-file-list',
                 }
-
-            },
-            {
-                path: 'system-file-detail',
-                name: 'SystemFileDetail',
-                component: () => import('@/views/system/system-file-detail.vue'),
-                hidden: true,
-                meta: {
-                    title: '消息详情',
-                    parent: '/system/system-file-list',
-                }
             },
         ]
 
