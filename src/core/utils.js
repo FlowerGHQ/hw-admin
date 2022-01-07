@@ -436,7 +436,7 @@ const Util = {
         return MAP[val] || '未知'
     },
     /* =============== 系统消息 ================ */
-    
+
     /* =============== 退款管理 ================ */
     refundTypeFilter(val) {
         const MAP = Core.Const.REFUND.TYPE_MAP
@@ -450,24 +450,7 @@ const Util = {
         const MAP = Core.Const.DISTRIBUTOR.TYPE_MAP
         return MAP[val] || '未知'
     },
-    loginAuth(...arr) {
-        let loginType = Core.Data.getLoginType()
-        if (arr.indexOf(loginType) != -1) {
-            return {
-                then: function (...fun) {
-                    fun.forEach(fun => {
-                        fun()
-                    })
-                }
-            }
-        } else {
-            return {
-                then: function () {
-
-                }
-            }
-        }
-    }
+    /* =============== 退款管理 ================ */
 
 }
 

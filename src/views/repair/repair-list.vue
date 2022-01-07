@@ -236,26 +236,15 @@ export default {
     },
     mounted() {
         this.getTableData();
-
-        Core.Util.loginAuth(LOGIN_TYPE.ADMIN).then(
-            this.getDistributorListAll
-        )
-
-        Core.Util.loginAuth(
-            LOGIN_TYPE.ADMIN,
-            LOGIN_TYPE.DISTRIBUTOR
-        ).then(
-            this.getAgentListAll
-        )
-
-        Core.Util.loginAuth(
-            LOGIN_TYPE.ADMIN,
-            LOGIN_TYPE.AGENT,
-            LOGIN_TYPE.DISTRIBUTOR
-        ).then(
-            this.getStoreList
-        )
-
+        if (this.$auth('ADMIN')) {
+            this.getDistributorListAll();
+        }
+        if (this.$auth('ADMIN', 'DISTRIBUTOR')) {
+            this.getAgentListAll();
+        }
+        if (this.$auth('ADMIN', 'DISTRIBUTOR', 'AGENT')) {
+            this.getStoreList();
+        }
     },
     methods: {
         routerChange(type, item = {}) {

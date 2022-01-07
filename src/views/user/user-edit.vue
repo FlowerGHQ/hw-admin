@@ -9,10 +9,10 @@
             <div class="form-item required" v-if="!form.id">
                 <div class="key">类型：</div>
                 <div class="value">
-                    <a-select    v-model:value="type" @change="handleTypeSelect" placeholder="请选择员工类型" allow-clear >
-                        <a-select-option  key="20" :value="type">普通员工</a-select-option>
-                        <a-select-option  key="40" :value="ORG_TYPE.REPAIR">维修工</a-select-option>
-                    </a-select>
+                    <a-radio-group v-model:value="form.type">
+                        <a-radio :value="type">普通员工</a-radio>
+                        <a-radio :value="ORG_TYPE.REPAIR">维修工</a-radio>
+                    </a-radio-group>
                 </div>
             </div>
             <div class="form-item required">
@@ -21,39 +21,32 @@
                     <a-input v-model:value="form.name" placeholder="请输入员工名"/>
                 </div>
             </div>
-            <div class="form-item required" v-if="!form.id">
+            <template v-if="!form.id">
+            <div class="form-item required" >
                 <div class="key">账号:</div>
                 <div class="value">
                     <a-input v-model:value="form.username" placeholder="请输入账号"/>
                 </div>
             </div>
-            <div class="form-item required" v-if="!form.id">
+            <div class="form-item required">
                 <div class="key">密码:</div>
                 <div class="value">
                     <a-input-password v-model:value="form.password" placeholder="请输入密码"/>
                 </div>
             </div>
-            <div class="form-item required" v-if="!form.id">
+            <div class="form-item required">
                 <div class="key">手机号:</div>
                 <div class="value">
                     <a-input v-model:value="form.phone" placeholder="请输入员工手机号"/>
                 </div>
             </div>
+            </template>
             <div class="form-item required">
                 <div class="key">邮箱:</div>
                 <div class="value">
                     <a-input v-model:value="form.email" placeholder="请输入员工邮箱"/>
                 </div>
             </div>
-            <!-- <div class="form-item" v-if="loginType < type">
-                <div class="key">管理权限:</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.flag_admin" >
-                        <a-radio :value="0">无</a-radio>
-                        <a-radio :value="1">有</a-radio>
-                    </a-radio-group>
-                </div>
-            </div> -->
         </div>
     </div>
     <div class="form-btns">
@@ -72,37 +65,40 @@ export default {
     props: {},
     data() {
         return {
-            USER_TYPE: Core.Const.USER.TYPE,
             ORG_TYPE: Core.Const.LOGIN.ORG_TYPE,
-            loginType: Core.Data.getLoginType(),
+
             // 加载
             loading: false,
+
             user_id: '',
-            org_id: Core.Data.getOrgId(),
-            org_type: Core.Data.getLoginType(),
-            type: Core.Data.getLoginType(),
-
-
             detail: {},
-
+            org_type: Core.Data.getLoginType(),
             form: {
                 id: '',
+
+                org_id: '', // 组织ID
+                org_type: '', // 组织类型 平台、代理、经销、门店
+                type: '', // 账号类型 维修工、普通员工（和org_type保持一致）
+
                 name: '',
                 username: '',
                 password: '',
                 phone: '',
                 email: '',
-                // flag_admin: 0,
+                role_id: '',
             }
         };
     },
     watch: {},
     computed: {},
     created() {
-        this.type = Number(this.$route.query.type) || Core.Data.getLoginType()
-        this.user_id = Number(this.$route.query.id) || 0
-        this.org_id = Number(this.$route.query.org_id) || Core.Data.getOrgId()
         this.org_type = Number(this.$route.query.org_type) || Core.Data.getOrgType()
+
+        this.form.org_id = Number(this.$route.query.org_id) || Core.Data.getOrgId()
+        this.form.org_type = Number(this.$route.query.org_type) || Core.Data.getOrgType()
+        this.form.type = Number(this.$route.query.type) || Core.Data.getLoginType()
+
+        this.user_id = Number(this.$route.query.id) || 0
         if (this.user_id) {
             this.getUserDetail();
         }
@@ -134,9 +130,6 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
-        },
-        handleTypeSelect(val) {
-            this.type = val
         },
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)

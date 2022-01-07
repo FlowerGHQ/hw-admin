@@ -44,7 +44,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'" >
-                            <a-button type="link" @click="handleDownloadConfirm(record)"><i class="icon i_edit"/> 下载</a-button>
+                            <a-button type="link" @click="handleDownloadConfirm(record)"><i class="icon i_download"/> 下载</a-button>
                             <a-button type="link" @click="routerChange('edit',record)" v-if="loginType === USER_TYPE.ADMIN"><i class="icon i_edit"/> 编辑</a-button>
                             <a-button type="link" @click="handleDelete(record.id)" v-if="loginType === USER_TYPE.ADMIN"><i class="icon i_delete"/> 删除</a-button>
                         </template>

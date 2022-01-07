@@ -680,7 +680,7 @@ const routes = [
         meta: {
             title: '角色管理',
             icon: 'i_s_temp',
-            roles: [LOGIN_TYPE.ADMIN],
+            auth: ['MANMGE']
         },
         children: [
             {
@@ -721,6 +721,7 @@ const routes = [
                 component: () => import('@/views/system/system-file-list.vue'),
                 meta: {
                     title: '系统文件',
+                    is_sub_menu: true,
                 }
             },
             {
@@ -729,8 +730,18 @@ const routes = [
                 component: () => import('@/views/system/system-file-edit.vue'),
                 hidden: true,
                 meta: {
-                    title: '系统文件编辑',
+                    title: '文件编辑',
                     parent: '/system/system-file-list',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+            {
+                path: 'allot-org-auth',
+                name: 'AllotOrgAuth',
+                component: () => import('@/views/system/allot-org-auth.vue'),
+                meta: {
+                    title: '组织权限管理',
+                    is_sub_menu: true,
                     roles: [LOGIN_TYPE.ADMIN],
                 }
             },
@@ -745,8 +756,6 @@ const routes = [
         meta: {
             title: '系统消息',
             icon: 'i_s_temp',
-            // auth: ['AGENT', 'STORE','DISTRIBUTOR'],
-            roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
             {
@@ -766,7 +775,6 @@ const routes = [
                     title: '新增消息',
                     parent: '/notice/notice-list',
                 }
-
             },
             {
                 path: 'notice-detail',

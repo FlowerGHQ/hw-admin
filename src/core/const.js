@@ -159,7 +159,6 @@ let Const = {
             STORE: 30,
             REPAIR: 40,
         },
-
     },
 
     DISTRIBUTOR: { // 代理商
@@ -464,19 +463,19 @@ let Const = {
     },
 
     AUTH_LIST_TEMP: [ // 权限
-        {list: [], select: [], key: 'home',     name: '总览' },
-        {list: [], select: [], key: 'distributor', name: '代理商管理' },
-        {list: [], select: [], key: 'agent', name: '经销商管理' },
-        {list: [], select: [], key: 'store', name: '门店管理' },
-        {list: [], select: [], key: 'customer', name: '客户管理' },
-        {list: [], select: [], key: 'user',    name: '员工管理' },
-        {list: [], select: [], key: 'item',  name: '商品管理' },
-        {list: [], select: [], key: 'warehouse',  name: '仓库管理' },
-        {list: [], select: [], key: 'purchase',  name: '采购订单管理' },
-        {list: [], select: [], key: 'refund',  name: '退款管理' },
-        {list: [], select: [], key: 'repair', name: '维修单管理' },
-        {list: [], select: [], key: 'notice',  name: '消息管理' },
-        {list: [], select: [], key: 'system-file', name: '系统文件管理' },
+        { list: [], select: [], key: 'home',            name: '总览' },
+        { list: [], select: [], key: 'distributor',     name: '代理商管理' },
+        { list: [], select: [], key: 'agent',           name: '经销商管理' },
+        { list: [], select: [], key: 'store',           name: '门店管理' },
+        { list: [], select: [], key: 'customer',        name: '客户管理' },
+        { list: [], select: [], key: 'org-user',        name: '员工管理' },
+        { list: [], select: [], key: 'item',            name: '商品管理' },
+        { list: [], select: [], key: 'warehouse',       name: '仓库管理' },
+        { list: [], select: [], key: 'purchase-order',  name: '采购订单管理' },
+        { list: [], select: [], key: 'refund',          name: '退款管理' },
+        { list: [], select: [], key: 'repair-order',    name: '维修单管理' },
+        { list: [], select: [], key: 'notice',          name: '消息管理' },
+        { list: [], select: [], key: 'system-file',     name: '系统文件管理' },
     ],
 
     ATTACHMENT: {
