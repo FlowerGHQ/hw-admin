@@ -24,7 +24,7 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
-                        <div class="key">经销商：</div>
+                        <div class="key">所属经销商：</div>
                         <div class="value">
                             <a-select placeholder="请选择经销商" v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
                                 <a-select-option v-for="(item,index) of agentList" :key="index" :value="item.id">{{item.name}}</a-select-option>
@@ -32,11 +32,15 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">状态:</div>
+                        <div class="key">地区:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.status" @change="handleSearch" allow-clear>
-                                <a-select-option v-for="(item,index) of statusList" :key="index" :value="item.value">{{item.text}}</a-select-option>
-                            </a-select>
+                            <a-cascader
+                                placeholder="请选择大洲/国家"
+                                v-model:value="country_cascader"
+                                :options="countryOptions"
+                                @change="handleSearch"
+                                :field-names="{ label: 'value', value: 'value' , children: 'children'}"
+                            />
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
@@ -45,18 +49,6 @@
                             <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
                                 <template #suffixIcon><i class="icon i_calendar"/></template>
                             </a-range-picker>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">地区:</div>
-                        <div class="value">
-                            <a-cascader 
-                                placeholder="请选择大洲/国家" 
-                                v-model:value="country_cascader" 
-                                :options="countryOptions"
-                                @change="handleSearch" 
-                                :field-names="{ label: 'value', value: 'value' , children: 'children'}"
-                                />
                         </div>
                     </a-col>
                 </a-row>
@@ -104,17 +96,17 @@
             </div>
             <div class="paging-container">
                 <a-pagination
-                        v-model:current="currPage"
-                        :page-size='pageSize'
-                        :total="total"
-                        show-quick-jumper
-                        show-size-changer
-                        show-less-items
-                        :show-total="total => `共${total}条`"
-                        :hide-on-single-page='false'
-                        :pageSizeOptions="['10', '20', '30', '40']"
-                        @change="pageChange"
-                        @showSizeChange="pageSizeChange"
+                    v-model:current="currPage"
+                    :page-size='pageSize'
+                    :total="total"
+                    show-quick-jumper
+                    show-size-changer
+                    show-less-items
+                    :show-total="total => `共${total}条`"
+                    :hide-on-single-page='false'
+                    :pageSizeOptions="['10', '20', '30', '40']"
+                    @change="pageChange"
+                    @showSizeChange="pageSizeChange"
                 />
             </div>
         </div>
@@ -139,21 +131,18 @@ export default {
             total: 0,
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            continentList: Core.Const.CONTINENT_LIST, // 大洲
-            countryList: Core.Const.COUNTRY_LIST, // 国家
-            countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
-
             create_time: [],
+            countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
             country_cascader: [], // 搜索框 大洲>国家
             distributorList: [], // 分销商下拉框数据
             agentList: [],
-            statusList: Core.Const.ORG_STATUS_LIST,
+            filteredInfo: {status: [1]},
             searchForm: {
                 name: '',
                 status: 1,
                 contact_name:'',
                 contact_phone:'',
-                distributor_id:undefined,
+                distributor_id: undefined,
                 agent_id: undefined,
             },
 
@@ -163,19 +152,22 @@ export default {
     watch: {},
     computed: {
         tableColumns() {
+            let { filteredInfo } = this;
+            filteredInfo = filteredInfo || {};
             let tableColumns = [
                 {title: '门店名称', dataIndex: 'name', key: 'detail'},
                 {title: '联系人姓名', dataIndex: 'contact_name', key:'item'},
                 {title: '联系人电话', dataIndex: 'contact_phone',key:'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '状态', dataIndex: 'status', key: 'status' },
+                {title: '状态', dataIndex: 'status', key: 'status',
+                    filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || null },
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
             if (this.$auth('ADMIN')) {
-                tableColumns.splice(1, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'name'})
+                tableColumns.splice(1, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'item'})
             }
-            if (this.$auth('ADMIN')) {
-                tableColumns.splice(2, 0, {title: '所属经销商', dataIndex: 'agent_name', key: 'name'})
+            if (this.$auth('ADMIN', 'DISTRIBUTOR')) {
+                tableColumns.splice(2, 0, {title: '所属经销商', dataIndex: 'agent_name', key: 'item'})
             }
             return tableColumns
         },

@@ -24,14 +24,6 @@
                         <a-input placeholder="请输入工单编号" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
-                <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">工单帐类:</div>
-                    <div class="value">
-                        <a-select placeholder="请选择工单帐类" v-model:value="searchForm.service_type" @keydown.enter='handleSearch' allow-clear>
-                            <a-select-option v-for="item of typeList" :key="item.value" :value="item.value">{{item.text}}</a-select-option>
-                        </a-select>
-                    </div>
-                </a-col> -->
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">车辆编号:</div>
                     <div class="value">
@@ -188,7 +180,7 @@ export default {
             distributorList: [], // 分销商下拉框数据
             storeList: [],
             agentList: [],
-            typeList: Core.Const.REPAIR.SERVICE_TYPE_LIST,
+            filteredInfo: null,
             searchForm: {
                 uid: '',
                 org_id:undefined,
@@ -201,7 +193,6 @@ export default {
                 service_type: '',
                 vehicle_no: '',
             },
-            filteredInfo: null,
 
             tableFields: [],
             tableData: [],

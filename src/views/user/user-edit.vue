@@ -87,6 +87,7 @@ export default {
             org_type: '', // 想要编辑的 员工的组织类型
             form: {
                 id: '',
+                user_id: '',
 
                 org_id: '', // 组织ID
                 org_type: '', // 组织类型 平台、代理、经销、门店
@@ -138,6 +139,7 @@ export default {
                 this.detail = d
                 this.form = {
                     id: d.account_id,
+                    user_id: d.id,
 
                     role_id: d.role_id || undefined,
                     org_id: d.org_id,

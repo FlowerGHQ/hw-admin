@@ -16,14 +16,6 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">类型:</div>
-                        <div class="value">
-                            <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择分销商类型" allow-clear>
-                                <a-select-option v-for="(val, key) in typeMap" :key="key" :value="key">{{val}}</a-select-option>
-                            </a-select>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">地区:</div>
                         <div class="value">
                             <a-cascader
@@ -33,16 +25,6 @@
                                 @change="handleSearch"
                                 :field-names="{ label: 'value', value: 'value' , children: 'children'}"
                             />
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">状态:</div>
-                        <div class="value">
-                            <a-select v-model:value="searchForm.status" @change="handleSearch">
-                                <a-select-option v-for="(item,index) of statusList" :key="index" :value="item.value">
-                                    {{ item.text }}
-                                </a-select-option>
-                            </a-select>
                         </div>
                     </a-col>
                 </a-row>
@@ -120,34 +102,34 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            continentList: Core.Const.CONTINENT_LIST, // 大洲
-            countryList: Core.Const.COUNTRY_LIST, // 国家
+            statusList: Core.Const.ORG_STATUS_LIST,
             countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
-            typeMap: Core.Const.DISTRIBUTOR.TYPE_MAP,
-            create_time: [],
             country_cascader: [], // 搜索框 大洲>国家
+            filteredInfo: {status: [1]},
             searchForm: {
                 name: '',
                 status: 1,
-                type: undefined,
+                type: '',
             },
-            tableData: [],
-            statusList: Core.Const.ORG_STATUS_LIST,
 
+            tableData: [],
         };
     },
     watch: {},
     computed: {
         tableColumns() {
+            let { filteredInfo } = this;
+            filteredInfo = filteredInfo || {};
             let columns = [
                 {title: '分销商', dataIndex: 'name'},
-                {title: '类型', dataIndex: 'type'},
+                {title: '类型', dataIndex: 'type',
+                    filters: Core.Const.DISTRIBUTOR.TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.type || null },
                 {title: '国家', dataIndex: 'country'},
                 {title: '联系人', dataIndex: 'contact'},
                 {title: '手机号', dataIndex: 'phone'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '状态', dataIndex: 'status', key: 'status'},
+                {title: '状态', dataIndex: 'status', key: 'status',
+                    filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || null },
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
             return columns
@@ -199,9 +181,11 @@ export default {
         // 表格筛选
         handleTableChange(page, filters, sorter) {
             console.log('handleTableChange filters:', filters)
+            this.filteredInfo = filters;
             for (const key in filters) {
                 this.searchForm[key] = filters[key] ? filters[key][0] : 0
             }
+            this.pageChange(1);
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
@@ -209,8 +193,6 @@ export default {
                 ...this.searchForm,
                 continent: this.country_cascader[0] || '',
                 country: this.country_cascader[1] || '',
-                begin_time: this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {

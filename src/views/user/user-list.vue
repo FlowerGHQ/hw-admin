@@ -44,7 +44,7 @@
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.dataIndex === 'type'">
-                        {{ text === USER_TYPE.WORKER ? '维修工' : '普通员工' }}
+                        {{ text === USER_TYPE.WORKER ? '维修工' : '一般员工' }}
                     </template>
                     <template v-if="column.dataIndex === 'flag_admin'">
                         {{ text ? '是' : '否' }}
