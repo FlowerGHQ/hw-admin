@@ -41,11 +41,8 @@
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record }">
-                        <template v-if="column.key === 'detail'">
-                            <a-tooltip placement="top" :title='text'>
-                                <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}
-                                </a-button>
-                            </a-tooltip>
+                        <template v-if="column.key === 'text'">
+                            {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -113,9 +110,9 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: '文件名', dataIndex: 'name', key: 'detail'},
-                {title: '文件类型', dataIndex: 'type', key: 'detail'},
-                {title: '地址', dataIndex: 'path', key: 'detail'},
+                {title: '文件名', dataIndex: 'name', key: 'text'},
+                {title: '文件类型', dataIndex: 'type', key: 'text'},
+                {title: '地址', dataIndex: 'path', key: 'text'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right', width: 100,},
             ]
