@@ -1,5 +1,5 @@
 <template>
-    <div id="NoticeList">
+    <div id="SystemFileList">
         <div class="list-container">
             <div class="title-container">
                 <div class="title-area">系统文件列表</div>
@@ -12,12 +12,8 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
                         <div class="key">文件类型:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择文件类型" allow-clear >
-                                <a-select-option  key="xlsx" :value="typeList.XLSX">xlsx</a-select-option>
-                                <a-select-option  key="word" :value="typeList.WORD">word</a-select-option>
-                                <a-select-option  key="doc" :value="typeList.DOC">doc</a-select-option>
-                                <a-select-option  key="docx" :value="typeList.DOCX">docx</a-select-option>
-                                <a-select-option  key="video" :value="typeList.VIDEO">video</a-select-option>
+                            <a-select v-model:value="searchForm.type" placeholder="请选择文件类型">
+                                <a-select-option v-for="file of fileTypeList" :key="file.value" :value="file.value">{{file.text}}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -25,7 +21,7 @@
                         <div class="key">创建时间:</div>
                         <div class="value">
                             <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
-                                            :show-time="defaultTime" :allow-clear='false'>
+                                :show-time="defaultTime" :allow-clear='false'>
                                 <template #suffixIcon><i class="icon i_calendar"></i></template>
                             </a-range-picker>
                         </div>
@@ -78,7 +74,7 @@ import Core from '../../core';
 
 const USER_TYPE = Core.Const.USER.TYPE;
 export default {
-    name: 'NoticeList',
+    name: 'SystemFileList',
     components: {},
     props: {},
     data() {
@@ -96,7 +92,7 @@ export default {
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
-            typeList: Core.Const.SYSTEM.FILE.TYPE,
+            fileTypeList: Core.Const.SYSTEM.FILE.TYPE_LIST,
             searchForm: {
                 id:'',
                 type: undefined,
@@ -220,5 +216,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #NoticeList {}
+// #SystemFileList {}
 </style>
