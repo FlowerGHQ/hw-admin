@@ -12,17 +12,14 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">分销商名称:</div>
                         <div class="value">
-                            <a-input placeholder="请输入分销商名称" v-model:value="searchForm.name"
-                                     @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入分销商名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='12' :xl="9" :xxl='6' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">类型:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.type" @change="handleTypeSelect" placeholder="请选择分销商类型"
-                                      allow-clear>
-                                <a-select-option key="10" :value="typeList.INTERNAL">国内</a-select-option>
-                                <a-select-option key="20" :value="typeList.EXPORT">国外</a-select-option>
+                            <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择分销商类型" allow-clear>
+                                <a-select-option v-for="(val, key) in typeMap" :key="key" :value="key">{{val}}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -38,7 +35,7 @@
                             />
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="9" :xxl='6' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">状态:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.status" @change="handleSearch">
@@ -48,15 +45,6 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <!--                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">-->
-                    <!--                        <div class="key">创建时间:</div>-->
-                    <!--                        <div class="value">-->
-                    <!--                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"-->
-                    <!--                                            :show-time="defaultTime" :allow-clear='false'>-->
-                    <!--                                <template #suffixIcon><i class="icon i_calendar"></i></template>-->
-                    <!--                            </a-range-picker>-->
-                    <!--                        </div>-->
-                    <!--                    </a-col>-->
                 </a-row>
                 <div class="btn-area">
                     <a-button @click="handleSearch" type="primary">查询</a-button>
@@ -65,7 +53,7 @@
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                         :row-key="record => record.id" :pagination='false' @change="handleTableChange">
+                    :row-key="record => record.id" :pagination='false' @change="handleTableChange">
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.dataIndex === 'type'">
                             {{ $Util.distributorTypeFilter(text) }}
@@ -88,8 +76,7 @@
                             </a-button>
                             <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/> 编辑
                             </a-button>
-                            <a-button type='link' @click="handleStatusChange(record)"
-                                      :class="record.status ? 'danger' : ''">
+                            <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
                                 <template v-if="record.status"><i class="icon i_forbidden"/>禁用</template>
                                 <template v-else><i class="icon i_enable"/>启用</template>
                             </a-button>
@@ -137,7 +124,7 @@ export default {
             continentList: Core.Const.CONTINENT_LIST, // 大洲
             countryList: Core.Const.COUNTRY_LIST, // 国家
             countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
-            typeList: Core.Const.Distributor.TYPE,
+            typeMap: Core.Const.DISTRIBUTOR.TYPE_MAP,
             create_time: [],
             country_cascader: [], // 搜索框 大洲>国家
             searchForm: {
@@ -198,9 +185,6 @@ export default {
             console.log('pageSizeChange size:', size)
             this.pageSize = size
             this.getTableData()
-        },
-        handleTypeSelect(val) {
-            this.type = val
         },
         handleSearch() {  // 搜索
             this.pageChange(1);

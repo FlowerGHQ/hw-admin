@@ -6,54 +6,26 @@
                 <div class="title-colorful">基本信息</div>
             </div>
             <div class="form-content">
-                <div class="form-item required" v-if="!form.id">
-                    <div class="key">角色：</div>
-                    <div class="value">
-                        <a-select    v-model:value="type" @change="handleTypeSelect" placeholder="请选择角色类型" allow-clear >
-                            <a-select-option  key="20" :value="type"></a-select-option>
-                            <a-select-option  key="40" :value="ORG_TYPE.REPAIR"></a-select-option>
-                        </a-select>
-                    </div>
-                </div>
                 <div class="form-item required">
-                    <div class="key">员工名:</div>
+                    <div class="key">角色名称</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" placeholder="请输入员工名"/>
+                        <a-input v-model:value="form.name" placeholder="请输入角色名称"/>
                     </div>
                 </div>
-                <div class="form-item required" v-if="!form.id">
-                    <div class="key">账号:</div>
+                <div class="form-item textarea">
+                    <div class="key">角色描述:</div>
                     <div class="value">
-                        <a-input v-model:value="form.username" placeholder="请输入账号"/>
+                        <a-textarea v-model:value="form.remark" placeholder="请输入角色描述" :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                        <span class="content-length">{{form.remark.length}}/99</span>
                     </div>
                 </div>
-                <div class="form-item required" v-if="!form.id">
-                    <div class="key">密码:</div>
-                    <div class="value">
-                        <a-input-password v-model:value="form.password" placeholder="请输入密码"/>
-                    </div>
-                </div>
-                <div class="form-item required" v-if="!form.id">
-                    <div class="key">手机号:</div>
-                    <div class="value">
-                        <a-input v-model:value="form.phone" placeholder="请输入员工手机号"/>
-                    </div>
-                </div>
-                <div class="form-item required">
-                    <div class="key">邮箱:</div>
-                    <div class="value">
-                        <a-input v-model:value="form.email" placeholder="请输入员工邮箱"/>
-                    </div>
-                </div>
-                <!-- <div class="form-item" v-if="loginType < type">
-                    <div class="key">管理权限:</div>
-                    <div class="value">
-                        <a-radio-group v-model:value="form.flag_admin" >
-                            <a-radio :value="0">无</a-radio>
-                            <a-radio :value="1">有</a-radio>
-                        </a-radio-group>
-                    </div>
-                </div> -->
+            </div>
+        </div>
+        <div class="form-block">
+            <div class="form-title">
+                <div class="title-colorful">权限分配</div>
+            </div>
+            <div class="form-content">
             </div>
         </div>
         <div class="form-btns">
@@ -72,98 +44,81 @@ export default {
     props: {},
     data() {
         return {
-            USER_TYPE: Core.Const.USER.TYPE,
-            ORG_TYPE: Core.Const.LOGIN.ORG_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            user_id: '',
-            org_id: Core.Data.getOrgId(),
-            org_type: Core.Data.getLoginType(),
-            type: Core.Data.getLoginType(),
 
+            id: '',
             detail: {},
 
             form: {
                 id: '',
                 name: '',
-                username: '',
-                password: '',
-                phone: '',
-                email: '',
-                // flag_admin: 0,
+                remark: '',
             }
         };
     },
     watch: {},
     computed: {},
     created() {
-        this.type = Number(this.$route.query.type) || Core.Data.getLoginType()
-        this.user_id = Number(this.$route.query.id) || 0
-        this.org_id = Number(this.$route.query.org_id) || Core.Data.getOrgId()
-        this.org_type = Number(this.$route.query.org_type) || Core.Data.getOrgType()
-        if (this.user_id) {
+        this.form.id = Number(this.$route.query.id) || 0
+        if (this.form.id) {
             this.getAuthRoleDetail();
+            this.getRoleSelectedAuth();
         }
+        this.getAuthOptions()
     },
     methods: {
         routerChange(type, item) {
             switch (type) {
-                case 'back':
-                    this.$router.go(-1)
-                    break;
+                case 'back': this.$router.go(-1); break;
             }
         },
         getAuthRoleDetail() {
             this.loading = true;
-            Core.Api.AuthRole.detail({
-                id: this.user_id,
+            Core.Api.Authority.roleDetail({
+                id: this.form.id,
             }).then(res => {
                 console.log('getAuthRoleDetail res', res)
-                this.detail = res.detail
-                this.type = res.detail.type
-                this.org_id = res.detail.org_id
-                this.org_type = res.detail.org_type
+                this.detail = res.role
                 for (const key in this.form) {
-                    this.form[key] = res.detail.account[key]
+                    this.form[key] = res.role[key]
                 }
-                this.form.flag_admin = res.detail.flag_admin
             }).catch(err => {
                 console.log('getAuthRoleDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
-        handleTypeSelect(val) {
-            this.type = val
+
+        getAuthOptions() { // 获取 某个身份下 可选的权限项
+            Core.Api.Authority.authOptions({
+                user_type: Core.Data.getOrgType(),
+            }).then(res => {
+                console.log('getAuthOptions res:', res)
+            }).catch(err => {
+                console.log('getAuthOptions err:', err)
+            })
         },
+        getRoleSelectedAuth() { // 某个角色 已选的权限
+            Core.Api.Authority.authSelected({
+                role_id: this.form.id,
+            }).then(res => {
+                console.log('getRoleSelectedAuth res:', res)
+            }).catch(err => {
+                console.log('getRoleSelectedAuth err:', err)
+            })
+        },
+
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
-            let judge = "update"
-            if (!form.id) {
-                judge = "save"
-                if (!form.name) {
-                    return this.$message.warning('请输入员工名')
-                }
-                if (!form.username) {
-                    return this.$message.warning('请输入账号')
-                }
-                if (!form.password) {
-                    return this.$message.warning('请输入密码')
-                }
+            console.log('handleSubmit form:', form)
+            if (!form.name) {
+                return this.$message.warning('请输入角色名称')
             }
-            if (!form.phone) {
-                return this.$message.warning('请输入员工手机号')
-            }
-            if (!form.email) {
-                return this.$message.warning('请输入员工邮箱')
-            }
-            // console.log(judge)
-            Core.Api.AuthRole[judge]({
+            return
+            Core.Api.Authority.roleEdit({
                 ...form,
-                type: this.type,
-                org_id: this.org_id,
-                org_type: this.org_type
             }).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')

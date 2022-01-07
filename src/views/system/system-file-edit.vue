@@ -34,13 +34,10 @@
 
 <script>
 import Core from '../../core';
-import VueTinymce from '@jsdawn/vue3-tinymce';
 
 export default {
     name: 'SystemFileEdit',
-    components: {
-        VueTinymce
-    },
+    components: {},
     props: {},
     data() {
         return {
@@ -67,22 +64,6 @@ export default {
                     token: Core.Data.getToken(),
                     type: 'img',
                 },
-            },
-            tinymce_setting: {
-                menubar: false,  // 隐藏菜单栏
-                branding: false, // 隐藏右下角技术支持
-
-                toolbar: ' fontsizeselect forecolor backcolor | bold italic underline strikethrough | formatselect alignleft aligncenter alignright alignjustify | numlist bullist | indent outdent | superscript subscript | removeformat | fullscreen',
-                toolbar_mode: 'sliding',
-
-                fontsize_formats: '12px 14px 16px 18px',
-                default_link_target: '_blank',
-                link_title: false,
-                nonbreaking_force_tab: true,
-                // 设置中文语言
-                language: 'zh_CN',
-                language_url: '/ext/tinymce_zh_CN.js',
-                content_style: 'body{font-size: 14px}'
             },
         };
     },

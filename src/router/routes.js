@@ -714,7 +714,7 @@ const routes = [
             title: '系统管理',
             icon: 'i_s_temp',
             // auth: ['dashboard'],
-            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+            roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
             {
@@ -734,7 +734,6 @@ const routes = [
                     title: '新增消息',
                     parent: '/system/system-file-list',
                 }
-
             },
             {
                 path: 'system-file-detail',
@@ -747,7 +746,6 @@ const routes = [
                 }
             },
         ]
-
     },
     {   // 系统消息
         path: '/notice',

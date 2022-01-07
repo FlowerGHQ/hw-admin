@@ -43,7 +43,7 @@ const apiList = {
     Authority: { // 角色 & 权限
         roleList: ['PostJson', 'auth/role-list'], // 角色列表
         roleEdit: ['PostJson', 'auth/role-save'], // 角色编辑
-        // roleDetail: ['PostJson', 'auth/role-detail'], // 角色详情
+        roleDetail: ['PostJson', 'auth/role-detail'], // 角色详情
         roleDelete: ['PostJson', 'auth/role-delete'], // 角色删除
 
         authOptions: ['PostJson', 'authority/list-by-org-type'], // 某个身份下 可选的权限项

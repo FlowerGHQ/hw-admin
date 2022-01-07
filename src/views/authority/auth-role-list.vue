@@ -1,87 +1,65 @@
 <template>
-    <div id="AuthRoleList">
-        <div class="list-container">
-            <div class="title-container">
-                <div class="title-area">角色管理</div>
-                <div class="btns-area">
-                    <a-button type="primary" @click="handleRoleShow()" class="menu-item-btn"><i class="icon i_add"/>新建角色</a-button>
-                </div>
-            </div>
-            <!-- <div class="search-container">
-                <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
-                        <div class="key">角色名称:</div>
-                        <div class="value">
-                            <a-input placeholder="请输入角色名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
-                        </div>
-                    </a-col>
-                </a-row>
-                <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">查询</a-button>
-                    <a-button @click="handleSearchReset">重置</a-button>
-                </div>
-            </div> -->
-            <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                    :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, text , record }">
-                        <template v-if="column.dataIndex === 'name'">
-                            {{ text || '-' }}
-                        </template>
-                        <template v-if="column.key === 'tip_item'">
-                            <a-tooltip placement="top" :title='text'>
-                                <div class="ell" style="max-width: 40em">{{text || '-'}}</div>
-                            </a-tooltip>
-                        </template>
-                        <template v-if="column.key === 'time'">
-                            {{ $Util.timeFilter(text) }}
-                        </template>
-                        <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="handleRoleShow(record)"><i class="icon i_edit"/>编辑描述</a-button>
-                            <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/>设置权限</a-button>
-                            <a-button type='link' danger @click="handleDelete(record.id)"><i class="icon i_delete"/>删除</a-button>
-                        </template>
-                    </template>
-                </a-table>
-            </div>
-            <div class="paging-container">
-                <a-pagination
-                    v-model:current="currPage"
-                    :page-size='pageSize'
-                    :total="total"
-                    show-quick-jumper
-                    show-size-changer
-                    show-less-items
-                    :show-total="total => `共${total}条`"
-                    :hide-on-single-page='false'
-                    :pageSizeOptions="['10', '20', '30', '40']"
-                    @change="pageChange"
-                    @showSizeChange="pageSizeChange"
-                />
+<div id="AuthRoleList">
+    <div class="list-container">
+        <div class="title-container">
+            <div class="title-area">角色管理</div>
+            <div class="btns-area">
+                <a-button type="primary" @click="routerChange()" class="menu-item-btn"><i class="icon i_add"/>新建角色</a-button>
             </div>
         </div>
-        <a-modal v-model:visible="roleShow" title="新建角色" class="password-edit-modal">
-            <div class="form-title">
-                <div class="form-item required">
+        <!-- <div class="search-container">
+            <a-row class="search-area">
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
                     <div class="key">角色名称:</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" placeholder="请输入角色名称"/>
+                        <a-input placeholder="请输入角色名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                     </div>
-                </div>
-                <div class="form-item textarea">
-                    <div class="key">角色描述:</div>
-                    <div class="value">
-                        <a-textarea v-model:value="form.remark" placeholder="请输入角色描述" :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
-                        <span class="content-length">{{form.remark.length}}/99</span>
-                    </div>
-                </div>
+                </a-col>
+            </a-row>
+            <div class="btn-area">
+                <a-button @click="handleSearch" type="primary">查询</a-button>
+                <a-button @click="handleSearchReset">重置</a-button>
             </div>
-            <template class="form-btns" #footer>
-                <a-button key="back" type="primary" @click="handleRoleSubmit">确定</a-button>
-                <a-button @click="roleShow = false">取消</a-button>
-            </template>
-        </a-modal>
+        </div> -->
+        <div class="table-container">
+            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                :row-key="record => record.id" :pagination='false'>
+                <template #bodyCell="{ column, text , record }">
+                    <template v-if="column.dataIndex === 'name'">
+                        {{ text || '-' }}
+                    </template>
+                    <template v-if="column.key === 'tip_item'">
+                        <a-tooltip placement="top" :title='text'>
+                            <div class="ell" style="max-width: 40em">{{text || '-'}}</div>
+                        </a-tooltip>
+                    </template>
+                    <template v-if="column.key === 'time'">
+                        {{ $Util.timeFilter(text) }}
+                    </template>
+                    <template v-if="column.key === 'operation'">
+                        <a-button type='link' @click="routerChange(record)"><i class="icon i_edit"/>编辑</a-button>
+                        <a-button type='link' danger @click="handleDelete(record.id)"><i class="icon i_delete"/>删除</a-button>
+                    </template>
+                </template>
+            </a-table>
+        </div>
+        <div class="paging-container">
+            <a-pagination
+                v-model:current="currPage"
+                :page-size='pageSize'
+                :total="total"
+                show-quick-jumper
+                show-size-changer
+                show-less-items
+                :show-total="total => `共${total}条`"
+                :hide-on-single-page='false'
+                :pageSizeOptions="['10', '20', '30', '40']"
+                @change="pageChange"
+                @showSizeChange="pageSizeChange"
+            />
+        </div>
     </div>
+</div>
 </template>
 
 <script>
@@ -128,18 +106,12 @@ export default {
         this.getTableData();
     },
     methods: {
-        routerChange(type, item = {}) {
-            console.log(item)
-            let routeUrl = ''
-            switch (type) {
-                case 'edit':    // 详情
-                    routeUrl = this.$router.resolve({
-                        path: "/auth/auth-role-edit",
-                        query: {id: item.id}
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
-            }
+        routerChange(item = {}) {
+            let routeUrl = this.$router.resolve({
+                path: "/authority/auth-role-edit",
+                query: {id: item.id}
+            })
+            window.open(routeUrl.href, '_self')
         },
         pageChange(curr) {    // 页码改变
             this.currPage = curr

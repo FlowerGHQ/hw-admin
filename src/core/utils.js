@@ -446,7 +446,7 @@ const Util = {
         return MAP[val] || '未知'
     },
     distributorTypeFilter(val) {
-        const MAP = Core.Const.Distributor.TYPE_MAP
+        const MAP = Core.Const.DISTRIBUTOR.TYPE_MAP
         return MAP[val] || '未知'
     },
     loginAuth(...arr) {

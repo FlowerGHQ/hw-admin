@@ -23,7 +23,7 @@ switch (window.location.hostname) {
         break;
     default:
         // URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
-        // URL_POINT = 'http://10.0.0.109:8083' // 谢耀圣
+        URL_POINT = 'http://10.0.0.109:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.205:8083' // 徐伟
         // URL_POINT = 'http://10.0.0.149:8083' // 徐伟
         // URL_POINT = 'http://10.0.0.39:8083'  // 姚志宇
@@ -162,13 +162,21 @@ let Const = {
 
     },
 
-    ORG_STATUS_LIST: [
+    DISTRIBUTOR: { // 代理商
+        TYPE: {
+            INTERNAL: 1,  //国内
+            EXPORT: 2, //出口
+        },
+        TYPE_MAP: {
+            1: '国内',
+            2: '出口',
+        },
+    },
+
+    ORG_STATUS_LIST: [ // 组织状态
         {text: "禁用", value: 0},
         {text: "启用", value: 1},
     ],
-
-    ITEM: { // 商品
-    },
 
     REPAIR: { // 维修工单
         // 工单分类
@@ -301,6 +309,8 @@ let Const = {
         },
     },
 
+    ITEM: { // 商品
+    },
     PURCHASE: { // 采购订单
         // 状态
         STATUS: {
@@ -350,6 +360,31 @@ let Const = {
             '0': '未评论',
         },
     },
+    REFUND: { // 退款管理
+        TYPE: {
+            APPLY_BY_CUSTOMER: 100,  //用户申请
+            INITIATIVE_REFUND: 200, //后台主动退款
+        },
+        TYPE_MAP: {
+            100: '用户申请退款',
+            200: '经销商申请退款',
+        },
+        STATUS: {
+            WAIT_AUDIT: 10,    // 初始化
+            AUDIT_PASS: 20,    // 审核通过
+            SUCCESS: 40,       // 退款成功
+            AUDIT_REFUSE: '-10', // 拒绝退款
+            FAIL: '-20',         // 退款失败
+        },
+        STATUS_MAP: {
+            10: '初始化',
+            20: '审核通过',
+            40: '退款成功',
+            '-10': '拒绝退款',
+            '-20': '退款失败',
+
+        },
+    },
 
     WAYBILL: { // 物流
         TYPE: {
@@ -389,6 +424,7 @@ let Const = {
             {name: '跨越速运', value: 'KYEXPRESS'},
         ],
     },
+
     NOTICE: { //系统消息
         TYPE: {
             ADMIN: 10,  //平台消息
@@ -398,54 +434,41 @@ let Const = {
             10: '平台消息',
             20: '经销商消息'
         },
-
     },
     SYSTEM: { //系统
         FILE: {
             TYPE:{
-                XLSX: 'xlsx',  
-                WORD: 'word',  
-                DOC: 'doc',  
-                DOCX: 'docx',  
-                VIDEO: 'video', 
-            }
+                XLSX: 'xlsx',
+                WORD: 'word',
+                DOC: 'doc',
+                DOCX: 'docx',
+                VIDEO: 'video',
+            },
+            TYPE_LIST: [
+                {value: 'xlsx', text: '表格'},
+                {value: 'word', text: '表格'},
+                {value: 'doc', text: '表格'},
+                {value: 'docx', text: '表格'},
+                {value: 'video', text: '表格'},
+            ]
         },
     },
-    REFUND: {
-        TYPE: {
-            APPLY_BY_CUSTOMER: 100,  //用户申请
-            INITIATIVE_REFUND: 200, //后台主动退款
-        },
-        TYPE_MAP: {
-            100: '用户申请退款',
-            200: '经销商申请退款',
-        },
-        STATUS: {
-            WAIT_AUDIT: 10,    // 初始化
-            AUDIT_PASS: 20,    // 审核通过
-            SUCCESS: 40,       // 退款成功
-            AUDIT_REFUSE: '-10', // 拒绝退款
-            FAIL: '-20',         // 退款失败
-        },
-        STATUS_MAP: {
-            10: '初始化',
-            20: '审核通过',
-            40: '退款成功',
-            '-10': '拒绝退款',
-            '-20': '退款失败',
 
-        },
-    },
-    Distributor: {
-        TYPE: {
-            INTERNAL: 1,  //国内
-            EXPORT: 2, //出口
-        },
-        TYPE_MAP: {
-            1: '国内',
-            2: '出口',
-        },
-    }
+    AUTH_LIST_TEMP: [ // 权限
+        {list: [], select: [], key: 'home',     name: '总览' },
+        {list: [], select: [], key: 'distributor', name: '代理商管理' },
+        {list: [], select: [], key: 'agent', name: '经销商管理' },
+        {list: [], select: [], key: 'store', name: '门店管理' },
+        {list: [], select: [], key: 'customer', name: '客户管理' },
+        {list: [], select: [], key: 'user',    name: '员工管理' },
+        {list: [], select: [], key: 'item',  name: '商品管理' },
+        {list: [], select: [], key: 'warehouse',  name: '仓库管理' },
+        {list: [], select: [], key: 'purchase',  name: '采购订单管理' },
+        {list: [], select: [], key: 'refund',  name: '退款管理' },
+        {list: [], select: [], key: 'repair', name: '维修单管理' },
+        {list: [], select: [], key: 'notice',  name: '消息管理' },
+        {list: [], select: [], key: 'system-file', name: '系统文件管理' },
+    ],
 };
 
 export default Const;
