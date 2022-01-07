@@ -27,7 +27,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.0.0.205:8083' // 徐伟
         // URL_POINT = 'http://10.0.0.149:8083' // 徐伟
         // URL_POINT = 'http://10.0.0.39:8083'  // 姚志宇
-        // URL_POINT = 'http://10.0.0.128:8083'  // 姚志宇
+        // URL_POINT = 'http://10.0.0.128:8083' // 姚志宇
         // URL_POINT = 'http://10.0.0.155:8083' // 戚哲康
         break;
 }
@@ -436,7 +436,7 @@ let Const = {
 
         },
     },
-    Distributor: {
+    DISTRIBUTOR: {
         TYPE: {
             INTERNAL: 1,  //国内
             EXPORT: 2, //出口
@@ -445,7 +445,13 @@ let Const = {
             1: '国内',
             2: '出口',
         },
-    }
+    },
+
+    ATTACHMENT: {
+        TARGET_TYPE: {
+            REPAIR_ORDER: 1, //图片类型
+        }
+    },
 };
 
 export default Const;

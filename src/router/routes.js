@@ -57,6 +57,7 @@ const routes = [
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
                     title: '维修单列表',
+                    is_sub_menu: true
                 }
             },
             {
@@ -85,7 +86,7 @@ const routes = [
                 component: () => import('@/views/repair/repair-invoice.vue'),
                 hidden: true,
                 meta: {
-                    title: '维修单详情',
+                    title: '维修单结算',
                     parent: '/repair/repair-list',
                 }
             },
@@ -96,6 +97,7 @@ const routes = [
                 meta: {
                     title: '故障管理',
                     roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true
                 }
             },
             {
@@ -346,16 +348,16 @@ const routes = [
                     parent: '/warehouse/warehouse-list',
                 }
             },
-            // {
-            //     path: 'warehouse-detail',
-            //     name: 'WarehouseDetail',
-            //     component: () => import('@/views/warehouse/warehouse-detail.vue'),
-            //     hidden: true,
-            //     meta: {
-            //         title: '仓库详情',
-            //         parent: '/warehouse/warehouse-list',
-            //     }
-            // },
+            {
+                path: 'warehouse-detail',
+                name: 'WarehouseDetail',
+                component: () => import('@/views/warehouse/warehouse-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '仓库详情',
+                    parent: '/warehouse/warehouse-list',
+                }
+            },
         ]
     },
     {   // 商品 - 平台端
@@ -530,6 +532,60 @@ const routes = [
             },
         ]
     },
+    {   // 退款管理
+        path: '/refund',
+        component: Layout,
+        redirect: '/refund/refund-list',
+        name: 'RefundManagement',
+        hidden: false,
+        meta: {
+            title: '退款管理',
+            icon: 'i_s_temp',
+            // auth: ['dashboard'],
+            // roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'refund-list',
+                name: 'RefundList',
+                component: () => import('@/views/refund/refund-list.vue'),
+                meta: {
+                    title: '退款列表',
+                }
+            },
+            {
+                path: 'refund-create',
+                name: 'RefundCreate',
+                component: () => import('@/views/refund/refund-create.vue'),
+                hidden: true,
+                meta: {
+                    title: '新增退款',
+                    parent: '/refund/refund-list',
+                }
+
+            },
+            {
+                path: 'refund-detail',
+                name: 'RefundDetail',
+                component: () => import('@/views/refund/refund-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '退款详情',
+                    parent: '/refund/refund-list',
+                }
+            },
+            /* {
+                path: 'refund-audit',
+                name: 'RefundAudit',
+                component: () => import('@/views/refund/refund-audit.vue'),
+                hidden: true,
+                meta: {
+                    title: '退款审核',
+                    parent: '/refund/refund-list',
+                }
+            }, */
+        ]
+    },
     {   // 客户管理
         path: '/customer',
         component: Layout,
@@ -615,6 +671,39 @@ const routes = [
         ]
 
     },
+    {   // 角色管理
+        path: '/authority',
+        component: Layout,
+        redirect: '/authority/auth-role-list',
+        name: 'AuthManagement',
+        hidden: false,
+        meta: {
+            title: '角色管理',
+            icon: 'i_s_temp',
+            roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'auth-role-list',
+                name: 'RoleList',
+                component: () => import('@/views/authority/auth-role-list.vue'),
+                meta: {
+                    title: '角色管理',
+                }
+            },
+            {
+                path: 'auth-role-edit',
+                name: 'RoleEdit',
+                component: () => import('@/views/authority/auth-role-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '角色编辑',
+                    parent: '/authority/auth-role-list',
+                }
+
+            },
+        ]
+    },
     {   // 系统管理
         path: '/system',
         component: Layout,
@@ -693,105 +782,6 @@ const routes = [
             },
         ]
     },
-    {   // 退款管理
-        path: '/refund',
-        component: Layout,
-        redirect: '/refund/refund-list',
-        name: 'RefundManagement',
-        hidden: false,
-        meta: {
-            title: '退款管理',
-            icon: 'i_s_temp',
-            // auth: ['dashboard'],
-            // roles: [LOGIN_TYPE.ADMIN],
-        },
-        children: [
-            {
-                path: 'refund-list',
-                name: 'RefundList',
-                component: () => import('@/views/refund/refund-list.vue'),
-                meta: {
-                    title: '退款列表',
-                }
-            },
-            {
-                path: 'refund-create',
-                name: 'RefundCreate',
-                component: () => import('@/views/refund/refund-create.vue'),
-                hidden: true,
-                meta: {
-                    title: '新增退款',
-                    parent: '/refund/refund-list',
-                }
-
-            },
-            {
-                path: 'refund-detail',
-                name: 'RefundDetail',
-                component: () => import('@/views/refund/refund-detail.vue'),
-                hidden: true,
-                meta: {
-                    title: '退款详情',
-                    parent: '/refund/refund-list',
-                }
-            },
-            /* {
-                path: 'refund-audit',
-                name: 'RefundAudit',
-                component: () => import('@/views/refund/refund-audit.vue'),
-                hidden: true,
-                meta: {
-                    title: '退款审核',
-                    parent: '/refund/refund-list',
-                }
-            }, */
-        ]
-    },
-    {   // 角色管理
-        path: '/auth',
-        component: Layout,
-        redirect: '/auth/auth-role-list',
-        name: 'AuthManagement',
-        hidden: false,
-        meta: {
-            title: '角色管理',
-            icon: 'i_s_temp',
-            // auth: ['dashboard'],
-            // roles: [LOGIN_TYPE.ADMIN],
-        },
-        children: [
-            {
-                path: 'auth-role-list',
-                name: 'AuthList',
-                component: () => import('@/views/auth/auth-role-list.vue'),
-                meta: {
-                    title: '角色管理',
-                }
-            },
-            {
-                path: 'auth-role-edit',
-                name: 'AuthEdit',
-                component: () => import('@/views/auth/auth-role-edit.vue'),
-                hidden: true,
-                meta: {
-                    title: '新建角色',
-                    parent: '/auth/auth-role-list',
-                }
-
-            },
-            {
-                path: 'auth-detail',
-                name: 'AuthDetail',
-                component: () => import('@/views/auth/auth-role-detail.vue'),
-                hidden: true,
-                meta: {
-                    title: '角色详情',
-                    parent: '/auth/auth-role-list',
-                }
-            },
-        ]
-    },
-
 ];
 
 export default routes;

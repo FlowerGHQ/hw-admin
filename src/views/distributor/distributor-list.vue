@@ -137,7 +137,7 @@ export default {
             continentList: Core.Const.CONTINENT_LIST, // 大洲
             countryList: Core.Const.COUNTRY_LIST, // 国家
             countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
-            typeList: Core.Const.Distributor.TYPE,
+            typeList: Core.Const.DISTRIBUTOR.TYPE,
             create_time: [],
             country_cascader: [], // 搜索框 大洲>国家
             searchForm: {

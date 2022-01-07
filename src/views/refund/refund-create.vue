@@ -24,11 +24,11 @@
                     <div class="key">上传图片</div>
                     <div class="value">
                         <a-upload name="file" class="image-uploader"
-                                  list-type="picture-card" accept='image/*'
-                                  :file-list="upload.fileList" :action="upload.action"
-                                  :headers="upload.headers" :data='upload.data'
-                                  :before-upload="handleImgCheck"
-                                  @change="handleLogoChange">
+                            list-type="picture-card" accept='image/*'
+                            :file-list="upload.fileList" :action="upload.action"
+                            :headers="upload.headers" :data='upload.data'
+                            :before-upload="handleImgCheck"
+                            @change="handleLogoChange">
                             <div class="image-inner" v-if="upload.fileList.length < 5">
                                 <i class="icon i_upload"/>
                             </div>
