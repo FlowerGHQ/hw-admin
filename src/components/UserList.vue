@@ -135,7 +135,12 @@ export default {
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/user/user-edit",
-                        query: {id: item.id, type: this.type, org_id: this.orgId, org_type: this.orgType}
+                        query: {
+                            id: item.id,
+                            org_id: this.orgId,
+                            org_type: this.orgType,
+                            type: this.type,
+                        }
                     })
                     window.open(routeUrl.href, '_self')
                     break;

@@ -680,7 +680,7 @@ const routes = [
         meta: {
             title: '角色管理',
             icon: 'i_s_temp',
-            auth: ['MANMGE']
+            auth: ['MANAGER']
         },
         children: [
             {
