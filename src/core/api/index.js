@@ -197,10 +197,10 @@ const apiList = {
         delete: ['PostJson', 'item-fault/delete'],
     },
     System: { // 系统管理
-        fileList: ['PostJson', 'system-file/list'], // 系统文件管理
-        fileSave: ['PostJson', 'system-file/save'],
-        fileDetail: ['PostJson', 'system-file/detail'],
-        fileDelete: ['PostJson', 'system-file/delete'],
+        fileList: ['PostJson', 'sys-file/list'], // 系统文件管理
+        fileSave: ['PostJson', 'sys-file/save'],
+        fileDetail: ['PostJson', 'sys-file/detail'],
+        fileDelete: ['PostJson', 'sys-file/delete'],
     },
 
     Attachment: { // 附件管理
