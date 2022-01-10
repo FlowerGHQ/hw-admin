@@ -23,40 +23,16 @@
                         <a-input placeholder="请输入经销商名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
-                <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
-                    <div class="key">大洲：</div>
-                    <div class="value">
-                        <a-select placeholder="请选择大洲" v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
-                            <a-select-option v-for="(item,index) of countryList" :key="index" :value="item.id">{{item.name}}</a-select-option>
-                        </a-select>
-                    </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">国家:</div>
-                    <div class="value">
-                        <a-select placeholder="请选择国家" v-model:value="searchForm.country" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
-                            <a-select-option v-for="(item,index) of countryList" :key="index" :value="item.name">{{item.name}}</a-select-option>
-                        </a-select>
-                    </div>
-                </a-col> -->
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">地区:</div>
                     <div class="value">
-                        <a-cascader 
-                            placeholder="请选择大洲/国家" 
-                            v-model:value="country_cascader" 
+                        <a-cascader
+                            placeholder="请选择大洲/国家"
+                            v-model:value="country_cascader"
                             :options="countryOptions"
-                            @change="handleSearch" 
+                            @change="handleSearch"
                             :field-names="{ label: 'value', value: 'value' , children: 'children'}"
-                            />
-                    </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">状态:</div>
-                    <div class="value">
-                        <a-select v-model:value="searchForm.status" @change="handleSearch">
-                            <a-select-option v-for="(item,index) of statusList" :key="index" :value="item.value">{{item.text}}</a-select-option>
-                        </a-select>
+                        />
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
@@ -89,9 +65,6 @@
                         <a-tooltip placement="top" :title='text'>
                             <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
                         </a-tooltip>
-                    </template>
-                    <template v-if="column.key === 'item'">
-                        {{ text || '-'}}
                     </template>
                     <template v-if="column.key === 'tip_item'">
                         <a-tooltip placement="top" :title='text'>
@@ -155,35 +128,37 @@ export default {
             total: 0,
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            continentList: Core.Const.CONTINENT_LIST, // 大洲
-            countryList: Core.Const.COUNTRY_LIST, // 国家
-            countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
-
             create_time: [],
-            distributorList: [], // 分销商下拉框数据
+            countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
             country_cascader: [], // 搜索框 大洲>国家
+
+            distributorList: [], // 分销商下拉框数据
+            filteredInfo: {status: [1]},
             searchForm: {
                 name: '',
                 status: 1,
-                distributor_id:undefined,
+                distributor_id: undefined,
             },
+            // 表格
             tableData: [],
-            statusList: Core.Const.ORG_STATUS_LIST,
         };
     },
     watch: {},
     computed: {
         tableColumns() {
+            let { filteredInfo } = this;
+            filteredInfo = filteredInfo || {};
             let tableColumns = [
                 { title: '经销商', dataIndex: 'name' },
-                { title: '国家', dataIndex: 'country' },
-                { title: '手机号', dataIndex: 'phone' },
+                { title: '国家', dataIndex: 'country', key: 'item' },
+                { title: '手机号', dataIndex: 'phone', key: 'item'},
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
-                { title: '状态', dataIndex: 'status', key: 'status' },
+                { title: '状态', dataIndex: 'status', key: 'status',
+                    filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || null },
                 { title: '操作', key: 'operation', fixed: 'right'},
             ]
-            if (this.$auth('ADMIN', 'DISTRIBUTOR')) {
-                tableColumns.splice(1, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'name'})
+            if (this.$auth('ADMIN')) {
+                tableColumns.splice(1, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'item'})
             }
             return tableColumns
         },
@@ -244,9 +219,11 @@ export default {
         // 表格筛选
         handleTableChange(page, filters, sorter) {
             console.log('handleTableChange filters:', filters)
+            this.filteredInfo = filters;
             for (const key in filters) {
                 this.searchForm[key] = filters[key] ? filters[key][0] : 0
             }
+            this.pageChange(1);
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;

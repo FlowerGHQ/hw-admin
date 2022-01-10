@@ -21,7 +21,7 @@
                     <div class="key">类型:</div>
                     <div class="value">
                         <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择员工类型" allow-clear>
-                            <a-select-option :value="userType">普通员工</a-select-option>
+                            <a-select-option :value="orgType">普通员工</a-select-option>
                             <a-select-option :value="USER_TYPE.WORKER">维修工</a-select-option>
                         </a-select>
                     </div>
@@ -44,7 +44,7 @@
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.dataIndex === 'type'">
-                        {{ text === USER_TYPE.WORKER ? '维修工' : '普通员工' }}
+                        {{ text === USER_TYPE.WORKER ? '维修工' : '一般员工' }}
                     </template>
                     <template v-if="column.dataIndex === 'flag_admin'">
                         {{ text ? '是' : '否' }}
@@ -116,7 +116,7 @@ export default {
     props: {},
     data() {
         return {
-            userType: Core.Data.getLoginType(),
+            orgType: Core.Data.getOrgType(),
             USER_TYPE: Core.Const.USER.TYPE,
 
             // 加载
@@ -172,7 +172,11 @@ export default {
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/user/user-edit",
-                        query: {id: item.id ,org_id: Core.Data.getOrgId() ,type: this.userType}
+                        query: {
+                            id: item.id,
+                            org_id: Core.Data.getOrgId(),
+                            org_type: this.orgType
+                        }
                     })
                     window.open(routeUrl.href, '_self')
                     break;

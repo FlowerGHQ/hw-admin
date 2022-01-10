@@ -143,12 +143,15 @@ export default {
         // 页面跳转
         routerChange(type, item) {
             let routeUrl
-            let WORKER = Core.Const.USER.TYPE.WORKER
             switch (type) {
                 case 'staff':  // 详情
                     routeUrl = this.$router.resolve({
                         path: "/user/user-edit",
-                        query: { type: WORKER}
+                        query: {
+                            org_id: Core.Data.getOrgId(),
+                            org_type: Core.Data.getOrgType(),
+                            type: Core.Const.USER.TYPE.WORKER,
+                        }
                     })
 
                     window.open(routeUrl.href, '_blank')

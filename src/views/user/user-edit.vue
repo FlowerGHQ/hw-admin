@@ -10,7 +10,7 @@
                 <div class="key">类型：</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.type">
-                        <a-radio :value="type">普通员工</a-radio>
+                        <a-radio :value="org_type">普通员工</a-radio>
                         <a-radio :value="ORG_TYPE.REPAIR">维修工</a-radio>
                     </a-radio-group>
                 </div>
@@ -25,13 +25,13 @@
             <div class="form-item required" >
                 <div class="key">账号:</div>
                 <div class="value">
-                    <a-input v-model:value="form.username" placeholder="请输入账号"/>
+                    <a-input v-model:value="form.username" placeholder="请输入账号" autocomplete="off"/>
                 </div>
             </div>
             <div class="form-item required">
                 <div class="key">密码:</div>
                 <div class="value">
-                    <a-input-password v-model:value="form.password" placeholder="请输入密码"/>
+                    <a-input-password v-model:value="form.password" placeholder="请输入密码" autocomplete="off"/>
                 </div>
             </div>
             <div class="form-item required">
@@ -45,6 +45,14 @@
                 <div class="key">邮箱:</div>
                 <div class="value">
                     <a-input v-model:value="form.email" placeholder="请输入员工邮箱"/>
+                </div>
+            </div>
+            <div class="form-item" v-if="$auth('MANAGER') && loginType == org_type">
+                <div class="key">员工角色:</div>
+                <div class="value">
+                    <a-select v-model:value="form.role_id" placeholder="请选择员工角色">
+                        <a-select-option v-for="(item,index) of roleList" :key="index" :value="item.id">{{item.name}}</a-select-option>
+                    </a-select>
                 </div>
             </div>
         </div>
@@ -65,6 +73,7 @@ export default {
     props: {},
     data() {
         return {
+            loginType: Core.Data.getOrgType(), // 当前登录的用户的 组织类型
             ORG_TYPE: Core.Const.LOGIN.ORG_TYPE,
 
             // 加载
@@ -72,35 +81,44 @@ export default {
 
             user_id: '',
             detail: {},
-            org_type: Core.Data.getLoginType(),
+
+            roleList: [],
+
+            org_type: '', // 想要编辑的 员工的组织类型
             form: {
                 id: '',
+                user_id: '',
 
                 org_id: '', // 组织ID
                 org_type: '', // 组织类型 平台、代理、经销、门店
                 type: '', // 账号类型 维修工、普通员工（和org_type保持一致）
+                role_id: undefined,
 
                 name: '',
                 username: '',
                 password: '',
                 phone: '',
                 email: '',
-                role_id: '',
             }
         };
     },
     watch: {},
     computed: {},
     created() {
-        this.org_type = Number(this.$route.query.org_type) || Core.Data.getOrgType()
+        let q = this.$route.query
+        this.org_type = Number(q.org_type) || Core.Data.getOrgType()
 
-        this.form.org_id = Number(this.$route.query.org_id) || Core.Data.getOrgId()
-        this.form.org_type = Number(this.$route.query.org_type) || Core.Data.getOrgType()
-        this.form.type = Number(this.$route.query.type) || Core.Data.getLoginType()
+        this.form.org_id = Number(q.org_id) || Core.Data.getOrgId()
+        this.form.org_type = Number(q.org_type) || Core.Data.getOrgType()
+        this.form.type = Number(q.type) || Number(q.org_type) || Core.Data.getLoginType()
 
-        this.user_id = Number(this.$route.query.id) || 0
+        this.user_id = Number(q.id) || 0
         if (this.user_id) {
             this.getUserDetail();
+        }
+
+        if (this.$auth('MANAGER') && this.loginType == this.org_type) {
+            this.getRoleList();
         }
     },
     methods: {
@@ -117,14 +135,22 @@ export default {
                 id: this.user_id,
             }).then(res => {
                 console.log('getUserDetail res', res)
-                this.detail = res.detail
-                this.type = res.detail.type
-                this.org_id = res.detail.org_id
-                this.org_type = res.detail.org_type
-                for (const key in this.form) {
-                    this.form[key] = res.detail.account[key]
+                let d = res.detail
+                this.detail = d
+                this.form = {
+                    id: d.account_id,
+                    user_id: d.id,
+
+                    role_id: d.role_id || undefined,
+                    org_id: d.org_id,
+                    org_type: d.org_type,
+                    type: d.type,
+
+                    name: d.account.name,
+                    username: d.account.username,
+                    phone: d.account.phone,
+                    email: d.account.email,
                 }
-                this.form.flag_admin = res.detail.flag_admin
             }).catch(err => {
                 console.log('getUserDetail err', err)
             }).finally(() => {
@@ -133,9 +159,8 @@ export default {
         },
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
-            let judge = "update"
+            let apiName = form.id ? "update" : "save"
             if (!form.id) {
-                judge = "save"
                 if (!form.name) {
                     return this.$message.warning('请输入员工名')
                 }
@@ -152,17 +177,18 @@ export default {
             if (!form.email) {
                 return this.$message.warning('请输入员工邮箱')
             }
-            // console.log(judge)
-            Core.Api.Account[judge]({
-                ...form,
-                type: this.type,
-                org_id: this.org_id,
-                org_type: this.org_type
-            }).then(() => {
+            Core.Api.Account[apiName](form).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)
+            })
+        },
+
+        getRoleList() {
+            Core.Api.Authority.roleList().then(res => {
+                console.log('getRoleList res:', res)
+                this.roleList = res.list
             })
         }
     }

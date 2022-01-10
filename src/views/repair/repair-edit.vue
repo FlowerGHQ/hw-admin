@@ -198,7 +198,6 @@ export default {
             channelList: REPAIR.CHANNEL_LIST, // 维修方式
             priorityList: REPAIR.PRIORITY_LIST, // 紧急程度
             customerList: [], // 车主列表
-            staffList: [], // 员工列表
             REPAIR,
             form: {
                 id: '',
@@ -251,13 +250,11 @@ export default {
             this.getRepairDetail();
         }
         this.getCustomerList();
-        this.getStaffList();
     },
     methods: {
         // 页面跳转
         routerChange(type, item) {
             let routeUrl
-            let WORKER = Core.Const.USER.TYPE.WORKER
             switch (type) {
                 case 'back':
                     this.$router.go(-1)
@@ -266,14 +263,6 @@ export default {
                     routeUrl = this.$router.resolve({
                         path: "/customer/customer-edit",
                     })
-                    window.open(routeUrl.href, '_blank')
-                    break;
-                case 'staff':  // 详情
-                    routeUrl = this.$router.resolve({
-                        path: "/user/user-edit",
-                        query: {type: WORKER}
-                    })
-
                     window.open(routeUrl.href, '_blank')
                     break;
             }
@@ -287,21 +276,6 @@ export default {
                     this.$message.success('刷新成功')
                 }
             })
-        },
-        // 获取 员工列表
-        getStaffList(val) {
-            console.log(Core.Data.getUser().org_type)
-            Core.Api.User.list({
-                page: 0,
-                type: Core.Const.USER.TYPE.WORKER,
-                org_id: Core.Data.getOrgId(),
-                org_type: Core.Data.getOrgType(),
-            }).then(res => {
-                this.staffList = res.list
-                if (val == 'refresh') {
-                    this.$message.success('刷新成功')
-                }
-            });
         },
         // 获取工单详情
         getRepairDetail() {

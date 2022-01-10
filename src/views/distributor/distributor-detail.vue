@@ -96,7 +96,7 @@ export default {
             // 加载
             loading: false,
             //标签页
-            activeKey: 'UserList',
+            activeKey: 'AgentList',
             distributor_id: '',
             detail: {}
         };

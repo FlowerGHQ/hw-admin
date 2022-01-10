@@ -104,7 +104,7 @@ export default {
             let authorityMap = {}
             authorityMap[userType] = true
             if (flag_admin) {
-                authorityMap['MANMGE'] = true
+                authorityMap['MANAGER'] = true
             }
             Core.Data.setAuthority(authorityMap)
             setTimeout(() => {

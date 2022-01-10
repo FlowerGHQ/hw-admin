@@ -166,6 +166,10 @@ let Const = {
             INTERNAL: 1,  //国内
             EXPORT: 2, //出口
         },
+        TYPE_LIST: [
+            {text: '国内', value: 1},
+            {text: '出口', value: 2},
+        ],
         TYPE_MAP: {
             1: '国内',
             2: '出口',

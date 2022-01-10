@@ -26,8 +26,7 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
-                            <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改</a-button>
-                            <!-- <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button> -->
+                            <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改1</a-button>
                             <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
                                 <template v-if="record.status"><i class="icon i_forbidden"/>禁用</template>
                                 <template v-else><i class="icon i_enable"/>启用</template>
@@ -95,14 +94,14 @@ export default {
             switch (type) {
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/distributor/distributor-edit",
-                        query: {id: item.id, distributor_id: this.distributorId}
+                        path: "/agent/agent-edit",
+                        query: {id: item.id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':    // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/distributor/distributor-detail",
+                        path: "/agent/agent-detail",
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_self')
