@@ -17,10 +17,10 @@
                 <div class="form-item required">
                     <div class="key">分销商类型:</div>
                     <div class="value">
-                        <a-select v-model:value="form.type" @change="handleTypeSelect" placeholder="请选择分销商类型" allow-clear>
-                            <a-select-option key="1" :value="typeList.INTERNAL">国内</a-select-option>
-                            <a-select-option key="2" :value="typeList.EXPORT">国外</a-select-option>
-                        </a-select>
+                        <a-radio-group v-model:value="form.type">
+                            <a-radio :value="typeList.INTERNAL">国内</a-radio>
+                            <a-radio :value="typeList.EXPORT">出口</a-radio>
+                        </a-radio-group>
                     </div>
                 </div>
                 <div class="form-item required">

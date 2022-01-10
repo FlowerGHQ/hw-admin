@@ -91,7 +91,7 @@ export default {
             create_time: [],
             searchForm: {
                 name: '',
-                country: undefined,
+                // country: undefined,
             },
 
             tableColumns: [
@@ -125,7 +125,7 @@ export default {
                         path: "/warehouse/warehouse-detail",
                         query: {id: item.id}
                     })
-                    window.open(routeUrl.href, '_blank')
+                    window.open(routeUrl.href, '_self')
                     break;
             }
         },

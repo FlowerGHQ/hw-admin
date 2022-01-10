@@ -3,14 +3,14 @@
         <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
             <template #expandIcon><i class="icon i_expan_l"/></template>
             <a-collapse-panel key="attachmentFile" header="上传附件" class="gray-collapse-panel">
-                <div v-for="(item,index) of attachmentFileList" :key="index">
-                    <a-image :width="30" :height="30" :src="$Util.imageFilter(item.path)" fallback='无' v-if="['jpeg', 'png', 'gif', 'bmp', 'jpg'].includes(item.type.toLocaleLowerCase())"/>
-                    <a-image :width="30" :height="30" :src="$Util.imageFilter('')"  fallback='无' v-else/>
-                    {{ item.name }}
-                    <a-button danger @click="handleDelete(item.id)"><i class="icon i_delete"/></a-button>
-                </div>
                 <div class="panel-content">
-                    <a-button type="primary" @click="handleRepairShow">上传附件</a-button>
+                    <div v-for="(item,index) of attachmentFileList" :key="index">
+                        <a-image :width="120" :height="120" :src="$Util.imageFilter(item.path)" fallback='无' v-if="['jpeg', 'png', 'gif', 'bmp', 'jpg'].includes(item.type.toLocaleLowerCase())"/>
+                        <a-image :width="30" :height="30" :src="$Util.imageFilter('')"  fallback='无' v-else/>
+                        {{ item.name }}
+                        <a-button danger  @click="handleDelete(item.id)"><i class="icon i_delete"/></a-button>
+                    </div>
+                    <a-button type="primary"  @click="handleRepairShow">上传附件</a-button>
                 </div>
             </a-collapse-panel>
         </a-collapse>
@@ -57,7 +57,6 @@ export default {
         target_id: {
             type: Number
         },
-
     },
     data() {
         return {
