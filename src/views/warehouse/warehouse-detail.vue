@@ -30,7 +30,7 @@
                     <WarehouseStockList/>
                 </a-tab-pane>
                 <a-tab-pane key="PurchaseList" tab="出入库记录">
-                    <WarehouseStockAdd/>
+                    <WarehouseStockRecord/>
                 </a-tab-pane>
             </a-tabs>
         </div>
@@ -43,14 +43,14 @@ import Core from '../../core';
 import UserList from '@/components/UserList.vue';
 import PurchaseList from '@/components/PurchaseOrderList.vue';
 import WarehouseStockList from './components/WarehouseStockList.vue';
-import WarehouseStockAdd from './components/WarehouseStockAdd.vue';
+import WarehouseStockRecord from './components/WarehouseStockRecord.vue';
 
 
 
 const USER_TYPE = Core.Const.USER.TYPE;
 export default {
     name: 'WarehouseDetail',
-    components: {UserList, PurchaseList, WarehouseStockList, WarehouseStockAdd },
+    components: {UserList, PurchaseList, WarehouseStockList, WarehouseStockRecord },
     props: {},
     data() {
         return {

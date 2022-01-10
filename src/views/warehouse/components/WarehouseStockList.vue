@@ -48,7 +48,7 @@ export default {
     name: 'WarehouseStockList',
     components: {},
     props: {
-        agentId: {
+        warehouse_id: {
             type: Number,
         },
         distributorId: {

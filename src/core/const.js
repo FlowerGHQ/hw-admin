@@ -487,6 +487,16 @@ let Const = {
             REPAIR_ORDER: 1, //图片类型
         }
     },
+    STOCK_RECORD: {
+        TYPE: {
+            TYPE_IN: 1, //增加
+            TYPE_OUT: 2, //减少
+        },
+        TYPE_MAP: {
+            1: '增加',
+            2: '减少'
+        }
+    },
 };
 
 export default Const;

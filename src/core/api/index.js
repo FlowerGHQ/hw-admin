@@ -84,6 +84,8 @@ const apiList = {
         transfer: ['PostJson', 'stock/transfer'],
         listByTarget: ['PostJson', 'stock/list-by-target'],
         listByTargetId: ['PostJson', 'stock/list-by-target-id'],
+        stockRecordList: ['PostJson', 'stock-record/list'],
+        stockRecordDetail: ['PostJson', 'stock-record/detail'],
 
     },
 
