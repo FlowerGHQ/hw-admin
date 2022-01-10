@@ -63,7 +63,6 @@ export default {
     },
     data() {
         return {
-            loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
             // 分页

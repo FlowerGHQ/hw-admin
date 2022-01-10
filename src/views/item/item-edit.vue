@@ -421,9 +421,9 @@ export default {
                         width: 120px;
                     }
                     > span {
-                        font-size: 14px;
-                        padding-left: 10px;
-                        color: #323233;
+                        font-size: 10px;
+                        color: #8090A6;
+                        margin-left: 5px;
                     }
                 }
             }

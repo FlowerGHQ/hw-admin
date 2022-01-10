@@ -33,7 +33,7 @@
                     <template #bodyCell="{ column, text , record}">
                         <template v-if="column.key === 'item-name'">
                             <a-tooltip placement="top" :title='text'>
-                                {{  text ? text.name : '-' }}
+                                {{ text ? text.name : '-' }}
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'item-code'">
@@ -43,10 +43,10 @@
                             {{ $Util.stockRecordFilter(text) }}
                         </template>
                         <template v-if="column.key === 'amount'">
-                            {{ text || '-'}}
+                            {{ text || '-' }}
                         </template>
                         <template v-if="column.dataIndex === 'balance'">
-                            {{ text || '-'}}
+                            {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -92,7 +92,6 @@ export default {
     },
     data() {
         return {
-            loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
             // 分页
@@ -107,6 +106,7 @@ export default {
             },
             type: Core.Const.STOCK_RECORD.TYPE,
             tableData: [],
+            warehouse_id: '',
         };
     },
     watch: {},
@@ -124,7 +124,7 @@ export default {
         },
     },
     mounted() {
-       this.warehouse_id = Number(this.$route.query.id) || 0
+        this.warehouse_id = Number(this.$route.query.id) || 0
         this.getTableData();
     },
     methods: {

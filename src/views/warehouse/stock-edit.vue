@@ -8,7 +8,7 @@
             </div>
             <div class="form-content">
                 <div class="form-item required">
-                    <div class="key">库存增减：</div>
+                    <div class="key">操作类型：</div>
                     <a-radio-group v-model:value="form.type">
                         <a-radio  :value="'add'" @click="">增加</a-radio>
                         <a-radio  :value="'reduce'" @click="">减少</a-radio>
@@ -54,13 +54,14 @@ export default {
                 target_code: '', //商品编码
                 number: '',
                 warehouse_id: '',
-            }
+            },
         };
     },
     watch: {},
     computed: {},
     mounted() {
         this.form.warehouse_id = Number(this.$route.query.id) || 0
+        this.getItemCode()
     },
     methods: {
         routerChange(type, item) {
@@ -76,6 +77,9 @@ export default {
         },
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
+            if (!form.type) {
+                return this.$message.warning('请选择操作类型')
+            }
             if (!form.target_code) {
                 return this.$message.warning('请输入商品编码')
             }
@@ -88,6 +92,18 @@ export default {
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
+        },
+        getItemCode() {  // 获取 商品编码 数据
+            this.loading = true;
+            Core.Api.Item.detailByCode({
+                itemCode: this.form.target_code,
+            }).then(res => {
+                console.log("getItemCode res", res)
+            }).catch(err => {
+                console.log('getItemCode err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
         },
     }
 };

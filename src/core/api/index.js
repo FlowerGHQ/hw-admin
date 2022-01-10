@@ -115,6 +115,7 @@ const apiList = {
         list: ['PostJson', 'item/list'],
         detail: ['PostJson', 'item/detail'],
         delete: ['PostJson', 'item/delete'],
+        detailByCode: ['PostJson', 'item/detail-by-code'],
     },
     ItemCategory: { // 商品分类
         list: ['PostJson', 'item-category/list'],
