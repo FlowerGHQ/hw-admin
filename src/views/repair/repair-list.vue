@@ -166,7 +166,7 @@ export default {
                 {text: '全  部', value: '0', color: 'primary', key: '0'},
                 {text: '待分配', value: '0', color: 'red',     key: STATUS.WAIT_DISTRIBUTION },
                 {text: '待确认', value: '0', color: 'orange',  key: STATUS.WAIT_CHECK },
-                {text: '等待审核(后台审核)', value: '0', color: 'yellow',  key: STATS.WAIT_AUDIT },
+                {text: '等待审核(后台审核)', value: '0', color: 'yellow',  key: STATUS.WAIT_AUDIT },
                 {text: '待检测', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
                 {text: '维修中', value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
                 {text: '已维修', value: '0', color: 'light',   key: STATUS.REPAIR_END },
