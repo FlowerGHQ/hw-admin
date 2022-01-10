@@ -84,6 +84,8 @@ const apiList = {
         transfer: ['PostJson', 'stock/transfer'],
         listByTarget: ['PostJson', 'stock/list-by-target'],
         listByTargetId: ['PostJson', 'stock/list-by-target-id'],
+        stockRecordList: ['PostJson', 'stock-record/list'],
+        stockRecordDetail: ['PostJson', 'stock-record/detail'],
 
     },
 
@@ -113,6 +115,7 @@ const apiList = {
         list: ['PostJson', 'item/list'],
         detail: ['PostJson', 'item/detail'],
         delete: ['PostJson', 'item/delete'],
+        detailByCode: ['PostJson', 'item/detail-by-code'],
     },
     ItemCategory: { // 商品分类
         list: ['PostJson', 'item-category/list'],

@@ -8,7 +8,7 @@
             </div>
             <div class="form-content">
                 <div class="form-item required">
-                    <div class="key">库存增减：</div>
+                    <div class="key">操作类型：</div>
                     <a-radio-group v-model:value="form.type">
                         <a-radio  :value="'add'" @click="">增加</a-radio>
                         <a-radio  :value="'reduce'" @click="">减少</a-radio>
@@ -17,7 +17,9 @@
                 <div class="form-item required">
                     <div class="key">商品编码：</div>
                     <div class="value">
-                        <a-input v-model:value="form.target_code" placeholder="请输入商品编码"/>
+                        <a-input-number v-model:value="form.target_code" @click="onblur"/>
+                        <template #prefix><i class="icon i_confirm" @click="handleSearch"/></template>
+                        <template #suffix><i class="icon i_close_c" @click="handleNameReset" v-if="searchForm.name"/></template>
                     </div>
                 </div>
                 <div class="form-item required">
@@ -54,7 +56,7 @@ export default {
                 target_code: '', //商品编码
                 number: '',
                 warehouse_id: '',
-            }
+            },
         };
     },
     watch: {},
@@ -76,6 +78,9 @@ export default {
         },
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
+            if (!form.type) {
+                return this.$message.warning('请选择操作类型')
+            }
             if (!form.target_code) {
                 return this.$message.warning('请输入商品编码')
             }
@@ -88,6 +93,18 @@ export default {
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
+        },
+        onblur() {  // 获取 商品编码 数据
+            this.loading = true;
+            Core.Api.Item.detailByCode({
+                itemCode: this.form.target_code,
+            }).then(res => {
+                console.log("getItemCode res", res)
+            }).catch(err => {
+                console.log('getItemCode err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
         },
     }
 };
