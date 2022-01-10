@@ -4,14 +4,9 @@
         <div class="title-container">
             <div class="title-area">工单详情</div>
             <div class="btns-area">
-                <template  v-if="detail.org_type == OrgType && $auth('AGENT', 'STORE')">
+                <template  v-if="detail.org_type == OrgType && $auth('AGENT', 'STORE') || $auth('ADMIN')">
                     <!-- v-if="[STATUS.WAIT_AUDIT].includes(detail.status)" -->
-                    <a-button type="primary" ghost @click="handleAudit()" ><i class="icon i_edit"/>审批</a-button>
-                    <a-modal v-model:visible="visible" title="Basic Modal" @ok="handleOk">
-                        <p>Some contents...</p>
-                        <p>Some contents...</p>
-                        <p>Some contents...</p>
-                    </a-modal>
+                    <a-button type="primary" ghost @click="handleEditShow()" v-if="[STATUS.WAIT_AUDIT].includes(detail.status) && $auth('ADMIN')"><i class="icon i_edit"/>审核</a-button>
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION].includes(detail.status)"><i class="icon i_edit"/>编辑</a-button>
                     <a-button type="primary" ghost @click="handleSecondDoor()" v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_REPAIR].includes(detail.status)"><i class="icon i_edit_l"/>二次维修</a-button>
                     <template v-if="detail.account_id == User.id || $auth('MANAGER')">
@@ -105,7 +100,7 @@
                 <div class="form-item" v-if="repairForm.results == REPAIR.RESULTS.FAIL">
                     <div class="key">失败原因</div>
                     <div class="value">
-                        <a-input v-model:value="repairForm.fail_remark" placeholder="请输入失败原因"/>
+                        <a-input v-model:value="repairForm.audit_message" placeholder="请输入失败原因"/>
                     </div>
                 </div>
             </div>
@@ -145,6 +140,32 @@
             </div>
         </a-modal>
     </template>
+    <template class="modal-container">
+        <a-modal v-model:visible="editShow" title="审核"
+            class="warehouse-edit-modal" :after-close='handleEditClose'>
+            <div class="modal-content">
+                <div>
+                    <div class="form-item required">
+                        <a-radio-group v-model:value="editForm.audit_result">
+                            <a-radio value="1">通过</a-radio>
+                            <a-radio value="0">不通过</a-radio>
+                        </a-radio-group>
+                    </div>
+                    <div class="form-item required" v-if="editForm.audit_result == 0">
+                        <div class="key">原因:</div>
+                        <div class="value">
+                            <a-input v-model:value="editForm.audit_message" placeholder="请输入不通过原因"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="editShow = false">取消</a-button>
+                <a-button @click="handleSubmit" type="primary" >确定</a-button>
+            </template>
+        </a-modal>
+    </template>
+
 </div>
 </template>
 
@@ -163,24 +184,6 @@ const REPAIR = Core.Const.REPAIR
 const User = Core.Data.getUser();
 const OrgType = Core.Data.getOrgType();
 export default {
-    setup() {
-        const visible = ref(false);
-
-        const showModal = () => {
-            visible.value = true;
-        };
-
-        const handleOk = e => {
-            console.log(e);
-            visible.value = false;
-        };
-
-        return {
-            visible,
-            showModal,
-            handleOk,
-        };
-    },
     name: 'RepairDetail',
     components: {
         AttachmentFile,
@@ -211,7 +214,7 @@ export default {
             transferShow: false,
             repairForm: {
                 results: undefined,
-                fail_remark: undefined,
+                audit_message: undefined,
                 plan_time: undefined,
                 // finish_time: undefined,
 
@@ -234,6 +237,14 @@ export default {
                 { title: '结算' },
             ],
             currStep: 1,
+
+            // 审核
+            editShow: false,
+            editForm: {
+                audit_result: 1,
+                audit_message: '',
+            },
+
         };
     },
     watch: {},
@@ -244,9 +255,28 @@ export default {
         console.log(User.id)
     },
     methods: {
-        handleAudit(){ // 审批
-            
+        handleEditShow() { // 显示弹框
+            this.editShow = true
         },
+        handleEditClose() { // 关闭弹框
+            this.editShow = false;
+            Object.assign(this.$data.editForm, this.$options.data().editForm)
+        },
+        handleSubmit(){ // 审核提交
+            this.loading = true;
+            Core.Api.Repair.audit({
+                id: this.id,
+                ...this.editForm
+            }).then(res => {
+                console.log('handleSubmit res', res)
+                this.routerChange('back')
+            }).catch(err => {
+                console.log('handleSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+
         // 页面跳转
         routerChange(type, item) {
             let routeUrl
@@ -326,7 +356,10 @@ export default {
 
         // 工单确认
         handleRepairCheck() {
-            Core.Api.Repair.check({id: this.id}).then(() => {
+            Core.Api.Repair.check({
+                id: this.id,
+                audit_result: 1
+            }).then(() => {
                 this.$message.success('操作成功')
                 this.getRepairDetail()
             })
