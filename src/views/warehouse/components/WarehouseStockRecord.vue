@@ -42,11 +42,11 @@
                         <template v-if="column.dataIndex === 'type'">
                             {{ $Util.stockRecordFilter(text) }}
                         </template>
-                        <template v-if="column.dataIndex === 'amount'">
-                            {{ text ? text.amount : '-' }}
+                        <template v-if="column.key === 'amount'">
+                            {{ text || '-'}}
                         </template>
                         <template v-if="column.dataIndex === 'balance'">
-                            {{ text ? text.balance : '-' }}
+                            {{ text || '-'}}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -80,14 +80,14 @@ export default {
     name: 'WarehouseStockRecord',
     components: {},
     props: {
-        warehouseId: {
+        warehouse_id: {
             type: Number,
         },
-        distributorId: {
-            type: Number,
-        },
-        type: {
-            type: Number,
+        detail: {
+            type: Object,
+            default: () => {
+                return {}
+            }
         },
     },
     data() {
@@ -97,10 +97,9 @@ export default {
             loading: false,
             // 分页
             currPage: 1,
-            pageSize: 20,
+            pageSize: 10,
             total: 0,
             list: '',
-            warehouse_id: '',
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
             searchForm: {
@@ -125,29 +124,10 @@ export default {
         },
     },
     mounted() {
-        this.warehouse_id = Number(this.$route.query.id) || 0
+       this.warehouse_id = Number(this.$route.query.id) || 0
         this.getTableData();
     },
     methods: {
-        // routerChange(type, item = {}) {
-        //     let routeUrl = ''
-        //     switch (type) {
-        //         case 'edit':    // 编辑
-        //             routeUrl = this.$router.resolve({
-        //                 path: "/warehouse-item/store-edit",
-        //                 query: {id: item.id, agent_id: this.agentId, distributor_id: this.distributorId}
-        //             })
-        //             window.open(routeUrl.href, '_self')
-        //             break;
-        //         case 'detail':    // 详情
-        //             routeUrl = this.$router.resolve({
-        //                 path: "/store/store-detail",
-        //                 query: { id: item.id }
-        //             })
-        //             window.open(routeUrl.href, '_self')
-        //             break;
-        //     }
-        // },
         handleSearch() {    // 搜索
             this.pageChange(1);
         },
@@ -169,6 +149,7 @@ export default {
             this.loading = true;
             Core.Api.Stock.stockRecordList({
                 ...this.searchForm,
+                warehouse_id: this.warehouse_id,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
                 page: this.currPage,

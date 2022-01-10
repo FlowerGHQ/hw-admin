@@ -51,8 +51,11 @@ export default {
         warehouse_id: {
             type: Number,
         },
-        distributorId: {
-            type: Number,
+        detail: {
+            type: Object,
+            default: () => {
+                return {}
+            }
         },
         type: {
             type: Number,
@@ -111,6 +114,7 @@ export default {
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             Core.Api.Stock.list({
+                warehouse_id: this.warehouse_id,
                 page: this.currPage,
                 page_size: this.pageSize,
             }).then(res => {

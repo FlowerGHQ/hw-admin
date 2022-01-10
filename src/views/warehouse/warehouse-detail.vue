@@ -25,12 +25,12 @@
             </div>
         </div>
         <div class="tabs-container">
-            <a-tabs v-model:activeKey="activeKey">
-                <a-tab-pane key="UserList" tab="库存数量">
-                    <WarehouseStockList/>
+            <a-tabs class="WarehouseStock">
+                <a-tab-pane key="WarehouseStockList" tab="库存数量">
+                    <WarehouseStockList :warehouse_id="id" :detail='detail'  @submit="getWarehouseDetail"/>
                 </a-tab-pane>
-                <a-tab-pane key="PurchaseList" tab="出入库记录">
-                    <WarehouseStockRecord/>
+                <a-tab-pane key="WarehouseStockRecord" tab="出入库记录">
+                    <WarehouseStockRecord :warehouse_id='id' :detail='detail'  @submit="getWarehouseDetail"/>
                 </a-tab-pane>
             </a-tabs>
         </div>
@@ -40,8 +40,6 @@
 <script>
 import Core from '../../core';
 
-import UserList from '@/components/UserList.vue';
-import PurchaseList from '@/components/PurchaseOrderList.vue';
 import WarehouseStockList from './components/WarehouseStockList.vue';
 import WarehouseStockRecord from './components/WarehouseStockRecord.vue';
 
@@ -50,19 +48,15 @@ import WarehouseStockRecord from './components/WarehouseStockRecord.vue';
 const USER_TYPE = Core.Const.USER.TYPE;
 export default {
     name: 'WarehouseDetail',
-    components: {UserList, PurchaseList, WarehouseStockList, WarehouseStockRecord },
+    components: { WarehouseStockList, WarehouseStockRecord },
     props: {},
     data() {
         return {
             USER_TYPE,
-            ORG_TYPE: Core.Const.LOGIN.TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
             //标签页
-            activeKey: 'UserList',
-
-            store_id: Core.Data.getOrgId(),
             detail: {},
             id: '',
             name: '',
