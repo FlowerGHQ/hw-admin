@@ -18,9 +18,7 @@
         </div>
         <div class="gray-panel">
             <div class="panel-content">
-                <MySteps :stepsList='stepsList' :current='currStep'>
-                scbsjhbcjhsd
-                </MySteps>
+                <MySteps :stepsList='stepsList' :current='currStep'></MySteps>
             </div>
         </div>
         <div class="form-container">

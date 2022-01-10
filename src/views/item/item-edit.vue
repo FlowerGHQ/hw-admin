@@ -3,7 +3,7 @@
     <div class="title-container">
         <div class="title-area">{{ form.id ? '编辑商品' : '新增商品' }}</div>
     </div>
-    <div class="form-block">
+    <div class="form-block"> <!-- 基本信息 -->
         <div class="form-title">
             <div class="title">基本信息</div>
         </div>
@@ -27,47 +27,9 @@
                         :category='item_category' :category-id='form.category_id' v-if="form.id !== ''"/>
                 </div>
             </div>
-            <!-- <div class="form-item required">
-                <div class="key">品牌</div>
-                <div class="value">
-                    <a-select v-model:value="form.country" placeholder="请选择品牌">
-                        <a-select-option v-for="item of countryList" :key="item.value" :value="item.value">{{ item.text }}</a-select-option>
-                    </a-select>
-                </div>
-            </div>
-            <div class="form-item">
-                <div class="key">生产商</div>
-                <div class="value">
-                    <a-select v-model:value="form.country" placeholder="请选择生产厂商">
-                        <a-select-option v-for="item of countryList" :key="item.value" :value="item.value">{{ item.text }}</a-select-option>
-                    </a-select>
-                </div>
-            </div> -->
         </div>
     </div>
-    <div class="form-block">
-        <div class="form-title">
-            <div class="title">价格信息</div>
-        </div>
-        <div class="form-content">
-            <div class="form-item required">
-                <div class="key">标准售价</div>
-                <div class="value input-number">
-                    <a-input-number v-model:value="form.price" :min="0" :precision="2" placeholder="0.00"/>
-                    <span>元</span>
-                </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">批发价格</div>
-                <div class="value input-number">
-                    <a-input-number v-model:value="form.original_price" :min="0" :precision="2" placeholder="0.00"/>
-                    <span>元</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="form-block">
+    <div class="form-block"> <!-- 图片信息 -->
         <div class="form-title">
             <div class="title">图片信息</div>
         </div>
@@ -106,9 +68,70 @@
             </div>
         </div>
     </div>
-    <div class="form-block" v-if="form.category_id && configTemp.length">
+    <div class="form-block"> <!-- 规格信息 -->
         <div class="form-title">
-            <div class="title">商品配置</div>
+            <div class="title">规格信息</div>
+        </div>
+        <div class="form-content">
+            <div class="form-item">
+                <div class="key">规格模式</div>
+                <div class="value">
+                    <a-radio-group v-model:value="specific.mode">
+                        <a-radio :value="1">单规格</a-radio>
+                        <a-radio :value="2">多规格</a-radio>
+                    </a-radio-group>
+                </div>
+            </div>
+            <template v-if="specific.mode === 2">
+            <div class="form-item">
+                <div class="key">规格定义</div>
+                <div class="value">
+                    <div class="spec-item" v-for="(item,index) of specific.list" :key="index">
+                        <div class="name">
+                            <span>规格名</span>
+                            <a-input v-model:value="item.name" placeholder="请输入规格名"/>
+                            <a-button type="link" @click="handleRemoveSpec(index)">删除</a-button>
+                        </div>
+                        <div class="option">
+                            <span>规格值</span>
+                            <div class="option-item" v-for="(option, i) of item" :key="i">
+                                <a-input v-model:value="item.option[i]" placeholder="规格值"/>
+                                <i class="icon i_close" @click="handleRemoveSpecOption(index, i)"/>
+                            </div>
+                            <a-button type="link" @click="handleAddSpecOption(index)"><i class="icon i_add"></i> 删除</a-button>
+                        </div>
+                    </div>
+
+                    <a-button type="primary" ghost @click="handleAddSpec">添加规格信息</a-button>
+                </div>
+            </div>
+            </template>
+        </div>
+    </div>
+    <div class="form-block" v-if="specific.mode === 1"> <!-- 单规格时的 价格信息 -->
+        <div class="form-title">
+            <div class="title">价格信息</div>
+        </div>
+        <div class="form-content">
+            <div class="form-item required">
+                <div class="key">标准售价</div>
+                <div class="value input-number">
+                    <a-input-number v-model:value="form.price" :min="0" :precision="2" placeholder="0.00"/>
+                    <span>元</span>
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">批发价格</div>
+                <div class="value input-number">
+                    <a-input-number v-model:value="form.original_price" :min="0" :precision="2" placeholder="0.00"/>
+                    <span>元</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-block" v-if="form.category_id && configTemp.length"> <!-- 分类配置 -->
+        <div class="form-title">
+            <div class="title">分类配置</div>
         </div>
         <div class="form-content">
             <div v-for="(item, index) of configTemp" :key="index" :class="{'form-item':true, required: item.required, textarea: item.type === 'textarea', rich_text: item.type === 'rich_text'}">
@@ -176,6 +199,12 @@ export default {
             },
             item_category: {},
             configTemp: [],
+
+            specific: { // 规格
+                mode: 1,
+                list: [],
+            },
+
             upload: {
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
                 coverList: [],
@@ -406,7 +435,20 @@ export default {
             }
             console.log('handleCategorySelect config:', config)
             this.form.config = config
-        }
+        },
+
+        handleAddSpec() {
+            this.specific.list.push({name: '', option: []})
+        },
+        handleRemoveSpec(index) {
+            this.specific.list.splice(index, 1)
+        },
+        handleAddSpecOption(index) {
+            this.specific.list[index].option.push('')
+        },
+        handleRemoveSpecOption(index, i) {
+            this.specific.list[index].option.splice(i, 1)
+        },
     }
 };
 </script>
