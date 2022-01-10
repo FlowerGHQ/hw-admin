@@ -18,8 +18,8 @@ switch (window.location.hostname) {
     case "10.0.0.159":
         URL_POINT = 'http://10.0.0.109:8083'
         break;
-    case "10.0.0.128":
-        URL_POINT = 'http://10.0.0.128:8083'
+    case "10.0.0.228":
+        URL_POINT = 'http://10.0.0.228:8083'
         break;
     default:
         // URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
@@ -245,29 +245,29 @@ let Const = {
             WAIT_APPROVAL: 5,
             WAIT_DISTRIBUTION: 10,
             WAIT_CHECK: 20,
-            // WAIT_AUDIT: 25,
+            WAIT_AUDIT: 25,
             WAIT_DETECTION: 30,
             WAIT_REPAIR: 40,
             REPAIR_END: 50,
             SETTLEMENT: 60,
             TRANSFER: 100,
-            // CHECK_FAIL: -20,
-            // AUDIT_FAIL: -30,
-            // CLOSE: -10,
+            CHECK_FAIL: -20,
+            AUDIT_FAIL: -30,
+            CLOSE: -10,
         },
         STATUS_MAP: {
             5: '待审批',
             10: '待分配',
             20: '待确认',
-            // 25: '等待审核(后台审核)',
+            25: '等待审核(后台审核)',
             30: '待检测',
             40: '维修中',
             50: '已维修',
             60: '已结算',
             100: '已转单',
-            // -20: '确认未通过',
-            // -30: '审核未通过',
-            // -10: '取消',
+            '-20': '确认未通过',
+            '-30': '审核未通过',
+            '-10': '取消',
 
         },
         STATUS_COLOR_MAP: {

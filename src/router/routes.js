@@ -336,6 +336,7 @@ const routes = [
                 component: () => import('@/views/warehouse/warehouse-list.vue'),
                 meta: {
                     title: '仓库列表',
+                    // is_sub_menu: true
                 }
             },
             {
@@ -356,6 +357,16 @@ const routes = [
                 meta: {
                     title: '仓库详情',
                     parent: '/warehouse/warehouse-list',
+                }
+            },
+            {
+                path: 'stock-edit',
+                name: 'StockEdit',
+                component: () => import('@/views/warehouse/stock-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '库存增减',
+                    parent: '/warehouse/warehouse-detail',
                 }
             },
         ]
