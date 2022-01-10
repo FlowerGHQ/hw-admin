@@ -172,7 +172,7 @@ export default {
                 {text: '已维修', value: '0', color: 'light',   key: STATUS.REPAIR_END },
                 {text: '已结算', value: '0', color: 'green',   key: STATUS.SETTLEMENT },
                 {text: '已转单', value: '0', color: 'purple',  key: STATUS.TRANSFER },
-                // {text: '确认未通过', value: '0', color: 'purple',  key: STATUS.CHECK_FAIL },
+                // {text: '确认未通过', value: '0', color: 'blue',  key: STATUS.CHECK_FAIL },
                 // {text: '审核未通过', value: '0', color: 'purple',  key: STATUS.AUDIT_FAIL },
                 // {text: '取消', value: '0', color: 'purple',  key: STATUS.CLOSE },
             ],
