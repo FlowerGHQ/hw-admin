@@ -4,9 +4,9 @@
         <div class="title-container">
             <div class="title-area">工单详情</div>
             <div class="btns-area">
-                <template  v-if="detail.org_type == OrgType && $auth('AGENT', 'STORE')">
+                <template  v-if="detail.org_type == OrgType && $auth('AGENT', 'STORE') || $auth('ADMIN')">
                     <!-- v-if="[STATUS.WAIT_AUDIT].includes(detail.status)" -->
-                    <a-button type="primary" ghost @click="handleEditShow()" v-if="[STATUS.WAIT_AUDIT].includes(detail.status) && $auth('AGENT')"><i class="icon i_edit"/>审批</a-button>
+                    <a-button type="primary" ghost @click="handleEditShow()" v-if="[STATUS.WAIT_AUDIT].includes(detail.status) && $auth('ADMIN')"><i class="icon i_edit"/>审核</a-button>
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION].includes(detail.status)"><i class="icon i_edit"/>编辑</a-button>
                     <a-button type="primary" ghost @click="handleSecondDoor()" v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_REPAIR].includes(detail.status)"><i class="icon i_edit_l"/>二次维修</a-button>
                     <template v-if="detail.account_id == User.id || $auth('MANAGER')">
@@ -100,7 +100,7 @@
                 <div class="form-item" v-if="repairForm.results == REPAIR.RESULTS.FAIL">
                     <div class="key">失败原因</div>
                     <div class="value">
-                        <a-input v-model:value="repairForm.fail_remark" placeholder="请输入失败原因"/>
+                        <a-input v-model:value="repairForm.audit_message" placeholder="请输入失败原因"/>
                     </div>
                 </div>
             </div>
@@ -141,7 +141,7 @@
         </a-modal>
     </template>
     <template class="modal-container">
-        <a-modal v-model:visible="editShow" title="审批"
+        <a-modal v-model:visible="editShow" title="审核"
             class="warehouse-edit-modal" :after-close='handleEditClose'>
             <div class="modal-content">
                 <div>
@@ -154,7 +154,7 @@
                     <div class="form-item required" v-if="editForm.audit_result == 0">
                         <div class="key">原因:</div>
                         <div class="value">
-                            <a-input v-model:value="editForm.fail_remark" placeholder="请输入不通过原因"/>
+                            <a-input v-model:value="editForm.audit_message" placeholder="请输入不通过原因"/>
                         </div>
                     </div>
                 </div>
@@ -214,7 +214,7 @@ export default {
             transferShow: false,
             repairForm: {
                 results: undefined,
-                fail_remark: undefined,
+                audit_message: undefined,
                 plan_time: undefined,
                 // finish_time: undefined,
 
@@ -238,11 +238,11 @@ export default {
             ],
             currStep: 1,
 
-            // 审批
+            // 审核
             editShow: false,
             editForm: {
                 audit_result: 1,
-                fail_remark: '',
+                audit_message: '',
             },
 
         };
@@ -262,9 +262,9 @@ export default {
             this.editShow = false;
             Object.assign(this.$data.editForm, this.$options.data().editForm)
         },
-        handleSubmit(){ // 审批提交
+        handleSubmit(){ // 审核提交
             this.loading = true;
-            Core.Api.Repair.check({
+            Core.Api.Repair.audit({
                 id: this.id,
                 ...this.editForm
             }).then(res => {
@@ -356,7 +356,10 @@ export default {
 
         // 工单确认
         handleRepairCheck() {
-            Core.Api.Repair.check({id: this.id}).then(() => {
+            Core.Api.Repair.check({
+                id: this.id,
+                audit_result: 1
+            }).then(() => {
                 this.$message.success('操作成功')
                 this.getRepairDetail()
             })

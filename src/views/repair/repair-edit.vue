@@ -212,6 +212,7 @@ export default {
                 channel: 1, // 维修方式、维修途径
                 repair_method: 1, // 维修类别
                 item_code: '', // 车辆编号
+                vehicle_no: '', // 车辆编号
 
                 customer_id: undefined,  // 相关客户-id
                 customer_name: "",  // 相关客户-名称
@@ -311,10 +312,13 @@ export default {
             if (!checkRes) {
                 return
             }
-
             let apiName = form.id ? 'update' : 'create'
-            Core.Api.Repair[apiName](form).then(() => {
+            this.form.vehicle_no = 
 
+            Core.Api.Repair[apiName]({
+                ...form,
+                vehicle_no: this.form.item_code,
+            }).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
             }).catch(err => {
