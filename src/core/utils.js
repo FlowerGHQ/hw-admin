@@ -7,7 +7,6 @@ import dayjs from "dayjs";
 import defult_img from '@images/defult_img.png'
 import defult_org from '@images/defult_org.png'
 import defult_item from '@images/defult_item.png'
-import Core from "./index";
 
 const Util = {
     /* =============== 通用方法 ================ */
@@ -432,22 +431,22 @@ const Util = {
 
     /* =============== 系统消息 ================ */
     noticeTypeFilter(val) {
-        const MAP = Core.Const.NOTICE.TYPE_MAP
+        const MAP = Const.NOTICE.TYPE_MAP
         return MAP[val] || '未知'
     },
     /* =============== 系统消息 ================ */
 
     /* =============== 退款管理 ================ */
     refundTypeFilter(val) {
-        const MAP = Core.Const.REFUND.TYPE_MAP
+        const MAP = Const.REFUND.TYPE_MAP
         return MAP[val] || '未知'
     },
     refundStatusFilter(val) {
-        const MAP = Core.Const.REFUND.STATUS_MAP
+        const MAP = Const.REFUND.STATUS_MAP
         return MAP[val] || '未知'
     },
     distributorTypeFilter(val) {
-        const MAP = Core.Const.DISTRIBUTOR.TYPE_MAP
+        const MAP = Const.DISTRIBUTOR.TYPE_MAP
         return MAP[val] || '未知'
     },
     /* =============== 退款管理 ================ */
