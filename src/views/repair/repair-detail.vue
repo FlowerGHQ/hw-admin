@@ -6,7 +6,7 @@
             <div class="btns-area">
                 <template  v-if="detail.org_type == OrgType && $auth('AGENT', 'STORE')">
                     <!-- v-if="[STATUS.WAIT_AUDIT].includes(detail.status)" -->
-                    <a-button type="primary" ghost @click="handleEditShow()" v-if="[STATUS.WAIT_AUDIT].includes(detail.status)"><i class="icon i_edit"/>审批</a-button>
+                    <a-button type="primary" ghost @click="handleEditShow()" v-if="[STATUS.WAIT_AUDIT].includes(detail.status) && $auth('ADMIN')"><i class="icon i_edit"/>审批</a-button>
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION].includes(detail.status)"><i class="icon i_edit"/>编辑</a-button>
                     <a-button type="primary" ghost @click="handleSecondDoor()" v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_REPAIR].includes(detail.status)"><i class="icon i_edit_l"/>二次维修</a-button>
                     <template v-if="detail.account_id == User.id || $auth('MANAGER')">
