@@ -17,7 +17,9 @@
                 <div class="form-item required">
                     <div class="key">商品编码：</div>
                     <div class="value">
-                        <a-input v-model:value="form.target_code" placeholder="请输入商品编码"/>
+                        <a-input-number v-model:value="form.target_code" @click="onblur"/>
+                        <template #prefix><i class="icon i_confirm" @click="handleSearch"/></template>
+                        <template #suffix><i class="icon i_close_c" @click="handleNameReset" v-if="searchForm.name"/></template>
                     </div>
                 </div>
                 <div class="form-item required">
@@ -61,7 +63,6 @@ export default {
     computed: {},
     mounted() {
         this.form.warehouse_id = Number(this.$route.query.id) || 0
-        this.getItemCode()
     },
     methods: {
         routerChange(type, item) {
@@ -93,7 +94,7 @@ export default {
                 console.log('handleSubmit err:', err)
             })
         },
-        getItemCode() {  // 获取 商品编码 数据
+        onblur() {  // 获取 商品编码 数据
             this.loading = true;
             Core.Api.Item.detailByCode({
                 itemCode: this.form.target_code,
