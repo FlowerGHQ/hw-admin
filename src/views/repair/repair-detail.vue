@@ -4,14 +4,14 @@
         <div class="title-container">
             <div class="title-area">工单详情</div>
             <div class="btns-area">
-                <template  v-if="detail.org_type == OrgType && $auth('AGENT', 'STORE') || $auth('ADMIN')">
+                <template  v-if="detail.org_type == OrgType && $auth('AGENT', 'STORE') || $auth('ADMIN') || $auth('DISTRIBUTOR')">
                     <!-- v-if="[STATUS.WAIT_AUDIT].includes(detail.status)" -->
-                    <a-button type="primary" ghost @click="handleEditShow()" v-if="[STATUS.WAIT_AUDIT].includes(detail.status) && $auth('ADMIN')"><i class="icon i_edit"/>审核</a-button>
-                    <a-button type="primary" ghost @click="routerChange('edit')" v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION].includes(detail.status)"><i class="icon i_edit"/>编辑</a-button>
+                    <a-button type="primary" ghost @click="handleAuditShow()" v-if="[STATUS.WAIT_AUDIT].includes(detail.status) && $auth('ADMIN')"><i class="icon i_edit"/>审核</a-button>
+                    <a-button type="primary" ghost @click="routerChange('edit')" v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.AUDIT_FAIL].includes(detail.status)"><i class="icon i_edit"/>编辑</a-button>
                     <a-button type="primary" ghost @click="handleSecondDoor()" v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_REPAIR].includes(detail.status)"><i class="icon i_edit_l"/>二次维修</a-button>
                     <template v-if="detail.account_id == User.id || $auth('MANAGER')">
                         <a-button type="primary" @click="handleTransfer()" ghost v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_transfer"/>转单</a-button>
-                        <a-button type="primary" @click="handleRepairCheck()" v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_confirm"/>确定接单</a-button>
+                        <a-button type="primary" @click="handleOrderShow()" v-if="detail.status == STATUS.WAIT_CHECK && $auth('DISTRIBUTOR')"><i class="icon i_confirm"/>确定接单</a-button>
                         <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_submit"/>提交</a-button>
                         <a-button type="primary" @click="handleResultShow()"  v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_completed"/>维修完成</a-button>
                     </template>
@@ -140,9 +140,10 @@
             </div>
         </a-modal>
     </template>
+    <!-- 审核 -->
     <template class="modal-container">
-        <a-modal v-model:visible="editShow" title="审核"
-            class="warehouse-edit-modal" :after-close='handleEditClose'>
+        <a-modal v-model:visible="auditShow" title="审核"
+            class="warehouse-edit-modal" :after-close='handleAuditClose'>
             <div class="modal-content">
                 <div>
                     <div class="form-item required">
@@ -160,8 +161,34 @@
                 </div>
             </div>
             <template #footer>
-                <a-button @click="editShow = false">取消</a-button>
-                <a-button @click="handleSubmit" type="primary" >确定</a-button>
+                <a-button @click="auditShow = false">取消</a-button>
+                <a-button @click="handleAuditSubmit" type="primary" >确定</a-button>
+            </template>
+        </a-modal>
+    </template>
+    <!-- 工单确认 -->
+    <template class="modal-container">
+        <a-modal v-model:visible="orderShow" title="工单确认"
+            class="warehouse-edit-modal" :after-close='handleAuditClose'>
+            <div class="modal-content">
+                <div>
+                    <div class="form-item required">
+                        <a-radio-group v-model:value="editForm.audit_result">
+                            <a-radio value="1">接单</a-radio>
+                            <a-radio value="0">不接单</a-radio>
+                        </a-radio-group>
+                    </div>
+                    <div class="form-item required" v-if="editForm.audit_result == 0">
+                        <div class="key">原因:</div>
+                        <div class="value">
+                            <a-input v-model:value="editForm.audit_message" placeholder="请输入不接单原因"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="orderShow = false">取消</a-button>
+                <a-button @click="handleOrderSubmit" type="primary" >确定</a-button>
             </template>
         </a-modal>
     </template>
@@ -239,7 +266,9 @@ export default {
             currStep: 1,
 
             // 审核
-            editShow: false,
+            auditShow: false,
+            // 工单确认
+            orderShow: false,
             editForm: {
                 audit_result: 1,
                 audit_message: '',
@@ -255,28 +284,6 @@ export default {
         console.log(User.id)
     },
     methods: {
-        handleEditShow() { // 显示弹框
-            this.editShow = true
-        },
-        handleEditClose() { // 关闭弹框
-            this.editShow = false;
-            Object.assign(this.$data.editForm, this.$options.data().editForm)
-        },
-        handleSubmit(){ // 审核提交
-            this.loading = true;
-            Core.Api.Repair.audit({
-                id: this.id,
-                ...this.editForm
-            }).then(res => {
-                console.log('handleSubmit res', res)
-                this.routerChange('back')
-            }).catch(err => {
-                console.log('handleSubmit err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-
         // 页面跳转
         routerChange(type, item) {
             let routeUrl
@@ -303,6 +310,52 @@ export default {
                     break;
             }
             window.open(routeUrl.href, '_self')
+        },
+
+        handleAuditShow() { // 显示弹框
+            this.auditShow = true
+        },
+        handleAuditClose() { // 关闭弹框
+            this.auditShow = false;
+            // Object.assign(this.$data.editForm, this.$options.data().editForm)
+        },
+        handleAuditSubmit() { // 审核提交
+            this.loading = true; 
+            
+            Core.Api.Repair.audit({
+                id: this.id,
+                ...this.editForm
+            }).then(res => {
+                console.log('handleAuditSubmit res', res)
+                this.routerChange('back')
+            }).catch(err => {
+                console.log('handleAuditSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+
+        handleOrderShow() { // 显示弹框
+            this.orderShow = true
+        },
+        handleOrderClose() { // 关闭弹框
+            this.orderShow = false;
+            // Object.assign(this.$data.editForm, this.$options.data().editForm)
+        },
+        handleOrderSubmit() { // 工单确认提交
+            this.loading = true; 
+
+            Core.Api.Repair.check({
+                id: this.id,
+                ...this.editForm
+            }).then(res => {
+                console.log('handleOrderSubmit res', res)
+                this.routerChange('back')
+            }).catch(err => {
+                console.log('handleOrderSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
         },
 
         // 获取工单详情
@@ -354,16 +407,7 @@ export default {
             })
         },
 
-        // 工单确认
-        handleRepairCheck() {
-            Core.Api.Repair.check({
-                id: this.id,
-                audit_result: 1
-            }).then(() => {
-                this.$message.success('操作成功')
-                this.getRepairDetail()
-            })
-        },
+
 
         handleResultShow(){
             this.modalFailShow = true

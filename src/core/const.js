@@ -242,7 +242,6 @@ let Const = {
         },
         // 状态
         STATUS: {
-            WAIT_APPROVAL: 5,
             WAIT_DISTRIBUTION: 10,
             WAIT_CHECK: 20,
             WAIT_AUDIT: 25,
@@ -256,10 +255,9 @@ let Const = {
             CLOSE: -10,
         },
         STATUS_MAP: {
-            5: '待审批',
             10: '待分配',
             20: '待确认',
-            25: '等待审核(后台审核)',
+            25: '待审核(后台审核)',
             30: '待检测',
             40: '维修中',
             50: '已维修',
@@ -268,7 +266,6 @@ let Const = {
             '-20': '确认未通过',
             '-30': '审核未通过',
             '-10': '取消',
-
         },
         STATUS_COLOR_MAP: {
             10: 'red',

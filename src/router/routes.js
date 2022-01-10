@@ -61,6 +61,16 @@ const routes = [
                 }
             },
             {
+                path: 'repair-list-audit',
+                name: 'RepairListAudit',
+                component: () => import('@/views/repair/repair-list-audit.vue'),
+                meta: {
+                    title: '待审工单列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true
+                }
+            },
+            {
                 path: 'repair-edit',
                 name: 'RepairEdit',
                 component: () => import('@/views/repair/repair-edit.vue'),

@@ -92,7 +92,7 @@ const apiList = {
 	    create: ['PostJson', 'repair/save'], // 列表
 	    hand: ['PostJson', 'repair/hand'], // 列表
         detail: ['PostJson', 'repair/detail'], // 工单详情
-	    check: ['PostJson', 'repair/check'], // 检查
+	    check: ['PostJson', 'repair/check'], // 确认
 	    audit: ['PostJson', 'repair/audit'], // 审批
         statusList: ['PostJson', 'repair/status-list'], // 保存
 	    repair: ['PostJson', 'repair/repair'], // 维修结束
