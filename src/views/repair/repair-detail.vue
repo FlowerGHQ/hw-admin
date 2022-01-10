@@ -5,6 +5,13 @@
             <div class="title-area">工单详情</div>
             <div class="btns-area">
                 <template  v-if="detail.org_type == OrgType && $auth('AGENT', 'STORE')">
+                    <!-- v-if="[STATUS.WAIT_AUDIT].includes(detail.status)" -->
+                    <a-button type="primary" ghost @click="handleAudit()" ><i class="icon i_edit"/>审批</a-button>
+                    <a-modal v-model:visible="visible" title="Basic Modal" @ok="handleOk">
+                        <p>Some contents...</p>
+                        <p>Some contents...</p>
+                        <p>Some contents...</p>
+                    </a-modal>
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION].includes(detail.status)"><i class="icon i_edit"/>编辑</a-button>
                     <a-button type="primary" ghost @click="handleSecondDoor()" v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_REPAIR].includes(detail.status)"><i class="icon i_edit_l"/>二次维修</a-button>
                     <template v-if="detail.account_id == User.id || $auth('MANAGER')">
@@ -151,11 +158,29 @@ import ActionLog from './components/ActionLog.vue';
 import MySteps from '@/components/MySteps.vue';
 import dayjs from "dayjs";
 import AttachmentFile from './components/AttachmentFile.vue';
-
+import { defineComponent, ref } from 'vue';
 const REPAIR = Core.Const.REPAIR
 const User = Core.Data.getUser();
 const OrgType = Core.Data.getOrgType();
 export default {
+    setup() {
+        const visible = ref(false);
+
+        const showModal = () => {
+            visible.value = true;
+        };
+
+        const handleOk = e => {
+            console.log(e);
+            visible.value = false;
+        };
+
+        return {
+            visible,
+            showModal,
+            handleOk,
+        };
+    },
     name: 'RepairDetail',
     components: {
         AttachmentFile,
@@ -219,7 +244,9 @@ export default {
         console.log(User.id)
     },
     methods: {
-
+        handleAudit(){ // 审批
+            
+        },
         // 页面跳转
         routerChange(type, item) {
             let routeUrl
