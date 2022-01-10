@@ -73,10 +73,18 @@ const apiList = {
     },
     Warehouse: { // 仓库
         save: ['PostJson', 'warehouse/save'],
-        update: ['PostJson', 'warehouse/update'],
         detail: ['PostJson', 'warehouse/detail'],
         list: ['PostJson', 'warehouse/list'],
         delete: ['PostJson', 'warehouse/delete'],
+    },
+    Stock: { //仓库库存管理
+        add: ['PostJson', 'stock/add'],
+        reduce: ['PostJson', 'stock/reduce'],
+        list: ['PostJson', 'stock/list'],
+        transfer: ['PostJson', 'stock/transfer'],
+        listByTarget: ['PostJson', 'stock/list-by-target'],
+        listByTargetId: ['PostJson', 'stock/list-by-target-id'],
+
     },
 
     Repair: { // 维修单

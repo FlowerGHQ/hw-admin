@@ -101,8 +101,7 @@ export default {
             if (!form.address) {
                 return this.$message.warning('请输入仓库地址')
             }
-            let apiName = form.id ? 'update' : 'save'
-            Core.Api.Warehouse[apiName](form).then(() => {
+            Core.Api.Warehouse.save(form).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
             }).catch(err => {

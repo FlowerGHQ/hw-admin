@@ -8,7 +8,7 @@
                         <i class="icon i_warning"/>共{{ faultSelect.length }}个故障
                     </div>
                     <a-checkbox-group class="fault_select" v-model:value="faultSelect" @change="handleFaultSelect">
-                        <a-checkbox v-for="(value,key) of faultMap" :key='key' :value='key'>
+                        <a-checkbox v-for="(value,key) of faultMap" :key='key' :value='key' @change="handleFaultItemSelect(key)">
                             {{ value }}
                         </a-checkbox>
                     </a-checkbox-group>
@@ -16,8 +16,8 @@
             </a-collapse-panel>
             <a-collapse-panel key="change" header="零部件更换" class="gray-collapse-panel">
                 <div class="panel-content">
-                    <a-collapse v-model:activeKey="failActive" ghost class="collapse-item">
-                        <a-collapse-panel v-for="fault of faultSelect" :key="fault" :header="faultMap[fault]">
+                    <a-collapse v-model:activeKey="failActive" ghost class="collapse-item" >
+                        <a-collapse-panel v-for="fault of faultSelect" :key="fault" :header="faultMap[fault]" class="fault-item">
                             <template #extra>
                                 <ItemSelect btnType='link' @change="handleAddFailItem" :fault-name="fault"
                                             :disabled-checked='failData[fault].map(i => i.id)' btn-text="添加商品"/>
@@ -152,7 +152,7 @@ export default {
 
             failData: {},
             failTotle: {},
-            failActive: '',
+            failActive: [],
 
             exchangeData: {},
             // exchangeActive: '',
@@ -174,9 +174,21 @@ export default {
                 }
             }
             this.faultSelect.forEach(it => {
+                /*console.log("++++++", "failActive", this.failActive)
+                console.log("++++++", "faultSelect", this.faultSelect)
+                if (!this.failActive.includes(it)) {
+                    console.log("++++++", 'it', it)
+                    this.failActive.push(it)
+                    console.log("++++++", "failActive", this.failActive)
+                }*/
                 this.failData[it] = this.failData[it] || []
                 this.exchangeData[it] = this.exchangeData[it] || []
+
+
             })
+        },
+        handleFaultItemSelect(val) {
+            this.failActive.push(val)
         },
 
         // 添加商品
@@ -195,6 +207,8 @@ export default {
             })
             console.log(this.failTotle[name])
         },
+
+
         // handleAddExchangeItem(ids, items,name) {
         //     console.log('handleAddExchangeItem items:', items)
         //     this.exchangeData[name].push(...items)
@@ -213,6 +227,8 @@ export default {
         // 移除商品
         handleFailItemDelete(index, name) {
             this.failData[name].splice(index, 1)
+            this.inputNumberFail(name)
+
         },
         handleExchangeItemDelete(index, name) {
             this.exchangeData[name].splice(index, 1)
@@ -275,14 +291,20 @@ export default {
         .collapse-item {
             width: calc(~'50% - 10px');
 
-            .ant-collapse-item {
-                margin-bottom: 10px;
 
+            .ant-collapse-item {
+                margin-top: 10px;
+
+
+
+                .ant-collapse-item.gray-collapse-panel{
+                    line-height: 50px;
+                }
                 .ant-collapse-content-box {
                     padding: 0;
-
                     .ant-table-thead {
                         display: none;
+
                     }
                 }
             }

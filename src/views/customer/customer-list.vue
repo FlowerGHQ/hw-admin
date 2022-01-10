@@ -1,4 +1,3 @@
-
 <template>
     <div id="CustomerList">
         <div class="list-container">
@@ -200,5 +199,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #WarehouseList {}
+// #CustomerList {}
 </style>
