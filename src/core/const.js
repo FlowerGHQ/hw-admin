@@ -117,7 +117,7 @@ let Const = {
         TYPE: {
             ADMIN: 10,      // 管理员
             DISTRIBUTOR: 15, //分销商
-            AGENT: 20,      // 经销商
+            AGENT: 20,      // 零售商
             STORE: 30,      // 门店
             WORKER: 40,     // 维修工
             CUSTOMER: 100,  // 顾客
@@ -125,7 +125,7 @@ let Const = {
         TYPE_MAP: {
             10: '平台方',
             15: '分销商',
-            20: '经销商',
+            20: '零售商',
             30: '门店',
             40: '维修工',
             100: '顾客',
@@ -135,12 +135,12 @@ let Const = {
         TYPE: {
             ADMIN: 10,     // 管理员
             DISTRIBUTOR: 15, //分销商
-            AGENT: 20,     // 经销商
+            AGENT: 20,     // 零售商
             STORE: 30,     // 门店
         },
         TYPE_LIST: [
             {value: 30, text: '门店'},
-            {value: 20, text: '经销商'},
+            {value: 20, text: '零售商'},
             {value: 15, text: '分销商'},
             {value: 10, text: '平台方'},
         ],
@@ -212,7 +212,7 @@ let Const = {
             3: '寄修',
         },
         ORG_TYPE_LIST: [
-            {text: '经销商', value: 20},
+            {text: '零售商', value: 20},
             {text: '门店', value: 30},
         ],
         // 维修类别
@@ -378,7 +378,7 @@ let Const = {
         },
         TYPE_MAP: {
             100: '用户申请退款',
-            200: '经销商申请退款',
+            200: '零售商申请退款',
         },
         STATUS: {
             WAIT_AUDIT: 10,    // 初始化
@@ -439,11 +439,11 @@ let Const = {
     NOTICE: { //系统消息
         TYPE: {
             ADMIN: 10,  //平台消息
-            AGENT: 20,  //经销商消息
+            AGENT: 20,  //零售商消息
         },
         TYPE_MAP: {
             10: '平台消息',
-            20: '经销商消息'
+            20: '零售商消息'
         },
     },
     SYSTEM: { //系统
@@ -466,7 +466,7 @@ let Const = {
     AUTH_LIST_TEMP: [ // 权限
         { list: [], select: [], key: 'home',            name: '总览' },
         { list: [], select: [], key: 'distributor',     name: '代理商管理' },
-        { list: [], select: [], key: 'agent',           name: '经销商管理' },
+        { list: [], select: [], key: 'agent',           name: '零售商管理' },
         { list: [], select: [], key: 'store',           name: '门店管理' },
         { list: [], select: [], key: 'customer',        name: '客户管理' },
         { list: [], select: [], key: 'org-user',        name: '员工管理' },

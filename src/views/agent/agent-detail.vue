@@ -1,7 +1,7 @@
 <template>
 <div id="AgentDetail" class='list-container'>
     <div class="title-container">
-        <div class="title-area">经销商详情 <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>{{detail.status ? '启用中' : '已禁用'}}</a-tag></div>
+        <div class="title-area">零售商详情 <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>{{detail.status ? '启用中' : '已禁用'}}</a-tag></div>
         <div class="btns-area" v-if="$auth('ADMIN')">
             <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
             <!-- <a-button type="primary" ghost @click="handleDelete(agent_id)"><i class="icon i_delete"/>删除</a-button> -->
@@ -135,11 +135,11 @@ export default {
                 this.loading = false;
             });
         },
-        // 删除 经销商
+        // 删除 零售商
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该经销商吗？',
+                title: '确定要删除该零售商吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',
@@ -157,7 +157,7 @@ export default {
         handleStatusChange() {
             let _this = this;
             this.$confirm({
-                title: `确定要${_this.detail.status ? '禁用' : '启用'}该经销商吗？`,
+                title: `确定要${_this.detail.status ? '禁用' : '启用'}该零售商吗？`,
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',

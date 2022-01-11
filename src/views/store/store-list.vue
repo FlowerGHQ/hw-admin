@@ -24,9 +24,9 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
-                        <div class="key">所属经销商：</div>
+                        <div class="key">所属零售商：</div>
                         <div class="value">
-                            <a-select placeholder="请选择经销商" v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
+                            <a-select placeholder="请选择零售商" v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
                                 <a-select-option v-for="(item,index) of agentList" :key="index" :value="item.id">{{item.name}}</a-select-option>
                             </a-select>
                         </div>
@@ -167,7 +167,7 @@ export default {
                 tableColumns.splice(1, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'item'})
             }
             if (this.$auth('ADMIN', 'DISTRIBUTOR')) {
-                tableColumns.splice(2, 0, {title: '所属经销商', dataIndex: 'agent_name', key: 'item'})
+                tableColumns.splice(2, 0, {title: '所属零售商', dataIndex: 'agent_name', key: 'item'})
             }
             return tableColumns
         },
@@ -253,7 +253,7 @@ export default {
                 this.loading = false;
             });
         },
-        getAgentList() {        // 获取 经销商 数据
+        getAgentList() {        // 获取 零售商 数据
             this.loading = true;
             Core.Api.Agent.listAll().then(res => {
                 console.log("getAgentList res", res)

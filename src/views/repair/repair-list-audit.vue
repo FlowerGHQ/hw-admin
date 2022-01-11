@@ -39,9 +39,9 @@
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
-                    <div class="key">所属经销商:</div>
+                    <div class="key">所属零售商:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.agent_id" placeholder="请选择经销商" @change="handleSearch">
+                        <a-select v-model:value="searchForm.agent_id" placeholder="请选择零售商" @change="handleSearch">
                             <a-select-option v-for="item of agentList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
@@ -210,8 +210,8 @@ export default {
                     filters: Core.Const.REPAIR.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.channel || null },
                 { title: '维修类别', dataIndex: 'repair_method',
                     filters: Core.Const.REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.repair_method || null },
-                // { title: '维修门店/经销商',   dataIndex: 'store_name', key: 'item' },
-                { title: '维修门店/经销商',   dataIndex: 'repair_name',},
+                // { title: '维修门店/零售商',   dataIndex: 'store_name', key: 'item' },
+                { title: '维修门店/零售商',   dataIndex: 'repair_name',},
                 { title: '维修门店电话',   dataIndex: 'repair_phone', key: 'item' },
                 { title: '创建人',   dataIndex: 'user_name', key: 'item' },
                 { title: '关联客户', dataIndex: 'customer_name', key: 'item' },
@@ -282,14 +282,14 @@ export default {
                 status: 1,
             }).then(res => {
                 this.storeList = res.list
-                this.storeList.push({id:-1,name:"经销商"})
+                this.storeList.push({id:-1,name:"零售商"})
             });
         },
         getAgentListAll() {
             Core.Api.Agent.listAll().then(res => {
                 console.log('res.list: ', res.list);
                 this.agentList = res.list
-                this.agentList.push({id:-1,name:"经销商"})
+                this.agentList.push({id:-1,name:"零售商"})
             });
         },
         getDistributorListAll() {

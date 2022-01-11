@@ -17,9 +17,9 @@
                     </div>
                 </div>
                 <div class="form-item required" v-if="loginType == LOGIN_TYPE.ADMIN && !form.id">
-                    <div class="key">所属经销商</div>
+                    <div class="key">所属零售商</div>
                     <div class="value">
-                        <a-select v-model:value="form.agent_id" placeholder="请选择所属经销商">
+                        <a-select v-model:value="form.agent_id" placeholder="请选择所属零售商">
                             <a-select-option v-for="agent of agentList" :key="agent.id" :value="agent.id">{{ agent.name }}</a-select-option>
                         </a-select>
                     </div>
@@ -158,7 +158,7 @@ export default {
                 this.loading = false;
             });
         },
-        // 获取选择用 经销商列表
+        // 获取选择用 零售商列表
         getDistributorList() {
             Core.Api.Distributor.listAll().then(res => {
                 this.distributorList = res.list
@@ -182,7 +182,7 @@ export default {
             }
             console.log('form:', form)
             if (!form.agent_id) {
-                return this.$message.warning('请选择所属经销商')
+                return this.$message.warning('请选择所属零售商')
             }
             if (!form.name) {
                 return this.$message.warning('请输入门店名称')

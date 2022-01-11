@@ -14,7 +14,7 @@ const messages = {
             repair_detail: '维修详情',
             repair_create: '新增工单',
 
-            agent: '经销商',
+            agent: '零售商',
             distributor: '代理商',
             store: '门店',
             "故障编辑" : '故障编辑'

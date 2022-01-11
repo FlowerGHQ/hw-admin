@@ -1,6 +1,6 @@
 <template>
 <div id="AgentEdit" class="edit-container">
-    <div class="title-container"><div class="title-area">{{form.id ? '编辑经销商' : '新建经销商'}}</div></div>
+    <div class="title-container"><div class="title-area">{{form.id ? '编辑零售商' : '新建零售商'}}</div></div>
     <div class="form-block">
         <div class="form-title"><div class="title">基本信息</div></div>
         <div class="form-content">
@@ -13,21 +13,21 @@
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">经销商名:</div>
+                <div class="key">零售商名:</div>
                 <div class="value">
-                    <a-input v-model:value="form.name" placeholder="请输入经销商"/>
+                    <a-input v-model:value="form.name" placeholder="请输入零售商"/>
                 </div>
             </div>
             <div class="form-item required">
                 <div class="key">手机号:</div>
                 <div class="value">
-                    <a-input v-model:value="form.phone" placeholder="请输入经销商手机号"/>
+                    <a-input v-model:value="form.phone" placeholder="请输入零售商手机号"/>
                 </div>
             </div>
             <div class="form-item required">
                 <div class="key">邮箱:</div>
                 <div class="value">
-                    <a-input v-model:value="form.email" placeholder="请输入经销商邮箱"/>
+                    <a-input v-model:value="form.email" placeholder="请输入零售商邮箱"/>
                 </div>
             </div>
             <div class="form-item required">
@@ -139,16 +139,16 @@ export default {
             this.form.country = this.country_cascader[1] || ''
             let form = Core.Util.deepCopy(this.form)
             if (!form.name) {
-                return this.$message.warning('请输入经销商名')
+                return this.$message.warning('请输入零售商名')
             }
             if (!form.phone) {
-                return this.$message.warning('请输入经销商手机号')
+                return this.$message.warning('请输入零售商手机号')
             }
             if (!form.email) {
-                return this.$message.warning('请输入经销商邮箱')
+                return this.$message.warning('请输入零售商邮箱')
             }
             if (!form.country) {
-                return this.$message.warning('请选择经销商国家')
+                return this.$message.warning('请选择零售商国家')
             }
             Core.Api.Agent.save(form).then(() => {
                 this.$message.success('保存成功')

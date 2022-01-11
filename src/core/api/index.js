@@ -54,7 +54,7 @@ const apiList = {
         allotAuth: ['PostJson', 'authority/save-role-authority'], // 向角色分配权限
         allotRole: ['PostJson', 'authority/save-user-role'], // 向员工账号分配角色
     },
-    Agent: { // 经销商
+    Agent: { // 零售商
         list: ['PostJson', 'agent/list'], // 列表
         listAll: ['PostJson','agent/list-name'], //选择用的 名称列表 无分页
         save: ['PostJson', 'agent/save'], // 编辑

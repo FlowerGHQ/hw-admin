@@ -99,7 +99,7 @@ export default {
                 tableColumns.splice(1, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'name'})
             }
             if (this.$auth('ADMIN')) {
-                tableColumns.splice(2, 0, {title: '所属经销商', dataIndex: 'agent_name', key: 'name'})
+                tableColumns.splice(2, 0, {title: '所属零售商', dataIndex: 'agent_name', key: 'name'})
             }
             return tableColumns
         },

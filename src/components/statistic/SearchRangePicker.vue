@@ -30,7 +30,7 @@ export default {
             if (this.$auth('ADMIN')) {
                 list = [
                     {value: 0, text: '全部'},
-                    {value: 1, text: '经销商'},
+                    {value: 1, text: '零售商'},
                     {value: 2, text: '门店'},
                 ]
             } else if (this.$auth('AGENT')) {

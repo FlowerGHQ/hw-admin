@@ -37,7 +37,7 @@
                     </a-col>
                 </a-row>
                 <div class='desc-stat'>
-                    <a-statistic title="经销商数" :value="detail.agent_count" />
+                    <a-statistic title="零售商数" :value="detail.agent_count" />
                     <a-divider type="vertical" />
                     <a-statistic title="门店数" :value="detail.store_count" />
                     <a-divider type="vertical" />
@@ -51,7 +51,7 @@
         </div>
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
-                <a-tab-pane key="AgentList" tab="经销商管理" v-if="loginType == USER_TYPE.ADMIN">
+                <a-tab-pane key="AgentList" tab="零售商管理" v-if="loginType == USER_TYPE.ADMIN">
                     <AgentList :orgId="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'AgentList'" @change="getDistributorDetail"/>
                 </a-tab-pane>
                 <a-tab-pane key="StoreList" tab="门店管理" v-if="loginType == USER_TYPE.ADMIN">
@@ -141,7 +141,7 @@ export default {
                 this.loading = false;
             });
         },
-        // 删除 经销商
+        // 删除 零售商
         handleDelete(id) {
             let _this = this;
             this.$confirm({

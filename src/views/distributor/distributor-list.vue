@@ -205,11 +205,11 @@ export default {
                 this.loading = false;
             });
         },
-        // 删除 经销商
+        // 删除 零售商
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除分经销商吗？',
+                title: '确定要删除分零售商吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',

@@ -128,7 +128,7 @@ export default {
             ]
             switch (this.org_type) {
                 case 1:
-                    columns.splice(1, 0, {title: '经销商名称', dataIndex: 'org_name', key: 'org_name'})
+                    columns.splice(1, 0, {title: '零售商名称', dataIndex: 'org_name', key: 'org_name'})
                     break;
                 case 2:
                     columns.splice(1, 0, {title: '门店名称', dataIndex: 'org_name', key: 'org_name'})
