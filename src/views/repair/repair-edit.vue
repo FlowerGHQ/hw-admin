@@ -186,11 +186,16 @@ export default {
     props: {},
     data() {
         return {
+            REPAIR,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
             detail: {
                 status: 0,
+                repair_user_id: undefined, // 工单负责人
+                plan_time: undefined, // 计划时间
+                repair_message: "", // 处理信息、工单备注
+                priority: 0, // 紧急程度
             }, // 工单详情
             create_time: [],
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
@@ -201,7 +206,6 @@ export default {
             channelList: REPAIR.CHANNEL_LIST, // 维修方式
             priorityList: REPAIR.PRIORITY_LIST, // 紧急程度
             customerList: [], // 车主列表
-            REPAIR,
             isExist: '', // 车辆编号输入框提示
             form: {
                 id: '',
@@ -319,28 +323,42 @@ export default {
                 return
             }
             let apiName = form.id ? 'update' : 'create'
-            this.form.vehicle_no =
 
-                Core.Api.Repair[apiName]({
-                    ...form,
-                    vehicle_no: this.form.item_code,
-                }).then(() => {
-                    this.$message.success('保存成功')
+            Core.Api.Repair[apiName]({
+                ...form,
+                vehicle_no: this.form.item_code,
+            }).then(() => {
+                this.$message.success('保存成功')
+                this.routerChange('back')
+            }).catch(err => {
+                console.log('handleSubmit err:', err)
+            })
+                
+            if (this.detail.status == REPAIR.STATUS.CHECK_FAIL) { // 未确认通过维修单 员工再次确认（重提）
+                this.loading = true; 
+                Core.Api.Repair.hand({
+                    id: this.form.id,
+                    ...this.detail
+                }).then(res => {
+                    console.log('handSubmit res', res)
                     this.routerChange('back')
                 }).catch(err => {
-                    console.log('handleSubmit err:', err)
-                })
-            if (this.detail.status == -30) { // 为审核通过维修单 员工再次确认（重提）
+                    console.log('handSubmit err', err)
+                }).finally(() => {
+                    this.loading = false;
+                });
+            }
+            if (this.detail.status == REPAIR.STATUS.AUDIT_FAIL) { // 未审核通过维修单 员工再次确认（重提）
                 this.loading = true; 
                 Core.Api.Repair.check({
                     id: this.form.id,
                     audit_result: 1,
                     audit_message: '',
                 }).then(res => {
-                    console.log('handleOrderSubmit res', res)
+                    console.log('checkSubmit res', res)
                     this.routerChange('back')
                 }).catch(err => {
-                    console.log('handleOrderSubmit err', err)
+                    console.log('checkSubmit err', err)
                 }).finally(() => {
                     this.loading = false;
                 });
