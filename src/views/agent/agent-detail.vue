@@ -56,7 +56,7 @@
             <a-tab-pane key="WorkerList" tab="维修工管理">
                 <UserList :orgId="agent_id" :orgType="ORG_TYPE.AGENT" :type="USER_TYPE.WORKER" v-if="activeKey === 'WorkerList'"/>
             </a-tab-pane>
-            <a-tab-pane key="StoreList" tab="门店管理" v-if="loginType == USER_TYPE.ADMIN">
+            <a-tab-pane key="StoreList" tab="门店管理">
                 <StoreList :orgId="agent_id" :type="USER_TYPE.AGENT" v-if="activeKey === 'StoreList'" @change="getAgentDetail"/>
             </a-tab-pane>
             <a-tab-pane key="PurchaseList" tab="订单列表">

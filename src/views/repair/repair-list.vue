@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">{{$t('n.repair_list')}}</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('DISTRIBUTOR', 'AGENT', 'STORE')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="$auth( 'AGENT', 'STORE')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
             </div>
         </div>
         <div class="tabs-container colorful">
@@ -33,23 +33,23 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
                     <div class="key">所属分销商:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.distributor_id" placeholder="请选择分销商" @change="handleSearch">
-                            <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
+                        <a-select v-model:value="searchForm.distributor_id" placeholder="请选择所属分销商" @change="handleSearch">
+                            <a-select-option v-for="distributor of distributorList" :key="distributor.id" :value="distributor.id">{{ distributor.name }}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
                     <div class="key">所属零售商:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.agent_id" placeholder="请选择零售商" @change="handleSearch">
-                            <a-select-option v-for="item of agentList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
+                        <a-select v-model:value="searchForm.agent_id" placeholder="请选择所属零售商" @change='handleSearch'>
+                            <a-select-option v-for="agent of agentList" :key="agent.id" :value="agent.id">{{ agent.name }}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR', 'AGENT')">
                     <div class="key">所属门店:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.org_id" placeholder="请选择门店" @change="handleSearch">
+                        <a-select v-model:value="searchForm.store_id" placeholder="请选择门店" @change='handleSearch'>
                             <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
@@ -57,7 +57,7 @@
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">{{$t('def.create_time')}}</div>
                     <div class="value">
-                        <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
+                        <a-range-picker v-model:value="create_time" valueFormat='X' @change='handleSearch' :show-time="defaultTime" :allow-clear='false'>
                             <template #suffixIcon><i class="icon i_calendar"></i> </template>
                         </a-range-picker>
                     </div>
@@ -182,9 +182,9 @@ export default {
             filteredInfo: null,
             searchForm: {
                 uid: '',
-                org_id:undefined,
+                store_id: undefined,
                 agent_id: undefined,
-                distributor_id:undefined,
+                distributor_id: undefined,
                 status: undefined,
                 channel: '',
                 repair_method: '',
@@ -192,12 +192,26 @@ export default {
                 service_type: '',
                 vehicle_no: '',
             },
+            agentSearchFrom: {
+                distributor_id: ''
+            },
 
             tableFields: [],
             tableData: [],
+
         };
     },
-    watch: {},
+    watch: {
+        'searchForm.distributor_id': function () {
+            this.getAgentListAll();
+            this.searchForm.agent_id = undefined
+            this.searchForm.store_id = undefined
+        },
+        'searchForm.agent_id': function () {
+            this.getStoreListAll()
+            this.searchForm.store_id = undefined
+        },
+    },
     computed: {
         tableColumns() {
             let { filteredInfo } = this;
@@ -229,10 +243,12 @@ export default {
         if (this.$auth('ADMIN')) {
             this.getDistributorListAll();
         }
-        if (this.$auth('ADMIN', 'DISTRIBUTOR')) {
+        if (this.$auth('DISTRIBUTOR')) {
+            this.searchForm.distributor_id = Core.Data.getOrgId()
             this.getAgentListAll();
         }
-        if (this.$auth('ADMIN', 'DISTRIBUTOR', 'AGENT')) {
+        if (this.$auth('AGENT')) {
+            this.searchForm.agent_id = Core.Data.getOrgId()
             this.getStoreList();
         }
     },
@@ -278,28 +294,39 @@ export default {
             this.pageChange(1);
         },
 
-        getStoreList() {
-            Core.Api.Store.list({
-                page: 0,
-                status: 1,
-            }).then(res => {
+        getStoreListAll() {
+            if (this.searchForm.agent_id) {
+                Core.Api.Store.listAll({agent_id: this.searchForm.agent_id}).then(res => {
                 this.storeList = res.list
-                this.storeList.push({id:-1,name:"零售商"})
+                // this.storeList.push({id:-1,name:"零售商"})
             });
+            } else {
+                this.storeList = []
+            }
         },
         getAgentListAll() {
-            Core.Api.Agent.listAll().then(res => {
+            if (this.searchForm.distributor_id) {
+            Core.Api.Agent.listAll({distributor_id: this.searchForm.distributor_id}).then(res => {
                 console.log('res.list: ', res.list);
                 this.agentList = res.list
-                this.agentList.push({id:-1,name:"零售商"})
+                // this.agentList.push({id:-1,name:"零售商"})
             });
+            } else {
+                this.agentList = []
+            }
+
         },
         getDistributorListAll() {
             Core.Api.Distributor.listAll().then(res => {
                 console.log('res.list: ', res.list);
                 this.distributorList = res.list
-                this.distributorList.push({id:-1,name:"分销商"})
+                // this.distributorList.push({id:-1,name:"分销商"})
             });
+        },
+        onDistributorChange(val) {
+            this.agentSearchFrom.distributor_id = val
+            this.getAgentList()
+
         },
 
         handleTableChange(page, filters, sorter) {
@@ -313,14 +340,6 @@ export default {
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             console.log('this.searchForm:', this.searchForm)
-            if (this.searchForm.org_id == -1){
-                // this.searchForm.org_id = 0
-                this.searchForm.org_type = Core.Const.LOGIN.ORG_TYPE.AGENT
-            }
-            if (this.searchForm.org_id > 0){
-
-                this.searchForm.org_type = Core.Const.LOGIN.ORG_TYPE.STORE
-            }
             Core.Api.Repair.list({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
@@ -387,8 +406,8 @@ export default {
             let type = form.type || 0
             let status = form.status || 0
             let distributorId = form.distributorId || 0
-            let agentId = form.agentId || 0
-            let storeId = form.storeId || 0
+            let agentId = form.agent_id || 0
+            let storeId = form.store_id || 0
             let orgId = form.org_id ? form.org_id : 0
             let orgType = form.orgType || 0
             let itemId = form.itemId || 0

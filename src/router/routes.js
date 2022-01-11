@@ -369,16 +369,6 @@ const routes = [
                     parent: '/warehouse/warehouse-list',
                 }
             },
-            {
-                path: 'stock-edit',
-                name: 'StockEdit',
-                component: () => import('@/views/warehouse/stock-edit.vue'),
-                hidden: true,
-                meta: {
-                    title: '库存增减',
-                    parent: '/warehouse/warehouse-detail',
-                }
-            },
         ]
     },
     {   // 商品 - 平台端
