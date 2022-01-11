@@ -311,7 +311,7 @@ export default {
         },
 
         // 表单提交
-        handleSubmit() {
+        async handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
 
             form.plan_time = form.plan_time ? dayjs(form.plan_time).unix() : 0
@@ -324,7 +324,7 @@ export default {
             }
             let apiName = form.id ? 'update' : 'create'
 
-            Core.Api.Repair[apiName]({
+            await Core.Api.Repair[apiName]({
                 ...form,
                 vehicle_no: this.form.item_code,
             }).then(() => {
@@ -334,9 +334,9 @@ export default {
                 console.log('handleSubmit err:', err)
             })
                 
-            if (this.detail.status == REPAIR.STATUS.CHECK_FAIL) { // 未确认通过维修单 员工再次确认（重提）
+            if (this.detail.status == this.REPAIR.STATUS.CHECK_FAIL) { // 未确认通过维修单 员工再次确认（重提）
                 this.loading = true; 
-                Core.Api.Repair.hand({
+                await Core.Api.Repair.hand({
                     id: this.form.id,
                     ...this.detail
                 }).then(res => {
@@ -348,9 +348,9 @@ export default {
                     this.loading = false;
                 });
             }
-            if (this.detail.status == REPAIR.STATUS.AUDIT_FAIL) { // 未审核通过维修单 员工再次确认（重提）
+            if (this.detail.status == this.REPAIR.STATUS.AUDIT_FAIL) { // 未审核通过维修单 员工再次确认（重提）
                 this.loading = true; 
-                Core.Api.Repair.check({
+                await Core.Api.Repair.check({
                     id: this.form.id,
                     audit_result: 1,
                     audit_message: '',

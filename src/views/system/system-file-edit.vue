@@ -8,7 +8,7 @@
             <div class="title">文件上传</div>
         </div>
         <div class="form-content">
-            <div class="form-item img-upload">
+            <div class="form-item required">
                 <div class="key">文件类型</div>
                 <div class="value">
                     <a-select placeholder="请选择文件类型" v-model:value="form.target_type" @change="handleCustomerSelect"
