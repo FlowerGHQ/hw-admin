@@ -183,7 +183,6 @@ export default {
                 { title: '订单编号', dataIndex: 'sn', },
                 { title: '价格', dataIndex: 'price' },
                 { title: '订单状态', dataIndex: 'status' },
-                { title: '是否已评论', dataIndex: 'flag_review' },
                 { title: '下单时间', dataIndex: 'create_time', key: 'time' },
                 { title: '操作', key: 'operation', fixed: 'right'}
             ]
