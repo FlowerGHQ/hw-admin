@@ -83,9 +83,9 @@
         </div>
         -->
         <div class="form-container">
-            <Distribution :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DISTRIBUTION && ($auth('DISTRIBUTOR')||$auth('AGENT')||$auth('STORE'))"/>
-            <CheckFault :id='id' :detail='detail' @submit="getRepairDetail" ref="CheckFault"  v-if="detail.status == STATUS.WAIT_DETECTION && ($auth('DISTRIBUTOR')||$auth('AGENT')||$auth('STORE'))"/>
-            <AttachmentFile  :target_id='id' :detail='detail' @submit="getRepairDetail" ref="AttachmentFile"  v-if="detail.status == STATUS.WAIT_DETECTION &&($auth('DISTRIBUTOR')|| $auth('AGENT')||$auth('STORE'))"/>
+            <Distribution :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DISTRIBUTION && $auth('DISTRIBUTOR', 'AGENT', 'STORE')"/>
+            <CheckFault :id='id' :detail='detail' @submit="getRepairDetail" ref="CheckFault"  v-if="detail.status == STATUS.WAIT_DETECTION && $auth('DISTRIBUTOR', 'AGENT', 'STORE')"/>
+            <AttachmentFile  :target_id='id' :detail='detail' @submit="getRepairDetail" ref="AttachmentFile"  v-if="$auth('DISTRIBUTOR', 'AGENT', 'STORE')"/>
             <CheckResult :id='id' :detail='detail' :faultList="faultList" :failList="failList" :exchangeList="exchangeList" :failTotle="failTotle" :exchangeTotle="exchangeTotle"  ref="CheckResult" v-if="resultShow && (detail.status != STATUS.WAIT_DISTRIBUTION && detail.status != STATUS.WAIT_DETECTION && detail.status != STATUS.WAIT_CHECK)"/>
             <RepairInfo :id='id' :detail='detail' />
             <ActionLog :id='id' :detail='detail' />
@@ -211,7 +211,6 @@ import ActionLog from './components/ActionLog.vue';
 import MySteps from '@/components/MySteps.vue';
 import dayjs from "dayjs";
 import AttachmentFile from './components/AttachmentFile.vue';
-import { defineComponent, ref } from 'vue';
 const REPAIR = Core.Const.REPAIR
 const User = Core.Data.getUser();
 const OrgType = Core.Data.getOrgType();
@@ -260,10 +259,9 @@ export default {
             exchangeList: [],
             resultShow: false,
 
-
             stepsList: [
                 { title: '分配工单' },
-                { title: '员工确认' },
+                { title: '后台审核' },
                 { title: '检测' },
                 { title: '维修' },
                 { title: '结算' },
