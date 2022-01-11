@@ -456,11 +456,11 @@ let Const = {
                 TARGET_TYPE_REPAIR_ORDER: '5',
             },
             TARGET_TYPE_LIST: [
-                {value: '1', text: '系统'},
-                {value: '2', text: '分销商'},
-                {value: '3', text: '零售商'},
-                {value: '4', text: '门店'},
-                {value: '5', text: '维修订单'},
+                {value: 1, text: '系统'},
+                {value: 2, text: '分销商'},
+                {value: 3, text: '零售商'},
+                {value: 4, text: '门店'},
+                {value: 5, text: '维修订单'},
             ],
             TYPE:{
                 XLSX: 'xlsx',
