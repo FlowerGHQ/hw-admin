@@ -1,5 +1,5 @@
 <template>
-<div id="RepairAuditList">
+<div id="RepairConfirmList">
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">{{$t('n.repair_list')}}</div>
@@ -172,7 +172,7 @@ import Core from '../../core';
 const REPAIR = Core.Const.REPAIR
 
 export default {
-    name: 'RepairAuditList',
+    name: 'RepairConfirmList',
     components: {},
     props: {},
     data() {
@@ -194,7 +194,7 @@ export default {
                 {text: '全  部', value: '0', color: 'primary', key: '0'},
                 {text: '待分配', value: '0', color: 'red',     key: REPAIR.STATUS.WAIT_DISTRIBUTION },
                 {text: '待确认', value: '0', color: 'orange',  key: REPAIR.STATUS.WAIT_CHECK },
-                {text: '等待审核(后台审核)', value: '0', color: 'yellow',  key: REPAIR.STATUS.WAIT_AUDIT },
+                {text: '待审核', value: '0', color: 'yellow',  key: REPAIR.STATUS.WAIT_AUDIT },
                 {text: '待检测', value: '0', color: 'yellow',  key: REPAIR.STATUS.WAIT_DETECTION },
                 {text: '维修中', value: '0', color: 'blue',    key: REPAIR.STATUS.WAIT_REPAIR },
                 {text: '已维修', value: '0', color: 'light',   key: REPAIR.STATUS.REPAIR_END },
@@ -473,5 +473,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #RepairAuditList {}
+// #RepairConfirmList {}
 </style>

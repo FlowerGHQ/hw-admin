@@ -1,5 +1,5 @@
 <template>
-<div id="RepairList">
+<div id="RepairConfirmList">
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">{{$t('n.repair_list')}}</div>
@@ -7,7 +7,7 @@
                 <a-button type="primary" @click="routerChange('edit')" v-if="$auth('DISTRIBUTOR', 'AGENT', 'STORE')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
             </div>
         </div>
-        <div class="tabs-container colorful">
+        <!-- <div class="tabs-container colorful">
             <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
                 <a-tab-pane :key="item.key" v-for="item of statusList">
                     <template #tab>
@@ -15,7 +15,7 @@
                     </template>
                 </a-tab-pane>
             </a-tabs>
-        </div>
+        </div> -->
         <div class="search-container">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -116,6 +116,9 @@
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
+                    <template v-if="column.key === 'operation'">
+                        <a-button type='link' @click="handleConfirmShow(record.id)" v-if="record.status == REPAIR.STATUS.WAIT_CHECK"><i class="icon i_edit"/>确认</a-button>
+                    </template>
                 </template>
             </a-table>
         </div>
@@ -135,6 +138,32 @@
             />
         </div>
     </div>
+    <!-- 员工确认 -->
+    <template class="modal-container">
+        <a-modal v-model:visible="confirmShow" title="员工确认"
+            class="warehouse-edit-modal" :after-close='handleConfirmClose'>
+            <div class="modal-content">
+                <div>
+                    <div class="form-item required">
+                        <a-radio-group v-model:value="editForm.audit_result">
+                            <a-radio value="1">通过</a-radio>
+                            <a-radio value="0">不通过</a-radio>
+                        </a-radio-group>
+                    </div>
+                    <div class="form-item required" v-if="editForm.audit_result == 0">
+                        <div class="key">原因:</div>
+                        <div class="value">
+                            <a-input v-model:value="editForm.audit_message" placeholder="请输入不通过原因"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="confirmShow = false">取消</a-button>
+                <a-button @click="handleConfirmSubmit" type="primary" >确定</a-button>
+            </template>
+        </a-modal>
+    </template>
 </div>
 </template>
 
@@ -143,7 +172,7 @@ import Core from '../../core';
 const REPAIR = Core.Const.REPAIR
 
 export default {
-    name: 'RepairList',
+    name: 'RepairConfirmList',
     components: {},
     props: {},
     data() {
@@ -165,14 +194,14 @@ export default {
                 {text: '全  部', value: '0', color: 'primary', key: '0'},
                 {text: '待分配', value: '0', color: 'red',     key: REPAIR.STATUS.WAIT_DISTRIBUTION },
                 {text: '待确认', value: '0', color: 'orange',  key: REPAIR.STATUS.WAIT_CHECK },
-                {text: '待审核', value: '0', color: 'orange',  key: REPAIR.STATUS.WAIT_AUDIT },
+                {text: '待审核', value: '0', color: 'yellow',  key: REPAIR.STATUS.WAIT_AUDIT },
                 {text: '待检测', value: '0', color: 'yellow',  key: REPAIR.STATUS.WAIT_DETECTION },
                 {text: '维修中', value: '0', color: 'blue',    key: REPAIR.STATUS.WAIT_REPAIR },
                 {text: '已维修', value: '0', color: 'light',   key: REPAIR.STATUS.REPAIR_END },
                 {text: '已结算', value: '0', color: 'green',   key: REPAIR.STATUS.SETTLEMENT },
                 {text: '已转单', value: '0', color: 'purple',  key: REPAIR.STATUS.TRANSFER },
-                {text: '确认未通过', value: '0', color: 'red',  key: REPAIR.STATUS.CHECK_FAIL },
-                {text: '审核未通过', value: '0', color: 'red',  key: REPAIR.STATUS.AUDIT_FAIL },
+                {text: '确认未通过', value: '0', color: 'purple',  key: REPAIR.STATUS.CHECK_FAIL },
+                {text: '审核未通过', value: '0', color: 'purple',  key: REPAIR.STATUS.AUDIT_FAIL },
                 {text: '取消', value: '0', color: 'purple',  key: REPAIR.STATUS.CLOSE },
             ],
             create_time: [],
@@ -185,7 +214,7 @@ export default {
                 org_id:undefined,
                 agent_id: undefined,
                 distributor_id:undefined,
-                status: undefined,
+                status: 20,
                 channel: '',
                 repair_method: '',
                 repair_user_org_type:'',
@@ -195,6 +224,13 @@ export default {
 
             tableFields: [],
             tableData: [],
+            // 确认
+            confirmShow: false,
+            editForm: {
+                audit_result: 1,
+                audit_message: '',
+            },
+            repair_id: ''
         };
     },
     watch: {},
@@ -220,6 +256,7 @@ export default {
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
                 { title: '订单状态', dataIndex: 'status' , fixed: 'right'},
+                { title: '操作', key: 'operation', fixed: 'right' },
             ]
             return columns
         },
@@ -277,6 +314,27 @@ export default {
             this.create_time = []
             this.pageChange(1);
         },
+        
+        handleConfirmShow(id) { // 显示弹框
+            this.repair_id = id
+            this.confirmShow = true
+        },
+        handleConfirmClose() { // 关闭弹框
+            this.confirmShow = false;
+        },
+        handleConfirmSubmit() { // 审核提交
+            this.loading = true; 
+            
+            Core.Api.Repair.check({
+                id: this.repair_id,
+                ...this.editForm
+            }).then(res => {
+                this.handleConfirmClose()
+                this.getTableData()
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
 
         getStoreList() {
             Core.Api.Store.list({
@@ -321,7 +379,6 @@ export default {
 
                 this.searchForm.org_type = Core.Const.LOGIN.ORG_TYPE.STORE
             }
-            console.log('this.searchForm:', this.searchForm)
             Core.Api.Repair.list({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
@@ -336,38 +393,38 @@ export default {
                 console.log('getTableData err:', err)
             }).finally(() => {
                 this.loading = false;
-                this.getStatusStat()
+                // this.getStatusStat()
             });
         },
-        getStatusStat() {  // 获取 状态数量
-            this.loading = true;
-            Object.assign(this.statusList, this.$options.data().statusList)
-            Core.Api.Repair.statusList({
-                ...this.searchForm,
-                begin_time: this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
-                page: this.currPage,
-                page_size: this.pageSize
-            }).then(res => {
-                console.log("getStatusStat res:", res)
-                let total = 0
+        // getStatusStat() {  // 获取 状态数量
+        //     this.loading = true;
+        //     Object.assign(this.statusList, this.$options.data().statusList)
+        //     Core.Api.Repair.statusList({
+        //         ...this.searchForm,
+        //         begin_time: this.create_time[0] || '',
+        //         end_time: this.create_time[1] || '',
+        //         page: this.currPage,
+        //         page_size: this.pageSize
+        //     }).then(res => {
+        //         console.log("getStatusStat res:", res)
+        //         let total = 0
 
-                this.statusList.forEach(statusItem => {
-                    res.status_list.forEach(item => {
-                        if ( statusItem.key == item.status) {
-                            statusItem.value = item.amount
-                            total += item.amount
-                        }
-                    })
-                })
-                console.log(total)
-                this.statusList[0].value = total
-            }).catch(err => {
-                console.log('getStatusStat err:', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
+        //         this.statusList.forEach(statusItem => {
+        //             res.status_list.forEach(item => {
+        //                 if ( statusItem.key == item.status) {
+        //                     statusItem.value = item.amount
+        //                     total += item.amount
+        //                 }
+        //             })
+        //         })
+        //         console.log(total)
+        //         this.statusList[0].value = total
+        //     }).catch(err => {
+        //         console.log('getStatusStat err:', err)
+        //     }).finally(() => {
+        //         this.loading = false;
+        //     });
+        // },
 
         handleExportConfirm(){ // 确认订单是否导出
             let _this = this;
@@ -416,5 +473,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #RepairList {}
+// #RepairConfirmList {}
 </style>

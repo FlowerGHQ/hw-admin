@@ -334,7 +334,7 @@ export default {
                 console.log('handleSubmit err:', err)
             })
                 
-            if (this.detail.status == REPAIR.STATUS.CHECK_FAIL) { // 未确认通过维修单 员工再次确认（重提）
+            if (this.detail.status == this.REPAIR.STATUS.CHECK_FAIL) { // 未确认通过维修单 员工再次确认（重提）
                 this.loading = true; 
                 Core.Api.Repair.hand({
                     id: this.form.id,
@@ -348,7 +348,7 @@ export default {
                     this.loading = false;
                 });
             }
-            if (this.detail.status == REPAIR.STATUS.AUDIT_FAIL) { // 未审核通过维修单 员工再次确认（重提）
+            if (this.detail.status == this.REPAIR.STATUS.AUDIT_FAIL) { // 未审核通过维修单 员工再次确认（重提）
                 this.loading = true; 
                 Core.Api.Repair.check({
                     id: this.form.id,
