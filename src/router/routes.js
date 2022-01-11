@@ -48,7 +48,7 @@ const routes = [
             title: '维修单管理',
             icon: 'i_s_repair',
             // auth: ['dashboard'],
-            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN,  LOGIN_TYPE.DISTRIBUTOR],
+            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
         },
         children: [
             {
@@ -61,9 +61,9 @@ const routes = [
                 }
             },
             {
-                path: 'repair-list-audit',
-                name: 'RepairListAudit',
-                component: () => import('@/views/repair/repair-list-audit.vue'),
+                path: 'repair-audit-list',
+                name: 'RepairAuditList',
+                component: () => import('@/views/repair/repair-audit-list.vue'),
                 meta: {
                     title: '待审工单列表',
                     roles: [LOGIN_TYPE.ADMIN],

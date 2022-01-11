@@ -4,14 +4,19 @@
         <div class="title-container">
             <div class="title-area">工单详情</div>
             <div class="btns-area">
-                <template  v-if="detail.org_type == OrgType && $auth('AGENT', 'STORE') || $auth('ADMIN') || $auth('DISTRIBUTOR')">
+                <template  v-if="$auth('ADMIN')">
+                    <a-button type="primary" ghost @click="handleAuditShow()" v-if="[STATUS.WAIT_AUDIT].includes(detail.status)"><i class="icon i_edit"/>审核</a-button>
+                </template>
+                <template  v-if="$auth('DISTRIBUTOR')">
+                    <a-button type="primary" @click="handleOrderShow()" v-if="[STATUS.WAIT_CHECK].includes(detail.status)"><i class="icon i_confirm"/>确定接单</a-button>
+                </template>
+                <template  v-if="detail.org_type == OrgType && $auth('AGENT', 'STORE')">
                     <!-- v-if="[STATUS.WAIT_AUDIT].includes(detail.status)" -->
-                    <a-button type="primary" ghost @click="handleAuditShow()" v-if="[STATUS.WAIT_AUDIT].includes(detail.status) && $auth('ADMIN')"><i class="icon i_edit"/>审核</a-button>
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.AUDIT_FAIL].includes(detail.status)"><i class="icon i_edit"/>编辑</a-button>
                     <a-button type="primary" ghost @click="handleSecondDoor()" v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_REPAIR].includes(detail.status)"><i class="icon i_edit_l"/>二次维修</a-button>
                     <template v-if="detail.account_id == User.id || $auth('MANAGER')">
                         <a-button type="primary" @click="handleTransfer()" ghost v-if="detail.status == STATUS.WAIT_CHECK"><i class="icon i_transfer"/>转单</a-button>
-                        <a-button type="primary" @click="handleOrderShow()" v-if="detail.status == STATUS.WAIT_CHECK && $auth('DISTRIBUTOR')"><i class="icon i_confirm"/>确定接单</a-button>
+                        <!-- <a-button type="primary" @click="handleOrderShow()" v-if="detail.status == STATUS.WAIT_CHECK && $auth('DISTRIBUTOR')"><i class="icon i_confirm"/>确定接单</a-button> -->
                         <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_submit"/>提交</a-button>
                         <a-button type="primary" @click="handleResultShow()"  v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_completed"/>维修完成</a-button>
                     </template>

@@ -51,12 +51,13 @@
                 <div class="form-item required">
                     <div class="key">到港时间</div>
                     <div class="value">
-                        <a-date-picker v-model:value="form.arrival_time" valueFormat='X' :show-time="defaultTime"
+                        <a-date-picker v-model:value="form.arrival_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime"
                                        placeholder="请选择到港时间">
                             <template #suffixIcon><i class="icon i_calendar"/></template>
                         </a-date-picker>
                     </div>
                 </div>
+                <!-- <a-date-picker v-model:value="form.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/> -->
                 <div class="form-item required">
                     <div class="key">工单名称</div>
                     <div class="value">
@@ -296,6 +297,7 @@ export default {
                 this.form.customer_id = this.form.customer_id || undefined
                 this.form.repair_user_id = this.form.repair_user_id || undefined
                 this.form.plan_time = this.form.plan_time ? dayjs.unix(this.form.plan_time).format('YYYY-MM-DD HH:mm:ss') : undefined
+                this.form.arrival_time = this.form.arrival_time ? dayjs.unix(this.form.arrival_time).format('YYYY-MM-DD HH:mm:ss') : undefined // 时间戳转日期
                 // this.form.finish_time = this.form.finish_time ? dayjs.unix(this.form.finish_time).format('YYYY-MM-DD HH:mm:ss') : undefined
             }).catch(err => {
                 console.log('getRepairDetail err', err)
@@ -309,6 +311,7 @@ export default {
             let form = Core.Util.deepCopy(this.form)
 
             form.plan_time = form.plan_time ? dayjs(form.plan_time).unix() : 0
+            form.arrival_time = form.arrival_time ? dayjs(form.arrival_time).unix() : 0 // 日期转时间戳
             // form.finish_time = form.finish_time ? dayjs(form.finish_time).unix() : 0
             console.log('handleSubmit form:', form)
             let checkRes = this.checkFormInput(form);
@@ -327,6 +330,21 @@ export default {
                 }).catch(err => {
                     console.log('handleSubmit err:', err)
                 })
+            if (this.detail.status == -30) { // 为审核通过维修单 员工再次确认（重提）
+                this.loading = true; 
+                Core.Api.Repair.check({
+                    id: this.form.id,
+                    audit_result: 1,
+                    audit_message: '',
+                }).then(res => {
+                    console.log('handleOrderSubmit res', res)
+                    this.routerChange('back')
+                }).catch(err => {
+                    console.log('handleOrderSubmit err', err)
+                }).finally(() => {
+                    this.loading = false;
+                });
+            }
         },
         onblur() {  // 获取 车辆编码 数据
             if (!this.form.item_code) {

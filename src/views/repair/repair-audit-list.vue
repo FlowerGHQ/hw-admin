@@ -1,5 +1,5 @@
 <template>
-<div id="RepairList">
+<div id="RepairAuditList">
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">{{$t('n.repair_list')}}</div>
@@ -172,7 +172,7 @@ import Core from '../../core';
 const REPAIR = Core.Const.REPAIR
 
 export default {
-    name: 'RepairList',
+    name: 'RepairAuditList',
     components: {},
     props: {},
     data() {
@@ -473,5 +473,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #RepairList {}
+// #RepairAuditList {}
 </style>
