@@ -199,7 +199,7 @@ export default {
                 {text: '维修中', value: '0', color: 'blue',    key: REPAIR.STATUS.WAIT_REPAIR },
                 {text: '已维修', value: '0', color: 'light',   key: REPAIR.STATUS.REPAIR_END },
                 {text: '已结算', value: '0', color: 'green',   key: REPAIR.STATUS.SETTLEMENT },
-                {text: '已转单', value: '0', color: 'purple',  key: REPAIR.STATUS.TRANSFER },
+                // {text: '已转单', value: '0', color: 'purple',  key: REPAIR.STATUS.TRANSFER },
                 {text: '确认未通过', value: '0', color: 'purple',  key: REPAIR.STATUS.CHECK_FAIL },
                 {text: '审核未通过', value: '0', color: 'purple',  key: REPAIR.STATUS.AUDIT_FAIL },
                 {text: '取消', value: '0', color: 'purple',  key: REPAIR.STATUS.CLOSE },
