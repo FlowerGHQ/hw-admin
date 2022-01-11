@@ -116,9 +116,6 @@
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
-                    <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="handleAuditShow(record.id)" v-if="record.status == REPAIR.STATUS.WAIT_AUDIT"><i class="icon i_edit"/>审批</a-button>
-                    </template>
                 </template>
             </a-table>
         </div>
@@ -138,32 +135,6 @@
             />
         </div>
     </div>
-    <!-- 审核 -->
-    <template class="modal-container">
-        <a-modal v-model:visible="auditShow" title="审核"
-            class="warehouse-edit-modal" :after-close='handleAuditClose'>
-            <div class="modal-content">
-                <div>
-                    <div class="form-item required">
-                        <a-radio-group v-model:value="editForm.audit_result">
-                            <a-radio value="1">通过</a-radio>
-                            <a-radio value="0">不通过</a-radio>
-                        </a-radio-group>
-                    </div>
-                    <div class="form-item required" v-if="editForm.audit_result == 0">
-                        <div class="key">原因:</div>
-                        <div class="value">
-                            <a-input v-model:value="editForm.audit_message" placeholder="请输入不通过原因"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <template #footer>
-                <a-button @click="auditShow = false">取消</a-button>
-                <a-button @click="handleAuditSubmit" type="primary" >确定</a-button>
-            </template>
-        </a-modal>
-    </template>
 </div>
 </template>
 
@@ -224,13 +195,6 @@ export default {
 
             tableFields: [],
             tableData: [],
-            // 审核
-            auditShow: false,
-            editForm: {
-                audit_result: 1,
-                audit_message: '',
-            },
-            repair_id: ''
         };
     },
     watch: {},
@@ -256,7 +220,6 @@ export default {
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
                 { title: '订单状态', dataIndex: 'status' , fixed: 'right'},
-                { title: '操作', key: 'operation', fixed: 'right' },
             ]
             return columns
         },
@@ -313,28 +276,6 @@ export default {
 
             this.create_time = []
             this.pageChange(1);
-        },
-        
-        handleAuditShow(id) { // 显示弹框
-            this.repair_id = id
-            this.auditShow = true
-        },
-        handleAuditClose() { // 关闭弹框
-            this.auditShow = false;
-            // Object.assign(this.$data.editForm, this.$options.data().editForm)
-        },
-        handleAuditSubmit() { // 审核提交
-            this.loading = true; 
-            
-            Core.Api.Repair.audit({
-                id: this.repair_id,
-                ...this.editForm
-            }).then(res => {
-                this.handleAuditClose()
-                this.getTableData()
-            }).finally(() => {
-                this.loading = false;
-            });
         },
 
         getStoreList() {
