@@ -76,6 +76,7 @@ const apiList = {
         detail: ['PostJson', 'warehouse/detail'],
         list: ['PostJson', 'warehouse/list'],
         delete: ['PostJson', 'warehouse/delete'],
+        listWithStock: ['PostJson', 'warehouse/list-with-stock'],
     },
     Stock: { //仓库库存管理
         add: ['PostJson', 'stock/add'],
