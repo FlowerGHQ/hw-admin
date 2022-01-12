@@ -177,8 +177,8 @@ let Const = {
     },
 
     ORG_STATUS_LIST: [ // 组织状态
-        {text: "禁用", value: 0},
         {text: "启用", value: 1},
+        {text: "禁用", value: 0},
     ],
 
     REPAIR: { // 维修工单
@@ -506,7 +506,17 @@ let Const = {
         TYPE_MAP: {
             1: '增加',
             2: '减少'
+        },
+        PRODUCT_TYPE: {  //产品类型
+            TYPE_QUALITY: 1, //正品仓
+            TYPE_DEFECTIVE: 2, //残次仓
+        },
+        PRODUCT_TYPE_MAP: {
+            1: '正品仓',
+            2: '残次仓',
         }
+
+
     },
 };
 

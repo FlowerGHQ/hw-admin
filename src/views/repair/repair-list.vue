@@ -222,7 +222,6 @@ export default {
                     filters: Core.Const.REPAIR.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.channel || null },
                 { title: '维修类别', dataIndex: 'repair_method',
                     filters: Core.Const.REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.repair_method || null },
-                // { title: '维修门店/零售商',   dataIndex: 'store_name', key: 'item' },
                 { title: '维修门店/零售商',   dataIndex: 'repair_name',},
                 { title: '维修门店电话',   dataIndex: 'repair_phone', key: 'item' },
                 { title: '创建人',   dataIndex: 'user_name', key: 'item' },
@@ -294,7 +293,7 @@ export default {
             if (this.searchForm.agent_id) {
                 Core.Api.Store.listAll({agent_id: this.searchForm.agent_id}).then(res => {
                 this.storeList = res.list
-                // this.storeList.push({id:-1,name:"零售商"})
+                // this.storeList.push({id:-1,name:"门店"})
             });
             } else {
                 this.storeList = []
@@ -319,17 +318,11 @@ export default {
                 // this.distributorList.push({id:-1,name:"分销商"})
             });
         },
-        onDistributorChange(val) {
-            this.agentSearchFrom.distributor_id = val
-            this.getAgentList()
-
-        },
-
         handleTableChange(page, filters, sorter) {
             console.log('handleTableChange filters:', filters)
             this.filteredInfo = filters;
             for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : 0
+                this.searchForm[key] = filters[key] ? filters[key][0] : ''
             }
             this.pageChange(1);
         },
