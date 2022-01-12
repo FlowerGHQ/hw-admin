@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="table-container">
-            <ItemTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :check-mode='true' :disabled-checked='disabledChecked' @change="handleSelectItem" :radio-mode='radioMode'/>
+            <ItemTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :check-mode='true' :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode'/>
         </div>
         <div class="paging-container">
             <a-pagination
@@ -46,6 +46,7 @@ export default {
     components: {
         ItemTable: () => import('@/components/table/ItemTable.vue'),
     },
+    emits: ['select'],
     props: {
         btnText: {
             type: String,
@@ -121,7 +122,7 @@ export default {
         handleConfirm() {
             console.log('handleConfirm this.faultName:', this.selectItems)
 
-            this.$emit('change', this.selectItemIds, this.selectItems, this.faultName)
+            this.$emit('select', this.selectItemIds, this.selectItems, this.faultName)
             this.modalShow = false
         },
 
