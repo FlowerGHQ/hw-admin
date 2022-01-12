@@ -87,7 +87,7 @@
         <div class="form-container">
             <Distribution :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DISTRIBUTION && $auth('DISTRIBUTOR', 'AGENT', 'STORE')"/>
             <CheckFault :id='id' :detail='detail' @submit="getRepairDetail" ref="CheckFault"  v-if="detail.status == STATUS.WAIT_DETECTION && $auth('DISTRIBUTOR', 'AGENT', 'STORE')"/>
-            <AttachmentFile  :target_id='id' :detail='detail' @submit="getRepairDetail" ref="AttachmentFile"  v-if="$auth('DISTRIBUTOR', 'AGENT', 'STORE')"/>
+            <AttachmentFile  :target_id='id' :detail='detail' @submit="getRepairDetail" ref="AttachmentFile"  v-if="$auth('DISTRIBUTOR', 'AGENT', 'STORE', 'ADMIN')"/>
             <CheckResult :id='id' :detail='detail' :faultList="faultList" :failList="failList" :exchangeList="exchangeList" :failTotle="failTotle" :exchangeTotle="exchangeTotle"  ref="CheckResult" v-if="resultShow && (detail.status != STATUS.WAIT_DISTRIBUTION && detail.status != STATUS.WAIT_DETECTION && detail.status != STATUS.WAIT_CHECK)"/>
             <RepairInfo :id='id' :detail='detail' />
             <ActionLog :id='id' :detail='detail' />
