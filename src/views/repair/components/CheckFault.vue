@@ -142,6 +142,8 @@ export default {
             tableColumns: [
                 {title: '商品名称', dataIndex: 'name'},
                 {title: '数量', dataIndex: 'amount'},
+                {title: '故障仓', dataIndex: 'price'},
+                {title: '换新仓', dataIndex: 'price'},
                 {title: '金额', dataIndex: 'price', key: 'money'},
                 {title: '金额', dataIndex: 'totle_price'},
                 {title: '操作', dataIndex: 'operation'},
