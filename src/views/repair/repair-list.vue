@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">{{$t('n.repair_list')}}</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('DISTRIBUTOR', 'AGENT', 'STORE')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('AGENT', 'STORE')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
             </div>
         </div>
         <div class="tabs-container colorful">
