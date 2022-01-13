@@ -192,6 +192,10 @@ let Const = {
             2: '特批订单',
         },
         // 工单帐类
+        SERVICE_TYPE: {
+            IN_REPAIR_TIME: 1,
+            OUT_REPAIR_TIME: 2,
+        },
         SERVICE_TYPE_LIST: [
             {text: '保内维修', value: 1},
             {text: '保外维修', value: 2},
@@ -300,7 +304,13 @@ let Const = {
         TYPE: {
             ADD: 1,
             REPLACE: 2,
-        }
+            TRANSFER: 3,
+        },
+        TYPE_LIST: [
+            {value: 1, text: '新增'},
+            {value: 2, text: '更换'},
+            {value: 3, text: '转单'},
+        ],
     },
     ACTION_LOG: { // 操作记录
         SOURCE_TYPE: {
