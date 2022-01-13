@@ -244,7 +244,7 @@ export default {
         }
         if (this.$auth('AGENT')) {
             this.searchForm.agent_id = Core.Data.getOrgId()
-            this.getStoreList();
+            this.getStoreListAll();
         }
     },
     methods: {

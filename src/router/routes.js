@@ -56,7 +56,7 @@ const routes = [
                 name: 'RepairList',
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
-                    title: '维修单列表',
+                    title: '维修单',
                     is_sub_menu: true
                 }
             },
@@ -65,7 +65,7 @@ const routes = [
                 name: 'RepairConfirmList',
                 component: () => import('@/views/repair/repair-confirm-list.vue'),
                 meta: {
-                    title: '待确认工单列表',
+                    title: '待确认工单',
                     roles: [LOGIN_TYPE.DISTRIBUTOR],
                     is_sub_menu: true
                 }
@@ -75,7 +75,7 @@ const routes = [
                 name: 'repairauditlist',
                 component: () => import('@/views/repair/repair-audit-list.vue'),
                 meta: {
-                    title: '待审工单列表',
+                    title: '待审工单',
                     roles: [LOGIN_TYPE.ADMIN],
                     is_sub_menu: true
                 }
@@ -356,7 +356,7 @@ const routes = [
                 component: () => import('@/views/warehouse/warehouse-list.vue'),
                 meta: {
                     title: '仓库列表',
-                    // is_sub_menu: true
+                    is_sub_menu: true
                 }
             },
             {
@@ -377,6 +377,15 @@ const routes = [
                 meta: {
                     title: '仓库详情',
                     parent: '/warehouse/warehouse-list',
+                }
+            },
+            {
+                path: 'invoice-list',
+                name: 'InvoiceList',
+                component: () => import('@/views/invoice/invoice-list.vue'),
+                meta: {
+                    title: '出入库货单',
+                    is_sub_menu: true
                 }
             },
         ]

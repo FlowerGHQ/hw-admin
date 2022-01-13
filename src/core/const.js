@@ -498,7 +498,7 @@ let Const = {
             REPAIR_ORDER: 1, //图片类型
         }
     },
-    STOCK_RECORD: {
+    STOCK_RECORD: {  //仓库明细
         TYPE: {
             TYPE_IN: 1, //增加
             TYPE_OUT: 2, //减少
@@ -514,8 +514,13 @@ let Const = {
         PRODUCT_TYPE_MAP: {
             1: '正品仓',
             2: '残次仓',
+        },
+        STATUS: {  //出入库审核
+            AIT_AUDIT: 10, //待审核
+            AUDIT_PASS: 20, //审核通过
+            CLOSE: 40, //处理完成
+            AUDIT_REFUSE: '-10' //审核失败
         }
-
 
     },
 };
