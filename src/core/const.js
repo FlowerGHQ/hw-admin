@@ -500,12 +500,12 @@ let Const = {
     },
     STOCK_RECORD: {  //仓库明细
         TYPE: {
-            TYPE_IN: 1, //增加
-            TYPE_OUT: 2, //减少
+            TYPE_IN: 1, //入库
+            TYPE_OUT: 2, //出库
         },
         TYPE_MAP: {
-            1: '增加',
-            2: '减少'
+            1: '入库',
+            2: '出库'
         },
         PRODUCT_TYPE: {  //产品类型
             TYPE_QUALITY: 1, //正品仓

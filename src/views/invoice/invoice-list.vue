@@ -2,7 +2,7 @@
     <div id="WarehouseList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">出入库货单列表</div>
+                <div class="title-area">货单列表</div>
                 <div class="btns-area">
                     <a-button type="primary" @click="handleAddShow" style="margin-bottom: 10px;"
                               class="panel-btn"><i class="icon i_add"/>库存管理
@@ -33,12 +33,12 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">出入库类型:</div>
+                        <div class="key">货单类型:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.type" @change="handleTypeSelect" placeholder="请选择出入库类型"
                                       allow-clear>
-                                <a-select-option key="1" :value="handleTypeList.TYPE_IN">增加</a-select-option>
-                                <a-select-option key="20" :value="handleTypeList.TYPE_OUT">减少</a-select-option>
+                                <a-select-option key="1" :value="handleTypeList.TYPE_IN">入库</a-select-option>
+                                <a-select-option key="2" :value="handleTypeList.TYPE_OUT">出库</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -102,29 +102,23 @@
                 />
             </div>
         </div>
-        <a-modal v-model:visible="codeAddShow" title="库存增减" class="codeAddShow-edit-modal"
+        <a-modal v-model:visible="codeAddShow" title="库存管理" class="codeAddShow-edit-modal"
                  :after-close="handleAddClose">
             <div class="form-item required">
-                <div class="key">操作类型：</div>
-                <a-radio-group v-model:value="form.type">
-                    <a-radio :value="'add'">增加</a-radio>
-                    <a-radio :value="'reduce'">减少</a-radio>
-                </a-radio-group>
-            </div>
-            <div class="form-item required">
-                <div class="key">商品编码：</div>
-                <div class="value form-item-value">
-                    <a-input class="itemCodeInput" v-model:value="form.target_code" placeholder="请输入商品编码"
-                             @blur="onblur"/>
-                    <span v-if="isExist === true"><i class="icon i_confirm"/></span>
-                    <span v-else-if="isExist === false"><i class="icon i_close_c"/></span>
+                <div class="key">仓库：</div>
+                <div class="value">
+                <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库">
+                    <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">{{ warehouse.name }}</a-select-option>
+                </a-select>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">商品数量:</div>
-                <div class="value form-item-value">
-                    <a-input-number v-model:value="form.number" :min="1"/>
-                    <span class="itemNumber">件</span>
+                <div class="key">类型：</div>
+                <div class="value">
+                    <a-radio-group v-model:value="form.type">
+                        <a-radio :value="handleTypeList.TYPE_IN">入库</a-radio>
+                        <a-radio :value="handleTypeList.TYPE_OUT">出库</a-radio>
+                    </a-radio-group>
                 </div>
             </div>
             <template #footer>
@@ -157,7 +151,8 @@ export default {
             detail: {},
             codeAddShow: false,
             isExist: '',
-            handleTypeList:Core.Const.STOCK_RECORD.TYPE,
+            warehouseList: [],
+            handleTypeList:Core.Const.STOCK_RECORD.TYPE, //出入库
             statusList: [
                 {text: '全  部', value: '0', color: 'primary', key: '0'},
                 {text: '待审核', value: '0', color: 'yellow',     key: STOCK_RECORD.STATUS.AIT_AUDIT },
@@ -174,9 +169,7 @@ export default {
             form: {
                 type: '',
                 id: '',
-                target_code: '', //商品编码
-                number: '',
-                warehouse_id: '',
+                warehouse_id: undefined,
             },
 
             tableColumns: [
@@ -195,6 +188,7 @@ export default {
     computed: {},
     mounted() {
         this.getTableData();
+        this.getWarehouseList();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -203,7 +197,7 @@ export default {
             switch (type) {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/repair/repair-edit",
+                        path: "/invoice/invoice-edit",
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_self')
@@ -232,38 +226,27 @@ export default {
                 warehouse_id: '',
             }
         },
+        getWarehouseList() {
+            Core.Api.Warehouse.listAll().then(res => {
+                this.warehouseList = res.list
+            })
+        },
         handleAddSubmit() {
             let form = Core.Util.deepCopy(this.form)
+            if (!form.warehouse_id) {
+                return this.$message.warning('请选择仓库')
+            }
             if (!form.type) {
-                return this.$message.warning('请选择操作类型')
+                return this.$message.warning('请选择类型')
             }
-            if (!form.target_code) {
-                return this.$message.warning('请输入商品编码')
-            }
-            if (!form.number) {
-                return this.$message.warning('请输入商品数量')
-            }
-            Core.Api.Stock[this.form.type](form).then(() => {
+            Core.Api.Invoice.save(form).then(() => {
                 this.$message.success('保存成功')
                 this.handleAddClose();
                 this.getTableData();
+                this.routerChange('edit')
             }).catch(err => {
                 console.log('handleAddSubmit err:', err)
             })
-        },
-        onblur() {  // 获取 商品编码 数据
-            if (!this.form.target_code) {
-                return this.isExist = ''
-            }
-            Core.Api.Item.detailByCode({
-                code: this.form.target_code,
-            }).then(res => {
-                this.isExist = res.detail != null
-                console.log("getItemCode res", res)
-            }).catch(err => {
-                console.log('getItemCode err', err)
-            }).finally(() => {
-            });
         },
         handleTypeSelect(val) {
             this.type = val

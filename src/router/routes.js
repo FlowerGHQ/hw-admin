@@ -384,8 +384,18 @@ const routes = [
                 name: 'InvoiceList',
                 component: () => import('@/views/invoice/invoice-list.vue'),
                 meta: {
-                    title: '出入库货单',
+                    title: '货单列表',
                     is_sub_menu: true
+                }
+            },
+            {
+                path: 'invoice-edit',
+                name: 'InvoiceEdit',
+                component: () => import('@/views/invoice/invoice-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '货单编辑',
+                    parent: '/invoice/invoice-list',
                 }
             },
         ]

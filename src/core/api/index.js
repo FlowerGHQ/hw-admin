@@ -75,6 +75,7 @@ const apiList = {
         save: ['PostJson', 'warehouse/save'],
         detail: ['PostJson', 'warehouse/detail'],
         list: ['PostJson', 'warehouse/list'],
+        listAll: ['PostJson', 'warehouse/list-name'],
         delete: ['PostJson', 'warehouse/delete'],
         listWithStock: ['PostJson', 'warehouse/list-with-stock'],
     },

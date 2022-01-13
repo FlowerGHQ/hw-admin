@@ -43,8 +43,8 @@
             <div class="form-item required">
                 <div class="key">操作类型：</div>
                 <a-radio-group v-model:value="form.type">
-                    <a-radio :value="'add'">增加</a-radio>
-                    <a-radio :value="'reduce'">减少</a-radio>
+                    <a-radio :value="'add'">入库</a-radio>
+                    <a-radio :value="'reduce'">出库</a-radio>
                 </a-radio-group>
             </div>
             <div class="form-item required">
