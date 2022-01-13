@@ -1,207 +1,239 @@
 <template>
-<div id="RepairDetail">
-    <div class="list-container">
-        <div class="title-container">
-            <div class="title-area">工单详情</div>
-            <div class="btns-area">
-                <template  v-if="$auth('ADMIN')">
-                    <a-button type="primary" ghost @click="handleAuditShow()" v-if="[STATUS.WAIT_AUDIT].includes(detail.status)"><i class="icon i_edit"/>审核</a-button>
-                </template>
-                <template  v-if="$auth('DISTRIBUTOR')">
-                    <a-button type="primary" @click="handleOrderShow()" v-if="[STATUS.WAIT_CHECK].includes(detail.status)"><i class="icon i_confirm"/>确定接单</a-button>
-                </template>
-                <template  v-if="detail.org_type == OrgType && $auth('AGENT', 'STORE')">
-                    <!-- v-if="[STATUS.WAIT_AUDIT].includes(detail.status)" -->
-                    <a-button type="primary" ghost @click="routerChange('edit')" v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.AUDIT_FAIL, STATUS.CHECK_FAIL].includes(detail.status)"><i class="icon i_edit"/>编辑</a-button>
-                    <a-button type="primary" ghost @click="handleSecondDoor()" v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_REPAIR].includes(detail.status)"><i class="icon i_edit_l"/>二次维修</a-button>
-                    <a-button type="primary" @click="handleTransfer()" ghost v-if="[STATUS.WAIT_CHECK].includes(detail.status)"><i class="icon i_transfer"/>转单</a-button>
-                    <template v-if="detail.account_id == User.id || $auth('MANAGER')">
-                        <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_submit"/>提交</a-button>
-                        <a-button type="primary" @click="handleResultShow()"  v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_completed"/>维修完成</a-button>
+    <div id="RepairDetail">
+        <div class="list-container">
+            <div class="title-container">
+                <div class="title-area">工单详情</div>
+                <div class="btns-area">
+                    <template v-if="$auth('ADMIN')">
+                        <a-button type="primary" ghost @click="handleAuditShow()"
+                                  v-if="[STATUS.WAIT_AUDIT].includes(detail.status)"><i class="icon i_edit"/>审核
+                        </a-button>
                     </template>
-                    <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END"><i class="icon i_settle"/>结算</a-button>
-                    <!-- <a-button type="danger" ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button> -->
-                </template>
-                <a-button type="primary" @click="routerChange('invoice')" v-if="detail.status == STATUS.SETTLEMENT"><i class="icon i_detail_l"/>查看结算单</a-button>
-            </div>
-        </div>
-        <div class="gray-panel info">
-            <div class="panel-title">
-                <div class="left">
-                    <span>工单编号</span> {{detail.uid}}
+                    <template v-if="$auth('DISTRIBUTOR')">
+                        <a-button type="primary" @click="handleOrderShow()"
+                                  v-if="[STATUS.WAIT_CHECK].includes(detail.status)"><i class="icon i_confirm"/>确定接单
+                        </a-button>
+                    </template>
+                    <template v-if="detail.org_type == OrgType && $auth('AGENT', 'STORE')">
+                        <!-- v-if="[STATUS.WAIT_AUDIT].includes(detail.status)" -->
+                        <a-button type="primary" ghost @click="routerChange('edit')"
+                                  v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.AUDIT_FAIL, STATUS.CHECK_FAIL].includes(detail.status)">
+                            <i class="icon i_edit"/>编辑
+                        </a-button>
+                        <a-button type="primary" ghost @click="handleSecondDoor()"
+                                  v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_REPAIR].includes(detail.status)">
+                            <i class="icon i_edit_l"/>二次维修
+                        </a-button>
+                        <a-button type="primary" @click="handleTransfer()" ghost
+                                  v-if="[STATUS.WAIT_CHECK].includes(detail.status)"><i class="icon i_transfer"/>转单
+                        </a-button>
+                        <template v-if="detail.account_id == User.id || $auth('MANAGER')">
+                            <a-button type="primary" @click="handleFaultSubmit()"
+                                      v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_submit"/>提交
+                            </a-button>
+                            <a-button type="primary" @click="handleResultShow()"
+                                      v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_completed"/>维修完成
+                            </a-button>
+                        </template>
+                        <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END">
+                            <i class="icon i_settle"/>结算
+                        </a-button>
+                        <!-- <a-button type="danger" ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button> -->
+                    </template>
+                    <a-button type="primary" @click="routerChange('invoice')" v-if="detail.status == STATUS.SETTLEMENT">
+                        <i class="icon i_detail_l"/>查看结算单
+                    </a-button>
                 </div>
-                <div class="right">
-                    <div class="staff" v-if="detail.repair_user_id">员工：{{detail.repair_user_name || '-'}}</div>
-                    <div class="status">
-                        <i class="icon i_point" :class="$Util.repairStatusFilter(detail.status,'color')"/>
-                        {{$Util.repairStatusFilter(detail.status)}}
+            </div>
+            <div class="gray-panel info">
+                <div class="panel-title">
+                    <div class="left">
+                        <span>工单编号</span> {{ detail.uid }}
+                    </div>
+                    <div class="right">
+                        <div class="staff" v-if="detail.repair_user_id">员工：{{ detail.repair_user_name || '-' }}</div>
+                        <div class="status">
+                            <i class="icon i_point" :class="$Util.repairStatusFilter(detail.status,'color')"/>
+                            {{ $Util.repairStatusFilter(detail.status) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div class="info-item">
+                        <div class="key">工单帐类</div>
+                        <div class="value">{{ $Util.repairServiceFilter(detail.service_type || '-') }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">创建人</div>
+                        <div class="value">{{ detail.user_name || '-' }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">相关客户</div>
+                        <div class="value">{{ detail.customer_name || '-' }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">优先级</div>
+                        <div class="value">{{ $Util.repairPriorityFilter(detail.priority) }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">创建时间</div>
+                        <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">计划时间</div>
+                        <div class="value">{{ $Util.timeFilter(detail.plan_time) || '-' }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">实施时间</div>
+                        <div class="value">{{ $Util.timeFilter(detail.finish_time) || '-' }}</div>
+                    </div>
+                    <div class="info-item" v-if="detail.audit_message != ''">
+                        <div class="key">未通过原因</div>
+                        <div class="value">{{ detail.audit_message || '-' }}</div>
                     </div>
                 </div>
             </div>
-            <div class="panel-content">
-                <div class="info-item">
-                    <div class="key">工单帐类</div>
-                    <div class="value">{{$Util.repairServiceFilter(detail.service_type || '-') }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">创建人</div>
-                    <div class="value">{{detail.user_name || '-'}}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">相关客户</div>
-                    <div class="value">{{detail.customer_name || '-'}}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">优先级</div>
-                    <div class="value">{{$Util.repairPriorityFilter(detail.priority)}}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">创建时间</div>
-                    <div class="value">{{$Util.timeFilter(detail.create_time) || '-'}}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">计划时间</div>
-                    <div class="value">{{$Util.timeFilter(detail.plan_time) || '-'}}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">实施时间</div>
-                    <div class="value">{{$Util.timeFilter(detail.finish_time) || '-'}}</div>
-                </div>
-                <div class="info-item" v-if="detail.audit_message != ''">
-                    <div class="key">未通过原因</div>
-                    <div class="value">{{detail.audit_message || '-'}}</div>
-                </div>
+            <MySteps :stepsList='stepsList' :current='currStep'/>
+            <!-- <div class="steps-container">
+                <a-steps>
+                    <a-step v-for="(item, index) of stepsList" :key="index" :status="item.status" :title="item.title">
+                        <template #icon>
+                            <span v-if="item.status == 'finish'" class="circle icon i_click"/>
+                            <span v-else class="circle">{{index + 1}}</span>
+                        </template>
+                    </a-step>
+                </a-steps>
+            </div>
+            -->
+            <div class="form-container">
+                <Distribution :id='id' :detail='detail' @submit="getRepairDetail"
+                              v-if="detail.status == STATUS.WAIT_DISTRIBUTION && $auth('AGENT', 'STORE')"/>
+                <CheckFault :id='id' :detail='detail' @submit="getRepairDetail" ref="CheckFault"
+                            v-if="detail.status == STATUS.WAIT_DETECTION && $auth('DISTRIBUTOR', 'AGENT', 'STORE')"/>
+                <AttachmentFile :target_id='id' :detail='detail' @submit="getRepairDetail" ref="AttachmentFile"
+                                v-if="$auth('DISTRIBUTOR', 'AGENT', 'STORE', 'ADMIN')"/>
+                <CheckResult :id='id' :detail='detail' :faultList="faultList" :failList="failList"
+                             :exchangeList="exchangeList" :failTotle="failTotle" :exchangeTotle="exchangeTotle"
+                             ref="CheckResult"
+                             v-if="resultShow && (detail.status != STATUS.WAIT_DISTRIBUTION && detail.status != STATUS.WAIT_DETECTION && detail.status != STATUS.WAIT_CHECK)"/>
+                <RepairInfo :id='id' :detail='detail'/>
+                <ActionLog :id='id' :detail='detail'/>
             </div>
         </div>
-        <MySteps :stepsList='stepsList' :current='currStep'/>
-        <!-- <div class="steps-container">
-            <a-steps>
-                <a-step v-for="(item, index) of stepsList" :key="index" :status="item.status" :title="item.title">
-                    <template #icon>
-                        <span v-if="item.status == 'finish'" class="circle icon i_click"/>
-                        <span v-else class="circle">{{index + 1}}</span>
-                    </template>
-                </a-step>
-            </a-steps>
-        </div>
-        -->
-        <div class="form-container">
-            <Distribution :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DISTRIBUTION && $auth('AGENT', 'STORE')"/>
-            <CheckFault :id='id' :detail='detail' @submit="getRepairDetail" ref="CheckFault"  v-if="detail.status == STATUS.WAIT_DETECTION && $auth('DISTRIBUTOR', 'AGENT', 'STORE')"/>
-            <AttachmentFile  :target_id='id' :detail='detail' @submit="getRepairDetail" ref="AttachmentFile"  v-if="$auth('DISTRIBUTOR', 'AGENT', 'STORE', 'ADMIN')"/>
-            <CheckResult :id='id' :detail='detail' :faultList="faultList" :failList="failList" :exchangeList="exchangeList" :failTotle="failTotle" :exchangeTotle="exchangeTotle"  ref="CheckResult" v-if="resultShow && (detail.status != STATUS.WAIT_DISTRIBUTION && detail.status != STATUS.WAIT_DETECTION && detail.status != STATUS.WAIT_CHECK)"/>
-            <RepairInfo :id='id' :detail='detail' />
-            <ActionLog :id='id' :detail='detail' />
-        </div>
-    </div>
-    <template class="modal-container">
-        <a-modal v-model:visible="modalFailShow" width="600px" title="维修结果" @ok="handleResultSubmit">
-            <div class="modal-content">
+        <template class="modal-container">
+            <a-modal v-model:visible="modalFailShow" width="600px" title="维修结果" @ok="handleResultSubmit">
+                <div class="modal-content">
+                    <div class="form-item">
+                        <div class="key">维修结果</div>
+                        <div class="value">
+                            <a-select v-model:value="repairForm.results" placeholder="请选择维修结果">
+                                <a-select-option v-for="results of resultsList" :key="results.value"
+                                                 :value="results.value">{{ results.name }}
+                                </a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                    <div class="form-item" v-if="repairForm.results == REPAIR.RESULTS.FAIL">
+                        <div class="key">失败原因</div>
+                        <div class="value">
+                            <a-input v-model:value="repairForm.audit_message" placeholder="请输入失败原因"/>
+                        </div>
+                    </div>
+                </div>
+            </a-modal>
+            <a-modal v-model:visible="secondDoorShow" width="600px" title="维修结果" @ok="handleSecondDoorSubmit">
                 <div class="form-item">
-                    <div class="key">维修结果</div>
+                    <div class="key">计划时间</div>
                     <div class="value">
-                        <a-select v-model:value="repairForm.results" placeholder="请选择维修结果">
-                            <a-select-option v-for="results of resultsList" :key="results.value" :value="results.value">{{results.name}}</a-select-option>
-                        </a-select>
+                        <a-date-picker v-model:value="repairForm.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>
                     </div>
                 </div>
-                <div class="form-item" v-if="repairForm.results == REPAIR.RESULTS.FAIL">
-                    <div class="key">失败原因</div>
-                    <div class="value">
-                        <a-input v-model:value="repairForm.audit_message" placeholder="请输入失败原因"/>
-                    </div>
-                </div>
-            </div>
-        </a-modal>
-        <a-modal v-model:visible="secondDoorShow" width="600px" title="维修结果" @ok="handleSecondDoorSubmit">
-            <div class="form-item">
-                <div class="key">计划时间</div>
-                <div class="value">
-                    <a-date-picker v-model:value="repairForm.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>
-                </div>
-            </div>
-<!--            <div class="form-item">-->
-<!--                <div class="key">完成时间</div>-->
-<!--                <div class="value">-->
-<!--                    <a-date-picker v-model:value="repairForm.finish_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>-->
-<!--                </div>-->
-<!--            </div>-->
-        </a-modal>
-        <a-modal v-model:visible="transferShow" width="600px" title="转单" @ok="handleTransferSubmit">
-            <div class="modal-content">
-                <div class="form-item required">
-                    <div class="key">门店</div>
-                    <div class="value">
-                        <a-select v-model:value="transferForm.store_id" placeholder="请选择门店" @change="getStaffList">
-                            <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
-                        </a-select>
-                    </div>
-                </div>
-                <div class="form-item required">
-                    <div class="key">工单负责人</div>
-                    <div class="value">
-                        <a-select v-model:value="transferForm.repair_user_id" placeholder="请选择工单负责人">
-                            <a-select-option v-for="item of staffList" :key="item.id" :value="item.id">{{item.account.name}}</a-select-option>
-                        </a-select>
-                    </div>
-                </div>
-            </div>
-        </a-modal>
-    </template>
-    <!-- 审核 -->
-    <template class="modal-container">
-        <a-modal v-model:visible="auditShow" title="审核"
-            class="warehouse-edit-modal" :after-close='handleAuditClose'>
-            <div class="modal-content">
-                <div>
+                <!--            <div class="form-item">-->
+                <!--                <div class="key">完成时间</div>-->
+                <!--                <div class="value">-->
+                <!--                    <a-date-picker v-model:value="repairForm.finish_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>-->
+                <!--                </div>-->
+                <!--            </div>-->
+            </a-modal>
+            <a-modal v-model:visible="transferShow" width="600px" title="转单" @ok="handleTransferSubmit">
+                <div class="modal-content">
                     <div class="form-item required">
-                        <a-radio-group v-model:value="editForm.audit_result">
-                            <a-radio value="1">通过</a-radio>
-                            <a-radio value="0">不通过</a-radio>
-                        </a-radio-group>
-                    </div>
-                    <div class="form-item required" v-if="editForm.audit_result == 0">
-                        <div class="key">原因:</div>
+                        <div class="key">门店</div>
                         <div class="value">
-                            <a-input v-model:value="editForm.audit_message" placeholder="请输入不通过原因"/>
+                            <a-select v-model:value="transferForm.store_id" placeholder="请选择门店" @change="getStaffList">
+                                <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">
+                                    {{ item.name }}
+                                </a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                    <div class="form-item required">
+                        <div class="key">工单负责人</div>
+                        <div class="value">
+                            <a-select v-model:value="transferForm.repair_user_id" placeholder="请选择工单负责人">
+                                <a-select-option v-for="item of staffList" :key="item.id" :value="item.id">
+                                    {{ item.account.name }}
+                                </a-select-option>
+                            </a-select>
                         </div>
                     </div>
                 </div>
-            </div>
-            <template #footer>
-                <a-button @click="auditShow = false">取消</a-button>
-                <a-button @click="handleAuditSubmit" type="primary" >确定</a-button>
-            </template>
-        </a-modal>
-    </template>
-    <!-- 工单确认 -->
-    <template class="modal-container">
-        <a-modal v-model:visible="orderShow" title="工单确认"
-            class="warehouse-edit-modal" :after-close='handleAuditClose'>
-            <div class="modal-content">
-                <div>
-                    <div class="form-item required">
-                        <a-radio-group v-model:value="editForm.audit_result">
-                            <a-radio value="1">接单</a-radio>
-                            <a-radio value="0">不接单</a-radio>
-                        </a-radio-group>
-                    </div>
-                    <div class="form-item required" v-if="editForm.audit_result == 0">
-                        <div class="key">原因:</div>
-                        <div class="value">
-                            <a-input v-model:value="editForm.audit_message" placeholder="请输入不接单原因"/>
+            </a-modal>
+        </template>
+        <!-- 审核 -->
+        <template class="modal-container">
+            <a-modal v-model:visible="auditShow" title="审核"
+                     class="warehouse-edit-modal" :after-close='handleAuditClose'>
+                <div class="modal-content">
+                    <div>
+                        <div class="form-item required">
+                            <a-radio-group v-model:value="editForm.audit_result">
+                                <a-radio value="1">通过</a-radio>
+                                <a-radio value="0">不通过</a-radio>
+                            </a-radio-group>
+                        </div>
+                        <div class="form-item required" v-if="editForm.audit_result == 0">
+                            <div class="key">原因:</div>
+                            <div class="value">
+                                <a-input v-model:value="editForm.audit_message" placeholder="请输入不通过原因"/>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <template #footer>
-                <a-button @click="orderShow = false">取消</a-button>
-                <a-button @click="handleOrderSubmit" type="primary" >确定</a-button>
-            </template>
-        </a-modal>
-    </template>
+                <template #footer>
+                    <a-button @click="auditShow = false">取消</a-button>
+                    <a-button @click="handleAuditSubmit" type="primary">确定</a-button>
+                </template>
+            </a-modal>
+        </template>
+        <!-- 工单确认 -->
+        <template class="modal-container">
+            <a-modal v-model:visible="orderShow" title="工单确认"
+                     class="warehouse-edit-modal" :after-close='handleAuditClose'>
+                <div class="modal-content">
+                    <div>
+                        <div class="form-item required">
+                            <a-radio-group v-model:value="editForm.audit_result">
+                                <a-radio value="1">接单</a-radio>
+                                <a-radio value="0">不接单</a-radio>
+                            </a-radio-group>
+                        </div>
+                        <div class="form-item required" v-if="editForm.audit_result == 0">
+                            <div class="key">原因:</div>
+                            <div class="value">
+                                <a-input v-model:value="editForm.audit_message" placeholder="请输入不接单原因"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <template #footer>
+                    <a-button @click="orderShow = false">取消</a-button>
+                    <a-button @click="handleOrderSubmit" type="primary">确定</a-button>
+                </template>
+            </a-modal>
+        </template>
 
-</div>
+    </div>
 </template>
 
 <script>
@@ -214,6 +246,7 @@ import ActionLog from './components/ActionLog.vue';
 import MySteps from '@/components/MySteps.vue';
 import dayjs from "dayjs";
 import AttachmentFile from './components/AttachmentFile.vue';
+
 const REPAIR = Core.Const.REPAIR
 const User = Core.Data.getUser();
 const OrgType = Core.Data.getOrgType();
@@ -267,11 +300,11 @@ export default {
             resultShow: false,
 
             stepsList: [
-                { title: '分配工单' },
-                { title: '后台审核' },
-                { title: '检测' },
-                { title: '维修' },
-                { title: '结算' },
+                {title: '分配工单'},
+                {title: '后台审核'},
+                {title: '检测'},
+                {title: '维修'},
+                {title: '结算'},
             ],
             currStep: 1,
 
@@ -304,7 +337,7 @@ export default {
                 case 'edit':  // 编辑工单
                     routeUrl = this.$router.resolve({
                         path: "/repair/repair-edit",
-                        query: { id: this.id },
+                        query: {id: this.id},
                     })
                     break;
                 case 'list':  // 工单列表
@@ -315,7 +348,7 @@ export default {
                 case 'invoice':  // 工单列表
                     routeUrl = this.$router.resolve({
                         path: "/repair/repair-invoice",
-                        query: { id: this.id },
+                        query: {id: this.id},
                     })
                     break;
             }
@@ -330,8 +363,8 @@ export default {
             // Object.assign(this.$data.editForm, this.$options.data().editForm)
         },
         handleAuditSubmit() { // 审核提交
-            this.loading = true; 
-            
+            this.loading = true;
+
             Core.Api.Repair.audit({
                 id: this.id,
                 ...this.editForm
@@ -353,7 +386,7 @@ export default {
             // Object.assign(this.$data.editForm, this.$options.data().editForm)
         },
         handleOrderSubmit() { // 工单确认提交
-            this.loading = true; 
+            this.loading = true;
 
             Core.Api.Repair.check({
                 id: this.id,
@@ -385,8 +418,8 @@ export default {
                 this.loading = false;
             });
         },
-        step(status){
-            switch (status){
+        step(status) {
+            switch (status) {
                 case REPAIR.STATUS.WAIT_DISTRIBUTION:
                     this.currStep = 0;
                     break;
@@ -410,7 +443,7 @@ export default {
         handleFaultSubmit() {
             this.$refs.CheckFault.handleFaultSubmit();
         },
-        handleSettlement(){
+        handleSettlement() {
             Core.Api.Repair.settlement({id: this.id}).then(() => {
                 this.$message.success('操作成功')
                 this.getRepairDetail()
@@ -418,8 +451,7 @@ export default {
         },
 
 
-
-        handleResultShow(){
+        handleResultShow() {
             this.modalFailShow = true
         },
         handleResultSubmit() {
@@ -434,7 +466,7 @@ export default {
                 this.modalFailShow = false
             });
         },
-        handleSecondDoor(){
+        handleSecondDoor() {
             this.secondDoorShow = true
             this.repairForm.plan_time = this.detail.plan_time ? dayjs.unix(this.detail.plan_time).format('YYYY-MM-DD HH:mm:ss') : undefined
             // this.repairForm.finish_time = this.detail.finish_time ? dayjs.unix(this.detail.finish_time).format('YYYY-MM-DD HH:mm:ss') : undefined
@@ -485,12 +517,12 @@ export default {
                 status: 1,
             }).then(res => {
                 this.storeList = res.list
-                this.storeList.push({id:-1,name:"零售商"})
+                this.storeList.push({id: -1, name: "零售商"})
             });
         },
         // 获取 员工列表
         getStaffList() {
-            if (this.repairForm.store_id == -1){
+            if (this.repairForm.store_id == -1) {
                 Core.Api.User.list({
                     page: 0,
                     type: Core.Const.USER.TYPE.WORKER,
@@ -500,7 +532,7 @@ export default {
                     this.staffList = res.list
                     this.repairForm.repair_user_id = undefined
                 });
-            } else{
+            } else {
                 Core.Api.User.list({
                     page: 0,
                     type: Core.Const.USER.TYPE.WORKER,
@@ -571,52 +603,65 @@ export default {
         .left {
             font-size: 12px;
             color: #465670;
+
             span {
                 color: #A5ACB8;
             }
         }
+
         .right {
             .fcc();
             font-size: 12px;
+
             .staff {
                 color: rgba(0, 0, 0, 0.85);
                 margin-right: 12px;
                 font-weight: 500;
             }
+
             .status {
                 .fcc();
+
                 .i_point {
                     margin-right: 6px;
                 }
             }
         }
+
         .panel-content {
             .fsb(flex-start);
             padding-bottom: 15px;
         }
+
         .info-item {
             flex: 1;
             font-size: 12px;
+
             .key {
                 color: #8090A6;
             }
+
             .value {
                 margin-top: 10px;
                 color: #363D42;
             }
         }
     }
+
     .panel-content.affirm {
-         .title {
+        .title {
             color: #DD5D5D;
             margin-bottom: 24px;
+
             i.icon {
                 margin-right: 12px;
             }
         }
+
         .fault_select {
             width: 100%;
             padding-left: 12px;
+
             .ant-checkbox-wrapper {
                 width: 25%;
                 margin-left: 0;
@@ -624,6 +669,7 @@ export default {
             }
         }
     }
+
     .steps-container {
         padding: 0 20px;
         margin-bottom: 20px;
