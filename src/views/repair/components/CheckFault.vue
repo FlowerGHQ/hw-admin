@@ -27,9 +27,15 @@
                                 <template #bodyCell="{ column , record ,index, text}">
 
                                     <template v-if="column.dataIndex === 'type'">
-                                        <a-select v-model:value="record.type" placeholder="请选择商品类型">
+                                        <a-select v-model:value="record.type" placeholder="请选择商品类型" @change="conloggg(record)">
                                             <a-select-option v-for="(item,index) of repairItemTypeList" :key="index" :value="item.value">{{item.text}}</a-select-option>
                                         </a-select>
+                                    </template>
+
+                                    <template v-if="column.dataIndex === 'repair'">
+                                        <template v-if="record.type === repairItemType.TRANSFER">
+                                            <a-button @click="handleTransfer()">选择</a-button>
+                                        </template>
                                     </template>
 
                                     <template v-if="column.dataIndex === 'amount'">
@@ -98,8 +104,35 @@
                 </div>
             </a-collapse-panel>
         </a-collapse>
+        <template class="modal-container">
+            <a-modal v-model:visible="transferShow" width="600px" title="转单" @ok="handleTransferSubmit">
+                <div class="modal-content">
+                    <div class="form-item required">
+                        <div class="key">门店</div>
+                        <div class="value">
+                            <a-select v-model:value="transferForm.store_id" placeholder="请选择门店" @change="getStaffList">
+                                <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">
+                                    {{ item.name }}
+                                </a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                    <div class="form-item required">
+                        <div class="key">工单负责人</div>
+                        <div class="value">
+                            <a-select v-model:value="transferForm.repair_user_id" placeholder="请选择工单负责人">
+                                <a-select-option v-for="item of staffList" :key="item.id" :value="item.id">
+                                    {{ item.account.name }}
+                                </a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                </div>
+            </a-modal>
+        </template>
     </div>
 </template>
+
 
 <script>
 import Core from '../../../core';
@@ -129,8 +162,9 @@ export default {
             tableColumns: [
                 {title: '商品名称', dataIndex: 'name'},
                 {title: '商品类型', dataIndex: 'type'},
+                {title: '选择维修工', dataIndex: 'repair'},
                 {title: '数量', dataIndex: 'amount'},
-                {title: '故障仓', dataIndex: 'bad'}, // ++判断
+                {title: '故障仓', dataIndex: 'bad'},
                 {title: '换新仓', dataIndex: 'new'},
                 {title: '金额', dataIndex: 'price', key: 'money'},
                 {title: '金额', dataIndex: 'totle_price'},
@@ -143,6 +177,15 @@ export default {
             failData: {},
             failTotle: {},
             failActive: [],
+
+            // 转单
+            transferShow: false,
+            transferForm: {
+                store_id: undefined,
+                repair_user_id: undefined,
+            },
+            staffList: [], // 工单负责人列表
+            storeList: [], // 门店列表
 
             warehouseFailList: [], // 故障仓列表
             repairItemTypeList: Core.Const.REPAIR_ITEM.TYPE_LIST, // 维修商品类型列表
@@ -157,6 +200,55 @@ export default {
         this.getWarehouseList();
     },
     methods: {
+        // 显示转单弹窗
+        handleTransfer() {
+            this.transferShow = true
+            this.getStoreList()
+        },
+        // 转单
+        handleTransferSubmit() {
+            this.transferShow = false
+        },
+        // 获取门店列表
+        getStoreList() {
+            Core.Api.Store.list({
+                page: 0,
+                status: 1,
+            }).then(res => {
+                this.storeList = res.list
+                this.storeList.push({id: -1, name: "零售商"})
+            });
+        },
+        // 获取 员工列表
+        getStaffList() {
+            if (this.repairForm.store_id == -1) {
+                Core.Api.User.list({
+                    page: 0,
+                    type: Core.Const.USER.TYPE.WORKER,
+                    org_id: this.detail.agent_id,
+                    org_type: Core.Const.LOGIN.ORG_TYPE.AGENT,
+                }).then(res => {
+                    this.staffList = res.list
+                    this.repairForm.repair_user_id = undefined
+                });
+            } else {
+                Core.Api.User.list({
+                    page: 0,
+                    type: Core.Const.USER.TYPE.WORKER,
+                    org_id: this.repairForm.store_id,
+                    org_type: Core.Const.LOGIN.ORG_TYPE.STORE,
+                }).then(res => {
+                    this.staffList = res.list
+                    this.repairForm.repair_user_id = undefined
+                });
+            }
+
+        },
+
+        // 测试
+        conloggg(record){
+            console.log('record: ', record);
+        },
         routerChange(type, item = {}) {
             let routeUrl = ''
             switch (type) {
@@ -190,7 +282,7 @@ export default {
             for (let i = 0; i < items.length; i++) {
                 const element = items[i];
                 element.amount = 1
-                // element.type = 1
+                element.type = 2
                 element.recycle_warehouse_id = this.warehouseFailList.length ? this.warehouseFailList[0].id : undefined
                 element.warehouse_out_list = await this.getWarehouseListByItem(element.id)
                 element.warehouse_id = this.getFilstWarehouse(element) || undefined
@@ -267,7 +359,6 @@ export default {
             this.faultSelect.forEach(fault => {
                 this.failData[fault].forEach(item => {
                     item.item_fault_id = Number(fault)
-                    item.type = 1
                     itemList.push(item)
                 })
             })

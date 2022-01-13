@@ -27,14 +27,14 @@
                         <a-button type="primary" @click="handleTransfer()" ghost
                                   v-if="[STATUS.WAIT_CHECK].includes(detail.status)"><i class="icon i_transfer"/>转单
                         </a-button>
-                        <template v-if="detail.account_id == User.id || $auth('MANAGER')">
+                        <!-- <template v-if="detail.account_id == User.id || $auth('MANAGER')"> -->
                             <a-button type="primary" @click="handleFaultSubmit()"
                                       v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_submit"/>提交
                             </a-button>
                             <a-button type="primary" @click="handleResultShow()"
                                       v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_completed"/>维修完成
                             </a-button>
-                        </template>
+                        <!-- </template> -->
                         <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END">
                             <i class="icon i_settle"/>结算
                         </a-button>
