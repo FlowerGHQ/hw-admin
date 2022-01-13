@@ -204,7 +204,7 @@ export default {
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/repair/repair-detail",
+                        path: "/warehouse/invoice-detail",
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_self')
