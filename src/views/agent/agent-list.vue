@@ -154,7 +154,7 @@ export default {
                 { title: '手机号', dataIndex: 'phone', key: 'item'},
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '状态', dataIndex: 'status', key: 'status',
-                    filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || null },
+                    filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [1] },
                 { title: '操作', key: 'operation', fixed: 'right'},
             ]
             if (this.$auth('ADMIN')) {
@@ -213,7 +213,6 @@ export default {
             Core.Api.Distributor.listAll().then(res => {
                 console.log('res.list: ', res.list);
                 this.distributorList = res.list
-                this.distributorList.push({id:-1,name:"分销商"})
             });
         },
         // 表格筛选
@@ -221,8 +220,9 @@ export default {
             console.log('handleTableChange filters:', filters)
             this.filteredInfo = filters;
             for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : 0
+                this.searchForm[key] = filters[key] ? filters[key][0] : ''
             }
+            this.searchForm.status = filters.status ? filters.status[0] : 1
             this.pageChange(1);
         },
         getTableData() {  // 获取 表格 数据

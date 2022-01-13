@@ -2,7 +2,7 @@
     <div class="WarehouseStockList gray-panel no-margin">
         <div class="panel-content">
             <div class="table-container">
-                <a-button type="primary" ghost @click="routerChange('edit')" style="margin-bottom: 10px;"
+                <a-button type="primary" @click="handleAddShow" style="margin-bottom: 10px;"
                           class="panel-btn"><i class="icon i_add"/>库存增减
                 </a-button>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -10,11 +10,11 @@
                     <template #bodyCell="{ column, text , record}">
                         <template v-if="column.key === 'item-name'">
                             <a-tooltip placement="top" :title='text'>
-                                {{  text ? text.name : '-' }}
+                                {{ text ? text.name : '-' }}
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'item-code'">
-                                {{ text? text.code : '-' }}
+                            {{ text ? text.code : '-' }}
                         </template>
                         <template v-if="column.dataIndex === 'stock'">
                             {{ text || '-' }}
@@ -38,6 +38,36 @@
                 />
             </div>
         </div>
+        <a-modal v-model:visible="codeAddShow" title="库存增减" class="codeAddShow-edit-modal"
+                 :after-close="handleAddClose">
+            <div class="form-item required">
+                <div class="key">操作类型：</div>
+                <a-radio-group v-model:value="form.type">
+                    <a-radio :value="'add'">入库</a-radio>
+                    <a-radio :value="'reduce'">出库</a-radio>
+                </a-radio-group>
+            </div>
+            <div class="form-item required">
+                <div class="key">商品编码：</div>
+                <div class="value form-item-value">
+                    <a-input class="itemCodeInput" v-model:value="form.target_code" placeholder="请输入商品编码"
+                             @blur="onblur"/>
+                    <span v-if="isExist === true"><i class="icon i_confirm"/></span>
+                    <span v-else-if="isExist === false"><i class="icon i_close_c"/></span>
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">商品数量:</div>
+                <div class="value form-item-value">
+                    <a-input-number v-model:value="form.number" :min="1"/>
+                    <span class="itemNumber">件</span>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handleAddSubmit" type="primary">确定</a-button>
+                <a-button @click="codeAddShow=false">取消</a-button>
+            </template>
+        </a-modal>
     </div>
 </template>
 
@@ -69,8 +99,17 @@ export default {
             currPage: 1,
             pageSize: 20,
             total: 0,
-            warehouse_id: '',
             tableData: [],
+            detail: {},
+            codeAddShow: false,
+            isExist: '',
+            form: {
+                type: '',
+                id: '',
+                target_code: '', //商品编码
+                number: '',
+                warehouse_id: '',
+            },
         };
     },
     watch: {},
@@ -85,21 +124,63 @@ export default {
         },
     },
     mounted() {
-        this.warehouse_id = Number(this.$route.query.id) || 0
         this.getTableData();
     },
     methods: {
-        routerChange(type) {
-            let routeUrl = ''
+        routerChange(type, item) {
             switch (type) {
-                case 'edit':  // 编辑
-                    routeUrl = this.$router.resolve({
-                        path: "/warehouse/stock-edit",
-                        query: {id: this.warehouse_id}
-                    })
-                    window.open(routeUrl.href, '_self')
+                case 'back':
+                    this.$router.go(-1)
                     break;
             }
+        },
+        handleAddShow() {
+            this.codeAddShow = true;
+            this.form.warehouse_id = this.warehouse_id
+        },
+        handleAddClose() {
+            this.codeAddShow = false;
+            this.isExist = '';
+            this.form = {
+                type: '',
+                id: '',
+                target_code: '', //商品编码
+                number: '',
+                warehouse_id: '',
+            }
+        },
+        handleAddSubmit() {
+            let form = Core.Util.deepCopy(this.form)
+            if (!form.type) {
+                return this.$message.warning('请选择操作类型')
+            }
+            if (!form.target_code) {
+                return this.$message.warning('请输入商品编码')
+            }
+            if (!form.number) {
+                return this.$message.warning('请输入商品数量')
+            }
+            Core.Api.Stock[this.form.type](form).then(() => {
+                this.$message.success('保存成功')
+                this.handleAddClose();
+                this.getTableData();
+            }).catch(err => {
+                console.log('handleAddSubmit err:', err)
+            })
+        },
+        onblur() {  // 获取 商品编码 数据
+            if (!this.form.target_code) {
+                return this.isExist = ''
+            }
+            Core.Api.Item.detailByCode({
+                code: this.form.target_code,
+            }).then(res => {
+                this.isExist = res.detail != null
+                console.log("getItemCode res", res)
+            }).catch(err => {
+                console.log('getItemCode err', err)
+            }).finally(() => {
+            });
         },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
@@ -126,12 +207,48 @@ export default {
                 this.loading = false;
             });
         },
-
-
     }
 };
 </script>
 
-<style lang="less" scoped>
-//#WarehouseStockList{}
+<style lang="less">
+.form-item-value {
+    .fac();
+
+    .itemCodeInput {
+        width: calc(~'100% - 24px');
+    }
+
+    i.icon {
+        display: inline-block;
+        width: 24px;
+        text-align: right;
+    }
+
+    .i_confirm {
+        color: @green;
+        font-size: 18px;
+    }
+
+    .i_close_c {
+        color: @red;
+        font-size: 18px;
+    }
+
+    .ant-input-number {
+        margin-right: 10px;
+    }
+
+    .itemNumber {
+        font-size: 12px;
+        line-height: 16px;
+        color: #363D42;
+    }
+}
+
+//#WarehouseStockList {
+//    .form-item-value {
+//        .fac()
+//    }
+//}
 </style>

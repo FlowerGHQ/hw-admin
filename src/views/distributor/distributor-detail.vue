@@ -20,6 +20,10 @@
                 </div>
                 <a-row class="desc-detail has-logo">
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                    <span class="key">联系人：</span>
+                    <span class="value">{{detail.contact}}</span>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">手机号：</span>
                         <span class="value">{{detail.phone}}</span>
                     </a-col>
@@ -51,12 +55,6 @@
         </div>
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
-                <a-tab-pane key="AgentList" tab="零售商管理" v-if="loginType == USER_TYPE.ADMIN">
-                    <AgentList :orgId="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'AgentList'" @change="getDistributorDetail"/>
-                </a-tab-pane>
-                <a-tab-pane key="StoreList" tab="门店管理" v-if="loginType == USER_TYPE.ADMIN">
-                    <StoreList :orgId="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'StoreList'" @change="getDistributorDetail"/>
-                </a-tab-pane>
                 <a-tab-pane key="UserList" tab="员工管理">
                     <UserList :orgId="distributor_id" :orgType="ORG_TYPE.DISTRIBUTOR" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'UserList'"/>
                 </a-tab-pane>
@@ -65,6 +63,12 @@
                 </a-tab-pane>
                 <a-tab-pane key="PurchaseList" tab="订单列表">
                     <PurchaseList :orgId="distributor_id"  v-if="activeKey === 'PurchaseList'"/>
+                </a-tab-pane>
+                <a-tab-pane key="AgentList" tab="零售商管理" v-if="loginType == USER_TYPE.ADMIN" >
+                    <AgentList :distributor_id="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'AgentList'" @change="getDistributorDetail"/>
+                </a-tab-pane>
+                <a-tab-pane key="StoreList" tab="门店管理" v-if="loginType == USER_TYPE.ADMIN">
+                    <StoreList :orgId="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'StoreList'" @change="getDistributorDetail"/>
                 </a-tab-pane>
             </a-tabs>
         </div>
@@ -96,7 +100,7 @@ export default {
             // 加载
             loading: false,
             //标签页
-            activeKey: 'AgentList',
+            activeKey: 'UserList',
             distributor_id: '',
             detail: {}
         };

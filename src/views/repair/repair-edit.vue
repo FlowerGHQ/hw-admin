@@ -505,6 +505,8 @@ export default {
                     }
                     .i_close_c {
                         color: @red;
+                        font-size: 18px;
+
                     }
                 }
 

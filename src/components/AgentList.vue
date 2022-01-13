@@ -45,10 +45,10 @@ export default {
     name: 'AgentList',
     components: {},
     props: {
-        agentId: {
+        agent_id: {
             type: Number,
         },
-        distributorId: {
+        distributor_id: {
             type: Number,
         },
         type: {
@@ -120,7 +120,7 @@ export default {
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             Core.Api.Agent.list({
-                distributor_id: this.distributorId,
+                distributor_id: this.distributor_id,
                 type: this.type,
                 page: this.currPage,
                 page_size: this.pageSize,

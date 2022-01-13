@@ -139,9 +139,6 @@ export default {
             if (!form.name) {
                 return this.$message.warning('请输入分销商名')
             }
-            if (!form.type) {
-                return this.$message.warning('请选择分销商类型')
-            }
             if (!form.contact) {
                 return this.$message.warning('请输入联系人')
             }

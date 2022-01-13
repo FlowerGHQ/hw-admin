@@ -18,29 +18,17 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
                         <div class="key">所属分销商:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.distributor_id" placeholder="请选择分销商" @change="handleSearch">
-                                <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
+                            <a-select v-model:value="searchForm.distributor_id" placeholder="请选择所属分销商" @change="handleSearch">
+                                <a-select-option v-for="distributor of distributorList" :key="distributor.id" :value="distributor.id">{{ distributor.name }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
-                        <div class="key">所属零售商：</div>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
+                        <div class="key">所属零售商:</div>
                         <div class="value">
-                            <a-select placeholder="请选择零售商" v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
-                                <a-select-option v-for="(item,index) of agentList" :key="index" :value="item.id">{{item.name}}</a-select-option>
+                            <a-select v-model:value="searchForm.agent_id" placeholder="请选择所属零售商" @change='handleSearch'>
+                                <a-select-option v-for="agent of agentList" :key="agent.id" :value="agent.id">{{ agent.name }}</a-select-option>
                             </a-select>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">地区:</div>
-                        <div class="value">
-                            <a-cascader
-                                placeholder="请选择大洲/国家"
-                                v-model:value="country_cascader"
-                                :options="countryOptions"
-                                @change="handleSearch"
-                                :field-names="{ label: 'value', value: 'value' , children: 'children'}"
-                            />
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
@@ -132,8 +120,6 @@ export default {
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
-            countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
-            country_cascader: [], // 搜索框 大洲>国家
             distributorList: [], // 分销商下拉框数据
             agentList: [],
             filteredInfo: {status: [1]},
@@ -149,7 +135,12 @@ export default {
             tableData: [],
         };
     },
-    watch: {},
+    watch: {
+        'searchForm.distributor_id': function () {
+            this.getAgentListAll();
+            this.searchForm.agent_id = undefined
+        },
+    },
     computed: {
         tableColumns() {
             let { filteredInfo } = this;
@@ -160,7 +151,7 @@ export default {
                 {title: '联系人电话', dataIndex: 'contact_phone',key:'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '状态', dataIndex: 'status', key: 'status',
-                    filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || null },
+                    filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [1] },
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
             if (this.$auth('ADMIN')) {
@@ -173,12 +164,13 @@ export default {
         },
     },
     mounted() {
-        this.getTableData();// 获取表格数据
-        if (this.loginType === LOGIN_TYPE.ADMIN) {
+        this.getTableData();
+        if (this.$auth('ADMIN')) {
             this.getDistributorListAll();
         }
-        if (this.$auth('ADMIN')) {
-            this.getAgentList();
+        if (this.$auth('DISTRIBUTOR')) {
+            this.searchForm.distributor_id = Core.Data.getOrgId()
+            this.getAgentListAll();
         }
     },
     methods: {
@@ -214,31 +206,40 @@ export default {
         handleSearch() {        // 搜索
             this.pageChange(1);
         },
+        getAgentListAll() {
+            if (this.searchForm.distributor_id) {
+                Core.Api.Agent.listAll({distributor_id: this.searchForm.distributor_id}).then(res => {
+                    console.log('res.list: ', res.list);
+                    this.agentList = res.list
+                });
+            } else {
+                this.agentList = []
+            }
+
+        },
         getDistributorListAll() {
             Core.Api.Distributor.listAll().then(res => {
                 console.log('res.list: ', res.list);
                 this.distributorList = res.list
-                this.distributorList.push({id:-1,name:"分销商"})
             });
         },
         handleSearchReset() {        // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.country_cascader = []
             this.create_time = []
             this.pageChange(1);
         },
         handleTableChange(page, filters, sorter) {
             console.log('handleTableChange filters:', filters)
             for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : 0
+                this.searchForm[key] = filters[key] ? filters[key][0] : ''
             }
+            this.searchForm.status = filters.status ? filters.status[0] : 1
+            this.pageChange(1);
         },
         getTableData() {        // 获取 表格 数据
             this.loading = true;
             Core.Api.Store.list({
                 ...this.searchForm,
-                continent: this.country_cascader[0] || '',
-                country: this.country_cascader[1] || '',
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
                 page: this.currPage,
@@ -249,17 +250,6 @@ export default {
                 this.tableData = res.list;
             }).catch(err => {
                 console.log('getTableData err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-        getAgentList() {        // 获取 零售商 数据
-            this.loading = true;
-            Core.Api.Agent.listAll().then(res => {
-                console.log("getAgentList res", res)
-                this.agentList = res.list;
-            }).catch(err => {
-                console.log('getAgentList err', err)
             }).finally(() => {
                 this.loading = false;
             });

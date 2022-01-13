@@ -208,7 +208,7 @@ export default {
         handleTableChange(page, filters, sorter) {
             console.log('handleTableChange filters:', filters)
             for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : 0
+                this.searchForm[key] = filters[key] ? filters[key][0] : ''
             }
         },
         getTableData() {  // 获取 表格 数据

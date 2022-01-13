@@ -75,6 +75,7 @@ const apiList = {
         save: ['PostJson', 'warehouse/save'],
         detail: ['PostJson', 'warehouse/detail'],
         list: ['PostJson', 'warehouse/list'],
+        listAll: ['PostJson', 'warehouse/list-name'],
         delete: ['PostJson', 'warehouse/delete'],
         listWithStock: ['PostJson', 'warehouse/list-with-stock'],
     },
@@ -87,9 +88,15 @@ const apiList = {
         listByTargetId: ['PostJson', 'stock/list-by-target-id'],
         stockRecordList: ['PostJson', 'stock-record/list'],
         stockRecordDetail: ['PostJson', 'stock-record/detail'],
+    },
+    Invoice: { // 出入库货单
+        save: ['PostJson', 'invoice/save'],
+        detail: ['PostJson', 'invoice/detail'],
+        list: ['PostJson', 'invoice/list'],
+        delete: ['PostJson', 'invoice/delete'],
+        audit: ['PostJson', 'invoice/audit'],
 
     },
-
     Repair: { // 维修单
         list: ['PostJson', 'repair/list'], // 列表
 	    create: ['PostJson', 'repair/save'], // 列表
