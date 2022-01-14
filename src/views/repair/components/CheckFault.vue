@@ -255,8 +255,10 @@ export default {
         itemTypeChange(record){
             if (record.type == this.repairItemType.TRANSFER) { // 转单的时候不需要考虑仓库
                 record.change_to_transfer = true
+                this.$emit('getIsTransfer',true)
             }else{
                 record.change_to_transfer = false
+                this.$emit('getIsTransfer',false)
             }
             console.log('record: ', record);
         },

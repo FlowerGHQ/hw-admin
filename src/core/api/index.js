@@ -110,6 +110,7 @@ const apiList = {
 	    settlement: ['PostJson', 'repair/settlement'], // 结算
 	    transfer: ['PostJson', 'repair/transfer'], // 维修结束
 	    update: ['PostJson', 'repair/update'], // 维修结束
+	    post: ['PostJson', 'repair/post-for-transfer'], // 增加快递
 	    export: ['PostJson', 'repair/export-repair-order-record'], // 导出
     },
 	RepairItem: { // 维修单
