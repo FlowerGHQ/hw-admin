@@ -71,6 +71,10 @@ export default {
         disabledChecked: {
             type: Array,
             default: () => { return [] }
+        },
+        warehouseId: {
+            type: Number,
+            default: 0
         }
     },
     data() {
@@ -80,6 +84,7 @@ export default {
             currPage: 1,
             pageSize: 10,
             total: 0,
+            warehouse_id: '',
 
             searchForm: {
                 code: "",
@@ -88,11 +93,6 @@ export default {
 
             modalShow: false,
 
-            tableColumns: [
-                { title: '商品名', dataIndex: 'name', scopedSlots: { customRender: 'name' } },
-                { title: '商品编码', dataIndex: 'code', scopedSlots: { customRender: 'item' }, },
-                { title: '标准售价', dataIndex: 'price', key: 'money', },
-            ],
             tableData: [],
 
             selectItems: [],
@@ -100,7 +100,19 @@ export default {
         }
     },
     watch: {},
-    computed: {},
+    computed: {
+        tableColumns() {
+            let tableColumns = [
+                { title: '商品名称', dataIndex: 'name', scopedSlots: { customRender: 'name' } },
+                { title: '商品编码', dataIndex: 'code', scopedSlots: { customRender: 'item' }, },
+                { title: '标准售价', dataIndex: 'price', key: 'money', },
+            ]
+            if (this.warehouseId !== 0) {
+                tableColumns.splice(2, 0, {title: '仓库库存', dataIndex: 'stock', key: 'stock'})
+            }
+            return tableColumns
+        },
+    },
     created() {},
     mounted() {
         console.log('this.disabledChecked:', this.disabledChecked)
@@ -126,26 +138,10 @@ export default {
             this.modalShow = false
         },
 
-        getTableOrderData() {
-            Core.Api.Item.list({
-                ...this.searchForm,
-                page: this.currPage,
-                page_size: this.pageSize
-            }).then(res =>{
-                res.list.forEach(item => {
-                    try {
-                        item.logo = item.logo ? JSON.parse(item.logo) : []
-                    } catch (error) {
-                        item.logo = item.logo.split(',')
-                    }
-                })
-                this.tableData = res.list
-                this.total = res.count;
-            })
-        },
         getTableData() {
             Core.Api.Item.list({
                 ...this.searchForm,
+                warehouse_id: this.warehouseId,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res =>{

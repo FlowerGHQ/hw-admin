@@ -28,10 +28,10 @@
         <div class="tabs-container">
             <a-tabs class="WarehouseStock" @change="getWarehouseStockRecord">
                 <a-tab-pane key="WarehouseStockList" tab="库存数量">
-                    <WarehouseStockList :warehouse_id="warehouse_id" :detail='detail'  @submit="getWarehouseDetail"/>
+                    <WarehouseStockList :warehouseId="warehouse_id" :detail='detail'  @submit="getWarehouseDetail"/>
                 </a-tab-pane>
                 <a-tab-pane key="WarehouseStockRecord" tab="出入库记录">
-                    <WarehouseStockRecord ref="WarehouseStockRecord" :warehouse_id='warehouse_id' :detail='detail'  @submit="getWarehouseDetail"/>
+                    <WarehouseStockRecord ref="WarehouseStockRecord" :warehouseId='warehouse_id' :detail='detail'  @submit="getWarehouseDetail"/>
                 </a-tab-pane>
             </a-tabs>
         </div>

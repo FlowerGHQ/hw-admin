@@ -34,29 +34,29 @@
                     <div class="gray-collapse-panel">
                         <span>商品信息</span>
                     </div>
-                    <template #extra>
-                        <ItemSelect btnType='link' @select="handleAddFailItem" :fault-name="fault"
-                                    :disabled-checked='failData[fault].map(i => i.id)' btn-text="添加商品"/>
+                    <ItemSelect :warehouseId ="detail.type == typeList.TYPE_OUT ? detail.warehouse_id: 0 " btnType='link' @select="handleAddInvoiceItem" btn-text="添加商品"/>
+                </div>
+            </div>
+            <div class="table-container">
+                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                         :row-key="record => record.id" :pagination='false'>
+                    <template #bodyCell="{ column, text , record}">
+                        <template v-if="column.key === 'item-name'">
+                            <a-tooltip placement="top" :title='text'>
+                                {{ text ? text.name : '-' }}
+                            </a-tooltip>
+                        </template>
+                        <template v-if="column.key === 'item-code'">
+                            {{ text ? text.code : '-' }}
+                        </template>
+                        <template v-if="column.dataIndex === 'stock'">
+                            {{ text || 0 }}
+                        </template>
+                        <template v-if="column.key === 'amount'">
+                            {{ text || 0 }}
+                        </template>
                     </template>
-                </div>
-                <div class="panel-content">
-                    <div class="info-item">
-                        <div class="key">货单类型</div>
-                        <div class="value">{{ $Util.stockRecordFilter(detail.type || '-') }}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">所属仓库</div>
-                        <div class="value">{{ detail.warehouse.name || '-' }}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">仓库类型</div>
-                        <div class="value">{{ $Util.stockTypeFilter(detail.type || '-') }}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">创建时间</div>
-                        <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
-                    </div>
-                </div>
+                </a-table>
             </div>
         </div>
     </div>
@@ -78,28 +78,27 @@ export default {
         return {
             // 加载
             loading: false,
+            id: '',
             detail: {
                 warehouse: {}
             },
             activeKey: ['affirm'],
-            typeList: Core.Const.STOCK_RECORD.PRODUCT_TYPE,
-            form: {
-                id: '',
-                name: '',
-                province: '',
-                city: '',
-                county: '',
-                address: '',
-                type: '',
-            },
+            typeList: Core.Const.STOCK_RECORD.TYPE,
             failData: {},
+            tableData: [],
         };
     },
     watch: {},
-    computed: {},
-
+    computed: {
+        tableColumns: [
+            {title: '商品名称', dataIndex: 'item', key: 'item-name'},
+            {title: '商品编码', dataIndex: 'item', key: 'item-code'},
+            {title: '库存数量', dataIndex: 'stock', key: 'item'},
+            {title: '数量', dataIndex: 'amount', key: 'amount'},
+        ],
+    },
     mounted() {
-        this.form.id = Number(this.$route.query.id) || 0
+        this.id = Number(this.$route.query.id) || 0
         this.getInvoiceDetail();
     },
     methods: {
@@ -113,13 +112,10 @@ export default {
         getInvoiceDetail() {
             this.loading = true;
             Core.Api.Invoice.detail({
-                id: this.form.id,
+                id: this.id,
             }).then(res => {
                 console.log('getInvoiceDet  ail res', res)
                 this.detail = res.detail
-                for (const key in this.form) {
-                    this.form[key] = res.detail[key]
-                }
             }).catch(err => {
                 console.log('getInvoiceDetail err', err)
             }).finally(() => {
@@ -128,18 +124,12 @@ export default {
         },
 
 
-        handleAddressSelect(address = []) {
-            this.form.province = address[0]
-            this.form.city = address[1]
-            this.form.county = address[2]
-        },
+        handleAddInvoiceItem(ids, items) {
+            console.log('handleAddInvoiceItem ids:', ids)
+            console.log('handleAddInvoiceItem items:', items)
+            this.tableData = items
 
-        // handleAddFailItem(ids, items, name) {
-        //     console.log('handleAddFailItem items:', name)
-        //     this.failData[name].push(...items)
-        //     console.log('handleAddFailItem failData items:', this.failData)
-        //
-        // },
+        },
     }
 };
 </script>

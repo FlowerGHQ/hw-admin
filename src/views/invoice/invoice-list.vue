@@ -29,7 +29,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">货单编号:</div>
                         <div class="value">
-                            <a-input placeholder="请输入工单编号" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入货单编号" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -65,16 +65,14 @@
                                 <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                             </a-tooltip>
                         </template>
-                        <template v-if="column.key === 'detail'">
-                            <a-tooltip placement="top" :title='text'>
-                                <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
-                            </a-tooltip>
+                        <template v-if="column.key === 'stock_type'">
+                            {{ $Util.stockRecordFilter(text) }}
                         </template>
                         <template v-if="column.key === 'type'">
                             {{ $Util.stockTypeFilter(text) }}
                         </template>
-                        <template v-if="column.key === 'address'">
-                            {{ $Util.addressFilter(record) }}
+                        <template v-if="column.key === 'warehouse-name'">
+                            {{ detail.warehouse.name || '-' }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -148,7 +146,9 @@ export default {
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
-            detail: {},
+            detail: {
+                warehouse: {}
+            },
             codeAddShow: false,
             isExist: '',
             warehouseList: [],
@@ -166,6 +166,7 @@ export default {
                 status: undefined,
                 type: undefined,
             },
+            warehouse_id: '',
             form: {
                 type: '',
                 id: '',
@@ -174,10 +175,9 @@ export default {
 
             tableColumns: [
                 { title: '出入库单编号', dataIndex: 'uid', key: 'detail' },
-                {title: '出入库类型', dataIndex: 'type',key: 'type',},
-                {title: '所属仓库', dataIndex: 'name',key: 'detail',},
+                {title: '出入库类型', dataIndex: 'type',key: 'stock_type',},
+                {title: '所属仓库', dataIndex: 'name',key: 'warehouse-name',},
                 {title: '仓库类型', dataIndex: 'type',key: 'type',},
-                {title: '仓库地址', key:'address', dataIndex: 'province'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right' },
             ],
@@ -239,11 +239,11 @@ export default {
             if (!form.type) {
                 return this.$message.warning('请选择类型')
             }
-            Core.Api.Invoice.save(form).then(() => {
+            Core.Api.Invoice.save(form).then(res => {
                 this.$message.success('保存成功')
                 this.handleAddClose();
                 this.getTableData();
-                this.routerChange('edit')
+                this.routerChange('edit', res)
             }).catch(err => {
                 console.log('handleAddSubmit err:', err)
             })
@@ -293,12 +293,12 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该仓库吗？',
+                title: '确定要删除该货单吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Warehouse.delete({id}).then(() => {
+                    Core.Api.Invoice.delete({id}).then(() => {
                         _this.$message.success('删除成功');
                         _this.getTableData();
                     }).catch(err => {
