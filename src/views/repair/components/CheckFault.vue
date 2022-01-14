@@ -27,7 +27,7 @@
                                 <template #bodyCell="{ column , record ,index, text}">
 
                                     <template v-if="column.dataIndex === 'type'">
-                                        <a-select v-model:value="record.type" placeholder="请选择商品类型" @change="conloggg(record)">
+                                        <a-select v-model:value="record.type" placeholder="请选择商品类型" @change="itemTypeChange(record)">
                                             <a-select-option v-for="(item,index) of repairItemTypeList" :key="index" :value="item.value">{{item.text}}</a-select-option>
                                         </a-select>
                                     </template>
@@ -111,7 +111,7 @@
                         <div class="key">门店</div>
                         <div class="value">
                             <a-select v-model:value="transferForm.store_id" placeholder="请选择门店" @change="getStaffList">
-                                <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">
+                                <a-select-option v-for="(item, index) of storeList" :key="index" :value="item.id">
                                     {{ item.name }}
                                 </a-select-option>
                             </a-select>
@@ -180,6 +180,12 @@ export default {
 
             // 转单
             transferShow: false,
+            repairForm: {
+                results: undefined,
+                audit_message: undefined,
+                plan_time: undefined,
+                // finish_time: undefined,
+            },
             transferForm: {
                 store_id: undefined,
                 repair_user_id: undefined,
@@ -216,7 +222,7 @@ export default {
                 status: 1,
             }).then(res => {
                 this.storeList = res.list
-                this.storeList.push({id: -1, name: "零售商"})
+                // this.storeList.push({id: -1, name: "零售商"})
             });
         },
         // 获取 员工列表
@@ -245,8 +251,13 @@ export default {
 
         },
 
-        // 测试
-        conloggg(record){
+        // 商品类型改变
+        itemTypeChange(record){
+            if (record.type == this.repairItemType.TRANSFER) { // 转单的时候不需要考虑仓库
+                record.change_to_transfer = true
+            }else{
+                record.change_to_transfer = false
+            }
             console.log('record: ', record);
         },
         routerChange(type, item = {}) {
@@ -344,7 +355,14 @@ export default {
         needPurchase(record) {
             if (!record.warehouse_id) { return false }
             let warehouse = record.warehouse_out_list.find(i => i.id === record.warehouse_id)
-            return record.amount > warehouse.stock ? true : false
+            // return record.amount > warehouse.stock ? true : false
+            if (record.amount > warehouse.stock) {
+                record.is_stock = false
+                return true
+            }else{
+                record.is_stock = true
+                return false
+            }
         },
 
         // 移除商品
@@ -355,16 +373,53 @@ export default {
 
         // 提交故障
         handleFaultSubmit() {
+            console.log('this.faultSelect: ', this.faultSelect);
+
             let itemList = []
+            let itemFlag = false
+            let transferFlag = false
+            let stockFlag = false
             this.faultSelect.forEach(fault => {
+                if(this.failData[fault].length == 0){
+                    itemFlag = true
+                }
                 this.failData[fault].forEach(item => {
                     item.item_fault_id = Number(fault)
+                    if(!item){
+                        itemFlag = true
+                    }
+                    if (item.type == 3) { // 选择转单时 校验负责人
+                        if (this.transferForm.store_id && this.transferForm.repair_user_id) {
+                            item.store_id = this.transferForm.store_id
+                            item.repair_user_id = this.transferForm.repair_user_id
+                        }else{
+                            transferFlag = true
+                        }
+                    }
+                    console.log('item.is_stock: ', item.is_stock);
+                    if (!item.is_stock && !item.change_to_transfer) { // 仓库货量不足
+                        stockFlag = true
+                    }
                     itemList.push(item)
                 })
             })
+            if (this.faultSelect.length == 0) {
+                return this.$message.warning('请选择故障')
+            }
+            if (itemFlag) {
+                return this.$message.warning('请添加商品')
+            }
+            if (stockFlag) {
+                return this.$message.warning('仓库库存不足请加仓或采购')
+            }
+            if (transferFlag) {
+                return this.$message.warning('请选择转单负责人')
+            }
             Core.Api.RepairItem.saveList({
                 repair_order_id: this.id,
-                item_list: itemList
+                item_list: itemList,
+                store_id: this.transferForm.store_id,
+                repair_user_id: this.transferForm.repair_user_id,
             }).then(() => {
                 this.$message.success('操作成功');
                 this.$emit('submit')

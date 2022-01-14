@@ -517,7 +517,7 @@ export default {
                 status: 1,
             }).then(res => {
                 this.storeList = res.list
-                this.storeList.push({id: -1, name: "零售商"})
+                // this.storeList.push({id: -1, name: "零售商"})
             });
         },
         // 获取 员工列表
