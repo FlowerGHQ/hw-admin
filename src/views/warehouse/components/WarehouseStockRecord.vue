@@ -43,10 +43,10 @@
                             {{ $Util.stockRecordFilter(text) }}
                         </template>
                         <template v-if="column.key === 'amount'">
-                            {{ text || '-' }}
+                            {{ text || 0 }}
                         </template>
                         <template v-if="column.dataIndex === 'balance'">
-                            {{ text || '-' }}
+                            {{ text || 0 }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -80,7 +80,7 @@ export default {
     name: 'WarehouseStockRecord',
     components: {},
     props: {
-        warehouse_id: {
+        warehouseId: {
             type: Number,
         },
         detail: {
@@ -147,7 +147,7 @@ export default {
             this.loading = true;
             Core.Api.Stock.stockRecordList({
                 // ...this.searchForm,
-                warehouse_id: this.warehouse_id,
+                warehouse_id: this.warehouseId,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
                 page: this.currPage,

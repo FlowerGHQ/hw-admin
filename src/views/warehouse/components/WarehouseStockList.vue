@@ -17,7 +17,7 @@
                             {{ text ? text.code : '-' }}
                         </template>
                         <template v-if="column.dataIndex === 'stock'">
-                            {{ text || '-' }}
+                            {{ text || 0 }}
                         </template>
                     </template>
                 </a-table>
@@ -78,7 +78,7 @@ export default {
     name: 'WarehouseStockList',
     components: {},
     props: {
-        warehouse_id: {
+        warehouseId: {
             type: Number,
         },
         detail: {
@@ -136,7 +136,7 @@ export default {
         },
         handleAddShow() {
             this.codeAddShow = true;
-            this.form.warehouse_id = this.warehouse_id
+            this.form.warehouse_id = this.warehouseId
         },
         handleAddClose() {
             this.codeAddShow = false;
@@ -194,7 +194,7 @@ export default {
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             Core.Api.Stock.list({
-                warehouse_id: this.warehouse_id,
+                warehouse_id: this.warehouseId,
                 page: this.currPage,
                 page_size: this.pageSize,
             }).then(res => {
