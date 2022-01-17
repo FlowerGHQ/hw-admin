@@ -95,7 +95,9 @@ const apiList = {
         list: ['PostJson', 'invoice/list'],
         delete: ['PostJson', 'invoice/delete'],
         audit: ['PostJson', 'invoice/audit'],
-
+        saveList: ['PostJson', 'invoice-item/save-list'], //货单提交
+        itemList: ['PostJson', 'invoice-item/list'], // 货单列表
+        status: ['PostJson', 'invoice/status-list'], // 状态
     },
     Repair: { // 维修单
         list: ['PostJson', 'repair/list'], // 列表

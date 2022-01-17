@@ -530,7 +530,25 @@ let Const = {
             AUDIT_PASS: 20, //审核通过
             CLOSE: 40, //处理完成
             AUDIT_REFUSE: '-10' //审核失败
-        }
+        },
+        STATUS_MAP:{
+            10: '待审核',
+            20: '审核通过',
+            40: '处理完成',
+            '-10': '审核失败',
+        },
+        STATUS_COLOR_MAP: {
+            10: 'yellow',
+            20: 'green',
+            40: 'red',
+            "-10": 'orange',
+        },
+        STATUS_LIST: [
+            {text: '待审核',value: 10},
+            {text: '审核通过',value: 20},
+            {text: '审核失败',value: '-10'},
+            {text: '处理完成',value: '40'},
+        ],
 
     },
 };

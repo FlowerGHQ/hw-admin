@@ -1,9 +1,10 @@
 <template>
-    <div id="InvoiceEdit" class="edit-container">
+    <div id="InvoiceDetail" class="edit-container">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">货单编辑</div>
-                <a-button type="primary" @click="handleFaultSubmit()"><i class="icon i_submit"/>提交
+                <div class="title-area">货单详情</div>
+                <a-button type="primary" ghost @click="handleInvoiceShow()"
+                          v-if="[STATUS.AIT_AUDIT]"><i class="icon i_edit"/>审核
                 </a-button>
             </div>
             <div class="gray-panel info">
@@ -33,11 +34,7 @@
             </div>
             <a-collapse v-model:activeKey="activeKey" ghost>
                 <a-collapse-panel key="affirm" header="商品信息" class="gray-collapse-panel">
-                    <template #extra>
-                    <ItemSelect :warehouseId="detail.type == typeList.TYPE_OUT ? detail.warehouse_id: 0 " :disabledChecked="disabledChecked"
-                                btnType='link'
-                                @select="handleAddInvoiceItem" btn-text="添加商品"/>
-                    </template>
+
                     <div class="panel-content">
                         <div class="table-container">
                             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -55,12 +52,7 @@
                                         {{ text ? text.stock : '-' }}
                                     </template>
                                     <template v-if="column.key === 'amount'">
-                                        <a-input-number v-model:value="record.amount" :min="1" :max="detail.type === 1 ? 99999: record.item.stock" :precision="0" placeholder="请输入"/>件
-                                    </template>
-                                    <template v-if="column.dataIndex === 'operation'">
-                                        <a-button type="link" @click="handleFailItemDelete(index)"><i
-                                            class="icon i_delete"/> 移除
-                                        </a-button>
+                                        {{ text ? text.amount : '-' }}件
                                     </template>
                                 </template>
                                 <template #summary>
@@ -68,7 +60,7 @@
                                         <a-table-summary-row>
                                             <a-table-summary-cell :index="0" :col-span="4">合计</a-table-summary-cell>
                                             <a-table-summary-cell :index="1" :col-span="3">
-                                                {{ totalCount }}件
+                                                {{ total }}件
                                             </a-table-summary-cell>
                                         </a-table-summary-row>
                                     </a-table-summary>
@@ -77,68 +69,96 @@
                         </div>
                     </div>
                 </a-collapse-panel>
-
             </a-collapse>
-
+            <template class="modal-container">
+                <a-modal v-model:visible="invoiceShow" title="审核"
+                         class="warehouse-edit-modal" :after-close='handleInvoiceClose'>
+                    <div class="modal-content">
+                        <div>
+                            <div class="form-item required">
+                                <a-radio-group v-model:value="editForm.status">
+                                    <a-radio :value="STATUS.AUDIT_PASS">通过</a-radio>
+                                    <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio>
+                                </a-radio-group>
+                            </div>
+                            <div class="form-item required" v-if="editForm.status === STATUS.AUDIT_REFUSE">
+                                <div class="key">原因:</div>
+                                <div class="value">
+                                    <a-input v-model:value="editForm.audit_message" placeholder="请输入不通过原因"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <template #footer>
+                        <a-button @click="invoiceShow = false">取消</a-button>
+                        <a-button @click="handleInvoiceSubmit" type="primary">确定</a-button>
+                    </template>
+                </a-modal>
+            </template>
         </div>
     </div>
 </template>
 
 <script>
 import Core from '../../core';
-import ItemSelect from '@/components/ItemSelect.vue';
-
 
 export default {
-    name: 'InvoiceEdit',
-    components: {
-        ItemSelect,
-    },
+    name: 'InvoiceDetail',
+    components: {},
     props: {},
     data() {
         return {
             // 加载
             loading: false,
             id: '',
+            STATUS: Core.Const.STOCK_RECORD.STATUS,
             detail: {
                 warehouse: {}
             },
             activeKey: ['affirm'],
-            typeList: Core.Const.STOCK_RECORD.TYPE,
-            failActive: [],
             tableData: [],
             tableColumns: [
                 {title: '商品名称', dataIndex: 'item', key: 'item-name'},
                 {title: '商品编码', dataIndex: 'item', key: 'item-code'},
                 {title: '库存数量', dataIndex: 'item', key: 'item-stock'},
-                {title: '数量', dataIndex: 'amount', key: 'amount'},
-                {title: '操作', dataIndex: 'operation'},
+                {title: '数量', dataIndex: 'amount', key: 'item-amount'},
             ],
+            invoiceShow: false,
+            editForm: {
+                status: 20,
+                audit_message: '',
+            },
+            total: {},
         };
     },
     watch: {},
-    computed: {
-        disabledChecked() {
-            let disabledChecked = []
-            this.tableData.forEach(item =>{
-                disabledChecked.push(item.item.id)
-            })
-            return disabledChecked
-        },
-        totalCount() {
-            let totalCount = 0
-            this.tableData.forEach(item => {
-                totalCount += item.amount
-            })
-            return totalCount
-        },
-    },
+    computed: {},
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         this.getInvoiceDetail();
         this.getInvoiceList();
     },
     methods: {
+        handleInvoiceShow() { // 显示弹框
+            this.invoiceShow = true
+        },
+        handleInvoiceClose() { // 关闭弹框
+            this.invoiceShow = false;
+        },
+        handleInvoiceSubmit() { // 审核提交
+            this.loading = true;
+            Core.Api.Invoice.audit({
+                id: this.id,
+                ...this.editForm
+            }).then(res => {
+                console.log('handleInvoiceSubmit res', res)
+                this.routerChange('back')
+            }).catch(err => {
+                console.log('handleInvoiceSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
         routerChange(type, item) {
             switch (type) {
                 case 'back':
@@ -173,59 +193,20 @@ export default {
             });
 
         },
-        // 获取商品列表
-        handleAddInvoiceItem(ids, items) {
-            console.log('handleAddInvoiceItem ids:', ids)
-            console.log('handleAddInvoiceItem items:', items)
-            this.disabledChecked = []
-            for (let item of items) {
-                console.log('handleAddInvoiceItem item:', item)
-                this.tableData.push({
-                    "id": 0,
-                    "item": item,
-                    "amount": 1,
-                    "stock": 0,
-                })
-            }
-        },
-        // 移除商品
-        handleFailItemDelete(index) {
-            this.tableData.splice(index, 1)
-        },
-        // 货单明细提交
-        handleFaultSubmit() {
-            this.loading = false;
-            let list = []
-            for (let item of this.tableData) {
-                list.push({
-                    "id": item.id,
-                    "invoice_id": this.id,
-                    "item_id": item.item.id,
-                    "amount": item.amount
-                })
-            }
-            Core.Api.Invoice.saveList(list).then(res => {
-                this.$message.success('保存成功')
-                this.getInvoiceDetail()
-                this.routerChange('back')
-            }).catch(err => {
-                console.log('handleFaultSubmit err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
     }
 };
 </script>
 <style lang="less">
-#InvoiceEdit {
+#InvoiceDetail {
     .gray-panel.info {
-        .left {
-            font-size: 12px;
-            color: #465670;
+        .panel-title {
+            .left {
+                font-size: 12px;
+                color: #465670;
 
-            span {
-                color: #A5ACB8;
+                span {
+                    color: #A5ACB8;
+                }
             }
         }
 

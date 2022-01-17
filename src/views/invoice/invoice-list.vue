@@ -13,7 +13,8 @@
                 <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
                     <a-tab-pane :key="item.key" v-for="item of statusList">
                         <template #tab>
-                            <div class="tabs-title">{{item.text}}<span :class="item.color">{{item.value}}</span></div>
+                            <div class="tabs-title">{{ item.text }}<span :class="item.color">{{ item.value }}</span>
+                            </div>
                         </template>
                     </a-tab-pane>
                 </a-tabs>
@@ -23,13 +24,15 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">仓库名称:</div>
                         <div class="value">
-                            <a-input placeholder="请输入仓库名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入仓库名称" v-model:value="searchForm.name"
+                                     @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">货单编号:</div>
                         <div class="value">
-                            <a-input placeholder="请输入货单编号" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入货单编号" v-model:value="searchForm.uid"
+                                     @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -45,7 +48,8 @@
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
                         <div class="key">创建时间:</div>
                         <div class="value">
-                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
+                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
+                                            :show-time="defaultTime" :allow-clear='false'>
                                 <template #suffixIcon><i class="icon i_calendar"/></template>
                             </a-range-picker>
                         </div>
@@ -58,11 +62,13 @@
 
             </div>
             <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
+                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                         :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record}">
                         <template v-if="column.key === 'detail'">
-                            <a-tooltip placement="top" :title='text' >
-                                <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
+                            <a-tooltip placement="top" :title='text'>
+                                <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}
+                                </a-button>
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'stock_type'">
@@ -72,14 +78,21 @@
                             {{ $Util.stockTypeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'warehouse_name'">
-                            {{ text.name ||  '-' }}
+                            {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
+                        <template v-if="column.dataIndex === 'status'">
+                            <div class="status status-bg status-tag" :class="$Util.invoiceStatusFilter(text,'color')">
+                                {{$Util.invoiceStatusFilter(text)}}
+                            </div>
+                        </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button>
+                            <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改
+                            </a-button>
+                            <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除
+                            </a-button>
                         </template>
                     </template>
                 </a-table>
@@ -105,9 +118,11 @@
             <div class="form-item required">
                 <div class="key">仓库：</div>
                 <div class="value">
-                <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库">
-                    <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">{{ warehouse.name }}</a-select-option>
-                </a-select>
+                    <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库">
+                        <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">
+                            {{ warehouse.name }}
+                        </a-select-option>
+                    </a-select>
                 </div>
             </div>
             <div class="form-item required">
@@ -129,6 +144,7 @@
 
 <script>
 import Core from '../../core';
+
 const STOCK_RECORD = Core.Const.STOCK_RECORD
 export default {
     name: 'WarehouseList',
@@ -151,14 +167,15 @@ export default {
             },
             codeAddShow: false,
             isExist: '',
+            filteredInfo: {status: [1]},
             warehouseList: [],
-            handleTypeList:Core.Const.STOCK_RECORD.TYPE, //出入库
+            handleTypeList: Core.Const.STOCK_RECORD.TYPE, //出入库
             statusList: [
                 {text: '全  部', value: '0', color: 'primary', key: '0'},
-                {text: '待审核', value: '0', color: 'yellow',     key: STOCK_RECORD.STATUS.AIT_AUDIT },
-                {text: '审核通过', value: '0', color: 'green',  key: STOCK_RECORD.STATUS.AUDIT_PASS },
-                {text: '审核失败', value: '0', color: 'red',  key: STOCK_RECORD.STATUS.CLOSE },
-                {text: '处理完成', value: '0', color: 'green',    key: STOCK_RECORD.STATUS.AUDIT_REFUSE },
+                {text: '待审核', value: '0', color: 'yellow', key: STOCK_RECORD.STATUS.AIT_AUDIT},
+                {text: '审核通过', value: '0', color: 'green', key: STOCK_RECORD.STATUS.AUDIT_PASS},
+                {text: '审核失败', value: '0', color: 'red', key: STOCK_RECORD.STATUS.AUDIT_REFUSE},
+                {text: '处理完成', value: '0', color: 'green', key: STOCK_RECORD.STATUS.CLOSE},
             ],
             searchForm: {
                 name: '',
@@ -172,23 +189,31 @@ export default {
                 id: '',
                 warehouse_id: undefined,
             },
-
-            tableColumns: [
-                { title: '出入库单编号', dataIndex: 'uid', key: 'detail' },
-                {title: '出入库类型', dataIndex: 'type',key: 'stock_type',},
-                {title: '所属仓库', dataIndex: 'warehouse',key: 'warehouse_name',},
-                {title: '仓库类型', dataIndex: 'type',key: 'type',},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '操作', key: 'operation', fixed: 'right' },
-            ],
             tableData: [],
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        tableColumns() {
+            let {filteredInfo} = this;
+            filteredInfo = filteredInfo || {};
+            let columns = [
+                {title: '出入库单编号', dataIndex: 'uid', key: 'detail'},
+                {title: '出入库类型', dataIndex: 'type', key: 'stock_type',},
+                {title: '所属仓库', dataIndex: ['warehouse', 'name'], key: 'warehouse_name',},
+                {title: '仓库类型', dataIndex: 'type', key: 'type',},
+                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
+                {title: '状态', dataIndex: 'status', key: 'status',
+                    filters: Core.Const.STOCK_RECORD.STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [1]},
+                {title: '操作', key: 'operation', fixed: 'right'},
+            ]
+            return columns
+        }
+    },
     mounted() {
         this.getTableData();
         this.getWarehouseList();
+        this.getStatusList();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -198,14 +223,14 @@ export default {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/warehouse/invoice-edit",
-                        query: { id: item.id }
+                        query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
                         path: "/warehouse/invoice-detail",
-                        query: { id: item.id }
+                        query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -242,8 +267,7 @@ export default {
             Core.Api.Invoice.save(form).then(res => {
                 this.$message.success('保存成功')
                 this.handleAddClose();
-                this.getTableData();
-                this.routerChange('edit', res)
+                this.routerChange('edit', res.detail)
             }).catch(err => {
                 console.log('handleAddSubmit err:', err)
             })
@@ -271,8 +295,6 @@ export default {
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
-            this.loading = false;
-            // return
             Core.Api.Invoice.list({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
@@ -305,6 +327,29 @@ export default {
                         console.log("handleDelete err", err);
                     })
                 },
+            });
+        },
+        getStatusList() {    // 获取 状态 列表
+            Object.assign(this.statusList, this.$options.data().statusList)
+            Core.Api.Invoice.status({
+                ...this.searchForm,
+            }).then(res => {
+                console.log("getStatusList res:", res)
+                let total = 0
+                this.statusList.forEach(statusItem => {
+                    res.status_list.forEach(item => {
+                        if (statusItem.key == item.status) {
+                            statusItem.value = item.amount
+                            total += item.amount
+                        }
+                    })
+                })
+                console.log(total)
+                this.statusList[0].value = total
+            }).catch(err => {
+                console.log('getStatusStat err:', err)
+            }).finally(() => {
+                this.loading = false;
             });
         },
     }

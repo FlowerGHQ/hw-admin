@@ -476,6 +476,16 @@ const Util = {
         const MAP = Const.STOCK_RECORD.PRODUCT_TYPE_MAP
         return MAP[val] || '未知'
     },
+    invoiceStatusFilter(val, to = 'word') {
+        const MAP = Const.STOCK_RECORD.STATUS_MAP
+        const COLOR_MAP = Const.STOCK_RECORD.STATUS_COLOR_MAP
+        switch (to) {
+            case 'word':
+                return MAP[val] || '未知'
+            case 'color':
+                return COLOR_MAP[val] || 'grey'
+        }
+    },
     /* =============== 出入库 ================ */
 }
 

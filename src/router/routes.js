@@ -398,6 +398,16 @@ const routes = [
                     parent: '/invoice/invoice-list',
                 }
             },
+            {
+                path: 'invoice-detail',
+                name: 'InvoiceDetail',
+                component: () => import('@/views/invoice/invoice-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '货单详情',
+                    parent: '/invoice/invoice-list',
+                }
+            },
         ]
     },
     {   // 商品管理 - 平台端
