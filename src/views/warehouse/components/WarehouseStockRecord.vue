@@ -3,15 +3,15 @@
         <div class="panel-content">
             <div class="search-container">
                 <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
-                        <div class="key">商品名称:</div>
-                        <div class="value">
-                            <div class="value">
-                                <a-input placeholder="请输入商品名称" v-model:value="searchForm.name"
-                                         @keydown.enter='handleSearch'/>
-                            </div>
-                        </div>
-                    </a-col>
+<!--                    <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">-->
+<!--                        <div class="key">商品名称:</div>-->
+<!--                        <div class="value">-->
+<!--                            <div class="value">-->
+<!--                                <a-input placeholder="请输入商品名称" v-model:value="searchForm.name"-->
+<!--                                         @keydown.enter='handleSearch'/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </a-col>-->
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                         <div class="key">创建时间:</div>
                         <div class="value">
@@ -43,10 +43,10 @@
                             {{ $Util.stockRecordFilter(text) }}
                         </template>
                         <template v-if="column.key === 'amount'">
-                            {{ text || '-' }}
+                            {{ text || 0 }}
                         </template>
                         <template v-if="column.dataIndex === 'balance'">
-                            {{ text || '-' }}
+                            {{ text || 0 }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -80,7 +80,7 @@ export default {
     name: 'WarehouseStockRecord',
     components: {},
     props: {
-        warehouse_id: {
+        warehouseId: {
             type: Number,
         },
         detail: {
@@ -101,12 +101,11 @@ export default {
             list: '',
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
-            searchForm: {
-                name: '',
-            },
+            // searchForm: {
+            //     name: '',
+            // },
             type: Core.Const.STOCK_RECORD.TYPE,
             tableData: [],
-            warehouse_id: '',
         };
     },
     watch: {},
@@ -117,14 +116,13 @@ export default {
                 {title: '商品编码', dataIndex: 'item', key: 'item-code'},
                 {title: '操作类型', dataIndex: 'type', key: 'type'},
                 {title: '数量', dataIndex: 'amount', key: 'amount'},
-                {title: '当前库存数量', dataIndex: 'balance', key: 'balance'},
+                {title: '变更后库存数量', dataIndex: 'balance', key: 'balance'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
             ]
             return tableColumns
         },
     },
     mounted() {
-        this.warehouse_id = Number(this.$route.query.id) || 0
         this.getTableData();
     },
     methods: {
@@ -148,8 +146,8 @@ export default {
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             Core.Api.Stock.stockRecordList({
-                ...this.searchForm,
-                warehouse_id: this.warehouse_id,
+                // ...this.searchForm,
+                warehouse_id: this.warehouseId,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
                 page: this.currPage,
@@ -158,15 +156,12 @@ export default {
                 console.log("getTableData res", res)
                 this.total = res.count;
                 this.tableData = res.list;
-                console.log("getTableData res", this.tableData)
             }).catch(err => {
                 console.log('getTableData err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
-
-
     }
 };
 </script>

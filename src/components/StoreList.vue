@@ -62,10 +62,13 @@ export default {
     name: 'UserList',
     components: {},
     props: {
-        agentId: {
+        store_id: {
             type: Number,
         },
-        distributorId: {
+        agent_id: {
+            type: Number,
+        },
+        distributor_id: {
             type: Number,
         },
         type: {
@@ -99,7 +102,7 @@ export default {
                 tableColumns.splice(1, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'name'})
             }
             if (this.$auth('ADMIN')) {
-                tableColumns.splice(2, 0, {title: '所属经销商', dataIndex: 'agent_name', key: 'name'})
+                tableColumns.splice(2, 0, {title: '所属零售商', dataIndex: 'agent_name', key: 'name'})
             }
             return tableColumns
         },
@@ -114,7 +117,7 @@ export default {
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/store/store-edit",
-                        query: {id: item.id, agent_id: this.agentId, distributor_id: this.distributorId}
+                        query: {id: item.id, agent_id: this.agent_id, distributor_id: this.distributor_id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -139,8 +142,8 @@ export default {
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             Core.Api.Store.list({
-                agent_id: this.agentId,
-                distributor_id: this.distributorId,
+                agent_id: this.agent_id,
+                distributor_id: this.distributor_id,
                 type: this.type,
                 page: this.currPage,
                 page_size: this.pageSize,

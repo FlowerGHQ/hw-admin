@@ -117,7 +117,7 @@ let Const = {
         TYPE: {
             ADMIN: 10,      // 管理员
             DISTRIBUTOR: 15, //分销商
-            AGENT: 20,      // 经销商
+            AGENT: 20,      // 零售商
             STORE: 30,      // 门店
             WORKER: 40,     // 维修工
             CUSTOMER: 100,  // 顾客
@@ -125,7 +125,7 @@ let Const = {
         TYPE_MAP: {
             10: '平台方',
             15: '分销商',
-            20: '经销商',
+            20: '零售商',
             30: '门店',
             40: '维修工',
             100: '顾客',
@@ -135,12 +135,12 @@ let Const = {
         TYPE: {
             ADMIN: 10,     // 管理员
             DISTRIBUTOR: 15, //分销商
-            AGENT: 20,     // 经销商
+            AGENT: 20,     // 零售商
             STORE: 30,     // 门店
         },
         TYPE_LIST: [
             {value: 30, text: '门店'},
-            {value: 20, text: '经销商'},
+            {value: 20, text: '零售商'},
             {value: 15, text: '分销商'},
             {value: 10, text: '平台方'},
         ],
@@ -177,8 +177,8 @@ let Const = {
     },
 
     ORG_STATUS_LIST: [ // 组织状态
-        {text: "禁用", value: 0},
         {text: "启用", value: 1},
+        {text: "禁用", value: 0},
     ],
 
     REPAIR: { // 维修工单
@@ -192,6 +192,10 @@ let Const = {
             2: '特批订单',
         },
         // 工单帐类
+        SERVICE_TYPE: {
+            IN_REPAIR_TIME: 1,
+            OUT_REPAIR_TIME: 2,
+        },
         SERVICE_TYPE_LIST: [
             {text: '保内维修', value: 1},
             {text: '保外维修', value: 2},
@@ -212,7 +216,7 @@ let Const = {
             3: '寄修',
         },
         ORG_TYPE_LIST: [
-            {text: '经销商', value: 20},
+            {text: '零售商', value: 20},
             {text: '门店', value: 30},
         ],
         // 维修类别
@@ -249,7 +253,7 @@ let Const = {
             WAIT_REPAIR: 40,
             REPAIR_END: 50,
             SETTLEMENT: 60,
-            TRANSFER: 100,
+            // TRANSFER: 100,
             CHECK_FAIL: -20,
             AUDIT_FAIL: -30,
             CLOSE: -10,
@@ -257,12 +261,12 @@ let Const = {
         STATUS_MAP: {
             10: '待分配',
             20: '待确认',
-            25: '待审核(后台审核)',
+            25: '待审核',
             30: '待检测',
             40: '维修中',
             50: '已维修',
             60: '已结算',
-            100: '已转单',
+            // 100: '已转单',
             '-20': '确认未通过',
             '-30': '审核未通过',
             '-10': '取消',
@@ -300,7 +304,13 @@ let Const = {
         TYPE: {
             ADD: 1,
             REPLACE: 2,
-        }
+            TRANSFER: 3,
+        },
+        TYPE_LIST: [
+            {value: 1, text: '新增'},
+            {value: 2, text: '更换'},
+            {value: 3, text: '转单'},
+        ],
     },
     ACTION_LOG: { // 操作记录
         SOURCE_TYPE: {
@@ -378,7 +388,7 @@ let Const = {
         },
         TYPE_MAP: {
             100: '用户申请退款',
-            200: '经销商申请退款',
+            200: '零售商申请退款',
         },
         STATUS: {
             WAIT_AUDIT: 10,    // 初始化
@@ -439,15 +449,29 @@ let Const = {
     NOTICE: { //系统消息
         TYPE: {
             ADMIN: 10,  //平台消息
-            AGENT: 20,  //经销商消息
+            AGENT: 20,  //零售商消息
         },
         TYPE_MAP: {
             10: '平台消息',
-            20: '经销商消息'
+            20: '零售商消息'
         },
     },
     SYSTEM: { //系统
         FILE: {
+            TARGET_TYPE:{
+                // TARGET_TYPE_SYSTEM: '1',
+                TARGET_TYPE_DISTRIBUTOR: '2',
+                // TARGET_TYPE_AGENT: '3',
+                // TARGET_TYPE_STORE: '4',
+                // TARGET_TYPE_REPAIR_ORDER: '5',
+            },
+            TARGET_TYPE_LIST: [
+                // {value: 1, text: '系统'},
+                {value: 2, text: '分销商'},
+                // {value: 3, text: '零售商'},
+                // {value: 4, text: '门店'},
+                // {value: 5, text: '维修订单'},
+            ],
             TYPE:{
                 XLSX: 'xlsx',
                 DOC: 'doc',
@@ -466,7 +490,7 @@ let Const = {
     AUTH_LIST_TEMP: [ // 权限
         { list: [], select: [], key: 'home',            name: '总览' },
         { list: [], select: [], key: 'distributor',     name: '代理商管理' },
-        { list: [], select: [], key: 'agent',           name: '经销商管理' },
+        { list: [], select: [], key: 'agent',           name: '零售商管理' },
         { list: [], select: [], key: 'store',           name: '门店管理' },
         { list: [], select: [], key: 'customer',        name: '客户管理' },
         { list: [], select: [], key: 'org-user',        name: '员工管理' },
@@ -484,15 +508,30 @@ let Const = {
             REPAIR_ORDER: 1, //图片类型
         }
     },
-    STOCK_RECORD: {
+    STOCK_RECORD: {  //仓库明细
         TYPE: {
-            TYPE_IN: 1, //增加
-            TYPE_OUT: 2, //减少
+            TYPE_IN: 1, //入库
+            TYPE_OUT: 2, //出库
         },
         TYPE_MAP: {
-            1: '增加',
-            2: '减少'
+            1: '入库',
+            2: '出库'
+        },
+        PRODUCT_TYPE: {  //产品类型
+            TYPE_QUALITY: 1, //正品仓
+            TYPE_DEFECTIVE: 2, //残次仓
+        },
+        PRODUCT_TYPE_MAP: {
+            1: '正品仓',
+            2: '残次仓',
+        },
+        STATUS: {  //出入库审核
+            AIT_AUDIT: 10, //待审核
+            AUDIT_PASS: 20, //审核通过
+            CLOSE: 40, //处理完成
+            AUDIT_REFUSE: '-10' //审核失败
         }
+
     },
 };
 

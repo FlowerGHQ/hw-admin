@@ -51,12 +51,13 @@
                 <div class="form-item required">
                     <div class="key">到港时间</div>
                     <div class="value">
-                        <a-date-picker v-model:value="form.arrival_time" valueFormat='X' :show-time="defaultTime"
+                        <a-date-picker v-model:value="form.arrival_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime"
                                        placeholder="请选择到港时间">
                             <template #suffixIcon><i class="icon i_calendar"/></template>
                         </a-date-picker>
                     </div>
                 </div>
+                <!-- <a-date-picker v-model:value="form.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/> -->
                 <div class="form-item required">
                     <div class="key">工单名称</div>
                     <div class="value">
@@ -185,11 +186,16 @@ export default {
     props: {},
     data() {
         return {
+            REPAIR,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
             detail: {
                 status: 0,
+                repair_user_id: undefined, // 工单负责人
+                plan_time: undefined, // 计划时间
+                repair_message: "", // 处理信息、工单备注
+                priority: 0, // 紧急程度
             }, // 工单详情
             create_time: [],
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
@@ -200,7 +206,6 @@ export default {
             channelList: REPAIR.CHANNEL_LIST, // 维修方式
             priorityList: REPAIR.PRIORITY_LIST, // 紧急程度
             customerList: [], // 车主列表
-            REPAIR,
             isExist: '', // 车辆编号输入框提示
             form: {
                 id: '',
@@ -296,6 +301,7 @@ export default {
                 this.form.customer_id = this.form.customer_id || undefined
                 this.form.repair_user_id = this.form.repair_user_id || undefined
                 this.form.plan_time = this.form.plan_time ? dayjs.unix(this.form.plan_time).format('YYYY-MM-DD HH:mm:ss') : undefined
+                this.form.arrival_time = this.form.arrival_time ? dayjs.unix(this.form.arrival_time).format('YYYY-MM-DD HH:mm:ss') : undefined // 时间戳转日期
                 // this.form.finish_time = this.form.finish_time ? dayjs.unix(this.form.finish_time).format('YYYY-MM-DD HH:mm:ss') : undefined
             }).catch(err => {
                 console.log('getRepairDetail err', err)
@@ -305,10 +311,11 @@ export default {
         },
 
         // 表单提交
-        handleSubmit() {
+        async handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
 
             form.plan_time = form.plan_time ? dayjs(form.plan_time).unix() : 0
+            form.arrival_time = form.arrival_time ? dayjs(form.arrival_time).unix() : 0 // 日期转时间戳
             // form.finish_time = form.finish_time ? dayjs(form.finish_time).unix() : 0
             console.log('handleSubmit form:', form)
             let checkRes = this.checkFormInput(form);
@@ -316,17 +323,46 @@ export default {
                 return
             }
             let apiName = form.id ? 'update' : 'create'
-            this.form.vehicle_no =
 
-                Core.Api.Repair[apiName]({
-                    ...form,
-                    vehicle_no: this.form.item_code,
-                }).then(() => {
-                    this.$message.success('保存成功')
+            await Core.Api.Repair[apiName]({
+                ...form,
+                vehicle_no: this.form.item_code,
+            }).then(() => {
+                this.$message.success('保存成功')
+                this.routerChange('back')
+            }).catch(err => {
+                console.log('handleSubmit err:', err)
+            })
+                
+            if (this.detail.status == this.REPAIR.STATUS.CHECK_FAIL) { // 未确认通过维修单 员工再次确认（重提）
+                this.loading = true; 
+                await Core.Api.Repair.hand({
+                    id: this.form.id,
+                    ...this.detail
+                }).then(res => {
+                    console.log('handSubmit res', res)
                     this.routerChange('back')
                 }).catch(err => {
-                    console.log('handleSubmit err:', err)
-                })
+                    console.log('handSubmit err', err)
+                }).finally(() => {
+                    this.loading = false;
+                });
+            }
+            if (this.detail.status == this.REPAIR.STATUS.AUDIT_FAIL) { // 未审核通过维修单 员工再次确认（重提）
+                this.loading = true; 
+                await Core.Api.Repair.check({
+                    id: this.form.id,
+                    audit_result: 1,
+                    audit_message: '',
+                }).then(res => {
+                    console.log('checkSubmit res', res)
+                    this.routerChange('back')
+                }).catch(err => {
+                    console.log('checkSubmit err', err)
+                }).finally(() => {
+                    this.loading = false;
+                });
+            }
         },
         onblur() {  // 获取 车辆编码 数据
             if (!this.form.item_code) {
@@ -469,6 +505,8 @@ export default {
                     }
                     .i_close_c {
                         color: @red;
+                        font-size: 18px;
+
                     }
                 }
 

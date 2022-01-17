@@ -8,7 +8,19 @@
             <div class="title">文件上传</div>
         </div>
         <div class="form-content">
+            <div class="form-item required">
+                <div class="key">文件类型</div>
+                <div class="value">
+                    <a-select placeholder="请选择文件类型" v-model:value="form.target_type" @change="handleCustomerSelect"
+                                show-search>
+                        <a-select-option v-for="(item,index) of fileTypeList" :key="index" :value="item.value">
+                            {{ item.text }}
+                        </a-select-option>
+                    </a-select>
+                </div>
+            </div>
             <div class="form-item img-upload">
+                <div class="key">文件上传</div>
                 <div class="value">
                     <a-upload name="file" class="image-uploader"
                         list-type="picture-card"
@@ -49,10 +61,13 @@ export default {
                 name: '',
                 path: '',
                 type: '',
-                target_type: 2,
+                target_type: '',
             },
             item_category: {},
             configTemp: [],
+            // 文件类型
+            fileTypeList: Core.Const.SYSTEM.FILE.TARGET_TYPE_LIST,
+            // 上传文件
             upload: {
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
                 fileList: [],
@@ -132,7 +147,6 @@ export default {
                 console.log('handleSubmit err:', err)
             })
         },
-
         // 校验文件
         handleImgCheck(file) {
             console.log('handleImgCheck file.type', file.type)

@@ -3,7 +3,7 @@
         :columns="columns" :data-source="dataList" :scroll="{ x: true }"
         :row-key="record => record.id" :loading='loading' :pagination='false'
         :row-selection="checkMode ? rowSelection : null">
-        <template #bodyCell="{ column , record ,index,text}">
+        <template #bodyCell="{ column ,text}">
             <template v-if="column.key === 'money'">
                 ￥{{$Util.countFilter(text)}}
             </template>
@@ -45,6 +45,7 @@ export default {
             default: () => { return [] }
         }
     },
+    emit: ['submit'],
     data() {
         return {
             selectedRowKeys: [],
@@ -84,7 +85,7 @@ export default {
                     });
                     this.selectedRowItems = selectedRowItems
                     console.log('rowSelection this.selectedRowKeys:', this.selectedRowKeys,'selectedRowItems:', selectedRowItems)
-                    this.$emit('change', this.selectedRowKeys, this.selectedRowItems)
+                    this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
                 },
                 getCheckboxProps: record => ({
                     props: {
@@ -126,7 +127,7 @@ export default {
         taxMoneyCheck(record) {
             record.totle_charge = record.charge * record.amount
             record.tax_money = record.tax_rate * record.totle_charge / 100
-            this.$emit('change', this.selectedRowKeys, this.selectedRowItems)
+            this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
         },
     }
 }

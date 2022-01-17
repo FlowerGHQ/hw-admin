@@ -129,7 +129,7 @@ export default {
                 {title: '手机号', dataIndex: 'phone'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '状态', dataIndex: 'status', key: 'status',
-                    filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || null },
+                    filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [1] },
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
             return columns
@@ -183,8 +183,9 @@ export default {
             console.log('handleTableChange filters:', filters)
             this.filteredInfo = filters;
             for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : 0
+                this.searchForm[key] = filters[key] ? filters[key][0] : ''
             }
+            this.searchForm.status = filters.status ? filters.status[0] : 1
             this.pageChange(1);
         },
         getTableData() {  // 获取 表格 数据
@@ -205,11 +206,11 @@ export default {
                 this.loading = false;
             });
         },
-        // 删除 经销商
+        // 删除 零售商
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除分经销商吗？',
+                title: '确定要删除分零售商吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',

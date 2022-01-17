@@ -11,15 +11,15 @@
                 <div class="form-item required" v-if="loginType == LOGIN_TYPE.ADMIN && !form.id">
                     <div class="key">所属分销商</div>
                     <div class="value">
-                        <a-select v-model:value="form.distributor_id" placeholder="请选择所属分销商">
+                        <a-select v-model:value="form.distributor_id" placeholder="请选择所属分销商" @change="onDistributorChange">
                             <a-select-option v-for="distributor of distributorList" :key="distributor.id" :value="distributor.id">{{ distributor.name }}</a-select-option>
                         </a-select>
                     </div>
                 </div>
-                <div class="form-item required" v-if="loginType == LOGIN_TYPE.ADMIN && !form.id">
-                    <div class="key">所属经销商</div>
+                <div class="form-item required" v-if="!form.id">
+                    <div class="key">所属零售商</div>
                     <div class="value">
-                        <a-select v-model:value="form.agent_id" placeholder="请选择所属经销商">
+                        <a-select v-model:value="form.agent_id" placeholder="请选择所属零售商">
                             <a-select-option v-for="agent of agentList" :key="agent.id" :value="agent.id">{{ agent.name }}</a-select-option>
                         </a-select>
                     </div>
@@ -94,6 +94,9 @@ export default {
                 logo: '',
                 type: 0,
             },
+            agentSearchFrom: {
+                distributor_id: ''
+            },
             upload: {
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
                 fileList: [],
@@ -118,7 +121,7 @@ export default {
         if (this.loginType === LOGIN_TYPE.ADMIN) {
             this.getDistributorList();
         }
-        if (this.loginType === LOGIN_TYPE.ADMIN) {
+        if (this.loginType === LOGIN_TYPE.DISTRIBUTOR) {
             this.getAgentList();
         } else if (this.loginType === LOGIN_TYPE.AGENT) {
             this.form.agent_id = Core.Data.getOrgId()
@@ -158,16 +161,23 @@ export default {
                 this.loading = false;
             });
         },
-        // 获取选择用 经销商列表
         getDistributorList() {
             Core.Api.Distributor.listAll().then(res => {
                 this.distributorList = res.list
             })
         },
+        // 获取选择用 零售商列表
         getAgentList(){
-            Core.Api.Agent.listAll().then(res => {
+            Core.Api.Agent.listAll(this.agentSearchFrom).then(res => {
                 this.agentList = res.list
+                console.log('getAgentList res', res)
             })
+        },
+        onDistributorChange(val) {
+            this.form.agent_id = undefined
+            this.agentSearchFrom.distributor_id = val
+            this.getAgentList()
+
         },
         // 提交编辑
         handleSubmit() {
@@ -181,8 +191,11 @@ export default {
                 }
             }
             console.log('form:', form)
+            if (!form.distributor_id) {
+                return this.$message.warning('请选择所属分销商')
+            }
             if (!form.agent_id) {
-                return this.$message.warning('请选择所属经销商')
+                return this.$message.warning('请选择所属零售商')
             }
             if (!form.name) {
                 return this.$message.warning('请输入门店名称')

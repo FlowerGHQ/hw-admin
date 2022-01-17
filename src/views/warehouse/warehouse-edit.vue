@@ -15,6 +15,15 @@
                     </div>
                 </div>
                 <div class="form-item required">
+                    <div class="key">仓库类型：</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.type">
+                            <a-radio :value="typeList.TYPE_QUALITY">正品仓</a-radio>
+                            <a-radio :value="typeList.TYPE_DEFECTIVE">残次仓</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">仓库地址：</div>
                     <div class="value">
                         <AddressCascader @change='handleAddressSelect' :default-address='[form.province, form.city, form.county]'/>
@@ -49,6 +58,7 @@ export default {
             // 加载
             loading: false,
             detail: {},
+            typeList: Core.Const.STOCK_RECORD.PRODUCT_TYPE,
 
             form: {
                 id: '',
@@ -57,6 +67,7 @@ export default {
                 city: '',
                 county: '',
                 address: '',
+                type: '',
             },
         };
     },

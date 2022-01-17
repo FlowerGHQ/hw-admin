@@ -66,7 +66,7 @@ export default {
                 selected: {},
             },
             agent: {
-                name: '经销商权限管理',
+                name: '零售商权限管理',
                 type: USER_TYPE.AGENT,
                 edit: false,
                 options: [],

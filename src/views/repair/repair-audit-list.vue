@@ -1,5 +1,5 @@
 <template>
-<div id="RepairList">
+<div id="RepairConfirmList">
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">{{$t('n.repair_list')}}</div>
@@ -39,9 +39,9 @@
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
-                    <div class="key">所属经销商:</div>
+                    <div class="key">所属零售商:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.agent_id" placeholder="请选择经销商" @change="handleSearch">
+                        <a-select v-model:value="searchForm.agent_id" placeholder="请选择零售商" @change="handleSearch">
                             <a-select-option v-for="item of agentList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
@@ -116,6 +116,9 @@
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
+                    <template v-if="column.key === 'operation'">
+                        <a-button type='link' @click="handleAuditShow(record.id)" v-if="record.status == REPAIR.STATUS.WAIT_AUDIT"><i class="icon i_edit"/>审批</a-button>
+                    </template>
                 </template>
             </a-table>
         </div>
@@ -135,19 +138,47 @@
             />
         </div>
     </div>
+    <!-- 审核 -->
+    <template class="modal-container">
+        <a-modal v-model:visible="auditShow" title="审核"
+            class="warehouse-edit-modal" :after-close='handleAuditClose'>
+            <div class="modal-content">
+                <div>
+                    <div class="form-item required">
+                        <a-radio-group v-model:value="editForm.audit_result">
+                            <a-radio value="1">通过</a-radio>
+                            <a-radio value="0">不通过</a-radio>
+                        </a-radio-group>
+                    </div>
+                    <div class="form-item required" v-if="editForm.audit_result == 0">
+                        <div class="key">原因:</div>
+                        <div class="value">
+                            <a-input v-model:value="editForm.audit_message" placeholder="请输入不通过原因"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="auditShow = false">取消</a-button>
+                <a-button @click="handleAuditSubmit" type="primary" >确定</a-button>
+            </template>
+        </a-modal>
+    </template>
 </div>
 </template>
 
 <script>
 import Core from '../../core';
-const STATUS = Core.Const.REPAIR.STATUS
-const LOGIN_TYPE = Core.Const.LOGIN.TYPE
+const REPAIR = Core.Const.REPAIR
+
 export default {
-    name: 'RepairListAudit',
+    name: 'RepairConfirmList',
     components: {},
     props: {},
     data() {
         return {
+            Core,
+            REPAIR,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -161,17 +192,17 @@ export default {
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             statusList: [
                 {text: '全  部', value: '0', color: 'primary', key: '0'},
-                {text: '待分配', value: '0', color: 'red',     key: STATUS.WAIT_DISTRIBUTION },
-                {text: '待确认', value: '0', color: 'orange',  key: STATUS.WAIT_CHECK },
-                {text: '等待审核(后台审核)', value: '0', color: 'yellow',  key: STATUS.WAIT_AUDIT },
-                {text: '待检测', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
-                {text: '维修中', value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
-                {text: '已维修', value: '0', color: 'light',   key: STATUS.REPAIR_END },
-                {text: '已结算', value: '0', color: 'green',   key: STATUS.SETTLEMENT },
-                {text: '已转单', value: '0', color: 'purple',  key: STATUS.TRANSFER },
-                {text: '确认未通过', value: '0', color: 'purple',  key: STATUS.CHECK_FAIL },
-                {text: '审核未通过', value: '0', color: 'purple',  key: STATUS.AUDIT_FAIL },
-                {text: '取消', value: '0', color: 'purple',  key: STATUS.CLOSE },
+                {text: '待分配', value: '0', color: 'red',     key: REPAIR.STATUS.WAIT_DISTRIBUTION },
+                {text: '待确认', value: '0', color: 'orange',  key: REPAIR.STATUS.WAIT_CHECK },
+                {text: '待审核', value: '0', color: 'yellow',  key: REPAIR.STATUS.WAIT_AUDIT },
+                {text: '待检测', value: '0', color: 'yellow',  key: REPAIR.STATUS.WAIT_DETECTION },
+                {text: '维修中', value: '0', color: 'blue',    key: REPAIR.STATUS.WAIT_REPAIR },
+                {text: '已维修', value: '0', color: 'light',   key: REPAIR.STATUS.REPAIR_END },
+                {text: '已结算', value: '0', color: 'green',   key: REPAIR.STATUS.SETTLEMENT },
+                // {text: '已转单', value: '0', color: 'purple',  key: REPAIR.STATUS.TRANSFER },
+                {text: '确认未通过', value: '0', color: 'purple',  key: REPAIR.STATUS.CHECK_FAIL },
+                {text: '审核未通过', value: '0', color: 'purple',  key: REPAIR.STATUS.AUDIT_FAIL },
+                {text: '取消', value: '0', color: 'purple',  key: REPAIR.STATUS.CLOSE },
             ],
             create_time: [],
             distributorList: [], // 分销商下拉框数据
@@ -193,6 +224,13 @@ export default {
 
             tableFields: [],
             tableData: [],
+            // 审核
+            auditShow: false,
+            editForm: {
+                audit_result: 1,
+                audit_message: '',
+            },
+            repair_id: ''
         };
     },
     watch: {},
@@ -210,14 +248,15 @@ export default {
                     filters: Core.Const.REPAIR.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.channel || null },
                 { title: '维修类别', dataIndex: 'repair_method',
                     filters: Core.Const.REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.repair_method || null },
-                // { title: '维修门店/经销商',   dataIndex: 'store_name', key: 'item' },
-                { title: '维修门店/经销商',   dataIndex: 'repair_name',},
+                // { title: '维修门店/零售商',   dataIndex: 'store_name', key: 'item' },
+                { title: '维修门店/零售商',   dataIndex: 'repair_name',},
                 { title: '维修门店电话',   dataIndex: 'repair_phone', key: 'item' },
                 { title: '创建人',   dataIndex: 'user_name', key: 'item' },
                 { title: '关联客户', dataIndex: 'customer_name', key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
-                { title: '订单状态', dataIndex: 'status', fixed: 'right' },
+                { title: '订单状态', dataIndex: 'status' , fixed: 'right'},
+                { title: '操作', key: 'operation', fixed: 'right' },
             ]
             return columns
         },
@@ -275,6 +314,27 @@ export default {
             this.create_time = []
             this.pageChange(1);
         },
+        
+        handleAuditShow(id) { // 显示弹框
+            this.repair_id = id
+            this.auditShow = true
+        },
+        handleAuditClose() { // 关闭弹框
+            this.auditShow = false;
+        },
+        handleAuditSubmit() { // 审核提交
+            this.loading = true; 
+            
+            Core.Api.Repair.audit({
+                id: this.repair_id,
+                ...this.editForm
+            }).then(res => {
+                this.handleAuditClose()
+                this.getTableData()
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
 
         getStoreList() {
             Core.Api.Store.list({
@@ -282,21 +342,20 @@ export default {
                 status: 1,
             }).then(res => {
                 this.storeList = res.list
-                this.storeList.push({id:-1,name:"经销商"})
+                this.storeList.push({id:-1,name:"零售商"})
             });
         },
         getAgentListAll() {
             Core.Api.Agent.listAll().then(res => {
                 console.log('res.list: ', res.list);
                 this.agentList = res.list
-                this.agentList.push({id:-1,name:"经销商"})
+                this.agentList.push({id:-1,name:"零售商"})
             });
         },
         getDistributorListAll() {
             Core.Api.Distributor.listAll().then(res => {
                 console.log('res.list: ', res.list);
                 this.distributorList = res.list
-                this.distributorList.push({id:-1,name:"分销商"})
             });
         },
 
@@ -304,7 +363,7 @@ export default {
             console.log('handleTableChange filters:', filters)
             this.filteredInfo = filters;
             for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : 0
+                this.searchForm[key] = filters[key] ? filters[key][0] : ''
             }
             this.pageChange(1);
         },
@@ -413,5 +472,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #RepairList {}
+// #RepairConfirmList {}
 </style>

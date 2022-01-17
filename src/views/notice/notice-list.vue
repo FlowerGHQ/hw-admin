@@ -14,7 +14,7 @@
                         <div class="value">
                             <a-select v-model:value="searchForm.type" @change="handleTypeSelect" placeholder="请选择消息类型" allow-clear >
                                 <a-select-option  key="10" :value="typeList.ADMIN">平台消息</a-select-option>
-                                <a-select-option  key="20" :value="typeList.AGENT">经销商消息</a-select-option>
+                                <a-select-option  key="20" :value="typeList.AGENT">零售商消息</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -184,8 +184,8 @@ export default {
         handleTableChange(page, filters, sorter) {
             console.log('handleTableChange filters:', filters)
             for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : 0
-            }
+this.searchForm[key] = filters[key] ? filters[key][0] : ''            }
+
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;

@@ -1,13 +1,13 @@
 <template>
-<div id="RepairList">
+<div id="RepairConfirmList">
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">{{$t('n.repair_list')}}</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')" v-if="$auth( 'AGENT', 'STORE')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('DISTRIBUTOR', 'AGENT', 'STORE')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
             </div>
         </div>
-        <div class="tabs-container colorful">
+        <!-- <div class="tabs-container colorful">
             <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
                 <a-tab-pane :key="item.key" v-for="item of statusList">
                     <template #tab>
@@ -15,7 +15,7 @@
                     </template>
                 </a-tab-pane>
             </a-tabs>
-        </div>
+        </div> -->
         <div class="search-container">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -33,23 +33,23 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
                     <div class="key">所属分销商:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.distributor_id" placeholder="请选择所属分销商" @change="handleSearch">
-                            <a-select-option v-for="distributor of distributorList" :key="distributor.id" :value="distributor.id">{{ distributor.name }}</a-select-option>
+                        <a-select v-model:value="searchForm.distributor_id" placeholder="请选择分销商" @change="handleSearch">
+                            <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
                     <div class="key">所属零售商:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.agent_id" placeholder="请选择所属零售商" @change='handleSearch'>
-                            <a-select-option v-for="agent of agentList" :key="agent.id" :value="agent.id">{{ agent.name }}</a-select-option>
+                        <a-select v-model:value="searchForm.agent_id" placeholder="请选择零售商" @change="handleSearch">
+                            <a-select-option v-for="item of agentList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR', 'AGENT')">
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">所属门店:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.store_id" placeholder="请选择门店" @change='handleSearch'>
+                        <a-select v-model:value="searchForm.org_id" placeholder="请选择门店" @change="handleSearch">
                             <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
@@ -57,7 +57,7 @@
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">{{$t('def.create_time')}}</div>
                     <div class="value">
-                        <a-range-picker v-model:value="create_time" valueFormat='X' @change='handleSearch' :show-time="defaultTime" :allow-clear='false'>
+                        <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
                             <template #suffixIcon><i class="icon i_calendar"></i> </template>
                         </a-range-picker>
                     </div>
@@ -116,6 +116,9 @@
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
+                    <template v-if="column.key === 'operation'">
+                        <a-button type='link' @click="handleConfirmShow(record.id)" v-if="record.status == REPAIR.STATUS.WAIT_CHECK"><i class="icon i_edit"/>确认</a-button>
+                    </template>
                 </template>
             </a-table>
         </div>
@@ -135,6 +138,32 @@
             />
         </div>
     </div>
+    <!-- 员工确认 -->
+    <template class="modal-container">
+        <a-modal v-model:visible="confirmShow" title="员工确认"
+            class="warehouse-edit-modal" :after-close='handleConfirmClose'>
+            <div class="modal-content">
+                <div>
+                    <div class="form-item required">
+                        <a-radio-group v-model:value="editForm.audit_result">
+                            <a-radio value="1">通过</a-radio>
+                            <a-radio value="0">不通过</a-radio>
+                        </a-radio-group>
+                    </div>
+                    <div class="form-item required" v-if="editForm.audit_result == 0">
+                        <div class="key">原因:</div>
+                        <div class="value">
+                            <a-input v-model:value="editForm.audit_message" placeholder="请输入不通过原因"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="confirmShow = false">取消</a-button>
+                <a-button @click="handleConfirmSubmit" type="primary" >确定</a-button>
+            </template>
+        </a-modal>
+    </template>
 </div>
 </template>
 
@@ -143,7 +172,7 @@ import Core from '../../core';
 const REPAIR = Core.Const.REPAIR
 
 export default {
-    name: 'RepairList',
+    name: 'RepairConfirmList',
     components: {},
     props: {},
     data() {
@@ -165,14 +194,14 @@ export default {
                 {text: '全  部', value: '0', color: 'primary', key: '0'},
                 {text: '待分配', value: '0', color: 'red',     key: REPAIR.STATUS.WAIT_DISTRIBUTION },
                 {text: '待确认', value: '0', color: 'orange',  key: REPAIR.STATUS.WAIT_CHECK },
-                {text: '待审核', value: '0', color: 'orange',  key: REPAIR.STATUS.WAIT_AUDIT },
+                {text: '待审核', value: '0', color: 'yellow',  key: REPAIR.STATUS.WAIT_AUDIT },
                 {text: '待检测', value: '0', color: 'yellow',  key: REPAIR.STATUS.WAIT_DETECTION },
                 {text: '维修中', value: '0', color: 'blue',    key: REPAIR.STATUS.WAIT_REPAIR },
                 {text: '已维修', value: '0', color: 'light',   key: REPAIR.STATUS.REPAIR_END },
                 {text: '已结算', value: '0', color: 'green',   key: REPAIR.STATUS.SETTLEMENT },
                 {text: '已转单', value: '0', color: 'purple',  key: REPAIR.STATUS.TRANSFER },
-                {text: '确认未通过', value: '0', color: 'red',  key: REPAIR.STATUS.CHECK_FAIL },
-                {text: '审核未通过', value: '0', color: 'red',  key: REPAIR.STATUS.AUDIT_FAIL },
+                {text: '确认未通过', value: '0', color: 'purple',  key: REPAIR.STATUS.CHECK_FAIL },
+                {text: '审核未通过', value: '0', color: 'purple',  key: REPAIR.STATUS.AUDIT_FAIL },
                 {text: '取消', value: '0', color: 'purple',  key: REPAIR.STATUS.CLOSE },
             ],
             create_time: [],
@@ -182,10 +211,10 @@ export default {
             filteredInfo: null,
             searchForm: {
                 uid: '',
-                store_id: undefined,
+                org_id:undefined,
                 agent_id: undefined,
-                distributor_id: undefined,
-                status: undefined,
+                distributor_id:undefined,
+                status: 20,
                 channel: '',
                 repair_method: '',
                 repair_user_org_type:'',
@@ -195,19 +224,16 @@ export default {
 
             tableFields: [],
             tableData: [],
+            // 确认
+            confirmShow: false,
+            editForm: {
+                audit_result: 1,
+                audit_message: '',
+            },
+            repair_id: ''
         };
     },
-    watch: {
-        'searchForm.distributor_id': function () {
-            this.getAgentListAll();
-            this.searchForm.agent_id = undefined
-            this.searchForm.store_id = undefined
-        },
-        'searchForm.agent_id': function () {
-            this.getStoreListAll()
-            this.searchForm.store_id = undefined
-        },
-    },
+    watch: {},
     computed: {
         tableColumns() {
             let { filteredInfo } = this;
@@ -222,6 +248,7 @@ export default {
                     filters: Core.Const.REPAIR.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.channel || null },
                 { title: '维修类别', dataIndex: 'repair_method',
                     filters: Core.Const.REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.repair_method || null },
+                // { title: '维修门店/零售商',   dataIndex: 'store_name', key: 'item' },
                 { title: '维修门店/零售商',   dataIndex: 'repair_name',},
                 { title: '维修门店电话',   dataIndex: 'repair_phone', key: 'item' },
                 { title: '创建人',   dataIndex: 'user_name', key: 'item' },
@@ -229,6 +256,7 @@ export default {
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
                 { title: '订单状态', dataIndex: 'status' , fixed: 'right'},
+                { title: '操作', key: 'operation', fixed: 'right' },
             ]
             return columns
         },
@@ -238,13 +266,11 @@ export default {
         if (this.$auth('ADMIN')) {
             this.getDistributorListAll();
         }
-        if (this.$auth('DISTRIBUTOR')) {
-            this.searchForm.distributor_id = Core.Data.getOrgId()
+        if (this.$auth('ADMIN', 'DISTRIBUTOR')) {
             this.getAgentListAll();
         }
-        if (this.$auth('AGENT')) {
-            this.searchForm.agent_id = Core.Data.getOrgId()
-            this.getStoreListAll();
+        if (this.$auth('ADMIN', 'DISTRIBUTOR', 'AGENT')) {
+            this.getStoreList();
         }
     },
     methods: {
@@ -288,36 +314,51 @@ export default {
             this.create_time = []
             this.pageChange(1);
         },
-
-        getStoreListAll() {
-            if (this.searchForm.agent_id) {
-                Core.Api.Store.listAll({agent_id: this.searchForm.agent_id}).then(res => {
-                this.storeList = res.list
-                // this.storeList.push({id:-1,name:"门店"})
+        
+        handleConfirmShow(id) { // 显示弹框
+            this.repair_id = id
+            this.confirmShow = true
+        },
+        handleConfirmClose() { // 关闭弹框
+            this.confirmShow = false;
+        },
+        handleConfirmSubmit() { // 审核提交
+            this.loading = true; 
+            
+            Core.Api.Repair.check({
+                id: this.repair_id,
+                ...this.editForm
+            }).then(res => {
+                this.handleConfirmClose()
+                this.getTableData()
+            }).finally(() => {
+                this.loading = false;
             });
-            } else {
-                this.storeList = []
-            }
+        },
+
+        getStoreList() {
+            Core.Api.Store.list({
+                page: 0,
+                status: 1,
+            }).then(res => {
+                this.storeList = res.list
+                this.storeList.push({id:-1,name:"零售商"})
+            });
         },
         getAgentListAll() {
-            if (this.searchForm.distributor_id) {
-            Core.Api.Agent.listAll({distributor_id: this.searchForm.distributor_id}).then(res => {
+            Core.Api.Agent.listAll().then(res => {
                 console.log('res.list: ', res.list);
                 this.agentList = res.list
-                // this.agentList.push({id:-1,name:"零售商"})
+                this.agentList.push({id:-1,name:"零售商"})
             });
-            } else {
-                this.agentList = []
-            }
-
         },
         getDistributorListAll() {
             Core.Api.Distributor.listAll().then(res => {
                 console.log('res.list: ', res.list);
                 this.distributorList = res.list
-                // this.distributorList.push({id:-1,name:"分销商"})
             });
         },
+
         handleTableChange(page, filters, sorter) {
             console.log('handleTableChange filters:', filters)
             this.filteredInfo = filters;
@@ -329,6 +370,14 @@ export default {
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             console.log('this.searchForm:', this.searchForm)
+            if (this.searchForm.org_id == -1){
+                // this.searchForm.org_id = 0
+                this.searchForm.org_type = Core.Const.LOGIN.ORG_TYPE.AGENT
+            }
+            if (this.searchForm.org_id > 0){
+
+                this.searchForm.org_type = Core.Const.LOGIN.ORG_TYPE.STORE
+            }
             Core.Api.Repair.list({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
@@ -343,38 +392,38 @@ export default {
                 console.log('getTableData err:', err)
             }).finally(() => {
                 this.loading = false;
-                this.getStatusStat()
+                // this.getStatusStat()
             });
         },
-        getStatusStat() {  // 获取 状态数量
-            this.loading = true;
-            Object.assign(this.statusList, this.$options.data().statusList)
-            Core.Api.Repair.statusList({
-                ...this.searchForm,
-                begin_time: this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
-                page: this.currPage,
-                page_size: this.pageSize
-            }).then(res => {
-                console.log("getStatusStat res:", res)
-                let total = 0
+        // getStatusStat() {  // 获取 状态数量
+        //     this.loading = true;
+        //     Object.assign(this.statusList, this.$options.data().statusList)
+        //     Core.Api.Repair.statusList({
+        //         ...this.searchForm,
+        //         begin_time: this.create_time[0] || '',
+        //         end_time: this.create_time[1] || '',
+        //         page: this.currPage,
+        //         page_size: this.pageSize
+        //     }).then(res => {
+        //         console.log("getStatusStat res:", res)
+        //         let total = 0
 
-                this.statusList.forEach(statusItem => {
-                    res.status_list.forEach(item => {
-                        if ( statusItem.key == item.status) {
-                            statusItem.value = item.amount
-                            total += item.amount
-                        }
-                    })
-                })
-                console.log(total)
-                this.statusList[0].value = total
-            }).catch(err => {
-                console.log('getStatusStat err:', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
+        //         this.statusList.forEach(statusItem => {
+        //             res.status_list.forEach(item => {
+        //                 if ( statusItem.key == item.status) {
+        //                     statusItem.value = item.amount
+        //                     total += item.amount
+        //                 }
+        //             })
+        //         })
+        //         console.log(total)
+        //         this.statusList[0].value = total
+        //     }).catch(err => {
+        //         console.log('getStatusStat err:', err)
+        //     }).finally(() => {
+        //         this.loading = false;
+        //     });
+        // },
 
         handleExportConfirm(){ // 确认订单是否导出
             let _this = this;
@@ -395,8 +444,8 @@ export default {
             let type = form.type || 0
             let status = form.status || 0
             let distributorId = form.distributorId || 0
-            let agentId = form.agent_id || 0
-            let storeId = form.store_id || 0
+            let agentId = form.agentId || 0
+            let storeId = form.storeId || 0
             let orgId = form.org_id ? form.org_id : 0
             let orgType = form.orgType || 0
             let itemId = form.itemId || 0
@@ -423,5 +472,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #RepairList {}
+// #RepairConfirmList {}
 </style>

@@ -467,12 +467,16 @@ const Util = {
     },
     /* =============== 退款管理 ================ */
 
-    /* =============== 出入库操作类型 ================ */
+    /* =============== 出入库 ================ */
     stockRecordFilter(val) {
         const MAP = Const.STOCK_RECORD.TYPE_MAP
         return MAP[val] || '未知'
     },
-    /* =============== 出入库操作类型 ================ */
+    stockTypeFilter(val) {
+        const MAP = Const.STOCK_RECORD.PRODUCT_TYPE_MAP
+        return MAP[val] || '未知'
+    },
+    /* =============== 出入库 ================ */
 }
 
 export default Util

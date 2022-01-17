@@ -2,7 +2,7 @@
     <div id="WarehouseDetail" class="list-container">
         <div class="title-container">
             <div class="title-area">仓库详情</div>
-            <div class="btns-area" v-if="$auth('ADMIN')">
+            <div class="btns-area">
                 <a-button type="primary" ghost @click="routerChange('edit',record)"><i class="icon i_edit"/> 编辑</a-button>
             </div>
         </div>
@@ -20,17 +20,18 @@
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">仓库地址：</span>
-                        <span class="value">{{ $Util.addressFilter(detail) }}</span>                    </a-col>
+                        <span class="value">{{ $Util.addressFilter(detail) }}</span>
+                    </a-col>
                 </a-row>
             </div>
         </div>
         <div class="tabs-container">
-            <a-tabs class="WarehouseStock">
+            <a-tabs class="WarehouseStock" @change="getWarehouseStockRecord">
                 <a-tab-pane key="WarehouseStockList" tab="库存数量">
-                    <WarehouseStockList :warehouse_id="id" :detail='detail'  @submit="getWarehouseDetail"/>
+                    <WarehouseStockList :warehouseId="warehouse_id" :detail='detail'  @submit="getWarehouseDetail"/>
                 </a-tab-pane>
                 <a-tab-pane key="WarehouseStockRecord" tab="出入库记录">
-                    <WarehouseStockRecord :warehouse_id='id' :detail='detail'  @submit="getWarehouseDetail"/>
+                    <WarehouseStockRecord ref="WarehouseStockRecord" :warehouseId='warehouse_id' :detail='detail'  @submit="getWarehouseDetail"/>
                 </a-tab-pane>
             </a-tabs>
         </div>
@@ -43,22 +44,17 @@ import Core from '../../core';
 import WarehouseStockList from './components/WarehouseStockList.vue';
 import WarehouseStockRecord from './components/WarehouseStockRecord.vue';
 
-
-
-const USER_TYPE = Core.Const.USER.TYPE;
 export default {
     name: 'WarehouseDetail',
     components: { WarehouseStockList, WarehouseStockRecord },
     props: {},
     data() {
         return {
-            USER_TYPE,
-            loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
             //标签页
             detail: {},
-            id: '',
+            warehouse_id: '',
             name: '',
             province: '',
             city: '',
@@ -73,6 +69,16 @@ export default {
         this.getWarehouseDetail();
     },
     methods: {
+        getWarehouseStockRecord(e) {
+            console.log("getWarehouseStockRecord", e)
+            switch (e) {
+                case 'WarehouseStockRecord': {
+                    this.$nextTick(() => {
+                        this.$refs['WarehouseStockRecord'].getTableData()
+                    } )
+                }
+            }
+        },
         routerChange(type) {
             let routeUrl = ''
             switch (type) {

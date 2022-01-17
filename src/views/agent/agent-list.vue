@@ -2,9 +2,9 @@
 <div id="AgentList">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">经销商列表</div>
+            <div class="title-area">零售商列表</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建经销商</a-button>
+                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建零售商</a-button>
             </div>
         </div>
         <div class="search-container">
@@ -18,9 +18,9 @@
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">经销商名称:</div>
+                    <div class="key">零售商名称:</div>
                     <div class="value">
-                        <a-input placeholder="请输入经销商名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                        <a-input placeholder="请输入零售商名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -149,12 +149,12 @@ export default {
             let { filteredInfo } = this;
             filteredInfo = filteredInfo || {};
             let tableColumns = [
-                { title: '经销商', dataIndex: 'name' },
+                { title: '零售商', dataIndex: 'name' },
                 { title: '国家', dataIndex: 'country', key: 'item' },
                 { title: '手机号', dataIndex: 'phone', key: 'item'},
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '状态', dataIndex: 'status', key: 'status',
-                    filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || null },
+                    filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [1] },
                 { title: '操作', key: 'operation', fixed: 'right'},
             ]
             if (this.$auth('ADMIN')) {
@@ -213,7 +213,6 @@ export default {
             Core.Api.Distributor.listAll().then(res => {
                 console.log('res.list: ', res.list);
                 this.distributorList = res.list
-                this.distributorList.push({id:-1,name:"分销商"})
             });
         },
         // 表格筛选
@@ -221,8 +220,9 @@ export default {
             console.log('handleTableChange filters:', filters)
             this.filteredInfo = filters;
             for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : 0
+                this.searchForm[key] = filters[key] ? filters[key][0] : ''
             }
+            this.searchForm.status = filters.status ? filters.status[0] : 1
             this.pageChange(1);
         },
         getTableData() {  // 获取 表格 数据
@@ -245,11 +245,11 @@ export default {
                 this.loading = false;
             });
         },
-        // 删除 经销商
+        // 删除 零售商
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该经销商吗？',
+                title: '确定要删除该零售商吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',
@@ -266,7 +266,7 @@ export default {
         handleStatusChange(record) {
             let _this = this;
             this.$confirm({
-                title: `确定要${record.status ? '禁用' : '启用'}该经销商吗？`,
+                title: `确定要${record.status ? '禁用' : '启用'}该零售商吗？`,
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',

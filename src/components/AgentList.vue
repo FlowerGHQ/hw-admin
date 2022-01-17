@@ -1,11 +1,11 @@
 <template>
     <div class="StoreList gray-panel no-margin">
         <div class="panel-title">
-            <div class="title">经销商列表</div>
+            <div class="title">零售商列表</div>
         </div>
         <div class="panel-content">
             <div class="table-container">
-                <a-button type="primary" ghost @click="routerChange('edit')" style="margin-bottom: 10px;" class="panel-btn"><i class="icon i_add"/>新增经销商</a-button>
+                <a-button type="primary" ghost @click="routerChange('edit')" style="margin-bottom: 10px;" class="panel-btn"><i class="icon i_add"/>新增零售商</a-button>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id"  :pagination='false'>
                     <template #bodyCell="{ column, text , record }">
@@ -45,10 +45,10 @@ export default {
     name: 'AgentList',
     components: {},
     props: {
-        agentId: {
+        agent_id: {
             type: Number,
         },
-        distributorId: {
+        distributor_id: {
             type: Number,
         },
         type: {
@@ -72,7 +72,7 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                { title: '经销商', dataIndex: 'name' },
+                { title: '零售商', dataIndex: 'name' },
                 { title: '国家', dataIndex: 'country' },
                 { title: '手机号', dataIndex: 'phone' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
@@ -120,7 +120,7 @@ export default {
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             Core.Api.Agent.list({
-                distributor_id: this.distributorId,
+                distributor_id: this.distributor_id,
                 type: this.type,
                 page: this.currPage,
                 page_size: this.pageSize,
@@ -135,11 +135,11 @@ export default {
                 this.loading = false;
             });
         },
-        // 删除 经销商
+        // 删除 零售商
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该经销商吗？',
+                title: '确定要删除该零售商吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',
@@ -156,7 +156,7 @@ export default {
         handleStatusChange(record) {
             let _this = this;
             this.$confirm({
-                title: `确定要${record.status ? '禁用' : '启用'}该经销商吗？`,
+                title: `确定要${record.status ? '禁用' : '启用'}该零售商吗？`,
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',

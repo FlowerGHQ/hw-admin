@@ -54,7 +54,7 @@ const apiList = {
         allotAuth: ['PostJson', 'authority/save-role-authority'], // 向角色分配权限
         allotRole: ['PostJson', 'authority/save-user-role'], // 向员工账号分配角色
     },
-    Agent: { // 经销商
+    Agent: { // 零售商
         list: ['PostJson', 'agent/list'], // 列表
         listAll: ['PostJson','agent/list-name'], //选择用的 名称列表 无分页
         save: ['PostJson', 'agent/save'], // 编辑
@@ -75,7 +75,9 @@ const apiList = {
         save: ['PostJson', 'warehouse/save'],
         detail: ['PostJson', 'warehouse/detail'],
         list: ['PostJson', 'warehouse/list'],
+        listAll: ['PostJson', 'warehouse/list-name'],
         delete: ['PostJson', 'warehouse/delete'],
+        listWithStock: ['PostJson', 'warehouse/list-with-stock'],
     },
     Stock: { //仓库库存管理
         add: ['PostJson', 'stock/add'],
@@ -86,9 +88,15 @@ const apiList = {
         listByTargetId: ['PostJson', 'stock/list-by-target-id'],
         stockRecordList: ['PostJson', 'stock-record/list'],
         stockRecordDetail: ['PostJson', 'stock-record/detail'],
+    },
+    Invoice: { // 出入库货单
+        save: ['PostJson', 'invoice/save'],
+        detail: ['PostJson', 'invoice/detail'],
+        list: ['PostJson', 'invoice/list'],
+        delete: ['PostJson', 'invoice/delete'],
+        audit: ['PostJson', 'invoice/audit'],
 
     },
-
     Repair: { // 维修单
         list: ['PostJson', 'repair/list'], // 列表
 	    create: ['PostJson', 'repair/save'], // 列表
@@ -102,6 +110,7 @@ const apiList = {
 	    settlement: ['PostJson', 'repair/settlement'], // 结算
 	    transfer: ['PostJson', 'repair/transfer'], // 维修结束
 	    update: ['PostJson', 'repair/update'], // 维修结束
+	    post: ['PostJson', 'repair/post-for-transfer'], // 增加快递
 	    export: ['PostJson', 'repair/export-repair-order-record'], // 导出
     },
 	RepairItem: { // 维修单

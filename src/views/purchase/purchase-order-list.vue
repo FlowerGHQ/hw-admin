@@ -33,9 +33,9 @@
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
-                    <div class="key">所属经销商：</div>
+                    <div class="key">所属零售商：</div>
                     <div class="value">
-                        <a-select placeholder="请选择所属经销商" v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
+                        <a-select placeholder="请选择所属零售商" v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
                             <a-select-option v-for="(item,index) of agentList" :key="index" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
@@ -44,7 +44,7 @@
                     <div class="key">所属门店：</div>
                     <div class="value">
                         <a-select v-model:value="searchForm.store_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear
-                            :placeholder="searchForm.agent_id ? '请选择所属门店' : '请先选择所属经销商'" :disabled="!searchForm.agent_id">
+                            :placeholder="searchForm.agent_id ? '请选择所属门店' : '请先选择所属零售商'" :disabled="!searchForm.agent_id">
                             <a-select-option v-for="(item,index) of storeList" :key="index" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
@@ -271,14 +271,13 @@ export default {
             Core.Api.Distributor.listAll().then(res => {
                 console.log('res.list: ', res.list);
                 this.distributorList = res.list
-                this.distributorList.push({id:-1,name:"分销商"})
             });
         },
         handleTableChange(page, filters, sorter) {
             console.log('handleTableChange filters:', filters)
             // this.filteredInfo = filters;
             for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : 0
+                this.searchForm[key] = filters[key] ? filters[key][0] : ''
             }
         },
         getTableData() {  // 获取 表格 数据
@@ -301,7 +300,7 @@ export default {
                 this.loading = false;
             });
         },
-        getAgentList() { // 获取 经销商 数据
+        getAgentList() { // 获取 零售商 数据
             this.loading = true;
             Core.Api.Agent.listAll().then(res => {
                 console.log("getAgentList res", res)

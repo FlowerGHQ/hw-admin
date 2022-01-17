@@ -38,6 +38,9 @@
                             <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                         </a-tooltip>
                     </template>
+                    <template v-if="column.key === 'type'">
+                        {{ $Util.stockTypeFilter(text) }}
+                    </template>
                     <template v-if="column.key === 'address'">
                         {{ $Util.addressFilter(record) }}
                     </template>
@@ -96,6 +99,7 @@ export default {
 
             tableColumns: [
                 {title: '仓库名称', dataIndex: 'name',key: 'detail',},
+                {title: '仓库类型', dataIndex: 'type',key: 'type',},
                 {title: '仓库地址', key:'address', dataIndex: 'province'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right' },
@@ -146,12 +150,6 @@ export default {
             console.log('this.searchForm:', this.searchForm)
             this.create_time = []
             this.pageChange(1);
-        },
-        handleTableChange(page, filters, sorter) {
-            console.log('handleTableChange filters:', filters)
-            for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : 0
-            }
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
