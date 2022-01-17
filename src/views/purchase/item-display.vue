@@ -3,6 +3,7 @@
         <div class="info-content">
             <p class="name">{{ detail.name }}</p>
             <p class="code">商品编号：{{ detail.code }}</p>
+            <p class="spec" v-if="detail.attr_str"><span>规格：</span>{{ detail.attr_str }}</p>
             <p class="price">￥{{ $Util.countFilter(detail.price) }}</p>
             <p class="category">{{ category.name }}</p>
             <div class="desc" v-if="config && config.length">
@@ -24,6 +25,16 @@
                     <a><img :src="getImgUrl(props.i)"/></a>
                 </template>
             </a-carousel>
+        </div>
+        <div class="spec-content" v-if='specList.length'>
+            <div class="title">规格({{specList.length}})</div>
+            <div class="spec-list">
+                <div class="spec-item" v-for="item of specList" :key="item.id"
+                    :class="this.id === item.id ? 'active' : ''" @click="handleSpecChange(item)">
+                    <img :src="$Util.imageFilter(item.logo, 2)"/>
+                    <p>{{item.name}}{{item.name}}{{item.name}}</p>
+                </div>
+            </div>
         </div>
         <div class="btn-content">
             <a-button type="primary" class="disabled" v-if="detail.in_shopping_cart">已在购物车中</a-button>
@@ -54,6 +65,8 @@ export default {
             config: [],
             imgs: [],
             activeKey: 0,
+
+            specList: [],
         };
     },
     watch: {},
@@ -70,21 +83,43 @@ export default {
                 id: this.id,
             }).then(res => {
                 console.log('getItemDetail res', res)
-
-                this.detail = res
-                this.category = res.category
-                try {
-                    this.config = JSON.parse(res.config)
-                } catch (err) {
-                    this.config = []
+                let detail = res.detail
+                detail.attr_str = detail.attr_list ? detail.attr_list.map(item => item.value).join(' ') : ''
+                this.detail = detail
+                this.category = detail.category
+                try { this.config = JSON.parse(detail.config) } catch (err) { this.config = [] }
+                this.imgs = detail.imgs ? detail.imgs.split(',') : []
+                if (detail.set_id) {
+                    this.getSpecList();
                 }
-                this.imgs = res.imgs ? res.imgs.split(',') : []
-
             }).catch(err => {
                 console.log('getItemDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
+        },
+        // 获取 同规格商品 列表
+        getSpecList() {
+            this.loading = true;
+            Core.Api.Item.listBySet({
+                set_id: this.detail.set_id
+            }).then(res => {
+                let data = res.list.map(item => ({
+                    ...item,
+                    attr_desc: item.attr_list.map(i => i.value).join(',')
+                }))
+                this.specList = data
+                console.log('getSpecList this.specific.data:', data)
+            }).catch(err => {
+                console.log('getSpecList err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        // 查看不同 规格
+        handleSpecChange(item) {
+            this.id = item.id;
+            this.getItemDetail()
         },
         // 添加到购物车
         hanldeAddToShopCart() {
@@ -131,6 +166,8 @@ export default {
         width: calc(~'100% - 450px');
         display: flex;
         flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
         color: #111111;
         line-height: 22px;
         font-size: 16px;
@@ -140,8 +177,23 @@ export default {
             font-size: 28px;
             line-height: 39px;
         }
+        .code {
+            margin-top: 6px;
+        }
+        .spec {
+            display: inline-block;
+            color: #757575;
+            margin-top: 6px;
+            line-height: 28px;
+            height: 28px;
+            background: #F9F9F9;
+            border-radius: 2px;
+            padding: 0 10px;
+            span {
+                color: #111111;
+            }
+        }
 
-        // .code {}
         .price {
             margin: 20px 0 44px;
         }
@@ -201,10 +253,54 @@ export default {
         }
     }
 
+    .spec-content {
+        margin-top: 30px;
+        width: 100%;
+        > .title {
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 22px;
+            color: #000000;
+            margin-bottom: 22px;
+        }
+        .spec-list {
+            display: flex;
+            flex-wrap: wrap;
+            .spec-item {
+                .flex();
+                width: 200px;
+                height: 188px;
+                border-radius: 12px;
+                border: 1px solid #D2D2D7;
+                overflow: hidden;
+                margin-right: 30px;
+                margin-bottom: 30px;
+                transition: border-color 0.3s ease;
+                &.active {
+                    border-color: #006EF9;
+                }
+                img {
+                    height: 152px;
+                }
+                p {
+                    padding: 0 8px;
+                    box-sizing: border-box;
+                    .ell();
+                    width: 100%;
+                    height: 34px;
+                    line-height: 34px;
+                    font-size: 17px;
+                    font-weight: 500;
+                    color: #1D1D1F;
+                }
+            }
+        }
+    }
+
     .btn-content {
         display: flex;
         flex-direction: column;
-        margin-top: 70px;
+        margin-top: 40px;
 
         .ant-btn {
             margin: 0;
@@ -236,6 +332,7 @@ export default {
 
             &.disabled {
                 opacity: 0.7;
+                cursor: no-drop;
             }
 
         }

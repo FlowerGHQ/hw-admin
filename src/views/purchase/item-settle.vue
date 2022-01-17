@@ -97,9 +97,10 @@
                 <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
                 <div class="info">
                     <p>{{item.item ? item.item.name : '-'}}</p>
-                    <span>商品编码：{{item.item ? item.item.code : '-'}}</span>
-                    <span>购买数量：{{item.amount}}</span>
-                    <span>商品单价：￥{{$Util.countFilter(item.price)}}</span>
+                    <span>编号：{{item.item ? item.item.code : '-'}}</span>
+                    <span v-if="item.item && item.item.attr_str">规格：{{item.item ? item.item.attr_str : '-'}}</span>
+                    <span>数量：{{item.amount}}</span>
+                    <span>单价：￥{{$Util.countFilter(item.price)}}</span>
                 </div>
             </div>
         </div>
@@ -181,6 +182,13 @@ export default {
         getShopCartList() {
             Core.Api.ShopCart.list().then(res => {
                 console.log('getShopCartList res:', res)
+                res.list.forEach(item => {
+                    let element = item.item || {}
+                    if (element.attr_list && element.attr_list.length) {
+                        let str = element.attr_list.map(i => i.value).join(' ')
+                        element.attr_str = str
+                    }
+                })
                 this.shopCartList = res.list
             })
         },
@@ -464,7 +472,7 @@ export default {
                 font-size: 14px;
                 p {
                     color: #111111;
-                    margin-bottom: 8px;
+                    margin-bottom: 6px;
                 }
                 span {
                     color: #757575;

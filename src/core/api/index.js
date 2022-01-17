@@ -124,12 +124,15 @@ const apiList = {
     Item: { // 商品
         save: ['PostJson', 'item/save'],
         batchSave: ['PostJson', 'item/batch-save'],
+        update: ['PostJson', 'item/update'],
 
         list: ['PostJson', 'item/list'],
         listBySet: ['PostJson', 'item/list-by-set-id'],
         detail: ['PostJson', 'item/detail'],
         delete: ['PostJson', 'item/delete'],
         detailByCode: ['PostJson', 'item/detail-by-code'],
+
+        setIndep: ['PostJson', 'item/set-flag-independent-info']
     },
     ItemCategory: { // 商品分类
         list: ['PostJson', 'item-category/list'],

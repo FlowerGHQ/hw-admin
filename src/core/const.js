@@ -341,8 +341,6 @@ let Const = {
             WAIT_TAKE_DELIVER: 300,
             DEAL_SUCCESS: 400,
             CLOSE: 1000,
-
-
         },
         STATUS_MAP: {
             '0': '未知',
@@ -413,7 +411,8 @@ let Const = {
             OUT: 2,
         },
         TARGET_TYPE: {
-            PURCHASE_ORDER: 10
+            PURCHASE_ORDER: 10,
+            REPAIR_ORDER_TRANSFER: 20,
         },
 
         COMPANY_MAP: {
