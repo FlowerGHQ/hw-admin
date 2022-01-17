@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import SimpleImageEmpty from '@/components/SimpleImageEmpty.vue'
+import SimpleImageEmpty from '@/components/common/SimpleImageEmpty.vue'
 import Core from '../../../core';
 
 export default {

@@ -157,11 +157,11 @@
 <script>
 import Core from '../../core';
 import PurchaseInfo from "./components/PurchaseInfo.vue"
-import WaybillShow from "@/components/WaybillShow.vue"
-import MySteps from "@/components/MySteps.vue"
+import WaybillShow from "@/components/popup-btn/WaybillShow.vue"
+import MySteps from "@/components/common/MySteps.vue"
+
 const PURCHASE = Core.Const.PURCHASE;
 const STATUS = Core.Const.PURCHASE.STATUS;
-
 
 const purchaseItemColumns = [
     { title: '商品', dataIndex: 'item' },

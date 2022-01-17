@@ -128,6 +128,8 @@ const apiList = {
         detail: ['PostJson', 'item/detail'],
         delete: ['PostJson', 'item/delete'],
         detailByCode: ['PostJson', 'item/detail-by-code'],
+
+        setIndep: ['PostJson', 'item/set-flag-independent-info']
     },
     ItemCategory: { // 商品分类
         list: ['PostJson', 'item-category/list'],
