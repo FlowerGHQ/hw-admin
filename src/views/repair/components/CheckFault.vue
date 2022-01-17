@@ -324,7 +324,7 @@ export default {
                     target_type: 1
                 })
                 console.log('getWarehouseListByItem res:', res)
-                return res.list 
+                return res.list
             } catch(err) {
                 return []
             }
@@ -352,7 +352,7 @@ export default {
                 this.failData[name][index].warehouse_id = this.getFilstWarehouse(this.failData[name][index])
             }
         },
-        
+
         // 需要采购（判断 所选仓库库存不够）
         needPurchase(record) {
             if (!record.warehouse_id) { return false }

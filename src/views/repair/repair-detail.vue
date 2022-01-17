@@ -256,6 +256,10 @@
                         </div>
                     </div>
                 </div>
+                <template #footer>
+                    <a-button @click="deliverShow = false">取消</a-button>
+                    <a-button @click="deliverShow = false" type="primary">确定</a-button>
+                </template>
             </a-modal>
         </template>
     </div>
@@ -338,10 +342,10 @@ export default {
             isTransfer: undefined, // 判断是否存在转单操作（用以显示物流按钮）
             companyUidList: Core.Const.WAYBILL.COMPANY_LIST,
             form: { // 物流信息
-                pay_method: undefined,
+                // pay_method: undefined,
                 company_uid: undefined,
                 waybill_uid: '',
-                review: '',
+                // review: '',
             },
 
             // 审核
@@ -490,14 +494,18 @@ export default {
             }
         },
         handleFaultSubmit() {
-            this.$refs.CheckFault.handleFaultSubmit();
             // 物流信息提交 this.form
+            if (this.isTransfer == true && (this.form.company_uid == undefined || this.form.waybill_uid == '')) {
+                return this.$message.warning('请选择快递公司,物流单号')
+            }
             this.loading = false;
             Core.Api.Repair.post({
                 id: this.id,
                 ...this.form
             }).then(res => {
                 this.getRepairDetail()
+                // 故障信息提交
+                this.$refs.CheckFault.handleFaultSubmit();
             }).catch(err => {
                 console.log('handleFaultSubmit err', err)
             }).finally(() => {
