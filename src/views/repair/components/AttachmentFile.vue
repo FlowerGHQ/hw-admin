@@ -168,7 +168,7 @@ export default {
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             Core.Api.Attachment.list({
-                target_id: this.id,
+                target_id: this.target_id,
                 target_type: Const.ATTACHMENT.TARGET_TYPE.REPAIR_ORDER,
                 page: 0
             }).then(res => {
