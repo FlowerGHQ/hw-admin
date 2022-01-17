@@ -29,13 +29,53 @@
                     </div>
                 </div>
             </div>
-            <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
-                <template #expandIcon><i class="icon i_expan_l"/></template>
-                <a-collapse-panel key="change" header="商品信息" class="gray-collapse-panel">
-                    <ItemSelect :warehouseId="detail.type == typeList.TYPE_OUT ? detail.warehouse_id: 0 "
+            <a-collapse v-model:activeKey="activeKey" ghost>
+                <a-collapse-panel key="affirm" header="商品信息" class="gray-collapse-panel">
+                    <template #extra>
+                    <ItemSelect :warehouseId="detail.type == typeList.TYPE_OUT ? detail.warehouse_id: 0 " :disabledChecked="disabledChecked"
                                 btnType='link'
                                 @select="handleAddInvoiceItem" btn-text="添加商品"/>
+                    </template>
+                    <div class="panel-content">
+                        <div class="table-container">
+                            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                                     :row-key="record => record.id" :pagination='false'>
+                                <template #bodyCell="{ column, text , record}">
+                                    <template v-if="column.key === 'item-name'">
+                                        <a-tooltip placement="top" :title='text'>
+                                            {{ text ? text.name : '-' }}
+                                        </a-tooltip>
+                                    </template>
+                                    <template v-if="column.key === 'item-code'">
+                                        {{ text ? text.code : '-' }}
+                                    </template>
+                                    <template v-if="column.key === 'item-stock'">
+                                        {{ text ? text.stock : '-' }}
+                                    </template>
+                                    <template v-if="column.key === 'amount'">
+                                        <a-input-number v-model:value="record.amount" :min="1" :precision="0" placeholder="请输入"/>件
+                                    </template>
+                                    <template v-if="column.dataIndex === 'operation'">
+                                        <a-button type="link" @click="handleFailItemDelete(index, fault)"><i
+                                            class="icon i_delete"/> 移除
+                                        </a-button>
+                                    </template>
+                                </template>
+                                <template #summary>
+                                    <a-table-summary>
+                                        <a-table-summary-row>
+                                            <a-table-summary-cell :index="0" :col-span="4">合计</a-table-summary-cell>
+                                            <a-table-summary-cell :index="1" :col-span="3">
+                                            </a-table-summary-cell>
+                                        </a-table-summary-row>
+                                    </a-table-summary>
+                                </template>
+                            </a-table>
+                        </div>
+                    </div>
+
                 </a-collapse-panel>
+
             </a-collapse>
 
         </div>
@@ -51,9 +91,6 @@ export default {
     name: 'InvoiceEdit',
     components: {
         ItemSelect,
-        VNodes: (_, {attrs}) => {
-            return attrs.vnodes;
-        },
     },
     props: {},
     data() {
@@ -66,14 +103,15 @@ export default {
             },
             activeKey: ['affirm'],
             typeList: Core.Const.STOCK_RECORD.TYPE,
-            failData: {},
             failActive: [],
             tableData: [],
+            disabledChecked: [],
             tableColumns: [
                 {title: '商品名称', dataIndex: 'item', key: 'item-name'},
                 {title: '商品编码', dataIndex: 'item', key: 'item-code'},
-                {title: '库存数量', dataIndex: 'stock', key: 'item'},
+                {title: '库存数量', dataIndex: 'item', key: 'item-stock'},
                 {title: '数量', dataIndex: 'amount', key: 'amount'},
+                {title: '操作', dataIndex: 'operation'},
             ],
         };
     },
@@ -94,9 +132,9 @@ export default {
         getInvoiceDetail() {
             this.loading = true;
             Core.Api.Invoice.detail({
-                id: this.id,
+                id: this.id
             }).then(res => {
-                console.log('getInvoiceDet  ail res', res)
+                console.log('getInvoiceDetail res', res)
                 this.detail = res.detail
             }).catch(err => {
                 console.log('getInvoiceDetail err', err)
@@ -104,17 +142,27 @@ export default {
                 this.loading = false;
             });
         },
+
         handleAddInvoiceItem(ids, items) {
             console.log('handleAddInvoiceItem ids:', ids)
             console.log('handleAddInvoiceItem items:', items)
+            this.disabledChecked = []
             for (let item of items) {
                 console.log('handleAddInvoiceItem item:', item)
                 this.tableData.push({
                     "item": item,
                     "amount": 1,
-                    "stock": 0
+                    "stock": 0,
                 })
             }
+            this.tableData.forEach(item =>{
+                this.disabledChecked.push(item.id)
+            })
+        },
+        // 移除商品
+        handleFailItemDelete(index, name) {
+            this.failData[name].splice(index, 1)
+            this.handleItemAmountChang(name)
         },
     }
 };
