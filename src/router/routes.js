@@ -497,11 +497,7 @@ const routes = [
             },
         ]
     },
-<<<<<<< HEAD
     {   // 采购管理 - 经销商端 && 门店端 && 分销商端
-=======
-    {   // 商品&采购 - 零售商端 && 门店端 && 分销商端
->>>>>>> ce5357e40f6effcf24cfcb049ac5db24c2afbf3a
         path: '/purchase',
         component: Layout,
         redirect: '/purchase/item-list',
