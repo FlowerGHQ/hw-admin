@@ -51,28 +51,29 @@
                                     </template>
 
                                     <template v-if="column.dataIndex === 'bad'">
-                                        <template v-if="record.type === repairItemType.REPLACE">
+                                        <template v-if="warehouseFailList.length > 0 && record.type === repairItemType.REPLACE">
                                             <a-select v-model:value="record.recycle_warehouse_id" placeholder="请选择故障仓">
                                                 <a-select-option v-for="item of warehouseFailList" :key="item.id"
                                                                  :value="item.id">{{ item.name }}
                                                 </a-select-option>
                                             </a-select>
                                         </template>
-                                        <template v-else>-</template>
+                                        <template v-else-if="warehouseFailList.length === 0 && record.type !== repairItemType.REPLACE">
+                                            <a-button type='link' @click="routerChange('editWarehouse')">新建仓库</a-button>
+                                        </template>
+                                        <template v-else>
+                                            -
+                                        </template>
                                     </template>
 
                                     <template v-if="column.dataIndex === 'new'">
-                                        <template
-                                            v-if="record.type === repairItemType.ADD || record.type === repairItemType.REPLACE">
-                                            <a-select v-if="record.warehouse_out_list.length"
-                                                      v-model:value="record.warehouse_id" placeholder="请选择换新仓">
-                                                <a-select-option v-for="item of record.warehouse_out_list"
-                                                                 :key="item.id" :value="item.id">
-                                                    <span>{{ item.name }}<span
-                                                        :style="item.disabled ? 'color: red;' : ''">({{ item.stock }})</span></span>
+                                        <template v-if="record.warehouse_out_list.length > 0 && (record.type === repairItemType.ADD || record.type === repairItemType.REPLACE)">
+                                            <a-select v-model:value="record.warehouse_id" placeholder="请选择换新仓">
+                                                <a-select-option v-for="item of record.warehouse_out_list" :key="item.id" :value="item.id">
+                                                    <span>{{ item.name }}(<span :style="item.disabled ? 'color: red;' : ''">{{ item.stock }}</span><span>)</span></span>
                                                 </a-select-option>
                                             </a-select>
-                                            <!-- 区分帐类 -->
+                                            <!-- 区分帐类 start -->
                                             <template v-if="detail.service_type === serviceType.IN_REPAIR_TIME">
                                                 <a-button type='link' v-if="needPurchase(record)"
                                                           @click="routerChange('edit')">加仓
@@ -84,9 +85,14 @@
                                                 </a-button>
                                             </template>
                                             <template v-else>-</template>
-                                            <!-- 区分帐类 -->
+                                            <!-- 区分帐类 end -->
                                         </template>
-                                        <template v-else>-</template>
+                                        <template v-else-if="record.warehouse_out_list.length === 0 && record.type !== repairItemType.REPLACE">
+                                            <a-button type='link' @click="routerChange('editWarehouse')">新建仓库</a-button>
+                                        </template>
+                                        <template v-else>
+                                            -
+                                        </template>
                                     </template>
 
                                     <template v-if="column.key === 'money'">
@@ -182,12 +188,12 @@ export default {
             tableColumns: [
                 {title: '商品名称', dataIndex: 'name'},
                 {title: '商品类型', dataIndex: 'type'},
-                {title: '选择维修工', dataIndex: 'repair'},
                 {title: '数量', dataIndex: 'amount'},
                 {title: '故障仓', dataIndex: 'bad'},
                 {title: '换新仓', dataIndex: 'new'},
                 {title: '金额', dataIndex: 'price', key: 'money'},
                 {title: '金额', dataIndex: 'totle_price'},
+                {title: '选择维修工', dataIndex: 'repair'},
                 {title: '操作', dataIndex: 'operation'},
             ],
 
@@ -226,6 +232,25 @@ export default {
         this.getWarehouseList();
     },
     methods: {
+        routerChange(type, item = {}) {
+            let routeUrl = ''
+            switch (type) {
+                case 'editWarehouse':    // 新建仓库
+                    routeUrl = this.$router.resolve({
+                        path: "/warehouse/warehouse-edit",
+                        // query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'edit':    // 仓库采购
+                    routeUrl = this.$router.resolve({
+                        path: "/caigou/caigou-edit",
+                        query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+            }
+        },
         // 显示转单弹窗
         handleTransfer() {
             this.transferShow = true
@@ -281,18 +306,6 @@ export default {
                 this.$emit('getIsTransfer', false)
             }
             console.log('record: ', record);
-        },
-        routerChange(type, item = {}) {
-            let routeUrl = ''
-            switch (type) {
-                case 'edit':    // 仓库采购
-                    routeUrl = this.$router.resolve({
-                        path: "/caigou/caigou-edit",
-                        query: {id: item.id}
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
-            }
         },
         // 故障选择
         handleFaultSelect(val) {
@@ -355,9 +368,11 @@ export default {
                 item.disabled = item.stock >= record.amount ? false : true
             })
             let item = record.warehouse_out_list.find(i => !i.disabled)
-            console.log('getFilstWarehouse item', item)
-            console.log('getFilstWarehouse record', record)
-            return item ? item.id : record.warehouse_out_list[0].id
+            if (record.warehouse_out_list.length > 0) {
+                return item ? item.id : record.warehouse_out_list[0].id
+            }else{
+                return null
+            }
         },
         // 商品数量变更
         handleItemAmountChang(name, index = -1) {

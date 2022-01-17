@@ -9,7 +9,7 @@
                     <template #prefix><i class="icon i_search" @click="handleSearch"/></template>
                     <template #suffix><i class="icon i_close_b" @click="handleNameReset" v-if="searchForm.name"/></template>
                 </a-input>
-                <template v-else>
+                <template>
                     <a-tooltip title="查看收藏夹" class="popover">
                         <a-button type="link" @click="routerChange('favorite')"><i class="icon i_collect"/></a-button>
                     </a-tooltip>
@@ -65,7 +65,7 @@
                     <p class="name">{{item.name}}</p>
                     <p class="desc">&nbsp;</p>
                     <p class="price">￥{{$Util.countFilter(item.price)}}</p>
-                    <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)" v-else>添加到购物车</a-button>
+                    <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">添加到购物车</a-button>
                 </div>
             </div>
             <div class="paging-container">
