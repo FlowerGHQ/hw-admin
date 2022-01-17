@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import defult_img from '@images/defult_img.png'
 import defult_org from '@images/defult_org.png'
 import defult_item from '@images/defult_item.png'
+
 const Util = {
     /* =============== 通用方法 ================ */
     /**
@@ -66,6 +67,22 @@ const Util = {
             return true
         }
         return !Object.keys(obj).length
+    },
+    /**
+     * 判断传入的数组是否有相同的值
+     * @param {Array} arr ['', '']
+     */
+    hasSameItem(arr) {
+        for (let i = 0; i < arr.length; i++) {
+            const val = arr[i];
+            for (let j = i + 1; j < arr.length; j++) {
+                const _val = arr[j];
+                if (val === _val) {
+                    return true
+                }
+            }
+        }
+        return false
     },
     /**
      * 检测字符串中是否包含 表情图标

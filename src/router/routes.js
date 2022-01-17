@@ -400,7 +400,7 @@ const routes = [
             },
         ]
     },
-    {   // 商品 - 平台端
+    {   // 商品管理 - 平台端
         path: '/item',
         component: Layout,
         redirect: '/item/item-list',
@@ -488,7 +488,7 @@ const routes = [
             {
                 path: 'purchase-order-list',
                 name: 'PurchaseOrderListAdmin',
-                component: () => import('@/views/item/purchase-order-list.vue'),
+                component: () => import('@/views/purchase/purchase-order-list.vue'),
                 meta: {
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     title: '采购订单',
@@ -497,7 +497,7 @@ const routes = [
             },
         ]
     },
-    {   // 商品&采购 - 零售商端 && 门店端 && 分销商端
+    {   // 采购管理 - 经销商端 && 门店端 && 分销商端
         path: '/purchase',
         component: Layout,
         redirect: '/purchase/item-list',
@@ -511,8 +511,8 @@ const routes = [
         children: [
             {
                 path: 'item-list',
-                name: 'ItemListSp',
-                component: () => import('@/views/item/item-list.vue'),
+                name: 'PurchaseItemList',
+                component: () => import('@/views/purchase/item-list.vue'),
                 meta: {
                     title: '采购',
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
@@ -522,7 +522,7 @@ const routes = [
             {
                 path: 'item-display',
                 name: 'ItemDisplay',
-                component: () => import('@/views/item/item-display.vue'),
+                component: () => import('@/views/purchase/item-display.vue'),
                 hidden: true,
                 meta: {
                     title: '商品详情',
@@ -533,7 +533,7 @@ const routes = [
             {
                 path: 'item-collect',
                 name: 'ItemCollect',
-                component: () => import('@/views/item/item-collect.vue'),
+                component: () => import('@/views/purchase/item-collect.vue'),
                 meta: {
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
                     title: '购物车',
@@ -543,7 +543,7 @@ const routes = [
             {
                 path: 'item-settle',
                 name: 'ItemSettle',
-                component: () => import('@/views/item/item-settle.vue'),
+                component: () => import('@/views/purchase/item-settle.vue'),
                 hidden: true,
                 meta: {
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
@@ -553,7 +553,7 @@ const routes = [
             {
                 path: 'purchase-order-list',
                 name: 'PurchaseOrderList',
-                component: () => import('@/views/item/purchase-order-list.vue'),
+                component: () => import('@/views/purchase/purchase-order-list.vue'),
                 meta: {
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     title: '采购订单',
@@ -563,7 +563,7 @@ const routes = [
             {
                 path: 'purchase-order-detail',
                 name: 'PurchaseOrderDetail',
-                component: () => import('@/views/item/purchase-order-detail.vue'),
+                component: () => import('@/views/purchase/purchase-order-detail.vue'),
                 hidden: true,
                 meta: {
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],

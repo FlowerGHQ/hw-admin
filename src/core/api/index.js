@@ -121,7 +121,10 @@ const apiList = {
 
     Item: { // 商品
         save: ['PostJson', 'item/save'],
+        batchSave: ['PostJson', 'item/batch-save'],
+
         list: ['PostJson', 'item/list'],
+        listBySet: ['PostJson', 'item/list-by-set-id'],
         detail: ['PostJson', 'item/detail'],
         delete: ['PostJson', 'item/delete'],
         detailByCode: ['PostJson', 'item/detail-by-code'],
@@ -133,6 +136,13 @@ const apiList = {
         tree: ['PostJson', 'item-category/tree'],
         delete: ['PostJson', 'item-category/delete'],
         detail: ['PostJson', 'item-category/detail'],
+    },
+    AttrDef: { // 规格定义
+        save: ['PostJson', 'attr-def/save'],
+        batchSave: ['PostJson', 'attr-def/batch-save'],
+
+        delete: ['PostJson', 'attr-def/delete'],
+        listBySet: ['PostJson', 'attr-def/list-by-set-id'],
     },
     SalesArea: { // 车辆销售区域
         list: ['PostJson', 'sales-area/list'],

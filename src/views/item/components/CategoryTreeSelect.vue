@@ -44,7 +44,9 @@ export default {
         },
         categoryId(n) {
             console.log('watch this.categoryId:', n)
-            if (n && n !== this.value) {
+            if (!n) {
+                this.value = undefined
+            } else if (n && n !== this.value) {
                 this.value = this.categoryId
             }
         }

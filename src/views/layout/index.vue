@@ -1,5 +1,5 @@
 <template>
-<a-config-provider :locale="lang == 'zh' ? zhCN : enUS">
+<a-config-provider :locale="lang == 'zh' ? zhCN : enUS" :autoInsertSpaceInButton='false'>
     <a-layout id="Layout">
         <a-layout-header class="layout-header">
             <div class="header-left" @click="collapsed = !collapsed" :class="{'collapsed': collapsed}">
@@ -35,7 +35,6 @@
                                             <div class="key">旧密码:</div>
                                             <div class="value">
                                                 <a-input-password placeholder='请输入旧密码' v-model:value="form.old_password" />
-
                                             </div>
                                         </div>
                                         <div class="form-item required">
