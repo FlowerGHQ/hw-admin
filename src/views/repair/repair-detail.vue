@@ -122,6 +122,7 @@
                              ref="CheckResult"
                              v-if="resultShow && (detail.status != STATUS.WAIT_DISTRIBUTION && detail.status != STATUS.WAIT_DETECTION && detail.status != STATUS.WAIT_CHECK)"/>
                 <RepairInfo :id='id' :detail='detail'/>
+                <WaybillInfo :id='id' :detail='detail'/>
                 <ActionLog :id='id' :detail='detail'/>
             </div>
         </div>
@@ -258,7 +259,10 @@
                 </div>
                 <template #footer>
                     <a-button @click="deliverShow = false">取消</a-button>
-                    <a-button @click="deliverShow = false" type="primary">确定</a-button>
+                    <!-- 填写物流 -->
+                    <a-button v-if="[STATUS.WAIT_DETECTION].includes(detail.status)" @click="deliverShow = false" type="primary">确定</a-button>
+                    <!-- 查看物流 -->
+                    <a-button v-if="[STATUS.WAIT_REPAIR].includes(detail.status)" @click="handleLogisticsSubmit()" type="primary">确定</a-button> 
                 </template>
             </a-modal>
         </template>
@@ -270,6 +274,7 @@ import Core from '../../core';
 import CheckFault from './components/CheckFault.vue';
 import CheckResult from './components/CheckResult.vue';
 import RepairInfo from './components/RepairInfo.vue';
+import WaybillInfo from './components/WaybillInfo.vue';
 import Distribution from './components/Distribution.vue';
 import ActionLog from './components/ActionLog.vue';
 import MySteps from '@/components/common/MySteps.vue';
@@ -289,6 +294,7 @@ export default {
         ActionLog,
         MySteps,
         Distribution,
+        WaybillInfo,
     },
     props: {},
     data() {
@@ -364,7 +370,7 @@ export default {
     created() {
         this.id = Number(this.$route.query.id) || 0
         this.getRepairDetail();
-        console.log(User.id)
+        // console.log(User.id)
     },
     methods: {
         // 向子组件取值
@@ -417,7 +423,6 @@ export default {
         },
         handleAuditSubmit() { // 审核提交
             this.loading = true;
-
             Core.Api.Repair.audit({
                 id: this.id,
                 ...this.editForm
@@ -494,7 +499,7 @@ export default {
             }
         },
         handleFaultSubmit() {
-            // 物流信息提交 this.form
+            // 物流信息提交
             if (this.isTransfer == true && (this.form.company_uid == undefined || this.form.waybill_uid == '')) {
                 return this.$message.warning('请选择快递公司,物流单号')
             }
@@ -506,6 +511,23 @@ export default {
                 this.getRepairDetail()
                 // 故障信息提交
                 this.$refs.CheckFault.handleFaultSubmit();
+            }).catch(err => {
+                console.log('handleFaultSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        handleLogisticsSubmit() {
+            // 物流信息提交
+            if (this.form.company_uid == undefined || this.form.waybill_uid == '') {
+                return this.$message.warning('请选择快递公司,物流单号')
+            }
+            this.loading = false;
+            Core.Api.Repair.post({
+                id: this.id,
+                ...this.form
+            }).then(res => {
+                this.getRepairDetail()
             }).catch(err => {
                 console.log('handleFaultSubmit err', err)
             }).finally(() => {
@@ -636,7 +658,7 @@ export default {
                 let exchangeList = []
                 let exchangeTotle = 0
                 res.list.forEach(it => {
-                    it.item_name = it.item.name
+                    // it.item_name = it.item.name // ？？
                     if (it.type == Core.Const.REPAIR_ITEM.TYPE.ADD) {
                         failList.push(it)
                         failTotle += it.amount * it.price
