@@ -149,7 +149,7 @@ export default {
                 { title: '商品编码', dataIndex: 'code', key: 'item' },
                 { title: '标准价格', dataIndex: 'price', key: 'money' },
                 { title: '成本价格', dataIndex: 'original_price', key: 'money' },
-                { title: '商品分类', dataIndex: 'category_name', key: 'item' },
+                { title: '商品分类', dataIndex: ['category','name'], key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 // { title: '商品状态', dataIndex: 'status' },
                 { title: '操作', key: 'operation', fixed: 'right', width: 180 }
@@ -250,7 +250,6 @@ export default {
 
         // 表格行展开-查看同规格商品
         handleTableExpand(expanded, record) {
-            console.log('handleTableExpand expanded:', expanded, 'record:', record)
             if (expanded) {
                 if (record.device_ports) {
                     this.expandedRowKeys.push(record.id)
@@ -259,7 +258,6 @@ export default {
                         console.log('handleTableExpand res:', res)
                         let list = res.list.filter(i => i.flag_default !== 1)
                         let mainItem = res.list.find(i => i.flag_default === 1)
-                        console.log('handleTableExpand list:', list)
                         list.forEach(item => {
                             item.attr_desc = item.attr_list.map(i => i.value).join(',')
                         })

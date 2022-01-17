@@ -4,6 +4,7 @@
     <div class="title-container">
         <div class="title-area">{{ form.id ? '编辑商品' : '新增商品' }}</div>
     </div>
+    <ItemHeader :detail='detail' v-if="indep_flag" :show-spec='true'/>
     <div class="form-block"> <!-- 基本信息 -->
         <div class="form-title">
             <div class="title">基本信息</div>
@@ -15,13 +16,13 @@
                     <a-input v-model:value="form.name" placeholder="请输入商品名称(最多输入50字符)" :maxlength='50'/>
                 </div>
             </div>
-            <div class="form-item required">
+            <div class="form-item required" v-if="!indep_flag">
                 <div class="key">商品型号</div>
                 <div class="value">
                     <a-input v-model:value="form.model" placeholder="请输入商品型号"/>
                 </div>
             </div>
-            <div class="form-item required" v-if="specific.mode === 1">
+            <div class="form-item required" v-if="specific.mode === 1 || indep_flag">
                 <div class="key">商品编码</div>
                 <div class="value">
                     <a-input v-model:value="form.code" placeholder="请输入商品编码"/>
@@ -75,7 +76,7 @@
             </div>
         </div>
     </div>
-    <div class="form-block"> <!-- 规格信息 -->
+    <div class="form-block" v-if="!indep_flag"> <!-- 规格信息 -->
         <div class="form-title">
             <div class="title">规格信息</div>
         </div>
@@ -188,7 +189,7 @@
             </template>
         </div>
     </div>
-    <div class="form-block" v-if="specific.mode === 1"> <!-- 单规格时的 价格信息 -->
+    <div class="form-block" v-if="specific.mode === 1 || indep_flag"> <!-- 单规格时的 价格信息 -->
         <div class="form-title">
             <div class="title">价格信息</div>
         </div>
@@ -251,13 +252,15 @@
 <script>
 import Core from '../../core';
 import CategoryTreeSelect from './components/CategoryTreeSelect.vue'
+import ItemHeader from './components/ItemHeader.vue'
 import VueTinymce from '@jsdawn/vue3-tinymce';
 
 export default {
     name: 'ItemEdit',
     components: {
         CategoryTreeSelect,
-        VueTinymce
+        ItemHeader,
+        VueTinymce,
     },
     props: {},
     data() {
@@ -265,6 +268,8 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
+
+            indep_flag: 0,
 
             set_id: '',
             detail: {},
@@ -358,6 +363,7 @@ export default {
     created() {
         this.form.id = Number(this.$route.query.id) || 0
         this.set_id = Number(this.$route.query.set_id) || 0
+        this.indep_flag = Number(this.$route.query.indep_flag) || 0
         if (this.form.id) {
             this.getItemDetail();
         }
@@ -382,7 +388,8 @@ export default {
         // 获取商品详情
         getItemDetail() {
             this.loading = true;
-            if (this.set_id) {
+            if (this.set_id && !this.indep_flag) {
+                console.log('多规格商品:')
                 // 多规格商品
                 Core.Api.Item.listBySet({set_id: this.set_id}).then(res => {
                     console.log('getItemGroup res', res)
@@ -397,12 +404,13 @@ export default {
                     this.loading = false;
                 });
             } else {
+                console.log('单规格商品 或 开启信息个性化的多规格商品')
                 // 单规格商品
                 Core.Api.Item.detail({
                     id: this.form.id,
                 }).then(res => {
                     console.log('getItemDetail res', res)
-                    this.setFormData(res)
+                    this.setFormData(res.detail)
                 }).catch(err => {
                     console.log('getItemDetail err', err)
                 }).finally(() => {
@@ -518,10 +526,12 @@ export default {
                 form.imgs = detailList.join(',')
             }
             form.config = JSON.stringify(form.config)
-            if (this.specific.mode === 1) { // 单规格
+            let apiName = 'save'
+            if (this.specific.mode === 1 || this.indep_flag) { // 单规格
                 form.price = Math.round(form.price * 100)
                 form.original_price = Math.round(form.original_price * 100)
             } else { // 多规格
+                apiName = 'batchSave'
                 form.attr_ids = attrDef.map(i => i.id).join(',')
                 form.children = specData.map(data => {
                     return {
@@ -550,7 +560,6 @@ export default {
                     }
                 })
             }
-            let apiName = this.specific.mode === 2 ? 'batchSave' : 'save'
             console.log('handleSubmit form:', form)
             Core.Api.Item[apiName](form).then(() => {
                 this.$message.success('保存成功')
@@ -570,7 +579,7 @@ export default {
             if (!form.category_id) {
                 return this.$message.warning('请选择商品分类')
             }
-            if (this.specific.mode === 1) { // 单规格
+            if (this.specific.mode === 1 || this.indep_flag) { // 单规格
                 if (!form.code) {
                     return this.$message.warning('请输入商品编码')
                 }

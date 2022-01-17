@@ -92,7 +92,7 @@
 <script>
 import Core from '../../core';
 import CategoryTree from './components/CategoryTree.vue'
-import SimpleImageEmpty from '../../components/SimpleImageEmpty.vue'
+import SimpleImageEmpty from '../../components/common/SimpleImageEmpty.vue'
 
 export default {
     name: 'PurchaseItemList',

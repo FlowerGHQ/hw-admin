@@ -43,7 +43,7 @@
 
 <script>
 import Core from '../../core';
-import SimpleImageEmpty from '../../components/SimpleImageEmpty.vue'
+import SimpleImageEmpty from '../../components/common/SimpleImageEmpty.vue'
 
 const AUTH_LIST_TEMP = Core.Const.AUTH_LIST_TEMP
 const USER_TYPE = Core.Const.USER.TYPE

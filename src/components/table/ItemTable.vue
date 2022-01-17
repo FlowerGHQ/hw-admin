@@ -71,7 +71,6 @@ export default {
     },
     computed: {
         rowSelection() {
-            console.log('this.disabledChecked:', this.disabledChecked)
             return {
                 type: this.radioMode ? 'radio' : 'checkbox',
                 selectedRowKeys: this.selectedRowKeys,
@@ -88,9 +87,7 @@ export default {
                     this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
                 },
                 getCheckboxProps: record => ({
-                    props: {
-                        disabled: this.disabledChecked.includes(record.id)
-                    },
+                    disabled: record.stock === 0 || this.disabledChecked.includes(record.id)
                 }),
             };
         },

@@ -277,7 +277,7 @@ import RepairInfo from './components/RepairInfo.vue';
 import WaybillInfo from './components/WaybillInfo.vue';
 import Distribution from './components/Distribution.vue';
 import ActionLog from './components/ActionLog.vue';
-import MySteps from '@/components/MySteps.vue';
+import MySteps from '@/components/common/MySteps.vue';
 import dayjs from "dayjs";
 import AttachmentFile from './components/AttachmentFile.vue';
 

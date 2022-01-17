@@ -8,8 +8,7 @@
                         <i class="icon i_warning"/>共{{ faultSelect.length }}个故障
                     </div>
                     <a-checkbox-group class="fault_select" v-model:value="faultSelect" @change="handleFaultSelect">
-                        <a-checkbox v-for="(value,key) of faultMap" :key='key' :value='key'
-                                    @change="handleFaultItemSelect(key)">
+                        <a-checkbox v-for="(value,key) of faultMap" :key='key' :value='key' @change="handleFaultItemSelect(key)">
                             {{ value }}
                         </a-checkbox>
                     </a-checkbox-group>
@@ -17,23 +16,19 @@
             </a-collapse-panel>
             <a-collapse-panel key="change" header="零部件更换" class="gray-collapse-panel">
                 <div class="panel-content">
-                    <a-collapse v-model:activeKey="failActive" ghost class="collapse-item">
-                        <a-collapse-panel v-for="fault of faultSelect" :key="fault" :header="faultMap[fault]"
-                                          class="fault-item">
+                    <a-collapse v-model:activeKey="failActive" ghost class="collapse-item" >
+                        <a-collapse-panel v-for="fault of faultSelect" :key="fault" :header="faultMap[fault]" class="fault-item">
                             <template #extra>
                                 <ItemSelect btnType='link' @select="handleAddFailItem" :fault-name="fault"
-                                            :disabled-checked='failData[fault].map(i => i.id)' btn-text="添加商品"/>
+                                    :disabled-checked='failData[fault].map(i => i.id)' btn-text="添加商品"/>
                             </template>
                             <a-table :columns="tableColumns" :data-source="failData[fault]"
                                      :row-key="record => record.id" :pagination='false' size="small">
                                 <template #bodyCell="{ column , record ,index, text}">
 
                                     <template v-if="column.dataIndex === 'type'">
-                                        <a-select v-model:value="record.type" placeholder="请选择商品类型"
-                                                  @change="itemTypeChange(record)">
-                                            <a-select-option v-for="(item,index) of repairItemTypeList" :key="index"
-                                                             :value="item.value">{{ item.text }}
-                                            </a-select-option>
+                                        <a-select v-model:value="record.type" placeholder="请选择商品类型" @change="itemTypeChange(record)">
+                                            <a-select-option v-for="(item,index) of repairItemTypeList" :key="index" :value="item.value">{{item.text}}</a-select-option>
                                         </a-select>
                                     </template>
 
@@ -44,18 +39,13 @@
                                     </template>
 
                                     <template v-if="column.dataIndex === 'amount'">
-                                        <a-input-number v-model:value="record.amount" :min="1" :precision="0"
-                                                        placeholder="请输入"
-                                                        @change="handleItemAmountChang(fault, index)"/>
-                                        件
+                                        <a-input-number v-model:value="record.amount" :min="1" :precision="0" placeholder="请输入" @change="handleItemAmountChang(fault, index)"/>件
                                     </template>
 
                                     <template v-if="column.dataIndex === 'bad'">
                                         <template v-if="warehouseFailList.length > 0 && record.type === repairItemType.REPLACE">
                                             <a-select v-model:value="record.recycle_warehouse_id" placeholder="请选择故障仓">
-                                                <a-select-option v-for="item of warehouseFailList" :key="item.id"
-                                                                 :value="item.id">{{ item.name }}
-                                                </a-select-option>
+                                                <a-select-option v-for="item of warehouseFailList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
                                             </a-select>
                                         </template>
                                         <template v-else-if="warehouseFailList.length === 0 && record.type !== repairItemType.REPLACE">
@@ -75,14 +65,10 @@
                                             </a-select>
                                             <!-- 区分帐类 start -->
                                             <template v-if="detail.service_type === serviceType.IN_REPAIR_TIME">
-                                                <a-button type='link' v-if="needPurchase(record)"
-                                                          @click="routerChange('edit')">加仓
-                                                </a-button>
+                                                <a-button type='link' v-if="needPurchase(record)" @click="routerChange('edit')">加仓</a-button>
                                             </template>
                                             <template v-else-if="detail.service_type === serviceType.OUT_REPAIR_TIME">
-                                                <a-button type='link' v-if="needPurchase(record)"
-                                                          @click="routerChange('edit')">采购
-                                                </a-button>
+                                                <a-button type='link' v-if="needPurchase(record)" @click="routerChange('edit')">采购</a-button>
                                             </template>
                                             <template v-else>-</template>
                                             <!-- 区分帐类 end -->
@@ -166,9 +152,7 @@ export default {
     name: 'RepairDetail',
     components: {
         ItemSelect,
-        VNodes: (_, {attrs}) => {
-            return attrs.vnodes;
-        },
+        VNodes: (_, { attrs }) => { return attrs.vnodes; },
     },
     props: {
         id: {
@@ -297,13 +281,13 @@ export default {
         },
 
         // 商品类型改变
-        itemTypeChange(record) {
+        itemTypeChange(record){
             if (record.type == this.repairItemType.TRANSFER) { // 转单的时候不需要考虑仓库
                 record.change_to_transfer = true
-                this.$emit('getIsTransfer', true)
-            } else {
+                this.$emit('getIsTransfer',true)
+            }else{
                 record.change_to_transfer = false
-                this.$emit('getIsTransfer', false)
+                this.$emit('getIsTransfer',false)
             }
             console.log('record: ', record);
         },
@@ -358,7 +342,7 @@ export default {
                 })
                 console.log('getWarehouseListByItem res:', res)
                 return res.list
-            } catch (err) {
+            } catch(err) {
                 return []
             }
         },
@@ -390,15 +374,13 @@ export default {
 
         // 需要采购（判断 所选仓库库存不够）
         needPurchase(record) {
-            if (!record.warehouse_id) {
-                return false
-            }
+            if (!record.warehouse_id) { return false }
             let warehouse = record.warehouse_out_list.find(i => i.id === record.warehouse_id)
             // return record.amount > warehouse.stock ? true : false
             if (record.amount > warehouse.stock) {
                 record.is_stock = false
                 return true
-            } else {
+            }else{
                 record.is_stock = true
                 return false
             }
@@ -419,19 +401,19 @@ export default {
             let transferFlag = false
             let stockFlag = false
             this.faultSelect.forEach(fault => {
-                if (this.failData[fault].length == 0) {
+                if(this.failData[fault].length == 0){
                     itemFlag = true
                 }
                 this.failData[fault].forEach(item => {
                     item.item_fault_id = Number(fault)
-                    if (!item) {
+                    if(!item){
                         itemFlag = true
                     }
                     if (item.type == 3) { // 选择转单时 校验负责人
                         if (this.transferForm.store_id && this.transferForm.repair_user_id) {
                             item.store_id = this.transferForm.store_id
                             item.repair_user_id = this.transferForm.repair_user_id
-                        } else {
+                        }else{
                             transferFlag = true
                         }
                     }
@@ -503,13 +485,12 @@ export default {
                 margin-top: 10px;
 
 
-                .ant-collapse-item.gray-collapse-panel {
+
+                .ant-collapse-item.gray-collapse-panel{
                     line-height: 50px;
                 }
-
                 .ant-collapse-content-box {
                     padding: 0;
-
                     .ant-table-thead {
                         display: none;
 
