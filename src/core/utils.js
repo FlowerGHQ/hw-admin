@@ -69,6 +69,22 @@ const Util = {
         return !Object.keys(obj).length
     },
     /**
+     * 判断传入的数组是否有相同的值
+     * @param {Array} arr ['', '']
+     */
+    hasSameItem(arr) {
+        for (let i = 0; i < arr.length; i++) {
+            const val = arr[i];
+            for (let j = i + 1; j < arr.length; j++) {
+                const _val = arr[j];
+                if (val === _val) {
+                    return true
+                }
+            }
+        }
+        return false
+    },
+    /**
      * 检测字符串中是否包含 表情图标
      * @param {String} str 需要检测的字符串
      */
@@ -451,6 +467,12 @@ const Util = {
     },
     /* =============== 退款管理 ================ */
 
+    /* =============== 出入库操作类型 ================ */
+    stockRecordFilter(val) {
+        const MAP = Const.STOCK_RECORD.TYPE_MAP
+        return MAP[val] || '未知'
+    },
+    /* =============== 出入库操作类型 ================ */
 }
 
 export default Util

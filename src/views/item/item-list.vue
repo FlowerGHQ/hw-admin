@@ -24,8 +24,7 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">商品分类:</div>
                     <div class="value">
-                        <CategoryTreeSelect @change="handleCategorySelect"
-                            :category-id='searchForm.category_id' />
+                        <CategoryTreeSelect @change="handleCategorySelect" :category-id='searchForm.category_id' />
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
@@ -44,15 +43,19 @@
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                :row-key="record => record.id" :pagination='false' @change="handleTableChange">
+                :row-key="record => record.id" :pagination='false' @change="handleTableChange"
+                @expand='handleTableExpand' :expandedRowKeys="expandedRowKeys" :indentSize='0'>
                 <template #bodyCell="{ column, text , record}">
                     <template v-if="column.key === 'detail'">
-                        <div class="table-img">
-                            <a-image :width="60" :height="60" :src="$Util.imageFilter(record.logo)" fallback='无'/>
-                            <a-tooltip placement="top" :title='text'>
-                                <a-button type="link" @click="routerChange('detail', record)" style="margin-left: 6px;">
-                                    <div class="ell" style="max-width: 160px">{{ text || '-' }}</div>
-                                </a-button>
+                        <div class="table-img afs">
+                            <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" fallback='无'/>
+                            <a-tooltip placement="top" :title='text' destroy-tooltip-on-hide>
+                                <div class="info">
+                                    <a-button type="link" @click="routerChange('detail', record)">
+                                        <div class="ell" style="max-width: 150px">{{ text || '-' }}</div>
+                                    </a-button>
+                                    <p class="sub-info">{{record.attr_desc || ' '}}</p>
+                                </div>
                             </a-tooltip>
                         </div>
                     </template>
@@ -81,6 +84,8 @@
                         <a-button type='link' @click="handleDelete(record)" class="danger"><i class="icon i_delete"/> 删除</a-button>
                     </template>
                 </template>
+                <!-- <template #expandedRowRender="{ record }">
+                </template> -->
             </a-table>
         </div>
         <div class="paging-container">
@@ -132,16 +137,19 @@ export default {
 
             // 表格
             tableData: [],
+            expandedRowKeys: [],
         };
     },
     watch: {},
     computed: {
         tableColumns() {
             let columns = [
-                { title: '商品名称', dataIndex: 'name', key: 'detail', width: 240 },
-                { title: '标准价格', dataIndex: 'price', key: 'money' },
-                { title: '商品分类', dataIndex: 'category_name', key: 'item' },
+                { title: '商品名称', dataIndex: 'name', key: 'detail' },
+                { title: '商品型号', dataIndex: 'model', key: 'item' },
                 { title: '商品编码', dataIndex: 'code', key: 'item' },
+                { title: '标准价格', dataIndex: 'price', key: 'money' },
+                { title: '成本价格', dataIndex: 'original_price', key: 'money' },
+                { title: '商品分类', dataIndex: 'category_name', key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 // { title: '商品状态', dataIndex: 'status' },
                 { title: '操作', key: 'operation', fixed: 'right', width: 180 }
@@ -153,21 +161,21 @@ export default {
         this.getTableData();
     },
     methods: {
-        async routerChange(type, item = {}) {
+        routerChange(type, item = {}) {
             console.log('routerChange item:', item)
             let routeUrl = ''
             switch (type) {
                 case 'detail':  // 商品详情
                     routeUrl = this.$router.resolve({
                         path: "/item/item-detail",
-                        query: { id: item.id }
+                        query: { id: item.id, set_id: item.set_id }
                     })
-                    window.open(routeUrl.href, '_self')
+                    window.open(routeUrl.href, '_blank')
                     break;
                 case 'edit':  // 商品编辑
                     routeUrl = this.$router.resolve({
                         path: "/item/item-edit",
-                        query: { id: item.id }
+                        query: { id: item.id, set_id: item.set_id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -218,6 +226,7 @@ export default {
                 console.log('getTableData err:', err)
             }).finally(() => {
                 this.loading = false;
+                this.expandedRowKeys = []
             });
         },
 
@@ -238,6 +247,34 @@ export default {
                 },
             });
         },
+
+        // 表格行展开-查看同规格商品
+        handleTableExpand(expanded, record) {
+            console.log('handleTableExpand expanded:', expanded, 'record:', record)
+            if (expanded) {
+                if (record.device_ports) {
+                    this.expandedRowKeys.push(record.id)
+                } else {
+                    Core.Api.Item.listBySet({set_id: record.set_id}).then(res => {
+                        console.log('handleTableExpand res:', res)
+                        let list = res.list.filter(i => i.flag_default !== 1)
+                        let mainItem = res.list.find(i => i.flag_default === 1)
+                        console.log('handleTableExpand list:', list)
+                        list.forEach(item => {
+                            item.attr_desc = item.attr_list.map(i => i.value).join(',')
+                        })
+                        record.children = list
+                        record.attr_desc = mainItem.attr_list.map(i => i.value).join(',')
+
+                    }).finally(() => {
+                        this.expandedRowKeys.push(record.id)
+                    })
+                }
+            } else {
+                let index = this.expandedRowKeys.indexOf(record.id)
+                this.expandedRowKeys.splice(index, 1)
+            }
+        }
     }
 };
 </script>

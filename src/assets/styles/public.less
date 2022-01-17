@@ -304,63 +304,75 @@
         white-space: nowrap;
         word-break: break-all;
     }
-    .ant-table-container .ant-table-content table {
-        thead.ant-table-thead {
-            tr {
-                th.ant-table-cell {
-                    height: 38px;
-                    font-weight: 500;
-                    font-size: 12px;
-                    line-height: 22px;
-
-                    color: rgba(0, 0, 0, 0.85);
-                    padding: 8px 16px;
-                    background-color: #F7F8FA;
-                    &::before {
-                        display: none;
-                    }
+    .ant-table-container .ant-table-content {
+        &::-webkit-scrollbar {
+            height: 8px;
+            &-thumb {
+                border-radius: 3px;
+                background-color: @scrollbar-thumb;
+                transition: background-color 0.3s;
+                &:hover {
+                    background: @scrollbar-thumb-hover;
                 }
             }
-            .ant-table-filter-trigger {
-                .anticon.anticon-filter { color: #8E9AAD; }
-                &.active {
-                    .anticon.anticon-filter { color: #1890ff; }
-                }
+            &-track {
+                /*滚动条内部轨道*/
+                background: @scrollbar-track;
             }
         }
-        tbody.ant-table-tbody {
-            &::-webkit-scrollbar {
-                height: 8px;
-                &-thumb {
-                    border-radius: 3px;
-                    background-color: @scrollbar-thumb;
-                    transition: background-color 0.3s;
-                    &:hover {
-                        background: @scrollbar-thumb-hover;
-                    }
-                }
-                &-track {
-                    /*滚动条内部轨道*/
-                    background: @scrollbar-track;
-                }
-            }
-            tr.ant-table-row {
-                td.ant-table-cell {
-                    border-bottom: 1px solid #E6EAEE;
-                    padding: 8px 16px;
-                    color: #363D42;
-                    font-size: @fz_sm;
-                    .ant-btn {
-                        font-size: @fz_sm;
-                        height: 22px;
-                        &.ant-btn-link {
-                            line-height: 22px;
+        table {
+            thead.ant-table-thead {
+                tr {
+                    th.ant-table-cell {
+                        height: 38px;
+                        font-weight: 500;
+                        font-size: 12px;
+                        line-height: 22px;
+                        color: rgba(0, 0, 0, 0.85);
+                        padding: 8px 16px;
+                        background-color: #F7F8FA;
+                        &::before {
+                            display: none;
                         }
                     }
                 }
+                .ant-table-filter-trigger {
+                    .anticon.anticon-filter { color: #8E9AAD; }
+                    &.active {
+                        .anticon.anticon-filter { color: #1890ff; }
+                    }
+                }
             }
-            .ant-table-row-expand-icon {
-                margin: 0 8px 0 0;
+            tbody.ant-table-tbody {
+                tr.ant-table-row {
+                    td.ant-table-cell {
+                        border-bottom: 1px solid #E6EAEE;
+                        padding: 8px 16px;
+                        color: #363D42;
+                        font-size: @fz_sm;
+                        .ant-btn {
+                            font-size: @fz_sm;
+                            height: 22px;
+                            &.ant-btn-link {
+                                line-height: 22px;
+                            }
+                        }
+                        &.ant-table-cell-with-append {
+                            position: relative;
+                            padding-left: 34px;
+                            .ant-table-row-expand-icon {
+                                .ath();
+                                left: 7px;
+                                margin: 0;
+                            }
+                        }
+                    }
+                    &.ant-table-row-level-1 {
+                        td.ant-table-cell {
+                            background: #F7F8FA;
+                        }
+                    }
+                }
             }
         }
     }
@@ -407,6 +419,15 @@
         .ant-image-img {
             height: 100%;
             object-fit: cover;
+        }
+        &.afs {
+            align-items: flex-start;
+        }
+        .info {
+            padding-left: 6px;
+            .sub-info {
+                margin-top: 4px;
+            }
         }
     }
     .status-tag {
@@ -782,6 +803,7 @@ p {
     background: @BG_panel;
     border-radius: 6px;
     overflow: hidden;
+    position: relative;
 }
 .title-container { // 标题
     .fsb();
@@ -870,6 +892,9 @@ p {
     color: @TC_table;
     position: relative;
     margin: 20px;
+    &.no-mg {
+        margin: 0;
+    }
     .field-select {
         cursor: pointer;
         position: absolute;
@@ -906,6 +931,7 @@ p {
     background: @BG_N;
     box-sizing: border-box;
     border-radius: 6px;
+    position: relative;
 
     .form-block { // 新增页 分块
         margin: 0 20px 20px;

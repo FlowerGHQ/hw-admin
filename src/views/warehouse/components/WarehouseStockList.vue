@@ -48,11 +48,14 @@ export default {
     name: 'WarehouseStockList',
     components: {},
     props: {
-        agentId: {
+        warehouse_id: {
             type: Number,
         },
-        distributorId: {
-            type: Number,
+        detail: {
+            type: Object,
+            default: () => {
+                return {}
+            }
         },
         type: {
             type: Number,
@@ -60,7 +63,6 @@ export default {
     },
     data() {
         return {
-            loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
             // 分页
@@ -111,6 +113,7 @@ export default {
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             Core.Api.Stock.list({
+                warehouse_id: this.warehouse_id,
                 page: this.currPage,
                 page_size: this.pageSize,
             }).then(res => {

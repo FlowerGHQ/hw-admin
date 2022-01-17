@@ -101,7 +101,9 @@
                 <div class="form-item required">
                     <div class="key">车辆编号</div>
                     <div class="value">
-                        <a-input v-model:value="form.item_code" placeholder="请输入车辆编号"/>
+                        <a-input class="item-code" v-model:value="form.item_code" placeholder="请输入车辆编号" @blur="onblur"/>
+                        <span v-if="isExist === true"><i class="icon i_confirm"/></span>
+                        <span v-else-if="isExist === false"><i class="icon i_close_c"/></span>
                     </div>
                 </div>
             </div>
@@ -199,6 +201,7 @@ export default {
             priorityList: REPAIR.PRIORITY_LIST, // 紧急程度
             customerList: [], // 车主列表
             REPAIR,
+            isExist: '', // 车辆编号输入框提示
             form: {
                 id: '',
 
@@ -212,6 +215,7 @@ export default {
                 channel: 1, // 维修方式、维修途径
                 repair_method: 1, // 维修类别
                 item_code: '', // 车辆编号
+                vehicle_no: '', // 车辆编号
 
                 customer_id: undefined,  // 相关客户-id
                 customer_name: "",  // 相关客户-名称
@@ -311,15 +315,32 @@ export default {
             if (!checkRes) {
                 return
             }
-
             let apiName = form.id ? 'update' : 'create'
-            Core.Api.Repair[apiName](form).then(() => {
+            this.form.vehicle_no =
 
-                this.$message.success('保存成功')
-                this.routerChange('back')
+                Core.Api.Repair[apiName]({
+                    ...form,
+                    vehicle_no: this.form.item_code,
+                }).then(() => {
+                    this.$message.success('保存成功')
+                    this.routerChange('back')
+                }).catch(err => {
+                    console.log('handleSubmit err:', err)
+                })
+        },
+        onblur() {  // 获取 车辆编码 数据
+            if (!this.form.item_code) {
+                return this.isExist = ''
+            }
+            Core.Api.Item.detailByCode({
+                code: this.form.item_code,
+            }).then(res => {
+                this.isExist = res.detail != null
+                console.log("getItemCode res", res)
             }).catch(err => {
-                console.log('handleSubmit err:', err)
-            })
+                console.log('getItemCode err', err)
+            }).finally(() => {
+            });
         },
         // 检查表单输入
         checkFormInput(form) {
@@ -419,16 +440,39 @@ export default {
 </script>
 
 <style lang="less">
-#app {
-    .ant-layout {
-        .ant-input-number {
-            margin-right: 10px;
-        }
+#RepairEdit {
+    .form-block {
+        .form-content {
+            .form-item {
+                .value {
+                    .fac();
+                    .ant-input-number {
+                        margin-right: 10px;
+                    }
 
-        .kilometre {
-            font-size: 12px;
-            line-height: 16px;
-            color: #363D42;
+                    .kilometre {
+                        font-size: 12px;
+                        line-height: 16px;
+                        color: #363D42;
+                    }
+                    .item-code {
+                        width: calc(~'100% - 24px');
+                    }
+                    i.icon {
+                        display: inline-block;
+                        width: 24px;
+                        text-align: right;
+                    }
+                    .i_confirm {
+                        color: @green;
+                        font-size: 18px;
+                    }
+                    .i_close_c {
+                        color: @red;
+                    }
+                }
+
+            }
         }
     }
 }

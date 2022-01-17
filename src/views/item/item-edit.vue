@@ -1,5 +1,6 @@
 <template>
 <div id="ItemEdit" class="edit-container">
+    <a-spin :spinning="loading" class='loading-incontent' v-if="loading"></a-spin>
     <div class="title-container">
         <div class="title-area">{{ form.id ? '编辑商品' : '新增商品' }}</div>
     </div>
@@ -15,6 +16,12 @@
                 </div>
             </div>
             <div class="form-item required">
+                <div class="key">商品型号</div>
+                <div class="value">
+                    <a-input v-model:value="form.model" placeholder="请输入商品型号"/>
+                </div>
+            </div>
+            <div class="form-item required" v-if="specific.mode === 1">
                 <div class="key">商品编码</div>
                 <div class="value">
                     <a-input v-model:value="form.code" placeholder="请输入商品编码"/>
@@ -76,33 +83,106 @@
             <div class="form-item">
                 <div class="key">规格模式</div>
                 <div class="value">
-                    <a-radio-group v-model:value="specific.mode">
+                    <a-radio-group v-model:value="specific.mode" @change="handleSpecificModeChange">
                         <a-radio :value="1">单规格</a-radio>
                         <a-radio :value="2">多规格</a-radio>
                     </a-radio-group>
                 </div>
             </div>
             <template v-if="specific.mode === 2">
-            <div class="form-item">
-                <div class="key">规格定义</div>
+            <div class="form-item specific-config">
+                <div class="key">规格定义
+                    <a-tooltip title="关键字：用于区分规格,应由小写英文字母组成且不可重复">
+                        <i class="icon i_hint" style="font-size: 12px;"></i>
+                    </a-tooltip>
+                </div>
                 <div class="value">
                     <div class="spec-item" v-for="(item,index) of specific.list" :key="index">
                         <div class="name">
-                            <span>规格名</span>
-                            <a-input v-model:value="item.name" placeholder="请输入规格名"/>
+                            <p>规格名</p>
+                            <a-input v-model:value="item.name" placeholder="规格名" @blur="handleSpecEditBlur(index, 'name')"/>
+                            <p>关键字</p>
+                            <a-input v-model:value="item.key"  placeholder="关键字" @blur="handleSpecEditBlur(index, 'key')"/>
                             <a-button type="link" @click="handleRemoveSpec(index)">删除</a-button>
                         </div>
                         <div class="option">
-                            <span>规格值</span>
-                            <div class="option-item" v-for="(option, i) of item" :key="i">
-                                <a-input v-model:value="item.option[i]" placeholder="规格值"/>
-                                <i class="icon i_close" @click="handleRemoveSpecOption(index, i)"/>
+                            <p>规格值</p>
+                            <div class="option-list">
+                                <div class="option-item" v-for="(option, i) of item.option" :key="i">
+                                    <a-input :value="option" placeholder="规格值"/>
+                                    <i class="close icon i_close_b" @click="handleRemoveSpecOption(index, i)"/>
+                                </div>
+                                <a-popover v-model:visible="item.addVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseSpecOption(index)}'>
+                                    <template #content>
+                                        <div class="specific-option-edit-popover">
+                                            <a-input v-model:value="item.addValue" placeholder="规格值" :max-length='50' @keydown.enter="handleAddSpecOption(index)" :autofocus='true'/>
+                                            <div class="content-length">{{item.addValue.length}}/50</div>
+                                            <div class="btns">
+                                                <a-button type="primary" ghost @click="handleCloseSpecOption(index)">取消</a-button>
+                                                <a-button type="primary" @click="handleAddSpecOption(index)">确定</a-button>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <a-button type="link"><i class="icon i_add"></i> 添加</a-button>
+                                </a-popover>
                             </div>
-                            <a-button type="link" @click="handleAddSpecOption(index)"><i class="icon i_add"></i> 删除</a-button>
                         </div>
                     </div>
-
-                    <a-button type="primary" ghost @click="handleAddSpec">添加规格信息</a-button>
+                    <a-button class="spec-add" type="primary" ghost @click="handleAddSpec">添加规格定义</a-button>
+                </div>
+            </div>
+            <div class="form-item specific-items">
+                <div class="key">规格信息</div>
+                <div class="value table-container no-mg">
+                    <a-table :columns="specificColumns" :data-source="specific.data" :scroll="{ x: true }"
+                        :row-key="record => record.title"  :pagination='false' class="specific-table">
+                        <template #bodyCell="{ column, record }">
+                            <template v-if="column.dataIndex === 'code'">
+                                <a-input class="code" v-model:value="record.code" placeholder="请输入商品编码"/>
+                            </template>
+                            <template v-if="column.dataIndex === 'price'">
+                                <a-input-number v-model:value="record.price" :min="0.01"
+                                    :formatter="value => `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/￥\s?|(,*)/g, '')"/>
+                            </template>
+                            <template v-if="column.dataIndex === 'original_price'">
+                                <a-input-number v-model:value="record.original_price" :min="0.01"
+                                    :formatter="value => `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/￥\s?|(,*)/g, '')" />
+                            </template>
+                            <template v-if="column.key === 'select'">
+                                <a-select v-model:value="record[column.dataIndex]" placeholder="请选择">
+                                    <a-select-option v-for="(val,index) of column.option" :key="index" :value="val">{{ val }}</a-select-option>
+                                </a-select>
+                            </template>
+                        </template>
+                    </a-table>
+                    <div class="batch-set">
+                        批量设置：
+                        <a-popover v-model:visible="batchSet.originalVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseBatchSet()}'>
+                            <template #content>
+                                <div class="batch-set-edit-popover">
+                                    <a-input-number v-model:value="batchSet.original_price" placeholder="请输入成本价格" @keydown.enter="handleBatchSpec('original_price')" :min='0' :autofocus='true'/>
+                                    <div class="btns">
+                                        <a-button type="primary" ghost @click="handleCloseBatchSet">取消</a-button>
+                                        <a-button type="primary" @click="handleBatchSpec('original_price')">确定</a-button>
+                                    </div>
+                                </div>
+                            </template>
+                            <a-button type="link">成本价格</a-button>
+                        </a-popover>
+                        <a-popover v-model:visible="batchSet.priceVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseBatchSet()}'>
+                            <template #content>
+                                <div class="batch-set-edit-popover">
+                                    <a-input-number v-model:value="batchSet.price" placeholder="请输入标准售价" @keydown.enter="handleBatchSpec('price')" :min='0' :autofocus='true'/>
+                                    <div class="btns">
+                                        <a-button type="primary" ghost @click="handleCloseBatchSet">取消</a-button>
+                                        <a-button type="primary" @click="handleBatchSpec('price')">确定</a-button>
+                                    </div>
+                                </div>
+                            </template>
+                            <a-button type="link">标准售价</a-button>
+                        </a-popover>
+                    </div>
+                    <a-button class="spec-add" type="primary" ghost @click="handleAddSpecItem"><i class="icon i_add"/>添加规格</a-button>
                 </div>
             </div>
             </template>
@@ -114,16 +194,16 @@
         </div>
         <div class="form-content">
             <div class="form-item required">
-                <div class="key">标准售价</div>
+                <div class="key">成本价格</div>
                 <div class="value input-number">
-                    <a-input-number v-model:value="form.price" :min="0" :precision="2" placeholder="0.00"/>
+                    <a-input-number v-model:value="form.original_price" :min="0" :precision="2" placeholder="0.00"/>
                     <span>元</span>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">批发价格</div>
+                <div class="key">标准售价</div>
                 <div class="value input-number">
-                    <a-input-number v-model:value="form.original_price" :min="0" :precision="2" placeholder="0.00"/>
+                    <a-input-number v-model:value="form.price" :min="0" :precision="2" placeholder="0.00"/>
                     <span>元</span>
                 </div>
             </div>
@@ -185,27 +265,39 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
+
+            set_id: '',
             detail: {},
             form: {
                 id: '',
                 name: '',
+                code: '',
+                model: '',
                 logo: '',
                 imgs: '',
-                code: '',
                 category_id: undefined,
                 price: undefined,
                 original_price: undefined,
                 config: '',
             },
+
+            // 商品分类
             item_category: {},
             configTemp: [],
 
             specific: { // 规格
                 mode: 1,
-                list: [],
+                list: [], // [{id: '', name: '', key: '', option: [], addVisible: false, addValue: ''}]
+                data: [], // [{code: '', price: '', original_price: [], ……, attr_list}]
+            },
+            batchSet: { // 批量设置
+                priceVisible: false,
+                price: '',
+                originalVisible: false,
+                original_price: '',
             },
 
-            upload: {
+            upload: { // 上传图片
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
                 coverList: [],
                 detailList: [],
@@ -217,7 +309,7 @@ export default {
                     type: 'img',
                 },
             },
-            tinymce_setting: {
+            tinymce_setting: { // 富文本
                 menubar: false,  // 隐藏菜单栏
                 branding: false, // 隐藏右下角技术支持
 
@@ -241,9 +333,31 @@ export default {
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        specificColumns() {
+            let column = []
+            column = this.specific.list.map((item, index) => ({
+                id: item.id,
+                title: item.name,
+                dataIndex: item.key,
+                key: 'select',
+                option: item.option,
+                minWidth: '150px',
+            }))
+            column = column.filter(item => item.title && item.dataIndex)
+            column.unshift(
+                {title: '商品编码', key: 'input', dataIndex: 'code', fixed: 'left'},
+            )
+            column.push(
+                {title: '成本价格', key: 'money', dataIndex: 'original_price', fixed: 'right'},
+                {title: '标准售价', key: 'money', dataIndex: 'price', fixed: 'right'},
+            )
+            return column
+        }
+    },
     created() {
         this.form.id = Number(this.$route.query.id) || 0
+        this.set_id = Number(this.$route.query.set_id) || 0
         if (this.form.id) {
             this.getItemDetail();
         }
@@ -268,69 +382,129 @@ export default {
         // 获取商品详情
         getItemDetail() {
             this.loading = true;
-            Core.Api.Item.detail({
-                id: this.form.id,
-            }).then(res => {
-                console.log('getItemDetail res', res)
-                this.detail = res
-                let config = []
-                let _config = []
+            if (this.set_id) {
+                // 多规格商品
+                Core.Api.Item.listBySet({set_id: this.set_id}).then(res => {
+                    console.log('getItemGroup res', res)
+                    let list = res.list
+                    let mainItem = list.find(i => i.flag_default === 1)
+                    console.log('getItemGroup mainItem', mainItem)
+                    this.setFormData(mainItem)
+                    this.setSpecificData(list)
+                }).catch(err => {
+                    console.log('getItemGroup err', err)
+                }).finally(() => {
+                    this.loading = false;
+                });
+            } else {
+                // 单规格商品
+                Core.Api.Item.detail({
+                    id: this.form.id,
+                }).then(res => {
+                    console.log('getItemDetail res', res)
+                    this.setFormData(res)
+                }).catch(err => {
+                    console.log('getItemDetail err', err)
+                }).finally(() => {
+                    this.loading = false;
+                });
+            }
+        },
 
-                this.item_category = res.category
-                try { this.configTemp = JSON.parse(res.category.config) } catch (err) { this.configTemp = [] }
-                try { _config = JSON.parse(res.config) } catch (err) { _config = [] }
+        setFormData(res) {
+            this.loading = true
+            this.detail = res
 
-                for (let i = 0; i < this.configTemp.length; i++) {
-                    const item = this.configTemp[i];
-                    config.push({
-                        name: item.name,
-                        key: item.key,
-                        value: item.type === 'select' ? undefined : '',
-                        type: item.type
-                    })
-                }
-                for (let i = 0; i < config.length; i++) {
-                    const target = config[i];
-                    let _target = _config.find(item => item.key === target.key)
-                    target.value = _target ? _target.value : ''
-                }
+            let config = []
+            let _config = []
+            this.item_category = res.category
+            try { this.configTemp = JSON.parse(res.category.config) } catch (err) { this.configTemp = [] }
+            try { _config = JSON.parse(res.config) } catch (err) { _config = [] }
+            for (let i = 0; i < this.configTemp.length; i++) {
+                const item = this.configTemp[i];
+                config.push({
+                    name: item.name,
+                    key: item.key,
+                    value: item.type === 'select' ? undefined : '',
+                    type: item.type
+                })
+            }
+            for (let i = 0; i < config.length; i++) {
+                const target = config[i];
+                let _target = _config.find(item => item.key === target.key)
+                target.value = _target ? _target.value : ''
+            }
 
-                for (const key in this.form) {
-                    this.form[key] = res[key]
-                }
-                this.form.config = config
-                this.form.price = Core.Util.countFilter(res.price)
-                this.form.original_price = Core.Util.countFilter(res.original_price)
-                if (this.form.logo) {
-                    this.upload.coverList = [{
-                        uid: 1,
-                        name: this.form.logo,
-                        url: Core.Const.NET.FILE_URL_PREFIX + this.form.logo,
-                        short_path: this.form.logo,
-                        status: 'done',
-                    }]
-                }
-                if (this.form.imgs) {
-                    let imgs = this.form.imgs.split(',')
-                    this.upload.detailList = imgs.map((item, index) => ({
-                        uid: index + 1,
-                        name: item,
-                        url: Core.Const.NET.FILE_URL_PREFIX + item,
-                        short_path: item,
-                        status: 'done',
-                    }))
-                }
-            }).catch(err => {
-                console.log('getItemDetail err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+            for (const key in this.form) {
+                this.form[key] = res[key]
+            }
+            this.form.config = config
+            this.form.price = Core.Util.countFilter(res.price)
+            this.form.original_price = Core.Util.countFilter(res.original_price)
+            if (this.form.logo) {
+                let logos = this.form.logo.split(',')
+                this.upload.coverList = logos.map((item, index) => ({
+                    uid: index + 1,
+                    name: item,
+                    url: Core.Const.NET.FILE_URL_PREFIX + item,
+                    short_path: item,
+                    status: 'done',
+                }))
+            }
+            if (this.form.imgs) {
+                let imgs = this.form.imgs.split(',')
+                this.upload.detailList = imgs.map((item, index) => ({
+                    uid: index + 1,
+                    name: item,
+                    url: Core.Const.NET.FILE_URL_PREFIX + item,
+                    short_path: item,
+                    status: 'done',
+                }))
+            }
+            this.loading = false
+        },
+        setSpecificData(itemList) {
+            this.loading = true
+            this.specific.mode = 2
+            Core.Api.AttrDef.listBySet({set_id: this.set_id}).then(res => {
+                let list = res.list.map(item => ({
+                    id: item.id,
+                    key: item.key,
+                    name: item.name,
+                    option: item.value.split(','),
+                    addValue: '',
+                    addVisible: false,
+                }))
+                console.log('setSpecificData list:', list)
+                let data = itemList.map(item => {
+                    let params = {}
+                    for (const attr of list) {
+                        let element = item.attr_list.find(i => i.attr_def_id === attr.id)
+                        params[attr.key] = element.value
+                    }
+                    return {
+                        ...params,
+                        code: item.code,
+                        price: Core.Util.countFilter(item.price),
+                        original_price: Core.Util.countFilter(item.original_price),
+
+                        target_id: item.id,
+                        attr_list: item.attr_list,
+                    }
+                })
+                console.log('setSpecificData data:', data)
+                this.specific.list = list
+                this.specific.data = data
+            })
         },
 
         // 保存、新建 商品
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
+            let specData = Core.Util.deepCopy(this.specific.data)
+            let attrDef = Core.Util.deepCopy(this.specific.list)
             console.log('form:', form)
+            if (typeof this.checkFormInput(form, specData, attrDef) === 'function') { return }
             if (this.upload.coverList.length) {
                 let coverList = this.upload.coverList.map(item => {
                     return item.short_path || item.response.data.filename
@@ -343,20 +517,113 @@ export default {
                 })
                 form.imgs = detailList.join(',')
             }
+            form.config = JSON.stringify(form.config)
+            if (this.specific.mode === 1) { // 单规格
+                form.price = Math.round(form.price * 100)
+                form.original_price = Math.round(form.original_price * 100)
+            } else { // 多规格
+                form.attr_ids = attrDef.map(i => i.id).join(',')
+                form.children = specData.map(data => {
+                    return {
+                        id: data.target_id,
+                        code: data.code,
+                        price: Math.round(data.price * 100),
+                        original_price: Math.round(data.original_price * 100),
+                        attr_params: attrDef.map((attr,index) => {
+                            let id = ''
+                            if (data.attr_list && data.attr_list.length) {
+                                let _attr = data.attr_list.find(i => i.attr_def_id === attr.id)
+                                if (_attr) {
+                                    id = _attr.id
+                                }
+                            }
+                            return {
+                                attr_def_id: attr.id,
+                                attr_def_name: attr.name,
+                                id,
+                                name: data[attr.key],
+                                value: data[attr.key],
+                                target_id: data.target_id || '',
+                                target_type: 1,
+                            }
+                        }),
+                    }
+                })
+            }
+            let apiName = this.specific.mode === 2 ? 'batchSave' : 'save'
+            console.log('handleSubmit form:', form)
+            Core.Api.Item[apiName](form).then(() => {
+                this.$message.success('保存成功')
+                this.routerChange('back')
+            }).catch(err => {
+                console.log('handleSubmit err:', err)
+            })
+        },
+        // 保存时检查表单输入
+        checkFormInput(form, specData, attrDef) {
             if (!form.name) {
                 return this.$message.warning('请输入商品名称')
             }
-            if (!form.code) {
-                return this.$message.warning('请输入商品编码')
+            if (!form.model) {
+                return this.$message.warning('请输入商品型号')
             }
             if (!form.category_id) {
                 return this.$message.warning('请选择商品分类')
             }
-            if (!form.price) {
-                return this.$message.warning('请输入商品标准售价')
-            }
-            if (!form.original_price) {
-                return this.$message.warning('请输入商品批发价格')
+            if (this.specific.mode === 1) { // 单规格
+                if (!form.code) {
+                    return this.$message.warning('请输入商品编码')
+                }
+                if (!form.price) {
+                    return this.$message.warning('请输入商品标准售价')
+                }
+                if (!form.original_price) {
+                    return this.$message.warning('请输入商品成本价格')
+                }
+            } else { // 多规格
+                // 规格定义 检查
+                for (let i = 0; i < attrDef.length; i++) {
+                    const item = attrDef[i];
+                    if (!item.name) {
+                        return this.$message.warning('请输入规格名')
+                    }
+                    if (!item.key) {
+                        return this.$message.warning('请输入规格关键字')
+                    }
+                    if (!item.option.length) {
+                        return this.$message.warning('请至少配置一项规格值')
+                    }
+                }
+                // 规格信息 检查
+                let attrs = []
+                for (let i = 0; i < specData.length; i++) {
+                    const item = specData[i];
+                    if (!item.code) {
+                        return this.$message.warning('请输入商品编码')
+                    }
+                    if (!item.price) {
+                        return this.$message.warning('请输入商品标准售价')
+                    }
+                    if (!item.original_price) {
+                        return this.$message.warning('请输入商品成本价格')
+                    }
+                    let str = ''
+                    for (let j = 0; j < this.specific.list.length; j++) {
+                        const {name, key} = this.specific.list[j];
+                        if (!item[key]) {
+                            return this.$message.warning('请输入商品' + name)
+                        }
+                        str += item[key]
+                    }
+                    attrs.push(str)
+                }
+                if (Core.Util.hasSameItem(specData.map(i => i.code))) {
+                    return this.$message.warning('商品编码不可重复')
+                }
+                if (Core.Util.hasSameItem(attrs)) {
+                    return this.$message.warning('请不要设置规格完全一致的商品')
+                }
+                console.log('attrs:', attrs)
             }
             if (this.configTemp.length) {
                 for (let i = 0; i < this.configTemp.length; i++) {
@@ -366,15 +633,7 @@ export default {
                     }
                 }
             }
-            form.config = JSON.stringify(form.config)
-            form.price = Math.round(form.price * 100)
-            form.original_price = Math.round(form.original_price * 100)
-            Core.Api.Item.save(form).then(() => {
-                this.$message.success('保存成功')
-                this.routerChange('back')
-            }).catch(err => {
-                console.log('handleSubmit err:', err)
-            })
+            return 0
         },
 
         // 校验图片
@@ -409,6 +668,7 @@ export default {
             this.upload.detailList = fileList
         },
 
+        // 商品分类选择
         handleCategorySelect(val, node) {
             this.form.category_id = val
             this.item_category = node
@@ -437,18 +697,133 @@ export default {
             this.form.config = config
         },
 
-        handleAddSpec() {
-            this.specific.list.push({name: '', option: []})
+        // 商品规格模式改变
+        handleSpecificModeChange() {
+            if (this.specific.mode === 2) {
+                this.specific.data = [{
+                    code: this.form.code,
+                    price: this.form.price,
+                    original_price: this.form.original_price,
+                }]
+            } else if (this.specific.mode === 1) {
+                this.form.code = this.specific.data[0].code
+                this.form.price = this.specific.data[0].price
+                this.form.original_price = this.specific.data[0].original_price
+            }
         },
-        handleRemoveSpec(index) {
+
+        // 规格定义
+        // 规格名
+        handleAddSpec() { // 添加规格定义
+            this.specific.list.push({id: '', name: '', key: '', option: [], addVisible: false, addValue: ''})
+        },
+        handleRemoveSpec(index) { // 删除规格定义
+            let item = this.specific.list[index]
+            if (item.id) {
+                Core.Api.AttrDef.delete(item.id)
+            }
             this.specific.list.splice(index, 1)
         },
+        handleSpecEditBlur(index, key) {
+            let item = this.specific.list[index]
+            if (key === 'name') {
+                if (!item.name) {
+                    return this.$message.warning('请输入规格名')
+                }
+                let names = this.specific.list.map(i => i.name).filter((val,i) => val && i !== index)
+                if (names.includes(item.name)) {
+                    this.specific.list[index].name = ''
+                    return this.$message.warning('规格名不可重复')
+                }
+            } else {
+                let reg = /^[a-z]+$/g
+                if (!item.key) {
+                    return this.$message.warning('请输入规格关键字')
+                }
+                if (!reg.test(item.key)) {
+                    this.specific.list[index].key = ''
+                    return this.$message.warning('规格关键字应由小写英文字母组成')
+                }
+                let keys = this.specific.list.map(i => i.key).filter((val,i) => val && i !== index)
+                if (keys.includes(item.key)) {
+                    this.specific.list[index].key = ''
+                    return this.$message.warning('规格关键字不可重复')
+                }
+            }
+            if (item.key.trim() && item.name.trim()) {
+                let _item = { id: item.id, key: item.key, name: item.name, value: item.option.join(',') }
+                Core.Api.AttrDef.save(_item).then(res => {
+                    console.log('handleSpecEditBlur res:', res)
+                    this.specific.list[index].id = res.detail.id
+                })
+            }
+        },
+        // 规格值
         handleAddSpecOption(index) {
-            this.specific.list[index].option.push('')
+            let item = this.specific.list[index]
+            if (!item.addValue) {
+                return this.$message.warning('请输入规格值')
+            }
+            if (item.option.includes(item.addValue)) {
+                return this.$message.warning('同以规格下，规格值不可重复')
+            }
+
+            item.option.push(this.specific.list[index].addValue)
+            this.handleCloseSpecOption(index)
+            if (item.id && item.key.trim() && item.name.trim()) {
+                let _item = { id: item.id, key: item.key, name: item.name, value: item.option.join(',') }
+                Core.Api.AttrDef.save(_item)
+            }
+        },
+        handleCloseSpecOption(index) {
+            this.specific.list[index].addValue = ''
+            this.specific.list[index].addVisible = false
         },
         handleRemoveSpecOption(index, i) {
-            this.specific.list[index].option.splice(i, 1)
+            let item = this.specific.list[index]
+            item.option.splice(i, 1)
+            if (item.id && item.key.trim() && item.name.trim()) {
+                let _item = { id: item.id, key: item.key, name: item.name, value: item.option.join(',') }
+                Core.Api.AttrDef.save(_item)
+            }
         },
+
+        // 规格商品
+        handleAddSpecItem() { // 添加商品规格
+            let maxLen = 1
+            for (let i = 0; i < this.specific.list.length; i++) {
+                const len = this.specific.list[i].option.length || 1;
+                maxLen = maxLen*len
+            }
+            if (this.specific.data.length >= maxLen) {
+                return this.$message.warning('当前商品规格已达最大规格组合数，请添加规格定义')
+            }
+            this.specific.data.push({
+                code: '',
+                price: '',
+                original_price: '',
+            })
+        },
+
+        // 批量设置
+        handleCloseBatchSet() {
+            this.batchSet = {
+                priceVisible: false,
+                price: '',
+                originalVisible: false,
+                original_price: '',
+            }
+        },
+        handleBatchSpec(key) {
+            if (!this.batchSet[key] && this.batchSet[key] !== 0) {
+                return this.$message.warning('请输入您要设置的价格')
+            }
+            this.specific.data = this.specific.data.map(item => {
+                item[key] = this.batchSet[key]
+                return item
+            })
+            this.handleCloseBatchSet()
+        }
     }
 };
 </script>
@@ -463,12 +838,179 @@ export default {
                         width: 120px;
                     }
                     > span {
-                        font-size: 14px;
-                        padding-left: 10px;
-                        color: #323233;
+                        font-size: 10px;
+                        color: #8090A6;
+                        margin-left: 5px;
                     }
                 }
             }
+        }
+    }
+    .form-item.specific-config,
+    .form-item.specific-items {
+        align-items: flex-start;
+        > .key {
+            line-height: 32px;
+        }
+        > .value {
+            // width: calc(~'100% - 200px');
+            max-width: calc(~'100% - 200px');
+        }
+    }
+    .form-item.specific-items {
+        margin-top: 30px;
+    }
+    .spec-item {
+        padding-bottom: 10px;
+        .name ,.option {
+            > p {
+                width: 4em;
+                font-size: 12px;
+                color: #000000;
+                padding-left: 16px;
+                box-sizing: content-box;
+            }
+            .ant-btn {
+                font-size: 12px;
+            }
+        }
+        .name {
+            .fac();
+            box-sizing: border-box;
+            height: 50px;
+            background: #FFFFFF;
+            border: 1px solid #E5E8EB;
+            border-radius: 1px;
+            > .ant-input {
+                width: 194px;
+                margin-right: 8px;
+            }
+            > .ant-btn {
+                font-size: 12px;
+                transition: opacity 0.3s ease;
+                visibility: hidden;
+                opacity: 0;
+            }
+            &:hover > .ant-btn {
+                visibility: visible;
+                opacity: 1;
+            }
+        }
+        .option {
+            display: flex;
+            margin-bottom: 20px;
+            > p {
+                padding-left: 64px;
+                height: 32px;
+                line-height: 32px;
+                margin-top: 8px;
+            }
+            .option-list {
+                display: flex;
+                flex-wrap: wrap;
+                width: calc(~'100% - 64px - 4em');
+            }
+            .option-item {
+                position: relative;
+                margin-top: 8px;
+                .ant-input {
+                    width: 90px;
+                    margin-right: 14px;
+                    text-align: center;
+                    border: 1px solid #E5E8EB;
+                    box-shadow: 0 0 0 0;
+                }
+                .close {
+                    position: absolute;
+                    color: #C2C2C2;
+                    display: inline-block;
+                    width: 18px;
+                    height: 18px;
+                    line-height: 18px;
+                    font-size: 18px;
+                    top: -8px;
+                    right: 6px;
+                    visibility: hidden;
+                    opacity: 0;
+                }
+                &:hover .close {
+                    visibility: visible;
+                    opacity: 1;
+                }
+            }
+            .ant-btn {
+                margin-top: 8px;
+            }
+        }
+    }
+    .spec-add {
+        border-radius: 2px;
+        background: #FFFFFF;
+        font-size: 12px;
+    }
+    .specific-table {
+        th {
+            background-color: #fff;
+        }
+        .ant-select, .ant-input-number {
+            width: 120px;
+        }
+        .code {
+            width: 150px;
+        }
+        .ant-table-container .ant-table-content  {
+            &::-webkit-scrollbar {
+                width: 2px;
+                height: 6px;
+                &-thumb {
+                    border-radius: 6px;
+                    background-color: rgba(0, 110, 249, 0.2);
+                    &:hover {
+                        background: rgba(0, 110, 249, 0.5);
+                    }
+                }
+                &-track {
+                    /*滚动条内部轨道*/
+                    background: #F8FAFC;
+                }
+            }
+        }
+    }
+    .batch-set {
+        margin: 20px 0;
+        > .ant-btn {
+            height: 20px;
+            line-height: 20px;
+            padding: 0;
+            + .ant-btn {
+                margin-left: 16px;
+            }
+        }
+    }
+}
+.specific-option-edit-popover, .batch-set-edit-popover {
+    margin: 0 -4px;
+    display: flex;
+    .flex(flex-start,flex-end);
+    .ant-input, .ant-input-number {
+        width: 134px;
+        margin-bottom: 8px;
+    }
+    .content-length {
+        font-size: 10px;
+        line-height: 14px;
+        color: #8090A6;
+    }
+    .btns {
+        margin-top: 16px;
+        .fcc();
+        .ant-btn {
+            width: 48px;
+            height: 25px;
+            font-size: 12px;
+            border-radius: 2px;
+            padding: 0;
+            line-height: 25px;
         }
     }
 }

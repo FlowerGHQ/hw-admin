@@ -11,7 +11,6 @@
                 <template v-if="$auth('AGENT', 'STORE')">
                     <a-button type="primary" @click="handlePurchaseStatus('received')" v-if="detail.status == STATUS.WAIT_TAKE_DELIVER"><i class="icon i_goods"/>确认收货</a-button>
                     <a-button type="primary" @click="handlePurchaseStatus('cancel')" v-if="detail.status == STATUS.WAIT_PAY"><i class="icon i_close_c"/>关闭</a-button>
-                    <a-button type="primary" @click="handlePurchaseStatus('review')" v-if="detail.status == STATUS.DEAL_SUCCESS && detail.flag_review == PURCHASE.FLAG_REVIEW.FAIL"><i class="icon i_comment"/>评论</a-button>
                     <a-button type="primary" @click="routerChange('refund')" ghost v-if="detail.status == STATUS.DEAL_SUCCESS"><i class="icon i_edit"/>申请退款</a-button>
                 </template>
             </div>
@@ -84,10 +83,6 @@
                                 <div class="key">支付方式</div>
                                 <div class="value">{{$Util.puechasePayMethodFilter(detail.pay_method) || '-'}}</div>
                             </div>
-                            <div class="info-item">
-                                <div class="key">评论</div>
-                                <div class="value">{{detail.review || '-'}}</div>
-                            </div>
                         </a-col>
                     </a-row>
                 </a-collapse-panel>
@@ -151,16 +146,6 @@
                     <div class="key">快递单号</div>
                     <div class="value">
                         <a-input v-model:value="form.waybill_uid" placeholder="请输入快递单号"/>
-                    </div>
-                </div>
-            </div>
-        </a-modal>
-        <a-modal v-model:visible="reviewShow" width="600px" title="评价" @ok="handleReview">
-            <div class="modal-content">
-                <div class="form-item">
-                    <div class="key">评论</div>
-                    <div class="value">
-                        <a-input v-model:value="form.review" placeholder="请输入评论"/>
                     </div>
                 </div>
             </div>
@@ -364,9 +349,6 @@ export default {
                         this.loading = false;
                     });
                     break;
-                case "review":
-                    this.reviewShow = true
-                    break;
                 case "cancel":
                     Core.Api.Purchase.cancel({
                         id: this.id
@@ -410,20 +392,6 @@ export default {
             }).finally(() => {
                 this.loading = false;
 
-            });
-        },
-        handleReview() {
-            Core.Api.Purchase.review({
-                id: this.id,
-                ...this.form
-            }).then(res => {
-                this.getPurchaseInfo()
-                this.$message.success('评论成功')
-                this.reviewShow = false
-            }).catch(err => {
-                console.log('getRepairDetail err', err)
-            }).finally(() => {
-                this.loading = false;
             });
         },
     }

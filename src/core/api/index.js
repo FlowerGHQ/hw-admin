@@ -84,6 +84,8 @@ const apiList = {
         transfer: ['PostJson', 'stock/transfer'],
         listByTarget: ['PostJson', 'stock/list-by-target'],
         listByTargetId: ['PostJson', 'stock/list-by-target-id'],
+        stockRecordList: ['PostJson', 'stock-record/list'],
+        stockRecordDetail: ['PostJson', 'stock-record/detail'],
 
     },
 
@@ -92,7 +94,8 @@ const apiList = {
 	    create: ['PostJson', 'repair/save'], // 列表
 	    hand: ['PostJson', 'repair/hand'], // 列表
         detail: ['PostJson', 'repair/detail'], // 工单详情
-	    check: ['PostJson', 'repair/check'], // 检查
+	    check: ['PostJson', 'repair/check'], // 确认
+	    audit: ['PostJson', 'repair/audit'], // 审批
         statusList: ['PostJson', 'repair/status-list'], // 保存
 	    repair: ['PostJson', 'repair/repair'], // 维修结束
 	    secondDoor: ['PostJson', 'repair/second-door'], // 二次上门
@@ -109,9 +112,13 @@ const apiList = {
 
     Item: { // 商品
         save: ['PostJson', 'item/save'],
+        batchSave: ['PostJson', 'item/batch-save'],
+
         list: ['PostJson', 'item/list'],
+        listBySet: ['PostJson', 'item/list-by-set-id'],
         detail: ['PostJson', 'item/detail'],
         delete: ['PostJson', 'item/delete'],
+        detailByCode: ['PostJson', 'item/detail-by-code'],
     },
     ItemCategory: { // 商品分类
         list: ['PostJson', 'item-category/list'],
@@ -120,6 +127,13 @@ const apiList = {
         tree: ['PostJson', 'item-category/tree'],
         delete: ['PostJson', 'item-category/delete'],
         detail: ['PostJson', 'item-category/detail'],
+    },
+    AttrDef: { // 规格定义
+        save: ['PostJson', 'attr-def/save'],
+        batchSave: ['PostJson', 'attr-def/batch-save'],
+
+        delete: ['PostJson', 'attr-def/delete'],
+        listBySet: ['PostJson', 'attr-def/list-by-set-id'],
     },
     SalesArea: { // 车辆销售区域
         list: ['PostJson', 'sales-area/list'],
