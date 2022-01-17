@@ -528,6 +528,7 @@ export default {
             form.config = JSON.stringify(form.config)
             let apiName = 'save'
             if (this.specific.mode === 1 || this.indep_flag) { // 单规格
+                apiName = this.indep_flag ? 'update' : 'save'
                 form.price = Math.round(form.price * 100)
                 form.original_price = Math.round(form.original_price * 100)
             } else { // 多规格

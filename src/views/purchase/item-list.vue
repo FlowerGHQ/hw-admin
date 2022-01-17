@@ -9,36 +9,34 @@
                     <template #prefix><i class="icon i_search" @click="handleSearch"/></template>
                     <template #suffix><i class="icon i_close_b" @click="handleNameReset" v-if="searchForm.name"/></template>
                 </a-input>
-                <template v-else>
-                    <a-tooltip title="查看收藏夹" class="popover">
-                        <a-button type="link" @click="routerChange('favorite')"><i class="icon i_collect"/></a-button>
-                    </a-tooltip>
-                    <a-popover v-model:visible="briefVisible" arrow-point-at-center placement="bottomRight" trigger='click' overlayClassName='shop-cart-brief-content'>
-                        <template #content>
-                            <div class="shop-cart-brief" :class="briefVisible ? 'show' : 'hidden'">
-                                <div class="icon i_close" @click="briefVisible = false"></div>
-                                <div class="tip">
-                                    <i class="icon i_check_b"/>已加入购物车
-                                </div>
-                                <div class="item" v-for="item of briefList" :key="item.id">
-                                    <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
-                                    <div class="desc">
-                                        <p>{{item.item.name}}</p>
-                                        <span>{{item.item.code}}</span>
-                                        <p class="price">￥{{$Util.countFilter(item.price)}}</p>
-                                    </div>
-                                </div>
-                                <div class="btns">
-                                    <a-button class='btn ghost' @click="routerChange('shop_cart')">查看购物车({{briefCount}})</a-button>
-                                    <a-button class='btn black' @click="routerChange('settle')">结算</a-button>
+                <a-tooltip title="查看收藏夹" class="popover">
+                    <a-button type="link" @click="routerChange('favorite')"><i class="icon i_collect"/></a-button>
+                </a-tooltip>
+                <a-popover v-model:visible="briefVisible" arrow-point-at-center placement="bottomRight" trigger='click' overlayClassName='shop-cart-brief-content'>
+                    <template #content>
+                        <div class="shop-cart-brief" :class="briefVisible ? 'show' : 'hidden'">
+                            <div class="icon i_close" @click="briefVisible = false"></div>
+                            <div class="tip">
+                                <i class="icon i_check_b"/>已加入购物车
+                            </div>
+                            <div class="item" v-for="item of briefList" :key="item.id">
+                                <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
+                                <div class="desc">
+                                    <p>{{item.item.name}}</p>
+                                    <span>{{item.attr_str || item.item.code}}</span>
+                                    <p class="price">￥{{$Util.countFilter(item.price)}}</p>
                                 </div>
                             </div>
-                        </template>
-                        <a-tooltip :title="`查看购物车${briefCount ? '('+briefCount+')' : ''}`" class="popover">
-                            <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>
-                        </a-tooltip>
-                    </a-popover>
-                </template>
+                            <div class="btns">
+                                <a-button class='btn ghost' @click="routerChange('shop_cart')">查看购物车({{briefCount}})</a-button>
+                                <a-button class='btn black' @click="routerChange('settle')">结算</a-button>
+                            </div>
+                        </div>
+                    </template>
+                    <a-tooltip :title="`查看购物车${briefCount ? '('+briefCount+')' : ''}`" class="popover">
+                        <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>
+                    </a-tooltip>
+                </a-popover>
             </template>
         </a-tabs>
     </div>
@@ -65,7 +63,7 @@
                     <p class="name">{{item.name}}</p>
                     <p class="desc">&nbsp;</p>
                     <p class="price">￥{{$Util.countFilter(item.price)}}</p>
-                    <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)" v-else>添加到购物车</a-button>
+                    <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">添加到购物车</a-button>
                 </div>
             </div>
             <div class="paging-container">
@@ -210,7 +208,11 @@ export default {
             Core.Api.ShopCart.list().then(res => {
                 console.log('getShopCartData res:', res)
                 this.briefVisible = flag
-                this.briefList = [res.list[0] || {}]
+                let item = res.list[0]
+                if (item.item.attr_list instanceof Array) {
+                    item.attr_str = item.item.attr_list.map(item => item.value).join(' ')
+                }
+                this.briefList = [item || {}]
                 this.briefCount = res.count;
             })
         },

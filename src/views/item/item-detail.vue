@@ -203,11 +203,11 @@ export default {
                 }))
                 this.specific.list = list
                 console.log('getAttrDef this.specific.list:', list)
-                this.getSepcList();
+                this.getSpecList();
             })
         },
         // 获取 多规格 商品列表
-        getSepcList() {
+        getSpecList() {
             this.loading = true;
             Core.Api.Item.listBySet({
                 set_id: this.detail.set_id
@@ -228,9 +228,9 @@ export default {
                     }
                 })
                 this.specific.data = data
-                console.log('getSepcList this.specific.data:', data)
+                console.log('getSpecList this.specific.data:', data)
             }).catch(err => {
-                console.log('getSepcList err', err)
+                console.log('getSpecList err', err)
             }).finally(() => {
                 this.loading = false;
             });
@@ -268,7 +268,7 @@ export default {
                 onOk() {
                     Core.Api.Item.setIndep({id: record.id}).then(() => {
                         _this.$message.success('操作成功');
-                        _this.getSepcList();
+                        _this.getSpecList();
                     }).catch(err => {
                         console.log("handleIndepChange err", err);
                     })

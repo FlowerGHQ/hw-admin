@@ -6,9 +6,11 @@
             <div class="list-item" v-for="item of shopCartList" :key="item.id">
                 <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
                 <div class="info">
-                    <div class="name">{{item.item ? item.item.name : '-'}}</div>
+                    <div class="name" @click="routerChange('detail', item.item)">{{item.item ? item.item.name : '-'}}</div>
                     <div class="sub">{{item.item ? item.item.code : '-'}}</div>
-                    <div class="subject"></div>
+                    <div class="spec" v-if='item.item && item.item.attr_str'>
+                        <span>规格：</span>{{item.item.attr_str}}
+                    </div>
                     <span class="count" v-if="!item.editMode" @click="handleCountEditShow(item)">x{{item.amount}}</span>
                     <div class="count-edit" v-else>
                         <a-input-number v-model:value="editCount" :min="1" :precision="0" autofocus @blur="handleCountEditBlur(item)"/>
@@ -44,9 +46,12 @@
             <div class="list-item" v-for="item of favoriteList" :key="item.id">
                 <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
                 <div class="info">
-                    <div class="name">{{item.item ? item.item.name : '-'}}</div>
+                    <div class="name" @click="routerChange('detail', item.item)">{{item.item ? item.item.name : '-'}}</div>
                     <div class="sub">{{item.item ? item.item.code : '-'}}</div>
-                    <div class="subject"></div>
+                    <div class="spec" v-if='item.item && item.item.attr_str'>
+                        <span>规格：</span>{{item.item.attr_str}}
+                    </div>
+                    <div></div><!-- 调整结构用 不要删 --><div></div>
                     <div class="btns">
                         <a-button type="link" @click="handleFavoriteRemove(item)">删除收藏</a-button>
                         <a-button type="link" class="disabled" v-if="item.item.in_shopping_cart">已在购物车中</a-button>
@@ -100,9 +105,16 @@ export default {
         routerChange(type, item) {
             let routeUrl
             switch (type) {
-                case 'settle':  // 详情
+                case 'settle':  // 结算
                     routeUrl = this.$router.resolve({
                         path: "/purchase/item-settle",
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'detail':  // 详情
+                    routeUrl = this.$router.resolve({
+                        path: "/purchase/item-display",
+                        query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -115,12 +127,26 @@ export default {
         getShopCartList() {
             Core.Api.ShopCart.list().then(res => {
                 console.log('getShopCartList res:', res)
+                res.list.forEach(item => {
+                    let element = item.item || {}
+                    if (element.attr_list && element.attr_list.length) {
+                        let str = element.attr_list.map(i => i.value).join(' ')
+                        element.attr_str = str
+                    }
+                })
                 this.shopCartList = res.list
             })
         },
         getFavoriteList() {
             Core.Api.Favorite.list().then(res => {
                 console.log('getFavoriteList res:', res)
+                res.list.forEach(item => {
+                    let element = item.item || {}
+                    if (element.attr_list && element.attr_list.length) {
+                        let str = element.attr_list.map(i => i.value).join(' ')
+                        element.attr_str = str
+                    }
+                })
                 this.favoriteList = res.list
             })
         },
@@ -252,10 +278,15 @@ export default {
                     .name {
                         .ell();
                         max-width: calc(~'100% - 100px');
-                        font-size: 14px;
+                        font-size: 16px;
                         font-weight: 500;
                         color: #111111;
-                        line-height: 16px;
+                        line-height: 18px;
+                        cursor: pointer;
+                        transition: color 0.3s ease;
+                        &:hover {
+                            color: #006EF9;
+                        }
                     }
                     .sub {
                         .ell();
@@ -264,7 +295,21 @@ export default {
                         font-weight: 400;
                         color: #757575;
                         line-height: 16px;
-                        margin: 4px 0 8px;
+                        margin: 4px 0;
+                    }
+                    .spec {
+                        display: inline-block;
+                        color: #757575;
+                        margin: 4px 0;
+                        line-height: 26px;
+                        height: 26px;
+                        font-size: 14px;
+                        background: #F9F9F9;
+                        border-radius: 2px;
+                        padding: 0 10px;
+                        span {
+                            color: #111111;
+                        }
                     }
                     .count {
                         .fcc();

@@ -122,6 +122,7 @@ const apiList = {
     Item: { // 商品
         save: ['PostJson', 'item/save'],
         batchSave: ['PostJson', 'item/batch-save'],
+        update: ['PostJson', 'item/update'],
 
         list: ['PostJson', 'item/list'],
         listBySet: ['PostJson', 'item/list-by-set-id'],

@@ -79,9 +79,11 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
+                        <template v-if="!record.default_item_id">
                         <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/> 编辑</a-button>
                         <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
-                        <a-button type='link' @click="handleDelete(record)" class="danger"><i class="icon i_delete"/> 删除</a-button>
+                        </template>
+                        <a-button type='link' @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button>
                     </template>
                 </template>
                 <!-- <template #expandedRowRender="{ record }">
@@ -147,8 +149,8 @@ export default {
                 { title: '商品名称', dataIndex: 'name', key: 'detail' },
                 { title: '商品型号', dataIndex: 'model', key: 'item' },
                 { title: '商品编码', dataIndex: 'code', key: 'item' },
-                { title: '标准价格', dataIndex: 'price', key: 'money' },
                 { title: '成本价格', dataIndex: 'original_price', key: 'money' },
+                { title: '标准价格', dataIndex: 'price', key: 'money' },
                 { title: '商品分类', dataIndex: ['category','name'], key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 // { title: '商品状态', dataIndex: 'status' },
@@ -168,14 +170,14 @@ export default {
                 case 'detail':  // 商品详情
                     routeUrl = this.$router.resolve({
                         path: "/item/item-detail",
-                        query: { id: item.id, set_id: item.set_id }
+                        query: { id: item.default_item_id || item.id, set_id: item.set_id }
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
                 case 'edit':  // 商品编辑
                     routeUrl = this.$router.resolve({
                         path: "/item/item-edit",
-                        query: { id: item.id, set_id: item.set_id }
+                        query: { id: item.default_item_id || item.id, set_id: item.set_id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -220,6 +222,9 @@ export default {
                 page_size: this.pageSize
             }).then(res => {
                 console.log("getTableData res:", res)
+                res.list.forEach(item => {
+                    item.attr_desc = item.attr_list ? item.attr_list.map(i => i.value).join(',') : ''
+                })
                 this.total = res.count;
                 this.tableData = res.list;
             }).catch(err => {
@@ -260,10 +265,10 @@ export default {
                         let mainItem = res.list.find(i => i.flag_default === 1)
                         list.forEach(item => {
                             item.attr_desc = item.attr_list.map(i => i.value).join(',')
+                            item.default_item_id = mainItem.id
                         })
                         record.children = list
                         record.attr_desc = mainItem.attr_list.map(i => i.value).join(',')
-
                     }).finally(() => {
                         this.expandedRowKeys.push(record.id)
                     })
