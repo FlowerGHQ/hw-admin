@@ -29,35 +29,15 @@
                     </div>
                 </div>
             </div>
-            <div class="gray-panel info">
-                <div class="panel-title">
-                    <div class="gray-collapse-panel">
-                        <span>商品信息</span>
-                    </div>
-                    <ItemSelect :warehouseId ="detail.type == typeList.TYPE_OUT ? detail.warehouse_id: 0 " btnType='link' @select="handleAddInvoiceItem" btn-text="添加商品"/>
-                </div>
-            </div>
-            <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                         :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, text , record}">
-                        <template v-if="column.key === 'item-name'">
-                            <a-tooltip placement="top" :title='text'>
-                                {{ text ? text.name : '-' }}
-                            </a-tooltip>
-                        </template>
-                        <template v-if="column.key === 'item-code'">
-                            {{ text ? text.code : '-' }}
-                        </template>
-                        <template v-if="column.dataIndex === 'stock'">
-                            {{ text || 0 }}
-                        </template>
-                        <template v-if="column.key === 'amount'">
-                            {{ text || 0 }}
-                        </template>
-                    </template>
-                </a-table>
-            </div>
+            <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
+                <template #expandIcon><i class="icon i_expan_l"/></template>
+                <a-collapse-panel key="change" header="商品信息" class="gray-collapse-panel">
+                    <ItemSelect :warehouseId="detail.type == typeList.TYPE_OUT ? detail.warehouse_id: 0 "
+                                btnType='link'
+                                @select="handleAddInvoiceItem" btn-text="添加商品"/>
+                </a-collapse-panel>
+            </a-collapse>
+
         </div>
     </div>
 </template>
@@ -71,7 +51,9 @@ export default {
     name: 'InvoiceEdit',
     components: {
         ItemSelect,
-        VNodes: (_, { attrs }) => { return attrs.vnodes; },
+        VNodes: (_, {attrs}) => {
+            return attrs.vnodes;
+        },
     },
     props: {},
     data() {
@@ -85,18 +67,18 @@ export default {
             activeKey: ['affirm'],
             typeList: Core.Const.STOCK_RECORD.TYPE,
             failData: {},
+            failActive: [],
             tableData: [],
+            tableColumns: [
+                {title: '商品名称', dataIndex: 'item', key: 'item-name'},
+                {title: '商品编码', dataIndex: 'item', key: 'item-code'},
+                {title: '库存数量', dataIndex: 'stock', key: 'item'},
+                {title: '数量', dataIndex: 'amount', key: 'amount'},
+            ],
         };
     },
     watch: {},
-    computed: {
-        tableColumns: [
-            {title: '商品名称', dataIndex: 'item', key: 'item-name'},
-            {title: '商品编码', dataIndex: 'item', key: 'item-code'},
-            {title: '库存数量', dataIndex: 'stock', key: 'item'},
-            {title: '数量', dataIndex: 'amount', key: 'amount'},
-        ],
-    },
+    computed: {},
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         this.getInvoiceDetail();
@@ -122,13 +104,17 @@ export default {
                 this.loading = false;
             });
         },
-
-
         handleAddInvoiceItem(ids, items) {
             console.log('handleAddInvoiceItem ids:', ids)
             console.log('handleAddInvoiceItem items:', items)
-            this.tableData = items
-
+            for (let item of items) {
+                console.log('handleAddInvoiceItem item:', item)
+                this.tableData.push({
+                    "item": item,
+                    "amount": 1,
+                    "stock": 0
+                })
+            }
         },
     }
 };
@@ -142,25 +128,6 @@ export default {
 
             span {
                 color: #A5ACB8;
-            }
-        }
-
-        .right {
-            .fcc();
-            font-size: 12px;
-
-            .staff {
-                color: rgba(0, 0, 0, 0.85);
-                margin-right: 12px;
-                font-weight: 500;
-            }
-
-            .status {
-                .fcc();
-
-                .i_point {
-                    margin-right: 6px;
-                }
             }
         }
 
@@ -184,31 +151,27 @@ export default {
         }
     }
 
-    .panel-content.affirm {
-        .title {
-            color: #DD5D5D;
-            margin-bottom: 24px;
+    .collapse-item {
+        width: calc(~'50% - 10px');
 
-            i.icon {
-                margin-right: 12px;
-            }
-        }
+        .ant-collapse-item.gray-collapse-panel {
+            line-height: 50px;
 
-        .fault_select {
-            width: 100%;
-            padding-left: 12px;
+            .ant-collapse-header {
+                background-color: #F5F8FA;
+                height: 40px;
+                .fac();
+                width: 100%;
+                position: relative;
 
-            .ant-checkbox-wrapper {
-                width: 25%;
-                margin-left: 0;
-                margin-bottom: 18px;
+                .ant-collapse-extra {
+                    position: absolute;
+                    right: 12px;
+                }
             }
         }
     }
 
-    .steps-container {
-        padding: 0 20px;
-        margin-bottom: 20px;
-    }
+
 }
 </style>

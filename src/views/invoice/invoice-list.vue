@@ -71,8 +71,8 @@
                         <template v-if="column.key === 'type'">
                             {{ $Util.stockTypeFilter(text) }}
                         </template>
-                        <template v-if="column.key === 'warehouse-name'">
-                            {{ detail.warehouse.name || '-' }}
+                        <template v-if="column.key === 'warehouse_name'">
+                            {{ text.name ||  '-' }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -176,7 +176,7 @@ export default {
             tableColumns: [
                 { title: '出入库单编号', dataIndex: 'uid', key: 'detail' },
                 {title: '出入库类型', dataIndex: 'type',key: 'stock_type',},
-                {title: '所属仓库', dataIndex: 'name',key: 'warehouse-name',},
+                {title: '所属仓库', dataIndex: 'warehouse',key: 'warehouse_name',},
                 {title: '仓库类型', dataIndex: 'type',key: 'type',},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right' },
