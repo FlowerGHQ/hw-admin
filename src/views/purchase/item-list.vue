@@ -9,7 +9,6 @@
                     <template #prefix><i class="icon i_search" @click="handleSearch"/></template>
                     <template #suffix><i class="icon i_close_b" @click="handleNameReset" v-if="searchForm.name"/></template>
                 </a-input>
-<<<<<<< HEAD
                 <a-tooltip title="查看收藏夹" class="popover">
                     <a-button type="link" @click="routerChange('favorite')"><i class="icon i_collect"/></a-button>
                 </a-tooltip>
@@ -26,30 +25,6 @@
                                     <p>{{item.item.name}}</p>
                                     <span>{{item.attr_str || item.item.code}}</span>
                                     <p class="price">￥{{$Util.countFilter(item.price)}}</p>
-=======
-                <template>
-                    <a-tooltip title="查看收藏夹" class="popover">
-                        <a-button type="link" @click="routerChange('favorite')"><i class="icon i_collect"/></a-button>
-                    </a-tooltip>
-                    <a-popover v-model:visible="briefVisible" arrow-point-at-center placement="bottomRight" trigger='click' overlayClassName='shop-cart-brief-content'>
-                        <template #content>
-                            <div class="shop-cart-brief" :class="briefVisible ? 'show' : 'hidden'">
-                                <div class="icon i_close" @click="briefVisible = false"></div>
-                                <div class="tip">
-                                    <i class="icon i_check_b"/>已加入购物车
-                                </div>
-                                <div class="item" v-for="item of briefList" :key="item.id">
-                                    <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
-                                    <div class="desc">
-                                        <p>{{item.item.name}}</p>
-                                        <span>{{item.item.code}}</span>
-                                        <p class="price">￥{{$Util.countFilter(item.price)}}</p>
-                                    </div>
-                                </div>
-                                <div class="btns">
-                                    <a-button class='btn ghost' @click="routerChange('shop_cart')">查看购物车({{briefCount}})</a-button>
-                                    <a-button class='btn black' @click="routerChange('settle')">结算</a-button>
->>>>>>> b3af42b20ce251d13243f88e784b62ce4c01c7a6
                                 </div>
                             </div>
                             <div class="btns">
