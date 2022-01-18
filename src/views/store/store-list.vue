@@ -66,6 +66,11 @@
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
+                        <template v-if="column.key === 'transfer'">
+                            <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
+                                {{ text ? '接受转单' : '不接受转单' }}
+                            </div>
+                        </template>
                         <template v-if="column.dataIndex === 'status'">
                             <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
                                 {{ text ? '启用中' : '已禁用' }}
@@ -77,6 +82,10 @@
                             <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
                                     <template v-if="record.status"><i class="icon i_forbidden"/>禁用</template>
                                     <template v-else><i class="icon i_enable"/>启用</template>
+                            </a-button>
+                            <a-button type='link' @click="handleTransferChange(record)" :class="record.flag_receive_transfer ? 'danger' : ''">
+                                    <template v-if="record.flag_receive_transfer"><i class="icon i_forbidden"/>禁用（转单）</template>
+                                    <template v-else><i class="icon i_enable"/>启用（转单）</template>
                             </a-button>
                         </template>
                     </template>
@@ -130,6 +139,7 @@ export default {
                 contact_phone:'',
                 distributor_id: undefined,
                 agent_id: undefined,
+                flag_receive_transfer: undefined,
             },
 
             tableData: [],
@@ -150,6 +160,8 @@ export default {
                 {title: '联系人姓名', dataIndex: 'contact_name', key:'item'},
                 {title: '联系人电话', dataIndex: 'contact_phone',key:'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
+                {title: '是否接受转单', dataIndex: 'flag_receive_transfer', key: 'transfer',
+                    filters: Core.Const.TRANSFER_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.flag_receive_transfer || null },
                 {title: '状态', dataIndex: 'status', key: 'status',
                     filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [1] },
                 {title: '操作', key: 'operation', fixed: 'right'},
@@ -230,6 +242,7 @@ export default {
         },
         handleTableChange(page, filters, sorter) {
             console.log('handleTableChange filters:', filters)
+            this.filteredInfo = filters;
             for (const key in filters) {
                 this.searchForm[key] = filters[key] ? filters[key][0] : ''
             }
@@ -285,6 +298,23 @@ export default {
                                         _this.getTableData();
                                 }).catch(err => {
                                         console.log("handleStatusChange err", err);
+                                })
+                        },
+                });
+        },
+        handleTransferChange(record) {
+                let _this = this;
+                this.$confirm({
+                        title: `确定要${record.status ? '禁用(转单)' : '启用(转单)'}该门店吗？`,
+                        okText: '确定',
+                        okType: 'danger',
+                        cancelText: '取消',
+                        onOk() {
+                                Core.Api.Store.updateTransfer({id:record.id}).then(() => {
+                                        _this.$message.success(`${record.status ? '禁用' : '启用'}成功`);
+                                        _this.getTableData();
+                                }).catch(err => {
+                                        console.log("handleTransferChange err", err);
                                 })
                         },
                 });

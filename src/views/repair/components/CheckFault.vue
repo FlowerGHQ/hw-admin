@@ -123,19 +123,9 @@
                     <div class="form-item required">
                         <div class="key">门店</div>
                         <div class="value">
-                            <a-select v-model:value="transferForm.store_id" placeholder="请选择门店" @change="getStaffList">
+                            <a-select v-model:value="transferForm.store_id" placeholder="请选择门店">
                                 <a-select-option v-for="(item, index) of storeList" :key="index" :value="item.id">
                                     {{ item.name }}
-                                </a-select-option>
-                            </a-select>
-                        </div>
-                    </div>
-                    <div class="form-item required">
-                        <div class="key">工单负责人</div>
-                        <div class="value">
-                            <a-select v-model:value="transferForm.repair_user_id" placeholder="请选择工单负责人">
-                                <a-select-option v-for="item of staffList" :key="item.id" :value="item.id">
-                                    {{ item.account.name }}
                                 </a-select-option>
                             </a-select>
                         </div>
@@ -201,7 +191,6 @@ export default {
             },
             transferForm: {
                 store_id: undefined,
-                repair_user_id: undefined,
             },
             staffList: [], // 工单负责人列表
             storeList: [], // 门店列表
@@ -249,40 +238,11 @@ export default {
         },
         // 获取门店列表
         getStoreList() {
-            Core.Api.Store.list({
-                page: 0,
-                status: 1,
-            }).then(res => {
+            Core.Api.Store.listTransfer().then(res => {
+                console.log('getStoreList: res: ', res);
                 this.storeList = res.list
-                // this.storeList.push({id: -1, name: "零售商"})
             });
         },
-        // 获取 员工列表
-        getStaffList() {
-            if (this.repairForm.store_id == -1) {
-                Core.Api.User.list({
-                    page: 0,
-                    type: Core.Const.USER.TYPE.WORKER,
-                    org_id: this.detail.agent_id,
-                    org_type: Core.Const.LOGIN.ORG_TYPE.AGENT,
-                }).then(res => {
-                    this.staffList = res.list
-                    this.repairForm.repair_user_id = undefined
-                });
-            } else {
-                Core.Api.User.list({
-                    page: 0,
-                    type: Core.Const.USER.TYPE.WORKER,
-                    org_id: this.repairForm.store_id,
-                    org_type: Core.Const.LOGIN.ORG_TYPE.STORE,
-                }).then(res => {
-                    this.staffList = res.list
-                    this.repairForm.repair_user_id = undefined
-                });
-            }
-
-        },
-
         // 商品类型改变
         itemTypeChange(record){
             if (record.type == this.repairItemType.TRANSFER) { // 转单的时候不需要考虑仓库
@@ -320,9 +280,7 @@ export default {
                 element.warehouse_out_list = await this.getWarehouseListByItem(element.id)
                 element.warehouse_id = this.getFilstWarehouse(element) || undefined
             }
-            // console.log('handleAddFailItem items: ', items);
             this.failData[name].push(...items)
-            // console.log('handleAddFailItem this.failData:', this.failData)
         },
         // 获取故障仓列表
         getWarehouseList() {
@@ -413,9 +371,8 @@ export default {
                         itemFlag = true
                     }
                     if (item.type == 3) { // 选择转单时 校验负责人
-                        if (this.transferForm.store_id && this.transferForm.repair_user_id) {
+                        if (this.transferForm.store_id) {
                             item.store_id = this.transferForm.store_id
-                            item.repair_user_id = this.transferForm.repair_user_id
                         }else{
                             transferFlag = true
                         }
@@ -443,7 +400,6 @@ export default {
                 repair_order_id: this.id,
                 item_list: itemList,
                 store_id: this.transferForm.store_id,
-                repair_user_id: this.transferForm.repair_user_id,
             }).then(() => {
                 this.$message.success('操作成功');
                 this.$emit('submit')

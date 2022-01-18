@@ -181,6 +181,11 @@ let Const = {
         {text: "禁用", value: 0},
     ],
 
+    TRANSFER_STATUS_LIST: [ // 组织转单状态
+        {text: "接受转单", value: 1},
+        {text: "不接受转单", value: 0},
+    ],
+
     REPAIR: { // 维修工单
         // 工单分类
         TYPE_LIST: [

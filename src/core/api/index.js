@@ -196,6 +196,8 @@ const apiList = {
         detail: ['PostJson', 'store/detail'],
         delete: ['PostJson', 'store/delete'],
         updateStatus: ['PostJson', 'store/update-status'], // 禁用
+        listTransfer: ['PostJson', 'store/list-receive-transfer-able'], // 获取可接收转单的门店列表
+        updateTransfer: ['PostJson', 'store/set-flag-receive-transfer'], // 修改是否接收转单
     },
     Notice: { // 系统消息
         list: ['PostJson', 'sys-message/list'],
