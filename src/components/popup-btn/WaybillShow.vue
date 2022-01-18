@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import Core from '../core'
+import Core from '../../core'
 
 const WAYBILL = Core.Const.WAYBILL
 export default {

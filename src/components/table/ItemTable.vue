@@ -3,9 +3,24 @@
         :columns="columns" :data-source="dataList" :scroll="{ x: true }"
         :row-key="record => record.id" :loading='loading' :pagination='false'
         :row-selection="checkMode ? rowSelection : null">
-        <template #bodyCell="{ column ,text}">
+        <template #bodyCell="{ record, column ,text}">
+            <template v-if="column.key === 'detail'">
+                <div class="table-img">
+                    <a-image :width="30" :height="30" :src="$Util.imageFilter(record.logo)" fallback='无'/>
+                    <a-tooltip placement="top" :title='text'>
+                        <div class="info">
+                            <a-button type="link" @click="routerChange('detail', record)">
+                                <div class="ell" style="max-width: 150px">{{ text || '-' }}</div>
+                            </a-button>
+                        </div>
+                    </a-tooltip>
+                </div>
+            </template>
             <template v-if="column.key === 'money'">
                 ￥{{$Util.countFilter(text)}}
+            </template>
+            <template v-if="column.key === 'item'">
+                {{text || '-'}}
             </template>
         </template>
     </a-table>
@@ -51,7 +66,7 @@ export default {
             selectedRowKeys: [],
             selectedRowItems: [],
             selectedRowItemsAll: [],
-            dataList:[]
+            dataList:[],
         }
     },
     watch: {
@@ -94,22 +109,14 @@ export default {
     },
     methods: {
         routerChange(type, item = {}) {
+            console.log('routerChange item:', item)
+            // return
             let routeUrl = ''
             switch (type) {
                 case 'detail':  // 商品编辑
                     routeUrl = this.$router.resolve({
-                        path: "/item/item-detail",
-                        query: {
-                            id: item.id
-                        }
-                    })
-                    break;
-                case 'detail_item':  // 商品编辑
-                    routeUrl = this.$router.resolve({
-                        path: "/item/item-detail",
-                        query: {
-                            id: item.item_id
-                        }
+                        path: this.$auth('ADMIN') ? "/item/item-detail" : '/purchase/item-display',
+                        query: { id: item.id }
                     })
                     break;
             }
