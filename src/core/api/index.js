@@ -142,6 +142,14 @@ const apiList = {
         delete: ['PostJson', 'item-category/delete'],
         detail: ['PostJson', 'item-category/detail'],
     },
+    ItemPrice: { // 商品价格体系
+        save: ['PostJson', 'item-price/save'],
+        batchSave: ['PostJson', 'item-price/batch-save'],
+
+        list: ['PostJson', 'item-price/list'],
+        delete: ['PostJson', 'item-price/delete'],
+        detail: ['PostJson', 'item-price/detail'],
+    },
     AttrDef: { // 规格定义
         save: ['PostJson', 'attr-def/save'],
         batchSave: ['PostJson', 'attr-def/batch-save'],

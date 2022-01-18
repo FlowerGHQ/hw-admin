@@ -185,14 +185,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#PurchaseList {
-    
-}
-.btn-area{
-        white-space: nowrap;
-        min-width: 210px;
-        display: flex;
-        justify-content: flex-end;
-        // padding-bottom: 50px;
-    }
+// .PurchaseList {}
 </style>

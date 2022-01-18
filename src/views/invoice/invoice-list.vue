@@ -4,9 +4,7 @@
             <div class="title-container">
                 <div class="title-area">货单列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleAddShow" style="margin-bottom: 10px;"
-                              class="panel-btn"><i class="icon i_add"/>库存管理
-                    </a-button>
+                    <a-button type="primary" @click="handleAddShow"><i class="icon i_add"/>库存管理</a-button>
                 </div>
             </div>
             <div class="tabs-container colorful">
@@ -357,37 +355,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.form-item-value {
-    .fac();
-
-    .itemCodeInput {
-        width: calc(~'100% - 24px');
-    }
-
-    i.icon {
-        display: inline-block;
-        width: 24px;
-        text-align: right;
-    }
-
-    .i_confirm {
-        color: @green;
-        font-size: 18px;
-    }
-
-    .i_close_c {
-        color: @red;
-        font-size: 18px;
-    }
-
-    .ant-input-number {
-        margin-right: 10px;
-    }
-
-    .itemNumber {
-        font-size: 12px;
-        line-height: 16px;
-        color: #363D42;
-    }
-}
+// 
 </style>

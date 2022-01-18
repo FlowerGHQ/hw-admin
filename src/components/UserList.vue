@@ -5,7 +5,7 @@
     </div>
     <div class="panel-content">
         <div class="table-container">
-            <a-button type="primary" ghost @click="routerChange('edit')" style="margin-bottom: 10px;" class="panel-btn">
+            <a-button type="primary" ghost @click="routerChange('edit')" class="panel-btn">
                 <i class="icon i_add"/>新增{{type == USER_TYPE.WORKER ? '维修工' : '员工'}}
             </a-button>
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>

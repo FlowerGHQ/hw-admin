@@ -1,74 +1,71 @@
 <template>
-    <div class="WarehouseStockList gray-panel no-margin">
-        <div class="panel-content">
-            <div class="table-container">
-                <a-button type="primary" @click="handleAddShow" style="margin-bottom: 10px;"
-                          class="panel-btn"><i class="icon i_add"/>库存增减
-                </a-button>
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                         :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, text , record}">
-                        <template v-if="column.key === 'item-name'">
-                            <a-tooltip placement="top" :title='text'>
-                                {{ text ? text.name : '-' }}
-                            </a-tooltip>
-                        </template>
-                        <template v-if="column.key === 'item-code'">
-                            {{ text ? text.code : '-' }}
-                        </template>
-                        <template v-if="column.dataIndex === 'stock'">
-                            {{ text || 0 }}
-                        </template>
+<div class="WarehouseStockList gray-panel no-margin">
+    <div class="panel-content">
+        <div class="table-container">
+            <a-button type="primary" ghost @click="handleAddShow" class="panel-btn"><i class="icon i_add"/>库存增减</a-button>
+            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                        :row-key="record => record.id" :pagination='false'>
+                <template #bodyCell="{ column, text}">
+                    <template v-if="column.key === 'item-name'">
+                        <a-tooltip placement="top" :title='text'>
+                            {{ text ? text.name : '-' }}
+                        </a-tooltip>
                     </template>
-                </a-table>
-            </div>
-            <div class="paging-container">
-                <a-pagination
-                    v-model:current="currPage"
-                    :page-size='pageSize'
-                    :total="total"
-                    show-quick-jumper
-                    show-size-changer
-                    show-less-items
-                    :show-total="total => `共${total}条`"
-                    :hide-on-single-page='false'
-                    :pageSizeOptions="['10', '20', '30', '40']"
-                    @change="pageChange"
-                    @showSizeChange="pageSizeChange"
-                />
+                    <template v-if="column.key === 'item-code'">
+                        {{ text ? text.code : '-' }}
+                    </template>
+                    <template v-if="column.dataIndex === 'stock'">
+                        {{ text || 0 }}
+                    </template>
+                </template>
+            </a-table>
+        </div>
+        <div class="paging-container">
+            <a-pagination
+                v-model:current="currPage"
+                :page-size='pageSize'
+                :total="total"
+                show-quick-jumper
+                show-size-changer
+                show-less-items
+                :show-total="total => `共${total}条`"
+                :hide-on-single-page='false'
+                :pageSizeOptions="['10', '20', '30', '40']"
+                @change="pageChange"
+                @showSizeChange="pageSizeChange"
+            />
+        </div>
+    </div>
+    <a-modal v-model:visible="codeAddShow" title="库存增减" class="stock-change-modal"
+                :after-close="handleAddClose">
+        <div class="form-item required">
+            <div class="key">操作类型：</div>
+            <a-radio-group v-model:value="form.type">
+                <a-radio :value="'add'">入库</a-radio>
+                <a-radio :value="'reduce'">出库</a-radio>
+            </a-radio-group>
+        </div>
+        <div class="form-item required">
+            <div class="key">商品编码：</div>
+            <div class="value form-item-value">
+                <a-input class="itemCodeInput" v-model:value="form.target_code" placeholder="请输入商品编码" @blur="onblur"/>
+                <span v-if="isExist === true"><i class="icon i_confirm"/></span>
+                <span v-else-if="isExist === false"><i class="icon i_close_c"/></span>
             </div>
         </div>
-        <a-modal v-model:visible="codeAddShow" title="库存增减" class="codeAddShow-edit-modal"
-                 :after-close="handleAddClose">
-            <div class="form-item required">
-                <div class="key">操作类型：</div>
-                <a-radio-group v-model:value="form.type">
-                    <a-radio :value="'add'">入库</a-radio>
-                    <a-radio :value="'reduce'">出库</a-radio>
-                </a-radio-group>
+        <div class="form-item required">
+            <div class="key">商品数量:</div>
+            <div class="value form-item-value">
+                <a-input-number v-model:value="form.number" :min="1"/>
+                <span class="itemNumber">件</span>
             </div>
-            <div class="form-item required">
-                <div class="key">商品编码：</div>
-                <div class="value form-item-value">
-                    <a-input class="itemCodeInput" v-model:value="form.target_code" placeholder="请输入商品编码"
-                             @blur="onblur"/>
-                    <span v-if="isExist === true"><i class="icon i_confirm"/></span>
-                    <span v-else-if="isExist === false"><i class="icon i_close_c"/></span>
-                </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">商品数量:</div>
-                <div class="value form-item-value">
-                    <a-input-number v-model:value="form.number" :min="1"/>
-                    <span class="itemNumber">件</span>
-                </div>
-            </div>
-            <template #footer>
-                <a-button @click="handleAddSubmit" type="primary">确定</a-button>
-                <a-button @click="codeAddShow=false">取消</a-button>
-            </template>
-        </a-modal>
-    </div>
+        </div>
+        <template #footer>
+            <a-button @click="handleAddSubmit" type="primary">确定</a-button>
+            <a-button @click="codeAddShow=false">取消</a-button>
+        </template>
+    </a-modal>
+</div>
 </template>
 
 <script>
@@ -211,44 +208,49 @@ export default {
 };
 </script>
 
-<style lang="less">
-.form-item-value {
-    .fac();
 
-    .itemCodeInput {
-        width: calc(~'100% - 24px');
-    }
-
-    i.icon {
-        display: inline-block;
-        width: 24px;
-        text-align: right;
-    }
-
-    .i_confirm {
-        color: @green;
-        font-size: 18px;
-    }
-
-    .i_close_c {
-        color: @red;
-        font-size: 18px;
-    }
-
-    .ant-input-number {
-        margin-right: 10px;
-    }
-
-    .itemNumber {
-        font-size: 12px;
-        line-height: 16px;
-        color: #363D42;
+<style lang="less" scoped>
+.WarehouseStockList {
+    .table-container {
+        margin-top: -10px;
     }
 }
+</style>
 
-//#WarehouseStockList {
-//    .form-item-value {
-//        .fac()
-//    }
-//}
+<style lang="less">
+.stock-change-modal {
+    .form-item-value {
+        .fac();
+
+        .itemCodeInput {
+            width: calc(~'100% - 24px');
+        }
+
+        i.icon {
+            display: inline-block;
+            width: 24px;
+            text-align: right;
+        }
+
+        .i_confirm {
+            color: @green;
+            font-size: 18px;
+        }
+
+        .i_close_c {
+            color: @red;
+            font-size: 18px;
+        }
+
+        .ant-input-number {
+            margin-right: 10px;
+        }
+
+        .itemNumber {
+            font-size: 12px;
+            line-height: 16px;
+            color: #363D42;
+        }
+    }
+}
 </style>

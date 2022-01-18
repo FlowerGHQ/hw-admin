@@ -64,12 +64,17 @@
                 <a-tab-pane key="PurchaseList" tab="订单列表">
                     <PurchaseList :orgId="distributor_id"  v-if="activeKey === 'PurchaseList'"/>
                 </a-tab-pane>
-                <a-tab-pane key="AgentList" tab="零售商管理" v-if="loginType == USER_TYPE.ADMIN" >
-                    <AgentList :distributor_id="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'AgentList'" @change="getDistributorDetail"/>
+                <template v-if="$auth('ADMIN')">
+                <a-tab-pane key="AgentList" tab="零售商管理">
+                    <AgentList :distributorId="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'AgentList'" @change="getDistributorDetail"/>
                 </a-tab-pane>
-                <a-tab-pane key="StoreList" tab="门店管理" v-if="loginType == USER_TYPE.ADMIN">
+                <a-tab-pane key="StoreList" tab="门店管理">
                     <StoreList :orgId="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'StoreList'" @change="getDistributorDetail"/>
                 </a-tab-pane>
+                <a-tab-pane key="PricingStructure" tab="商品价格">
+                    <PricingStructure :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'PricingStructure'"/>
+                </a-tab-pane>
+                </template>
             </a-tabs>
         </div>
     </div>
@@ -81,6 +86,7 @@ import StoreList from '@/components/StoreList.vue';
 import UserList from '@/components/UserList.vue';
 import PurchaseList from '@/components/PurchaseOrderList.vue';
 import AgentList from '@/components/AgentList.vue';
+import PricingStructure from '@/components/PricingStructure.vue';
 
 const USER_TYPE = Core.Const.USER.TYPE;
 export default {
@@ -90,6 +96,7 @@ export default {
         StoreList,
         PurchaseList,
         AgentList,
+        PricingStructure,
     },
     props: {},
     data() {
