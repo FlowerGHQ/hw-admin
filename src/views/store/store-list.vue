@@ -83,7 +83,7 @@
                                     <template v-if="record.status"><i class="icon i_forbidden"/>禁用</template>
                                     <template v-else><i class="icon i_enable"/>启用</template>
                             </a-button>
-                            <a-button type='link' @click="handleTransferChange(record)" :class="record.flag_receive_transfer ? 'danger' : ''">
+                            <a-button type='link' v-if="$auth('ADMIN')" @click="handleTransferChange(record)" :class="record.flag_receive_transfer ? 'danger' : ''">
                                     <template v-if="record.flag_receive_transfer"><i class="icon i_forbidden"/>禁用（转单）</template>
                                     <template v-else><i class="icon i_enable"/>启用（转单）</template>
                             </a-button>
@@ -160,14 +160,15 @@ export default {
                 {title: '联系人姓名', dataIndex: 'contact_name', key:'item'},
                 {title: '联系人电话', dataIndex: 'contact_phone',key:'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '是否接受转单', dataIndex: 'flag_receive_transfer', key: 'transfer',
-                    filters: Core.Const.TRANSFER_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.flag_receive_transfer || null },
+                
                 {title: '状态', dataIndex: 'status', key: 'status',
                     filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [1] },
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
             if (this.$auth('ADMIN')) {
                 tableColumns.splice(1, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'item'})
+                tableColumns.splice(5, 0, {title: '是否接受转单', dataIndex: 'flag_receive_transfer', key: 'transfer',
+                    filters: Core.Const.TRANSFER_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.flag_receive_transfer || null })
             }
             if (this.$auth('ADMIN', 'DISTRIBUTOR')) {
                 tableColumns.splice(2, 0, {title: '所属零售商', dataIndex: 'agent_name', key: 'item'})

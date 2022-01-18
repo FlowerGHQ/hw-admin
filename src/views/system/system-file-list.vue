@@ -96,6 +96,7 @@ export default {
             searchForm: {
                 id:'',
                 type: undefined,
+                target_type: undefined,
             },
             tableData: [],
 
@@ -158,6 +159,10 @@ export default {
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
+            if (this.loginType != this.USER_TYPE.ADMIN) { // 非管理员只能看平台文件
+                this.searchForm.target_type = 1 
+            }
+            console.log('    this.searchForm.target_type: ',     this.searchForm.target_type);
             Core.Api.System.fileList({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
