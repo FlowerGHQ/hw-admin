@@ -9,11 +9,11 @@
             </div>
             <div class="search-container">
                 <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
-                        <div class="key">文件类型:</div>
+                    <a-col v-if="$auth('ADMIN')" :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
+                        <div class="key">来源类型:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.type" placeholder="请选择文件类型">
-                                <a-select-option v-for="file of fileTypeList" :key="file.value" :value="file.value">{{file.text}}</a-select-option>
+                            <a-select v-model:value="searchForm.target_type" placeholder="请选择来源类型">
+                                <a-select-option v-for="file of fileTargetTypeList" :key="file.value" :value="file.value">{{file.text}}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -92,10 +92,11 @@ export default {
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
-            fileTypeList: Core.Const.SYSTEM.FILE.TYPE_LIST,
+            fileTargetTypeList: Core.Const.SYSTEM.FILE.TARGET_TYPE_LIST,
             searchForm: {
                 id:'',
-                type: undefined,
+                // type: undefined,
+                target_type: undefined,
             },
             tableData: [],
 
@@ -158,6 +159,9 @@ export default {
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
+            if (this.loginType != this.USER_TYPE.ADMIN) { // 非管理员只能看平台文件
+                this.searchForm.target_type = 1 
+            }
             Core.Api.System.fileList({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',

@@ -98,6 +98,14 @@ const apiList = {
         saveList: ['PostJson', 'invoice-item/save-list'], //货单提交
         itemList: ['PostJson', 'invoice-item/list'], // 货单列表
         status: ['PostJson', 'invoice/status-list'], // 状态
+        handle: ['PostJson', 'invoice/handle'], // 处理完成
+    },
+    Transfer: {
+        save: ['PostJson', 'transfer-order/save'],
+        detail: ['PostJson', 'transfer-order/detail'],
+        list: ['PostJson', 'transfer-order/list'],
+        delete: ['PostJson', 'transfer-order/delete'],
+        audit: ['PostJson', 'transfer-order/audit'],
     },
     Repair: { // 维修单
         list: ['PostJson', 'repair/list'], // 列表
@@ -204,6 +212,8 @@ const apiList = {
         detail: ['PostJson', 'store/detail'],
         delete: ['PostJson', 'store/delete'],
         updateStatus: ['PostJson', 'store/update-status'], // 禁用
+        listTransfer: ['PostJson', 'store/list-receive-transfer-able'], // 获取可接收转单的门店列表
+        updateTransfer: ['PostJson', 'store/set-flag-receive-transfer'], // 修改是否接收转单
     },
     Notice: { // 系统消息
         list: ['PostJson', 'sys-message/list'],

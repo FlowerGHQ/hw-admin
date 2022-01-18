@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">货单详情</div>
                 <a-button type="primary" ghost @click="handleInvoiceShow()"
-                          v-if="[STATUS.AIT_AUDIT]"><i class="icon i_edit"/>审核
+                          v-if="[STATUS.AIT_AUDIT].includes(detail.status)"><i class="icon i_edit"/>审核
                 </a-button>
             </div>
             <div class="gray-panel info">
@@ -58,9 +58,9 @@
                                 <template #summary>
                                     <a-table-summary>
                                         <a-table-summary-row>
-                                            <a-table-summary-cell :index="0" :col-span="4">合计</a-table-summary-cell>
+                                            <a-table-summary-cell :index="0" :col-span="3">合计</a-table-summary-cell>
                                             <a-table-summary-cell :index="1" :col-span="3">
-                                                {{ total }}件
+                                                {{ totalCount }}件
                                             </a-table-summary-cell>
                                         </a-table-summary-row>
                                     </a-table-summary>
@@ -132,7 +132,15 @@ export default {
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        totalCount() {
+            let totalCount = 0
+            this.tableData.forEach(item => {
+                totalCount += item.amount
+            })
+            return totalCount
+        },
+    },
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         this.getInvoiceDetail();

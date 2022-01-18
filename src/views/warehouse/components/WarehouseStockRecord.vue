@@ -1,8 +1,8 @@
 <template>
     <div class="WarehouseStockRecord gray-panel no-margin">
         <div class="panel-content">
-            <div class="search-container">
-                <a-row class="search-area">
+<!--            <div class="search-container">-->
+<!--                <a-row class="search-area">-->
 <!--                    <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">-->
 <!--                        <div class="key">商品名称:</div>-->
 <!--                        <div class="value">-->
@@ -12,21 +12,21 @@
 <!--                            </div>-->
 <!--                        </div>-->
 <!--                    </a-col>-->
-                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
-                        <div class="key">创建时间:</div>
-                        <div class="value">
-                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
-                                            :show-time="defaultTime" :allow-clear='false'>
-                                <template #suffixIcon><i class="icon i_calendar"></i></template>
-                            </a-range-picker>
-                        </div>
-                    </a-col>
-                </a-row>
-                <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">查询</a-button>
-                    <a-button @click="handleSearchReset">重置</a-button>
-                </div>
-            </div>
+<!--                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">-->
+<!--                        <div class="key">创建时间:</div>-->
+<!--                        <div class="value">-->
+<!--                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"-->
+<!--                                            :show-time="defaultTime" :allow-clear='false'>-->
+<!--                                <template #suffixIcon><i class="icon i_calendar"></i></template>-->
+<!--                            </a-range-picker>-->
+<!--                        </div>-->
+<!--                    </a-col>-->
+<!--                </a-row>-->
+<!--                <div class="btn-area">-->
+<!--                    <a-button @click="handleSearch" type="primary">查询</a-button>-->
+<!--                    <a-button @click="handleSearchReset">重置</a-button>-->
+<!--                </div>-->
+<!--            </div>-->
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false'>

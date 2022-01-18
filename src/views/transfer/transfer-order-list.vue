@@ -1,10 +1,10 @@
 <template>
-    <div id="InvoiceList">
+    <div id="TransferOrderList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">货单列表</div>
+                <div class="title-area">调货单列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleStockShow"><i class="icon i_add"/>库存管理</a-button>
+                    <a-button type="primary" @click="handleTransferShow"><i class="icon i_add"/>新建调货单</a-button>
                 </div>
             </div>
             <div class="tabs-container colorful">
@@ -117,8 +117,8 @@
                 />
             </div>
         </div>
-        <a-modal v-model:visible="stockShow" title="库存管理" class="stock-edit-modal"
-                 :after-close="handleStockClose">
+        <a-modal v-model:visible="transferShow" title="新建调货单" class="codeAddShow-edit-modal"
+                 :after-close="handleTransferClose">
             <div class="form-item required">
                 <div class="key">仓库：</div>
                 <div class="value">
@@ -129,23 +129,20 @@
                     </a-select>
                 </div>
             </div>
-            <div class="form-item required">
-                <div class="key">类型：</div>
+            <div class="form-item textarea">
+                <div class="key">原因：</div>
                 <div class="value">
-                    <a-radio-group v-model:value="form.type">
-                        <a-radio :value="handleTypeList.TYPE_IN">入库</a-radio>
-                        <a-radio :value="handleTypeList.TYPE_OUT">出库</a-radio>
-                    </a-radio-group>
+                    <a-textarea v-model:value="form.apply_message" placeholder="请输入申请原因" :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                 </div>
             </div>
             <template #footer>
-                <a-button @click="handleStockSubmit" type="primary">确定</a-button>
-                <a-button @click="stockShow=false">取消</a-button>
+                <a-button @click="handleTransferSubmit" type="primary">确定</a-button>
+                <a-button @click="transferShow=false">取消</a-button>
             </template>
         </a-modal>
         <template class="modal-container">
             <a-modal v-model:visible="invoiceShow" title="审核"
-                     class="invoice-edit-modal" :after-close='handleInvoiceClose'>
+                     class="warehouse-edit-modal" :after-close='handleInvoiceClose'>
                 <div class="modal-content">
                     <div>
                         <div class="form-item required">
@@ -157,7 +154,7 @@
                         <div class="form-item required" v-if="editForm.status === STATUS.AUDIT_REFUSE">
                             <div class="key">原因:</div>
                             <div class="value">
-                                <a-textarea v-model:value="editForm.audit_message" placeholder="请输入不通过原因" :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                                <a-input v-model:value="editForm.audit_message" placeholder="请输入不通过原因"/>
                             </div>
                         </div>
                     </div>
@@ -176,7 +173,7 @@ import Core from '../../core';
 
 const STOCK_RECORD = Core.Const.STOCK_RECORD
 export default {
-    name: 'InvoiceList',
+    name: 'TransferOrderList',
     components: {},
     props: {},
     data() {
@@ -194,7 +191,7 @@ export default {
             detail: {
                 warehouse: {}
             },
-            stockShow: false,
+            transferShow: false,
             isExist: '',
             filteredInfo: {status: [1]},
             warehouseList: [],
@@ -214,9 +211,9 @@ export default {
             },
             warehouse_id: '',
             form: {
-                type: '',
                 id: '',
                 warehouse_id: undefined,
+                apply_message: '',
             },
             tableData: [],
             invoiceShow: false,
@@ -278,12 +275,12 @@ export default {
                     break;
             }
         },
-        handleStockShow() {
-            this.stockShow = true;
+        handleTransferShow() {
+            this.transferShow = true;
             this.form.warehouse_id = this.warehouse_id
         },
-        handleStockClose() {
-            this.stockShow = false;
+        handleTransferClose() {
+            this.transferShow = false;
             this.isExist = '';
             this.form = {
                 type: '',
@@ -298,7 +295,7 @@ export default {
                 this.warehouseList = res.list
             })
         },
-        handleStockSubmit() {
+        handleTransferSubmit() {
             let form = Core.Util.deepCopy(this.form)
             if (!form.warehouse_id) {
                 return this.$message.warning('请选择仓库')
@@ -308,10 +305,10 @@ export default {
             }
             Core.Api.Invoice.save(form).then(res => {
                 this.$message.success('保存成功')
-                this.handleStockClose()
+                this.handleTransferClose()
                 this.routerChange('edit', res.detail)
             }).catch(err => {
-                console.log('handleStockSubmit err:', err)
+                console.log('handleAddSubmit err:', err)
             })
         },
         handleTypeSelect(val) {
@@ -438,5 +435,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// 
+//
 </style>

@@ -181,6 +181,11 @@ let Const = {
         {text: "禁用", value: 0},
     ],
 
+    TRANSFER_STATUS_LIST: [ // 组织转单状态
+        {text: "接受转单", value: 1},
+        {text: "不接受转单", value: 0},
+    ],
+
     REPAIR: { // 维修工单
         // 工单分类
         TYPE_LIST: [
@@ -458,14 +463,14 @@ let Const = {
     SYSTEM: { //系统
         FILE: {
             TARGET_TYPE:{
-                // TARGET_TYPE_SYSTEM: '1',
+                TARGET_TYPE_SYSTEM: '1',
                 TARGET_TYPE_DISTRIBUTOR: '2',
                 // TARGET_TYPE_AGENT: '3',
                 // TARGET_TYPE_STORE: '4',
                 // TARGET_TYPE_REPAIR_ORDER: '5',
             },
             TARGET_TYPE_LIST: [
-                // {value: 1, text: '系统'},
+                {value: 1, text: '平台'},
                 {value: 2, text: '分销商'},
                 // {value: 3, text: '零售商'},
                 // {value: 4, text: '门店'},
@@ -539,8 +544,8 @@ let Const = {
         STATUS_COLOR_MAP: {
             10: 'yellow',
             20: 'green',
-            40: 'red',
-            "-10": 'orange',
+            40: 'orange',
+            "-10": 'red',
         },
         STATUS_LIST: [
             {text: '待审核',value: 10},
