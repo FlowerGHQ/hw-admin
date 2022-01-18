@@ -76,7 +76,7 @@
                                             <template v-else>-</template>
                                             <!-- 区分帐类 end -->
                                         </template>
-                                        <template v-else-if="record.warehouse_out_list.length === 0 && record.type === repairItemType.REPLACE">
+                                        <template v-else-if="record.warehouse_out_list.length === 0 && record.type !== repairItemType.TRANSFER">
                                             <a-button type='link' @click="routerChange('editWarehouse')">新建仓库</a-button>
                                         </template>
                                         <template v-else>
