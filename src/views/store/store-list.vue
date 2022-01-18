@@ -66,7 +66,7 @@
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
-                        <template v-if="column.key === 'transfer'">
+                        <template v-if="column.key === 'flag_receive_transfer'">
                             <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
                                 {{ text ? '接受转单' : '不接受转单' }}
                             </div>
@@ -166,8 +166,7 @@ export default {
             ]
             if (this.$auth('ADMIN')) {
                 tableColumns.splice(1, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'item'})
-                tableColumns.splice(5, 0, {title: '是否接受转单', dataIndex: 'flag_receive_transfer', key: 'transfer',
-                    filters: Core.Const.TRANSFER_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.flag_receive_transfer || null })
+                tableColumns.splice(5, 0, {title: '是否接受转单', dataIndex: 'flag_receive_transfer', key: 'flag_receive_transfer'})
             }
             if (this.$auth('ADMIN', 'DISTRIBUTOR')) {
                 tableColumns.splice(2, 0, {title: '所属零售商', dataIndex: 'agent_name', key: 'item'})
@@ -305,13 +304,13 @@ export default {
         handleTransferChange(record) {
                 let _this = this;
                 this.$confirm({
-                        title: `确定要${record.status ? '禁用(转单)' : '启用(转单)'}该门店吗？`,
+                        title: `确定要${record.flag_receive_transfer ? '禁用(转单)' : '启用(转单)'}该门店吗？`,
                         okText: '确定',
                         okType: 'danger',
                         cancelText: '取消',
                         onOk() {
                                 Core.Api.Store.updateTransfer({id:record.id}).then(() => {
-                                        _this.$message.success(`${record.status ? '禁用' : '启用'}成功`);
+                                        _this.$message.success(`${record.flag_receive_transfer ? '禁用' : '启用'}成功`);
                                         _this.getTableData();
                                 }).catch(err => {
                                         console.log("handleTransferChange err", err);

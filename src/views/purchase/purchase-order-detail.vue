@@ -31,7 +31,8 @@
                                 <template v-if="column.dataIndex === 'item'">
                                     <div class="table-img">
                                         <a-image :width="30" :height="30" :src="$Util.imageFilter(text ? text.logo : '', 2)"/>
-                                        <a-tooltip placement="top" :title='text.name'>
+                                        <!-- <a-tooltip placement="top" :title='text.name'> -->
+                                        <a-tooltip placement="top" :title='text'>
                                             <a-button type="link" @click="routerChange('detail', text)" style="margin-left: 6px;">
                                                 {{text ? text.name : '-'}}
                                             </a-button>
@@ -86,6 +87,8 @@
                         </a-col>
                     </a-row>
                 </a-collapse-panel>
+                <AttachmentFile :target_id='id' :detail='detail' @submit="getRepairDetail" ref="AttachmentFile"
+                                v-if="$auth('DISTRIBUTOR', 'AGENT', 'STORE', 'ADMIN')"/>
                 <a-collapse-panel key="WaybillInfo" header="物流信息" class="gray-collapse-panel">
                     <a-row class="panel-content info-container">
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
@@ -159,6 +162,7 @@ import Core from '../../core';
 import PurchaseInfo from "./components/PurchaseInfo.vue"
 import WaybillShow from "@/components/popup-btn/WaybillShow.vue"
 import MySteps from "@/components/common/MySteps.vue"
+import AttachmentFile from './components/AttachmentFile.vue';
 
 const PURCHASE = Core.Const.PURCHASE;
 const STATUS = Core.Const.PURCHASE.STATUS;
@@ -174,6 +178,7 @@ const purchaseItemColumns = [
 export default {
     name: 'PurchaseOrderDetail',
     components: {
+        AttachmentFile,
         PurchaseInfo,
         WaybillShow,
         MySteps
@@ -237,10 +242,12 @@ export default {
         }
     },
     mounted() {
-        this.id = Number(this.$route.query.id) || 0
         this.handlePurchaseItemSearch();
         this.getPurchaseInfo()
         this.getWaybill()
+    },
+    created() {
+        this.id = Number(this.$route.query.id) || 0
     },
     methods: {
         routerChange(type, item = {}) {
