@@ -76,6 +76,38 @@
             </div>
         </div>
     </div>
+    <div class="form-block" v-if="form.category_id && configTemp.length"> <!-- 分类配置 -->
+        <div class="form-title">
+            <div class="title">分类配置</div>
+        </div>
+        <div class="form-content">
+            <div v-for="(item, index) of configTemp" :key="index" :class="{'form-item':true, required: item.required, textarea: item.type === 'textarea', rich_text: item.type === 'rich_text'}">
+                <div class="key">{{item.name}}</div>
+                <div class="value">
+                    <template v-if="item.type == 'input'">
+                        <a-input :placeholder="`请输入${item.name}`" v-model:value="form.config[index].value"/>
+                    </template>
+                    <template v-if="item.type == 'textarea'">
+                        <a-textarea :placeholder="`请输入${item.name}`" v-model:value="form.config[index].value" :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500'/>
+                        <span class="content-length">{{form.config[index].value.length}}/500</span>
+                    </template>
+                    <template v-if="item.type == 'select'">
+                        <a-select :placeholder="`请选择${item.name}`" v-model:value="form.config[index].value" show-search option-filter-prop="children">
+                            <a-select-option v-for="(val,i) of item.select" :key="i" :value="val" >{{val}}</a-select-option>
+                        </a-select>
+                    </template>
+                    <template v-if="item.type == 'radio'">
+                        <a-radio-group v-model:value="form.config[index].value">
+                            <a-radio v-for="(val,i) of item.select" :key="i" :value="val" >{{val}}</a-radio>
+                        </a-radio-group>
+                    </template>
+                    <template v-if="item.type == 'rich_text'">
+                        <VueTinymce v-model="form.config[index].value" :setting="tinymce_setting"/>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="form-block" v-if="!indep_flag"> <!-- 规格信息 -->
         <div class="form-title">
             <div class="title">规格信息</div>
@@ -104,7 +136,7 @@
                             <a-input v-model:value="item.name" placeholder="规格名" @blur="handleSpecEditBlur(index, 'name')"/>
                             <p>关键字</p>
                             <a-input v-model:value="item.key"  placeholder="关键字" @blur="handleSpecEditBlur(index, 'key')"/>
-                            <a-button type="link" @click="handleRemoveSpec(index)">删除</a-button>
+                            <a-button type="link" v-if="!form.id" @click="handleRemoveSpec(index)">删除</a-button>
                         </div>
                         <div class="option">
                             <p>规格值</p>
@@ -206,38 +238,6 @@
                 <div class="value input-number">
                     <a-input-number v-model:value="form.price" :min="0" :precision="2" placeholder="0.00"/>
                     <span>元</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="form-block" v-if="form.category_id && configTemp.length"> <!-- 分类配置 -->
-        <div class="form-title">
-            <div class="title">分类配置</div>
-        </div>
-        <div class="form-content">
-            <div v-for="(item, index) of configTemp" :key="index" :class="{'form-item':true, required: item.required, textarea: item.type === 'textarea', rich_text: item.type === 'rich_text'}">
-                <div class="key">{{item.name}}</div>
-                <div class="value">
-                    <template v-if="item.type == 'input'">
-                        <a-input :placeholder="`请输入${item.name}`" v-model:value="form.config[index].value"/>
-                    </template>
-                    <template v-if="item.type == 'textarea'">
-                        <a-textarea :placeholder="`请输入${item.name}`" v-model:value="form.config[index].value" :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500'/>
-                        <span class="content-length">{{form.config[index].value.length}}/500</span>
-                    </template>
-                    <template v-if="item.type == 'select'">
-                        <a-select :placeholder="`请选择${item.name}`" v-model:value="form.config[index].value" show-search option-filter-prop="children">
-                            <a-select-option v-for="(val,i) of item.select" :key="i" :value="val" >{{val}}</a-select-option>
-                        </a-select>
-                    </template>
-                    <template v-if="item.type == 'radio'">
-                        <a-radio-group v-model:value="form.config[index].value">
-                            <a-radio v-for="(val,i) of item.select" :key="i" :value="val" >{{val}}</a-radio>
-                        </a-radio-group>
-                    </template>
-                    <template v-if="item.type == 'rich_text'">
-                        <VueTinymce v-model="form.config[index].value" :setting="tinymce_setting"/>
-                    </template>
                 </div>
             </div>
         </div>
@@ -730,7 +730,7 @@ export default {
         handleRemoveSpec(index) { // 删除规格定义
             let item = this.specific.list[index]
             if (item.id) {
-                Core.Api.AttrDef.delete(item.id)
+                Core.Api.AttrDef.delete({id: item.id})
             }
             this.specific.list.splice(index, 1)
         },
@@ -791,10 +791,30 @@ export default {
         },
         handleRemoveSpecOption(index, i) {
             let item = this.specific.list[index]
-            item.option.splice(i, 1)
-            if (item.id && item.key.trim() && item.name.trim()) {
-                let _item = { id: item.id, key: item.key, name: item.name, value: item.option.join(',') }
-                Core.Api.AttrDef.save(_item)
+            let _do = function() {
+                item.option.splice(i, 1)
+                if (item.id && item.key.trim() && item.name.trim()) {
+                    let _item = { id: item.id, key: item.key, name: item.name, value: item.option.join(',') }
+                    Core.Api.AttrDef.save(_item)
+                }
+            }
+            if (this.specific.data.map(i => i[item.key]).includes(item.option[i])) {
+                this.$confirm({
+                    title: `该规格值已被使用，确认要删除此规格值吗？`,
+                    okText: '确定',
+                    okType: 'danger',
+                    cancelText: '取消',
+                    onOk: () => {
+                        for (const element of this.specific.data) {
+                            if (element[item.key] === item.option[i]) {
+                                element[item.key] = undefined
+                            }
+                        }
+                        _do()
+                    },
+                });
+            } else {
+                _do()
             }
         },
 
