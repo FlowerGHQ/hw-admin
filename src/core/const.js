@@ -544,8 +544,8 @@ let Const = {
         STATUS_COLOR_MAP: {
             10: 'yellow',
             20: 'green',
-            40: 'red',
-            "-10": 'orange',
+            40: 'orange',
+            "-10": 'red',
         },
         STATUS_LIST: [
             {text: '待审核',value: 10},
