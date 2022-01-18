@@ -76,7 +76,6 @@ export default {
                 target_type: Core.Const.WAYBILL.TARGET_TYPE.REPAIR_ORDER_TRANSFER,
                 type: Core.Const.WAYBILL.TYPE.OUT,
             }).then(res => {
-                console.log('阿啊阿啊阿啊res: ', res);
                 this.waybill = res.detail
                 this.getWaybillInfo(this.waybill.uid, this.waybill.company_uid)
             }).catch(err => {
@@ -91,8 +90,8 @@ export default {
             }).then(res => {
                 this.waybillInfo = JSON.parse(res.waybill).result
                 console.log('waybillInfo', this.waybillInfo)
-                console.log('waybillInfo', res.waybill)
-                console.log('waybillInfo', JSON.parse(res.waybill))
+                // console.log('waybillInfo', res.waybill)
+                // console.log('waybillInfo', JSON.parse(res.waybill))
             }).catch(err => {
                 console.log('getRepairDetail err', err)
             }).finally(() => {

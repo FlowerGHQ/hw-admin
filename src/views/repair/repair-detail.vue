@@ -6,7 +6,7 @@
                 <div class="btns-area">
                     <!-- 发货 start -->
                     <a-button type="primary" v-if="[STATUS.WAIT_DETECTION].includes(detail.status) && isTransfer == true" @click="handlePurchaseStatus('deliver')" ><i class="icon i_deliver"/>物流信息</a-button>
-                    <a-button type="primary" v-if="[STATUS.WAIT_REPAIR].includes(detail.status)" @click="handlePurchaseStatus('deliver')" ><i class="icon i_deliver"/>查看物流</a-button>
+                    <!-- <a-button type="primary" v-if="[STATUS.WAIT_REPAIR].includes(detail.status)" @click="handlePurchaseStatus('deliver')" ><i class="icon i_deliver"/>查看物流</a-button> -->
                     <!-- 发货 end   -->
                     <template v-if="$auth('ADMIN')">
                         <a-button type="primary" ghost @click="handleAuditShow()"
@@ -259,10 +259,7 @@
                 </div>
                 <template #footer>
                     <a-button @click="deliverShow = false">取消</a-button>
-                    <!-- 填写物流 -->
-                    <a-button v-if="[STATUS.WAIT_DETECTION].includes(detail.status)" @click="deliverShow = false" type="primary">确定</a-button>
-                    <!-- 查看物流 -->
-                    <a-button v-if="[STATUS.WAIT_REPAIR].includes(detail.status)" @click="handleLogisticsSubmit()" type="primary">确定</a-button> 
+                    <a-button @click="deliverShow = false" type="primary">确定</a-button>
                 </template>
             </a-modal>
         </template>
@@ -511,23 +508,6 @@ export default {
                 this.getRepairDetail()
                 // 故障信息提交
                 this.$refs.CheckFault.handleFaultSubmit();
-            }).catch(err => {
-                console.log('handleFaultSubmit err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-        handleLogisticsSubmit() {
-            // 物流信息提交
-            if (this.form.company_uid == undefined || this.form.waybill_uid == '') {
-                return this.$message.warning('请选择快递公司,物流单号')
-            }
-            this.loading = false;
-            Core.Api.Repair.post({
-                id: this.id,
-                ...this.form
-            }).then(res => {
-                this.getRepairDetail()
             }).catch(err => {
                 console.log('handleFaultSubmit err', err)
             }).finally(() => {
