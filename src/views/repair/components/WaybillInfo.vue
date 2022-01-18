@@ -36,7 +36,7 @@
 
 <script>
 import Core from '../../../core';
-import WaybillShow from "@/components/WaybillShow.vue"
+import WaybillShow from "@/components/popup-btn/WaybillShow.vue"
 const REPAIR = Core.Const.REPAIR
 export default {
     name: 'WaybillInfo',

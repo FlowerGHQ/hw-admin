@@ -149,7 +149,7 @@
 
 <script>
 import Core from '../../../core';
-import ItemSelect from '@/components/ItemSelect.vue';
+import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 
 export default {
     name: 'RepairDetail',

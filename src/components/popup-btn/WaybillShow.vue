@@ -35,7 +35,7 @@
                 </div>
                 <template #footer>
                     <a-button key="back" @click="updateShow = false">关闭</a-button>
-                    <a-button type="primary" @click="updateWaybill">提交</a-button>
+                    <a-button type="primary" @click="updatePurchaseOrRepair">提交</a-button>
                 </template>
             </a-modal>
         </template>
@@ -50,6 +50,9 @@ export default {
     name: 'WaybillShow',
     components: {},
     props: {
+        id: {
+                type: Number,
+        },
         detail: {
             type: Object,
             default: () => {
@@ -69,6 +72,7 @@ export default {
     },
     data() {
         return {
+            // id: undefined,
             companyMap: WAYBILL.COMPANY_MAP,
             detailShow: false,
             uid: "",
@@ -88,6 +92,7 @@ export default {
     mounted() {
         this.companyUid = this.detail.company_uid
         this.uid = this.detail.uid
+        // alert(this.id)
     },
     methods: {
         handleDetailShow() {
@@ -96,7 +101,14 @@ export default {
         handleUpdateShow() {
             this.updateShow = true
         },
-        updateWaybill() {
+        updatePurchaseOrRepair(){
+            if (this.detail.target_type == Core.Const.WAYBILL.TARGET_TYPE.PURCHASE_ORDER) {
+                this.updatePurchaseWaybill()
+            }else{ // this.detail.target_type == Core.Const.WAYBILL.TARGET_TYPE.REPAIR_ORDER_TRANSFER
+                this.updateRepairWaybill()
+            }
+        },
+        updatePurchaseWaybill() { // 采购物流修改
             Core.Api.Waybill.update({
                 id: this.detail.id,
                 company_uid: this.companyUid,
@@ -106,7 +118,18 @@ export default {
                 this.$message.success('修改成功')
                 this.updateShow = false
             })
-
+        },
+        updateRepairWaybill() { // 维修转单物流修改
+            console.log('this.id: ', this.id);
+            Core.Api.Repair.post({
+                id: this.id,
+                company_uid: this.companyUid,
+                waybill_uid: this.uid,
+            }).then(res => {
+                this.$emit('change')
+                this.$message.success('修改成功')
+                this.updateShow = false
+            })
         },
     },
 }

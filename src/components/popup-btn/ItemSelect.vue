@@ -1,41 +1,49 @@
 <template>
     <a-button @click.stop="handleModalShow" :ghost='ghost' :type="btnType">{{btnText}}</a-button>
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px' @ok="handleConfirm">
-        <div class="search-container">
-            <a-row class="search-area">
-                <a-col :xs='24' :sm='24' :md='12' class="search-item">
-                    <div class="key"><span>商品编码:</span></div>
-                    <div class="value">
-                        <a-input placeholder="请输入商品编码" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
-                    </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :md='12' class="search-item">
-                    <div class="key"><span>商品名称:</span></div>
-                    <div class="value">
-                        <a-input placeholder="请输入商品名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
-                    </div>
-                </a-col>
-            </a-row>
-            <div class="btn-area">
-                <a-button @click="handleSearch" type="primary">查询</a-button>
-                <a-button @click="handleSearchReset">重置</a-button>
+        <div class="modal-content">
+            <div class="search-container">
+                <a-row class="search-area">
+                    <a-col :xs='24' :sm='24' :md='12' class="search-item">
+                        <div class="key"><span>商品编码:</span></div>
+                        <div class="value">
+                            <a-input placeholder="请输入商品编码" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :md='12' class="search-item">
+                        <div class="key"><span>商品名称:</span></div>
+                        <div class="value">
+                            <a-input placeholder="请输入商品名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                        </div>
+                    </a-col>
+                </a-row>
+                <div class="btn-area">
+                    <a-button @click="handleSearch" type="primary">查询</a-button>
+                    <a-button @click="handleSearchReset">重置</a-button>
+                </div>
+            </div>
+            <div class="table-container">
+                <ItemTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :check-mode='true' :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode'/>
             </div>
         </div>
-        <div class="table-container">
-            <ItemTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :check-mode='true' :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode'/>
-        </div>
-        <div class="paging-container">
-            <a-pagination
-                show-quick-jumper
-                show-less-items
-                :show-total="total => `共 ${total} 条记录`"
-                :hide-on-single-page='false'
-                :total="total"
-                :current="currPage"
-                :default-page-size='pageSize'
-                @change="pageChange"
-            />
-        </div>
+        <template #footer>
+            <div class="modal-footer">
+                <div class="paging-area">
+                    <a-pagination
+                        show-less-items
+                        :hide-on-single-page='false'
+                        :total="total"
+                        :current="currPage"
+                        :default-page-size='pageSize'
+                        @change="pageChange"
+                    />
+                </div>
+                <div class="btn-area">
+                    <a-button @click="handleModalClose">取消</a-button>
+                    <a-button @click="handleConfirm" type="primary">确定</a-button>
+                </div>
+            </div>
+        </template>
     </a-modal>
 </template>
 
@@ -103,12 +111,13 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                { title: '商品名称', dataIndex: 'name', scopedSlots: { customRender: 'name' } },
-                { title: '商品编码', dataIndex: 'code', scopedSlots: { customRender: 'item' }, },
+                { title: '商品名称', dataIndex: 'name',  key: 'detail' },
+                { title: '商品型号', dataIndex: 'model', key: 'item' },
+                { title: '商品编码', dataIndex: 'code',  key: 'item' },
                 { title: '标准售价', dataIndex: 'price', key: 'money', },
             ]
             if (this.warehouseId !== 0) {
-                tableColumns.splice(2, 0, {title: '仓库库存', dataIndex: 'stock', key: 'stock'})
+                tableColumns.splice(2, 0, {title: '仓库库存', dataIndex: 'stock', key: 'item'})
             }
             return tableColumns
         },
@@ -143,11 +152,13 @@ export default {
                 ...this.searchForm,
                 warehouse_id: this.warehouseId,
                 page: this.currPage,
-                page_size: this.pageSize
+                page_size: this.pageSize,
+                flag_spread: 1,
             }).then(res =>{
                 console.log('getTableData res:', res)
                 res.list.forEach(item => {
-                    item.logo = item.logo.split(',')
+                    console.log('getTableData item:', item)
+                    item.children = null
                 })
                 this.tableData = res.list
                 this.total = res.count;
