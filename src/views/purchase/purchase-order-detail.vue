@@ -31,6 +31,7 @@
                                 <template v-if="column.dataIndex === 'item'">
                                     <div class="table-img">
                                         <a-image :width="30" :height="30" :src="$Util.imageFilter(text ? text.logo : '', 2)"/>
+                                        <!-- <a-tooltip placement="top" :title='text.name'> -->
                                         <a-tooltip placement="top" :title='text'>
                                             <a-button type="link" @click="routerChange('detail', text)" style="margin-left: 6px;">
                                                 {{text ? text.name : '-'}}
