@@ -1042,12 +1042,15 @@ p {
         }
     }
     .panel-btn {
-        font-size: 12px;
-        line-height: 20px;
-        height: 30px;
-        padding: 4px 14px;
-        .icon {
+        &.ant-btn, > .ant-btn {
             font-size: 12px;
+            line-height: 20px;
+            height: 30px;
+            padding: 4px 14px;
+            margin-bottom: 10px;
+            .icon {
+                font-size: 12px;
+            }
         }
     }
 }

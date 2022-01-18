@@ -5,7 +5,7 @@
     </div>
     <div class="panel-content">
         <div class="table-container">
-            <a-button type="primary" ghost @click="routerChange('edit')" style="margin-bottom: 10px;" class="panel-btn"><i class="icon i_add"/>新增门店</a-button>
+            <a-button type="primary" ghost @click="routerChange('edit')" class="panel-btn"><i class="icon i_add"/>新增门店</a-button>
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false'>
                 <template #bodyCell="{ column, text , record }">
@@ -85,6 +85,7 @@ export default {
             pageSize: 20,
             total: 0,
 
+            tableData: [],
         };
     },
     watch: {},

@@ -1,42 +1,41 @@
 <template>
-    <div class="StoreList gray-panel no-margin">
-        <div class="panel-title">
-            <div class="title">零售商列表</div>
-        </div>
-        <div class="panel-content">
-            <div class="table-container">
-                <a-button type="primary" ghost @click="routerChange('edit')" style="margin-bottom: 10px;" class="panel-btn"><i class="icon i_add"/>新增零售商</a-button>
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                         :row-key="record => record.id"  :pagination='false'>
-                    <template #bodyCell="{ column, text , record }">
-                        <template v-if="column.key === 'detail'">
-                            <div class="table-img">
-                                <a-tooltip placement="top" :title='text'>
-                                    <a-button type="link" @click="routerChange('detail', record)" style="margin-left: 6px;">{{text || '-'}}</a-button>
-                                </a-tooltip>
-                            </div>
-                        </template>
-                        <template v-if="column.key === 'time'">
-                            {{ $Util.timeFilter(text) }}
-                        </template>
-                        <template v-if="column.dataIndex === 'status'">
-                            <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
-                                {{ text ? '启用中' : '已禁用' }}
-                            </div>
-                        </template>
-                        <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
-                            <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改1</a-button>
-                            <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
-                                <template v-if="record.status"><i class="icon i_forbidden"/>禁用</template>
-                                <template v-else><i class="icon i_enable"/>启用</template>
-                            </a-button>
-                        </template>
+<div class="AgentList gray-panel no-margin">
+    <div class="panel-title">
+        <div class="title">零售商列表</div>
+    </div>
+    <div class="panel-content">
+        <div class="table-container">
+            <a-button type="primary" ghost @click="routerChange('edit')" class="panel-btn"><i class="icon i_add"/>新增零售商</a-button>
+            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id"  :pagination='false'>
+                <template #bodyCell="{ column, text , record }">
+                    <template v-if="column.key === 'detail'">
+                        <div class="table-img">
+                            <a-tooltip placement="top" :title='text'>
+                                <a-button type="link" @click="routerChange('detail', record)" style="margin-left: 6px;">{{text || '-'}}</a-button>
+                            </a-tooltip>
+                        </div>
                     </template>
-                </a-table>
-            </div>
+                    <template v-if="column.key === 'time'">
+                        {{ $Util.timeFilter(text) }}
+                    </template>
+                    <template v-if="column.dataIndex === 'status'">
+                        <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
+                            {{ text ? '启用中' : '已禁用' }}
+                        </div>
+                    </template>
+                    <template v-if="column.key === 'operation'">
+                        <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
+                        <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改1</a-button>
+                        <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
+                            <template v-if="record.status"><i class="icon i_forbidden"/>禁用</template>
+                            <template v-else><i class="icon i_enable"/>启用</template>
+                        </a-button>
+                    </template>
+                </template>
+            </a-table>
         </div>
     </div>
+</div>
 </template>
 
 <script>
@@ -45,10 +44,7 @@ export default {
     name: 'AgentList',
     components: {},
     props: {
-        agent_id: {
-            type: Number,
-        },
-        distributor_id: {
+        distributorId: {
             type: Number,
         },
         type: {
@@ -120,7 +116,7 @@ export default {
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             Core.Api.Agent.list({
-                distributor_id: this.distributor_id,
+                distributor_id: this.distributorId,
                 type: this.type,
                 page: this.currPage,
                 page_size: this.pageSize,
@@ -175,5 +171,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #AgentList {}
+.AgentList {
+    .table-container {
+        margin-top: -10px;
+    }
+}
 </style>

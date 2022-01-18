@@ -1,5 +1,7 @@
 <template>
-    <a-button @click.stop="handleModalShow" :ghost='ghost' :type="btnType">{{btnText}}</a-button>
+    <a-button @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
+        <slot>{{btnText}}</slot>
+    </a-button>
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px' @ok="handleConfirm">
         <div class="modal-content">
             <div class="search-container">
@@ -63,6 +65,9 @@ export default {
         btnType: {
             type: String,
             default: 'primary'
+        },
+        btnClass: {
+            type: String,
         },
         ghost: {
             type: Boolean,
