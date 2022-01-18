@@ -5,7 +5,7 @@
         <div class="btns-area" v-if="$auth('ADMIN')">
             <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
             <!-- <a-button type="primary" ghost @click="handleDelete(store_id)"><i class="icon i_delete"/>删除</a-button> -->
-            <a-button :type="detail.status ? 'danger' : 'primary'" ghost @click="handleStatusChange()">
+            <a-button type="primary" ghost :danger='detail.status ? true : false'  @click="handleStatusChange()">
                 <template v-if="detail.status"><i class="icon i_forbidden"/>禁用</template>
                 <template v-else><i class="icon i_enable"/>启用</template>
             </a-button>
@@ -52,6 +52,11 @@
             <a-tab-pane key="PurchaseList" tab="订单列表">
                 <PurchaseList :storeId="store_id" v-if="activeKey == 'PurchaseList'"/>
             </a-tab-pane>
+            <template v-if="!$auth('STORE')">
+                <a-tab-pane key="PricingStructure" tab="商品价格">
+                    <PricingStructure :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'PricingStructure'"/>
+                </a-tab-pane>
+            </template>
         </a-tabs>
     </div>
 </div>
@@ -62,11 +67,16 @@ import Core from '../../core';
 
 import UserList from '@/components/UserList.vue';
 import PurchaseList from '@/components/PurchaseOrderList.vue';
+import PricingStructure from '@/components/PricingStructure.vue';
 
 const USER_TYPE = Core.Const.USER.TYPE;
 export default {
     name: 'StoreDetail',
-    components: { UserList , PurchaseList },
+    components: {
+        UserList,
+        PurchaseList,
+        PricingStructure,
+    },
     props: {},
     data() {
         return {

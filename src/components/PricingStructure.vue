@@ -5,34 +5,43 @@
     </div>
     <div class="panel-content">
         <div class="table-container">
-            <ItemSelect :disabled-checked='tableData.map(i => i.id)' @select="handleAddItem" ghost btn-class="panel-btn">
+            <ItemSelect :disabled-checked='tableData.map(i => i.item_id)' @select="handleAddItem" ghost btn-class="panel-btn">
                 <i class="icon i_add"/> 添加商品
             </ItemSelect>
-            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
-                <template #bodyCell="{ column, text , record }">
-                    <template v-if="column.dataIndex === 'type'">
-                        {{ $Util.userTypeFilter(text) }}
+            <a-button @click="handleMutiEditChange()" class="panel-btn">{{editShow ? '确认设置' : '批量设置供货价'}}</a-button>
+            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' :loading='loading'>
+                <template #bodyCell="{ column, text, record }">
+                    <template v-if="column.key === 'detail'">
+                        <div class="table-img">
+                            <a-image :width="30" :height="30" :src="$Util.imageFilter(record.logo)" fallback='无'/>
+                            <a-tooltip placement="top" :title='text'>
+                                <div class="info">
+                                    <a-button type="link" @click="routerChange('detail', record)">
+                                        <div class="ell" style="max-width: 150px">{{ text || '-' }}</div>
+                                    </a-button>
+                                </div>
+                            </a-tooltip>
+                        </div>
                     </template>
-                    <template v-if="column.dataIndex === 'flag_admin'">
-                        <template v-if="loginType < type">
-                            <a-switch :checked="!!record.flag_admin" checked-children="是" un-checked-children="否" @click="handleManagerChange(record)"/>
-                        </template>
-                        <template v-else>{{ text ? "是" : "否" }}</template>
+                    <template v-if="column.key === 'money'">
+                        ￥{{ $Util.countFilter(text) }}
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}
                     </template>
-                    <template v-if="column.key === 'tip_item'">
-                        <a-tooltip placement="top" :title='text'>
-                            <div class="ell" style="max-width: 160px">{{ text || '-' }}</div>
-                        </a-tooltip>
-                    </template>
-                    <template v-if="column.key === 'time'">
-                        {{ $Util.timeFilter(text) }}
+                    <template v-if="column.key === 'supply'">
+                        <template v-if="record.edit_show || editShow">
+                            <a-input-number v-model:value="record.edit_price" :min="0.01" style="width: 120px;"
+                                :formatter="value => `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/￥\s?|(,*)/g, '')"/>
+                        </template>
+                        <template v-else>￥{{ $Util.countFilter(text) }}</template>
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/> 编辑</a-button>
-                        <a-button type='link' class="danger" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button>
+                        <a-button type='link' @click="handleEditChange(record)" v-if="!editShow">
+                            <template v-if="record.edit_show"><i class="icon i_confirm"/>确认设置</template>
+                            <template v-else><i class="icon i_edit"/>设置价格</template>
+                        </a-button>
+                        <a-button type='link' class="danger" @click="handleDelete(record.id)"><i class="icon i_delete"/>移出</a-button>
                     </template>
                 </template>
             </a-table>
@@ -87,6 +96,7 @@ export default {
             total: 0,
             // 表格数据
             tableData: [],
+            editShow: false,
         };
     },
     watch: {},
@@ -96,12 +106,10 @@ export default {
                 { title: '商品名称', dataIndex: 'name', key: 'detail'},
                 { title: '商品型号', dataIndex: 'model', key: 'item' },
                 { title: '商品编码', dataIndex: 'code',  key: 'item' },
-                { title: '供货价',  dataIndex: 'price', key: 'supply', },
+                { title: '供货价',  dataIndex: 'purchase_price', key: 'supply', },
                 { title: '标准售价', dataIndex: 'price', key: 'money', },
                 { title: '操作', key: 'operation', fixed: 'right'},
             ]
-            if (this.$auth('ADMIN')) {
-            }
             return columns
         },
     },
@@ -116,23 +124,24 @@ export default {
                 case 'detail':    // 详情
                     routeUrl = this.$router.resolve({
                         path: this.$auth('ADMIN') ? "/item/item-detail" : '/purchase/item-display',
-                        query: {id: item.id}
+                        query: {id: item.item_id}
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
             }
         },
-        pageChange(curr) {    // 页码改变
+        pageChange(curr) { // 页码改变
             this.currPage = curr
             this.getTableData()
         },
-        pageSizeChange(current, size) {    // 页码尺寸改变
+        pageSizeChange(current, size) { // 页码尺寸改变
             console.log('pageSizeChange size:', size)
             this.pageSize = size
             this.getTableData()
         },
-        getTableData() {    // 获取 表格 数据
+        getTableData() { // 获取 表格 数据
             this.loading = true;
+            this.editShow = false
             Core.Api.ItemPrice.list({
                 org_id: this.orgId,
                 org_type: this.orgType,
@@ -141,6 +150,10 @@ export default {
             }).then(res => {
                 console.log("getTableData res", res)
                 this.total = res.count;
+                res.list.forEach(item => {
+                    item.edit_price = Core.Util.countFilter(item.purchase_price)
+                    item.edit_show = false
+                });
                 this.tableData = res.list;
             }).catch(err => {
                 console.log('getTableData err', err)
@@ -148,6 +161,7 @@ export default {
                 this.loading = false;
             });
         },
+
         handleDelete(id) {
             let _this = this;
             this.$confirm({
@@ -166,8 +180,68 @@ export default {
             });
         },
 
-        handleAddItem() {
+        handleAddItem(ids, items) {
+            console.log('handleAddItem items:', items)
+            items = items.map(item => ({
+                category_id: item.category_id,
+                code: item.code,
+                id: 0,
+                item_id: item.id,
+                name: item.name,
+                org_id: this.orgId,
+                org_type: this.orgType,
+                price: item.price,
+                purchase_price: item.price,
+            }))
+            Core.Api.ItemPrice.batchSave(items).then(() => {
+                this.$message.success('添加成功')
+                this.getTableData()
+            }).catch(err => {
+                console.log('handleAddItem err:', err)
+            })
         },
+
+        handleEditChange(item) {
+            if (!item.edit_show) {
+                // 开启编辑模式
+                item.edit_show = true
+            } else {
+                // 关闭编辑模式
+                this.loading = true
+                Core.Api.ItemPrice.save({
+                    id: item.id,
+                    item_id: item.item_id,
+                    purchase_price: Math.round(item.edit_price * 100),
+                }).then(() => {
+                    this.$message.success('更改成功')
+                }).catch(err => {
+                    console.log('handleEditChange err:', err)
+                }).finally(() => {
+                    this.getTableData()
+                })
+            }
+        },
+        handleMutiEditChange() {
+            if (!this.editShow) {
+                // 开启编辑模式
+                this.editShow = true
+            } else {
+                // 关闭编辑模式
+                this.loading = true
+                let items = this.tableData.map(item => ({
+                    id: item.id,
+                    item_id: item.item_id,
+                    purchase_price: Math.round(item.edit_price * 100),
+                }))
+                Core.Api.ItemPrice.batchSave(items).then(() => {
+                    this.$message.success('更改成功')
+                }).catch(err => {
+                    console.log('handleMutiEditChange err:', err)
+                }).finally(() => {
+                    this.getTableData()
+                })
+            }
+        }
     }
 };
 </script>

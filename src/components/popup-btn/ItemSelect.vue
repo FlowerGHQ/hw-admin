@@ -146,8 +146,7 @@ export default {
             this.selectItems = []
         },
         handleConfirm() {
-            console.log('handleConfirm this.faultName:', this.selectItems)
-
+            console.log('handleConfirm this.selectItems:', this.selectItems)
             this.$emit('select', this.selectItemIds, this.selectItems, this.faultName)
             this.modalShow = false
         },
@@ -162,7 +161,6 @@ export default {
             }).then(res =>{
                 console.log('getTableData res:', res)
                 res.list.forEach(item => {
-                    console.log('getTableData item:', item)
                     item.children = null
                 })
                 this.tableData = res.list
