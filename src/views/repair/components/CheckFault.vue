@@ -34,7 +34,7 @@
 
                                     <template v-if="column.dataIndex === 'repair'">
                                         <template v-if="record.type === repairItemType.TRANSFER">
-                                            <a-button @click="handleTransfer()">选择</a-button>
+                                            <a-button @click="handleTransfer()">选择门店</a-button>
                                         </template>
                                         <template v-else>
                                             -
@@ -170,7 +170,7 @@ export default {
                 {title: '换新仓', dataIndex: 'new'},
                 {title: '金额', dataIndex: 'price', key: 'money'},
                 // {title: '金额', dataIndex: 'totle_price'},
-                {title: '选择维修工', dataIndex: 'repair'},
+                {title: '接收门店', dataIndex: 'repair'},
                 {title: '操作', dataIndex: 'operation'},
             ],
 
