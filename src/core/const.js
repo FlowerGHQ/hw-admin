@@ -463,14 +463,14 @@ let Const = {
     SYSTEM: { //系统
         FILE: {
             TARGET_TYPE:{
-                // TARGET_TYPE_SYSTEM: '1',
+                TARGET_TYPE_SYSTEM: '1',
                 TARGET_TYPE_DISTRIBUTOR: '2',
                 // TARGET_TYPE_AGENT: '3',
                 // TARGET_TYPE_STORE: '4',
                 // TARGET_TYPE_REPAIR_ORDER: '5',
             },
             TARGET_TYPE_LIST: [
-                // {value: 1, text: '系统'},
+                {value: 1, text: '平台'},
                 {value: 2, text: '分销商'},
                 // {value: 3, text: '零售商'},
                 // {value: 4, text: '门店'},
