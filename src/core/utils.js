@@ -1,5 +1,5 @@
 import {Modal} from 'ant-design-vue';
-
+import { createVNode } from 'vue';
 import Data from './data';
 import Const from './const';
 import dayjs from "dayjs";
@@ -22,6 +22,12 @@ const Util = {
         return arr.some(key => {
             return rolesMap[key];
         });
+    },
+    confirm(param, type = 'warning') {
+        Modal.confirm({
+            ...param,
+            icon: createVNode('span', { class: `modal-confirm-icon icon i_m_${type}` }),
+        })
     },
     /**
      * 深拷贝
@@ -352,6 +358,13 @@ const Util = {
     itemTypeFilter(val) {
         const MAP = Const.ITEM.TYPE_MAP
         return MAP[val] || '未知'
+    },
+    itemSpecFilter(attr_list) {
+        if (!(attr_list instanceof Array) || !attr_list.length) {
+            return '-'
+        }
+        let attr = attr_list.map(i => i.value)
+        return attr.join(' ')
     },
     /* =============== 商品 ================ */
 

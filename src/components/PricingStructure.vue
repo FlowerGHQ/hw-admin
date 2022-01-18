@@ -5,10 +5,15 @@
     </div>
     <div class="panel-content">
         <div class="table-container">
-            <ItemSelect :disabled-checked='tableData.map(i => i.item_id)' @select="handleAddItem" ghost btn-class="panel-btn">
+            <ItemSelect :disabled-checked='tableData.map(i => i.item_id)' @select="handleAddItem" btn-class="panel-btn">
                 <i class="icon i_add"/> 添加商品
             </ItemSelect>
-            <a-button @click="handleMutiEditChange()" class="panel-btn">{{editShow ? '确认设置' : '批量设置供货价'}}</a-button>
+            <a-button class="panel-btn" @click="handleMutiEditChange()" type="primary" ghost>
+                <template v-if='editShow'><i class="icon i_confirm"/>确认设置</template>
+                <template v-else>批量设置供货价</template>
+            </a-button>
+            <a-button class="panel-btn" @click="getTableData" v-if="editShow"><i class="icon i_close_c"/>取消设置</a-button>
+
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' :loading='loading'>
                 <template #bodyCell="{ column, text, record }">
                     <template v-if="column.key === 'detail'">
@@ -28,6 +33,9 @@
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}
+                    </template>
+                    <template v-if="column.key === 'spec'">
+                        {{ $Util.itemSpecFilter(text) }}
                     </template>
                     <template v-if="column.key === 'supply'">
                         <template v-if="record.edit_show || editShow">
@@ -104,6 +112,7 @@ export default {
         tableColumns() {
             let columns = [
                 { title: '商品名称', dataIndex: 'name', key: 'detail'},
+                { title: '商品规格', dataIndex: 'attr_list', key: 'spec' },
                 { title: '商品型号', dataIndex: 'model', key: 'item' },
                 { title: '商品编码', dataIndex: 'code',  key: 'item' },
                 { title: '供货价',  dataIndex: 'purchase_price', key: 'supply', },
