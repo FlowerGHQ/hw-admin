@@ -36,6 +36,9 @@
                                         <template v-if="record.type === repairItemType.TRANSFER">
                                             <a-button @click="handleTransfer()">选择</a-button>
                                         </template>
+                                        <template v-else>
+                                            -
+                                        </template>
                                     </template>
 
                                     <template v-if="column.dataIndex === 'amount'">
@@ -48,7 +51,7 @@
                                                 <a-select-option v-for="item of warehouseFailList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
                                             </a-select>
                                         </template>
-                                        <template v-else-if="warehouseFailList.length === 0 && record.type !== repairItemType.REPLACE">
+                                        <template v-else-if="warehouseFailList.length === 0 && record.type === repairItemType.REPLACE">
                                             <a-button type='link' @click="routerChange('editWarehouse')">新建仓库</a-button>
                                         </template>
                                         <template v-else>
@@ -73,7 +76,7 @@
                                             <template v-else>-</template>
                                             <!-- 区分帐类 end -->
                                         </template>
-                                        <template v-else-if="record.warehouse_out_list.length === 0 && record.type !== repairItemType.REPLACE">
+                                        <template v-else-if="record.warehouse_out_list.length === 0 && record.type === repairItemType.REPLACE">
                                             <a-button type='link' @click="routerChange('editWarehouse')">新建仓库</a-button>
                                         </template>
                                         <template v-else>
@@ -171,12 +174,12 @@ export default {
 
             tableColumns: [
                 {title: '商品名称', dataIndex: 'name'},
-                {title: '商品类型', dataIndex: 'type'},
+                {title: '维修类型', dataIndex: 'type'},
                 {title: '数量', dataIndex: 'amount'},
                 {title: '故障仓', dataIndex: 'bad'},
                 {title: '换新仓', dataIndex: 'new'},
                 {title: '金额', dataIndex: 'price', key: 'money'},
-                {title: '金额', dataIndex: 'totle_price'},
+                // {title: '金额', dataIndex: 'totle_price'},
                 {title: '选择维修工', dataIndex: 'repair'},
                 {title: '操作', dataIndex: 'operation'},
             ],
