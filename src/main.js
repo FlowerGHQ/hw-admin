@@ -18,6 +18,6 @@ app.config.globalProperties.$Util = Util
 app.config.globalProperties.$auth = Util.auth
 app.config.globalProperties.$message = message
 app.config.globalProperties.$notification = notification
-app.config.globalProperties.$confirm = Modal.confirm
+app.config.globalProperties.$confirm = Util.confirm
 
 app.use(router).use(store).use(i18n).mount('#app')

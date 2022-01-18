@@ -147,23 +147,6 @@ export default {
         this.getTableData();
     },
     methods: {
-        // handleDelete(id) {
-        //     let _this = this;
-        //     this.$confirm({
-        //         title: '确定要删除该退款记录吗？',
-        //         okText: '确定',
-        //         okType: 'danger',
-        //         cancelText: '取消',
-        //         onOk() {
-        //             Core.Api.Refund.delete({id}).then(() => {
-        //                 _this.$message.success('删除成功');
-        //                 _this.getTableData();
-        //             }).catch(err => {
-        //                 console.log("handleDelete err", err);
-        //             })
-        //         },
-        //     });
-        // },
         routerChange(type, item = {}) {
             console.log(item)
             let routeUrl = ''

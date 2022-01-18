@@ -22,6 +22,9 @@
             <template v-if="column.key === 'item'">
                 {{text || '-'}}
             </template>
+            <template v-if="column.key === 'spec'">
+                {{ $Util.itemSpecFilter(text)}}
+            </template>
         </template>
     </a-table>
 </template>
@@ -133,6 +136,10 @@ export default {
             record.tax_money = record.tax_rate * record.totle_charge / 100
             this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
         },
+
+        itemSpecFilter() {
+            return '-'
+        }
     }
 }
 </script>

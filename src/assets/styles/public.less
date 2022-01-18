@@ -63,7 +63,7 @@
             border-color: @BtnC_S_T;
         }
     }
-    &.ant-btn-primary {
+    &.ant-btn-primary:not(.ant-btn-dangerous) {
         background-color: @TC_P;
         border-color: @BG_P;
         &:hover, &:focus {
@@ -287,6 +287,26 @@
         .btn-area {
             width: 170px;
             display: flex;
+        }
+    }
+
+    .modal-confirm-icon {
+        display: inline-block;
+        margin-right: 16px;
+        font-size: 22px;
+        float: left;
+        line-height: 1;
+        &.i_m_info {
+            color: #1890ff;
+        }
+        &.i_m_success {
+            color: #52c41a;
+        }
+        &.i_m_error {
+            color: #ff4d4f;
+        }
+        &.i_m_warning {
+            color: #faad14;
         }
     }
 }
