@@ -9,9 +9,9 @@
         </div>
         <div class="form-content">
             <div class="form-item required">
-                <div class="key">文件类型</div>
+                <div class="key">来源类型</div>
                 <div class="value">
-                    <a-select placeholder="请选择文件类型" v-model:value="form.target_type" @change="handleCustomerSelect"
+                    <a-select placeholder="请选择来源类型" v-model:value="form.target_type" @change="handleCustomerSelect"
                                 show-search>
                         <a-select-option v-for="(item,index) of fileTypeList" :key="index" :value="item.value">
                             {{ item.text }}
