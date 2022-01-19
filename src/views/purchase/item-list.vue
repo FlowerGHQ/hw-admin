@@ -24,7 +24,7 @@
                                 <div class="desc">
                                     <p>{{item.item.name}}</p>
                                     <span>{{item.attr_str || item.item.code}}</span>
-                                    <p class="price">￥{{$Util.countFilter(item.price)}}</p>
+                                    <p class="price">￥{{$Util.countFilter(item.purchase_price)}}</p>
                                 </div>
                             </div>
                             <div class="btns">
