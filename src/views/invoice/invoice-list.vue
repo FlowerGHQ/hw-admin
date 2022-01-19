@@ -98,7 +98,7 @@
                             <a-button type="link" v-if="record.status === STATUS.AIT_AUDIT"
                                       @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改
                             </a-button>
-                            <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除
+                            <a-button type="link" v-if="record.status === STATUS.AIT_AUDIT" @click="handleCancel(record.id)"><i class="icon i_m_error"/> 取消
                             </a-button>
                         </template>
                     </template>
@@ -210,6 +210,7 @@ export default {
                 {text: '审核通过', value: '0', color: 'green', key: STOCK_RECORD.STATUS.AUDIT_PASS},
                 {text: '审核失败', value: '0', color: 'red', key: STOCK_RECORD.STATUS.AUDIT_REFUSE},
                 {text: '处理完成', value: '0', color: 'green', key: STOCK_RECORD.STATUS.CLOSE},
+                {text: '取消', value: '0', color: 'blue', key: STOCK_RECORD.STATUS.CANCEL},
             ],
             searchForm: {
                 name: '',
@@ -348,16 +349,16 @@ export default {
             });
         },
 
-        handleDelete(id) {
+        handleCancel(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该出入库表单吗？',
+                title: '确定要取消该出入库单吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Invoice.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                    Core.Api.Transfer.cancel({id}).then(() => {
+                        _this.$message.success('取消成功');
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);
@@ -403,6 +404,7 @@ export default {
                 console.log('handleInvoiceSubmit res', res)
                 this.handleInvoiceClose()
                 this.getTableData()
+                this.getStatusList()
             }).catch(err => {
                 console.log('handleInvoiceSubmit err', err)
             }).finally(() => {

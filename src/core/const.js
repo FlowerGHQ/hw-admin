@@ -523,9 +523,10 @@ let Const = {
             AIT_AUDIT: 10, //待审核
             AUDIT_PASS: 20, //审核通过
             CLOSE: 40, //处理完成
-            AUDIT_REFUSE: -10, //审核失败
+            AUDIT_REFUSE: '-10', //审核失败
+            CANCEL: '-20', // 取消
         },
-        STATUS_MAP: {
+        STATUS_MAP:{
             '10': '待审核',
             '20': '审核通过',
             '40': '处理完成',
@@ -535,13 +536,15 @@ let Const = {
             '10': 'yellow',
             '20': 'green',
             '40': 'orange',
-            "-10": 'gray',
+            '-10': 'gray',
+            '-20': 'blue'
         },
         STATUS_LIST: [  //出入库单审核
             {text: '待审核',value: 10},
             {text: '审核通过',value: 20},
             {text: '审核失败',value: -10},
             {text: '处理完成',value: 40},
+            {text: '取消',value: -20},
         ],
     },
     TRANSFER_ORDER: {   //调货单
@@ -550,22 +553,33 @@ let Const = {
             AUDIT_PASS: 20, //审核通过
             IN_TRANSIT: 30, //运输中
             CLOSE: 40, //处理完成
-            AUDIT_REFUSE: -20 //审核失败
+            AUDIT_REFUSE: -10, //审核失败
+            CANCEL: -20, //取消
         },
         STATUS_MAP:{
             '10': '待审核',
             '20': '审核通过',
             '30': '运输中',
             '40': '处理完成',
-            '-20': '审核失败',
+            '-10': '审核失败',
+            '-20': '取消',
         },
         STATUS_COLOR_MAP: {
             '10': 'yellow',
             '20': 'green',
             '30': 'purple',
             '40': 'orange',
-            "-10": 'red',
+            '-10': 'red',
+            '-20': 'blue'
         },
+        STATUS_LIST: [  //调货单审核
+            {text: '待审核',value: 10},
+            {text: '审核通过',value: 20},
+            {text: '运输中',value: 30},
+            {text: '处理完成',value: 40},
+            {text: '审核失败',value: -10},
+            {text: '取消',value: -20},
+        ],
     }
 };
 

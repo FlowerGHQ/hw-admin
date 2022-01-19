@@ -54,7 +54,7 @@
                 </a-collapse-panel>
             </a-collapse>
             <template class="modal-container">
-                <a-modal v-model:visible="invoiceShow" title="审核"
+                <a-modal v-model:visible="transferShow" title="审核"
                          class="warehouse-edit-modal" :after-close='handleInvoiceClose'>
                     <div class="modal-content">
                         <div>
@@ -74,8 +74,8 @@
                         </div>
                     </div>
                     <template #footer>
-                        <a-button @click="invoiceShow = false">取消</a-button>
-                        <a-button @click="handleInvoiceSubmit" type="primary">确定</a-button>
+                        <a-button @click="transferShow = false">取消</a-button>
+                        <a-button @click="handleTransferSubmit" type="primary">确定</a-button>
                     </template>
                 </a-modal>
             </template>
