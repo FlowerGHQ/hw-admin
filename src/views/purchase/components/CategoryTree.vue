@@ -122,7 +122,7 @@ export default {
                     position: absolute;
                     right: 0;
                     top: 50%;
-                    margin-top: -8px;
+                    left: calc(~'100% - 22px');
                 }
                 .name {
                     min-width: 0;

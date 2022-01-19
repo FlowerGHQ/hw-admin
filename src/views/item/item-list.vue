@@ -282,6 +282,12 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-// #ItemList {}
+<style lang="less">
+#ItemList {
+    .ant-table-row-level-1 {
+        td.ant-table-cell {
+            background: #F7F8FA;
+        }
+    }
+}
 </style>
