@@ -196,6 +196,13 @@ let Const = {
             1: '维修工单',
             2: '特批订单',
         },
+        // 维修单类别
+        CATEGORY_LIST: [
+            {text: '维修', value: 1},
+            {text: '换车', value: 2},
+            {text: '开箱损', value: 3},
+            {text: '电池维修', value: 4},
+        ],
         // 工单帐类
         SERVICE_TYPE: {
             IN_REPAIR_TIME: 1,

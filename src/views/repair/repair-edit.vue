@@ -18,6 +18,17 @@
                 </div>
             </div>
             <div class="form-item required">
+                <div class="key">类别</div>
+                <div class="value">
+                    <a-radio-group v-model:value="form.category">
+                        <a-radio v-for="item of categoryList" :key="item.value" :value="item.value">{{
+                                item.text
+                            }}
+                        </a-radio>
+                    </a-radio-group>
+                </div>
+            </div>
+            <div class="form-item required">
                 <div class="key">紧急程度</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.priority">
@@ -199,6 +210,7 @@ export default {
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
 
             typeList: REPAIR.TYPE_LIST, // 工单分类
+            categoryList: REPAIR.CATEGORY_LIST, // 维修工单类别
             methodList: REPAIR.METHOD_LIST, // 维修类别
             serviceList: REPAIR.SERVICE_TYPE_LIST,//工单帐类
             channelList: REPAIR.CHANNEL_LIST, // 维修方式
@@ -209,6 +221,7 @@ export default {
                 id: '',
 
                 type: 1,  // 工单分类
+                category: undefined, // 维修工单类别
                 name: '', // 工单名称
                 desc: '', // 问题描述
                 service_type: '',//保内维修、保外维修
