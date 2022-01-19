@@ -720,6 +720,7 @@ export default {
         handleSpecificModeChange() {
             if (this.specific.mode === 2) {
                 this.specific.data = [{
+                    target_id: this.form.id,
                     code: this.form.code,
                     price: this.form.price,
                     original_price: this.form.original_price,
