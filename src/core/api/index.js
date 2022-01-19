@@ -99,6 +99,7 @@ const apiList = {
         itemList: ['PostJson', 'invoice-item/list'], // 出入库单明细列表
         status: ['PostJson', 'invoice/status-list'], // 状态
         handle: ['PostJson', 'invoice/handle'], // 处理完成
+        cancel: ['PostJson', 'transfer-order/cancel'], // 取消出入库单
     },
     Transfer: { // 调货申请单
         save: ['PostJson', 'transfer-order/save'],
@@ -109,6 +110,7 @@ const apiList = {
         itemList: ['PostJson', 'transfer-order-item/list'], // 调货单明细列表
         saveList: ['PostJson', 'transfer-order-item/save-list'], //调货单提交
         status: ['PostJson', 'transfer-order/status-list'], // 状态
+        cancel: ['PostJson', 'transfer-order/cancel'], // 取消调货单
     },
     Repair: { // 维修单
         list: ['PostJson', 'repair/list'], // 列表

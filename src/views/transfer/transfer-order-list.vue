@@ -85,8 +85,8 @@
 <!--                            </a-button>-->
                             <a-button type="link" v-if="record.status === STATUS.WAIT_AUDIT && !$auth('ADMIN')" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改
                             </a-button>
-<!--                            <a-button type="link" v-if="record.status === STATUS.WAIT_AUDIT" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除-->
-<!--                            </a-button>-->
+                            <a-button type="link" v-if="record.status === STATUS.WAIT_AUDIT && !$auth('ADMIN')" @click="handleCancel(record.id)"><i class="icon i_m_error"/> 取消
+                            </a-button>
                         </template>
                     </template>
                 </a-table>
@@ -187,7 +187,6 @@ export default {
             isExist: '',
             filteredInfo: {status: [0]},
             warehouseList: [],
-            handleTypeList: Core.Const.STOCK_RECORD.TYPE, //出入库
             statusList: [
                 {text: '全  部', value: '0', color: 'primary', key: '0'},
                 {text: '待审核', value: '0', color: 'yellow', key: TRANSFER_ORDER.STATUS.AIT_AUDIT},
@@ -335,23 +334,23 @@ export default {
                 this.loading = false;
             });
         },
-        // handleDelete(id) {
-        //     let _this = this;
-        //     this.$confirm({
-        //         title: '确定要删除该调货单吗？',
-        //         okText: '确定',
-        //         okType: 'danger',
-        //         cancelText: '取消',
-        //         onOk() {
-        //             Core.Api.Transfer.delete({id}).then(() => {
-        //                 _this.$message.success('删除成功');
-        //                 _this.getTableData();
-        //             }).catch(err => {
-        //                 console.log("handleDelete err", err);
-        //             })
-        //         },
-        //     });
-        // },
+        handleCancel(id) {
+            let _this = this;
+            this.$confirm({
+                title: '确定要取消该调货单吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Invoice.cancel({id}).then(() => {
+                        _this.$message.success('取消成功');
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
         handleTransferShow(id) { // 显示弹框
             this.transferShow = true
             this.editForm.id = id
@@ -367,6 +366,7 @@ export default {
                 console.log('handleTransferSubmit res', res)
                 this.handleTransferClose()
                 this.getTableData()
+                this.getStatusList()
             }).catch(err => {
                 console.log('handleTransferSubmit err', err)
             }).finally(() => {
