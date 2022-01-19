@@ -99,7 +99,7 @@ const apiList = {
         itemList: ['PostJson', 'invoice-item/list'], // 出入库单明细列表
         status: ['PostJson', 'invoice/status-list'], // 状态
         handle: ['PostJson', 'invoice/handle'], // 处理完成
-        cancel: ['PostJson', 'transfer-order/cancel'], // 取消出入库单
+        cancel: ['PostJson', 'invoice/cancel'], // 取消出入库单
     },
     Transfer: { // 调货申请单
         save: ['PostJson', 'transfer-order/save'],

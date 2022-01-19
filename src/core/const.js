@@ -538,20 +538,21 @@ let Const = {
             '20': '审核通过',
             '40': '处理完成',
             '-10': '审核失败',
+            '-20': '已取消'
         },
         STATUS_COLOR_MAP: {
             '10': 'yellow',
             '20': 'green',
             '40': 'orange',
-            '-10': 'gray',
-            '-20': 'blue'
+            '-10': 'red',
+            '-20': 'gray'
         },
         STATUS_LIST: [  //出入库单审核
             {text: '待审核',value: 10},
             {text: '审核通过',value: 20},
             {text: '审核失败',value: -10},
             {text: '处理完成',value: 40},
-            {text: '取消',value: -20},
+            {text: '已取消',value: -20},
         ],
     },
     TRANSFER_ORDER: {   //调货单
