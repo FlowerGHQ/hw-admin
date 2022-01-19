@@ -210,6 +210,7 @@ export default {
                 {text: '审核通过', value: '0', color: 'green', key: STOCK_RECORD.STATUS.AUDIT_PASS},
                 {text: '审核失败', value: '0', color: 'red', key: STOCK_RECORD.STATUS.AUDIT_REFUSE},
                 {text: '处理完成', value: '0', color: 'green', key: STOCK_RECORD.STATUS.CLOSE},
+                {text: '取消', value: '0', color: 'blue', key: STOCK_RECORD.STATUS.CANCEL},
             ],
             searchForm: {
                 name: '',

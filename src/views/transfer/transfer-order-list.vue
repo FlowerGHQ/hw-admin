@@ -51,7 +51,7 @@
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                         :row-key="record => record.id" :pagination='false'>
+                         :row-key="record => record.id" :pagination='false' @change="handleTableChange">
                     <template #bodyCell="{ column, text , record}">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
@@ -85,8 +85,8 @@
 <!--                            </a-button>-->
                             <a-button type="link" v-if="record.status === STATUS.WAIT_AUDIT && !$auth('ADMIN')" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改
                             </a-button>
-                            <a-button type="link" v-if="record.status === STATUS.WAIT_AUDIT" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除
-                            </a-button>
+<!--                            <a-button type="link" v-if="record.status === STATUS.WAIT_AUDIT" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除-->
+<!--                            </a-button>-->
                         </template>
                     </template>
                 </a-table>
@@ -163,7 +163,7 @@
 <script>
 import Core from '../../core';
 
-const STOCK_RECORD = Core.Const.STOCK_RECORD
+const TRANSFER_ORDER = Core.Const.TRANSFER_ORDER
 export default {
     name: 'TransferOrderList',
     components: {},
@@ -185,15 +185,16 @@ export default {
             },
             transferOrderShow: false,
             isExist: '',
-            filteredInfo: {status: [1]},
+            filteredInfo: {status: [0]},
             warehouseList: [],
             handleTypeList: Core.Const.STOCK_RECORD.TYPE, //出入库
             statusList: [
                 {text: '全  部', value: '0', color: 'primary', key: '0'},
-                {text: '待审核', value: '0', color: 'yellow', key: STOCK_RECORD.STATUS.AIT_AUDIT},
-                {text: '审核通过', value: '0', color: 'green', key: STOCK_RECORD.STATUS.AUDIT_PASS},
-                {text: '审核失败', value: '0', color: 'red', key: STOCK_RECORD.STATUS.AUDIT_REFUSE},
-                {text: '处理完成', value: '0', color: 'green', key: STOCK_RECORD.STATUS.CLOSE},
+                {text: '待审核', value: '0', color: 'yellow', key: TRANSFER_ORDER.STATUS.AIT_AUDIT},
+                {text: '审核通过', value: '0', color: 'green', key: TRANSFER_ORDER.STATUS.AUDIT_PASS},
+                {text: '审核失败', value: '0', color: 'red', key: TRANSFER_ORDER.STATUS.AUDIT_REFUSE},
+                {text: '处理完成', value: '0', color: 'green', key: TRANSFER_ORDER.STATUS.CLOSE},
+                {text: '取消', value: '0', color: 'blue', key: TRANSFER_ORDER.STATUS.CANCEL},
             ],
             searchForm: {
                 name: '',
@@ -230,7 +231,7 @@ export default {
                 {title: '仓库类型', dataIndex: ['to_warehouse', 'type'], key: 'type',},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '状态', dataIndex: 'status', key: 'status',
-                    filters: Core.Const.STOCK_RECORD.STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [1]},
+                    filters: Core.Const.TRANSFER_ORDER.STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [0]},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
             return columns
@@ -249,14 +250,14 @@ export default {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/warehouse/transfer-order-edit",
-                        query: {to_warehouse_id: item.id}
+                        query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
                         path: "/warehouse/transfer-order-detail",
-                        query: {to_warehouse_id: item.id}
+                        query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -334,23 +335,23 @@ export default {
                 this.loading = false;
             });
         },
-        handleDelete(id) {
-            let _this = this;
-            this.$confirm({
-                title: '确定要删除该调货单吗？',
-                okText: '确定',
-                okType: 'danger',
-                cancelText: '取消',
-                onOk() {
-                    Core.Api.Transfer.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
-                        _this.getTableData();
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
-                },
-            });
-        },
+        // handleDelete(id) {
+        //     let _this = this;
+        //     this.$confirm({
+        //         title: '确定要删除该调货单吗？',
+        //         okText: '确定',
+        //         okType: 'danger',
+        //         cancelText: '取消',
+        //         onOk() {
+        //             Core.Api.Transfer.delete({id}).then(() => {
+        //                 _this.$message.success('删除成功');
+        //                 _this.getTableData();
+        //             }).catch(err => {
+        //                 console.log("handleDelete err", err);
+        //             })
+        //         },
+        //     });
+        // },
         handleTransferShow(id) { // 显示弹框
             this.transferShow = true
             this.editForm.id = id
@@ -394,6 +395,15 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
+        },
+        handleTableChange(page, filters, sorter) {
+            console.log('handleTableChange filters:', filters)
+            this.filteredInfo = filters;
+            for (const key in filters) {
+                this.searchForm[key] = filters[key] ? filters[key][0] : ''
+            }
+            this.searchForm.status = filters.status ? filters.status[0] : 1
+            this.pageChange(1);
         },
     }
 };
