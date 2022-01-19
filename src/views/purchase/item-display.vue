@@ -4,7 +4,7 @@
             <p class="name">{{ detail.name }}</p>
             <p class="code">商品编号：{{ detail.code }}</p>
             <p class="spec" v-if="detail.attr_str"><span>规格：</span>{{ detail.attr_str }}</p>
-            <p class="price">￥{{ $Util.countFilter(detail.price) }}</p>
+            <p class="price">￥{{ $Util.countFilter(detail.purchase_price) }}</p>
             <p class="category">{{ category.name }}</p>
             <div class="desc" v-if="config && config.length">
                 <template v-for="(item, index) of config" :key="index">
@@ -32,7 +32,7 @@
                 <div class="spec-item" v-for="item of specList" :key="item.id"
                     :class="this.id === item.id ? 'active' : ''" @click="handleSpecChange(item)">
                     <img :src="$Util.imageFilter(item.logo, 2)"/>
-                    <p>{{item.name}}{{item.name}}{{item.name}}</p>
+                    <p>{{item.name}}</p>
                 </div>
             </div>
         </div>
@@ -292,6 +292,7 @@ export default {
                     font-size: 17px;
                     font-weight: 500;
                     color: #1D1D1F;
+                    text-align: center;
                 }
             }
         }

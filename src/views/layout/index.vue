@@ -210,7 +210,7 @@ export default {
             switch (type) {
                 case 'notice':        //系统
                     routeUrl = this.$router.resolve({
-                        path: "/notice/notice-list",
+                        path: "/system/notice-list",
                     })
                     window.open(routeUrl.href, '_self')
                     break;

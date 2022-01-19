@@ -816,6 +816,36 @@ const routes = [
                 }
             },
             {
+                path: 'notice-list',
+                name: 'NoticeList',
+                component: () => import('@/views/system/notice-list.vue'),
+                meta: {
+                    title: '消息列表',
+                    is_sub_menu: true,
+                }
+            },
+            {
+                path: 'notice-edit',
+                name: 'NoticeEdit',
+                component: () => import('@/views/system/notice-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '新增消息',
+                    parent: '/system/notice-list',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+            {
+                path: 'notice-detail',
+                name: 'NoticeDetail',
+                component: () => import('@/views/system/notice-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '消息详情',
+                    parent: '/system/notice-list',
+                }
+            },
+            {
                 path: 'allot-org-auth',
                 name: 'AllotOrgAuth',
                 component: () => import('@/views/system/allot-org-auth.vue'),
@@ -823,47 +853,6 @@ const routes = [
                     title: '组织权限管理',
                     is_sub_menu: true,
                     roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-        ]
-    },
-    {   // 系统消息
-        path: '/notice',
-        component: Layout,
-        redirect: '/notice/notice-list',
-        name: 'NoticeManagement',
-        hidden: false,
-        meta: {
-            title: '系统消息',
-            icon: 'i_s_temp',
-        },
-        children: [
-            {
-                path: 'notice-list',
-                name: 'NoticeList',
-                component: () => import('@/views/notice/notice-list.vue'),
-                meta: {
-                    title: '消息列表',
-                }
-            },
-            {
-                path: 'notice-edit',
-                name: 'NoticeEdit',
-                component: () => import('@/views/notice/notice-edit.vue'),
-                hidden: true,
-                meta: {
-                    title: '新增消息',
-                    parent: '/notice/notice-list',
-                }
-            },
-            {
-                path: 'notice-detail',
-                name: 'NoticeDetail',
-                component: () => import('@/views/notice/notice-detail.vue'),
-                hidden: true,
-                meta: {
-                    title: '消息详情',
-                    parent: '/notice/notice-list',
                 }
             },
         ]

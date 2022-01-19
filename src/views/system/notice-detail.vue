@@ -50,14 +50,14 @@ export default {
             switch (type) {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/notice/notice-edit",
+                        path: "/system/notice-edit",
                         query: {id: this.notice_id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'list':  // 列表
                     routeUrl = this.$router.resolve({
-                        path: "/notice/notice-list",
+                        path: "/system/notice-list",
                         query: {id: this.notice_id}
                     })
                     window.open(routeUrl.href, '_self')

@@ -590,6 +590,9 @@ export default {
                 if (!form.original_price) {
                     return this.$message.warning('请输入商品成本价格')
                 }
+                if (form.original_price > form.price) {
+                    return this.$message.warning('商品成本价格应小于商品标准售价')
+                }
             } else { // 多规格
                 // 规格定义 检查
                 for (let i = 0; i < attrDef.length; i++) {
@@ -617,6 +620,9 @@ export default {
                     if (!item.original_price) {
                         return this.$message.warning('请输入商品成本价格')
                     }
+                    if (item.original_price > item.price) {
+                    return this.$message.warning('商品成本价格应小于商品标准售价')
+                }
                     let str = ''
                     for (let j = 0; j < this.specific.list.length; j++) {
                         const {name, key} = this.specific.list[j];

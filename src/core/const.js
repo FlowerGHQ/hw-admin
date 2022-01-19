@@ -530,8 +530,8 @@ let Const = {
             AIT_AUDIT: 10, //待审核
             AUDIT_PASS: 20, //审核通过
             CLOSE: 40, //处理完成
-            AUDIT_REFUSE: '-10', //审核失败
-            CANCEL: '-20', // 取消
+            AUDIT_REFUSE: -10, //审核失败
+            CANCEL: -20, // 取消
         },
         STATUS_MAP: {
             '10': '待审核',
@@ -542,8 +542,8 @@ let Const = {
         },
         STATUS_COLOR_MAP: {
             '10': 'yellow',
-            '20': 'green',
-            '40': 'orange',
+            '20': 'blue',
+            '40': 'green',
             '-10': 'red',
             '-20': 'gray'
         },

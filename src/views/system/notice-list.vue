@@ -123,14 +123,14 @@ export default {
             switch (type) {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/notice/notice-edit",
+                        path: "/system/notice-edit",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/notice/notice-detail",
+                        path: "/system/notice-detail",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
