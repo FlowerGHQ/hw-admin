@@ -533,7 +533,7 @@ let Const = {
             AUDIT_REFUSE: '-10', //审核失败
             CANCEL: '-20', // 取消
         },
-        STATUS_MAP:{
+        STATUS_MAP: {
             '10': '待审核',
             '20': '审核通过',
             '40': '处理完成',
@@ -573,11 +573,11 @@ let Const = {
         },
         STATUS_COLOR_MAP: {
             '10': 'yellow',
-            '20': 'green',
+            '20': 'blue',
             '30': 'purple',
-            '40': 'orange',
+            '40': 'green',
             '-10': 'red',
-            '-20': 'blue'
+            '-20': 'gray'
         },
         STATUS_LIST: [  //调货单审核
             {text: '待审核',value: 10},
@@ -585,7 +585,7 @@ let Const = {
             {text: '运输中',value: 30},
             {text: '处理完成',value: 40},
             {text: '审核失败',value: -10},
-            {text: '取消',value: -20},
+            {text: '已取消',value: -20},
         ],
     }
 };
