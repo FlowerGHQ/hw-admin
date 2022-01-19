@@ -33,7 +33,7 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
                     <div class="key">所属分销商:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.distributor_id" placeholder="请选择所属分销商" @change="handleSearch">
+                        <a-select v-model:value="searchForm.distributor_id" placeholder="请选择所属分销商" @change="handleSearch" show-search option-filter-prop="children">
                             <a-select-option v-for="distributor of distributorList" :key="distributor.id" :value="distributor.id">{{ distributor.name }}</a-select-option>
                         </a-select>
                     </div>
@@ -41,7 +41,8 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
                     <div class="key">所属零售商:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.agent_id" placeholder="请选择所属零售商" @change='handleSearch'>
+                        <a-select v-model:value="searchForm.agent_id" @change='handleSearch' show-search option-filter-prop="children"
+                            :placeholder="searchForm.distributor_id ? '请选择所属零售商' : '请先选择所属分销商'" :disabled="!searchForm.distributor_id">
                             <a-select-option v-for="agent of agentList" :key="agent.id" :value="agent.id">{{ agent.name }}</a-select-option>
                         </a-select>
                     </div>
@@ -49,7 +50,8 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR', 'AGENT')">
                     <div class="key">所属门店:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.store_id" placeholder="请选择门店" @change='handleSearch'>
+                        <a-select v-model:value="searchForm.store_id" @change='handleSearch' show-search option-filter-prop="children"
+                            :placeholder="searchForm.agent_id ? '请选择所属门店' : '请先选择所属零售商'" :disabled="!searchForm.agent_id">
                             <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
@@ -234,18 +236,7 @@ export default {
         },
     },
     mounted() {
-        this.getTableData();
-        if (this.$auth('ADMIN')) {
-            this.getDistributorListAll();
-        }
-        if (this.$auth('DISTRIBUTOR')) {
-            this.searchForm.distributor_id = Core.Data.getOrgId()
-            this.getAgentListAll();
-        }
-        if (this.$auth('AGENT')) {
-            this.searchForm.agent_id = Core.Data.getOrgId()
-            this.getStoreListAll();
-        }
+        this.handleSearchReset();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -290,20 +281,30 @@ export default {
         },
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
+            if (this.$auth('ADMIN')) {
+                this.getDistributorListAll();
+            }
+            else if (this.$auth('DISTRIBUTOR')) {
+                this.searchForm.distributor_id = Core.Data.getOrgId()
+                this.getAgentListAll();
+            }
+            else if (this.$auth('AGENT')) {
+                this.searchForm.agent_id = Core.Data.getOrgId()
+                this.getStoreListAll();
+            }
+            else if (this.$auth('STORE')) {
+                this.searchForm.store_id = Core.Data.getOrgId()
+            }
             this.filteredInfo = null
             this.create_time = []
             this.pageChange(1);
         },
 
-        getStoreListAll() { // 通过零售商Id 获取所有门店
-            if (this.searchForm.agent_id) {
-                Core.Api.Store.listAll({agent_id: this.searchForm.agent_id}).then(res => {
-                    console.log('getStoreListAll res.list: ', res.list);
-                    this.storeList = res.list
-                });
-            } else {
-                this.storeList = []
-            }
+        getDistributorListAll() { // 获取所有分销商
+            Core.Api.Distributor.listAll().then(res => {
+                console.log('getDistributorListAll res.list: ', res.list);
+                this.distributorList = res.list
+            });
         },
         getAgentListAll() { // 通过分销商Id 获取所有零售商
             if (this.searchForm.distributor_id) {
@@ -315,11 +316,15 @@ export default {
                 this.agentList = []
             }
         },
-        getDistributorListAll() { // 获取所有分销商
-            Core.Api.Distributor.listAll().then(res => {
-                console.log('getDistributorListAll res.list: ', res.list);
-                this.distributorList = res.list
-            });
+        getStoreListAll() { // 通过零售商Id 获取所有门店
+            if (this.searchForm.agent_id) {
+                Core.Api.Store.listAll({agent_id: this.searchForm.agent_id}).then(res => {
+                    console.log('getStoreListAll res.list: ', res.list);
+                    this.storeList = res.list
+                });
+            } else {
+                this.storeList = []
+            }
         },
 
         getTableData() {  // 获取 表格 数据
@@ -372,7 +377,7 @@ export default {
             });
         },
 
-        handleExportConfirm(){ // 确认订单是否导出
+        handleExportConfirm() { // 确认订单是否导出
             let _this = this;
             this.$confirm({
                 title: '确认要导出吗？',

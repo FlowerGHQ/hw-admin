@@ -27,23 +27,24 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
                     <div class="key">所属分销商:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.distributor_id" placeholder="请选择分销商" @change="handleSearch">
+                        <a-select v-model:value="searchForm.distributor_id" placeholder="请选择分销商" @change="handleSearch" show-search option-filter-prop="children">
                             <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
                     <div class="key">所属零售商：</div>
                     <div class="value">
-                        <a-select placeholder="请选择所属零售商" v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear>
+                        <a-select v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children"
+                            :placeholder="searchForm.distributor_id ? '请选择所属零售商' : '请先选择所属分销商'" :disabled="!searchForm.distributor_id">
                             <a-select-option v-for="(item,index) of agentList" :key="index" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'AGENT')">
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR', 'AGENT')">
                     <div class="key">所属门店：</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.store_id" @change="handleSearch" show-search option-filter-prop="children" allow-clear
+                        <a-select v-model:value="searchForm.store_id" @change="handleSearch" show-search option-filter-prop="children"
                             :placeholder="searchForm.agent_id ? '请选择所属门店' : '请先选择所属零售商'" :disabled="!searchForm.agent_id">
                             <a-select-option v-for="(item,index) of storeList" :key="index" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
@@ -159,12 +160,13 @@ export default {
             ],
             agentList: [],
             storeList: [],
+            distributorList: [],
             create_time: [],
             searchForm: {
                 sn: '',
                 status: undefined,
                 item_type: 0,
-                distributor_id:undefined,
+                distributor_id: undefined,
                 agent_id: undefined,
                 store_id: undefined,
                 type: 0,
@@ -175,9 +177,14 @@ export default {
         };
     },
     watch: {
-        'searchForm.agent_id': function(newVal, oldVal) {
-            console.log('watch searchForm.agent_id newVal', newVal)
-            this.getStoreList()
+        'searchForm.distributor_id': function () {
+            this.getAgentListAll();
+            this.searchForm.agent_id = undefined
+            this.searchForm.store_id = undefined
+        },
+        'searchForm.agent_id': function () {
+            this.getStoreListAll()
+            this.searchForm.store_id = undefined
         },
     },
     computed: {
@@ -187,31 +194,25 @@ export default {
                 { title: '价格', dataIndex: 'price' },
                 { title: '订单状态', dataIndex: 'status' },
                 { title: '下单时间', dataIndex: 'create_time', key: 'time' },
+                { title: '支付时间', dataIndex: 'pay_time', key: 'time' },
+                { title: '完成时间', dataIndex: 'close_time', key: 'time' },
                 { title: '操作', key: 'operation', fixed: 'right'}
             ]
-            if (this.$auth('ADMIN', 'AGENT')) {
+            if (this.$auth('ADMIN', 'DISTRIBUTOR', 'AGENT')) {
                 columns.splice(2, 0, {title: '所属门店', dataIndex: 'store_name', key: 'item'})
             }
+            if (this.$auth('ADMIN', 'DISTRIBUTOR')) {
+                columns.splice(2, 0, {title: '所属零售商', dataIndex: 'agent_name', key: 'item'})
+            }
             if (this.$auth('ADMIN')) {
-                columns.splice(2, 0, {title: '所属运营商', dataIndex: 'agent_name', key: 'item'})
+                columns.splice(2, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'item'})
             }
             return columns
         }
     },
     mounted() {
-        this.getTableData();
+        this.handleSearchReset();
         this.getStatusStat();
-        if (this.loginType === LOGIN_TYPE.ADMIN) {
-            this.getDistributorListAll();
-        }
-        if (this.$auth('ADMIN')) {
-            this.getAgentList()
-        } else if (this.$auth('AGENT')) {
-            this.searchForm.agent_id = Core.Data.getOrgId()
-            this.getStoreList()
-        } else if (this.$auth('STORE')) {
-            this.searchForm.store_id = Core.Data.getOrgId()
-        }
     },
     methods: {
         async routerChange(type, item = {}) {
@@ -239,17 +240,29 @@ export default {
             this.getTableData()
         },
         pageSizeChange(current, size) {  // 页码尺寸改变
-            console.log('pageSizeChange size:', size)
             this.pageSize = size
             this.getTableData()
+        },
+        handleTableChange(page, filters, sorter) {
+            console.log('handleTableChange filters:', filters)
+            // this.filteredInfo = filters;
+            for (const key in filters) {
+                this.searchForm[key] = filters[key] ? filters[key][0] : ''
+            }
         },
         handleSearch() {  // 搜索
             this.pageChange(1);
         },
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            if (this.$auth('AGENT')) {
+            if (this.$auth('ADMIN')) {
+                this.getDistributorListAll();
+            } else if (this.$auth('DISTRIBUTOR')) {
+                this.searchForm.distributor_id = Core.Data.getOrgId()
+                this.getAgentListAll();
+            } else if (this.$auth('AGENT')) {
                 this.searchForm.agent_id = Core.Data.getOrgId()
+                this.getStoreListAll();
             } else if (this.$auth('STORE')) {
                 this.searchForm.store_id = Core.Data.getOrgId()
             }
@@ -258,8 +271,6 @@ export default {
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-            this.loading = false;
-
             Core.Api.Purchase.list({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
@@ -276,17 +287,57 @@ export default {
                 this.loading = false;
             });
         },
-        handleTableChange(page, filters, sorter) {
-            console.log('handleTableChange filters:', filters)
-            // this.filteredInfo = filters;
-            for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : ''
+        getStatusStat() {  // 获取 状态统计 数据
+            this.loading = true;
+            Core.Api.Purchase.statusList().then(res => {
+                console.log("getStatusStat res:", res)
+                let total = 0
+
+                this.statusList.forEach(statusItem => {
+                    res.status_list.forEach(item => {
+                        if ( statusItem.key == item.status) {
+                            statusItem.value = item.amount
+                            total += item.amount
+                        }
+                    })
+                })
+                console.log(total)
+                this.statusList[0].value = total
+            }).catch(err => {
+                console.log('getStatusStat err:', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        getDistributorListAll() {
+            Core.Api.Distributor.listAll().then(res => {
+                console.log('res.list: ', res.list);
+                this.distributorList = res.list
+            });
+        },
+        getAgentListAll() { // 获取 零售商 数据
+            if (this.searchForm.distributor_id) {
+                Core.Api.Agent.listAll({distributor_id: this.searchForm.distributor_id}).then(res => {
+                    console.log('getAgentListAll res.list: ', res.list);
+                    this.agentList = res.list
+                });
+            } else {
+                this.agentList = []
+            }
+        },
+        getStoreListAll() { // 通过零售商Id 获取所有门店
+            if (this.searchForm.agent_id) {
+                Core.Api.Store.listAll({agent_id: this.searchForm.agent_id}).then(res => {
+                    console.log('getStoreListAll res.list: ', res.list);
+                    this.storeList = res.list
+                });
+            } else {
+                this.storeList = []
             }
         },
 
         handleRecreate(item){ // 再来一单
             this.loading = true;
-            console.log("item.id:"+item.id);
             Core.Api.Purchase.recreate({
                 id: item.id,
             }).then(res => {
@@ -317,7 +368,7 @@ export default {
             let sn = form.sn || ''
             let status = form.status || 0
             let itemType = form.item_type || 0
-            let distributorId = form.distributorId || 0
+            let distributorId = form.distributor_id || 0
             let agentId = form.agent_id || 0
             let storeId = form.store_id || 0
             let orgId = form.org_id ? form.org_id : 0
@@ -339,59 +390,6 @@ export default {
             window.open(exportUrl, '_blank')
 
             this.exportDisabled = false;
-        },
-
-        getDistributorListAll() {
-            Core.Api.Distributor.listAll().then(res => {
-                console.log('res.list: ', res.list);
-                this.distributorList = res.list
-            });
-        },
-        getAgentList() { // 获取 零售商 数据
-            this.loading = true;
-            Core.Api.Agent.listAll().then(res => {
-                console.log("getAgentList res", res)
-                this.agentList = res.list;
-            }).catch(err => {
-                console.log('getAgentList err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-        getStoreList() { // 获取 门店 数据
-            this.loading = true;
-            Core.Api.Store.listAll({
-                agent_id: this.searchForm.agent_id
-            }).then(res => {
-                console.log("getStoreList res", res)
-                this.storeList = res.list;
-            }).catch(err => {
-                console.log('getStoreList err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-        getStatusStat() {  // 获取 状态统计 数据
-            this.loading = true;
-            Core.Api.Purchase.statusList().then(res => {
-                console.log("getStatusStat res:", res)
-                let total = 0
-
-                this.statusList.forEach(statusItem => {
-                    res.status_list.forEach(item => {
-                        if ( statusItem.key == item.status) {
-                            statusItem.value = item.amount
-                            total += item.amount
-                        }
-                    })
-                })
-                console.log(total)
-                this.statusList[0].value = total
-            }).catch(err => {
-                console.log('getStatusStat err:', err)
-            }).finally(() => {
-                this.loading = false;
-            });
         },
     }
 };
