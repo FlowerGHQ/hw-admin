@@ -384,7 +384,7 @@ const routes = [
                 name: 'InvoiceList',
                 component: () => import('@/views/invoice/invoice-list.vue'),
                 meta: {
-                    title: '货单',
+                    title: '出入库',
                     is_sub_menu: true
                 }
             },
@@ -394,7 +394,7 @@ const routes = [
                 component: () => import('@/views/invoice/invoice-edit.vue'),
                 hidden: true,
                 meta: {
-                    title: '货单编辑',
+                    title: '出入库编辑',
                     parent: '/invoice/invoice-list',
                 }
             },
@@ -404,7 +404,7 @@ const routes = [
                 component: () => import('@/views/invoice/invoice-detail.vue'),
                 hidden: true,
                 meta: {
-                    title: '货单详情',
+                    title: '出入库详情',
                     parent: '/invoice/invoice-list',
                 }
             },
@@ -420,7 +420,7 @@ const routes = [
             {
                 path: 'transfer-order-edit',
                 name: 'TransferOrderEdit',
-                component: () => import('@/views//transfer/transfer-order-edit.vue'),
+                component: () => import('@/views/transfer/transfer-order-edit.vue'),
                 hidden: true,
                 meta: {
                     title: '调货单编辑',

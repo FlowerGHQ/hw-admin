@@ -2,7 +2,7 @@
     <div id="InvoiceList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">货单列表</div>
+                <div class="title-area">出入库单列表</div>
                 <div class="btns-area">
                     <a-button type="primary" @click="handleStockShow"><i class="icon i_add"/>库存管理</a-button>
                 </div>
@@ -27,14 +27,14 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">货单编号:</div>
+                        <div class="key">出入库单编号:</div>
                         <div class="value">
-                            <a-input placeholder="请输入货单编号" v-model:value="searchForm.uid"
+                            <a-input placeholder="请输入出入库单编号" v-model:value="searchForm.uid"
                                      @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">货单类型:</div>
+                        <div class="key">出入库单类型:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.type" @change="handleTypeSelect" placeholder="请选择出入库类型"
                                       allow-clear>
@@ -87,13 +87,16 @@
                             </div>
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link"  v-if="record.status === STATUS.AIT_AUDIT" @click="handleInvoiceShow(record.id)"><i
+                            <a-button type="link" v-if="record.status === STATUS.AIT_AUDIT"
+                                      @click="handleInvoiceShow(record.id)"><i
                                 class="icon i_edit"/>审核
                             </a-button>
-                            <a-button type="link"  v-else-if="record.status === STATUS.AUDIT_PASS" @click="handleInvoice(record.id)"><i
+                            <a-button type="link" v-else-if="record.status === STATUS.AUDIT_PASS"
+                                      @click="handleInvoice(record.id)"><i
                                 class="icon i_edit"/>处理
                             </a-button>
-                            <a-button type="link" v-if="record.status === STATUS.AIT_AUDIT" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改
+                            <a-button type="link" v-if="record.status === STATUS.AIT_AUDIT"
+                                      @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改
                             </a-button>
                             <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除
                             </a-button>
@@ -149,15 +152,17 @@
                 <div class="modal-content">
                     <div>
                         <div class="form-item required">
+                            <div class="key">审核结果:</div>
                             <a-radio-group v-model:value="editForm.status">
                                 <a-radio :value="STATUS.AUDIT_PASS">通过</a-radio>
                                 <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio>
                             </a-radio-group>
                         </div>
-                        <div class="form-item required" v-if="editForm.status === STATUS.AUDIT_REFUSE">
+                        <div class="form-item textarea required" v-if="editForm.status === STATUS.AUDIT_REFUSE">
                             <div class="key">原因:</div>
                             <div class="value">
-                                <a-textarea v-model:value="editForm.audit_message" placeholder="请输入不通过原因" :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                                <a-textarea v-model:value="editForm.audit_message" placeholder="请输入不通过原因"
+                                            :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                             </div>
                         </div>
                     </div>
@@ -212,7 +217,6 @@ export default {
                 status: undefined,
                 type: undefined,
             },
-            warehouse_id: '',
             form: {
                 type: '',
                 id: '',
@@ -235,18 +239,11 @@ export default {
             filteredInfo = filteredInfo || {};
             let columns = [
                 {title: '出入库单编号', dataIndex: 'uid', key: 'detail'},
-                {title: '出入库类型', dataIndex: 'type', key: 'stock_type',},
+                {title: '出入库单类型', dataIndex: 'type', key: 'stock_type',},
                 {title: '所属仓库', dataIndex: ['warehouse', 'name'], key: 'warehouse_name',},
                 {title: '仓库类型', dataIndex: 'type', key: 'type',},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {
-                    title: '状态',
-                    dataIndex: 'status',
-                    key: 'status',
-                    filters: Core.Const.STOCK_RECORD.STATUS_LIST,
-                    filterMultiple: false,
-                    filteredValue: filteredInfo.status || [1]
-                },
+                {title: '状态', dataIndex: 'status', key: 'status', filters: Core.Const.STOCK_RECORD.STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [1]},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
             return columns
@@ -280,7 +277,6 @@ export default {
         },
         handleStockShow() {
             this.stockShow = true;
-            this.form.warehouse_id = this.warehouse_id
         },
         handleStockClose() {
             this.stockShow = false;
@@ -288,8 +284,6 @@ export default {
             this.form = {
                 type: '',
                 id: '',
-                target_code: '', //商品编码
-                number: '',
                 warehouse_id: '',
             }
         },
@@ -357,7 +351,7 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该货单吗？',
+                title: '确定要删除该出入库表单吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',
@@ -389,7 +383,7 @@ export default {
                 console.log(total)
                 this.statusList[0].value = total
             }).catch(err => {
-                console.log('getStatusStat err:', err)
+                console.log('getStatusList err:', err)
             }).finally(() => {
                 this.loading = false;
             });
