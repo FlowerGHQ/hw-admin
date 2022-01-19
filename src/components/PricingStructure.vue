@@ -124,6 +124,7 @@ export default {
                 { title: '商品型号', dataIndex: 'model', key: 'item' },
                 { title: '商品编码', dataIndex: 'code',  key: 'item' },
                 { title: '供货价',  dataIndex: 'purchase_price', key: 'supply', },
+                { title: '采购价', dataIndex: 'parent_price', key: 'money', },
                 { title: '标准售价', dataIndex: 'price', key: 'money', },
                 { title: '操作', key: 'operation', fixed: 'right'},
             ]
@@ -205,6 +206,7 @@ export default {
             console.log('handleAddItemShow items:', items)
             items.forEach(item => {
                 item.edit_price = Core.Util.countFilter(item.price)
+                item.parent_price = item.purchase_price || item.original_price
             })
             this.addData = items
             this.addMode = true
@@ -225,6 +227,7 @@ export default {
 
                 org_id: this.orgId,
                 org_type: this.orgType,
+                parent_id: item.item_price_id || 0
             }))
             console.log('handleAddItemConfirm items:', items)
             Core.Api.ItemPrice.batchSave(items).then(() => {
