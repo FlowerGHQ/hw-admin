@@ -7,7 +7,7 @@
                 <a-button type="primary" @click="routerChange('edit')" v-if="$auth('AGENT', 'STORE')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
             </div>
         </div>
-        <div class="tabs-container colorful">
+        <div class="tabs-container colorful" v-if="!operMode">
             <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
                 <a-tab-pane :key="item.key" v-for="item of statusList">
                     <template #tab>
@@ -118,6 +118,10 @@
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
+                    <template v-if="column.key === 'operation'">
+                        <a-button type='link' @click="handleModalShow(record.id, 'check')" v-if="record.status == REPAIR.STATUS.WAIT_CHECK"><i class="icon i_edit"/>确认</a-button>
+                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == REPAIR.STATUS.WAIT_AUDIT"><i class="icon i_edit"/>审批</a-button>
+                    </template>
                 </template>
             </a-table>
         </div>
@@ -137,6 +141,29 @@
             />
         </div>
     </div>
+    <!-- 员工确认 -->
+    <template class="modal-container">
+        <a-modal v-model:visible="modalShow" :title="modalType == 'check' ? '员工确认' : '审核'" :after-close='handleModalClose'>
+            <div class="modal-content">
+                <div class="form-item required">
+                    <a-radio-group v-model:value="editForm.audit_result">
+                        <a-radio :value="1">通过</a-radio>
+                        <a-radio :value="0">不通过</a-radio>
+                    </a-radio-group>
+                </div>
+                <div class="form-item" v-if="editForm.audit_result === 0">
+                    <div class="key">原因:</div>
+                    <div class="value">
+                        <a-input v-model:value="editForm.audit_message" placeholder="请输入不通过原因"/>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="modalShow = false">取消</a-button>
+                <a-button @click="handleModalSubmit" type="primary" >确定</a-button>
+            </template>
+        </a-modal>
+    </template>
 </div>
 </template>
 
@@ -150,7 +177,6 @@ export default {
     props: {},
     data() {
         return {
-            Core,
             REPAIR,
             loginType: Core.Data.getLoginType(),
             // 加载
@@ -162,6 +188,7 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
+            operMode: '',
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             statusList: [
                 {text: '全  部', value: '0', color: 'primary', key: '0'},
@@ -172,7 +199,6 @@ export default {
                 {text: '维修中', value: '0', color: 'blue',    key: REPAIR.STATUS.WAIT_REPAIR },
                 {text: '已维修', value: '0', color: 'light',   key: REPAIR.STATUS.REPAIR_END },
                 {text: '已结算', value: '0', color: 'green',   key: REPAIR.STATUS.SETTLEMENT },
-                {text: '已转单', value: '0', color: 'purple',  key: REPAIR.STATUS.TRANSFER },
                 {text: '确认未通过', value: '0', color: 'red',  key: REPAIR.STATUS.CHECK_FAIL },
                 {text: '审核未通过', value: '0', color: 'red',  key: REPAIR.STATUS.AUDIT_FAIL },
                 {text: '已取消', value: '0', color: 'purple',  key: REPAIR.STATUS.CLOSE },
@@ -197,9 +223,26 @@ export default {
 
             tableFields: [],
             tableData: [],
+
+            modalShow: false,
+            modalType: '',
+            editForm: {
+                id: '',
+                audit_result: 1,
+                audit_message: '',
+            },
         };
     },
     watch: {
+        $route: {
+            deep: true,
+            immediate: true,
+            handler(newRoute) {
+                let type = newRoute.meta ? newRoute.meta.type : ''
+                this.operMode = type
+                this.handleSearchReset();
+            }
+        },
         'searchForm.distributor_id': function () {
             this.getAgentListAll();
             this.searchForm.agent_id = undefined
@@ -219,11 +262,11 @@ export default {
                 { title: '工单名称', dataIndex: 'name', key: 'tip_item' },
                 { title: '紧急程度', dataIndex: 'priority' },
                 { title: '工单帐类', dataIndex: 'service_type',
-                    filters: Core.Const.REPAIR.SERVICE_TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.service_type || null },
+                    filters: REPAIR.SERVICE_TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.service_type || null },
                 { title: '维修方式', dataIndex: 'channel',
-                    filters: Core.Const.REPAIR.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.channel || null },
+                    filters: REPAIR.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.channel || null },
                 { title: '维修类别', dataIndex: 'repair_method',
-                    filters: Core.Const.REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.repair_method || null },
+                    filters: REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.repair_method || null },
                 { title: '维修门店/零售商', dataIndex: 'repair_name', key: 'item' },
                 { title: '维修门店电话', dataIndex: 'repair_phone', key: 'item' },
                 { title: '创建人',   dataIndex: 'user_name', key: 'item' },
@@ -232,12 +275,13 @@ export default {
                 { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
                 { title: '订单状态', dataIndex: 'status', fixed: 'right'},
             ]
+            if (this.operMode) {
+                columns.push({ title: '操作', dataIndex: 'status', fixed: 'right'},)
+            }
             return columns
         },
     },
-    mounted() {
-        this.handleSearchReset();
-    },
+    mounted() {},
     methods: {
         routerChange(type, item = {}) {
             console.log('routerChange item:', item)
@@ -281,6 +325,11 @@ export default {
         },
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
+            if (this.operMode == 'audit') {
+                this.searchForm.status = REPAIR.STATUS.WAIT_CHECK
+            } else if (this.operMode == 'check') {
+                this.searchForm.status = REPAIR.STATUS.WAIT_AUDIT
+            }
             if (this.$auth('ADMIN')) {
                 this.getDistributorListAll();
             }
@@ -418,6 +467,27 @@ export default {
             console.log("handleRepairExport -> exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
+        },
+
+
+        handleModelShow(id, type) { // 显示弹框
+            this.modelShow = true
+            this.modelType = type
+            this.editForm.id = id
+        },
+        handleModelClose() { // 关闭弹框
+            this.modelShow = false;
+            Object.assign(this.editForm, this.$options.data().editForm)
+        },
+        handleModalSubmit() { // 审核提交
+            this.loading = true;
+            Core.Api.Repair[this.modalType](this.editForm).then(() => {
+                this.$message.success('操作成功')
+                this.handleModelClose()
+                this.getTableData()
+            }).finally(() => {
+                this.loading = false;
+            });
         },
     }
 };
