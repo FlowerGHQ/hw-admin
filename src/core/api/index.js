@@ -95,17 +95,20 @@ const apiList = {
         list: ['PostJson', 'invoice/list'],
         delete: ['PostJson', 'invoice/delete'],
         audit: ['PostJson', 'invoice/audit'],
-        saveList: ['PostJson', 'invoice-item/save-list'], //货单提交
-        itemList: ['PostJson', 'invoice-item/list'], // 货单列表
+        saveList: ['PostJson', 'invoice-item/save-list'], //出入库单提交
+        itemList: ['PostJson', 'invoice-item/list'], // 出入库单明细列表
         status: ['PostJson', 'invoice/status-list'], // 状态
         handle: ['PostJson', 'invoice/handle'], // 处理完成
     },
-    Transfer: {
+    Transfer: { // 调货申请单
         save: ['PostJson', 'transfer-order/save'],
         detail: ['PostJson', 'transfer-order/detail'],
         list: ['PostJson', 'transfer-order/list'],
         delete: ['PostJson', 'transfer-order/delete'],
         audit: ['PostJson', 'transfer-order/audit'],
+        itemList: ['PostJson', 'transfer-order-item/list'], // 调货单明细列表
+        saveList: ['PostJson', 'transfer-order-item/save-list'], //调货单提交
+        status: ['PostJson', 'transfer-order/status-list'], // 状态
     },
     Repair: { // 维修单
         list: ['PostJson', 'repair/list'], // 列表

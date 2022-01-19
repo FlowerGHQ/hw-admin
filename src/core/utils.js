@@ -375,7 +375,7 @@ const Util = {
         const COLOR_MAP = Const.REPAIR.STATUS_COLOR_MAP
         switch (to) {
             case 'word':
-                return MAP[val] || '未知'
+                return MAP[val + ''] || '未知'
             case 'color':
                 return COLOR_MAP[val] || 'grey'
         }
@@ -476,7 +476,7 @@ const Util = {
     },
     refundStatusFilter(val) {
         const MAP = Const.REFUND.STATUS_MAP
-        return MAP[val] || '未知'
+        return MAP[val + ''] || '未知'
     },
     distributorTypeFilter(val) {
         const MAP = Const.DISTRIBUTOR.TYPE_MAP
@@ -504,6 +504,18 @@ const Util = {
         }
     },
     /* =============== 出入库 ================ */
+    /* =============== 调货单 ================ */
+    transferStatusFilter(val, to = 'word') {
+        const MAP = Const.TRANSFER_ORDER.STATUS_MAP
+        const COLOR_MAP = Const.TRANSFER_ORDER.STATUS_COLOR_MAP
+        switch (to) {
+            case 'word':
+                return MAP[val + ''] || '未知'
+            case 'color':
+                return COLOR_MAP[val + ''] || 'grey'
+        }
+    },
+    /* =============== 调货单 ================ */
 }
 
 export default Util

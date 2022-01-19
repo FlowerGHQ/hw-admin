@@ -1,10 +1,10 @@
 <template>
-    <div id="InvoiceDetail" class="edit-container">
+    <div id="TransferOrderDetail" class="edit-container">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">出入库单详情</div>
-                <a-button type="primary" ghost @click="handleInvoiceShow()"
-                          v-if="[STATUS.AIT_AUDIT].includes(detail.status)"><i class="icon i_edit"/>审核
+                <div class="title-area">调货单详情</div>
+                <a-button type="primary" ghost @click="handleTransferShow()"
+                          v-if="[STATUS.WAIT_AUDIT].includes(detail.status)"><i class="icon i_edit"/>审核
                 </a-button>
             </div>
             <div class="gray-panel info">
@@ -15,16 +15,12 @@
                 </div>
                 <div class="panel-content">
                     <div class="info-item">
-                        <div class="key">出入库单类型</div>
-                        <div class="value">{{ $Util.stockRecordFilter(detail.type || '-') }}</div>
-                    </div>
-                    <div class="info-item">
                         <div class="key">所属仓库</div>
-                        <div class="value">{{ detail.warehouse.name || '-' }}</div>
+                        <div class="value">{{ detail.to_warehouse.name || '-' }}</div>
                     </div>
                     <div class="info-item">
                         <div class="key">仓库类型</div>
-                        <div class="value">{{ $Util.stockTypeFilter(detail.type || '-') }}</div>
+                        <div class="value">{{ $Util.stockTypeFilter(detail.to_warehouse.type || '-') }}</div>
                     </div>
                     <div class="info-item">
                         <div class="key">创建时间</div>
@@ -48,23 +44,10 @@
                                     <template v-if="column.key === 'item-code'">
                                         {{ text ? text.code : '-' }}
                                     </template>
-                                    <template v-if="column.key === 'item-stock'">
-                                        {{ text ? text.stock : '-' }}
-                                    </template>
                                     <template v-if="column.key === 'amount'">
                                         {{ text ? text.amount : '-' }}件
                                     </template>
                                 </template>
-<!--                                <template #summary>-->
-<!--                                    <a-table-summary>-->
-<!--                                        <a-table-summary-row>-->
-<!--                                            <a-table-summary-cell :index="0" :col-span="3">合计</a-table-summary-cell>-->
-<!--                                            <a-table-summary-cell :index="1" :col-span="3">-->
-<!--                                                {{ totalCount }}件-->
-<!--                                            </a-table-summary-cell>-->
-<!--                                        </a-table-summary-row>-->
-<!--                                    </a-table-summary>-->
-<!--                                </template>-->
                             </a-table>
                         </div>
                     </div>
@@ -104,7 +87,7 @@
 import Core from '../../core';
 
 export default {
-    name: 'InvoiceDetail',
+    name: 'TransferOrderDetail',
     components: {},
     props: {},
     data() {
@@ -112,19 +95,18 @@ export default {
             // 加载
             loading: false,
             id: '',
-            STATUS: Core.Const.STOCK_RECORD.STATUS,
+            STATUS: Core.Const.TRANSFER_ORDER.STATUS,
             detail: {
-                warehouse: {}
+                to_warehouse: {}
             },
             activeKey: ['affirm'],
             tableData: [],
             tableColumns: [
                 {title: '商品名称', dataIndex: 'item', key: 'item-name'},
                 {title: '商品编码', dataIndex: 'item', key: 'item-code'},
-                {title: '库存数量', dataIndex: 'item', key: 'item-stock'},
                 {title: '数量', dataIndex: 'amount', key: 'item-amount'},
             ],
-            invoiceShow: false,
+            transferShow: false,
             editForm: {
                 status: 20,
                 audit_message: '',
@@ -144,26 +126,27 @@ export default {
     },
     mounted() {
         this.id = Number(this.$route.query.id) || 0
-        this.getInvoiceDetail();
-        this.getInvoiceList();
+        this.getTransferDetail();
+        this.getTransferList();
     },
     methods: {
-        handleInvoiceShow() { // 显示弹框
-            this.invoiceShow = true
+        handleTransferShow(id) { // 显示弹框
+            this.transferShow = true
+            this.editForm.id = id
         },
-        handleInvoiceClose() { // 关闭弹框
-            this.invoiceShow = false;
+        handleTransferClose() { // 关闭弹框
+            this.transferShow = false;
         },
-        handleInvoiceSubmit() { // 审核提交
+        handleTransferSubmit() { // 审核提交
             this.loading = true;
-            Core.Api.Invoice.audit({
-                id: this.id,
+            Core.Api.Transfer.audit({
                 ...this.editForm
             }).then(res => {
-                console.log('handleInvoiceSubmit res', res)
-                this.routerChange('back')
+                console.log('handleTransferSubmit res', res)
+                this.handleTransferClose()
+                this.getTableData()
             }).catch(err => {
-                console.log('handleInvoiceSubmit err', err)
+                console.log('handleTransferSubmit err', err)
             }).finally(() => {
                 this.loading = false;
             });
@@ -175,23 +158,23 @@ export default {
                     break;
             }
         },
-        getInvoiceDetail() {
+        getTransferDetail() {
             this.loading = true;
-            Core.Api.Invoice.detail({
+            Core.Api.Transfer.detail({
                 id: this.id
             }).then(res => {
-                console.log('getInvoiceDetail res', res)
+                console.log('getTransferDetail res', res)
                 this.detail = res.detail
             }).catch(err => {
-                console.log('getInvoiceDetail err', err)
+                console.log('getTransferDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
-        getInvoiceList() {
+        getTransferList() {
             this.loading = true;
-            Core.Api.Invoice.itemList({
-                invoice_id: this.id,
+            Core.Api.Transfer.itemList({
+                transfer_order_id: this.id,
             }).then(res => {
                 console.log('getInvoiceList res', res)
                 this.tableData = res.list
@@ -206,7 +189,7 @@ export default {
 };
 </script>
 <style lang="less">
-#InvoiceDetail {
+#TransferOrderDetail {
     .gray-panel.info {
         .panel-title {
             .left {
