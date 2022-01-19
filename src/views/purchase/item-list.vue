@@ -24,7 +24,7 @@
                                 <div class="desc">
                                     <p>{{item.item.name}}</p>
                                     <span>{{item.attr_str || item.item.code}}</span>
-                                    <p class="price">￥{{$Util.countFilter(item.purchase_price)}}</p>
+                                    <p class="price">￥{{$Util.countFilter(item.price)}}</p>
                                 </div>
                             </div>
                             <div class="btns">
@@ -62,7 +62,7 @@
                     <p class="sub">{{item.code}}</p>
                     <p class="name">{{item.name}}</p>
                     <p class="desc">&nbsp;</p>
-                    <p class="price">￥{{$Util.countFilter(item.price)}}</p>
+                    <p class="price">￥{{$Util.countFilter(item.purchase_price)}}</p>
                     <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">添加到购物车</a-button>
                 </div>
             </div>
@@ -213,6 +213,7 @@ export default {
                     item.attr_str = item.item.attr_list.map(item => item.value).join(' ')
                 }
                 this.briefList = [item || {}]
+                console.log('this.briefList: ', this.briefList);
                 this.briefCount = res.count;
             })
         },
@@ -222,7 +223,7 @@ export default {
             Core.Api.ShopCart.save({
                 item_id: item.id,
                 amount: 1,
-                price: item.price
+                price: item.purchase_price
             }).then(res => {
                 console.log('res:', res)
                 this.$message.success('添加成功')
