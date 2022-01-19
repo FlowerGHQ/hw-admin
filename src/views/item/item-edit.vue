@@ -446,6 +446,7 @@ export default {
             for (const key in this.form) {
                 this.form[key] = res[key]
             }
+            console.log('setFormData config:', config)
             this.form.config = config
             this.form.price = Core.Util.countFilter(res.price)
             this.form.original_price = Core.Util.countFilter(res.original_price)
@@ -690,6 +691,7 @@ export default {
             this.item_category = node
             try {
                 this.configTemp = JSON.parse(node.config)
+                console.log('this.configTemp:', this.configTemp)
             } catch (error) {
                 this.configTemp = []
             }
@@ -701,6 +703,7 @@ export default {
                 config.push({
                     name: item.name,
                     key: item.key,
+                    type: item.type,
                     value: item.type === 'select' ? undefined : '',
                 })
             }
