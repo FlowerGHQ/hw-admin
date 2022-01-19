@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">{{$t('n.repair_list')}}</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')" v-if="$auth( 'AGENT', 'STORE')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('AGENT', 'STORE')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
             </div>
         </div>
         <div class="tabs-container colorful">
@@ -173,7 +173,7 @@ export default {
                 {text: '已转单', value: '0', color: 'purple',  key: REPAIR.STATUS.TRANSFER },
                 {text: '确认未通过', value: '0', color: 'red',  key: REPAIR.STATUS.CHECK_FAIL },
                 {text: '审核未通过', value: '0', color: 'red',  key: REPAIR.STATUS.AUDIT_FAIL },
-                {text: '取消', value: '0', color: 'purple',  key: REPAIR.STATUS.CLOSE },
+                {text: '已取消', value: '0', color: 'purple',  key: REPAIR.STATUS.CLOSE },
             ],
             create_time: [],
             distributorList: [], // 分销商下拉框数据
@@ -222,13 +222,13 @@ export default {
                     filters: Core.Const.REPAIR.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.channel || null },
                 { title: '维修类别', dataIndex: 'repair_method',
                     filters: Core.Const.REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.repair_method || null },
-                { title: '维修门店/零售商',   dataIndex: 'repair_name',},
-                { title: '维修门店电话',   dataIndex: 'repair_phone', key: 'item' },
+                { title: '维修门店/零售商', dataIndex: 'repair_name', key: 'item' },
+                { title: '维修门店电话', dataIndex: 'repair_phone', key: 'item' },
                 { title: '创建人',   dataIndex: 'user_name', key: 'item' },
                 { title: '关联客户', dataIndex: 'customer_name', key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
-                { title: '订单状态', dataIndex: 'status' , fixed: 'right'},
+                { title: '订单状态', dataIndex: 'status', fixed: 'right'},
             ]
             return columns
         },
@@ -277,48 +277,7 @@ export default {
             this.pageSize = size
             this.getTableData()
         },
-        handleSearch() {  // 搜索
-            this.pageChange(1);
-        },
-        handleSearchReset() {  // 重置搜索
-            console.log('handleSearchReset:')
-            Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.filteredInfo = null
-
-            this.create_time = []
-            this.pageChange(1);
-        },
-
-        getStoreListAll() {
-            if (this.searchForm.agent_id) {
-                Core.Api.Store.listAll({agent_id: this.searchForm.agent_id}).then(res => {
-                this.storeList = res.list
-                // this.storeList.push({id:-1,name:"门店"})
-            });
-            } else {
-                this.storeList = []
-            }
-        },
-        getAgentListAll() {
-            if (this.searchForm.distributor_id) {
-            Core.Api.Agent.listAll({distributor_id: this.searchForm.distributor_id}).then(res => {
-                console.log('res.list: ', res.list);
-                this.agentList = res.list
-                // this.agentList.push({id:-1,name:"零售商"})
-            });
-            } else {
-                this.agentList = []
-            }
-
-        },
-        getDistributorListAll() {
-            Core.Api.Distributor.listAll().then(res => {
-                console.log('res.list: ', res.list);
-                this.distributorList = res.list
-                // this.distributorList.push({id:-1,name:"分销商"})
-            });
-        },
-        handleTableChange(page, filters, sorter) {
+        handleTableChange(page, filters, sorter) { // 表格搜索
             console.log('handleTableChange filters:', filters)
             this.filteredInfo = filters;
             for (const key in filters) {
@@ -326,6 +285,43 @@ export default {
             }
             this.pageChange(1);
         },
+        handleSearch() {  // 搜索
+            this.pageChange(1);
+        },
+        handleSearchReset() {  // 重置搜索
+            Object.assign(this.searchForm, this.$options.data().searchForm)
+            this.filteredInfo = null
+            this.create_time = []
+            this.pageChange(1);
+        },
+
+        getStoreListAll() { // 通过零售商Id 获取所有门店
+            if (this.searchForm.agent_id) {
+                Core.Api.Store.listAll({agent_id: this.searchForm.agent_id}).then(res => {
+                    console.log('getStoreListAll res.list: ', res.list);
+                    this.storeList = res.list
+                });
+            } else {
+                this.storeList = []
+            }
+        },
+        getAgentListAll() { // 通过分销商Id 获取所有零售商
+            if (this.searchForm.distributor_id) {
+                Core.Api.Agent.listAll({distributor_id: this.searchForm.distributor_id}).then(res => {
+                    console.log('getAgentListAll res.list: ', res.list);
+                    this.agentList = res.list
+                });
+            } else {
+                this.agentList = []
+            }
+        },
+        getDistributorListAll() { // 获取所有分销商
+            Core.Api.Distributor.listAll().then(res => {
+                console.log('getDistributorListAll res.list: ', res.list);
+                this.distributorList = res.list
+            });
+        },
+
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             console.log('this.searchForm:', this.searchForm)

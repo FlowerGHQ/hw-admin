@@ -2,7 +2,7 @@
     <div id="NoticeDetail" class="list-container">
         <div class="title-container">
             <div class="title-area">消息详情</div>
-            <div class="btns-area">
+            <div class="btns-area" v-if="$auth('ADMIN')">
                 <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
                 <a-button danger @click="handleDelete()"><i class="icon i_delete"/>删除</a-button>
             </div>
@@ -15,7 +15,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -36,7 +35,6 @@ export default {
                 title: '',
                 type: 0,
                 content: '',
-
             },
         };
     },
@@ -64,34 +62,7 @@ export default {
                     })
                     window.open(routeUrl.href, '_self')
                     break;
-                case 'notice-detail':  // 详情
-                    routeUrl = this.$router.resolve({
-                        path: "/notice/notice-detail",
-                        query: {id: this.detail.notice_id}
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
-
             }
-        },
-        // 删除详情页
-        handleDelete(id) {
-            let _this = this;
-            this.$confirm({
-                title: '确定要删除该消息吗？',
-                okText: '确定',
-                okType: 'danger',
-                cancelText: '取消',
-                onOk() {
-                    console.log(_this.notice_id);
-                    Core.Api.Notice.delete({id:_this.notice_id}).then(() => {
-                        _this.$message.success('删除成功');
-                        _this.routerChange('list');
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
-                },
-            });
         },
         getNoticeDetail() {
             this.loading = true;
@@ -106,23 +77,25 @@ export default {
                 this.loading = false;
             });
         },
-        handleStatusChange() {
+
+        // 删除消息
+        handleDelete() {
             let _this = this;
             this.$confirm({
-                title: `确定要${_this.detail.status ? '禁用' : '启用'}该门店吗？`,
+                title: '确定要删除该消息吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Store.updateStatus({id: _this.detail.id}).then(() => {
-                        _this.$message.success(`${_this.detail.status ? '禁用' : '启用'}成功`);
-                        _this.getStoreDetail();
+                    Core.Api.Notice.delete({id:_this.notice_id}).then(() => {
+                        _this.$message.success('删除成功');
+                        _this.routerChange('list');
                     }).catch(err => {
-                        console.log("handleStatusChange err", err);
+                        console.log("handleDelete err", err);
                     })
                 },
             });
-        }
+        },
     }
 };
 </script>

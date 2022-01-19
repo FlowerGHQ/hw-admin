@@ -413,6 +413,10 @@
     }
     .ant-table-placeholder {
         border-radius: 0;
+        .ant-table-expanded-row-fixed {
+            width: 100% !important;
+            margin: 0;
+        }
     }
     .ant-table-empty {
         .ant-table-body {
@@ -710,6 +714,20 @@ p {
     }
     &.img-upload {
         align-items: flex-start;
+    }
+    &.file-upload {
+        .file-upload-btn {
+            font-size: 12px;
+            height: 30px;
+            i.icon {
+                font-size: 12px;
+            }
+        }
+        .ant-upload-list-text {
+            .ant-upload-list-item {
+                margin: 4px 0;
+            }
+        }
     }
 }
 

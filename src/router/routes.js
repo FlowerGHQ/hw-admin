@@ -715,7 +715,7 @@ const routes = [
         meta: {
             title: '员工管理',
             icon: 'i_s_user',
-            // auth: ['dashboard'],
+            // auth: ['org-user.manager'],
             // roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
@@ -748,7 +748,6 @@ const routes = [
                 }
             },
         ]
-
     },
     {   // 角色管理
         path: '/authority',
@@ -799,7 +798,7 @@ const routes = [
                 name: 'SystemFileList',
                 component: () => import('@/views/system/system-file-list.vue'),
                 meta: {
-                    title: '系统文件',
+                    title: '系统附件',
                     is_sub_menu: true,
                 }
             },
@@ -809,7 +808,7 @@ const routes = [
                 component: () => import('@/views/system/system-file-edit.vue'),
                 hidden: true,
                 meta: {
-                    title: '文件编辑',
+                    title: '附件编辑',
                     parent: '/system/system-file-list',
                     roles: [LOGIN_TYPE.ADMIN],
                 }
