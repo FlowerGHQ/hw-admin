@@ -85,8 +85,11 @@ export default {
     methods: {
         routerChange(type, item) {
             switch (type) {
-                case 'back':
-                    this.$router.go(-1)
+                case 'back':    // 详情
+                    routeUrl = this.$router.resolve({
+                        path: "/customer/customer-list",
+                    })
+                    window.open(routeUrl.href, '_self')
                     break;
             }
         },
