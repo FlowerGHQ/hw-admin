@@ -5,16 +5,21 @@
     </div>
     <div class="panel-content">
         <div class="table-container">
-            <ItemSelect :disabled-checked='tableData.map(i => i.item_id)' @select="handleAddItem" btn-class="panel-btn">
-                <i class="icon i_add"/> 添加商品
-            </ItemSelect>
-            <a-button class="panel-btn" @click="handleMutiEditChange()" type="primary" ghost>
-                <template v-if='editShow'><i class="icon i_confirm"/>确认设置</template>
-                <template v-else>批量设置供货价</template>
-            </a-button>
-            <a-button class="panel-btn" @click="getTableData" v-if="editShow"><i class="icon i_close_c"/>取消设置</a-button>
-
-            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' :loading='loading'>
+            <template v-if="!addMode">
+                <ItemSelect :disabled-checked='tableData.map(i => i.item_id)' @select="handleAddItemShow" btn-class="panel-btn">
+                    <i class="icon i_add"/> 添加商品
+                </ItemSelect>
+                <a-button class="panel-btn" @click="handleMutiEditChange()" type="primary" ghost>
+                    <template v-if='editShow'><i class="icon i_confirm"/>确认设置</template>
+                    <template v-else>批量设置供货价</template>
+                </a-button>
+                <a-button class="panel-btn" @click="getTableData" v-if="editShow"><i class="icon i_close_c"/>取消设置</a-button>
+            </template>
+            <template v-else>
+                <a-button class="panel-btn" @click="handleAddItemConfirm()" type="primary" ghost><i class="icon i_confirm"/>确认添加</a-button>
+                <a-button class="panel-btn" @click="handleAddItemClose()"><i class="icon i_close_c"/>取消添加</a-button>
+            </template>
+            <a-table :columns="tableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' :loading='loading'>
                 <template #bodyCell="{ column, text, record }">
                     <template v-if="column.key === 'detail'">
                         <div class="table-img">
@@ -38,7 +43,7 @@
                         {{ $Util.itemSpecFilter(text) }}
                     </template>
                     <template v-if="column.key === 'supply'">
-                        <template v-if="record.edit_show || editShow">
+                        <template v-if="record.edit_show || editShow || addMode">
                             <a-input-number v-model:value="record.edit_price" :min="0.01" style="width: 120px;"
                                 :formatter="value => `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/￥\s?|(,*)/g, '')"/>
                         </template>
@@ -54,7 +59,7 @@
                 </template>
             </a-table>
         </div>
-        <div class="paging-container">
+        <div class="paging-container" v-if="!addMode">
             <a-pagination
                 v-model:current="currPage"
                 :page-size='pageSize'
@@ -105,6 +110,9 @@ export default {
             // 表格数据
             tableData: [],
             editShow: false,
+
+            addMode: false,
+            addData: []
         };
     },
     watch: {},
@@ -119,6 +127,9 @@ export default {
                 { title: '标准售价', dataIndex: 'price', key: 'money', },
                 { title: '操作', key: 'operation', fixed: 'right'},
             ]
+            if (this.addMode) {
+                columns.pop()
+            }
             return columns
         },
     },
@@ -151,6 +162,7 @@ export default {
         getTableData() { // 获取 表格 数据
             this.loading = true;
             this.editShow = false
+            this.addMode = false
             Core.Api.ItemPrice.list({
                 org_id: this.orgId,
                 org_type: this.orgType,
@@ -170,7 +182,7 @@ export default {
                 this.loading = false;
             });
         },
-
+        // 移出商品
         handleDelete(id) {
             let _this = this;
             this.$confirm({
@@ -188,29 +200,42 @@ export default {
                 },
             });
         },
-
-        handleAddItem(ids, items) {
-            console.log('handleAddItem items:', items)
-            items = items.map(item => ({
+        // 添加商品
+        handleAddItemShow(ids, items) {
+            console.log('handleAddItemShow items:', items)
+            items.forEach(item => {
+                item.edit_price = Core.Util.countFilter(item.price)
+            })
+            this.addData = items
+            this.addMode = true
+            this.editShow = false
+        },
+        handleAddItemClose() {
+            this.addMode = false
+        },
+        handleAddItemConfirm() {
+            let items = this.addData.map(item => ({
                 category_id: item.category_id,
                 code: item.code,
                 id: 0,
                 item_id: item.id,
                 name: item.name,
+                price: item.price,
+                purchase_price: Math.round(item.edit_price * 100),
+
                 org_id: this.orgId,
                 org_type: this.orgType,
-                price: item.price,
-                purchase_price: item.price,
             }))
+            console.log('handleAddItemConfirm items:', items)
             Core.Api.ItemPrice.batchSave(items).then(() => {
                 this.$message.success('添加成功')
                 this.getTableData()
             }).catch(err => {
-                console.log('handleAddItem err:', err)
+                console.log('handleAddItemShow err:', err)
             })
         },
-
-        handleEditChange(item) {
+        // 价格编辑
+        handleEditChange(item) { // 单个 价格编辑
             if (!item.edit_show) {
                 // 开启编辑模式
                 item.edit_show = true
@@ -230,7 +255,7 @@ export default {
                 })
             }
         },
-        handleMutiEditChange() {
+        handleMutiEditChange() { // 批量 价格编辑
             if (!this.editShow) {
                 // 开启编辑模式
                 this.editShow = true
