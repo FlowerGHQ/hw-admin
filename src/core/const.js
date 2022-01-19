@@ -578,7 +578,7 @@ let Const = {
             '30': 'purple',
             '40': 'orange',
             '-10': 'red',
-            '-20': 'blue'
+            '-20': 'gray'
         },
         STATUS_LIST: [  //调货单审核
             {text: '待审核',value: 10},
@@ -586,7 +586,7 @@ let Const = {
             {text: '运输中',value: 30},
             {text: '处理完成',value: 40},
             {text: '审核失败',value: -10},
-            {text: '取消',value: -20},
+            {text: '已取消',value: -20},
         ],
     }
 };
