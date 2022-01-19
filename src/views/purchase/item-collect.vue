@@ -8,8 +8,8 @@
                 <div class="info">
                     <div class="name" @click="routerChange('detail', item.item)">{{item.item ? item.item.name : '-'}}</div>
                     <div class="sub">{{item.item ? item.item.code : '-'}}</div>
-                    <div class="spec" v-if='item.item && item.item.attr_str'>
-                        <span>规格：</span>{{item.item.attr_str}}
+                    <div class="spec" v-if='item.item && item.item.attr_list'>
+                        <span>规格：</span>{{$Util.itemSpecFilter(item.item.attr_list)}}
                     </div>
                     <span class="count" v-if="!item.editMode" @click="handleCountEditShow(item)">x{{item.amount}}</span>
                     <div class="count-edit" v-else>
@@ -30,7 +30,12 @@
         <div class="settle-content" v-if="shopCartList.length">
             <div class="title-area">摘要</div>
             <div class="settle-item" v-for="item of shopCartList" :key="item.id">
-                <p class="name">{{item.item ? item.item.name : '-'}}</p>
+                <p class="name">
+                    {{item.item ? item.item.name : '-'}}
+                    <span class="spec" v-if='item.item && item.item.attr_list'>
+                        {{$Util.itemSpecFilter(item.item.attr_list)}}
+                    </span>
+                </p>
                 <span class="price">￥{{$Util.countFilter(item.price*item.amount)}}</span>
             </div>
             <div class="settle-item sum">
@@ -48,8 +53,8 @@
                 <div class="info">
                     <div class="name" @click="routerChange('detail', item.item)">{{item.item ? item.item.name : '-'}}</div>
                     <div class="sub">{{item.item ? item.item.code : '-'}}</div>
-                    <div class="spec" v-if='item.item && item.item.attr_str'>
-                        <span>规格：</span>{{item.item.attr_str}}
+                    <div class="spec" v-if='item.item && item.item.attr_list'>
+                        <span>规格：</span>{{$Util.itemSpecFilter(item.item.attr_list)}}
                     </div>
                     <div></div><!-- 调整结构用 不要删 --><div></div>
                     <div class="btns">
@@ -127,26 +132,12 @@ export default {
         getShopCartList() {
             Core.Api.ShopCart.list().then(res => {
                 console.log('getShopCartList res:', res)
-                res.list.forEach(item => {
-                    let element = item.item || {}
-                    if (element.attr_list && element.attr_list.length) {
-                        let str = element.attr_list.map(i => i.value).join(' ')
-                        element.attr_str = str
-                    }
-                })
                 this.shopCartList = res.list
             })
         },
         getFavoriteList() {
             Core.Api.Favorite.list().then(res => {
                 console.log('getFavoriteList res:', res)
-                res.list.forEach(item => {
-                    let element = item.item || {}
-                    if (element.attr_list && element.attr_list.length) {
-                        let str = element.attr_list.map(i => i.value).join(' ')
-                        element.attr_str = str
-                    }
-                })
                 this.favoriteList = res.list
             })
         },
@@ -374,6 +365,17 @@ export default {
                 .name {
                     width: calc(~'100% - 100px');
                     .ell();
+                    .fac();
+                    .spec {
+                        display: inline-block;
+                        color: #757575;
+                        line-height: 24px;
+                        height: 24px;
+                        font-size: 12px;
+                        background: #F9F9F9;
+                        border-radius: 2px;
+                        padding: 0 10px;
+                    }
                 }
                 .price {
                     width: 100px;

@@ -98,9 +98,6 @@
                     <template v-if="column.dataIndex === 'channel'">
                         {{$Util.repairChannelFilter(text)}}
                     </template>
-                    <template v-if="column.dataIndex === 'repair_name'">
-                        {{text}}
-                    </template>
                     <template v-if="column.dataIndex === 'repair_method'">
                         {{$Util.repairMethodFilter(text)}}
                     </template>
@@ -146,10 +143,13 @@
         <a-modal v-model:visible="modalShow" :title="modalType == 'check' ? '员工确认' : '审核'" :after-close='handleModalClose'>
             <div class="modal-content">
                 <div class="form-item required">
+                    <div class="key">{{modalType == 'check' ? '确认' : '审核'}}结果:</div>
+                    <div class="value">
                     <a-radio-group v-model:value="editForm.audit_result">
                         <a-radio :value="1">通过</a-radio>
                         <a-radio :value="0">不通过</a-radio>
                     </a-radio-group>
+                    </div>
                 </div>
                 <div class="form-item" v-if="editForm.audit_result === 0">
                     <div class="key">原因:</div>
@@ -276,7 +276,7 @@ export default {
                 { title: '订单状态', dataIndex: 'status', fixed: 'right'},
             ]
             if (this.operMode) {
-                columns.push({ title: '操作', dataIndex: 'status', fixed: 'right'},)
+                columns.push({ title: '操作', key: 'operation', fixed: 'right'},)
             }
             return columns
         },
@@ -326,9 +326,9 @@ export default {
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
             if (this.operMode == 'audit') {
-                this.searchForm.status = REPAIR.STATUS.WAIT_CHECK
-            } else if (this.operMode == 'check') {
                 this.searchForm.status = REPAIR.STATUS.WAIT_AUDIT
+            } else if (this.operMode == 'check') {
+                this.searchForm.status = REPAIR.STATUS.WAIT_CHECK
             }
             if (this.$auth('ADMIN')) {
                 this.getDistributorListAll();
@@ -470,20 +470,20 @@ export default {
         },
 
 
-        handleModelShow(id, type) { // 显示弹框
-            this.modelShow = true
-            this.modelType = type
+        handleModalShow(id, type) { // 显示弹框
+            this.modalShow = true
+            this.modalType = type
             this.editForm.id = id
         },
-        handleModelClose() { // 关闭弹框
-            this.modelShow = false;
+        handleModalClose() { // 关闭弹框
+            this.modalShow = false;
             Object.assign(this.editForm, this.$options.data().editForm)
         },
         handleModalSubmit() { // 审核提交
             this.loading = true;
             Core.Api.Repair[this.modalType](this.editForm).then(() => {
                 this.$message.success('操作成功')
-                this.handleModelClose()
+                this.handleModalClose()
                 this.getTableData()
             }).finally(() => {
                 this.loading = false;
