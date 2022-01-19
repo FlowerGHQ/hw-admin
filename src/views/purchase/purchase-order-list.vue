@@ -59,8 +59,9 @@
                 </a-col>
             </a-row>
             <div class="btn-area">
-                <a-button @click="handleSearch" type="primary">查询</a-button>
-                <a-button @click="handleSearchReset">重置</a-button>
+                <a-button @click="handleExportConfirm">{{$t('def.export')}}</a-button>
+                <a-button @click="handleSearch" type="primary">{{$t('def.search')}}</a-button>
+                <a-button @click="handleSearchReset">{{$t('def.reset')}}</a-button>
             </div>
         </div>
         <div class="table-container">
@@ -140,6 +141,8 @@ export default {
             USER_TYPE: Core.Const.USER.TYPE,
             // 加载
             loading: false,
+            // 导出
+            exportDisabled: false,
             // 分页
             currPage: 1,
             pageSize: 20,
@@ -231,20 +234,6 @@ export default {
                     break;
             }
         },
-        handleRecreate(item){ // 再来一单
-            this.loading = true;
-            console.log("item.id:"+item.id);
-            Core.Api.Purchase.recreate({
-                id: item.id,
-            }).then(res => {
-                console.log("handleRecreate res:", res)
-                this.routerChange('edit', item)
-            }).catch(err => {
-                console.log('handleRecreate err:', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
             this.getTableData()
@@ -267,19 +256,6 @@ export default {
             this.create_time = []
             this.pageChange(1);
         },
-        getDistributorListAll() {
-            Core.Api.Distributor.listAll().then(res => {
-                console.log('res.list: ', res.list);
-                this.distributorList = res.list
-            });
-        },
-        handleTableChange(page, filters, sorter) {
-            console.log('handleTableChange filters:', filters)
-            // this.filteredInfo = filters;
-            for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : ''
-            }
-        },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             this.loading = false;
@@ -298,6 +274,77 @@ export default {
                 console.log('getTableData err:', err)
             }).finally(() => {
                 this.loading = false;
+            });
+        },
+        handleTableChange(page, filters, sorter) {
+            console.log('handleTableChange filters:', filters)
+            // this.filteredInfo = filters;
+            for (const key in filters) {
+                this.searchForm[key] = filters[key] ? filters[key][0] : ''
+            }
+        },
+
+        handleRecreate(item){ // 再来一单
+            this.loading = true;
+            console.log("item.id:"+item.id);
+            Core.Api.Purchase.recreate({
+                id: item.id,
+            }).then(res => {
+                console.log("handleRecreate res:", res)
+                this.routerChange('edit', item)
+            }).catch(err => {
+                console.log('handleRecreate err:', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+
+        handleExportConfirm(){ // 确认订单是否导出
+            let _this = this;
+            this.$confirm({
+                title: '确认要导出吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    _this.handleRepairExport();
+                }
+            })
+        },
+        handleRepairExport() { // 订单导出
+            this.exportDisabled = true;
+
+            let form = this.searchForm;
+            let sn = form.sn || ''
+            let status = form.status || 0
+            let itemType = form.item_type || 0
+            let distributorId = form.distributorId || 0
+            let agentId = form.agent_id || 0
+            let storeId = form.store_id || 0
+            let orgId = form.org_id ? form.org_id : 0
+            let orgType = form.orgType || 0
+            let type = form.type || 0
+            let subject = form.subject || 0
+            let payMethod = form.pay_method || 0
+            let beginTime = this.create_time[0] || ''
+            let endTime   = this.create_time[1] || ''
+
+            const token = Core.Data.getToken() || ''
+            let fileUrl = Core.Const.NET.URL_POINT + '/agent/1/purchase-order/export?'
+
+            let exportUrl =
+                `${fileUrl}token=${token}&sn=${sn}&status=${status}&item_type=${itemType}&distributor_id=${distributorId}
+                &agent_id=${agentId}&store_id=${storeId}&org_id=${orgId}&org_type=${orgType}&type=${type}&subject=${subject}&pay_method=${payMethod}
+                &begin_time=${beginTime}&end_time=${endTime}`
+            console.log("handleRepairExport -> exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+
+            this.exportDisabled = false;
+        },
+
+        getDistributorListAll() {
+            Core.Api.Distributor.listAll().then(res => {
+                console.log('res.list: ', res.list);
+                this.distributorList = res.list
             });
         },
         getAgentList() { // 获取 零售商 数据
