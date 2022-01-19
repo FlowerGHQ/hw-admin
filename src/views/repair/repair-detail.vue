@@ -671,15 +671,6 @@ export default {
 <style lang="less">
 #RepairDetail {
     .gray-panel.info {
-        .left {
-            font-size: 12px;
-            color: #465670;
-
-            span {
-                color: #A5ACB8;
-            }
-        }
-
         .right {
             .fcc();
             font-size: 12px;
@@ -696,25 +687,6 @@ export default {
                 .i_point {
                     margin-right: 6px;
                 }
-            }
-        }
-
-        .panel-content {
-            .fsb(flex-start);
-            padding-bottom: 15px;
-        }
-
-        .info-item {
-            flex: 1;
-            font-size: 12px;
-
-            .key {
-                color: #8090A6;
-            }
-
-            .value {
-                margin-top: 10px;
-                color: #363D42;
             }
         }
     }

@@ -111,7 +111,7 @@ export default {
                 {title: '附件名', dataIndex: 'name', key: 'item'},
                 {title: '附件类型', dataIndex: 'target_type'},
                 {title: '文件类型', dataIndex: 'type', key: 'item'},
-                {title: '文件地址', dataIndex: 'path', key: 'item'},
+                // {title: '文件地址', dataIndex: 'path', key: 'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]

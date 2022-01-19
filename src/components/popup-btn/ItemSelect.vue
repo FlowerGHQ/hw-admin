@@ -1,5 +1,5 @@
 <template>
-    <a-button @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
+    <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
         <slot>{{btnText}}</slot>
     </a-button>
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px' @ok="handleConfirm">
@@ -202,5 +202,9 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style lang='less' scoped>
+.ItemSelectBtn {
+    line-height: 1;
+    height: 1em;
+}
 </style>

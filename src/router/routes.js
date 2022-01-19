@@ -346,7 +346,7 @@ const routes = [
         redirect: '/warehouse/warehouse-list',
         name: 'WarehouseManagement',
         meta: {
-            title: '仓库管理',
+            title: '库存管理',
             icon: 'i_s_warehouse',
             // auth: ['dashboard'],
             roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
@@ -357,7 +357,7 @@ const routes = [
                 name: 'WarehouseList',
                 component: () => import('@/views/warehouse/warehouse-list.vue'),
                 meta: {
-                    title: '仓库',
+                    title: '仓库管理',
                     is_sub_menu: true
                 }
             },
@@ -384,16 +384,16 @@ const routes = [
             {
                 path: 'invoice-list',
                 name: 'InvoiceList',
-                component: () => import('@/views/invoice/invoice-list.vue'),
+                component: () => import('@/views/warehouse/invoice-list.vue'),
                 meta: {
-                    title: '出入库',
+                    title: '出入库管理',
                     is_sub_menu: true
                 }
             },
             {
                 path: 'invoice-edit',
                 name: 'InvoiceEdit',
-                component: () => import('@/views/invoice/invoice-edit.vue'),
+                component: () => import('@/views/warehouse/invoice-edit.vue'),
                 hidden: true,
                 meta: {
                     title: '出入库编辑',
@@ -403,7 +403,7 @@ const routes = [
             {
                 path: 'invoice-detail',
                 name: 'InvoiceDetail',
-                component: () => import('@/views/invoice/invoice-detail.vue'),
+                component: () => import('@/views/warehouse/invoice-detail.vue'),
                 hidden: true,
                 meta: {
                     title: '出入库详情',
@@ -413,16 +413,16 @@ const routes = [
             {
                 path: 'transfer-order-list',
                 name: 'TransferOrderList',
-                component: () => import('@/views/transfer/transfer-order-list.vue'),
+                component: () => import('@/views/warehouse/transfer-order-list.vue'),
                 meta: {
-                    title: '调货单',
+                    title: '调货管理',
                     is_sub_menu: true
                 }
             },
             {
                 path: 'transfer-order-edit',
                 name: 'TransferOrderEdit',
-                component: () => import('@/views/transfer/transfer-order-edit.vue'),
+                component: () => import('@/views/warehouse/transfer-order-edit.vue'),
                 hidden: true,
                 meta: {
                     title: '调货单编辑',
@@ -432,7 +432,7 @@ const routes = [
             {
                 path: 'transfer-order-detail',
                 name: 'TransferOrderDetail',
-                component: () => import('@/views/transfer/transfer-order-detail.vue'),
+                component: () => import('@/views/warehouse/transfer-order-detail.vue'),
                 hidden: true,
                 meta: {
                     title: '调货单详情',

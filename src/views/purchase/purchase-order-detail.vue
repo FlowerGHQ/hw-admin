@@ -2,7 +2,7 @@
 <div id="PurchaseOrderDetail">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">商品详情</div>
+            <div class="title-area">采购订单详情</div>
             <div class="btns-area">
                 <template v-if="$auth('ADMIN')">
                     <a-button type="primary" @click="handlePurchaseStatus('payment')" v-if="detail.status == STATUS.WAIT_PAY"><i class="icon i_received"/>已收款</a-button>

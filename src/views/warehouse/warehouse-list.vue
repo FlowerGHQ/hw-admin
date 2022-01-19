@@ -49,7 +49,7 @@
                     </template>
                     <template v-if="column.key === 'operation'">
                         <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改</a-button>
-                        <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button>
+                        <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button>
                     </template>
                 </template>
             </a-table>

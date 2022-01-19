@@ -1,18 +1,17 @@
 <template>
-    <div id="InvoiceList">
+    <div id="TransferOrderList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">出入库单列表</div>
+                <div class="title-area">调货单列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleStockShow"><i class="icon i_add"/>库存管理</a-button>
+                    <a-button type="primary" v-if="!$auth('ADMIN')" @click="handleTransferOrderShow"><i class="icon i_add"/>新建调货单</a-button>
                 </div>
             </div>
-            <div class="tabs-container colorful">
+            <div class="tabs-container colorful" v-if="$auth('ADMIN')">
                 <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
                     <a-tab-pane :key="item.key" v-for="item of statusList">
                         <template #tab>
-                            <div class="tabs-title">{{ item.text }}<span :class="item.color">{{ item.value }}</span>
-                            </div>
+                            <div class="tabs-title">{{ item.text }}<span :class="item.color">{{ item.value }}</span></div>
                         </template>
                     </a-tab-pane>
                 </a-tabs>
@@ -22,32 +21,19 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">仓库名称:</div>
                         <div class="value">
-                            <a-input placeholder="请输入仓库名称" v-model:value="searchForm.name"
-                                     @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入仓库名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">出入库单编号:</div>
+                        <div class="key">货单编号:</div>
                         <div class="value">
-                            <a-input placeholder="请输入出入库单编号" v-model:value="searchForm.uid"
-                                     @keydown.enter='handleSearch'/>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">出入库单类型:</div>
-                        <div class="value">
-                            <a-select v-model:value="searchForm.type" @change="handleTypeSelect" placeholder="请选择出入库类型"
-                                      allow-clear>
-                                <a-select-option key="1" :value="handleTypeList.TYPE_IN">入库</a-select-option>
-                                <a-select-option key="2" :value="handleTypeList.TYPE_OUT">出库</a-select-option>
-                            </a-select>
+                            <a-input placeholder="请输入调货单编号" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
                         <div class="key">创建时间:</div>
                         <div class="value">
-                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
-                                            :show-time="defaultTime" :allow-clear='false'>
+                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
                                 <template #suffixIcon><i class="icon i_calendar"/></template>
                             </a-range-picker>
                         </div>
@@ -61,7 +47,7 @@
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                         :row-key="record => record.id" :pagination='false'>
+                    :row-key="record => record.id" :pagination='false' @change="handleTableChange">
                     <template #bodyCell="{ column, text , record}">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
@@ -69,37 +55,39 @@
                                 </a-button>
                             </a-tooltip>
                         </template>
-                        <template v-if="column.key === 'stock_type'">
-                            {{ $Util.stockRecordFilter(text) }}
+                        <template v-if="column.key === 'org-type'">
+                            {{ $Util.userTypeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'type'">
                             {{ $Util.stockTypeFilter(text) }}
                         </template>
-                        <template v-if="column.key === 'warehouse_name'">
+                        <template v-if="column.key === 'warehouse-name'">
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.dataIndex === 'status'">
-                            <div class="status status-bg status-tag" :class="$Util.invoiceStatusFilter(text,'color')">
-                                {{ $Util.invoiceStatusFilter(text) }}
+                            <div class="status status-bg status-tag" :class="$Util.transferStatusFilter(text,'color')">
+                                <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>
+                                    {{ $Util.transferStatusFilter(text) }}
+                                    <template v-if="record.status === STATUS.AUDIT_REFUSE">
+                                        <i class="icon i_hint" style="font-size: 12px;padding-left: 6px;"/>
+                                    </template>
+                                </a-tooltip>
                             </div>
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" v-if="record.status === STATUS.AIT_AUDIT"
-                                      @click="handleInvoiceShow(record.id)"><i
-                                class="icon i_edit"/>审核
+                            <a-button type="link" v-if="record.status === STATUS.WAIT_AUDIT && $auth('ADMIN')" @click="handleTransferShow(record.id)">
+                                <i class="icon i_edit"/>审核
                             </a-button>
-                            <a-button type="link" v-else-if="record.status === STATUS.AUDIT_PASS"
-                                      @click="handleInvoice(record.id)"><i
+                            <!-- <a-button type="link"  v-else-if="record.status === STATUS.AUDIT_PASS" @click="handleInvoice(record.id)"><i
                                 class="icon i_edit"/>处理
-                            </a-button>
-                            <a-button type="link" v-if="record.status === STATUS.AIT_AUDIT"
-                                      @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改
-                            </a-button>
-                            <a-button type="link" v-if="record.status === STATUS.AIT_AUDIT" @click="handleCancel(record.id)"><i class="icon i_m_error"/> 取消
-                            </a-button>
+                            </a-button> -->
+                            <template v-if="record.status === STATUS.WAIT_AUDIT && !$auth('ADMIN')">
+                                <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>修改</a-button>
+                                <a-button type="link" @click="handleCancel(record.id)" class="danger"><i class="icon i_m_error"/>取消</a-button>
+                            </template>
                         </template>
                     </template>
                 </a-table>
@@ -120,56 +108,49 @@
                 />
             </div>
         </div>
-        <a-modal v-model:visible="stockShow" title="库存管理" class="stock-edit-modal"
-                 :after-close="handleStockClose">
+        <a-modal v-model:visible="transferOrderShow" title="新建调货单" class="transfer-edit-modal" :after-close="handleTransferOrderClose">
             <div class="form-item required">
-                <div class="key">仓库：</div>
+                <div class="key">仓库:</div>
                 <div class="value">
-                    <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库">
+                    <a-select v-model:value="form.to_warehouse_id" placeholder="请选择仓库">
                         <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">
                             {{ warehouse.name }}
                         </a-select-option>
                     </a-select>
                 </div>
             </div>
-            <div class="form-item required">
-                <div class="key">类型：</div>
+            <div class="form-item textarea required">
+                <div class="key">原因:</div>
                 <div class="value">
-                    <a-radio-group v-model:value="form.type">
-                        <a-radio :value="handleTypeList.TYPE_IN">入库</a-radio>
-                        <a-radio :value="handleTypeList.TYPE_OUT">出库</a-radio>
-                    </a-radio-group>
+                    <a-textarea v-model:value="form.apply_message" placeholder="请输入申请原因" :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                 </div>
             </div>
             <template #footer>
-                <a-button @click="handleStockSubmit" type="primary">确定</a-button>
-                <a-button @click="stockShow=false">取消</a-button>
+                <a-button @click="handleTransferOrderSubmit" type="primary">确定</a-button>
+                <a-button @click="transferOrderShow=false">取消</a-button>
             </template>
         </a-modal>
         <template class="modal-container">
-            <a-modal v-model:visible="invoiceShow" title="审核"
-                     class="invoice-edit-modal" :after-close='handleInvoiceClose'>
+            <a-modal v-model:visible="transferShow" title="审核" class="invoice-edit-modal" :after-close='handleTransferClose'>
                 <div class="modal-content">
-                    <div>
-                        <div class="form-item required">
-                            <div class="key">审核结果:</div>
-                            <a-radio-group v-model:value="editForm.status">
-                                <a-radio :value="STATUS.AUDIT_PASS">通过</a-radio>
-                                <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio>
-                            </a-radio-group>
-                        </div>
-                        <div class="form-item textarea required" v-if="editForm.status === STATUS.AUDIT_REFUSE">
-                            <div class="key">原因:</div>
-                            <div class="value">
-                                <a-textarea v-model:value="editForm.audit_message" placeholder="请输入不通过原因"
-                                            :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
-                            </div>
+                    <div class="form-item required">
+                        <div class="key">审核结果:</div>
+                        <a-radio-group v-model:value="editForm.status">
+                            <a-radio :value="STATUS.AUDIT_PASS">通过</a-radio>
+                            <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio>
+                        </a-radio-group>
+                    </div>
+                    <div class="form-item textarea required" v-if="editForm.status === STATUS.AUDIT_REFUSE">
+                        <div class="key">原因:</div>
+                        <div class="value">
+                            <a-textarea v-model:value="editForm.audit_message" placeholder="请输入不通过原因"
+                                :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                         </div>
                     </div>
                 </div>
                 <template #footer>
-                    <a-button @click="invoiceShow = false">取消</a-button>
-                    <a-button @click="handleInvoiceSubmit" type="primary">确定</a-button>
+                    <a-button @click="transferShow = false">取消</a-button>
+                    <a-button @click="handleTransferSubmit" type="primary">确定</a-button>
                 </template>
             </a-modal>
         </template>
@@ -179,9 +160,9 @@
 <script>
 import Core from '../../core';
 
-const STOCK_RECORD = Core.Const.STOCK_RECORD
+const TRANSFER_ORDER = Core.Const.TRANSFER_ORDER
 export default {
-    name: 'InvoiceList',
+    name: 'TransferOrderList',
     components: {},
     props: {},
     data() {
@@ -199,18 +180,17 @@ export default {
             detail: {
                 warehouse: {}
             },
-            stockShow: false,
+            transferOrderShow: false,
             isExist: '',
-            filteredInfo: {status: [1]},
+            filteredInfo: {status: [0]},
             warehouseList: [],
-            handleTypeList: Core.Const.STOCK_RECORD.TYPE, //出入库
             statusList: [
                 {text: '全  部', value: '0', color: 'primary', key: '0'},
-                {text: '待审核', value: '0', color: 'yellow', key: STOCK_RECORD.STATUS.AIT_AUDIT},
-                {text: '审核通过', value: '0', color: 'green', key: STOCK_RECORD.STATUS.AUDIT_PASS},
-                {text: '审核失败', value: '0', color: 'red', key: STOCK_RECORD.STATUS.AUDIT_REFUSE},
-                {text: '处理完成', value: '0', color: 'green', key: STOCK_RECORD.STATUS.CLOSE},
-                {text: '取消', value: '0', color: 'blue', key: STOCK_RECORD.STATUS.CANCEL},
+                {text: '待审核', value: '0', color: 'yellow', key: TRANSFER_ORDER.STATUS.AIT_AUDIT},
+                {text: '审核通过', value: '0', color: 'green', key: TRANSFER_ORDER.STATUS.AUDIT_PASS},
+                {text: '审核失败', value: '0', color: 'red', key: TRANSFER_ORDER.STATUS.AUDIT_REFUSE},
+                {text: '处理完成', value: '0', color: 'green', key: TRANSFER_ORDER.STATUS.CLOSE},
+                {text: '已取消', value: '0', color: 'blue', key: TRANSFER_ORDER.STATUS.CANCEL},
             ],
             searchForm: {
                 name: '',
@@ -218,14 +198,15 @@ export default {
                 status: undefined,
                 type: undefined,
             },
+            warehouse_id: '',
             form: {
-                type: '',
-                id: '',
+                to_warehouse_id: undefined,
                 warehouse_id: undefined,
+                apply_message: '',
             },
             tableData: [],
-            invoiceShow: false,
-            STATUS: Core.Const.STOCK_RECORD.STATUS,
+            transferShow: false,
+            STATUS: Core.Const.TRANSFER_ORDER.STATUS,
             editForm: {
                 id: '',
                 status: 20,
@@ -239,12 +220,13 @@ export default {
             let {filteredInfo} = this;
             filteredInfo = filteredInfo || {};
             let columns = [
-                {title: '出入库单编号', dataIndex: 'uid', key: 'detail'},
-                {title: '出入库单类型', dataIndex: 'type', key: 'stock_type',},
-                {title: '所属仓库', dataIndex: ['warehouse', 'name'], key: 'warehouse_name',},
-                {title: '仓库类型', dataIndex: 'type', key: 'type',},
+                {title: '调货单编号', dataIndex: 'uid', key: 'detail'},
+                {title: '创建单位', dataIndex: 'org_name', key: 'org-ame'},
+                {title: '单位类型', dataIndex: 'org_type', key: 'org-type'},
+                {title: '所属仓库', dataIndex: ['to_warehouse', 'name'], key: 'warehouse-name',},
+                {title: '仓库类型', dataIndex: ['to_warehouse', 'type'], key: 'type',},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '状态', dataIndex: 'status', key: 'status', filters: Core.Const.STOCK_RECORD.STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [1]},
+                {title: '状态', dataIndex: 'status', key: 'status', align: 'center'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
             return columns
@@ -262,29 +244,29 @@ export default {
             switch (type) {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/warehouse/invoice-edit",
+                        path: "/warehouse/transfer-order-edit",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/warehouse/invoice-detail",
+                        path: "/warehouse/transfer-order-detail",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
             }
         },
-        handleStockShow() {
-            this.stockShow = true;
+        handleTransferOrderShow() {
+            this.transferOrderShow = true;
         },
-        handleStockClose() {
-            this.stockShow = false;
+        handleTransferOrderClose() {
+            this.transferOrderShow = false;
             this.isExist = '';
             this.form = {
                 type: '',
-                id: '',
+                to_warehouse_id: '',
                 warehouse_id: '',
             }
         },
@@ -293,20 +275,20 @@ export default {
                 this.warehouseList = res.list
             })
         },
-        handleStockSubmit() {
+        handleTransferOrderSubmit() {
             let form = Core.Util.deepCopy(this.form)
-            if (!form.warehouse_id) {
+            if (!form.to_warehouse_id) {
                 return this.$message.warning('请选择仓库')
             }
-            if (!form.type) {
-                return this.$message.warning('请选择类型')
+            if (!form.apply_message) {
+                return this.$message.warning('请输入申请原因')
             }
-            Core.Api.Invoice.save(form).then(res => {
+            Core.Api.Transfer.save(form).then(res => {
                 this.$message.success('保存成功')
-                this.handleStockClose()
+                this.handleTransferOrderClose()
                 this.routerChange('edit', res.detail)
             }).catch(err => {
-                console.log('handleStockSubmit err:', err)
+                console.log('handleTransferSubmit err:', err)
             })
         },
         handleTypeSelect(val) {
@@ -332,7 +314,7 @@ export default {
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
-            Core.Api.Invoice.list({
+            Core.Api.Transfer.list({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
@@ -348,16 +330,15 @@ export default {
                 this.loading = false;
             });
         },
-
         handleCancel(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要取消该出入库单吗？',
+                title: '确定要取消该调货单吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Transfer.cancel({id}).then(() => {
+                    Core.Api.Invoice.cancel({id}).then(() => {
                         _this.$message.success('取消成功');
                         _this.getTableData();
                     }).catch(err => {
@@ -366,9 +347,31 @@ export default {
                 },
             });
         },
+        handleTransferShow(id) { // 显示弹框
+            this.transferShow = true
+            this.editForm.id = id
+        },
+        handleTransferClose() { // 关闭弹框
+            this.transferShow = false;
+        },
+        handleTransferSubmit() { // 审核提交
+            this.loading = true;
+            Core.Api.Transfer.audit({
+                ...this.editForm
+            }).then(res => {
+                console.log('handleTransferSubmit res', res)
+                this.handleTransferClose()
+                this.getTableData()
+                this.getStatusList()
+            }).catch(err => {
+                console.log('handleTransferSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
         getStatusList() {    // 获取 状态 列表
             Object.assign(this.statusList, this.$options.data().statusList)
-            Core.Api.Invoice.status({
+            Core.Api.Transfer.status({
                 ...this.searchForm,
             }).then(res => {
                 console.log("getStatusList res:", res)
@@ -389,50 +392,19 @@ export default {
                 this.loading = false;
             });
         },
-        handleInvoiceShow(id) { // 显示弹框
-            this.invoiceShow = true
-            this.editForm.id = id
-        },
-        handleInvoiceClose() { // 关闭弹框
-            this.invoiceShow = false;
-        },
-        handleInvoiceSubmit() { // 审核提交
-            this.loading = true;
-            Core.Api.Invoice.audit({
-                ...this.editForm
-            }).then(res => {
-                console.log('handleInvoiceSubmit res', res)
-                this.handleInvoiceClose()
-                this.getTableData()
-                this.getStatusList()
-            }).catch(err => {
-                console.log('handleInvoiceSubmit err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-        handleInvoice(id) { // 处理完成
-            let _this = this;
-            this.$confirm({
-                title: '确定要处理吗？',
-                okText: '确定',
-                okType: 'danger',
-                cancelText: '取消',
-                onOk() {
-                    Core.Api.Invoice.handle({id}).then(() => {
-                        _this.$message.success('处理完成');
-                        _this.getTableData();
-                        _this.getStatusList()
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
-                },
-            });
+        handleTableChange(page, filters, sorter) {
+            console.log('handleTableChange filters:', filters)
+            this.filteredInfo = filters;
+            for (const key in filters) {
+                this.searchForm[key] = filters[key] ? filters[key][0] : ''
+            }
+            this.searchForm.status = filters.status ? filters.status[0] : 1
+            this.pageChange(1);
         },
     }
 };
 </script>
 
 <style lang="less" scoped>
-// 
+//
 </style>
