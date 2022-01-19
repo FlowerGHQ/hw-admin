@@ -1,36 +1,36 @@
 <template>
 <div id="SystemFileEdit" class="edit-container">
     <div class="title-container">
-        <div class="title-area">{{ form.id ? '编辑文件' : '新增文件' }}</div>
+        <div class="title-area">{{ form.id ? '编辑附件' : '新增附件' }}</div>
     </div>
     <div class="form-block">
-        <div class="form-title">
-            <div class="title">文件上传</div>
-        </div>
+        <div class="form-title"><div class="title">附件信息</div></div>
         <div class="form-content">
             <div class="form-item required">
-                <div class="key">来源类型</div>
+                <div class="key">附件名称</div>
                 <div class="value">
-                    <a-select placeholder="请选择来源类型" v-model:value="form.target_type" @change="handleCustomerSelect"
-                                show-search>
-                        <a-select-option v-for="(item,index) of fileTypeList" :key="index" :value="item.value">
-                            {{ item.text }}
-                        </a-select-option>
+                    <a-input v-model:value="form.name" placeholder="请输入附件名称"/>
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">附件类型</div>
+                <div class="value">
+                    <a-select placeholder="请选择附件类型" v-model:value="form.target_type">
+                        <a-select-option v-for="(val,key) of typeMap" :key="key" :value="key">{{ val }}</a-select-option>
                     </a-select>
                 </div>
             </div>
-            <div class="form-item img-upload">
+            <div class="form-item required file-upload">
                 <div class="key">文件上传</div>
                 <div class="value">
-                    <a-upload name="file" class="image-uploader"
-                        list-type="picture-card"
+                    <a-upload name="file"
                         :file-list="upload.fileList" :action="upload.action"
                         :headers="upload.headers" :data='upload.data'
                         :before-upload="handleImgCheck"
                         @change="handleFileChange">
-                        <div class="image-inner" v-if="upload.fileList.length < 1">
-                            <i class="icon i_upload"/>
-                        </div>
+                        <a-button class="file-upload-btn" type="primary" ghost v-if="upload.fileList.length < 1">
+                            <i class="icon i_upload"/> 上传文件
+                        </a-button>
                     </a-upload>
                 </div>
             </div>
@@ -61,12 +61,10 @@ export default {
                 name: '',
                 path: '',
                 type: '',
-                target_type: '',
+                target_type: undefined,
             },
-            item_category: {},
-            configTemp: [],
             // 文件类型
-            fileTypeList: Core.Const.SYSTEM.FILE.TARGET_TYPE_LIST,
+            typeMap: Core.Const.SYSTEM.FILE.TARGET_TYPE_MAP,
             // 上传文件
             upload: {
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
@@ -105,7 +103,10 @@ export default {
                 id: this.form.id,
             }).then(res => {
                 console.log('getSystemFileDetail res', res)
-                this.form = res.detail
+                this.detail = res.detail
+                for (const key in this.form) {
+                    this.form[key] = res.detail[key]
+                }
                 if (this.form.path) {
                     this.upload.fileList = [{
                         uid: 1,
@@ -126,20 +127,19 @@ export default {
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
             console.log('form:', form)
-            if (this.upload.fileList.length) {
-                let fileList = this.upload.fileList.map(item => {
-                    return item.short_path || item.response.data.filename
-                })
-                form.path = fileList[0]
+            if (!form.name) {
+                return this.$massage.warning('请输入附件名称')
             }
-            if (this.configTemp.length) {
-                for (let i = 0; i < this.configTemp.length; i++) {
-                    let item = this.configTemp[i]
-                    if (item.required && !form.config[i].value) {
-                        return this.$message.warning(`请${['select','radio'].includes(item.type) ? '选择' : '输入'}${item.name}`)
-                    }
-                }
+            if (!form.target_type) {
+                return this.$massage.warning('请选择附件类型')
             }
+            if (!this.upload.fileList.length) {
+                return this.$massage.warning('请上传文件')
+            }
+            let fileList = this.upload.fileList.map(item => {
+                return item.short_path || item.response.data.filename
+            })
+            form.path = fileList[0]
             Core.Api.System.fileSave(form).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
@@ -172,60 +172,13 @@ export default {
             this.upload.fileList = fileList
             let list = file.name.split('.')
             if (list) {
-                this.form.name = list[0]
-                this.form.type = list[1]
+                this.form.type = list.pop().toLowerCase()
             }
         },
-
-        handleCategorySelect(val, node) {
-            this.form.category_id = val
-            this.item_category = node
-            try {
-                this.configTemp = JSON.parse(node.config)
-            } catch (error) {
-                this.configTemp = []
-            }
-
-            let _config = Core.Util.deepCopy(this.form.config)
-            let config = []
-            for (let i = 0; i < this.configTemp.length; i++) {
-                const item = this.configTemp[i];
-                config.push({
-                    name: item.name,
-                    key: item.key,
-                    value: item.type === 'select' ? undefined : '',
-                })
-            }
-            for (let i = 0; i < config.length; i++) {
-                const target = config[i];
-                let _target = _config.find(item => item.key === target.key)
-                target.value = _target ? _target.value : ''
-            }
-            console.log('handleCategorySelect config:', config)
-            this.form.config = config
-        }
-        
     }
 };
 </script>
 
 <style lang="less">
-#SystemFileEdit {
-    .form-block {
-        .form-content {
-            .form-item {
-                .value.input-number {
-                    .ant-input-number {
-                        width: 120px;
-                    }
-                    > span {
-                        font-size: 14px;
-                        padding-left: 10px;
-                        color: #323233;
-                    }
-                }
-            }
-        }
-    }
-}
+// #SystemFileEdit {}
 </style>

@@ -1,73 +1,78 @@
 <template>
-    <div id="SystemFileList">
-        <div class="list-container">
-            <div class="title-container">
-                <div class="title-area">系统文件列表</div>
-                <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="loginType === USER_TYPE.ADMIN"><i class="icon i_add"/>新建文件</a-button>
-                </div>
-            </div>
-            <div class="search-container">
-                <a-row class="search-area">
-                    <a-col v-if="$auth('ADMIN')" :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
-                        <div class="key">来源类型:</div>
-                        <div class="value">
-                            <a-select v-model:value="searchForm.target_type" placeholder="请选择来源类型">
-                                <a-select-option v-for="file of fileTargetTypeList" :key="file.value" :value="file.value">{{file.text}}</a-select-option>
-                            </a-select>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :xl="16" :xxl='16' class="search-item">
-                        <div class="key">创建时间:</div>
-                        <div class="value">
-                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
-                                :show-time="defaultTime" :allow-clear='false'>
-                                <template #suffixIcon><i class="icon i_calendar"></i></template>
-                            </a-range-picker>
-                        </div>
-                    </a-col>
-                </a-row>
-                <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">查询</a-button>
-                    <a-button @click="handleSearchReset">重置</a-button>
-                </div>
-
-            </div>
-            <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                         :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, text , record }">
-                        <template v-if="column.key === 'text'">
-                            {{ text || '-' }}
-                        </template>
-                        <template v-if="column.key === 'time'">
-                            {{ $Util.timeFilter(text) }}
-                        </template>
-                        <template v-if="column.key === 'operation'" >
-                            <a-button type="link" @click="handleDownloadConfirm(record)"><i class="icon i_download"/> 下载</a-button>
-                            <a-button type="link" @click="routerChange('edit',record)" v-if="loginType === USER_TYPE.ADMIN"><i class="icon i_edit"/> 编辑</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" v-if="loginType === USER_TYPE.ADMIN"><i class="icon i_delete"/> 删除</a-button>
-                        </template>
-                    </template>
-                </a-table>
-            </div>
-            <div class="paging-container">
-                <a-pagination
-                    v-model:current="currPage"
-                    :page-size='pageSize'
-                    :total="total"
-                    show-quick-jumper
-                    show-size-changer
-                    show-less-items
-                    :show-total="total => `共${total}条`"
-                    :hide-on-single-page='false'
-                    :pageSizeOptions="['10', '20', '30', '40']"
-                    @change="pageChange"
-                    @showSizeChange="pageSizeChange"
-                />
+<div id="SystemFileList">
+    <div class="list-container">
+        <div class="title-container">
+            <div class="title-area">系统附件列表</div>
+            <div class="btns-area">
+                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('ADMIN')"><i class="icon i_add"/>新建文件</a-button>
             </div>
         </div>
+        <div class="search-container">
+            <a-row class="search-area">
+                <a-col v-if="$auth('ADMIN')" :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
+                    <div class="key">附件类型:</div>
+                    <div class="value">
+                        <a-select v-model:value="searchForm.target_type" placeholder="请选择附件类型">
+                            <a-select-option v-for="(val, key) in typeMap" :key="key" :value="key">{{ val }}</a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :xl="16" :xxl='16' class="search-item">
+                    <div class="key">创建时间:</div>
+                    <div class="value">
+                        <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
+                            :show-time="defaultTime" :allow-clear='false'>
+                            <template #suffixIcon><i class="icon i_calendar"></i></template>
+                        </a-range-picker>
+                    </div>
+                </a-col>
+            </a-row>
+            <div class="btn-area">
+                <a-button @click="handleSearch" type="primary">查询</a-button>
+                <a-button @click="handleSearchReset">重置</a-button>
+            </div>
+
+        </div>
+        <div class="table-container">
+            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                :row-key="record => record.id" :pagination='false'>
+                <template #bodyCell="{ column, text , record }">
+                    <template v-if="column.key === 'text'">
+                        {{ text || '-' }}
+                    </template>
+                    <template v-if="column.dataIndex === 'target_type'">
+                        {{ $Util.fileTargetTypeFilter(text) }}
+                    </template>
+                    <template v-if="column.key === 'time'">
+                        {{ $Util.timeFilter(text) }}
+                    </template>
+                    <template v-if="column.key === 'operation'" >
+                        <a-button type="link" @click="handleDownload(record)"><i class="icon i_download"/>下载</a-button>
+                        <template v-if="$auth('ADMIN')">
+                            <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
+                        </template>
+                    </template>
+                </template>
+            </a-table>
+        </div>
+        <div class="paging-container">
+            <a-pagination
+                v-model:current="currPage"
+                :page-size='pageSize'
+                :total="total"
+                show-quick-jumper
+                show-size-changer
+                show-less-items
+                :show-total="total => `共${total}条`"
+                :hide-on-single-page='false'
+                :pageSizeOptions="['10', '20', '30', '40']"
+                @change="pageChange"
+                @showSizeChange="pageSizeChange"
+            />
+        </div>
     </div>
+</div>
 </template>
 <script>
 import Core from '../../core';
@@ -83,8 +88,6 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            // 下载
-            downloadDisabled: false,
             // 分页
             currPage: 1,
             pageSize: 20,
@@ -92,10 +95,9 @@ export default {
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
-            fileTargetTypeList: Core.Const.SYSTEM.FILE.TARGET_TYPE_LIST,
+            typeMap: Core.Const.SYSTEM.FILE.TARGET_TYPE_MAP,
             searchForm: {
                 id:'',
-                // type: undefined,
                 target_type: undefined,
             },
             tableData: [],
@@ -106,12 +108,16 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: '文件名', dataIndex: 'name', key: 'text'},
-                {title: '文件类型', dataIndex: 'type', key: 'text'},
-                {title: '地址', dataIndex: 'path', key: 'text'},
+                {title: '附件名', dataIndex: 'name', key: 'item'},
+                {title: '附件类型', dataIndex: 'target_type'},
+                {title: '文件类型', dataIndex: 'type', key: 'item'},
+                {title: '文件地址', dataIndex: 'path', key: 'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '操作', key: 'operation', fixed: 'right', width: 100,},
+                {title: '操作', key: 'operation', fixed: 'right'},
             ]
+            if (!this.$auth('ADMIN')) {
+                columns.splice(1,1)
+            }
             return columns
         },
     },
@@ -120,19 +126,11 @@ export default {
     },
     methods: {
         routerChange(type, item = {}) {
-            console.log(item)
             let routeUrl = ''
             switch (type) {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/system/system-file-edit",
-                        query: {id: item.id}
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
-                case 'detail':  // 详情
-                    routeUrl = this.$router.resolve({
-                        path: "/system/system-file-detail",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
@@ -144,7 +142,6 @@ export default {
             this.getTableData()
         },
         pageSizeChange(current, size) {  // 页码尺寸改变
-            console.log('pageSizeChange size:', size)
             this.pageSize = size
             this.getTableData()
         },
@@ -153,15 +150,11 @@ export default {
         },
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            console.log('this.searchForm:', this.searchForm)
             this.create_time = []
             this.pageChange(1);
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-            if (this.loginType != this.USER_TYPE.ADMIN) { // 非管理员只能看平台文件
-                this.searchForm.target_type = 1 
-            }
             Core.Api.System.fileList({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
@@ -179,7 +172,7 @@ export default {
             });
         },
 
-        handleDelete(id) { // 删
+        handleDelete(id) { // 删除该文件
             let _this = this;
             this.$confirm({
                 title: '确定要删除该文件吗？',
@@ -197,23 +190,18 @@ export default {
             });
         },
 
-        handleDownloadConfirm(record){ // 下载问询
+        handleDownload(record) { // 文件下载
             let _this = this;
             this.$confirm({
                 title: '确认要下载吗？',
                 okText: '确定',
                 cancelText: '取消',
                 onOk() {
-                    _this.handleDownload(record);
+                    const path = record.path
+                    let fileUrl = Core.Const.NET.FILE_URL_PREFIX + path + ''
+                    window.open(fileUrl, '_blank')
                 }
             })
-        },
-        handleDownload(record) { // 下载
-            this.downloadDisabled = true;
-            const path = record.path
-            let fileUrl = Core.Const.NET.FILE_URL_PREFIX + path + ''
-            window.open(fileUrl, '_blank')
-            this.downloadDisabled = false;
         },
     }
 };

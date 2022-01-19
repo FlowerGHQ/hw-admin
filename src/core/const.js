@@ -372,7 +372,6 @@ let Const = {
             {name: '支付宝', value: '1'},
             {name: '微信', value: '2'},
             {name: '银行转账', value: '3'},
-
         ],
         // 评论
         FLAG_REVIEW: {
@@ -452,42 +451,33 @@ let Const = {
 
     NOTICE: { //系统消息
         TYPE: {
-            ADMIN: 10,  //平台消息
-            AGENT: 20,  //零售商消息
+            ADMIN: 10,  // 系统消息
+            DISTRIBUTOR: 15, // 分销商
+            AGENT: 20,       // 零售商
+            STORE: 30,       // 门店
         },
         TYPE_MAP: {
-            10: '平台消息',
-            20: '零售商消息'
+            10: '系统消息',
+            15: '分销商消息',
+            20: '零售商消息',
+            30: '门店消息',
         },
     },
     SYSTEM: { //系统
         FILE: {
-            TARGET_TYPE:{
-                TARGET_TYPE_SYSTEM: '1',
-                TARGET_TYPE_DISTRIBUTOR: '2',
-                // TARGET_TYPE_AGENT: '3',
-                // TARGET_TYPE_STORE: '4',
-                // TARGET_TYPE_REPAIR_ORDER: '5',
+            TARGET_TYPE: {
+                SYSTEM: 1,
+                DISTRIBUTOR: 2,
+                AGENT: 3,
+                STORE: 4,
+                // REPAIR_ORDER: '5',
             },
-            TARGET_TYPE_LIST: [
-                {value: 1, text: '平台'},
-                {value: 2, text: '分销商'},
-                // {value: 3, text: '零售商'},
-                // {value: 4, text: '门店'},
-                // {value: 5, text: '维修订单'},
-            ],
-            TYPE:{
-                XLSX: 'xlsx',
-                DOC: 'doc',
-                DOCX: 'docx',
-                AVI: 'avi',
+            TARGET_TYPE_MAP: {
+                1: '系统',
+                2: '分销商',
+                3: '零售商',
+                4: '门店',
             },
-            TYPE_LIST: [
-                {value: 'xlsx', text: '表格'},
-                {value: 'doc', text: '文档(doc)'},
-                {value: 'docx', text: '文档(docx)'},
-                {value: 'avi', text: '视频'},
-            ]
         },
     },
 
@@ -533,25 +523,25 @@ let Const = {
             AIT_AUDIT: 10, //待审核
             AUDIT_PASS: 20, //审核通过
             CLOSE: 40, //处理完成
-            AUDIT_REFUSE: '-10' //审核失败
+            AUDIT_REFUSE: -10, //审核失败
         },
-        STATUS_MAP:{
-            10: '待审核',
-            20: '审核通过',
-            40: '处理完成',
+        STATUS_MAP: {
+            '10': '待审核',
+            '20': '审核通过',
+            '40': '处理完成',
             '-10': '审核失败',
         },
         STATUS_COLOR_MAP: {
-            10: 'yellow',
-            20: 'green',
-            40: 'orange',
+            '10': 'yellow',
+            '20': 'green',
+            '40': 'orange',
             "-10": 'red',
         },
         STATUS_LIST: [
-            {text: '待审核',value: 10},
-            {text: '审核通过',value: 20},
-            {text: '审核失败',value: '-10'},
-            {text: '处理完成',value: '40'},
+            {text: '待审核', value: 10},
+            {text: '审核通过', value: 20},
+            {text: '审核失败', value: '-10'},
+            {text: '处理完成', value: '40'},
         ],
 
     },

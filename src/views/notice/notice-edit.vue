@@ -1,41 +1,42 @@
 <template>
-    <div id="NoticeEdit" class="edit-container">
-        <div class="title-container">
-            <div class="title-area">{{ form.id ? '编辑消息' : '新建消息' }}</div>
-        </div>
-        <div class="form-block">
-            <div class="form-title">
-                <div class="title-colorful">基本信息</div>
-            </div>
-            <div class="form-content">
-                <div class="form-item required">
-                    <div class="key">消息标题：</div>
-                    <div class="value">
-                        <a-input v-model:value="form.title" placeholder="请输入消息标题"/>
-                    </div>
-                </div>
-                <div class="form-item required">
-                    <div class="key">消息类型：</div>
-                    <div class="value">
-                        <a-select    v-model:value="form.type" @change="handleTypeSelect" placeholder="请选择消息类型" allow-clear >
-                            <a-select-option  key="10" :value="typeList.ADMIN">平台消息</a-select-option>
-                            <a-select-option  key="20" :value="typeList.AGENT">零售商消息</a-select-option>
-                        </a-select>
-                    </div>
-                </div>
-                <div class="form-item required afs rich_text">
-                    <div class="key">消息内容：</div>
-                    <div class="value">
-                        <VueTinymce v-model="form.content" :setting="tinymce_setting" />
-                    </div>
+<div id="NoticeEdit" class="edit-container">
+    <div class="title-container">
+        <div class="title-area">{{ form.id ? '编辑消息' : '新建消息' }}</div>
+    </div>
+    <div class="form-block">
+        <div class="form-title"><div class="title-colorful">基本信息</div></div>
+        <div class="form-content">
+            <div class="form-item required">
+                <div class="key">消息标题：</div>
+                <div class="value">
+                    <a-input v-model:value="form.title" placeholder="请输入消息标题"/>
                 </div>
             </div>
-        </div>
-        <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary">确定</a-button>
-            <a-button @click="routerChange('back')" type="primary" ghost="">取消</a-button>
+            <div class="form-item required">
+                <div class="key">消息类型：</div>
+                <div class="value">
+                    <a-select v-model:value="form.type" placeholder="请选择消息类型">
+                        <a-select-option v-for="(val, key) in typeMap" :key="key" :value="Number(key)">{{val}}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
         </div>
     </div>
+    <div class="form-block">
+        <div class="form-title"><div class="title-colorful">消息内容</div></div>
+        <div class="form-content">
+            <div class="form-item required afs rich_text">
+                <div class="value">
+                    <VueTinymce v-model="form.content" :setting="tinymce_setting" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-btns">
+        <a-button @click="handleSubmit" type="primary">确定</a-button>
+        <a-button @click="routerChange('back')" type="primary" ghost="">取消</a-button>
+    </div>
+</div>
 </template>
 
 <script>
@@ -45,24 +46,20 @@ import VueTinymce from '@jsdawn/vue3-tinymce';
 
 export default {
     name: 'NoticeEdit',
-    components: {
-        VueTinymce
-    },
+    components: { VueTinymce },
     props: {},
     data() {
         return {
             // 加载
             loading: false,
             detail: {},
-            typeList: Core.Const.NOTICE.TYPE,
+            typeMap: Core.Const.NOTICE.TYPE_MAP,
             form: {
                 id: '',
                 title: '',
                 content: '',
                 type: undefined,
-
             },
-            configTemp: [],
             tinymce_setting: {
                 menubar: true,  // 隐藏菜单栏
                 branding: false, // 隐藏右下角技术支持
@@ -119,27 +116,20 @@ export default {
                 this.loading = false;
             });
         },
-        handleTypeSelect(val) {
-            this.type = val
-        },
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
-            if (!form.id) {
-              if (!form.title) {
+            if (!form.title) {
                 return this.$message.warning('请输入消息标题')
-              }
-              if (!form.type) {
+            }
+            if (!form.type) {
                 return this.$message.warning('请选择消息类型')
-              }
-
-              if (!form.content) {
+            }
+            if (!form.content) {
                 return this.$message.warning('请输入消息内容')
-              }
             }
             Core.Api.Notice.save(form).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
-
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })

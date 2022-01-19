@@ -458,12 +458,16 @@ const Util = {
     },
     /* =============== 物流信息 ================ */
 
-    /* =============== 系统消息 ================ */
+    /* =============== 系统管理 ================ */
     noticeTypeFilter(val) {
         const MAP = Const.NOTICE.TYPE_MAP
         return MAP[val] || '未知'
     },
-    /* =============== 系统消息 ================ */
+    fileTargetTypeFilter(val) {
+        const MAP = Const.SYSTEM.FILE.TARGET_TYPE_MAP
+        return MAP[val] || '未知'
+    },
+    /* =============== 系统管理 ================ */
 
     /* =============== 退款管理 ================ */
     refundTypeFilter(val) {
@@ -494,9 +498,9 @@ const Util = {
         const COLOR_MAP = Const.STOCK_RECORD.STATUS_COLOR_MAP
         switch (to) {
             case 'word':
-                return MAP[val] || '未知'
+                return MAP[val + ''] || '未知'
             case 'color':
-                return COLOR_MAP[val] || 'grey'
+                return COLOR_MAP[val + ''] || 'grey'
         }
     },
     /* =============== 出入库 ================ */
