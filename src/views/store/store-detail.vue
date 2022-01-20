@@ -52,11 +52,11 @@
             <a-tab-pane key="PurchaseList" tab="订单列表">
                 <PurchaseList :storeId="store_id" v-if="activeKey == 'PurchaseList'"/>
             </a-tab-pane>
-            <template v-if="!$auth('STORE')">
+<!--            <template v-if="!$auth('STORE')">
                 <a-tab-pane key="PricingStructure" tab="商品价格">
                     <PricingStructure :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'PricingStructure'"/>
                 </a-tab-pane>
-            </template>
+            </template>-->
         </a-tabs>
     </div>
 </div>

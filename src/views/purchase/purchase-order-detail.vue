@@ -167,6 +167,9 @@ const STATUS = Core.Const.PURCHASE.STATUS;
 
 const itemColumns = [
     { title: '商品', dataIndex: 'item' },
+    { title: '型号', dataIndex: ['item', "model"] },
+    { title: '编号', dataIndex: ['item', "code"] },
+    { title: '规格', dataIndex: ['item', 'attr_str'], key: 'attrs' },
     { title: '数量', dataIndex: 'amount'},
     { title: '单价', dataIndex: 'unit_price', key: 'money'},
     { title: '售价', dataIndex: 'price', key: 'money'},
@@ -311,6 +314,11 @@ export default {
                     total_amount += it.amount
                     total_charge += it.charge
                     total_price += it.price
+                    let element = it.item || {}
+                    if (element.attr_list && element.attr_list.length) {
+                        let str = element.attr_list.map(i => i.value).join(' ')
+                        element.attr_str = str
+                    }
                 })
                 this.itemList = res.list
                 this.total.amount = total_amount

@@ -164,6 +164,11 @@ export default {
                 console.log('getTableData res:', res)
                 res.list.forEach(item => {
                     item.children = null
+                    let element = item || {}
+                    if (element.attr_list && element.attr_list.length) {
+                        let str = element.attr_list.map(i => i.value).join(' ')
+                        element.attr_str = str
+                    }
                 })
                 this.tableData = res.list
                 this.total = res.count;
