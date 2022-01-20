@@ -352,7 +352,7 @@ let Const = {
             WAIT_DELIVER: 200,
             WAIT_TAKE_DELIVER: 300,
             DEAL_SUCCESS: 400,
-            CLOSE: 1000,
+            CANCEL: -100,
         },
         STATUS_MAP: {
             '0': '未知',
@@ -360,7 +360,7 @@ let Const = {
             '200': '待发货',
             '300': '已发货',
             '400': '交易完成',
-            '1000': '交易关闭',
+            '-100': '交易关闭',
         },
         STATUS_COLOR_MAP: {
             '0': 'red',
