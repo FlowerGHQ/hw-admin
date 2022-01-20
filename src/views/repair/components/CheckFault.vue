@@ -92,7 +92,6 @@
 </div>
 </template>
 
-
 <script>
 import Core from '../../../core';
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
@@ -342,7 +341,7 @@ export default {
             Core.Api.RepairItem.saveList({
                 repair_order_id: this.id,
                 item_list: itemList,
-                store_id: this.transferForm.store_id,
+                store_id: this.transferStoreId,
             }).then(() => {
                 this.$message.success('操作成功');
                 this.$emit('submit')

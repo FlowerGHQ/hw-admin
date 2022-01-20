@@ -193,7 +193,7 @@ export default {
             operMode: '',
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             statusList: [
-                {text: '全  部', value: '0', color: 'primary', key: '0'},
+                {text: '全  部', value: '0', color: 'primary', key: '-1'},
                 {text: '待分配', value: '0', color: 'red',     key: REPAIR.STATUS.WAIT_DISTRIBUTION },
                 {text: '待确认', value: '0', color: 'orange',  key: REPAIR.STATUS.WAIT_CHECK },
                 {text: '待审核', value: '0', color: 'orange',  key: REPAIR.STATUS.WAIT_AUDIT },
@@ -215,7 +215,7 @@ export default {
                 store_id: undefined,
                 agent_id: undefined,
                 distributor_id: undefined,
-                status: '0',
+                status: '-1',
                 channel: '',
                 repair_method: '',
                 repair_user_org_type:'',

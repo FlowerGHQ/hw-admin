@@ -350,7 +350,7 @@ export default {
             if (!this.form.item_code) {
                 return this.isExist = 0
             }
-            Core.Api.Item.detailByCode({
+            Core.Api.Item.detailByCodeForRepair({
                 code: this.form.item_code,
             }).then(res => {
                 console.log("getItemCode res", res)
