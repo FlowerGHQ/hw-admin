@@ -6,6 +6,7 @@
             <p class="spec" v-if="detail.attr_str"><span>规格：</span>{{ detail.attr_str }}</p>
             <p class="price">￥{{ $Util.countFilter(detail.purchase_price) }}</p>
             <p class="category">{{ category.name }}</p>
+            <p class="sale-price">建议零售价：￥{{ $Util.countFilter(detail.price) }}</p>
             <div class="desc" v-if="config && config.length">
                 <template v-for="(item, index) of config" :key="index">
                     <p v-if="item.value">
@@ -172,6 +173,8 @@ export default {
         line-height: 22px;
         font-size: 16px;
         font-weight: 500;
+        box-sizing: border-box;
+        padding-right: 32px;
 
         .name {
             font-size: 28px;
@@ -196,6 +199,11 @@ export default {
 
         .price {
             margin: 20px 0 44px;
+        }
+        .sale-price {
+            color: #000000;
+            font-weight: 400;
+            margin-bottom: 20px;
         }
 
         .category {

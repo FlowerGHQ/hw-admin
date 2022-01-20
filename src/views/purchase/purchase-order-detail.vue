@@ -8,7 +8,7 @@
                     <a-button type="primary" @click="handlePurchaseStatus('payment')" v-if="detail.status == STATUS.WAIT_PAY"><i class="icon i_received"/>已收款</a-button>
                     <a-button type="primary" @click="handlePurchaseStatus('deliver')" v-if="detail.status == STATUS.WAIT_DELIVER"><i class="icon i_deliver"/>发货</a-button>
                 </template>
-                <template v-if="$auth('AGENT', 'STORE')">
+                <template v-if="$auth('DISTRIBUTOR', 'AGENT', 'STORE')">
                     <a-button type="primary" @click="handlePurchaseStatus('received')" v-if="detail.status == STATUS.WAIT_TAKE_DELIVER"><i class="icon i_goods"/>确认收货</a-button>
                     <a-button type="primary" @click="handlePurchaseStatus('cancel')" v-if="detail.status == STATUS.WAIT_PAY"><i class="icon i_close_c"/>关闭</a-button>
                     <a-button type="primary" @click="routerChange('refund')" ghost v-if="detail.status == STATUS.DEAL_SUCCESS"><i class="icon i_edit"/>申请退款</a-button>
@@ -31,7 +31,6 @@
                                 <template v-if="column.dataIndex === 'item'">
                                     <div class="table-img">
                                         <a-image :width="30" :height="30" :src="$Util.imageFilter(text ? text.logo : '', 2)"/>
-                                        <!-- <a-tooltip placement="top" :title='text.name'> -->
                                         <a-tooltip placement="top" :title='text'>
                                             <a-button type="link" @click="routerChange('detail', text)" style="margin-left: 6px;">
                                                 {{text ? text.name : '-'}}
@@ -87,8 +86,7 @@
                         </a-col>
                     </a-row>
                 </a-collapse-panel>
-                <AttachmentFile :target_id='id' :detail='detail' @submit="getRepairDetail" ref="AttachmentFile"
-                                v-if="$auth('DISTRIBUTOR', 'AGENT', 'STORE', 'ADMIN')"/>
+                <AttachmentFile :target_id='id' :detail='detail' @submit="getPurchaseInfo" ref="AttachmentFile"/>
                 <a-collapse-panel key="WaybillInfo" header="物流信息" class="gray-collapse-panel">
                     <a-row class="panel-content info-container">
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
@@ -242,7 +240,7 @@ export default {
         }
     },
     mounted() {
-        this.handlePurchaseItemSearch();
+        this.getPurchaseItemList();
         this.getPurchaseInfo()
         this.getWaybill()
     },
@@ -278,17 +276,19 @@ export default {
                     break;
             }
         },
+        // 获取 采购单详情
         getPurchaseInfo() {
             Core.Api.Purchase.detail({
                 id: this.id
             }).then(res => {
                 this.detail = res
-                console.log('getRepairDetail err', res)
+                console.log('getPurchaseInfo err', res)
             }).catch(err => {
-                console.log('getRepairDetail err', err)
+                console.log('getPurchaseInfo err', err)
             }).finally(() => {
             });
         },
+        // 获取 物流单信息
         getWaybill() {
             Core.Api.Waybill.detailByTarget({
                 target_id: this.id,
@@ -299,10 +299,11 @@ export default {
                 this.getWaybillInfo(this.waybill.uid, this.waybill.company_uid)
                 // this.getWaybillInfo("JD0060147134468", this.waybill.companyUid)
             }).catch(err => {
-                console.log('getRepairDetail err', err)
+                console.log('getPurchaseInfo err', err)
             }).finally(() => {
             });
         },
+        // 获取 物流单详情
         getWaybillInfo(uid, company_uid) {
             Core.Api.Waybill.queryLogistics({
                 uid: uid,
@@ -313,29 +314,32 @@ export default {
                 // console.log('waybillInfo', res.waybill)
                 // console.log('waybillInfo', JSON.parse(res.waybill))
             }).catch(err => {
-                console.log('getRepairDetail err', err)
+                console.log('getPurchaseInfo err', err)
             }).finally(() => {
             });
         },
-        handlePurchaseItemSearch() {
+        // 获取 采购单 商品列表
+        getPurchaseItemList() {
             Core.Api.Purchase.itemList({
                 order_id: this.id
             }).then(res => {
-                this.totle_amount = 0
-                this.totle_charge = 0
-                this.totle_price = 0
-                this.purchaseItemList = res.list
-                this.purchaseItemList.forEach(it =>{
-                    this.totle_amount += it.amount
-                    this.totle_charge += it.charge
-                    this.totle_price += it.price
+                let totle_amount = 0,totle_charge = 0,totle_price = 0;
+                res.list.forEach(it =>{
+                    totle_amount += it.amount
+                    totle_charge += it.charge
+                    totle_price += it.price
                 })
+                this.purchaseItemList = res.list
+                this.totle_amount = totle_amount
+                this.totle_charge = totle_charge
+                this.totle_price = totle_price
             }).catch(err => {
-                console.log('getRepairDetail err', err)
+                console.log('getPurchaseInfo err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
+
         handlePurchaseStatus(val) {
             switch (val){
                 case "payment":
@@ -351,7 +355,7 @@ export default {
                         this.$message.success('收货成功')
                         this.getPurchaseInfo()
                     }).catch(err => {
-                        console.log('getRepairDetail err', err)
+                        console.log('getPurchaseInfo err', err)
                     }).finally(() => {
                         this.loading = false;
                     });
@@ -364,7 +368,7 @@ export default {
                         // this.getPurchaseInfo()
                         this.routerChange("list")
                     }).catch(err => {
-                        console.log('getRepairDetail err', err)
+                        console.log('getPurchaseInfo err', err)
                     }).finally(() => {
                         this.loading = false;
                     });
@@ -379,7 +383,7 @@ export default {
                 this.getPurchaseInfo()
                 this.paymentShow = false
             }).catch(err => {
-                console.log('getRepairDetail err', err)
+                console.log('getPurchaseInfo err', err)
                 this.$message.success('支付成功')
             }).finally(() => {
                 this.loading = false;
@@ -395,7 +399,7 @@ export default {
                 this.deliverShow = false
                 this.$message.success('发货成功')
             }).catch(err => {
-                console.log('getRepairDetail err', err)
+                console.log('getPurchaseInfo err', err)
             }).finally(() => {
                 this.loading = false;
 

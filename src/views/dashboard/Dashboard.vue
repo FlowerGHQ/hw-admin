@@ -74,7 +74,7 @@
                 <div class="rank-item" v-for="(item,index) of systeFmileData" :key="index">
                     <div class="number" :class="index < 3 ? 'color' : ''">{{index + 1}}</div>
                     <div class="name">{{item.name}}</div>
-                    <a-button class="count" type="link" @click="handleDownloadConfirm(item)"><i class="icon i_download"/>下载</a-button>
+                    <a-button class="count" style="height: 1em;font-size: 12px;" type="link" @click="handleDownloadConfirm(item)"><i class="icon i_download"/>下载</a-button>
                 </div>
             </div>
         </div>

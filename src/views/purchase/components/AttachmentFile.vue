@@ -26,12 +26,12 @@
                     <div class="key">上传文件:</div>
                     <div class="value">
                         <a-upload name="file" class="file-uploader"
-                                  :file-list="upload.fileList" :action="upload.action"
-                                  :headers="upload.headers" :data='upload.data'
-                                  :before-upload="handleImgCheck"
-                                  @change="handleLogoChange">
-                            <a-button v-if="upload.fileList.length < 1" v-model:value="form.path"><i
-                                class="icon i_upload"/> 点击上传
+                            :file-list="upload.fileList" :action="upload.action"
+                            :headers="upload.headers" :data='upload.data'
+                            :before-upload="handleImgCheck"
+                            @change="handleLogoChange">
+                            <a-button v-if="upload.fileList.length < 1" v-model:value="form.path">
+                                <i class="icon i_upload"/> 点击上传
                             </a-button>
                         </a-upload>
                     </div>

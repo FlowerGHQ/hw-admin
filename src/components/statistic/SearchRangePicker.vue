@@ -30,13 +30,20 @@ export default {
             if (this.$auth('ADMIN')) {
                 list = [
                     {value: 0, text: '全部'},
-                    {value: 1, text: '零售商'},
-                    {value: 2, text: '门店'},
+                    {value: 1, text: '分销商'},
+                    {value: 2, text: '零售商'},
+                    {value: 3, text: '门店'},
+                ]
+            } else if (this.$auth('DISTRIBUTOR')) {
+                list = [
+                    {value: 0, text: '全部'},
+                    {value: 2, text: '零售商'},
+                    {value: 3, text: '门店'},
                 ]
             } else if (this.$auth('AGENT')) {
                 list = [
                     {value: 0, text: '全部'},
-                    {value: 2, text: '门店'},
+                    {value: 3, text: '门店'},
                 ]
             }
             return list
