@@ -5,12 +5,12 @@
             <div class="title-area">采购订单详情</div>
             <div class="btns-area">
                 <template v-if="$auth('ADMIN')">
-                    <a-button type="primary" @click="handlePurchaseStatus('payment')" v-if="detail.status == STATUS.WAIT_PAY"><i class="icon i_received"/>已收款</a-button>
-                    <a-button type="primary" @click="handlePurchaseStatus('deliver')" v-if="detail.status == STATUS.WAIT_DELIVER"><i class="icon i_deliver"/>发货</a-button>
+                    <a-button type="primary" @click="handleModalShow('payment')" v-if="detail.status == STATUS.WAIT_PAY"><i class="icon i_received"/>已收款</a-button>
+                    <a-button type="primary" @click="handleModalShow('deliver')" v-if="detail.status == STATUS.WAIT_DELIVER"><i class="icon i_deliver"/>发货</a-button>
                 </template>
                 <template v-if="$auth('DISTRIBUTOR', 'AGENT', 'STORE')">
-                    <a-button type="primary" @click="handlePurchaseStatus('received')" v-if="detail.status == STATUS.WAIT_TAKE_DELIVER"><i class="icon i_goods"/>确认收货</a-button>
-                    <a-button type="primary" @click="handlePurchaseStatus('cancel')" v-if="detail.status == STATUS.WAIT_PAY"><i class="icon i_close_c"/>关闭</a-button>
+                    <a-button type="primary" @click="handleReceived()" v-if="detail.status == STATUS.WAIT_TAKE_DELIVER"><i class="icon i_goods"/>确认收货</a-button>
+                    <a-button type="primary" @click="handleCancel()" v-if="detail.status == STATUS.WAIT_PAY"><i class="icon i_close_c"/>关闭</a-button>
                     <a-button type="primary" @click="routerChange('refund')" ghost v-if="detail.status == STATUS.DEAL_SUCCESS"><i class="icon i_edit"/>申请退款</a-button>
                 </template>
             </div>
@@ -25,8 +25,8 @@
                 <template #expandIcon ><i class="icon i_expan_l"/> </template>
                 <a-collapse-panel key="ItemInfo" header="商品信息" class="gray-collapse-panel">
                     <div class="panel-content">
-                        <a-table :columns="purchaseItemColumns" :data-source="purchaseItemList" :scroll="{ x: true }"
-                            :row-key="record => record.id" :loading='purchaseLoading' :pagination='false'>
+                        <a-table :columns="itemColumns" :data-source="itemList" :scroll="{ x: true }"
+                            :row-key="record => record.id" :pagination='false'>
                             <template #bodyCell="{ column, text , record}">
                                 <template v-if="column.dataIndex === 'item'">
                                     <div class="table-img">
@@ -48,9 +48,9 @@
                             <template #summary>
                                 <a-table-summary>
                                     <a-table-summary-row>
-                                        <a-table-summary-cell :index="0" :col-span="3">总数量:{{totle_amount}}件</a-table-summary-cell>
-                                        <a-table-summary-cell :index="4" :col-span="1">总售价:{{$Util.countFilter(totle_price)}}元</a-table-summary-cell>
-                                        <a-table-summary-cell :index="5" :col-span="1">总实付金额:{{$Util.countFilter(totle_charge)}}元</a-table-summary-cell>
+                                        <a-table-summary-cell :index="0" :col-span="3">总数量:{{total.amount}}件</a-table-summary-cell>
+                                        <a-table-summary-cell :index="4" :col-span="1">总售价:{{$Util.countFilter(total.price)}}元</a-table-summary-cell>
+                                        <a-table-summary-cell :index="5" :col-span="1">总实付金额:{{$Util.countFilter(total.charge)}}元</a-table-summary-cell>
                                     </a-table-summary-row>
                                 </a-table-summary>
                             </template>
@@ -110,8 +110,8 @@
                             <div class="info-item">
                                 <div class="key">物流信息</div>
                                 <div class="value">
-                                    <WaybillShow v-if="waybillInfo && detail.status != PURCHASE.STATUS.CLOSE && detail.status != PURCHASE.STATUS.WAIT_PAY && detail.status != PURCHASE.STATUS.INIT && detail.status != PURCHASE.STATUS.WAIT_DELIVER" @change="getWaybill" :detail='waybill' :list='waybillInfo.list' :can-edit="$auth('ADMIN')" />
-                                    <template >暂无物流信息</template>
+                                    <WaybillShow v-if="waybillInfo && showWaybill" @change="getWaybillDetail" :detail='waybill' :list='waybillInfo.list' :can-edit="$auth('ADMIN')" />
+                                    <template v-else>暂无物流信息</template>
                                 </div>
                             </div>
                         </a-col>
@@ -121,7 +121,7 @@
         </div>
     </div>
     <template class="modal-container">
-        <a-modal v-model:visible="paymentShow" width="600px" title="支付" @ok="handlePayment">
+        <a-modal v-model:visible="paymentShow" title="确认支付" @ok="handlePayment">
             <div class="modal-content">
                 <div class="form-item required">
                     <div class="key">支付方式</div>
@@ -133,7 +133,7 @@
                 </div>
             </div>
         </a-modal>
-        <a-modal v-model:visible="deliverShow" width="600px" title="发货" @ok="handleDeliver">
+        <a-modal v-model:visible="deliverShow" title="确认发货" @ok="handleDeliver">
             <div class="modal-content">
                 <div class="form-item required">
                     <div class="key">快递公司</div>
@@ -165,7 +165,7 @@ import AttachmentFile from './components/AttachmentFile.vue';
 const PURCHASE = Core.Const.PURCHASE;
 const STATUS = Core.Const.PURCHASE.STATUS;
 
-const purchaseItemColumns = [
+const itemColumns = [
     { title: '商品', dataIndex: 'item' },
     { title: '数量', dataIndex: 'amount'},
     { title: '单价', dataIndex: 'unit_price', key: 'money'},
@@ -185,7 +185,6 @@ export default {
     data() {
         return {
             loginType: Core.Data.getLoginType(),
-            PURCHASE,
             STATUS,
             // 加载
             loading: false,
@@ -193,32 +192,35 @@ export default {
             detail: {}, // 采购单详情
             activeKey: ['ItemInfo', 'PurchaseInfo', 'WaybillInfo'],
 
-            waybill: '',
-            waybillInfo: '',
-            paymentShow: false,
-            deliverShow: false,
-            reviewShow: false,
-            totle_amount: 0,
-            totle_price: 0,
-            totle_charge: 0,
-            payMethodList: Core.Const.PURCHASE.PAY_METHOD_LIST,
-            companyUidList: Core.Const.WAYBILL.COMPANY_LIST,
-            form: {
-                pay_method: undefined,
-                company_uid: undefined,
-                waybill_uid: '',
-                review: '',
-            },
-            purchaseItemList: [],
-            purchaseLoading: false,
-            purchaseItemColumns: purchaseItemColumns,
-
             stepsList: [
                 {status: '100', title: '支付'},
                 {status: '200', title: '发货'},
                 {status: '300', title: '收货'},
                 {status: '400', title: '交易完成'},
             ],
+
+            itemList: [],
+            itemColumns: itemColumns,
+            total: {
+                amount: 0,
+                price: 0,
+                charge: 0,
+            },
+
+            waybill: {},
+            waybillInfo: {},
+
+            paymentShow: false,
+            payMethodList: PURCHASE.PAY_METHOD_LIST,
+
+            deliverShow: false,
+            companyUidList: Core.Const.WAYBILL.COMPANY_LIST,
+
+            form: {
+                pay_method: undefined,
+                company_uid: undefined,
+                waybill_uid: '',
+            },
         };
     },
     watch: {},
@@ -226,7 +228,7 @@ export default {
         currStep() {
             for (let i = 0; i < this.stepsList.length; i++) {
                 const item = this.stepsList[i];
-                if (this.detail.status == Core.Const.PURCHASE.STATUS.CLOSE){
+                if (this.detail.status == STATUS.CLOSE) {
                     this.stepsList= [
                         {status: '100', title: '取消'},
                     ]
@@ -237,12 +239,22 @@ export default {
                 }
             }
             return 0
+        },
+        showWaybill() {
+            switch (this.detail.status) {
+                case STATUS.CLOSE:
+                case STATUS.WAIT_PAY:
+                case STATUS.INIT:
+                case STATUS.WAIT_DELIVER:
+                    return false
+            }
+            return true
         }
     },
     mounted() {
         this.getPurchaseItemList();
         this.getPurchaseInfo()
-        this.getWaybill()
+        this.getWaybillDetail()
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
@@ -288,8 +300,29 @@ export default {
             }).finally(() => {
             });
         },
+        // 获取 采购单 商品列表
+        getPurchaseItemList() {
+            Core.Api.Purchase.itemList({
+                order_id: this.id
+            }).then(res => {
+                let total_amount = 0,total_charge = 0,total_price = 0;
+                res.list.forEach(it =>{
+                    total_amount += it.amount
+                    total_charge += it.charge
+                    total_price += it.price
+                })
+                this.itemList = res.list
+                this.total.amount = total_amount
+                this.total.charge = total_charge
+                this.total.price  = total_price
+            }).catch(err => {
+                console.log('getPurchaseInfo err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
         // 获取 物流单信息
-        getWaybill() {
+        getWaybillDetail() {
             Core.Api.Waybill.detailByTarget({
                 target_id: this.id,
                 target_type: Core.Const.WAYBILL.TARGET_TYPE.PURCHASE_ORDER,
@@ -297,7 +330,7 @@ export default {
             }).then(res => {
                 this.waybill = res.detail
                 this.getWaybillInfo(this.waybill.uid, this.waybill.company_uid)
-                // this.getWaybillInfo("JD0060147134468", this.waybill.companyUid)
+                console.log('getWaybillDetail', this.waybill)
             }).catch(err => {
                 console.log('getPurchaseInfo err', err)
             }).finally(() => {
@@ -310,75 +343,34 @@ export default {
                 company_uid: company_uid,
             }).then(res => {
                 this.waybillInfo = JSON.parse(res.waybill).result
-                console.log('waybillInfo', this.waybillInfo)
-                // console.log('waybillInfo', res.waybill)
-                // console.log('waybillInfo', JSON.parse(res.waybill))
+                console.log('getWaybillInfo', this.waybillInfo)
             }).catch(err => {
                 console.log('getPurchaseInfo err', err)
             }).finally(() => {
-            });
-        },
-        // 获取 采购单 商品列表
-        getPurchaseItemList() {
-            Core.Api.Purchase.itemList({
-                order_id: this.id
-            }).then(res => {
-                let totle_amount = 0,totle_charge = 0,totle_price = 0;
-                res.list.forEach(it =>{
-                    totle_amount += it.amount
-                    totle_charge += it.charge
-                    totle_price += it.price
-                })
-                this.purchaseItemList = res.list
-                this.totle_amount = totle_amount
-                this.totle_charge = totle_charge
-                this.totle_price = totle_price
-            }).catch(err => {
-                console.log('getPurchaseInfo err', err)
-            }).finally(() => {
-                this.loading = false;
             });
         },
 
-        handlePurchaseStatus(val) {
-            switch (val){
+        // 弹出弹框
+        handleModalShow(val) {
+            Object.assign(this.form, this.$options.data().form)
+            switch (val) {
                 case "payment":
                     this.paymentShow = true
                     break;
                 case "deliver":
                     this.deliverShow = true
                     break;
-                case "received":
-                    Core.Api.Purchase.takeDeliver({
-                        id: this.id
-                    }).then(res => {
-                        this.$message.success('收货成功')
-                        this.getPurchaseInfo()
-                    }).catch(err => {
-                        console.log('getPurchaseInfo err', err)
-                    }).finally(() => {
-                        this.loading = false;
-                    });
-                    break;
-                case "cancel":
-                    Core.Api.Purchase.cancel({
-                        id: this.id
-                    }).then(res => {
-                        this.$message.success('取消成功')
-                        // this.getPurchaseInfo()
-                        this.routerChange("list")
-                    }).catch(err => {
-                        console.log('getPurchaseInfo err', err)
-                    }).finally(() => {
-                        this.loading = false;
-                    });
-                    break;
             }
         },
+        // 确认收款
         handlePayment() {
+            let form = Core.Util.deepCopy(this.form)
+            if (!form.pay_method) {
+                return this.$message.warning('请选择支付方式')
+            }
             Core.Api.Purchase.payment({
                 id: this.id,
-                ...this.form
+                pay_method: form.pay_method
             }).then(res => {
                 this.getPurchaseInfo()
                 this.paymentShow = false
@@ -387,22 +379,69 @@ export default {
                 this.$message.success('支付成功')
             }).finally(() => {
                 this.loading = false;
-
             });
         },
+        // 确认发货
         handleDeliver() {
+            let form = Core.Util.deepCopy(this.form)
+            if (!form.company_uid) {
+                return this.$message.warning('请选择快递公司')
+            }
+            if (!form.waybill_uid) {
+                return this.$message.warning('请输入快递单号')
+            }
             Core.Api.Purchase.deliver({
                 id: this.id,
-                ...this.form
+                company_uid: form.company_uid,
+                waybill_uid: form.waybill_uid,
             }).then(res => {
-                this.getPurchaseInfo()
-                this.deliverShow = false
                 this.$message.success('发货成功')
+                this.deliverShow = false
+                this.getPurchaseInfo()
+                this.getWaybillDetail();
             }).catch(err => {
-                console.log('getPurchaseInfo err', err)
+                console.log('handleDeliver err', err)
             }).finally(() => {
                 this.loading = false;
+            });
+        },
 
+        // 确认收货
+        handleReceived() {
+            let _this = this
+            this.$confirm({
+                title: '确认已收到货物吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Purchase.takeDeliver({
+                        id: _this.id
+                    }).then(res => {
+                        _this.$message.success('收货成功')
+                        _this.getPurchaseInfo()
+                    }).catch(err => {
+                        console.log('handleReceived err', err)
+                    })
+                },
+            });
+        },
+        // 取消采购
+        handleCancel() {
+            let _this = this
+            this.$confirm({
+                title: '确认要取消本次采购吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Purchase.cancel({
+                        id: _this.id
+                    }).then(res => {
+                        _this.$message.success('取消成功')
+                        _this.routerChange("list")
+                    }).catch(err => {
+                        console.log('handleCancel err', err)
+                    })
+                },
             });
         },
     }
