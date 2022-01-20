@@ -489,6 +489,10 @@ const Util = {
         const MAP = Const.STOCK_RECORD.TYPE_MAP
         return MAP[val] || '未知'
     },
+    stockRecordSourceFilter(val) {
+        const MAP = Const.STOCK_RECORD.SOURCE_TYPE_MAP
+        return MAP[val] || '未知'
+    },
     stockTypeFilter(val) {
         const MAP = Const.STOCK_RECORD.PRODUCT_TYPE_MAP
         return MAP[val] || '未知'

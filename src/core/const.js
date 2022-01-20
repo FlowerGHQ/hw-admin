@@ -555,6 +555,11 @@ let Const = {
             {text: '处理完成',value: 40},
             {text: '已取消',value: -20},
         ],
+        SOURCE_TYPE_MAP: {
+            1: '管理员操作',
+            21: '维修单',
+            31: '出/入库单'
+        }
     },
     TRANSFER_ORDER: {   //调货单
         STATUS: {    //调货单审核状态
