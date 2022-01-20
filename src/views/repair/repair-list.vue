@@ -170,6 +170,8 @@
 <script>
 import Core from '../../core';
 const REPAIR = Core.Const.REPAIR
+const LOGIN_TYPE = Core.Const.LOGIN.TYPE
+
 
 export default {
     name: 'RepairList',
@@ -178,6 +180,7 @@ export default {
     data() {
         return {
             REPAIR,
+            LOGIN_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -457,7 +460,25 @@ export default {
             let endTime   = this.create_time[1] || ''
 
             const token = Core.Data.getToken() || ''
-            let fileUrl = Core.Const.NET.URL_POINT + '/agent/1/repair/export-repair-order-record?'
+
+            let power = ''
+            switch(this.loginType){
+                case LOGIN_TYPE.ADMIN:
+                    power = 'admin'
+                    break
+                case LOGIN_TYPE.DISTRIBUTOR:
+                    power = 'distributor'
+                    break
+                case LOGIN_TYPE.AGENT:
+                    power = 'agent'
+                    break
+                case LOGIN_TYPE.STORE:
+                    power = 'store'
+                    break
+                default:
+                    break
+            }
+            let fileUrl = Core.Const.NET.URL_POINT + '/' + power + '/1/repair/export-repair-order-record?'
 
             let exportUrl =
                 `${fileUrl}token=${token}&uid=${uid}&type=${type}&status=${status}&distributor_id=${distributorId}
