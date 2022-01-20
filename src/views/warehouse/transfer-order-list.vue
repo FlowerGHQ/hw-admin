@@ -346,6 +346,7 @@ export default {
                 onOk() {
                     Core.Api.Transfer.cancel({id}).then(() => {
                         _this.$message.success('取消成功');
+                        _this.getStatusList();
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);
