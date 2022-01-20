@@ -226,9 +226,15 @@ export default {
                 {title: '所属仓库', dataIndex: ['to_warehouse', 'name'], key: 'warehouse-name',},
                 {title: '仓库类型', dataIndex: ['to_warehouse', 'type'], key: 'type',},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
+                {title: '审核人', dataIndex: ["audit_user", "account", "name"], key: 'audit_user'},
+                {title: '审核时间', dataIndex: 'audit_time', key: 'time'},
                 {title: '状态', dataIndex: 'status', key: 'status', align: 'center'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
+
+            if (!this.$auth('admin')) {
+                columns.splice(6, 1)
+            }
             return columns
         },
     },
@@ -338,8 +344,9 @@ export default {
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Invoice.cancel({id}).then(() => {
+                    Core.Api.Transfer.cancel({id}).then(() => {
                         _this.$message.success('取消成功');
+                        _this.getStatusList();
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

@@ -30,7 +30,7 @@
                     <ItemSelect :warehouseId="detail.type == typeList.TYPE_OUT ? detail.warehouse_id: 0 "
                         :disabledChecked="disabledChecked"
                         btnType='link'
-                        @select="handleAddInvoiceItem" btn-text="添加商品"/>
+                        @select="handleAddTransferItem" btn-text="添加商品"/>
                 </template>
                 <div class="panel-content">
                     <div class="table-container no-mg">
@@ -69,7 +69,6 @@
 import Core from '../../core';
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 
-const STOCK_TYPE = Core.Const.STOCK_RECORD.TYPE
 export default {
     name: 'TransferOrderEdit',
     components: {
@@ -99,9 +98,6 @@ export default {
                 {title: '数量', dataIndex: 'amount', key: 'amount'},
                 {title: '操作', dataIndex: 'operation'},
             ]
-            if (this.detail.type == STOCK_TYPE.TYPE_IN) { // 入库不显示库存数量
-                columns.splice(2, 1)
-            }
             return columns
         },
 
@@ -151,18 +147,18 @@ export default {
             Core.Api.Transfer.itemList({
                 transfer_order_id: this.id,
             }).then(res => {
-                console.log('getInvoiceList res', res)
+                console.log('getTransferList res', res)
                 this.tableData = res.list
             }).catch(err => {
-                console.log('getInvoiceList err', err)
+                console.log('getTransferList err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
         // 获取商品列表
-        handleAddInvoiceItem(ids, items) {
-            console.log('handleAddInvoiceItem ids:', ids)
-            console.log('handleAddInvoiceItem items:', items)
+        handleAddTransferItem(ids, items) {
+            console.log('handleAddTransferItem ids:', ids)
+            console.log('handleAddTransferItem items:', items)
             this.disabledChecked = []
             items = items.map(item => ({
                 "id": 0,
@@ -170,7 +166,7 @@ export default {
                 "amount": 1,
                 "stock": 0,
             }))
-            console.log('handleInvoiceItem items:', items)
+            console.log('handleAddTransferItem items:', items)
             this.tableData.push(...items)
         },
         // 移除商品

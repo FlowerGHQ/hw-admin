@@ -130,7 +130,7 @@
                 <div class="key">类型：</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.type">
-                        <a-radio v-for="(val, key) in typeMap" :key='key' :value='keu'>{{val}}</a-radio>
+                        <a-radio v-for="(val, key) in typeMap" :key='key' :value='key'>{{val}}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
@@ -230,7 +230,10 @@ export default {
                 {title: '出入库单类型', dataIndex: 'type', key: 'stock_type',},
                 {title: '所属仓库', dataIndex: ['warehouse', 'name'], key: 'warehouse_name',},
                 {title: '仓库类型', dataIndex: 'type', key: 'type',},
+                {title: '申请人', dataIndex: ['apply_user', "account", "name"], key: 'apply_user'},
+                {title: '处理人', dataIndex: ['operator_user', "account", "name"], key: 'operator_user'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
+                {title: '处理时间', dataIndex: 'operate_time', key: 'time'},
                 {title: '状态', dataIndex: 'status', key: 'status'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
@@ -343,8 +346,9 @@ export default {
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Transfer.cancel({id}).then(() => {
+                    Core.Api.Invoice.cancel({id}).then(() => {
                         _this.$message.success('取消成功');
+                        _this.getStatusList();
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

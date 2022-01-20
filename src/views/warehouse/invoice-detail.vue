@@ -82,7 +82,7 @@
 
 <script>
 import Core from '../../core';
-
+const STOCK_TYPE = Core.Const.STOCK_RECORD.TYPE
 export default {
     name: 'InvoiceDetail',
     components: {},
@@ -98,12 +98,6 @@ export default {
             },
             activeKey: ['affirm'],
             tableData: [],
-            tableColumns: [
-                {title: '商品名称', dataIndex: 'item', key: 'item-name'},
-                {title: '商品编码', dataIndex: 'item', key: 'item-code'},
-                {title: '库存数量', dataIndex: 'item', key: 'item-stock'},
-                {title: '数量', dataIndex: 'amount', key: 'item-amount'},
-            ],
             invoiceShow: false,
             editForm: {
                 status: 20,
@@ -112,7 +106,20 @@ export default {
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        tableColumns() {
+            let columns = [
+                {title: '商品名称', dataIndex: 'item', key: 'item-name'},
+                {title: '商品编码', dataIndex: 'item', key: 'item-code'},
+                {title: '库存数量', dataIndex: 'item', key: 'item-stock'},
+                {title: '数量', dataIndex: 'amount', key: 'item-amount'},
+            ]
+            if (this.detail.type == STOCK_TYPE.TYPE_IN) { // 入库不显示库存数量
+                columns.splice(2, 1)
+            }
+            return columns
+        },
+    },
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         this.getInvoiceDetail();
