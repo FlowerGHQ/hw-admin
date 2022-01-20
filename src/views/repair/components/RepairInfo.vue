@@ -21,6 +21,12 @@
                     <div class="value">{{$Util.repairTypeFilter(detail.type)}}</div>
                 </div>
                 <div class="info-item">
+                    <div class="key">工单备注</div>
+                    <div class="value">{{detail.remark || '-'}}</div>
+                </div>
+            </a-col>
+            <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
+                <div class="info-item">
                     <div class="key">维修方式</div>
                     <div class="value">{{$Util.repairChannelFilter(detail.channel)}}</div>
                 </div>
@@ -29,14 +35,19 @@
                     <div class="value">{{$Util.repairMethodFilter(detail.repair_method) || '-'}}</div>
                 </div>
                 <div class="info-item">
+                    <div class="key">维修信息</div>
+                    <div class="value">{{detail.repair_message || '-'}}</div>
+                </div>
+                <div class="info-item">
                     <div class="key">车辆编号</div>
                     <div class="value">{{detail.item_code || '-'}}</div>
                 </div>
+                <div class="info-item">
+                    <div class="key">行程公里数</div>
+                    <div class="value">{{detail.travel_distance || '-'}}公里</div>
+                </div>
             </a-col>
             <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
-
-
-
                 <div class="info-item">
                     <div class="key">相关客户</div>
                     <div class="value">{{detail.customer_name || '-'}}</div>
@@ -53,18 +64,10 @@
                     <div class="key">客户地址</div>
                     <div class="value">{{detail.customer_province + detail.customer_city + detail.customer_county + detail.customer_address || '-'}}</div>
                 </div>
-
-
-
                 <div class="info-item">
-                    <div class="key">工单备注</div>
-                    <div class="value">{{detail.remark || '-'}}</div>
+                    <div class="key">到港时间</div>
+                    <div class="value">{{$Util.timeFilter(detail.arrival_time)}}</div>
                 </div>
-                <div class="info-item">
-                    <div class="key">维修信息</div>
-                    <div class="value">{{detail.repair_message || '-'}}</div>
-                </div>
-
             </a-col>
         </a-row>
     </a-collapse-panel>

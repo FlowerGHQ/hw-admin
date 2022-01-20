@@ -12,7 +12,9 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
                     <div class="key">仓库名称:</div>
                     <div class="value">
-                        <a-input placeholder="请输入仓库名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                        <a-select v-model:value="searchForm.warehouse_id" placeholder="请选择仓库">
+                            <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">{{ warehouse.name }}</a-select-option>
+                        </a-select>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
@@ -91,9 +93,10 @@ export default {
             total: 0,
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
+            warehouseList: [],
             create_time: [],
             searchForm: {
-                name: '',
+               warehouse_id: undefined,
                 // country: undefined,
             },
 
@@ -111,6 +114,7 @@ export default {
     computed: {},
     mounted() {
         this.getTableData();
+        this.getWarehouseList();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -150,6 +154,11 @@ export default {
             console.log('this.searchForm:', this.searchForm)
             this.create_time = []
             this.pageChange(1);
+        },
+        getWarehouseList() {
+            Core.Api.Warehouse.listAll().then(res => {
+                this.warehouseList = res.list
+            })
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;

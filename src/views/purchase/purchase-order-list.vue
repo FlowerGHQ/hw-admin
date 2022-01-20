@@ -302,7 +302,6 @@ export default {
                         }
                     })
                 })
-                console.log(total)
                 this.statusList[0].value = total
             }).catch(err => {
                 console.log('getStatusStat err:', err)

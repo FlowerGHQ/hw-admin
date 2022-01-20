@@ -393,7 +393,6 @@ const Util = {
         return MAP[val] || '未知'
     },
     repairServiceFilter(val) {
-        console.log('repairServiceFilter', val);
         const MAP = Const.REPAIR.SERVICE_TYPE_MAP
         return MAP[val] || '未知'
     },

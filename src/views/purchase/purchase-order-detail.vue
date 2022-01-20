@@ -229,7 +229,7 @@ export default {
         currStep() {
             for (let i = 0; i < this.stepsList.length; i++) {
                 const item = this.stepsList[i];
-                if (this.detail.status == STATUS.CLOSE) {
+                if (this.detail.status == STATUS.CANCEL) {
                     this.stepsList= [
                         {status: '100', title: '取消'},
                     ]
