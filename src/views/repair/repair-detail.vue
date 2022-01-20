@@ -234,9 +234,9 @@ export default {
     computed: {
         showCheckResult() {
             switch (this.detail.status) {
-                case WAIT_REPAIR:
-                case REPAIR_END:
-                case SETTLEMENT:
+                case STATUS.WAIT_REPAIR:
+                case STATUS.REPAIR_END:
+                case STATUS.SETTLEMENT:
                     return true
                 default:
                     return false
