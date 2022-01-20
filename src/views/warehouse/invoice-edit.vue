@@ -96,13 +96,14 @@ export default {
         tableColumns() {
             let columns = [
                 {title: '商品名称', dataIndex: 'item', key: 'item-name'},
+                {title: '商品型号', dataIndex: ['item', 'model'], key: 'item-model'},
                 {title: '商品编码', dataIndex: 'item', key: 'item-code'},
                 {title: '库存数量', dataIndex: 'item', key: 'item-stock'},
                 {title: '数量', dataIndex: 'amount', key: 'amount'},
                 {title: '操作', dataIndex: 'operation'},
             ]
             if (this.detail.type == STOCK_TYPE.TYPE_IN) { // 入库不显示库存数量
-                columns.splice(2, 1)
+                columns.splice(3, 1)
             }
             return columns
         },

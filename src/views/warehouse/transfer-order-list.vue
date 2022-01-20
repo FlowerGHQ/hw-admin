@@ -232,7 +232,7 @@ export default {
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
 
-            if (!this.$auth('admin')) {
+            if (!this.$auth('ADMIN')) {
                 columns.splice(6, 1)
             }
             return columns
