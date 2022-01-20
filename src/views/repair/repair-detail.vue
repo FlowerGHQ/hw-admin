@@ -245,6 +245,9 @@ import dayjs from "dayjs";
 import AttachmentFile from '@/components/popup-btn/AttachmentFile.vue';
 
 const REPAIR = Core.Const.REPAIR
+const STATUS = Core.Const.REPAIR.STATUS
+const REPAIR_ITEM = Core.Const.REPAIR_ITEM
+
 export default {
     name: 'RepairDetail',
     components: {
@@ -261,10 +264,10 @@ export default {
     data() {
         return {
             OrgType: Core.Data.getOrgType(),
-            STATUS: REPAIR.STATUS,
+            STATUS,
             REPAIR_RESULTS: REPAIR.RESULTS,
             ATTACHMENT_TARGET_TYPE: Core.Const.ATTACHMENT.TARGET_TYPE,
-            loginType: Core.Data.getLoginType(),
+
             // 加载
             loading: false,
             id: 0,
@@ -438,22 +441,22 @@ export default {
         },
         step(status) {
             switch (status) {
-                case REPAIR.STATUS.WAIT_DISTRIBUTION:
+                case STATUS.WAIT_DISTRIBUTION:
                     this.currStep = 0;
                     break;
-                case REPAIR.STATUS.WAIT_CHECK:
+                case STATUS.WAIT_CHECK:
                     this.currStep = 1;
                     break;
-                case REPAIR.STATUS.WAIT_DETECTION:
+                case STATUS.WAIT_DETECTION:
                     this.currStep = 2;
                     break;
-                case REPAIR.STATUS.WAIT_REPAIR:
+                case STATUS.WAIT_REPAIR:
                     this.currStep = 3;
                     break;
-                case REPAIR.STATUS.REPAIR_END:
+                case STATUS.REPAIR_END:
                     this.currStep = 4;
                     break;
-                case REPAIR.STATUS.SETTLEMENT:
+                case STATUS.SETTLEMENT:
                     this.currStep = 5;
                     break;
             }
@@ -607,11 +610,11 @@ export default {
                 let exchangeTotle = 0
                 res.list.forEach(it => {
                     // it.item_name = it.item.name // ？？
-                    if (it.type == Core.Const.REPAIR_ITEM.TYPE.ADD) {
+                    if (it.type == REPAIR_ITEM.TYPE.ADD) {
                         failList.push(it)
                         failTotle += it.amount * it.price
                     }
-                    if (it.type == Core.Const.REPAIR_ITEM.TYPE.REPLACE) {
+                    if (it.type == REPAIR_ITEM.TYPE.REPLACE) {
                         exchangeList.push(it)
                         exchangeTotle += it.amount * it.price
                     }
