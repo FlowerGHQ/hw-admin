@@ -346,8 +346,9 @@ export default {
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Transfer.cancel({id}).then(() => {
+                    Core.Api.Invoice.cancel({id}).then(() => {
                         _this.$message.success('取消成功');
+                        _this.getStatusList();
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

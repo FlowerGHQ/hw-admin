@@ -32,12 +32,12 @@
                                   v-if="[STATUS.WAIT_CHECK].includes(detail.status)"><i class="icon i_transfer"/>转单
                         </a-button>
                         <!-- <template v-if="detail.account_id == User.id || $auth('MANAGER')"> -->
-                            <a-button type="primary" @click="handleFaultSubmit()"
-                                      v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_submit"/>提交
-                            </a-button>
-                            <a-button type="primary" @click="handleResultShow()"
-                                      v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_completed"/>维修完成
-                            </a-button>
+                        <a-button type="primary" @click="handleFaultSubmit()"
+                                    v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_submit"/>提交
+                        </a-button>
+                        <a-button type="primary" @click="handleResultShow()"
+                                    v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_completed"/>维修完成
+                        </a-button>
                         <!-- </template> -->
                         <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END">
                             <i class="icon i_settle"/>结算
@@ -502,18 +502,23 @@ export default {
                 return this.$message.warning('请选择快递公司,物流单号')
             }
             this.loading = false;
-            Core.Api.Repair.post({
-                id: this.id,
-                ...this.form
-            }).then(res => {
-                this.getRepairDetail()
+            if (this.isTransfer == true) { // 存在转单
+                Core.Api.Repair.post({
+                    id: this.id,
+                    ...this.form
+                }).then(res => {
+                    this.getRepairDetail()
+                    // 故障信息提交
+                    this.$refs.CheckFault.handleFaultSubmit();
+                }).catch(err => {
+                    console.log('handleFaultSubmit err', err)
+                }).finally(() => {
+                    this.loading = false;
+                });
+            }else{
                 // 故障信息提交
                 this.$refs.CheckFault.handleFaultSubmit();
-            }).catch(err => {
-                console.log('handleFaultSubmit err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+            }
         },
         handleSettlement() {
             Core.Api.Repair.settlement({id: this.id}).then(() => {

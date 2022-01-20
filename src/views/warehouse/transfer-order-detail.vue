@@ -53,7 +53,7 @@
     </div>
     <template class="modal-container">
         <a-modal v-model:visible="transferShow" title="审核"
-            class="warehouse-edit-modal" :after-close='handleInvoiceClose'>
+            class="warehouse-edit-modal" :after-close='handleTransferClose'>
             <div class="modal-content">
                 <div class="form-item required">
                     <div class="key">审核结果:</div>
@@ -150,10 +150,10 @@ export default {
             Core.Api.Transfer.itemList({
                 transfer_order_id: this.id,
             }).then(res => {
-                console.log('getInvoiceList res', res)
+                console.log('getTransferList res', res)
                 this.tableData = res.list
             }).catch(err => {
-                console.log('getInvoiceList err', err)
+                console.log('getTransferList err', err)
             }).finally(() => {
                 this.loading = false;
             });

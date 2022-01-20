@@ -8,7 +8,7 @@
                 <div class="title">基本信息</div>
             </div>
             <div class="form-content">
-                <div class="form-item required" v-if="loginType == LOGIN_TYPE.ADMIN && !form.id">
+                <div class="form-item required" v-if="$auth('ADMIN') && !form.id">
                     <div class="key">所属分销商</div>
                     <div class="value">
                         <a-select v-model:value="form.distributor_id" placeholder="请选择所属分销商" @change="onDistributorChange">
@@ -16,7 +16,7 @@
                         </a-select>
                     </div>
                 </div>
-                <div class="form-item required" v-if="!form.id">
+                <div class="form-item required"  v-if="$auth('ADMIN','DISTRIBUTOR') && !form.id">
                     <div class="key">所属零售商</div>
                     <div class="value">
                         <a-select v-model:value="form.agent_id" placeholder="请选择所属零售商">
@@ -191,10 +191,10 @@ export default {
                 }
             }
             console.log('form:', form)
-            if (!form.distributor_id) {
+            if (!form.distributor_id && this.$auth('ADMIN')) {
                 return this.$message.warning('请选择所属分销商')
             }
-            if (!form.agent_id) {
+            if (!form.agent_id && this.$auth('ADMIN','DISTRIBUTOR') ) {
                 return this.$message.warning('请选择所属零售商')
             }
             if (!form.name) {
