@@ -234,6 +234,8 @@
 
 <script>
 import Core from '../../core';
+import dayjs from "dayjs";
+
 import CheckFault from './components/CheckFault.vue';
 import CheckResult from './components/CheckResult.vue';
 import RepairInfo from './components/RepairInfo.vue';
@@ -241,7 +243,6 @@ import WaybillInfo from './components/WaybillInfo.vue';
 import Distribution from './components/Distribution.vue';
 import ActionLog from './components/ActionLog.vue';
 import MySteps from '@/components/common/MySteps.vue';
-import dayjs from "dayjs";
 import AttachmentFile from '@/components/popup-btn/AttachmentFile.vue';
 
 const REPAIR = Core.Const.REPAIR
