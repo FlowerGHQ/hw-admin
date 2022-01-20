@@ -98,7 +98,9 @@ export default {
             tableData: [],
             tableColumns: [
                 {title: '商品名称', dataIndex: ['item', 'name'], key: 'name'},
-                {title: '商品编码', dataIndex: ['item', 'code'], key: 'code'},
+                {title: '商品型号', dataIndex: ['item', 'model']},
+                {title: '商品编码', dataIndex: ['item', 'code']},
+                {title: '商品规格', dataIndex: ['item', 'attr_str'],},
                 {title: '数量', dataIndex: 'amount', key: 'amount'},
             ],
             transferShow: false,
@@ -151,6 +153,13 @@ export default {
                 transfer_order_id: this.id,
             }).then(res => {
                 console.log('getTransferList res', res)
+                res.list.forEach(item => {
+                    let element = item.item || {}
+                    if (element.attr_list && element.attr_list.length) {
+                        let str = element.attr_list.map(i => i.value).join(' ')
+                        element.attr_str = str
+                    }
+                })
                 this.tableData = res.list
             }).catch(err => {
                 console.log('getTransferList err', err)
