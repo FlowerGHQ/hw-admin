@@ -394,7 +394,7 @@ export default {
                 return this.$message.warning('仓库库存不足请加仓或采购')
             }
             if (transferFlag) {
-                return this.$message.warning('请选择转单负责人')
+                return this.$message.warning('请选择转单门店')
             }
             Core.Api.RepairItem.saveList({
                 repair_order_id: this.id,

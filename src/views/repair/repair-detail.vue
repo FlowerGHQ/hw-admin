@@ -5,8 +5,7 @@
                 <div class="title-area">工单详情</div>
                 <div class="btns-area">
                     <!-- 发货 start -->
-                    <a-button type="primary" v-if="[STATUS.WAIT_DETECTION].includes(detail.status) && isTransfer == true" @click="handlePurchaseStatus('deliver')" ><i class="icon i_deliver"/>物流信息</a-button>
-                    <!-- <a-button type="primary" v-if="[STATUS.WAIT_REPAIR].includes(detail.status)" @click="handlePurchaseStatus('deliver')" ><i class="icon i_deliver"/>查看物流</a-button> -->
+                    <a-button type="primary" v-if="[STATUS.WAIT_DETECTION].includes(detail.status) && isTransfer == true" @click="deliverShow = true" ><i class="icon i_deliver"/>物流信息</a-button>
                     <!-- 发货 end   -->
                     <template v-if="$auth('ADMIN')">
                         <a-button type="primary" ghost @click="handleAuditShow()"
@@ -259,7 +258,7 @@
                 </div>
                 <template #footer>
                     <a-button @click="deliverShow = false">取消</a-button>
-                    <a-button @click="deliverShow = false" type="primary">确定</a-button>
+                    <a-button @click="handlePostForTransferSubmit()" type="primary">确定</a-button>
                 </template>
             </a-modal>
         </template>
@@ -368,22 +367,8 @@ export default {
     created() {
         this.id = Number(this.$route.query.id) || 0
         this.getRepairDetail();
-        // console.log(User.id)
     },
     methods: {
-        // 向子组件取值
-        getIsTransfer(data){
-            this.isTransfer = data
-            console.log(this.isTransfer)
-        },
-        // 物流信息显示
-        handlePurchaseStatus(val) {
-            switch (val){
-                case "deliver":
-                    this.deliverShow = true
-                    break;
-            }
-        },
         // 页面跳转
         routerChange(type, item) {
             let routeUrl
@@ -412,12 +397,14 @@ export default {
             window.open(routeUrl.href, '_self')
         },
 
+        getIsTransfer(data){ // 向子组件取值(是否转单)
+            this.isTransfer = data
+        },
         handleAuditShow() { // 显示弹框
             this.auditShow = true
         },
         handleAuditClose() { // 关闭弹框
             this.auditShow = false;
-            // Object.assign(this.$data.editForm, this.$options.data().editForm)
         },
         handleAuditSubmit() { // 审核提交
             this.loading = true;
@@ -439,7 +426,6 @@ export default {
         },
         handleOrderClose() { // 关闭弹框
             this.orderShow = false;
-            // Object.assign(this.$data.editForm, this.$options.data().editForm)
         },
         handleOrderSubmit() { // 工单确认提交
             this.loading = true;
@@ -496,8 +482,7 @@ export default {
                     break;
             }
         },
-        handleFaultSubmit() {
-            // 物流信息提交
+        handlePostForTransferSubmit(){ // 物流信息提交
             if (this.isTransfer == true && (this.form.company_uid == undefined || this.form.waybill_uid == '')) {
                 return this.$message.warning('请选择快递公司,物流单号')
             }
@@ -508,18 +493,18 @@ export default {
                     ...this.form
                 }).then(res => {
                     this.getRepairDetail()
-                    // 故障信息提交
-                    this.$refs.CheckFault.handleFaultSubmit();
                 }).catch(err => {
-                    console.log('handleFaultSubmit err', err)
+                    console.log('handlePostForTransferSubmit err', err)
                 }).finally(() => {
-                    this.loading = false;
+                    this.deliverShow = false
+                    this.loading = false
                 });
-            }else{
-                // 故障信息提交
-                this.$refs.CheckFault.handleFaultSubmit();
             }
         },
+        handleFaultSubmit() { // 故障信息提交
+            this.$refs.CheckFault.handleFaultSubmit();
+        },
+
         handleSettlement() {
             Core.Api.Repair.settlement({id: this.id}).then(() => {
                 this.$message.success('操作成功')
