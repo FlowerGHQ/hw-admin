@@ -86,7 +86,7 @@
                         </a-col>
                     </a-row>
                 </a-collapse-panel>
-                <AttachmentFile :target_id='id' :detail='detail' @submit="getPurchaseInfo" ref="AttachmentFile"/>
+                <AttachmentFile :target_id='id' :target_type='Core.Const.ATTACHMENT.TARGET_TYPE.PURCHASE_ORDER' :detail='detail' @submit="getPurchaseInfo" ref="AttachmentFile"/>
                 <a-collapse-panel key="WaybillInfo" header="物流信息" class="gray-collapse-panel">
                     <a-row class="panel-content info-container">
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
@@ -184,6 +184,7 @@ export default {
     props: {},
     data() {
         return {
+            Core,
             loginType: Core.Data.getLoginType(),
             STATUS,
             // 加载
@@ -228,7 +229,7 @@ export default {
         currStep() {
             for (let i = 0; i < this.stepsList.length; i++) {
                 const item = this.stepsList[i];
-                if (this.detail.status == STATUS.CLOSE) {
+                if (this.detail.status == STATUS.CANCEL) {
                     this.stepsList= [
                         {status: '100', title: '取消'},
                     ]

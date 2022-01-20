@@ -16,7 +16,7 @@
                         <a-input-number v-model:value="editCount" :min="1" :precision="0" autofocus @blur="handleCountEditBlur(item)"/>
                     </div>
                     <div class="btns">
-                        <a-button type="link" class="disabled" v-if="item.item.in_favorite">已收藏</a-button>
+                        <a-button type="link" class="disabled" v-if="item.item && item.item.in_favorite">已收藏</a-button>
                         <a-button type="link" @click="handleMoveToFavorite(item)" v-else>移至收藏</a-button>
                         <a-button type="link" @click="handleShopCartRemove(item)">删除</a-button>
                     </div>
@@ -36,7 +36,7 @@
                         {{$Util.itemSpecFilter(item.item.attr_list)}}
                     </span>
                 </p>
-                <span class="price">￥{{$Util.countFilter(item.price*item.amount)}}</span>
+                <span class="price">￥{{$Util.countFilter(item.item.purchase_price * item.amount)}}</span>
             </div>
             <div class="settle-item sum">
                 <p class="name">总计</p>
@@ -98,7 +98,7 @@ export default {
         sum_price() {
             let sum = 0
             for (const item of this.shopCartList) {
-                sum += item.price * item.amount
+                sum += item.item.purchase_price * item.amount
             }
             return Core.Util.countFilter(sum)
         }

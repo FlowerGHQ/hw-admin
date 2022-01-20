@@ -5,9 +5,15 @@
             <a-collapse-panel key="attachmentFile" header="上传附件" class="gray-collapse-panel">
                 <div class="panel-content">
                     <div v-for="(item,index) of attachmentFileList" :key="index">
+                        <p style="display: inline-block; width: 120px;">{{ item.name.slice(0,15) }}</p>
+                        <a-popover title="名称:">
+                            <template #content>
+                            <p>{{item.name}}</p>
+                            </template>
+                            <a-button>全部</a-button>
+                        </a-popover>
                         <a-image :width="120" :height="120" :src="$Util.imageFilter(item.path)" fallback='无' v-if="['jpeg', 'png', 'gif', 'bmp', 'jpg'].includes(item.type.toLocaleLowerCase())"/>
                         <a-image :width="30" :height="30" :src="$Util.imageFilter('')"  fallback='无' v-else/>
-                        {{ item.name }}
                         <a-button danger @click="handleDelete(item.id)"><i class="icon i_delete"/></a-button>
                     </div>
                     <a-button type="primary"  @click="handleRepairShow">上传附件</a-button>
@@ -57,6 +63,9 @@ export default {
         target_id: {
             type: Number
         },
+        target_type: {
+            type: Number
+        },
     },
     data() {
         return {
@@ -90,6 +99,7 @@ export default {
     },
     mounted() {
         this.getTableData();
+        console.log('this.target_type : ',this.target_type);
     },
     methods: {
         handleImgCheck(file) {
@@ -137,13 +147,14 @@ export default {
                 return this.$message.warning('请输入名称')
             }
             this.loading = true;
-            this.form.target_type = Const.ATTACHMENT.TARGET_TYPE.REPAIR_ORDER
+            this.form.target_type = this.target_type
             this.form.target_id = this.target_id
             Core.Api.Attachment.save(this.form).then(() => {
                 this.$message.success('保存成功')
                 this.$emit('handleAttachmentFile')
                 this.handleEditClose();
                 this.getTableData();
+                this.upload.fileList = []
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
@@ -169,7 +180,7 @@ export default {
             this.loading = true;
             Core.Api.Attachment.list({
                 target_id: this.target_id,
-                target_type: Const.ATTACHMENT.TARGET_TYPE.REPAIR_ORDER,
+                target_type: this.target_type,
                 page: 0
             }).then(res => {
                 this.attachmentFileList = res.list

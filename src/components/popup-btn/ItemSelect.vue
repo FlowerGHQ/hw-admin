@@ -117,13 +117,14 @@ export default {
         tableColumns() {
             let tableColumns = [
                 { title: '商品名称', dataIndex: 'name',  key: 'detail' },
+                { title: '商品型号', dataIndex: 'model', key: 'item' },
                 { title: '商品规格', dataIndex: 'attr_list', key: 'spec' },
                 { title: '标准售价', dataIndex: 'price', key: 'money', },
                 { title: '商品编码', dataIndex: 'code',  key: 'item' },
-                { title: '商品型号', dataIndex: 'model', key: 'item' },
+
             ]
             if (this.warehouseId !== 0) {
-                tableColumns.splice(2, 0, {title: '仓库库存', dataIndex: 'stock', key: 'item'})
+                tableColumns.splice(3, 0, {title: '仓库库存', dataIndex: 'stock', key: 'stock'})
             }
             return tableColumns
         },

@@ -352,7 +352,7 @@ let Const = {
             WAIT_DELIVER: 200,
             WAIT_TAKE_DELIVER: 300,
             DEAL_SUCCESS: 400,
-            CLOSE: 1000,
+            CANCEL: -100,
         },
         STATUS_MAP: {
             '0': '未知',
@@ -360,7 +360,7 @@ let Const = {
             '200': '待发货',
             '300': '已发货',
             '400': '交易完成',
-            '1000': '交易关闭',
+            '-100': '交易关闭',
         },
         STATUS_COLOR_MAP: {
             '0': 'red',
@@ -505,8 +505,9 @@ let Const = {
     ],
 
     ATTACHMENT: {
-        TARGET_TYPE: {
-            REPAIR_ORDER: 1, //图片类型
+        TARGET_TYPE: { // 来源类型
+            REPAIR_ORDER: 1, // 维修单附件
+            PURCHASE_ORDER: 2 // 采购单附件
         }
     },
     STOCK_RECORD: {  //仓库明细
@@ -554,6 +555,11 @@ let Const = {
             {text: '处理完成',value: 40},
             {text: '已取消',value: -20},
         ],
+        SOURCE_TYPE_MAP: {
+            1: '管理员操作',
+            21: '维修单',
+            31: '出/入库单'
+        }
     },
     TRANSFER_ORDER: {   //调货单
         STATUS: {    //调货单审核状态

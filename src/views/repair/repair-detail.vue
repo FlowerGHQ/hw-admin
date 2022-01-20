@@ -19,7 +19,6 @@
                     </a-button>
                 </template>
                 <template v-if="detail.org_type == OrgType && $auth('AGENT', 'STORE')">
-                    <!-- v-if="[STATUS.WAIT_AUDIT].includes(detail.status)" -->
                     <a-button type="primary" ghost @click="routerChange('edit')"
                         v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.AUDIT_FAIL, STATUS.CHECK_FAIL].includes(detail.status)">
                         <i class="icon i_edit"/>编辑
@@ -32,17 +31,16 @@
                         v-if="[STATUS.WAIT_CHECK].includes(detail.status)"><i class="icon i_transfer"/>转单
                     </a-button>
                     <!-- <template v-if="detail.account_id == User.id || $auth('MANAGER')"> -->
-                        <a-button type="primary" @click="handleFaultSubmit()"
-                            v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_submit"/>提交
-                        </a-button>
-                        <a-button type="primary" @click="handleResultShow()"
-                            v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_completed"/>维修完成
-                        </a-button>
                     <!-- </template> -->
+                    <a-button type="primary" @click="handleFaultSubmit()"
+                        v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_submit"/>提交
+                    </a-button>
+                    <a-button type="primary" @click="handleResultShow()"
+                        v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_completed"/>维修完成
+                    </a-button>
                     <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END">
                         <i class="icon i_settle"/>结算
                     </a-button>
-                    <!-- <a-button type="primary" danger ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button> -->
                 </template>
                 <a-button type="primary" @click="routerChange('invoice')" v-if="detail.status == STATUS.SETTLEMENT">
                     <i class="icon i_detail_l"/>查看结算单
@@ -99,7 +97,7 @@
         <div class="form-container">
             <Distribution :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DISTRIBUTION && $auth('AGENT', 'STORE')"/>
             <CheckFault   :id='id' :detail='detail' @submit="getRepairDetail" @getIsTransfer="getIsTransfer" ref="CheckFault" v-if="detail.status == STATUS.WAIT_DETECTION && $auth('AGENT', 'STORE')"/>
-            <AttachmentFile :target_id='id' :detail='detail' @submit="getRepairDetail"/>
+            <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER' :detail='detail' @submit="getRepairDetail"/>
             <CheckResult  :id='id' :detail='detail' :faultList="faultList" :failList="failList"
                 :exchangeList="exchangeList" :failTotle="failTotle" :exchangeTotle="exchangeTotle"
                 v-if="resultShow && ![STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_DETECTION, STATUS.WAIT_CHECK].includes(detail.status)"/>
@@ -119,7 +117,7 @@
                         </a-select>
                     </div>
                 </div>
-                <div class="form-item" v-if="repairForm.results == REPAIR.RESULTS.FAIL">
+                <div class="form-item" v-if="repairForm.results == REPAIR_RESULTS.FAIL">
                     <div class="key">失败原因</div>
                     <div class="value">
                         <a-input v-model:value="repairForm.audit_message" placeholder="请输入失败原因"/>
@@ -247,8 +245,6 @@ import dayjs from "dayjs";
 import AttachmentFile from '@/components/popup-btn/AttachmentFile.vue';
 
 const REPAIR = Core.Const.REPAIR
-const User = Core.Data.getUser();
-const OrgType = Core.Data.getOrgType();
 export default {
     name: 'RepairDetail',
     components: {
@@ -264,17 +260,17 @@ export default {
     props: {},
     data() {
         return {
-            User,
-            OrgType,
-            REPAIR,
+            OrgType: Core.Data.getOrgType(),
             STATUS: REPAIR.STATUS,
+            REPAIR_RESULTS: REPAIR.RESULTS,
+            ATTACHMENT_TARGET_TYPE: Core.Const.ATTACHMENT.TARGET_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
             id: 0,
             detail: {}, // 工单详情
 
-            resultsList: Core.Const.REPAIR.RESULTS_LIST,
+            resultsList: REPAIR.RESULTS_LIST,
 
             modalFailShow: false,
             secondDoorShow: false,
@@ -335,7 +331,6 @@ export default {
     created() {
         this.id = Number(this.$route.query.id) || 0
         this.getRepairDetail();
-        // console.log(User.id)
     },
     methods: {
         // 向子组件取值
@@ -469,18 +464,23 @@ export default {
                 return this.$message.warning('请选择快递公司,物流单号')
             }
             this.loading = false;
-            Core.Api.Repair.post({
-                id: this.id,
-                ...this.form
-            }).then(res => {
-                this.getRepairDetail()
+            if (this.isTransfer == true) { // 存在转单
+                Core.Api.Repair.post({
+                    id: this.id,
+                    ...this.form
+                }).then(res => {
+                    this.getRepairDetail()
+                    // 故障信息提交
+                    this.$refs.CheckFault.handleFaultSubmit();
+                }).catch(err => {
+                    console.log('handleFaultSubmit err', err)
+                }).finally(() => {
+                    this.loading = false;
+                });
+            }else{
                 // 故障信息提交
                 this.$refs.CheckFault.handleFaultSubmit();
-            }).catch(err => {
-                console.log('handleFaultSubmit err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+            }
         },
         handleSettlement() {
             Core.Api.Repair.settlement({id: this.id}).then(() => {

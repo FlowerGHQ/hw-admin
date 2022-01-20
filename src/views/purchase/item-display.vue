@@ -127,7 +127,7 @@ export default {
             Core.Api.ShopCart.save({
                 item_id: this.detail.id,
                 amount: 1,
-                price: this.detail.price
+                price: this.detail.purchase_price
             }).then(res => {
                 console.log('hanldeAddToShopCart res:', res)
                 this.$message.success('添加成功')
@@ -141,7 +141,7 @@ export default {
             }
             Core.Api.Favorite.add({
                 item_id: this.detail.id,
-                price: this.detail.price
+                price: this.detail.purchase_price
             }).then(res => {
                 console.log('hanldeAddToFavorite res:', res)
                 this.$message.success('添加成功')

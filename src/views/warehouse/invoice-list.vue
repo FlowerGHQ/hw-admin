@@ -1,170 +1,179 @@
 <template>
-<div id="InvoiceList">
-    <div class="list-container">
-        <div class="title-container">
-            <div class="title-area">出入库单列表</div>
-            <div class="btns-area">
-                <a-button type="primary" @click="handleStockShow"><i class="icon i_add"/>库存管理</a-button>
+    <div id="InvoiceList">
+        <div class="list-container">
+            <div class="title-container">
+                <div class="title-area">出入库单列表</div>
+                <div class="btns-area">
+                    <a-button type="primary" @click="handleStockShow"><i class="icon i_add"/>库存管理</a-button>
+                </div>
+            </div>
+            <div class="tabs-container colorful">
+                <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
+                    <a-tab-pane :key="item.key" v-for="item of statusList">
+                        <template #tab>
+                            <div class="tabs-title">{{ item.text }}<span :class="item.color">{{ item.value }}</span>
+                            </div>
+                        </template>
+                    </a-tab-pane>
+                </a-tabs>
+            </div>
+            <div class="search-container">
+                <a-row class="search-area">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">仓库名称:</div>
+                        <div class="value">
+                            <a-select v-model:value="searchForm.warehouse_id" placeholder="请选择仓库" @change="handleSearch">
+                                <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">{{ warehouse.name }}</a-select-option>
+                            </a-select>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">出入库单编号:</div>
+                        <div class="value">
+                            <a-input placeholder="请输入出入库单编号" v-model:value="searchForm.uid"
+                                     @keydown.enter='handleSearch'/>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">出入库单类型:</div>
+                        <div class="value">
+                            <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择出入库类型">
+                                <a-select-option v-for="(val, key) in typeMap" :key='key' :value='keu'>{{ val }}
+                                </a-select-option>
+                            </a-select>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
+                        <div class="key">创建时间:</div>
+                        <div class="value">
+                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
+                                            :show-time="defaultTime" :allow-clear='false'>
+                                <template #suffixIcon><i class="icon i_calendar"/></template>
+                            </a-range-picker>
+                        </div>
+                    </a-col>
+                </a-row>
+                <div class="btn-area">
+                    <a-button @click="handleSearch" type="primary">查询</a-button>
+                    <a-button @click="handleSearchReset">重置</a-button>
+                </div>
+            </div>
+            <div class="table-container">
+                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                         :row-key="record => record.id" :pagination='false'>
+                    <template #bodyCell="{ column, text, record }">
+                        <template v-if="column.key === 'detail'">
+                            <a-tooltip placement="top" :title='text'>
+                                <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}
+                                </a-button>
+                            </a-tooltip>
+                        </template>
+                        <template v-if="column.key === 'stock_type'">
+                            {{ $Util.stockRecordFilter(text) }}
+                        </template>
+                        <template v-if="column.key === 'type'">
+                            {{ $Util.stockTypeFilter(text) }}
+                        </template>
+                        <template v-if="column.key === 'warehouse_name'">
+                            {{ text || '-' }}
+                        </template>
+                        <template v-if="column.key === 'time'">
+                            {{ $Util.timeFilter(text) }}
+                        </template>
+                        <template v-if="column.dataIndex === 'status'">
+                            <div class="status status-bg status-tag" :class="$Util.invoiceStatusFilter(text,'color')">
+                                {{ $Util.invoiceStatusFilter(text) }}
+                            </div>
+                        </template>
+                        <template v-if="column.key === 'operation'">
+                            <a-button type="link" v-if="record.status === STATUS.AIT_AUDIT"
+                                      @click="handleInvoiceShow(record.id)"><i
+                                class="icon i_edit"/>审核
+                            </a-button>
+                            <a-button type="link" v-else-if="record.status === STATUS.AUDIT_PASS"
+                                      @click="handleInvoice(record.id)"><i
+                                class="icon i_edit"/>处理
+                            </a-button>
+                            <a-button type="link" v-if="record.status === STATUS.AIT_AUDIT"
+                                      @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改
+                            </a-button>
+                            <a-button type="link" v-if="record.status === STATUS.AIT_AUDIT"
+                                      @click="handleCancel(record.id)" class="danger">
+                                <i class="icon i_m_error"/>取消
+                            </a-button>
+                        </template>
+                    </template>
+                </a-table>
+            </div>
+            <div class="paging-container">
+                <a-pagination
+                    v-model:current="currPage"
+                    :page-size='pageSize'
+                    :total="total"
+                    show-quick-jumper
+                    show-size-changer
+                    show-less-items
+                    :show-total="total => `共${total}条`"
+                    :hide-on-single-page='false'
+                    :pageSizeOptions="['10', '20', '30', '40']"
+                    @change="pageChange"
+                    @showSizeChange="pageSizeChange"
+                />
             </div>
         </div>
-        <div class="tabs-container colorful">
-            <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
-                <a-tab-pane :key="item.key" v-for="item of statusList">
-                    <template #tab>
-                        <div class="tabs-title">{{ item.text }}<span :class="item.color">{{ item.value }}</span></div>
-                    </template>
-                </a-tab-pane>
-            </a-tabs>
-        </div>
-        <div class="search-container">
-            <a-row class="search-area">
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">仓库名称:</div>
+        <template class="modal-container">
+            <a-modal v-model:visible="stockShow" title="库存管理" class="stock-edit-modal" :after-close="handleStockClose">
+                <div class="form-item required">
+                    <div class="key">仓库：</div>
                     <div class="value">
-                        <a-input placeholder="请输入仓库名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
-                    </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">出入库单编号:</div>
-                    <div class="value">
-                        <a-input placeholder="请输入出入库单编号" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
-                    </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">出入库单类型:</div>
-                    <div class="value">
-                        <a-select v-model:value="searchForm.type" @change="handleTypeSelect" placeholder="请选择出入库类型">
-                            <a-select-option v-for="(val, key) in typeMap" :key='key' :value='keu'>{{val}}</a-select-option>
+                        <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库">
+                            <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id"
+                                             :value="warehouse.id">
+                                {{ warehouse.name }}
+                            </a-select-option>
                         </a-select>
                     </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
-                    <div class="key">创建时间:</div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">类型：</div>
                     <div class="value">
-                        <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
-                            <template #suffixIcon><i class="icon i_calendar"/></template>
-                        </a-range-picker>
-                    </div>
-                </a-col>
-            </a-row>
-            <div class="btn-area">
-                <a-button @click="handleSearch" type="primary">查询</a-button>
-                <a-button @click="handleSearchReset">重置</a-button>
-            </div>
-        </div>
-        <div class="table-container">
-            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                :row-key="record => record.id" :pagination='false'>
-                <template #bodyCell="{ column, text, record }">
-                    <template v-if="column.key === 'detail'">
-                        <a-tooltip placement="top" :title='text'>
-                            <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}
-                            </a-button>
-                        </a-tooltip>
-                    </template>
-                    <template v-if="column.key === 'stock_type'">
-                        {{ $Util.stockRecordFilter(text) }}
-                    </template>
-                    <template v-if="column.key === 'type'">
-                        {{ $Util.stockTypeFilter(text) }}
-                    </template>
-                    <template v-if="column.key === 'warehouse_name'">
-                        {{ text || '-' }}
-                    </template>
-                    <template v-if="column.key === 'time'">
-                        {{ $Util.timeFilter(text) }}
-                    </template>
-                    <template v-if="column.dataIndex === 'status'">
-                        <div class="status status-bg status-tag" :class="$Util.invoiceStatusFilter(text,'color')">
-                            {{ $Util.invoiceStatusFilter(text) }}
-                        </div>
-                    </template>
-                    <template v-if="column.key === 'operation'">
-                        <a-button type="link" v-if="record.status === STATUS.AIT_AUDIT"
-                                    @click="handleInvoiceShow(record.id)"><i
-                            class="icon i_edit"/>审核
-                        </a-button>
-                        <a-button type="link" v-else-if="record.status === STATUS.AUDIT_PASS"
-                                    @click="handleInvoice(record.id)"><i
-                            class="icon i_edit"/>处理
-                        </a-button>
-                        <a-button type="link" v-if="record.status === STATUS.AIT_AUDIT"
-                                    @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改
-                        </a-button>
-                        <a-button type="link" v-if="record.status === STATUS.AIT_AUDIT" @click="handleCancel(record.id)" class="danger">
-                            <i class="icon i_m_error"/>取消
-                        </a-button>
-                    </template>
-                </template>
-            </a-table>
-        </div>
-        <div class="paging-container">
-            <a-pagination
-                v-model:current="currPage"
-                :page-size='pageSize'
-                :total="total"
-                show-quick-jumper
-                show-size-changer
-                show-less-items
-                :show-total="total => `共${total}条`"
-                :hide-on-single-page='false'
-                :pageSizeOptions="['10', '20', '30', '40']"
-                @change="pageChange"
-                @showSizeChange="pageSizeChange"
-            />
-        </div>
-    </div>
-    <template class="modal-container">
-        <a-modal v-model:visible="stockShow" title="库存管理" class="stock-edit-modal" :after-close="handleStockClose">
-            <div class="form-item required">
-                <div class="key">仓库：</div>
-                <div class="value">
-                    <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库">
-                        <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">
-                            {{ warehouse.name }}
-                        </a-select-option>
-                    </a-select>
-                </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">类型：</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.type">
-                        <a-radio v-for="(val, key) in typeMap" :key='key' :value='keu'>{{val}}</a-radio>
-                    </a-radio-group>
-                </div>
-            </div>
-            <template #footer>
-                <a-button @click="stockShow=false">取消</a-button>
-                <a-button @click="handleStockSubmit" type="primary">确定</a-button>
-            </template>
-        </a-modal>
-        <a-modal v-model:visible="invoiceShow" title="审核" class="invoice-edit-modal" :after-close='handleInvoiceClose'>
-            <div class="modal-content">
-                <div>
-                    <div class="form-item required">
-                        <div class="key">审核结果:</div>
-                        <a-radio-group v-model:value="editForm.status">
-                            <a-radio :value="STATUS.AUDIT_PASS">通过</a-radio>
-                            <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio>
+                        <a-radio-group v-model:value="form.type">
+                            <a-radio v-for="(val, key) in typeMap" :key='key' :value='key'>{{ val }}</a-radio>
                         </a-radio-group>
                     </div>
-                    <div class="form-item textarea required" v-if="editForm.status === STATUS.AUDIT_REFUSE">
-                        <div class="key">原因:</div>
-                        <div class="value">
-                            <a-textarea v-model:value="editForm.audit_message" placeholder="请输入不通过原因"
-                                :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                </div>
+                <template #footer>
+                    <a-button @click="stockShow=false">取消</a-button>
+                    <a-button @click="handleStockSubmit" type="primary">确定</a-button>
+                </template>
+            </a-modal>
+            <a-modal v-model:visible="invoiceShow" title="审核" class="invoice-edit-modal"
+                     :after-close='handleInvoiceClose'>
+                <div class="modal-content">
+                    <div>
+                        <div class="form-item required">
+                            <div class="key">审核结果:</div>
+                            <a-radio-group v-model:value="editForm.status">
+                                <a-radio :value="STATUS.AUDIT_PASS">通过</a-radio>
+                                <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio>
+                            </a-radio-group>
+                        </div>
+                        <div class="form-item textarea required" v-if="editForm.status === STATUS.AUDIT_REFUSE">
+                            <div class="key">原因:</div>
+                            <div class="value">
+                                <a-textarea v-model:value="editForm.audit_message" placeholder="请输入不通过原因"
+                                            :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <template #footer>
-                <a-button @click="invoiceShow = false">取消</a-button>
-                <a-button @click="handleInvoiceSubmit" type="primary">确定</a-button>
-            </template>
-        </a-modal>
-    </template>
-</div>
+                <template #footer>
+                    <a-button @click="invoiceShow = false">取消</a-button>
+                    <a-button @click="handleInvoiceSubmit" type="primary">确定</a-button>
+                </template>
+            </a-modal>
+        </template>
+    </div>
 </template>
 
 <script>
@@ -198,7 +207,7 @@ export default {
                 {text: '已取消', value: '0', color: 'gray', key: STOCK_RECORD.STATUS.CANCEL},
             ],
             searchForm: {
-                name: '',
+                warehouse_id: undefined,
                 uid: '',
                 status: undefined,
                 type: undefined,
@@ -230,7 +239,10 @@ export default {
                 {title: '出入库单类型', dataIndex: 'type', key: 'stock_type',},
                 {title: '所属仓库', dataIndex: ['warehouse', 'name'], key: 'warehouse_name',},
                 {title: '仓库类型', dataIndex: 'type', key: 'type',},
+                {title: '申请人', dataIndex: ['apply_user', "account", "name"], key: 'apply_user'},
+                {title: '处理人', dataIndex: ['operator_user', "account", "name"], key: 'operator_user'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
+                {title: '处理时间', dataIndex: 'operate_time', key: 'time'},
                 {title: '状态', dataIndex: 'status', key: 'status'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
@@ -295,9 +307,6 @@ export default {
                 console.log('handleStockSubmit err:', err)
             })
         },
-        handleTypeSelect(val) {
-            this.type = val
-        },
         pageChange(curr) {    // 页码改变
             this.currPage = curr
             this.getTableData()
@@ -343,8 +352,9 @@ export default {
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Transfer.cancel({id}).then(() => {
+                    Core.Api.Invoice.cancel({id}).then(() => {
                         _this.$message.success('取消成功');
+                        _this.getStatusList();
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

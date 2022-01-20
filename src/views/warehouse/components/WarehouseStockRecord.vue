@@ -48,6 +48,9 @@
                         <template v-if="column.dataIndex === 'balance'">
                             {{ text || 0 }}
                         </template>
+                        <template v-if="column.dataIndex === 'source_type'">
+                            {{ $Util.stockRecordSourceFilter(text) }}
+                        </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
@@ -117,6 +120,7 @@ export default {
                 {title: '操作类型', dataIndex: 'type', key: 'type'},
                 {title: '数量', dataIndex: 'amount', key: 'amount'},
                 {title: '变更后库存数量', dataIndex: 'balance', key: 'balance'},
+                {title: '变更来源', dataIndex: 'source_type', key: 'source-type'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
             ]
             return tableColumns
