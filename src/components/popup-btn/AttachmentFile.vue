@@ -57,6 +57,9 @@ export default {
         target_id: {
             type: Number
         },
+        target_type: {
+            type: Number
+        },
     },
     data() {
         return {
@@ -90,6 +93,7 @@ export default {
     },
     mounted() {
         this.getTableData();
+        console.log('this.target_type : ',this.target_type);
     },
     methods: {
         handleImgCheck(file) {
@@ -137,7 +141,7 @@ export default {
                 return this.$message.warning('请输入名称')
             }
             this.loading = true;
-            this.form.target_type = Const.ATTACHMENT.TARGET_TYPE.REPAIR_ORDER
+            this.form.target_type = this.target_type
             this.form.target_id = this.target_id
             Core.Api.Attachment.save(this.form).then(() => {
                 this.$message.success('保存成功')
@@ -169,7 +173,7 @@ export default {
             this.loading = true;
             Core.Api.Attachment.list({
                 target_id: this.target_id,
-                target_type: Const.ATTACHMENT.TARGET_TYPE.REPAIR_ORDER,
+                target_type: this.target_type,
                 page: 0
             }).then(res => {
                 this.attachmentFileList = res.list

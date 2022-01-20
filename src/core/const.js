@@ -505,8 +505,9 @@ let Const = {
     ],
 
     ATTACHMENT: {
-        TARGET_TYPE: {
-            REPAIR_ORDER: 1, //图片类型
+        TARGET_TYPE: { // 来源类型
+            REPAIR_ORDER: 1, // 维修单附件
+            PURCHASE_ORDER: 2 // 采购单附件
         }
     },
     STOCK_RECORD: {  //仓库明细

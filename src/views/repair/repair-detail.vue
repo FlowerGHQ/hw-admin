@@ -115,7 +115,7 @@
                 <CheckFault :id='id' :detail='detail' @submit="getRepairDetail" ref="CheckFault"
                             v-if="detail.status == STATUS.WAIT_DETECTION && $auth('DISTRIBUTOR', 'AGENT', 'STORE')"
                             @getIsTransfer="getIsTransfer"/>
-                <AttachmentFile :target_id='id' :detail='detail' @submit="getRepairDetail" ref="AttachmentFile"
+                <AttachmentFile :target_id='id' :target_type='Core.Const.ATTACHMENT.TARGET_TYPE.REPAIR_ORDER' :detail='detail' @submit="getRepairDetail" ref="AttachmentFile"
                                 v-if="$auth('DISTRIBUTOR', 'AGENT', 'STORE', 'ADMIN')"/>
                 <CheckResult :id='id' :detail='detail' :faultList="faultList" :failList="failList"
                              :exchangeList="exchangeList" :failTotle="failTotle" :exchangeTotle="exchangeTotle"
@@ -296,6 +296,7 @@ export default {
     props: {},
     data() {
         return {
+            Core,
             User,
             OrgType,
             REPAIR,
