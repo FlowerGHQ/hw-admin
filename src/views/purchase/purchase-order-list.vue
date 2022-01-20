@@ -138,6 +138,7 @@ export default {
     props: {},
     data() {
         return {
+            LOGIN_TYPE,
             loginType: Core.Data.getLoginType(),
             USER_TYPE: Core.Const.USER.TYPE,
             // 加载
@@ -380,7 +381,26 @@ export default {
             let endTime   = this.create_time[1] || ''
 
             const token = Core.Data.getToken() || ''
-            let fileUrl = Core.Const.NET.URL_POINT + '/agent/1/purchase-order/export?'
+
+            let power = ''
+            switch(this.loginType){
+                case LOGIN_TYPE.ADMIN:
+                    power = 'admin'
+                    break
+                case LOGIN_TYPE.DISTRIBUTOR:
+                    power = 'distributor'
+                    break
+                case LOGIN_TYPE.AGENT:
+                    power = 'agent'
+                    break
+                case LOGIN_TYPE.STORE:
+                    power = 'store'
+                    break
+                default:
+                    break
+            }
+
+            let fileUrl = Core.Const.NET.URL_POINT + '/' + power + '/1/purchase-order/export?'
 
             let exportUrl =
                 `${fileUrl}token=${token}&sn=${sn}&status=${status}&item_type=${itemType}&distributor_id=${distributorId}
