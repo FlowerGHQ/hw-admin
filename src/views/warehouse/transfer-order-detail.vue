@@ -43,7 +43,7 @@
                                 {{ text || '-' }}
                             </template>
                             <template v-if="column.key === 'amount'">
-                                {{ text ? text.amount : '-' }}件
+                                {{ text || '-' }}件
                             </template>
                         </template>
                     </a-table>
@@ -99,7 +99,7 @@ export default {
             tableColumns: [
                 {title: '商品名称', dataIndex: ['item', 'name'], key: 'name'},
                 {title: '商品编码', dataIndex: ['item', 'code'], key: 'code'},
-                {title: '数量', dataIndex: ['item', 'amount'], key: 'amount'},
+                {title: '数量', dataIndex: 'amount', key: 'amount'},
             ],
             transferShow: false,
             editForm: {
