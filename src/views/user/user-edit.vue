@@ -125,7 +125,10 @@ export default {
         routerChange(type, item) {
             switch (type) {
                 case 'back':
-                    this.$router.go(-1)
+                    let routeUrl = this.$router.resolve({
+                        path: "/user/user-list",
+                    })
+                    window.open(routeUrl.href, '_self')
                     break;
             }
         },
