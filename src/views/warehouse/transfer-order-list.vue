@@ -4,14 +4,17 @@
             <div class="title-container">
                 <div class="title-area">调货单列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" v-if="!$auth('ADMIN')" @click="handleTransferOrderShow"><i class="icon i_add"/>新建调货单</a-button>
+                    <a-button type="primary" v-if="!$auth('ADMIN')" @click="handleTransferOrderShow"><i
+                        class="icon i_add"/>新建调货单
+                    </a-button>
                 </div>
             </div>
             <div class="tabs-container colorful" v-if="$auth('ADMIN')">
                 <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
                     <a-tab-pane :key="item.key" v-for="item of statusList">
                         <template #tab>
-                            <div class="tabs-title">{{ item.text }}<span :class="item.color">{{ item.value }}</span></div>
+                            <div class="tabs-title">{{ item.text }}<span :class="item.color">{{ item.value }}</span>
+                            </div>
                         </template>
                     </a-tab-pane>
                 </a-tabs>
@@ -21,19 +24,24 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">仓库名称:</div>
                         <div class="value">
-                            <a-input placeholder="请输入仓库名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                            <a-select v-model:value="searchForm.warehouse_id" placeholder="请选择仓库">
+                                <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">{{ warehouse.name }}
+                                </a-select-option>
+                            </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">货单编号:</div>
                         <div class="value">
-                            <a-input placeholder="请输入调货单编号" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入调货单编号" v-model:value="searchForm.uid"
+                                     @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
                         <div class="key">创建时间:</div>
                         <div class="value">
-                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
+                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
+                                            :show-time="defaultTime" :allow-clear='false'>
                                 <template #suffixIcon><i class="icon i_calendar"/></template>
                             </a-range-picker>
                         </div>
@@ -47,7 +55,7 @@
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                    :row-key="record => record.id" :pagination='false' @change="handleTableChange">
+                         :row-key="record => record.id" :pagination='false' @change="handleTableChange">
                     <template #bodyCell="{ column, text , record}">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
@@ -64,6 +72,9 @@
                         <template v-if="column.key === 'warehouse-name'">
                             {{ text || '-' }}
                         </template>
+                        <template v-if="column.key === 'apply-message'">
+                            {{ text || '-' }}
+                        </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
@@ -78,15 +89,19 @@
                             </div>
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" v-if="record.status === STATUS.WAIT_AUDIT && $auth('ADMIN')" @click="handleTransferShow(record.id)">
+                            <a-button type="link" v-if="record.status === STATUS.WAIT_AUDIT && $auth('ADMIN')"
+                                      @click="handleTransferShow(record.id)">
                                 <i class="icon i_edit"/>审核
                             </a-button>
                             <!-- <a-button type="link"  v-else-if="record.status === STATUS.AUDIT_PASS" @click="handleInvoice(record.id)"><i
                                 class="icon i_edit"/>处理
                             </a-button> -->
                             <template v-if="record.status === STATUS.WAIT_AUDIT && !$auth('ADMIN')">
-                                <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>修改</a-button>
-                                <a-button type="link" @click="handleCancel(record.id)" class="danger"><i class="icon i_m_error"/>取消</a-button>
+                                <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>修改
+                                </a-button>
+                                <a-button type="link" @click="handleCancel(record.id)" class="danger"><i
+                                    class="icon i_m_error"/>取消
+                                </a-button>
                             </template>
                         </template>
                     </template>
@@ -108,7 +123,8 @@
                 />
             </div>
         </div>
-        <a-modal v-model:visible="transferOrderShow" title="新建调货单" class="transfer-edit-modal" :after-close="handleTransferOrderClose">
+        <a-modal v-model:visible="transferOrderShow" title="新建调货单" class="transfer-edit-modal"
+                 :after-close="handleTransferOrderClose">
             <div class="form-item required">
                 <div class="key">仓库:</div>
                 <div class="value">
@@ -122,7 +138,8 @@
             <div class="form-item textarea required">
                 <div class="key">原因:</div>
                 <div class="value">
-                    <a-textarea v-model:value="form.apply_message" placeholder="请输入申请原因" :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                    <a-textarea v-model:value="form.apply_message" placeholder="请输入申请原因"
+                                :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                 </div>
             </div>
             <template #footer>
@@ -131,7 +148,8 @@
             </template>
         </a-modal>
         <template class="modal-container">
-            <a-modal v-model:visible="transferShow" title="审核" class="invoice-edit-modal" :after-close='handleTransferClose'>
+            <a-modal v-model:visible="transferShow" title="审核" class="invoice-edit-modal"
+                     :after-close='handleTransferClose'>
                 <div class="modal-content">
                     <div class="form-item required">
                         <div class="key">审核结果:</div>
@@ -144,7 +162,7 @@
                         <div class="key">原因:</div>
                         <div class="value">
                             <a-textarea v-model:value="editForm.audit_message" placeholder="请输入不通过原因"
-                                :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                                        :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                         </div>
                     </div>
                 </div>
@@ -193,7 +211,7 @@ export default {
                 {text: '已取消', value: '0', color: 'gray', key: TRANSFER_ORDER.STATUS.CANCEL},
             ],
             searchForm: {
-                name: '',
+                warehouse_id: undefined,
                 uid: '',
                 status: undefined,
                 type: undefined,
@@ -221,12 +239,13 @@ export default {
             filteredInfo = filteredInfo || {};
             let columns = [
                 {title: '调货单编号', dataIndex: 'uid', key: 'detail'},
+                {title: '申请原因', dataIndex: 'apply_message', key: 'apply-message'},
                 {title: '创建单位', dataIndex: 'org_name', key: 'org-ame'},
                 {title: '单位类型', dataIndex: 'org_type', key: 'org-type'},
                 {title: '所属仓库', dataIndex: ['to_warehouse', 'name'], key: 'warehouse-name',},
                 {title: '仓库类型', dataIndex: ['to_warehouse', 'type'], key: 'type',},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '审核人', dataIndex: ["audit_user", "account", "name"], key: 'audit_user'},
+                {title: '审核人', dataIndex: ["audit_user", "account", "name"], key: 'audit-user'},
                 {title: '审核时间', dataIndex: 'audit_time', key: 'time'},
                 {title: '状态', dataIndex: 'status', key: 'status', align: 'center'},
                 {title: '操作', key: 'operation', fixed: 'right'},
@@ -296,9 +315,6 @@ export default {
             }).catch(err => {
                 console.log('handleTransferSubmit err:', err)
             })
-        },
-        handleTypeSelect(val) {
-            this.type = val
         },
         pageChange(curr) {    // 页码改变
             this.currPage = curr
