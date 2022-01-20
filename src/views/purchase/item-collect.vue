@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 <div class="price">
-                    ￥{{$Util.countFilter(item.price)}}
+                    ￥{{$Util.countFilter(item.item ? item.item.purchase_price : item.price) }}
                 </div>
             </div>
             <SimpleImageEmpty v-if="!favoriteList.length" desc='您的收藏夹中暂无商品'/>
