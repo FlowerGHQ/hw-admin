@@ -48,6 +48,9 @@
                         <template v-if="column.dataIndex === 'balance'">
                             {{ text || 0 }}
                         </template>
+                        <template v-if="column.dataIndex === 'source_type'">
+                            {{ $Util.stockRecordSourceFilter(text) }}
+                        </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
