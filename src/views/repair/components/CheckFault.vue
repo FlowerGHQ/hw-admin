@@ -14,7 +14,7 @@
             <div class="panel-content change">
                 <div class="fault-item" v-for="fault of faultSelect" :key="fault">
                     <div class="fault-title">
-                        <span class="fault-name">{{faultMap[fault]}}</span>
+                        <span class="fault-name">故障：{{faultMap[fault]}}</span>
                         <ItemSelect @select="handleAddFailItem" :fault-name="fault" :disabled-checked='failData[fault].map(i => i.id)'
                             btn-type='primary' btn-text="添加商品" btn-class="fault-btn"/>
                     </div>
@@ -85,6 +85,7 @@
                         </template>
                     </a-table>
                 </div>
+                <SimpleImageEmpty desc='请先选择故障类型' v-if='!faultSelect.length'/>
             </div>
         </a-collapse-panel>
     </a-collapse>
@@ -95,11 +96,13 @@
 <script>
 import Core from '../../../core';
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
+import SimpleImageEmpty from '@/components/common/SimpleImageEmpty.vue';
 const REPAIR_TYPE = Core.Const.REPAIR_ITEM.TYPE
 export default {
     name: 'RepairDetail',
     components: {
         ItemSelect,
+        SimpleImageEmpty,
         VNodes: (_, { attrs }) => { return attrs.vnodes; },
     },
     props: {
@@ -307,46 +310,35 @@ export default {
         // 提交故障
         handleFaultSubmit() {
             console.log('this.faultSelect: ', this.faultSelect);
-
             let itemList = []
-            let itemFlag = false
-            let transferFlag = false
-            let stockFlag = false
-            this.faultSelect.forEach(fault => {
-                if(this.failData[fault].length == 0){
-                    itemFlag = true
+            if (!this.faultSelect.length) {
+                return this.$message.warning('请选择故障')
+            }
+            for (const fault of this.faultSelect) {
+                if (this.failData[fault].length == 0) {
+                    return this.$message.warning('请添加商品')
                 }
-                this.failData[fault].forEach(item => {
-                    item.item_fault_id = Number(fault)
-                    if(!item){
-                        itemFlag = true
+                for (const item of this.failData[fault]) {
+                    if (!item) {
+                        return this.$message.warning('请添加商品')
                     }
+                    item.item_fault_id = Number(fault)
+
                     if (item.type == 3) { // 选择转单时 校验负责人
                         if (this.transferStoreId) {
                             item.store_id = this.transferStoreId
                         } else {
-                            transferFlag = true
+                            return this.$message.warning('请选择转单门店')
                         }
                     }
                     console.log('item.is_stock: ', item.is_stock);
                     if (!item.is_stock && !item.change_to_transfer) { // 仓库货量不足
-                        stockFlag = true
+                        this.$message.warning('仓库库存不足,请及时调仓或采购')
                     }
                     itemList.push(item)
-                })
-            })
-            if (this.faultSelect.length == 0) {
-                return this.$message.warning('请选择故障')
+                }
             }
-            if (itemFlag) {
-                return this.$message.warning('请添加商品')
-            }
-            if (stockFlag) {
-                return this.$message.warning('仓库库存不足请加仓或采购')
-            }
-            if (transferFlag) {
-                return this.$message.warning('请选择转单负责人')
-            }
+            console.log('handleFaultSubmit itemList:', itemList)
             Core.Api.RepairItem.saveList({
                 repair_order_id: this.id,
                 item_list: itemList,
