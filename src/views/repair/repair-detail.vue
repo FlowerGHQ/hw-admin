@@ -1,209 +1,157 @@
 <template>
-    <div id="RepairDetail">
-        <div class="list-container">
-            <div class="title-container">
-                <div class="title-area">工单详情</div>
-                <div class="btns-area">
-                    <template v-if="$auth('ADMIN')">
-                        <a-button type="primary" ghost @click="handleAuditShow()"
-                                  v-if="[STATUS.WAIT_AUDIT].includes(detail.status)"><i class="icon i_edit"/>审核
-                        </a-button>
-                    </template>
-                    <template v-if="$auth('DISTRIBUTOR')">
-                        <a-button type="primary" @click="handleOrderShow()"
-                            v-if="[STATUS.WAIT_CHECK].includes(detail.status)"><i class="icon i_confirm"/>确定接单
-                        </a-button>
-                    </template>
-                    <template v-if="detail.org_type == OrgType && $auth('AGENT', 'STORE')">
-                        <!-- v-if="[STATUS.WAIT_AUDIT].includes(detail.status)" -->
-                        <a-button type="primary" ghost @click="routerChange('edit')"
-                                  v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.AUDIT_FAIL, STATUS.CHECK_FAIL].includes(detail.status)">
-                            <i class="icon i_edit"/>编辑
-                        </a-button>
-                        <a-button type="primary" ghost @click="handleSecondDoor()"
-                                  v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_REPAIR].includes(detail.status)">
-                            <i class="icon i_edit_l"/>二次维修
-                        </a-button>
-                        <a-button type="primary" @click="handleTransfer()" ghost
-                                  v-if="[STATUS.WAIT_CHECK].includes(detail.status)"><i class="icon i_transfer"/>转单
-                        </a-button>
-                        <!-- <template v-if="detail.account_id == User.id || $auth('MANAGER')"> -->
-                        <a-button type="primary" @click="handleFaultSubmit()"
-                                    v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_submit"/>提交
-                        </a-button>
-                        <a-button type="primary" @click="handleResultShow()"
-                                    v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_completed"/>维修完成
-                        </a-button>
-                        <!-- </template> -->
-                        <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END">
-                            <i class="icon i_settle"/>结算
-                        </a-button>
-                        <!-- <a-button type="primary" danger ghost @click="handleDelete"><i class="icon i_delete"/>删除</a-button> -->
-                    </template>
-                    <a-button type="primary" @click="routerChange('invoice')" v-if="detail.status == STATUS.SETTLEMENT">
-                        <i class="icon i_detail_l"/>查看结算单
+<div id="RepairDetail">
+    <div class="list-container">
+        <div class="title-container">
+            <div class="title-area">工单详情</div>
+            <div class="btns-area">
+                <template v-if="$auth('ADMIN')">
+                    <a-button type="primary" @click="handleAuditShow('audit')"
+                        v-if="detail.status === STATUS.WAIT_AUDIT"><i class="icon i_edit"/>审核
                     </a-button>
-                </div>
-            </div>
-            <div class="gray-panel info">
-                <div class="panel-title">
-                    <div class="left"><span>工单编号</span> {{ detail.uid }}</div>
-                    <div class="right">
-                        <div class="staff" v-if="detail.repair_user_id">员工：{{ detail.repair_user_name || '-' }}</div>
-                        <div class="status">
-                            <i class="icon i_point" :class="$Util.repairStatusFilter(detail.status,'color')"/>
-                            {{ $Util.repairStatusFilter(detail.status) }}
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-content">
-                    <div class="info-item">
-                        <div class="key">工单帐类</div>
-                        <div class="value">{{ $Util.repairServiceFilter(detail.service_type || '-') }}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">创建人</div>
-                        <div class="value">{{ detail.user_name || '-' }}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">相关客户</div>
-                        <div class="value">{{ detail.customer_name || '-' }}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">优先级</div>
-                        <div class="value">{{ $Util.repairPriorityFilter(detail.priority) }}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">创建时间</div>
-                        <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">计划时间</div>
-                        <div class="value">{{ $Util.timeFilter(detail.plan_time) || '-' }}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">实施时间</div>
-                        <div class="value">{{ $Util.timeFilter(detail.finish_time) || '-' }}</div>
-                    </div>
-                    <div class="info-item" v-if="detail.audit_message != ''">
-                        <div class="key">未通过原因</div>
-                        <div class="value">{{ detail.audit_message || '-' }}</div>
-                    </div>
-                </div>
-            </div>
-            <MySteps :stepsList='stepsList' :current='currStep'/>
-            <div class="form-container">
-                <Distribution :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DISTRIBUTION && $auth('AGENT', 'STORE')"/>
-                <CheckFault   :id='id' :detail='detail' @submit="getRepairDetail" @getIsTransfer="getIsTransfer" ref="CheckFault" v-if="detail.status == STATUS.WAIT_DETECTION && $auth('AGENT', 'STORE')"/>
-                <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER' :detail='detail' @submit="getRepairDetail"/>
-                <CheckResult  :id='id' :detail='detail' :faultList="faultList" :failList="failList"
-                    :exchangeList="exchangeList" :failTotle="failTotle" :exchangeTotle="exchangeTotle"
-                    v-if="resultShow && ![STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_DETECTION, STATUS.WAIT_CHECK].includes(detail.status)"/>
-                <RepairInfo :id='id' :detail='detail'/>
-                <WaybillInfo :id='id' :detail='detail'/>
-                <ActionLog :id='id' :detail='detail'/>
+                </template>
+                <template v-if="$auth('DISTRIBUTOR')">
+                    <a-button type="primary" @click="handleAuditShow('check')"
+                        v-if="detail.status === STATUS.WAIT_CHECK"><i class="icon i_confirm"/>确定接单
+                    </a-button>
+                </template>
+                <template v-if="$auth('AGENT', 'STORE') && detail.org_type == OrgType">
+                    <!-- <template v-if="detail.account_id == User.id || $auth('MANAGER')"> -->
+                    <!-- </template> -->
+                    <a-button type="primary" ghost @click="routerChange('edit')"
+                        v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.AUDIT_FAIL, STATUS.CHECK_FAIL].includes(detail.status)">
+                        <i class="icon i_edit"/>编辑
+                    </a-button>
+                    <a-button type="primary" ghost @click="handleSecondRepairShow()"
+                        v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_REPAIR].includes(detail.status)">
+                        <i class="icon i_edit_l"/>二次维修
+                    </a-button>
+                    <a-button type="primary" @click="handleFaultSubmit()"
+                        v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_submit"/>提交
+                    </a-button>
+                    <a-button type="primary" @click="handleResultShow()"
+                        v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_completed"/>维修完成
+                    </a-button>
+                    <a-button type="primary" @click="handleSettlement()"
+                        v-if="detail.status == STATUS.REPAIR_END"><i class="icon i_settle"/>结算
+                    </a-button>
+                </template>
+                <a-button type="primary" @click="routerChange('invoice')"
+                    v-if="detail.status == STATUS.SETTLEMENT"><i class="icon i_detail_l"/>查看结算单
+                </a-button>
             </div>
         </div>
-        <template class="modal-container">
-            <a-modal v-model:visible="modalFailShow" width="600px" title="维修结果" @ok="handleResultSubmit">
-                <div class="modal-content">
-                    <div class="form-item">
-                        <div class="key">维修结果</div>
-                        <div class="value">
-                            <a-select v-model:value="repairForm.results" placeholder="请选择维修结果">
-                                <a-select-option v-for="results of resultsList" :key="results.value" :value="results.value">{{ results.name }}</a-select-option>
-                            </a-select>
-                        </div>
-                    </div>
-                    <div class="form-item" v-if="repairForm.results == REPAIR_RESULTS.FAIL">
-                        <div class="key">失败原因</div>
-                        <div class="value">
-                            <a-input v-model:value="repairForm.audit_message" placeholder="请输入失败原因"/>
-                        </div>
+        <div class="gray-panel info">
+            <div class="panel-title">
+                <div class="left"><span>工单编号</span> {{ detail.uid }}</div>
+                <div class="right">
+                    <div class="staff" v-if="detail.repair_user_id">员工：{{ detail.repair_user_name || '-' }}</div>
+                    <div class="status">
+                        <i class="icon i_point" :class="$Util.repairStatusFilter(detail.status,'color')"/>
+                        {{ $Util.repairStatusFilter(detail.status) }}
                     </div>
                 </div>
-            </a-modal>
-            <a-modal v-model:visible="secondDoorShow" width="600px" title="维修结果" @ok="handleSecondDoorSubmit">
-                <div class="form-item">
+            </div>
+            <div class="panel-content">
+                <div class="info-item">
+                    <div class="key">工单帐类</div>
+                    <div class="value">{{ $Util.repairServiceFilter(detail.service_type || '-') }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">创建人</div>
+                    <div class="value">{{ detail.user_name || '-' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">相关客户</div>
+                    <div class="value">{{ detail.customer_name || '-' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">优先级</div>
+                    <div class="value">{{ $Util.repairPriorityFilter(detail.priority) }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">创建时间</div>
+                    <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">计划时间</div>
+                    <div class="value">{{ $Util.timeFilter(detail.plan_time) || '-' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">实施时间</div>
+                    <div class="value">{{ $Util.timeFilter(detail.finish_time) || '-' }}</div>
+                </div>
+                <div class="info-item" v-if="detail.audit_message != ''">
+                    <div class="key">未通过原因</div>
+                    <div class="value">{{ detail.audit_message || '-' }}</div>
+                </div>
+            </div>
+        </div>
+        <MySteps :stepsList='stepsList' :current='currStep'/>
+        <div class="form-container">
+            <Distribution :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DISTRIBUTION && $auth('AGENT', 'STORE')"/>
+            <CheckFault   :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DETECTION && $auth('AGENT', 'STORE')" ref="CheckFault"/>
+            <CheckResult  :id='id' :detail='detail' v-if="![STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_DETECTION, STATUS.WAIT_CHECK].includes(detail.status)"/>
+            <AttachmentFile :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER'/>
+            <RepairInfo  :id='id' :detail='detail'/>
+            <WaybillInfo :id='id' :detail='detail'/>
+            <ActionLog   :id='id' :detail='detail'/>
+        </div>
+    </div>
+    <template class="modal-container">
+        <!-- 工单确认 & 审核 -->
+        <a-modal v-model:visible="auditShow" :title="modalType == 'check' ? '确认接单' : '审核'" @ok="handleAuditSubmit">
+            <div class="modal-content">
+                <div class="form-item required">
+                    <div class="key">{{modalType == 'check' ? '确认' : '审核'}}结果:</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="auditForm.audit_result">
+                            <a-radio :value="1">通过</a-radio>
+                            <a-radio :value="0">不通过</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="form-item required textarea" v-if="auditForm.audit_result === 0">
+                    <div class="key">原因:</div>
+                    <div class="value">
+                        <a-textarea v-model:value="auditForm.audit_message" placeholder="请输入不通过的原因" :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                        <span class="content-length">{{auditForm.audit_message.length}}/99</span>
+                    </div>
+                </div>
+            </div>
+        </a-modal>
+        <!-- 维修结果 -->
+        <a-modal v-model:visible="resultShow" title="维修结果" @ok="handleResultSubmit">
+            <div class="modal-content">
+                <div class="form-item required">
+                    <div class="key">维修结果:</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="resultForm.results">
+                            <a-radio v-for="results of resultsList" :key="results.value" :value="results.value">{{ results.name }}</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="form-item required textarea" v-if="resultForm.results == REPAIR_RESULTS.FAIL">
+                    <div class="key">失败原因:</div>
+                    <div class="value">
+                        <a-textarea v-model:value="resultForm.audit_message" placeholder="请输入失败原因" :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                        <span class="content-length">{{resultForm.audit_message.length}}/99</span>
+                    </div>
+                </div>
+            </div>
+        </a-modal>
+        <!-- 二次维修计划时间 -->
+        <a-modal v-model:visible="secondShow" title="二次维修计划时间" @ok="handleSecondRepairSubmit">
+            <div class="modal-content">
+                <div class="form-item required">
                     <div class="key">计划时间</div>
                     <div class="value">
-                        <a-date-picker v-model:value="repairForm.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>
+                        <a-date-picker v-model:value="secondForm.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>
                     </div>
                 </div>
-                <!-- <div class="form-item">
-                    <div class="key">完成时间</div>
-                    <div class="value">
-                        <a-date-picker v-model:value="repairForm.finish_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>
-                    </div>
-                </div> -->
-            </a-modal>
-            <!-- 审核 -->
-            <a-modal v-model:visible="auditShow" title="审核" :after-close='handleAuditClose'>
-                <div class="modal-content">
-                    <div class="form-item required">
-                        <a-radio-group v-model:value="editForm.audit_result">
-                            <a-radio value="1">通过</a-radio>
-                            <a-radio value="0">不通过</a-radio>
-                        </a-radio-group>
-                    </div>
-                    <div class="form-item required" v-if="editForm.audit_result == 0">
-                        <div class="key">原因:</div>
-                        <div class="value">
-                            <a-input v-model:value="editForm.audit_message" placeholder="请输入不通过原因"/>
-                        </div>
-                    </div>
-                </div>
-                <template #footer>
-                    <a-button @click="auditShow = false">取消</a-button>
-                    <a-button @click="handleAuditSubmit" type="primary">确定</a-button>
-                </template>
-            </a-modal>
-            <!-- 工单确认 -->
-            <a-modal v-model:visible="orderShow" title="工单确认" :after-close='handleAuditClose'>
-                <div class="modal-content">
-                    <div class="form-item required">
-                        <a-radio-group v-model:value="editForm.audit_result">
-                            <a-radio value="1">接单</a-radio>
-                            <a-radio value="0">不接单</a-radio>
-                        </a-radio-group>
-                    </div>
-                    <div class="form-item required" v-if="editForm.audit_result == 0">
-                        <div class="key">原因:</div>
-                        <div class="value">
-                            <a-input v-model:value="editForm.audit_message" placeholder="请输入不接单原因"/>
-                        </div>
-                    </div>
-                </div>
-                <template #footer>
-                    <a-button @click="orderShow = false">取消</a-button>
-                    <a-button @click="handleOrderSubmit" type="primary">确定</a-button>
-                </template>
-            </a-modal>
-            <!-- 物流信息 -->
-            <a-modal v-model:visible="deliverShow" width="600px" title="物流" @ok="handleDeliver">
-                <div class="modal-content">
-                    <div class="form-item required">
-                        <div class="key">快递公司</div>
-                        <div class="value">
-                            <a-select v-model:value="form.company_uid" placeholder="请选择快递公司">
-                                <a-select-option v-for="company of companyUidList" :key="company.value" :value="company.value">{{company.name}}</a-select-option>
-                            </a-select>
-                        </div>
-                    </div>
-                    <div class="form-item required" >
-                        <div class="key">快递单号</div>
-                        <div class="value">
-                            <a-input v-model:value="form.waybill_uid" placeholder="请输入快递单号"/>
-                        </div>
-                    </div>
-                </div>
-                <template #footer>
-                    <a-button @click="deliverShow = false">取消</a-button>
-                    <a-button @click="handlePostForTransferSubmit()" type="primary">确定</a-button>
-                </template>
-            </a-modal>
-        </template>
-    </div>
+            </div>
+        </a-modal>
+    </template>
+</div>
 </template>
 
 <script>
@@ -248,27 +196,6 @@ export default {
             id: 0,
             detail: {}, // 工单详情
 
-            resultsList: REPAIR.RESULTS_LIST,
-
-            modalFailShow: false,
-            secondDoorShow: false,
-            
-            repairForm: {
-                results: undefined,
-                audit_message: undefined,
-                plan_time: undefined,
-                // finish_time: undefined,
-            },
-
-            staffList: [],
-            storeList: [],
-            faultList: [],
-            failList: [],
-            failTotle: 0,
-            exchangeTotle: 0,
-            exchangeList: [],
-            resultShow: false,
-
             stepsList: [
                 {title: '分配工单'},
                 {title: '后台审核'},
@@ -278,24 +205,27 @@ export default {
             ],
             currStep: 1,
 
-            // 物流弹框显示
-            deliverShow: false,
-            isTransfer: undefined, // 判断是否存在转单操作（用以显示物流按钮）
-            companyUidList: Core.Const.WAYBILL.COMPANY_LIST,
-            form: { // 物流信息
-                // pay_method: undefined,
-                company_uid: undefined,
-                waybill_uid: '',
-                // review: '',
-            },
+            faultMap: {}, // 所有故障类型
 
-            // 审核
+            // 工单确认&&审核
             auditShow: false,
-            // 工单确认
-            orderShow: false,
-            editForm: {
+            auditForm: {
                 audit_result: 1,
                 audit_message: '',
+            },
+
+            // 维修结果
+            resultShow: false,
+            resultsList: REPAIR.RESULTS_LIST,
+            resultForm: {
+                results: '1',
+                audit_message: undefined,
+            },
+
+            // 二次维修
+            secondShow: false,
+            secondForm: {
+                plan_time: undefined,
             },
 
         };
@@ -334,53 +264,6 @@ export default {
             }
             window.open(routeUrl.href, '_self')
         },
-
-        getIsTransfer(data){ // 向子组件取值(是否转单)
-            this.isTransfer = data
-        },
-        handleAuditShow() { // 显示弹框
-            this.auditShow = true
-        },
-        handleAuditClose() { // 关闭弹框
-            this.auditShow = false;
-        },
-        handleAuditSubmit() { // 审核提交
-            this.loading = true;
-            Core.Api.Repair.audit({
-                id: this.id,
-                ...this.editForm
-            }).then(res => {
-                console.log('handleAuditSubmit res', res)
-                this.routerChange('back')
-            }).catch(err => {
-                console.log('handleAuditSubmit err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-
-        handleOrderShow() { // 显示弹框
-            this.orderShow = true
-        },
-        handleOrderClose() { // 关闭弹框
-            this.orderShow = false;
-        },
-        handleOrderSubmit() { // 工单确认提交
-            this.loading = true;
-
-            Core.Api.Repair.check({
-                id: this.id,
-                ...this.editForm
-            }).then(res => {
-                console.log('handleOrderSubmit res', res)
-                this.routerChange('back')
-            }).catch(err => {
-                console.log('handleOrderSubmit err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-
         // 获取工单详情
         getRepairDetail() {
             this.loading = true;
@@ -389,16 +272,15 @@ export default {
             }).then(res => {
                 console.log('getRepairDetail res', res)
                 this.detail = res
-                this.resultShow = false
-                this.getRepairFaultList();
-                this.step(this.detail.status)
+                this.getCurrStep(this.detail.status)
             }).catch(err => {
                 console.log('getRepairDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
-        step(status) {
+        // 获取当前工单进度
+        getCurrStep(status) {
             switch (status) {
                 case STATUS.WAIT_DISTRIBUTION:
                     this.currStep = 0;
@@ -420,157 +302,102 @@ export default {
                     break;
             }
         },
-        handlePostForTransferSubmit(){ // 物流信息提交
-            if (this.isTransfer == true && (this.form.company_uid == undefined || this.form.waybill_uid == '')) {
-                return this.$message.warning('请选择快递公司,物流单号')
-            }
-            this.loading = false;
-            if (this.isTransfer == true) { // 存在转单
-                Core.Api.Repair.post({
-                    id: this.id,
-                    ...this.form
-                }).then(res => {
-                    this.getRepairDetail()
-                }).catch(err => {
-                    console.log('handlePostForTransferSubmit err', err)
-                }).finally(() => {
-                    this.deliverShow = false
-                    this.loading = false
-                });
-            }
+
+        // 分销商确认接单 以及 平台方确认审核
+        handleAuditShow(type) {
+            Object.assign(this.auditForm, this.$options.data().auditForm)
+            this.auditType = type
+            this.auditShow = true
         },
-        handleFaultSubmit() { // 故障信息提交
+        handleAuditSubmit() {
+            this.loading = true;
+            let form = Core.Util.deepCopy(this.auditForm)
+            if (form.audit_result == 0 && !form.audit_message) {
+                return this.$message.warning('请输入不通过的原因')
+            }
+            Core.Api.Repair[this.auditType]({
+                id: this.id,
+                ...this.auditForm
+            }).then(res => {
+                console.log('handleAuditSubmit res', res)
+                this.$message.success('操作成功')
+                this.routerChange('back')
+            }).catch(err => {
+                console.log('handleAuditSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+
+        // 提交检测结果
+        handleFaultSubmit() {
             this.$refs.CheckFault.handleFaultSubmit();
         },
 
-        handleSettlement() {
-            Core.Api.Repair.settlement({id: this.id}).then(() => {
-                this.$message.success('操作成功')
-                this.getRepairDetail()
-            })
-        },
-
-
+        // 提交 维修结果
         handleResultShow() {
-            this.modalFailShow = true
+            this.resultShow = true
+            Object.assign(this.resultForm, this.$options.data().resultForm)
         },
         handleResultSubmit() {
+            this.loading = true;
+            let form = Core.Util.deepCopy(this.resultForm)
+            if (form.results == 2 && !form.audit_message) {
+                return this.$message.warning('请输入维修失败的原因')
+            }
             Core.Api.Repair.repair({
                 id: this.id,
-            }).then(res => {
+                ...form
+            }).then(() => {
+                this.$message.success('操作成功')
                 this.getRepairDetail()
             }).catch(err => {
                 console.log('getRepairDetail err', err)
             }).finally(() => {
                 this.loading = false;
-                this.modalFailShow = false
+                this.resultShow = false
             });
         },
-        handleSecondDoor() {
-            this.secondDoorShow = true
-            this.repairForm.plan_time = this.detail.plan_time ? dayjs.unix(this.detail.plan_time).format('YYYY-MM-DD HH:mm:ss') : undefined
-            // this.repairForm.finish_time = this.detail.finish_time ? dayjs.unix(this.detail.finish_time).format('YYYY-MM-DD HH:mm:ss') : undefined
+
+        // 工单 结算
+        handleSettlement() {
+            let _this = this;
+            this.$confirm({
+                title: '确定要结算该工单吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Repair.settlement({id: _this.id}).then(() => {
+                        _this.$message.success('操作成功')
+                        _this.getRepairDetail()
+                    })
+                },
+            });
         },
-        handleSecondDoorSubmit() {
-            let repairForm = Core.Util.deepCopy(this.repairForm)
-            repairForm.plan_time = repairForm.plan_time ? dayjs(repairForm.plan_time).unix() : 0
-            // repairForm.finish_time = repairForm.finish_time ? dayjs(repairForm.finish_time).unix() : 0
+
+        // 工单 二次维修
+        handleSecondRepairShow() {
+            this.secondShow = true
+            this.secondForm.plan_time = this.detail.plan_time ? dayjs.unix(this.detail.plan_time).format('YYYY-MM-DD HH:mm:ss') : undefined
+        },
+        handleSecondRepairSubmit() {
+            let form = Core.Util.deepCopy(this.secondForm)
+            if (!form.plan_time) {
+                return this.$message.warning('请选择预计二次维修时间')
+            }
+            form.plan_time = dayjs(form.plan_time).unix()
             Core.Api.Repair.secondDoor({
                 id: this.detail.id,
-                ...repairForm
-            }).then(res => {
+                ...form
+            }).then(() => {
+                this.$message.success('操作成功')
                 this.getRepairDetail()
             }).catch(err => {
                 console.log('getRepairDetail err', err)
             }).finally(() => {
-                this.repairForm.plan_time = undefined
-                // this.repairForm.finish_time = undefined
                 this.loading = false;
-                this.secondDoorShow = false
+                this.secondShow = false
             });
-        },
-
-        getStoreList() {
-            Core.Api.Store.list({
-                page: 0,
-                status: 1,
-            }).then(res => {
-                this.storeList = res.list
-                // this.storeList.push({id: -1, name: "零售商"})
-            });
-        },
-        // 获取 员工列表
-        getStaffList() {
-            if (this.repairForm.store_id == -1) {
-                Core.Api.User.list({
-                    page: 0,
-                    type: Core.Const.USER.TYPE.WORKER,
-                    org_id: this.detail.agent_id,
-                    org_type: Core.Const.LOGIN.ORG_TYPE.AGENT,
-                }).then(res => {
-                    this.staffList = res.list
-                    this.repairForm.repair_user_id = undefined
-                });
-            } else {
-                Core.Api.User.list({
-                    page: 0,
-                    type: Core.Const.USER.TYPE.WORKER,
-                    org_id: this.repairForm.store_id,
-                    org_type: Core.Const.LOGIN.ORG_TYPE.STORE,
-                }).then(res => {
-                    this.staffList = res.list
-                    this.repairForm.repair_user_id = undefined
-                });
-            }
-
-        },
-        getRepairFaultList() {
-            Core.Api.RepairItem.faultList({
-                repair_order_id: this.id
-            }).then(res => {
-                console.log('getRepairFaultList res', res)
-                this.faultList = res.fault_list.map(i => i.item_fault_id)
-                console.log('getRepairFaultList this.faultList', this.faultList)
-                this.getRepairItemList();
-            })
-        },
-
-        getRepairItemList() {
-            Core.Api.RepairItem.list({
-                repair_order_id: this.id
-            }).then(res => {
-                console.log('getRepairItemList res', res)
-
-                let failList = []
-                let failTotle = 0
-                let exchangeList = []
-                let exchangeTotle = 0
-                res.list.forEach(it => {
-                    // it.item_name = it.item.name // ？？
-                    if (it.type == REPAIR_ITEM.TYPE.ADD) {
-                        failList.push(it)
-                        failTotle += it.amount * it.price
-                    }
-                    if (it.type == REPAIR_ITEM.TYPE.REPLACE) {
-                        exchangeList.push(it)
-                        exchangeTotle += it.amount * it.price
-                    }
-                })
-
-                this.failList = failList
-                this.failTotle = failTotle
-                this.exchangeList = exchangeList
-                this.exchangeTotle = exchangeTotle
-
-                console.log('this.failList:', this.failList)
-                console.log('this.exchangeList:', this.exchangeList)
-                console.log('this.exchangeTotle:', this.exchangeTotle)
-
-                this.resultShow = true
-                console.log('this.resultShow:', this.resultShow)
-
-            })
-
         },
     }
 };

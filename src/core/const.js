@@ -329,11 +329,11 @@ let Const = {
             REPLACE: 2,
             TRANSFER: 3,
         },
-        TYPE_LIST: [
-            {value: 1, text: '新增零件'},
-            {value: 2, text: '更换零件'},
-            {value: 3, text: '维修转单'},
-        ],
+        TYPE_MAP: {
+            1: '新增零件',
+            2: '更换零件',
+            3: '维修转单',
+        },
     },
     ACTION_LOG: { // 操作记录
         SOURCE_TYPE: {

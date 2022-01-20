@@ -140,7 +140,7 @@
     </div>
     <!-- 员工确认 -->
     <template class="modal-container">
-        <a-modal v-model:visible="modalShow" :title="modalType == 'check' ? '员工确认' : '审核'" :after-close='handleModalClose'>
+        <a-modal v-model:visible="modalShow" :title="modalType == 'check' ? '确认接单' : '审核'" :after-close='handleModalClose'>
             <div class="modal-content">
                 <div class="form-item required">
                     <div class="key">{{modalType == 'check' ? '确认' : '审核'}}结果:</div>

@@ -1,89 +1,68 @@
 <template>
-    <div class="CheckResult">
-        <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
-            <template #expandIcon><i class="icon i_expan_l"/></template>
-            <a-collapse-panel key="affirm" header="故障确认" class="gray-collapse-panel">
-                <div class="panel-content affirm">
-                    <div class="title">
-                        <i class="icon i_warning"/>共{{ faultList.length }}个故障
-                    </div>
-                    <div class="fault_select">
-                        <div class="item" v-for="(value,index) of faultList" :key="index">
-                            {{ faultMap[value] }}
-                        </div>
+<div class="CheckResult">
+    <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
+        <template #expandIcon><i class="icon i_expan_l"/></template>
+        <a-collapse-panel key="affirm" header="故障确认" class="gray-collapse-panel">
+            <div class="panel-content affirm">
+                <div class="title">
+                    <i class="icon i_warning"/>共{{ faultList.length }}个故障
+                </div>
+                <div class="fault_select">
+                    <div class="item" v-for="(value,index) of faultList" :key="index">
+                        {{ faultMap[value] || '-' }}
                     </div>
                 </div>
-            </a-collapse-panel>
-            <a-collapse-panel key="change" header="零部件更换" class="gray-collapse-panel">
-                <div class="panel-content change">
-                    <a-table :columns="tableColumns" :data-source="failList" :row-key="record => {return JSON.stringify(record)}" :pagination='false' size="small">
-                        <template #bodyCell="{ column, record, text }">
-                            <template v-if="column.dataIndex === 'service_type'">
-                                {{$Util.repairServiceFilter(detail.service_type || '-') }}
-
-                            </template>
-                            <template v-if="column.dataIndex === 'item_fault_id'">{{ faultMap[text] }}</template>
-
-                            <template v-if="column.dataIndex === 'price'">
-                                ￥{{ $Util.countFilter(text) }}
-                            </template>
-                            <template v-if="column.dataIndex === 'amount'">{{ text }}件</template>
-                            <template v-if="column.key === 'totle_price' && record">
-                                ￥{{ $Util.countFilter(record.price * record.amount) }}
-                            </template>
-
+            </div>
+        </a-collapse-panel>
+        <a-collapse-panel key="change" header="零部件更换" class="gray-collapse-panel">
+            <div class="panel-content change">
+                <a-table :columns="tableColumns" :data-source="tableData" :row-key="record => {return JSON.stringify(record)}" :pagination='false' size="small">
+                    <template #bodyCell="{ column, record, text }">
+                        <template v-if="column.dataIndex === 'item_fault_id'">
+                            {{ faultMap[text] || '-' }}
                         </template>
-                        <template #summary>
-                            <a-table-summary>
-                                <a-table-summary-row>
-                                    <a-table-summary-cell :index="0" :col-span="6">合计</a-table-summary-cell>
-                                    <a-table-summary-cell :index="1" :col-span="6">￥{{ $Util.countFilter(failTotle) }}
-                                    </a-table-summary-cell>
-                                </a-table-summary-row>
-                            </a-table-summary>
+                        <template v-if="column.dataIndex === 'price'">
+                            ￥{{ $Util.countFilter(text) }}
                         </template>
-                    </a-table>
-<!--                    <a-table :columns="tableColumns" :data-source="exchangeList" :row-key="record => {return JSON.stringify(record)}"-->
-<!--                             :pagination='false' size="small">-->
-<!--                        <template #bodyCell="{ column, record, text }">-->
-<!--                            <template v-if="column.dataIndex === 'item_fault_id'">{{ faultMap[text] }}</template>-->
-
-<!--                            <template v-if="column.dataIndex === 'price'">-->
-<!--                                ￥{{ $Util.countFilter(text) }}-->
-<!--                            </template>-->
-<!--                            <template v-if="column.dataIndex === 'amount'">{{ text }}件</template>-->
-<!--                            <template v-if="column.key === 'totle_price' && record">-->
-<!--                                ￥{{ $Util.countFilter(record.price * record.amount) }}-->
-<!--                            </template>-->
-
-<!--                        </template>-->
-<!--                        <template #summary>-->
-<!--                            <a-table-summary>-->
-<!--                                <a-table-summary-row>-->
-<!--                                    <a-table-summary-cell :index="0" :col-span="4">合计</a-table-summary-cell>-->
-<!--                                    <a-table-summary-cell :index="1" :col-span="2">-->
-<!--                                        ￥{{ $Util.countFilter(exchangeTotle) }}-->
-<!--                                    </a-table-summary-cell>-->
-<!--                                </a-table-summary-row>-->
-<!--                            </a-table-summary>-->
-<!--                        </template>-->
-<!--                    </a-table>-->
-                </div>
-            </a-collapse-panel>
-        </a-collapse>
-    </div>
+                        <template v-if="column.dataIndex === 'amount'">
+                            {{ text }}件
+                        </template>
+                        <template v-if="column.key === 'total_price'">
+                            ￥{{ $Util.countFilter(record.price * record.amount) }}
+                        </template>
+                        <template v-if="column.dataIndex === 'type'">
+                            {{repairTypeMap[text]}}
+                        </template>
+                        <template v-if="column.dataIndex === 'man_hour'">
+                            {{ text }}小时
+                        </template>
+                        <template v-if="column.key === 'item'">
+                            {{ text || '-' }}
+                        </template>
+                    </template>
+                    <template #summary>
+                        <a-table-summary>
+                            <a-table-summary-row>
+                                <a-table-summary-cell :index="0" :col-span="3">合计</a-table-summary-cell>
+                                <a-table-summary-cell :index="1" :col-span="1">{{ total.amount }}件</a-table-summary-cell>
+                                <a-table-summary-cell :index="2" :col-span="4">￥{{ $Util.countFilter(total.price) }}</a-table-summary-cell>
+                                <a-table-summary-cell :index="3" :col-span="1">{{ $Util.countFilter(total.man_hour) }}小时</a-table-summary-cell>
+                            </a-table-summary-row>
+                        </a-table-summary>
+                    </template>
+                </a-table>
+            </div>
+        </a-collapse-panel>
+    </a-collapse>
+</div>
 </template>
-
 
 <script>
 import Core from '../../../core';
-import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 
 export default {
     name: 'CheckResult',
-    components: {
-        ItemSelect
-    },
+    components: {},
     props: {
         id: {
             type: Number,
@@ -94,62 +73,54 @@ export default {
                 return {}
             }
         },
-        faultList: {
-            type: Array,
-            default: () => {
-                return []
-            }
-        },
-        failList: {
-            type: Array,
-            default: () => {
-                return []
-            }
-        },
-        exchangeList: {
-            type: Array,
-            default: () => {
-                return []
-            }
-        },
-        failTotle: {
-            type: Number,
-        },
-        exchangeTotle: {
-            type: Number,
-        }
     },
     data() {
         return {
-            loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            tableColumns: [
-                {title: '帐类', dataIndex: 'service_type'},
-                {title: '故障原因', dataIndex: 'item_fault_id'},
-                {title: '商品名称', dataIndex: 'item_name', key: 'item'},
-                {title: '金额', dataIndex: 'price'},
-                {title: '数量', dataIndex: 'amount'},
-                {title: '工时', dataIndex: 'man_hours'},
-                {title: '总价', key: 'totle_price'},
-            ],
 
             activeKey: ['affirm', 'change'],
 
             faultMap: {},
+            repairTypeMap: Core.Const.REPAIR_ITEM.TYPE_MAP, // 维修商品类型
+
+            faultList: [],
+
+            tableData: [],
+            tableColumns: [
+                {title: '故障原因', dataIndex: 'item_fault_id'},
+                {title: '商品名称', dataIndex: ['item','name'], key: 'item'},
+                {title: '单价', dataIndex: 'price'},
+                {title: '数量', dataIndex: 'amount'},
+                {title: '总价', key: 'total_price'},
+                {title: '维修类型', dataIndex: 'type'},
+                {title: '故障仓库', dataIndex: 'recycle_warehouse_name', key: 'item'},
+                {title: '换新仓库', dataIndex: 'warehouse_name', key: 'item'},
+                // {title: '接收门店', dataIndex: 'store_id'},
+                {title: '工时', dataIndex: 'man_hour'},
+            ],
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        total() {
+            let price = 0,man_hour = 0,amount = 0
+            for (const item of this.tableData) {
+                price += item.amount * item.price
+                amount += item.amount
+                man_hour += item.man_hour
+            }
+            return {price, man_hour, amount}
+        },
+    },
     mounted() {
-        console.log('CheckResult detail', this.detail);
-        console.log('CheckResult faultList', this.faultList);
-        console.log('CheckResult failList', this.failList);
-        console.log('CheckResult exchangeList', this.exchangeList);
+        console.log('mounted this.faultMap:', this.faultMap)
         this.getFaultData();
+        this.getRepairFaultList();
     },
     methods: {
-        getFaultData() {    // 获取 故障 数据
+        // 获取 所有故障类型
+        getFaultData() {
             this.loading = true;
             // return
             Core.Api.Fault.list({
@@ -170,6 +141,24 @@ export default {
             });
         },
 
+        getRepairFaultList() {
+            Core.Api.RepairItem.faultList({
+                repair_order_id: this.id
+            }).then(res => {
+                console.log('getRepairFaultList res', res)
+                this.faultList = res.fault_list.map(i => i.item_fault_id)
+                console.log('getRepairFaultList this.faultList', this.faultList)
+                this.getRepairItemList();
+            })
+        },
+        getRepairItemList() {
+            Core.Api.RepairItem.list({
+                repair_order_id: this.id
+            }).then(res => {
+                console.log('getRepairItemList res', res)
+                this.tableData = res.list
+            })
+        },
     }
 };
 </script>
