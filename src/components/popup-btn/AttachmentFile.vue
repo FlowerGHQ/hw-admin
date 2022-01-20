@@ -5,7 +5,9 @@
             <a-collapse-panel key="attachmentFile" header="上传附件" class="gray-collapse-panel">
                 <div class="panel-content">
                     <div v-for="(item,index) of attachmentFileList" :key="index">
-                        <span>{{ item.name }}</span>
+                        <div style="display: inline-block;width: 200px;">
+                            <p>{{ item.name.slice(0,15) }}</p>
+                        </div> 
                         <a-image :width="120" :height="120" :src="$Util.imageFilter(item.path)" fallback='无' v-if="['jpeg', 'png', 'gif', 'bmp', 'jpg'].includes(item.type.toLocaleLowerCase())"/>
                         <a-image :width="30" :height="30" :src="$Util.imageFilter('')"  fallback='无' v-else/>
                         <a-button danger @click="handleDelete(item.id)"><i class="icon i_delete"/></a-button>
@@ -148,6 +150,7 @@ export default {
                 this.$emit('handleAttachmentFile')
                 this.handleEditClose();
                 this.getTableData();
+                this.upload.fileList = []
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
