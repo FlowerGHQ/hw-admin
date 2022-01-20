@@ -33,7 +33,6 @@ export default {
             deep: true,
             immediate: true,
             handler(address) {
-                console.log('watch address:', address)
                 let len = address.length
                 if (this.addrLevel === len) {
                 } else {

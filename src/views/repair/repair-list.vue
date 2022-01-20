@@ -172,7 +172,6 @@ import Core from '../../core';
 const REPAIR = Core.Const.REPAIR
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 
-
 export default {
     name: 'RepairList',
     components: {},
@@ -200,7 +199,7 @@ export default {
                 {text: '待审核', value: '0', color: 'orange',  key: REPAIR.STATUS.WAIT_AUDIT },
                 {text: '待检测', value: '0', color: 'yellow',  key: REPAIR.STATUS.WAIT_DETECTION },
                 {text: '维修中', value: '0', color: 'blue',    key: REPAIR.STATUS.WAIT_REPAIR },
-                {text: '已维修', value: '0', color: 'light',   key: REPAIR.STATUS.REPAIR_END },
+                {text: '已维修', value: '0', color: 'primary', key: REPAIR.STATUS.REPAIR_END },
                 {text: '已结算', value: '0', color: 'green',   key: REPAIR.STATUS.SETTLEMENT },
                 {text: '确认未通过', value: '0', color: 'red',  key: REPAIR.STATUS.CHECK_FAIL },
                 {text: '审核未通过', value: '0', color: 'red',  key: REPAIR.STATUS.AUDIT_FAIL },
@@ -216,7 +215,7 @@ export default {
                 store_id: undefined,
                 agent_id: undefined,
                 distributor_id: undefined,
-                status: undefined,
+                status: '0',
                 channel: '',
                 repair_method: '',
                 repair_user_org_type:'',
@@ -420,7 +419,6 @@ export default {
                         }
                     })
                 })
-                console.log(total)
                 this.statusList[0].value = total
             }).catch(err => {
                 console.log('getStatusStat err:', err)

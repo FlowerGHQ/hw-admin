@@ -10,21 +10,15 @@
                 <div class="key">工单分类</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.type" :disabled="!!form.id">
-                        <a-radio v-for="item of typeList" :key="item.value" :value="item.value">{{
-                                item.text
-                            }}
-                        </a-radio>
+                        <a-radio v-for="item of typeList" :key="item.value" :value="item.value">{{item.text}}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
-            <div class="form-item required">
+            <div class="form-item required" v-if="form.type == 1">
                 <div class="key">类别</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.category">
-                        <a-radio v-for="item of categoryList" :key="item.value" :value="item.value">{{
-                                item.text
-                            }}
-                        </a-radio>
+                        <a-radio v-for="item of categoryList" :key="item.value" :value="item.value">{{item.text}}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
@@ -32,10 +26,7 @@
                 <div class="key">紧急程度</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.priority">
-                        <a-radio v-for="item of priorityList" :key="item.value" :value="item.value">{{
-                                item.text
-                            }}
-                        </a-radio>
+                        <a-radio v-for="item of priorityList" :key="item.value" :value="item.value">{{item.text}}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
@@ -43,27 +34,8 @@
                 <div class="key">工单帐类</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.service_type" :disabled="!!form.id">
-                        <a-radio v-for="item of serviceList" :key="item.value" :value="item.value">{{
-                                item.text
-                            }}
-                        </a-radio>
+                        <a-radio v-for="item of serviceList" :key="item.value" :value="item.value">{{item.text}}</a-radio>
                     </a-radio-group>
-                </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">行程公里数</div>
-                <div class="value">
-                    <a-input-number v-model:value="form.travel_distance" :min="0"/>
-                    <span class="kilometre">公里</span>
-                </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">到港时间</div>
-                <div class="value">
-                    <a-date-picker v-model:value="form.arrival_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime"
-                                    placeholder="请选择到港时间">
-                        <template #suffixIcon><i class="icon i_calendar"/></template>
-                    </a-date-picker>
                 </div>
             </div>
             <!-- <a-date-picker v-model:value="form.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/> -->
@@ -78,8 +50,7 @@
                 <div class="key">问题描述</div>
                 <div class="value">
                     <a-textarea v-model:value="form.desc" placeholder="请输入问题描述"
-                                :auto-size="{ minRows: 4, maxRows: 6 }"
-                                :maxlength='500'/>
+                        :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500'/>
                     <span class="content-length">{{ form.desc.length }}/500</span>
                 </div>
             </div>
@@ -94,8 +65,7 @@
                 <div class="key">维修方式</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.channel">
-                        <a-radio v-for="item of channelList" :key="item.value" :value="item.value">{{ item.text }}
-                        </a-radio>
+                        <a-radio v-for="item of channelList" :key="item.value" :value="item.value">{{ item.text }}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
@@ -103,17 +73,33 @@
                 <div class="key">维修类别</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.repair_method">
-                        <a-radio v-for="item of methodList" :key="item.value" :value="item.value">{{ item.text }}
-                        </a-radio>
+                        <a-radio v-for="item of methodList" :key="item.value" :value="item.value">{{ item.text }}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
             <div class="form-item required">
                 <div class="key">车辆编号</div>
                 <div class="value">
-                    <a-input class="item-code" v-model:value="form.item_code" placeholder="请输入车辆编号" @blur="onblur"/>
-                    <span v-if="isExist === true"><i class="icon i_confirm"/></span>
-                    <span v-else-if="isExist === false"><i class="icon i_close_c"/></span>
+                    <a-input v-model:value="form.item_code" placeholder="请输入车辆编号" @blur="handleCarCodeBlur"/>
+                </div>
+                <div class="sp">
+                    <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
+                    <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
+                </div>
+            </div>
+            <div class="form-item">
+                <div class="key">到港时间</div>
+                <div class="value">
+                    <a-date-picker v-model:value="form.arrival_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" placeholder="请选择到港时间">
+                        <template #suffixIcon><i class="icon i_calendar"/></template>
+                    </a-date-picker>
+                </div>
+            </div>
+            <div class="form-item">
+                <div class="key">行程公里数</div>
+                <div class="value">
+                    <a-input-number v-model:value="form.travel_distance" :min="0"/>
+                    <span class="unit">公里</span>
                 </div>
             </div>
         </div>
@@ -126,9 +112,8 @@
             <div class="form-item required">
                 <div class="key">相关客户</div>
                 <div class="value">
-                    <a-select placeholder="请选择相关客户" v-model:value="form.customer_id" @change="handleCustomerSelect"
-                                show-search
-                                :disabled="detail.status == REPAIR.STATUS.WAIT_CHECK">
+                    <a-select placeholder="请选择相关客户" v-model:value="form.customer_id" @change="handleCustomerSelect" show-search
+                        :disabled="detail.status == REPAIR.STATUS.WAIT_CHECK">
                         <a-select-option v-for="(item,index) of customerList" :key="index" :value="item.id">
                             {{ item.name }}
                         </a-select-option>
@@ -154,8 +139,7 @@
             <div class="form-item">
                 <div class="key">维修地址</div>
                 <div class="value">
-                    <AddressCascader @change='handleAddressSelect'
-                                        :default-address='[form.customer_province, form.customer_city, form.customer_county]'/>
+                    <AddressCascader @change='handleAddressSelect' :default-address='[form.customer_province, form.customer_city, form.customer_county]'/>
                 </div>
             </div>
             <div class="form-item" :class="form.channel == 1 ? 'required' : ''">
@@ -168,8 +152,7 @@
                 <div class="key">工单备注</div>
                 <div class="value">
                     <a-textarea v-model:value="form.remark" placeholder="请输入工单备注"
-                                :auto-size="{ minRows: 2, maxRows: 6 }"
-                                :maxlength='500'/>
+                        :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
                     <span class="content-length">{{ form.remark.length }}/500</span>
                 </div>
             </div>
@@ -221,7 +204,7 @@ export default {
                 id: '',
 
                 type: 1,  // 工单分类
-                category: undefined, // 维修工单类别
+                category: 1, // 维修工单类别
                 name: '', // 工单名称
                 desc: '', // 问题描述
                 service_type: '',//保内维修、保外维修
@@ -333,9 +316,8 @@ export default {
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
-                
             if (this.detail.status == this.REPAIR.STATUS.CHECK_FAIL) { // 未确认通过维修单 员工再次确认（重提）
-                this.loading = true; 
+                this.loading = true;
                 await Core.Api.Repair.hand({
                     id: this.form.id,
                     ...this.detail
@@ -364,19 +346,23 @@ export default {
                 });
             }
         },
-        onblur() {  // 获取 车辆编码 数据
+        handleCarCodeBlur() {  // 获取 车辆编码 数据
             if (!this.form.item_code) {
-                return this.isExist = ''
+                return this.isExist = 0
             }
             Core.Api.Item.detailByCode({
                 code: this.form.item_code,
             }).then(res => {
-                this.isExist = res.detail != null
                 console.log("getItemCode res", res)
+                if (res.detail) {
+                    this.isExist = 1
+                } else {
+                    this.isExist = 2
+                    this.$message.warning('该编号未在系统中，请确认车辆编号是否正确')
+                }
             }).catch(err => {
                 console.log('getItemCode err', err)
-            }).finally(() => {
-            });
+            })
         },
         // 检查表单输入
         checkFormInput(form) {
@@ -392,14 +378,14 @@ export default {
                 this.$message.warning('请选择工单帐类')
                 return 0
             }
-            if (!form.travel_distance) {
+            /* if (!form.travel_distance) {
                 this.$message.warning('请输入行程公里数')
                 return 0
             }
             if (!form.arrival_time) {
                 this.$message.warning('请选择到港时间')
                 return 0
-            }
+            } */
             if (!form.name) {
                 this.$message.warning('请输入工单名称')
                 return 0
@@ -477,43 +463,33 @@ export default {
 
 <style lang="less">
 #RepairEdit {
-    .form-block {
-        .form-content {
-            .form-item {
-                .value {
-                    .fac();
-                    .ant-input-number {
-                        margin-right: 10px;
-                    }
-
-                    .kilometre {
-                        font-size: 12px;
-                        line-height: 16px;
-                        color: #363D42;
-                    }
-                    .item-code {
-                        width: calc(~'100% - 24px');
-                    }
-                    i.icon {
-                        display: inline-block;
-                        width: 24px;
-                        text-align: right;
-                    }
-                    .i_confirm {
-                        color: @green;
-                        font-size: 18px;
-                    }
-                    .i_close_c {
-                        color: @red;
-                        font-size: 18px;
-
-                    }
-                }
-
+    .form-item {
+        .value {
+            .fac();
+            .ant-input-number {
+                margin-right: 10px;
+            }
+            .unit {
+                font-size: 12px;
+                line-height: 16px;
+                color: #363D42;
+            }
+            i.icon {
+                display: inline-block;
+                width: 24px;
+                text-align: right;
+            }
+        }
+        .sp {
+            .i_confirm {
+                color: @green;
+                font-size: 18px;
+            }
+            .i_close_c {
+                color: @red;
+                font-size: 18px;
             }
         }
     }
 }
-
-
 </style>

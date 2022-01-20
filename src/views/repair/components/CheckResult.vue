@@ -16,8 +16,7 @@
             </a-collapse-panel>
             <a-collapse-panel key="change" header="零部件更换" class="gray-collapse-panel">
                 <div class="panel-content change">
-                    <a-table :columns="tableColumns" :data-source="failList" :row-key="record => {return JSON.stringify(record)}"
-                             :pagination='false' size="small">
+                    <a-table :columns="tableColumns" :data-source="failList" :row-key="record => {return JSON.stringify(record)}" :pagination='false' size="small">
                         <template #bodyCell="{ column, record, text }">
                             <template v-if="column.dataIndex === 'service_type'">
                                 {{$Util.repairServiceFilter(detail.service_type || '-') }}
