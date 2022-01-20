@@ -35,7 +35,7 @@
                 <div class="form-item">
                     <div class="key"></div>
                     <div class="value">
-                        <a-button @click="handleSubmit" type="primary">确定</a-button>
+                        <a-button @click="handleSubmit" type="primary" style="border-radius: 2px;">确认分配</a-button>
                     </div>
                 </div>
             </div>

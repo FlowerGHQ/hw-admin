@@ -21,7 +21,7 @@
                         v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.AUDIT_FAIL, STATUS.CHECK_FAIL].includes(detail.status)">
                         <i class="icon i_edit"/>编辑
                     </a-button>
-                    <a-button type="primary" ghost @click="handleSecondRepairShow()"
+                    <a-button type="primary" @click="handleSecondRepairShow()"
                         v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_REPAIR].includes(detail.status)">
                         <i class="icon i_edit_l"/>二次维修
                     </a-button>
@@ -86,13 +86,13 @@
                 </div>
             </div>
         </div>
-        <MySteps :stepsList='stepsList' :current='currStep'/>
+        <MySteps :stepsList='stepsList' :current='currStep' v-if="detail.status != STATUS.CLOSE"/>
         <div class="form-container">
             <Distribution :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DISTRIBUTION && $auth('AGENT', 'STORE')"/>
             <CheckFault   :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DETECTION && $auth('AGENT', 'STORE')" ref="CheckFault"/>
-            <CheckResult  :id='id' :detail='detail' v-if="![STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_DETECTION, STATUS.WAIT_CHECK].includes(detail.status)"/>
-            <AttachmentFile :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER'/>
+            <CheckResult  :id='id' :detail='detail' v-if="showCheckResult"/>
             <RepairInfo  :id='id' :detail='detail'/>
+            <AttachmentFile :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER'/>
             <WaybillInfo :id='id' :detail='detail'/>
             <ActionLog   :id='id' :detail='detail'/>
         </div>
@@ -231,7 +231,18 @@ export default {
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        showCheckResult() {
+            switch (this.detail.status) {
+                case WAIT_REPAIR:
+                case REPAIR_END:
+                case SETTLEMENT:
+                    return true
+                default:
+                    return false
+            }
+        }
+    },
     created() {
         this.id = Number(this.$route.query.id) || 0
         this.getRepairDetail();
@@ -286,6 +297,9 @@ export default {
                     this.currStep = 0;
                     break;
                 case STATUS.WAIT_CHECK:
+                case STATUS.WAIT_AUDIT:
+                case STATUS.CHECK_FAIL:
+                case STATUS.AUDIT_FAIL:
                     this.currStep = 1;
                     break;
                 case STATUS.WAIT_DETECTION:

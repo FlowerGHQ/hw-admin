@@ -116,8 +116,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="handleModalShow(record.id, 'check')" v-if="record.status == REPAIR.STATUS.WAIT_CHECK"><i class="icon i_edit"/>确认</a-button>
-                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == REPAIR.STATUS.WAIT_AUDIT"><i class="icon i_edit"/>审核</a-button>
+                        <a-button type='link' @click="handleModalShow(record.id, 'check')" v-if="record.status == REPAIR.STATUS.WAIT_CHECK"><i class="icon i_confirm"/>确认</a-button>
+                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == REPAIR.STATUS.WAIT_AUDIT"><i class="icon i_confirm"/>审核</a-button>
                     </template>
                 </template>
             </a-table>
