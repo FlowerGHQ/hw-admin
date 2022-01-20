@@ -1,4 +1,9 @@
 import dayjs from 'dayjs';
+import defult_img from '@images/defult_img.png'
+import defult_org from '@images/defult_org.png'
+import defult_item from '@images/defult_item.png'
+import defult_file from '@images/defult_file.png'
+
 
 let OSS_POINT = 'https://rebuild-mel-erp.oss-cn-hangzhou.aliyuncs.com'
 let URL_POINT = 'https://eos-api.hw.innotick.com'
@@ -50,6 +55,12 @@ let Const = {
         KEY_AUTHORITY_LIST: 'authority.list',
 
         KEY_FIELD_DISPLAY: 'field.display',
+    },
+    DEFULT_IMG: {
+        1: defult_img,
+        2: defult_item,
+        3: defult_org,
+        4: defult_file,
     },
 
     TIME_PICKER_DEFAULT_VALUE: {

@@ -23,13 +23,10 @@
                         v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.AUDIT_FAIL, STATUS.CHECK_FAIL].includes(detail.status)">
                         <i class="icon i_edit"/>编辑
                     </a-button>
-                    <a-button type="primary" ghost @click="handleSecondDoor()"
+                    <!-- <a-button type="primary" ghost @click="handleSecondDoor()"
                         v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_REPAIR].includes(detail.status)">
                         <i class="icon i_edit_l"/>二次维修
-                    </a-button>
-                    <a-button type="primary" @click="handleTransfer()" ghost
-                        v-if="[STATUS.WAIT_CHECK].includes(detail.status)"><i class="icon i_transfer"/>转单
-                    </a-button>
+                    </a-button> -->
                     <!-- <template v-if="detail.account_id == User.id || $auth('MANAGER')"> -->
                     <!-- </template> -->
                     <a-button type="primary" @click="handleFaultSubmit()"
@@ -138,30 +135,6 @@
                     <a-date-picker v-model:value="repairForm.finish_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>
                 </div>
             </div> -->
-        </a-modal>
-        <a-modal v-model:visible="transferShow" width="600px" title="转单" @ok="handleTransferSubmit">
-            <div class="modal-content">
-                <div class="form-item required">
-                    <div class="key">门店</div>
-                    <div class="value">
-                        <a-select v-model:value="transferForm.store_id" placeholder="请选择门店" @change="getStaffList">
-                            <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">
-                                {{ item.name }}
-                            </a-select-option>
-                        </a-select>
-                    </div>
-                </div>
-                <div class="form-item required">
-                    <div class="key">工单负责人</div>
-                    <div class="value">
-                        <a-select v-model:value="transferForm.repair_user_id" placeholder="请选择工单负责人">
-                            <a-select-option v-for="item of staffList" :key="item.id" :value="item.id">
-                                {{ item.account.name }}
-                            </a-select-option>
-                        </a-select>
-                    </div>
-                </div>
-            </div>
         </a-modal>
         <!-- 审核 -->
         <a-modal v-model:visible="auditShow" title="审核" :after-close='handleAuditClose'>
@@ -278,18 +251,14 @@ export default {
 
             modalFailShow: false,
             secondDoorShow: false,
-            transferShow: false,
+            
             repairForm: {
                 results: undefined,
                 audit_message: undefined,
                 plan_time: undefined,
                 // finish_time: undefined,
             },
-            // 转单
-            transferForm: {
-                store_id: undefined,
-                repair_user_id: undefined,
-            },
+
             staffList: [],
             storeList: [],
             faultList: [],
@@ -338,7 +307,7 @@ export default {
     },
     methods: {
         // 向子组件取值
-        getIsTransfer(data){
+        getIsTransfer(data) {
             this.isTransfer = data
             console.log(this.isTransfer)
         },
@@ -530,27 +499,6 @@ export default {
                 // this.repairForm.finish_time = undefined
                 this.loading = false;
                 this.secondDoorShow = false
-            });
-        },
-        handleTransfer() {
-            this.transferShow = true
-            this.getStoreList()
-        },
-        // 转单
-        handleTransferSubmit() {
-            let transferForm = Core.Util.deepCopy(this.transferForm)
-            // transferForm.plan_time = 0
-            // store_id ,repairUserId
-            Core.Api.Repair.transfer({
-                id: this.detail.id,
-                ...transferForm
-            }).then(res => {
-                this.getRepairDetail()
-            }).catch(err => {
-                console.log('getRepairDetail err', err)
-            }).finally(() => {
-                this.loading = false;
-                this.transferShow = false
             });
         },
 

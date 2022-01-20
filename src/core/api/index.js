@@ -268,9 +268,7 @@ const apiList = {
         list: ['PostJson', 'attachment/list'],
         save: ['PostJson', 'attachment/save'],
         delete: ['PostJson', 'attachment/delete'],
-        update: ['PostJson', 'attachment/update'],
     },
-
 };
 
 export default new Api(baseUrl, apiList);
