@@ -174,11 +174,11 @@
                                 <a-input class="code" v-model:value="record.code" placeholder="请输入商品编码"/>
                             </template>
                             <template v-if="column.dataIndex === 'price'">
-                                <a-input-number v-model:value="record.price" :min="0.01"
+                                <a-input-number v-model:value="record.price" :min="0.01" :precision="2"
                                     :formatter="value => `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/￥\s?|(,*)/g, '')"/>
                             </template>
                             <template v-if="column.dataIndex === 'original_price'">
-                                <a-input-number v-model:value="record.original_price" :min="0.01"
+                                <a-input-number v-model:value="record.original_price" :min="0.01" :precision="2"
                                     :formatter="value => `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/￥\s?|(,*)/g, '')" />
                             </template>
                             <template v-if="column.key === 'select'">
@@ -193,7 +193,7 @@
                         <a-popover v-model:visible="batchSet.originalVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseBatchSet()}'>
                             <template #content>
                                 <div class="batch-set-edit-popover">
-                                    <a-input-number v-model:value="batchSet.original_price" placeholder="请输入成本价格" @keydown.enter="handleBatchSpec('original_price')" :min='0' :autofocus='true'/>
+                                    <a-input-number v-model:value="batchSet.original_price" placeholder="请输入成本价格" @keydown.enter="handleBatchSpec('original_price')" :min='0' :autofocus='true' :precision="2"/>
                                     <div class="btns">
                                         <a-button type="primary" ghost @click="handleCloseBatchSet">取消</a-button>
                                         <a-button type="primary" @click="handleBatchSpec('original_price')">确定</a-button>
@@ -205,7 +205,7 @@
                         <a-popover v-model:visible="batchSet.priceVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseBatchSet()}'>
                             <template #content>
                                 <div class="batch-set-edit-popover">
-                                    <a-input-number v-model:value="batchSet.price" placeholder="请输入标准售价" @keydown.enter="handleBatchSpec('price')" :min='0' :autofocus='true'/>
+                                    <a-input-number v-model:value="batchSet.price" placeholder="请输入标准售价" @keydown.enter="handleBatchSpec('price')" :min='0' :autofocus='true' :precision="2"/>
                                     <div class="btns">
                                         <a-button type="primary" ghost @click="handleCloseBatchSet">取消</a-button>
                                         <a-button type="primary" @click="handleBatchSpec('price')">确定</a-button>

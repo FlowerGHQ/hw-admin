@@ -98,7 +98,7 @@
             <div class="form-item">
                 <div class="key">行程公里数</div>
                 <div class="value">
-                    <a-input-number v-model:value="form.travel_distance" :min="0"/>
+                    <a-input-number v-model:value="form.travel_distance" :min="0" :precision="3"/>
                     <span class="unit">公里</span>
                 </div>
             </div>

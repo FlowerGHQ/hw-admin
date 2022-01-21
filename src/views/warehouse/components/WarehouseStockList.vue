@@ -56,7 +56,7 @@
         <div class="form-item required">
             <div class="key">商品数量:</div>
             <div class="value form-item-value">
-                <a-input-number v-model:value="form.number" :min="1"/>
+                <a-input-number v-model:value="form.number" :min="1" :precision="0"/>
                 <span class="itemNumber">件</span>
             </div>
         </div>
