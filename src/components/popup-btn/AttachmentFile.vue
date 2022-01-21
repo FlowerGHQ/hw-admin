@@ -19,6 +19,9 @@
                                 </a-tooltip>
                             </div>
                         </template>
+                        <template v-if="column.key === 'org'">
+                            {{ $Util.userTypeFilter(text.org_type) }}·{{ text.org_name }}
+                        </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-'}}
                         </template>
@@ -90,6 +93,7 @@ export default {
                 { title: '附件名称', dataIndex: 'name', key: 'detail' },
                 { title: '文件类型', dataIndex: 'type', key: 'item' },
                 { title: '上传人', dataIndex: ['user', 'account', 'name'], key: 'item' },
+                { title: '上传组织', dataIndex: 'user', key: 'org' },
                 { title: '上传时间', dataIndex: 'create_time', key: 'time' },
                 { title: '操作', key: 'operation', fixed: 'right'},
             ],
