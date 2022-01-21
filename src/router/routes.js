@@ -610,7 +610,7 @@ const routes = [
                 name: 'PurchaseOrderList',
                 component: () => import('@/views/purchase/purchase-order-list.vue'),
                 meta: {
-                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     title: '订单列表',
                     is_sub_menu: true,
                     search_type: SEARCH_TYPE.ALL

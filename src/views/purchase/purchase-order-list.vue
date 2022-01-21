@@ -104,7 +104,7 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="handleRecreate(record)" v-if='loginType != USER_TYPE.ADMIN'>  <i class="icon i_cart"/> 再次购买</a-button>
+                        <a-button type='link' @click="handleRecreate(record)" v-if='search_type === SEARCH_TYPE.SELF'>  <i class="icon i_cart"/> 再次购买</a-button>
                         <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_detail"/> 详情</a-button>
                     </template>
                 </template>
@@ -140,6 +140,7 @@ export default {
     data() {
         return {
             LOGIN_TYPE,
+            SEARCH_TYPE: Core.Const.PURCHASE.SEARCH_TYPE,
             loginType: Core.Data.getLoginType(),
             USER_TYPE: Core.Const.USER.TYPE,
             // 加载
@@ -239,7 +240,9 @@ export default {
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
                         path: "/purchase/purchase-order-detail",
-                        query: { id: item.id }
+                        query: {
+                            id: item.id
+                        }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -446,7 +449,7 @@ export default {
             let exportUrl =
                 `${fileUrl}token=${token}&sn=${sn}&status=${status}&item_type=${itemType}&distributor_id=${distributorId}
                 &agent_id=${agentId}&store_id=${storeId}&org_id=${orgId}&org_type=${orgType}&type=${type}&subject=${subject}&pay_method=${payMethod}
-                &begin_time=${beginTime}&end_time=${endTime}`
+                &begin_time=${beginTime}&end_time=${endTime}&search_typ=${this.search_type}`
             console.log("handleRepairExport -> exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
 
