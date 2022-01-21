@@ -1,5 +1,4 @@
 <template>
-
 <div class="Distribution">
     <div class="gray-panel info">
         <div class="panel-title">

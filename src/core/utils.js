@@ -408,7 +408,7 @@ const Util = {
     //     return MAP[val] || '未知'
     // },
     actionLogTypeFilter(val) {
-        const MAP = Const.ACTION_LOG.ACTION_LOG_TYPE_MAP
+        const MAP = Const.ACTION_LOG.TYPE_MAP
         return MAP[val] || '未知'
     },
     /* =============== 维修单 ================ */
