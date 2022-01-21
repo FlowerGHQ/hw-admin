@@ -156,6 +156,9 @@ export default {
             if (!form.target_code) {
                 return this.$message.warning('请输入商品编码')
             }
+            if (this.isExist === false) {
+                return this.$message.warning('请输入正确的商品编码')
+            }
             if (!form.number) {
                 return this.$message.warning('请输入商品数量')
             }

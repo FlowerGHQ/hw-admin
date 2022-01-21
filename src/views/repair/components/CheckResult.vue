@@ -16,7 +16,8 @@
         </a-collapse-panel>
         <a-collapse-panel key="change" header="零部件更换" class="gray-collapse-panel">
             <div class="panel-content change">
-                <a-table :columns="tableColumns" :data-source="tableData" :row-key="record => {return JSON.stringify(record)}" :pagination='false' size="small">
+                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                    :row-key="record => {return JSON.stringify(record)}" :pagination='false' size="small">
                     <template #bodyCell="{ column, record, text }">
                         <template v-if="column.dataIndex === 'item_fault_id'">
                             {{ faultMap[text] || '-' }}
@@ -43,7 +44,7 @@
                     <template #summary>
                         <a-table-summary>
                             <a-table-summary-row>
-                                <a-table-summary-cell :index="0" :col-span="3">合计</a-table-summary-cell>
+                                <a-table-summary-cell :index="0" :col-span="4">合计</a-table-summary-cell>
                                 <a-table-summary-cell :index="1" :col-span="1">{{ total.amount }}件</a-table-summary-cell>
                                 <a-table-summary-cell :index="2" :col-span="4">￥{{ $Util.countFilter(total.price) }}</a-table-summary-cell>
                                 <a-table-summary-cell :index="3" :col-span="1">{{ $Util.countFilter(total.man_hour) }}小时</a-table-summary-cell>
@@ -74,6 +75,7 @@ export default {
             }
         },
     },
+    emit: ['hasTransfer'],
     data() {
         return {
             // 加载
@@ -90,6 +92,7 @@ export default {
             tableColumns: [
                 {title: '故障原因', dataIndex: 'item_fault_id'},
                 {title: '商品名称', dataIndex: ['item','name'], key: 'item'},
+                {title: '商品编号', dataIndex: ['item','code'], key: 'item'},
                 {title: '单价', dataIndex: 'price'},
                 {title: '数量', dataIndex: 'amount'},
                 {title: '总价', key: 'total_price'},
@@ -157,6 +160,12 @@ export default {
             }).then(res => {
                 console.log('getRepairItemList res', res)
                 this.tableData = res.list
+
+                for (const item of res.list) {
+                    if (item.type === Core.Const.REPAIR_ITEM.TYPE.TRANSFER) {
+                        this.$emit('hasTransfer')
+                    }
+                }
             })
         },
     }

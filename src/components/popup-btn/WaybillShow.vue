@@ -76,9 +76,8 @@ export default {
             companyMap: WAYBILL.COMPANY_MAP,
             detailShow: false,
             uid: "",
-            companyUid: '',
+            companyUid: undefined,
             updateShow: false,
-
         }
     },
     watch: {},

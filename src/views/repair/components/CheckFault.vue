@@ -18,9 +18,12 @@
                         <ItemSelect @select="handleAddFailItem" :fault-name="fault" :disabled-checked='failData[fault].map(i => i.id)'
                             btn-type='primary' btn-text="添加商品" btn-class="fault-btn"/>
                     </div>
-                    <a-table :columns="tableColumns" :data-source="failData[fault]" :row-key="record => record.id" :pagination='false' size="small">
+                    <a-table :columns="tableColumns" :data-source="failData[fault]" :scroll="{ x: true }"
+                        :row-key="record => record.id" :pagination='false' size="small">
                         <template #bodyCell="{ column , record ,index, text}">
-
+                            <template v-if="column.key === 'item'">
+                                {{ text || '-' }}
+                            </template>
                             <template v-if="column.key === 'money'">
                                 ￥{{ $Util.countFilter(text) }}
                             </template>
@@ -61,7 +64,7 @@
                                             </a-select-option>
                                         </a-select>
                                         <template v-if="needPurchase(record)">
-                                            <a-button type='link' v-if="detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME" @click="routerChange('edit')"><i class="icon i_s_warehouse"/>调货</a-button>
+                                            <a-button type='link' v-if="detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME" @click="routerChange('transfer')"><i class="icon i_s_warehouse"/>调货</a-button>
                                             <a-button type='link' v-if="detail.service_type === SERVICE_TYPE.OUT_REPAIR_TIME" @click="routerChange('purchase')"><i class="icon i_goods"/>采购</a-button>
                                         </template>
                                     </template>
@@ -124,7 +127,8 @@ export default {
             activeKey: ['affirm'],
 
             tableColumns: [
-                {title: '商品名称', dataIndex: 'name'},
+                {title: '商品名称', dataIndex: 'name', key: 'item'},
+                {title: '商品编号', dataIndex: 'code', key: 'item'},
                 {title: '单价', dataIndex: 'price', key: 'money'},
                 {title: '数量(件)', key: 'amount'},
                 {title: '总价', key: 'total_price'},
