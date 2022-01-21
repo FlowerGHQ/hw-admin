@@ -124,7 +124,7 @@ export default {
                 { title: '排序', key: 'index' },
                 { title: '订单数量', dataIndex: 'count', key: 'item'},
                 { title: '商品总数', dataIndex: 'amount', key: 'item'},
-                { title: '商品总数', dataIndex: 'price', key: 'price' },
+                { title: '订单总价', dataIndex: 'price', key: 'price' },
             ]
             switch (this.org_type) {
                 case 1:

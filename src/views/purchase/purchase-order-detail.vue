@@ -46,7 +46,7 @@
                             <template #summary>
                                 <a-table-summary>
                                     <a-table-summary-row>
-                                        <a-table-summary-cell :index="0" :col-span="3">总数量:{{total.amount}}件</a-table-summary-cell>
+                                        <a-table-summary-cell :index="0" :col-span="6">总数量:{{total.amount}}件</a-table-summary-cell>
                                         <a-table-summary-cell :index="4" :col-span="1">总售价:{{$Util.countFilter(total.price)}}元</a-table-summary-cell>
                                         <a-table-summary-cell :index="5" :col-span="1">总实付金额:{{$Util.countFilter(total.charge)}}元</a-table-summary-cell>
                                     </a-table-summary-row>

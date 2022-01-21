@@ -202,7 +202,7 @@ export default {
                 warehouse: {}
             },
             transferOrderShow: false,
-            isExist: '',
+
             filteredInfo: {status: [0]},
             warehouseList: [],
             statusList: [
@@ -291,7 +291,6 @@ export default {
         },
         handleTransferOrderClose() {
             this.transferOrderShow = false;
-            this.isExist = '';
             this.form = {
                 type: '',
                 to_warehouse_id: '',
