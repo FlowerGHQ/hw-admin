@@ -530,7 +530,7 @@ const routes = [
             },
             {
                 path: 'purchase-order-list',
-                name: 'PurchaseOrderListAll',
+                name: 'AdminPurchaseOrderListAll',
                 component: () => import('@/views/purchase/purchase-order-list.vue'),
                 meta: {
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
@@ -541,7 +541,7 @@ const routes = [
             },
             {
                 path: 'purchase-order-children',
-                name: 'PurchaseOrderListChildren',
+                name: 'AdminPurchaseOrderListChildren',
                 component: () => import('@/views/purchase/purchase-order-list.vue'),
                 meta: {
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
