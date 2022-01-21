@@ -2,6 +2,8 @@ import Const from "../core/const"
 
 const LOGIN_TYPE = Const.LOGIN.TYPE
 
+const SEARCH_TYPE = Const.PURCHASE.SEARCH_TYPE
+
 import Layout from '../views/layout/index.vue';
 
 const routes = [
@@ -528,12 +530,24 @@ const routes = [
             },
             {
                 path: 'purchase-order-list',
-                name: 'PurchaseOrderListAdmin',
+                name: 'PurchaseOrderListAll',
                 component: () => import('@/views/purchase/purchase-order-list.vue'),
                 meta: {
-                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-                    title: '采购订单',
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    title: '订单列表',
                     is_sub_menu: true,
+                    search_type: SEARCH_TYPE.ALL
+                }
+            },
+            {
+                path: 'purchase-order-children',
+                name: 'PurchaseOrderListChildren',
+                component: () => import('@/views/purchase/purchase-order-list.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    title: '供货订单',
+                    is_sub_menu: true,
+                    search_type: SEARCH_TYPE.CHILDREN
                 }
             },
         ]
@@ -597,8 +611,31 @@ const routes = [
                 component: () => import('@/views/purchase/purchase-order-list.vue'),
                 meta: {
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    title: '订单列表',
+                    is_sub_menu: true,
+                    search_type: SEARCH_TYPE.ALL
+                }
+            },
+            {
+                path: 'purchase-order-self',
+                name: 'PurchaseOrderListSelf',
+                component: () => import('@/views/purchase/purchase-order-list.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
                     title: '采购订单',
                     is_sub_menu: true,
+                    search_type: SEARCH_TYPE.SELF
+                }
+            },
+            {
+                path: 'purchase-order-children',
+                name: 'PurchaseOrderListChildren',
+                component: () => import('@/views/purchase/purchase-order-list.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    title: '供货订单',
+                    is_sub_menu: true,
+                    search_type: SEARCH_TYPE.CHILDREN
                 }
             },
             {

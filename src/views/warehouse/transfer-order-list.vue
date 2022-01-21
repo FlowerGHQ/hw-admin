@@ -25,7 +25,8 @@
                         <div class="key">仓库名称:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.warehouse_id" placeholder="请选择仓库">
-                                <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">{{ warehouse.name }}
+                                <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id"
+                                                 :value="warehouse.id">{{ warehouse.name }}
                                 </a-select-option>
                             </a-select>
                         </div>
@@ -72,8 +73,10 @@
                         <template v-if="column.key === 'warehouse-name'">
                             {{ text || '-' }}
                         </template>
-                        <template v-if="column.key === 'apply-message'">
-                            {{ text || '-' }}
+                        <template v-if="column.key === 'tip_time'">
+                            <a-tooltip :title="text" destroyTooltipOnHide>
+                                <div class="ell" style="max-width: 200px">{{ text || '-' }}</div>
+                            </a-tooltip>
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -239,7 +242,7 @@ export default {
             filteredInfo = filteredInfo || {};
             let columns = [
                 {title: '调货单编号', dataIndex: 'uid', key: 'detail'},
-                {title: '申请原因', dataIndex: 'apply_message', key: 'apply-message'},
+                {title: '申请原因', dataIndex: 'apply_message', key: 'tip_time'},
                 {title: '创建单位', dataIndex: 'org_name', key: 'org-ame'},
                 {title: '单位类型', dataIndex: 'org_type', key: 'org-type'},
                 {title: '所属仓库', dataIndex: ['to_warehouse', 'name'], key: 'warehouse-name',},
@@ -427,6 +430,6 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-//
+<style lang="less">
+//#TransferOrderList {}
 </style>

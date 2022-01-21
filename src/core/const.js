@@ -400,6 +400,11 @@ let Const = {
             '1': '已评论',
             '0': '未评论',
         },
+        SEARCH_TYPE: {
+            SELF: 1, //本账户的采购单
+            CHILDREN: 2, //子级采购单
+            ALL: 3, //所有子级采购单
+        },
     },
     REFUND: { // 退款管理
         TYPE: {

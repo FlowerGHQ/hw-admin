@@ -7,7 +7,7 @@
                 <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新增工单</a-button>
             </div> -->
         </div>
-        <div class="tabs-container colorful">
+        <div class="tabs-container colorful" v-if="!purchaseMode">
             <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
                 <a-tab-pane :key="item.key" v-for="item of statusList">
                     <template #tab>
@@ -132,6 +132,7 @@
 <script>
 import Core from '../../core';
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE
+const PURCHASE = Core.Const.PURCHASE
 export default {
     name: 'PurchaseList',
     components: {},
@@ -150,6 +151,7 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
+            purchaseMode: '',
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             statusList: [
                 {text: '全  部', value: '0', color: 'primary',  key: '0'},
@@ -173,11 +175,24 @@ export default {
                 type: 0,
                 subject: 0,
             },
+            search_type: 0,
             filteredInfo: null,
             tableData: [],
         };
     },
     watch: {
+        $route: {
+            deep: true,
+            immediate: true,
+            handler(newRoute) {
+                let search_type = newRoute.meta ? newRoute.meta.search_type : 0
+                this.search_type = search_type
+                console.log("search_type", search_type, this.search_type)
+                this.handleSearchReset();
+                this.getStatusStat();
+            }
+        },
+
         'searchForm.distributor_id': function () {
             this.getAgentListAll();
             this.searchForm.agent_id = undefined
@@ -212,9 +227,10 @@ export default {
         }
     },
     mounted() {
-        this.handleSearchReset();
-        this.getStatusStat();
+        /*this.handleSearchReset();
+        this.getStatusStat();*/
     },
+
     methods: {
         async routerChange(type, item = {}) {
             console.log('routerChange item:', item)
@@ -270,10 +286,36 @@ export default {
             this.create_time = []
             this.pageChange(1);
         },
+        // handleSearchReset() {  // 重置搜索
+        //     Object.assign(this.searchForm, this.$options.data().searchForm)
+        //     if (this.purchaseMode == 'audit') {
+        //         this.searchForm.status = PURCHASE.STATUS.WAIT_AUDIT
+        //     } else if (this.purchaseMode == 'check') {
+        //         this.searchForm.status = PURCHASE.STATUS.WAIT_CHECK
+        //     }
+        //     if (this.$auth('ADMIN')) {
+        //         this.getDistributorListAll();
+        //     }
+        //     else if (this.$auth('DISTRIBUTOR')) {
+        //         this.searchForm.distributor_id = Core.Data.getOrgId()
+        //         this.getAgentListAll();
+        //     }
+        //     else if (this.$auth('AGENT')) {
+        //         this.searchForm.agent_id = Core.Data.getOrgId()
+        //         this.getStoreListAll();
+        //     }
+        //     else if (this.$auth('STORE')) {
+        //         this.searchForm.store_id = Core.Data.getOrgId()
+        //     }
+        //     this.filteredInfo = null
+        //     this.create_time = []
+        //     this.pageChange(1);
+        // },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             Core.Api.Purchase.list({
                 ...this.searchForm,
+                search_type: this.search_type,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
                 page: this.currPage,
