@@ -73,6 +73,9 @@ export default {
         orgId: {
             type: Number,
         },
+        orgType: {
+            type: Number,
+        },
         agentId: {
             type: Number,
         },
@@ -166,6 +169,7 @@ export default {
             this.loading = false;
             Core.Api.Purchase.list({
                 org_id: this.orgId,
+                org_type: this.orgType,
                 store_id:this.storeId,
                 agent_id:this.agentId,
                 page: this.currPage,

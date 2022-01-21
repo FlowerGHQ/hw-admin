@@ -215,10 +215,10 @@ export default {
                 { title: '完成时间', dataIndex: 'close_time', key: 'time' },
                 { title: '操作', key: 'operation', fixed: 'right'}
             ]
-            if (this.$auth('ADMIN', 'AGENT', 'DISTRIBUTOR') && this.search_type != this.SEARCH_TYPE.SELF) {
+            if ((this.$auth('AGENT', 'DISTRIBUTOR') && this.search_type != this.SEARCH_TYPE.SELF) ||  (this.$auth('ADMIN') && this.search_type == this.SEARCH_TYPE.ALL)) {
                 columns.splice(2, 0, {title: '所属门店', dataIndex: 'store_name', key: 'item'})
             }
-            if (this.$auth('ADMIN', 'DISTRIBUTOR') && this.search_type !== this.SEARCH_TYPE.SELF) {
+            if ((this.$auth( 'DISTRIBUTOR') && this.search_type !== this.SEARCH_TYPE.SELF) || (this.$auth('ADMIN') && this.search_type == this.SEARCH_TYPE.ALL)) {
                 columns.splice(2, 0, {title: '所属零售商', dataIndex: 'agent_name', key: 'item'})
             }
             if (this.$auth('ADMIN')) {
