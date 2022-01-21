@@ -4,10 +4,6 @@ import Data from './data';
 import Const from './const';
 import dayjs from "dayjs";
 
-import defult_img from '@images/defult_img.png'
-import defult_org from '@images/defult_org.png'
-import defult_item from '@images/defult_item.png'
-
 const Util = {
     /* =============== 通用方法 ================ */
     /**
@@ -293,11 +289,7 @@ const Util = {
     imageFilter(item, default_type = 1) {
         if (!item || typeof item !== 'string') {
             // console.warn("imageFilter 没有找到图像")
-            let map = {
-                1: defult_img,
-                2: defult_item,
-                3: defult_org,
-            }
+            let map = Const.DEFULT_IMG
             return map[default_type] || ''
         }
 

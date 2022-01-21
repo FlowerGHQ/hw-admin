@@ -112,11 +112,12 @@ export default {
                 {title: '商品名称', dataIndex: 'item', key: 'item-name'},
                 {title: '商品型号', dataIndex: ['item', 'model'], key: 'item-model'},
                 {title: '商品编码', dataIndex: 'item', key: 'item-code'},
+                {title: '商品规格', dataIndex: ['item', 'attr_str']},
                 {title: '库存数量', dataIndex: 'item', key: 'item-stock'},
                 {title: '数量', dataIndex: 'amount', key: 'item-amount'},
             ]
             if (this.detail.type == STOCK_TYPE.TYPE_IN) { // 入库不显示库存数量
-                columns.splice(3, 1)
+                columns.splice(4, 1)
             }
             return columns
         },
@@ -173,6 +174,13 @@ export default {
                 invoice_id: this.id,
             }).then(res => {
                 console.log('getInvoiceList res', res)
+                res.list.forEach(item => {
+                    let element = item.item || {}
+                    if (element.attr_list && element.attr_list.length) {
+                        let str = element.attr_list.map(i => i.value).join(' ')
+                        element.attr_str = str
+                    }
+                })
                 this.tableData = res.list
             }).catch(err => {
                 console.log('getInvoiceList err', err)

@@ -1,4 +1,9 @@
 import dayjs from 'dayjs';
+import defult_img from '@images/defult_img.png'
+import defult_org from '@images/defult_org.png'
+import defult_item from '@images/defult_item.png'
+import defult_file from '@images/defult_file.png'
+
 
 let OSS_POINT = 'https://rebuild-mel-erp.oss-cn-hangzhou.aliyuncs.com'
 let URL_POINT = 'https://eos-api.hw.innotick.com'
@@ -50,6 +55,12 @@ let Const = {
         KEY_AUTHORITY_LIST: 'authority.list',
 
         KEY_FIELD_DISPLAY: 'field.display',
+    },
+    DEFULT_IMG: {
+        1: defult_img,
+        2: defult_item,
+        3: defult_org,
+        4: defult_file,
     },
 
     TIME_PICKER_DEFAULT_VALUE: {
@@ -318,11 +329,11 @@ let Const = {
             REPLACE: 2,
             TRANSFER: 3,
         },
-        TYPE_LIST: [
-            {value: 1, text: '新增零件'},
-            {value: 2, text: '更换零件'},
-            {value: 3, text: '维修转单'},
-        ],
+        TYPE_MAP: {
+            1: '新增零件',
+            2: '更换零件',
+            3: '维修转单',
+        },
     },
     ACTION_LOG: { // 操作记录
         SOURCE_TYPE: {
@@ -388,6 +399,11 @@ let Const = {
         FLAG_REVIEW_MAP: {
             '1': '已评论',
             '0': '未评论',
+        },
+        SEARCH_TYPE: {
+            SELF: 1, //本账户的采购单
+            CHILDREN: 2, //子级采购单
+            ALL: 3, //所有子级采购单
         },
     },
     REFUND: { // 退款管理

@@ -60,7 +60,7 @@ export default {
             // 物流
             waybill: '',
             waybillInfo: '',
-            activeKey: 'WaybillInfo'
+            activeKey: ''
         };
     },
     watch: {},

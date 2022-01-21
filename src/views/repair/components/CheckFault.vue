@@ -36,7 +36,7 @@
 
                             <template v-if="column.key === 'type'">
                                 <a-select v-model:value="record.type" placeholder="维修类型" @change="handleRepairTypeChange(record)" style="width: 100px;">
-                                    <a-select-option v-for="(item,index) of repairTypeList" :key="index" :value="item.value">{{item.text}}</a-select-option>
+                                    <a-select-option v-for="(val,key) in repairTypeMap" :key="key" :value="Number(key)">{{val}}</a-select-option>
                                 </a-select>
                             </template>
 
@@ -92,12 +92,13 @@
 </div>
 </template>
 
-
 <script>
 import Core from '../../../core';
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 import SimpleImageEmpty from '@/components/common/SimpleImageEmpty.vue';
+
 const REPAIR_TYPE = Core.Const.REPAIR_ITEM.TYPE
+
 export default {
     name: 'RepairDetail',
     components: {
@@ -138,7 +139,7 @@ export default {
             faultSelect: [], // 存放 被选中的故障
             failData: {}, // 存放 零部件更换 商品信息
 
-            repairTypeList: Core.Const.REPAIR_ITEM.TYPE_LIST, // 维修商品类型列表
+            repairTypeMap: Core.Const.REPAIR_ITEM.TYPE_MAP, // 维修商品类型
             warehouseFailList: [], // 故障仓列表
             storeList: [], // 门店列表
 
@@ -319,17 +320,20 @@ export default {
                     return this.$message.warning('请添加商品')
                 }
                 for (const item of this.failData[fault]) {
-                    if (!item) {
-                        return this.$message.warning('请添加商品')
-                    }
+                    if (!item) { return this.$message.warning('请添加商品') }
                     item.item_fault_id = Number(fault)
 
-                    if (item.type == 3) { // 选择转单时 校验负责人
-                        if (this.transferStoreId) {
-                            item.store_id = this.transferStoreId
-                        } else {
+                    if (item.type == REPAIR_TYPE.TRANSFER) {
+                        // 转单
+                        if (!this.transferStoreId) {
                             return this.$message.warning('请选择转单门店')
+                        } else {
+                            item.store_id = this.transferStoreId
+                            item.warehouse_id = ''
+                            item.recycle_warehouse_id = ''
                         }
+                    } else if (item.type == REPAIR_TYPE.ADD) {
+                        item.recycle_warehouse_id = ''
                     }
                     console.log('item.is_stock: ', item.is_stock);
                     if (!item.is_stock && !item.change_to_transfer) { // 仓库货量不足
@@ -342,7 +346,7 @@ export default {
             Core.Api.RepairItem.saveList({
                 repair_order_id: this.id,
                 item_list: itemList,
-                store_id: this.transferForm.store_id,
+                store_id: this.transferStoreId,
             }).then(() => {
                 this.$message.success('操作成功');
                 this.$emit('submit')

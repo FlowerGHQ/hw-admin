@@ -144,8 +144,10 @@ const apiList = {
         detail: ['PostJson', 'item/detail'],
         delete: ['PostJson', 'item/delete'],
         detailByCode: ['PostJson', 'item/detail-by-code'],
+        detailByCodeForRepair: ['PostJson','item/detail-by-code-for-repair'],
 
-        setIndep: ['PostJson', 'item/set-flag-independent-info']
+        setIndep: ['PostJson', 'item/set-flag-independent-info'],
+
     },
     ItemCategory: { // 商品分类
         list: ['PostJson', 'item-category/list'],
@@ -268,9 +270,7 @@ const apiList = {
         list: ['PostJson', 'attachment/list'],
         save: ['PostJson', 'attachment/save'],
         delete: ['PostJson', 'attachment/delete'],
-        update: ['PostJson', 'attachment/update'],
     },
-
 };
 
 export default new Api(baseUrl, apiList);

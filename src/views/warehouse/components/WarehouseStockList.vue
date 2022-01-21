@@ -115,6 +115,7 @@ export default {
             let tableColumns = [
                 {title: '商品名称', dataIndex: 'item', key: 'item-name'},
                 {title: '商品型号', dataIndex: ['item', 'model'], key: 'item-model'},
+                {title: '商品规格', dataIndex: ['item', 'attr_str']},
                 {title: '商品编码', dataIndex: 'item', key: 'item-code'},
                 {title: '库存数量', dataIndex: 'stock', key: 'item'},
             ]
@@ -198,6 +199,13 @@ export default {
             }).then(res => {
                 console.log("getTableData res", res)
                 this.total = res.count;
+                res.list.forEach(item => {
+                    let element = item.item || {}
+                    if (element.attr_list && element.attr_list.length) {
+                        let str = element.attr_list.map(i => i.value).join(' ')
+                        element.attr_str = str
+                    }
+                })
                 this.tableData = res.list;
             }).catch(err => {
                 console.log('getTableData err', err)
