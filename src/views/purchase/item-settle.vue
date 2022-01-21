@@ -164,7 +164,7 @@ export default {
                     break;
                 case 'order':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/purchase/purchase-order-list",
+                        path: "/purchase/purchase-order-self",
                     })
                     window.open(routeUrl.href, '_self')
                     break;
