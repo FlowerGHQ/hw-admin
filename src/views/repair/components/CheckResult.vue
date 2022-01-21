@@ -43,7 +43,7 @@
                     <template #summary>
                         <a-table-summary>
                             <a-table-summary-row>
-                                <a-table-summary-cell :index="0" :col-span="3">合计</a-table-summary-cell>
+                                <a-table-summary-cell :index="0" :col-span="4">合计</a-table-summary-cell>
                                 <a-table-summary-cell :index="1" :col-span="1">{{ total.amount }}件</a-table-summary-cell>
                                 <a-table-summary-cell :index="2" :col-span="4">￥{{ $Util.countFilter(total.price) }}</a-table-summary-cell>
                                 <a-table-summary-cell :index="3" :col-span="1">{{ $Util.countFilter(total.man_hour) }}小时</a-table-summary-cell>
@@ -90,6 +90,7 @@ export default {
             tableColumns: [
                 {title: '故障原因', dataIndex: 'item_fault_id'},
                 {title: '商品名称', dataIndex: ['item','name'], key: 'item'},
+                {title: '商品编号', dataIndex: ['item','code'], key: 'item'},
                 {title: '单价', dataIndex: 'price'},
                 {title: '数量', dataIndex: 'amount'},
                 {title: '总价', key: 'total_price'},

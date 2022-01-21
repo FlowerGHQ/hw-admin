@@ -20,7 +20,9 @@
                     </div>
                     <a-table :columns="tableColumns" :data-source="failData[fault]" :row-key="record => record.id" :pagination='false' size="small">
                         <template #bodyCell="{ column , record ,index, text}">
-
+                            <template v-if="column.key === 'item'">
+                                {{ text || '-' }}
+                            </template>
                             <template v-if="column.key === 'money'">
                                 ￥{{ $Util.countFilter(text) }}
                             </template>
@@ -124,7 +126,8 @@ export default {
             activeKey: ['affirm'],
 
             tableColumns: [
-                {title: '商品名称', dataIndex: 'name'},
+                {title: '商品名称', dataIndex: 'name', key: 'item'},
+                {title: '商品编号', dataIndex: 'code', key: 'item'},
                 {title: '单价', dataIndex: 'price', key: 'money'},
                 {title: '数量(件)', key: 'amount'},
                 {title: '总价', key: 'total_price'},
