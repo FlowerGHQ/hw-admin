@@ -336,23 +336,7 @@ export default {
                         this.$message.warning('仓库库存不足,请及时调仓或采购')
                     }
                     itemList.push(item)
-<<<<<<< HEAD
-                })
-            })
-            if (this.faultSelect.length == 0) {
-                return this.$message.warning('请选择故障')
-            }
-            if (itemFlag) {
-                return this.$message.warning('请添加商品')
-            }
-            if (stockFlag) {
-                return this.$message.warning('仓库库存不足请加仓或采购')
-            }
-            if (transferFlag) {
-                return this.$message.warning('请选择转单门店')
-=======
                 }
->>>>>>> abfe7da9cc77ec3c8f6be4dfb9ae66ca25c88c97
             }
             console.log('handleFaultSubmit itemList:', itemList)
             Core.Api.RepairItem.saveList({
