@@ -237,7 +237,7 @@ export default {
         },
 
         // 删除 商品
-        handleDelete(id) {
+        handleDelete() {
             let _this = this;
             this.$confirm({
                 title: '确定要删除该商品吗？',
@@ -245,7 +245,7 @@ export default {
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Item.delete({id}).then(() => {
+                    Core.Api.Item.delete({id: this.id}).then(() => {
                         _this.$message.success('删除成功');
                         _this.getItemDetail();
                         if (!_this.set_id) {
