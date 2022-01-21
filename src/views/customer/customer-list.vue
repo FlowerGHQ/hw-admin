@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">客户列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建客户</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('STORE','AGENT')"><i class="icon i_add"/>新建客户</a-button>
                 </div>
             </div>
             <div class="search-container">

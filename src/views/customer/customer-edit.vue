@@ -86,7 +86,7 @@ export default {
         routerChange(type, item) {
             switch (type) {
                 case 'back':    // 详情
-                    routeUrl = this.$router.resolve({
+                    let routeUrl = this.$router.resolve({
                         path: "/customer/customer-list",
                     })
                     window.open(routeUrl.href, '_self')
