@@ -102,10 +102,10 @@
     </div>
     <template class="modal-container">
         <!-- 工单确认 & 审核 -->
-        <a-modal v-model:visible="auditShow" :title="modalType == 'check' ? '确认接单' : '审核'" @ok="handleAuditSubmit">
+        <a-modal v-model:visible="auditShow" :title="auditType == 'check' ? '确认接单' : '审核'" @ok="handleAuditSubmit">
             <div class="modal-content">
                 <div class="form-item required">
-                    <div class="key">{{modalType == 'check' ? '确认' : '审核'}}结果:</div>
+                    <div class="key">{{auditType == 'check' ? '确认' : '审核'}}结果:</div>
                     <div class="value">
                         <a-radio-group v-model:value="auditForm.audit_result">
                             <a-radio :value="1">通过</a-radio>
@@ -229,6 +229,7 @@ export default {
 
             // 工单确认&&审核
             auditShow: false,
+            auditType: '',
             auditForm: {
                 audit_result: 1,
                 audit_message: '',
