@@ -16,7 +16,8 @@
         </a-collapse-panel>
         <a-collapse-panel key="change" header="零部件更换" class="gray-collapse-panel">
             <div class="panel-content change">
-                <a-table :columns="tableColumns" :data-source="tableData" :row-key="record => {return JSON.stringify(record)}" :pagination='false' size="small">
+                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                    :row-key="record => {return JSON.stringify(record)}" :pagination='false' size="small">
                     <template #bodyCell="{ column, record, text }">
                         <template v-if="column.dataIndex === 'item_fault_id'">
                             {{ faultMap[text] || '-' }}
@@ -74,6 +75,7 @@ export default {
             }
         },
     },
+    emit: ['hasTransfer'],
     data() {
         return {
             // 加载
@@ -158,6 +160,12 @@ export default {
             }).then(res => {
                 console.log('getRepairItemList res', res)
                 this.tableData = res.list
+
+                for (const item of res.list) {
+                    if (item.type === Core.Const.REPAIR_ITEM.TYPE.TRANSFER) {
+                        this.$emit('hasTransfer')
+                    }
+                }
             })
         },
     }
