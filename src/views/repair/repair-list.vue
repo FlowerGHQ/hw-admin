@@ -84,7 +84,12 @@
                     </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="$Util.repairStatusFilter(text,'color')">
-                            {{$Util.repairStatusFilter(text)}}
+                            <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>
+                                {{ $Util.repairStatusFilter(text) }}
+                                <template v-if="[STATUS.CHECK_FAIL, STATUS.AUDIT_FAIL].includes(record.status)">
+                                    <i class="icon i_hint" style="font-size: 12px;padding-left: 6px;"/>
+                                </template>
+                            </a-tooltip>
                         </div>
                     </template>
                     <template v-if="column.dataIndex === 'type'">
@@ -116,8 +121,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="handleModalShow(record.id, 'check')" v-if="record.status == REPAIR.STATUS.WAIT_CHECK"><i class="icon i_confirm"/>确认</a-button>
-                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == REPAIR.STATUS.WAIT_AUDIT"><i class="icon i_confirm"/>审核</a-button>
+                        <a-button type='link' @click="handleModalShow(record.id, 'check')" v-if="record.status == STATUS.WAIT_CHECK"><i class="icon i_confirm"/>确认</a-button>
+                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.WAIT_AUDIT"><i class="icon i_confirm"/>审核</a-button>
                     </template>
                 </template>
             </a-table>
@@ -170,6 +175,7 @@
 <script>
 import Core from '../../core';
 const REPAIR = Core.Const.REPAIR
+const STATUS = Core.Const.REPAIR.STATUS
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 
 export default {
@@ -178,7 +184,7 @@ export default {
     props: {},
     data() {
         return {
-            REPAIR,
+            STATUS,
             LOGIN_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
@@ -194,16 +200,16 @@ export default {
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             statusList: [
                 {text: '全  部', value: '0', color: 'primary', key: '-1'},
-                {text: '待分配', value: '0', color: 'red',     key: REPAIR.STATUS.WAIT_DISTRIBUTION },
-                {text: '待确认', value: '0', color: 'orange',  key: REPAIR.STATUS.WAIT_CHECK },
-                {text: '待审核', value: '0', color: 'orange',  key: REPAIR.STATUS.WAIT_AUDIT },
-                {text: '待检测', value: '0', color: 'yellow',  key: REPAIR.STATUS.WAIT_DETECTION },
-                {text: '维修中', value: '0', color: 'blue',    key: REPAIR.STATUS.WAIT_REPAIR },
-                {text: '已维修', value: '0', color: 'primary', key: REPAIR.STATUS.REPAIR_END },
-                {text: '已结算', value: '0', color: 'green',   key: REPAIR.STATUS.SETTLEMENT },
-                {text: '确认未通过', value: '0', color: 'red',  key: REPAIR.STATUS.CHECK_FAIL },
-                {text: '审核未通过', value: '0', color: 'red',  key: REPAIR.STATUS.AUDIT_FAIL },
-                {text: '已取消', value: '0', color: 'purple',  key: REPAIR.STATUS.CLOSE },
+                {text: '待分配', value: '0', color: 'red',     key: STATUS.WAIT_DISTRIBUTION },
+                {text: '待确认', value: '0', color: 'orange',  key: STATUS.WAIT_CHECK },
+                {text: '待审核', value: '0', color: 'orange',  key: STATUS.WAIT_AUDIT },
+                {text: '待检测', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
+                {text: '维修中', value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
+                {text: '已维修', value: '0', color: 'primary', key: STATUS.REPAIR_END },
+                {text: '已结算', value: '0', color: 'green',   key: STATUS.SETTLEMENT },
+                {text: '确认未通过', value: '0', color: 'red',  key: STATUS.CHECK_FAIL },
+                {text: '审核未通过', value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
+                {text: '已取消', value: '0', color: 'purple',  key: STATUS.CLOSE },
             ],
             create_time: [],
             distributorList: [], // 分销商下拉框数据
@@ -328,9 +334,9 @@ export default {
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
             if (this.operMode == 'audit') {
-                this.searchForm.status = REPAIR.STATUS.WAIT_AUDIT
+                this.searchForm.status = STATUS.WAIT_AUDIT
             } else if (this.operMode == 'check') {
-                this.searchForm.status = REPAIR.STATUS.WAIT_CHECK
+                this.searchForm.status = STATUS.WAIT_CHECK
             }
             if (this.$auth('ADMIN')) {
                 this.getDistributorListAll();
