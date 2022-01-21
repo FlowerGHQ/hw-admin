@@ -116,8 +116,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="handleModalShow(record.id, 'check')" v-if="record.status == REPAIR.STATUS.WAIT_CHECK"><i class="icon i_edit"/>确认</a-button>
-                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == REPAIR.STATUS.WAIT_AUDIT"><i class="icon i_edit"/>审核</a-button>
+                        <a-button type='link' @click="handleModalShow(record.id, 'check')" v-if="record.status == REPAIR.STATUS.WAIT_CHECK"><i class="icon i_confirm"/>确认</a-button>
+                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == REPAIR.STATUS.WAIT_AUDIT"><i class="icon i_confirm"/>审核</a-button>
                     </template>
                 </template>
             </a-table>
@@ -140,7 +140,7 @@
     </div>
     <!-- 员工确认 -->
     <template class="modal-container">
-        <a-modal v-model:visible="modalShow" :title="modalType == 'check' ? '员工确认' : '审核'" :after-close='handleModalClose'>
+        <a-modal v-model:visible="modalShow" :title="modalType == 'check' ? '确认接单' : '审核'" :after-close='handleModalClose'>
             <div class="modal-content">
                 <div class="form-item required">
                     <div class="key">{{modalType == 'check' ? '确认' : '审核'}}结果:</div>
