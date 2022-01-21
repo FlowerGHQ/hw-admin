@@ -96,7 +96,7 @@
             <CheckResult  :id='id' :detail='detail' v-if="showCheckResult" @hasTransfer='hasTransfer = true'/>
             <RepairInfo  :id='id' :detail='detail'/>
             <AttachmentFile :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER'/>
-            <WaybillInfo :id='id' :detail='detail' v-if="hasTransfer" @needDelivery='needDelivery = true'/>
+            <WaybillInfo :id='id' :detail='detail' v-if="hasTransfer" @needDelivery='needDelivery = true' ref="WaybillInfo"/>
             <ActionLog   :id='id' :detail='detail'/>
         </div>
     </div>
@@ -463,6 +463,7 @@ export default {
             }).then(() => {
                 this.$message.success('操作成功')
                 this.getRepairDetail()
+                this.$refs.WaybillInfo.getWaybillDetail();
             }).catch(err => {
                 console.log('getRepairDetail err', err)
             }).finally(() => {

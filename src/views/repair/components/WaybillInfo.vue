@@ -1,7 +1,7 @@
 <template>
 <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
     <template #expandIcon ><i class="icon i_expan_l"/> </template>
-    <a-collapse-panel key="WaybillInfo" header="物流信息" class="gray-collapse-panel">
+    <a-collapse-panel key="WaybillInfo" header="转单物流" class="gray-collapse-panel">
         <a-row class="panel-content info-container">
             <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                 <div class="info-item">
