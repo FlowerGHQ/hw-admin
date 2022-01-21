@@ -62,7 +62,7 @@
                     <UserList :orgId="distributor_id" :orgType="ORG_TYPE.DISTRIBUTOR" :type="USER_TYPE.WORKER" v-if="activeKey === 'WorkerList'"/>
                 </a-tab-pane>
                 <a-tab-pane key="PurchaseList" tab="订单列表">
-                    <PurchaseList :orgId="distributor_id"  v-if="activeKey === 'PurchaseList'"/>
+                    <PurchaseList :orgId="distributor_id" :orgType="ORG_TYPE.DISTRIBUTOR"  v-if="activeKey === 'PurchaseList'"/>
                 </a-tab-pane>
                 <template v-if="$auth('ADMIN')">
                 <a-tab-pane key="AgentList" tab="零售商管理">

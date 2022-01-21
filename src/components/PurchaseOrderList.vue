@@ -81,11 +81,16 @@ export default {
         },
         storeId: {
             type: Number,
+        },
+        searchType: {
+            type: Number,
+            default: 1
         }
     },
     data() {
         return {
             loginType: Core.Data.getLoginType(),
+            SEARCH_TYPE: Core.Const.PURCHASE.SEARCH_TYPE,
             // 加载
             loading: false,
             // 分页
@@ -105,7 +110,6 @@ export default {
 
             tableColumns: [
                 { title: '订单编号', dataIndex: 'sn', },
-                { title: '所属门店', dataIndex: 'store_name', },
                 { title: '价格', dataIndex: 'price'  },
                 { title: '订单状态', dataIndex: 'status' },
                 { title: '下单时间', dataIndex: 'create_time', key: 'time' },
@@ -116,6 +120,8 @@ export default {
     },
     watch: {},
     computed: {
+    },
+    created() {
     },
     mounted() {
         this.getTableData();

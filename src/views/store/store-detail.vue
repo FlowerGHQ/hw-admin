@@ -50,7 +50,7 @@
                 <UserList :orgType="ORG_TYPE.STORE" :orgId="store_id"  :type="USER_TYPE.WORKER" v-if="activeKey == 'WorkerList'"/>
             </a-tab-pane>
             <a-tab-pane key="PurchaseList" tab="订单列表">
-                <PurchaseList :storeId="store_id" v-if="activeKey == 'PurchaseList'"/>
+                <PurchaseList :orgId="store_id" :orgType="ORG_TYPE.STORE" v-if="activeKey == 'PurchaseList'"/>
             </a-tab-pane>
 <!--            <template v-if="!$auth('STORE')">
                 <a-tab-pane key="PricingStructure" tab="商品价格">
