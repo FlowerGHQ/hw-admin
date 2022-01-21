@@ -540,17 +540,6 @@ const routes = [
                 }
             },
             {
-                path: 'purchase-order-self',
-                name: 'PurchaseOrderListSelf',
-                component: () => import('@/views/purchase/purchase-order-list.vue'),
-                meta: {
-                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
-                    title: '采购订单',
-                    is_sub_menu: true,
-                    search_type: SEARCH_TYPE.SELF
-                }
-            },
-            {
                 path: 'purchase-order-children',
                 name: 'PurchaseOrderListChildren',
                 component: () => import('@/views/purchase/purchase-order-list.vue'),
@@ -622,8 +611,31 @@ const routes = [
                 component: () => import('@/views/purchase/purchase-order-list.vue'),
                 meta: {
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    title: '订单列表',
+                    is_sub_menu: true,
+                    search_type: SEARCH_TYPE.ALL
+                }
+            },
+            {
+                path: 'purchase-order-self',
+                name: 'PurchaseOrderListSelf',
+                component: () => import('@/views/purchase/purchase-order-list.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
                     title: '采购订单',
                     is_sub_menu: true,
+                    search_type: SEARCH_TYPE.SELF
+                }
+            },
+            {
+                path: 'purchase-order-children',
+                name: 'PurchaseOrderListChildren',
+                component: () => import('@/views/purchase/purchase-order-list.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    title: '供货订单',
+                    is_sub_menu: true,
+                    search_type: SEARCH_TYPE.CHILDREN
                 }
             },
             {

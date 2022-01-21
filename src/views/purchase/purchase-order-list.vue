@@ -173,9 +173,9 @@ export default {
                 agent_id: undefined,
                 store_id: undefined,
                 type: 0,
-                search_type: 0,
                 subject: 0,
             },
+            search_type: 0,
             filteredInfo: null,
             tableData: [],
         };
@@ -185,8 +185,11 @@ export default {
             deep: true,
             immediate: true,
             handler(newRoute) {
-                let search_type = newRoute.meta ? newRoute.meta.search_type : ''
-                this.searchForm.search_type = search_type
+                let search_type = newRoute.meta ? newRoute.meta.search_type : 0
+                this.search_type = search_type
+                console.log("search_type", search_type, this.search_type)
+                this.handleSearchReset();
+                this.getStatusStat();
             }
         },
 
@@ -224,9 +227,10 @@ export default {
         }
     },
     mounted() {
-        this.handleSearchReset();
-        this.getStatusStat();
+        /*this.handleSearchReset();
+        this.getStatusStat();*/
     },
+
     methods: {
         async routerChange(type, item = {}) {
             console.log('routerChange item:', item)
@@ -311,6 +315,7 @@ export default {
             this.loading = true;
             Core.Api.Purchase.list({
                 ...this.searchForm,
+                search_type: this.search_type,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
                 page: this.currPage,
