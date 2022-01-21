@@ -9,6 +9,9 @@
                     <template v-if="column.dataIndex === 'type'">
                         {{ $Util.actionLogTypeFilter(text) }}
                     </template>
+                    <template v-if="column.key === 'org'">
+                        {{ $Util.userTypeFilter(text.org_type) }}·{{ text.org_name }}
+                    </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
                     </template>
@@ -70,7 +73,7 @@ export default {
             tableColumns: [
                 { title: '操作类型', dataIndex: 'type' },
                 { title: '操作人', dataIndex: ['user', 'account','name'], key: 'item' },
-                { title: '工单编号', dataIndex: 'source_uid', key: 'item' },
+                { title: '操作组织', dataIndex: 'user', key: 'org' },
                 { title: '操作时间', dataIndex: 'create_time', key: 'time' },
                 { title: '备注', dataIndex: 'remark', key: 'tip_item' },
             ],
