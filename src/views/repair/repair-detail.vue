@@ -21,6 +21,9 @@
                         v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.AUDIT_FAIL, STATUS.CHECK_FAIL].includes(detail.status)">
                         <i class="icon i_edit"/>编辑
                     </a-button>
+                    <a-button type="primary" ghost @click="handleDeliveryShow()"
+                        v-if="needDelivery"><i class="icon i_deliver"/>转单物流
+                    </a-button>
                     <a-button type="primary" @click="handleSecondRepairShow()"
                         v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_REPAIR].includes(detail.status)">
                         <i class="icon i_edit_l"/>二次维修
@@ -90,10 +93,10 @@
         <div class="form-container">
             <Distribution :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DISTRIBUTION && $auth('AGENT', 'STORE')"/>
             <CheckFault   :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DETECTION && $auth('AGENT', 'STORE')" ref="CheckFault"/>
-            <CheckResult  :id='id' :detail='detail' v-if="showCheckResult"/>
+            <CheckResult  :id='id' :detail='detail' v-if="showCheckResult" @hasTransfer='hasTransfer = true'/>
             <RepairInfo  :id='id' :detail='detail'/>
             <AttachmentFile :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER'/>
-            <WaybillInfo :id='id' :detail='detail'/>
+            <WaybillInfo :id='id' :detail='detail' v-if="hasTransfer" @needDelivery='needDelivery = true'/>
             <ActionLog   :id='id' :detail='detail'/>
         </div>
     </div>
@@ -147,6 +150,23 @@
                     <div class="value">
                         <a-date-picker v-model:value="secondForm.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>
                     </div>
+                </div>
+            </div>
+        </a-modal>
+        <!-- 转单物流 -->
+        <a-modal v-model:visible="deliveryShow" title="转单物流" @ok="handleDeliverySubmit">
+            <div class="form-item required">
+                <div class="key">物流公司:</div>
+                <div class="value">
+                    <a-select v-model:value="deliveryForm.company_uid" placeholder="请选择物流公司" show-search>
+                        <a-select-option v-for="(val,key) in companyMap" :key="key" :value="key">{{ val }}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">物流单号:</div>
+                <div class="value">
+                    <a-input v-model:value="deliveryForm.waybill_uid" placeholder="请输入物流单号"/>
                 </div>
             </div>
         </a-modal>
@@ -226,6 +246,15 @@ export default {
             secondShow: false,
             secondForm: {
                 plan_time: undefined,
+            },
+            // 转单
+            hasTransfer: false,
+            needDelivery: false,
+            deliveryShow: false,
+            companyMap: Core.Const.WAYBILL.COMPANY_MAP,
+            deliveryForm: {
+                waybill_uid: "",
+                company_uid: undefined,
             },
 
         };
@@ -411,6 +440,34 @@ export default {
             }).finally(() => {
                 this.loading = false;
                 this.secondShow = false
+            });
+        },
+
+        // 转单物流
+        handleDeliveryShow() {
+            this.deliveryShow = true;
+            Object.assign(this.deliveryForm, this.$options.data().deliveryForm)
+        },
+        handleDeliverySubmit() {
+            this.loading = true;
+            let form = Core.Util.deepCopy(this.deliveryForm)
+            if (!form.company_uid) {
+                return this.$message.warning('请选择物流公司')
+            }
+            if (!form.waybill_uid) {
+                return this.$message.warning('请输入物流单号')
+            }
+            Core.Api.Repair.post({
+                id: this.id,
+                ...form
+            }).then(() => {
+                this.$message.success('操作成功')
+                this.getRepairDetail()
+            }).catch(err => {
+                console.log('getRepairDetail err', err)
+            }).finally(() => {
+                this.loading = false;
+                this.deliveryShow = false
             });
         },
     }
