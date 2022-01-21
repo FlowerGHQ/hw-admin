@@ -9,7 +9,7 @@
                     <a-button type="primary" @click="handleModalShow('deliver')" v-if="detail.status == STATUS.WAIT_DELIVER"><i class="icon i_deliver"/>发货</a-button>
                 </template>
                 <template v-if="$auth('DISTRIBUTOR', 'AGENT', 'STORE')">
-                    <a-button type="primary" @click="handleReceived()" v-if="detail.status == STATUS.WAIT_TAKE_DELIVER"><i class="icon i_goods"/>确认收货</a-button>
+                    <a-button type="primary" @click="handleReceived()" v-if="detail.status == STATUS.WAIT_TAKE_DELIVER "><i class="icon i_goods"/>确认收货</a-button>
                     <a-button type="primary" @click="handleCancel()" v-if="detail.status == STATUS.WAIT_PAY"><i class="icon i_close_c"/>关闭</a-button>
                     <a-button type="primary" @click="routerChange('refund')" ghost v-if="detail.status == STATUS.DEAL_SUCCESS"><i class="icon i_edit"/>申请退款</a-button>
                 </template>
@@ -189,6 +189,7 @@ export default {
         return {
             Core,
             loginType: Core.Data.getLoginType(),
+
             STATUS,
             // 加载
             loading: false,
