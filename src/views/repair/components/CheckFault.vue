@@ -44,7 +44,7 @@
                             </template>
 
                             <template v-if="column.dataIndex === 'bad'">
-                                <template v-if="record.type === REPAIR_TYPE.REPLACE">
+                                <template v-if="record.type === REPAIR_TYPE.REPLACE && detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME">
                                     <template v-if="warehouseFailList.length">
                                         <a-select v-model:value="record.recycle_warehouse_id" placeholder="请选择故障仓" style="width: 120px;">
                                             <a-select-option v-for="item of warehouseFailList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>

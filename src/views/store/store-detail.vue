@@ -52,11 +52,6 @@
             <a-tab-pane key="PurchaseList" tab="订单列表">
                 <PurchaseList :orgId="store_id" :orgType="ORG_TYPE.STORE" v-if="activeKey == 'PurchaseList'"/>
             </a-tab-pane>
-<!--            <template v-if="!$auth('STORE')">
-                <a-tab-pane key="PricingStructure" tab="商品价格">
-                    <PricingStructure :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'PricingStructure'"/>
-                </a-tab-pane>
-            </template>-->
         </a-tabs>
     </div>
 </div>
@@ -67,7 +62,6 @@ import Core from '../../core';
 
 import UserList from '@/components/UserList.vue';
 import PurchaseList from '@/components/PurchaseOrderList.vue';
-import PricingStructure from '@/components/PricingStructure.vue';
 
 const USER_TYPE = Core.Const.USER.TYPE;
 export default {
@@ -75,7 +69,6 @@ export default {
     components: {
         UserList,
         PurchaseList,
-        PricingStructure,
     },
     props: {},
     data() {

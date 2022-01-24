@@ -64,7 +64,7 @@
                 <StoreList :orgId="agent_id" :type="USER_TYPE.AGENT" v-if="activeKey === 'StoreList'" @change="getAgentDetail"/>
             </a-tab-pane>
             <a-tab-pane key="PricingStructure" tab="商品价格">
-                <PricingStructure :orgId="agent_id" :orgType="USER_TYPE.AGENT" v-if="activeKey === 'PricingStructure'"/>
+                <PricingStructure :orgId="agent_id" :orgType="USER_TYPE.AGENT" v-if="activeKey === 'PricingStructure'" :can-edit="$auth('DISTRIBUTOR')"/>
             </a-tab-pane>
             </template>
         </a-tabs>

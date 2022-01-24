@@ -5,6 +5,7 @@
     </div>
     <div class="panel-content">
         <div class="table-container">
+            <template v-if="canEdit">
             <template v-if="!addMode">
                 <ItemSelect :disabled-checked='tableData.map(i => i.item_id)' @select="handleAddItemShow" btn-class="panel-btn">
                     <i class="icon i_add"/> 添加商品
@@ -18,6 +19,7 @@
             <template v-else>
                 <a-button class="panel-btn" @click="handleAddItemConfirm()" type="primary" ghost><i class="icon i_confirm"/>确认添加</a-button>
                 <a-button class="panel-btn" @click="handleAddItemClose()"><i class="icon i_close_c"/>取消添加</a-button>
+            </template>
             </template>
             <a-table :columns="tableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' :loading='loading'>
                 <template #bodyCell="{ column, text, record }">
@@ -96,6 +98,10 @@ export default {
         title: {
             type: Number,
         },
+        canEdit: {
+            type: Boolean,
+            default: true,
+        }
     },
     data() {
         return {
@@ -128,7 +134,7 @@ export default {
                 { title: '标准售价', dataIndex: 'price', key: 'money', },
                 { title: '操作', key: 'operation', fixed: 'right'},
             ]
-            if (this.addMode) {
+            if (this.addMode || !this.canEdit) {
                 columns.pop()
             }
             return columns
