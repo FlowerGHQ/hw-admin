@@ -61,7 +61,7 @@
             </a-tab-pane>
             <template v-if="$auth('ADMIN', 'DISTRIBUTOR')">
             <a-tab-pane key="StoreList" tab="门店管理">
-                <StoreList :agent_id="agent_id" :type="USER_TYPE.AGENT" v-if="activeKey === 'StoreList'" @change="getAgentDetail"/>
+                <StoreList :agentId="agent_id" :type="USER_TYPE.AGENT" v-if="activeKey === 'StoreList'" @change="getAgentDetail"/>
             </a-tab-pane>
             <a-tab-pane key="PricingStructure" tab="商品价格">
                 <PricingStructure :orgId="agent_id" :orgType="USER_TYPE.AGENT" v-if="activeKey === 'PricingStructure'"/>

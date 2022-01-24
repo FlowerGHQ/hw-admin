@@ -172,12 +172,11 @@ export default {
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-            this.loading = false;
             Core.Api.Purchase.list({
                 org_id: this.orgId,
                 org_type: this.orgType,
-                store_id:this.storeId,
-                agent_id:this.agentId,
+                store_id: this.storeId,
+                agent_id: this.agentId,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {

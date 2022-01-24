@@ -62,13 +62,13 @@ export default {
     name: 'UserList',
     components: {},
     props: {
-        store_id: {
+        storeId: {
             type: Number,
         },
-        agent_id: {
+        agentId: {
             type: Number,
         },
-        distributor_id: {
+        distributorId: {
             type: Number,
         },
         type: {
@@ -118,7 +118,7 @@ export default {
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/store/store-edit",
-                        query: {id: item.id, agent_id: this.agent_id, distributor_id: this.distributor_id}
+                        query: {id: item.id, agent_id: this.agentId, distributor_id: this.distributorId}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -142,11 +142,11 @@ export default {
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-            console.log("searchForm", 'agent_id', this.agent_id)
+            console.log("searchForm", 'agent_id', this.agentId)
 
             Core.Api.Store.list({
-                agent_id: this.agent_id,
-                distributor_id: this.distributor_id,
+                agent_id: this.agentId,
+                distributor_id: this.distributorId,
                 type: this.type,
                 page: this.currPage,
                 page_size: this.pageSize,
