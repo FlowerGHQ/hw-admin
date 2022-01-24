@@ -1,10 +1,10 @@
 import Const from "../core/const"
 
-const LOGIN_TYPE = Const.LOGIN.TYPE
+import Layout from '../views/layout/index.vue';
 
+const LOGIN_TYPE = Const.LOGIN.TYPE
 const SEARCH_TYPE = Const.PURCHASE.SEARCH_TYPE
 
-import Layout from '../views/layout/index.vue';
 
 const routes = [
     {
@@ -896,4 +896,5 @@ const routes = [
     },
 ];
 
+// console.log('export routes:', routes)
 export default routes;
