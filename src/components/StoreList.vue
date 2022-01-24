@@ -143,6 +143,7 @@ export default {
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             console.log("searchForm", 'agent_id', this.agent_id)
+
             Core.Api.Store.list({
                 agent_id: this.agent_id,
                 distributor_id: this.distributor_id,
