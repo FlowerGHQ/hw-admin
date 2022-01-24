@@ -69,7 +69,7 @@
                     <AgentList :distributorId="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'AgentList'" @change="getDistributorDetail"/>
                 </a-tab-pane>
                 <a-tab-pane key="StoreList" tab="门店管理">
-                    <StoreList :distributor_id="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'StoreList'" @change="getDistributorDetail"/>
+                    <StoreList :distributorId="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'StoreList'" @change="getDistributorDetail"/>
                 </a-tab-pane>
                 <a-tab-pane key="PricingStructure" tab="商品价格">
                     <PricingStructure :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'PricingStructure'"/>
