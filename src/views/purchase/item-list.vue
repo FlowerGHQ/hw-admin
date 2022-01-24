@@ -209,7 +209,7 @@ export default {
                 console.log('getShopCartData res:', res)
                 this.briefVisible = flag
                 let item = res.list[0]
-                if (item.item.attr_list instanceof Array) {
+                if (item && item.item.attr_list instanceof Array) {
                     item.attr_str = item.item.attr_list.map(item => item.value).join(' ')
                 }
                 this.briefList = [item || {}]
@@ -220,6 +220,10 @@ export default {
 
         handleCartAdd(item) { // 添加到购物车
             console.log('handleCartAdd item:', item)
+            if (item.set_id && item.attr_list.length > 1) {
+                this.routerChange('detail', item)
+                return
+            }
             Core.Api.ShopCart.save({
                 item_id: item.id,
                 amount: 1,
