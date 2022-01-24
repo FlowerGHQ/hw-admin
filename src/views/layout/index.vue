@@ -103,9 +103,9 @@
 
 <script>
 import Core from '../../core';
-import routes from '@/router/routes';
-import MyBreadcrumb from './components/Breadcrumb.vue';
+import routes from '../../router/routes';
 
+import MyBreadcrumb from './components/Breadcrumb.vue';
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
 import enUS from 'ant-design-vue/lib/locale-provider/en_US';
 
@@ -137,7 +137,9 @@ export default {
     },
     computed: {
         showList() {
+            // console.log('computed routes:', routes)
             let showList = routes.filter((item) => {
+                // console.log('this.loginType:', this.loginType)
                 const roles = item.meta ? item.meta.roles : '';
                 return roles ? (roles.includes(this.loginType) && !item.hidden) : !item.hidden;
             });
@@ -152,7 +154,6 @@ export default {
                     return i
                 })
             })
-            console.log('showList:', showList)
             return showList
         },
         lang() {
@@ -188,6 +189,7 @@ export default {
         } */
     },
     created() {
+        // console.log('created routes:', routes)
         for (const item of routes) {
             if (item.hidden || item.children.length === 1) {
                 continue;
@@ -199,6 +201,7 @@ export default {
                 }
             }
         }
+        // console.log('created routes:', routes)
     },
     mounted() {
         // this.getTableData();
