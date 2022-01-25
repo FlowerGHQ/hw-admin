@@ -465,9 +465,15 @@ const Util = {
         const MAP = Const.REFUND.TYPE_MAP
         return MAP[val] || '未知'
     },
-    refundStatusFilter(val) {
+    refundStatusFilter(val, to ='word') {
         const MAP = Const.REFUND.STATUS_MAP
-        return MAP[val + ''] || '未知'
+        const COLOR_MAP = Const.REFUND.STATUS_COLOR_MAP
+        switch (to) {
+            case 'word':
+                return MAP[val + ''] || '未知'
+            case 'color':
+                return COLOR_MAP[val + ''] || 'grey'
+        }
     },
     distributorTypeFilter(val) {
         const MAP = Const.DISTRIBUTOR.TYPE_MAP

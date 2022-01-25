@@ -3,19 +3,31 @@
         <div class="list-container">
             <div class="title-container">
                 <div class="title-area">退款列表</div>
-                <!--                <div class="btns-area">-->
-                <!--                    <a-button type="primary" @click="routerChange('create')"><i class="icon i_add"/>新建退款</a-button>-->
-                <!--                </div>-->
+            </div>
+            <div class="tabs-container colorful">
+                <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
+                    <a-tab-pane :key="item.key" v-for="item of statusList">
+                        <template #tab>
+                            <div class="tabs-title">{{ item.text }}<span :class="item.color">{{ item.value }}</span>
+                            </div>
+                        </template>
+                    </a-tab-pane>
+                </a-tabs>
             </div>
             <div class="search-container">
                 <a-row class="search-area">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">订单编号:</div>
+                        <div class="value">
+                            <a-input placeholder="请输入退款订单编号" v-model:value="searchForm.uid"
+                                     @keydown.enter='handleSearch'/>
+                        </div>
+                    </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
                         <div class="key">退款类型:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.type" @change="handleTypeSelect" placeholder="请选择退款类型"
-                                      allow-clear>
-                                <a-select-option key="10" :value="typeList.APPLY_BY_CUSTOMER">用户申请退款</a-select-option>
-                                <a-select-option key="20" :value="typeList.INITIATIVE_REFUND">后台主动退款</a-select-option>
+                            <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择退款类型">
+                                <a-select-option v-for="(val, index) of typeList" :key="index" :value="val.value">{{val.text}}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -37,7 +49,7 @@
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                         :row-key="record => record.id" :pagination='false'>
+                         :row-key="record => record.id" :pagination='false'  @change="handleTableChange">
                     <template #bodyCell="{ column, text , record, index}">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
@@ -45,28 +57,39 @@
                                 </a-button>
                             </a-tooltip>
                         </template>
-
-                        <template v-if="column.dataIndex === 'order_status'">
-                            {{ $Util.puechaseStatusFilter(text) }}
+                        <template v-if="column.dataIndex === 'user'">
+                            {{ text }}
                         </template>
-
-                        <template v-if="column.dataIndex === 'apply_user_type'">
-                            {{ $Util.userTypeFilter(text) }}
+                        <template v-if="column.key === 'money'">
+                            ￥{{ text/100 }}
                         </template>
-
+                        <template v-if="column.key === 'tip_time'">
+                            <a-tooltip :title="text" destroyTooltipOnHide>
+                                <div class="ell" style="max-width: 200px">{{ text || '-' }}</div>
+                            </a-tooltip>
+                        </template>
                         <template v-if="column.dataIndex === 'type'">
                             {{ $Util.refundTypeFilter(text) }}
                         </template>
-
                         <template v-if="column.dataIndex === 'status'">
-                            {{ $Util.refundStatusFilter(text) }}
+                            <div class="status status-bg status-tag" :class="$Util.refundStatusFilter(text,'color')">
+                                <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>
+                                {{ $Util.refundStatusFilter(text) }}
+                                    <template v-if="record.status === STATUS.AUDIT_REFUSE">
+                                        <i class="icon i_hint" style="font-size: 12px;padding-left: 6px;"/>
+                                    </template>
+                                </a-tooltip>
+                            </div>
                         </template>
-
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('create',record)"><i class="icon i_edit"/> 编辑
+                            <a-button type="link" @click="routerChange('create',record)" v-if="record.status === STATUS.WAIT_AUDIT && authOrg(record.org_id, record.org_type)"><i class="icon i_edit"/>修改
+                            </a-button>
+                            <a-button type="link" @click="handleRefundShow(record.id)" v-if="record.status === STATUS.WAIT_AUDIT && authOrg(record.supply_org_id, record.supply_org_type)"><i class="icon i_m_success"/>审核
+                            </a-button>
+                            <a-button type="link" @click="handleCancel(record.id)" v-if="record.status === STATUS.WAIT_AUDIT && authOrg(record.org_id, record.org_type)"><i class="icon i_m_error"/>取消
                             </a-button>
                         </template>
                     </template>
@@ -88,13 +111,38 @@
                 />
             </div>
         </div>
+        <template class="modal-container">
+            <a-modal v-model:visible="refundShow" title="审核" class="refund-edit-modal"
+                     :after-close='handleRefundClose'>
+                <div class="modal-content">
+                    <div class="form-item required">
+                        <div class="key">审核结果:</div>
+                        <a-radio-group v-model:value="editForm.status">
+                            <a-radio :value="STATUS.AUDIT_PASS">通过</a-radio>
+                            <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio>
+                        </a-radio-group>
+                    </div>
+                    <div class="form-item textarea required" v-if="editForm.status === STATUS.AUDIT_REFUSE">
+                        <div class="key">原因:</div>
+                        <div class="value">
+                            <a-textarea v-model:value="editForm.audit_message" placeholder="请输入不通过原因"
+                                        :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                        </div>
+                    </div>
+                </div>
+                <template #footer>
+                    <a-button @click="refundShow = false">取消</a-button>
+                    <a-button @click="handleRefundSubmit" type="primary">确定</a-button>
+                </template>
+            </a-modal>
+        </template>
     </div>
 </template>
 <script>
 const provinceData = ['China'];
 import Core from '../../core';
 
-
+const REFUND_STATUS = Core.Const.REFUND.STATUS
 export default {
     name: 'RefundList',
     components: {},
@@ -102,11 +150,14 @@ export default {
     data() {
         return {
             loginType: Core.Data.getLoginType(),
+            loginOrgId: Core.Data.getOrgId(),
+            loginOrgType: Core.Data.getOrgType(),
             // 加载
             loading: false,
             // 分页
             currPage: 1,
             pageSize: 20,
+            detail: {},
             total: 0,
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
@@ -115,16 +166,26 @@ export default {
             order_id: '',
             searchForm: {
                 id: '',
-                order_sn: '',
-                order_status: '',
-                status: '',
-                apply_user_type: '',
+                uid: '',
                 type: undefined,
-                money: '',
-                create_time: '',
+                status: undefined,
             },
             tableData: [],
-
+            statusList: [
+                {text: '全  部', value: '0', color: 'primary', key: '0'},
+                {text: '待审核', value: '0', color: 'yellow', key: REFUND_STATUS.WAIT_AUDIT},
+                {text: '审核通过', value: '0', color: 'blue', key: REFUND_STATUS.AUDIT_PASS},
+                {text: '审核失败', value: '0', color: 'red', key: REFUND_STATUS.AUDIT_REFUSE},
+                {text: '退款完成', value: '0', color: 'green', key: REFUND_STATUS.SUCCESS},
+                {text: '已取消', value: '0', color: 'gray', key: REFUND_STATUS.CANCEL},
+            ],
+            STATUS: Core.Const.REFUND.STATUS,
+            refundShow: false,
+            editForm: {
+                id: '',
+                status: '',
+                audit_message: '',
+            },
         };
     },
     watch: {},
@@ -132,10 +193,11 @@ export default {
         tableColumns() {
             let columns = [
                 {title: '订单号', dataIndex: 'order_sn', key: 'detail'},
-                {title: '订单状态', dataIndex: 'order_status'},
-                {title: '退款状态', dataIndex: 'status'},
-                {title: '申请人', dataIndex: 'apply_user_type'},
+                {title: '退款金额', dataIndex: 'money', key: 'money'},
+                {title: '退款原因', dataIndex: 'apply_message', key: 'tip_time'},
                 {title: '退款类型', dataIndex: 'type'},
+                {title: '申请人', dataIndex: ['apply_user','account','name'],key: 'user'},
+                {title: '订单状态', dataIndex: 'status',key: 'status', align: 'center'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right', width: 100,},
 
@@ -145,8 +207,16 @@ export default {
     },
     mounted() {
         this.getTableData();
+        this.getStatusList();
     },
     methods: {
+        authOrg(orgId, orgType) {
+            console.log(orgId, orgType, this.loginOrgId, this.loginOrgType)
+            if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
+                return true
+            }
+            return false
+        },
         routerChange(type, item = {}) {
             console.log(item)
             let routeUrl = ''
@@ -214,7 +284,80 @@ export default {
                 this.loading = false;
             });
         },
-    }
+        handleCancel(id) {
+            let _this = this;
+            this.$confirm({
+                title: '确定要取消该退款单吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Refund.cancel({id}).then(() => {
+                        _this.$message.success('取消成功');
+                        _this.getStatusList();
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
+        getStatusList() {    // 获取 状态 列表
+            Object.assign(this.statusList, this.$options.data().statusList)
+            Core.Api.Refund.status({
+                ...this.searchForm,
+            }).then(res => {
+                console.log("getStatusList res:", res)
+                let total = 0
+                this.statusList.forEach(statusItem => {
+                    res.status_list.forEach(item => {
+                        if (statusItem.key == item.status) {
+                            statusItem.value = item.amount
+                            total += item.amount
+                        }
+                    })
+                })
+                this.statusList[0].value = total
+            }).catch(err => {
+                console.log('getStatusList err:', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        getRefundDetail() {
+            Core.Api.Refund.detail({
+                id: this.id,
+            }).then(res => {
+                this.detail = res.detail
+                console.log('getRefundDetail err', res)
+            }).catch(err => {
+                console.log('getRefundDetail err', err)
+            }).finally(() => {
+            });
+        },
+        handleRefundShow(id) { // 显示弹框
+            this.refundShow = true
+            this.editForm.id = id
+        },
+        handleRefundClose() { // 关闭弹框
+            this.refundShow = false;
+        },
+        handleRefundSubmit() { // 审核提交
+            this.loading = true;
+            Core.Api.Refund.audit({
+                ...this.editForm
+            }).then(res => {
+                console.log('handleRefundSubmit res', res)
+                this.handleRefundClose()
+                this.getTableData()
+                this.getStatusList()
+            }).catch(err => {
+                console.log('handleRefundSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+    },
 };
 </script>
 

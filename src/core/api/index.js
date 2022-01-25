@@ -243,7 +243,8 @@ const apiList = {
         detail: ['PostJson', 'order-refund-record/detail'],
         update: ['PostJson', 'order-refund-record/update'],
         audit: ['PostJson', 'order-refund-record/audit'],
-
+        cancel: ['PostJson', 'order-refund-record/cancel'],
+        status: ['PostJson', 'order-refund-record/status-list'], // 状态
     },
     Distributor: { // 分销商
         list: ['PostJson', 'distributor/list'],

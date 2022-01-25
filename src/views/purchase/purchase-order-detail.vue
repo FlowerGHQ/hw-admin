@@ -4,11 +4,11 @@
         <div class="title-container">
             <div class="title-area">采购订单详情</div>
             <div class="btns-area">
-                <a-button type="primary" @click="handleModalShow('payment')" v-if="detail.status == STATUS.WAIT_PAY && authOrg(detail.supply_org_id, detail.supply_org_type)"><i class="icon i_received"/>确认收款</a-button>
-                <a-button type="primary" @click="handleModalShow('deliver')" v-if="detail.status == STATUS.WAIT_DELIVER && authOrg(detail.supply_org_id, detail.supply_org_type)"><i class="icon i_deliver"/>发货</a-button>
-                <a-button type="primary" @click="handleReceived()" v-if="detail.status == STATUS.WAIT_TAKE_DELIVER  && authOrg(detail.org_id, detail.org_type)"><i class="icon i_goods"/>确认收货</a-button>
-                <a-button type="primary" @click="handleCancel()" v-if="detail.status == STATUS.WAIT_PAY & authOrg(detail.org_id, detail.org_type)"><i class="icon i_close_c"/>取消</a-button>
-                <a-button type="primary" @click="routerChange('refund')" ghost v-if="detail.status == STATUS.DEAL_SUCCESS & authOrg(detail.org_id, detail.org_type)"><i class="icon i_edit"/>申请退款</a-button>
+                <a-button type="primary" @click="handleModalShow('payment')" v-if="detail.status === STATUS.WAIT_PAY && authOrg(detail.supply_org_id, detail.supply_org_type)"><i class="icon i_received"/>确认收款</a-button>
+                <a-button type="primary" @click="handleModalShow('deliver')" v-if="detail.status === STATUS.WAIT_DELIVER && authOrg(detail.supply_org_id, detail.supply_org_type)"><i class="icon i_deliver"/>发货</a-button>
+                <a-button type="primary" @click="handleReceived()" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER  && authOrg(detail.org_id, detail.org_type)"><i class="icon i_goods"/>确认收货</a-button>
+                <a-button type="primary" @click="handleCancel()" v-if="detail.status === STATUS.WAIT_PAY & authOrg(detail.org_id, detail.org_type)"><i class="icon i_close_c"/>取消</a-button>
+                <a-button type="primary" @click="routerChange('refund')" ghost v-if="detail.status === STATUS.DEAL_SUCCESS & authOrg(detail.org_id, detail.org_type)"><i class="icon i_edit"/>申请退款</a-button>
 
 
             </div>
@@ -288,6 +288,12 @@ export default {
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
+                case 'orderList':
+                    routeUrl = this.$router.resolve({
+                        path: '/purchase/purchase-order-self',
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
                 case 'refund':
                     routeUrl = this.$router.resolve({
                         path: '/refund/refund-create',
@@ -454,7 +460,7 @@ export default {
                         id: _this.id
                     }).then(res => {
                         _this.$message.success('取消成功')
-                        _this.routerChange("list")
+                        _this.routerChange('orderList')
                     }).catch(err => {
                         console.log('handleCancel err', err)
                     })

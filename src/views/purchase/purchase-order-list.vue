@@ -208,7 +208,7 @@ export default {
         tableColumns() {
             let columns = [
                 { title: '订单编号', dataIndex: 'sn', },
-                { title: '价格', dataIndex: 'price' },
+                { title: '订单总价', dataIndex: 'price' },
                 { title: '订单状态', dataIndex: 'status' },
                 { title: '下单时间', dataIndex: 'create_time', key: 'time' },
                 { title: '支付时间', dataIndex: 'pay_time', key: 'time' },
