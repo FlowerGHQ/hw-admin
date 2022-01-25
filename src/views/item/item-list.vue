@@ -55,7 +55,7 @@
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :pagination='false' @change="handleTableChange"
                 @expand='handleTableExpand' :expandedRowKeys="expandedRowKeys" :indentSize='0' :expandIconColumnIndex="expandIconColumnIndex">
-                <template #bodyCell="{ column, text , record}">
+                <template #bodyCell="{ column, text , record }">
                     <template v-if="column.key === 'detail'">
                         <div class="table-img afs">
                             <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" fallback='无'/>
@@ -90,8 +90,8 @@
                     </template>
                     <template v-if="column.key === 'operation'">
                         <template v-if="!record.default_item_id">
-                        <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/> 编辑</a-button>
-                        <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
+                            <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/> 编辑</a-button>
+                            <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
                         </template>
                         <a-button type='link' @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button>
                     </template>
