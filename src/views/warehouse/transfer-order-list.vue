@@ -211,7 +211,7 @@ export default {
                 {text: '审核通过', value: '0', color: 'blue', key: TRANSFER_ORDER.STATUS.AUDIT_PASS},
                 {text: '审核失败', value: '0', color: 'red', key: TRANSFER_ORDER.STATUS.AUDIT_REFUSE},
                 {text: '处理完成', value: '0', color: 'green', key: TRANSFER_ORDER.STATUS.CLOSE},
-                {text: '已取消', value: '0', color: 'gray', key: TRANSFER_ORDER.STATUS.CANCEL},
+                {text: '已取消', value: '0', color: 'grey', key: TRANSFER_ORDER.STATUS.CANCEL},
             ],
             searchForm: {
                 warehouse_id: undefined,
@@ -401,6 +401,9 @@ export default {
             }).then(res => {
                 console.log("getStatusList res:", res)
                 let total = 0
+                this.statusList.forEach(statusItem => {
+                    statusItem.value = 0
+                })
                 this.statusList.forEach(statusItem => {
                     res.status_list.forEach(item => {
                         if (statusItem.key == item.status) {

@@ -289,31 +289,6 @@ export default {
             this.create_time = []
             this.pageChange(1);
         },
-        // handleSearchReset() {  // 重置搜索
-        //     Object.assign(this.searchForm, this.$options.data().searchForm)
-        //     if (this.purchaseMode == 'audit') {
-        //         this.searchForm.status = PURCHASE.STATUS.WAIT_AUDIT
-        //     } else if (this.purchaseMode == 'check') {
-        //         this.searchForm.status = PURCHASE.STATUS.WAIT_CHECK
-        //     }
-        //     if (this.$auth('ADMIN')) {
-        //         this.getDistributorListAll();
-        //     }
-        //     else if (this.$auth('DISTRIBUTOR')) {
-        //         this.searchForm.distributor_id = Core.Data.getOrgId()
-        //         this.getAgentListAll();
-        //     }
-        //     else if (this.$auth('AGENT')) {
-        //         this.searchForm.agent_id = Core.Data.getOrgId()
-        //         this.getStoreListAll();
-        //     }
-        //     else if (this.$auth('STORE')) {
-        //         this.searchForm.store_id = Core.Data.getOrgId()
-        //     }
-        //     this.filteredInfo = null
-        //     this.create_time = []
-        //     this.pageChange(1);
-        // },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             Core.Api.Purchase.list({

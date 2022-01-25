@@ -43,6 +43,7 @@ let Const = {
         OSS_POINT: OSS_POINT,
         FILE_URL_PREFIX: `${OSS_POINT}/`,
         FILE_UPLOAD_END_POINT: `${URL_POINT}/core/1/file/file-upload`,
+        FILE_UPLOAD_ACTION: `${URL_POINT}/admin/1/item/import`,
     },
     DATA: { // 本地存储
         KEY_PREFIX: 'haowan.admin.data.',
@@ -412,13 +413,6 @@ let Const = {
         },
     },
     REFUND: { // 退款管理
-        // TYPE: {
-        //     APPLY_BY_AGENT: 100,  //零售商申请退款
-        //     APPLY_BY_DISTRIBUTOR: 110,//分销商申请退款
-        //     APPLY_BY_STORE: 120, //门店申请退款
-        //     INITIATIVE_REFUND: 200, //后台主动退款
-        //
-        // },
         TYPE: [
             {text: '零售商申请退款',value: 100},
             {text: '分销商申请退款',value: 110},
@@ -450,7 +444,11 @@ let Const = {
             '20': 'blue',
             '40': 'green',
             '-10': 'red',
-            '-20': 'gray'
+            '-20': 'grey'
+        },
+        SEARCH_TYPE: {
+            SELF: 1, //本账户申请的退款单
+            CHILDREN: 2, //待审核的退款单
         },
     },
 
@@ -584,7 +582,7 @@ let Const = {
             '20': 'blue',
             '40': 'green',
             '-10': 'red',
-            '-20': 'gray'
+            '-20': 'grey'
         },
         STATUS_LIST: [  //出入库单审核
             {text: '待审核',value: 10},
@@ -622,7 +620,7 @@ let Const = {
             '30': 'purple',
             '40': 'green',
             '-10': 'red',
-            '-20': 'gray'
+            '-20': 'grey'
         },
         STATUS_LIST: [  //调货单审核
             {text: '待审核',value: 10},

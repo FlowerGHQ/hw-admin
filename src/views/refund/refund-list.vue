@@ -19,7 +19,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">订单编号:</div>
                         <div class="value">
-                            <a-input placeholder="请输入退款订单编号" v-model:value="searchForm.uid"
+                            <a-input placeholder="请输入退款订单编号" v-model:value="searchForm.sn"
                                      @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
@@ -139,9 +139,8 @@
     </div>
 </template>
 <script>
-const provinceData = ['China'];
-import Core from '../../core';
 
+import Core from '../../core';
 const REFUND_STATUS = Core.Const.REFUND.STATUS
 export default {
     name: 'RefundList',
@@ -149,7 +148,6 @@ export default {
     props: {},
     data() {
         return {
-            loginType: Core.Data.getLoginType(),
             loginOrgId: Core.Data.getOrgId(),
             loginOrgType: Core.Data.getOrgType(),
             // 加载
@@ -169,6 +167,7 @@ export default {
                 uid: '',
                 type: undefined,
                 status: undefined,
+                sn: '',
             },
             tableData: [],
             statusList: [
@@ -177,7 +176,7 @@ export default {
                 {text: '审核通过', value: '0', color: 'blue', key: REFUND_STATUS.AUDIT_PASS},
                 {text: '审核失败', value: '0', color: 'red', key: REFUND_STATUS.AUDIT_REFUSE},
                 {text: '退款完成', value: '0', color: 'green', key: REFUND_STATUS.SUCCESS},
-                {text: '已取消', value: '0', color: 'gray', key: REFUND_STATUS.CANCEL},
+                {text: '取消退款', value: '0', color: 'grey', key: REFUND_STATUS.CANCEL},
             ],
             STATUS: Core.Const.REFUND.STATUS,
             refundShow: false,
@@ -186,9 +185,23 @@ export default {
                 status: '',
                 audit_message: '',
             },
+            SEARCH_TYPE: Core.Const.REFUND.SEARCH_TYPE,
+            search_type: 0,
         };
     },
-    watch: {},
+    watch: {
+        $route: {
+            deep: true,
+            immediate: true,
+            handler(newRoute) {
+                let search_type = newRoute.meta ? newRoute.meta.search_type : 0
+                this.search_type = search_type
+                console.log("search_type", search_type, this.search_type)
+                this.handleSearchReset();
+                this.getStatusList();
+            }
+        }
+    },
     computed: {
         tableColumns() {
             let columns = [
@@ -211,7 +224,6 @@ export default {
     },
     methods: {
         authOrg(orgId, orgType) {
-            console.log(orgId, orgType, this.loginOrgId, this.loginOrgType)
             if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
                 return true
             }
@@ -254,7 +266,6 @@ export default {
         },
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            console.log('this.searchForm:', this.searchForm)
             this.create_time = []
             this.pageChange(1);
         },
@@ -267,11 +278,26 @@ export default {
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             this.loading = false;
+            let orgId = 0
+            let orgType = 0
+            let supplyOrgId = 0
+            let supplyOrgType = 0
+            if (this.search_type === this.SEARCH_TYPE.SELF) {
+                orgId = this.loginOrgId
+                orgType = this.loginOrgType
+            } else {
+                supplyOrgId = this.loginOrgId
+                supplyOrgType = this.loginOrgType
+            }
             // return
             Core.Api.Refund.list({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
+                org_id: orgId,
+                org_type: orgType,
+                supply_org_id: supplyOrgId,
+                supply_org_type: supplyOrgType,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -303,15 +329,34 @@ export default {
             });
         },
         getStatusList() {    // 获取 状态 列表
-            Object.assign(this.statusList, this.$options.data().statusList)
+            this.loading = true;
+            this.loading = false;
+            let orgId = 0
+            let orgType = 0
+            let supplyOrgId = 0
+            let supplyOrgType = 0
+            if (this.search_type === this.SEARCH_TYPE.SELF) {
+                orgId = this.loginOrgId
+                orgType = this.loginOrgType
+            } else {
+                supplyOrgId = this.loginOrgId
+                supplyOrgType = this.loginOrgType
+            }
             Core.Api.Refund.status({
-                ...this.searchForm,
+                org_id: orgId,
+                org_type: orgType,
+                supply_org_id: supplyOrgId,
+                supply_org_type: supplyOrgType
             }).then(res => {
                 console.log("getStatusList res:", res)
                 let total = 0
+
+                this.statusList.forEach(statusItem => {
+                    statusItem.value = 0
+                })
                 this.statusList.forEach(statusItem => {
                     res.status_list.forEach(item => {
-                        if (statusItem.key == item.status) {
+                        if ( statusItem.key == item.status) {
                             statusItem.value = item.amount
                             total += item.amount
                         }

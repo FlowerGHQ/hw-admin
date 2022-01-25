@@ -5,6 +5,16 @@
             <div class="title-area">商品列表</div>
             <div class="btns-area">
                 <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新增商品</a-button>
+                <a-upload name="file" class="file-uploader"
+                          :file-list="upload.fileList" :action="upload.action"
+                          :show-upload-list='false'
+                          :headers="upload.headers" :data='upload.data'
+                          accept=".xlsx,.xls"
+                          @change="handleMatterChange">
+                    <a-button type="primary"  class="file-upload-btn">
+                        <i class="icon i_add"/> 批量导入
+                    </a-button>
+                </a-upload>
             </div>
         </div>
         <div class="search-container">
@@ -141,6 +151,22 @@ export default {
             tableData: [],
             expandedRowKeys: [],
             expandIconColumnIndex: 0,
+            form: {
+                name: '',
+                path: '',
+                type: ''
+            },
+            upload: {
+                action: Core.Const.NET.FILE_UPLOAD_ACTION,
+                fileList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'xlsx',
+                },
+            },
         };
     },
     watch: {},
@@ -183,6 +209,18 @@ export default {
                     window.open(routeUrl.href, '_self')
                     break;
             }
+        },
+        // 上传文件
+        handleMatterChange({file, fileList}) {
+            console.log("handleMatterChange status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                if (file.response && file.response.code < 0) {
+                    return this.$message.error(file.response.message)
+                } else {
+                    return this.$message.success('上传成功');
+                }
+            }
+            this.upload.fileList = fileList
         },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
@@ -300,6 +338,19 @@ export default {
     .ant-table-row-level-1 {
         td.ant-table-cell {
             background: #F7F8FA;
+        }
+    }
+}
+</style>
+<style lang="less" scoped>
+#ItemList {
+    .list-container {
+        .title-container {
+           .btns-area {
+               .file-upload-btn {
+                   margin-left: 15px;
+               }
+           }
         }
     }
 }

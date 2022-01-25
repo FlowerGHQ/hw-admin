@@ -1,6 +1,6 @@
 <template>
     <div id="RefundCreate" class="edit-container">
-        <div class="title-container"><div class="title-area">{{ form.id ? '退款编辑' : '新建退款' }}</div></div>
+        <div class="title-container"><div class="title-area">{{ form.id ? '退款编辑' : '申请退款' }}</div></div>
         <div class="form-block">
             <div class="form-title">
                 <div class="title-colorful">基本信息</div>
