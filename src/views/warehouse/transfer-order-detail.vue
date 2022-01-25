@@ -5,7 +5,7 @@
             <div class="title-area">调货单详情</div>
             <a-button type="primary" ghost @click="handleTransferShow()"
                 v-if="[STATUS.WAIT_AUDIT].includes(detail.status) && $auth('ADMIN')">
-                <i class="icon i_edit"/>审核
+                <i class="icon i_m_success"/>审核
             </a-button>
         </div>
         <div class="gray-panel info">

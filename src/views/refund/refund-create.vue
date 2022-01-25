@@ -109,6 +109,7 @@ export default {
                 for (const key in this.form) {
                     this.form[key] = res.detail[key]
                 }
+                this.form.money =  Core.Util.countFilter(res.detail.money)
                 if (this.form.apply_imgs) {
                     let imgs = this.form.apply_imgs.split(',')
                     this.upload.fileList = imgs.map((item, index) => ({
@@ -155,6 +156,7 @@ export default {
             // console.log(judge)
             Core.Api.Refund[judge]({
                 ...form,
+                money: form.money * 100
             }).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')

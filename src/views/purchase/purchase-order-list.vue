@@ -160,7 +160,7 @@ export default {
                 {text: '待发货', value: '0', color: 'orange',  key: '200'},
                 {text: '已发货', value: '0', color: 'primary',  key: '300'},
                 {text: '交易完成', value: '0', color: 'green',  key: '400'},
-                {text: '交易关闭', value: '0', color: 'grey',  key: '1000'},
+                {text: '交易取消', value: '0', color: 'grey',  key: '-100'},
             ],
             agentList: [],
             storeList: [],
@@ -208,7 +208,7 @@ export default {
         tableColumns() {
             let columns = [
                 { title: '订单编号', dataIndex: 'sn', },
-                { title: '价格', dataIndex: 'price' },
+                { title: '订单总价', dataIndex: 'price' },
                 { title: '订单状态', dataIndex: 'status' },
                 { title: '下单时间', dataIndex: 'create_time', key: 'time' },
                 { title: '支付时间', dataIndex: 'pay_time', key: 'time' },
@@ -335,7 +335,10 @@ export default {
         },
         getStatusStat() {  // 获取 状态统计 数据
             this.loading = true;
-            Core.Api.Purchase.statusList().then(res => {
+
+            Core.Api.Purchase.statusList({
+                    search_type: this.search_type
+            }).then(res => {
                 console.log("getStatusStat res:", res)
                 let total = 0
 

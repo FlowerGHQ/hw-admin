@@ -44,7 +44,7 @@
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :pagination='false' @change="handleTableChange"
-                @expand='handleTableExpand' :expandedRowKeys="expandedRowKeys" :indentSize='0'>
+                @expand='handleTableExpand' :expandedRowKeys="expandedRowKeys" :indentSize='0' :expandIconColumnIndex="expandIconColumnIndex">
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.key === 'detail'">
                         <div class="table-img afs">
@@ -140,6 +140,7 @@ export default {
             // 表格
             tableData: [],
             expandedRowKeys: [],
+            expandIconColumnIndex: 0,
         };
     },
     watch: {},
@@ -214,19 +215,31 @@ export default {
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
+            let flag_spread = 0
+            if (this.searchForm.name !== '' || this.searchForm.code !== '') {
+                flag_spread = 1
+            }
             Core.Api.Item.list({
                 ...this.searchForm,
+                flag_spread: flag_spread,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
                 console.log("getTableData res:", res)
-                res.list.forEach(item => {
+                let list = res.list.map(item => {
                     item.attr_desc = item.attr_list ? item.attr_list.map(i => i.value).join(',') : ''
+                    return item
                 })
+                if (flag_spread == 1) {
+                    this.expandIconColumnIndex = -1
+                } else {
+                    this.expandIconColumnIndex = 0
+                }
+                console.log("res.list", res.list)
                 this.total = res.count;
-                this.tableData = res.list;
+                this.tableData = list;
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {

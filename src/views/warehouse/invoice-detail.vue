@@ -3,7 +3,7 @@
     <div class="title-container">
         <div class="title-area">出入库单详情</div>
         <a-button type="primary" ghost @click="handleInvoiceShow()"
-            v-if="[STATUS.AIT_AUDIT].includes(detail.status)"><i class="icon i_edit"/>审核</a-button>
+            v-if="[STATUS.AIT_AUDIT].includes(detail.status)"><i class="icon i_m_success"/>审核</a-button>
     </div>
     <div class="gray-panel info">
         <div class="panel-title">
