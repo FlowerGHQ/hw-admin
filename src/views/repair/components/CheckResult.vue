@@ -23,13 +23,13 @@
                             {{ faultMap[text] || '-' }}
                         </template>
                         <template v-if="column.dataIndex === 'price'">
-                            ￥{{ $Util.countFilter(text) }}
+                            €{{ $Util.countFilter(text) }}
                         </template>
                         <template v-if="column.dataIndex === 'amount'">
                             {{ text }}件
                         </template>
                         <template v-if="column.key === 'total_price'">
-                            ￥{{ $Util.countFilter(record.price * record.amount) }}
+                            €{{ $Util.countFilter(record.price * record.amount) }}
                         </template>
                         <template v-if="column.dataIndex === 'type'">
                             {{repairTypeMap[text]}}
@@ -46,7 +46,7 @@
                             <a-table-summary-row>
                                 <a-table-summary-cell :index="0" :col-span="4">合计</a-table-summary-cell>
                                 <a-table-summary-cell :index="1" :col-span="1">{{ total.amount }}件</a-table-summary-cell>
-                                <a-table-summary-cell :index="2" :col-span="4">￥{{ $Util.countFilter(total.price) }}</a-table-summary-cell>
+                                <a-table-summary-cell :index="2" :col-span="4">€{{ $Util.countFilter(total.price) }}</a-table-summary-cell>
                                 <a-table-summary-cell :index="3" :col-span="1">{{ $Util.countFilter(total.man_hour) }}小时</a-table-summary-cell>
                             </a-table-summary-row>
                         </a-table-summary>

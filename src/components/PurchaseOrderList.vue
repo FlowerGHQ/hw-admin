@@ -14,11 +14,11 @@
                         </a-tooltip>
                     </template>
                     <template v-if="column.dataIndex === 'price'">
-                        ￥{{$Util.countFilter(text)}}
+                        €{{$Util.countFilter(text)}}
                     </template>
                     <template v-if="column.dataIndex === 'status'">
-                        <div class="status status-bg status-tag" :class="$Util.puechaseStatusFilter(text,'color')">
-                            {{$Util.puechaseStatusFilter(text)}}
+                        <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text,'color')">
+                            {{$Util.purchaseStatusFilter(text)}}
                         </div>
                     </template>
                     <template v-if="column.dataIndex === 'purchase_method'">

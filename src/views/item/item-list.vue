@@ -70,7 +70,7 @@
                         </div>
                     </template>
                     <template v-if="column.key === 'money'">
-                        ￥{{$Util.countFilter(text)}}
+                        €{{$Util.countFilter(text)}}
                     </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="text ? 'primary' : 'grey'">

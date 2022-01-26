@@ -25,7 +25,7 @@
                                 {{ text || '-' }}
                             </template>
                             <template v-if="column.key === 'money'">
-                                ￥{{ $Util.countFilter(text) }}
+                                €{{ $Util.countFilter(text) }}
                             </template>
 
                             <template v-if="column.key === 'amount'">
@@ -34,7 +34,7 @@
                             </template>
 
                             <template v-if="column.key === 'total_price'">
-                                ￥{{ $Util.countFilter(record.price * record.amount) }}
+                                €{{ $Util.countFilter(record.price * record.amount) }}
                             </template>
 
                             <template v-if="column.key === 'type'">

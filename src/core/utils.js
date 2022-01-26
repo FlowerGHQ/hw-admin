@@ -415,7 +415,7 @@ const Util = {
 
 
     /* =============== 采购单 ================ */
-    puechaseStatusFilter(val, to = 'word') {
+    purchaseStatusFilter(val, to = 'word') {
         const MAP = Const.PURCHASE.STATUS_MAP
         const COLOR_MAP = Const.PURCHASE.STATUS_COLOR_MAP
         switch (to) {
@@ -425,11 +425,11 @@ const Util = {
                 return COLOR_MAP[val + ''] || 'grey'
         }
     },
-    puechasePayMethodFilter(val) {
+    purchasePayMethodFilter(val) {
         const MAP = Const.PURCHASE.PAY_METHOD
         return MAP[val] || '-'
     },
-    puechaseFlagReviewFilter(val) {
+    purchaseFlagReviewFilter(val) {
         const MAP = Const.PURCHASE.FLAG_REVIEW_MAP
         return MAP[val] || '-'
     },

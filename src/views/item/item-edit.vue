@@ -175,11 +175,11 @@
                             </template>
                             <template v-if="column.dataIndex === 'price'">
                                 <a-input-number v-model:value="record.price" :min="0.01" :precision="2"
-                                    :formatter="value => `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/￥\s?|(,*)/g, '')"/>
+                                    :formatter="value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')"/>
                             </template>
                             <template v-if="column.dataIndex === 'original_price'">
                                 <a-input-number v-model:value="record.original_price" :min="0.01" :precision="2"
-                                    :formatter="value => `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/￥\s?|(,*)/g, '')" />
+                                    :formatter="value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')" />
                             </template>
                             <template v-if="column.key === 'select'">
                                 <a-select v-model:value="record[column.dataIndex]" placeholder="请选择">

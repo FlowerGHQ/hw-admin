@@ -36,7 +36,7 @@
                         </div>
                     </template>
                     <template v-if="column.key === 'money'">
-                        ￥{{ $Util.countFilter(text) }}
+                        €{{ $Util.countFilter(text) }}
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}
@@ -47,9 +47,9 @@
                     <template v-if="column.key === 'supply'">
                         <template v-if="record.edit_show || editShow || addMode">
                             <a-input-number v-model:value="record.edit_price" style="width: 120px;" :min="0.01" :max='record.price/100' :precision="2"
-                                :formatter="value => `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/￥\s?|(,*)/g, '')"/>
+                                :formatter="value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')"/>
                         </template>
-                        <template v-else>￥{{ $Util.countFilter(text) }}</template>
+                        <template v-else>€{{ $Util.countFilter(text) }}</template>
                     </template>
                     <template v-if="column.key === 'operation'">
                         <a-button type='link' @click="handleEditChange(record)" v-if="!editShow">

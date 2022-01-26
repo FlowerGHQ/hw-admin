@@ -25,11 +25,11 @@
                         </div>
                         <div class="info-item">
                             <div class="key">标准售价</div>
-                            <div class="value">￥{{$Util.countFilter(detail.price)}}</div>
+                            <div class="value">€{{$Util.countFilter(detail.price)}}</div>
                         </div>
                         <div class="info-item">
                             <div class="key">成本价格</div>
-                            <div class="value">￥{{$Util.countFilter(detail.original_price)}}</div>
+                            <div class="value">€{{$Util.countFilter(detail.original_price)}}</div>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='12' :xl='16' :xxl='18' class="info-block">
@@ -53,7 +53,7 @@
                                 {{text || ''}}
                             </template>
                             <template v-if="column.key === 'money'">
-                                ￥{{$Util.countFilter(text)}}
+                                €{{$Util.countFilter(text)}}
                             </template>
                             <template v-if="column.dataIndex === 'flag_independent_info'">
                                 <template v-if="index === 0">

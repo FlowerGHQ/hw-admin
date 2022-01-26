@@ -47,7 +47,7 @@
                     <a-divider type="vertical" />
                     <a-statistic title="员工数" :value="detail.user_count"/>
                     <a-divider type="vertical" />
-                    <a-statistic title="累计营收" :value="0" :precision="2" prefix='￥'/>
+                    <a-statistic title="累计营收" :value="0" :precision="2" prefix='€'/>
                     <a-divider type="vertical" />
                     <a-statistic title="总订单数" :value="detail.order_count" />
                 </div>
@@ -66,10 +66,10 @@
                 </a-tab-pane>
                 <template v-if="$auth('ADMIN')">
                 <a-tab-pane key="AgentList" tab="零售商管理">
-                    <AgentList :distributorId="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'AgentList'" @change="getDistributorDetail"/>
+                    <AgentList :distributorId="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'AgentList'"/>
                 </a-tab-pane>
                 <a-tab-pane key="StoreList" tab="门店管理">
-                    <StoreList :distributorId="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'StoreList'" @change="getDistributorDetail"/>
+                    <StoreList :distributorId="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'StoreList'"/>
                 </a-tab-pane>
                 <a-tab-pane key="PricingStructure" tab="商品价格">
                     <PricingStructure :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'PricingStructure'"/>

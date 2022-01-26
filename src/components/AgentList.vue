@@ -68,7 +68,7 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                { title: '零售商', dataIndex: 'name' },
+                { title: '零售商', dataIndex: 'name', key:'detail'},
                 { title: '国家', dataIndex: 'country' },
                 { title: '手机号', dataIndex: 'phone' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },

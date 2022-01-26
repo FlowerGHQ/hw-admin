@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 <div class="price">
-                    ￥{{$Util.countFilter(item.price)}}
+                    €{{$Util.countFilter(item.price)}}
                 </div>
             </div>
             <SimpleImageEmpty v-if="!shopCartList.length" desc='您的购物车中暂无商品'/>
@@ -36,11 +36,11 @@
                         {{$Util.itemSpecFilter(item.item.attr_list)}}
                     </span>
                 </p>
-                <span class="price">￥{{$Util.countFilter(item.item.purchase_price * item.amount)}}</span>
+                <span class="price">€{{$Util.countFilter(item.item.purchase_price * item.amount)}}</span>
             </div>
             <div class="settle-item sum">
                 <p class="name">总计</p>
-                <span class="price">￥{{sum_price}}</span>
+                <span class="price">€{{sum_price}}</span>
             </div>
             <a-button type="primary" ghost @click="routerChange('settle')">结算</a-button>
         </div>
@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 <div class="price">
-                    ￥{{$Util.countFilter(item.item ? item.item.purchase_price : item.price) }}
+                    €{{$Util.countFilter(item.item ? item.item.purchase_price : item.price) }}
                 </div>
             </div>
             <SimpleImageEmpty v-if="!favoriteList.length" desc='您的收藏夹中暂无商品'/>

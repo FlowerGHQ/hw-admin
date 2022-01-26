@@ -61,7 +61,7 @@
                             {{ text }}
                         </template>
                         <template v-if="column.key === 'money'">
-                            ￥{{ text/100 }}
+                            €{{ text/100 }}
                         </template>
                         <template v-if="column.key === 'tip_time'">
                             <a-tooltip :title="text" destroyTooltipOnHide>
