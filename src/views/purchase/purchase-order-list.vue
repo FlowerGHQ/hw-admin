@@ -427,7 +427,7 @@ export default {
             let exportUrl =
                 `${fileUrl}token=${token}&sn=${sn}&status=${status}&item_type=${itemType}&distributor_id=${distributorId}
                 &agent_id=${agentId}&store_id=${storeId}&org_id=${orgId}&org_type=${orgType}&type=${type}&subject=${subject}&pay_method=${payMethod}
-                &begin_time=${beginTime}&end_time=${endTime}&search_typ=${this.search_type}`
+                &begin_time=${beginTime}&end_time=${endTime}&search_type=${this.search_type}`
             console.log("handleRepairExport -> exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
 
