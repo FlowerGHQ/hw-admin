@@ -40,7 +40,7 @@
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'price'">
-                            ￥{{ $Util.countFilter(text) }}
+                            €{{ $Util.countFilter(text) }}
                         </template>
                     </template>
                 </a-table>
@@ -270,7 +270,7 @@ export default {
                     range: [0, 0.97],
                     type: 'linear',
                     formatter: (val) => {
-                        return val + '￥';
+                        return val + '€';
                     },
                 },
                 count: {

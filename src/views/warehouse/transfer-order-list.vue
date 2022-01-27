@@ -32,7 +32,7 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">货单编号:</div>
+                        <div class="key">调货单编号:</div>
                         <div class="value">
                             <a-input placeholder="请输入调货单编号" v-model:value="searchForm.uid"
                                      @keydown.enter='handleSearch'/>
@@ -94,7 +94,7 @@
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" v-if="record.status === STATUS.WAIT_AUDIT && $auth('ADMIN')"
                                       @click="handleTransferShow(record.id)">
-                                <i class="icon i_edit"/>审核
+                                <i class="icon i_m_success"/>审核
                             </a-button>
                             <!-- <a-button type="link"  v-else-if="record.status === STATUS.AUDIT_PASS" @click="handleInvoice(record.id)"><i
                                 class="icon i_edit"/>处理
@@ -151,7 +151,7 @@
             </template>
         </a-modal>
         <template class="modal-container">
-            <a-modal v-model:visible="transferShow" title="审核" class="invoice-edit-modal"
+            <a-modal v-model:visible="transferShow" title="审核" class="transfer-edit-modal"
                      :after-close='handleTransferClose'>
                 <div class="modal-content">
                     <div class="form-item required">
@@ -211,7 +211,7 @@ export default {
                 {text: '审核通过', value: '0', color: 'blue', key: TRANSFER_ORDER.STATUS.AUDIT_PASS},
                 {text: '审核失败', value: '0', color: 'red', key: TRANSFER_ORDER.STATUS.AUDIT_REFUSE},
                 {text: '处理完成', value: '0', color: 'green', key: TRANSFER_ORDER.STATUS.CLOSE},
-                {text: '已取消', value: '0', color: 'gray', key: TRANSFER_ORDER.STATUS.CANCEL},
+                {text: '已取消', value: '0', color: 'grey', key: TRANSFER_ORDER.STATUS.CANCEL},
             ],
             searchForm: {
                 warehouse_id: undefined,
@@ -401,6 +401,9 @@ export default {
             }).then(res => {
                 console.log("getStatusList res:", res)
                 let total = 0
+                this.statusList.forEach(statusItem => {
+                    statusItem.value = 0
+                })
                 this.statusList.forEach(statusItem => {
                     res.status_list.forEach(item => {
                         if (statusItem.key == item.status) {

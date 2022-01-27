@@ -262,7 +262,9 @@ export default {
 
         // 获取 车主列表
         getCustomerList(val) {
-            Core.Api.Customer.list().then(res => {
+            Core.Api.Customer.list(
+
+            ).then(res => {
                 this.customerList = res.list
                 if (val == 'refresh') {
                     this.$message.success('刷新成功')

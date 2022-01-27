@@ -10,7 +10,7 @@
                         {{ $Util.actionLogTypeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'org'">
-                        {{ $Util.userTypeFilter(text.org_type) }}·{{ text.org_name }}
+                        {{ $Util.userTypeFilter(text.org_type) + (text.org_name === "" ? "" : "·") + text.org_name }}
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}

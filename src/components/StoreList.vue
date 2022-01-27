@@ -118,7 +118,7 @@ export default {
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/store/store-edit",
-                        query: {id: item.id, agent_id: this.agentId, distributor_id: this.distributorId}
+                        query: {id: item.id, distributor_id: this.distributorId}
                     })
                     window.open(routeUrl.href, '_self')
                     break;

@@ -415,7 +415,7 @@ const Util = {
 
 
     /* =============== 采购单 ================ */
-    puechaseStatusFilter(val, to = 'word') {
+    purchaseStatusFilter(val, to = 'word') {
         const MAP = Const.PURCHASE.STATUS_MAP
         const COLOR_MAP = Const.PURCHASE.STATUS_COLOR_MAP
         switch (to) {
@@ -425,11 +425,11 @@ const Util = {
                 return COLOR_MAP[val + ''] || 'grey'
         }
     },
-    puechasePayMethodFilter(val) {
+    purchasePayMethodFilter(val) {
         const MAP = Const.PURCHASE.PAY_METHOD
         return MAP[val] || '-'
     },
-    puechaseFlagReviewFilter(val) {
+    purchaseFlagReviewFilter(val) {
         const MAP = Const.PURCHASE.FLAG_REVIEW_MAP
         return MAP[val] || '-'
     },
@@ -465,9 +465,15 @@ const Util = {
         const MAP = Const.REFUND.TYPE_MAP
         return MAP[val] || '未知'
     },
-    refundStatusFilter(val) {
+    refundStatusFilter(val, to ='word') {
         const MAP = Const.REFUND.STATUS_MAP
-        return MAP[val + ''] || '未知'
+        const COLOR_MAP = Const.REFUND.STATUS_COLOR_MAP
+        switch (to) {
+            case 'word':
+                return MAP[val + ''] || '未知'
+            case 'color':
+                return COLOR_MAP[val + ''] || 'grey'
+        }
     },
     distributorTypeFilter(val) {
         const MAP = Const.DISTRIBUTOR.TYPE_MAP

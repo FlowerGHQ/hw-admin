@@ -35,7 +35,7 @@
                 <a-divider type="vertical" />
                 <a-statistic title="维修工数量" :value="detail.repair_worker_count" />
                 <a-divider type="vertical" />
-                <a-statistic title="累计营收" :value="0" :precision="2" prefix='￥'/>
+                <a-statistic title="累计营收" :value="0" :precision="2" prefix='€'/>
                 <a-divider type="vertical" />
                 <a-statistic title="总订单数" :value="detail.order_count" />
             </div>

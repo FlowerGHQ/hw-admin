@@ -43,6 +43,7 @@ let Const = {
         OSS_POINT: OSS_POINT,
         FILE_URL_PREFIX: `${OSS_POINT}/`,
         FILE_UPLOAD_END_POINT: `${URL_POINT}/core/1/file/file-upload`,
+        FILE_UPLOAD_ACTION: `${URL_POINT}/admin/1/item/import`,
     },
     DATA: { // 本地存储
         KEY_PREFIX: 'haowan.admin.data.',
@@ -343,12 +344,12 @@ let Const = {
         TYPE_MAP: {
             101:  '维修单创建',
             102:  '维修单信息完善/修改',
-            103:  '维修单信息分配维修人员',
+            103:  '维修单分配维修人员',
             104:  '维修单删除',
             105:  '维修单取消',
             110:  '二次上门',
             201:  '维修单确认',
-            211:  '维修单审',
+            211:  '维修单审核',
             301:  '维修检测',
             303:  '删除故障零件',
             304:  '删除故障零件',
@@ -412,28 +413,42 @@ let Const = {
         },
     },
     REFUND: { // 退款管理
-        TYPE: {
-            APPLY_BY_CUSTOMER: 100,  //用户申请
-            INITIATIVE_REFUND: 200, //后台主动退款
-        },
+        TYPE: [
+            {text: '零售商申请退款',value: 100},
+            {text: '分销商申请退款',value: 110},
+            {text: '门店申请退款',value: 120},
+            {text: '后台主动退款',value: 200},
+        ],
         TYPE_MAP: {
-            100: '用户申请退款',
-            200: '零售商申请退款',
+            100: '零售商申请退款',
+            110: '分销商申请退款',
+            120: '门店申请退款',
+            200: '后台主动退款'
         },
         STATUS: {
-            WAIT_AUDIT: 10,    // 初始化
+            WAIT_AUDIT: 10,    // 待审核
             AUDIT_PASS: 20,    // 审核通过
             SUCCESS: 40,       // 退款成功
-            AUDIT_REFUSE: -10, // 拒绝退款
-            FAIL: -20,         // 退款失败
+            AUDIT_REFUSE: -10, // 审核失败
+            CANCEL: -20, // 已取消
         },
         STATUS_MAP: {
-            '10': '初始化',
+            '10': '待审核',
             '20': '审核通过',
             '40': '退款成功',
-            '-10': '拒绝退款',
-            '-20': '退款失败',
-
+            '-10': '审核失败',
+            '-20': '已取消',
+        },
+        STATUS_COLOR_MAP: {
+            '10': 'yellow',
+            '20': 'blue',
+            '40': 'green',
+            '-10': 'red',
+            '-20': 'grey'
+        },
+        SEARCH_TYPE: {
+            SELF: 1, //本账户申请的退款单
+            CHILDREN: 2, //待审核的退款单
         },
     },
 
@@ -567,7 +582,7 @@ let Const = {
             '20': 'blue',
             '40': 'green',
             '-10': 'red',
-            '-20': 'gray'
+            '-20': 'grey'
         },
         STATUS_LIST: [  //出入库单审核
             {text: '待审核',value: 10},
@@ -605,7 +620,7 @@ let Const = {
             '30': 'purple',
             '40': 'green',
             '-10': 'red',
-            '-20': 'gray'
+            '-20': 'grey'
         },
         STATUS_LIST: [  //调货单审核
             {text: '待审核',value: 10},
@@ -615,7 +630,7 @@ let Const = {
             {text: '审核失败',value: -10},
             {text: '已取消',value: -20},
         ],
-    }
+    },
 };
 
 export default Const;

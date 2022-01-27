@@ -75,19 +75,19 @@
                         </a-tooltip>
                     </template>
                     <template v-if="column.dataIndex === 'price'">
-                        ￥{{$Util.countFilter(text)}}
+                        €{{$Util.countFilter(text)}}
                     </template>
                     <template v-if="column.dataIndex === 'status'">
-                        <div class="status status-bg status-tag" :class="$Util.puechaseStatusFilter(text,'color')">
-                            {{$Util.puechaseStatusFilter(text)}}
+                        <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text,'color')">
+                            {{$Util.purchaseStatusFilter(text)}}
                         </div>
                     </template>
 
                     <template v-if="column.dataIndex === 'flag_review'">
-                        {{$Util.puechaseFlagReviewFilter(text)}}
+                        {{$Util.purchaseFlagReviewFilter(text)}}
                     </template>
                     <template v-if="column.dataIndex === 'purchase_method'">
-                        {{$Util.puechasePayMethodFilter(text)}}
+                        {{$Util.purchasePayMethodFilter(text)}}
                     </template>
                     <template v-if="column.dataIndex === 'item_type'">
                         {{$Util.itemTypeFilter(text)}}
@@ -160,7 +160,7 @@ export default {
                 {text: '待发货', value: '0', color: 'orange',  key: '200'},
                 {text: '已发货', value: '0', color: 'primary',  key: '300'},
                 {text: '交易完成', value: '0', color: 'green',  key: '400'},
-                {text: '交易关闭', value: '0', color: 'grey',  key: '1000'},
+                {text: '交易取消', value: '0', color: 'grey',  key: '-100'},
             ],
             agentList: [],
             storeList: [],
@@ -208,7 +208,7 @@ export default {
         tableColumns() {
             let columns = [
                 { title: '订单编号', dataIndex: 'sn', },
-                { title: '价格', dataIndex: 'price' },
+                { title: '订单总价', dataIndex: 'price' },
                 { title: '订单状态', dataIndex: 'status' },
                 { title: '下单时间', dataIndex: 'create_time', key: 'time' },
                 { title: '支付时间', dataIndex: 'pay_time', key: 'time' },
@@ -289,31 +289,6 @@ export default {
             this.create_time = []
             this.pageChange(1);
         },
-        // handleSearchReset() {  // 重置搜索
-        //     Object.assign(this.searchForm, this.$options.data().searchForm)
-        //     if (this.purchaseMode == 'audit') {
-        //         this.searchForm.status = PURCHASE.STATUS.WAIT_AUDIT
-        //     } else if (this.purchaseMode == 'check') {
-        //         this.searchForm.status = PURCHASE.STATUS.WAIT_CHECK
-        //     }
-        //     if (this.$auth('ADMIN')) {
-        //         this.getDistributorListAll();
-        //     }
-        //     else if (this.$auth('DISTRIBUTOR')) {
-        //         this.searchForm.distributor_id = Core.Data.getOrgId()
-        //         this.getAgentListAll();
-        //     }
-        //     else if (this.$auth('AGENT')) {
-        //         this.searchForm.agent_id = Core.Data.getOrgId()
-        //         this.getStoreListAll();
-        //     }
-        //     else if (this.$auth('STORE')) {
-        //         this.searchForm.store_id = Core.Data.getOrgId()
-        //     }
-        //     this.filteredInfo = null
-        //     this.create_time = []
-        //     this.pageChange(1);
-        // },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             Core.Api.Purchase.list({
@@ -335,7 +310,10 @@ export default {
         },
         getStatusStat() {  // 获取 状态统计 数据
             this.loading = true;
-            Core.Api.Purchase.statusList().then(res => {
+
+            Core.Api.Purchase.statusList({
+                    search_type: this.search_type
+            }).then(res => {
                 console.log("getStatusStat res:", res)
                 let total = 0
 
@@ -449,7 +427,7 @@ export default {
             let exportUrl =
                 `${fileUrl}token=${token}&sn=${sn}&status=${status}&item_type=${itemType}&distributor_id=${distributorId}
                 &agent_id=${agentId}&store_id=${storeId}&org_id=${orgId}&org_type=${orgType}&type=${type}&subject=${subject}&pay_method=${payMethod}
-                &begin_time=${beginTime}&end_time=${endTime}&search_typ=${this.search_type}`
+                &begin_time=${beginTime}&end_time=${endTime}&search_type=${this.search_type}`
             console.log("handleRepairExport -> exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
 

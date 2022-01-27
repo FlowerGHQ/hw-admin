@@ -17,7 +17,7 @@
                 </div>
             </template>
             <template v-if="column.key === 'money'">
-                ￥{{$Util.countFilter(text)}}
+                €{{$Util.countFilter(text)}}
             </template>
             <template v-if="column.key === 'item'">
                 {{text || '-'}}

@@ -4,6 +4,7 @@ import Layout from '../views/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE
 const SEARCH_TYPE = Const.PURCHASE.SEARCH_TYPE
+const REFUND_TYPE = Const.REFUND.SEARCH_TYPE
 
 
 const routes = [
@@ -653,55 +654,69 @@ const routes = [
     {   // 退款管理
         path: '/refund',
         component: Layout,
-        redirect: '/refund/refund-list',
+        redirect: '/refund/refund-apply-list',
         name: 'RefundManagement',
         hidden: false,
         meta: {
             title: '退款管理',
             icon: 'i_s_temp',
-            // auth: ['dashboard'],
-            // roles: [LOGIN_TYPE.ADMIN],
+            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.STORE],
         },
         children: [
             {
-                path: 'refund-list',
-                name: 'RefundList',
+                path: 'refund-apply-list',
+                name: 'RefundApplyList',
                 component: () => import('@/views/refund/refund-list.vue'),
                 meta: {
-                    title: '退款列表',
+                    title: '退款申请',
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.STORE],
+                    // is_sub_menu: true,
+                    search_type: REFUND_TYPE.SELF
+                }
+            },
+            {
+                path: 'refund-audit-list',
+                name: 'RefundAuditList',
+                component: () => import('@/views/refund/refund-list.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.DISTRIBUTOR],
+                    title: '退款审核',
+                    is_sub_menu: true,
+                    search_type: REFUND_TYPE.CHILDREN
                 }
             },
             {
                 path: 'refund-create',
-                name: 'RefundCreate',
+                name: 'refundCreate',
                 component: () => import('@/views/refund/refund-create.vue'),
                 hidden: true,
                 meta: {
-                    title: '新增退款',
+                    title: '申请退款',
                     parent: '/refund/refund-list',
                 }
-
             },
+        ]
+    },
+    {   // 平台端退款管理
+        path: '/refund-audit',
+        component: Layout,
+        name: 'RefundAuditManagement',
+        hidden: false,
+        meta: {
+            title: '退款管理',
+            icon: 'i_s_temp',
+            roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
             {
-                path: 'refund-detail',
-                name: 'RefundDetail',
-                component: () => import('@/views/refund/refund-detail.vue'),
-                hidden: true,
+                path: '',
+                component: () => import('@/views/refund/refund-list.vue'),
                 meta: {
-                    title: '退款详情',
-                    parent: '/refund/refund-list',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    title: '退款审核',
+                    search_type: REFUND_TYPE.CHILDREN
                 }
             },
-            /* {
-                path: 'refund-audit',
-                name: 'RefundAudit',
-                component: () => import('@/views/refund/refund-audit.vue'),
-                hidden: true,
-                meta: {
-                    title: '退款审核',
-                    parent: '/refund/refund-list',
-                }
-            }, */
         ]
     },
     {   // 客户管理

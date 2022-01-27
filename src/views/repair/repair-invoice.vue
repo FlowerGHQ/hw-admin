@@ -39,10 +39,10 @@
                         {{ text || '-'}}
                     </template>
                     <template v-if="column.dataIndex === 'price'">
-                        {{ $Util.countFilter(text) }}￥
+                        {{ $Util.countFilter(text) }}€
                     </template>
                     <template v-if="column.dataIndex === 'sum_price'">
-                        {{ $Util.countFilter(record.price * record.amount) }}￥
+                        {{ $Util.countFilter(record.price * record.amount) }}€
                     </template>
                 </template>
                 <template #summary>
@@ -51,7 +51,7 @@
                             <a-table-summary-cell :index="0" :col-span="2"></a-table-summary-cell>
                             <a-table-summary-cell :index="1" :col-span="2">
                                 <div class="sum-price">
-                                    <p>总金额</p> <span>￥{{$Util.countFilter(sum_price)}}</span>
+                                    <p>总金额</p> <span>€{{$Util.countFilter(sum_price)}}</span>
                                 </div>
                             </a-table-summary-cell>
                         </a-table-summary-row>

@@ -24,10 +24,10 @@
                     <a-button type="primary" ghost @click="handleDeliveryShow()"
                         v-if="needDelivery"><i class="icon i_deliver"/>转单物流
                     </a-button>
-                    <a-button type="primary" @click="handleSecondRepairShow()"
-                        v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_REPAIR].includes(detail.status)">
+<!--                    <a-button type="primary" @click="handleSecondRepairShow()"
+                        v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_REPAIR].includes(detail.status) ">
                         <i class="icon i_edit_l"/>二次维修
-                    </a-button>
+                    </a-button>-->
                     <a-button type="primary" @click="handleFaultSubmit()"
                         v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_submit"/>提交
                     </a-button>
@@ -240,7 +240,7 @@ export default {
             resultsList: REPAIR.RESULTS_LIST,
             resultForm: {
                 results: '1',
-                audit_message: undefined,
+                audit_message: '',
             },
 
             // 二次维修
@@ -420,10 +420,10 @@ export default {
         },
 
         // 工单 二次维修
-        handleSecondRepairShow() {
+/*        handleSecondRepairShow() {
             this.secondShow = true
             this.secondForm.plan_time = this.detail.plan_time ? dayjs.unix(this.detail.plan_time).format('YYYY-MM-DD HH:mm:ss') : undefined
-        },
+        },*/
         handleSecondRepairSubmit() {
             let form = Core.Util.deepCopy(this.secondForm)
             if (!form.plan_time) {

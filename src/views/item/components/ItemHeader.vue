@@ -6,7 +6,7 @@
             <p class="name">{{detail.name}}</p>
             <p class="model">商品型号：{{detail.model}}</p>
             <p class="spec" v-if="showSpec"><span>规格：</span>{{attr_str}}</p>
-            <p class="price">￥{{$Util.countFilter(detail.price)}}</p>
+            <p class="price">€{{$Util.countFilter(detail.price)}}</p>
         </div>
     </div>
 </div>

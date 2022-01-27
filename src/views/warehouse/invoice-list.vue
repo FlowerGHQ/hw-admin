@@ -88,7 +88,7 @@
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" v-if="record.status === STATUS.AIT_AUDIT"
                                       @click="handleInvoiceShow(record.id)"><i
-                                class="icon i_edit"/>审核
+                                class="icon i_m_success"/>审核
                             </a-button>
                             <a-button type="link" v-else-if="record.status === STATUS.AUDIT_PASS"
                                       @click="handleInvoice(record.id)"><i
@@ -204,7 +204,7 @@ export default {
                 {text: '审核通过', value: '0', color: 'blue', key: STOCK_RECORD.STATUS.AUDIT_PASS},
                 {text: '审核失败', value: '0', color: 'red', key: STOCK_RECORD.STATUS.AUDIT_REFUSE},
                 {text: '处理完成', value: '0', color: 'green', key: STOCK_RECORD.STATUS.CLOSE},
-                {text: '已取消', value: '0', color: 'gray', key: STOCK_RECORD.STATUS.CANCEL},
+                {text: '已取消', value: '0', color: 'grey', key: STOCK_RECORD.STATUS.CANCEL},
             ],
             searchForm: {
                 warehouse_id: undefined,
@@ -369,6 +369,9 @@ export default {
             }).then(res => {
                 console.log("getStatusList res:", res)
                 let total = 0
+                this.statusList.forEach(statusItem => {
+                    statusItem.value = 0
+                })
                 this.statusList.forEach(statusItem => {
                     res.status_list.forEach(item => {
                         if (statusItem.key == item.status) {
