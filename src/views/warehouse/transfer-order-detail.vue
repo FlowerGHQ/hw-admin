@@ -92,7 +92,7 @@ export default {
             id: '',
             STATUS: Core.Const.TRANSFER_ORDER.STATUS,
             detail: {
-                to_warehouse: {}
+                to_warehouse: {},
             },
             activeKey: ['affirm'],
             tableData: [],
@@ -105,6 +105,7 @@ export default {
             ],
             transferShow: false,
             editForm: {
+                id: '',
                 status: 20,
                 audit_message: '',
             },
@@ -170,7 +171,7 @@ export default {
 
         handleTransferShow(id) { // 显示弹框
             this.transferShow = true
-            this.editForm.id = id
+            this.editForm.id = this.id
         },
         handleTransferClose() { // 关闭弹框
             this.transferShow = false;
@@ -181,8 +182,9 @@ export default {
                 ...this.editForm
             }).then(res => {
                 console.log('handleTransferSubmit res', res)
+                this.$message.success('审核成功')
                 this.handleTransferClose()
-                this.getTableData()
+                this.routerChange('back')
             }).catch(err => {
                 console.log('handleTransferSubmit err', err)
             }).finally(() => {

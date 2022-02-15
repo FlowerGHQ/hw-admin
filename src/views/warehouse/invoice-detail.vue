@@ -2,7 +2,7 @@
 <div id="InvoiceDetail" class="list-container">
     <div class="title-container">
         <div class="title-area">出入库单详情</div>
-        <a-button type="primary" ghost @click="handleInvoiceShow()"
+        <a-button type="primary" ghost @click="handleStockAuditShow()"
             v-if="[STATUS.AIT_AUDIT].includes(detail.status)"><i class="icon i_m_success"/>审核</a-button>
     </div>
     <div class="gray-panel info">
@@ -54,26 +54,29 @@
         </a-collapse-panel>
     </a-collapse>
     <template class="modal-container">
-        <a-modal v-model:visible="invoiceShow" title="审核"
-            class="warehouse-edit-modal" :after-close='handleInvoiceClose'>
+        <a-modal v-model:visible="stockAuditShow" title="审核" class="stock-audit-modal"
+                 :after-close='handleStockAuditClose'>
             <div class="modal-content">
-                <div class="form-item required">
-                    <div class="key">审核结果:</div>
-                    <a-radio-group v-model:value="editForm.status">
-                        <a-radio :value="STATUS.AUDIT_PASS">通过</a-radio>
-                        <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio>
-                    </a-radio-group>
-                </div>
-                <div class="form-item textarea required" v-if="editForm.status === STATUS.AUDIT_REFUSE">
-                    <div class="key">原因:</div>
-                    <div class="value">
-                        <a-textarea v-model:value="editForm.audit_message" placeholder="请输入不通过原因" :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                <div>
+                    <div class="form-item required">
+                        <div class="key">审核结果:</div>
+                        <a-radio-group v-model:value="editForm.status">
+                            <a-radio :value="STATUS.AUDIT_PASS">通过</a-radio>
+                            <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio>
+                        </a-radio-group>
+                    </div>
+                    <div class="form-item textarea required" v-if="editForm.status === STATUS.AUDIT_REFUSE">
+                        <div class="key">原因:</div>
+                        <div class="value">
+                            <a-textarea v-model:value="editForm.audit_message" placeholder="请输入不通过原因"
+                                        :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                        </div>
                     </div>
                 </div>
             </div>
             <template #footer>
-                <a-button @click="invoiceShow = false">取消</a-button>
-                <a-button @click="handleInvoiceSubmit" type="primary">确定</a-button>
+                <a-button @click="stockAuditShow = false">取消</a-button>
+                <a-button @click="handleStockAuditSubmit" type="primary">确定</a-button>
             </template>
         </a-modal>
     </template>
@@ -82,7 +85,7 @@
 
 <script>
 import Core from '../../core';
-const STOCK_TYPE = Core.Const.STOCK_RECORD.TYPE
+const STOCK_TYPE = Core.Const.WAREHOUSE_RECORD.TYPE
 export default {
     name: 'InvoiceDetail',
     components: {},
@@ -91,14 +94,14 @@ export default {
         return {
             // 加载
             loading: false,
-            STATUS: Core.Const.STOCK_RECORD.STATUS,
+            STATUS: Core.Const.WAREHOUSE_RECORD.STATUS,
             id: '',
             detail: {
                 warehouse: {}
             },
             activeKey: ['affirm'],
             tableData: [],
-            invoiceShow: false,
+            stockAuditShow: false,
             editForm: {
                 status: 20,
                 audit_message: '',
@@ -128,22 +131,26 @@ export default {
         this.getInvoiceList();
     },
     methods: {
-        handleInvoiceShow() { // 显示弹框
-            this.invoiceShow = true
+        //库存审核
+        handleStockAuditShow(id) { // 显示弹框
+            this.stockAuditShow = true
+            this.editForm.id = this.id
         },
-        handleInvoiceClose() { // 关闭弹框
-            this.invoiceShow = false;
+        handleStockAuditClose() { // 关闭弹框
+            this.stockAuditShow = false;
         },
-        handleInvoiceSubmit() { // 审核提交
+        handleStockAuditSubmit() { // 审核提交
             this.loading = true;
             Core.Api.Invoice.audit({
                 id: this.id,
                 ...this.editForm
             }).then(res => {
-                console.log('handleInvoiceSubmit res', res)
+                console.log('handleStockAuditSubmit res', res)
+                this.$message.success('审核成功')
+                this.handleStockAuditClose()
                 this.routerChange('back')
             }).catch(err => {
-                console.log('handleInvoiceSubmit err', err)
+                console.log('handleStockAuditSubmit err', err)
             }).finally(() => {
                 this.loading = false;
             });

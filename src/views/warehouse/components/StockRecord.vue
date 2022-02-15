@@ -1,5 +1,5 @@
 <template>
-    <div class="WarehouseStockRecord gray-panel no-margin">
+    <div class="StockRecord gray-panel no-margin">
         <div class="panel-content">
 <!--            <div class="search-container">-->
 <!--                <a-row class="search-area">-->
@@ -80,7 +80,7 @@
 import Core from '../../../core';
 
 export default {
-    name: 'WarehouseStockRecord',
+    name: 'StockRecord',
     components: {},
     props: {
         warehouseId: {
@@ -107,7 +107,7 @@ export default {
             // searchForm: {
             //     name: '',
             // },
-            type: Core.Const.STOCK_RECORD.TYPE,
+            type: Core.Const.WAREHOUSE_RECORD.TYPE,
             tableData: [],
         };
     },
@@ -171,5 +171,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-//#WarehouseStockRecord {}
+//#StockRecord {}
 </style>

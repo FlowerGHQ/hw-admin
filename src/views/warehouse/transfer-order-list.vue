@@ -93,7 +93,7 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" v-if="record.status === STATUS.WAIT_AUDIT && $auth('ADMIN')"
-                                      @click="handleTransferShow(record.id)">
+                                      @click="handleTransferAuditShow(record.id)">
                                 <i class="icon i_m_success"/>审核
                             </a-button>
                             <!-- <a-button type="link"  v-else-if="record.status === STATUS.AUDIT_PASS" @click="handleInvoice(record.id)"><i
@@ -126,7 +126,7 @@
                 />
             </div>
         </div>
-        <a-modal v-model:visible="transferOrderShow" title="新建调货单" class="transfer-edit-modal"
+        <a-modal v-model:visible="transferOrderShow" title="新建调货单" class="transfer-modal"
                  :after-close="handleTransferOrderClose">
             <div class="form-item required">
                 <div class="key">仓库:</div>
@@ -151,8 +151,8 @@
             </template>
         </a-modal>
         <template class="modal-container">
-            <a-modal v-model:visible="transferShow" title="审核" class="transfer-edit-modal"
-                     :after-close='handleTransferClose'>
+            <a-modal v-model:visible="transferAuditShow" title="审核" class="transfer-audit-modal"
+                     :after-close='handleTransferAuditClose'>
                 <div class="modal-content">
                     <div class="form-item required">
                         <div class="key">审核结果:</div>
@@ -170,8 +170,8 @@
                     </div>
                 </div>
                 <template #footer>
-                    <a-button @click="transferShow = false">取消</a-button>
-                    <a-button @click="handleTransferSubmit" type="primary">确定</a-button>
+                    <a-button @click="transferAuditShow = false">取消</a-button>
+                    <a-button @click="handleTransferAuditSubmit" type="primary">确定</a-button>
                 </template>
             </a-modal>
         </template>
@@ -226,7 +226,7 @@ export default {
                 apply_message: '',
             },
             tableData: [],
-            transferShow: false,
+            transferAuditShow: false,
             STATUS: Core.Const.TRANSFER_ORDER.STATUS,
             editForm: {
                 id: '',
@@ -372,24 +372,24 @@ export default {
                 },
             });
         },
-        handleTransferShow(id) { // 显示弹框
-            this.transferShow = true
+        handleTransferAuditShow(id) { // 显示弹框
+            this.transferAuditShow = true
             this.editForm.id = id
         },
-        handleTransferClose() { // 关闭弹框
-            this.transferShow = false;
+        handleTransferAuditClose() { // 关闭弹框
+            this.transferAuditShow = false;
         },
-        handleTransferSubmit() { // 审核提交
+        handleTransferAuditSubmit() { // 审核提交
             this.loading = true;
             Core.Api.Transfer.audit({
                 ...this.editForm
             }).then(res => {
-                console.log('handleTransferSubmit res', res)
+                console.log('handleTransferAuditSubmit res', res)
                 this.handleTransferClose()
                 this.getTableData()
                 this.getStatusList()
             }).catch(err => {
-                console.log('handleTransferSubmit err', err)
+                console.log('handleTransferAuditSubmit err', err)
             }).finally(() => {
                 this.loading = false;
             });

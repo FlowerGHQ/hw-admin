@@ -70,7 +70,7 @@
 import Core from '../../core';
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 
-const STOCK_TYPE = Core.Const.STOCK_RECORD.TYPE
+const STOCK_TYPE = Core.Const.WAREHOUSE_RECORD.TYPE
 export default {
     name: 'InvoiceEdit',
     components: {
@@ -86,7 +86,7 @@ export default {
                 warehouse: {}
             },
             activeKey: ['affirm'],
-            typeList: Core.Const.STOCK_RECORD.TYPE,
+            typeList: Core.Const.WAREHOUSE_RECORD.TYPE,
             failActive: [],
             tableData: [],
         };

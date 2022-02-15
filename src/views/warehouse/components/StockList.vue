@@ -1,5 +1,5 @@
 <template>
-<div class="WarehouseStockList gray-panel no-margin">
+<div class="StockList gray-panel no-margin">
     <div class="panel-content">
         <div class="table-container">
             <a-button type="primary" ghost @click="handleAddShow" class="panel-btn"><i class="icon i_add"/>库存增减</a-button>
@@ -72,7 +72,7 @@
 import Core from '../../../core';
 
 export default {
-    name: 'WarehouseStockList',
+    name: 'StockList',
     components: {},
     props: {
         warehouseId: {
@@ -222,7 +222,7 @@ export default {
 
 
 <style lang="less" scoped>
-.WarehouseStockList {
+.StockList {
     .table-container {
         margin-top: -10px;
     }

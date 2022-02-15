@@ -3,7 +3,8 @@
         <div class="title-container">
             <div class="title-area">仓库详情</div>
             <div class="btns-area">
-                <a-button type="primary" ghost @click="routerChange('edit',record)"><i class="icon i_edit"/> 编辑</a-button>
+                <a-button type="primary" ghost @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button>
+                <a-button type="primary" ghost @click="handleDelete(warehouse_id)"><i class="icon i_delete"/>删除</a-button>
             </div>
         </div>
         <div class="gray-panel">
@@ -26,12 +27,12 @@
             </div>
         </div>
         <div class="tabs-container">
-            <a-tabs class="WarehouseStock" @change="getWarehouseStockRecord">
-                <a-tab-pane key="WarehouseStockList" tab="库存数量">
-                    <WarehouseStockList :warehouseId="warehouse_id" :detail='detail'  @submit="getWarehouseDetail"/>
+            <a-tabs  v-model:activeKey="activeKey">
+                <a-tab-pane key="StockList" tab="库存数量">
+                    <StockList :warehouseId="warehouse_id" :detail='detail'  @submit="getWarehouseDetail"/>
                 </a-tab-pane>
-                <a-tab-pane key="WarehouseStockRecord" tab="出入库记录">
-                    <WarehouseStockRecord ref="WarehouseStockRecord" :warehouseId='warehouse_id' :detail='detail'  @submit="getWarehouseDetail"/>
+                <a-tab-pane key="StockRecord" tab="出入库记录">
+                    <StockRecord :warehouseId='warehouse_id' :detail='detail'  @submit="getWarehouseDetail"  v-if="activeKey === 'StockRecord'"/>
                 </a-tab-pane>
             </a-tabs>
         </div>
@@ -41,12 +42,12 @@
 <script>
 import Core from '../../core';
 
-import WarehouseStockList from './components/WarehouseStockList.vue';
-import WarehouseStockRecord from './components/WarehouseStockRecord.vue';
+import StockList from './components/StockList.vue';
+import StockRecord from './components/StockRecord.vue';
 
 export default {
     name: 'WarehouseDetail',
-    components: { WarehouseStockList, WarehouseStockRecord },
+    components: { StockList, StockRecord },
     props: {},
     data() {
         return {
@@ -55,30 +56,16 @@ export default {
             //标签页
             detail: {},
             warehouse_id: '',
-            name: '',
-            province: '',
-            city: '',
-            county: '',
-            address: '',
+            activeKey: ['affirm'],
         };
     },
     watch: {},
     computed: {},
     created() {
-        this.warehouse_id = Number(this.$route.query.id) || Core.Data.getOrgId()
+        this.warehouse_id = Number(this.$route.query.id) || ''
         this.getWarehouseDetail();
     },
     methods: {
-        getWarehouseStockRecord(e) {
-            console.log("getWarehouseStockRecord", e)
-            switch (e) {
-                case 'WarehouseStockRecord': {
-                    this.$nextTick(() => {
-                        this.$refs['WarehouseStockRecord'].getTableData()
-                    } )
-                }
-            }
-        },
         routerChange(type) {
             let routeUrl = ''
             switch (type) {
@@ -110,6 +97,23 @@ export default {
                 console.log('getWarehouseDetail err', err)
             }).finally(() => {
                 this.loading = false;
+            });
+        },
+        handleDelete(id) {
+            let _this = this;
+            this.$confirm({
+                title: '确定要删除该仓库吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Warehouse.delete({id}).then(() => {
+                        _this.$message.success('删除成功');
+                        _this.routerChange('list');
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
             });
         },
     }

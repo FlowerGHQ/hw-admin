@@ -546,7 +546,7 @@ let Const = {
             PURCHASE_ORDER: 2 // 采购单附件
         }
     },
-    WAREHOUSE_RECORD: {  //仓库明细
+    WAREHOUSE_RECORD: {
         TYPE: {
             TYPE_IN: 1, //入库
             TYPE_OUT: 2, //出库
