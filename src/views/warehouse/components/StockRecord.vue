@@ -104,10 +104,6 @@ export default {
             list: '',
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
-            // searchForm: {
-            //     name: '',
-            // },
-            type: Core.Const.WAREHOUSE_RECORD.TYPE,
             tableData: [],
         };
     },
