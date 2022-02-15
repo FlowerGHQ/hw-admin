@@ -103,6 +103,7 @@ export default {
             tableData: [],
             stockAuditShow: false,
             editForm: {
+                id: '',
                 status: 20,
                 audit_message: '',
             },

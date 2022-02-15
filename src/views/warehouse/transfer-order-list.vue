@@ -385,7 +385,7 @@ export default {
                 ...this.editForm
             }).then(res => {
                 console.log('handleTransferAuditSubmit res', res)
-                this.handleTransferClose()
+                this.handleTransferAuditClose()
                 this.getTableData()
                 this.getStatusList()
             }).catch(err => {
