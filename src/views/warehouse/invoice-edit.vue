@@ -31,7 +31,7 @@
         <a-collapse v-model:activeKey="activeKey" ghost>
             <a-collapse-panel key="affirm" header="商品信息" class="gray-collapse-panel">
                 <template #extra>
-                    <ItemSelect :warehouseId="detail.type == typeList.TYPE_OUT ? detail.warehouse_id: 0 " :disabledChecked="disabledChecked"
+                    <ItemSelect :warehouseId="detail.type == TYPE.TYPE_OUT ? detail.warehouse_id: 0 " :disabledChecked="disabledChecked"
                         @select="handleInvoiceItem" btnType='link' btnText="添加商品"/>
                 </template>
                 <div class="panel-content">
@@ -86,7 +86,7 @@ export default {
                 warehouse: {}
             },
             activeKey: ['affirm'],
-            typeList: Core.Const.WAREHOUSE_RECORD.TYPE,
+            TYPE: Core.Const.WAREHOUSE_RECORD.TYPE,
             failActive: [],
             tableData: [],
         };

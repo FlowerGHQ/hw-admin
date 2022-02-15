@@ -2,7 +2,7 @@
 <div class="StockList gray-panel no-margin">
     <div class="panel-content">
         <div class="table-container">
-            <a-button type="primary" ghost @click="handleAddShow" class="panel-btn"><i class="icon i_add"/>库存增减</a-button>
+            <a-button type="primary" ghost @click="handleStockAddShow" class="panel-btn"><i class="icon i_add"/>库存增减</a-button>
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                         :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text}">
@@ -36,13 +36,13 @@
             />
         </div>
     </div>
-    <a-modal v-model:visible="codeAddShow" title="库存增减" class="stock-change-modal"
-                :after-close="handleAddClose">
+    <a-modal v-model:visible="stockAddShow" title="库存增减" class="stock-change-modal"
+                :after-close="handleStockAddClose">
         <div class="form-item required">
             <div class="key">操作类型：</div>
             <a-radio-group v-model:value="form.type">
-                <a-radio :value="'add'">入库</a-radio>
-                <a-radio :value="'reduce'">出库</a-radio>
+                <a-radio :value="TYPE.TYPE_IN">入库</a-radio>
+                <a-radio :value="TYPE.TYPE_OUT">出库</a-radio>
             </a-radio-group>
         </div>
         <div class="form-item required">
@@ -61,8 +61,8 @@
             </div>
         </div>
         <template #footer>
-            <a-button @click="handleAddSubmit" type="primary">确定</a-button>
-            <a-button @click="codeAddShow=false">取消</a-button>
+            <a-button @click="handleStockAddSubmit" type="primary">确定</a-button>
+            <a-button @click="stockAddShow=false">取消</a-button>
         </template>
     </a-modal>
 </div>
@@ -96,9 +96,10 @@ export default {
             currPage: 1,
             pageSize: 20,
             total: 0,
+            TYPE: Core.Const.WAREHOUSE_RECORD.TYPE,
             tableData: [],
             detail: {},
-            codeAddShow: false,
+            stockAddShow: false,
             isExist: '',
             form: {
                 type: '',
@@ -133,12 +134,13 @@ export default {
                     break;
             }
         },
-        handleAddShow() {
-            this.codeAddShow = true;
+        //仓库库存增减
+        handleStockAddShow() {
+            this.stockAddShow = true;
             this.form.warehouse_id = this.warehouseId
         },
-        handleAddClose() {
-            this.codeAddShow = false;
+        handleStockAddClose() {
+            this.stockAddShow = false;
             this.isExist = '';
             this.form = {
                 type: '',
@@ -148,7 +150,7 @@ export default {
                 warehouse_id: '',
             }
         },
-        handleAddSubmit() {
+        handleStockAddSubmit() {
             let form = Core.Util.deepCopy(this.form)
             if (!form.type) {
                 return this.$message.warning('请选择操作类型')
@@ -164,10 +166,10 @@ export default {
             }
             Core.Api.Stock[this.form.type](form).then(() => {
                 this.$message.success('保存成功')
-                this.handleAddClose();
+                this.handleStockAddClose();
                 this.getTableData();
             }).catch(err => {
-                console.log('handleAddSubmit err:', err)
+                console.log('handleStockAddSubmit err:', err)
             })
         },
         onblur() {  // 获取 商品编码 数据
@@ -178,9 +180,9 @@ export default {
                 code: this.form.target_code,
             }).then(res => {
                 this.isExist = res.detail != null
-                console.log("getItemCode res", res)
+                console.log("onblur res", res)
             }).catch(err => {
-                console.log('getItemCode err', err)
+                console.log('onblur err', err)
             }).finally(() => {
             });
         },

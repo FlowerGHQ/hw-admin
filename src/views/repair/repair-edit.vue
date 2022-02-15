@@ -355,7 +355,6 @@ export default {
             Core.Api.Item.detailByCodeForRepair({
                 code: this.form.item_code,
             }).then(res => {
-                console.log("getItemCode res", res)
                 if (res.detail) {
                     this.isExist = 1
                 } else {
@@ -363,7 +362,7 @@ export default {
                     this.$message.warning('该编号未在系统中，请确认车辆编号是否正确')
                 }
             }).catch(err => {
-                console.log('getItemCode err', err)
+                console.log('handleCarCodeBlur err', err)
             })
         },
         // 检查表单输入
