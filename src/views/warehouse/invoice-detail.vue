@@ -2,7 +2,7 @@
 <div id="InvoiceDetail" class="list-container">
     <div class="title-container">
         <div class="title-area">出入库单详情</div>
-        <a-button type="primary" ghost @click="handleStockAuditShow()"
+        <a-button type="primary" ghost @click="handleStockAuditShow"
             v-if="[STATUS.AIT_AUDIT].includes(detail.status)"><i class="icon i_m_success"/>审核</a-button>
     </div>
     <div class="gray-panel info">
@@ -133,7 +133,7 @@ export default {
     },
     methods: {
         //库存审核
-        handleStockAuditShow(id) { // 显示弹框
+        handleStockAuditShow() { // 显示弹框
             this.stockAuditShow = true
             this.editForm.id = this.id
         },

@@ -3,7 +3,7 @@
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">调货单详情</div>
-            <a-button type="primary" ghost @click="handleTransferAuditShow()"
+            <a-button type="primary" ghost @click="handleTransferAuditShow"
                 v-if="[STATUS.WAIT_AUDIT].includes(detail.status) && $auth('ADMIN')">
                 <i class="icon i_m_success"/>审核
             </a-button>
@@ -170,7 +170,7 @@ export default {
             });
         },
         // 调货单审核
-        handleTransferAuditShow(id) { // 显示弹框
+        handleTransferAuditShow() { // 显示弹框
             this.transferAuditShow = true
             this.editForm.id = this.id
         },
