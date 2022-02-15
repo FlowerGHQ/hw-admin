@@ -18,8 +18,8 @@
                     <div class="key">仓库类型：</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.type">
-                            <a-radio :value="typeList.TYPE_QUALITY">正品仓</a-radio>
-                            <a-radio :value="typeList.TYPE_DEFECTIVE">残次仓</a-radio>
+                            <a-radio :value="WAREHOUSE_TYPE.QUALITY">正品仓</a-radio>
+                            <a-radio :value="WAREHOUSE_TYPE.DEFECTIVE">残次仓</a-radio>
                         </a-radio-group>
                     </div>
                 </div>
@@ -58,7 +58,7 @@ export default {
             // 加载
             loading: false,
             detail: {},
-            typeList: Core.Const.STOCK_RECORD.PRODUCT_TYPE,
+            WAREHOUSE_TYPE: Core.Const.WAREHOUSE_RECORD.WAREHOUSE_TYPE,
 
             form: {
                 id: '',

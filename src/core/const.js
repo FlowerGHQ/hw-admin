@@ -546,7 +546,7 @@ let Const = {
             PURCHASE_ORDER: 2 // 采购单附件
         }
     },
-    STOCK_RECORD: {  //仓库明细
+    WAREHOUSE_RECORD: {  //仓库明细
         TYPE: {
             TYPE_IN: 1, //入库
             TYPE_OUT: 2, //出库
@@ -555,11 +555,11 @@ let Const = {
             1: '入库',
             2: '出库'
         },
-        PRODUCT_TYPE: {  //产品类型
-            TYPE_QUALITY: 1, //正品仓
-            TYPE_DEFECTIVE: 2, //残次仓
+        WAREHOUSE_TYPE: {
+            QUALITY: 1, //正品仓
+            DEFECTIVE: 2, //残次仓
         },
-        PRODUCT_TYPE_MAP: {
+        WAREHOUSE_TYPE_MAP: {
             1: '正品仓',
             2: '残次仓',
         },

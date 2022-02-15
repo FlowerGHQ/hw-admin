@@ -18,8 +18,8 @@
                     <div class="key">分销商类型:</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.type">
-                            <a-radio :value="typeList.INTERNAL">国内</a-radio>
-                            <a-radio :value="typeList.EXPORT">出口</a-radio>
+                            <a-radio :value="DISTRIBUTOR.INTERNAL">国内</a-radio>
+                            <a-radio :value="DISTRIBUTOR.EXPORT">出口</a-radio>
                         </a-radio-group>
                     </div>
                 </div>
@@ -77,7 +77,7 @@ export default {
             continentList: Core.Const.CONTINENT_LIST, // 大洲
             countryList: Core.Const.COUNTRY_LIST, // 国家
             countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
-            typeList: Core.Const.DISTRIBUTOR.TYPE,
+            DISTRIBUTOR: Core.Const.DISTRIBUTOR.TYPE,
             country_cascader: [],
             detail: {},
             form: {
