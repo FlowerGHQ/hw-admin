@@ -69,6 +69,9 @@
                             </a-tooltip>
                         </div>
                     </template>
+                    <template v-if="column.key === 'item'">
+                        {{ text || '-'}}
+                    </template>
                     <template v-if="column.key === 'money'">
                         €{{$Util.countFilter(text)}}
                     </template>
@@ -77,9 +80,7 @@
                             {{text ? '已上架' : '未上架'}}
                         </div>
                     </template>
-                    <template v-if="column.key === 'item'">
-                        {{ text || '-'}}
-                    </template>
+
                     <template v-if="column.key === 'tip_item'">
                         <a-tooltip placement="top" :title='text'>
                             <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
@@ -121,7 +122,7 @@
 
 <script>
 import Core from '../../core';
-import CategoryTreeSelect from './components/CategoryTreeSelect.vue'
+import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue';
 
 export default {
     name: 'ItemList',
@@ -174,11 +175,12 @@ export default {
         tableColumns() {
             let columns = [
                 { title: '商品名称', dataIndex: 'name', key: 'detail' },
+                { title: '商品分类', dataIndex: ['category','name'], key: 'item' },
                 { title: '商品型号', dataIndex: 'model', key: 'item' },
                 { title: '商品编码', dataIndex: 'code', key: 'item' },
                 { title: '成本价格', dataIndex: 'original_price', key: 'money' },
                 { title: '标准价格', dataIndex: 'price', key: 'money' },
-                { title: '商品分类', dataIndex: ['category','name'], key: 'item' },
+                { title: '工时费', dataIndex: 'price', key: 'money' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 // { title: '商品状态', dataIndex: 'status' },
                 { title: '操作', key: 'operation', fixed: 'right', width: 180 }

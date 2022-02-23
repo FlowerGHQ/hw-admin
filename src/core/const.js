@@ -28,7 +28,7 @@ switch (window.location.hostname) {
         break;
     default:
         // URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
-        URL_POINT = 'http://10.0.0.109:8083' // 谢耀圣
+        URL_POINT = 'http://10.0.0.121:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.205:8083' // 徐伟
         // URL_POINT = 'http://10.0.0.149:8083' // 徐伟
         // URL_POINT = 'http://10.0.0.39:8083'  // 姚志宇
@@ -131,7 +131,6 @@ let Const = {
             DISTRIBUTOR: 15, //分销商
             AGENT: 20,      // 零售商
             STORE: 30,      // 门店
-            WORKER: 40,     // 维修工
             CUSTOMER: 100,  // 顾客
         },
         TYPE_MAP: {
@@ -139,7 +138,6 @@ let Const = {
             15: '分销商',
             20: '零售商',
             30: '门店',
-            40: '维修工',
             100: '顾客',
         },
     },
@@ -161,7 +159,6 @@ let Const = {
             15: 'DISTRIBUTOR',
             20: 'AGENT',
             30: 'STORE',
-            40: 'WORKER',
             100: 'CUSTOMER',
         },
         ORG_TYPE: {
@@ -169,7 +166,6 @@ let Const = {
             DISTRIBUTOR: 15,
             AGENT: 20,
             STORE: 30,
-            REPAIR: 40,
         },
     },
 
@@ -221,12 +217,12 @@ let Const = {
             OUT_REPAIR_TIME: 2,
         },
         SERVICE_TYPE_LIST: [
-            {text: '保内维修', value: 1},
-            {text: '保外维修', value: 2},
+            {text: '保内', value: 1},
+            {text: '保外', value: 2},
         ],
         SERVICE_TYPE_MAP: {
-            1: '保内维修',
-            2: '保外维修',
+            1: '保内',
+            2: '保外',
         },
         // 维修方式
         CHANNEL_LIST: [
@@ -270,9 +266,9 @@ let Const = {
         },
         // 状态
         STATUS: {
-            WAIT_DISTRIBUTION: 10,
-            WAIT_CHECK: 20,
-            WAIT_AUDIT: 25,
+            // WAIT_DISTRIBUTION: 10,
+            // WAIT_CHECK: 20,
+            // WAIT_AUDIT: 25,
             WAIT_DETECTION: 30,
             WAIT_REPAIR: 40,
             REPAIR_END: 50,
@@ -283,9 +279,9 @@ let Const = {
             CLOSE: -10,
         },
         STATUS_MAP: {
-            '10': '待分配',
-            '20': '待确认',
-            '25': '待审核',
+            // '10': '待分配',
+            // '20': '待确认',
+            // '25': '待审核',
             '30': '待检测',
             '40': '维修中',
             '50': '已维修',
@@ -296,8 +292,8 @@ let Const = {
             '-10': '取消',
         },
         STATUS_COLOR_MAP: {
-            10: 'red',
-            20: 'orange',
+            // 10: 'red',
+            // 20: 'orange',
             30: 'yellow',
             40: 'blue',
             50: 'light',

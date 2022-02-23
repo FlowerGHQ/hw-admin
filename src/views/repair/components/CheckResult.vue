@@ -80,28 +80,12 @@ export default {
         return {
             // 加载
             loading: false,
-
             activeKey: ['affirm', 'change'],
-
             faultMap: {},
             repairTypeMap: Core.Const.REPAIR_ITEM.TYPE_MAP, // 维修商品类型
-
+            repairType: Core.Const.REPAIR_ITEM.TYPE,
             faultList: [],
-
             tableData: [],
-            tableColumns: [
-                {title: '故障原因', dataIndex: 'item_fault_id'},
-                {title: '商品名称', dataIndex: ['item','name'], key: 'item'},
-                {title: '商品编号', dataIndex: ['item','code'], key: 'item'},
-                {title: '单价', dataIndex: 'price'},
-                {title: '数量', dataIndex: 'amount'},
-                {title: '总价', key: 'total_price'},
-                {title: '维修类型', dataIndex: 'type'},
-                {title: '故障仓库', dataIndex: 'recycle_warehouse_name', key: 'item'},
-                {title: '换新仓库', dataIndex: 'warehouse_name', key: 'item'},
-                // {title: '接收门店', dataIndex: 'store_id'},
-                {title: '工时', dataIndex: 'man_hour'},
-            ],
         };
     },
     watch: {},
@@ -115,6 +99,27 @@ export default {
             }
             return {price, man_hour, amount}
         },
+        tableColumns() {
+            let { filteredInfo } = this;
+            filteredInfo = filteredInfo || {};
+            let tableColumns = [
+                {title: '故障原因', dataIndex: 'item_fault_id'},
+                {title: '商品名称', dataIndex: ['item','name'], key: 'item'},
+                {title: '商品编号', dataIndex: ['item','code'], key: 'item'},
+                {title: '单价', dataIndex: 'price'},
+                {title: '数量', dataIndex: 'amount'},
+                {title: '总价', key: 'total_price'},
+                {title: '维修类型', dataIndex: 'type'},
+                // {title: '回收仓', dataIndex: 'recycle_warehouse_name', key: 'item'},
+                {title: '良品仓', dataIndex: 'warehouse_name', key: 'item'},
+                // {title: '接收门店', dataIndex: 'store_id'},
+                {title: '工时', dataIndex: 'man_hour'},
+            ]
+            if (this.repairTypeMap === 1) {
+                tableColumns.splice(7, 0, {title: '回收仓', dataIndex: 'recycle_warehouse_name', key: 'item'})
+            }
+            return tableColumns
+        }
     },
     mounted() {
         console.log('mounted this.faultMap:', this.faultMap)

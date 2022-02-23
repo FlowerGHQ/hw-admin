@@ -251,7 +251,7 @@
 
 <script>
 import Core from '../../core';
-import CategoryTreeSelect from './components/CategoryTreeSelect.vue'
+import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue'
 import ItemHeader from './components/ItemHeader.vue'
 import VueTinymce from '@jsdawn/vue3-tinymce';
 

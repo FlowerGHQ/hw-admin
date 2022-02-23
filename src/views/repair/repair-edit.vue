@@ -80,7 +80,7 @@
             <div class="form-item required">
                 <div class="key">车辆编号</div>
                 <div class="value">
-                    <a-input v-model:value="form.item_code" placeholder="请输入车辆编号" @blur="handleCarCodeBlur"/>
+                    <a-input v-model:value="form.item_code" placeholder="请输入车辆编号"/>
                 </div>
                 <div class="sp">
                     <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
@@ -263,7 +263,6 @@ export default {
         // 获取 车主列表
         getCustomerList(val) {
             Core.Api.Customer.list(
-
             ).then(res => {
                 this.customerList = res.list
                 if (val == 'refresh') {
@@ -347,23 +346,6 @@ export default {
                     this.loading = false;
                 });
             }
-        },
-        handleCarCodeBlur() {  // 获取 车辆编码 数据
-            if (!this.form.item_code) {
-                return this.isExist = 0
-            }
-            Core.Api.Item.detailByCodeForRepair({
-                code: this.form.item_code,
-            }).then(res => {
-                if (res.detail) {
-                    this.isExist = 1
-                } else {
-                    this.isExist = 2
-                    this.$message.warning('该编号未在系统中，请确认车辆编号是否正确')
-                }
-            }).catch(err => {
-                console.log('handleCarCodeBlur err', err)
-            })
         },
         // 检查表单输入
         checkFormInput(form) {

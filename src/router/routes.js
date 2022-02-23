@@ -64,28 +64,6 @@ const routes = [
                 }
             },
             {
-                path: 'repair-confirm-list',
-                name: 'RepairConfirmList',
-                component: () => import('@/views/repair/repair-list.vue'),
-                meta: {
-                    title: '待确认工单',
-                    roles: [LOGIN_TYPE.DISTRIBUTOR],
-                    is_sub_menu: true,
-                    type: 'check'
-                }
-            },
-            {
-                path: 'repair-audit-list',
-                name: 'repairauditlist',
-                component: () => import('@/views/repair/repair-list.vue'),
-                meta: {
-                    title: '待审工单',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    is_sub_menu: true,
-                    type: 'audit'
-                }
-            },
-            {
                 path: 'repair-edit',
                 name: 'RepairEdit',
                 component: () => import('@/views/repair/repair-edit.vue'),
@@ -121,20 +99,8 @@ const routes = [
                 component: () => import('@/views/repair/item-fault-list.vue'),
                 meta: {
                     title: '故障管理',
-                    roles: [LOGIN_TYPE.ADMIN],
+                    roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT],
                     is_sub_menu: true
-                }
-            },
-            {
-                path: 'item-fault-edit',
-                name: 'FaultEdit',
-                component: () => import('@/views/repair/item-fault-edit.vue'),
-                hidden: true,
-                meta: {
-                    title: '故障编辑',
-                    title_en: 'fault-edit',
-                    parent: '/repair/item-fault-list',
-                    roles: [LOGIN_TYPE.ADMIN],
                 }
             },
         ]

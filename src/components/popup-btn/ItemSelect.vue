@@ -1,21 +1,30 @@
 <template>
     <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
-        <slot>{{btnText}}</slot>
+        <slot>{{ btnText }}</slot>
     </a-button>
-    <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px' @ok="handleConfirm">
+    <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'
+             @ok="handleConfirm">
         <div class="modal-content">
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
+                        <div class="key"><span>商品分类:</span></div>
+                        <div class="value">
+                            <CategoryTreeSelect @change="handleCategorySelect" :category-id='searchForm.category_id' />
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :md='12' class="search-item">
                         <div class="key"><span>商品编码:</span></div>
                         <div class="value">
-                            <a-input placeholder="请输入商品编码" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入商品编码" v-model:value="searchForm.code"
+                                     @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
                         <div class="key"><span>商品名称:</span></div>
                         <div class="value">
-                            <a-input placeholder="请输入商品名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入商品名称" v-model:value="searchForm.name"
+                                     @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                 </a-row>
@@ -25,7 +34,9 @@
                 </div>
             </div>
             <div class="table-container">
-                <ItemTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :check-mode='true' :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode'/>
+                <ItemTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow"
+                           :check-mode='true' :disabled-checked='disabledChecked' @submit="handleSelectItem"
+                           :radio-mode='radioMode'/>
             </div>
         </div>
         <template #footer>
@@ -55,6 +66,8 @@ import Core from '@/core';
 export default {
     components: {
         ItemTable: () => import('@/components/table/ItemTable.vue'),
+        CategoryTreeSelect: () => import("@/components/popup-btn/CategoryTreeSelect.vue")
+
     },
     emits: ['select'],
     props: {
@@ -83,7 +96,9 @@ export default {
         },
         disabledChecked: {
             type: Array,
-            default: () => { return [] }
+            default: () => {
+                return []
+            }
         },
         warehouseId: {
             type: Number,
@@ -98,29 +113,28 @@ export default {
             pageSize: 10,
             total: 0,
             warehouse_id: '',
-
             searchForm: {
                 code: "",
                 name: ""
             },
-
             modalShow: false,
 
             tableData: [],
 
             selectItems: [],
-            selectItemIds: []
+            selectItemIds: [],
         }
     },
     watch: {},
     computed: {
         tableColumns() {
             let tableColumns = [
-                { title: '商品名称', dataIndex: 'name',  key: 'detail' },
-                { title: '商品型号', dataIndex: 'model', key: 'item' },
-                { title: '商品规格', dataIndex: 'attr_list', key: 'spec' },
-                { title: '标准售价', dataIndex: 'price', key: 'money', },
-                { title: '商品编码', dataIndex: 'code',  key: 'item' },
+                {title: '商品分类', dataIndex: ['category','name']},
+                {title: '商品名称', dataIndex: 'name', key: 'detail'},
+                {title: '商品型号', dataIndex: 'model', key: 'item'},
+                {title: '商品规格', dataIndex: 'attr_list', key: 'spec'},
+                {title: '标准售价', dataIndex: 'price', key: 'money',},
+                {title: '商品编码', dataIndex: 'code', key: 'item'},
 
             ]
             if (this.warehouseId !== 0) {
@@ -129,9 +143,11 @@ export default {
             return tableColumns
         },
     },
-    created() {},
+    created() {
+    },
     mounted() {
         console.log('this.disabledChecked:', this.disabledChecked)
+        this.getTableData()
     },
     methods: {
         // handleSelectItem(ids, items ) {
@@ -160,7 +176,7 @@ export default {
                 page: this.currPage,
                 page_size: this.pageSize,
                 flag_spread: 1,
-            }).then(res =>{
+            }).then(res => {
                 console.log('getTableData res:', res)
                 res.list.forEach(item => {
                     item.children = null
@@ -186,12 +202,16 @@ export default {
             this.searchForm.name = ''
             this.pageChange(1)
         },
+        handleCategorySelect(val) {
+            this.searchForm.category_id = val
+            this.pageChange(1);
+        },
         handleSelectItem(ids, items) {
             console.log('handleSelectItem ids, items:', ids, items)
             this.selectItems = items
             this.selectItemIds = ids
         },
-        handleSelectRadio(){
+        handleSelectRadio() {
             // if (this.radioValue == "1"){
             //     this.getTableOrderData()
             // } else {

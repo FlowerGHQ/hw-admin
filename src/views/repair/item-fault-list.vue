@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">故障列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('ADMIN')"><i class="icon i_add"/>新增故障
+                    <a-button type="primary" @click="handleFaultShow()"><i class="icon i_add"/>新增故障
                     </a-button>
                 </div>
             </div>
@@ -21,8 +21,6 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改
-                            </a-button>
                             <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除
                             </a-button>
                         </template>
@@ -45,6 +43,23 @@
                 />
             </div>
         </div>
+        <template class="modal-container">
+            <a-modal v-model:visible="faultShow" title="新增故障" class="fault-modal"
+                     :after-close='handleFaultClose'>
+                <div class="modal-content">
+                    <div class="form-item required">
+                        <div class="key">原因:</div>
+                        <div class="value">
+                            <a-input v-model:value="editForm.name" placeholder="请输入故障名称"/>
+                        </div>
+                    </div>
+                </div>
+                <template #footer>
+                    <a-button @click="faultShow = false">取消</a-button>
+                    <a-button @click="handleFaultSubmit" type="primary">确定</a-button>
+                </template>
+            </a-modal>
+        </template>
     </div>
 </template>
 <script>
@@ -76,6 +91,11 @@ export default {
                 {title: '操作', key: 'operation', fixed: 'right'},
             ],
             tableData: [],
+            faultShow: false,
+            editForm: {
+                id: '',
+                name: '',
+            },
         };
     },
     watch: {},
@@ -84,16 +104,10 @@ export default {
         this.getTableData();
     },
     methods: {
-        routerChange(type, item = {}) {
-            console.log(item)
-            let routeUrl = ''
+        routerChange(type, item) {
             switch (type) {
-                case 'edit':    // 编辑
-                    routeUrl = this.$router.resolve({
-                        path: "/repair/item-fault-edit",
-                        query: {id: item.id}
-                    })
-                    window.open(routeUrl.href, '_self')
+                case 'back':
+                    this.$router.go(-1)
                     break;
             }
         },
@@ -114,6 +128,31 @@ export default {
             console.log('this.searchForm:', this.searchForm)
             this.create_time = []
             this.pageChange(1);
+        },
+        handleFaultShow(id) { // 显示弹框
+            this.faultShow = true
+            this.editForm.id = id
+        },
+        handleFaultClose() { // 关闭弹框
+            this.faultShow = false;
+            this.editForm = {
+                id: '',
+                name: '',
+            }
+        },
+        handleFaultSubmit() { // 审核提交
+            this.loading = true;
+            Core.Api.Fault.save({
+                ...this.editForm
+            }).then(res => {
+                this.$message.success('添加成功')
+                this.handleFaultClose()
+                this.getTableData()
+            }).catch(err => {
+                console.log('handleTransferAuditSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
