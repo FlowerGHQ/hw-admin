@@ -10,6 +10,7 @@ let URL_POINT = 'https://eos-api.hw.innotick.com'
 
 switch (window.location.hostname) {
     case 'eos.hw.innotick.com':
+    case "10.0.0.202":
         URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服
         break;
     case "10.0.0.205":
@@ -29,11 +30,11 @@ switch (window.location.hostname) {
     default:
         // URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
         URL_POINT = 'http://10.0.0.109:8083' // 谢耀圣
-        // URL_POINT = 'http://10.0.0.205:8083' // 徐伟
-        // URL_POINT = 'http://10.0.0.149:8083' // 徐伟
-        // URL_POINT = 'http://10.0.0.39:8083'  // 姚志宇
-        // URL_POINT = 'http://10.0.0.128:8083' // 姚志宇
-        // URL_POINT = 'http://10.0.0.155:8083' // 戚哲康
+            // URL_POINT = 'http://10.0.0.205:8083' // 徐伟
+            // URL_POINT = 'http://10.0.0.149:8083' // 徐伟
+            // URL_POINT = 'http://10.0.0.39:8083'  // 姚志宇
+            // URL_POINT = 'http://10.0.0.128:8083' // 姚志宇
+            // URL_POINT = 'http://10.0.0.155:8083' // 戚哲康
         break;
 }
 
@@ -127,12 +128,12 @@ let Const = {
 
     USER: { // 员工、账号、用户
         TYPE: {
-            ADMIN: 10,      // 管理员
+            ADMIN: 10, // 管理员
             DISTRIBUTOR: 15, //分销商
-            AGENT: 20,      // 零售商
-            STORE: 30,      // 门店
-            WORKER: 40,     // 维修工
-            CUSTOMER: 100,  // 顾客
+            AGENT: 20, // 零售商
+            STORE: 30, // 门店
+            WORKER: 40, // 维修工
+            CUSTOMER: 100, // 顾客
         },
         TYPE_MAP: {
             10: '平台方',
@@ -145,16 +146,16 @@ let Const = {
     },
     LOGIN: { // 登录
         TYPE: {
-            ADMIN: 10,     // 管理员
+            ADMIN: 10, // 管理员
             DISTRIBUTOR: 15, //分销商
-            AGENT: 20,     // 零售商
-            STORE: 30,     // 门店
+            AGENT: 20, // 零售商
+            STORE: 30, // 门店
         },
         TYPE_LIST: [
-            {value: 30, text: '门店'},
-            {value: 20, text: '零售商'},
-            {value: 15, text: '分销商'},
-            {value: 10, text: '平台方'},
+            { value: 30, text: '门店' },
+            { value: 20, text: '零售商' },
+            { value: 15, text: '分销商' },
+            { value: 10, text: '平台方' },
         ],
         TYPE_MAP: {
             10: 'ADMIN',
@@ -175,12 +176,12 @@ let Const = {
 
     DISTRIBUTOR: { // 代理商
         TYPE: {
-            INTERNAL: 1,  //国内
+            INTERNAL: 1, //国内
             EXPORT: 2, //出口
         },
         TYPE_LIST: [
-            {text: '国内', value: 1},
-            {text: '出口', value: 2},
+            { text: '国内', value: 1 },
+            { text: '出口', value: 2 },
         ],
         TYPE_MAP: {
             1: '国内',
@@ -189,20 +190,20 @@ let Const = {
     },
 
     ORG_STATUS_LIST: [ // 组织状态
-        {text: "启用", value: 1},
-        {text: "禁用", value: 0},
+        { text: "启用", value: 1 },
+        { text: "禁用", value: 0 },
     ],
 
     TRANSFER_STATUS_LIST: [ // 组织转单状态
-        {text: "接受转单", value: 1},
-        {text: "不接受转单", value: 0},
+        { text: "接受转单", value: 1 },
+        { text: "不接受转单", value: 0 },
     ],
 
     REPAIR: { // 维修工单
         // 工单分类
         TYPE_LIST: [
-            {text: '维修工单', value: 1}, // 普通工单
-            {text: '特批订单', value: 2},
+            { text: '维修工单', value: 1 }, // 普通工单
+            { text: '特批订单', value: 2 },
         ],
         TYPE_MAP: {
             1: '维修工单',
@@ -210,10 +211,10 @@ let Const = {
         },
         // 维修单类别
         CATEGORY_LIST: [
-            {text: '维修', value: 1},
-            {text: '换车', value: 2},
-            {text: '开箱损', value: 3},
-            {text: '电池维修', value: 4},
+            { text: '维修', value: 1 },
+            { text: '换车', value: 2 },
+            { text: '开箱损', value: 3 },
+            { text: '电池维修', value: 4 },
         ],
         // 工单帐类
         SERVICE_TYPE: {
@@ -221,8 +222,8 @@ let Const = {
             OUT_REPAIR_TIME: 2,
         },
         SERVICE_TYPE_LIST: [
-            {text: '保内维修', value: 1},
-            {text: '保外维修', value: 2},
+            { text: '保内维修', value: 1 },
+            { text: '保外维修', value: 2 },
         ],
         SERVICE_TYPE_MAP: {
             1: '保内维修',
@@ -230,9 +231,9 @@ let Const = {
         },
         // 维修方式
         CHANNEL_LIST: [
-            {text: '上门', value: 1},
-            {text: '到店', value: 2},
-            {text: '寄修', value: 3},
+            { text: '上门', value: 1 },
+            { text: '到店', value: 2 },
+            { text: '寄修', value: 3 },
         ],
         CHANNEL_MAP: {
             1: '上门',
@@ -240,13 +241,13 @@ let Const = {
             3: '寄修',
         },
         ORG_TYPE_LIST: [
-            {text: '零售商', value: 20},
-            {text: '门店', value: 30},
+            { text: '零售商', value: 20 },
+            { text: '门店', value: 30 },
         ],
         // 维修类别
         METHOD_LIST: [
-            {text: '维修', value: 1},
-            {text: '更换', value: 2},
+            { text: '维修', value: 1 },
+            { text: '更换', value: 2 },
         ],
         METHOD_MAP: {
             1: '维修',
@@ -254,9 +255,9 @@ let Const = {
         },
         // 优先级
         PRIORITY_LIST: [
-            {text: '高', value: 1},
-            {text: '中', value: 2},
-            {text: '低', value: 3},
+            { text: '高', value: 1 },
+            { text: '中', value: 2 },
+            { text: '低', value: 3 },
         ],
         PRIORITY_MAP: {
             1: '高',
@@ -316,8 +317,8 @@ let Const = {
         },
         // 维修结果
         RESULTS_LIST: [
-            {name: '成功', value: '1'},
-            {name: '失败', value: '2'},
+            { name: '成功', value: '1' },
+            { name: '失败', value: '2' },
         ],
         RESULTS: {
             SUCCESS: 1,
@@ -342,19 +343,19 @@ let Const = {
             REPAIR_ORDER: 20,
         },
         TYPE_MAP: {
-            101:  '维修单创建',
-            102:  '维修单信息完善/修改',
-            103:  '维修单分配维修人员',
-            104:  '维修单删除',
-            105:  '维修单取消',
-            110:  '二次上门',
-            201:  '维修单确认',
-            211:  '维修单审核',
-            301:  '维修检测',
-            303:  '删除故障零件',
-            304:  '删除故障零件',
-            401:  '维修完成',
-            501:  '结算完成',
+            101: '维修单创建',
+            102: '维修单信息完善/修改',
+            103: '维修单分配维修人员',
+            104: '维修单删除',
+            105: '维修单取消',
+            110: '二次上门',
+            201: '维修单确认',
+            211: '维修单审核',
+            301: '维修检测',
+            303: '删除故障零件',
+            304: '删除故障零件',
+            401: '维修完成',
+            501: '结算完成',
             1001: '订单转移',
         },
     },
@@ -393,9 +394,9 @@ let Const = {
             3: "银行转账",
         },
         PAY_METHOD_LIST: [
-            {name: '支付宝', value: '1'},
-            {name: '微信', value: '2'},
-            {name: '银行转账', value: '3'},
+            { name: '支付宝', value: '1' },
+            { name: '微信', value: '2' },
+            { name: '银行转账', value: '3' },
         ],
         // 评论
         FLAG_REVIEW: {
@@ -414,10 +415,10 @@ let Const = {
     },
     REFUND: { // 退款管理
         TYPE: [
-            {text: '零售商申请退款',value: 100},
-            {text: '分销商申请退款',value: 110},
-            {text: '门店申请退款',value: 120},
-            {text: '后台主动退款',value: 200},
+            { text: '零售商申请退款', value: 100 },
+            { text: '分销商申请退款', value: 110 },
+            { text: '门店申请退款', value: 120 },
+            { text: '后台主动退款', value: 200 },
         ],
         TYPE_MAP: {
             100: '零售商申请退款',
@@ -426,9 +427,9 @@ let Const = {
             200: '后台主动退款'
         },
         STATUS: {
-            WAIT_AUDIT: 10,    // 待审核
-            AUDIT_PASS: 20,    // 审核通过
-            SUCCESS: 40,       // 退款成功
+            WAIT_AUDIT: 10, // 待审核
+            AUDIT_PASS: 20, // 审核通过
+            SUCCESS: 40, // 退款成功
             AUDIT_REFUSE: -10, // 审核失败
             CANCEL: -20, // 已取消
         },
@@ -477,27 +478,27 @@ let Const = {
             'KYEXPRESS': '跨越速运',
         },
         COMPANY_LIST: [
-            {name: 'EMS', value: 'EMS'},
-            {name: '京东物流', value: 'JD'},
-            {name: '申通快递', value: 'STO'},
-            {name: '圆通速递', value: 'YTO'},
-            {name: '中通快递', value: 'ZTO'},
-            {name: '百世快递', value: 'HTKY'},
-            {name: '百世快运', value: 'BSKY'},
-            {name: '韵达快递', value: 'YUNDA'},
-            {name: '德邦快递', value: 'DEPPON'},
-            {name: '顺丰速运', value: 'SFEXPRESS'},
-            {name: '邮政包裹', value: 'CHINAPOST'},
-            {name: '跨越速运', value: 'KYEXPRESS'},
+            { name: 'EMS', value: 'EMS' },
+            { name: '京东物流', value: 'JD' },
+            { name: '申通快递', value: 'STO' },
+            { name: '圆通速递', value: 'YTO' },
+            { name: '中通快递', value: 'ZTO' },
+            { name: '百世快递', value: 'HTKY' },
+            { name: '百世快运', value: 'BSKY' },
+            { name: '韵达快递', value: 'YUNDA' },
+            { name: '德邦快递', value: 'DEPPON' },
+            { name: '顺丰速运', value: 'SFEXPRESS' },
+            { name: '邮政包裹', value: 'CHINAPOST' },
+            { name: '跨越速运', value: 'KYEXPRESS' },
         ],
     },
 
     NOTICE: { //系统消息
         TYPE: {
-            ADMIN: 10,  // 系统消息
+            ADMIN: 10, // 系统消息
             DISTRIBUTOR: 15, // 分销商
-            AGENT: 20,       // 零售商
-            STORE: 30,       // 门店
+            AGENT: 20, // 零售商
+            STORE: 30, // 门店
         },
         TYPE_MAP: {
             10: '系统消息',
@@ -525,19 +526,19 @@ let Const = {
     },
 
     AUTH_LIST_TEMP: [ // 权限
-        { list: [], select: [], key: 'home',            name: '总览' },
-        { list: [], select: [], key: 'distributor',     name: '代理商管理' },
-        { list: [], select: [], key: 'agent',           name: '零售商管理' },
-        { list: [], select: [], key: 'store',           name: '门店管理' },
-        { list: [], select: [], key: 'customer',        name: '客户管理' },
-        { list: [], select: [], key: 'org-user',        name: '员工管理' },
-        { list: [], select: [], key: 'item',            name: '商品管理' },
-        { list: [], select: [], key: 'warehouse',       name: '仓库管理' },
-        { list: [], select: [], key: 'purchase-order',  name: '采购订单管理' },
-        { list: [], select: [], key: 'refund',          name: '退款管理' },
-        { list: [], select: [], key: 'repair-order',    name: '维修单管理' },
-        { list: [], select: [], key: 'notice',          name: '消息管理' },
-        { list: [], select: [], key: 'system-file',     name: '系统文件管理' },
+        { list: [], select: [], key: 'home', name: '总览' },
+        { list: [], select: [], key: 'distributor', name: '代理商管理' },
+        { list: [], select: [], key: 'agent', name: '零售商管理' },
+        { list: [], select: [], key: 'store', name: '门店管理' },
+        { list: [], select: [], key: 'customer', name: '客户管理' },
+        { list: [], select: [], key: 'org-user', name: '员工管理' },
+        { list: [], select: [], key: 'item', name: '商品管理' },
+        { list: [], select: [], key: 'warehouse', name: '仓库管理' },
+        { list: [], select: [], key: 'purchase-order', name: '采购订单管理' },
+        { list: [], select: [], key: 'refund', name: '退款管理' },
+        { list: [], select: [], key: 'repair-order', name: '维修单管理' },
+        { list: [], select: [], key: 'notice', name: '消息管理' },
+        { list: [], select: [], key: 'system-file', name: '系统文件管理' },
     ],
 
     ATTACHMENT: {
@@ -563,7 +564,7 @@ let Const = {
             1: '正品仓',
             2: '残次仓',
         },
-        STATUS: {  //出入库单审核状态
+        STATUS: { //出入库单审核状态
             AIT_AUDIT: 10, //待审核
             AUDIT_PASS: 20, //审核通过
             CLOSE: 40, //处理完成
@@ -584,12 +585,12 @@ let Const = {
             '-10': 'red',
             '-20': 'grey'
         },
-        STATUS_LIST: [  //出入库单审核
-            {text: '待审核',value: 10},
-            {text: '审核通过',value: 20},
-            {text: '审核失败',value: -10},
-            {text: '处理完成',value: 40},
-            {text: '已取消',value: -20},
+        STATUS_LIST: [ //出入库单审核
+            { text: '待审核', value: 10 },
+            { text: '审核通过', value: 20 },
+            { text: '审核失败', value: -10 },
+            { text: '处理完成', value: 40 },
+            { text: '已取消', value: -20 },
         ],
         SOURCE_TYPE_MAP: {
             1: '管理员操作',
@@ -597,8 +598,8 @@ let Const = {
             31: '出/入库单'
         }
     },
-    TRANSFER_ORDER: {   //调货单
-        STATUS: {    //调货单审核状态
+    TRANSFER_ORDER: { //调货单
+        STATUS: { //调货单审核状态
             WAIT_AUDIT: 10, //待审核
             AUDIT_PASS: 20, //审核通过
             IN_TRANSIT: 30, //运输中
@@ -606,7 +607,7 @@ let Const = {
             AUDIT_REFUSE: -10, //审核失败
             CANCEL: -20, //取消
         },
-        STATUS_MAP:{
+        STATUS_MAP: {
             '10': '待审核',
             '20': '审核通过',
             '30': '运输中',
@@ -622,13 +623,13 @@ let Const = {
             '-10': 'red',
             '-20': 'grey'
         },
-        STATUS_LIST: [  //调货单审核
-            {text: '待审核',value: 10},
-            {text: '审核通过',value: 20},
-            {text: '运输中',value: 30},
-            {text: '处理完成',value: 40},
-            {text: '审核失败',value: -10},
-            {text: '已取消',value: -20},
+        STATUS_LIST: [ //调货单审核
+            { text: '待审核', value: 10 },
+            { text: '审核通过', value: 20 },
+            { text: '运输中', value: 30 },
+            { text: '处理完成', value: 40 },
+            { text: '审核失败', value: -10 },
+            { text: '已取消', value: -20 },
         ],
     },
 };
