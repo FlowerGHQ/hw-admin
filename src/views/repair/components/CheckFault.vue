@@ -5,14 +5,13 @@
             <a-collapse-panel key="affirm" header="故障确认" class="gray-collapse-panel">
                 <div class="panel-content affirm">
                     <div class="title"><i class="icon i_warning"/>共{{ faultSelect.length }}个故障
-                        <span class="title-fault">
-                        <a-button type="link" @click="routerChange('fault')">新增故障</a-button>
-                         <a-button type="link" @click="getFaultData('refresh')">刷新</a-button>
-                    </span>
                     </div>
                     <a-checkbox-group class="fault_select" v-model:value="faultSelect" @change="handleFaultSelect">
                         <a-checkbox v-for="(value,key) of faultMap" :key='key' :value='key'>{{ value }}</a-checkbox>
                     </a-checkbox-group>
+                    <div class="title-fault">
+                        <FaultList :id="id" ref="FaultList" @saveFault="getFaultData" btn-type="primary"/>
+                    </div>
                 </div>
             </a-collapse-panel>
             <a-collapse-panel key="change" header="零部件更换" class="gray-collapse-panel">
@@ -132,6 +131,7 @@
 import Core from '../../../core';
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 import SimpleImageEmpty from '@/components/common/SimpleImageEmpty.vue';
+import FaultList from '@/components/popup-btn/FaultList.vue';
 
 const REPAIR_TYPE = Core.Const.REPAIR_ITEM.TYPE
 
@@ -139,21 +139,27 @@ export default {
     name: 'RepairDetail',
     components: {
         ItemSelect,
+        FaultList,
         SimpleImageEmpty,
-        VNodes: (_, {attrs}) => {
-            return attrs.vnodes;
-        },
+        VNodes: (_, { attrs }) => { return attrs.vnodes; },
     },
     props: {
         id: {
-            type: Number
+            type: Number,
         },
         detail: {
             type: Object
-        }
+        },
+        orgId: {
+            type: Number,
+        },
+        orgType: {
+            type: Number,
+        },
     },
     data() {
         return {
+
             REPAIR_TYPE, // 维修商品类型
             SERVICE_TYPE: Core.Const.REPAIR.SERVICE_TYPE, // 工单帐类
             loginType: Core.Data.getLoginType(),
@@ -218,17 +224,6 @@ export default {
             }
             window.open(routeUrl.href, '_blank')
         },
-       /* getFaultList(val) { //刷新故障列表
-            Core.Api.Fault.list(
-
-            ).then(res => {
-                this.faultMap = res.list
-                if (val == 'refresh') {
-                    this.$message.success('刷新成功')
-                }
-            })
-        },*/
-
         // 获取门店列表
         getStoreList() {
             Core.Api.Store.listTransfer().then(res => {
@@ -241,7 +236,8 @@ export default {
             this.loading = true;
             // return
             Core.Api.Fault.list({
-                page: 0
+                org_id: this.orgId,
+                org_type: this.orgType,
             }).then(res => {
                 console.log("getFaultData res:", res)
                 let list = res.list;
@@ -440,9 +436,5 @@ export default {
 }
 </style>
 <style lang="less" scoped>
-.CheckFault {
-    .title-fault{
-        margin-left: 30px;
-    }
-}
+//.CheckFault {}
 </style>

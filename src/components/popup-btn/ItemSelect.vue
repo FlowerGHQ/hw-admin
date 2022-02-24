@@ -129,13 +129,12 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: '商品分类', dataIndex: ['category','name']},
                 {title: '商品名称', dataIndex: 'name', key: 'detail'},
+                {title: '商品分类', dataIndex: ['category','name']},
                 {title: '商品型号', dataIndex: 'model', key: 'item'},
+                {title: '商品编码', dataIndex: 'code', key: 'item'},
                 {title: '商品规格', dataIndex: 'attr_list', key: 'spec'},
                 {title: '标准售价', dataIndex: 'price', key: 'money',},
-                {title: '商品编码', dataIndex: 'code', key: 'item'},
-
             ]
             if (this.warehouseId !== 0) {
                 tableColumns.splice(3, 0, {title: '仓库库存', dataIndex: 'stock', key: 'stock'})
@@ -200,6 +199,7 @@ export default {
         handleSearchReset() {
             this.searchForm.code = ''
             this.searchForm.name = ''
+            this.searchForm.category_id = ''
             this.pageChange(1)
         },
         handleCategorySelect(val) {

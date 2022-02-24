@@ -7,7 +7,7 @@
                 <template v-if="$auth('AGENT', 'STORE') && detail.org_type == OrgType">
                     <!-- <template v-if="detail.account_id == User.id || $auth('MANAGER')"> -->
                     <!-- </template> -->
-                    <a-button type="primary" ghost @click="routerChange('edit')">
+                    <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION && $auth('AGENT', 'STORE')">
                         <i class="icon i_edit"/>编辑
                     </a-button>
                     <a-button type="primary" ghost @click="handleDeliveryShow()"
@@ -20,11 +20,9 @@
                     <a-button type="primary" @click="handleFaultSubmit()"
                         v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_submit"/>提交
                     </a-button>
-                    <a-button type="primary" @click="handleResultShow()"
-                        v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_completed"/>维修完成
-                    </a-button>
+
                     <a-button type="primary" @click="handleSettlement()"
-                        v-if="detail.status == STATUS.REPAIR_END"><i class="icon i_settle"/>结算
+                        v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_settle"/>结算
                     </a-button>
                 </template>
                 <a-button type="primary" @click="routerChange('invoice')"
@@ -60,27 +58,27 @@
                     <div class="key">优先级</div>
                     <div class="value">{{ $Util.repairPriorityFilter(detail.priority) }}</div>
                 </div>
-<!--                <div class="info-item">-->
-<!--                    <div class="key">创建时间</div>-->
-<!--                    <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>-->
-<!--                </div>-->
-<!--                <div class="info-item">-->
-<!--                    <div class="key">计划时间</div>-->
-<!--                    <div class="value">{{ $Util.timeFilter(detail.plan_time) || '-' }}</div>-->
-<!--                </div>-->
-<!--                <div class="info-item">-->
-<!--                    <div class="key">实施时间</div>-->
-<!--                    <div class="value">{{ $Util.timeFilter(detail.finish_time) || '-' }}</div>-->
-<!--                </div>-->
+                <div class="info-item">
+                    <div class="key">创建时间</div>
+                    <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
+                </div>
+<!--                <div class="info-item">
+                    <div class="key">计划时间</div>
+                    <div class="value">{{ $Util.timeFilter(detail.plan_time) || '-' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">实施时间</div>
+                    <div class="value">{{ $Util.timeFilter(detail.finish_time) || '-' }}</div>
+                </div>
                 <div class="info-item" v-if="detail.audit_message != ''">
                     <div class="key">未通过原因</div>
                     <div class="value">{{ detail.audit_message || '-' }}</div>
-                </div>
+                </div>-->
             </div>
         </div>
         <MySteps :stepsList='stepsList' :current='currStep' v-if="detail.status != STATUS.CLOSE"/>
         <div class="form-container">
-            <CheckFault   :id='id' :detail='detail' @submit="getRepairDetail" v-if="$auth('AGENT', 'STORE')" ref="CheckFault"/>
+            <CheckFault   :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DETECTION && $auth('AGENT', 'STORE')" ref="CheckFault"/>
             <CheckResult  :id='id' :detail='detail' v-if="showCheckResult" @hasTransfer='hasTransfer = true'/>
             <RepairInfo  :id='id' :detail='detail'/>
             <AttachmentFile :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER'/>
@@ -159,7 +157,7 @@ export default {
                 {title: '维修'},
                 {title: '结算'},
             ],
-            currStep: 1,
+            currStep: 0,
 
             faultMap: {}, // 所有故障类型
 
@@ -259,26 +257,17 @@ export default {
         // 获取当前工单进度
         getCurrStep(status) {
             switch (status) {
-                case STATUS.WAIT_DISTRIBUTION:
+                case STATUS.WAIT_DETECTION:
                     this.currStep = 0;
                     break;
-                case STATUS.WAIT_CHECK:
-                case STATUS.WAIT_AUDIT:
-                case STATUS.CHECK_FAIL:
-                case STATUS.AUDIT_FAIL:
+                case STATUS.WAIT_REPAIR:
                     this.currStep = 1;
                     break;
-                case STATUS.WAIT_DETECTION:
+                case STATUS.REPAIR_END:
                     this.currStep = 2;
                     break;
-                case STATUS.WAIT_REPAIR:
-                    this.currStep = 3;
-                    break;
-                case STATUS.REPAIR_END:
-                    this.currStep = 4;
-                    break;
                 case STATUS.SETTLEMENT:
-                    this.currStep = 5;
+                    this.currStep = 3;
                     break;
             }
         },
@@ -315,11 +304,11 @@ export default {
         },
 
         // 提交 维修结果
-        handleResultShow() {
-            this.resultShow = true
-            Object.assign(this.resultForm, this.$options.data().resultForm)
-        },
-        handleResultSubmit() {
+        // handleResultShow() {
+        //     this.resultShow = true
+        //     Object.assign(this.resultForm, this.$options.data().resultForm)
+        // },
+       /* handleResultSubmit() {
             this.loading = true;
             let form = Core.Util.deepCopy(this.resultForm)
             if (form.results == 2 && !form.audit_message) {
@@ -337,7 +326,7 @@ export default {
                 this.loading = false;
                 this.resultShow = false
             });
-        },
+        },*/
 
         // 工单 结算
         handleSettlement() {

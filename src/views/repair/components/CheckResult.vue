@@ -19,8 +19,11 @@
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => {return JSON.stringify(record)}" :pagination='false' size="small">
                     <template #bodyCell="{ column, record, text }">
-                        <template v-if="column.dataIndex === 'item_fault_id'">
+                        <template v-if="column.dataIndex === 'name'">
                             {{ faultMap[text] || '-' }}
+                        </template>
+                        <template v-if="column.key === 'service_type'">
+                            {{ $Util.repairServiceFilter(detail.service_type) }}
                         </template>
                         <template v-if="column.dataIndex === 'price'">
                             €{{ $Util.countFilter(text) }}
@@ -103,6 +106,7 @@ export default {
             let { filteredInfo } = this;
             filteredInfo = filteredInfo || {};
             let tableColumns = [
+                {title: '维修帐类', key: 'service_type'},
                 {title: '故障原因', dataIndex: 'item_fault_id'},
                 {title: '商品名称', dataIndex: ['item','name'], key: 'item'},
                 {title: '商品编号', dataIndex: ['item','code'], key: 'item'},
@@ -110,14 +114,11 @@ export default {
                 {title: '数量', dataIndex: 'amount'},
                 {title: '总价', key: 'total_price'},
                 {title: '维修类型', dataIndex: 'type'},
-                // {title: '回收仓', dataIndex: 'recycle_warehouse_name', key: 'item'},
+                {title: '回收仓', dataIndex: 'recycle_warehouse_name', key: 'item'},
                 {title: '良品仓', dataIndex: 'warehouse_name', key: 'item'},
                 // {title: '接收门店', dataIndex: 'store_id'},
                 {title: '工时', dataIndex: 'man_hour'},
             ]
-            if (this.repairTypeMap === 1) {
-                tableColumns.splice(7, 0, {title: '回收仓', dataIndex: 'recycle_warehouse_name', key: 'item'})
-            }
             return tableColumns
         }
     },
@@ -130,9 +131,9 @@ export default {
         // 获取 所有故障类型
         getFaultData() {
             this.loading = true;
-            // return
             Core.Api.Fault.list({
-                page: 0
+                org_id: this.detail.org_id,
+                org_type: this.detail.org_type,
             }).then(res => {
                 console.log("getFaultData res:", res)
                 let list = res.list;

@@ -274,8 +274,8 @@ let Const = {
             REPAIR_END: 50,
             SETTLEMENT: 60,
             // TRANSFER: 100,
-            CHECK_FAIL: -20,
-            AUDIT_FAIL: -30,
+            // CHECK_FAIL: -20,
+            // AUDIT_FAIL: -30,
             CLOSE: -10,
         },
         STATUS_MAP: {
@@ -287,8 +287,8 @@ let Const = {
             '50': '已维修',
             '60': '已结算',
             // 100: '已转单',
-            '-20': '确认未通过',
-            '-30': '审核未通过',
+            // '-20': '确认未通过',
+            // '-30': '审核未通过',
             '-10': '取消',
         },
         STATUS_COLOR_MAP: {

@@ -95,11 +95,11 @@
                     <template v-if="column.dataIndex === 'type'">
                         {{$Util.repairTypeFilter(text)}}
                     </template>
-                    <template v-if="column.dataIndex === 'priority'">
+<!--                    <template v-if="column.dataIndex === 'priority'">
                         <div class="status status-bg status-tag smell" :class="$Util.repairPriorityFilter(text,'color')">
                             {{$Util.repairPriorityFilter(text)}}
                         </div>
-                    </template>
+                    </template>-->
                     <template v-if="column.dataIndex === 'channel'">
                         {{$Util.repairChannelFilter(text)}}
                     </template>
@@ -281,8 +281,8 @@ export default {
                 { title: '维修门店电话', dataIndex: 'repair_phone', key: 'item' },
                 { title: '创建人',   dataIndex: 'user_name', key: 'item' },
                 { title: '关联客户', dataIndex: 'customer_name', key: 'item' },
-                // { title: '创建时间', dataIndex: 'create_time', key: 'time' },
-                { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
+                { title: '创建时间', dataIndex: 'create_time', key: 'time' },
+                // { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
                 // { title: '订单状态', dataIndex: 'status', fixed: 'right'},
             ]
             if (this.operMode) {
