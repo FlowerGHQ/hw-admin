@@ -1,4 +1,4 @@
-import {Modal} from 'ant-design-vue';
+import { Modal } from 'ant-design-vue';
 import { createVNode } from 'vue';
 import Data from './data';
 import Const from './const';
@@ -48,7 +48,7 @@ const Util = {
             if (Array.isArray(target)) {
                 obj = [];
             }
-            copyed_objs.push({target: target, copyTarget: obj})
+            copyed_objs.push({ target: target, copyTarget: obj })
             Object.keys(target).forEach(key => {
                 if (obj[key]) {
                     return;
@@ -90,7 +90,7 @@ const Util = {
      * 检测字符串中是否包含 表情图标
      * @param {String} str 需要检测的字符串
      */
-    includeEmoji(str = '',) {
+    includeEmoji(str = '', ) {
         str = str.toString()
         let regRule = /\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g
         return str.match(regRule) ? true : false
@@ -108,9 +108,9 @@ const Util = {
         parentId = parentId || 'parentId'
         children = children || 'children'
         rootId = rootId || 0
-        //对源数据深度克隆
+            //对源数据深度克隆
         const cloneData = JSON.parse(JSON.stringify(data))
-        //循环所有项
+            //循环所有项
         const treeData = cloneData.filter(father => {
             let branchArr = cloneData.filter(child => {
                 //返回每一项的子级数组
@@ -301,7 +301,7 @@ const Util = {
     },
 
     addressFilter(obj, type = 1) {
-        let {province, city, county, address} = obj
+        let { province, city, county, address } = obj
         if (!province && !city && !county && !address) {
             return '-'
         }
@@ -316,16 +316,16 @@ const Util = {
     boolFlagFilter(val, name) {
         if (name) {
             switch (val) {
-                case  10:
+                case 10:
                     return '已' + name
-                case  0:
+                case 0:
                     return '未' + name
                 default:
                     return '未知'
             }
         } else {
             switch (val) {
-                case  10:
+                case 10:
                     return '是'
                 case -10:
                     return '否'
@@ -447,6 +447,10 @@ const Util = {
         const MAP = Const.WAYBILL.COMPANY_MAP
         return MAP[key] || '未知物流公司'
     },
+    waybillTargetFilter(val) {
+        const MAP = Const.WAYBILL.TARGET_TYPE_MAP
+        return MAP[val] || '未知货物订单'
+    },
     /* =============== 物流信息 ================ */
 
     /* =============== 系统管理 ================ */
@@ -465,7 +469,7 @@ const Util = {
         const MAP = Const.REFUND.TYPE_MAP
         return MAP[val] || '未知'
     },
-    refundStatusFilter(val, to ='word') {
+    refundStatusFilter(val, to = 'word') {
         const MAP = Const.REFUND.STATUS_MAP
         const COLOR_MAP = Const.REFUND.STATUS_COLOR_MAP
         switch (to) {

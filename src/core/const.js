@@ -459,23 +459,23 @@ let Const = {
             IN: 1,
             OUT: 2,
         },
-        TYPE_LIST: [
-            { text: '采购订单物流', value: 10 },
-            { text: '维修单转单物流', value: 20 },
-            { text: '维修单调货单物流', value: 30 },
-            { text: '售后单物流', value: 40 },
-        ],
-        TYPE_LIST_MAP: {
-            10: '采购订单物流',
-            20: '维修单转单物流',
-            30: '维修单调货单物流',
-            40: '售后单物流'
-        },
         TARGET_TYPE: {
             PURCHASE_ORDER: 10, //采购订单物流
             REPAIR_ORDER_TRANSFER: 20, //维修单转单物流
             TRANSFER_ORDER: 30, //维修单调货单物流
             AFTER_SALES_ORDER: 40 //售后单物流
+        },
+        TARGET_TYPE_LIST: [
+            { text: '采购订单物流', value: 10 },
+            { text: '维修单转单物流', value: 20 },
+            { text: '维修单调货单物流', value: 30 },
+            { text: '售后单物流', value: 40 },
+        ],
+        TARGET_TYPE_MAP: {
+            10: '采购订单物流',
+            20: '维修单转单物流',
+            30: '维修单调货单物流',
+            40: '售后单物流'
         },
         COMPANY_MAP: {
             'EMS': 'EMS',

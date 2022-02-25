@@ -16,12 +16,20 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">物流单类型:</div>
+                        <div class="key">货物清单类型:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择物流单类型">
-                              <a-select-option v-for="(val, index) of wayBillOptions" :key="index" :value="val.value">{{val.text}}</a-select-option>
+                            <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择货物清单类型">
+                              <a-select-option v-for="(val, index) of waybillOptions" :key="index" :value="val.value">{{val.text}}</a-select-option>
                             </a-select>
                         </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
+                        <div class="key">创建时间:</div>
+                        <div class="value">
+                        <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
+                            <template #suffixIcon><i class="icon i_calendar"></i> </template>
+                        </a-range-picker>
+                    </div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
@@ -32,24 +40,21 @@
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false' @change="handleTableChange">
-                    <template #bodyCell="{ column, record}">
-                        <template v-if="column.dataIndex === 'org_type'">
+                    <template #bodyCell="{ column, record, text}">
+                        <!-- <template v-if="column.dataIndex === 'org_type'">
                           机构类型
                         </template>
-                        <template v-if="column.dataIndex === 'target_type'">
-                          货物清单类型
-                        </template>
                         <template v-if="column.dataIndex === 'company'">
-                          物流公司名称
-                        </template>
-                        <template v-if="column.dataIndex === 'uid'">
-                          物流编号
-                        </template>
-                        <template v-if="column.dataIndex === 'post_fee'">
-                          费用
+                          物流公司名
                         </template>
                         <template v-if="column.dataIndex === 'goods_over_view'">
                           包装显示的商品名称
+                        </template> -->
+                        <template v-if="column.dataIndex === 'target_type'">
+                          {{ $Util.waybillTargetFilter(text) }}
+                        </template>
+                        <template v-if="column.key === 'time'">
+                        {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
                             <template v-if="!record.default_item_id">
@@ -84,7 +89,7 @@
 import Core from '../../core';
 
 export default {
-    name: 'WayBillList',
+    name: 'WaybillList',
     components: {},
     props: {},
     data() {
@@ -97,7 +102,9 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
-            wayBillOptions: Core.Const.WAYBILL.TYPE_LIST,
+            waybillOptions: Core.Const.WAYBILL.TARGET_TYPE_LIST,
+            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
+            create_time: [],
             searchForm: {
                 uid:'',
                 type: undefined,
@@ -108,14 +115,16 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                // {title: '机构id', dataIndex: 'org_id'},
                 {title: '机构类型', dataIndex: 'org_type'},
-                // {title: '货物清单id', dataIndex: 'target_id'},
                 {title: '货物清单类型', dataIndex: 'target_type'},
                 {title: '物流公司名称', dataIndex: 'company'},
                 {title: '物流编号', dataIndex: 'uid'},
-                {title: '费用', dataIndex: 'post_fee'},
+                {title: '寄件人', dataIndex: 'sender'},
+                {title: '寄件人电话', dataIndex: 'sender_phone'},
+                {title: '收件人', dataIndex: 'receiver'},
+                {title: '收件人电话', dataIndex: 'receiver_phone'},
                 {title: '包装显示的商品名称', dataIndex: 'goods_over_view'},
+                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
             return columns
@@ -166,7 +175,23 @@ export default {
         handleTableChange() {   
         },
         // 获取 表格 数据 
-        getTableData() {            
+        getTableData() {       
+            this.loading = true;
+            Core.Api.Waybill.list({
+                ...this.searchForm,
+                begin_time: this.create_time[0] || '',
+                end_time: this.create_time[1] || '',
+                page: this.currPage,
+                page_size: this.pageSize
+            }).then(res => {
+                console.log("getTableData res", res)
+                this.total = res.count;
+                this.tableData = res.list;
+            }).catch(err => {
+                console.log('getTableData err', err)
+            }).finally(() => {
+                this.loading = false;
+            });     
         },
         //处理状态改变
         handleStatusChange() {   

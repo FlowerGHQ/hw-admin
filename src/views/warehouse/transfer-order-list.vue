@@ -56,7 +56,7 @@
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                         :row-key="record => record.id" :pagination='false' @change="handleTableChange">
+                         :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record}">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
@@ -129,6 +129,26 @@
         <a-modal v-model:visible="transferOrderShow" title="新建调货单" class="transfer-modal"
                  :after-close="handleTransferOrderClose">
             <div class="form-item required">
+                <div class="key">单位类型:</div>
+                <div class="value">
+                    <a-select placeholder="请选择单位类型" v-model:value='form.org_type' @change="handleOrgTypeChange">
+                        <a-select-option v-for="item of orgTypeList" :key="item.value" :value="item.value">
+                            {{ item.text }}
+                        </a-select-option>
+                    </a-select>
+                </div>
+            </div>     
+            <div class="form-item required">
+                <div class="key">货物来源:</div>
+                <div class="value">
+                    <a-select placeholder="请选择单位类型" v-model:value='form.org_id'>
+                        <a-select-option v-for="item of orgList" :key="item.id" :value="item.id">
+                            {{ item.name }}
+                        </a-select-option>
+                    </a-select>
+                </div>
+            </div>     
+            <div class="form-item required">
                 <div class="key">仓库:</div>
                 <div class="value">
                     <a-select v-model:value="form.to_warehouse_id" placeholder="请选择仓库">
@@ -182,6 +202,7 @@
 import Core from '../../core';
 
 const TRANSFER_ORDER = Core.Const.TRANSFER_ORDER
+const ORG_TYPE = Core.Const.LOGIN.TYPE
 export default {
     name: 'TransferOrderList',
     components: {},
@@ -189,6 +210,7 @@ export default {
     data() {
         return {
             loginType: Core.Data.getLoginType(),
+            STATUS: TRANSFER_ORDER.STATUS,
             // 加载
             loading: false,
             // 分页
@@ -201,10 +223,6 @@ export default {
             detail: {
                 warehouse: {}
             },
-            transferOrderShow: false,
-
-            filteredInfo: {status: [0]},
-            warehouseList: [],
             statusList: [
                 {text: '全  部', value: '0', color: 'primary', key: '0'},
                 {text: '待审核', value: '0', color: 'yellow', key: TRANSFER_ORDER.STATUS.AIT_AUDIT},
@@ -213,33 +231,49 @@ export default {
                 {text: '处理完成', value: '0', color: 'green', key: TRANSFER_ORDER.STATUS.CLOSE},
                 {text: '已取消', value: '0', color: 'grey', key: TRANSFER_ORDER.STATUS.CANCEL},
             ],
+            // 搜索
             searchForm: {
                 warehouse_id: undefined,
                 uid: '',
                 status: undefined,
                 type: undefined,
             },
-            warehouse_id: '',
+            // 表格
+            tableData: [],
+
+            
+            // 创建
+            orgType: Core.Data.getOrgType(), // 操作者的组织类型
+
+            orgTypeList: Core.Const.LOGIN.TYPE_LIST,
+            storeList: [],
+            agentList: [],
+            distributorList: [],
+            warehouseList: [],
+            orgList: [],
+            transferOrderShow: false,
+
             form: {
+                org_type: undefined,
+                org_id: undefined,
                 to_warehouse_id: undefined,
-                warehouse_id: undefined,
                 apply_message: '',
             },
-            tableData: [],
+            // 审核
             transferAuditShow: false,
-            STATUS: Core.Const.TRANSFER_ORDER.STATUS,
             editForm: {
                 id: '',
                 status: 20,
                 audit_message: '',
             },
+
+
+
         };
     },
     watch: {},
     computed: {
         tableColumns() {
-            let {filteredInfo} = this;
-            filteredInfo = filteredInfo || {};
             let columns = [
                 {title: '调货单编号', dataIndex: 'uid', key: 'detail'},
                 {title: '申请原因', dataIndex: 'apply_message', key: 'tip_time'},
@@ -262,7 +296,6 @@ export default {
     },
     mounted() {
         this.getTableData();
-        this.getWarehouseList();
         this.getStatusList();
     },
     methods: {
@@ -285,38 +318,6 @@ export default {
                     window.open(routeUrl.href, '_self')
                     break;
             }
-        },
-        handleTransferOrderShow() {
-            this.transferOrderShow = true;
-        },
-        handleTransferOrderClose() {
-            this.transferOrderShow = false;
-            this.form = {
-                type: '',
-                to_warehouse_id: '',
-                warehouse_id: '',
-            }
-        },
-        getWarehouseList() {
-            Core.Api.Warehouse.listAll().then(res => {
-                this.warehouseList = res.list
-            })
-        },
-        handleTransferOrderSubmit() {
-            let form = Core.Util.deepCopy(this.form)
-            if (!form.to_warehouse_id) {
-                return this.$message.warning('请选择仓库')
-            }
-            if (!form.apply_message) {
-                return this.$message.warning('请输入申请原因')
-            }
-            Core.Api.Transfer.save(form).then(res => {
-                this.$message.success('保存成功')
-                this.handleTransferOrderClose()
-                this.routerChange('edit', res.detail)
-            }).catch(err => {
-                console.log('handleTransferSubmit err:', err)
-            })
         },
         pageChange(curr) {    // 页码改变
             this.currPage = curr
@@ -354,46 +355,6 @@ export default {
                 this.loading = false;
             });
         },
-        handleCancel(id) {
-            let _this = this;
-            this.$confirm({
-                title: '确定要取消该调货单吗？',
-                okText: '确定',
-                okType: 'danger',
-                cancelText: '取消',
-                onOk() {
-                    Core.Api.Transfer.cancel({id}).then(() => {
-                        _this.$message.success('取消成功');
-                        _this.getStatusList();
-                        _this.getTableData();
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
-                },
-            });
-        },
-        handleTransferAuditShow(id) { // 显示弹框
-            this.transferAuditShow = true
-            this.editForm.id = id
-        },
-        handleTransferAuditClose() { // 关闭弹框
-            this.transferAuditShow = false;
-        },
-        handleTransferAuditSubmit() { // 审核提交
-            this.loading = true;
-            Core.Api.Transfer.audit({
-                ...this.editForm
-            }).then(res => {
-                console.log('handleTransferAuditSubmit res', res)
-                this.handleTransferAuditClose()
-                this.getTableData()
-                this.getStatusList()
-            }).catch(err => {
-                console.log('handleTransferAuditSubmit err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
         getStatusList() {    // 获取 状态 列表
             Object.assign(this.statusList, this.$options.data().statusList)
             Core.Api.Transfer.status({
@@ -419,14 +380,161 @@ export default {
                 this.loading = false;
             });
         },
-        handleTableChange(page, filters, sorter) {
-            console.log('handleTableChange filters:', filters)
-            this.filteredInfo = filters;
-            for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : ''
+        
+        // 调货单审核
+        handleTransferAuditShow(id) { // 显示弹框
+            this.transferAuditShow = true
+            this.editForm.id = id
+        },
+        handleTransferAuditClose() { // 关闭弹框
+            this.transferAuditShow = false;
+        },
+        handleTransferAuditSubmit() { // 审核提交
+            this.loading = true;
+            Core.Api.Transfer.audit({
+                ...this.editForm
+            }).then(res => {
+                console.log('handleTransferAuditSubmit res', res)
+                this.handleTransferAuditClose()
+                this.getTableData()
+                this.getStatusList()
+            }).catch(err => {
+                console.log('handleTransferAuditSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+
+        // 取消调货单
+        handleCancel(id) {
+            let _this = this;
+            this.$confirm({
+                title: '确定要取消该调货单吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Transfer.cancel({id}).then(() => {
+                        _this.$message.success('取消成功');
+                        _this.getStatusList();
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
+        
+
+        
+
+
+
+        handleTransferOrderShow() {
+            this.getWarehouseList();
+            this.getStoreList();
+            this.getAgentList();
+            this.getDistributorList();
+            this.transferOrderShow = true;
+        },
+        getWarehouseList() {
+            Core.Api.Warehouse.listAll().then(res => {
+                this.warehouseList = res.list
+            })
+        },
+        getStoreList() {
+            this.storeList = []
+            return 
+            if (this.orgType === ORG_TYPE.STORE) {
+                // todo 获取同级的门店列表
+                Core.Api.Store.listBySameLevel().then(res => {
+                    this.storeList = res.list
+                })
+            }  else if (this.orgType < ORG_TYPE.STORE) {
+                Core.Api.Store.listAll().then(res => {
+                    console.log('getStoreList', res);
+                    this.storeList = res.list
+                })
             }
-            this.searchForm.status = filters.status ? filters.status[0] : 1
-            this.pageChange(1);
+        },
+        getAgentList() {
+            this.agentList = []
+            return 
+            if (this.orgType === ORG_TYPE.AGENT) {
+                // todo 获取同级的零售商列表
+                Core.Api.Agent.listBySameLevel().then(res => {
+                    this.agentList = res.list
+                })
+            } else if (this.orgType > ORG_TYPE.AGENT) {
+                // todo 门店 获取所属零售商的信息
+                Core.Api.Agent.detailByLowLevel().then(res => {
+                    this.agentList = [{name: res.detail.name, id:res.detail.id}]
+                })
+            } else if (this.orgType < ORG_TYPE.AGENT) {
+                Core.Api.Agent.listAll().then(res => {
+                    this.agentList = res.list
+                })
+            }
+        },
+        getDistributorList() {
+            this.distributorList = []
+            return 
+            if (this.orgType === ORG_TYPE.DISTRIBUTOR) {
+                // todo 获取同级的分销商列表
+                Core.Api.Distributor.listBySameLevel().then(res => {
+                    this.distributorList = res.list
+                })
+            } else if (this.orgType > ORG_TYPE.DISTRIBUTOR) {
+                // todo 门店、零售 获取上属分销商的信息
+                Core.Api.Distributor.detailByLowLevel().then(res => {
+                    this.distributorList = [{name: res.detail.name, id:res.detail.id}]
+                })
+            }
+        },
+        // 单位类型改变
+        handleOrgTypeChange(val) {
+            console.log('handleOrgTypeChange this.form.org_type', val);
+            switch (val) {
+                case ORG_TYPE.ADMIN:
+                    this.orgList = [{name: '平台', id: 1 }]
+                    break;
+                case ORG_TYPE.DISTRIBUTOR:
+                    this.orgList = this.distributorList
+                    break;
+                case ORG_TYPE.AGENT:
+                    this.orgList = this.agentList
+                    break;
+                case ORG_TYPE.STORE:
+                    this.orgList = this.storeList
+                    break;
+            }
+            console.log('handleOrgTypeChange this.orgList', this.orgList);
+
+            if (this.orgList.length == 1) {
+                this.form.org_id = this.orgList[0].id
+            }
+            console.log('handleOrgTypeChange this.form.org_id', this.form.org_id);
+        },
+        handleTransferOrderClose() {
+            this.transferOrderShow = false;
+            Object.assign(this.form, this.$options.data().form)
+        },
+        
+        handleTransferOrderSubmit() {
+            let form = Core.Util.deepCopy(this.form)
+            if (!form.to_warehouse_id) {
+                return this.$message.warning('请选择仓库')
+            }
+            if (!form.apply_message) {
+                return this.$message.warning('请输入申请原因')
+            }
+            Core.Api.Transfer.save(form).then(res => {
+                this.$message.success('保存成功')
+                this.handleTransferOrderClose()
+                this.routerChange('edit', res.detail)
+            }).catch(err => {
+                console.log('handleTransferSubmit err:', err)
+            })
         },
     }
 };
