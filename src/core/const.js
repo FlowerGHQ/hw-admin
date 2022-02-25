@@ -542,56 +542,65 @@ let Const = {
             PURCHASE_ORDER: 2 // 采购单附件
         }
     },
-    WAREHOUSE_RECORD: {
+    WAREHOUSE: {
+        TYPE: {  //仓库类型
+            QUALITY: 1, //正品仓
+            DEFECTIVE: 2, //残次仓
+        },
+        TYPE_MAP: {
+            1: '正品仓',
+            2: '残次仓',
+        },
+    },
+    STOCK_RECORD: {  // 出入库明细
+        COMMODITY_TYPE: {
+            ENTITY: 20,
+            ITEM: 10,
+        },
+        COMMODITY_TYPE_MAP: {
+            20: '整车',
+            10: '零部件',
+        },
         TYPE: {
-            TYPE_IN: 1, //入库
-            TYPE_OUT: 2, //出库
+            IN: 1, //入库
+            OUT: 2, //出库
         },
         TYPE_MAP: {
             1: '入库',
             2: '出库'
         },
-        WAREHOUSE_TYPE: {
-            QUALITY: 1, //正品仓
-            DEFECTIVE: 2, //残次仓
-        },
-        WAREHOUSE_TYPE_MAP: {
-            1: '正品仓',
-            2: '残次仓',
-        },
         STATUS: {  //出入库单审核状态
-            AIT_AUDIT: 10, //待审核
-            AUDIT_PASS: 20, //审核通过
-            CLOSE: 40, //处理完成
-            AUDIT_REFUSE: -10, //审核失败
+            INIT: 0, //初始化
+            CLOSE: 40, //已完成
             CANCEL: -20, // 取消
         },
         STATUS_MAP: {
-            '10': '待审核',
-            '20': '审核通过',
-            '40': '处理完成',
-            '-10': '审核失败',
+            '0': '初始化',
+            '40': '已完成',
             '-20': '已取消'
         },
         STATUS_COLOR_MAP: {
-            '10': 'yellow',
-            '20': 'blue',
+            '0': 'yellow',
             '40': 'green',
-            '-10': 'red',
             '-20': 'grey'
         },
         STATUS_LIST: [  //出入库单审核
-            {text: '待审核',value: 10},
-            {text: '审核通过',value: 20},
-            {text: '审核失败',value: -10},
-            {text: '处理完成',value: 40},
-            {text: '已取消',value: -20},
+            {text: '初始化', value: 0},
+            {text: '已完成', value: 40},
+            {text: '已取消', value: -20},
         ],
+        SOURCE_TYPE: {
+            ADMIN: 10, //管理员创建
+            PURCHASE_ORDER: 20, //采购单
+            AFTER_SALES_ORDER: 30, //售后
+            TRANSFER_ORDER: 40,
+        },
         SOURCE_TYPE_MAP: {
-            1: '管理员操作',
-            21: '维修单',
-            31: '出/入库单'
-        }
+            10: '管理员创建',
+            20: '采购',
+            30: '售后',
+            40: '调货',
+        },
     },
     TRANSFER_ORDER: {   //调货单
         STATUS: {    //调货单审核状态

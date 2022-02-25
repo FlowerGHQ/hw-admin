@@ -58,7 +58,7 @@ export default {
             // 加载
             loading: false,
             detail: {},
-            WAREHOUSE_TYPE: Core.Const.WAREHOUSE_RECORD.WAREHOUSE_TYPE,
+            WAREHOUSE_TYPE: Core.Const.WAREHOUSE.TYPE,
 
             form: {
                 id: '',

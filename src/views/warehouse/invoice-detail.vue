@@ -1,91 +1,96 @@
 <template>
-<div id="InvoiceDetail" class="list-container">
-    <div class="title-container">
-        <div class="title-area">出入库单详情</div>
-        <a-button type="primary" ghost @click="handleStockAuditShow"
-            v-if="[STATUS.AIT_AUDIT].includes(detail.status)"><i class="icon i_m_success"/>审核</a-button>
-    </div>
-    <div class="gray-panel info">
-        <div class="panel-title">
-            <div class="left"><span>出入库单编号</span> {{ detail.uid }}</div>
-        </div>
-        <div class="panel-content">
-            <div class="info-item">
-                <div class="key">出入库单类型</div>
-                <div class="value">{{ $Util.stockRecordFilter(detail.type || '-') }}</div>
-            </div>
-            <div class="info-item">
-                <div class="key">所属仓库</div>
-                <div class="value">{{ detail.warehouse.name || '-' }}</div>
-            </div>
-            <div class="info-item">
-                <div class="key">仓库类型</div>
-                <div class="value">{{ $Util.stockTypeFilter(detail.type || '-') }}</div>
-            </div>
-            <div class="info-item">
-                <div class="key">创建时间</div>
-                <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
+    <div id="InvoiceDetail" class="list-container">
+        <div class="title-container">
+            <div class="title-area">{{type_ch}}单详情</div>
+            <div class="btn-area">
+                <a-button type="primary" ghost v-if="detail.status === STATUS.AUDIT_PASS"
+                          @click="handleComplete()" ><i class="icon i_confirm"/>
+                    {{detail.type === TYPE.IN ? '入库' : '出库'}}完成
+                </a-button>
+                <template v-if="detail.status === STATUS.INIT">
+                    <a-button type="primary" @click="handleInvoiceSubmit()"><i class="icon i_submit"/>提交</a-button>
+                    <a-button type="primary" ghost danger @click="handleCancel()"> <i class="icon i_close_c"/>取消</a-button>
+                </template>
             </div>
         </div>
-    </div>
-    <a-collapse v-model:activeKey="activeKey" ghost>
-        <a-collapse-panel key="affirm" header="商品信息" class="gray-collapse-panel">
-            <div class="panel-content table-container no-mg">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                    :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, text }">
-                        <template v-if="column.key === 'item-name'">
-                            <a-tooltip placement="top" :title='text'>
-                                {{ text ? text.name : '-' }}
-                            </a-tooltip>
-                        </template>
-                        <template v-if="column.key === 'item-code'">
-                            {{ text ? text.code : '-' }}
-                        </template>
-                        <template v-if="column.key === 'item-stock'">
-                            {{ text ? text.stock : '-' }}
-                        </template>
-                        <template v-if="column.key === 'amount'">
-                            {{ text ? text.amount : '-' }}件
-                        </template>
-                    </template>
-                </a-table>
+        <div class="gray-panel info">
+            <div class="panel-title">
+                <div class="left"><span>{{type_ch}}单编号</span> {{ detail.uid }}</div>
             </div>
-        </a-collapse-panel>
-    </a-collapse>
-    <template class="modal-container">
-        <a-modal v-model:visible="stockAuditShow" title="审核" class="stock-audit-modal"
-                 :after-close='handleStockAuditClose'>
-            <div class="modal-content">
-                <div>
-                    <div class="form-item required">
-                        <div class="key">审核结果:</div>
-                        <a-radio-group v-model:value="editForm.status">
-                            <a-radio :value="STATUS.AUDIT_PASS">通过</a-radio>
-                            <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio>
-                        </a-radio-group>
-                    </div>
-                    <div class="form-item textarea required" v-if="editForm.status === STATUS.AUDIT_REFUSE">
-                        <div class="key">原因:</div>
-                        <div class="value">
-                            <a-textarea v-model:value="editForm.audit_message" placeholder="请输入不通过原因"
-                                        :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
-                        </div>
+            <div class="panel-content">
+                <div class="info-item">
+                    <div class="key">所属仓库</div>
+                    <div class="value">{{ warehouse.name || '-' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">仓库类型</div>
+                    <div class="value">{{ $Util.warehouseTypeFilter(warehouse.type || '-') }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">创建人</div>
+                    <div class="value">
+                        <template v-if="detail.apply_user && detail.apply_user.account">{{ detail.apply_user.account.name }}</template>
+                        <template v-else>-</template>
                     </div>
                 </div>
+                <div class="info-item">
+                    <div class="key">创建时间</div>
+                    <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
+                </div>
             </div>
-            <template #footer>
-                <a-button @click="stockAuditShow = false">取消</a-button>
-                <a-button @click="handleStockAuditSubmit" type="primary">确定</a-button>
-            </template>
-        </a-modal>
-    </template>
-</div>
+        </div>
+        <a-collapse v-model:activeKey="activeKey" ghost>
+            <a-collapse-panel key="ItemList" header="商品信息" class="gray-collapse-panel">
+                <template #extra>
+                    <ItemSelect btnType='link' btnText="添加商品" v-if="detail.status === STATUS.INIT && !addMode"
+                                :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
+                                @select="handleAddItemChange"/>
+                    <a-button type="link" v-if="addMode" @click.stop="handleAddItemSubmit">确认添加</a-button>
+                </template>
+
+                <div class="panel-content table-container no-mg">
+                    <a-table :columns="tableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
+                             :row-key="record => record.id" :pagination='false'>
+                        <template #bodyCell="{ column, text, record }">
+                            <template v-if="column.key === 'tip_item'">
+                                <a-tooltip placement="top" :title='text'>
+                                    <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
+                                </a-tooltip>
+                            </template>
+                            <template v-if="column.key === 'attr_list'">
+                                {{ $Util.itemSpecFilter(text) }}
+                            </template>
+                            <template v-if="column.key === 'item'">
+                                {{ text || '-' }}
+                            </template>
+                            <template v-if="column.key === 'count'">
+                                {{ text || '-' }}件
+                            </template>
+                            <template v-if="column.key === 'amount'">
+                                <template v-if="addMode || record.editMode">
+                                    <a-input-number v-model:value="record.amount" placeholder="请输入"
+                                                    :min="1" :max="detail.type === TYPE.IN ? 99999: record.item.stock" :precision="0"/> 件
+                                </template>
+                                <template v-else>{{ text || '-' }}件</template>
+                            </template>
+                            <template v-if="column.key === 'operation'" >
+                                <a-button type="link" @click="handleItemSubmit(record)" v-if="record.editMode"><i class="icon i_confirm"/>确认更改</a-button>
+                                <a-button type="link" @click="handleItemChange(record)" v-else><i class="icon i_edit"/>更改数量</a-button>
+                                <a-button type="link" @click="handleRemoveItem(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
+                            </template>
+                        </template>
+                    </a-table>
+                </div>
+            </a-collapse-panel>
+        </a-collapse>
+    </div>
 </template>
 
 <script>
 import Core from '../../core';
-const STOCK_TYPE = Core.Const.WAREHOUSE_RECORD.TYPE
+const STOCK_RECORD = Core.Const.STOCK_RECORD
+const TYPE = STOCK_RECORD.TYPE
+const STATUS = STOCK_RECORD.STATUS
 export default {
     name: 'InvoiceDetail',
     components: {},
@@ -94,36 +99,52 @@ export default {
         return {
             // 加载
             loading: false,
-            STATUS: Core.Const.WAREHOUSE_RECORD.STATUS,
+            STATUS,
+            TYPE,
+
             id: '',
-            detail: {
-                warehouse: {}
-            },
-            activeKey: ['affirm'],
+            detail: {},
+            warehouse: {},
+
+            activeKey: ['ItemList'],
+
             tableData: [],
-            stockAuditShow: false,
-            editForm: {
-                id: '',
-                status: 20,
-                audit_message: '',
-            },
+            addMode: false,
+            addData: [],
+
         };
     },
     watch: {},
     computed: {
+        type_ch() {
+            return this.detail.type == TYPE.IN ? '入库' : '出库'
+        },
         tableColumns() {
             let columns = [
-                {title: '商品名称', dataIndex: 'item', key: 'item-name'},
-                {title: '商品型号', dataIndex: ['item', 'model'], key: 'item-model'},
-                {title: '商品编码', dataIndex: 'item', key: 'item-code'},
-                {title: '商品规格', dataIndex: ['item', 'attr_str']},
-                {title: '库存数量', dataIndex: 'item', key: 'item-stock'},
-                {title: '数量', dataIndex: 'amount', key: 'item-amount'},
+                {title: '商品名称', dataIndex: ['item', 'name'],  key: 'tip_item'},
+                {title: '商品型号', dataIndex: ['item', 'model'], key: 'item'},
+                {title: '商品编码', dataIndex: ['item', 'code'],  key: 'item'},
+                {title: '商品规格', dataIndex: ['item', 'attr_list'], key: 'attr_list'},
+                {title: '库存数量', dataIndex: ['item', 'stock'],     key: 'count'},
+                {title: this.type_ch + '数量', dataIndex: 'amount' , key: 'amount'},
+                {title: '操作', key: 'operation'},
             ]
-            if (this.detail.type == STOCK_TYPE.TYPE_IN) { // 入库不显示库存数量
+            if (this.detail.type == TYPE.IN) { // 入库不显示库存数量
                 columns.splice(4, 1)
             }
+            if (this.detail.status !== STATUS.INIT || this.addMode) { // 入库不显示库存数量
+                columns.pop()
+            }
             return columns
+        },
+        disabledChecked() {
+            let list = []
+            this.tableData.forEach(item => {
+                if (item.item && item.item.id) {
+                    list.push(item.item.id)
+                }
+            })
+            return list
         },
     },
     mounted() {
@@ -132,30 +153,6 @@ export default {
         this.getInvoiceList();
     },
     methods: {
-        //库存审核
-        handleStockAuditShow() { // 显示弹框
-            this.stockAuditShow = true
-            this.editForm.id = this.id
-        },
-        handleStockAuditClose() { // 关闭弹框
-            this.stockAuditShow = false;
-        },
-        handleStockAuditSubmit() { // 审核提交
-            this.loading = true;
-            Core.Api.Invoice.audit({
-                id: this.id,
-                ...this.editForm
-            }).then(res => {
-                console.log('handleStockAuditSubmit res', res)
-                this.$message.success('审核成功')
-                this.handleStockAuditClose()
-                this.routerChange('back')
-            }).catch(err => {
-                console.log('handleStockAuditSubmit err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
         routerChange(type, item) {
             switch (type) {
                 case 'back':
@@ -163,6 +160,7 @@ export default {
                     break;
             }
         },
+        // 获取出入库单详情
         getInvoiceDetail() {
             this.loading = true;
             Core.Api.Invoice.detail({
@@ -170,36 +168,151 @@ export default {
             }).then(res => {
                 console.log('getInvoiceDetail res', res)
                 this.detail = res.detail
+                this.warehouse = res.detail.warehouse || {}
             }).catch(err => {
                 console.log('getInvoiceDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
+        // 获取出入库单商品列表
         getInvoiceList() {
             this.loading = true;
-            Core.Api.Invoice.itemList({
+            Core.Api.InvoiceItem.list({
                 invoice_id: this.id,
             }).then(res => {
                 console.log('getInvoiceList res', res)
-                res.list.forEach(item => {
-                    let element = item.item || {}
-                    if (element.attr_list && element.attr_list.length) {
-                        let str = element.attr_list.map(i => i.value).join(' ')
-                        element.attr_str = str
-                    }
-                })
                 this.tableData = res.list
             }).catch(err => {
                 console.log('getInvoiceList err', err)
             }).finally(() => {
                 this.loading = false;
             });
+        },
 
+        // 取消 出入库单
+        handleCancel() {
+            let _this = this;
+            this.$confirm({
+                title: `确定要取消该${_this.type_ch}单吗？`,
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Invoice.cancel({id: _this.detail.id}).then(() => {
+                        _this.$message.success('取消成功');
+                        _this.getInvoiceDetail();
+                        _this.getInvoiceList();
+                    }).catch(err => {
+                        console.log("handleCancel err", err);
+                    })
+                },
+            });
+        },
+
+        // 处理完成 出入库单
+        handleComplete() {
+            let _this = this;
+            this.$confirm({
+                title: `确定该${_this.type_ch}单商品已${_this.type_ch}吗？`,
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Invoice.handle({id: _this.detail.id}).then(() => {
+                        _this.$message.success('操作成功');
+                        _this.getInvoiceDetail();
+                        _this.getInvoiceList();
+                        _this.routerChange();
+                    }).catch(err => {
+                        console.log("handleComplete err", err);
+                    })
+                },
+            });
+        },
+
+        // 处理 添加商品
+        handleAddItemChange(ids, items) {
+            console.log('handleAddItemChange items:', items)
+            let list = items.map(item => ({
+                id: 0,
+                item: item,
+                amount: 1,
+                stock: 0,
+            }))
+            this.addData = list
+            this.addMode = true
+        },
+        handleAddItemSubmit() {
+            this.loading = true;
+            let data = [...this.tableData, ...this.addData]
+            let list = data.map(item => ({
+                id: item.id,
+                amount: item.amount,
+                item_id: item.item.id,
+                invoice_id: this.id,
+            }))
+            Core.Api.InvoiceItem.saveList(list).then(() => {
+                this.$message.success('保存成功')
+                this.getInvoiceDetail()
+                this.getInvoiceList()
+                this.addMode = false
+                this.addData = []
+            }).catch(err => {
+                console.log('handleAddItemSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+
+        // 编辑单个商品的数量
+        handleItemChange(item) {
+            item.editMode = true
+        },
+        handleItemSubmit(item) {
+            Core.Api.InvoiceItem.save({
+                id: item.id,
+                amount: item.amount,
+                item_id: item.item.id,
+                invoice_id: this.id,
+            }).then(() => {
+                this.$message.success('保存成功')
+                this.getInvoiceDetail()
+                this.getInvoiceList()
+            })
+        },
+        handleInvoiceSubmit() {
+            this.loading = false;
+            let list = []
+            for (let item of this.tableData) {
+                list.push({
+                    "id": item.id,
+                    "invoice_id": this.id,
+                    "item_id": item.item.id,
+                    "amount": item.amount
+                })
+            }
+            Core.Api.Invoice.saveList(list).then(res => {
+                this.$message.success('保存成功')
+                this.getInvoiceDetail()
+                this.routerChange('back')
+            }).catch(err => {
+                console.log('handleInvoiceSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+
+        // 移除 商品
+        handleRemoveItem(record) {
+            Core.Api.InvoiceItem.delete({id: record.id}).then(() => {
+                this.$message.success('移除成功')
+                this.getInvoiceList()
+            })
         },
     }
 };
 </script>
+
 <style lang="less">
 // #InvoiceDetail {}
 </style>

@@ -95,11 +95,15 @@ const apiList = {
         list: ['PostJson', 'invoice/list'],
         delete: ['PostJson', 'invoice/delete'],
         audit: ['PostJson', 'invoice/audit'],
-        saveList: ['PostJson', 'invoice-item/save-list'], //出入库单提交
-        itemList: ['PostJson', 'invoice-item/list'], // 出入库单明细列表
         status: ['PostJson', 'invoice/status-list'], // 状态
         handle: ['PostJson', 'invoice/handle'], // 处理完成
         cancel: ['PostJson', 'invoice/cancel'], // 取消出入库单
+    },
+    InvoiceItem: {
+        list: ['PostJson', 'invoice-item/list'], // 出入库单明细列表
+        save: ['PostJson', 'invoice-item/save'], //出入库单明细 单个修改
+        saveList: ['PostJson', 'invoice-item/save-list'], //出入库单明细 批量提交
+        delete: ['PostJson', 'invoice-item/delete'], //出入库单明细 单个移除
     },
     Transfer: { // 调货申请单
         save: ['PostJson', 'transfer-order/save'],

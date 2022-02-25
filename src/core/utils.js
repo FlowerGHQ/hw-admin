@@ -483,20 +483,20 @@ const Util = {
 
     /* =============== 出入库 ================ */
     stockRecordFilter(val) {
-        const MAP = Const.WAREHOUSE_RECORD.TYPE_MAP
+        const MAP = Const.STOCK_RECORD.TYPE_MAP
         return MAP[val] || '未知'
     },
     stockRecordSourceFilter(val) {
-        const MAP = Const.WAREHOUSE_RECORD.SOURCE_TYPE_MAP
+        const MAP = Const.STOCK_RECORD.SOURCE_TYPE_MAP
         return MAP[val] || '未知'
     },
-    stockTypeFilter(val) {
-        const MAP = Const.WAREHOUSE_RECORD.WAREHOUSE_TYPE_MAP
+    warehouseTypeFilter(val) {
+        const MAP = Const.WAREHOUSE.TYPE_MAP
         return MAP[val] || '未知'
     },
     invoiceStatusFilter(val, to = 'word') {
-        const MAP = Const.WAREHOUSE_RECORD.STATUS_MAP
-        const COLOR_MAP = Const.WAREHOUSE_RECORD.STATUS_COLOR_MAP
+        const MAP = Const.STOCK_RECORD.STATUS_MAP
+        const COLOR_MAP = Const.STOCK_RECORD.STATUS_COLOR_MAP
         switch (to) {
             case 'word':
                 return MAP[val + ''] || '未知'

@@ -41,8 +41,8 @@
         <div class="form-item required">
             <div class="key">操作类型：</div>
             <a-radio-group v-model:value="form.type">
-                <a-radio :value="TYPE.TYPE_IN">入库</a-radio>
-                <a-radio :value="TYPE.TYPE_OUT">出库</a-radio>
+                <a-radio :value="TYPE.IN">入库</a-radio>
+                <a-radio :value="TYPE.OUT">出库</a-radio>
             </a-radio-group>
         </div>
         <div class="form-item required">
@@ -96,7 +96,7 @@ export default {
             currPage: 1,
             pageSize: 20,
             total: 0,
-            TYPE: Core.Const.WAREHOUSE_RECORD.TYPE,
+            TYPE: Core.Const.STOCK_RECORD.TYPE,
             tableData: [],
             detail: {},
             stockAddShow: false,

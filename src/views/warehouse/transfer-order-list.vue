@@ -68,7 +68,7 @@
                             {{ $Util.userTypeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'type'">
-                            {{ $Util.stockTypeFilter(text) }}
+                            {{ $Util.warehouseTypeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'warehouse-name'">
                             {{ text || '-' }}

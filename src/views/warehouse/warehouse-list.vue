@@ -41,7 +41,7 @@
                         </a-tooltip>
                     </template>
                     <template v-if="column.key === 'type'">
-                        {{ $Util.stockTypeFilter(text) }}
+                        {{ $Util.warehouseTypeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'address'">
                         {{ $Util.addressFilter(record) }}

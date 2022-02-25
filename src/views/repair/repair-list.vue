@@ -82,16 +82,16 @@
                             <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                         </a-tooltip>
                     </template>
-<!--                    <template v-if="column.dataIndex === 'status'">-->
-<!--                        <div class="status status-bg status-tag" :class="$Util.repairStatusFilter(text,'color')">-->
-<!--                            <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>-->
-<!--                                {{ $Util.repairStatusFilter(text) }}-->
-<!--                                <template v-if="[STATUS.CHECK_FAIL, STATUS.AUDIT_FAIL].includes(record.status)">-->
-<!--                                    <i class="icon i_hint" style="font-size: 12px;padding-left: 6px;"/>-->
-<!--                                </template>-->
-<!--                            </a-tooltip>-->
-<!--                        </div>-->
-<!--                    </template>-->
+                    <template v-if="column.dataIndex === 'status'">
+                        <div class="status status-bg status-tag" :class="$Util.repairStatusFilter(text,'color')">
+                            <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>
+                                {{ $Util.repairStatusFilter(text) }}
+                                <template v-if="[STATUS.CHECK_FAIL, STATUS.AUDIT_FAIL].includes(record.status)">
+                                    <i class="icon i_hint" style="font-size: 12px;padding-left: 6px;"/>
+                                </template>
+                            </a-tooltip>
+                        </div>
+                    </template>
                     <template v-if="column.dataIndex === 'type'">
                         {{$Util.repairTypeFilter(text)}}
                     </template>
@@ -283,7 +283,7 @@ export default {
                 { title: '关联客户', dataIndex: 'customer_name', key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 // { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
-                // { title: '订单状态', dataIndex: 'status', fixed: 'right'},
+                { title: '订单状态', dataIndex: 'status', fixed: 'right'},
             ]
             if (this.operMode) {
                 columns.push({ title: '操作', key: 'operation', fixed: 'right'},)

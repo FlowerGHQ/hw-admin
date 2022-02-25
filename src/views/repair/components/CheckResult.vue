@@ -19,7 +19,7 @@
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => {return JSON.stringify(record)}" :pagination='false' size="small">
                     <template #bodyCell="{ column, record, text }">
-                        <template v-if="column.dataIndex === 'name'">
+                        <template v-if="column.dataIndex === 'item_fault_id'">
                             {{ faultMap[text] || '-' }}
                         </template>
                         <template v-if="column.key === 'service_type'">
