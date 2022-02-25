@@ -504,6 +504,14 @@ const Util = {
                 return COLOR_MAP[val + ''] || 'grey'
         }
     },
+    targetTypeFilter(val) {
+        const MAP = Const.STOCK_RECORD.COMMODITY_TYPE_MAP
+        return MAP[val] || '未知'
+    },
+    sourceTypeFilter(val) {
+        const MAP = Const.STOCK_RECORD.SOURCE_TYPE_MAP
+        return MAP[val] || '未知'
+    },
     /* =============== 出入库 ================ */
     /* =============== 调货单 ================ */
     transferStatusFilter(val, to = 'word') {

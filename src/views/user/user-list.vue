@@ -115,7 +115,6 @@ export default {
         return {
             orgType: Core.Data.getOrgType(),
             USER_TYPE: Core.Const.USER.TYPE,
-
             // 加载
             loading: false,
             // 分页

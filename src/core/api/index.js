@@ -115,6 +115,7 @@ const apiList = {
         saveList: ['PostJson', 'transfer-order-item/save-list'], //调货单提交
         status: ['PostJson', 'transfer-order/status-list'], // 状态
         cancel: ['PostJson', 'transfer-order/cancel'], // 取消调货单
+        detailByUid: ['PostJson', 'transfer-order/detail-by-uid'], // 取消调货单
     },
     Repair: { // 维修单
         list: ['PostJson', 'repair/list'], // 列表
@@ -214,6 +215,7 @@ const apiList = {
 	    review: ['PostJson', 'purchase-order/review'], // 评论
 	    statusList: ['PostJson', 'purchase-order/status-list'], // 保存
 	    recreate: ['PostJson', 'purchase-order/recreate'], // 再来一单
+        detailSn: ['PostJson', 'purchase-order/detail-sn'],
     },
     Store: { // 门店管理
         list: ['PostJson', 'store/list'],

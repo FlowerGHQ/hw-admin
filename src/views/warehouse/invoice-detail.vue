@@ -3,7 +3,7 @@
         <div class="title-container">
             <div class="title-area">{{type_ch}}单详情</div>
             <div class="btn-area">
-                <a-button type="primary" ghost v-if="detail.status === STATUS.AUDIT_PASS"
+                <a-button type="primary" ghost v-if="detail.status === STATUS.CLOSE"
                           @click="handleComplete()" ><i class="icon i_confirm"/>
                     {{detail.type === TYPE.IN ? '入库' : '出库'}}完成
                 </a-button>
@@ -25,6 +25,18 @@
                 <div class="info-item">
                     <div class="key">仓库类型</div>
                     <div class="value">{{ $Util.warehouseTypeFilter(warehouse.type || '-') }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">类目</div>
+                    <div class="value">{{ $Util.targetTypeFilter(detail.target_type || "-")}}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">来源</div>
+                    <div class="value">{{ $Util.sourceTypeFilter(detail.source_type || "-")}}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">来源单号</div>
+                    <div class="value">{{ detail.source_id || "-"}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">创建人</div>
@@ -101,16 +113,14 @@ export default {
             loading: false,
             STATUS,
             TYPE,
-
             id: '',
             detail: {},
             warehouse: {},
-
             activeKey: ['ItemList'],
-
             tableData: [],
             addMode: false,
             addData: [],
+            map: [],
 
         };
     },
