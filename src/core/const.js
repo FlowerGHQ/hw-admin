@@ -10,8 +10,9 @@ let URL_POINT = 'https://eos-api.hw.innotick.com'
 
 switch (window.location.hostname) {
     case 'eos.hw.innotick.com':
-    case "10.0.0.202":
-        URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服
+    case "10.0.0.31":
+    case "localhost":
+        URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服 
         break;
     case "10.0.0.205":
         URL_POINT = 'http://10.0.0.205:8083'
@@ -458,11 +459,24 @@ let Const = {
             IN: 1,
             OUT: 2,
         },
-        TARGET_TYPE: {
-            PURCHASE_ORDER: 10,
-            REPAIR_ORDER_TRANSFER: 20,
+        TYPE_LIST: [
+            { text: '采购订单物流', value: 10 },
+            { text: '维修单转单物流', value: 20 },
+            { text: '维修单调货单物流', value: 30 },
+            { text: '售后单物流', value: 40 },
+        ],
+        TYPE_LIST_MAP: {
+            10: '采购订单物流',
+            20: '维修单转单物流',
+            30: '维修单调货单物流',
+            40: '售后单物流'
         },
-
+        TARGET_TYPE: {
+            PURCHASE_ORDER: 10, //采购订单物流
+            REPAIR_ORDER_TRANSFER: 20, //维修单转单物流
+            TRANSFER_ORDER: 30, //维修单调货单物流
+            AFTER_SALES_ORDER: 40 //售后单物流
+        },
         COMPANY_MAP: {
             'EMS': 'EMS',
             'JD': '京东物流',

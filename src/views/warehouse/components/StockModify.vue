@@ -1,32 +1,6 @@
 <template>
   <div class="StockRecord gray-panel no-margin">
     <div class="panel-content">
-      <!--            <div class="search-container">-->
-      <!--                <a-row class="search-area">-->
-      <!--                    <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">-->
-      <!--                        <div class="key">商品名称:</div>-->
-      <!--                        <div class="value">-->
-      <!--                            <div class="value">-->
-      <!--                                <a-input placeholder="请输入商品名称" v-model:value="searchForm.name"-->
-      <!--                                         @keydown.enter='handleSearch'/>-->
-      <!--                            </div>-->
-      <!--                        </div>-->
-      <!--                    </a-col>-->
-      <!--                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">-->
-      <!--                        <div class="key">创建时间:</div>-->
-      <!--                        <div class="value">-->
-      <!--                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"-->
-      <!--                                            :show-time="defaultTime" :allow-clear='false'>-->
-      <!--                                <template #suffixIcon><i class="icon i_calendar"></i></template>-->
-      <!--                            </a-range-picker>-->
-      <!--                        </div>-->
-      <!--                    </a-col>-->
-      <!--                </a-row>-->
-      <!--                <div class="btn-area">-->
-      <!--                    <a-button @click="handleSearch" type="primary">查询</a-button>-->
-      <!--                    <a-button @click="handleSearchReset">重置</a-button>-->
-      <!--                </div>-->
-      <!--            </div>-->
       <div class="table-container">
         <a-table
           :columns="tableColumns"
@@ -116,13 +90,10 @@ export default {
   computed: {
     tableColumns() {
       let tableColumns = [
-        { title: "商品名称", dataIndex: "item", key: "item-name" },
-        { title: "商品编码", dataIndex: "item", key: "item-code" },
-        { title: "操作类型", dataIndex: "type", key: "type" },
-        { title: "数量", dataIndex: "amount", key: "amount" },
-        { title: "变更后库存数量", dataIndex: "balance", key: "balance" },
-        { title: "变更来源", dataIndex: "source_type", key: "source-type" },
-        { title: "创建时间", dataIndex: "create_time", key: "time" },
+        { title: "工单编号", dataIndex: "item", key: "item-name" },
+        { title: "车架号", dataIndex: "item", key: "item-code" },
+        { title: "操作人", dataIndex: "type", key: "type" },
+        { title: "完成时间", dataIndex: "amount", key: "amount" },
       ];
       return tableColumns;
     },
