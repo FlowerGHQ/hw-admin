@@ -1,146 +1,173 @@
 <template>
-<div id="InvoiceEdit" class="edit-container">
-    <div class="list-container">
+    <div id="InvoiceEdit" class="edit-container">
         <div class="title-container">
-            <div class="title-area">出入库单编辑</div>
-            <a-button type="primary" @click="handleInvoiceSubmit()"><i class="icon i_submit"/>提交</a-button>
+            <div class="title-area">{{ form.id ? '编辑出入库单' : '新建出入库单' }}</div>
         </div>
-        <div class="gray-panel info">
-            <div class="panel-title">
-                <div class="left"><span>出入库单编号</span> {{ detail.uid }}</div>
+        <div class="form-block">
+            <div class="form-title">
+                <div class="title-colorful">基本信息</div>
             </div>
-            <div class="panel-content">
-                <div class="info-item">
-                    <div class="key">出入库单类型</div>
-                    <div class="value">{{ $Util.stockRecordFilter(detail.type || '-') }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">所属仓库</div>
-                    <div class="value">{{ detail.warehouse.name || '-' }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">仓库类型</div>
-                    <div class="value">{{ $Util.stockTypeFilter(detail.type || '-') }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">创建时间</div>
-                    <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
-                </div>
-            </div>
-        </div>
-        <a-collapse v-model:activeKey="activeKey" ghost>
-            <a-collapse-panel key="affirm" header="商品信息" class="gray-collapse-panel">
-                <template #extra>
-                    <ItemSelect :warehouseId="detail.type == TYPE.TYPE_OUT ? detail.warehouse_id: 0 " :disabledChecked="disabledChecked"
-                        @select="handleInvoiceItem" btnType='link' btnText="添加商品"/>
-                </template>
-                <div class="panel-content">
-                    <div class="table-container no-mg">
-                        <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                            :row-key="record => record.id" :pagination='false'>
-                            <template #bodyCell="{ column, text , index, record}">
-                                <template v-if="column.key === 'item-name'">
-                                    <a-tooltip placement="top" :title='text'>
-                                        {{ text ? text.name : '-' }}
-                                    </a-tooltip>
-                                </template>
-                                <template v-if="column.key === 'item-code'">
-                                    {{ text ? text.code : '-' }}
-                                </template>
-                                <template v-if="column.key === 'item-stock'">
-                                    {{ text ? text.stock : '-' }}
-                                </template>
-                                <template v-if="column.key === 'amount'">
-                                    <a-input-number v-model:value="record.amount" :min="1" :max="detail.type === 1 ? 99999: record.item.stock" :precision="0" placeholder="请输入"/> 件
-                                </template>
-                                <template v-if="column.dataIndex === 'operation'">
-                                    <a-button type="link" @click="handleItemDelete(index)" class="danger"><i class="icon i_delete"/>移除</a-button>
-                                </template>
-                            </template>
-                        </a-table>
+            <div class="form-content">
+                <div class="form-item required">
+                    <div class="key">仓库：</div>
+                    <div class="value">
+                        <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库">
+                            <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id"
+                                             :value="warehouse.id">
+                                {{ warehouse.name }}
+                            </a-select-option>
+                        </a-select>
                     </div>
                 </div>
-            </a-collapse-panel>
-        </a-collapse>
+                <div class="form-item required">
+                    <div class="key">类目：</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.target_type">
+                            <a-radio v-for="(val, key) in targetMap" :key='key' :value='key'>{{ val }}</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">类型：</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.type">
+                            <a-radio v-for="(val, key) in typeMap" :key='key' :value='key'>{{ val }}</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">来源：</div>
+                    <div class="value">
+                        <a-select v-model:value="form.source_type" placeholder="请选择来源">
+                            <a-select-option v-for="(val, key) of sourceTypeMap" :key='key' :value='key'>{{ val }}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item required" v-if="form.source_type == 20">
+                    <div class="key">采购单号：</div>
+                    <div class="value">
+                        <a-input class="purchase-order-detail" v-model:value="form.source_id" placeholder="请输入相关的采购单号"
+                                 @blur="onblur"/>
+                        <span v-if="isExist === true"><i class="icon i_confirm"/></span>
+                        <span v-else-if="isExist === false"><i class="icon i_close_c"/></span>
+                    </div>
+                </div>
+                <div class="form-item required" v-if="form.source_type == 40">
+                    <div class="key">调货单号：</div>
+                    <div class="value">
+                        <a-input v-model:value="form.source_id" placeholder="请输入调货单号" @blur="onblurTransfer"/>
+                        <span v-if="isRight === true"><i class="icon i_confirm"/></span>
+                        <span v-else-if="isRight === false"><i class="icon i_close_c"/></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-btns">
+            <a-button @click="handleSubmit" type="primary">确定</a-button>
+            <a-button @click="routerChange('list')" type="primary" ghost>取消</a-button>
+        </div>
     </div>
-</div>
 </template>
 
 <script>
 import Core from '../../core';
-import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 
-const STOCK_TYPE = Core.Const.WAREHOUSE_RECORD.TYPE
 export default {
     name: 'InvoiceEdit',
-    components: {
-        ItemSelect,
-    },
+    components: {},
     props: {},
     data() {
         return {
             // 加载
             loading: false,
-            id: '',
-            detail: {
-                warehouse: {}
+            detail: {},
+            isExist: '',
+            isRight: '',
+            form: {
+                type: '',
+                id: '',
+                warehouse_id: undefined,
+                source_type: undefined,
+                source_id: '',
+                target_type: '',
             },
-            activeKey: ['affirm'],
-            TYPE: Core.Const.WAREHOUSE_RECORD.TYPE,
-            failActive: [],
-            tableData: [],
+            warehouseList: [],
+            typeMap: Core.Const.STOCK_RECORD.TYPE_MAP, //出入库
+            sourceTypeMap: Core.Const.STOCK_RECORD.SOURCE_TYPE_MAP, //来源
+            sourceType: Core.Const.STOCK_RECORD.SOURCE_TYPE,
+            targetMap: Core.Const.STOCK_RECORD.COMMODITY_TYPE_MAP, //类目
         };
     },
     watch: {},
-    computed: {
-        tableColumns() {
-            let columns = [
-                {title: '商品名称', dataIndex: 'item', key: 'item-name'},
-                {title: '商品型号', dataIndex: ['item', 'model'], key: 'item-model'},
-                {title: '商品编码', dataIndex: 'item', key: 'item-code'},
-                {title: '商品规格', dataIndex: ['item', 'attr_str']},
-                {title: '库存数量', dataIndex: 'item', key: 'item-stock'},
-                {title: '数量', dataIndex: 'amount', key: 'amount'},
-                {title: '操作', dataIndex: 'operation'},
-            ]
-            if (this.detail.type == STOCK_TYPE.TYPE_IN) { // 入库不显示库存数量
-                columns.splice(4, 1)
-            }
-            return columns
-        },
-
-        disabledChecked() {
-            let disabledChecked = []
-            this.tableData.forEach(item =>{
-                disabledChecked.push(item.item.id)
-            })
-            return disabledChecked
-        },
-        // totalCount() {  // 合计 勿删
-        //     let totalCount = 0
-        //     this.tableData.forEach(item => {
-        //         totalCount += item.amount
-        //     })
-        //     return totalCount
-        // },
+    computed: {},
+    created() {
     },
     mounted() {
-        this.id = Number(this.$route.query.id) || 0
-        this.getInvoiceDetail();
-        this.getInvoiceList();
+        this.form.id = Number(this.$route.query.id) || 0
+        this.getWarehouseList();
+        if (this.form.id) {
+            this.getInvoiceDetail();
+        }
     },
     methods: {
-        routerChange(type, item) {
+        routerChange(type, item = {}) {
+            console.log('routerChange item:', item)
+            let routeUrl = ''
             switch (type) {
-                case 'back':
-                    this.$router.go(-1)
+                case 'list':  // 编辑
+                    routeUrl = this.$router.resolve({
+                        path: "/warehouse/invoice-list",
+                        query: { id: item.id }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'detail':  // 详情
+                    routeUrl = this.$router.resolve({
+                        path: "/warehouse/invoice-detail",
+                        query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_self')
                     break;
             }
+        },
+        getWarehouseList() {
+            Core.Api.Warehouse.listAll().then(res => {
+                this.warehouseList = res.list
+            })
+        },
+        onblur() {  // 获取 采购订单号
+            if (!this.form.source_id) {
+                return this.isExist = ''
+            }
+            Core.Api.Purchase.detailSn({
+                sn: this.form.source_id,
+            }).then(res => {
+                this.isExist = res != null
+                console.log("onblur res", res)
+            }).catch(err => {
+                console.log('onblur err', err)
+            }).finally(() => {
+            });
+        },
+        onblurTransfer() {
+            if (!this.form.source_id) {
+                return this.isRight = ''
+            }
+            Core.Api.Transfer.detailByUid({
+                uid: this.form.source_id,
+            }).then(res => {
+                this.isRight = res.detail != null
+                console.log("onblur res", res)
+            }).catch(err => {
+                console.log('onblur err', err)
+            }).finally(() => {
+            });
         },
         getInvoiceDetail() {
             this.loading = true;
             Core.Api.Invoice.detail({
-                id: this.id
+                id: this.form.id,
             }).then(res => {
                 console.log('getInvoiceDetail res', res)
                 this.detail = res.detail
@@ -150,70 +177,65 @@ export default {
                 this.loading = false;
             });
         },
-        getInvoiceList() {
-            this.loading = true;
-            Core.Api.Invoice.itemList({
-                invoice_id: this.id,
-            }).then(res => {
-                console.log('getInvoiceList res', res)
-                res.list.forEach(item => {
-                    let element = item.item || {}
-                    if (element.attr_list && element.attr_list.length) {
-                        let str = element.attr_list.map(i => i.value).join(' ')
-                        element.attr_str = str
-                    }
-                })
-                this.tableData = res.list
-            }).catch(err => {
-                console.log('getInvoiceList err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-
-        },
-        // 获取商品列表
-        handleInvoiceItem(ids, items) {
-            console.log('handleInvoiceItem ids:', ids)
-            console.log('handleInvoiceItem items:', items)
-            this.disabledChecked = []
-            items = items.map(item => ({
-                "id": 0,
-                "item": item,
-                "amount": 1,
-                "stock": 0,
-            }))
-            console.log('handleInvoiceItem items:', items)
-            this.tableData.push(...items)
-        },
-        // 移除商品
-        handleItemDelete(index) {
-            this.tableData.splice(index, 1)
-        },
-        // 出入库单明细提交
-        handleInvoiceSubmit() {
-            this.loading = false;
-            let list = []
-            for (let item of this.tableData) {
-                list.push({
-                    "id": item.id,
-                    "invoice_id": this.id,
-                    "item_id": item.item.id,
-                    "amount": item.amount
-                })
+        handleSubmit() {
+            let form = Core.Util.deepCopy(this.form)
+            if (!form.warehouse_id) {
+                return this.$message.warning('请选择仓库')
             }
-            Core.Api.Invoice.saveList(list).then(res => {
+            if (!form.target_type) {
+                return this.$message.warning('请选择类目')
+            }
+            if (!form.type) {
+                return this.$message.warning('请选择类型')
+            }
+            if (!form.source_type) {
+                return this.$message.warning('请选择来源')
+            }
+            if (!form.source_id && form.source_type == 20) {
+                return this.$message.warning('请输入相关的采购单号')
+            }
+            if (this.isExist === false) {
+                return this.$message.warning('请输入正确的采购单号')
+            }
+            if (!form.source_id && form.source_type == 40) {
+                return this.$message.warning('请输入相关的调货单号')
+            }
+            if (this.isRight === false) {
+                return this.$message.warning('请输入正确的调货单号')
+            }
+            Core.Api.Invoice.save(form).then(res => {
                 this.$message.success('保存成功')
-                this.getInvoiceDetail()
-                this.routerChange('back')
+                this.routerChange('detail',res.detail)
             }).catch(err => {
-                console.log('handleInvoiceSubmit err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+                console.log('handleSubmit err:', err)
+            })
         },
     }
 };
 </script>
+
 <style lang="less">
-// #InvoiceEdit {}
+.value {
+    .fac();
+
+    .ant-input {
+        width: calc(~'100% - 24px');
+    }
+
+    i.icon {
+        display: inline-block;
+        width: 24px;
+        text-align: right;
+    }
+
+    .i_confirm {
+        color: @green;
+        font-size: 18px;
+    }
+
+    .i_close_c {
+        color: @red;
+        font-size: 18px;
+    }
+}
 </style>

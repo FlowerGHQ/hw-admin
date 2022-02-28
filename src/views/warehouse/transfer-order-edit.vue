@@ -16,7 +16,7 @@
                 </div>
                 <div class="info-item">
                     <div class="key">仓库类型</div>
-                    <div class="value">{{ $Util.stockTypeFilter(detail.to_warehouse.type || '-') }}</div>
+                    <div class="value">{{ $Util.warehouseTypeFilter(detail.to_warehouse.type || '-') }}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">创建时间</div>
@@ -27,7 +27,7 @@
         <a-collapse v-model:activeKey="activeKey" ghost>
             <a-collapse-panel key="affirm" header="商品信息" class="gray-collapse-panel">
                 <template #extra>
-                    <ItemSelect :warehouseId="detail.type == WAREHOUSE_RECORD.TYPE_OUT ? detail.warehouse_id: 0 "
+                    <ItemSelect :warehouseId="detail.type == STOCK_RECORD.TYPE_OUT ? detail.warehouse_id: 0 "
                         :disabledChecked="disabledChecked"
                         btnType='link'
                         @select="handleAddTransferItem" btn-text="添加商品"/>
@@ -84,7 +84,7 @@ export default {
                 to_warehouse: {}
             },
             activeKey: ['affirm'],
-            WAREHOUSE_RECORD: Core.Const.WAREHOUSE_RECORD.TYPE,
+            STOCK_RECORD: Core.Const.STOCK_RECORD.TYPE,
             failActive: [],
             tableData: [],
         };

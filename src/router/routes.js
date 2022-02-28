@@ -50,7 +50,6 @@ const routes = [{
             title: '维修单管理',
             icon: 'i_s_repair',
             // auth: ['dashboard'],
-            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
         },
         children: [{
                 path: 'repair-list',
@@ -60,30 +59,6 @@ const routes = [{
                 meta: {
                     title: '维修单',
                     is_sub_menu: true
-                }
-            },
-            {
-                path: 'repair-confirm-list',
-                name: 'RepairConfirmList',
-                component: () =>
-                    import ('@/views/repair/repair-list.vue'),
-                meta: {
-                    title: '待确认工单',
-                    roles: [LOGIN_TYPE.DISTRIBUTOR],
-                    is_sub_menu: true,
-                    type: 'check'
-                }
-            },
-            {
-                path: 'repair-audit-list',
-                name: 'repairauditlist',
-                component: () =>
-                    import ('@/views/repair/repair-list.vue'),
-                meta: {
-                    title: '待审工单',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    is_sub_menu: true,
-                    type: 'audit'
                 }
             },
             {
@@ -126,21 +101,8 @@ const routes = [{
                     import ('@/views/repair/item-fault-list.vue'),
                 meta: {
                     title: '故障管理',
-                    roles: [LOGIN_TYPE.ADMIN],
+                    roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT],
                     is_sub_menu: true
-                }
-            },
-            {
-                path: 'item-fault-edit',
-                name: 'FaultEdit',
-                component: () =>
-                    import ('@/views/repair/item-fault-edit.vue'),
-                hidden: true,
-                meta: {
-                    title: '故障编辑',
-                    title_en: 'fault-edit',
-                    parent: '/repair/item-fault-list',
-                    roles: [LOGIN_TYPE.ADMIN],
                 }
             },
         ]
@@ -521,6 +483,29 @@ const routes = [{
             roles: [LOGIN_TYPE.ADMIN],
         },
         children: [{
+                path: 'entity-list',
+                name: 'EntityList',
+                component: () =>
+                    import ('@/views/item/entity-list.vue'),
+                meta: {
+                    title: '车架列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true
+                }
+            },
+            {
+                path: 'entity-detail',
+                name: 'EntityDetail',
+                hidden: true,
+                component: () =>
+                    import ('@/views/item/entity-detail.vue'),
+                meta: {
+                    title: '车架详情',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/item/entity-list',
+                }
+            },
+            {
                 path: 'item-list',
                 name: 'ItemList',
                 component: () =>

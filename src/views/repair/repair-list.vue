@@ -4,10 +4,10 @@
         <div class="title-container">
             <div class="title-area">{{$t('n.repair_list')}}</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('AGENT', 'STORE')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('AGENT')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
             </div>
         </div>
-        <div class="tabs-container colorful" v-if="!operMode">
+<!--        <div class="tabs-container colorful" v-if="!operMode">
             <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
                 <a-tab-pane :key="item.key" v-for="item of statusList">
                     <template #tab>
@@ -15,7 +15,7 @@
                     </template>
                 </a-tab-pane>
             </a-tabs>
-        </div>
+        </div>-->
         <div class="search-container">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -25,9 +25,9 @@
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">车辆编号:</div>
+                    <div class="key">车架编号:</div>
                     <div class="value">
-                        <a-input placeholder="请输入车辆编号" v-model:value="searchForm.vehicle_no" @keydown.enter='handleSearch'/>
+                        <a-input placeholder="请输入车架编号" v-model:value="searchForm.vehicle_no" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
@@ -95,11 +95,11 @@
                     <template v-if="column.dataIndex === 'type'">
                         {{$Util.repairTypeFilter(text)}}
                     </template>
-                    <template v-if="column.dataIndex === 'priority'">
+<!--                    <template v-if="column.dataIndex === 'priority'">
                         <div class="status status-bg status-tag smell" :class="$Util.repairPriorityFilter(text,'color')">
                             {{$Util.repairPriorityFilter(text)}}
                         </div>
-                    </template>
+                    </template>-->
                     <template v-if="column.dataIndex === 'channel'">
                         {{$Util.repairChannelFilter(text)}}
                     </template>
@@ -120,10 +120,10 @@
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
-                    <template v-if="column.key === 'operation'">
+<!--                    <template v-if="column.key === 'operation'">
                         <a-button type='link' @click="handleModalShow(record.id, 'check')" v-if="record.status == STATUS.WAIT_CHECK"><i class="icon i_confirm"/>确认</a-button>
                         <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.WAIT_AUDIT"><i class="icon i_confirm"/>审核</a-button>
-                    </template>
+                    </template>-->
                 </template>
             </a-table>
         </div>
@@ -144,7 +144,7 @@
         </div>
     </div>
     <!-- 员工确认 -->
-    <template class="modal-container">
+<!--    <template class="modal-container">
         <a-modal v-model:visible="modalShow" :title="modalType == 'check' ? '确认接单' : '审核'" :after-close='handleModalClose'>
             <div class="modal-content">
                 <div class="form-item required">
@@ -168,7 +168,7 @@
                 <a-button @click="handleModalSubmit" type="primary" >确定</a-button>
             </template>
         </a-modal>
-    </template>
+    </template>-->
 </div>
 </template>
 
@@ -177,6 +177,7 @@ import Core from '../../core';
 const REPAIR = Core.Const.REPAIR
 const STATUS = Core.Const.REPAIR.STATUS
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE
+const USER_TYPE = Core.Const.USER.TYPE
 
 export default {
     name: 'RepairList',
@@ -186,6 +187,7 @@ export default {
         return {
             STATUS,
             LOGIN_TYPE,
+            USER_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -198,7 +200,7 @@ export default {
             // 搜索
             operMode: '',
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            statusList: [
+            /*statusList: [
                 {text: '全  部', value: '0', color: 'primary', key: '-1'},
                 {text: '待分配', value: '0', color: 'red',     key: STATUS.WAIT_DISTRIBUTION },
                 {text: '待确认', value: '0', color: 'orange',  key: STATUS.WAIT_CHECK },
@@ -210,7 +212,7 @@ export default {
                 {text: '确认未通过', value: '0', color: 'red',  key: STATUS.CHECK_FAIL },
                 {text: '审核未通过', value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
                 {text: '已取消', value: '0', color: 'purple',  key: STATUS.CLOSE },
-            ],
+            ],*/
             create_time: [],
             distributorList: [], // 分销商下拉框数据
             storeList: [],
@@ -280,7 +282,7 @@ export default {
                 { title: '创建人',   dataIndex: 'user_name', key: 'item' },
                 { title: '关联客户', dataIndex: 'customer_name', key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
-                { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
+                // { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
                 { title: '订单状态', dataIndex: 'status', fixed: 'right'},
             ]
             if (this.operMode) {

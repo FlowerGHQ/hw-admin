@@ -47,32 +47,14 @@
         />
       </div>
     </div>
-    <a-modal
-      v-model:visible="stockAddShow"
-      title="库存增减"
-      class="stock-change-modal"
-      :after-close="handleStockAddClose"
-    >
-      <div class="form-item required">
-        <div class="key">操作类型：</div>
-        <a-radio-group v-model:value="form.type">
-          <a-radio :value="TYPE.TYPE_IN">入库</a-radio>
-          <a-radio :value="TYPE.TYPE_OUT">出库</a-radio>
-        </a-radio-group>
-      </div>
-      <div class="form-item required">
-        <div class="key">商品编码：</div>
-        <div class="value form-item-value">
-          <a-input
-            class="itemCodeInput"
-            v-model:value="form.target_code"
-            placeholder="请输入商品编码"
-            @blur="onblur"
-          />
-          <span v-if="isExist === true"><i class="icon i_confirm" /></span>
-          <span v-else-if="isExist === false"
-            ><i class="icon i_close_c"
-          /></span>
+    <a-modal v-model:visible="stockAddShow" title="库存增减" class="stock-change-modal"
+                :after-close="handleStockAddClose">
+        <div class="form-item required">
+            <div class="key">操作类型：</div>
+            <a-radio-group v-model:value="form.type">
+                <a-radio :value="TYPE.IN">入库</a-radio>
+                <a-radio :value="TYPE.OUT">出库</a-radio>
+            </a-radio-group>
         </div>
       </div>
       <div class="form-item required">
@@ -111,26 +93,26 @@ export default {
     },
   },
   data() {
-    return {
-      // 加载
-      loading: false,
-      // 分页
-      currPage: 1,
-      pageSize: 20,
-      total: 0,
-      TYPE: Core.Const.WAREHOUSE_RECORD.TYPE,
-      tableData: [],
-      detail: {},
-      stockAddShow: false,
-      isExist: "",
-      form: {
-        type: "",
-        id: "",
-        target_code: "", //商品编码
-        number: "",
-        warehouse_id: "",
-      },
-    };
+      return {
+          // 加载
+          loading: false,
+          // 分页
+          currPage: 1,
+          pageSize: 20,
+          total: 0,
+          TYPE: Core.Const.STOCK_RECORD.TYPE,
+          tableData: [],
+          detail: {},
+          stockAddShow: false,
+          isExist: '',
+          form: {
+              type: '',
+              id: '',
+              target_code: '', //商品编码
+              number: '',
+              warehouse_id: '',
+          },
+      };
   },
   watch: {},
   computed: {

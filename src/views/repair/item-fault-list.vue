@@ -4,8 +4,7 @@
             <div class="title-container">
                 <div class="title-area">故障列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('ADMIN')"><i class="icon i_add"/>新增故障
-                    </a-button>
+                    <FaultList :id="id" ref="FaultList" @saveFault="getTableData" />
                 </div>
             </div>
             <div class="table-container">
@@ -21,8 +20,6 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改
-                            </a-button>
                             <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除
                             </a-button>
                         </template>
@@ -49,11 +46,14 @@
 </template>
 <script>
 import Core from '../../core';
+import FaultList from '@/components/popup-btn/FaultList.vue';
 
 export default {
     name: 'FaultList',
     components: {},
-    props: {},
+    props: {
+        FaultList
+    },
     data() {
         return {
             loginType: Core.Data.getLoginType(),
@@ -84,16 +84,10 @@ export default {
         this.getTableData();
     },
     methods: {
-        routerChange(type, item = {}) {
-            console.log(item)
-            let routeUrl = ''
+        routerChange(type, item) {
             switch (type) {
-                case 'edit':    // 编辑
-                    routeUrl = this.$router.resolve({
-                        path: "/repair/item-fault-edit",
-                        query: {id: item.id}
-                    })
-                    window.open(routeUrl.href, '_self')
+                case 'back':
+                    this.$router.go(-1)
                     break;
             }
         },
@@ -139,7 +133,7 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该区域吗？',
+                title: '确定要删除该故障吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',

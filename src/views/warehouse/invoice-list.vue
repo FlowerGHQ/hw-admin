@@ -4,10 +4,10 @@
             <div class="title-container">
                 <div class="title-area">出入库单列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleStockShow"><i class="icon i_add"/>库存管理</a-button>
+                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>库存管理</a-button>
                 </div>
             </div>
-            <div class="tabs-container colorful">
+<!--            <div class="tabs-container colorful">
                 <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
                     <a-tab-pane :key="item.key" v-for="item of statusList">
                         <template #tab>
@@ -16,7 +16,7 @@
                         </template>
                     </a-tab-pane>
                 </a-tabs>
-            </div>
+            </div>-->
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -72,7 +72,7 @@
                             {{ $Util.stockRecordFilter(text) }}
                         </template>
                         <template v-if="column.key === 'type'">
-                            {{ $Util.stockTypeFilter(text) }}
+                            {{ $Util.warehouseTypeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'warehouse_name'">
                             {{ text || '-' }}
@@ -86,18 +86,10 @@
                             </div>
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" v-if="record.status === STATUS.AIT_AUDIT"
-                                      @click="handleStockAuditShow(record.id)"><i
-                                class="icon i_m_success"/>审核
+                            <a-button type="link" v-if="record.status === STATUS.INIT"
+                                      @click="routerChange('detail',record)"><i class="icon i_edit"/> 修改
                             </a-button>
-                            <a-button type="link" v-else-if="record.status === STATUS.AUDIT_PASS"
-                                      @click="handleComplete(record.id)"><i
-                                class="icon i_edit"/>处理
-                            </a-button>
-                            <a-button type="link" v-if="record.status === STATUS.AIT_AUDIT"
-                                      @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改
-                            </a-button>
-                            <a-button type="link" v-if="record.status === STATUS.AIT_AUDIT"
+                            <a-button type="link" v-if="record.status === STATUS.INIT"
                                       @click="handleCancel(record.id)" class="danger">
                                 <i class="icon i_m_error"/>取消
                             </a-button>
@@ -135,6 +127,14 @@
                     </div>
                 </div>
                 <div class="form-item required">
+                    <div class="key">类目：</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.targetType">
+                            <a-radio v-for="(val, key) in targetMap" :key='key' :value='key'>{{ val }}</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">类型：</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.type">
@@ -142,34 +142,23 @@
                         </a-radio-group>
                     </div>
                 </div>
-                <template #footer>
-                    <a-button @click="stockShow=false">取消</a-button>
-                    <a-button @click="handleStockSubmit" type="primary">确定</a-button>
-                </template>
-            </a-modal>
-            <a-modal v-model:visible="stockAuditShow" title="审核" class="stock-audit-modal"
-                     :after-close='handleStockAuditClose'>
-                <div class="modal-content">
-                    <div>
-                        <div class="form-item required">
-                            <div class="key">审核结果:</div>
-                            <a-radio-group v-model:value="editForm.status">
-                                <a-radio :value="STATUS.AUDIT_PASS">通过</a-radio>
-                                <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio>
-                            </a-radio-group>
-                        </div>
-                        <div class="form-item textarea required" v-if="editForm.status === STATUS.AUDIT_REFUSE">
-                            <div class="key">原因:</div>
-                            <div class="value">
-                                <a-textarea v-model:value="editForm.audit_message" placeholder="请输入不通过原因"
-                                            :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
-                            </div>
-                        </div>
+                <div class="form-item required">
+                    <div class="key">原因：</div>
+                    <div class="value">
+                        <a-select v-model:value="form.source_type" placeholder="请选择原因">
+                            <a-select-option v-for="(val, key) of sourceTypeMap" :key='key' :value='key'>{{ val }}</a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">采购单号：</div>
+                    <div class="value">
+                       <a-input v-model:value="form"/>
                     </div>
                 </div>
                 <template #footer>
-                    <a-button @click="stockAuditShow = false">取消</a-button>
-                    <a-button @click="handleStockAuditSubmit" type="primary">确定</a-button>
+                    <a-button @click="stockShow=false">取消</a-button>
+                    <a-button @click="handleStockSubmit" type="primary">确定</a-button>
                 </template>
             </a-modal>
         </template>
@@ -179,14 +168,14 @@
 <script>
 import Core from '../../core';
 
-const WAREHOUSE_RECORD = Core.Const.WAREHOUSE_RECORD
+const STOCK_RECORD = Core.Const.STOCK_RECORD
 export default {
     name: 'InvoiceList',
     components: {},
     props: {},
     data() {
         return {
-            STATUS: Core.Const.WAREHOUSE_RECORD.STATUS,
+            STATUS: Core.Const.STOCK_RECORD.STATUS,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -197,15 +186,15 @@ export default {
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
-            typeMap: Core.Const.WAREHOUSE_RECORD.TYPE_MAP, //出入库
-            statusList: [
+            typeMap: Core.Const.STOCK_RECORD.TYPE_MAP, //出入库
+           /* statusList: [
                 {text: '全  部', value: '0', color: 'primary', key: '0'},
-                {text: '待审核', value: '0', color: 'yellow', key: WAREHOUSE_RECORD.STATUS.AIT_AUDIT},
-                {text: '审核通过', value: '0', color: 'blue', key: WAREHOUSE_RECORD.STATUS.AUDIT_PASS},
-                {text: '审核失败', value: '0', color: 'red', key: WAREHOUSE_RECORD.STATUS.AUDIT_REFUSE},
-                {text: '处理完成', value: '0', color: 'green', key: WAREHOUSE_RECORD.STATUS.CLOSE},
-                {text: '已取消', value: '0', color: 'grey', key: WAREHOUSE_RECORD.STATUS.CANCEL},
-            ],
+                {text: '待审核', value: '0', color: 'yellow', key: STOCK_RECORD.STATUS.AIT_AUDIT},
+                {text: '审核通过', value: '0', color: 'blue', key: STOCK_RECORD.STATUS.AUDIT_PASS},
+                {text: '审核失败', value: '0', color: 'red', key: STOCK_RECORD.STATUS.AUDIT_REFUSE},
+                {text: '处理完成', value: '0', color: 'green', key: STOCK_RECORD.STATUS.CLOSE},
+                {text: '已取消', value: '0', color: 'grey', key: STOCK_RECORD.STATUS.CANCEL},
+            ],*/
             searchForm: {
                 warehouse_id: undefined,
                 uid: '',
@@ -221,14 +210,12 @@ export default {
                 type: '',
                 id: '',
                 warehouse_id: undefined,
+                source_type: '',
+                source_id: '',
+                targetType: '',
             },
-
-            stockAuditShow: false,
-            editForm: {
-                id: '',
-                status: 20,
-                audit_message: '',
-            },
+            sourceTypeMap: Core.Const.STOCK_RECORD.SOURCE_TYPE_MAP, //来源
+            targetMap: Core.Const.STOCK_RECORD.COMMODITY_TYPE_MAP, //类目
         };
     },
     watch: {},
@@ -239,10 +226,9 @@ export default {
                 {title: '出入库单类型', dataIndex: 'type', key: 'stock_type',},
                 {title: '所属仓库', dataIndex: ['warehouse', 'name'], key: 'warehouse_name',},
                 {title: '仓库类型', dataIndex: 'type', key: 'type',},
-                {title: '申请人', dataIndex: ['apply_user', "account", "name"], key: 'apply_user'},
-                {title: '处理人', dataIndex: ['operator_user', "account", "name"], key: 'operator_user'},
+                {title: '创建人', dataIndex: ['apply_user', "account", "name"], key: 'apply_user'},
+                // {title: '处理人', dataIndex: ['operator_user', "account", "name"], key: 'operator_user'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '处理时间', dataIndex: 'operate_time', key: 'time'},
                 {title: '状态', dataIndex: 'status', key: 'status'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
@@ -252,7 +238,6 @@ export default {
     mounted() {
         this.getTableData();
         this.getWarehouseList();
-        this.getStatusList();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -262,7 +247,7 @@ export default {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/warehouse/invoice-edit",
-                        query: {id: item.id}
+                        query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -298,7 +283,7 @@ export default {
             Core.Api.Invoice.save(form).then(res => {
                 this.$message.success('保存成功')
                 this.handleStockClose()
-                this.routerChange('edit', res.detail)
+                this.routerChange('detail', res.detail)
             }).catch(err => {
                 console.log('handleStockSubmit err:', err)
             })
@@ -355,7 +340,6 @@ export default {
                 onOk() {
                     Core.Api.Invoice.cancel({id}).then(() => {
                         _this.$message.success('取消成功');
-                        _this.getStatusList();
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);
@@ -363,7 +347,7 @@ export default {
                 },
             });
         },
-        getStatusList() {    // 获取 状态 列表
+      /*  getStatusList() {    // 获取 状态 列表
             Object.assign(this.statusList, this.$options.data().statusList)
             Core.Api.Invoice.status({
                 ...this.searchForm,
@@ -387,49 +371,7 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
-        },
-        //库存审核
-        handleStockAuditShow(id) { // 显示弹框
-            this.stockAuditShow = true
-            this.editForm.id = id
-        },
-        handleStockAuditClose() { // 关闭弹框
-            this.stockAuditShow = false;
-        },
-        handleStockAuditSubmit() { // 审核提交
-            this.loading = true;
-            Core.Api.Invoice.audit({
-                ...this.editForm
-            }).then(res => {
-                console.log('handleStockAuditSubmit res', res)
-                this.$message.success('审核成功')
-                this.handleStockAuditClose()
-                this.getTableData()
-                this.getStatusList()
-            }).catch(err => {
-                console.log('handleStockAuditSubmit err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-        handleComplete(id) { // 处理完成
-            let _this = this;
-            this.$confirm({
-                title: '确定处理完成吗？',
-                okText: '确定',
-                okType: 'danger',
-                cancelText: '取消',
-                onOk() {
-                    Core.Api.Invoice.handle({id}).then(() => {
-                        _this.$message.success('处理完成');
-                        _this.getTableData();
-                        _this.getStatusList()
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
-                },
-            });
-        },
+        },*/
     }
 };
 </script>

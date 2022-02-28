@@ -1,17 +1,17 @@
 <template>
-<a-tree-select class="CategoryTreeSelect"
-    v-model:value="value"
-    :placeholder="placeholder"
-    :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-    :tree-data="treeData"
-    :load-data='onLoadData'
-    @select='handleSelect'
-    treeDefaultExpandAll
-/>
+    <a-tree-select class="CategoryTreeSelect"
+                   v-model:value="value"
+                   :placeholder="placeholder"
+                   :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                   :tree-data="treeData"
+                   :load-data='onLoadData'
+                   @select='handleSelect'
+                   treeDefaultExpandAll
+    />
 </template>
 
 <script>
-import Core from '../../../core';
+import Core from '../../core';
 
 export default {
     components: {},

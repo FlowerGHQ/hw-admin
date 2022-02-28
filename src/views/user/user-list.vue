@@ -17,7 +17,7 @@
                         </div>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+<!--                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">类型:</div>
                     <div class="value">
                         <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择员工类型" allow-clear>
@@ -25,7 +25,7 @@
                             <a-select-option :value="USER_TYPE.WORKER">维修工</a-select-option>
                         </a-select>
                     </div>
-                </a-col>
+                </a-col>-->
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">创建时间:</div>
                     <div class="value">
@@ -43,9 +43,6 @@
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text , record }">
-                    <template v-if="column.dataIndex === 'type'">
-                        {{ text === USER_TYPE.WORKER ? '维修工' : '一般员工' }}
-                    </template>
                     <template v-if="column.dataIndex === 'flag_admin'">
                         {{ text ? '是' : '否' }}
                     </template>
@@ -118,7 +115,6 @@ export default {
         return {
             orgType: Core.Data.getOrgType(),
             USER_TYPE: Core.Const.USER.TYPE,
-
             // 加载
             loading: false,
             // 分页
@@ -142,7 +138,6 @@ export default {
                 {title: '账号', dataIndex: ['account', 'username'], key: 'item'},
                 {title: '手机号', dataIndex: ['account', 'phone'], key: 'item'},
                 {title: '邮箱', dataIndex: ['account', 'email'], key: 'item'},
-                {title: '员工类型', dataIndex: 'type'},
                 {title: '员工角色', dataIndex: 'role_name', key: 'item'},
                 {title: '是否为管理员', dataIndex: 'flag_admin', align: 'center'},
                 {title: '最近登录', dataIndex: ['account', 'last_login_time'], key: 'time'},

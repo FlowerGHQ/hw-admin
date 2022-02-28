@@ -3,6 +3,9 @@
     <div class="content">
         <div class="title-content">
             <div class="title">结算清单 Invoice</div>
+            <p>维修帐类</p>
+            <span>{{ $Util.repairServiceFilter(detail.service_type) }}</span>
+            repairServiceFilter
             <p>结算编号</p>
             <span>{{detail.uid || '-'}}</span>
             <p>交易日期</p>
@@ -12,7 +15,7 @@
             <div class="info-block">
                 <div class="title">托修方</div>
                 <p>车主姓名：{{detail.customer_name}}</p>
-                <p>车辆编号：{{detail.item_code}}</p>
+                <p>车架号：{{detail.item_code}}</p>
                 <p>送修日期：{{$Util.timeFormat(detail.create_time)}}</p>
                 <div class="title">联系电话</div>
                 <p>{{detail.customer_phone}}</p>
@@ -26,7 +29,7 @@
             <div class="info-block">
                 <div class="title">维修方</div>
                 <p>维修人：{{detail.repair_user_name}}</p>
-                <p>维修类别：{{$Util.repairChannelFilter(detail.channel)}}</p>
+                <p>维修方式：{{$Util.repairChannelFilter(detail.channel)}}</p>
                 <div class="title">联系电话</div>
                 <p>{{detail.repair_user_phone}}</p>
             </div>

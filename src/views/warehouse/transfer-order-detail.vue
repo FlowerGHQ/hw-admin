@@ -19,7 +19,7 @@
                 </div>
                 <div class="info-item">
                     <div class="key">仓库类型</div>
-                    <div class="value">{{ $Util.stockTypeFilter(detail.to_warehouse.type || '-') }}</div>
+                    <div class="value">{{ $Util.warehouseTypeFilter(detail.to_warehouse.type || '-') }}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">创建时间</div>

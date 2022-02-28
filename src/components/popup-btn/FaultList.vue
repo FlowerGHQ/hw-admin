@@ -1,0 +1,94 @@
+<template>
+    <a-button class="FaultlistBtn" @click.stop="handleFaultShow()" :ghost='ghost' :type="btnType" :class="btnClass">
+        <slot><i class="icon i_add"/></slot>
+        <slot>{{ btnText }}</slot>
+    </a-button>
+    <a-modal v-model:visible="faultShow" title="新增故障" class="fault-modal"
+             :after-close='handleFaultClose'>
+        <div class="modal-content">
+            <div class="form-item required">
+                <div class="key">原因:</div>
+                <div class="value">
+                    <a-input v-model:value="form.name" placeholder="请输入故障名称"/>
+                </div>
+            </div>
+        </div>
+        <template #footer>
+            <a-button @click="faultShow = false">取消</a-button>
+            <a-button @click="handleFaultSubmit" type="primary">确定</a-button>
+        </template>
+    </a-modal>
+</template>
+
+<script>
+import Core from '../../core';
+
+export default {
+    name: 'FaultList',
+    components: {},
+    props: {
+        btnText: {
+            type: String,
+            default: '新增故障'
+        },
+        btnType: {
+            type: String,
+            default: 'primary'
+        },
+        btnClass: {
+            type: String,
+        },
+        ghost: {
+            type: Boolean,
+            default: false,
+        },
+        id: {
+            type: Number,
+        }
+    },
+    data() {
+        return {
+            faultShow: false,
+            form: {
+                id: '',
+                name: '',
+            },
+        };
+    },
+    watch: {},
+    computed: {},
+    mounted() {
+    },
+    methods: {
+        handleFaultShow(id) { // 显示弹框
+            this.faultShow = true
+            this.form.id = id
+        },
+        handleFaultClose() { // 关闭弹框
+            this.faultShow = false;
+            this.form = {
+                id: '',
+                name: '',
+            }
+        },
+        handleFaultSubmit() { // 提交
+            this.loading = true;
+            Core.Api.Fault.save({
+                ...this.form
+            }).then(res => {
+                this.$message.success('添加成功')
+                this.handleFaultClose();
+                this.$emit('saveFault');
+            }).catch(err => {
+                console.log('handleFaultSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+    }
+};
+</script>
+
+<style scoped>
+
+</style>

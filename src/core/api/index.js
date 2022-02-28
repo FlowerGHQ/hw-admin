@@ -97,11 +97,15 @@ const apiList = {
         list: ['PostJson', 'invoice/list'],
         delete: ['PostJson', 'invoice/delete'],
         audit: ['PostJson', 'invoice/audit'],
-        saveList: ['PostJson', 'invoice-item/save-list'], //出入库单提交
-        itemList: ['PostJson', 'invoice-item/list'], // 出入库单明细列表
         status: ['PostJson', 'invoice/status-list'], // 状态
         handle: ['PostJson', 'invoice/handle'], // 处理完成
         cancel: ['PostJson', 'invoice/cancel'], // 取消出入库单
+    },
+    InvoiceItem: {
+        list: ['PostJson', 'invoice-item/list'], // 出入库单明细列表
+        save: ['PostJson', 'invoice-item/save'], //出入库单明细 单个修改
+        saveList: ['PostJson', 'invoice-item/save-list'], //出入库单明细 批量提交
+        delete: ['PostJson', 'invoice-item/delete'], //出入库单明细 单个移除
     },
     Transfer: { // 调货申请单
         save: ['PostJson', 'transfer-order/save'],
@@ -113,6 +117,7 @@ const apiList = {
         saveList: ['PostJson', 'transfer-order-item/save-list'], //调货单提交
         status: ['PostJson', 'transfer-order/status-list'], // 状态
         cancel: ['PostJson', 'transfer-order/cancel'], // 取消调货单
+        detailByUid: ['PostJson', 'transfer-order/detail-by-uid'], // 取消调货单
     },
     Repair: { // 维修单
         list: ['PostJson', 'repair/list'], // 列表
@@ -148,6 +153,15 @@ const apiList = {
         detailByCodeForRepair: ['PostJson', 'item/detail-by-code-for-repair'],
 
         setIndep: ['PostJson', 'item/set-flag-independent-info'],
+    },
+    Entity: { // 车架
+        list: ['PostJson', 'entity/list'],
+        save: ['PostJson', 'entity/save'],
+        detail: ['PostJson', 'entity/detail'],
+        delete: ['PostJson', 'entity/delete'],
+        detailByUid: ['PostJson', 'entity/detail-by-uid'],
+        getByUid: ['PostJson', 'entity/get-by-uid'],
+
 
     },
     ItemCategory: { // 商品分类
@@ -210,6 +224,7 @@ const apiList = {
         review: ['PostJson', 'purchase-order/review'], // 评论
         statusList: ['PostJson', 'purchase-order/status-list'], // 保存
         recreate: ['PostJson', 'purchase-order/recreate'], // 再来一单
+        detailSn: ['PostJson', 'purchase-order/detail-sn'],
     },
     Store: { // 门店管理
         list: ['PostJson', 'store/list'],

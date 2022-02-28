@@ -131,7 +131,6 @@ let Const = {
             DISTRIBUTOR: 15, //分销商
             AGENT: 20, // 零售商
             STORE: 30, // 门店
-            WORKER: 40, // 维修工
             CUSTOMER: 100, // 顾客
         },
         TYPE_MAP: {
@@ -139,7 +138,6 @@ let Const = {
             15: '分销商',
             20: '零售商',
             30: '门店',
-            40: '维修工',
             100: '顾客',
         },
     },
@@ -161,7 +159,6 @@ let Const = {
             15: 'DISTRIBUTOR',
             20: 'AGENT',
             30: 'STORE',
-            40: 'WORKER',
             100: 'CUSTOMER',
         },
         ORG_TYPE: {
@@ -169,7 +166,6 @@ let Const = {
             DISTRIBUTOR: 15,
             AGENT: 20,
             STORE: 30,
-            REPAIR: 40,
         },
     },
 
@@ -221,12 +217,12 @@ let Const = {
             OUT_REPAIR_TIME: 2,
         },
         SERVICE_TYPE_LIST: [
-            { text: '保内维修', value: 1 },
-            { text: '保外维修', value: 2 },
+            { text: '保内', value: 1 },
+            { text: '保外', value: 2 },
         ],
         SERVICE_TYPE_MAP: {
-            1: '保内维修',
-            2: '保外维修',
+            1: '保内',
+            2: '保外',
         },
         // 维修方式
         CHANNEL_LIST: [
@@ -270,34 +266,34 @@ let Const = {
         },
         // 状态
         STATUS: {
-            WAIT_DISTRIBUTION: 10,
-            WAIT_CHECK: 20,
-            WAIT_AUDIT: 25,
+            // WAIT_DISTRIBUTION: 10,
+            // WAIT_CHECK: 20,
+            // WAIT_AUDIT: 25,
             WAIT_DETECTION: 30,
             WAIT_REPAIR: 40,
             REPAIR_END: 50,
             SETTLEMENT: 60,
             // TRANSFER: 100,
-            CHECK_FAIL: -20,
-            AUDIT_FAIL: -30,
+            // CHECK_FAIL: -20,
+            // AUDIT_FAIL: -30,
             CLOSE: -10,
         },
         STATUS_MAP: {
-            '10': '待分配',
-            '20': '待确认',
-            '25': '待审核',
+            // '10': '待分配',
+            // '20': '待确认',
+            // '25': '待审核',
             '30': '待检测',
             '40': '维修中',
             '50': '已维修',
             '60': '已结算',
             // 100: '已转单',
-            '-20': '确认未通过',
-            '-30': '审核未通过',
+            // '-20': '确认未通过',
+            // '-30': '审核未通过',
             '-10': '取消',
         },
         STATUS_COLOR_MAP: {
-            10: 'red',
-            20: 'orange',
+            // 10: 'red',
+            // 20: 'orange',
             30: 'yellow',
             40: 'blue',
             50: 'light',
@@ -559,56 +555,65 @@ let Const = {
             PURCHASE_ORDER: 2 // 采购单附件
         }
     },
-    WAREHOUSE_RECORD: {
+    WAREHOUSE: {
+        TYPE: { //仓库类型
+            QUALITY: 1, //正品仓
+            DEFECTIVE: 2, //残次仓
+        },
+        TYPE_MAP: {
+            1: '正品仓',
+            2: '残次仓',
+        },
+    },
+    STOCK_RECORD: { // 出入库明细
+        COMMODITY_TYPE: {
+            ENTITY: 20,
+            ITEM: 10,
+        },
+        COMMODITY_TYPE_MAP: {
+            20: '车架',
+            10: '零部件',
+        },
         TYPE: {
-            TYPE_IN: 1, //入库
-            TYPE_OUT: 2, //出库
+            IN: 1, //入库
+            OUT: 2, //出库
         },
         TYPE_MAP: {
             1: '入库',
             2: '出库'
         },
-        WAREHOUSE_TYPE: {
-            QUALITY: 1, //正品仓
-            DEFECTIVE: 2, //残次仓
-        },
-        WAREHOUSE_TYPE_MAP: {
-            1: '正品仓',
-            2: '残次仓',
-        },
         STATUS: { //出入库单审核状态
-            AIT_AUDIT: 10, //待审核
-            AUDIT_PASS: 20, //审核通过
-            CLOSE: 40, //处理完成
-            AUDIT_REFUSE: -10, //审核失败
+            INIT: 0, //初始化
+            CLOSE: 40, //已完成
             CANCEL: -20, // 取消
         },
         STATUS_MAP: {
-            '10': '待审核',
-            '20': '审核通过',
-            '40': '处理完成',
-            '-10': '审核失败',
+            '0': '初始化',
+            '40': '已完成',
             '-20': '已取消'
         },
         STATUS_COLOR_MAP: {
-            '10': 'yellow',
-            '20': 'blue',
+            '0': 'yellow',
             '40': 'green',
-            '-10': 'red',
             '-20': 'grey'
         },
         STATUS_LIST: [ //出入库单审核
-            { text: '待审核', value: 10 },
-            { text: '审核通过', value: 20 },
-            { text: '审核失败', value: -10 },
-            { text: '处理完成', value: 40 },
+            { text: '初始化', value: 0 },
+            { text: '已完成', value: 40 },
             { text: '已取消', value: -20 },
         ],
+        SOURCE_TYPE: {
+            ADMIN: 10, //管理员创建
+            PURCHASE_ORDER: 20, //采购单
+            AFTER_SALES_ORDER: 30, //售后
+            TRANSFER_ORDER: 40,
+        },
         SOURCE_TYPE_MAP: {
-            1: '管理员操作',
-            21: '维修单',
-            31: '出/入库单'
-        }
+            10: '管理员创建',
+            20: '采购',
+            30: '售后',
+            40: '调货',
+        },
     },
     TRANSFER_ORDER: { //调货单
         STATUS: { //调货单审核状态

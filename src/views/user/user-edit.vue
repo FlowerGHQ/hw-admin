@@ -6,15 +6,6 @@
             <div class="title-colorful">基本信息</div>
         </div>
         <div class="form-content">
-            <div class="form-item required" v-if="!form.id">
-                <div class="key">类型：</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.type">
-                        <a-radio :value="org_type">普通员工</a-radio>
-                        <a-radio :value="ORG_TYPE.REPAIR">维修工</a-radio>
-                    </a-radio-group>
-                </div>
-            </div>
             <div class="form-item required">
                 <div class="key">员工名:</div>
                 <div class="value">
