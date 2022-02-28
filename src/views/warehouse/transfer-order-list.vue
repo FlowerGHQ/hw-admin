@@ -131,7 +131,7 @@
             <div class="form-item required">
                 <div class="key">单位类型:</div>
                 <div class="value">
-                    <a-select placeholder="请选择单位类型" v-model:value='form.org_type' @change="handleOrgTypeChange" labelInValue>
+                    <a-select placeholder="请选择单位类型" v-model:value='form.supply_org_type' @change="handleOrgTypeChange">
                         <a-select-option v-for="item of orgTypeList" :key="item.value" :value="item.value">
                             {{ item.text }}
                         </a-select-option>
@@ -141,8 +141,9 @@
             <div class="form-item required">
                 <div class="key">货物来源:</div>
                 <div class="value">
-                    <a-select placeholder="请选择单位类型" v-model:value='form.org_id'>
-                        <a-select-option v-for="item of orgList" :key="item.id" :value="item.id">
+                    <a-select placeholder="请选择货物来源" v-model:value='form.supply_org_id'>
+                        <a-select-option v-for="item of orgList" :key="item.id" :value="item.id"
+                            :disabled="form.supply_org_type === orgType && orgId === item.id">
                             {{ item.name }}
                         </a-select-option>
                     </a-select>
@@ -244,6 +245,7 @@ export default {
             
             // 创建
             orgType: Core.Data.getOrgType(), // 操作者的组织类型
+            orgId: Core.Data.getOrgId(),     // 操作者的组织id
 
             orgTypeList: Core.Const.LOGIN.TYPE_LIST,
             storeList: [],
@@ -254,8 +256,8 @@ export default {
             transferOrderShow: false,
 
             form: {
-                org_type: undefined,
-                org_id: undefined,
+                supply_org_type: undefined,
+                supply_org_id: undefined,
                 to_warehouse_id: undefined,
                 apply_message: '',
             },
@@ -439,10 +441,13 @@ export default {
             if (this.orgType === ORG_TYPE.STORE) {
                 // todo 获取同级的门店列表
                 Core.Api.Store.listAll().then(res => {
+                    console.log('getStoreList res', res);
                     this.storeList = res.list
+                    
                 })
             }  else if (this.orgType < ORG_TYPE.STORE) {
                 Core.Api.Store.listAll().then(res => {
+                    console.log('getStoreList res', res);
                     this.storeList = res.list
                 })
             }
@@ -451,15 +456,18 @@ export default {
             if (this.orgType === ORG_TYPE.AGENT) {
                 // todo 获取同级的零售商列表
                 Core.Api.Agent.listAll().then(res => {
+                    console.log('getAgentList res', res);
                     this.agentList = res.list
                 })
             } else if (this.orgType > ORG_TYPE.AGENT) {
                 // todo 门店 获取所属零售商的信息
                 Core.Api.Store.detail().then(res => {
                     this.agentList = [{name: res.detail.agent_name, id:res.detail.agent_id}]
+                    console.log('getAgentList agentList', this.agentList);
                 })
             } else if (this.orgType < ORG_TYPE.AGENT) {
                 Core.Api.Agent.listAll().then(res => {
+                    console.log('getAgentList res', res);
                     this.agentList = res.list
                 })
             }
@@ -468,6 +476,7 @@ export default {
             if (this.orgType === ORG_TYPE.DISTRIBUTOR) {
                 // todo 获取同级的分销商列表
                 Core.Api.Distributor.listAll().then(res => {
+                    console.log('getDistributorList res', res);
                     this.distributorList = res.list
                 })
             } else if (this.orgType > ORG_TYPE.DISTRIBUTOR) {
@@ -475,13 +484,14 @@ export default {
                 let apiName = this.orgType === ORG_TYPE.AGENT ? 'Agent' : 'Store'
                 Core.Api[apiName].detail().then(res => {
                     this.distributorList = [{name: res.detail.distributor_id, id:res.detail.distributor_name}]
+                    console.log('getDistributorList distributorList', this.distributorList);
                 })
             }
         },
         // 单位类型改变
         handleOrgTypeChange(val) {
-            console.log('handleOrgTypeChange this.form.org_type', val);
-            switch (val) {
+            console.log('handleOrgTypeChange this.form.supply_org_type', this.form.supply_org_type);
+            switch (this.form.supply_org_type) {
                 case ORG_TYPE.ADMIN:
                     this.orgList = [{name: '平台', id: 1 }]
                     break;
@@ -498,9 +508,9 @@ export default {
             console.log('handleOrgTypeChange this.orgList', this.orgList);
 
             if (this.orgList.length == 1) {
-                this.form.org_id = this.orgList[0].id
+                this.form.supply_org_id = this.orgList[0].id
             }
-            console.log('handleOrgTypeChange this.form.org_id', this.form.org_id);
+            console.log('handleOrgTypeChange this.form.supply_org_id', this.form.supply_org_id);
         },
         handleTransferOrderClose() {
             this.transferOrderShow = false;
@@ -509,6 +519,13 @@ export default {
         
         handleTransferOrderSubmit() {
             let form = Core.Util.deepCopy(this.form)
+            if (!form.supply_org_type) {
+                return this.$message.warning('请选择单位类型')
+            }
+            if (!form.supply_org_id) {
+                console.log(form.supply_org_id)
+                return this.$message.warning('请选择货物来源')
+            }
             if (!form.to_warehouse_id) {
                 return this.$message.warning('请选择仓库')
             }

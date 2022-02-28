@@ -18,7 +18,7 @@
                     <a-button key="back" @click="detailShow = false">关闭</a-button>
                 </template>
             </a-modal>
-            <a-modal v-model:visible="updateShow" title="编辑验收备注" class="remark-detail-modal" :ok="updateWaybill">
+            <a-modal v-model:visible="updateShow" title="编辑验收备注" class="remark-detail-modal">
                 <div class="form-item">
                     <div class="key">物流公司:</div>
                     <div class="value">

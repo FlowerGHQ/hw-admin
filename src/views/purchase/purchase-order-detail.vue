@@ -351,6 +351,7 @@ export default {
                 target_type: Core.Const.WAYBILL.TARGET_TYPE.PURCHASE_ORDER,
                 type: Core.Const.WAYBILL.TYPE.OUT,
             }).then(res => {
+                console.log('getWaybillDetail:', res);
                 this.waybill = res.detail
                 this.getWaybillInfo(this.waybill.uid, this.waybill.company_uid)
                 console.log('getWaybillDetail', this.waybill)
@@ -365,6 +366,7 @@ export default {
                 uid: uid,
                 company_uid: company_uid,
             }).then(res => {
+                console.log('getWaybillInfo:', res);
                 this.waybillInfo = JSON.parse(res.waybill).result
                 console.log('getWaybillInfo', this.waybillInfo)
             }).catch(err => {
