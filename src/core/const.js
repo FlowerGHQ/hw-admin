@@ -558,7 +558,7 @@ let Const = {
             ITEM: 10,
         },
         COMMODITY_TYPE_MAP: {
-            20: '整车',
+            20: '车架',
             10: '零部件',
         },
         TYPE: {

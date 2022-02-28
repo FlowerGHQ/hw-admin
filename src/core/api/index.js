@@ -150,8 +150,16 @@ const apiList = {
         delete: ['PostJson', 'item/delete'],
         detailByCode: ['PostJson', 'item/detail-by-code'],
         detailByCodeForRepair: ['PostJson','item/detail-by-code-for-repair'],
-
         setIndep: ['PostJson', 'item/set-flag-independent-info'],
+    },
+    Entity: {// 车架
+        list: ['PostJson', 'entity/list'],
+        save: ['PostJson', 'entity/save'],
+        detail: ['PostJson', 'entity/detail'],
+        delete: ['PostJson', 'entity/delete'],
+        detailByUid: ['PostJson', 'entity/detail-by-uid'],
+        getByUid: ['PostJson', 'entity/get-by-uid'],
+
 
     },
     ItemCategory: { // 商品分类

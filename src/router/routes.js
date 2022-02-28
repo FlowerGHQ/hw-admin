@@ -421,6 +421,27 @@ const routes = [
         },
         children: [
             {
+                path: 'entity-list',
+                name: 'EntityList',
+                component: () => import('@/views/item/entity-list.vue'),
+                meta: {
+                    title: '车架列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true
+                }
+            },
+            {
+                path: 'entity-detail',
+                name: 'EntityDetail',
+                hidden: true,
+                component: () => import('@/views/item/entity-detail.vue'),
+                meta: {
+                    title: '车架详情',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/item/entity-list',
+                }
+            },
+            {
                 path: 'item-list',
                 name: 'ItemList',
                 component: () => import('@/views/item/item-list.vue'),

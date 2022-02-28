@@ -203,7 +203,7 @@ export default {
             if (this.isRight === false) {
                 return this.$message.warning('请输入正确的调货单号')
             }
-            Core.Api.Invoice.save(form).then(() => {
+            Core.Api.Invoice.save(form).then(res => {
                 this.$message.success('保存成功')
                 this.routerChange('detail',res.detail)
             }).catch(err => {

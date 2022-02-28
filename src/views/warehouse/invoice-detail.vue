@@ -28,15 +28,15 @@
                 </div>
                 <div class="info-item">
                     <div class="key">类目</div>
-                    <div class="value">{{ $Util.targetTypeFilter(detail.target_type || "-")}}</div>
+                    <div class="value">{{ $Util.targetTypeFilter(detail.target_type || '-')}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">来源</div>
-                    <div class="value">{{ $Util.sourceTypeFilter(detail.source_type || "-")}}</div>
+                    <div class="value">{{ $Util.sourceTypeFilter(detail.source_type || '-')}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">来源单号</div>
-                    <div class="value">{{ detail.source_id || "-"}}</div>
+                    <div class="value">{{ detail.source_id || '无'}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">创建人</div>
@@ -68,6 +68,12 @@
                                 <a-tooltip placement="top" :title='text'>
                                     <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
                                 </a-tooltip>
+                            </template>
+                            <template v-if="column.dataIndex === 'target_type'">
+                                <template v-if="addMode || record.editMode">
+                                    <a-input v-model:value="record.number" placeholder="请输入车架号"/>
+                                </template>
+                                <template v-else>{{ text || '-' }}件</template>
                             </template>
                             <template v-if="column.key === 'attr_list'">
                                 {{ $Util.itemSpecFilter(text) }}
@@ -103,6 +109,7 @@ import Core from '../../core';
 const STOCK_RECORD = Core.Const.STOCK_RECORD
 const TYPE = STOCK_RECORD.TYPE
 const STATUS = STOCK_RECORD.STATUS
+const COMMODITY_TYPE = STOCK_RECORD.COMMODITY_TYPE
 export default {
     name: 'InvoiceDetail',
     components: {},
@@ -121,7 +128,9 @@ export default {
             addMode: false,
             addData: [],
             map: [],
-
+            form: {
+                entity_uid: '',
+            },
         };
     },
     watch: {},
@@ -132,6 +141,7 @@ export default {
         tableColumns() {
             let columns = [
                 {title: '商品名称', dataIndex: ['item', 'name'],  key: 'tip_item'},
+                {title: '车架号', dataIndex: 'target_type'},
                 {title: '商品型号', dataIndex: ['item', 'model'], key: 'item'},
                 {title: '商品编码', dataIndex: ['item', 'code'],  key: 'item'},
                 {title: '商品规格', dataIndex: ['item', 'attr_list'], key: 'attr_list'},
@@ -139,8 +149,11 @@ export default {
                 {title: this.type_ch + '数量', dataIndex: 'amount' , key: 'amount'},
                 {title: '操作', key: 'operation'},
             ]
+            if (this.detail.target_type == COMMODITY_TYPE.ENTITY) { // 车架显示
+                columns.splice(2, 1)
+            }
             if (this.detail.type == TYPE.IN) { // 入库不显示库存数量
-                columns.splice(4, 1)
+                columns.splice(5, 1)
             }
             if (this.detail.status !== STATUS.INIT || this.addMode) { // 入库不显示库存数量
                 columns.pop()
@@ -248,6 +261,7 @@ export default {
                 item: item,
                 amount: 1,
                 stock: 0,
+                number: undefined,
             }))
             this.addData = list
             this.addMode = true
@@ -258,8 +272,9 @@ export default {
             let list = data.map(item => ({
                 id: item.id,
                 amount: item.amount,
-                item_id: item.item.id,
+                target_id: item.item.id,
                 invoice_id: this.id,
+                number: item.number,
             }))
             Core.Api.InvoiceItem.saveList(list).then(() => {
                 this.$message.success('保存成功')
@@ -282,7 +297,7 @@ export default {
             Core.Api.InvoiceItem.save({
                 id: item.id,
                 amount: item.amount,
-                item_id: item.item.id,
+                target_id: item.item.id,
                 invoice_id: this.id,
             }).then(() => {
                 this.$message.success('保存成功')
@@ -297,7 +312,7 @@ export default {
                 list.push({
                     "id": item.id,
                     "invoice_id": this.id,
-                    "item_id": item.item.id,
+                    "target_id": item.item.id,
                     "amount": item.amount
                 })
             }

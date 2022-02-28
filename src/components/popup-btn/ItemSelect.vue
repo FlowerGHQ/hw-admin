@@ -114,8 +114,9 @@ export default {
             total: 0,
             warehouse_id: '',
             searchForm: {
-                code: "",
-                name: ""
+                code: '',
+                name: '',
+                category_id: '',
             },
             modalShow: false,
 
@@ -123,6 +124,8 @@ export default {
 
             selectItems: [],
             selectItemIds: [],
+            sourceTypeMap: [],
+            targetMap: Core.Const.STOCK_RECORD.COMMODITY_TYPE_MAP, //类目
         }
     },
     watch: {},
