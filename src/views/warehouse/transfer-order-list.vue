@@ -131,7 +131,7 @@
             <div class="form-item required">
                 <div class="key">单位类型:</div>
                 <div class="value">
-                    <a-select placeholder="请选择单位类型" v-model:value='form.org_type' @change="handleOrgTypeChange">
+                    <a-select placeholder="请选择单位类型" v-model:value='form.org_type' @change="handleOrgTypeChange" labelInValue>
                         <a-select-option v-for="item of orgTypeList" :key="item.value" :value="item.value">
                             {{ item.text }}
                         </a-select-option>
@@ -266,9 +266,6 @@ export default {
                 status: 20,
                 audit_message: '',
             },
-
-
-
         };
     },
     watch: {},
@@ -426,10 +423,6 @@ export default {
         },
         
 
-        
-
-
-
         handleTransferOrderShow() {
             this.getWarehouseList();
             this.getStoreList();
@@ -443,32 +436,27 @@ export default {
             })
         },
         getStoreList() {
-            this.storeList = []
-            return 
             if (this.orgType === ORG_TYPE.STORE) {
                 // todo 获取同级的门店列表
-                Core.Api.Store.listBySameLevel().then(res => {
+                Core.Api.Store.listAll().then(res => {
                     this.storeList = res.list
                 })
             }  else if (this.orgType < ORG_TYPE.STORE) {
                 Core.Api.Store.listAll().then(res => {
-                    console.log('getStoreList', res);
                     this.storeList = res.list
                 })
             }
         },
         getAgentList() {
-            this.agentList = []
-            return 
             if (this.orgType === ORG_TYPE.AGENT) {
                 // todo 获取同级的零售商列表
-                Core.Api.Agent.listBySameLevel().then(res => {
+                Core.Api.Agent.listAll().then(res => {
                     this.agentList = res.list
                 })
             } else if (this.orgType > ORG_TYPE.AGENT) {
                 // todo 门店 获取所属零售商的信息
-                Core.Api.Agent.detailByLowLevel().then(res => {
-                    this.agentList = [{name: res.detail.name, id:res.detail.id}]
+                Core.Api.Store.detail().then(res => {
+                    this.agentList = [{name: res.detail.agent_name, id:res.detail.agent_id}]
                 })
             } else if (this.orgType < ORG_TYPE.AGENT) {
                 Core.Api.Agent.listAll().then(res => {
@@ -477,17 +465,16 @@ export default {
             }
         },
         getDistributorList() {
-            this.distributorList = []
-            return 
             if (this.orgType === ORG_TYPE.DISTRIBUTOR) {
                 // todo 获取同级的分销商列表
-                Core.Api.Distributor.listBySameLevel().then(res => {
+                Core.Api.Distributor.listAll().then(res => {
                     this.distributorList = res.list
                 })
             } else if (this.orgType > ORG_TYPE.DISTRIBUTOR) {
                 // todo 门店、零售 获取上属分销商的信息
-                Core.Api.Distributor.detailByLowLevel().then(res => {
-                    this.distributorList = [{name: res.detail.name, id:res.detail.id}]
+                let apiName = this.orgType === ORG_TYPE.AGENT ? 'Agent' : 'Store'
+                Core.Api[apiName].detail().then(res => {
+                    this.distributorList = [{name: res.detail.distributor_id, id:res.detail.distributor_name}]
                 })
             }
         },

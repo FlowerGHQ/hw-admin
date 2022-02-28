@@ -10,8 +10,6 @@ let URL_POINT = 'https://eos-api.hw.innotick.com'
 
 switch (window.location.hostname) {
     case 'eos.hw.innotick.com':
-    case "10.0.0.31":
-    case "localhost":
         URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服 
         break;
     case "10.0.0.205":
@@ -30,7 +28,7 @@ switch (window.location.hostname) {
         break;
     default:
         // URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
-        URL_POINT = 'http://10.0.0.109:8083' // 谢耀圣
+        URL_POINT = 'http://10.0.0.121:8083' // 谢耀圣
             // URL_POINT = 'http://10.0.0.205:8083' // 徐伟
             // URL_POINT = 'http://10.0.0.149:8083' // 徐伟
             // URL_POINT = 'http://10.0.0.39:8083'  // 姚志宇
