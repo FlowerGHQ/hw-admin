@@ -391,13 +391,25 @@ const routes = [{
                 }
             },
             {
-                path: 'transfer-order-list',
-                name: 'TransferOrderList',
+                path: 'transfer-order-list-in',
+                name: 'TransferOrderListIn',
                 component: () =>
                     import ('@/views/warehouse/transfer-order-list.vue'),
                 meta: {
-                    title: '调货管理',
-                    is_sub_menu: true
+                    title: '调货收货管理',
+                    is_sub_menu: true,
+                    type: 'in'
+                }
+            },
+            {
+                path: 'transfer-order-list-out',
+                name: 'TransferOrderListOut',
+                component: () =>
+                    import ('@/views/warehouse/transfer-order-list.vue'),
+                meta: {
+                    title: '调货发货管理',
+                    is_sub_menu: true,
+                    type: 'out'
                 }
             },
             {
@@ -985,7 +997,6 @@ const routes = [{
             },
         ]
     },
-
 ];
 
 // console.log('export routes:', routes)

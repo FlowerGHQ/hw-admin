@@ -48,7 +48,8 @@
       </div>
     </div>
     <a-modal v-model:visible="stockAddShow" title="库存增减" class="stock-change-modal"
-                :after-close="handleStockAddClose">
+      :after-close="handleStockAddClose">
+      <div class="modal-content">
         <div class="form-item required">
             <div class="key">操作类型：</div>
             <a-radio-group v-model:value="form.type">
@@ -56,12 +57,12 @@
                 <a-radio :value="TYPE.OUT">出库</a-radio>
             </a-radio-group>
         </div>
-      </div>
-      <div class="form-item required">
-        <div class="key">商品数量:</div>
-        <div class="value form-item-value">
-          <a-input-number v-model:value="form.number" :min="1" :precision="0" />
-          <span class="itemNumber">件</span>
+        <div class="form-item required">
+          <div class="key">商品数量:</div>
+          <div class="value form-item-value">
+            <a-input-number v-model:value="form.number" :min="1" :precision="0" />
+            <span class="itemNumber">件</span>
+          </div>
         </div>
       </div>
       <template #footer>

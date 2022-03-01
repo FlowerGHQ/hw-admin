@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">调货单列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" v-if="!$auth('ADMIN')" @click="handleTransferOrderShow"><i
+                    <a-button type="primary" v-if="!$auth('ADMIN') && type !== 'out'" @click="handleTransferOrderShow"><i
                         class="icon i_add"/>新建调货单
                     </a-button>
                 </div>
@@ -92,18 +92,18 @@
                             </div>
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" v-if="record.status === STATUS.WAIT_AUDIT && $auth('ADMIN')"
+                            <a-button type="link" v-if="record.status === STATUS.WAIT_AUDIT && type == 'out'"
                                       @click="handleTransferAuditShow(record.id)">
                                 <i class="icon i_m_success"/>审核
                             </a-button>
-                            <!-- <a-button type="link"  v-else-if="record.status === STATUS.AUDIT_PASS" @click="handleInvoice(record.id)"><i
-                                class="icon i_edit"/>处理
-                            </a-button> -->
-                            <template v-if="record.status === STATUS.WAIT_AUDIT && !$auth('ADMIN')">
+                             <a-button type="link"  v-else-if="record.status === STATUS.AUDIT_PASS && type == 'out'" @click="handleInvoice(record.id)">
+                                <i class="icon i_edit"/>确认发货
+                            </a-button>
+                            <template v-if="record.status === STATUS.WAIT_AUDIT && type == 'in'">
                                 <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>修改
                                 </a-button>
-                                <a-button type="link" @click="handleCancel(record.id)" class="danger"><i
-                                    class="icon i_m_error"/>取消
+                                <a-button type="link" @click="handleCancel(record.id)" class="danger">
+                                    <i class="icon i_m_error"/>取消
                                 </a-button>
                             </template>
                         </template>
@@ -140,8 +140,8 @@
             </div>     
             <div class="form-item required">
                 <div class="key">货物来源:</div>
-                <div class="value">
-                    <a-select placeholder="请选择货物来源" v-model:value='form.supply_org_id'>
+                <div ariaaluemax="-=-" class="value">
+                    <a-select placeholder="请选择货物来源" v-model:value='form.supply_org_id' show-search option-filter-prop="children">
                         <a-select-option v-for="item of orgList" :key="item.id" :value="item.id"
                             :disabled="form.supply_org_type === orgType && orgId === item.id">
                             {{ item.name }}
@@ -152,7 +152,7 @@
             <div class="form-item required">
                 <div class="key">仓库:</div>
                 <div class="value">
-                    <a-select v-model:value="form.to_warehouse_id" placeholder="请选择仓库">
+                    <a-select v-model:value="form.to_warehouse_id" placeholder="请选择仓库" show-search option-filter-prop="children">
                         <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">
                             {{ warehouse.name }}
                         </a-select-option>
@@ -182,6 +182,16 @@
                             <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio>
                         </a-radio-group>
                     </div>
+                    <div class="form-item required" v-if="editForm.status === STATUS.AUDIT_PASS">
+                        <div class="key">仓库:</div>
+                        <div class="value">
+                            <a-select v-model:value="editForm.from_warehouse_id" placeholder="请选择仓库">
+                                <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">
+                                    {{ warehouse.name }}
+                                </a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
                     <div class="form-item textarea required" v-if="editForm.status === STATUS.AUDIT_REFUSE">
                         <div class="key">原因:</div>
                         <div class="value">
@@ -210,6 +220,7 @@ export default {
     props: {},
     data() {
         return {
+            type: '',
             loginType: Core.Data.getLoginType(),
             STATUS: TRANSFER_ORDER.STATUS,
             // 加载
@@ -267,10 +278,22 @@ export default {
                 id: '',
                 status: 20,
                 audit_message: '',
+                from_warehouse_id: undefined
             },
         };
     },
-    watch: {},
+    watch: {
+        $route: {
+            deep: true,
+            immediate: true,
+            handler(newRoute) {
+                let type = newRoute.meta ? newRoute.meta.type : 'in'
+                this.type = type
+                this.handleSearchReset();
+                this.getStatusList();
+            }
+        },
+    },
     computed: {
         tableColumns() {
             let columns = [
@@ -294,8 +317,9 @@ export default {
         },
     },
     mounted() {
-        this.getTableData();
-        this.getStatusList();
+        // this.getTableData();
+        // this.getStatusList();
+        this.getWarehouseList();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -338,12 +362,26 @@ export default {
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
+            let org = {}
+            if (this.type === 'out') {
+                org = {
+                    supply_org_id: this.orgId,
+                    supply_org_type: this.orgType,
+                }
+            } else {
+                org = {
+                    org_id: this.orgId,
+                    org_type: this.orgType,
+                }
+            }
+
             Core.Api.Transfer.list({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
                 page: this.currPage,
-                page_size: this.pageSize
+                page_size: this.pageSize,
+                ...org,
             }).then(res => {
                 console.log("getTableData res:", res)
                 this.total = res.count;
@@ -379,6 +417,31 @@ export default {
                 this.loading = false;
             });
         },
+        getWarehouseList() {
+            Core.Api.Warehouse.listAll().then(res => {
+                this.warehouseList = res.list
+            })
+        },
+        //确认发货后，状态未变成已完成 
+        handleInvoice(id) {   // 处理是否发货
+            let _this = this;
+            this.$confirm({
+                title: '确定发货吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Invoice.handle({id}).then(() => {
+                        _this.$message.success('完成发货');
+                        _this.getTableData();
+                        _this.getStatusList()
+                    }).catch(err => {
+                        console.log("handleInvoice err", err);
+                    })
+                },
+            });
+
+        },
         
         // 调货单审核
         handleTransferAuditShow(id) { // 显示弹框
@@ -390,6 +453,7 @@ export default {
         },
         handleTransferAuditSubmit() { // 审核提交
             this.loading = true;
+
             Core.Api.Transfer.audit({
                 ...this.editForm
             }).then(res => {
@@ -403,6 +467,7 @@ export default {
                 this.loading = false;
             });
         },
+
 
         // 取消调货单
         handleCancel(id) {
@@ -423,19 +488,13 @@ export default {
                 },
             });
         },
-        
 
+        // 调货单创建
         handleTransferOrderShow() {
-            this.getWarehouseList();
             this.getStoreList();
             this.getAgentList();
             this.getDistributorList();
             this.transferOrderShow = true;
-        },
-        getWarehouseList() {
-            Core.Api.Warehouse.listAll().then(res => {
-                this.warehouseList = res.list
-            })
         },
         getStoreList() {
             if (this.orgType === ORG_TYPE.STORE) {
@@ -516,7 +575,6 @@ export default {
             this.transferOrderShow = false;
             Object.assign(this.form, this.$options.data().form)
         },
-        
         handleTransferOrderSubmit() {
             let form = Core.Util.deepCopy(this.form)
             if (!form.supply_org_type) {
