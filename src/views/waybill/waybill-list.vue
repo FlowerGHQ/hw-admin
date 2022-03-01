@@ -3,9 +3,9 @@
         <div class="list-container">
             <div class="title-container">
                 <div class="title-area">物流列表</div>
-                <div class="btns-area">
+                <!-- <div class="btns-area">
                     <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建物流</a-button>
-                </div>
+                </div> -->
             </div>
             <div class="search-container">
                 <a-row class="search-area">
@@ -41,27 +41,30 @@
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false' @change="handleTableChange">
                     <template #bodyCell="{ column, record, text}">
-                        <!-- <template v-if="column.dataIndex === 'org_type'">
-                          机构类型
+                        <template v-if="column.dataIndex === 'org_type'">
+                          {{ $Util.userTypeFilter(text) }}
                         </template>
-                        <template v-if="column.dataIndex === 'company'">
-                          物流公司名
+                        <template v-if="column.dataIndex === 'company_uid'">
+                          {{ $Util.waybillCompanyFilter(text) }}
                         </template>
-                        <template v-if="column.dataIndex === 'goods_over_view'">
-                          包装显示的商品名称
-                        </template> -->
                         <template v-if="column.dataIndex === 'target_type'">
                           {{ $Util.waybillTargetFilter(text) }}
                         </template>
                         <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                         </template>
+                        <template v-if="column.dataIndex === 'target_uid'">
+                            <a-tooltip placement="top" :title='text'>
+                                <a-button type="link" @click="routerChange(record.target_type, record)">{{ text }}
+                                </a-button>
+                            </a-tooltip>
+                        </template>
                         <template v-if="column.key === 'operation'">
                             <template v-if="!record.default_item_id">
-                            <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/> 编辑</a-button>
-                            <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
-                        </template>
-                        <a-button type='link' @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button> 
+                                <!-- <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/> 编辑</a-button> -->
+                                <a-button type='link' @click="handleModalShow(record)"><i class="icon i_detail"/> 详情</a-button>
+                            </template>
+                            <a-button type='link' @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button> 
                         </template>
                     </template>
                 </a-table>
@@ -82,15 +85,28 @@
                 />
             </div>
         </div>
+        <a-modal v-model:visible="modalShow" title="物流详情" class="waybill-show-modal">
+            <div class="modal-content">
+                <a-steps progress-dot direction="vertical">
+                    <a-step v-for="(item,index) of waybillInfo.list" :key="index" :title="item.time" :description="item.status"/>
+                </a-steps>
+                <SimpleImageEmpty v-if="!waybillInfo.length" desc='暂无物流详情信息'/>
+            </div>
+
+            <template #footer>
+                <a-button key="back" @click="modalShow = false">关闭</a-button>
+            </template>
+        </a-modal>
     </div>
 </template>
 
 <script>
 import Core from '../../core';
-
+import SimpleImageEmpty from '../../components/common/SimpleImageEmpty.vue'
+const TARGET_TYPE = Core.Const.WAYBILL.TARGET_TYPE
 export default {
     name: 'WaybillList',
-    components: {},
+    components: {SimpleImageEmpty},
     props: {},
     data() {
         return {
@@ -109,6 +125,11 @@ export default {
                 uid:'',
                 type: undefined,
             },
+
+            tableData: [],
+
+            modalShow: false,
+            waybillInfo: []
         };
     },
     watch: {},
@@ -117,13 +138,13 @@ export default {
             let columns = [
                 {title: '机构类型', dataIndex: 'org_type'},
                 {title: '货物清单类型', dataIndex: 'target_type'},
-                {title: '物流公司名称', dataIndex: 'company'},
+                {title: '物流公司名称', dataIndex: 'company_uid'},
                 {title: '物流编号', dataIndex: 'uid'},
+                {title: '货物清单UID', dataIndex: 'target_uid'},
                 {title: '寄件人', dataIndex: 'sender'},
                 {title: '寄件人电话', dataIndex: 'sender_phone'},
                 {title: '收件人', dataIndex: 'receiver'},
                 {title: '收件人电话', dataIndex: 'receiver_phone'},
-                {title: '包装显示的商品名称', dataIndex: 'goods_over_view'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
@@ -135,24 +156,34 @@ export default {
     },
     methods: {
         routerChange(type, item = {}) {
-            console.log(item)
             let routeUrl = ''
             switch (type) {
-                case 'edit':  // 编辑
+                case TARGET_TYPE.PURCHASE_ORDER:  // 采购单详情
                     routeUrl = this.$router.resolve({
-                        path: "/waybill/waybill-edit",
-                        query: {id: item.id}
+                        path: "/purchase/purchase-order-detail",
+                        query: {id: item.target_id}
                     })
-                    window.open(routeUrl.href, '_self')
                     break;
-                case 'detail':  // 详情
+                case TARGET_TYPE.REPAIR_ORDER_TRANSFER:  // 维修单转单详情
                     routeUrl = this.$router.resolve({
-                        path: "/waybill/waybill-detail",
-                        query: {id: item.id}
+                        path: "/repair/repair-detail",
+                        query: {id: item.target_id}
                     })
-                    window.open(routeUrl.href, '_self')
                     break;
+                case TARGET_TYPE.TRANSFER_ORDER:  // 维修单调货单详情
+                    routeUrl = this.$router.resolve({
+                        path: "/warehouse/transfer-order-detail",
+                        query: {id: item.target_id}
+                    })
+                    break;
+                // case TARGET_TYPE.AFTER_SALES_ORDER:  // 售后单详情
+                //     routeUrl = this.$router.resolve({
+                //         path: "/purchase/",
+                //         query: {id: item.target_id}
+                //     })
+                //     break;
             }
+            window.open(routeUrl.href, '_blank')
         },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
@@ -193,9 +224,46 @@ export default {
                 this.loading = false;
             });     
         },
-        //处理状态改变
-        handleStatusChange() {   
-        }
+
+        //模态弹窗
+        handleModalShow(record) {
+            this.getWaybillInfo(record)
+            this.modalShow = true
+        },
+        // 获取 物流单详情
+        getWaybillInfo({uid, company_uid}) {
+            Core.Api.Waybill.queryLogistics({
+                uid: uid,
+                company_uid: company_uid,
+            }).then(res => {
+                console.log('getWaybillInfo:', res);
+                this.waybillInfo = JSON.parse(res.waybill).result
+                console.log('getWaybillInfo', this.waybillInfo)
+            }).catch(err => {
+                console.log('getPurchaseInfo err', err)
+            }).finally(() => {
+            });
+        },
+
+        //删除物流单
+        handleDelete(id) {
+            let _this = this;
+            this.$confirm({
+                title: '确定要删除该物流订单吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Waybill.delete({id}).then(() => {
+                        _this.$message.success('删除成功');
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
+        
     }
 };
 </script>

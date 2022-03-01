@@ -9,8 +9,6 @@
                 <a-button type="primary" @click="handleReceived()" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER  && authOrg(detail.org_id, detail.org_type)"><i class="icon i_goods"/>确认收货</a-button>
                 <a-button type="primary" @click="handleCancel()" v-if="detail.status === STATUS.WAIT_PAY & authOrg(detail.org_id, detail.org_type)"><i class="icon i_close_c"/>取消</a-button>
                 <a-button type="primary" @click="routerChange('refund')" ghost v-if="detail.status === STATUS.DEAL_SUCCESS & authOrg(detail.org_id, detail.org_type)"><i class="icon i_edit"/>申请退款</a-button>
-
-
             </div>
         </div>
         <div class="gray-panel">
