@@ -457,31 +457,6 @@ const routes = [{
                     roles: [LOGIN_TYPE.ADMIN],
                 }
             },
-            {
-                path: 'waybill-edit',
-                name: 'WayBillEdit',
-                component: () =>
-                    import ('@/views/waybill/waybill-edit.vue'),
-                hidden: true,
-                meta: {
-                    title: '物流管理编辑',
-                    parent: '/waybill/waybill-list',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-            {
-                path: 'waybill-detail',
-                name: 'WayBillDetail',
-                component: () =>
-                    import ('@/views/waybill/waybill-detail.vue'),
-                hidden: true,
-                meta: {
-                    title: '物流管理详情',
-                    parent: '/waybill/waybill-list',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-
         ]
     },
     { // 商品管理 - 平台端
