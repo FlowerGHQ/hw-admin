@@ -500,7 +500,7 @@ const routes = [{
                     is_sub_menu: true
                 }
             },
-            {
+            /* {
                 path: 'entity-detail',
                 name: 'EntityDetail',
                 hidden: true,
@@ -511,7 +511,7 @@ const routes = [{
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/item/entity-list',
                 }
-            },
+            }, */
             {
                 path: 'item-list',
                 name: 'ItemList',
