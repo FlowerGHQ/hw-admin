@@ -1,124 +1,130 @@
 <template>
-<div id="FaultEntityList">
-    <div class="list-container">
-        <div class="title-container">
-            <div class="title-area">故障件列表</div>
-            <a-button type="primary" @click="handleFaultOrderShow"><i
-                        class="icon i_add"/>新增故障件
-            </a-button>
-        </div>
-        <div class="search-container">
-            <a-row class="search-area">
-                <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
-                    <div class="key">故障类型:</div>
+    <div id="FaultEntityList">
+        <div class="list-container">
+            <div class="title-container">
+                <div class="title-area">故障件列表</div>
+                <a-button type="primary" @click="handleFaultOrderShow()"><i
+                            class="icon i_add"/>新增故障件
+                </a-button>
+            </div>
+            <div class="search-container">
+                <a-row class="search-area">
+                    <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
+                        <div class="key">故障类型:</div>
+                        <div class="value">
+                            <a-select v-model:value="searchForm.item_fault_id" placeholder="请选择产品故障类型" show-search option-filter-prop="children">
+                                <a-select-option v-for="faultType of faultTypeList" :key="faultType.id" :value="faultType.id">
+                                    {{ faultType.name }}
+                                </a-select-option>
+                            </a-select>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
+                        <div class="key">创建时间:</div>
+                        <div class="value">
+                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
+                                <template #suffixIcon><i class="icon i_calendar"/></template>
+                            </a-range-picker>
+                        </div>
+                    </a-col>
+                </a-row>
+                <div class="btn-area">
+                    <a-button @click="handleSearch" type="primary">查询</a-button>
+                    <a-button @click="handleSearchReset">重置</a-button>
+                </div>
+
+            </div>
+            <div class="table-container">
+                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
+                    <template #bodyCell="{ column, record, text}">
+                        <template v-if="column.dataIndex === 'org_type'">
+                            {{ $Util.userTypeFilter(text) }}
+                        </template>
+                        <template v-if="column.dataIndex === 'service_type'">
+                            {{ $Util.repairServiceFilter(text) }}
+                        </template>
+                        <template v-if="column.dataIndex === 'status'">
+                            <div class="status status-bg status-tag" :class="$Util.faultStatusFilter(text,'color')">
+                                {{ $Util.faultStatusFilter(text) }}
+                            </div>
+                        </template>
+                        <template v-if="column.dataIndex === 'create_time'">
+                            {{ $Util.timeFilter(text) }}
+                        </template>
+                        <template v-if="column.key === 'operation'">
+                            <a-button type="link" @click="handleFaultOrderShow(record)"><i class="icon i_edit"/> 修改</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button>
+                        </template>
+                    </template>
+                </a-table>
+            </div>
+            <div class="paging-container">
+                <a-pagination
+                    v-model:current="currPage"
+                    :page-size='pageSize'
+                    :total="total"
+                    show-quick-jumper
+                    show-size-changer
+                    show-less-items
+                    :show-total="total => `共${total}条`"
+                    :hide-on-single-page='false'
+                    :pageSizeOptions="['10', '20', '30', '40']"
+                    @change="pageChange"
+                    @showSizeChange="pageSizeChange"
+                />
+            </div>
+            <a-modal v-model:visible="modalShow" title="新增故障件" class="fault-entity-modal"
+                    :after-close="handleFaultOrderClose">
+                <div class="form-item required">
+                    <div class="key">所处仓库:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.item_fault_id" placeholder="请选择产品故障类型" show-search option-filter-prop="children">
+                        <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库" show-search option-filter-prop="children" :disabled="!!form.item_id" >
+                            <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">
+                                {{ warehouse.name }}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </div>  
+                <div class="form-item required">
+                    <div class="key">维修单号:</div>
+                    <div class="value">
+                        <a-input v-model:value="form.source_uid" placeholder="请输入工单编号" @blur="handleSearchFrameNum"/>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">产品故障类型:</div>
+                    <div class="value">
+                        <a-select v-model:value="form.item_fault_id" placeholder="请选择产品故障类型" show-search option-filter-prop="children">
                             <a-select-option v-for="faultType of faultTypeList" :key="faultType.id" :value="faultType.id">
                                 {{ faultType.name }}
                             </a-select-option>
                         </a-select>
                     </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
-                    <div class="key">创建时间:</div>
-                    <div class="value">
-                        <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
-                            <template #suffixIcon><i class="icon i_calendar"/></template>
-                        </a-range-picker>
-                    </div>
-                </a-col>
-            </a-row>
-            <div class="btn-area">
-                <a-button @click="handleSearch" type="primary">查询</a-button>
-                <a-button @click="handleSearchReset">重置</a-button>
-            </div>
-
-        </div>
-        <div class="table-container">
-            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
-                <template #bodyCell="{ column, record, text}">
-                    <template v-if="column.dataIndex === 'org_type'">
-                          {{ $Util.userTypeFilter(text) }}
-                    </template>
-                    <template v-if="column.dataIndex === 'service_type'">
-                          {{ $Util.repairServiceFilter(text) }}
-                    </template>
-                    <template v-if="column.dataIndex === 'status'">
-                        <div class="status status-bg status-tag" :class="$Util.faultStatusFilter(text,'color')">
-                            {{ $Util.faultStatusFilter(text) }}
+                </div>      
+                <div class="form-item required">
+                    <div class="key">故障件:</div>
+                    <div class="value item-display" >
+                        <ItemSelect @select="handleSelectItem" :disabled-checked='[form.item_id]'
+                            :radio-mode='true' btn-type='primary' btnText="选择商品" btn-class="select-item-btn"/>
+                        <div v-if="!$Util.isEmptyObj(selectItem)">
+                            <img :src="$Util.imageFilter(selectItem.logo)" alt="" />
+                            {{selectItem.name}}
                         </div>
-                    </template>
-                    <template v-if="column.dataIndex === 'create_time'">
-                        {{ $Util.timeFilter(text) }}
-                    </template>
-                    <template v-if="column.key === 'operation'">
-                        <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改</a-button>
-                        <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button>
-                    </template>
-                </template>
-            </a-table>
-        </div>
-        <div class="paging-container">
-            <a-pagination
-                v-model:current="currPage"
-                :page-size='pageSize'
-                :total="total"
-                show-quick-jumper
-                show-size-changer
-                show-less-items
-                :show-total="total => `共${total}条`"
-                :hide-on-single-page='false'
-                :pageSizeOptions="['10', '20', '30', '40']"
-                @change="pageChange"
-                @showSizeChange="pageSizeChange"
-            />
-        </div>
-        <a-modal v-model:visible="modalShow" title="新增故障件" class="fault-entity-modal"
-                 :after-close="handleFaultOrderClose">
-            <div class="form-item required">
-                <div class="key">所处仓库:</div>
-                <div class="value">
-                    <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库" show-search option-filter-prop="children">
-                        <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">
-                            {{ warehouse.name }}
-                        </a-select-option>
-                    </a-select>
-                </div>
-            </div>  
-            <div class="form-item required">
-                <div class="key">产品故障类型:</div>
-                <div class="value">
-                    <a-select v-model:value="form.item_fault_id" placeholder="请选择产品故障类型" show-search option-filter-prop="children">
-                        <a-select-option v-for="faultType of faultTypeList" :key="faultType.id" :value="faultType.id">
-                            {{ faultType.name }}
-                        </a-select-option>
-                    </a-select>
-                </div>
-            </div>      
-            <div class="form-item required">
-                <div class="key">商品:</div>
-                <div class="value item-display" >
-                    <ItemSelect @select="handleSelectItem" :disabled-checked='[form.item_id]'
-                        :radio-mode='true' btn-type='primary' btnText="选择商品" btn-class="select-item-btn"/>
-                    <div v-if="!$Util.isEmptyObj(selectItem)">
-                        <img :src="$Util.imageFilter(selectItem.logo)" alt="" />
-                        {{selectItem.name}}
                     </div>
                 </div>
-            </div>  
-            <div class="form-item required">
-                <div class="key">维修单号:</div>
-                <div class="value">
-                    <a-input v-model:value="form.source_uid" placeholder="请输入工单编号" @blur="handleSearchFrameNum"/>
-                </div>
-            </div>
-            <template #footer>
-                <a-button @click="handleFaultOrderSubmit" type="primary">确定</a-button>
-                <a-button @click="handleFaultOrderClose">取消</a-button>
-            </template>
-        </a-modal>
+                <div class="form-item">
+                    <div class="key">故障件实例:</div>
+                    <div class="value">
+                        <a-input v-model:value="form.uid" placeholder="请输入故障件实例号 选填" @blur="handleSearchFaultEntity"/>                    
+                    </div>
+                </div>  
+                <template #footer>
+                    <a-button @click="handleFaultOrderSubmit" type="primary">确定</a-button>
+                    <a-button @click="handleFaultOrderClose">取消</a-button>
+                </template>
+            </a-modal>
+        </div>
     </div>
-</div>
 </template>
 
 <script>
@@ -166,6 +172,7 @@ export default {
             warehouseList: [], // 所处仓库列表
             faultTypeList: [], // 产品故障类型列表
             form: {
+                id: undefined,
                 warehouse_id: undefined,
                 item_id: undefined,
                 item_fault_id: undefined,
@@ -173,7 +180,8 @@ export default {
                 source_id: undefined,
                 service_type: undefined,
                 vehicle_no: undefined,              
-                source_type: 200
+                source_type: 200,
+                uid: undefined
             },
             selectItem: {},
         };
@@ -181,7 +189,11 @@ export default {
     watch: {},
     computed: {},
     mounted() {
+        console.log('mounted this.form', this.form);
+
         this.getTableData();
+
+        this.getWarehouseList();
         this.getFaultTypeList();
     },
     methods: {
@@ -277,7 +289,7 @@ export default {
             this.form.vehicle_no = ''
             Core.Api.Repair.detailByUid({uid}).then(res => {
                 console.log('handleSearchFrameNum', res)
-                if (!res || !res.id || !res.service_type ||!res.vehicle_no) {
+                if (!res || !res.id || !res.service_type || !res.vehicle_no) {
                     this.$message.warning('获取维修单信息失败')
                 } else {
                     this.form.source_id = res.id
@@ -288,14 +300,34 @@ export default {
                 this.$message.warning('该维修单不存在，请输入正确的维修单号')
             })
         },
+        // 通过故障件实例号查故障件信息
+        handleSearchFaultEntity() {
+            const uid = this.form.uid
+            Core.Api.Entity.detailByUid({uid}).then(res => {
+                if(res.item_id !== this.form.item_id) {
+                    this.$message.warning('该故障件实例和故障件种类不符')
+                }               
+            }).catch(err => {
+                this.$message.warning('该故障件实例不存在')
+            })
+        },
+
         // 故障件表单
-        handleFaultOrderShow() {  // 新增故障件表单创建
-            this.getWarehouseList();
-            this.getFaultTypeList();
+        handleFaultOrderShow(record) {  // 新增故障件表单创建
+            if (record) {
+                console.log('handleFaultOrderShow record', record);
+                for (const key in this.form) {
+                    this.form[key] = record[key]
+                }
+                this.selectItem = Core.Util.deepCopy(record.item)
+            }
+            console.log('handleFaultOrderShow this.form', this.form);
+            console.log('handleFaultOrderShow this.selectItem', this.selectItem);
             this.modalShow = true;
         },
         handleFaultOrderSubmit() { // 新增故障件提交 
             let form = Core.Util.deepCopy(this.form)
+            console.log('handleFaultOrderSubmit', form);
             // 新建故障件列表写完进行补充 必填项
             if (!form.warehouse_id) {
                 return this.$message.warning('请选择所处仓库')
@@ -305,9 +337,6 @@ export default {
             }
             if (!form.item_fault_id) {
                 return this.$message.warning('请选择产品故障类型')
-            }
-            if (!form.service_type) {
-                return this.$message.warning('请选择工单类型')
             }
             if (!form.source_uid) {
                 return this.$message.warning('请输入工单编号')

@@ -649,23 +649,26 @@ let Const = {
             { text: '已取消', value: -20 },
         ],
     },
-    FAULT_ENTITY: { //故障件
+    FAULT_ENTITY: { // 故障件
         STATUS: { // 故障件审核状态
             INIT: 0, // 初始化
+            WAIT_AUDIT: 10, // 待审核
             AUDIT_SUCCESS: 20, // 成功
             AUDIT_FAIL: -20, // 失败
         },
         STATUS_MAP: {
             '0': '初始化',
+            '10': '待审核',
             '20': '审核成功',
             '-20': '失败失败'
         },
         STATUS_COLOR_MAP: {
-            '0': 'yellow',
+            '0': 'grey',
+            '10': 'yellow',
             '20': 'green',
             '-20': 'red'
         },
-    }
+    },
 };
 
 export default Const;

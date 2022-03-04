@@ -455,9 +455,20 @@ const routes = [{
                     parent: '/warehouse/fault-entity-list',
                 }
             },
+            {
+                path: 'pending-fault-entity-list',
+                name: 'pendingFaultEntityList',
+                component: () =>
+                    import ('@/views/warehouse/pending-fault-entity-list.vue'),
+                meta: {
+                    title: '待处理故障件',
+                    is_sub_menu: true,
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
         ]
     },
-    { //物流管理 - 平台端
+    { // 物流管理 - 平台端
         path: '/waybill',
         component: Layout,
         redirect: '/waybill/waybill-list',
