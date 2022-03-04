@@ -24,7 +24,7 @@
                             <div class="value">{{detail.category ? detail.category.name : '-'}}</div>
                         </div>
                         <div class="info-item">
-                            <div class="key">标准售价</div>
+                            <div class="key">建议零售价</div>
                             <div class="value">€{{$Util.countFilter(detail.price)}}</div>
                         </div>
                         <div class="info-item">
@@ -129,7 +129,7 @@ export default {
             )
             column.push(
                 {title: '成本价格', key: 'money', dataIndex: 'original_price'},
-                {title: '标准售价', key: 'money', dataIndex: 'price'},
+                {title: '建议零售价', key: 'money', dataIndex: 'price'},
                 {title: '是否自定义详情', dataIndex: 'flag_independent_info'},
                 {title: '操作', key: 'operation'},
             )

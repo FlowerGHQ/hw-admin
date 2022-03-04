@@ -131,7 +131,7 @@ export default {
                 { title: '商品编码', dataIndex: 'code',  key: 'item' },
                 { title: '供货价',  dataIndex: 'purchase_price', key: 'supply', },
                 { title: '采购价', dataIndex: 'parent_price', key: 'money', },
-                { title: '标准售价', dataIndex: 'price', key: 'money', },
+                { title: '建议零售价', dataIndex: 'price', key: 'money', },
                 { title: '操作', key: 'operation', fixed: 'right'},
             ]
             if (this.addMode || !this.canEdit) {

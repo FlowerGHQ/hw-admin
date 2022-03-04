@@ -179,7 +179,7 @@ export default {
                 { title: '商品型号', dataIndex: 'model', key: 'item' },
                 { title: '商品编码', dataIndex: 'code', key: 'item' },
                 { title: '成本价格', dataIndex: 'original_price', key: 'money' },
-                { title: '标准价格', dataIndex: 'price', key: 'money' },
+                { title: '建议零售价', dataIndex: 'price', key: 'money' },
                 { title: '工时费', dataIndex: 'price', key: 'money' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 // { title: '商品状态', dataIndex: 'status' },

@@ -8,10 +8,10 @@ const REFUND_TYPE = Const.REFUND.SEARCH_TYPE
 
 
 const routes = [{
-        path: '/',
-        redirect: '/dashboard',
-        hidden: true
-    },
+    path: '/',
+    redirect: '/dashboard',
+    hidden: true
+},
     { // 登录
         path: '/login',
         hidden: true,
@@ -39,7 +39,7 @@ const routes = [{
             meta: {
                 title: '时效看板',
             }
-        }, ]
+        },]
     },
     { // 维修单
         path: '/repair',
@@ -51,7 +51,8 @@ const routes = [{
             icon: 'i_s_repair',
             // auth: ['dashboard'],
         },
-        children: [{
+        children: [
+            {
                 path: 'repair-list',
                 name: 'RepairList',
                 component: () =>
@@ -59,6 +60,30 @@ const routes = [{
                 meta: {
                     title: '维修单',
                     is_sub_menu: true
+                }
+            },
+            {
+                path: 'repair-confirm-list',
+                name: 'RepairConfirmList',
+                component: () =>
+                    import ('@/views/repair/repair-list.vue'),
+                meta: {
+                    title: '待审工单',
+                    roles: [LOGIN_TYPE.DISTRIBUTOR],
+                    is_sub_menu: true,
+                    type: 'check'
+                }
+            },
+            {
+                path: 'repair-audit-list',
+                name: 'repairAuditList',
+                component: () =>
+                    import ('@/views/repair/repair-list.vue'),
+                meta: {
+                    title: '待审工单',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true,
+                    type: 'audit'
                 }
             },
             {
@@ -101,7 +126,7 @@ const routes = [{
                     import ('@/views/repair/item-fault-list.vue'),
                 meta: {
                     title: '故障管理',
-                    roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT],
+                    roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
                     is_sub_menu: true
                 }
             },
@@ -130,15 +155,15 @@ const routes = [{
             roles: [LOGIN_TYPE.ADMIN],
         },
         children: [{
-                path: 'distributor-list',
-                name: 'DistributorList',
-                component: () =>
-                    import ('@/views/distributor/distributor-list.vue'),
-                meta: {
-                    title: '分销商列表',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
+            path: 'distributor-list',
+            name: 'DistributorList',
+            component: () =>
+                import ('@/views/distributor/distributor-list.vue'),
+            meta: {
+                title: '分销商列表',
+                roles: [LOGIN_TYPE.ADMIN],
+            }
+        },
             {
                 path: 'distributor-edit',
                 name: 'DistributorEdit',
@@ -183,7 +208,7 @@ const routes = [{
                 roles: [LOGIN_TYPE.DISTRIBUTOR],
                 is_sub_menu: true
             }
-        }, ]
+        },]
     },
     { // 零售商管理 - 平台端 分销商端
         path: '/agent',
@@ -196,15 +221,15 @@ const routes = [{
             roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
         },
         children: [{
-                path: 'agent-list',
-                name: 'AgentList',
-                component: () =>
-                    import ('@/views/agent/agent-list.vue'),
-                meta: {
-                    title: '零售商列表',
-                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-                }
-            },
+            path: 'agent-list',
+            name: 'AgentList',
+            component: () =>
+                import ('@/views/agent/agent-list.vue'),
+            meta: {
+                title: '零售商列表',
+                roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+            }
+        },
             {
                 path: 'agent-edit',
                 name: 'AgentEdit',
@@ -249,7 +274,7 @@ const routes = [{
                 roles: [LOGIN_TYPE.AGENT],
                 is_sub_menu: true
             }
-        }, ]
+        },]
     },
     { // 门店管理 - 平台端&零售商端
         path: '/store',
@@ -263,14 +288,14 @@ const routes = [{
             roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
         },
         children: [{
-                path: 'store-list',
-                name: 'StoreList',
-                component: () =>
-                    import ('@/views/store/store-list.vue'),
-                meta: {
-                    title: '门店列表',
-                }
-            },
+            path: 'store-list',
+            name: 'StoreList',
+            component: () =>
+                import ('@/views/store/store-list.vue'),
+            meta: {
+                title: '门店列表',
+            }
+        },
             {
                 path: 'store-edit',
                 name: 'StoreEdit',
@@ -313,7 +338,7 @@ const routes = [{
                 roles: [LOGIN_TYPE.STORE],
                 is_sub_menu: true
             }
-        }, ]
+        },]
     },
     { // 仓库
         path: '/warehouse',
@@ -327,15 +352,15 @@ const routes = [{
             roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
         },
         children: [{
-                path: 'warehouse-list',
-                name: 'WarehouseList',
-                component: () =>
-                    import ('@/views/warehouse/warehouse-list.vue'),
-                meta: {
-                    title: '仓库管理',
-                    is_sub_menu: true
-                }
-            },
+            path: 'warehouse-list',
+            name: 'WarehouseList',
+            component: () =>
+                import ('@/views/warehouse/warehouse-list.vue'),
+            meta: {
+                title: '仓库管理',
+                is_sub_menu: true
+            }
+        },
             {
                 path: 'warehouse-edit',
                 name: 'WarehouseEdit',
@@ -468,16 +493,54 @@ const routes = [{
             icon: 'i_deliver',
             roles: [LOGIN_TYPE.ADMIN],
         },
-        children: [{
-            path: 'waybill-list',
-            name: 'waybillList',
-            component: () =>
-                import ('@/views/waybill/waybill-list.vue'),
-            meta: {
-                title: '物流管理列表',
-                roles: [LOGIN_TYPE.ADMIN],
-            }
-        }, ]
+        children: [
+            {
+                path: 'waybill-list',
+                name: 'waybillList',
+                component: () =>
+                    import ('@/views/waybill/waybill-list.vue'),
+                meta: {
+                    title: '物流管理列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+        ]
+    },
+    { // 车架管理
+        path: '/entity',
+        component: Layout,
+        redirect: '/entity/entity-list',
+        name: 'EntityManagement',
+        meta: {
+            title: '车架管理',
+            icon: 'i_s_item',
+            roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'entity-list',
+                name: 'EntityList',
+                component: () =>
+                    import ('@/views/entity/entity-list.vue'),
+                meta: {
+                    title: '车架列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true
+                }
+            },
+            {
+                path: 'entity-detail',
+                name: 'EntityDetail',
+                hidden: true,
+                component: () =>
+                    import ('@/views/item/entity-detail.vue'),
+                meta: {
+                    title: '车架详情',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/entity/entity-list',
+                }
+            },
+        ]
     },
     { // 商品管理 - 平台端
         path: '/item',
@@ -489,29 +552,7 @@ const routes = [{
             icon: 'i_s_item',
             roles: [LOGIN_TYPE.ADMIN],
         },
-        children: [{
-                path: 'entity-list',
-                name: 'EntityList',
-                component: () =>
-                    import ('@/views/item/entity-list.vue'),
-                meta: {
-                    title: '车架列表',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    is_sub_menu: true
-                }
-            },
-            /* {
-                path: 'entity-detail',
-                name: 'EntityDetail',
-                hidden: true,
-                component: () =>
-                    import ('@/views/item/entity-detail.vue'),
-                meta: {
-                    title: '车架详情',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/item/entity-list',
-                }
-            }, */
+        children: [
             {
                 path: 'item-list',
                 name: 'ItemList',
@@ -630,7 +671,8 @@ const routes = [{
             auth: ['AGENT', 'STORE', 'DISTRIBUTOR'],
             icon: 'i_s_item',
         },
-        children: [{
+        children: [
+            {
                 path: 'item-list',
                 name: 'PurchaseItemList',
                 component: () =>
@@ -736,17 +778,17 @@ const routes = [{
             roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.STORE],
         },
         children: [{
-                path: 'refund-apply-list',
-                name: 'RefundApplyList',
-                component: () =>
-                    import ('@/views/refund/refund-list.vue'),
-                meta: {
-                    title: '退款申请',
-                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.STORE],
-                    // is_sub_menu: true,
-                    search_type: REFUND_TYPE.SELF
-                }
-            },
+            path: 'refund-apply-list',
+            name: 'RefundApplyList',
+            component: () =>
+                import ('@/views/refund/refund-list.vue'),
+            meta: {
+                title: '退款申请',
+                roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.STORE],
+                // is_sub_menu: true,
+                search_type: REFUND_TYPE.SELF
+            }
+        },
             {
                 path: 'refund-audit-list',
                 name: 'RefundAuditList',
@@ -791,7 +833,7 @@ const routes = [{
                 title: '退款审核',
                 search_type: REFUND_TYPE.CHILDREN
             }
-        }, ]
+        },]
     },
     { // 客户管理
         path: '/customer',
@@ -805,14 +847,14 @@ const routes = [{
             // roles: [LOGIN_TYPE.ADMIN],
         },
         children: [{
-                path: 'customer-list',
-                name: 'CustomerList',
-                component: () =>
-                    import ('@/views/customer/customer-list.vue'),
-                meta: {
-                    title: '客户列表',
-                }
-            },
+            path: 'customer-list',
+            name: 'CustomerList',
+            component: () =>
+                import ('@/views/customer/customer-list.vue'),
+            meta: {
+                title: '客户列表',
+            }
+        },
             {
                 path: 'customer-edit',
                 name: 'CustomerEdit',
@@ -848,14 +890,14 @@ const routes = [{
             // roles: [LOGIN_TYPE.ADMIN],
         },
         children: [{
-                path: 'user-list',
-                name: 'UserList',
-                component: () =>
-                    import ('@/views/user/user-list.vue'),
-                meta: {
-                    title: '员工列表',
-                }
-            },
+            path: 'user-list',
+            name: 'UserList',
+            component: () =>
+                import ('@/views/user/user-list.vue'),
+            meta: {
+                title: '员工列表',
+            }
+        },
             {
                 path: 'user-edit',
                 name: 'UserEdit',
@@ -892,14 +934,14 @@ const routes = [{
             auth: ['MANAGER']
         },
         children: [{
-                path: 'auth-role-list',
-                name: 'RoleList',
-                component: () =>
-                    import ('@/views/authority/auth-role-list.vue'),
-                meta: {
-                    title: '角色管理',
-                }
-            },
+            path: 'auth-role-list',
+            name: 'RoleList',
+            component: () =>
+                import ('@/views/authority/auth-role-list.vue'),
+            meta: {
+                title: '角色管理',
+            }
+        },
             {
                 path: 'auth-role-edit',
                 name: 'RoleEdit',
@@ -925,15 +967,15 @@ const routes = [{
             icon: 'i_s_temp',
         },
         children: [{
-                path: 'system-file-list',
-                name: 'SystemFileList',
-                component: () =>
-                    import ('@/views/system/system-file-list.vue'),
-                meta: {
-                    title: '系统附件',
-                    is_sub_menu: true,
-                }
-            },
+            path: 'system-file-list',
+            name: 'SystemFileList',
+            component: () =>
+                import ('@/views/system/system-file-list.vue'),
+            meta: {
+                title: '系统附件',
+                is_sub_menu: true,
+            }
+        },
             {
                 path: 'system-file-edit',
                 name: 'SystemFileEdit',

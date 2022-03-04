@@ -393,7 +393,6 @@ export default {
             });
         },
         getStatusList() {    // 获取 状态 列表
-            Object.assign(this.statusList, this.$options.data().statusList)
             Core.Api.Transfer.status({
                 ...this.searchForm,
             }).then(res => {
