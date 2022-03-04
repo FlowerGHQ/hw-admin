@@ -434,6 +434,27 @@ const routes = [{
                     parent: '/transfer/transfer-order-list',
                 }
             },
+            {
+                path: 'fault-entity-list',
+                name: 'faultEntityList',
+                component: () =>
+                    import ('@/views/warehouse/fault-entity-list.vue'),
+                meta: {
+                    title: '故障件管理',
+                    is_sub_menu: true
+                }
+            },
+            {
+                path: 'fault-entity-detail',
+                name: 'faultEntityDetail',
+                component: () =>
+                    import ('@/views/warehouse/fault-entity-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '故障件详情',
+                    parent: '/warehouse/fault-entity-list',
+                }
+            },
         ]
     },
     { //物流管理 - 平台端
@@ -448,41 +469,15 @@ const routes = [{
             roles: [LOGIN_TYPE.ADMIN],
         },
         children: [{
-                path: 'waybill-list',
-                name: 'waybillList',
-                component: () =>
-                    import ('@/views/waybill/waybill-list.vue'),
-                meta: {
-                    title: '物流管理列表',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-            {
-                path: 'waybill-edit',
-                name: 'WayBillEdit',
-                component: () =>
-                    import ('@/views/waybill/waybill-edit.vue'),
-                hidden: true,
-                meta: {
-                    title: '物流管理编辑',
-                    parent: '/waybill/waybill-list',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-            {
-                path: 'waybill-detail',
-                name: 'WayBillDetail',
-                component: () =>
-                    import ('@/views/waybill/waybill-detail.vue'),
-                hidden: true,
-                meta: {
-                    title: '物流管理详情',
-                    parent: '/waybill/waybill-list',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-
-        ]
+            path: 'waybill-list',
+            name: 'waybillList',
+            component: () =>
+                import ('@/views/waybill/waybill-list.vue'),
+            meta: {
+                title: '物流管理列表',
+                roles: [LOGIN_TYPE.ADMIN],
+            }
+        }, ]
     },
     { // 商品管理 - 平台端
         path: '/item',

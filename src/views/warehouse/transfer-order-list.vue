@@ -126,52 +126,52 @@
                 />
             </div>
         </div>
-        <a-modal v-model:visible="transferOrderShow" title="新建调货单" class="transfer-modal"
-                 :after-close="handleTransferOrderClose">
-            <div class="form-item required">
-                <div class="key">单位类型:</div>
-                <div class="value">
-                    <a-select placeholder="请选择单位类型" v-model:value='form.supply_org_type' @change="handleOrgTypeChange">
-                        <a-select-option v-for="item of orgTypeList" :key="item.value" :value="item.value">
-                            {{ item.text }}
-                        </a-select-option>
-                    </a-select>
-                </div>
-            </div>     
-            <div class="form-item required">
-                <div class="key">货物来源:</div>
-                <div ariaaluemax="-=-" class="value">
-                    <a-select placeholder="请选择货物来源" v-model:value='form.supply_org_id' show-search option-filter-prop="children">
-                        <a-select-option v-for="item of orgList" :key="item.id" :value="item.id"
-                            :disabled="form.supply_org_type === orgType && orgId === item.id">
-                            {{ item.name }}
-                        </a-select-option>
-                    </a-select>
-                </div>
-            </div>     
-            <div class="form-item required">
-                <div class="key">仓库:</div>
-                <div class="value">
-                    <a-select v-model:value="form.to_warehouse_id" placeholder="请选择仓库" show-search option-filter-prop="children">
-                        <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">
-                            {{ warehouse.name }}
-                        </a-select-option>
-                    </a-select>
-                </div>
-            </div>
-            <div class="form-item textarea required">
-                <div class="key">原因:</div>
-                <div class="value">
-                    <a-textarea v-model:value="form.apply_message" placeholder="请输入申请原因"
-                                :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
-                </div>
-            </div>
-            <template #footer>
-                <a-button @click="handleTransferOrderSubmit" type="primary">确定</a-button>
-                <a-button @click="transferOrderShow=false">取消</a-button>
-            </template>
-        </a-modal>
         <template class="modal-container">
+            <a-modal v-model:visible="transferOrderShow" title="新建调货单" class="transfer-modal"
+                    :after-close="handleTransferOrderClose">
+                <div class="form-item required">
+                    <div class="key">单位类型:</div>
+                    <div class="value">
+                        <a-select placeholder="请选择单位类型" v-model:value='form.supply_org_type' @change="handleOrgTypeChange">
+                            <a-select-option v-for="item of orgTypeList" :key="item.value" :value="item.value">
+                                {{ item.text }}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </div>     
+                <div class="form-item required">
+                    <div class="key">货物来源:</div>
+                    <div class="value">
+                        <a-select placeholder="请选择货物来源" v-model:value='form.supply_org_id' show-search option-filter-prop="children">
+                            <a-select-option v-for="item of orgList" :key="item.id" :value="item.id"
+                                :disabled="form.supply_org_type === orgType && orgId === item.id">
+                                {{ item.name }}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </div>     
+                <div class="form-item required">
+                    <div class="key">仓库:</div>
+                    <div class="value">
+                        <a-select v-model:value="form.to_warehouse_id" placeholder="请选择仓库" show-search option-filter-prop="children">
+                            <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">
+                                {{ warehouse.name }}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item textarea required">
+                    <div class="key">原因:</div>
+                    <div class="value">
+                        <a-textarea v-model:value="form.apply_message" placeholder="请输入申请原因"
+                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                    </div>
+                </div>
+                <template #footer>
+                    <a-button @click="handleTransferOrderSubmit" type="primary">确定</a-button>
+                    <a-button @click="transferOrderShow=false">取消</a-button>
+                </template>
+            </a-modal>
             <a-modal v-model:visible="transferAuditShow" title="审核" class="transfer-audit-modal"
                      :after-close='handleTransferAuditClose'>
                 <div class="modal-content">

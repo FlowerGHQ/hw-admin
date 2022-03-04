@@ -408,7 +408,7 @@ export default {
         },
         getStatusStat() {  // 获取 状态数量
             this.loading = true;
-            Object.assign(this.statusList, this.$options.data().statusList)
+            // Object.assign(this.statusList, this.$options.data().statusList)
             Core.Api.Repair.statusList({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',

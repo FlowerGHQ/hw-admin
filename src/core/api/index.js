@@ -134,6 +134,7 @@ const apiList = {
         update: ['PostJson', 'repair/update'], // 维修结束
         post: ['PostJson', 'repair/post-for-transfer'], // 增加快递
         export: ['PostJson', 'repair/export-repair-order-record'], // 导出
+        detailByUid: ['PostJson', 'repair/detail-by-uid']
     },
     RepairItem: { // 维修单
         saveList: ['PostJson', 'repair-order-item/save-list'], // 列表
@@ -144,14 +145,12 @@ const apiList = {
         save: ['PostJson', 'item/save'],
         batchSave: ['PostJson', 'item/batch-save'],
         update: ['PostJson', 'item/update'],
-
         list: ['PostJson', 'item/list'],
         listBySet: ['PostJson', 'item/list-by-set-id'],
         detail: ['PostJson', 'item/detail'],
         delete: ['PostJson', 'item/delete'],
         detailByCode: ['PostJson', 'item/detail-by-code'],
         detailByCodeForRepair: ['PostJson', 'item/detail-by-code-for-repair'],
-
         setIndep: ['PostJson', 'item/set-flag-independent-info'],
     },
     Entity: { // 车架
@@ -161,7 +160,6 @@ const apiList = {
         delete: ['PostJson', 'entity/delete'],
         detailByUid: ['PostJson', 'entity/detail-by-uid'],
         getByUid: ['PostJson', 'entity/get-by-uid'],
-
 
     },
     ItemCategory: { // 商品分类
@@ -273,13 +271,20 @@ const apiList = {
         listAll: ['PostJson', 'distributor/list-name'], //选择用的 名称列表 无分页
         detail: ['PostJson', 'distributor/detail'],
         updateStatus: ['PostJson', 'distributor/update-status'], //修改状态
-
     },
-    Fault: { // 故障管理
+    Fault: { // 产品故障管理
         list: ['PostJson', 'item-fault/list'],
         save: ['PostJson', 'item-fault/save'],
         detail: ['PostJson', 'item-fault/detail'],
         delete: ['PostJson', 'item-fault/delete'],
+    },
+    FaultEntity: { // 故障件管理
+        audit: ['PostJson', 'fault-entity/audit'],
+        delete: ['PostJson', 'fault-entity/delete'],
+        detail: ['PostJson', 'fault-entity/detail'],
+        detailByUid: ['PostJson', 'fault-entity/detail-by-uid'],
+        list: ['PostJson', 'fault-entity/list'],
+        save: ['PostJson', 'fault-entity/save'],
     },
     System: { // 系统管理
         fileList: ['PostJson', 'sys-file/list'], // 系统文件管理
@@ -287,7 +292,6 @@ const apiList = {
         fileDetail: ['PostJson', 'sys-file/detail'],
         fileDelete: ['PostJson', 'sys-file/delete'],
     },
-
     Attachment: { // 附件管理
         list: ['PostJson', 'attachment/list'],
         save: ['PostJson', 'attachment/save'],

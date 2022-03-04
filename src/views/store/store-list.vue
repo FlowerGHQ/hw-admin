@@ -10,7 +10,7 @@
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">门店名称：</div>
+                        <div class="key">门店名称:</div>
                         <div class="value">
                             <a-input placeholder="请输入门店名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
@@ -32,7 +32,7 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
-                        <div class="key">创建时间：</div>
+                        <div class="key">创建时间:</div>
                         <div class="value">
                             <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
                                 <template #suffixIcon><i class="icon i_calendar"/></template>
@@ -174,7 +174,7 @@ export default {
             return tableColumns
         },
     },
-    mounted() {
+    mounted() { 
         this.getTableData();
         if (this.$auth('ADMIN')) {
             this.getDistributorListAll();
@@ -201,6 +201,7 @@ export default {
                         path: "/store/store-detail",
                         query: {id: item.id}
                     })
+                    console.log('routerUrl',routeUrl);
                     window.open(routeUrl.href, '_self')
                     break;
             }

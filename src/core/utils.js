@@ -529,6 +529,20 @@ const Util = {
         }
     },
     /* =============== 调货单 ================ */
+
+    /* =============== 故障件管理 ================ */
+    faultStatusFilter(val, to = 'word') {
+        const MAP = Const.FAULT_ENTITY.STATUS_MAP
+        const COLOR_MAP = Const.FAULT_ENTITY.STATUS_COLOR_MAP
+        switch (to) {
+            case 'word':
+                return MAP[val + ''] || '未知'
+            case 'color':
+                return COLOR_MAP[val + ''] || 'grey'
+        }
+    }
+    /* =============== 故障件管理 ================ */
+
 }
 
 export default Util

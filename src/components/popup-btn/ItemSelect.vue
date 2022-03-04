@@ -86,19 +86,21 @@ export default {
             type: Boolean,
             default: false,
         },
+        
         radioMode: { // 是否只能选一个商品
             type: Boolean,
             default: false,
-        },
-        faultName: {
-            type: String,
-            default: ''
         },
         disabledChecked: {
             type: Array,
             default: () => {
                 return []
             }
+        },
+
+        faultName: {
+            type: String,
+            default: ''
         },
         warehouseId: {
             type: Number,

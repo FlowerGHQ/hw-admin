@@ -92,7 +92,7 @@
             <div class="form-item required">
                 <div class="key">物流公司:</div>
                 <div class="value">
-                    <a-select v-model:value="deliveryForm.company_uid" placeholder="请选择物流公司" show-search>
+                    <a-select v-model:value="deliveryForm.company_uid" placeholder="请选择物流公司">
                         <a-select-option v-for="(val,key) in companyMap" :key="key" :value="key">{{ val }}</a-select-option>
                     </a-select>
                 </div>

@@ -112,7 +112,7 @@
             <div class="form-item required">
                 <div class="key">相关客户</div>
                 <div class="value">
-                    <a-select placeholder="请选择相关客户" v-model:value="form.customer_id" @change="handleCustomerSelect" show-search
+                    <a-select placeholder="请选择相关客户" v-model:value="form.customer_id" @change="handleCustomerSelect" show-search option-filter-prop="children"
                         :disabled="detail.status == REPAIR.STATUS.WAIT_CHECK">
                         <a-select-option v-for="(item,index) of customerList" :key="index" :value="item.id">
                             {{ item.name }}
