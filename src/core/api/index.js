@@ -2,12 +2,12 @@ import Api from './base';
 import Const from '../const'
 
 let baseUrl = Const.NET.URL_POINT
-    /*
-     * PostJson
-     * GetJson
-     * Post
-     * Get
-     */
+/*
+ * PostJson
+ * GetJson
+ * Post
+ * Get
+ */
 
 const apiList = {
     Common: { // 公共
@@ -32,13 +32,13 @@ const apiList = {
     },
     Account: {
         list: ['PostJson', 'account/list'], // 账户列表
-        save: ['PostJson', 'account/save'], // 账号新增
-        profile: ['GET', 'account/profile'], // 账户详情
+        save: ['PostJson', 'account/save' ], // 账号新增
+        profile: ['GET', 'account/profile' ], // 账户详情
         update: ['PostJson', 'account/update'], //  账号修改
-        delete: ['PostJson', 'account/delete'], // 账户删除
-        resetPwd: ['PostJson', 'account/resetPwd'], // 重置密码
+        delete: ['PostJson', 'account/delete' ], // 账户删除
+        resetPwd: ['PostJson', 'account/resetPwd' ], // 重置密码
         statusUpdate: ['PostJson', 'account/status-update'], // 更新账户状态1=启用2=禁用
-        roleAssign: ['PostJson', 'account/role-assign'],
+        roleAssign: ['PostJson','account/role-assign'],
     },
     Authority: { // 角色 & 权限
         roleList: ['PostJson', 'auth/role-list'], // 角色列表
@@ -46,9 +46,9 @@ const apiList = {
         roleDetail: ['PostJson', 'auth/role-detail'], // 角色详情
         roleDelete: ['PostJson', 'auth/role-delete'], // 角色删除
 
-        allOptions: ['PostJson', 'authority/list-all'], // 所有权限项
+        allOptions: ['PostJson', 'authority/list-all'],  // 所有权限项
         authOptions: ['PostJson', 'authority/list-by-org-type'], // 某个身份下 可选的权限项
-        authSelected: ['PostJson', 'authority/list-by-role'], // 某个角色 已选的权限
+        authSelected: ['PostJson', 'authority/list-by-role'],    // 某个角色 已选的权限
 
         allotOrgAuth: ['PostJson', 'authority/save-org-type-authority'], // 向组织分配 可分配权限
         allotAuth: ['PostJson', 'authority/save-role-authority'], // 向角色分配权限
@@ -56,7 +56,7 @@ const apiList = {
     },
     Agent: { // 零售商
         list: ['PostJson', 'agent/list'], // 列表
-        listAll: ['PostJson', 'agent/list-name'], //选择用的 名称列表 无分页
+        listAll: ['PostJson','agent/list-name'], //选择用的 名称列表 无分页
         save: ['PostJson', 'agent/save'], // 编辑
         detail: ['PostJson', 'agent/detail'], // 详情
         update: ['PostJson', 'agent/update'], // 更新
@@ -121,20 +121,19 @@ const apiList = {
     },
     Repair: { // 维修单
         list: ['PostJson', 'repair/list'], // 列表
-        create: ['PostJson', 'repair/save'], // 列表
-        hand: ['PostJson', 'repair/hand'], // 列表
+	    create: ['PostJson', 'repair/save'], // 列表
+	    hand: ['PostJson', 'repair/hand'], // 列表
         detail: ['PostJson', 'repair/detail'], // 工单详情
-        check: ['PostJson', 'repair/check'], // 确认
-        audit: ['PostJson', 'repair/audit'], // 审批
+	    check: ['PostJson', 'repair/check'], // 确认
+	    audit: ['PostJson', 'repair/audit'], // 审批
         statusList: ['PostJson', 'repair/status-list'], // 保存
-        repair: ['PostJson', 'repair/repair'], // 维修结束
-        secondDoor: ['PostJson', 'repair/second-door'], // 二次上门
-        settlement: ['PostJson', 'repair/settlement'], // 结算
-        transfer: ['PostJson', 'repair/transfer'], // 维修结束
-        update: ['PostJson', 'repair/update'], // 维修结束
-        post: ['PostJson', 'repair/post-for-transfer'], // 增加快递
-        export: ['PostJson', 'repair/export-repair-order-record'], // 导出
-        detailByUid: ['PostJson', 'repair/detail-by-uid']
+	    repair: ['PostJson', 'repair/repair'], // 维修结束
+	    secondDoor: ['PostJson', 'repair/second-door'], // 二次上门
+	    settlement: ['PostJson', 'repair/settlement'], // 结算
+	    transfer: ['PostJson', 'repair/transfer'], // 维修结束
+	    update: ['PostJson', 'repair/update'], // 维修结束
+	    post: ['PostJson', 'repair/post-for-transfer'], // 增加快递
+	    export: ['PostJson', 'repair/export-repair-order-record'], // 导出
     },
     RepairItem: { // 维修单
         saveList: ['PostJson', 'repair-order-item/save-list'], // 列表
@@ -145,21 +144,23 @@ const apiList = {
         save: ['PostJson', 'item/save'],
         batchSave: ['PostJson', 'item/batch-save'],
         update: ['PostJson', 'item/update'],
+
         list: ['PostJson', 'item/list'],
         listBySet: ['PostJson', 'item/list-by-set-id'],
         detail: ['PostJson', 'item/detail'],
         delete: ['PostJson', 'item/delete'],
         detailByCode: ['PostJson', 'item/detail-by-code'],
-        detailByCodeForRepair: ['PostJson', 'item/detail-by-code-for-repair'],
+        detailByCodeForRepair: ['PostJson','item/detail-by-code-for-repair'],
         setIndep: ['PostJson', 'item/set-flag-independent-info'],
     },
-    Entity: { // 车架
+    Entity: {// 车架
         list: ['PostJson', 'entity/list'],
         save: ['PostJson', 'entity/save'],
         detail: ['PostJson', 'entity/detail'],
         delete: ['PostJson', 'entity/delete'],
         detailByUid: ['PostJson', 'entity/detail-by-uid'],
         getByUid: ['PostJson', 'entity/get-by-uid'],
+
 
     },
     ItemCategory: { // 商品分类
@@ -292,10 +293,17 @@ const apiList = {
         fileDetail: ['PostJson', 'sys-file/detail'],
         fileDelete: ['PostJson', 'sys-file/delete'],
     },
+
     Attachment: { // 附件管理
         list: ['PostJson', 'attachment/list'],
         save: ['PostJson', 'attachment/save'],
         delete: ['PostJson', 'attachment/delete'],
+    },
+    Wallet: { // 钱包管理
+        list: ['PostJson', 'wallet/list'],
+        get: ['PostJson', 'wallet/get'],
+        detail: ['PostJson', 'wallet/detail'],
+        update: ['PostJson', 'wallet/update-balance'],
     },
 };
 

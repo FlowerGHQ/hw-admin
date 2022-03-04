@@ -5,7 +5,6 @@
             <div class="title">结算清单 Invoice</div>
             <p>维修帐类</p>
             <span>{{ $Util.repairServiceFilter(detail.service_type) }}</span>
-            repairServiceFilter
             <p>结算编号</p>
             <span>{{detail.uid || '-'}}</span>
             <p>交易日期</p>

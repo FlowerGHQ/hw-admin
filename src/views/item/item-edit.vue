@@ -205,14 +205,14 @@
                         <a-popover v-model:visible="batchSet.priceVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseBatchSet()}'>
                             <template #content>
                                 <div class="batch-set-edit-popover">
-                                    <a-input-number v-model:value="batchSet.price" placeholder="请输入标准售价" @keydown.enter="handleBatchSpec('price')" :min='0' :autofocus='true' :precision="2"/>
+                                    <a-input-number v-model:value="batchSet.price" placeholder="请输入建议零售价" @keydown.enter="handleBatchSpec('price')" :min='0' :autofocus='true' :precision="2"/>
                                     <div class="btns">
                                         <a-button type="primary" ghost @click="handleCloseBatchSet">取消</a-button>
                                         <a-button type="primary" @click="handleBatchSpec('price')">确定</a-button>
                                     </div>
                                 </div>
                             </template>
-                            <a-button type="link">标准售价</a-button>
+                            <a-button type="link">建议零售价</a-button>
                         </a-popover>
                     </div>
                     <a-button class="spec-add" type="primary" ghost @click="handleAddSpecItem"><i class="icon i_add"/>添加规格</a-button>
@@ -234,7 +234,7 @@
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">标准售价</div>
+                <div class="key">建议零售价</div>
                 <div class="value input-number">
                     <a-input-number v-model:value="form.price" :min="0" :precision="2" placeholder="0.00"/>
                     <span>元</span>
@@ -355,7 +355,7 @@ export default {
             )
             column.push(
                 {title: '成本价格', key: 'money', dataIndex: 'original_price', fixed: 'right'},
-                {title: '标准售价', key: 'money', dataIndex: 'price', fixed: 'right'},
+                {title: '建议零售价', key: 'money', dataIndex: 'price', fixed: 'right'},
             )
             return column
         }
@@ -586,13 +586,13 @@ export default {
                     return this.$message.warning('请输入商品编码')
                 }
                 if (!form.price) {
-                    return this.$message.warning('请输入商品标准售价')
+                    return this.$message.warning('请输入商品建议零售价')
                 }
                 if (!form.original_price) {
                     return this.$message.warning('请输入商品成本价格')
                 }
                 if (form.original_price > form.price) {
-                    return this.$message.warning('商品成本价格应小于商品标准售价')
+                    return this.$message.warning('商品成本价格应小于商品建议零售价')
                 }
             } else { // 多规格
                 // 规格定义 检查
@@ -616,13 +616,13 @@ export default {
                         return this.$message.warning('请输入商品编码')
                     }
                     if (!item.price) {
-                        return this.$message.warning('请输入商品标准售价')
+                        return this.$message.warning('请输入商品建议零售价')
                     }
                     if (!item.original_price) {
                         return this.$message.warning('请输入商品成本价格')
                     }
                     if (item.original_price > item.price) {
-                    return this.$message.warning('商品成本价格应小于商品标准售价')
+                    return this.$message.warning('商品成本价格应小于商品建议零售价')
                 }
                     let str = ''
                     for (let j = 0; j < this.specific.list.length; j++) {

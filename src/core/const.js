@@ -266,39 +266,35 @@ let Const = {
         },
         // 状态
         STATUS: {
-            // WAIT_DISTRIBUTION: 10,
-            // WAIT_CHECK: 20,
-            // WAIT_AUDIT: 25,
             WAIT_DETECTION: 30,
             WAIT_REPAIR: 40,
             REPAIR_END: 50,
             SETTLEMENT: 60,
-            // TRANSFER: 100,
-            // CHECK_FAIL: -20,
-            // AUDIT_FAIL: -30,
+            AUDIT_FAIL: -30,
+            AUDIT_SUCCESS: 80,
+            FINISH: 100,
             CLOSE: -10,
         },
         STATUS_MAP: {
-            // '10': '待分配',
-            // '20': '待确认',
-            // '25': '待审核',
             '30': '待检测',
             '40': '维修中',
             '50': '已维修',
-            '60': '已结算',
-            // 100: '已转单',
-            // '-20': '确认未通过',
-            // '-30': '审核未通过',
-            '-10': '取消',
+            '60': '已结算待审核',
+            '-30': '审核未通过',
+            '80': '审核通过',
+            '100': '已完成',
+            '-10': '已取消',
+
         },
         STATUS_COLOR_MAP: {
-            // 10: 'red',
-            // 20: 'orange',
-            30: 'yellow',
-            40: 'blue',
-            50: 'light',
-            60: 'green',
-            100: 'purple',
+            '30': 'yellow',
+            '40': 'blue',
+            '50': 'light',
+            '60': 'orange',
+            '-30': 'red',
+            '80': 'purple',
+            '100': 'green',
+            '-10': 'gray',
         },
         // 故障类型 - 放弃使用
         FAULT_OPTIONS_MAP: {
@@ -318,6 +314,10 @@ let Const = {
         RESULTS: {
             SUCCESS: 1,
             FAIL: 2,
+        },
+        AUDIT: { //审核结果
+            PASS: 1,
+            REFUSE: 2
         },
     },
     REPAIR_ITEM: { //维修商品
@@ -361,25 +361,25 @@ let Const = {
         // 状态
         STATUS: {
             INIT: 0,
-            WAIT_PAY: 100,
             WAIT_DELIVER: 200,
             WAIT_TAKE_DELIVER: 300,
+            TAKE_DELIVER: 350,
             DEAL_SUCCESS: 400,
             CANCEL: -100,
         },
         STATUS_MAP: {
             '0': '未知',
-            '100': '待支付',
             '200': '待发货',
             '300': '已发货',
+            '350': '已收货',
             '400': '交易完成',
             '-100': '交易关闭',
         },
         STATUS_COLOR_MAP: {
             '0': 'red',
-            '100': 'yellow',
             '200': 'orange',
             '300': 'blue',
+            '350': 'yellow',
             '400': 'green',
         },
         // 支付方式
@@ -393,6 +393,21 @@ let Const = {
             { name: '微信', value: '2' },
             { name: '银行转账', value: '3' },
         ],
+        PAYMENT_STATUS: {
+            WAIT_PAY: 100, //待支付
+            PAYING: 200, //部分付款
+            PAY_ALL: 400,//全部付款
+        },
+        PAYMENT_STATUS_MAP: {
+            '100': '待支付',
+            '200': '预付款',
+            '400': '全额付款',
+        },
+        PAYMENT_COLOR_MAP: {
+            '100': 'yellow',
+            '200': 'blue',
+            '400': 'green',
+        },
         // 评论
         FLAG_REVIEW: {
             SUCCESS: 1,
@@ -649,7 +664,43 @@ let Const = {
             { text: '已取消', value: -20 },
         ],
     },
-    FAULT_ENTITY: { // 故障件
+    WALLET: { //钱包
+        TYPE: {
+            CNY: 1,
+            EUR: 2,
+            USD: 3,
+            GBP: 4,
+        },
+        TYPE_MAP: {
+            '1': '人民币',
+            '2': '欧元',
+            '3': '美元',
+            '4': '英镑',
+        },
+        OPERATE_TYPE: {
+            IN: 1,
+            OUT: 2,
+        },
+        OPERATE_TYPE_MAP: {
+            '1': '充值',
+            '2': '扣款',
+        },
+        SUBJECT: {
+            MANAGER_ADJUSTMENT: 101,
+            PURCHASE_ORDER: 201,
+            PURCHASE_ORDER_COMPENSATION: 202,
+            REPAIR_ORDER_DEDUCTIONS: 501,
+            REPAIR_ORDER_COMPENSATION: 502,
+        },
+        SUBJECT_MAP: {
+            '101': '调整余额',
+            '201': '采购单支付',
+            '202': '采购单补偿',
+            '501': '维修单扣款',
+            '502': '维修单补偿',
+        }
+    },
+    FAULT_ENTITY: { //故障件
         STATUS: { // 故障件审核状态
             INIT: 0, // 初始化
             WAIT_AUDIT: 10, // 待审核

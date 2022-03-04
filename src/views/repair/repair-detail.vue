@@ -4,10 +4,10 @@
         <div class="title-container">
             <div class="title-area">工单详情</div>
             <div class="btns-area">
-                <template v-if="$auth('AGENT', 'STORE') && detail.org_type == OrgType">
+                <template v-if="!$auth('ADMIN') && detail.org_type == OrgType">
                     <!-- <template v-if="detail.account_id == User.id || $auth('MANAGER')"> -->
                     <!-- </template> -->
-                    <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION && $auth('AGENT', 'STORE')">
+                    <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION && !$auth('ADMIN')">
                         <i class="icon i_edit"/>编辑
                     </a-button>
                     <a-button type="primary" ghost @click="handleDeliveryShow()"
@@ -27,6 +27,9 @@
                 </template>
                 <a-button type="primary" @click="routerChange('invoice')"
                     v-if="detail.status == STATUS.SETTLEMENT"><i class="icon i_detail_l"/>查看结算单
+                </a-button>
+                <a-button type="primary" @click="handleAuditShow()"
+                          v-if="detail.status == STATUS.SETTLEMENT && $auth('ADMIN')"><i class="icon i_m_success"/>审核
                 </a-button>
             </div>
         </div>
@@ -78,7 +81,7 @@
         </div>
         <MySteps :stepsList='stepsList' :current='currStep' v-if="detail.status != STATUS.CLOSE"/>
         <div class="form-container">
-            <CheckFault   :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DETECTION && $auth('AGENT', 'STORE')" ref="CheckFault"/>
+            <CheckFault   :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DETECTION && !$auth('ADMIN')" ref="CheckFault"/>
             <CheckResult  :id='id' :detail='detail' v-if="showCheckResult" @hasTransfer='hasTransfer = true'/>
             <RepairInfo  :id='id' :detail='detail'/>
             <AttachmentFile :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER'/>
@@ -104,6 +107,28 @@
                 </div>
             </div>
         </a-modal>
+        <a-modal v-model:visible="repairAuditShow" title="审核" class="repair-audit-modal" :after-close='handleAuditClose'>
+            <div class="modal-content">
+                <div class="form-item required">
+                    <div class="key">审核结果:</div>
+                    <a-radio-group v-model:value="auditForm.status">
+                        <a-radio :value="AUDIT.PASS">通过</a-radio>
+                        <a-radio :value="AUDIT.REFUSE">不通过</a-radio>
+                    </a-radio-group>
+                </div>
+                <div class="form-item textarea required" v-if="auditForm.status === AUDIT.REFUSE">
+                    <div class="key">原因:</div>
+                    <div class="value">
+                        <a-textarea v-model:value="auditForm.audit_message" placeholder="请输入不通过原因"
+                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="repairAuditShow = false">取消</a-button>
+                <a-button @click="handleAuditSubmit()" type="primary">确定</a-button>
+            </template>
+        </a-modal>
     </template>
 </div>
 </template>
@@ -124,6 +149,7 @@ import AttachmentFile from '@/components/popup-btn/AttachmentFile.vue';
 const REPAIR = Core.Const.REPAIR
 const STATUS = Core.Const.REPAIR.STATUS
 const REPAIR_ITEM = Core.Const.REPAIR_ITEM
+const AUDIT = Core.Const.REPAIR.AUDIT
 
 export default {
     name: 'RepairDetail',
@@ -142,6 +168,7 @@ export default {
         return {
             OrgType: Core.Data.getOrgType(),
             STATUS,
+            AUDIT,
             REPAIR_RESULTS: REPAIR.RESULTS,
             ATTACHMENT_TARGET_TYPE: Core.Const.ATTACHMENT.TARGET_TYPE,
 
@@ -161,19 +188,10 @@ export default {
 
             faultMap: {}, // 所有故障类型
 
-            // 工单确认&&审核
-            auditShow: false,
-            auditType: '',
+            repairAuditShow: false, //审核
+            // auditType: '',
             auditForm: {
-                audit_result: 1,
-                audit_message: '',
-            },
-
-            // 维修结果
-            resultShow: false,
-            resultsList: REPAIR.RESULTS_LIST,
-            resultForm: {
-                results: '1',
+                status: '',
                 audit_message: '',
             },
 
@@ -191,6 +209,7 @@ export default {
                 waybill_uid: "",
                 company_uid: undefined,
             },
+
 
         };
     },
@@ -271,63 +290,10 @@ export default {
                     break;
             }
         },
-
-        // 分销商确认接单 以及 平台方确认审核
-        handleAuditShow(type) {
-            Object.assign(this.auditForm, this.$options.data().auditForm)
-            this.auditType = type
-            this.auditShow = true
-        },
-        handleAuditSubmit() {
-            this.loading = true;
-            let form = Core.Util.deepCopy(this.auditForm)
-            if (form.audit_result == 0 && !form.audit_message) {
-                return this.$message.warning('请输入不通过的原因')
-            }
-            Core.Api.Repair[this.auditType]({
-                id: this.id,
-                ...this.auditForm
-            }).then(res => {
-                console.log('handleAuditSubmit res', res)
-                this.$message.success('操作成功')
-                this.routerChange('back')
-            }).catch(err => {
-                console.log('handleAuditSubmit err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-
         // 提交检测结果
         handleFaultSubmit() {
             this.$refs.CheckFault.handleFaultSubmit();
         },
-
-        // 提交 维修结果
-        // handleResultShow() {
-        //     this.resultShow = true
-        //     Object.assign(this.resultForm, this.$options.data().resultForm)
-        // },
-       /* handleResultSubmit() {
-            this.loading = true;
-            let form = Core.Util.deepCopy(this.resultForm)
-            if (form.results == 2 && !form.audit_message) {
-                return this.$message.warning('请输入维修失败的原因')
-            }
-            Core.Api.Repair.repair({
-                id: this.id,
-                ...form
-            }).then(() => {
-                this.$message.success('操作成功')
-                this.getRepairDetail()
-            }).catch(err => {
-                console.log('getRepairDetail err', err)
-            }).finally(() => {
-                this.loading = false;
-                this.resultShow = false
-            });
-        },*/
-
         // 工单 结算
         handleSettlement() {
             let _this = this;
@@ -343,13 +309,39 @@ export default {
                 },
             });
         },
+        handleAuditShow() { // 显示弹框
+            this.repairAuditShow = true
+        },
+        handleAuditClose() { // 关闭弹框
+            this.repairAuditShow = false;
+            this.auditForm = {
+                status: '',
+                audit_message: '',
+            }
+        },
+        handleAuditSubmit() { // 审核提交
+            let form = Core.Util.deepCopy(this.auditForm)
+            this.loading = true;
+            Core.Api.Repair.audit({
+                ...form,
+                id: this.id
+            }).then(res => {
+                console.log('handleAuditSubmit res', res)
+                this.handleAuditClose()
+                this.routerChange('back')
+            }).catch(err => {
+                console.log('handleAuditSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
 
         // 工单 二次维修
 /*        handleSecondRepairShow() {
             this.secondShow = true
             this.secondForm.plan_time = this.detail.plan_time ? dayjs.unix(this.detail.plan_time).format('YYYY-MM-DD HH:mm:ss') : undefined
         },*/
-        handleSecondRepairSubmit() {
+        /*handleSecondRepairSubmit() {
             let form = Core.Util.deepCopy(this.secondForm)
             if (!form.plan_time) {
                 return this.$message.warning('请选择预计二次维修时间')
@@ -367,7 +359,7 @@ export default {
                 this.loading = false;
                 this.secondShow = false
             });
-        },
+        },*/
 
         // 转单物流
         handleDeliveryShow() {

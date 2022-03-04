@@ -71,7 +71,9 @@
                             </template>
                             <template v-if="column.dataIndex === 'target_type'">
                                 <template v-if="addMode || record.editMode">
-                                    <a-input v-model:value="record.number" placeholder="请输入车架号"/>
+                                    <a-input v-model:value="record.number" class="input-number" placeholder="请输入车架号" @blur="onblur"/>
+                                    <span v-if="isExist === true"><i class="icon i_confirm"/></span>
+                                    <span v-else-if="isExist === false"><i class="icon i_close_c"/></span>
                                 </template>
                                 <template v-else>{{ text || '-' }}件</template>
                             </template>
@@ -128,6 +130,7 @@ export default {
             addMode: false,
             addData: [],
             map: [],
+            isExist: '',
             form: {
                 entity_uid: '',
             },
@@ -141,22 +144,25 @@ export default {
         tableColumns() {
             let columns = [
                 {title: '商品名称', dataIndex: ['item', 'name'],  key: 'tip_item'},
-                {title: '车架号', dataIndex: 'target_type'},
+                // {title: '车架号', dataIndex: 'target_type'},
                 {title: '商品型号', dataIndex: ['item', 'model'], key: 'item'},
                 {title: '商品编码', dataIndex: ['item', 'code'],  key: 'item'},
                 {title: '商品规格', dataIndex: ['item', 'attr_list'], key: 'attr_list'},
-                {title: '库存数量', dataIndex: ['item', 'stock'],     key: 'count'},
+                // {title: '库存数量', dataIndex: ['item', 'stock'],     key: 'count'},
                 {title: this.type_ch + '数量', dataIndex: 'amount' , key: 'amount'},
                 {title: '操作', key: 'operation'},
             ]
-            if (this.detail.target_type == COMMODITY_TYPE.ENTITY) { // 车架显示
-                columns.splice(2, 1)
-            }
-            if (this.detail.type == TYPE.IN) { // 入库不显示库存数量
-                columns.splice(5, 1)
-            }
+           /* if (this.detail.type == TYPE.IN) { // 入库不显示库存数量
+                columns.splice(4, 1)
+            }*/
             if (this.detail.status !== STATUS.INIT || this.addMode) { // 入库不显示库存数量
                 columns.pop()
+            }
+            if (this.detail.type == TYPE.OUT) { // 入库不显示库存数量
+                columns.splice(4, 0, {title: '库存数量', dataIndex: ['item', 'stock'], key: 'count'})
+            }
+            if (this.detail.target_type == COMMODITY_TYPE.ENTITY) {
+                columns.splice(1, 0, {title: '车架号', dataIndex: 'target_type'})
             }
             return columns
         },
@@ -274,6 +280,7 @@ export default {
                 amount: item.amount,
                 target_id: item.item.id,
                 invoice_id: this.id,
+                target_type: item.target_type,
                 number: item.number,
             }))
             Core.Api.InvoiceItem.saveList(list).then(() => {
@@ -298,6 +305,7 @@ export default {
                 id: item.id,
                 amount: item.amount,
                 target_id: item.item.id,
+                number: item.number,
                 invoice_id: this.id,
             }).then(() => {
                 this.$message.success('保存成功')
@@ -326,7 +334,20 @@ export default {
                 this.loading = false;
             });
         },
-
+        onblur() {  // 获取 车架号
+            if (!this.record.number) {
+                return this.isExist = ''
+            }
+            Core.Api.Entity.detailByUid({
+                uid: this.record.number,
+            }).then(res => {
+                this.isExist = res.detail != null
+                console.log("onblur res", res)
+            }).catch(err => {
+                console.log('onblur err', err)
+            }).finally(() => {
+            });
+        },
         // 移除 商品
         handleRemoveItem(record) {
             Core.Api.InvoiceItem.delete({id: record.id}).then(() => {
@@ -339,5 +360,11 @@ export default {
 </script>
 
 <style lang="less">
-// #InvoiceDetail {}
+ #InvoiceDetail {
+     .ant-table-cell {
+         input.ant-input.input-number {
+             width: 100% - 50px;
+         }
+     }
+ }
 </style>
