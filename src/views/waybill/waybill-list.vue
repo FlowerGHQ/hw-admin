@@ -19,7 +19,7 @@
                         <div class="key">货物清单类型:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择货物清单类型">
-                              <a-select-option v-for="(val, index) of waybillOptions" :key="index" :value="val.value">{{val.text}}</a-select-option>
+                                <a-select-option v-for="(val, index) of waybillOptions" :key="index" :value="val.value">{{val.text}}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>

@@ -134,7 +134,7 @@
 </template>
 
 <script>
-import Core from '../core';
+import Core from '../../core';
 const TYPE = Core.Const.WALLET.TYPE
 export default {
     name: 'WalletList',

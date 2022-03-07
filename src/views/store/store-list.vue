@@ -33,11 +33,7 @@
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
                         <div class="key">创建时间:</div>
-                        <div class="value">
-                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
-                                <template #suffixIcon><i class="icon i_calendar"/></template>
-                            </a-range-picker>
-                        </div>
+                        <div class="value"><TimeSearch @search="handleSearch"/></div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
@@ -67,8 +63,10 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'flag_receive_transfer'">
-                            <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
-                                {{ text ? '接受转单' : '不接受转单' }}
+                            <a-switch v-if="$auth('ADMIN')" :checked="!!record.flag_receive_transfer"
+                                checked-children="是" un-checked-children="否" @click="handleTransferChange(record)"/>
+                            <div v-else class="status status-bg status-tag" :class="text ? 'green' : 'red'">
+                                {{ text ? '接受' : '不接受' }}
                             </div>
                         </template>
                         <template v-if="column.dataIndex === 'status'">
@@ -80,12 +78,8 @@
                             <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
                             <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改</a-button>
                             <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
-                                    <template v-if="record.status"><i class="icon i_forbidden"/>禁用</template>
-                                    <template v-else><i class="icon i_enable"/>启用</template>
-                            </a-button>
-                            <a-button type='link' v-if="$auth('ADMIN')" @click="handleTransferChange(record)" :class="record.flag_receive_transfer ? 'danger' : ''">
-                                    <template v-if="record.flag_receive_transfer"><i class="icon i_forbidden"/>禁用（转单）</template>
-                                    <template v-else><i class="icon i_enable"/>启用（转单）</template>
+                                <template v-if="record.status"><i class="icon i_forbidden"/>禁用</template>
+                                <template v-else><i class="icon i_enable"/>启用</template>
                             </a-button>
                         </template>
                     </template>
@@ -113,9 +107,11 @@
 <script>
 import Core from '../../core';
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE
+
+import TimeSearch from '../../components/common/TimeSearch.vue'
 export default {
     name: 'StoreList',
-    components: {},
+    components: {TimeSearch},
     props: {},
     data() {
         return {
@@ -127,8 +123,6 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            create_time: [],
             distributorList: [], // 分销商下拉框数据
             agentList: [],
             filteredInfo: {status: [1]},
@@ -140,6 +134,8 @@ export default {
                 distributor_id: undefined,
                 agent_id: undefined,
                 flag_receive_transfer: undefined,
+                begin_time: '',
+                end_time: '',
             },
 
             tableData: [],
@@ -174,7 +170,7 @@ export default {
             return tableColumns
         },
     },
-    mounted() { 
+    mounted() {
         this.getTableData();
         if (this.$auth('ADMIN')) {
             this.getDistributorListAll();
@@ -215,7 +211,11 @@ export default {
             this.pageSize = size
             this.getTableData()
         },
-        handleSearch() {        // 搜索
+        handleSearch(begin_time, end_time) { // 搜索
+            if (begin_time || end_time) {
+                this.searchForm.begin_time = begin_time
+                this.searchForm.end_time = end_time
+            }
             this.pageChange(1);
         },
         getAgentListAll() {
@@ -237,7 +237,6 @@ export default {
         },
         handleSearchReset() {        // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.create_time = []
             this.pageChange(1);
         },
         handleTableChange(page, filters, sorter) {
@@ -253,8 +252,6 @@ export default {
             this.loading = true;
             Core.Api.Store.list({
                 ...this.searchForm,
-                begin_time: this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -286,38 +283,38 @@ export default {
             });
         },
         handleStatusChange(record) {
-                let _this = this;
-                this.$confirm({
-                        title: `确定要${record.status ? '禁用' : '启用'}该门店吗？`,
-                        okText: '确定',
-                        okType: 'danger',
-                        cancelText: '取消',
-                        onOk() {
-                                Core.Api.Store.updateStatus({id:record.id}).then(() => {
-                                        _this.$message.success(`${record.status ? '禁用' : '启用'}成功`);
-                                        _this.getTableData();
-                                }).catch(err => {
-                                        console.log("handleStatusChange err", err);
-                                })
-                        },
-                });
+            let _this = this;
+            this.$confirm({
+                title: `确定要${record.status ? '禁用' : '启用'}该门店吗？`,
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Store.updateStatus({id:record.id}).then(() => {
+                        _this.$message.success(`${record.status ? '禁用' : '启用'}成功`);
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleStatusChange err", err);
+                    })
+                },
+            });
         },
         handleTransferChange(record) {
-                let _this = this;
-                this.$confirm({
-                        title: `确定要${record.flag_receive_transfer ? '禁用(转单)' : '启用(转单)'}该门店吗？`,
-                        okText: '确定',
-                        okType: 'danger',
-                        cancelText: '取消',
-                        onOk() {
-                                Core.Api.Store.updateTransfer({id:record.id}).then(() => {
-                                        _this.$message.success(`${record.flag_receive_transfer ? '禁用' : '启用'}成功`);
-                                        _this.getTableData();
-                                }).catch(err => {
-                                        console.log("handleTransferChange err", err);
-                                })
-                        },
-                });
+            let _this = this;
+            this.$confirm({
+                title: `确定要将该门店设置为${record.flag_receive_transfer ? '不可' : '可'}接受转单吗？`,
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Store.updateTransfer({id:record.id}).then(() => {
+                        _this.$message.success(`${record.flag_receive_transfer ? '禁用' : '启用'}成功`);
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleTransferChange err", err);
+                    })
+                },
+            });
         }
     }
 };

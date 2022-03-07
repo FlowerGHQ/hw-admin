@@ -96,12 +96,12 @@
 
 <script>
 import Core from '../../core';
-import StoreList from '@/components/StoreList.vue';
-import UserList from '@/components/UserList.vue';
-import PurchaseList from '@/components/PurchaseOrderList.vue';
-import AgentList from '@/components/AgentList.vue';
-import PricingStructure from '@/components/PricingStructure.vue';
-import WalletList from '@/components/WalletList.vue';
+import UserList from '@/components/panel/UserList.vue';
+import AgentList from '@/components/panel/AgentList.vue';
+import StoreList from '@/components/panel/StoreList.vue';
+import WalletList from '@/components/panel/WalletList.vue';
+import PurchaseList from '@/components/panel/PurchaseList.vue';
+import PricingStructure from '@/components/panel/PricingStructure.vue';
 
 const USER_TYPE = Core.Const.USER.TYPE;
 export default {
