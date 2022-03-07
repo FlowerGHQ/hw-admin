@@ -86,19 +86,21 @@ export default {
             type: Boolean,
             default: false,
         },
+        
         radioMode: { // 是否只能选一个商品
             type: Boolean,
             default: false,
-        },
-        faultName: {
-            type: String,
-            default: ''
         },
         disabledChecked: {
             type: Array,
             default: () => {
                 return []
             }
+        },
+
+        faultName: {
+            type: String,
+            default: ''
         },
         warehouseId: {
             type: Number,
@@ -137,7 +139,7 @@ export default {
                 {title: '商品型号', dataIndex: 'model', key: 'item'},
                 {title: '商品编码', dataIndex: 'code', key: 'item'},
                 {title: '商品规格', dataIndex: 'attr_list', key: 'spec'},
-                {title: '标准售价', dataIndex: 'price', key: 'money',},
+                {title: '建议零售价', dataIndex: 'price', key: 'money',},
             ]
             if (this.warehouseId !== 0) {
                 tableColumns.splice(3, 0, {title: '仓库库存', dataIndex: 'stock', key: 'stock'})

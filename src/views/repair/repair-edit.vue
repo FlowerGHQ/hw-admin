@@ -78,13 +78,11 @@
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">车辆编号</div>
+                <div class="key">车架号</div>
                 <div class="value">
-                    <a-input v-model:value="form.item_code" placeholder="请输入车辆编号"/>
-                </div>
-                <div class="sp">
-                    <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
-                    <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
+                    <a-input v-model:value="form.vehicle_no" placeholder="请输入车架号" @blur="onblur"/>
+                    <span v-if="isExist === true"><i class="icon i_confirm"/></span>
+                    <span v-else-if="isExist === false"><i class="icon i_close_c"/></span>
                 </div>
             </div>
             <div class="form-item">
@@ -112,8 +110,8 @@
             <div class="form-item required">
                 <div class="key">相关客户</div>
                 <div class="value">
-                    <a-select placeholder="请选择相关客户" v-model:value="form.customer_id" @change="handleCustomerSelect" show-search
-                        :disabled="detail.status == REPAIR.STATUS.WAIT_CHECK">
+                    <a-select placeholder="请选择相关客户" v-model:value="form.customer_id" @change="handleCustomerSelect" show-search option-filter-prop="children"
+                        :disabled="detail.status == REPAIR.STATUS.WAIT_DETECTION">
                         <a-select-option v-for="(item,index) of customerList" :key="index" :value="item.id">
                             {{ item.name }}
                         </a-select-option>
@@ -213,8 +211,7 @@ export default {
 
                 channel: 1, // 维修方式、维修途径
                 repair_method: 1, // 维修类别
-                item_code: '', // 车辆编号
-                vehicle_no: '', // 车辆编号
+                vehicle_no: '', // 车架号
 
                 customer_id: undefined,  // 相关客户-id
                 customer_name: "",  // 相关客户-名称
@@ -310,14 +307,13 @@ export default {
 
             await Core.Api.Repair[apiName]({
                 ...form,
-                vehicle_no: this.form.item_code,
             }).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
-            if (this.detail.status == this.REPAIR.STATUS.CHECK_FAIL) { // 未确认通过维修单 员工再次确认（重提）
+  /*          if (this.detail.status == this.REPAIR.STATUS.AUDIT_FAIL) { // 未确认通过维修单 员工再次确认（重提）
                 this.loading = true;
                 await Core.Api.Repair.hand({
                     id: this.form.id,
@@ -330,7 +326,7 @@ export default {
                 }).finally(() => {
                     this.loading = false;
                 });
-            }
+            }*/
             if (this.detail.status == this.REPAIR.STATUS.AUDIT_FAIL) { // 未审核通过维修单 员工再次确认（重提）
                 this.loading = true; 
                 await Core.Api.Repair.check({
@@ -346,6 +342,20 @@ export default {
                     this.loading = false;
                 });
             }
+        },
+        onblur() {  // 获取 车架号
+            if (!this.form.vehicle_no) {
+                return this.isExist = ''
+            }
+            Core.Api.Entity.detailByUid({
+                uid: this.form.vehicle_no,
+            }).then(res => {
+                this.isExist = res.detail != null
+                console.log("onblur res", res)
+            }).catch(err => {
+                console.log('onblur err', err)
+            }).finally(() => {
+            });
         },
         // 检查表单输入
         checkFormInput(form) {
@@ -385,9 +395,12 @@ export default {
                 this.$message.warning('请选择维修类别')
                 return 0
             }
-            if (!form.item_code) {
-                this.$message.warning('请输入车辆编号')
+            if (!form.vehicle_no) {
+                this.$message.warning('请输入车架号')
                 return 0
+            }
+            if (this.isExist === false) {
+                return this.$message.warning('请输入正确的车架号')
             }
             if (form.id) {
                 if (!form.customer_id) {
@@ -462,8 +475,6 @@ export default {
                 width: 24px;
                 text-align: right;
             }
-        }
-        .sp {
             .i_confirm {
                 color: @green;
                 font-size: 18px;

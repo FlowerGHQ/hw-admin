@@ -11,7 +11,7 @@
                               :headers="upload.headers" :data='upload.data'
                               accept=".xlsx,.xls"
                               @change="handleMatterChange">
-                        <a-button type="primary"  class="file-upload-btn">
+                        <a-button type="primary" class="file-upload-btn">
                             <i class="icon i_add"/> 批量导入
                         </a-button>
                     </a-upload>
@@ -22,20 +22,23 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">车架名称:</div>
                         <div class="value">
-                            <a-input placeholder="请输入车架名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入车架名称" v-model:value="searchForm.name"
+                                     @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">车架号:</div>
                         <div class="value">
-                            <a-input placeholder="请输入车架号" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入车架号" v-model:value="searchForm.code"
+                                     @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                         <div class="key">创建时间:</div>
                         <div class="value">
-                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
-                                <template #suffixIcon><i class="icon i_calendar"></i> </template>
+                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
+                                            :show-time="defaultTime" :allow-clear='false'>
+                                <template #suffixIcon><i class="icon i_calendar"></i></template>
                             </a-range-picker>
                         </div>
                     </a-col>
@@ -48,35 +51,40 @@
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false' @change="handleTableChange"
-                        :expandedRowKeys="expandedRowKeys" :indentSize='0' :expandIconColumnIndex="expandIconColumnIndex">
+                         :expandedRowKeys="expandedRowKeys" :indentSize='0'
+                         :expandIconColumnIndex="expandIconColumnIndex">
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail'">
-                            <div class="table-img afs">
-                                <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" fallback='无'/>
+                            <div class="table-img">
+                                <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)"
+                                         fallback='无'/>
                                 <a-tooltip placement="top" :title='text' destroy-tooltip-on-hide>
-                                    <div class="info">
                                         <a-button type="link" @click="routerChange('detail', record)">
                                             <div class="ell" style="max-width: 150px">{{ text || '-' }}</div>
                                         </a-button>
-                                    </div>
                                 </a-tooltip>
                             </div>
                         </template>
                         <template v-if="column.key === 'item'">
-                            {{ text || '-'}}
+                            {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'attr'">
-                            {{record.attr_desc || ' '}}
+                            {{ record.attr_desc || ' ' }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
                             <template v-if="!record.default_item_id">
-                                <a-button type='link' @click="handleVehicleShow(record.id)"><i class="icon i_edit"/> 编辑</a-button>
-                                <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
+                                <a-button type='link' @click="handleVehicleShow(record)"><i class="icon i_edit"/> 编辑
+                                </a-button>
+                                <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>
+                                    详情
+                                </a-button>
                             </template>
-                            <a-button type='link' @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button>
+                            <a-button type='link' @click="handleDelete(record.id)" class="danger"><i
+                                class="icon i_delete"/> 删除
+                            </a-button>
                         </template>
                     </template>
                     <!-- <template #expandedRowRender="{ record }">
@@ -100,7 +108,7 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="vehicleShow" :title="editForm.uid ? '新增车架' : '车架编辑'" class="refund-edit-modal"
+            <a-modal v-model:visible="vehicleShow" :title="editForm.uid ? '车架编辑' : '新增车架'" class="refund-edit-modal"
                      :after-close='handleVehicleClose'>
                 <div class="modal-content">
                     <div class="form-item required">
@@ -174,6 +182,7 @@ export default {
             isExist: '',
             vehicleShow: false,
             editForm: {
+                id: '',
                 uid: '',
                 item_code: '',
             },
@@ -183,12 +192,12 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                { title: '车架名称', dataIndex: ['item','name'], key: 'detail' },
-                { title: '车架号', dataIndex: 'uid', key: 'item' },
-                { title: '规格', key: 'attr' },
-                { title: '创建时间', dataIndex: 'create_time', key: 'time'},
+                {title: '车架名称', dataIndex: ['item', 'name'], key: 'detail'},
+                {title: '车架号', dataIndex: 'uid', key: 'item'},
+                {title: '规格', key: 'attr'},
+                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 // { title: '商品状态', dataIndex: 'status' },
-                { title: '操作', key: 'operation', fixed: 'right', width: 180 }
+                {title: '操作', key: 'operation', fixed: 'right', width: 180}
             ]
             return columns
         }
@@ -204,16 +213,9 @@ export default {
                 case 'detail':  // 车架详情
                     routeUrl = this.$router.resolve({
                         path: "/item/item-detail",
-                        query: { id: item.default_item_id || item.id, set_id: item.set_id }
+                        query: {id: item.default_item_id || item.id, set_id: item.set_id}
                     })
                     window.open(routeUrl.href, '_blank')
-                    break;
-                case 'edit':  // 车架编辑
-                    routeUrl = this.$router.resolve({
-                        path: "/item/entity-edit",
-                        query: { id: item.default_item_id || item.id, set_id: item.set_id }
-                    })
-                    window.open(routeUrl.href, '_self')
                     break;
             }
         },
@@ -246,10 +248,6 @@ export default {
             this.create_time = []
             this.pageChange(1);
         },
-        handleCategorySelect(val) {
-            this.searchForm.category_id = val
-            this.pageChange(1);
-        },
         handleTableChange(page, filters, sorter) {
             console.log('handleTableChange filters:', filters)
             this.filteredInfo = filters;
@@ -273,9 +271,9 @@ export default {
                 page_size: this.pageSize
             }).then(res => {
                 console.log("getTableData res:", res)
-                let list = res.list.map(item => {
-                    item.attr_desc = item.attr_list ? item.attr_list.map(i => i.value).join(',') : ''
-                    return item
+                let list = res.list.map(entity => {
+                    entity.attr_desc = entity.item.attr_list ? entity.item.attr_list.map(i => i.value).join(',') : ''
+                    return entity
                 })
                 if (flag_spread == 1) {
                     this.expandIconColumnIndex = -1
@@ -301,7 +299,7 @@ export default {
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Item.delete({id}).then(() => {
+                    Core.Api.Entity.delete({id}).then(() => {
                         _this.$message.success('删除成功');
                         _this.getTableData();
                     }).catch(err => {
@@ -311,13 +309,19 @@ export default {
             });
         },
 
-        handleVehicleShow() { // 显示弹框
+        handleVehicleShow(record) { // 显示弹框
             this.vehicleShow = true
+            this.editForm = {
+                id: record.id,
+                uid: record.uid,
+                item_code: record.item_code,
+            }
         },
         handleVehicleClose() { // 关闭弹框
             this.vehicleShow = false
             this.isExist = ''
             this.editForm = {
+                id: '',
                 uid: '',
                 item_code: '',
             }
@@ -363,12 +367,12 @@ export default {
 
 <style lang="less">
 #EntityList {
-    .ant-table-row-level-1 {
-        td.ant-table-cell {
-            background: #F7F8FA;
-        }
+    .ant-btn.ant-btn-link {
+        line-height: 22px;
+        margin-left: 8px;
     }
 }
+
 .form-item:last-child {
     .fac();
 
@@ -394,7 +398,7 @@ export default {
 }
 </style>
 <style lang="less" scoped>
-#ItemList {
+#EntityList {
     .list-container {
         .title-container {
             .btns-area {

@@ -191,7 +191,24 @@ export default {
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+       /* tableColumns() {
+            let tableColumns = [
+                {title: '商品名称', dataIndex: 'name', key: 'item'},
+                {title: '商品编号', dataIndex: 'code', key: 'item'},
+                {title: '单价', dataIndex: 'price', key: 'money'},
+                {title: '数量(件)', key: 'amount'},
+                {title: '总价', key: 'total_price'},
+                {title: '维修类型', key: 'type'},
+                // {title: '回收仓', dataIndex: 'bad'},
+                {title: '良品仓', dataIndex: 'new'},
+                // {title: '接收门店', dataIndex: 'repair'},
+                {title: '操作', dataIndex: 'operation'},
+            ]
+
+            return tableColumns
+        },*/
+    },
     mounted() {
         this.getFaultData();
         this.getWarehouseList();

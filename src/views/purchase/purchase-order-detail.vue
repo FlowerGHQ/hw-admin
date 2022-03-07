@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">采购订单详情</div>
             <div class="btns-area">
-                <a-button type="primary" @click="handleModalShow('payment')" v-if="detail.status === STATUS.WAIT_PAY && authOrg(detail.supply_org_id, detail.supply_org_type)"><i class="icon i_received"/>确认收款</a-button>
+                <a-button type="primary" @click="handleModalShow('payment')" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL && authOrg(detail.supply_org_id, detail.supply_org_type)"><i class="icon i_received"/>确认收款</a-button>
                 <a-button type="primary" @click="handleModalShow('deliver')" v-if="detail.status === STATUS.WAIT_DELIVER && authOrg(detail.supply_org_id, detail.supply_org_type)"><i class="icon i_deliver"/>发货</a-button>
                 <a-button type="primary" @click="handleReceived()" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER  && authOrg(detail.org_id, detail.org_type)"><i class="icon i_goods"/>确认收货</a-button>
                 <a-button type="primary" @click="handleCancel()" v-if="detail.status === STATUS.WAIT_PAY & authOrg(detail.org_id, detail.org_type)"><i class="icon i_close_c"/>取消</a-button>
@@ -47,7 +47,7 @@
                                         <a-table-summary-cell :index="0" :col-span="4">合计</a-table-summary-cell>
                                         <a-table-summary-cell :index="1" :col-span="2">总数量:{{total.amount}}件</a-table-summary-cell>
                                         <a-table-summary-cell :index="4" :col-span="1">总售价:{{$Util.countFilter(total.price)}}元</a-table-summary-cell>
-                                        <a-table-summary-cell :index="5" :col-span="1">总实付金额:{{$Util.countFilter(total.charge)}}元</a-table-summary-cell>
+                                        <a-table-summary-cell :index="5" :col-span="1">总金额:{{$Util.countFilter(total.charge)}}元</a-table-summary-cell>
                                     </a-table-summary-row>
                                 </a-table-summary>
                             </template>
@@ -118,14 +118,21 @@
         </div>
     </div>
     <template class="modal-container">
-        <a-modal v-model:visible="paymentShow" title="确认支付" @ok="handlePayment">
+        <a-modal v-model:visible="paymentShow" title="确认收款" @ok="handlePayment">
             <div class="modal-content">
                 <div class="form-item required">
-                    <div class="key">支付方式</div>
+                    <div class="key">收款方式</div>
                     <div class="value">
-                        <a-select v-model:value="form.pay_method" placeholder="请选择支付方式">
+                        <a-select v-model:value="form.pay_method" placeholder="请选择收款方式">
                             <a-select-option v-for="pay of payMethodList" :key="pay.value" :value="pay.value">{{pay.name}}</a-select-option>
                         </a-select>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">收款金额</div>
+                    <div class="value">
+                        <a-input-number v-model:value="form.payment" :min="0" :max="(detail.charge -detail.payment)/100" :precision="2" placeholder="0.00"/>
+                        <span>元</span>
                     </div>
                 </div>
             </div>
@@ -161,7 +168,7 @@ import AttachmentFile from '@/components/popup-btn/AttachmentFile.vue';
 
 const PURCHASE = Core.Const.PURCHASE;
 const STATUS = Core.Const.PURCHASE.STATUS;
-
+const PAYMENT_STATUS =Core.Const.PURCHASE.PAYMENT_STATUS;
 const itemColumns = [
     { title: '商品', dataIndex: 'item' },
     { title: '型号', dataIndex: ['item', "model"] },
@@ -189,6 +196,7 @@ export default {
             loginOrgId: Core.Data.getOrgId(),
             loginOrgType: Core.Data.getOrgType(),
             STATUS,
+            PAYMENT_STATUS,
             // 加载
             loading: false,
             id: '',
@@ -223,6 +231,7 @@ export default {
                 pay_method: undefined,
                 company_uid: undefined,
                 waybill_uid: '',
+                payment: '',
             },
         };
     },
@@ -389,11 +398,15 @@ export default {
         handlePayment() {
             let form = Core.Util.deepCopy(this.form)
             if (!form.pay_method) {
-                return this.$message.warning('请选择支付方式')
+                return this.$message.warning('请选择收款方式')
+            }
+            if (!form.payment) {
+                return this.$message.warning('请输入收款金额')
             }
             Core.Api.Purchase.payment({
                 id: this.id,
-                pay_method: form.pay_method
+                pay_method: form.pay_method,
+                payment: form.payment * 100
             }).then(res => {
                 this.getPurchaseInfo()
                 this.paymentShow = false

@@ -163,18 +163,21 @@ export default {
                         path: "/purchase/purchase-order-detail",
                         query: {id: item.target_id}
                     })
+                    window.open(routeUrl.href, '_self')
                     break;
                 case TARGET_TYPE.REPAIR_ORDER_TRANSFER:  // 维修单转单详情
                     routeUrl = this.$router.resolve({
                         path: "/repair/repair-detail",
                         query: {id: item.target_id}
                     })
+                    window.open(routeUrl.href, '_self')
                     break;
                 case TARGET_TYPE.TRANSFER_ORDER:  // 维修单调货单详情
                     routeUrl = this.$router.resolve({
                         path: "/warehouse/transfer-order-detail",
                         query: {id: item.target_id}
                     })
+                    window.open(routeUrl.href, '_self')
                     break;
                 // case TARGET_TYPE.AFTER_SALES_ORDER:  // 售后单详情
                 //     routeUrl = this.$router.resolve({

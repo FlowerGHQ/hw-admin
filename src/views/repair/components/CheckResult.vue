@@ -119,6 +119,7 @@ export default {
                 // {title: '接收门店', dataIndex: 'store_id'},
                 {title: '工时', dataIndex: 'man_hour'},
             ]
+
             return tableColumns
         }
     },

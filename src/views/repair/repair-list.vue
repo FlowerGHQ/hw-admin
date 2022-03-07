@@ -4,10 +4,10 @@
         <div class="title-container">
             <div class="title-area">{{$t('n.repair_list')}}</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('AGENT')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="!$auth('ADMIN')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
             </div>
         </div>
-<!--        <div class="tabs-container colorful" v-if="!operMode">
+        <div class="tabs-container colorful" v-if="!operMode">
             <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
                 <a-tab-pane :key="item.key" v-for="item of statusList">
                     <template #tab>
@@ -15,7 +15,7 @@
                     </template>
                 </a-tab-pane>
             </a-tabs>
-        </div>-->
+        </div>
         <div class="search-container">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -86,7 +86,7 @@
                         <div class="status status-bg status-tag" :class="$Util.repairStatusFilter(text,'color')">
                             <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>
                                 {{ $Util.repairStatusFilter(text) }}
-                                <template v-if="[STATUS.CHECK_FAIL, STATUS.AUDIT_FAIL].includes(record.status)">
+                                <template v-if="[STATUS.AUDIT_FAIL].includes(record.status)">
                                     <i class="icon i_hint" style="font-size: 12px;padding-left: 6px;"/>
                                 </template>
                             </a-tooltip>
@@ -95,11 +95,11 @@
                     <template v-if="column.dataIndex === 'type'">
                         {{$Util.repairTypeFilter(text)}}
                     </template>
-<!--                    <template v-if="column.dataIndex === 'priority'">
+                    <template v-if="column.dataIndex === 'priority'">
                         <div class="status status-bg status-tag smell" :class="$Util.repairPriorityFilter(text,'color')">
                             {{$Util.repairPriorityFilter(text)}}
                         </div>
-                    </template>-->
+                    </template>
                     <template v-if="column.dataIndex === 'channel'">
                         {{$Util.repairChannelFilter(text)}}
                     </template>
@@ -120,10 +120,12 @@
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
-<!--                    <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="handleModalShow(record.id, 'check')" v-if="record.status == STATUS.WAIT_CHECK"><i class="icon i_confirm"/>确认</a-button>
-                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.WAIT_AUDIT"><i class="icon i_confirm"/>审核</a-button>
-                    </template>-->
+                    <template v-if="column.key === 'operation'">
+                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.SETTLEMENT"><i class="icon i_confirm"/>审核</a-button>
+                    </template>
+                    <template v-if="column.key === 'operate'">
+                        <a-button type='link' @click="routerChange('edit',record)" v-if="record.status == STATUS.AUDIT_FAIL"><i class="icon i_edit"/>修改</a-button>
+                    </template>
                 </template>
             </a-table>
         </div>
@@ -143,12 +145,12 @@
             />
         </div>
     </div>
-    <!-- 员工确认 -->
-<!--    <template class="modal-container">
-        <a-modal v-model:visible="modalShow" :title="modalType == 'check' ? '确认接单' : '审核'" :after-close='handleModalClose'>
+    <!-- 审核 -->
+    <template class="modal-container">
+        <a-modal v-model:visible="modalShow" title="审核" :after-close='handleModalClose'>
             <div class="modal-content">
                 <div class="form-item required">
-                    <div class="key">{{modalType == 'check' ? '确认' : '审核'}}结果:</div>
+                    <div class="key">审核结果:</div>
                     <div class="value">
                     <a-radio-group v-model:value="editForm.audit_result">
                         <a-radio :value="1">通过</a-radio>
@@ -168,7 +170,7 @@
                 <a-button @click="handleModalSubmit" type="primary" >确定</a-button>
             </template>
         </a-modal>
-    </template>-->
+    </template>
 </div>
 </template>
 
@@ -200,19 +202,16 @@ export default {
             // 搜索
             operMode: '',
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            /*statusList: [
+            statusList: [
                 {text: '全  部', value: '0', color: 'primary', key: '-1'},
-                {text: '待分配', value: '0', color: 'red',     key: STATUS.WAIT_DISTRIBUTION },
-                {text: '待确认', value: '0', color: 'orange',  key: STATUS.WAIT_CHECK },
-                {text: '待审核', value: '0', color: 'orange',  key: STATUS.WAIT_AUDIT },
                 {text: '待检测', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
                 {text: '维修中', value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
-                {text: '已维修', value: '0', color: 'primary', key: STATUS.REPAIR_END },
-                {text: '已结算', value: '0', color: 'green',   key: STATUS.SETTLEMENT },
-                {text: '确认未通过', value: '0', color: 'red',  key: STATUS.CHECK_FAIL },
+                {text: '已维修', value: '0', color: 'light',  key: STATUS.REPAIR_END },
+                {text: '已结算待审核', value: '0', color: 'orange',  key: STATUS.SETTLEMENT },
                 {text: '审核未通过', value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
-                {text: '已取消', value: '0', color: 'purple',  key: STATUS.CLOSE },
-            ],*/
+                {text: '审核通过', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
+                {text: '已取消', value: '0', color: 'gray',  key: STATUS.CLOSE },
+            ],
             create_time: [],
             distributorList: [], // 分销商下拉框数据
             storeList: [],
@@ -277,8 +276,8 @@ export default {
                     filters: REPAIR.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.channel || null },
                 { title: '维修类别', dataIndex: 'repair_method',
                     filters: REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.repair_method || null },
-                { title: '维修门店/零售商', dataIndex: 'repair_name', key: 'item' },
-                { title: '维修门店电话', dataIndex: 'repair_phone', key: 'item' },
+                { title: '维修单位', dataIndex: 'repair_name', key: 'item' },
+                { title: '维修电话', dataIndex: 'repair_phone', key: 'item' },
                 { title: '创建人',   dataIndex: 'user_name', key: 'item' },
                 { title: '关联客户', dataIndex: 'customer_name', key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
@@ -287,6 +286,9 @@ export default {
             ]
             if (this.operMode) {
                 columns.push({ title: '操作', key: 'operation', fixed: 'right'},)
+            }
+            if (!this.operMode) {
+                columns.push({ title: '操作', key: 'operate', fixed: 'right'},)
             }
             return columns
         },
@@ -338,7 +340,7 @@ export default {
             if (this.operMode == 'audit') {
                 this.searchForm.status = STATUS.WAIT_AUDIT
             } else if (this.operMode == 'check') {
-                this.searchForm.status = STATUS.WAIT_CHECK
+                this.searchForm.status = STATUS.SETTLEMENT
             }
             if (this.$auth('ADMIN')) {
                 this.getDistributorListAll();
@@ -408,7 +410,6 @@ export default {
         },
         getStatusStat() {  // 获取 状态数量
             this.loading = true;
-            Object.assign(this.statusList, this.$options.data().statusList)
             Core.Api.Repair.statusList({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',

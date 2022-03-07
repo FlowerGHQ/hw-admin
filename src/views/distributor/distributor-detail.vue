@@ -1,10 +1,15 @@
 <template>
     <div id="DistributorDetail" class='list-container'>
         <div class="title-container">
-            <div class="title-area">分销商详情 <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>{{detail.status ? '启用中' : '已禁用'}}</a-tag></div>
+            <div class="title-area">分销商详情
+                <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>
+                    {{ detail.status ? '启用中' : '已禁用' }}
+                </a-tag>
+            </div>
             <div class="btns-area" v-if="$auth('ADMIN')">
                 <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
-                <a-button :type="detail.status ? 'default' : 'primary'" :danger="detail.status ? true : false" ghost @click="handleStatusChange()">
+                <a-button :type="detail.status ? 'default' : 'primary'" :danger="detail.status ? true : false" ghost
+                          @click="handleStatusChange()">
                     <template v-if="detail.status"><i class="icon i_forbidden"/>禁用</template>
                     <template v-else><i class="icon i_enable"/>启用</template>
                 </a-button>
@@ -14,66 +19,75 @@
             <div class="panel-content desc-container">
                 <div class="desc-title">
                     <div class="title-area">
-                        <img :src="$Util.imageFilter(detail.logo, 3)" />
-                        <span class="title">{{detail.name}}</span>
+                        <img :src="$Util.imageFilter(detail.logo, 3)"/>
+                        <span class="title">{{ detail.name }}</span>
                     </div>
                 </div>
                 <a-row class="desc-detail has-logo">
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                    <span class="key">联系人：</span>
-                    <span class="value">{{detail.contact}}</span>
+                        <span class="key">联系人：</span>
+                        <span class="value">{{ detail.contact }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">手机号：</span>
-                        <span class="value">{{detail.phone}}</span>
+                        <span class="value">{{ detail.phone }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">邮箱：</span>
-                        <span class="value">{{detail.email}}</span>
+                        <span class="value">{{ detail.email }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">国家：</span>
-                        <span class="value">{{detail.country}}</span>
+                        <span class="value">{{ detail.country }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">创建时间：</span>
-                        <span class="value">{{$Util.timeFilter(detail.create_time)}}</span>
+                        <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
                 </a-row>
                 <div class='desc-stat'>
-                    <a-statistic title="零售商数" :value="detail.agent_count" />
-                    <a-divider type="vertical" />
-                    <a-statistic title="门店数" :value="detail.store_count" />
-                    <a-divider type="vertical" />
+                    <a-statistic title="零售商数" :value="detail.agent_count"/>
+                    <a-divider type="vertical"/>
+                    <a-statistic title="门店数" :value="detail.store_count"/>
+                    <a-divider type="vertical"/>
                     <a-statistic title="员工数" :value="detail.user_count"/>
-                    <a-divider type="vertical" />
+                    <a-divider type="vertical"/>
                     <a-statistic title="累计营收" :value="0" :precision="2" prefix='€'/>
-                    <a-divider type="vertical" />
-                    <a-statistic title="总订单数" :value="detail.order_count" />
+                    <a-divider type="vertical"/>
+                    <a-statistic title="总订单数" :value="detail.order_count"/>
                 </div>
             </div>
         </div>
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
                 <a-tab-pane key="UserList" tab="员工管理">
-                    <UserList :orgId="distributor_id" :orgType="ORG_TYPE.DISTRIBUTOR" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'UserList'"/>
+                    <UserList :orgId="distributor_id" :orgType="ORG_TYPE.DISTRIBUTOR" :type="USER_TYPE.DISTRIBUTOR"
+                              v-if="activeKey === 'UserList'"/>
                 </a-tab-pane>
-                <a-tab-pane key="WorkerList" tab="维修工管理">
-                    <UserList :orgId="distributor_id" :orgType="ORG_TYPE.DISTRIBUTOR" :type="USER_TYPE.WORKER" v-if="activeKey === 'WorkerList'"/>
-                </a-tab-pane>
+                <!--                <a-tab-pane key="WorkerList" tab="维修工管理">
+                                    <UserList :orgId="distributor_id" :orgType="ORG_TYPE.DISTRIBUTOR" :type="USER_TYPE.WORKER" v-if="activeKey === 'WorkerList'"/>
+                                </a-tab-pane>-->
                 <a-tab-pane key="PurchaseList" tab="订单列表">
-                    <PurchaseList :orgId="distributor_id" :orgType="ORG_TYPE.DISTRIBUTOR"  v-if="activeKey === 'PurchaseList'"/>
+                    <PurchaseList :orgId="distributor_id" :orgType="ORG_TYPE.DISTRIBUTOR"
+                                  v-if="activeKey === 'PurchaseList'"/>
                 </a-tab-pane>
                 <template v-if="$auth('ADMIN')">
-                <a-tab-pane key="AgentList" tab="零售商管理">
-                    <AgentList :distributorId="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'AgentList'"/>
-                </a-tab-pane>
-                <a-tab-pane key="StoreList" tab="门店管理">
-                    <StoreList :distributorId="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'StoreList'"/>
-                </a-tab-pane>
-                <a-tab-pane key="PricingStructure" tab="商品价格">
-                    <PricingStructure :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'PricingStructure'"/>
-                </a-tab-pane>
+                    <a-tab-pane key="AgentList" tab="零售商管理">
+                        <AgentList :distributorId="distributor_id" :type="USER_TYPE.DISTRIBUTOR"
+                                   v-if="activeKey === 'AgentList'"/>
+                    </a-tab-pane>
+                    <a-tab-pane key="StoreList" tab="门店管理">
+                        <StoreList :distributorId="distributor_id" :type="USER_TYPE.DISTRIBUTOR"
+                                   v-if="activeKey === 'StoreList'"/>
+                    </a-tab-pane>
+                    <a-tab-pane key="PricingStructure" tab="商品价格">
+                        <PricingStructure :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR"
+                                          v-if="activeKey === 'PricingStructure'"/>
+                    </a-tab-pane>
+                    <a-tab-pane key="WalletList" tab="钱包管理">
+                        <WalletList :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR"
+                                    v-if="activeKey === 'WalletList'"/>
+                    </a-tab-pane>
                 </template>
             </a-tabs>
         </div>
@@ -87,6 +101,7 @@ import UserList from '@/components/UserList.vue';
 import PurchaseList from '@/components/PurchaseOrderList.vue';
 import AgentList from '@/components/AgentList.vue';
 import PricingStructure from '@/components/PricingStructure.vue';
+import WalletList from '@/components/WalletList.vue';
 
 const USER_TYPE = Core.Const.USER.TYPE;
 export default {
@@ -97,6 +112,7 @@ export default {
         PurchaseList,
         AgentList,
         PricingStructure,
+        WalletList,
     },
     props: {},
     data() {
@@ -109,7 +125,7 @@ export default {
             //标签页
             activeKey: 'UserList',
             distributor_id: '',
-            detail: {}
+            detail: {},
         };
     },
     watch: {},
@@ -125,14 +141,14 @@ export default {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/distributor/distributor-edit",
-                        query: { id: this.distributor_id }
+                        query: {id: this.distributor_id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'list':  // 详情
                     routeUrl = this.$router.resolve({
                         path: "/distributor/distributor-list",
-                        query: { id: this.distributor_id }
+                        query: {id: this.distributor_id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -178,7 +194,7 @@ export default {
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Distributor.updateStatus({id:_this.detail.id}).then(() => {
+                    Core.Api.Distributor.updateStatus({id: _this.detail.id}).then(() => {
                         _this.$message.success(`${_this.detail.status ? '禁用' : '启用'}成功`);
                         _this.getDistributorDetail();
                     }).catch(err => {

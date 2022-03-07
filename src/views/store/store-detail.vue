@@ -46,9 +46,9 @@
             <a-tab-pane key="UserList" tab="员工管理">
                 <UserList :orgType="ORG_TYPE.STORE" :orgId="store_id" :type="USER_TYPE.STORE" v-if="activeKey == 'UserList'"/>
             </a-tab-pane>
-            <a-tab-pane key="WorkerList" tab="维修工管理">
+<!--            <a-tab-pane key="WorkerList" tab="维修工管理">
                 <UserList :orgType="ORG_TYPE.STORE" :orgId="store_id"  :type="USER_TYPE.WORKER" v-if="activeKey == 'WorkerList'"/>
-            </a-tab-pane>
+            </a-tab-pane>-->
             <a-tab-pane key="PurchaseList" tab="订单列表">
                 <PurchaseList :orgId="store_id" :orgType="ORG_TYPE.STORE" v-if="activeKey == 'PurchaseList'"/>
             </a-tab-pane>

@@ -433,6 +433,16 @@ const Util = {
         const MAP = Const.PURCHASE.FLAG_REVIEW_MAP
         return MAP[val] || '-'
     },
+    paymentStatusFilter(val, to = 'word') {
+        const MAP = Const.PURCHASE.PAYMENT_STATUS_MAP
+        const COLOR_MAP = Const.PURCHASE.PAYMENT_COLOR_MAP
+        switch (to) {
+            case 'word':
+                return MAP[val + ''] || '未知'
+            case 'color':
+                return COLOR_MAP[val + ''] || 'grey'
+        }
+    },
     /* =============== 采购单 ================ */
 
     /* =============== 员工/账号/用户 ================ */
@@ -529,6 +539,28 @@ const Util = {
         }
     },
     /* =============== 调货单 ================ */
+
+    /* =============== 故障件管理 ================ */
+    faultStatusFilter(val, to = 'word') {
+        const MAP = Const.FAULT_ENTITY.STATUS_MAP
+        const COLOR_MAP = Const.FAULT_ENTITY.STATUS_COLOR_MAP
+        switch (to) {
+            case 'word':
+                return MAP[val + ''] || '未知'
+            case 'color':
+                return COLOR_MAP[val + ''] || 'grey'
+        }
+    },
+    /* =============== 故障件管理 ================ */
+
+
+    /* =============== 钱包 ================ */
+    walletTypeFilter(val) {
+        const MAP = Const.WALLET.TYPE_MAP
+        return MAP[val] || '未知'
+    }
+    /* =============== 钱包 ================ */
+
 }
 
 export default Util
