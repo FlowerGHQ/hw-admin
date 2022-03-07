@@ -84,7 +84,7 @@
                         <PricingStructure :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR"
                                           v-if="activeKey === 'PricingStructure'"/>
                     </a-tab-pane>
-                    <a-tab-pane key="WalletList" tab="钱包管理">
+                    <a-tab-pane key="WalletList" tab="账户管理">
                         <WalletList :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR"
                                     v-if="activeKey === 'WalletList'"/>
                     </a-tab-pane>

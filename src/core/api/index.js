@@ -300,11 +300,13 @@ const apiList = {
         save: ['PostJson', 'attachment/save'],
         delete: ['PostJson', 'attachment/delete'],
     },
-    Wallet: { // 钱包管理
+    Wallet: { // 账户管理
         list: ['PostJson', 'wallet/list'],
         get: ['PostJson', 'wallet/get'],
         detail: ['PostJson', 'wallet/detail'],
         update: ['PostJson', 'wallet/update-balance'],
+        walletDetail:  ['PostJson', 'wallet-money/detail'],
+        walletList: ['PostJson', 'wallet-money/list'],
     },
 };
 
