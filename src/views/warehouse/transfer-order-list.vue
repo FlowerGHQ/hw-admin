@@ -439,7 +439,6 @@ export default {
                     })
                 },
             });
-
         },
         
         // 调货单审核
@@ -452,7 +451,6 @@ export default {
         },
         handleTransferAuditSubmit() { // 审核提交
             this.loading = true;
-
             Core.Api.Transfer.audit({
                 ...this.editForm
             }).then(res => {

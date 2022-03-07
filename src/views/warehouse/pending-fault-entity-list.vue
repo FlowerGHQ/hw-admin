@@ -6,22 +6,22 @@
         </div>
         <div class="search-container">
             <a-row class="search-area">
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='14' class="search-item">
-                    <div class="key">分销商名称:</div>
-                    <div class="value">
-                        <a-select v-model:value="searchForm.distributor_id" placeholder="请选择分销商" @change="handleSearch" show-search option-filter-prop="children">
-                            <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">
-                                {{item.name}}
-                            </a-select-option>
-                        </a-select>
-                    </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='14' class="search-item">
+                <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
                     <div class="key">零售商名称:</div>
                     <div class="value">
                         <a-select v-model:value="searchForm.agent_id" placeholder="请选择零售商" @change="handleSearch" show-search option-filter-prop="children">
                             <a-select-option v-for="item of agentList" :key="item.id" :value="item.id">
                                 {{ item.name }}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
+                    <div class="key">门店名称:</div>
+                    <div class="value">
+                        <a-select v-model:value="searchForm.store_id" placeholder="请选择门店" @change="handleSearch" show-search option-filter-prop="children">
+                            <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">
+                                {{item.name}}
                             </a-select-option>
                         </a-select>
                     </div>
@@ -41,7 +41,8 @@
             </div>
         </div>
         <div class="table-container">
-            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
+            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'
+                :row-selection='rowSelection'>
                 <template #bodyCell="{ column, record, text}">
                     <template v-if="column.dataIndex === 'org_type'">
                           {{ $Util.userTypeFilter(text) }}
@@ -58,9 +59,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type="link" ><i class="icon i_s_warehouse"/> 入库</a-button>
-                        <!-- <a-button type="link" @click="handlePutInWarehouse(record.id)"><i class="icon i_edit"/> 入库</a-button> -->
-                        <a-button type="link" @click="handleModalAuditShow(record.id)"><i class="icon i_m_success"/> 审核</a-button>
+                        <a-button type="link" @click="handleModalWarehousingShow(record)" v-if="record.org_type !== TYPE.ADMIN"><i class="icon i_s_warehouse"/> 入库</a-button>
+                        <a-button type="link" @click="handleModalShow(record.id)" v-if="record.status === AUDIT_TYPE.WAIT"><i class="icon i_m_success"/> 审核</a-button>
                         <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button>
                     </template>
                 </template>
@@ -83,29 +83,45 @@
         </div>
     </div>
     <template class="modal-container">
-        <!-- <a-modal v-model:visible="modalAuditShow" title="审核" class="audit-modal"
-                     :after-close='handleModalAuditClose'>
-                <div class="modal-content">
-                    <div class="form-item required">
-                        <div class="key">审核结果:</div>
-                        <a-radio-group v-model:value="editForm.status">
-                            <a-radio :value="STATUS.AUDIT_PASS">通过</a-radio>
-                            <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio>
-                        </a-radio-group>
-                    </div>
-                    <div class="form-item textarea required" v-if="editForm.status === STATUS.AUDIT_REFUSE">
-                        <div class="key">原因:</div>
+        <a-modal v-model:visible="modalShow" title="审核" class="audit-modal" :after-close='handleModalClose'>
+            <div class="modal-content">
+                <div class="form-item required">
+                    <div class="key">审核结果:</div>
+                    <a-radio-group v-model:value="editForm.audit_result">
+                        <a-radio :value="AUDIT_TYPE.SUCCESS">通过</a-radio>
+                        <a-radio :value="AUDIT_TYPE.FAIL">不通过</a-radio>
+                    </a-radio-group>
+                </div>
+                <div class="form-item textarea required" v-if="editForm.audit_result === AUDIT_TYPE.FAIL">
+                    <div class="key">原因:</div>
                         <div class="value">
-                            <a-textarea v-model:value="editForm.audit_message" placeholder="请输入不通过原因"
-                                        :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                            <a-textarea v-model:value="editForm.audit_message" placeholder="请输入不通过原因" :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                         </div>
                     </div>
                 </div>
-                <template #footer>
-                    <a-button @click="handleModalAuditClose">取消</a-button>
-                    <a-button @click="handleTransferAuditSubmit" type="primary">确定</a-button>
-                </template>
-        </a-modal> -->
+            <template #footer>
+                <a-button @click="handleModalClose">取消</a-button>
+                <a-button @click="handleFaultAuditSubmit" type="primary">确定</a-button>
+            </template>
+        </a-modal>
+        <a-modal v-model:visible="modalWarehousingShow" title="入库" class="audit-modal" :after-close='handleModalWarehousingClose'>
+            <div class="modal-content">
+                <div class="form-item required">
+                    <div class="key">所处仓库:</div>
+                    <div class="value">
+                        <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库" show-search option-filter-prop="children" >
+                            <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">
+                                {{ item.name }}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handleModalWarehousingClose">取消</a-button>
+                <a-button @click="handleWarehousing" type="primary">确定</a-button>
+            </template>
+        </a-modal>       
     </template>
 </div>
 </template>
@@ -113,6 +129,8 @@
 <script>
 import Core from '../../core';
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
+const FAULT_ENTITY = Core.Const.FAULT_ENTITY
+const LOGIN = Core.Const.LOGIN
 
 export default {
     name: 'PendingFaultEntityList',
@@ -123,7 +141,8 @@ export default {
     data() {
         return {
             loginType: Core.Data.getLoginType(),
-            // STATUS: TRANSFER_ORDER.STATUS,
+            AUDIT_TYPE: FAULT_ENTITY.AUDIT_TYPE,
+            TYPE: LOGIN.TYPE,
             // 加载
             loading: false,
             // 分页
@@ -131,14 +150,18 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
+            warehouseList: [], // 仓库列表
+            storeList: [], // 分销商列表
+            agentList: [], // 零售商列表
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
             searchForm: {
-                distributor_id: undefined,
+                store_id: undefined,
                 agent_id: undefined
             },
             // 表格
             tableData: [],
+            selectedRowKeys: [],
             tableColumns: [
                 {title: '维修单号', dataIndex: 'source_uid'},
                 {title: '机构类型', dataIndex: 'org_type'},
@@ -153,23 +176,47 @@ export default {
                 {title: '操作', key: 'operation', fixed: 'right' },
             ],
             // 弹框
-            modalAuditShow: false,
-            distributorList: [], // 分销商列表
-            agentList: [], // 零售商列表 
-            editForm: {
+            modalShow: false,
+            modalWarehousingShow: false,
+            editForm: { //审核
                 id: '',
-                status: 20,
+                audit_result: undefined,
                 audit_message: '',
-                from_warehouse_id: undefined
             },
+            form: {
+                ids: undefined,
+                warehouse_id: undefined
+            }
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        rowSelection() {
+            return {
+                selectedRowKeys: this.selectedRowKeys,
+                onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
+                    this.selectedRowKeys = selectedRowKeys
+                    this.selectedRowItemsAll.push(...selectedRows)
+                    let selectedRowItems = []
+                    selectedRowKeys.forEach(id => {
+                        let element = this.selectedRowItemsAll.find(i => i.id == id)
+                        selectedRowItems.push(element)
+                    });
+                    this.selectedRowItems = selectedRowItems
+                    console.log('rowSelection this.selectedRowKeys:', this.selectedRowKeys,'selectedRowItems:', selectedRowItems)
+                    this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
+                },
+                getCheckboxProps: record => ({
+                    disabled: record.stock === 0 || this.disabledChecked.includes(record.id)
+                }),
+            };
+        },
+    },
     mounted() {
-        this.getDistributorList();
+        this.getStoreList();
         this.getAgentList();
         this.getTableData();
+        console.log("aaaaaa", this.$auth("ADMIN"))
     },
     methods: {
         pageChange(curr) { // 页码改变
@@ -190,18 +237,17 @@ export default {
             this.create_time = []
             this.pageChange(1);
         },
-
         // 获取列表数据
-        getDistributorList() { // 获取分销商列表
-            Core.Api.Distributor.list().then(res => {
-                console.log('this.distributorList', res.list);  
-                this.distributorList = res.list
-            })
-        },
         getAgentList() { // 获取零售商列表
             Core.Api.Agent.list().then(res => {
                 console.log('this.agentList', res.list);  
                 this.agentList = res.list
+            })
+        },
+        getStoreList() { // 获取门店列表
+            Core.Api.Store.list().then(res => {
+                console.log('this.storeList', res.list);  
+                this.storeList = res.list
             })
         },
         getTableData() { // 获取 表格 数据
@@ -224,6 +270,13 @@ export default {
                 this.loading = false;
             });
         },
+        getWarehouseList() { // 获取仓库数据  
+            const type = 2  // 残次仓类型       
+            Core.Api.Warehouse.listAll({type}).then(res => {
+                console.log("this.warehouseList", res)
+                this.warehouseList = res.list
+            })
+        },
 
         handleDelete(id) {
             let _this = this;
@@ -243,14 +296,58 @@ export default {
             });
         },
 
-    
-        handleModalAuditShow(id) { // 显示弹框
-            this.modalAuditShow = true
+        handleModalShow(id) { // 显示弹框
+            this.modalShow = true
             this.editForm.id = id
+            console.log('handleModalShow', this.editForm.id)
         },
-        handleModalAuditClose() { // 关闭弹框
-            this.modalAuditShow = false
+        handleModalClose() { // 关闭弹框
+            this.modalShow = false
         },
+        handleModalWarehousingShow(record) {
+            this.modalWarehousingShow = true
+            this.form.ids = record.id
+            this.getWarehouseList()
+            console.log("handleModalWarehousingShow", this.warehouseList)
+        },
+        handleModalWarehousingClose() {
+            this.modalWarehousingShow = false
+        },
+        handleWarehousing() {
+            console.log(this.form)
+            let _this = this;
+            this.$confirm({
+                title: '确定入库吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.FaultEntity.batchRecycle(_this.form).then(() => {
+                        _this.$message.success('完成入库');
+                        _this.getTableData();
+                        _this.modalWarehousingShow = false
+                    }).catch(err => {
+                        console.log("handleWarehousing err", err);
+                    })
+                },
+            });
+        },
+        handleFaultAuditSubmit() { // 审核提交
+            console.log('handleFaultAuditSubmit this.editForm.audit_result', this.editForm.audit_result)
+            console.log('handleFaultAuditSubmit this.editForm.id', this.editForm.id)
+            this.loading = true;
+            Core.Api.FaultEntity.audit({
+                ...this.editForm
+            }).then(res => {
+                console.log('handleFaultAuditSubmit res', res)
+                this.handleModalClose()
+                this.getTableData()
+            }).catch(err => {
+                console.log('handleFaultAuditSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        }
     }
 };
 </script>

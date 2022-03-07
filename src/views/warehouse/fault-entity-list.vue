@@ -78,7 +78,7 @@
                 <div class="form-item required">
                     <div class="key">所处仓库:</div>
                     <div class="value">
-                        <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库" show-search option-filter-prop="children" :disabled="!!form.item_id" >
+                        <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库" show-search option-filter-prop="children" :disabled="!!form.id" >
                             <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">
                                 {{ warehouse.name }}
                             </a-select-option>
@@ -173,7 +173,7 @@ export default {
             faultTypeList: [], // 产品故障类型列表
             form: {
                 id: undefined,
-                warehouse_id: undefined,
+                warehouse_id: undefined, 
                 item_id: undefined,
                 item_fault_id: undefined,
                 source_uid: undefined,
@@ -190,9 +190,7 @@ export default {
     computed: {},
     mounted() {
         console.log('mounted this.form', this.form);
-
         this.getTableData();
-
         this.getWarehouseList();
         this.getFaultTypeList();
     },
@@ -328,6 +326,8 @@ export default {
         handleFaultOrderSubmit() { // 新增故障件提交 
             let form = Core.Util.deepCopy(this.form)
             console.log('handleFaultOrderSubmit', form);
+            console.log('this.form.source_uid' , this.form.source_uid)
+            console.log('this.form.vehicle_no' , this.form.vehicle_no)
             // 新建故障件列表写完进行补充 必填项
             if (!form.warehouse_id) {
                 return this.$message.warning('请选择所处仓库')
@@ -342,8 +342,7 @@ export default {
                 return this.$message.warning('请输入工单编号')
             }
             if (!form.vehicle_no) {
-                // return this.$message.warning('请输入车架号')
-                return this.$message.warning('请输入正确的工单编号')
+                return this.$message.warning('请输入车架号')
             }
             Core.Api.FaultEntity.save(form).then(() => {
                 this.$message.success('保存成功')

@@ -134,6 +134,7 @@ const apiList = {
 	    update: ['PostJson', 'repair/update'], // 维修结束
 	    post: ['PostJson', 'repair/post-for-transfer'], // 增加快递
 	    export: ['PostJson', 'repair/export-repair-order-record'], // 导出
+        detailByUid: ['PostJson', 'repair/detail-by-uid']
     },
     RepairItem: { // 维修单
         saveList: ['PostJson', 'repair-order-item/save-list'], // 列表
@@ -144,7 +145,6 @@ const apiList = {
         save: ['PostJson', 'item/save'],
         batchSave: ['PostJson', 'item/batch-save'],
         update: ['PostJson', 'item/update'],
-
         list: ['PostJson', 'item/list'],
         listBySet: ['PostJson', 'item/list-by-set-id'],
         detail: ['PostJson', 'item/detail'],
@@ -160,8 +160,6 @@ const apiList = {
         delete: ['PostJson', 'entity/delete'],
         detailByUid: ['PostJson', 'entity/detail-by-uid'],
         getByUid: ['PostJson', 'entity/get-by-uid'],
-
-
     },
     ItemCategory: { // 商品分类
         list: ['PostJson', 'item-category/list'],
@@ -286,6 +284,7 @@ const apiList = {
         detailByUid: ['PostJson', 'fault-entity/detail-by-uid'],
         list: ['PostJson', 'fault-entity/list'],
         save: ['PostJson', 'fault-entity/save'],
+        batchRecycle: ['PostJson', 'fault-entity/batch-recycle']
     },
     System: { // 系统管理
         fileList: ['PostJson', 'sys-file/list'], // 系统文件管理
