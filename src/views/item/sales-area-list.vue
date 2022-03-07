@@ -105,8 +105,6 @@ export default {
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
-            continentList: Core.Const.CONTINENT_LIST, // 大洲
-            countryList: Core.Const.COUNTRY_LIST, // 国家
             countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
             country_cascader: [], // 搜索框 大洲>国家
             searchForm: {

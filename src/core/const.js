@@ -79,15 +79,15 @@ let Const = {
             ],
         }
     },
-
-    CONTINENT_LIST: [ // 大洲列表
-        {
-            "short": "CN",
-            "name": "中国",
-            "en": "China",
-            "tel": "86",
-            "pinyin": "zg"
-        },
+    // 大洲列表
+    CONTINENT_LIST: [
+        { "code": "AS", "name": "亚洲", "name_en": "Asia" },
+        { "code": "EU", "name": "欧洲", "name_en": "Europe" },
+        { "code": "AF", "name": "非洲", "name_en": "Africa" },
+        { "code": "NA", "name": "北美洲", "name_en": "North America" },
+        { "code": "SA", "name": "南美洲", "name_en": "South America" },
+        { "code": "OA", "name": "大洋洲", "name_en": "Oceania" },
+        { "code": "AN", "name": "南极洲", "name_en": "Antarctica" }
     ],
     COUNTRY_LIST: [ // 国家列表
         {

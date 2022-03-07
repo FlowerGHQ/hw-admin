@@ -33,16 +33,12 @@
             <div class="form-item required">
                 <div class="key">国家:</div>
                 <div class="value">
-                    <!-- <a-select v-model:value="form.country" placeholder="请选择国家">
-                        <a-select-option v-for="item of countryList" :key="item.name" :value="item.name">{{item.name}}</a-select-option>
-                    </a-select> -->
-                    <a-cascader 
-                        placeholder="请选择大洲/国家" 
-                        v-model:value="country_cascader" 
+                    <a-cascader
+                        placeholder="请选择大洲/国家"
+                        v-model:value="country_cascader"
                         :options="countryOptions"
                         :field-names="{ label: 'value', value: 'value' , children: 'children'}"
                         />
-
                 </div>
             </div>
         </div>
@@ -67,8 +63,6 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            continentList: Core.Const.CONTINENT_LIST, // 大洲
-            countryList: Core.Const.COUNTRY_LIST, // 国家
             countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
             distributorList: [],
             LOGIN_TYPE,

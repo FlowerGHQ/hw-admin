@@ -6,6 +6,11 @@ import Util from './core/utils'
 import i18n from './core/i18n'
 import {message,notification,Modal} from 'ant-design-vue';
 
+import address from './core/address'
+console.log('address:', JSON.stringify(address, null, 4))
+
+
+
 // 引入样式
 import '@/assets/styles/reset.css';
 import 'ant-design-vue/dist/antd.less';
