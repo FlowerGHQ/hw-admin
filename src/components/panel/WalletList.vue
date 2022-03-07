@@ -1,12 +1,12 @@
 <template>
     <div class="WalletList gray-panel no-margin">
         <div class="panel-title">
-            <div class="title">钱包列表</div>
+            <div class="title">账户列表</div>
         </div>
         <div class="panel-content">
             <div class="table-container">
                 <a-button type="primary" ghost @click="handleModalShow('addWalletShow')" class="panel-btn"><i
-                    class="icon i_add"/>新建钱包
+                    class="icon i_add"/>新建账户
                 </a-button>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false'>
@@ -14,17 +14,8 @@
                         <template v-if="column.dataIndex === 'type'">
                             {{ $Util.walletTypeFilter(text) }}
                         </template>
-                        <template v-if="column.dataIndex === 'balance' && this.operateForm.type === TYPE.CNY">
-                            ￥{{ text / 100 }}
-                        </template>
-                        <template v-if="column.dataIndex === 'balance' && this.operateForm.type === TYPE.EUR">
-                            €{{ text / 100 }}
-                        </template>
-                        <template v-if="column.dataIndex === 'balance' && this.operateForm.type === TYPE.USD">
-                            ${{ text / 100 }}
-                        </template>
-                        <template v-if="column.dataIndex === 'balance' && this.operateForm.type === TYPE.GBP">
-                            £{{ text / 100 }}
+                        <template v-if="column.dataIndex === 'balance'">
+                            {{ walletMap[record.type] +  (text / 100) }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -35,7 +26,7 @@
                                                     </div>
                                                 </template>-->
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleModalShow('operate',record.id)"><i class="icon i_edit"/>账户操作
+                            <a-button type="link" @click="handleModalShow('operate',record.id)"><i class="icon i_settle"/>账户操作
                             </a-button>
                             <!--                            <a-button type='link' @click="handleStatusChange(record)"
                                                                   :class="record.status ? 'danger' : ''">
@@ -48,7 +39,7 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="addWalletShow" title="新建钱包" class="repair-audit-modal"
+            <a-modal v-model:visible="addWalletShow" title="新建账户" class="repair-audit-modal"
                      :after-close='handleWalletClose'>
                 <div class="modal-content">
                     <div class="form-item required">
@@ -80,26 +71,25 @@
                     <div class="form-item required">
                         <div class="key">金额:</div>
                         <div class="value form-item-value">
-                            <a-input-number v-model:value="operateForm.money" :min="0" :precision="2"
-                                            placeholder="0.00"/>
+                            <a-input-number v-model:value="operateForm.money" :min="0" :precision="2" placeholder="0.00"/>
                             <span class="money">元</span>
                         </div>
                     </div>
                     <div class="form-item required">
                         <div class="key">来源:</div>
                         <div class="value form-item-value">
-                            <a-select v-model:value="operateForm.source_type" placeholder="请选择来源">
-                                <a-select-option v-for="(val, key) of object" :key="key" :value="key">{{ val }}
+                            <a-select v-model:value="operateForm.source_type" placeholder="请选择来源" @change="operateForm.subject = undefined">
+                                <a-select-option v-for="(val, key) of object" :key="key" :value="key">{{ val.name }}
                                 </a-select-option>
                             </a-select>
                         </div>
                     </div>
-                    <div class="form-item required">
+                    <div class="form-item required" v-if="operateForm.source_type">
                         <div class="key">具体原因:</div>
                         <div class="value form-item-value">
-                            <a-select v-model:value="operateForm.subject" placeholder="请选择分类">
+                            <a-select v-model:value="operateForm.subject" placeholder="请选择具体原因">
                                 <a-select-option v-for="(val, key) of object[operateForm.source_type].subject"
-                                                 :key="key" :value="key">{{ val }}
+                                    :key="key" :value="key">{{ val }}
                                 </a-select-option>
                             </a-select>
                         </div>
@@ -134,7 +124,7 @@
 </template>
 
 <script>
-import Core from '../core';
+import Core from '../../core';
 const TYPE = Core.Const.WALLET.TYPE
 export default {
     name: 'WalletList',
@@ -167,20 +157,25 @@ export default {
             },
             operateShow: false,
             operateTypeMAP: Core.Const.WALLET.OPERATE_TYPE_MAP,
-            subjectMap: Core.Const.WALLET.SUBJECT_MAP,
-            sourceMap: Core.Const.STOCK_RECORD.SOURCE_TYPE_MAP,
+         /*   subjectMap: Core.Const.WALLET.SUBJECT_MAP,
+            sourceMap: Core.Const.STOCK_RECORD.SOURCE_TYPE_MAP,*/
             operateForm: {
                 type: '',
                 money: '',
                 wallet_id: '',
                 remark: '',
-                subject: '',
+                subject: undefined,
                 source_id: '',
-                source_type: '',
+                source_type: undefined,
             },
             isExist: '',
             isRight: '',
-
+            walletMap: {
+                1: '¥',
+                2: '€',
+                3: '$',
+                4: '£'
+            },
             object: {
                 '10': {
                     name: '管理员创建', subject: {
@@ -212,12 +207,6 @@ export default {
                         '0': '其他',
                     }
                 },
-
-                '0': {
-                    name: '其他', subject: {
-                        '0': '其他',
-                    }
-                },
             }
         };
     },
@@ -225,7 +214,7 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: '类型', dataIndex: 'type'},
+                {title: '账户类型', dataIndex: 'type'},
                 {title: '余额', dataIndex: 'balance'},
                 // {title: '状态', dataIndex: 'status', key: 'status'},
                 {title: '操作', key: 'operation', fixed: 'right'},
@@ -237,25 +226,6 @@ export default {
         this.getTableData();
     },
     methods: {
-        routerChange(type, item = {}) {
-            let routeUrl = ''
-            switch (type) {
-                case 'edit':    // 编辑
-                    routeUrl = this.$router.resolve({
-                        path: "/agent/agent-edit",
-                        query: {id: item.id}
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
-                case 'detail':    // 详情
-                    routeUrl = this.$router.resolve({
-                        path: "/agent/agent-detail",
-                        query: {id: item.id}
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
-            }
-        },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
             this.getTableData()
@@ -284,6 +254,7 @@ export default {
             });
         },
         handleModalShow(val, id) { // 显示弹框
+            console.log('handleModalShow:')
             switch (val) {
                 case "addWalletShow":
                     this.addWalletShow = true
@@ -335,6 +306,24 @@ export default {
             }
             if (!form.money) {
                 return this.$message.warning('请输入金额')
+            }
+            if (!form.source_type) {
+                return this.$message.warning('请选择来源')
+            }
+            if (!form.subject) {
+                return this.$message.warning('请选择具体原因')
+            }
+            if (!form.source_id && form.source_type == 20) {
+                return this.$message.warning('请输入相关的采购单号')
+            }
+            if (this.isExist === false) {
+                return this.$message.warning('请输入正确的采购单号')
+            }
+            if (!form.source_id && form.source_type == 40) {
+                return this.$message.warning('请输入相关的调货单号')
+            }
+            if (this.isRight === false) {
+                return this.$message.warning('请输入正确的调货单号')
             }
             Core.Api.Wallet.update({
                 ...form,

@@ -25,26 +25,20 @@
                         <div class="key">仓库名称:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.warehouse_id" placeholder="请选择仓库">
-                                <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id"
-                                                 :value="warehouse.id">{{ warehouse.name }}
-                                </a-select-option>
+                                <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">调货单编号:</div>
                         <div class="value">
-                            <a-input placeholder="请输入调货单编号" v-model:value="searchForm.uid"
-                                     @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入调货单编号" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
                         <div class="key">创建时间:</div>
                         <div class="value">
-                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
-                                            :show-time="defaultTime" :allow-clear='false'>
-                                <template #suffixIcon><i class="icon i_calendar"/></template>
-                            </a-range-picker>
+                            <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
                         </div>
                     </a-col>
                 </a-row>
@@ -56,7 +50,7 @@
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                         :row-key="record => record.id" :pagination='false'>
+                    :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record}">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
@@ -127,7 +121,7 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="transferOrderShow" title="新建调货单" class="transfer-modal"
+            <a-modal v-model:visible="editShow" title="新建调货单" class="transfer-modal"
                     :after-close="handleTransferOrderClose">
                 <div class="form-item required">
                     <div class="key">单位类型:</div>
@@ -138,7 +132,7 @@
                             </a-select-option>
                         </a-select>
                     </div>
-                </div>     
+                </div>
                 <div class="form-item required">
                     <div class="key">货物来源:</div>
                     <div class="value">
@@ -149,7 +143,7 @@
                             </a-select-option>
                         </a-select>
                     </div>
-                </div>     
+                </div>
                 <div class="form-item required">
                     <div class="key">仓库:</div>
                     <div class="value">
@@ -169,39 +163,39 @@
                 </div>
                 <template #footer>
                     <a-button @click="handleTransferOrderSubmit" type="primary">确定</a-button>
-                    <a-button @click="transferOrderShow=false">取消</a-button>
+                    <a-button @click="editShow=false">取消</a-button>
                 </template>
             </a-modal>
-            <a-modal v-model:visible="transferAuditShow" title="审核" class="transfer-audit-modal"
+            <a-modal v-model:visible="auditShow" title="审核" class="transfer-audit-modal"
                      :after-close='handleTransferAuditClose'>
                 <div class="modal-content">
                     <div class="form-item required">
                         <div class="key">审核结果:</div>
-                        <a-radio-group v-model:value="editForm.status">
+                        <a-radio-group v-model:value="auditForm.status">
                             <a-radio :value="STATUS.AUDIT_PASS">通过</a-radio>
                             <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio>
                         </a-radio-group>
                     </div>
-                    <div class="form-item required" v-if="editForm.status === STATUS.AUDIT_PASS">
+                    <div class="form-item required" v-if="auditForm.status === STATUS.AUDIT_PASS">
                         <div class="key">仓库:</div>
                         <div class="value">
-                            <a-select v-model:value="editForm.from_warehouse_id" placeholder="请选择仓库">
+                            <a-select v-model:value="auditForm.from_warehouse_id" placeholder="请选择仓库">
                                 <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">
                                     {{ warehouse.name }}
                                 </a-select-option>
                             </a-select>
                         </div>
                     </div>
-                    <div class="form-item textarea required" v-if="editForm.status === STATUS.AUDIT_REFUSE">
+                    <div class="form-item textarea required" v-if="auditForm.status === STATUS.AUDIT_REFUSE">
                         <div class="key">原因:</div>
                         <div class="value">
-                            <a-textarea v-model:value="editForm.audit_message" placeholder="请输入不通过原因"
+                            <a-textarea v-model:value="auditForm.audit_message" placeholder="请输入不通过原因"
                                         :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                         </div>
                     </div>
                 </div>
                 <template #footer>
-                    <a-button @click="transferAuditShow = false">取消</a-button>
+                    <a-button @click="auditShow = false">取消</a-button>
                     <a-button @click="handleTransferAuditSubmit" type="primary">确定</a-button>
                 </template>
             </a-modal>
@@ -211,12 +205,15 @@
 
 <script>
 import Core from '../../core';
-
+import TimeSearch from '@/components/common/TimeSearch.vue'
 const TRANSFER_ORDER = Core.Const.TRANSFER_ORDER
+const STATUS = Core.Const.TRANSFER_ORDER.STATUS
 const ORG_TYPE = Core.Const.LOGIN.TYPE
 export default {
     name: 'TransferOrderList',
-    components: {},
+    components: {
+        TimeSearch,
+    },
     props: {},
     data() {
         return {
@@ -230,30 +227,25 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            create_time: [],
-            detail: {
-                warehouse: {}
-            },
             statusList: [
                 {text: '全  部', value: '0', color: 'primary', key: '0'},
-                {text: '待审核', value: '0', color: 'yellow', key: TRANSFER_ORDER.STATUS.AIT_AUDIT},
-                {text: '审核通过', value: '0', color: 'blue', key: TRANSFER_ORDER.STATUS.AUDIT_PASS},
-                {text: '审核失败', value: '0', color: 'red', key: TRANSFER_ORDER.STATUS.AUDIT_REFUSE},
-                {text: '处理完成', value: '0', color: 'green', key: TRANSFER_ORDER.STATUS.CLOSE},
-                {text: '已取消', value: '0', color: 'grey', key: TRANSFER_ORDER.STATUS.CANCEL},
+                {text: '待审核', value: '0', color: 'yellow', key: STATUS.AIT_AUDIT},
+                {text: '审核通过', value: '0', color: 'blue', key: STATUS.AUDIT_PASS},
+                {text: '审核失败', value: '0', color: 'red', key: STATUS.AUDIT_REFUSE},
+                {text: '处理完成', value: '0', color: 'green', key: STATUS.CLOSE},
+                {text: '已取消', value: '0', color: 'grey', key: STATUS.CANCEL},
             ],
-            // 搜索
             searchForm: {
                 warehouse_id: undefined,
                 uid: '',
                 status: undefined,
                 type: undefined,
+                begin_time: '',
+                end_time: '',
             },
             // 表格
             tableData: [],
 
-            
             // 创建
             orgType: Core.Data.getOrgType(), // 操作者的组织类型
             orgId: Core.Data.getOrgId(),     // 操作者的组织id
@@ -264,17 +256,17 @@ export default {
             distributorList: [],
             warehouseList: [],
             orgList: [],
-            transferOrderShow: false,
-
+            // 创建、编辑 弹框
+            editShow: false,
             form: {
                 supply_org_type: undefined,
                 supply_org_id: undefined,
                 to_warehouse_id: undefined,
                 apply_message: '',
             },
-            // 审核
-            transferAuditShow: false,
-            editForm: {
+            // 审核 弹框
+            auditShow: false,
+            auditForm: {
                 id: '',
                 status: 20,
                 audit_message: '',
@@ -317,8 +309,6 @@ export default {
         },
     },
     mounted() {
-        // this.getTableData();
-        // this.getStatusList();
         this.getWarehouseList();
     },
     methods: {
@@ -354,10 +344,16 @@ export default {
         handleSearch() {    // 搜索
             this.pageChange(1);
         },
+        handleTimeSearch(type, begin_time, end_time) { // 时间搜索
+            if (begin_time || end_time) {
+                this.searchForm.begin_time = begin_time
+                this.searchForm.end_time = end_time
+            }
+            this.pageChange(1);
+        },
         handleSearchReset() {    // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            console.log('this.searchForm:', this.searchForm)
-            this.create_time = []
+            this.$refs.TimeSearch.handleReset()
             this.pageChange(1);
         },
         getTableData() {    // 获取 表格 数据
@@ -374,14 +370,11 @@ export default {
                     org_type: this.orgType,
                 }
             }
-
             Core.Api.Transfer.list({
                 ...this.searchForm,
-                begin_time: this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
+                ...org,
                 page: this.currPage,
                 page_size: this.pageSize,
-                ...org,
             }).then(res => {
                 console.log("getTableData res:", res)
                 this.total = res.count;
@@ -443,16 +436,16 @@ export default {
         
         // 调货单审核
         handleTransferAuditShow(id) { // 显示弹框
-            this.transferAuditShow = true
-            this.editForm.id = id
+            this.auditShow = true
+            this.auditForm.id = id
         },
         handleTransferAuditClose() { // 关闭弹框
-            this.transferAuditShow = false;
+            this.auditShow = false;
         },
         handleTransferAuditSubmit() { // 审核提交
             this.loading = true;
             Core.Api.Transfer.audit({
-                ...this.editForm
+                ...this.auditForm
             }).then(res => {
                 console.log('handleTransferAuditSubmit res', res)
                 this.handleTransferAuditClose()
@@ -491,7 +484,7 @@ export default {
             this.getStoreList();
             this.getAgentList();
             this.getDistributorList();
-            this.transferOrderShow = true;
+            this.editShow = true;
         },
         getStoreList() {
             if (this.orgType === ORG_TYPE.STORE) {
@@ -569,7 +562,7 @@ export default {
             console.log('handleOrgTypeChange this.form.supply_org_id', this.form.supply_org_id);
         },
         handleTransferOrderClose() {
-            this.transferOrderShow = false;
+            this.editShow = false;
             Object.assign(this.form, this.$options.data().form)
         },
         handleTransferOrderSubmit() {

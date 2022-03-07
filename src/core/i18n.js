@@ -34,7 +34,7 @@ const messages = {
             submit: '确定',
 
             create_time: '创建时间'
-        }
+        },
     },
     en: {
         n: {

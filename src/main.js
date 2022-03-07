@@ -4,7 +4,7 @@ import router from './router';
 import store from './store';
 import Util from './core/utils'
 import i18n from './core/i18n'
-import {message,notification,Modal} from 'ant-design-vue';
+import {message,notification} from 'ant-design-vue';
 
 // 引入样式
 import '@/assets/styles/reset.css';

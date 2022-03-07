@@ -3,7 +3,7 @@
         <div class="list-container">
             <div class="title-container">
                 <div class="title-area">故障件列表</div>
-                <a-button type="primary" @click="handleFaultOrderShow()"><i
+                <a-button type="primary" @click="handleFaultItemShow()"><i
                             class="icon i_add"/>新增故障件
                 </a-button>
             </div>
@@ -21,11 +21,7 @@
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
                         <div class="key">创建时间:</div>
-                        <div class="value">
-                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
-                                <template #suffixIcon><i class="icon i_calendar"/></template>
-                            </a-range-picker>
-                        </div>
+                        <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
@@ -52,7 +48,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleFaultOrderShow(record)"><i class="icon i_edit"/> 修改</a-button>
+                            <a-button type="link" @click="handleFaultItemShow(record)"><i class="icon i_edit"/> 修改</a-button>
                             <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button>
                         </template>
                     </template>
@@ -74,7 +70,7 @@
                 />
             </div>
             <a-modal v-model:visible="modalShow" title="新增故障件" class="fault-entity-modal"
-                    :after-close="handleFaultOrderClose">
+                :after-close="handleFaultItemClose">
                 <div class="form-item required">
                     <div class="key">所处仓库:</div>
                     <div class="value">
@@ -84,7 +80,7 @@
                             </a-select-option>
                         </a-select>
                     </div>
-                </div>  
+                </div>
                 <div class="form-item required">
                     <div class="key">维修单号:</div>
                     <div class="value">
@@ -100,7 +96,7 @@
                             </a-select-option>
                         </a-select>
                     </div>
-                </div>      
+                </div>
                 <div class="form-item required">
                     <div class="key">故障件:</div>
                     <div class="value item-display" >
@@ -115,12 +111,12 @@
                 <div class="form-item">
                     <div class="key">故障件实例:</div>
                     <div class="value">
-                        <a-input v-model:value="form.uid" placeholder="请输入故障件实例号 选填" @blur="handleSearchFaultEntity"/>                    
+                        <a-input v-model:value="form.uid" placeholder="请输入故障件实例号" @blur="handleSearchFaultEntity"/>
                     </div>
-                </div>  
+                </div>
                 <template #footer>
-                    <a-button @click="handleFaultOrderSubmit" type="primary">确定</a-button>
-                    <a-button @click="handleFaultOrderClose">取消</a-button>
+                    <a-button @click="handleFaultItemSubmit" type="primary">确定</a-button>
+                    <a-button @click="handleFaultItemClose">取消</a-button>
                 </template>
             </a-modal>
         </div>
@@ -130,11 +126,12 @@
 <script>
 import Core from '../../core';
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
-
+import TimeSearch from '@/components/common/TimeSearch.vue'
 export default {
     name: 'FaultEntityList',
     components: {
         ItemSelect,
+        TimeSearch
     },
     props: {},
     data() {
@@ -147,10 +144,10 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            create_time: [],
             searchForm: {
-                item_fault_id: undefined
+                item_fault_id: undefined,
+                begin_time: '',
+                end_time: '',
             },
             // 表格
             tableData: [],
@@ -159,7 +156,7 @@ export default {
                 {title: '机构类型', dataIndex: 'org_type'},
                 {title: '所处仓库', dataIndex: 'warehouse_name'},
                 {title: '车架编号', dataIndex: 'vehicle_no'},
-                {title: '商品', dataIndex: ['item','name'],},  
+                {title: '商品', dataIndex: ['item','name'],},
                 {title: '产品故障类型', dataIndex: 'item_fault_name'},
                 {title: '检测人', dataIndex: 'audit_user_name'},
                 {title: '工单帐类', dataIndex: 'service_type'},
@@ -172,16 +169,16 @@ export default {
             warehouseList: [], // 所处仓库列表
             faultTypeList: [], // 产品故障类型列表
             form: {
-                id: undefined,
-                warehouse_id: undefined, 
-                item_id: undefined,
+                id: '',
+                warehouse_id: undefined,
+                item_id: '',
                 item_fault_id: undefined,
-                source_uid: undefined,
-                source_id: undefined,
+                source_uid: '',
+                source_id: '',
                 service_type: undefined,
-                vehicle_no: undefined,              
+                vehicle_no: '',
                 source_type: 200,
-                uid: undefined
+                uid: ''
             },
             selectItem: {},
         };
@@ -195,19 +192,18 @@ export default {
         this.getFaultTypeList();
     },
     methods: {
-        // routerChange(type, item = {}) {
-        //     console.log(item)
-        //     let routeUrl = ''
-        //     switch (type) {
-        //         case 'detail':    // 详情
-        //             routeUrl = this.$router.resolve({
-        //                 path: "/warehouse/fault-entity-detail",
-        //                 query: {id: item.id}
-        //             })
-        //             window.open(routeUrl.href, '_self')
-        //             break;
-        //     }
-        // },
+        routerChange(type, item = {}) {
+            let routeUrl = ''
+            switch (type) {
+                case 'detail':    // 详情
+                    routeUrl = this.$router.resolve({
+                        path: "/repair/repair-detail",
+                        query: {id: item.source_id}
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+            }
+        },
         pageChange(curr) {    // 页码改变
             this.currPage = curr
             this.getTableData()
@@ -220,22 +216,26 @@ export default {
         handleSearch() {    // 搜索
             this.pageChange(1);
         },
+        handleTimeSearch(type, begin_time, end_time) { // 时间搜索
+            if (begin_time || end_time) {
+                this.searchForm.begin_time = begin_time
+                this.searchForm.end_time = end_time
+            }
+            this.pageChange(1);
+        },
         handleSearchReset() {    // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            console.log('this.searchForm:', this.searchForm)
-            this.create_time = []
+            this.$refs.TimeSearch.handleReset()
             this.pageChange(1);
         },
         // 获取列表数据
-        getWarehouseList() { // 获取仓库数据  
-            const type = 2  // 残次仓类型       
-            Core.Api.Warehouse.listAll({type}).then(res => {
-                console.log("this.warehouseList", res)
+        getWarehouseList() { // 获取仓库数据
+            Core.Api.Warehouse.listAll({type: 2}).then(res => {
                 this.warehouseList = res.list
             })
         },
         getFaultTypeList() { // 获取产品故障类型
-            Core.Api.Fault.list().then(res => {
+            Core.Api.Fault.list({page: 0}).then(res => {
                 this.faultTypeList = res.list
             })
         },
@@ -277,7 +277,7 @@ export default {
                 },
             });
         },
-        
+
         // 通过维修单号找车架号
         handleSearchFrameNum() {
             const uid = this.form.source_uid
@@ -311,21 +311,21 @@ export default {
         },
 
         // 故障件表单
-        handleFaultOrderShow(record) {  // 新增故障件表单创建
+        handleFaultItemShow(record) {  // 新增故障件表单创建
             if (record) {
-                console.log('handleFaultOrderShow record', record);
+                console.log('handleFaultItemShow record', record);
                 for (const key in this.form) {
                     this.form[key] = record[key]
                 }
                 this.selectItem = Core.Util.deepCopy(record.item)
             }
-            console.log('handleFaultOrderShow this.form', this.form);
-            console.log('handleFaultOrderShow this.selectItem', this.selectItem);
+            console.log('handleFaultItemShow this.form', this.form);
+            console.log('handleFaultItemShow this.selectItem', this.selectItem);
             this.modalShow = true;
         },
-        handleFaultOrderSubmit() { // 新增故障件提交 
+        handleFaultItemSubmit() { // 新增故障件提交
             let form = Core.Util.deepCopy(this.form)
-            console.log('handleFaultOrderSubmit', form);
+            console.log('handleFaultItemSubmit', form);
             console.log('this.form.source_uid' , this.form.source_uid)
             console.log('this.form.vehicle_no' , this.form.vehicle_no)
             // 新建故障件列表写完进行补充 必填项
@@ -347,12 +347,12 @@ export default {
             Core.Api.FaultEntity.save(form).then(() => {
                 this.$message.success('保存成功')
                 this.getTableData();
-                this.handleFaultOrderClose()
+                this.handleFaultItemClose()
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
         },
-        handleFaultOrderClose() { // 新增故障件表单关闭
+        handleFaultItemClose() { // 新增故障件表单关闭
             this.modalShow = false;
             Object.assign(this.form, this.$options.data().form)
             this.selectItem = {};

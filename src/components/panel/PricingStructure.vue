@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import Core from '../core';
+import Core from '../../core';
 const USER_TYPE = Core.Const.USER.TYPE
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 

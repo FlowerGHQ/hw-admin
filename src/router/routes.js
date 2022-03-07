@@ -63,27 +63,27 @@ const routes = [{
                 }
             },
             {
-                path: 'repair-confirm-list',
-                name: 'RepairConfirmList',
-                component: () =>
-                    import ('@/views/repair/repair-list.vue'),
-                meta: {
-                    title: '待审工单',
-                    roles: [LOGIN_TYPE.DISTRIBUTOR],
-                    is_sub_menu: true,
-                    type: 'check'
-                }
-            },
-            {
                 path: 'repair-audit-list',
                 name: 'repairAuditList',
                 component: () =>
                     import ('@/views/repair/repair-list.vue'),
                 meta: {
                     title: '待审工单',
-                    roles: [LOGIN_TYPE.ADMIN],
+                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     is_sub_menu: true,
                     type: 'audit'
+                }
+            },
+            {
+                path: 'repair-redit-list',
+                name: 'repairReditList',
+                component: () =>
+                    import ('@/views/repair/repair-list.vue'),
+                meta: {
+                    title: '待改工单',
+                    roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
+                    is_sub_menu: true,
+                    type: 'redit'
                 }
             },
             {
@@ -929,6 +929,40 @@ const routes = [{
                 meta: {
                     title: '员工详情',
                     parent: '/user/user-list',
+                }
+            },
+        ]
+    },
+    { // 账户管理
+        path: '/wallet',
+        component: Layout,
+        redirect: '/wallet/wallet-list',
+        name: 'WalletManagement',
+        meta: {
+            title: '账户管理',
+            icon: 'i_s_user',
+            // auth: ['org-user.manager'],
+            roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
+        },
+        children: [
+            {
+                path: 'wallet-list',
+                name: 'WalletList',
+                component: () =>
+                    import ('@/views/wallet/wallet-list.vue'),
+                meta: {
+                    title: '账户列表',
+                }
+            },
+            {
+                path: 'wallet-detail',
+                name: 'WalletDetail',
+                hidden: true,
+                component: () =>
+                    import ('@/views/wallet/wallet-detail.vue'),
+                meta: {
+                    title: '账户详情',
+                    parent: '/wallet/wallet-list',
                 }
             },
         ]

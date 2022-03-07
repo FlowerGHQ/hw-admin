@@ -28,11 +28,7 @@
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
                     <div class="key">创建时间:</div>
-                    <div class="value">
-                        <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
-                            <template #suffixIcon><i class="icon i_calendar"/></template>
-                        </a-range-picker>
-                    </div>
+                    <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
                 </a-col>
             </a-row>
             <div class="btn-area">
@@ -45,10 +41,10 @@
                 :row-selection='rowSelection'>
                 <template #bodyCell="{ column, record, text}">
                     <template v-if="column.dataIndex === 'org_type'">
-                          {{ $Util.userTypeFilter(text) }}
+                        {{ $Util.userTypeFilter(text) }}
                     </template>
                     <template v-if="column.dataIndex === 'service_type'">
-                          {{ $Util.repairServiceFilter(text) }}
+                        {{ $Util.repairServiceFilter(text) }}
                     </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="$Util.faultStatusFilter(text,'color')">
@@ -129,6 +125,7 @@
 <script>
 import Core from '../../core';
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
+import TimeSearch from '@/components/common/TimeSearch.vue'
 const FAULT_ENTITY = Core.Const.FAULT_ENTITY
 const LOGIN = Core.Const.LOGIN
 
@@ -136,6 +133,7 @@ export default {
     name: 'PendingFaultEntityList',
     components: {
         ItemSelect,
+        TimeSearch
     },
     props: {},
     data() {
@@ -153,11 +151,12 @@ export default {
             warehouseList: [], // 仓库列表
             storeList: [], // 分销商列表
             agentList: [], // 零售商列表
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            create_time: [],
             searchForm: {
                 store_id: undefined,
-                agent_id: undefined
+                agent_id: undefined,
+                distributor_id: undefined,
+                begin_time: '',
+                end_time: '',
             },
             // 表格
             tableData: [],
@@ -231,10 +230,17 @@ export default {
         handleSearch() { // 搜索
             this.pageChange(1);
         },
+        handleTimeSearch(type, begin_time, end_time) { // 时间搜索
+            if (begin_time || end_time) {
+                this.searchForm.begin_time = begin_time
+                this.searchForm.end_time = end_time
+            }
+            this.pageChange(1);
+        },
         handleSearchReset() { // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
             console.log('this.searchForm:', this.searchForm)
-            this.create_time = []
+            this.$refs.TimeSearch.handleReset()
             this.pageChange(1);
         },
         // 获取列表数据
@@ -256,8 +262,6 @@ export default {
             // return
             Core.Api.FaultEntity.list({
                 ...this.searchForm,
-                begin_time:this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {

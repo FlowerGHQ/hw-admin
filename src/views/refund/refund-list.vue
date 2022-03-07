@@ -19,26 +19,20 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">订单编号:</div>
                         <div class="value">
-                            <a-input placeholder="请输入退款订单编号" v-model:value="searchForm.sn"
-                                     @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入退款订单编号" v-model:value="searchForm.sn" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
                         <div class="key">退款类型:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择退款类型">
-                                <a-select-option v-for="(val, index) of typeList" :key="index" :value="val.value">{{val.text}}</a-select-option>
+                                <a-select-option v-for="(item, index) of typeList" :key="index" :value="item.value">{{item.text}}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
                         <div class="key">退款时间:</div>
-                        <div class="value">
-                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
-                                            :show-time="defaultTime" :allow-clear='false'>
-                                <template #suffixIcon><i class="icon i_calendar"></i></template>
-                            </a-range-picker>
-                        </div>
+                        <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
@@ -49,7 +43,7 @@
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                         :row-key="record => record.id" :pagination='false'  @change="handleTableChange">
+                    :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record}">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
@@ -57,11 +51,11 @@
                                 </a-button>
                             </a-tooltip>
                         </template>
-                        <template v-if="column.dataIndex === 'user'">
-                            {{ text }}
+                        <template v-if="column.key === 'item'">
+                            {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'money'">
-                            €{{ text/100 }}
+                            €{{ $Util.countFilter(text)  }}
                         </template>
                         <template v-if="column.key === 'tip_time'">
                             <a-tooltip :title="text" destroyTooltipOnHide>
@@ -74,7 +68,7 @@
                         <template v-if="column.dataIndex === 'status'">
                             <div class="status status-bg status-tag" :class="$Util.refundStatusFilter(text,'color')">
                                 <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>
-                                {{ $Util.refundStatusFilter(text) }}
+                                    {{ $Util.refundStatusFilter(text) }}
                                     <template v-if="record.status === STATUS.AUDIT_REFUSE">
                                         <i class="icon i_hint" style="font-size: 12px;padding-left: 6px;"/>
                                     </template>
@@ -85,11 +79,17 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('create',record)" v-if="record.status === STATUS.WAIT_AUDIT && authOrg(record.org_id, record.org_type)"><i class="icon i_edit"/>修改
+                            <a-button type="link" @click="routerChange('create',record)"
+                                v-if="record.status === STATUS.WAIT_AUDIT && authOrg(record.org_id, record.org_type)">
+                                <i class="icon i_edit"/>修改
                             </a-button>
-                            <a-button type="link" @click="handleRefundShow(record.id)" v-if="record.status === STATUS.WAIT_AUDIT && authOrg(record.supply_org_id, record.supply_org_type)"><i class="icon i_m_success"/>审核
+                            <a-button type="link" @click="handleRefundShow(record.id)"
+                                v-if="record.status === STATUS.WAIT_AUDIT && authOrg(record.supply_org_id, record.supply_org_type)">
+                                <i class="icon i_m_success"/>审核
                             </a-button>
-                            <a-button type="link" @click="handleCancel(record.id)" v-if="record.status === STATUS.WAIT_AUDIT && authOrg(record.org_id, record.org_type)"><i class="icon i_m_error"/>取消
+                            <a-button type="link" @click="handleCancel(record.id)"
+                                v-if="record.status === STATUS.WAIT_AUDIT && authOrg(record.org_id, record.org_type)">
+                                <i class="icon i_m_error"/>取消
                             </a-button>
                         </template>
                     </template>
@@ -112,8 +112,7 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="refundShow" title="审核" class="refund-edit-modal"
-                     :after-close='handleRefundClose'>
+            <a-modal v-model:visible="refundShow" title="审核" class="refund-edit-modal" :after-close='handleRefundClose'>
                 <div class="modal-content">
                     <div class="form-item required">
                         <div class="key">审核结果:</div>
@@ -126,7 +125,7 @@
                         <div class="key">原因:</div>
                         <div class="value">
                             <a-textarea v-model:value="editForm.audit_message" placeholder="请输入不通过原因"
-                                        :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                                :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                         </div>
                     </div>
                 </div>
@@ -141,13 +140,19 @@
 <script>
 
 import Core from '../../core';
-const REFUND_STATUS = Core.Const.REFUND.STATUS
+import TimeSearch from '../../components/common/TimeSearch.vue'
+const STATUS = Core.Const.REFUND.STATUS
+const SEARCH_TYPE = Core.Const.REFUND.SEARCH_TYPE
+
 export default {
     name: 'RefundList',
-    components: {},
+    components: {
+        TimeSearch,
+    },
     props: {},
     data() {
         return {
+            STATUS,
             loginOrgId: Core.Data.getOrgId(),
             loginOrgType: Core.Data.getOrgType(),
             // 加载
@@ -155,38 +160,46 @@ export default {
             // 分页
             currPage: 1,
             pageSize: 20,
-            detail: {},
             total: 0,
             // 搜索
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            create_time: [],
-            typeList: Core.Const.REFUND.TYPE,
-            order_id: '',
+            search_type: 0,
+            typeList: Core.Const.REFUND.TYPE_LIST,
             searchForm: {
                 id: '',
                 uid: '',
                 type: undefined,
                 status: undefined,
                 sn: '',
+                begin_time: '',
+                end_time: '',
             },
-            tableData: [],
             statusList: [
                 {text: '全  部', value: '0', color: 'primary', key: '0'},
-                {text: '待审核', value: '0', color: 'yellow', key: REFUND_STATUS.WAIT_AUDIT},
-                {text: '审核通过', value: '0', color: 'blue', key: REFUND_STATUS.AUDIT_PASS},
-                {text: '审核失败', value: '0', color: 'red', key: REFUND_STATUS.AUDIT_REFUSE},
-                {text: '退款完成', value: '0', color: 'green', key: REFUND_STATUS.SUCCESS},
-                {text: '取消退款', value: '0', color: 'grey', key: REFUND_STATUS.CANCEL},
+                {text: '待审核', value: '0', color: 'yellow', key: STATUS.WAIT_AUDIT},
+                {text: '审核通过', value: '0', color: 'blue', key: STATUS.AUDIT_PASS},
+                {text: '审核失败', value: '0', color: 'red', key: STATUS.AUDIT_REFUSE},
+                {text: '退款完成', value: '0', color: 'green', key: STATUS.SUCCESS},
+                {text: '取消退款', value: '0', color: 'grey', key: STATUS.CANCEL},
             ],
-            STATUS: Core.Const.REFUND.STATUS,
+            // 表格
+            tableData: [],
+            tableColumns: [
+                {title: '订单号', dataIndex: 'order_sn', key: 'detail'},
+                {title: '退款金额', dataIndex: 'money', key: 'money'},
+                {title: '退款原因', dataIndex: 'apply_message', key: 'tip_time'},
+                {title: '退款类型', dataIndex: 'type'},
+                {title: '申请人', dataIndex: ['apply_user','account','name'],key: 'item'},
+                {title: '订单状态', dataIndex: 'status',key: 'status', align: 'center'},
+                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
+                {title: '操作', key: 'operation', fixed: 'right', width: 100,},
+            ],
+            // 审核
             refundShow: false,
             editForm: {
                 id: '',
                 status: '',
                 audit_message: '',
             },
-            SEARCH_TYPE: Core.Const.REFUND.SEARCH_TYPE,
-            search_type: 0,
         };
     },
     watch: {
@@ -196,32 +209,13 @@ export default {
             handler(newRoute) {
                 let search_type = newRoute.meta ? newRoute.meta.search_type : 0
                 this.search_type = search_type
-                console.log("search_type", search_type, this.search_type)
-                this.handleSearchReset();
+                this.handleSearchReset(false);
                 this.getStatusList();
             }
         }
     },
-    computed: {
-        tableColumns() {
-            let columns = [
-                {title: '订单号', dataIndex: 'order_sn', key: 'detail'},
-                {title: '退款金额', dataIndex: 'money', key: 'money'},
-                {title: '退款原因', dataIndex: 'apply_message', key: 'tip_time'},
-                {title: '退款类型', dataIndex: 'type'},
-                {title: '申请人', dataIndex: ['apply_user','account','name'],key: 'user'},
-                {title: '订单状态', dataIndex: 'status',key: 'status', align: 'center'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '操作', key: 'operation', fixed: 'right', width: 100,},
-
-            ]
-            return columns
-        },
-    },
-    mounted() {
-        this.getTableData();
-        this.getStatusList();
-    },
+    computed: {},
+    mounted() {},
     methods: {
         authOrg(orgId, orgType) {
             if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
@@ -249,9 +243,6 @@ export default {
                     break;
             }
         },
-        handleTypeSelect(val) {
-            this.type = val
-        },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
             this.getTableData()
@@ -264,40 +255,34 @@ export default {
         handleSearch() {  // 搜索
             this.pageChange(1);
         },
-        handleSearchReset() {  // 重置搜索
-            Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.create_time = []
+        handleTimeSearch(type, begin_time, end_time) { // 时间搜索
+            if (begin_time || end_time) {
+                this.searchForm.begin_time = begin_time
+                this.searchForm.end_time = end_time
+            }
             this.pageChange(1);
         },
-        handleTableChange(page, filters, sorter) {
-            console.log('handleTableChange filters:', filters)
-            for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : ''
+        handleSearchReset(flag = true) {  // 重置搜索
+            Object.assign(this.searchForm, this.$options.data().searchForm)
+            if (flag) {
+                this.$refs.TimeSearch.handleReset()
             }
+            this.pageChange(1);
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-            this.loading = false;
-            let orgId = 0
-            let orgType = 0
-            let supplyOrgId = 0
-            let supplyOrgType = 0
-            if (this.search_type === this.SEARCH_TYPE.SELF) {
-                orgId = this.loginOrgId
-                orgType = this.loginOrgType
+            let org_info = {}
+            if (this.search_type === SEARCH_TYPE.SELF) {
+                org_info.org_id = this.loginOrgId
+                org_info.org_type = this.loginOrgType
             } else {
-                supplyOrgId = this.loginOrgId
-                supplyOrgType = this.loginOrgType
+                org_info.supply_org_id = this.loginOrgId
+                org_info.supply_org_type = this.loginOrgType
             }
             // return
             Core.Api.Refund.list({
                 ...this.searchForm,
-                begin_time: this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
-                org_id: orgId,
-                org_type: orgType,
-                supply_org_id: supplyOrgId,
-                supply_org_type: supplyOrgType,
+                ...org_info,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -310,24 +295,6 @@ export default {
                 this.loading = false;
             });
         },
-        handleCancel(id) {
-            let _this = this;
-            this.$confirm({
-                title: '确定要取消该退款单吗？',
-                okText: '确定',
-                okType: 'danger',
-                cancelText: '取消',
-                onOk() {
-                    Core.Api.Refund.cancel({id}).then(() => {
-                        _this.$message.success('取消成功');
-                        _this.getStatusList();
-                        _this.getTableData();
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
-                },
-            });
-        },
         getStatusList() {    // 获取 状态 列表
             this.loading = true;
             this.loading = false;
@@ -335,7 +302,7 @@ export default {
             let orgType = 0
             let supplyOrgId = 0
             let supplyOrgType = 0
-            if (this.search_type === this.SEARCH_TYPE.SELF) {
+            if (this.search_type === SEARCH_TYPE.SELF) {
                 orgId = this.loginOrgId
                 orgType = this.loginOrgType
             } else {
@@ -369,17 +336,26 @@ export default {
                 this.loading = false;
             });
         },
-        getRefundDetail() {
-            Core.Api.Refund.detail({
-                id: this.id,
-            }).then(res => {
-                this.detail = res.detail
-                console.log('getRefundDetail err', res)
-            }).catch(err => {
-                console.log('getRefundDetail err', err)
-            }).finally(() => {
+        // 取消退款申请
+        handleCancel(id) {
+            let _this = this;
+            this.$confirm({
+                title: '确定要取消该退款单吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Refund.cancel({id}).then(() => {
+                        _this.$message.success('取消成功');
+                        _this.getStatusList();
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
             });
         },
+        // 退款审核
         handleRefundShow(id) { // 显示弹框
             this.refundShow = true
             this.editForm.id = id

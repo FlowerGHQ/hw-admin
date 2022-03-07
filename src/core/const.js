@@ -79,15 +79,15 @@ let Const = {
             ],
         }
     },
-
-    CONTINENT_LIST: [ // 大洲列表
-        {
-            "short": "CN",
-            "name": "中国",
-            "en": "China",
-            "tel": "86",
-            "pinyin": "zg"
-        },
+    // 大洲列表
+    CONTINENT_LIST: [
+        { "code": "AS", "name": "亚洲", "name_en": "Asia" },
+        { "code": "EU", "name": "欧洲", "name_en": "Europe" },
+        { "code": "AF", "name": "非洲", "name_en": "Africa" },
+        { "code": "NA", "name": "北美洲", "name_en": "North America" },
+        { "code": "SA", "name": "南美洲", "name_en": "South America" },
+        { "code": "OA", "name": "大洋洲", "name_en": "Oceania" },
+        { "code": "AN", "name": "南极洲", "name_en": "Antarctica" }
     ],
     COUNTRY_LIST: [ // 国家列表
         {
@@ -284,7 +284,6 @@ let Const = {
             '80': '审核通过',
             '100': '已完成',
             '-10': '已取消',
-
         },
         STATUS_COLOR_MAP: {
             '30': 'yellow',
@@ -424,7 +423,7 @@ let Const = {
         },
     },
     REFUND: { // 退款管理
-        TYPE: [
+        TYPE_LIST: [
             { text: '零售商申请退款', value: 100 },
             { text: '分销商申请退款', value: 110 },
             { text: '门店申请退款', value: 120 },
@@ -664,7 +663,7 @@ let Const = {
             { text: '已取消', value: -20 },
         ],
     },
-    WALLET: { //钱包
+    WALLET: { //账户
         TYPE: {
             CNY: 1,
             EUR: 2,

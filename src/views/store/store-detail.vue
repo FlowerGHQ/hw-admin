@@ -20,15 +20,32 @@
                 </div>
             </div>
             <a-row class="desc-detail has-logo">
+                <a-col :xs='24' :sm='12' :lg='8' class='detail-item' v-if="$auth('ADMIN')">
+                    <span class="key">所属分销商：</span>
+                    <a-button type="link" @click="routerChange('agent')">{{detail.agent_name}}</a-button>
+                </a-col>
+                <a-col :xs='24' :sm='12' :lg='8' class='detail-item' v-if="$auth('ADMIN', 'DISTRIBUTOR')">
+                    <span class="key">所属零售商：</span>
+                    <a-button type="link" @click="routerChange('distributor')">{{detail.distributor_name}}</a-button>
+                </a-col>
+                <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                    <span class="key">转单接受：</span>
+                    <a-switch v-if="$auth('ADMIN')" :checked="!!detail.flag_receive_transfer"
+                        checked-children="接受" un-checked-children="不接受" @click="handleTransferChange(detail)"/>
+                    <span v-else >{{ text ? '接受' : '不接受' }}</span>
+                </a-col>
+                <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                    <span class="key">联系人姓名：</span>
+                    <span class="value">{{detail.contact_name}}</span>
+                </a-col>
+                <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                    <span class="key">联系人电话：</span>
+                    <span class="value">{{detail.contact_phone}}</span>
+                </a-col>
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                     <span class="key">创建时间：</span>
                     <span class="value">{{$Util.timeFilter(detail.create_time)}}</span>
                 </a-col>
-                <a-col :xs='24' :sm='12' :lg='8' class='detail-item' v-if="$auth('ADMIN')">
-                    <span class="key">所属零售商：</span>
-                    <a @click="routerChange('agent-detail', detail)">{{detail.agent_name}}</a>
-                </a-col>
-
             </a-row>
             <div class='desc-stat'>
                 <a-statistic title="员工数量" :value="detail.user_count"/>
@@ -46,9 +63,6 @@
             <a-tab-pane key="UserList" tab="员工管理">
                 <UserList :orgType="ORG_TYPE.STORE" :orgId="store_id" :type="USER_TYPE.STORE" v-if="activeKey == 'UserList'"/>
             </a-tab-pane>
-<!--            <a-tab-pane key="WorkerList" tab="维修工管理">
-                <UserList :orgType="ORG_TYPE.STORE" :orgId="store_id"  :type="USER_TYPE.WORKER" v-if="activeKey == 'WorkerList'"/>
-            </a-tab-pane>-->
             <a-tab-pane key="PurchaseList" tab="订单列表">
                 <PurchaseList :orgId="store_id" :orgType="ORG_TYPE.STORE" v-if="activeKey == 'PurchaseList'"/>
             </a-tab-pane>
@@ -60,8 +74,8 @@
 <script>
 import Core from '../../core';
 
-import UserList from '@/components/UserList.vue';
-import PurchaseList from '@/components/PurchaseOrderList.vue';
+import UserList from '@/components/panel/UserList.vue';
+import PurchaseList from '@/components/panel/PurchaseList.vue';
 
 const USER_TYPE = Core.Const.USER.TYPE;
 export default {
@@ -109,35 +123,23 @@ export default {
                     })
                     window.open(routeUrl.href, '_self')
                     break;
-                case 'agent-detail':  // 详情
+                case 'agent':  // 详情
                     routeUrl = this.$router.resolve({
                         path: "/agent/agent-detail",
                         query: { id: this.detail.agent_id }
                     })
-                    window.open(routeUrl.href, '_self')
+                    window.open(routeUrl.href, '_blank')
                     break;
-
+                case 'agent':  // 详情
+                    routeUrl = this.$router.resolve({
+                        path: "/distributor/distributor-detail",
+                        query: { id: this.detail.distributor_id }
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
             }
         },
-        // 删除门店
-        handleDelete(id) {
-            let _this = this;
-            this.$confirm({
-                title: '确定要删除该门店吗？',
-                okText: '确定',
-                okType: 'danger',
-                cancelText: '取消',
-                onOk() {
-                    console.log(_this.store_id);
-                    Core.Api.Store.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
-                        _this.routerChange('list');
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
-                },
-            });
-        },
+        // 获取门店详情
         getStoreDetail(){
             this.loading = true;
             Core.Api.Store.detail({
@@ -151,6 +153,8 @@ export default {
                 this.loading = false;
             });
         },
+
+        // 门店启用禁用
         handleStatusChange() {
             let _this = this;
             this.$confirm({
@@ -164,6 +168,44 @@ export default {
                         _this.getStoreDetail();
                     }).catch(err => {
                         console.log("handleStatusChange err", err);
+                    })
+                },
+            });
+        },
+
+        // 删除门店
+        handleDelete(id) {
+            let _this = this;
+            this.$confirm({
+                title: '确定要删除该门店吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Store.delete({id}).then(() => {
+                        _this.$message.success('删除成功');
+                        _this.routerChange('list');
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
+
+        // 门店转单接受 启用禁用
+        handleTransferChange(detail) {
+            let _this = this;
+            this.$confirm({
+                title: `确定要将该门店设置为${detail.flag_receive_transfer ? '不可' : '可'}接受转单吗？`,
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Store.updateTransfer({id:detail.id}).then(() => {
+                        _this.$message.success(`${detail.flag_receive_transfer ? '禁用' : '启用'}成功`);
+                        _this.getStoreDetail();
+                    }).catch(err => {
+                        console.log("handleTransferChange err", err);
                     })
                 },
             });
