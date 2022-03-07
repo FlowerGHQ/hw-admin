@@ -58,11 +58,7 @@
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">{{$t('def.create_time')}}</div>
-                    <div class="value">
-                        <a-range-picker v-model:value="create_time" valueFormat='X' @change='handleSearch' :show-time="defaultTime" :allow-clear='false'>
-                            <template #suffixIcon><i class="icon i_calendar"></i> </template>
-                        </a-range-picker>
-                    </div>
+                    <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
                 </a-col>
             </a-row>
             <div class="btn-area">
@@ -180,10 +176,12 @@ const REPAIR = Core.Const.REPAIR
 const STATUS = Core.Const.REPAIR.STATUS
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 const USER_TYPE = Core.Const.USER.TYPE
-
+import TimeSearch from '@/components/common/TimeSearch.vue'
 export default {
     name: 'RepairList',
-    components: {},
+    components: {
+        TimeSearch
+    },
     props: {},
     data() {
         return {
@@ -201,7 +199,6 @@ export default {
             total: 0,
             // 搜索
             operMode: '',
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             statusList: [
                 {text: '全  部', value: '0', color: 'primary', key: '-1'},
                 {text: '待检测', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
@@ -212,7 +209,6 @@ export default {
                 {text: '审核通过', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
                 {text: '已取消', value: '0', color: 'gray',  key: STATUS.CLOSE },
             ],
-            create_time: [],
             distributorList: [], // 分销商下拉框数据
             storeList: [],
             agentList: [],
@@ -228,11 +224,13 @@ export default {
                 repair_user_org_type:'',
                 service_type: '',
                 vehicle_no: '',
+                begin_time: '',
+                end_time: '',
             },
-
+            // 表格
             tableFields: [],
             tableData: [],
-
+            // 弹框
             modalShow: false,
             modalType: '',
             editForm: {
@@ -249,7 +247,7 @@ export default {
             handler(newRoute) {
                 let type = newRoute.meta ? newRoute.meta.type : ''
                 this.operMode = type
-                this.handleSearchReset();
+                this.handleSearchReset(false);
             }
         },
         'searchForm.distributor_id': function () {
@@ -270,6 +268,7 @@ export default {
                 { title: '工单编号', dataIndex: 'uid', key: 'detail' },
                 { title: '工单名称', dataIndex: 'name', key: 'tip_item' },
                 { title: '紧急程度', dataIndex: 'priority' },
+                { title: '订单状态', dataIndex: 'status'},
                 { title: '工单帐类', dataIndex: 'service_type',
                     filters: REPAIR.SERVICE_TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.service_type || null },
                 { title: '维修方式', dataIndex: 'channel',
@@ -282,12 +281,11 @@ export default {
                 { title: '关联客户', dataIndex: 'customer_name', key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 // { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
-                { title: '订单状态', dataIndex: 'status', fixed: 'right'},
             ]
-            if (this.operMode) {
+            if (this.operMode === 'audit' && this.$auth('ADMIN', 'DISTRIBUTOR')) {
                 columns.push({ title: '操作', key: 'operation', fixed: 'right'},)
             }
-            if (!this.operMode) {
+            if (this.operMode === 'redit' && !this.$auth('ADMIN')) {
                 columns.push({ title: '操作', key: 'operate', fixed: 'right'},)
             }
             return columns
@@ -335,12 +333,22 @@ export default {
         handleSearch() {  // 搜索
             this.pageChange(1);
         },
-        handleSearchReset() {  // 重置搜索
+        handleTimeSearch(type, begin_time, end_time) { // 时间搜索
+            if (begin_time || end_time) {
+                this.searchForm.begin_time = begin_time
+                this.searchForm.end_time = end_time
+            }
+            this.pageChange(1);
+        },
+        handleSearchReset(flag = true) {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
+            if (flag) {
+                this.$refs.TimeSearch.handleReset()
+            }
             if (this.operMode == 'audit') {
-                this.searchForm.status = STATUS.WAIT_AUDIT
-            } else if (this.operMode == 'check') {
                 this.searchForm.status = STATUS.SETTLEMENT
+            } else if (this.operMode == 'redit') {
+                this.searchForm.status = STATUS.AUDIT_FAIL
             }
             if (this.$auth('ADMIN')) {
                 this.getDistributorListAll();
@@ -357,20 +365,17 @@ export default {
                 this.searchForm.store_id = Core.Data.getOrgId()
             }
             this.filteredInfo = null
-            this.create_time = []
             this.pageChange(1);
         },
 
         getDistributorListAll() { // 获取所有分销商
             Core.Api.Distributor.listAll().then(res => {
-                console.log('getDistributorListAll res.list: ', res.list);
                 this.distributorList = res.list
             });
         },
         getAgentListAll() { // 通过分销商Id 获取所有零售商
             if (this.searchForm.distributor_id) {
                 Core.Api.Agent.listAll({distributor_id: this.searchForm.distributor_id}).then(res => {
-                    console.log('getAgentListAll res.list: ', res.list);
                     this.agentList = res.list
                 });
             } else {
@@ -380,7 +385,6 @@ export default {
         getStoreListAll() { // 通过零售商Id 获取所有门店
             if (this.searchForm.agent_id) {
                 Core.Api.Store.listAll({agent_id: this.searchForm.agent_id}).then(res => {
-                    console.log('getStoreListAll res.list: ', res.list);
                     this.storeList = res.list
                 });
             } else {
@@ -393,8 +397,6 @@ export default {
             console.log('this.searchForm:', this.searchForm)
             Core.Api.Repair.list({
                 ...this.searchForm,
-                begin_time: this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -412,8 +414,6 @@ export default {
             this.loading = true;
             Core.Api.Repair.statusList({
                 ...this.searchForm,
-                begin_time: this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -450,49 +450,12 @@ export default {
         handleRepairExport() { // 订单导出
             this.exportDisabled = true;
 
-            let form = this.searchForm;
-            let uid = form.uid || ''
-            let type = form.type || 0
-            let status = form.status || 0
-            let distributorId = form.distributorId || 0
-            let agentId = form.agent_id || 0
-            let storeId = form.store_id || 0
-            let orgId = form.org_id ? form.org_id : 0
-            let orgType = form.orgType || 0
-            let itemId = form.itemId || 0
-            let channel = form.channel || 0
-            let vehicleId = form.vehicleId || 0
-            let repairMethod = form.repairMethod || 0
-            let beginTime = this.create_time[0] || ''
-            let endTime   = this.create_time[1] || ''
-
-            const token = Core.Data.getToken() || ''
-
-            let power = ''
-            switch(this.loginType){
-                case LOGIN_TYPE.ADMIN:
-                    power = 'admin'
-                    break
-                case LOGIN_TYPE.DISTRIBUTOR:
-                    power = 'distributor'
-                    break
-                case LOGIN_TYPE.AGENT:
-                    power = 'agent'
-                    break
-                case LOGIN_TYPE.STORE:
-                    power = 'store'
-                    break
-                default:
-                    break
+            let form = Core.Util.deepCopy(this.searchForm);
+            for (const key in form) {
+                form[key] = form[key] || ''
             }
-            let fileUrl = Core.Const.NET.URL_POINT + '/' + power + '/1/repair/export-repair-order-record?'
-
-            let exportUrl =
-                `${fileUrl}token=${token}&uid=${uid}&type=${type}&status=${status}&distributor_id=${distributorId}
-                &agent_id=${agentId}&store_id=${storeId}&org_id=${orgId}&org_type=${orgType}&item_id=${itemId}
-                &item_id=${itemId}&channel=${channel}&vehicle_id=${vehicleId}&repair_method=${repairMethod}
-                &begin_time=${beginTime}&end_time=${endTime}`
-            console.log("handleRepairExport -> exportUrl", exportUrl)
+            let exportUrl = Core.Api.Export.repairExport(form)
+            console.log("handleRepairExport exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
         },

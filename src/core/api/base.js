@@ -46,7 +46,6 @@ class ApiBase {
         const commonModule = ['Common']
         if (commonModule.includes(moduleName)) { mark = 'core/1' }
 
-
         let fullUrl = `${this.baseUrl}/${mark}/${config[1]}`;
         if (moduleName == 'Export') {
             return fullUrl + '?' + ApiBase.stringify({token, ...args})

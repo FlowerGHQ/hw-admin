@@ -80,8 +80,7 @@
                     <div class="form-item required">
                         <div class="key">金额:</div>
                         <div class="value form-item-value">
-                            <a-input-number v-model:value="operateForm.money" :min="0" :precision="2"
-                                            placeholder="0.00"/>
+                            <a-input-number v-model:value="operateForm.money" :min="0" :precision="2" placeholder="0.00"/>
                             <span class="money">元</span>
                         </div>
                     </div>
@@ -89,7 +88,7 @@
                         <div class="key">来源:</div>
                         <div class="value form-item-value">
                             <a-select v-model:value="operateForm.source_type" placeholder="请选择来源">
-                                <a-select-option v-for="(val, key) of object" :key="key" :value="key">{{ val }}
+                                <a-select-option v-for="(val, key) of object" :key="key" :value="key">{{ val.name }}
                                 </a-select-option>
                             </a-select>
                         </div>
@@ -99,7 +98,7 @@
                         <div class="value form-item-value">
                             <a-select v-model:value="operateForm.subject" placeholder="请选择分类">
                                 <a-select-option v-for="(val, key) of object[operateForm.source_type].subject"
-                                                 :key="key" :value="key">{{ val }}
+                                    :key="key" :value="key">{{ val }}
                                 </a-select-option>
                             </a-select>
                         </div>
@@ -176,7 +175,7 @@ export default {
                 remark: '',
                 subject: '',
                 source_id: '',
-                source_type: '',
+                source_type: '10',
             },
             isExist: '',
             isRight: '',
@@ -212,7 +211,6 @@ export default {
                         '0': '其他',
                     }
                 },
-
                 '0': {
                     name: '其他', subject: {
                         '0': '其他',
@@ -284,6 +282,7 @@ export default {
             });
         },
         handleModalShow(val, id) { // 显示弹框
+            console.log('handleModalShow:')
             switch (val) {
                 case "addWalletShow":
                     this.addWalletShow = true

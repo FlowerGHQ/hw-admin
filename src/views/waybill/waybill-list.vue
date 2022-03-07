@@ -25,11 +25,7 @@
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                         <div class="key">创建时间:</div>
-                        <div class="value">
-                        <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
-                            <template #suffixIcon><i class="icon i_calendar"></i> </template>
-                        </a-range-picker>
-                    </div>
+                        <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
@@ -39,7 +35,7 @@
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                    :row-key="record => record.id" :pagination='false' @change="handleTableChange">
+                    :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, record, text}">
                         <template v-if="column.dataIndex === 'org_type'">
                           {{ $Util.userTypeFilter(text) }}
@@ -102,11 +98,15 @@
 
 <script>
 import Core from '../../core';
-import SimpleImageEmpty from '../../components/common/SimpleImageEmpty.vue'
+import SimpleImageEmpty from '@/components/common/SimpleImageEmpty.vue'
+import TimeSearch from '@/components/common/TimeSearch.vue'
 const TARGET_TYPE = Core.Const.WAYBILL.TARGET_TYPE
 export default {
     name: 'WaybillList',
-    components: {SimpleImageEmpty},
+    components: {
+        SimpleImageEmpty,
+        TimeSearch
+    },
     props: {},
     data() {
         return {
@@ -119,23 +119,15 @@ export default {
             total: 0,
             // 搜索
             waybillOptions: Core.Const.WAYBILL.TARGET_TYPE_LIST,
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            create_time: [],
             searchForm: {
                 uid:'',
                 type: undefined,
+                begin_time: '',
+                end_time: '',
             },
 
             tableData: [],
-
-            modalShow: false,
-            waybillInfo: []
-        };
-    },
-    watch: {},
-    computed: {
-        tableColumns() {
-            let columns = [
+            tableColumns: [
                 {title: '机构类型', dataIndex: 'org_type'},
                 {title: '货物清单类型', dataIndex: 'target_type'},
                 {title: '物流公司名称', dataIndex: 'company_uid'},
@@ -147,10 +139,14 @@ export default {
                 {title: '收件人电话', dataIndex: 'receiver_phone'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'},
-            ]
-            return columns
-        },
+            ],
+
+            modalShow: false,
+            waybillInfo: []
+        };
     },
+    watch: {},
+    computed: {},
     mounted() {
         this.getTableData();
     },
@@ -193,28 +189,29 @@ export default {
             this.getTableData()
         },
         pageSizeChange(current, size) {  // 页码尺寸改变
-            console.log('pageSizeChange size:', size)
             this.pageSize = size
             this.getTableData()
         },
         handleSearch() {  // 搜索
             this.pageChange(1);
         },
-        handleSearchReset() {  // 重置搜索
-            Object.assign(this.searchForm, this.$options.data().searchForm)
-            console.log('this.searchForm:', this.searchForm)      
+        handleTimeSearch(type, begin_time, end_time) { // 时间搜索
+            if (begin_time || end_time) {
+                this.searchForm.begin_time = begin_time
+                this.searchForm.end_time = end_time
+            }
             this.pageChange(1);
         },
-        // 表格筛选
-        handleTableChange() {   
+        handleSearchReset() {  // 重置搜索
+            Object.assign(this.searchForm, this.$options.data().searchForm)
+            this.$refs.TimeSearch.handleReset()
+            this.pageChange(1);
         },
-        // 获取 表格 数据 
-        getTableData() {       
+        // 获取 表格 数据
+        getTableData() {
             this.loading = true;
             Core.Api.Waybill.list({
                 ...this.searchForm,
-                begin_time: this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {

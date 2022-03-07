@@ -37,11 +37,7 @@
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">创建时间:</div>
-                    <div class="value">
-                        <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
-                            <template #suffixIcon><i class="icon i_calendar"></i> </template>
-                        </a-range-picker>
-                    </div>
+                    <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
                 </a-col>
             </a-row>
             <div class="btn-area">
@@ -113,9 +109,12 @@
 import Core from '../../core';
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 
+import TimeSearch from '../../components/common/TimeSearch.vue'
 export default {
     name: 'AgentList',
-    components: {},
+    components: {
+        TimeSearch,
+    },
     props: {},
     data() {
         return {
@@ -127,8 +126,6 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            create_time: [],
             countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
             country_cascader: [], // 搜索框 大洲>国家
 
@@ -138,6 +135,8 @@ export default {
                 name: '',
                 status: 1,
                 distributor_id: undefined,
+                begin_time: '',
+                end_time: '',
             },
             // 表格
             tableData: [],
@@ -202,16 +201,21 @@ export default {
         handleSearch() {  // 搜索
             this.pageChange(1);
         },
+        handleTimeSearch(type, begin_time, end_time) { // 时间搜索
+            if (begin_time || end_time) {
+                this.searchForm.begin_time = begin_time
+                this.searchForm.end_time = end_time
+            }
+            this.pageChange(1);
+        },
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            console.log('this.searchForm:', this.searchForm)
+            this.$refs.TimeSearch.handleReset()
             this.country_cascader = []
-            this.create_time = []
             this.pageChange(1);
         },
         getDistributorListAll() {
             Core.Api.Distributor.listAll().then(res => {
-                console.log('res.list: ', res.list);
                 this.distributorList = res.list
             });
         },
@@ -231,8 +235,6 @@ export default {
                 ...this.searchForm,
                 continent: this.country_cascader[0] || '',
                 country: this.country_cascader[1] || '',
-                begin_time: this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {

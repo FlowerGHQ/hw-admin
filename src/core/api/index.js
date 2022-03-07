@@ -21,7 +21,8 @@ const apiList = {
         migrate: ['Post', 'migrate/order'], // 获取当前登录账号的账户信息
     },
     Export: { // 导出
-        templateExport: ['PostJson', 'item-media-package/export'],
+        purchaseExport: ['PostJson', 'purchase-order/export'],
+        repairExport: ['PostJson', 'repair/export-repair-order-record'],
     },
     User: { // 员工
         save: ['PostJson', 'user/save'],

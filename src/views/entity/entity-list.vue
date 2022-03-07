@@ -6,11 +6,11 @@
                 <div class="btns-area">
                     <a-button type="primary" @click="handleVehicleShow"><i class="icon i_add"/>新增车架</a-button>
                     <a-upload name="file" class="file-uploader"
-                              :file-list="upload.fileList" :action="upload.action"
-                              :show-upload-list='false'
-                              :headers="upload.headers" :data='upload.data'
-                              accept=".xlsx,.xls"
-                              @change="handleMatterChange">
+                        :file-list="upload.fileList" :action="upload.action"
+                        :show-upload-list='false'
+                        :headers="upload.headers" :data='upload.data'
+                        accept=".xlsx,.xls"
+                        @change="handleMatterChange">
                         <a-button type="primary" class="file-upload-btn">
                             <i class="icon i_add"/> 批量导入
                         </a-button>
@@ -22,25 +22,18 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">车架名称:</div>
                         <div class="value">
-                            <a-input placeholder="请输入车架名称" v-model:value="searchForm.name"
-                                     @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入车架名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">车架号:</div>
                         <div class="value">
-                            <a-input placeholder="请输入车架号" v-model:value="searchForm.code"
-                                     @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入车架号" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                         <div class="key">创建时间:</div>
-                        <div class="value">
-                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch"
-                                            :show-time="defaultTime" :allow-clear='false'>
-                                <template #suffixIcon><i class="icon i_calendar"></i></template>
-                            </a-range-picker>
-                        </div>
+                        <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
@@ -50,18 +43,17 @@
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                         :row-key="record => record.id" :pagination='false' @change="handleTableChange"
-                         :expandedRowKeys="expandedRowKeys" :indentSize='0'
-                         :expandIconColumnIndex="expandIconColumnIndex">
+                    :row-key="record => record.id" :pagination='false'
+                    :expandedRowKeys="expandedRowKeys" :indentSize='0'
+                    :expandIconColumnIndex="expandIconColumnIndex">
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail'">
                             <div class="table-img">
-                                <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)"
-                                         fallback='无'/>
+                                <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" fallback='无'/>
                                 <a-tooltip placement="top" :title='text' destroy-tooltip-on-hide>
-                                        <a-button type="link" @click="routerChange('detail', record)">
-                                            <div class="ell" style="max-width: 150px">{{ text || '-' }}</div>
-                                        </a-button>
+                                    <a-button type="link" @click="routerChange('detail', record)">
+                                        <div class="ell" style="max-width: 150px">{{ text || '-' }}</div>
+                                    </a-button>
                                 </a-tooltip>
                             </div>
                         </template>
@@ -76,19 +68,12 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <template v-if="!record.default_item_id">
-                                <a-button type='link' @click="handleVehicleShow(record)"><i class="icon i_edit"/> 编辑
-                                </a-button>
-                                <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>
-                                    详情
-                                </a-button>
+                                <a-button type='link' @click="handleVehicleShow(record)"><i class="icon i_edit"/>编辑</a-button>
+                                <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>详情</a-button>
                             </template>
-                            <a-button type='link' @click="handleDelete(record.id)" class="danger"><i
-                                class="icon i_delete"/> 删除
-                            </a-button>
+                            <a-button type='link' @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
                         </template>
                     </template>
-                    <!-- <template #expandedRowRender="{ record }">
-                    </template> -->
                 </a-table>
             </div>
             <div class="paging-container">
@@ -108,18 +93,17 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="vehicleShow" :title="editForm.uid ? '车架编辑' : '新增车架'" class="refund-edit-modal"
-                     :after-close='handleVehicleClose'>
+            <a-modal v-model:visible="vehicleShow" :title="editForm.uid ? '车架编辑' : '新增车架'" class="refund-edit-modal" :after-close='handleVehicleClose'>
                 <div class="modal-content">
+                    <div class="form-item required">
+                        <div class="key">商品编码:</div>
+                        <a-input v-model:value="editForm.item_code" placeholder="请输入对应的商品编码" @blur="handleItemCodeBlur"/>
+                        <span v-if="isExist"><i class="icon i_confirm"/></span>
+                        <span v-else><i class="icon i_close_c"/></span>
+                    </div>
                     <div class="form-item required">
                         <div class="key">车架号:</div>
                         <a-input v-model:value="editForm.uid" placeholder="请输入车架号"/>
-                    </div>
-                    <div class="form-item required">
-                        <div class="key">商品编码:</div>
-                        <a-input v-model:value="editForm.item_code" placeholder="请输入对应的商品编码" @blur="onblur"/>
-                        <span v-if="isExist === true"><i class="icon i_confirm"/></span>
-                        <span v-else-if="isExist === false"><i class="icon i_close_c"/></span>
                     </div>
                 </div>
                 <template #footer>
@@ -150,24 +134,19 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            create_time: [],
-            filteredInfo: null,
             searchForm: {
                 name: '',
                 code: '',
                 category_id: undefined,
+                begin_time: '',
+                end_time: '',
             },
-
             // 表格
             tableData: [],
             expandedRowKeys: [],
             expandIconColumnIndex: 0,
-            form: {
-                name: '',
-                path: '',
-                type: ''
-            },
+
+            // 上传
             upload: {
                 action: Core.Const.NET.FILE_UPLOAD_ACTION,
                 fileList: [],
@@ -179,8 +158,9 @@ export default {
                     type: 'xlsx',
                 },
             },
-            isExist: '',
+            // 弹框
             vehicleShow: false,
+            isExist: '',
             editForm: {
                 id: '',
                 uid: '',
@@ -196,7 +176,6 @@ export default {
                 {title: '车架号', dataIndex: 'uid', key: 'item'},
                 {title: '规格', key: 'attr'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                // { title: '商品状态', dataIndex: 'status' },
                 {title: '操作', key: 'operation', fixed: 'right', width: 180}
             ]
             return columns
@@ -219,18 +198,6 @@ export default {
                     break;
             }
         },
-        // 上传文件
-        handleMatterChange({file, fileList}) {
-            console.log("handleMatterChange status:", file.status, "file:", file)
-            if (file.status == 'done') {
-                if (file.response && file.response.code < 0) {
-                    return this.$message.error(file.response.message)
-                } else {
-                    return this.$message.success('上传成功');
-                }
-            }
-            this.upload.fileList = fileList
-        },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
             this.getTableData()
@@ -243,17 +210,16 @@ export default {
         handleSearch() {  // 搜索
             this.pageChange(1);
         },
-        handleSearchReset() {  // 重置搜索
-            Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.create_time = []
+        handleTimeSearch(type, begin_time, end_time) { // 时间搜索
+            if (begin_time || end_time) {
+                this.searchForm.begin_time = begin_time
+                this.searchForm.end_time = end_time
+            }
             this.pageChange(1);
         },
-        handleTableChange(page, filters, sorter) {
-            console.log('handleTableChange filters:', filters)
-            this.filteredInfo = filters;
-            for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : 0
-            }
+        handleSearchReset() {  // 重置搜索
+            Object.assign(this.searchForm, this.$options.data().searchForm)
+            this.$refs.TimeSearch.handleReset()
             this.pageChange(1);
         },
         getTableData() {  // 获取 表格 数据
@@ -265,8 +231,6 @@ export default {
             Core.Api.Entity.list({
                 ...this.searchForm,
                 flag_spread: flag_spread,
-                begin_time: this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -291,6 +255,7 @@ export default {
             });
         },
 
+        // 删除
         handleDelete(id) {
             let _this = this;
             this.$confirm({
@@ -309,13 +274,14 @@ export default {
             });
         },
 
+        // 弹框 添加、编辑
         handleVehicleShow(record) { // 显示弹框
-            this.vehicleShow = true
             this.editForm = {
                 id: record.id,
                 uid: record.uid,
                 item_code: record.item_code,
             }
+            this.vehicleShow = true
         },
         handleVehicleClose() { // 关闭弹框
             this.vehicleShow = false
@@ -326,20 +292,6 @@ export default {
                 item_code: '',
             }
         },
-        onblur() {  // 获取 商品编码
-            if (!this.editForm.item_code) {
-                return this.isExist = ''
-            }
-            Core.Api.Item.detailByCode({
-                code: this.editForm.item_code,
-            }).then(res => {
-                this.isExist = res.detail != null
-                console.log("onblur res", res)
-            }).catch(err => {
-                console.log('onblur err', err)
-            }).finally(() => {
-            });
-        },
         handleVehicleSubmit() { // 审核提交
             let form = Core.Util.deepCopy(this.editForm)
             if (!form.uid) {
@@ -348,7 +300,7 @@ export default {
             if (!form.item_code) {
                 return this.$message.warning('请输入对应的商品编码')
             }
-            if (this.isExist === false) {
+            if (!this.isExist) {
                 return this.$message.warning('请输入正确的商品编码')
             }
             Core.Api.Entity.save(form).then(res => {
@@ -360,6 +312,33 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
+        },
+        handleItemCodeBlur() {  // 获取 商品编码
+            if (!this.editForm.item_code) {
+                return this.isExist = ''
+            }
+            Core.Api.Item.detailByCode({
+                code: this.editForm.item_code,
+            }).then(res => {
+                console.log("handleItemCodeBlur res", res)
+                this.isExist = res.detail != null
+            }).catch(err => {
+                console.log('handleItemCodeBlur err', err)
+            })
+        },
+
+
+        // 上传文件
+        handleMatterChange({file, fileList}) {
+            console.log("handleMatterChange status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                if (file.response && file.response.code < 0) {
+                    return this.$message.error(file.response.message)
+                } else {
+                    return this.$message.success('上传成功');
+                }
+            }
+            this.upload.fileList = fileList
         },
     }
 };

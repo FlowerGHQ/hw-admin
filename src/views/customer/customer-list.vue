@@ -23,18 +23,13 @@
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
                         <div class="key">创建时间：</div>
-                        <div class="value">
-                            <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
-                                <template #suffixIcon><i class="icon i_calendar"></i></template>
-                            </a-range-picker>
-                        </div>
+                        <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
                     <a-button @click="handleSearch" type="primary">查询</a-button>
                     <a-button @click="handleSearchReset">重置</a-button>
                 </div>
-
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
@@ -55,7 +50,7 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -81,10 +76,13 @@
 
 <script>
 import Core from '../../core';
+import TimeSearch from '../../components/common/TimeSearch.vue'
 
 export default {
     name: 'CustomerList',
-    components: {},
+    components: {
+        TimeSearch
+    },
     props: {},
     data() {
         return {
@@ -96,13 +94,13 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            create_time: [],
             searchForm: {
                 name: '',
                 phone:'',
+                begin_time: '',
+                end_time: '',
             },
-
+            // 表格
             tableColumns: [
                 {title: '名称', dataIndex: 'name', key:'detail'},
                 {title: '电话', dataIndex: 'phone', key:'item'},
@@ -112,7 +110,6 @@ export default {
                 {title: '操作', key: 'operation', fixed: 'right'},
             ],
             tableData: [],
-
         };
     },
     watch: {},
@@ -122,7 +119,6 @@ export default {
     },
     methods: {
         routerChange(type, item = {}) {
-            console.log(item)
             let routeUrl = ''
             switch (type) {
                 case 'edit':    // 编辑
@@ -146,23 +142,22 @@ export default {
         handleSearch() {    // 搜索
             this.pageChange(1);
         },
-        handleSearchReset() {    // 重置搜索
-            Object.assign(this.searchForm, this.$options.data().searchForm)
-            console.log('this.searchForm:', this.searchForm)
-            this.create_time = []
+        handleTimeSearch(type, begin_time, end_time) { // 时间搜索
+            if (begin_time || end_time) {
+                this.searchForm.begin_time = begin_time
+                this.searchForm.end_time = end_time
+            }
             this.pageChange(1);
         },
-        handleTableChange(page, filters, sorter) {
-            console.log('handleTableChange filters:', filters)
-            for (const key in filters) {
-this.searchForm[key] = filters[key] ? filters[key][0] : ''            }
+        handleSearchReset() {    // 重置搜索
+            Object.assign(this.searchForm, this.$options.data().searchForm)
+            this.$refs.TimeSearch.handleReset()
+            this.pageChange(1);
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
             Core.Api.Customer.list({
                 ...this.searchForm,
-                begin_time: this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {

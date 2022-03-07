@@ -33,7 +33,7 @@
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
                         <div class="key">创建时间:</div>
-                        <div class="value"><TimeSearch @search="handleSearch"/></div>
+                        <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
@@ -137,7 +137,7 @@ export default {
                 begin_time: '',
                 end_time: '',
             },
-
+            // 表格
             tableData: [],
         };
     },
@@ -202,41 +202,28 @@ export default {
                     break;
             }
         },
-        pageChange(curr) {        // 页码改变
+        pageChange(curr) { // 页码改变
             this.currPage = curr
             this.getTableData()
         },
-        pageSizeChange(current, size) {        // 页码尺寸改变
+        pageSizeChange(current, size) { // 页码尺寸改变
             console.log('pageSizeChange size:', size)
             this.pageSize = size
             this.getTableData()
         },
-        handleSearch(begin_time, end_time) { // 搜索
+        handleSearch() { // 搜索
+            this.pageChange(1);
+        },
+        handleTimeSearch(type, begin_time, end_time) { // 时间搜索
             if (begin_time || end_time) {
                 this.searchForm.begin_time = begin_time
                 this.searchForm.end_time = end_time
             }
             this.pageChange(1);
         },
-        getAgentListAll() {
-            if (this.searchForm.distributor_id) {
-                Core.Api.Agent.listAll({distributor_id: this.searchForm.distributor_id}).then(res => {
-                    console.log('res.list: ', res.list);
-                    this.agentList = res.list
-                });
-            } else {
-                this.agentList = []
-            }
-
-        },
-        getDistributorListAll() {
-            Core.Api.Distributor.listAll().then(res => {
-                console.log('res.list: ', res.list);
-                this.distributorList = res.list
-            });
-        },
-        handleSearchReset() {        // 重置搜索
+        handleSearchReset() { // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
+            this.$refs.TimeSearch.handleReset()
             this.pageChange(1);
         },
         handleTableChange(page, filters, sorter) {
@@ -248,7 +235,7 @@ export default {
             this.searchForm.status = filters.status ? filters.status[0] : 1
             this.pageChange(1);
         },
-        getTableData() {        // 获取 表格 数据
+        getTableData() { // 获取 表格 数据
             this.loading = true;
             Core.Api.Store.list({
                 ...this.searchForm,
@@ -265,6 +252,22 @@ export default {
             });
         },
 
+        getAgentListAll() {
+            if (this.searchForm.distributor_id) {
+                Core.Api.Agent.listAll({distributor_id: this.searchForm.distributor_id}).then(res => {
+                    this.agentList = res.list
+                });
+            } else {
+                this.agentList = []
+            }
+        },
+        getDistributorListAll() {
+            Core.Api.Distributor.listAll().then(res => {
+                this.distributorList = res.list
+            });
+        },
+
+        // 删除
         handleDelete(id) {
             let _this = this;
             this.$confirm({
@@ -282,6 +285,7 @@ export default {
                 },
             });
         },
+        // 门店 启用禁用
         handleStatusChange(record) {
             let _this = this;
             this.$confirm({
@@ -299,6 +303,7 @@ export default {
                 },
             });
         },
+        // 门店转单接受 启用禁用
         handleTransferChange(record) {
             let _this = this;
             this.$confirm({

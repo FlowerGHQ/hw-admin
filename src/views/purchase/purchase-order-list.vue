@@ -52,11 +52,7 @@
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">下单时间:</div>
-                    <div class="value">
-                        <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
-                            <template #suffixIcon><i class="icon i_calendar"></i> </template>
-                        </a-range-picker>
-                    </div>
+                    <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
                 </a-col>
             </a-row>
             <div class="btn-area">
@@ -67,7 +63,7 @@
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                :row-key="record => record.id" :pagination='false' @change="handleTableChange">
+                :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text , record}">
                     <template v-if="column.dataIndex === 'sn'">
                         <a-tooltip placement="top" :title='text'>
@@ -136,17 +132,21 @@
 <script>
 import Core from '../../core';
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE
-const PURCHASE = Core.Const.PURCHASE
+const SEARCH_TYPE = Core.Const.PURCHASE.SEARCH_TYPE
+
+import TimeSearch from '@/components/common/TimeSearch.vue'
+
 export default {
     name: 'PurchaseList',
-    components: {},
+    components: {
+        TimeSearch
+    },
     props: {},
     data() {
         return {
             LOGIN_TYPE,
-            SEARCH_TYPE: Core.Const.PURCHASE.SEARCH_TYPE,
+            SEARCH_TYPE,
             loginType: Core.Data.getLoginType(),
-            USER_TYPE: Core.Const.USER.TYPE,
             // 加载
             loading: false,
             // 导出
@@ -157,7 +157,7 @@ export default {
             total: 0,
             // 搜索
             purchaseMode: '',
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
+            search_type: 0,
             statusList: [
                 {text: '全  部', value: '0', color: 'primary',  key: '0'},
                 {text: '待支付', value: '0', color: 'yellow',  key: '100'},
@@ -169,7 +169,6 @@ export default {
             agentList: [],
             storeList: [],
             distributorList: [],
-            create_time: [],
             searchForm: {
                 sn: '',
                 status: undefined,
@@ -179,9 +178,10 @@ export default {
                 store_id: undefined,
                 type: 0,
                 subject: 0,
+                begin_time: '',
+                end_time: '',
             },
-            search_type: 0,
-            filteredInfo: null,
+            // 表格
             tableData: [],
         };
     },
@@ -192,8 +192,7 @@ export default {
             handler(newRoute) {
                 let search_type = newRoute.meta ? newRoute.meta.search_type : 0
                 this.search_type = search_type
-                console.log("search_type", search_type, this.search_type)
-                this.handleSearchReset();
+                this.handleSearchReset(false);
                 this.getStatusStat();
             }
         },
@@ -220,10 +219,10 @@ export default {
                 { title: '完成时间', dataIndex: 'close_time', key: 'time' },
                 { title: '操作', key: 'operation', fixed: 'right'}
             ]
-            if ((this.$auth('AGENT', 'DISTRIBUTOR') && this.search_type != this.SEARCH_TYPE.SELF) ||  (this.$auth('ADMIN') && this.search_type == this.SEARCH_TYPE.ALL)) {
+            if ((this.$auth('AGENT', 'DISTRIBUTOR') && this.search_type != SEARCH_TYPE.SELF) ||  (this.$auth('ADMIN') && this.search_type == SEARCH_TYPE.ALL)) {
                 columns.splice(2, 0, {title: '所属门店', dataIndex: 'store_name', key: 'item'})
             }
-            if ((this.$auth( 'DISTRIBUTOR') && this.search_type !== this.SEARCH_TYPE.SELF) || (this.$auth('ADMIN') && this.search_type == this.SEARCH_TYPE.ALL)) {
+            if ((this.$auth( 'DISTRIBUTOR') && this.search_type !== SEARCH_TYPE.SELF) || (this.$auth('ADMIN') && this.search_type == SEARCH_TYPE.ALL)) {
                 columns.splice(2, 0, {title: '所属零售商', dataIndex: 'agent_name', key: 'item'})
             }
             if (this.$auth('ADMIN')) {
@@ -232,11 +231,7 @@ export default {
             return columns
         }
     },
-    mounted() {
-        /*this.handleSearchReset();
-        this.getStatusStat();*/
-    },
-
+    mounted() {},
     methods: {
         async routerChange(type, item = {}) {
             console.log('routerChange item:', item)
@@ -268,18 +263,21 @@ export default {
             this.pageSize = size
             this.getTableData()
         },
-        handleTableChange(page, filters, sorter) {
-            console.log('handleTableChange filters:', filters)
-            // this.filteredInfo = filters;
-            for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : ''
-            }
-        },
         handleSearch() {  // 搜索
             this.pageChange(1);
         },
-        handleSearchReset() {  // 重置搜索
+        handleTimeSearch(type, begin_time, end_time) { // 时间搜索
+            if (begin_time || end_time) {
+                this.searchForm.begin_time = begin_time
+                this.searchForm.end_time = end_time
+            }
+            this.pageChange(1);
+        },
+        handleSearchReset(flag = true) {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
+            if (flag) {
+                this.$refs.TimeSearch.handleReset()
+            }
             if (this.$auth('ADMIN')) {
                 this.getDistributorListAll();
             } else if (this.$auth('DISTRIBUTOR')) {
@@ -291,7 +289,6 @@ export default {
             } else if (this.$auth('STORE')) {
                 this.searchForm.store_id = Core.Data.getOrgId()
             }
-            this.create_time = []
             this.pageChange(1);
         },
         getTableData() {  // 获取 表格 数据
@@ -299,8 +296,6 @@ export default {
             Core.Api.Purchase.list({
                 ...this.searchForm,
                 search_type: this.search_type,
-                begin_time: this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -317,7 +312,7 @@ export default {
             this.loading = true;
 
             Core.Api.Purchase.statusList({
-                    search_type: this.search_type
+                search_type: this.search_type
             }).then(res => {
                 console.log("getStatusStat res:", res)
                 let total = 0
@@ -339,14 +334,12 @@ export default {
         },
         getDistributorListAll() {
             Core.Api.Distributor.listAll().then(res => {
-                console.log('res.list: ', res.list);
                 this.distributorList = res.list
             });
         },
         getAgentListAll() { // 获取 零售商 数据
             if (this.searchForm.distributor_id) {
                 Core.Api.Agent.listAll({distributor_id: this.searchForm.distributor_id}).then(res => {
-                    console.log('getAgentListAll res.list: ', res.list);
                     this.agentList = res.list
                 });
             } else {
@@ -356,7 +349,6 @@ export default {
         getStoreListAll() { // 通过零售商Id 获取所有门店
             if (this.searchForm.agent_id) {
                 Core.Api.Store.listAll({agent_id: this.searchForm.agent_id}).then(res => {
-                    console.log('getStoreListAll res.list: ', res.list);
                     this.storeList = res.list
                 });
             } else {
@@ -378,7 +370,7 @@ export default {
             });
         },
 
-        handleExportConfirm(){ // 确认订单是否导出
+        handleExportConfirm() { // 确认订单是否导出
             let _this = this;
             this.$confirm({
                 title: '确认要导出吗？',
@@ -391,51 +383,16 @@ export default {
         },
         handleRepairExport() { // 订单导出
             this.exportDisabled = true;
-
-            let form = this.searchForm;
-            let sn = form.sn || ''
-            let status = form.status || 0
-            let itemType = form.item_type || 0
-            let distributorId = form.distributor_id || 0
-            let agentId = form.agent_id || 0
-            let storeId = form.store_id || 0
-            let orgId = form.org_id ? form.org_id : 0
-            let orgType = form.orgType || 0
-            let type = form.type || 0
-            let subject = form.subject || 0
-            let payMethod = form.pay_method || 0
-            let beginTime = this.create_time[0] || ''
-            let endTime   = this.create_time[1] || ''
-
-            const token = Core.Data.getToken() || ''
-
-            let power = ''
-            switch(this.loginType){
-                case LOGIN_TYPE.ADMIN:
-                    power = 'admin'
-                    break
-                case LOGIN_TYPE.DISTRIBUTOR:
-                    power = 'distributor'
-                    break
-                case LOGIN_TYPE.AGENT:
-                    power = 'agent'
-                    break
-                case LOGIN_TYPE.STORE:
-                    power = 'store'
-                    break
-                default:
-                    break
+            let form = Core.Util.deepCopy(this.searchForm);
+            for (const key in form) {
+                form[key] = form[key] || ''
             }
-
-            let fileUrl = Core.Const.NET.URL_POINT + '/' + power + '/1/purchase-order/export?'
-
-            let exportUrl =
-                `${fileUrl}token=${token}&sn=${sn}&status=${status}&item_type=${itemType}&distributor_id=${distributorId}
-                &agent_id=${agentId}&store_id=${storeId}&org_id=${orgId}&org_type=${orgType}&type=${type}&subject=${subject}&pay_method=${payMethod}
-                &begin_time=${beginTime}&end_time=${endTime}&search_type=${this.search_type}`
-            console.log("handleRepairExport -> exportUrl", exportUrl)
+            let exportUrl = Core.Api.Export.purchaseExport({
+                ...form,
+                search_type: this.search_type
+            })
+            console.log("handleRepairExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
-
             this.exportDisabled = false;
         },
     }

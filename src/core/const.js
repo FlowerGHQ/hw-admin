@@ -284,7 +284,6 @@ let Const = {
             '80': '审核通过',
             '100': '已完成',
             '-10': '已取消',
-
         },
         STATUS_COLOR_MAP: {
             '30': 'yellow',
@@ -424,7 +423,7 @@ let Const = {
         },
     },
     REFUND: { // 退款管理
-        TYPE: [
+        TYPE_LIST: [
             { text: '零售商申请退款', value: 100 },
             { text: '分销商申请退款', value: 110 },
             { text: '门店申请退款', value: 120 },
