@@ -664,7 +664,7 @@ let Const = {
             { text: '已取消', value: -20 },
         ],
     },
-    WALLET: { //钱包
+    WALLET: { //账户
         TYPE: {
             CNY: 1,
             EUR: 2,

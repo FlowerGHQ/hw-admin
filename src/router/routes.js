@@ -933,6 +933,40 @@ const routes = [{
             },
         ]
     },
+    { // 账户管理
+        path: '/wallet',
+        component: Layout,
+        redirect: '/wallet/wallet-list',
+        name: 'WalletManagement',
+        meta: {
+            title: '账户管理',
+            icon: 'i_s_user',
+            // auth: ['org-user.manager'],
+            roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
+        },
+        children: [
+            {
+                path: 'wallet-list',
+                name: 'WalletList',
+                component: () =>
+                    import ('@/views/wallet/wallet-list.vue'),
+                meta: {
+                    title: '账户列表',
+                }
+            },
+            {
+                path: 'wallet-detail',
+                name: 'WalletDetail',
+                hidden: true,
+                component: () =>
+                    import ('@/views/wallet/wallet-detail.vue'),
+                meta: {
+                    title: '账户详情',
+                    parent: '/wallet/wallet-list',
+                }
+            },
+        ]
+    },
     { // 角色管理
         path: '/authority',
         component: Layout,
