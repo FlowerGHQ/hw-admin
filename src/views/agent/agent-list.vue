@@ -26,13 +26,7 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">地区:</div>
                     <div class="value">
-                        <a-cascader
-                            placeholder="请选择大洲/国家"
-                            v-model:value="country_cascader"
-                            :options="countryOptions"
-                            @change="handleSearch"
-                            :field-names="{ label: 'value', value: 'value' , children: 'children'}"
-                        />
+                        <AreaSearch @search="handleOtherSearch" ref='AreaSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
@@ -109,11 +103,13 @@
 import Core from '../../core';
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 
-import TimeSearch from '../../components/common/TimeSearch.vue'
+import TimeSearch from '@/components/common/TimeSearch.vue'
+import AreaSearch from '@/components/common/AreaSearch.vue'
 export default {
     name: 'AgentList',
     components: {
         TimeSearch,
+        AreaSearch,
     },
     props: {},
     data() {
@@ -126,9 +122,6 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
-            countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
-            country_cascader: [], // 搜索框 大洲>国家
-
             distributorList: [], // 分销商下拉框数据
             filteredInfo: {status: [1]},
             searchForm: {
@@ -137,6 +130,8 @@ export default {
                 distributor_id: undefined,
                 begin_time: '',
                 end_time: '',
+                continent: '',
+                country: '',
             },
             // 表格
             tableData: [],
@@ -164,7 +159,7 @@ export default {
     },
     mounted() {
         this.getTableData();
-        if (this.loginType === LOGIN_TYPE.ADMIN || LOGIN_TYPE.DISTRIBUTOR) {
+        if (this.$auth('ADMIN')) {
             this.getDistributorListAll();
         }
     },
@@ -208,10 +203,16 @@ export default {
             }
             this.pageChange(1);
         },
+        handleOtherSearch(params) { // 大洲/国家 搜索
+            for (const key in params) {
+                this.searchForm[key] = params[key]
+            }
+            this.pageChange(1);
+        },
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
             this.$refs.TimeSearch.handleReset()
-            this.country_cascader = []
+            this.$refs.AreaSearch.handleReset()
             this.pageChange(1);
         },
         getDistributorListAll() {
@@ -233,8 +234,6 @@ export default {
             this.loading = true;
             Core.Api.Agent.list({
                 ...this.searchForm,
-                continent: this.country_cascader[0] || '',
-                country: this.country_cascader[1] || '',
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {

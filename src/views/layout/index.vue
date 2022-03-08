@@ -175,7 +175,7 @@ export default {
                 console.log('this.selectedKeys:', this.selectedKeys)
             }
         },
-        /* $lang: {
+        $lang: {
             deep: true,
             immediate: true,
             handler(n) {
@@ -186,7 +186,7 @@ export default {
                 }
                 console.log('this.locale:', this.locale)
             }
-        } */
+        }
     },
     created() {
         // console.log('created routes:', routes)
