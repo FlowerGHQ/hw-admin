@@ -74,7 +74,7 @@
                 <div class="form-item required">
                     <div class="key">所处仓库:</div>
                     <div class="value">
-                        <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库" show-search option-filter-prop="children" :disabled="!!form.item_id" >
+                        <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库" show-search option-filter-prop="children" :disabled="!!form.id" >
                             <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">
                                 {{ warehouse.name }}
                             </a-select-option>
@@ -171,7 +171,7 @@ export default {
             form: {
                 id: '',
                 warehouse_id: undefined,
-                item_id: undefined,
+                item_id: '',
                 item_fault_id: undefined,
                 source_uid: '',
                 source_id: '',
@@ -187,9 +187,7 @@ export default {
     computed: {},
     mounted() {
         console.log('mounted this.form', this.form);
-
         this.getTableData();
-
         this.getWarehouseList();
         this.getFaultTypeList();
     },
@@ -237,7 +235,7 @@ export default {
             })
         },
         getFaultTypeList() { // 获取产品故障类型
-            Core.Api.Fault.list({page: 0}).then(res => {
+            Core.Api.Fault.list().then(res => {
                 this.faultTypeList = res.list
             })
         },
@@ -247,8 +245,6 @@ export default {
             // return
             Core.Api.FaultEntity.list({
                 ...this.searchForm,
-                begin_time:this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -260,6 +256,21 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
+            // Core.Api.FaultEntity.list({
+            //     ...this.searchForm,
+            //     begin_time: this.create_time[0] || '',
+            //     end_time: this.create_time[1] || '',
+            //     page: this.currPage,
+            //     page_size: this.pageSize
+            // }).then(res => {
+            //     console.log("getTableData res:", res)
+            //     this.total = res.count;
+            //     this.tableData = res.list;
+            // }).catch(err => {
+            //     console.log('getTableData err:', err)
+            // }).finally(() => {
+            //     this.loading = false;
+            // });
         },
 
         handleDelete(id) {
@@ -328,6 +339,8 @@ export default {
         handleFaultItemSubmit() { // 新增故障件提交
             let form = Core.Util.deepCopy(this.form)
             console.log('handleFaultItemSubmit', form);
+            console.log('this.form.source_uid' , this.form.source_uid)
+            console.log('this.form.vehicle_no' , this.form.vehicle_no)
             // 新建故障件列表写完进行补充 必填项
             if (!form.warehouse_id) {
                 return this.$message.warning('请选择所处仓库')
@@ -342,8 +355,7 @@ export default {
                 return this.$message.warning('请输入工单编号')
             }
             if (!form.vehicle_no) {
-                // return this.$message.warning('请输入车架号')
-                return this.$message.warning('请输入正确的工单编号')
+                return this.$message.warning('请输入车架号')
             }
             Core.Api.FaultEntity.save(form).then(() => {
                 this.$message.success('保存成功')

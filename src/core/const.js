@@ -703,14 +703,14 @@ let Const = {
         STATUS: { // 故障件审核状态
             INIT: 0, // 初始化
             WAIT_AUDIT: 10, // 待审核
-            AUDIT_SUCCESS: 20, // 成功
-            AUDIT_FAIL: -20, // 失败
+            AUDIT_SUCCESS:20, // 审核成功
+            AUDIT_FAIL: -20, // 审核失败
         },
         STATUS_MAP: {
             '0': '初始化',
             '10': '待审核',
             '20': '审核成功',
-            '-20': '失败失败'
+            '-20': '审核失败'
         },
         STATUS_COLOR_MAP: {
             '0': 'grey',
@@ -718,6 +718,11 @@ let Const = {
             '20': 'green',
             '-20': 'red'
         },
+        AUDIT_TYPE: {
+            WAIT: 10,
+            FAIL: 0,
+            SUCCESS: 1,
+        }
     },
 };
 
