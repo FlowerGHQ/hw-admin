@@ -470,6 +470,18 @@ const routes = [{
                 }
             },
             {
+                path: 'pending-fault-entity-list',
+                name: 'pendingFaultEntityList',
+                component: () =>
+                    import ('@/views/warehouse/fault-entity-list.vue'),
+                meta: {
+                    title: '待处理故障件',
+                    is_sub_menu: true,
+                    roles: [LOGIN_TYPE.ADMIN],
+                    type: 'pending'
+                }
+            },
+            {
                 path: 'fault-entity-detail',
                 name: 'faultEntityDetail',
                 component: () =>
@@ -478,17 +490,6 @@ const routes = [{
                 meta: {
                     title: '故障件详情',
                     parent: '/warehouse/fault-entity-list',
-                }
-            },
-            {
-                path: 'pending-fault-entity-list',
-                name: 'pendingFaultEntityList',
-                component: () =>
-                    import ('@/views/warehouse/pending-fault-entity-list.vue'),
-                meta: {
-                    title: '待处理故障件',
-                    is_sub_menu: true,
-                    roles: [LOGIN_TYPE.ADMIN],
                 }
             },
         ]

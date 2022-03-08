@@ -3,13 +3,13 @@
         <div class="list-container">
             <div class="title-container">
                 <div class="title-area">故障件列表</div>
-                <a-button type="primary" @click="handleFaultItemShow()"><i
-                            class="icon i_add"/>新增故障件
+                <a-button type="primary" @click="handleFaultItemShow()" v-if="type !== 'pending' && $auth('ADMIN')">
+                    <i class="icon i_add"/>新增故障件
                 </a-button>
             </div>
             <div class="search-container">
                 <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">故障类型:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.item_fault_id" placeholder="请选择产品故障类型" show-search option-filter-prop="children">
@@ -19,7 +19,27 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
+                        <div class="key">所属零售商:</div>
+                        <div class="value">
+                            <a-select v-model:value="searchForm.agent_id" placeholder="请选择零售商" @change="handleSearch" show-search option-filter-prop="children">
+                                <a-select-option v-for="item of agentList" :key="item.id" :value="item.id">
+                                    {{ item.name }}
+                                </a-select-option>
+                            </a-select>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
+                        <div class="key">所属门店:</div>
+                        <div class="value">
+                            <a-select v-model:value="searchForm.store_id" placeholder="请选择门店" @change="handleSearch" show-search option-filter-prop="children">
+                                <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">
+                                    {{item.name}}
+                                </a-select-option>
+                            </a-select>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                         <div class="key">创建时间:</div>
                         <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
                     </a-col>
@@ -28,11 +48,20 @@
                     <a-button @click="handleSearch" type="primary">查询</a-button>
                     <a-button @click="handleSearchReset">重置</a-button>
                 </div>
-
+            </div>
+            <div class="operate-container" v-if="type==='pending'">
+                <a-button type="primary" @click="handleEntryShow('batch')">批量入库</a-button>
+                <a-button type="primary" @click="handleAuditShow('batch')">批量审核</a-button>
             </div>
             <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
+                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                    :row-key="record => record.id" :pagination='false' :row-selection='type==="pending" ? rowSelection : null'>
                     <template #bodyCell="{ column, record, text}">
+                        <template v-if="column.key === 'detail'">
+                            <a-tooltip placement="top" :title='text' >
+                                <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
+                            </a-tooltip>
+                        </template>
                         <template v-if="column.dataIndex === 'org_type'">
                             {{ $Util.userTypeFilter(text) }}
                         </template>
@@ -44,7 +73,10 @@
                                 {{ $Util.faultStatusFilter(text) }}
                             </div>
                         </template>
-                        <template v-if="column.dataIndex === 'create_time'">
+                        <template v-if="column.key === 'item'">
+                            {{ text || '-' }}
+                        </template>
+                        <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
@@ -136,6 +168,7 @@ export default {
     props: {},
     data() {
         return {
+            type: '',
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -152,16 +185,16 @@ export default {
             // 表格
             tableData: [],
             tableColumns: [
-                {title: '维修单号', dataIndex: 'source_uid'},
-                {title: '机构类型', dataIndex: 'org_type'},
-                {title: '所处仓库', dataIndex: 'warehouse_name'},
-                {title: '车架编号', dataIndex: 'vehicle_no'},
-                {title: '商品', dataIndex: ['item','name'],},
-                {title: '产品故障类型', dataIndex: 'item_fault_name'},
-                {title: '检测人', dataIndex: 'audit_user_name'},
-                {title: '工单帐类', dataIndex: 'service_type'},
+                {title: '车架编号', dataIndex: 'vehicle_no', key: 'item'},
                 {title: '状态', dataIndex: 'status'},
-                {title: '创建时间', dataIndex: 'create_time'},
+                {title: '维修单号', dataIndex: 'source_uid', key: 'detail'},
+                {title: '所处机构', dataIndex: 'org_type'},
+                {title: '所处仓库', dataIndex: 'warehouse_name', key: 'item'},
+                {title: '商品', dataIndex: ['item','name'], key: 'item'},
+                {title: '产品故障类型', dataIndex: 'item_fault_name', key: 'item'},
+                {title: '检测人', dataIndex: 'audit_user_name', key: 'item'},
+                {title: '工单帐类', dataIndex: 'service_type'},
+                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right' },
             ],
             // 弹框
@@ -183,11 +216,19 @@ export default {
             selectItem: {},
         };
     },
-    watch: {},
+    watch: {
+        $route: {
+            deep: true,
+            immediate: true,
+            handler(newRoute) {
+                let type = newRoute.meta ? newRoute.meta.type : ''
+                this.type = type
+                this.handleSearchReset(false);
+            }
+        },
+    },
     computed: {},
     mounted() {
-        console.log('mounted this.form', this.form);
-        this.getTableData();
         this.getWarehouseList();
         this.getFaultTypeList();
     },
@@ -223,9 +264,11 @@ export default {
             }
             this.pageChange(1);
         },
-        handleSearchReset() {    // 重置搜索
+        handleSearchReset(flag = true) {    // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.$refs.TimeSearch.handleReset()
+            if (flag) {
+                this.$refs.TimeSearch.handleReset()
+            }
             this.pageChange(1);
         },
         // 获取列表数据
