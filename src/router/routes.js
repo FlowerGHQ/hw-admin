@@ -481,17 +481,6 @@ const routes = [{
                     type: 'pending'
                 }
             },
-            {
-                path: 'fault-entity-detail',
-                name: 'faultEntityDetail',
-                component: () =>
-                    import ('@/views/warehouse/fault-entity-detail.vue'),
-                hidden: true,
-                meta: {
-                    title: '故障件详情',
-                    parent: '/warehouse/fault-entity-list',
-                }
-            },
         ]
     },
     { // 物流管理 - 平台端

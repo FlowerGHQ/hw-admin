@@ -281,7 +281,7 @@ export default {
             handler(newRoute) {
                 let type = newRoute.meta ? newRoute.meta.type : 'in'
                 this.type = type
-                this.handleSearchReset();
+                this.handleSearchReset(false);
                 this.getStatusList();
             }
         },
@@ -351,9 +351,11 @@ export default {
             }
             this.pageChange(1);
         },
-        handleSearchReset() {    // 重置搜索
+        handleSearchReset(flag = true) {    // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.$refs.TimeSearch.handleReset()
+            if (flag) {
+                this.$refs.TimeSearch.handleReset()
+            }
             this.pageChange(1);
         },
         getTableData() {    // 获取 表格 数据

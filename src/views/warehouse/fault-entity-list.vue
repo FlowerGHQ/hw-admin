@@ -2,14 +2,14 @@
     <div id="FaultEntityList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">故障件列表</div>
-                <a-button type="primary" @click="handleFaultItemShow()" v-if="type !== 'pending' && $auth('ADMIN')">
+                <div class="title-area">{{title}}</div>
+                <a-button type="primary" @click="handleFaultItemShow()" v-if="type !== 'pending' && !$auth('ADMIN')">
                     <i class="icon i_add"/>新增故障件
                 </a-button>
             </div>
             <div class="search-container">
                 <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="!$auth('ADMIN')">
                         <div class="key">故障类型:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.item_fault_id" placeholder="请选择产品故障类型" show-search option-filter-prop="children">
@@ -55,7 +55,7 @@
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                    :row-key="record => record.id" :pagination='false' :row-selection='type==="pending" ? rowSelection : null'>
+                    :row-key="record => record.id" :pagination='false' :row-selection='type === "pending" ? rowSelection : null'>
                     <template #bodyCell="{ column, record, text}">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text' >
@@ -80,7 +80,9 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleFaultItemShow(record)"><i class="icon i_edit"/> 修改</a-button>
+                            <a-button type="link" @click="handleFaultItemShow(record)" v-if="type !== 'pending'"><i class="icon i_edit"/> 修改</a-button>
+                            <a-button type="link" @click="handleEntryShow('', record)" v-if="type == 'pending' && record.org_type !== LOGIN_TYPE.ADMIN"><i class="icon i_s_warehouse"/> 入库</a-button>
+                            <a-button type="link" @click="handleAuditShow('', record)" v-if="type == 'pending' && record.status === AUDIT_TYPE.WAIT"><i class="icon i_m_success"/> 审核</a-button>
                             <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button>
                         </template>
                     </template>
@@ -101,8 +103,10 @@
                     @showSizeChange="pageSizeChange"
                 />
             </div>
+        </div>
+        <template class="modal-container">
             <a-modal v-model:visible="modalShow" title="新增故障件" class="fault-entity-modal"
-                :after-close="handleFaultItemClose">
+            :after-close="handleFaultItemClose">
                 <div class="form-item required">
                     <div class="key">所处仓库:</div>
                     <div class="value">
@@ -151,7 +155,46 @@
                     <a-button @click="handleFaultItemClose">取消</a-button>
                 </template>
             </a-modal>
-        </div>
+            <a-modal v-model:visible="auditShow" title="审核" class="audit-modal" :after-close='handleAuditClose'>
+                <div class="modal-content">
+                    <div class="form-item required">
+                        <div class="key">审核结果:</div>
+                        <a-radio-group v-model:value="auditForm.audit_result">
+                            <a-radio :value="AUDIT_TYPE.SUCCESS">通过</a-radio>
+                            <a-radio :value="AUDIT_TYPE.FAIL">不通过</a-radio>
+                        </a-radio-group>
+                    </div>
+                    <div class="form-item textarea required" v-if="auditForm.audit_result === AUDIT_TYPE.FAIL">
+                        <div class="key">原因:</div>
+                            <div class="value">
+                                <a-textarea v-model:value="auditForm.audit_message" placeholder="请输入不通过原因" :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                            </div>
+                        </div>
+                    </div>
+                <template #footer>
+                    <a-button @click="handleAuditClose">取消</a-button>
+                    <a-button @click="handleAuditSubmit" type="primary">确定</a-button>
+                </template>
+            </a-modal>
+            <a-modal v-model:visible="entryShow" title="入库" class="entry-modal" :after-close='handleEntryClose'>
+                <div class="modal-content">
+                    <div class="form-item required">
+                        <div class="key">所处仓库:</div>
+                        <div class="value">
+                            <a-select v-model:value="entryForm.warehouse_id" placeholder="请选择仓库" show-search option-filter-prop="children" >
+                                <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">
+                                    {{ item.name }}
+                                </a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                </div>
+                <template #footer>
+                    <a-button @click="handleEntryClose">取消</a-button>
+                    <a-button @click="handleEntrySubmit" type="primary">确定</a-button>
+                </template>
+            </a-modal>       
+        </template>
     </div>
 </template>
 
@@ -159,6 +202,9 @@
 import Core from '../../core';
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 import TimeSearch from '@/components/common/TimeSearch.vue'
+const FAULT_ENTITY = Core.Const.FAULT_ENTITY
+const LOGIN_TYPE = Core.Const.LOGIN.TYPE
+
 export default {
     name: 'FaultEntityList',
     components: {
@@ -170,6 +216,8 @@ export default {
         return {
             type: '',
             loginType: Core.Data.getLoginType(),
+            AUDIT_TYPE: FAULT_ENTITY.AUDIT_TYPE,
+            LOGIN_TYPE,
             // 加载
             loading: false,
             // 分页
@@ -177,13 +225,22 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
+            storeList: [], // 分销商列表
+            agentList: [], // 零售商列表
+            warehouseList: [], // 所处仓库列表
+            faultTypeList: [], // 产品故障类型列表
             searchForm: {
+                store_id: undefined,
+                agent_id: undefined,
+                distributor_id: undefined,
                 item_fault_id: undefined,
                 begin_time: '',
                 end_time: '',
             },
             // 表格
             tableData: [],
+            selectedRowKeys: [],
+            selectedRowItems: [],
             tableColumns: [
                 {title: '车架编号', dataIndex: 'vehicle_no', key: 'item'},
                 {title: '状态', dataIndex: 'status'},
@@ -199,8 +256,6 @@ export default {
             ],
             // 弹框
             modalShow: false,
-            warehouseList: [], // 所处仓库列表
-            faultTypeList: [], // 产品故障类型列表
             form: {
                 id: '',
                 warehouse_id: undefined,
@@ -214,6 +269,19 @@ export default {
                 uid: ''
             },
             selectItem: {},
+            // 审核
+            auditShow: false,
+            auditForm: {
+                ids: '',
+                audit_result: undefined,
+                audit_message: '',
+            },
+            // 入库
+            entryShow: false,
+            entryForm: {
+                ids: '',
+                warehouse_id: undefined
+            }
         };
     },
     watch: {
@@ -227,12 +295,32 @@ export default {
             }
         },
     },
-    computed: {},
+    computed: {
+        rowSelection() {
+            return {
+                selectedRowKeys: this.selectedRowKeys,
+                onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
+                    this.selectedRowKeys = selectedRowKeys
+                    this.selectedRowItems = selectedRows
+                    console.log('rowSelection onChange this.selectedRowKeys', this.selectedRowKeys);
+                },
+                /* getCheckboxProps: record => ({
+                    disabled: record.org_type === LOGIN_TYPE.ADMIN
+                }), */
+            };
+        },
+        title() {
+            return this.type !== 'pending'? '故障件列表' : '待处理故障件列表'
+        }
+    },
     mounted() {
         this.getWarehouseList();
         this.getFaultTypeList();
+        this.getStoreList();
+        this.getAgentList();
     },
     methods: {
+        // 维修单详情入口 
         routerChange(type, item = {}) {
             let routeUrl = ''
             switch (type) {
@@ -272,19 +360,32 @@ export default {
             this.pageChange(1);
         },
         // 获取列表数据
+        getAgentList() { // 获取零售商列表
+            Core.Api.Agent.list().then(res => {
+                console.log('this.agentList', res.list);  
+                this.agentList = res.list
+            })
+        },
+        getStoreList() { // 获取门店列表
+            Core.Api.Store.list().then(res => {
+                console.log('this.storeList', res.list);  
+                this.storeList = res.list
+            })
+        },
         getWarehouseList() { // 获取仓库数据
-            Core.Api.Warehouse.listAll({type: 2}).then(res => {
+            const type = 2  // 残次仓类型
+            Core.Api.Warehouse.listAll({type}).then(res => {
                 this.warehouseList = res.list
             })
         },
-        getFaultTypeList() { // 获取产品故障类型
+        getFaultTypeList() { // 获取产品故障类型\
             Core.Api.Fault.list().then(res => {
+                console.log('this.faultTypeList', res.list);
                 this.faultTypeList = res.list
             })
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
-            this.loading = false;
             // return
             Core.Api.FaultEntity.list({
                 ...this.searchForm,
@@ -299,21 +400,6 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
-            // Core.Api.FaultEntity.list({
-            //     ...this.searchForm,
-            //     begin_time: this.create_time[0] || '',
-            //     end_time: this.create_time[1] || '',
-            //     page: this.currPage,
-            //     page_size: this.pageSize
-            // }).then(res => {
-            //     console.log("getTableData res:", res)
-            //     this.total = res.count;
-            //     this.tableData = res.list;
-            // }).catch(err => {
-            //     console.log('getTableData err:', err)
-            // }).finally(() => {
-            //     this.loading = false;
-            // });
         },
 
         handleDelete(id) {
@@ -384,7 +470,6 @@ export default {
             console.log('handleFaultItemSubmit', form);
             console.log('this.form.source_uid' , this.form.source_uid)
             console.log('this.form.vehicle_no' , this.form.vehicle_no)
-            // 新建故障件列表写完进行补充 必填项
             if (!form.warehouse_id) {
                 return this.$message.warning('请选择所处仓库')
             }
@@ -418,7 +503,87 @@ export default {
             console.log('handleSelectItem', ids, items);
             this.form.item_id = ids[0]
             this.selectItem = items[0]
-        }
+        },
+
+        // 审核
+        handleAuditShow(type, record) { // 显示弹框
+            if (type === 'batch') {
+                this.auditForm.ids = this.selectedRowKeys.join(',')
+            } else {
+                this.auditForm.ids = record.id
+            }
+            this.auditShow = true
+            console.log('handleAuditShow', this.auditForm.ids)
+        },
+        handleAuditClose() { // 关闭弹框
+            this.auditShow = false
+            this.selectedRowKeys = []
+            this.selectedRowItems = []
+            this.auditForm = {
+                ids: '',
+                audit_result: undefined,
+                audit_message: '',
+            }
+        },
+        handleAuditSubmit() { // 审核提交
+            if (this.selectedRowItems.length) {
+                for (const item of this.selectedRowItems) {
+                    if (item.status !== this.AUDIT_TYPE.WAIT) {
+                        return this.$message.warning('请勿审核已审核的故障件')
+                    } 
+                }
+            }
+            if (!this.auditForm.audit_result) {
+                return this.$message.warning('请选择审核结果')
+            }
+            Core.Api.FaultEntity.batchAudit(this.auditForm).then(() => {
+                this.$message.success('完成审核');
+                this.getTableData();
+                this.handleAuditClose()
+            }).catch(err => {
+                console.log("handleAuditSubmit err", err);
+            })
+        },
+
+        // 入库
+        handleEntryShow(type, record) {
+            if (type === 'batch') {
+                this.entryForm.ids = this.selectedRowKeys.join(',')
+            } else {
+                this.entryForm.ids = record.id
+            }
+            this.getWarehouseList()
+            this.entryShow = true
+        },
+        handleEntryClose() {
+            this.entryShow = false
+            this.selectedRowKeys = []
+            this.selectedRowItems = []
+            this.entryForm = {
+                ids: '',
+                warehouse_id: undefined
+            }
+        },
+        handleEntrySubmit() {
+            if (this.selectedRowItems.length) {
+                for (const item of this.selectedRowItems) {
+                    if (item.org_type === LOGIN_TYPE.ADMIN) {
+                        return this.$message.warning('请不要入库已入库的故障件')
+                    }
+                }
+            }
+            if(!this.entryForm.warehouse_id) {
+                this.$message.warning('请选择所处仓库')
+            } else {
+                Core.Api.FaultEntity.batchRecycle(this.entryForm).then(() => {
+                    this.$message.success('完成入库');
+                    this.getTableData();
+                    this.handleEntryClose()
+                }).catch(err => {
+                    console.log("handleEntrySubmit err", err);
+                })
+            }
+        },
     }
 };
 </script>
