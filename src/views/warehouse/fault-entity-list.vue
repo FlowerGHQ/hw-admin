@@ -235,7 +235,7 @@ export default {
             })
         },
         getFaultTypeList() { // 获取产品故障类型
-            Core.Api.Fault.list({page: 0}).then(res => {
+            Core.Api.Fault.list().then(res => {
                 this.faultTypeList = res.list
             })
         },
@@ -245,8 +245,6 @@ export default {
             // return
             Core.Api.FaultEntity.list({
                 ...this.searchForm,
-                begin_time:this.create_time[0] || '',
-                end_time: this.create_time[1] || '',
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -258,6 +256,21 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
+            // Core.Api.FaultEntity.list({
+            //     ...this.searchForm,
+            //     begin_time: this.create_time[0] || '',
+            //     end_time: this.create_time[1] || '',
+            //     page: this.currPage,
+            //     page_size: this.pageSize
+            // }).then(res => {
+            //     console.log("getTableData res:", res)
+            //     this.total = res.count;
+            //     this.tableData = res.list;
+            // }).catch(err => {
+            //     console.log('getTableData err:', err)
+            // }).finally(() => {
+            //     this.loading = false;
+            // });
         },
 
         handleDelete(id) {

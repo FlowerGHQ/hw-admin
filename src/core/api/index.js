@@ -285,7 +285,8 @@ const apiList = {
         detailByUid: ['PostJson', 'fault-entity/detail-by-uid'],
         list: ['PostJson', 'fault-entity/list'],
         save: ['PostJson', 'fault-entity/save'],
-        batchRecycle: ['PostJson', 'fault-entity/batch-recycle']
+        batchAudit: ['PostJson', 'fault-entity/batch-audit'], // 批量审核
+        batchRecycle: ['PostJson', 'fault-entity/batch-recycle']  // 批量入库
     },
     System: { // 系统管理
         fileList: ['PostJson', 'sys-file/list'], // 系统文件管理
