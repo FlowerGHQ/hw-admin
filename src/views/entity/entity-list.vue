@@ -31,6 +31,30 @@
                             <a-input placeholder="请输入车架号" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
+                        <div class="key">所属分销商:</div>
+                        <div class="value">
+                            <a-select v-model:value="searchForm.distributor_id" placeholder="请选择所属分销商" @change="handleSearch">
+                                <a-select-option v-for="distributor of distributorList" :key="distributor.id" :value="distributor.id">{{ distributor.name }}</a-select-option>
+                            </a-select>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
+                        <div class="key">所属零售商:</div>
+                        <div class="value">
+                            <a-select v-model:value="searchForm.agent_id" placeholder="请选择所属零售商" @change='handleSearch'>
+                                <a-select-option v-for="agent of agentList" :key="agent.id" :value="agent.id">{{ agent.name }}</a-select-option>
+                            </a-select>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="!$auth('STORE')">
+                        <div class="key">所属门店:</div>
+                        <div class="value">
+                            <a-select v-model:value="searchForm.store_id" placeholder="请选择所属门店" @change='handleSearch'>
+                                <a-select-option v-for="store of storeList" :key="store.id" :value="store.id">{{ store.name }}</a-select-option>
+                            </a-select>
+                        </div>
+                    </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                         <div class="key">创建时间:</div>
                         <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
@@ -63,6 +87,12 @@
                         <template v-if="column.key === 'attr'">
                             {{ record.attr_desc || ' ' }}
                         </template>
+                        <template v-if="column.dataIndex === 'org_name'">
+                            {{ text || '-' }}
+                        </template>
+                        <template v-if="column.dataIndex === 'org_type'">
+                            {{ $Util.userTypeFilter(text) }}
+                        </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
@@ -93,13 +123,14 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="vehicleShow" :title="editForm.uid ? '车架编辑' : '新增车架'" class="refund-edit-modal" :after-close='handleVehicleClose'>
+            <a-modal v-model:visible="vehicleShow" :title="editForm.uid ? '车架编辑' : '新增车架'" class="vehicle-edit-modal"
+                     :after-close='handleVehicleClose'>
                 <div class="modal-content">
                     <div class="form-item required">
                         <div class="key">商品编码:</div>
                         <a-input v-model:value="editForm.item_code" placeholder="请输入对应的商品编码" @blur="handleItemCodeBlur"/>
-                        <span v-if="isExist"><i class="icon i_confirm"/></span>
-                        <span v-else><i class="icon i_close_c"/></span>
+                        <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
+                        <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                     </div>
                     <div class="form-item required">
                         <div class="key">车架号:</div>
@@ -134,12 +165,18 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
+            distributorList: [],
+            agentList: [],
+            storeList: [],
             searchForm: {
                 name: '',
                 code: '',
                 category_id: undefined,
                 begin_time: '',
                 end_time: '',
+                distributor_id: undefined,
+                agent_id: undefined,
+                store_id: undefined,
             },
             // 表格
             tableData: [],
@@ -174,7 +211,10 @@ export default {
             let columns = [
                 {title: '车架名称', dataIndex: ['item', 'name'], key: 'detail'},
                 {title: '车架号', dataIndex: 'uid', key: 'item'},
-                {title: '规格', key: 'attr'},
+                {title: '规格',dataIndex: 'attr', key: 'attr'},
+                {title: '单位类型', dataIndex: 'org_type'},
+                {title: '所属单位', dataIndex: 'org_name'},
+                {title: '到港日期', dataIndex: 'arrival_time',key: 'time'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right', width: 180}
             ]
@@ -183,6 +223,15 @@ export default {
     },
     mounted() {
         this.getTableData();
+        if (this.$auth('ADMIN')) {
+            this.getDistributorListAll();
+        }
+        if (this.$auth('ADMIN','DISTRIBUTOR')) {
+            this.getAgentListAll();
+        }
+        if (!this.$auth('STORE')) {
+            this.getStoreListAll();
+        }
     },
     methods: {
         routerChange(type, item = {}) {
@@ -222,9 +271,24 @@ export default {
             this.$refs.TimeSearch.handleReset()
             this.pageChange(1);
         },
+        getDistributorListAll() {
+            Core.Api.Distributor.listAll().then(res => {
+                this.distributorList = res.list
+            });
+        },
+        getAgentListAll() {
+            Core.Api.Agent.listAll().then(res => {
+                this.agentList = res.list
+            });
+        },
+        getStoreListAll() {
+            Core.Api.Store.listAll().then(res => {
+                this.storeList = res.list
+            });
+        },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-            let flag_spread = 0
+            let flag_spread = ''
             if (this.searchForm.name !== '' || this.searchForm.code !== '') {
                 flag_spread = 1
             }
@@ -300,7 +364,7 @@ export default {
             if (!form.item_code) {
                 return this.$message.warning('请输入对应的商品编码')
             }
-            if (!this.isExist) {
+            if (this.isExist == 2) {
                 return this.$message.warning('请输入正确的商品编码')
             }
             Core.Api.Entity.save(form).then(res => {
@@ -321,7 +385,7 @@ export default {
                 code: this.editForm.item_code,
             }).then(res => {
                 console.log("handleItemCodeBlur res", res)
-                this.isExist = res.detail != null
+                this.isExist = res.detail == null ? 2 : 1
             }).catch(err => {
                 console.log('handleItemCodeBlur err', err)
             })
@@ -352,7 +416,7 @@ export default {
     }
 }
 
-.form-item:last-child {
+.form-item {
     .fac();
 
     .ant-input {

@@ -171,7 +171,7 @@ const STATUS = Core.Const.PURCHASE.STATUS;
 const PAYMENT_STATUS =Core.Const.PURCHASE.PAYMENT_STATUS;
 const itemColumns = [
     { title: '商品', dataIndex: 'item' },
-    { title: '型号', dataIndex: ['item', "model"] },
+    { title: '品号', dataIndex: ['item', "model"] },
     { title: '编号', dataIndex: ['item', "code"] },
     { title: '规格', dataIndex: ['item', 'attr_str'], key: 'attrs' },
     { title: '数量', dataIndex: 'amount'},

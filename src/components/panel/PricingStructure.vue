@@ -36,7 +36,7 @@
                         </div>
                     </template>
                     <template v-if="column.key === 'money'">
-                        €{{ $Util.countFilter(text) }}
+                        {{ $Util.countFilter(text) }}
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}
@@ -46,10 +46,15 @@
                     </template>
                     <template v-if="column.key === 'supply'">
                         <template v-if="record.edit_show || editShow || addMode">
-                            <a-input-number v-model:value="record.edit_price" style="width: 120px;" :min="0.01" :max='record.price/100' :precision="2"
-                                :formatter="value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')"/>
+                            <a-input-number v-model:value="record.purchase_price" v-if="column.dataIndex === 'purchase_price'" style="width: 120px;" :min="0.01" :precision="2"
+                                :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')"/>
+                            <a-input-number v-model:value="record.purchase_price_eur" v-if="column.dataIndex === 'purchase_price_eur'" style="width: 120px;" :min="0.01" :precision="2"
+                                            :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')"/>
+                            <a-input-number v-model:value="record.purchase_price_usd" v-if="column.dataIndex === 'purchase_price_usd'" style="width: 120px;" :min="0.01" :precision="2"
+                                            :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')"/>
+                            <a-input-number v-model:value="record.purchase_price_gbp" v-if="column.dataIndex === 'purchase_price_gbp'" style="width: 120px;" :min="0.01" :precision="2"
+                                            :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')"/>
                         </template>
-                        <template v-else>€{{ $Util.countFilter(text) }}</template>
                     </template>
                     <template v-if="column.key === 'operation'">
                         <a-button type='link' @click="handleEditChange(record)" v-if="!editShow">
@@ -116,9 +121,12 @@ export default {
             // 表格数据
             tableData: [],
             editShow: false,
-
             addMode: false,
-            addData: []
+            addData: [],
+            purchase_price_gbp: '',
+            purchase_price: '',
+            purchase_price_eur: '',
+            purchase_price_gbp_usd: '',
         };
     },
     watch: {},
@@ -127,9 +135,12 @@ export default {
             let columns = [
                 { title: '商品名称', dataIndex: 'name', key: 'detail'},
                 { title: '商品规格', dataIndex: 'attr_list', key: 'spec' },
-                { title: '商品型号', dataIndex: 'model', key: 'item' },
+                { title: '商品品号', dataIndex: 'model', key: 'item' },
                 { title: '商品编码', dataIndex: 'code',  key: 'item' },
-                { title: '供货价',  dataIndex: 'purchase_price', key: 'supply', },
+                { title: '供货价(￥)',  dataIndex: 'purchase_price', key: 'supply', },
+                { title: '供货价(€)',  dataIndex: 'purchase_price_eur', key: 'supply', },
+                { title: '供货价($)',  dataIndex: 'purchase_price_usd', key: 'supply', },
+                { title: '供货价(£)',  dataIndex: 'purchase_price_gbp', key: 'supply', },
                 { title: '采购价', dataIndex: 'parent_price', key: 'money', },
                 { title: '建议零售价', dataIndex: 'price', key: 'money', },
                 { title: '操作', key: 'operation', fixed: 'right'},
@@ -174,12 +185,15 @@ export default {
                 org_id: this.orgId,
                 org_type: this.orgType,
                 page: this.currPage,
-                page_size: this.pageSize
+                page_size: this.pageSize,
             }).then(res => {
                 console.log("getTableData res", res)
                 this.total = res.count;
                 res.list.forEach(item => {
-                    item.edit_price = Core.Util.countFilter(item.purchase_price)
+                    item.purchase_price = Core.Util.countFilter(item.purchase_price)
+                    item.purchase_price_gbp = Core.Util.countFilter(item.purchase_price_gbp)
+                    item.purchase_price_eur = Core.Util.countFilter(item.purchase_price_eur)
+                    item.purchase_price_usd = Core.Util.countFilter(item.purchase_price_usd)
                     item.edit_show = false
                 });
                 this.tableData = res.list;
@@ -229,7 +243,10 @@ export default {
                 item_id: item.id,
                 name: item.name,
                 price: item.price,
-                purchase_price: Math.round(item.edit_price * 100),
+                purchase_price: Math.round(item.purchase_price * 100),
+                purchase_price_gbp: Math.round(item.purchase_price_gbp * 100),
+                purchase_price_usd: Math.round(item.purchase_price_usd * 100),
+                purchase_price_eur: Math.round(item.purchase_price_eur * 100),
 
                 org_id: this.orgId,
                 org_type: this.orgType,
@@ -254,7 +271,10 @@ export default {
                 Core.Api.ItemPrice.save({
                     id: item.id,
                     item_id: item.item_id,
-                    purchase_price: Math.round(item.edit_price * 100),
+                    purchase_price: Math.round(item.purchase_price * 100),
+                    purchase_price_gbp: Math.round(item.purchase_price_gbp * 100),
+                    purchase_price_usd: Math.round(item.purchase_price_usd * 100),
+                    purchase_price_eur: Math.round(item.purchase_price_eur * 100),
                 }).then(() => {
                     this.$message.success('更改成功')
                 }).catch(err => {
@@ -274,7 +294,10 @@ export default {
                 let items = this.tableData.map(item => ({
                     id: item.id,
                     item_id: item.item_id,
-                    purchase_price: Math.round(item.edit_price * 100),
+                    purchase_price: Math.round(item.purchase_price * 100),
+                    purchase_price_gbp: Math.round(item.purchase_price_gbp * 100),
+                    purchase_price_usd: Math.round(item.purchase_price_usd * 100),
+                    purchase_price_eur: Math.round(item.purchase_price_eur * 100),
                 }))
                 Core.Api.ItemPrice.batchSave(items).then(() => {
                     this.$message.success('更改成功')
@@ -293,6 +316,10 @@ export default {
 .PricingStructure {
     .table-container {
         margin-top: -10px;
+        .value-price {
+            margin-right: 5px;
+            width: 60px;
+        }
     }
 }
 </style>

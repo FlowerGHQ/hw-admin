@@ -46,8 +46,7 @@
                                 <template v-if="column.key === 'type'">
                                     <a-select v-model:value="record.type" placeholder="维修类型"
                                               @change="handleRepairTypeChange(record)" style="width: 100px;">
-                                        <a-select-option v-for="(val,key) in repairTypeMap" :key="key"
-                                                         :value="Number(key)">{{ val }}
+                                        <a-select-option v-for="(val,key) in repairTypeMap" :key="key" :value="Number(key)">{{ val }}
                                         </a-select-option>
                                     </a-select>
                                 </template>

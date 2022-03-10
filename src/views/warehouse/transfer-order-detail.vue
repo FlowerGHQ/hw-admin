@@ -99,7 +99,7 @@ export default {
             tableData: [],
             tableColumns: [
                 {title: '商品名称', dataIndex: ['item', 'name'], key: 'name'},
-                {title: '商品型号', dataIndex: ['item', 'model']},
+                {title: '商品品号', dataIndex: ['item', 'model']},
                 {title: '商品编码', dataIndex: ['item', 'code']},
                 {title: '商品规格', dataIndex: ['item', 'attr_str'],},
                 {title: '数量', dataIndex: 'amount', key: 'amount'},

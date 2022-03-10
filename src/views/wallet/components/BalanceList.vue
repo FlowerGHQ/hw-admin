@@ -84,7 +84,6 @@ export default {
     },
     mounted() {
         this.getTableData();
-        console.log('getWalletDetail')
     },
     methods: {
       /*  routerChange(type, item) {

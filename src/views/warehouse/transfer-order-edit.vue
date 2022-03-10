@@ -94,7 +94,7 @@ export default {
         tableColumns() {
             let columns = [
                 {title: '商品名称', dataIndex: 'item', key: 'item-name'},
-                {title: '商品型号', dataIndex: ['item', 'model'], key: 'item-name'},
+                {title: '商品品号', dataIndex: ['item', 'model'], key: 'item-name'},
                 {title: '商品编码', dataIndex: 'item', key: 'item-code'},
                 {title: '商品规格', dataIndex: ['item', 'attr_str'], key: 'item-code'},
                 {title: '数量', dataIndex: 'amount', key: 'amount'},

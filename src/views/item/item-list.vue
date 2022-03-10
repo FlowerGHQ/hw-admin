@@ -26,6 +26,14 @@
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">商品类型:</div>
+                    <div class="value">
+                        <a-select v-model:value="searchForm.type" placeholder="请选择商品类型">
+                            <a-select-option v-for="(val, key) in itemTypeMap" :key="key" :value="key">{{ val }}</a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">商品编码:</div>
                     <div class="value">
                         <a-input placeholder="请输入商品编码" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
@@ -65,11 +73,17 @@
                             </a-tooltip>
                         </div>
                     </template>
+                    <template v-if="column.key === 'type'">
+                        {{ $Util.itemTypeFilter(text) }}
+                    </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
                     </template>
                     <template v-if="column.key === 'money'">
                         €{{$Util.countFilter(text)}}
+                    </template>
+                    <template v-if="column.key === 'man_hour'">
+                        {{ $Util.countFilter(text) }}
                     </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="text ? 'primary' : 'grey'">
@@ -142,18 +156,21 @@ export default {
                 category_id: undefined,
                 begin_time: '',
                 end_time: '',
+                type: undefined,
             },
-
+            itemTypeMap: Core.Const.ITEM.TYPE_MAP,
             // 表格
             tableData: [],
             tableColumns: [
                 { title: '商品名称', dataIndex: 'name', key: 'detail' },
+                { title: '类型', dataIndex: ['type'], key: 'type' },
                 { title: '商品分类', dataIndex: ['category','name'], key: 'item' },
-                { title: '商品型号', dataIndex: 'model', key: 'item' },
+                { title: '商品品号', dataIndex: 'model', key: 'item' },
                 { title: '商品编码', dataIndex: 'code', key: 'item' },
-                { title: '成本价格', dataIndex: 'original_price', key: 'money' },
+                { title: '成本价格', dataIndex: 'original_price' ,key: 'money'},
+                { title: 'FOB价', dataIndex: 'fob', key: 'money' },
                 { title: '建议零售价', dataIndex: 'price', key: 'money' },
-                { title: '工时费', dataIndex: 'price', key: 'money' },
+                { title: '工时', dataIndex: 'man_hour', key: 'man_hour' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 { title: '操作', key: 'operation', fixed: 'right', width: 180 }
             ],

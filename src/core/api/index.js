@@ -308,6 +308,18 @@ const apiList = {
         walletDetail:  ['PostJson', 'wallet-money/detail'],
         walletList: ['PostJson', 'wallet-money/list'],
     },
+    Production: { // 生产管理
+        list: ['PostJson', 'bom/list'],
+        delete: ['PostJson', 'bom/delete'],
+        detail: ['PostJson', 'bom/detail'],
+        save: ['PostJson', 'bom/save'],
+    },
+    BomCategory: {
+        list: ['PostJson', 'bom-category/list'],
+        save: ['PostJson', 'bom-category/save'],
+        delete: ['PostJson', 'bom-category/delete'],
+        tree: ['PostJson', 'bom-category/tree'],
+    }
 };
 
 export default new Api(baseUrl, apiList);

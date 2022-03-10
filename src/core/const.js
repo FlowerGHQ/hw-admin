@@ -355,6 +355,26 @@ let Const = {
     },
 
     ITEM: { // 商品
+        TYPE: {
+            PRODUCT: 1,//成品
+            COMPONENT: 2//零件
+        },
+        TYPE_MAP: {
+            1: '整车',
+            2: '零件',
+        },
+        MONETARY_TYPE: {
+            '￥': 'CNY',
+            '€': 'EUR',
+            '$': 'USD',
+            '£': 'GBP',
+        },
+        MONETARY_TYPE_MAP: {
+            CNY: '￥',
+            EUR: '€',
+            USD: '$',
+            GBP: '£',
+        }
     },
     PURCHASE: { // 采购订单
         // 状态

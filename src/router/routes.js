@@ -526,7 +526,6 @@ const routes = [{
                 meta: {
                     title: '车架列表',
                     roles: [LOGIN_TYPE.ADMIN],
-                    is_sub_menu: true
                 }
             },
             {

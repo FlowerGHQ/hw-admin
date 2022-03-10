@@ -145,7 +145,7 @@ export default {
             let columns = [
                 {title: '商品名称', dataIndex: ['item', 'name'],  key: 'tip_item'},
                 // {title: '车架号', dataIndex: 'target_type'},
-                {title: '商品型号', dataIndex: ['item', 'model'], key: 'item'},
+                {title: '商品品号', dataIndex: ['item', 'model'], key: 'item'},
                 {title: '商品编码', dataIndex: ['item', 'code'],  key: 'item'},
                 {title: '商品规格', dataIndex: ['item', 'attr_list'], key: 'attr_list'},
                 // {title: '库存数量', dataIndex: ['item', 'stock'],     key: 'count'},

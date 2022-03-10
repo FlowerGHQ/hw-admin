@@ -20,8 +20,16 @@
                             <div class="value">{{detail.code || '-'}}</div>
                         </div>
                         <div class="info-item">
+                            <div class="key">商品类型</div>
+                            <div class="value"> {{ $Util.itemTypeFilter(detail.type) }}</div>
+                        </div>
+                        <div class="info-item">
                             <div class="key">商品分类</div>
                             <div class="value">{{detail.category ? detail.category.name : '-'}}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="key">销售区域</div>
+                            <div class="value">{{ detail.sales_area_name || '-'}}</div>
                         </div>
                         <div class="info-item">
                             <div class="key">建议零售价</div>
@@ -29,7 +37,7 @@
                         </div>
                         <div class="info-item">
                             <div class="key">成本价格</div>
-                            <div class="value">€{{$Util.countFilter(detail.original_price)}}</div>
+                            <div class="value">{{detail.fob_currency + $Util.countFilter(detail.original_price)}}</div>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='12' :xl='16' :xxl='18' class="info-block">
@@ -176,6 +184,7 @@ export default {
             }).then(res => {
                 console.log("getItemDetail res", res)
                 let detail = res.detail || {}
+                detail.sales_area_name = detail.sales_area_list ? detail.sales_area_list.map(i => i.name).join(',') : ''
                 this.detail = detail;
                 try { this.config = JSON.parse(detail.config) } catch (err) { this.config = [] }
                 if (detail.set_id && !this.indep_flag) {

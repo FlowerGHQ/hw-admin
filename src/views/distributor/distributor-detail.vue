@@ -80,10 +80,10 @@
                         <StoreList :distributorId="distributor_id" :type="USER_TYPE.DISTRIBUTOR"
                                    v-if="activeKey === 'StoreList'"/>
                     </a-tab-pane>
-                    <a-tab-pane key="PricingStructure" tab="商品价格">
-                        <PricingStructure :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR"
-                                          v-if="activeKey === 'PricingStructure'"/>
-                    </a-tab-pane>
+<!--                    <a-tab-pane key="PricingStructure" tab="商品价格">-->
+<!--                        <PricingStructure :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR"-->
+<!--                                          v-if="activeKey === 'PricingStructure'"/>-->
+<!--                    </a-tab-pane>-->
                     <a-tab-pane key="WalletList" tab="账户管理">
                         <WalletList :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR"
                                     v-if="activeKey === 'WalletList'"/>
@@ -101,7 +101,7 @@ import AgentList from '@/components/panel/AgentList.vue';
 import StoreList from '@/components/panel/StoreList.vue';
 import WalletList from '@/components/panel/WalletList.vue';
 import PurchaseList from '@/components/panel/PurchaseList.vue';
-import PricingStructure from '@/components/panel/PricingStructure.vue';
+// import PricingStructure from '@/components/panel/PricingStructure.vue';
 
 const USER_TYPE = Core.Const.USER.TYPE;
 export default {
@@ -111,7 +111,7 @@ export default {
         StoreList,
         PurchaseList,
         AgentList,
-        PricingStructure,
+        // PricingStructure,
         WalletList,
     },
     props: {},
