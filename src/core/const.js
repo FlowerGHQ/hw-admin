@@ -605,7 +605,7 @@ let Const = {
             ITEM: 10,
         },
         COMMODITY_TYPE_MAP: {
-            20: '车架',
+            20: '整车',
             10: '零部件',
         },
         TYPE: {
@@ -641,12 +641,14 @@ let Const = {
             PURCHASE_ORDER: 20, //采购单
             AFTER_SALES_ORDER: 30, //售后
             TRANSFER_ORDER: 40,
+            REPAIR_ORDER: 50,
         },
         SOURCE_TYPE_MAP: {
             10: '管理员创建',
             20: '采购',
             30: '售后',
             40: '调货',
+            50: '维修单'
         },
     },
     TRANSFER_ORDER: { //调货单

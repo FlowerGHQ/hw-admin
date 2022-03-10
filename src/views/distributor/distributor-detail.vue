@@ -80,10 +80,10 @@
                         <StoreList :distributorId="distributor_id" :type="USER_TYPE.DISTRIBUTOR"
                                    v-if="activeKey === 'StoreList'"/>
                     </a-tab-pane>
-<!--                    <a-tab-pane key="PricingStructure" tab="商品价格">-->
-<!--                        <PricingStructure :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR"-->
-<!--                                          v-if="activeKey === 'PricingStructure'"/>-->
-<!--                    </a-tab-pane>-->
+                    <a-tab-pane key="PricingStructure" tab="商品价格">
+                        <PricingStructure :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR"
+                                          v-if="activeKey === 'PricingStructure'"/>
+                    </a-tab-pane>
                     <a-tab-pane key="WalletList" tab="账户管理">
                         <WalletList :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR"
                                     v-if="activeKey === 'WalletList'"/>

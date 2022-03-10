@@ -26,7 +26,7 @@
                     </a-button>
                 </template>
                 <a-button type="primary" @click="routerChange('invoice')"
-                    v-if="detail.status == STATUS.SETTLEMENT"><i class="icon i_detail_l"/>查看结算单
+                    v-if="detail.status == STATUS.SETTLEMENT || STATUS.FINISH || STATUS.AUDIT_SUCCESS"><i class="icon i_detail_l"/>查看结算单
                 </a-button>
                 <a-button type="primary" @click="handleAuditShow()"
                           v-if="detail.status == STATUS.SETTLEMENT && $auth('ADMIN')"><i class="icon i_m_success"/>审核
@@ -48,6 +48,10 @@
                 <div class="info-item">
                     <div class="key">工单帐类</div>
                     <div class="value">{{ $Util.repairServiceFilter(detail.service_type || '-') }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">车架号</div>
+                    <div class="value">{{ detail.vehicle_no || '-' }}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">创建人</div>
@@ -286,6 +290,12 @@ export default {
                     this.currStep = 2;
                     break;
                 case STATUS.SETTLEMENT:
+                    this.currStep = 3;
+                    break;
+                case STATUS.AUDIT_SUCCESS:
+                    this.currStep = 3;
+                    break;
+                case STATUS.FINISH:
                     this.currStep = 3;
                     break;
             }

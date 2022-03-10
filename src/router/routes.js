@@ -87,6 +87,18 @@ const routes = [{
                 }
             },
             {
+                path: 'repair-invoice-list',
+                name: 'repairInvoiceList',
+                component: () =>
+                    import ('@/views/repair/repair-list.vue'),
+                meta: {
+                    title: '待结算工单',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true,
+                    type: 'invoice'
+                }
+            },
+            {
                 path: 'repair-edit',
                 name: 'RepairEdit',
                 component: () =>

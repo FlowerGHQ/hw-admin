@@ -47,18 +47,37 @@
                 <div class="form-item required" v-if="form.source_type == 20">
                     <div class="key">采购单号：</div>
                     <div class="value">
-                        <a-input class="purchase-order-detail" v-model:value="form.source_id" placeholder="请输入相关的采购单号"
-                                 @blur="onblur"/>
-                        <span v-if="isExist === true"><i class="icon i_confirm"/></span>
-                        <span v-else-if="isExist === false"><i class="icon i_close_c"/></span>
+                        <a-input v-model:value="form.source_id" placeholder="请输入相关的采购单号"
+                                 @blur="handleSelectBlur('purchase')"/>
+                        <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
+                        <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
+                    </div>
+                </div>
+                <div class="form-item required" v-if="form.source_type == 20">
+                    <div class="key">到港时间</div>
+                    <div class="value">
+                        <a-date-picker v-model:value="form.arrival_time" valueFormat='YYYY-MM-DD HH:mm:ss'
+                                       :show-time="defaultTime" placeholder="请选择到港时间">
+                            <template #suffixIcon><i class="icon i_calendar"/></template>
+                        </a-date-picker>
                     </div>
                 </div>
                 <div class="form-item required" v-if="form.source_type == 40">
                     <div class="key">调货单号：</div>
                     <div class="value">
-                        <a-input v-model:value="form.source_id" placeholder="请输入调货单号" @blur="onblurTransfer"/>
-                        <span v-if="isRight === true"><i class="icon i_confirm"/></span>
-                        <span v-else-if="isRight === false"><i class="icon i_close_c"/></span>
+                        <a-input v-model:value="form.source_id" placeholder="请输入调货单号"
+                                 @blur="handleSelectBlur('transfer')"/>
+                        <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
+                        <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
+                    </div>
+                </div>
+                <div class="form-item required" v-if="form.source_type == 50">
+                    <div class="key">维修单号：</div>
+                    <div class="value">
+                        <a-input v-model:value="form.source_id" placeholder="请输入维修单号"
+                                 @blur="handleSelectBlur('repair')"/>
+                        <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
+                        <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                     </div>
                 </div>
             </div>
@@ -72,6 +91,7 @@
 
 <script>
 import Core from '../../core';
+import dayjs from "dayjs";
 
 export default {
     name: 'InvoiceEdit',
@@ -82,8 +102,8 @@ export default {
             // 加载
             loading: false,
             detail: {},
+            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
             isExist: '',
-            isRight: '',
             form: {
                 type: '',
                 id: '',
@@ -91,6 +111,7 @@ export default {
                 source_type: undefined,
                 source_id: '',
                 target_type: '',
+                arrival_time: '',//到港时间
             },
             warehouseList: [],
             typeMap: Core.Const.STOCK_RECORD.TYPE_MAP, //出入库
@@ -118,7 +139,7 @@ export default {
                 case 'list':  // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/warehouse/invoice-list",
-                        query: { id: item.id }
+                        query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -136,33 +157,61 @@ export default {
                 this.warehouseList = res.list
             })
         },
-        onblur() {  // 获取 采购订单号
+        handleSelectBlur(type) {
+            switch (type) {
+                case'repair':
+                    this.handleRepairBlur();
+                    break;
+                case'transfer':
+                    this.handleTransferBlur();
+                    break;
+                case'purchase':
+                    this.handlePurchaseBlur();
+                    break;
+            }
+        },
+        handlePurchaseBlur() {  // 获取 采购订单号
             if (!this.form.source_id) {
                 return this.isExist = ''
             }
             Core.Api.Purchase.detailSn({
                 sn: this.form.source_id,
             }).then(res => {
-                this.isExist = res != null
+                this.isExist = res.detail == null ? 2 : 1
+                this.source_id = res.detail.id
+                this.defaultTime = res.detail.arrival_time
+            }).catch(err => {
+                console.log('onblur err', err)
+            }).finally(() => {
+            });
+        },
+        handleTransferBlur() {
+            if (!this.form.source_id) {
+                return this.isExist = ''
+            }
+            Core.Api.Transfer.detailByUid({
+                uid: this.form.source_id,
+            }).then(res => {
+                this.isExist = res.detail == null ? 2 : 1
+                this.source_id = res.detail.id
                 console.log("onblur res", res)
             }).catch(err => {
                 console.log('onblur err', err)
             }).finally(() => {
             });
         },
-        onblurTransfer() {
+        handleRepairBlur() {
             if (!this.form.source_id) {
-                return this.isRight = ''
+                return this.isExist = ''
             }
-            Core.Api.Transfer.detailByUid({
+            Core.Api.Repair.detailByUid({
                 uid: this.form.source_id,
             }).then(res => {
-                this.isRight = res.detail != null
-                console.log("onblur res", res)
+                this.isExist = res.detail == null ? 2 : 1
+                this.source_id = res.detail.id
             }).catch(err => {
-                console.log('onblur err', err)
-            }).finally(() => {
-            });
+                console.log('handleBlur err', err)
+            })
         },
         getInvoiceDetail() {
             this.loading = true;
@@ -179,6 +228,7 @@ export default {
         },
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
+            form.arrival_time = form.arrival_time ? dayjs(form.arrival_time).unix() : 0 // 日期转时间戳
             if (!form.warehouse_id) {
                 return this.$message.warning('请选择仓库')
             }
@@ -194,18 +244,30 @@ export default {
             if (!form.source_id && form.source_type == 20) {
                 return this.$message.warning('请输入相关的采购单号')
             }
-            if (this.isExist === false) {
-                return this.$message.warning('请输入正确的采购单号')
+            if (this.isExist === 2) {
+                if (form.source_type == 20) {
+                    return this.$message.warning('请输入正确的采购单号')
+                }
+                if (form.source_type == 40) {
+                    return this.$message.warning('请输入正确的调货单号')
+                }
+                if (form.source_type == 50) {
+                    return this.$message.warning('请输入正确的维修单号')
+                }
             }
             if (!form.source_id && form.source_type == 40) {
                 return this.$message.warning('请输入相关的调货单号')
             }
-            if (this.isRight === false) {
-                return this.$message.warning('请输入正确的调货单号')
+
+            if (!form.source_id && form.source_type == 50) {
+                return this.$message.warning('请输入相关的维修单号')
+            }
+            if (!form.arrival_time && form.source_type == 20) {
+                return this.$message.warning('请选择到港时间')
             }
             Core.Api.Invoice.save(form).then(res => {
                 this.$message.success('保存成功')
-                this.routerChange('detail',res.detail)
+                this.routerChange('detail', res.detail)
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })

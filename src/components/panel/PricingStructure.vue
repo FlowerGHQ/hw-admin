@@ -38,6 +38,9 @@
                     <template v-if="column.key === 'money'">
                         {{ $Util.countFilter(text) }}
                     </template>
+                    <template v-if="column.dataIndex === 'price'">
+                        €{{ $Util.countFilter(text) }}
+                    </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}
                     </template>
@@ -46,13 +49,13 @@
                     </template>
                     <template v-if="column.key === 'supply'">
                         <template v-if="record.edit_show || editShow || addMode">
-                            <a-input-number v-model:value="record.purchase_price" v-if="column.dataIndex === 'purchase_price'" style="width: 120px;" :min="0.01" :precision="2"
+                            <a-input-number v-model:value="record.purchase_price" v-if="column.dataIndex === 'purchase_price'" style="width: 120px;" :min="0.00" :precision="2"
                                 :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')"/>
-                            <a-input-number v-model:value="record.purchase_price_eur" v-if="column.dataIndex === 'purchase_price_eur'" style="width: 120px;" :min="0.01" :precision="2"
+                            <a-input-number v-model:value="record.purchase_price_eur" v-if="column.dataIndex === 'purchase_price_eur'" style="width: 120px;" :min="0.00" :precision="2"
                                             :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')"/>
-                            <a-input-number v-model:value="record.purchase_price_usd" v-if="column.dataIndex === 'purchase_price_usd'" style="width: 120px;" :min="0.01" :precision="2"
+                            <a-input-number v-model:value="record.purchase_price_usd" v-if="column.dataIndex === 'purchase_price_usd'" style="width: 120px;" :min="0.00" :precision="2"
                                             :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')"/>
-                            <a-input-number v-model:value="record.purchase_price_gbp" v-if="column.dataIndex === 'purchase_price_gbp'" style="width: 120px;" :min="0.01" :precision="2"
+                            <a-input-number v-model:value="record.purchase_price_gbp" v-if="column.dataIndex === 'purchase_price_gbp'" style="width: 120px;" :min="0.00" :precision="2"
                                             :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')"/>
                         </template>
                     </template>
@@ -142,7 +145,7 @@ export default {
                 { title: '供货价($)',  dataIndex: 'purchase_price_usd', key: 'supply', },
                 { title: '供货价(£)',  dataIndex: 'purchase_price_gbp', key: 'supply', },
                 { title: '采购价', dataIndex: 'parent_price', key: 'money', },
-                { title: '建议零售价', dataIndex: 'price', key: 'money', },
+                { title: '建议零售价', dataIndex: 'price' },
                 { title: '操作', key: 'operation', fixed: 'right'},
             ]
             if (this.addMode || !this.canEdit) {
@@ -192,7 +195,7 @@ export default {
                 res.list.forEach(item => {
                     item.purchase_price = Core.Util.countFilter(item.purchase_price)
                     item.purchase_price_gbp = Core.Util.countFilter(item.purchase_price_gbp)
-                    item.purchase_price_eur = Core.Util.countFilter(item.purchase_price_eur)
+                    item.purchase_price_eur = Core.Util.countFilter(item.fob)
                     item.purchase_price_usd = Core.Util.countFilter(item.purchase_price_usd)
                     item.edit_show = false
                 });

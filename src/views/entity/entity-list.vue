@@ -5,6 +5,7 @@
                 <div class="title-area">车架列表</div>
                 <div class="btns-area">
                     <a-button type="primary" @click="handleVehicleShow"><i class="icon i_add"/>新增车架</a-button>
+                    <a-button type="primary" @click="handleSetShow"><i class="icon i_add"/>批量设置</a-button>
                     <a-upload name="file" class="file-uploader"
                         :file-list="upload.fileList" :action="upload.action"
                         :show-upload-list='false'
@@ -404,6 +405,15 @@ export default {
             }
             this.upload.fileList = fileList
         },
+        handleSetShow(type, record) {
+            if (type === 'batch') {
+                this.entryForm.ids = this.selectedRowKeys.join(',')
+            } else {
+                this.entryForm.ids = record.id
+            }
+            this.getWarehouseList()
+            this.entryShow = true
+        },
     }
 };
 </script>
@@ -446,7 +456,7 @@ export default {
         .title-container {
             .btns-area {
                 .file-upload-btn {
-                    margin-left: 15px;
+                    margin-left: 10px;
                 }
             }
         }

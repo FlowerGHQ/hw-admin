@@ -117,10 +117,13 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.SETTLEMENT"><i class="icon i_confirm"/>审核</a-button>
+                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.SETTLEMENT && record.service_type == 1"><i class="icon i_confirm"/>审核</a-button>
                     </template>
                     <template v-if="column.key === 'operate'">
                         <a-button type='link' @click="routerChange('edit',record)" v-if="record.status == STATUS.AUDIT_FAIL"><i class="icon i_edit"/>修改</a-button>
+                    </template>
+                    <template v-if="column.key === 'handle'">
+                        <a-button type='link' @click="handleInvoice(record.id)" v-if="record.status == STATUS.AUDIT_SUCCESS"><i class="icon i_edit"/>结算</a-button>
                     </template>
                 </template>
             </a-table>
@@ -288,6 +291,9 @@ export default {
             if (this.operMode === 'redit' && !this.$auth('ADMIN')) {
                 columns.push({ title: '操作', key: 'operate', fixed: 'right'},)
             }
+            if (this.operMode === 'invoice' && this.$auth('ADMIN')) {
+                columns.push({ title: '操作', key: 'handle', fixed: 'right'},)
+            }
             return columns
         },
     },
@@ -349,6 +355,8 @@ export default {
                 this.searchForm.status = STATUS.SETTLEMENT
             } else if (this.operMode == 'redit') {
                 this.searchForm.status = STATUS.AUDIT_FAIL
+            } else if (this.operMode == 'invoice') {
+                this.searchForm.status = STATUS.AUDIT_SUCCESS
             }
             if (this.$auth('ADMIN')) {
                 this.getDistributorListAll();
@@ -391,10 +399,12 @@ export default {
                 this.storeList = []
             }
         },
-
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             console.log('this.searchForm:', this.searchForm)
+            if(this.operMode == 'audit' && this.loginType == 10) {
+                this.searchForm.org_type = 15
+            }
             Core.Api.Repair.list({
                 ...this.searchForm,
                 page: this.currPage,
@@ -479,6 +489,12 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
+        },
+        handleInvoice(id) { //结算
+            Core.Api.Repair.pay({id}).then(() => {
+                this.$message.success('结算完成')
+                this.getTableData()
+            })
         },
     }
 };

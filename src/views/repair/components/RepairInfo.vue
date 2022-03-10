@@ -41,8 +41,8 @@
             </a-col>
             <a-col :xs='24' :sm='24' :lg='12' :xl='6' :xxl='6' class="info-block">
                 <div class="info-item">
-                    <div class="key">车辆编号</div>
-                    <div class="value">{{detail.item_code || '-'}}</div>
+                    <div class="key">车架号</div>
+                    <div class="value">{{detail.vehicle_no || '-'}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">对应商品</div>
