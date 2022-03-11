@@ -49,9 +49,9 @@
                     <a-button @click="handleSearchReset">重置</a-button>
                 </div>
             </div>
-            <div class="operate-container" v-if="type==='pending'">
-                <a-button type="primary" @click="handleEntryShow('batch')">批量入库</a-button>
-                <a-button type="primary" @click="handleAuditShow('batch')">批量审核</a-button>
+            <div class="operate-container" v-if="type==='pending' && selectedRowItems.length > 0">
+                <a-button type="primary"  @click="handleEntryShow('batch')">批量入库</a-button>
+                <a-button type="primary"  @click="handleAuditShow('batch')">批量审核</a-button>
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -249,7 +249,7 @@ export default {
                 {title: '所处仓库', dataIndex: 'warehouse_name', key: 'item'},
                 {title: '商品', dataIndex: ['item','name'], key: 'item'},
                 {title: '产品故障类型', dataIndex: 'item_fault_name', key: 'item'},
-                {title: '检测人', dataIndex: 'audit_user_name', key: 'item'},
+                {title: '审核人', dataIndex: 'audit_user_name', key: 'item'},
                 {title: '工单帐类', dataIndex: 'service_type'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right' },
@@ -281,7 +281,7 @@ export default {
             entryForm: {
                 ids: '',
                 warehouse_id: undefined
-            }
+            },
         };
     },
     watch: {
@@ -302,6 +302,7 @@ export default {
                 onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
                     this.selectedRowKeys = selectedRowKeys
                     this.selectedRowItems = selectedRows
+
                     console.log('rowSelection onChange this.selectedRowKeys', this.selectedRowKeys);
                 },
                 /* getCheckboxProps: record => ({
@@ -387,6 +388,11 @@ export default {
         getTableData() {    // 获取 表格 数据
             this.loading = true;
             // return
+            if (this.type === 'pending') {
+                this.searchForm.need_handle = 1
+            } else {
+                this.searchForm.need_handle = 0
+            }
             Core.Api.FaultEntity.list({
                 ...this.searchForm,
                 page: this.currPage,
@@ -555,6 +561,7 @@ export default {
             this.getWarehouseList()
             this.entryShow = true
         },
+
         handleEntryClose() {
             this.entryShow = false
             this.selectedRowKeys = []

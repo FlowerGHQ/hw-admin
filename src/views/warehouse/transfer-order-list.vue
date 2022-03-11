@@ -388,7 +388,20 @@ export default {
             });
         },
         getStatusList() {    // 获取 状态 列表
+            let org = {}
+            if (this.type === 'out') {
+                org = {
+                    supply_org_id: this.orgId,
+                    supply_org_type: this.orgType,
+                }
+            } else {
+                org = {
+                    org_id: this.orgId,
+                    org_type: this.orgType,
+                }
+            }
             Core.Api.Transfer.status({
+                ...org,
                 ...this.searchForm,
             }).then(res => {
                 console.log("getStatusList res:", res)
