@@ -69,11 +69,11 @@
                                     <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
                                 </a-tooltip>
                             </template>
-                            <template v-if="column.dataIndex === 'target_type'">
+                            <template v-if="column.dataIndex === 'entity'">
                                 <template v-if="addMode || record.editMode">
-                                    <a-input v-model:value="record.number" class="input-number" placeholder="请输入车架号" @blur="onblur"/>
-                                    <span v-if="isExist === true"><i class="icon i_confirm"/></span>
-                                    <span v-else-if="isExist === false"><i class="icon i_close_c"/></span>
+                                    <a-input v-model:value="record.uid" class="input-number" placeholder="请输入车架号" @blur="handleVehicleBlur"/>
+                                    <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
+                                    <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                                 </template>
                                 <template v-else>{{ text || '-' }}件</template>
                             </template>
@@ -131,9 +131,7 @@ export default {
             addData: [],
             map: [],
             isExist: '',
-            form: {
-                entity_uid: '',
-            },
+            uid: '',
         };
     },
     watch: {},
@@ -162,7 +160,7 @@ export default {
                 columns.splice(4, 0, {title: '库存数量', dataIndex: ['item', 'stock'], key: 'count'})
             }
             if (this.detail.target_type == COMMODITY_TYPE.ENTITY) {
-                columns.splice(1, 0, {title: '车架号', dataIndex: 'target_type'})
+                columns.splice(1, 0, {title: '车架号', dataIndex: 'entity'})
             }
             return columns
         },
@@ -267,10 +265,24 @@ export default {
                 item: item,
                 amount: 1,
                 stock: 0,
-                number: undefined,
+                uid: undefined,
             }))
             this.addData = list
             this.addMode = true
+        },
+        handleVehicleBlur() {  // 获取 车架号
+            /* if (!this.uid) {
+                 return this.isExist = ''
+             }*/
+            Core.Api.Entity.detailByUid({
+                uid: this.uid
+            }).then(res => {
+                this.isExist = res.detail == null ? 2 : 1
+                console.log("handleVehicleBlur res", res)
+            }).catch(err => {
+                console.log('handleVehicleBlur err', err)
+            }).finally(() => {
+            });
         },
         handleAddItemSubmit() {
             this.loading = true;
@@ -281,7 +293,7 @@ export default {
                 target_id: item.item.id,
                 invoice_id: this.id,
                 target_type: item.target_type,
-                number: item.number,
+                uid: item.uid,
             }))
             Core.Api.InvoiceItem.saveList(list).then(() => {
                 this.$message.success('保存成功')
@@ -305,8 +317,8 @@ export default {
                 id: item.id,
                 amount: item.amount,
                 target_id: item.item.id,
-                number: item.number,
                 invoice_id: this.id,
+                uid: item.uid
             }).then(() => {
                 this.$message.success('保存成功')
                 this.getInvoiceDetail()
@@ -321,7 +333,8 @@ export default {
                     "id": item.id,
                     "invoice_id": this.id,
                     "target_id": item.item.id,
-                    "amount": item.amount
+                    "amount": item.amount,
+                    "uid": item.uid,
                 })
             }
             Core.Api.Invoice.saveList(list).then(res => {
@@ -332,20 +345,6 @@ export default {
                 console.log('handleInvoiceSubmit err', err)
             }).finally(() => {
                 this.loading = false;
-            });
-        },
-        onblur() {  // 获取 车架号
-            if (!this.record.number) {
-                return this.isExist = ''
-            }
-            Core.Api.Entity.detailByUid({
-                uid: this.record.number,
-            }).then(res => {
-                this.isExist = res.detail != null
-                console.log("onblur res", res)
-            }).catch(err => {
-                console.log('onblur err', err)
-            }).finally(() => {
             });
         },
         // 移除 商品

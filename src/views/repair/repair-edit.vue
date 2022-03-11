@@ -80,9 +80,9 @@
             <div class="form-item required">
                 <div class="key">车架号</div>
                 <div class="value">
-                    <a-input v-model:value="form.vehicle_no" placeholder="请输入车架号" @blur="onblur"/>
-                    <span v-if="isExist === true"><i class="icon i_confirm"/></span>
-                    <span v-else-if="isExist === false"><i class="icon i_close_c"/></span>
+                    <a-input v-model:value="form.vehicle_no" placeholder="请输入车架号" @blur="handleVehicleBlur"/>
+                    <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
+                    <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                 </div>
             </div>
             <div class="form-item">
@@ -343,17 +343,17 @@ export default {
                 });
             }
         },
-        onblur() {  // 获取 车架号
+        handleVehicleBlur() {  // 获取 车架号
             if (!this.form.vehicle_no) {
                 return this.isExist = ''
             }
             Core.Api.Entity.detailByUid({
                 uid: this.form.vehicle_no,
             }).then(res => {
-                this.isExist = res.detail != null
-                console.log("onblur res", res)
+                this.isExist = res.detail == null ? 2 : 1
+                console.log("handleVehicleBlur res", res)
             }).catch(err => {
-                console.log('onblur err', err)
+                console.log('handleVehicleBlur err', err)
             }).finally(() => {
             });
         },

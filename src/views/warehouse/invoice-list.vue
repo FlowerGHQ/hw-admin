@@ -37,7 +37,7 @@
                         <div class="key">出入库单类型:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择出入库类型">
-                                <a-select-option v-for="(val, key) in typeMap" :key='key' :value='keu'>{{ val }}</a-select-option>
+                                <a-select-option v-for="(val, key) in typeMap" :key='key' :value='key'>{{ val }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
