@@ -10,7 +10,7 @@ let URL_POINT = 'https://eos-api.hw.innotick.com'
 
 switch (window.location.hostname) {
     case 'eos.hw.innotick.com':
-        URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服 
+        URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服
         break;
     case "10.0.0.205":
         URL_POINT = 'http://10.0.0.205:8083'
@@ -750,6 +750,29 @@ let Const = {
             SUCCESS: 1,
         }
     },
+    AFTERSALES: { // 售后
+        STATUS: {
+            INIT: 0,         // 初始化,信息录入
+            APPLY: 100,      // 申请成功
+            AUDIT_PASS: 200, // 申请成功
+            DOING: 300,      // 处理中
+            FINISH: 600 ,    // 已完成
+            CANCEL: -100,    // 取消
+            AUDIT_FAIL: -200,// 审核失败
+        },
+        TYPE: {
+            ONLY_REFUND: 1,       // 仅退款
+            REFUND_WITH_ITEMS: 2, // 退款且退货
+            EXCHANGE_ITEMS: 3,    // 换货
+            REISSUE: 4,           // 补发
+        },
+        TYPE_MAP: {
+            '1': '仅退款',
+            '2': '退款且退货',
+            '3': '换货',
+            '4': '补发',
+        }
+    }
 };
 
 export default Const;

@@ -85,7 +85,7 @@
                             </a-button>
                             <a-button type="link" @click="handleRefundShow(record.id)"
                                 v-if="record.status === STATUS.WAIT_AUDIT && authOrg(record.supply_org_id, record.supply_org_type)">
-                                <i class="icon i_m_success"/>审核
+                                <i class="icon i_audit"/>审核
                             </a-button>
                             <a-button type="link" @click="handleCancel(record.id)"
                                 v-if="record.status === STATUS.WAIT_AUDIT && authOrg(record.org_id, record.org_type)">

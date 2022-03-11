@@ -88,7 +88,7 @@
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" v-if="record.status === STATUS.WAIT_AUDIT && type == 'out'"
                                       @click="handleTransferAuditShow(record.id)">
-                                <i class="icon i_m_success"/>审核
+                                <i class="icon i_audit"/>审核
                             </a-button>
                              <a-button type="link"  v-else-if="record.status === STATUS.AUDIT_PASS && type == 'out'" @click="handleInvoice(record.id)">
                                 <i class="icon i_edit"/>确认发货

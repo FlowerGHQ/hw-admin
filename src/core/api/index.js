@@ -226,6 +226,21 @@ const apiList = {
         recreate: ['PostJson', 'purchase-order/recreate'], // 再来一单
         detailSn: ['PostJson', 'purchase-order/detail-sn'],
     },
+    Aftersale: { // 售后单
+        list: ['PostJson', 'after-sales-order/list'],
+        save: ['PostJson', 'after-sales-order/save'],
+        detail: ['PostJson', 'after-sales-order/detail'],
+        cancel: ['PostJson', 'after-sales-order/cancel'],
+    },
+    Refund: { // 退款管理
+        list: ['PostJson', 'order-refund-record/list'],
+        create: ['PostJson', 'order-refund-record/create'],
+        detail: ['PostJson', 'order-refund-record/detail'],
+        update: ['PostJson', 'order-refund-record/update'],
+        audit: ['PostJson', 'order-refund-record/audit'],
+        cancel: ['PostJson', 'order-refund-record/cancel'],
+        status: ['PostJson', 'order-refund-record/status-list'], // 状态
+    },
     Store: { // 门店管理
         list: ['PostJson', 'store/list'],
         listAll: ['PostJson', 'store/list-name'],
@@ -257,15 +272,6 @@ const apiList = {
         save: ['PostJson', 'waybill/save'],
         saveByUid: ['PostJson', 'waybill/save-by-uid'],
         update: ['PostJson', 'waybill/update'],
-    },
-    Refund: { // 退款管理
-        list: ['PostJson', 'order-refund-record/list'],
-        create: ['PostJson', 'order-refund-record/create'],
-        detail: ['PostJson', 'order-refund-record/detail'],
-        update: ['PostJson', 'order-refund-record/update'],
-        audit: ['PostJson', 'order-refund-record/audit'],
-        cancel: ['PostJson', 'order-refund-record/cancel'],
-        status: ['PostJson', 'order-refund-record/status-list'], // 状态
     },
     Distributor: { // 分销商
         list: ['PostJson', 'distributor/list'],
@@ -321,7 +327,7 @@ const apiList = {
         save: ['PostJson', 'bom-category/save'],
         delete: ['PostJson', 'bom-category/delete'],
         tree: ['PostJson', 'bom-category/tree'],
-    }
+    },
 };
 
 export default new Api(baseUrl, apiList);

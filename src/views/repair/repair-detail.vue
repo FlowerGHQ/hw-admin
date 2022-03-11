@@ -29,7 +29,7 @@
                     v-if="detail.status == STATUS.SETTLEMENT || STATUS.FINISH || STATUS.AUDIT_SUCCESS"><i class="icon i_detail_l"/>查看结算单
                 </a-button>
                 <a-button type="primary" @click="handleAuditShow()"
-                          v-if="detail.status == STATUS.SETTLEMENT && $auth('ADMIN')"><i class="icon i_m_success"/>审核
+                          v-if="detail.status == STATUS.SETTLEMENT && $auth('ADMIN')"><i class="icon i_audit"/>审核
                 </a-button>
             </div>
         </div>

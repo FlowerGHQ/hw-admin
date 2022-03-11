@@ -165,13 +165,10 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
+                n = n.redirectedFrom ? n.redirectedFrom : n
                 let is_sub_menu = n.meta ? n.meta.is_sub_menu : false
                 let path = n.path.split('/').slice(1)
-                if (is_sub_menu) {
-                    this.selectedKeys = [n.fullPath]
-                } else {
-                    this.selectedKeys = ['/' + path[0]]
-                }
+                this.selectedKeys = is_sub_menu ? [n.fullPath] : ['/' + path[0]]
                 console.log('this.selectedKeys:', this.selectedKeys)
             }
         },
