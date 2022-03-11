@@ -6,17 +6,6 @@
             <a-button type="primary" @click="routerChange('edit')" v-if="!$auth('ADMIN')"><i class="icon i_add" />申请售后</a-button>
         </div>
     </div>
-    <!-- <div class="tabs-container colorful">
-        <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
-            <a-tab-pane :key="item.key" v-for="item of statusList">
-                <template #tab>
-                    <div class="tabs-title">
-                        {{ item.text }}<span :class="item.color">{{ item.value }}</span>
-                    </div>
-                </template>
-            </a-tab-pane>
-        </a-tabs>
-    </div> -->
     <div class="search-container">
         <a-row class="search-area">
             <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -78,7 +67,7 @@
                 </template>
                 <template v-if="column.key === 'money'">
                     €{{ $Util.countFilter(text)  }}
-                </template>
+                </template>å
                 <template v-if="column.key === 'tip_time'">
                     <a-tooltip :title="text" destroyTooltipOnHide>
                         <div class="ell" style="max-width: 200px">{{ text || '-' }}</div>
@@ -88,21 +77,14 @@
                     {{ $Util.timeFilter(text) }}
                 </template>
                 <template v-if="column.key === 'operation'">
-                    <a-button type="link" @click="routerChange('edit',record)"
-                        v-if="record.status === STATUS.WAIT_AUDIT && authOrg(record.org_id, record.org_type)">
-                        <i class="icon i_edit"/>修改
-                    </a-button>
-                    <a-button type="link" @click="handleAuditShow(record.id)"
-                        v-if="record.status === STATUS.WAIT_AUDIT && authOrg(record.supply_org_id, record.supply_org_type)">
-                        
-                    </a-button>
-                    <AuditHandle @submit="getTableData">
-                        <i class="icon i_audit"/>审核
+                    <AuditHandle v-if="record.status === STATUS.APPLY && sameOrg(record.supply_org_id, record.supply_org_type)"
+                        btnType='link' :api-list="['Aftersales', 'audit']" :id="record.id" @submit="getTableData"
+                        :s-pass="STATUS.AUDIT_PASS" :s-refuse="STATUS.AUDIT_REFUSE"><i class="icon i_audit"/>审核
                     </AuditHandle>
-                    <a-button type="link" @click="handleCancel(record.id)"
-                        v-if="record.status === STATUS.WAIT_AUDIT && authOrg(record.org_id, record.org_type)">
-                        <i class="icon i_m_error"/>取消
-                    </a-button>
+                    <template v-if="canEdit(record) && sameOrg(record.org_id, record.org_type)">
+                        <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>修改</a-button>
+                        <a-button type="link" @click="handleCancel(record.id)"><i class="icon i_m_error"/>取消</a-button>
+                    </template>
                 </template>
             </template>
         </a-table>
@@ -122,30 +104,6 @@
             @showSizeChange="pageSizeChange"
         />
     </div>
-    <template class="modal-container">
-        <a-modal v-model:visible="auditShow" title="审核" class="refund-edit-modal" :after-close='handleAuditClose'>
-            <div class="modal-content">
-                <div class="form-item required">
-                    <div class="key">审核结果:</div>
-                    <a-radio-group v-model:value="auditForm.status">
-                        <a-radio :value="STATUS.AUDIT_PASS">通过</a-radio>
-                        <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio>
-                    </a-radio-group>
-                </div>
-                <div class="form-item textarea required" v-if="auditForm.status === STATUS.AUDIT_REFUSE">
-                    <div class="key">原因:</div>
-                    <div class="value">
-                        <a-textarea v-model:value="auditForm.audit_message" placeholder="请输入不通过原因"
-                            :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
-                    </div>
-                </div>
-            </div>
-            <template #footer>
-                <a-button @click="auditShow = false">取消</a-button>
-                <a-button @click="handleAuditSubmit" type="primary">确定</a-button>
-            </template>
-        </a-modal>
-    </template>
 </div>
 </template>
 
@@ -153,20 +111,23 @@
 
 import Core from '../../core';
 import TimeSearch from '../../components/common/TimeSearch.vue'
+import AuditHandle from '../../components/popup-btn/AuditHandle.vue'
 
-const STATUS = Core.Const.REFUND.STATUS
-const SEARCH_TYPE = Core.Const.REFUND.SEARCH_TYPE
+const STATUS = Core.Const.AFTERSALES.STATUS
+const QUERY_TYPE = Core.Const.AFTERSALES.QUERY_TYPE
+
 export default {
     name: 'AftersalesList',
     components: {
         TimeSearch,
+        AuditHandle,
     },
     props: {},
     data() {
         return {
             STATUS,
-            loginOrgId: Core.Data.getOrgId(),
-            loginOrgType: Core.Data.getOrgType(),
+            orgId: Core.Data.getOrgId(),
+            orgType: Core.Data.getOrgType(),
             // 加载
             loading: false,
             // 分页
@@ -174,42 +135,29 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
-            query_type: '',
             typeMap: Core.Const.AFTERSALES.TYPE_MAP,
+            query_type: '',
             searchForm: {
                 type: undefined,
                 status: undefined,
                 sn: '',
+                order_sn: '',
                 begin_time: '',
                 end_time: '',
             },
-            statusList: [
-                {text: '全  部', value: '0', color: 'primary', key: '0'},
-                {text: '待审核', value: '0', color: 'yellow', key: STATUS.WAIT_AUDIT},
-                {text: '审核通过', value: '0', color: 'blue', key: STATUS.AUDIT_PASS},
-                {text: '审核失败', value: '0', color: 'red', key: STATUS.AUDIT_REFUSE},
-                {text: '退款完成', value: '0', color: 'green', key: STATUS.SUCCESS},
-                {text: '取消退款', value: '0', color: 'grey', key: STATUS.CANCEL},
-            ],
+            statusList: [],
             // 表格
             tableData: [],
             tableColumns: [
-                {title: '订单号', dataIndex: 'order_sn', key: 'detail'},
+                {title: '售后单号', dataIndex: 'sn', key: 'detail'},
+                {title: '售后单状态', dataIndex: 'status',key: 'status', align: 'center'},
+                {title: '售后类型', dataIndex: 'type'},
                 {title: '退款金额', dataIndex: 'money', key: 'money'},
-                {title: '退款原因', dataIndex: 'apply_message', key: 'tip_time'},
-                {title: '退款类型', dataIndex: 'type'},
-                {title: '申请人', dataIndex: ['apply_user','account','name'],key: 'item'},
-                {title: '订单状态', dataIndex: 'status',key: 'status', align: 'center'},
+                {title: '申请组织', dataIndex: 'org_name' ,key: 'org'},
+                {title: '采购单号', dataIndex: 'order_sn'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right', width: 100,},
             ],
-            // 审核
-            auditShow: false,
-            auditForm: {
-                id: '',
-                status: '',
-                audit_message: '',
-            },
         };
     },
     watch: {
@@ -217,8 +165,8 @@ export default {
             deep: true,
             immediate: true,
             handler(newRoute) {
-                let search_type = newRoute.meta ? newRoute.meta.search_type : 0
-                this.search_type = search_type
+                let query_type = newRoute.meta ? newRoute.meta.query_type : 0
+                this.query_type = query_type
                 this.handleSearchReset(false);
                 this.getStatusList();
             }
@@ -227,29 +175,44 @@ export default {
     computed: {},
     mounted() {},
     methods: {
-        authOrg(orgId, orgType) {
-            if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
+        sameOrg(orgId, orgType) {
+            if (this.orgId === orgId && this.orgType === orgType) {
                 return true
             }
             return false
         },
+        canEdit(record) {
+            switch (record.status) {
+                case STATUS.INIT:
+                case STATUS.APPLY:
+                case STATUS.AUDIT_FAIL:
+                    return true
+                default: return false
+            }
+        },
         routerChange(type, item = {}) {
-            console.log(item)
             let routeUrl = ''
             switch (type) {
-                case 'create':  // 新建
+                case 'edit':  // 售后单 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/refund/refund-create",
+                        path: "/aftersales/aftersales-edit",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
-                case 'detail':  // 详情
+                case 'detail':  // 售后单 详情
+                    routeUrl = this.$router.resolve({
+                        path: "/aftersales/aftersales-detail",
+                        query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+                case 'purchase': //采购单 详情
                     routeUrl = this.$router.resolve({
                         path: "/purchase/purchase-order-detail",
                         query: {id: item.order_id}
                     })
-                    window.open(routeUrl.href, '_self')
+                    window.open(routeUrl.href, '_blank')
                     break;
             }
         },
@@ -279,11 +242,12 @@ export default {
             }
             this.pageChange(1);
         },
-        getTableData() {  // 获取 表格 数据
+        getTableData() { // 获取 表格 数据
             this.loading = true;
             // return
-            Core.Api.Refund.list({
+            Core.Api.Aftersales.list({
                 ...this.searchForm,
+                query_type: this.query_type,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -296,48 +260,25 @@ export default {
                 this.loading = false;
             });
         },
-        getStatusList() {    // 获取 状态 列表
+        getStatusList() { // 获取 状态 列表
         },
         // 取消退款申请
         handleCancel(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要取消该退款单吗？',
+                title: '确定要取消该售后单吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Refund.cancel({id}).then(() => {
+                    Core.Api.Aftersales.cancel({id}).then(() => {
                         _this.$message.success('取消成功');
                         _this.getStatusList();
                         _this.getTableData();
                     }).catch(err => {
-                        console.log("handleDelete err", err);
+                        console.log("handleCancel err", err);
                     })
                 },
-            });
-        },
-        // 退款审核
-        handleAuditShow(id) { // 显示弹框
-            this.auditShow = true
-            this.auditForm.id = id
-        },
-        handleAuditClose() { // 关闭弹框
-            this.auditShow = false;
-        },
-        handleAuditSubmit() { // 审核提交
-            this.loading = true;
-            Core.Api.Refund.audit({
-                ...this.auditForm
-            }).then(res => {
-                console.log('handleAuditSubmit res', res)
-                this.handleAuditClose()
-                this.getTableData()
-                this.getStatusList()
-            }).catch(err => {
-                console.log('handleAuditSubmit err', err)
-            }).finally(() => {
-                this.loading = false;
             });
         },
     },

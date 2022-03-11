@@ -3,8 +3,8 @@ import Const from "../core/const"
 import Layout from '../views/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE
-const SEARCH_TYPE = Const.PURCHASE.SEARCH_TYPE
-const REFUND_TYPE = Const.REFUND.SEARCH_TYPE
+const PURCHASE_SEARCH_TYPE = Const.PURCHASE.SEARCH_TYPE
+const REFUND_QUERY_TYPE = Const.AFTERSALES.QUERY_TYPE
 
 const routes = [
     {
@@ -606,7 +606,7 @@ const routes = [
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     title: '订单列表',
                     is_sub_menu: true,
-                    search_type: SEARCH_TYPE.ALL
+                    search_type: PURCHASE_SEARCH_TYPE.ALL
                 }
             },
             {
@@ -617,7 +617,7 @@ const routes = [
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     title: '供货订单',
                     is_sub_menu: true,
-                    search_type: SEARCH_TYPE.CHILDREN
+                    search_type: PURCHASE_SEARCH_TYPE.CHILDREN
                 }
             },
         ]
@@ -683,7 +683,7 @@ const routes = [
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     title: '订单列表',
                     is_sub_menu: true,
-                    search_type: SEARCH_TYPE.ALL
+                    search_type: PURCHASE_SEARCH_TYPE.ALL
                 }
             },
             {
@@ -694,7 +694,7 @@ const routes = [
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
                     title: '采购订单',
                     is_sub_menu: true,
-                    search_type: SEARCH_TYPE.SELF
+                    search_type: PURCHASE_SEARCH_TYPE.SELF
                 }
             },
             {
@@ -705,7 +705,7 @@ const routes = [
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     title: '供货订单',
                     is_sub_menu: true,
-                    search_type: SEARCH_TYPE.CHILDREN
+                    search_type: PURCHASE_SEARCH_TYPE.CHILDREN
                 }
             },
             {
@@ -721,10 +721,10 @@ const routes = [
         ]
     },
     { // 售后管理 - 平台 && 分销
-        path: '/aftersales-handle',
+        path: '/aftersales-supply',
         component: Layout,
-        redirect: '/aftersales-handle/aftersales-handle-list',
-        name: 'AftersalesHandleManagement',
+        redirect: '/aftersales-supply/aftersales-supply-list',
+        name: 'AftersalesSupplyManagement',
         hidden: false,
         meta: {
             title: '售后管理',
@@ -733,14 +733,14 @@ const routes = [
         },
         children: [
             {
-                path: 'aftersales-handle-list',
-                name: 'AftersalesHandleList',
+                path: 'aftersales-supply-list',
+                name: 'AftersalesSupplyList',
                 component: () => import('@/views/aftersales/aftersales-list.vue'),
                 meta: {
                     title: '售后响应',
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     is_sub_menu: true,
-                    type: 'handle'
+                    query_type: REFUND_QUERY_TYPE.SUPPLY,
                 }
             },
             {
@@ -750,7 +750,7 @@ const routes = [
                     title: '售后申请',
                     roles: [LOGIN_TYPE.DISTRIBUTOR],
                     is_sub_menu: true,
-                    type: 'apply'
+                    query_type: REFUND_QUERY_TYPE.APPLY,
                 }
             },
             {
@@ -784,7 +784,7 @@ const routes = [
                 meta: {
                     title: '售后单列表',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
-                    type: 'apply'
+                    query_type: REFUND_QUERY_TYPE.APPLY,
                 }
             },
             {

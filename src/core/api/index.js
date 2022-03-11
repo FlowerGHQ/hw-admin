@@ -226,9 +226,10 @@ const apiList = {
         recreate: ['PostJson', 'purchase-order/recreate'], // 再来一单
         detailSn: ['PostJson', 'purchase-order/detail-sn'],
     },
-    Aftersale: { // 售后单
+    Aftersales: { // 售后单
         list: ['PostJson', 'after-sales-order/list'],
         save: ['PostJson', 'after-sales-order/save'],
+        audit: ['PostJson', 'after-sales-order/audit'],
         detail: ['PostJson', 'after-sales-order/detail'],
         cancel: ['PostJson', 'after-sales-order/cancel'],
     },

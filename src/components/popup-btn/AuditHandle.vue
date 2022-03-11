@@ -49,9 +49,10 @@ export default {
             type: Boolean,
             default: false,
         },
-        itemId: {},
-        passStatus: {},
-        refuseStatus: {},
+
+        id: {},
+        sPass: {},
+        sRefuse: {},
         apiList: {},
     },
     data() {

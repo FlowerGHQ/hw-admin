@@ -4,11 +4,15 @@
         <div class="title-container">
             <div class="title-area">采购订单详情</div>
             <div class="btns-area">
-                <a-button type="primary" @click="handleModalShow('payment')" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL && authOrg(detail.supply_org_id, detail.supply_org_type)"><i class="icon i_received"/>确认收款</a-button>
-                <a-button type="primary" @click="handleModalShow('deliver')" v-if="detail.status === STATUS.WAIT_DELIVER && authOrg(detail.supply_org_id, detail.supply_org_type)"><i class="icon i_deliver"/>发货</a-button>
-                <a-button type="primary" @click="handleReceived()" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER  && authOrg(detail.org_id, detail.org_type)"><i class="icon i_goods"/>确认收货</a-button>
-                <a-button type="primary" @click="handleCancel()" v-if="detail.status === STATUS.WAIT_PAY & authOrg(detail.org_id, detail.org_type)"><i class="icon i_close_c"/>取消</a-button>
-                <a-button type="primary" @click="routerChange('refund')" ghost v-if="detail.status === STATUS.DEAL_SUCCESS & authOrg(detail.org_id, detail.org_type)"><i class="icon i_edit"/>申请退款</a-button>
+                <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
+                    <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL" @click="handleModalShow('payment')"><i class="icon i_received"/>确认收款</a-button>
+                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER" @click="handleModalShow('deliver')"><i class="icon i_deliver"/>发货</a-button>
+                </template>
+                <template v-if="authOrg(detail.org_id, detail.org_type)">
+                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER" @click="handleReceived()"><i class="icon i_goods"/>确认收货</a-button>
+                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_PAY"     @click="handleCancel()"><i class="icon i_close_c"/>取消</a-button>
+                    <a-button type="primary" v-if="detail.status === STATUS.DEAL_SUCCESS" @click="routerChange('aftersales')" ghost><i class="icon i_edit"/>申请售后</a-button>
+                </template>
             </div>
         </div>
         <div class="gray-panel">
@@ -301,12 +305,12 @@ export default {
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
-                case 'refund':
+                case 'aftersales':
                     routeUrl = this.$router.resolve({
-                        path: '/refund/refund-create',
+                        path: '/aftersales/aftersales-edit',
                         query: {
                             order_id: this.id,
-                            money: this.detail.charge,
+                            order_sn: this.detail.sn,
                         }
                     })
                     window.open(routeUrl.href, '_self')
@@ -318,8 +322,8 @@ export default {
             Core.Api.Purchase.detail({
                 id: this.id
             }).then(res => {
-                this.detail = res
-                console.log('getPurchaseInfo err', res)
+                this.detail = res.detail
+                console.log('getPurchaseInfo res', res)
             }).catch(err => {
                 console.log('getPurchaseInfo err', err)
             }).finally(() => {

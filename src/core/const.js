@@ -752,13 +752,20 @@ let Const = {
     },
     AFTERSALES: { // 售后
         STATUS: {
-            INIT: 0,         // 初始化,信息录入
-            APPLY: 100,      // 申请成功
-            AUDIT_PASS: 200, // 申请成功
-            DOING: 300,      // 处理中
+            INIT: 0,         // 待提交
+            APPLY: 100,      // 待审核
+            AUDIT_PASS: 200, // 处理中
             FINISH: 600 ,    // 已完成
-            CANCEL: -100,    // 取消
+            CANCEL: -100,    // 已取消
             AUDIT_FAIL: -200,// 审核失败
+        },
+        STATUS_MAP: {
+            '0'   : { color: 'purple', text: '待提交'},
+            '100' : { color: 'orange', text: '待审核'},
+            '200' : { color: 'blue',   text: '处理中'},
+            '600' : { color: 'green',  text: '已完成'},
+            '-100': { color: 'gray',   text: '已取消'},
+            '-200': { color: 'red',    text: '审核失败'},
         },
         TYPE: {
             ONLY_REFUND: 1,       // 仅退款
@@ -771,6 +778,10 @@ let Const = {
             '2': '退款且退货',
             '3': '换货',
             '4': '补发',
+        },
+        QUERY_TYPE: {
+            APPLY: 1,
+            SUPPLY: 2,
         }
     }
 };
