@@ -603,10 +603,12 @@ let Const = {
         COMMODITY_TYPE: {
             ENTITY: 20,
             ITEM: 10,
+            MATERIALS: 20,
         },
         COMMODITY_TYPE_MAP: {
             20: '整车',
             10: '零部件',
+            30: '物料',
         },
         TYPE: {
             IN: 1, //入库
@@ -638,6 +640,7 @@ let Const = {
         ],
         SOURCE_TYPE: {
             ADMIN: 10, //管理员创建
+            PRODUCTION: 15,
             PURCHASE_ORDER: 20, //采购单
             AFTER_SALES_ORDER: 30, //售后
             TRANSFER_ORDER: 40,
@@ -646,6 +649,7 @@ let Const = {
         SOURCE_TYPE_MAP: {
             10: '管理员创建',
             20: '采购',
+            15: '生产单',
             30: '售后',
             40: '调货',
             50: '维修单'

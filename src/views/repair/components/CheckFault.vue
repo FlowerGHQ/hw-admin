@@ -4,8 +4,7 @@
             <template #expandIcon><i class="icon i_expan_l"/></template>
             <a-collapse-panel key="affirm" header="故障确认" class="gray-collapse-panel">
                 <div class="panel-content affirm">
-                    <div class="title"><i class="icon i_warning"/>共{{ faultSelect.length }}个故障
-                    </div>
+                    <div class="title"><i class="icon i_warning"/>共{{ faultSelect.length }}个故障</div>
                     <a-checkbox-group class="fault_select" v-model:value="faultSelect" @change="handleFaultSelect">
                         <a-checkbox v-for="(value,key) of faultMap" :key='key' :value='key'>{{ value }}</a-checkbox>
                     </a-checkbox-group>
@@ -77,9 +76,7 @@
                                                 <a-select-option v-for="item of record.warehouse_out_list"
                                                                  :key="item.id" :value="item.id">
                                                     <span>{{ item.name }}(<span
-                                                        :style="item.disabled ? 'color: red;' : ''">{{
-                                                            item.stock
-                                                        }}</span>)</span>
+                                                        :style="item.disabled ? 'color: red;' : ''">{{item.stock }}</span>)</span>
                                                 </a-select-option>
                                             </a-select>
                                             <template v-if="needPurchase(record)">

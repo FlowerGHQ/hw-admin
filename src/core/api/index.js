@@ -162,6 +162,7 @@ const apiList = {
         delete: ['PostJson', 'entity/delete'],
         detailByUid: ['PostJson', 'entity/detail-by-uid'],
         getByUid: ['PostJson', 'entity/get-by-uid'],
+        batchSave: ['PostJson', 'entity/batch-save-arrival-time'],
     },
     ItemCategory: { // 商品分类
         list: ['PostJson', 'item-category/list'],
