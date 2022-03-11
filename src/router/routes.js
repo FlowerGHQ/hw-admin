@@ -94,7 +94,6 @@ const routes = [{
                 meta: {
                     title: '待结算工单',
                     roles: [LOGIN_TYPE.ADMIN],
-                    is_sub_menu: true,
                     type: 'invoice'
                 }
             },
@@ -402,7 +401,7 @@ const routes = [{
                     import ('@/views/warehouse/invoice-list.vue'),
                 meta: {
                     title: '出入库管理',
-                    is_sub_menu: true
+                    is_sub_menu: true,
                 }
             },
             {
@@ -540,7 +539,7 @@ const routes = [{
                     roles: [LOGIN_TYPE.ADMIN],
                 }
             },
-            {
+            /*{
                 path: 'entity-detail',
                 name: 'EntityDetail',
                 hidden: true,
@@ -551,7 +550,7 @@ const routes = [{
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/entity/entity-list',
                 }
-            },
+            },*/
         ]
     },
     { // 商品管理 - 平台端
