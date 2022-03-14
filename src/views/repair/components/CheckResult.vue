@@ -49,8 +49,8 @@
                             <a-table-summary-row>
                                 <a-table-summary-cell :index="0" :col-span="4">合计</a-table-summary-cell>
                                 <a-table-summary-cell :index="1" :col-span="1">{{ total.amount }}件</a-table-summary-cell>
-                                <a-table-summary-cell :index="2" :col-span="4">€{{ $Util.countFilter(total.price) }}</a-table-summary-cell>
-                                <a-table-summary-cell :index="3" :col-span="1">{{ $Util.countFilter(total.man_hour) }}小时</a-table-summary-cell>
+                                <a-table-summary-cell :index="2" :col-span="2">€{{ $Util.countFilter(total.price) }}</a-table-summary-cell>
+                                <a-table-summary-cell :index="3" :col-span="1" v-if="detail.service_type === SERVICE_TYPE.OUT_REPAIR_TIME">{{ $Util.countFilter(total.man_hour) }}小时</a-table-summary-cell>
                             </a-table-summary-row>
                         </a-table-summary>
                     </template>
@@ -63,7 +63,7 @@
 
 <script>
 import Core from '../../../core';
-
+const SERVICE_TYPE = Core.Const.REPAIR.SERVICE_TYPE
 export default {
     name: 'CheckResult',
     components: {},
@@ -81,6 +81,7 @@ export default {
     emit: ['hasTransfer'],
     data() {
         return {
+            SERVICE_TYPE,
             // 加载
             loading: false,
             activeKey: ['affirm', 'change'],
@@ -117,9 +118,11 @@ export default {
                 {title: '回收仓', dataIndex: 'recycle_warehouse_name', key: 'item'},
                 {title: '良品仓', dataIndex: 'warehouse_name', key: 'item'},
                 // {title: '接收门店', dataIndex: 'store_id'},
-                {title: '工时', dataIndex: 'man_hour'},
+                // {title: '工时', dataIndex: 'man_hour'},
             ]
-
+            if (this.detail.service_type === SERVICE_TYPE.OUT_REPAIR_TIME) {
+                tableColumns.splice(10, 0, {title: '工时', dataIndex: 'man_hour'})
+            }
             return tableColumns
         }
     },

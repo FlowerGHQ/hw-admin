@@ -67,6 +67,9 @@
                         <template v-if="column.key === 'type'">
                             {{ $Util.warehouseTypeFilter(text) }}
                         </template>
+                        <template v-if="column.key === 'target_type'">
+                            {{ $Util.targetTypeFilter(text) }}
+                        </template>
                         <template v-if="column.key === 'warehouse_name'">
                             {{ text || '-' }}
                         </template>
@@ -195,7 +198,8 @@ export default {
             tableData: [],
             tableColumns: [
                 {title: '出入库单编号', dataIndex: 'uid', key: 'detail'},
-                {title: '出入库单类型', dataIndex: 'type', key: 'stock_type',},
+                {title: '类型', dataIndex: 'type', key: 'stock_type',},
+                {title: '类目', dataIndex: 'target_type', key: 'target_type',},
                 {title: '所属仓库', dataIndex: ['warehouse', 'name'], key: 'warehouse_name',},
                 {title: '仓库类型', dataIndex: 'type', key: 'type',},
                 {title: '创建人', dataIndex: ['apply_user', "account", "name"], key: 'apply_user'},

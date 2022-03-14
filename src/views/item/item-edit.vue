@@ -207,11 +207,12 @@
                                 <a-input-number v-model:value="record.original_price" :min="0.01" :precision="2"
                                     :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')" />
                             </template>
-                            <template v-if="column.dataIndex === 'fob'">
-                                <a-select v-model:value="record.fob_currency" class="value-price">
-                                    <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">{{ val }}</a-select-option>
-                                </a-select>
-                                <a-input-number v-model:value="record.fob" :min="0.01" :precision="2"
+                            <template v-if="column.dataIndex === 'fob_eur'">
+                                <a-input-number v-model:value="record.fob_eur" :min="0.01" :precision="2"
+                                                :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')" />
+                            </template>
+                            <template v-if="column.dataIndex === 'fob_usd'">
+                                <a-input-number v-model:value="record.fob_usd" :min="0.01" :precision="2"
                                                 :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')" />
                             </template>
                             <template v-if="column.key === 'select'">
@@ -283,10 +284,15 @@
             <div class="form-item">
                 <div class="key">FOB</div>
                 <div class="value input-number">
-                    <a-input-number v-model:value="form.fob" :min="0" :precision="2" placeholder="0.00"/>
-                    <a-select v-model:value="form.fob_currency">
-                        <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="val">{{ val }}</a-select-option>
-                    </a-select>
+                    <a-input-number v-model:value="form.fob_eur" :min="0" :precision="2" placeholder="0.00"/>
+                    <span>€</span>
+                </div>
+            </div>
+            <div class="form-item">
+                <div class="key">FOB</div>
+                <div class="value input-number">
+                    <a-input-number v-model:value="form.fob_usd" :min="0" :precision="2" placeholder="0.00"/>
+                    <span>$</span>
                 </div>
             </div>
             <div class="form-item">
@@ -344,7 +350,8 @@ export default {
                 config: '',
                 man_hour: '',
                 sales_area_ids: undefined,
-                fob: '',
+                fob_eur: '',
+                fob_usd: '',
                 fob_currency: '',
             },
             salesList: [],
@@ -363,7 +370,8 @@ export default {
                 originalVisible: false,
                 original_price: '',
                 fobVisible: false,
-                fob: '',
+                fob_eur: '',
+                fob_usd: '',
             },
 
             upload: { // 上传图片
@@ -419,7 +427,8 @@ export default {
             )
             column.push(
                 {title: '成本价格', key: 'money', dataIndex: 'original_price', fixed: 'right'},
-                {title: 'FOB价格', key: 'money', dataIndex: 'fob', fixed: 'right'},
+                {title: 'FOB(EUR)', key: 'money', dataIndex: 'fob_eur', fixed: 'right'},
+                {title: 'FOB(USD)', key: 'money', dataIndex: 'fob_usd', fixed: 'right'},
                 {title: '建议零售价', key: 'money', dataIndex: 'price', fixed: 'right'},
             )
             return column
@@ -518,7 +527,8 @@ export default {
             // this.form.type = res.type
             console.log('type')
             this.form.price = Core.Util.countFilter(res.price)
-            this.form.fob = Core.Util.countFilter(res.fob)
+            this.form.fob_eur = Core.Util.countFilter(res.fob_eur)
+            this.form.fob_usd = Core.Util.countFilter(res.fob_usd)
             this.form.man_hour = Core.Util.countFilter(res.man_hour)
             this.form.type = JSON.stringify(res.type)
             this.form.original_price = Core.Util.countFilter(res.original_price)
@@ -568,7 +578,8 @@ export default {
                         ...params,
                         code: item.code,
                         price: Core.Util.countFilter(item.price),
-                        fob: Core.Util.countFilter(item.fob),
+                        fob_eur: Core.Util.countFilter(item.fob_eur),
+                        fob_usd: Core.Util.countFilter(item.fob_usd),
                         original_price_currency: item.original_price_currency,
                         fob_currency: item.fob_currency,
                         original_price: Core.Util.countFilter(item.original_price),
@@ -608,7 +619,8 @@ export default {
             if (this.specific.mode === 1 || this.indep_flag) { // 单规格
                 apiName = this.indep_flag ? 'update' : 'save'
                 form.price = Math.round(form.price * 100)
-                form.fob = Math.round(form.fob * 100)
+                form.fob_eur = Math.round(form.fob_eur * 100)
+                form.fob_usd = Math.round(form.fob_usd * 100)
                 form.original_price = Math.round(form.original_price * 100)
             } else { // 多规格
                 apiName = 'batchSave'
@@ -618,7 +630,8 @@ export default {
                         id: data.target_id,
                         code: data.code,
                         price: Math.round(data.price * 100),
-                        fob: Math.round(data.fob * 100),
+                        fob_eur: Math.round(data.fob_eur * 100),
+                        fob_usd: Math.round(data.fob_usd * 100),
                         original_price: Math.round(data.original_price * 100),
                         original_price_currency: data.original_price_currency,
                         fob_currency: data.fob_currency,
@@ -813,13 +826,15 @@ export default {
                     target_id: this.form.id,
                     code: this.form.code,
                     price: this.form.price,
-                    fob: this.form.fob,
+                    fob_eur: this.form.fob_eur,
+                    fob_usd: this.form.fob_usd,
                     original_price: this.form.original_price,
                 }]
             } else if (this.specific.mode === 1) {
                 this.form.code = this.specific.data[0].code
                 this.form.price = this.specific.data[0].price
-                this.form.fob = this.specific.data[0].fob
+                this.form.fob_eur = this.specific.data[0].fob_eur
+                this.form.fob_usd = this.specific.data[0].fob_usd
                 this.form.original_price = this.specific.data[0].original_price
             }
         },
@@ -938,7 +953,8 @@ export default {
                 code: '',
                 price: '',
                 original_price: '',
-                fob: '',
+                fob_eur: '',
+                fob_usd: '',
             })
         },
 
@@ -950,7 +966,8 @@ export default {
                 originalVisible: false,
                 original_price: '',
                 fobVisible: false,
-                fob: '',
+                fob_eur: '',
+                fob_usd: '',
             }
         },
         handleBatchSpec(key) {

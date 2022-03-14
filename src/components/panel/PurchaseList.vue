@@ -21,8 +21,16 @@
                             {{$Util.purchaseStatusFilter(text)}}
                         </div>
                     </template>
+                    <template v-if="column.dataIndex === 'payment_status'">
+                        <div class="status status-bg status-tag" :class="$Util.paymentStatusFilter(text,'color')">
+                            {{$Util.paymentStatusFilter(text)}}
+                        </div>
+                    </template>
+                    <template v-if="column.dataIndex === 'flag_review'">
+                        {{$Util.purchaseFlagReviewFilter(text)}}
+                    </template>
                     <template v-if="column.dataIndex === 'purchase_method'">
-                        {{$Util.purchaseMethodFilter(text)}}
+                        {{$Util.purchasePayMethodFilter(text)}}
                     </template>
                     <template v-if="column.dataIndex === 'item_type'">
                         {{$Util.itemTypeFilter(text)}}
@@ -109,10 +117,17 @@ export default {
             },
 
             tableColumns: [
-                { title: '订单编号', dataIndex: 'sn', },
+              /*  { title: '订单编号', dataIndex: 'sn', },
                 { title: '价格', dataIndex: 'price'  },
                 { title: '订单状态', dataIndex: 'status' },
+                { title: '下单时间', dataIndex: 'create_time', key: 'time' },*/
+                { title: '订单编号', dataIndex: 'sn', },
+                { title: '订单总价', dataIndex: 'price' },
+                { title: '订单状态', dataIndex: 'status' },
                 { title: '下单时间', dataIndex: 'create_time', key: 'time' },
+                { title: '支付状态', dataIndex: 'payment_status' },
+                { title: '支付时间', dataIndex: 'pay_time', key: 'time' },
+                { title: '完成时间', dataIndex: 'close_time', key: 'time' },
                 { title: '操作', key: 'operation', fixed: 'right'}
             ],
             tableData: [],
