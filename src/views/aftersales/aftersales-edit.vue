@@ -1,7 +1,7 @@
 <template>
 <div id="AftersalesEdit" class="edit-container">
     <div class="title-container"><div class="title-area">{{form.id ? '编辑售后单' : '新建售后单'}}</div></div>
-    <div class="gray-panel">
+    <div class="gray-panel" v-if="form.type !== TYPE.ONLY_REFUND">
         <div class="panel-content">
             <MySteps :stepsList='stepsList' :current='currStep'></MySteps>
         </div>
@@ -226,7 +226,7 @@ export default {
                     return true
                 default: return false
             }
-        }
+        },
     },
     created() {
         let q = this.$route.query
@@ -352,6 +352,9 @@ export default {
                 this.form.id = res.detail.id
                 this.detail = res.detail
                 this.currStep = 1
+                if (form.type === TYPE.ONLY_REFUND) {
+                    this.routerChange('detail')
+                }
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
