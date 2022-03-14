@@ -14,7 +14,7 @@
             <div class="info-block">
                 <div class="title">托修方</div>
                 <p>车主姓名：{{detail.customer_name}}</p>
-                <p>车架号：{{detail.item_code}}</p>
+                <p>车架号：{{detail.vehicle_no}}</p>
                 <p>送修日期：{{$Util.timeFormat(detail.create_time)}}</p>
                 <div class="title">联系电话</div>
                 <p>{{detail.customer_phone}}</p>
@@ -41,10 +41,13 @@
                         {{ text || '-'}}
                     </template>
                     <template v-if="column.dataIndex === 'price'">
-                        {{ $Util.countFilter(text) }}€
+                        €{{ $Util.countFilter(text) }}
                     </template>
                     <template v-if="column.dataIndex === 'sum_price'">
-                        {{ $Util.countFilter(record.price * record.amount) }}€
+                        €{{ $Util.countFilter(record.price * record.amount) }}
+                    </template>
+                    <template v-if="column.dataIndex === 'man_hour'">
+                        {{ text }}
                     </template>
                 </template>
                 <template #summary>
@@ -70,6 +73,7 @@
 </template>
 <script>
 import Core from '../../core';
+const SERVICE_TYPE = Core.Const.REPAIR.SERVICE_TYPE
 export default {
     name: 'RepairInvoice',
     components: {},
@@ -84,16 +88,22 @@ export default {
             detail: {},
 
             tableData: [],
-            tableColumns: [
-                { width: '40%', title: '维修材料', dataIndex: ['item', 'name'], key: 'item' },
-                { width: '20%', title: '数量', dataIndex: 'amount', key: 'item' },
-                { width: '20%', title: '单价', dataIndex: 'price' },
-                { width: '20%', title: '金额（元）', dataIndex: 'sum_price' },
-            ]
         }
     },
     watch: {},
     computed: {
+        tableColumns() {
+            let tableColumns = [
+                {width: '30%', title: '维修材料', dataIndex: ['item', 'name'], key: 'item'},
+                {width: '20%', title: '数量', dataIndex: 'amount', key: 'item'},
+                {width: '20%', title: '单价', dataIndex: 'price'},
+                {width: '20%', title: '金额', dataIndex: 'sum_price'},
+            ]
+            if (this.detail.service_type === SERVICE_TYPE.OUT_REPAIR_TIME) {
+                tableColumns.splice(10, 0, {title: '工时费', dataIndex: 'man_hour'})
+            }
+            return tableColumns
+        },
         sum_price() {
             let sum = 0
             this.tableData.forEach(item => {

@@ -26,7 +26,7 @@
                     </a-button>
                 </template>
                 <a-button type="primary" @click="routerChange('invoice')"
-                    v-if="detail.status == STATUS.SETTLEMENT || STATUS.FINISH || STATUS.AUDIT_SUCCESS"><i class="icon i_detail_l"/>查看结算单
+                    v-if="detail.status == STATUS.SETTLEMENT || detail.status == STATUS.FINISH || detail.status == STATUS.AUDIT_SUCCESS"><i class="icon i_detail_l"/>查看结算单
                 </a-button>
                 <a-button type="primary" @click="handleAuditShow()"
                           v-if="detail.status == STATUS.SETTLEMENT && $auth('ADMIN')"><i class="icon i_audit"/>审核

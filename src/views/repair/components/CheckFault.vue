@@ -51,8 +51,7 @@
                                 </template>
 
                                 <template v-if="column.dataIndex === 'bad'">
-                                    <template
-                                        v-if="record.type === REPAIR_TYPE.REPLACE && detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME">
+                                    <template v-if="record.type === REPAIR_TYPE.REPLACE && detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME">
                                         <template v-if="warehouseFailList.length">
                                             <a-select v-model:value="record.recycle_warehouse_id" placeholder="请选择故障仓"
                                                       style="width: 120px;">
@@ -130,7 +129,7 @@ import SimpleImageEmpty from '@/components/common/SimpleImageEmpty.vue';
 import FaultList from '@/components/popup-btn/FaultList.vue';
 
 const REPAIR_TYPE = Core.Const.REPAIR_ITEM.TYPE
-
+const SERVICE_TYPE = Core.Const.REPAIR.SERVICE_TYPE
 export default {
     name: 'RepairDetail',
     components: {
@@ -155,27 +154,12 @@ export default {
     },
     data() {
         return {
-
+            SERVICE_TYPE,
             REPAIR_TYPE, // 维修商品类型
-            SERVICE_TYPE: Core.Const.REPAIR.SERVICE_TYPE, // 工单帐类
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
             activeKey: ['affirm'],
-
-            tableColumns: [
-                {title: '商品名称', dataIndex: 'name', key: 'item'},
-                {title: '商品编号', dataIndex: 'code', key: 'item'},
-                {title: '单价', dataIndex: 'price', key: 'money'},
-                {title: '数量(件)', key: 'amount'},
-                {title: '总价', key: 'total_price'},
-                {title: '维修类型', key: 'type'},
-                {title: '回收仓', dataIndex: 'bad'},
-                {title: '良品仓', dataIndex: 'new'},
-                // {title: '接收门店', dataIndex: 'repair'},
-                {title: '操作', dataIndex: 'operation'},
-            ],
-
             faultMap: {}, // 存放所有可能的故障
             faultSelect: [], // 存放 被选中的故障
             failData: {}, // 存放 零部件更换 商品信息
@@ -188,22 +172,24 @@ export default {
     },
     watch: {},
     computed: {
-       /* tableColumns() {
-            let tableColumns = [
-                {title: '商品名称', dataIndex: 'name', key: 'item'},
-                {title: '商品编号', dataIndex: 'code', key: 'item'},
-                {title: '单价', dataIndex: 'price', key: 'money'},
-                {title: '数量(件)', key: 'amount'},
-                {title: '总价', key: 'total_price'},
-                {title: '维修类型', key: 'type'},
-                // {title: '回收仓', dataIndex: 'bad'},
-                {title: '良品仓', dataIndex: 'new'},
-                // {title: '接收门店', dataIndex: 'repair'},
-                {title: '操作', dataIndex: 'operation'},
-            ]
-
-            return tableColumns
-        },*/
+        tableColumns() {
+            let columns = [
+                    {title: '商品名称', dataIndex: 'name', key: 'item'},
+                    {title: '商品编号', dataIndex: 'code', key: 'item'},
+                    {title: '单价', dataIndex: 'price', key: 'money'},
+                    {title: '数量(件)', key: 'amount'},
+                    {title: '总价', key: 'total_price'},
+                    {title: '维修类型', key: 'type'},
+                    // {title: '回收仓', dataIndex: 'bad'},
+                    {title: '良品仓', dataIndex: 'new'},
+                    // {title: '接收门店', dataIndex: 'repair'},
+                    {title: '操作', dataIndex: 'operation'},
+                ]
+            if (this.detail.target_type == SERVICE_TYPE.IN_REPAIR_TIME) {
+                columns.splice(6, 0, {title: '回收仓', dataIndex: 'new'})
+            }
+            return columns
+        },
     },
     mounted() {
         this.getFaultData();

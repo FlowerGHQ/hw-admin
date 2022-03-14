@@ -85,6 +85,7 @@ const routes = [
                 meta: {
                     title: '待结算工单',
                     roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true,
                     type: 'invoice'
                 }
             },

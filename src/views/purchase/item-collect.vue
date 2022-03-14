@@ -1,7 +1,21 @@
 <template>
 <div id="ItemCollect" class="list-container">
     <div class="list-container shop-cart-container">
-        <div class="title-area">购物车</div>
+        <div class="title-area">
+            <div class="shop-area">购物车</div>
+            <div class="value" v-if="$auth('AGENT','STORE')">
+                <a-select v-model:value="currency" class="monetary-select">
+                    <a-select-option v-for="(val,key) in currencyList" :key="key" :value="key" >{{ val }}
+                    </a-select-option>
+                </a-select>
+            </div>
+            <div class="value" v-if="$auth('DISTRIBUTOR')">
+                <a-select v-model:value="currency" class="monetary-select">
+                    <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key" >{{ val }}
+                    </a-select-option>
+                </a-select>
+            </div>
+        </div>
         <div class="list-content">
             <div class="list-item" v-for="item of shopCartList" :key="item.id">
                 <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
@@ -22,8 +36,14 @@
                     </div>
                 </div>
                 <div class="price">
-                    €{{$Util.countFilter(item.price)}}
+                    {{ handleMonetaryChange(item.fob_eur) }}
                 </div>
+<!--                <div class="price" v-if="currency == currencyType.EUR">
+                    €{{$Util.countFilter(item.fob_eur)}}
+                </div>
+                <div class="price" v-else>
+                    ${{$Util.countFilter(item.fob_usd)}}
+                </div>-->
             </div>
             <SimpleImageEmpty v-if="!shopCartList.length" desc='您的购物车中暂无商品'/>
         </div>
@@ -91,6 +111,18 @@ export default {
             detail: {},
             shopCartList: [],
             favoriteList: [],
+            monetaryList: {
+                '€': '€ (EUR)',
+                '$': '$ (USD)',
+            },
+            currencyList: {
+                '￥': '￥(CNY)',
+                '€': '€ (EUR)',
+                '$': '$ (USD)',
+                '£': '£ (GBP)',
+            },
+            currency: Core.Const.ITEM.MONETARY_TYPE_MAP.EUR,
+            currencyType: Core.Const.ITEM.MONETARY_TYPE_MAP,
         };
     },
     watch: {},
@@ -221,11 +253,17 @@ export default {
                 },
             });
         },
+        handleMonetaryChange(item) {
+            if (this.currency == this.currencyType.EUR) {
+                return "€" + Core.Util.countFilter(item.fob_eur)
+            }
+
+        },
     }
 };
 </script>
 
-<style lang="less">
+<style lang="less" >
 #ItemCollect {
     padding: 60px 56px 150px 48px;
     .list-container {
@@ -234,14 +272,26 @@ export default {
         align-items: flex-start;
         + .list-container { margin-top: 76px; }
         .title-area {
+            display: flex;
             width: 100%;
             font-size: 24px;
-
             font-weight: 500;
             color: #111111;
             line-height: 28px;
-
             margin-bottom: 8px;
+            .value {
+                position: absolute;
+                right: 0;
+                .monetary-select {
+                    min-width: 126px;
+                    .ant-select-selector {
+                        border-color: #006EF9;
+                    }
+                    .ant-select-selection-item {
+                        color: #006EF9;
+                    }
+                }
+            }
         }
         .list-content {
             width: 72%;
@@ -354,6 +404,7 @@ export default {
                 line-height: 26px;
                 margin-bottom: 24px;
                 margin-top: 22px;
+
             }
             .settle-item {
                 width: 100%;

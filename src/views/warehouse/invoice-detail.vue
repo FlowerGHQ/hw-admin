@@ -71,7 +71,7 @@
                             </template>
                             <template v-if="column.dataIndex === 'entity'">
                                 <template v-if="addMode || record.editMode">
-                                    <a-input v-model:value="record.uid" class="input-number" placeholder="请输入车架号" @blur="handleVehicleBlur"/>
+                                    <a-input v-model:value="record.uid" class="input-number" placeholder="请输入车架号" @blur="handleVehicleBlur(id)"/>
                                     <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
                                     <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                                 </template>
@@ -180,10 +180,15 @@ export default {
         this.getInvoiceList();
     },
     methods: {
-        routerChange(type, item) {
+        routerChange(type, item = {}) {
+            let routeUrl = ''
             switch (type) {
-                case 'back':
-                    this.$router.go(-1)
+                case 'list':
+                    routeUrl = this.$router.resolve({
+                        path: "/warehouse/invoice-list",
+                        query: { id: item.id }
+                    })
+                    window.open(routeUrl.href, '_self')
                     break;
             }
         },
@@ -228,8 +233,7 @@ export default {
                 onOk() {
                     Core.Api.Invoice.cancel({id: _this.detail.id}).then(() => {
                         _this.$message.success('取消成功');
-                        _this.getInvoiceDetail();
-                        _this.getInvoiceList();
+                        _this.routerChange('list');
                     }).catch(err => {
                         console.log("handleCancel err", err);
                     })
@@ -248,8 +252,7 @@ export default {
                     Core.Api.Invoice.handle({id: _this.detail.id}).then(() => {
                         _this.$message.success('操作成功');
                         _this.getInvoiceDetail();
-                        _this.getInvoiceList();
-                        _this.routerChange();
+                        _this.routerChange('list');
                     }).catch(err => {
                         console.log("handleComplete err", err);
                     })
@@ -270,12 +273,13 @@ export default {
             this.addData = list
             this.addMode = true
         },
-        handleVehicleBlur() {  // 获取 车架号
+        handleVehicleBlur(id) {  // 获取 车架号
             /* if (!this.uid) {
                  return this.isExist = ''
              }*/
             Core.Api.Entity.detailByUid({
-                uid: this.uid
+                ...this.addData,
+                uid: this.addData.uid,
             }).then(res => {
                 this.isExist = res.detail == null ? 2 : 1
                 console.log("handleVehicleBlur res", res)
@@ -340,7 +344,7 @@ export default {
             Core.Api.Invoice.saveList(list).then(res => {
                 this.$message.success('保存成功')
                 this.getInvoiceDetail()
-                this.routerChange('back')
+                this.routerChange('list')
             }).catch(err => {
                 console.log('handleInvoiceSubmit err', err)
             }).finally(() => {

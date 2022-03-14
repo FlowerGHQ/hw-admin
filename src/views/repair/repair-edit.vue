@@ -85,12 +85,10 @@
                     <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                 </div>
             </div>
-            <div class="form-item">
+            <div class="form-item" v-if="form.vehicle_no && isExist == 1">
                 <div class="key">到港时间</div>
-                <div class="value">
-                    <a-date-picker v-model:value="form.arrival_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" placeholder="请选择到港时间">
-                        <template #suffixIcon><i class="icon i_calendar"/></template>
-                    </a-date-picker>
+                <div class="value" >
+                    {{ $Util.timeFilter(arrival_time) }}
                 </div>
             </div>
             <div class="form-item">
@@ -206,7 +204,6 @@ export default {
                 name: '', // 工单名称
                 desc: '', // 问题描述
                 service_type: '',//保内维修、保外维修
-                arrival_time: '',//到港时间
                 travel_distance: '',//行程公里数
 
                 channel: 1, // 维修方式、维修途径
@@ -229,6 +226,7 @@ export default {
                 repair_message: "", // 处理信息、工单备注
                 priority: 0, // 紧急程度
             },
+            arrival_time: '',
         };
     },
     watch: {},
@@ -282,7 +280,6 @@ export default {
                 this.form.customer_id = this.form.customer_id || undefined
                 this.form.repair_user_id = this.form.repair_user_id || undefined
                 this.form.plan_time = this.form.plan_time ? dayjs.unix(this.form.plan_time).format('YYYY-MM-DD HH:mm:ss') : undefined
-                this.form.arrival_time = this.form.arrival_time ? dayjs.unix(this.form.arrival_time).format('YYYY-MM-DD HH:mm:ss') : undefined // 时间戳转日期
                 // this.form.finish_time = this.form.finish_time ? dayjs.unix(this.form.finish_time).format('YYYY-MM-DD HH:mm:ss') : undefined
             }).catch(err => {
                 console.log('getRepairDetail err', err)
@@ -296,7 +293,6 @@ export default {
             let form = Core.Util.deepCopy(this.form)
 
             form.plan_time = form.plan_time ? dayjs(form.plan_time).unix() : 0
-            form.arrival_time = form.arrival_time ? dayjs(form.arrival_time).unix() : 0 // 日期转时间戳
             // form.finish_time = form.finish_time ? dayjs(form.finish_time).unix() : 0
             console.log('handleSubmit form:', form)
             let checkRes = this.checkFormInput(form);
@@ -307,6 +303,7 @@ export default {
 
             await Core.Api.Repair[apiName]({
                 ...form,
+                arrival_time: this.arrival_time
             }).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
@@ -328,7 +325,7 @@ export default {
                 });
             }*/
             if (this.detail.status == this.REPAIR.STATUS.AUDIT_FAIL) { // 未审核通过维修单 员工再次确认（重提）
-                this.loading = true; 
+                this.loading = true;
                 await Core.Api.Repair.check({
                     id: this.form.id,
                     audit_result: 1,
@@ -351,6 +348,8 @@ export default {
                 uid: this.form.vehicle_no,
             }).then(res => {
                 this.isExist = res.detail == null ? 2 : 1
+                this.arrival_time = res.detail.arrival_time
+                console.log('arrival_time')
                 console.log("handleVehicleBlur res", res)
             }).catch(err => {
                 console.log('handleVehicleBlur err', err)
@@ -374,11 +373,7 @@ export default {
             /* if (!form.travel_distance) {
                 this.$message.warning('请输入行程公里数')
                 return 0
-            }
-            if (!form.arrival_time) {
-                this.$message.warning('请选择到港时间')
-                return 0
-            } */
+            }*/
             if (!form.name) {
                 this.$message.warning('请输入工单名称')
                 return 0
