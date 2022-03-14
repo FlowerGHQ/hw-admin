@@ -24,7 +24,7 @@
                 <div class="key">售后类型:</div>
                 <div class="value">
                     <a-select placeholder="请选择售后类型" v-model:value="searchForm.type" @change='handleSearch'>
-                        <a-select-option v-for="item of typeList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+                        <a-select-option v-for="val,key of typeMap" :key="key" :value="key">{{ val }}</a-select-option>
                     </a-select>
                 </div>
             </a-col>
@@ -66,7 +66,7 @@
                     {{ text || '-' }}
                 </template>
                 <template v-if="column.key === 'money'">
-                    {{record.refund_money_currency || '€'}} {{ $Util.countFilter(text)  }}
+                    {{$Util.priceUnitFilter(record.refund_money_currency)}} {{ $Util.countFilter(text)  }}
                 </template>
                 <template v-if="column.key === 'tip_time'">
                     <a-tooltip :title="text" destroyTooltipOnHide>

@@ -141,7 +141,7 @@ export default {
                 {title: '商品品号', dataIndex: 'model', key: 'item'},
                 {title: '商品编码', dataIndex: 'code', key: 'item'},
                 {title: '商品规格', dataIndex: 'attr_list', key: 'spec'},
-                {title: '建议零售价', dataIndex: 'price', key: 'money',},
+                // {title: '建议零售价', dataIndex: 'price', key: 'money',},
             ]
             if (this.warehouseId !== 0) {
                 tableColumns.splice(3, 0, {title: '仓库库存', dataIndex: 'stock', key: 'count'})

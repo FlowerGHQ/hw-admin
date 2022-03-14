@@ -30,7 +30,7 @@
                 <div class="key">申请退款金额:</div>
                 <div class="value input-number">
                     <a-input-number v-model:value="form.refund_money" placeholder="申请退款金额"/>
-                    <span>{{form.refund_money_currency || '€'}}</span>
+                    <span>{{$Util.priceUnitFilter(form.refund_money_currency)}}</span>
                 </div>
             </div>
             <div class="form-item textarea">

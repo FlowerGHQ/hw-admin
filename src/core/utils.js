@@ -283,6 +283,10 @@ const Util = {
         }
         return CH_NUM_MAP[value] || value
     },
+    priceUnitFilter(val) {
+        const MAP = Const.ITEM.MONETARY_TYPE_MAP
+        return MAP[val]
+    },
     /* =============== 数值 ================ */
 
     /* =============== 通用过滤器 ================ */

@@ -200,20 +200,20 @@
                                 <a-input-number v-model:value="record.price" :min="0.01" :precision="2"
                                     :formatter="value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')"/>
                             </template>
-                            <template v-if="column.dataIndex === 'original_price'">
-                                <a-select v-model:value="record.original_price_currency" class="value-price">
-                                    <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">{{ val }}</a-select-option>
-                                </a-select>
+                            <div class="input-number-unit" v-if="column.dataIndex === 'original_price'">
                                 <a-input-number v-model:value="record.original_price" :min="0.01" :precision="2"
                                     :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')" />
-                            </template>
+                                <a-select v-model:value="record.original_price_currency" placeholder="Unit">
+                                    <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">{{ val }}</a-select-option>
+                                </a-select>
+                            </div>
                             <template v-if="column.dataIndex === 'fob_eur'">
                                 <a-input-number v-model:value="record.fob_eur" :min="0.01" :precision="2"
-                                                :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')" />
+                                    :formatter="value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')" />
                             </template>
                             <template v-if="column.dataIndex === 'fob_usd'">
                                 <a-input-number v-model:value="record.fob_usd" :min="0.01" :precision="2"
-                                                :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')" />
+                                    :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/\$\s?|(,*)/g, '')"/>
                             </template>
                             <template v-if="column.key === 'select'">
                                 <a-select v-model:value="record[column.dataIndex]" placeholder="请选择">
@@ -236,19 +236,31 @@
                             </template>
                             <a-button type="link">成本价格</a-button>
                         </a-popover>
-                        <a-popover v-model:visible="batchSet.fobVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseBatchSet()}'>
+                        <a-popover v-model:visible="batchSet.fobEurVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseBatchSet()}'>
                             <template #content>
                                 <div class="batch-set-edit-popover">
-                                    <a-input-number v-model:value="batchSet.fob" placeholder="请输入FOB价" @keydown.enter="handleBatchSpec('fob')" :min='0' :autofocus='true' :precision="2"/>
+                                    <a-input-number v-model:value="batchSet.fob_eur" placeholder="请输入FOB(EUR)价" @keydown.enter="handleBatchSpec('fob_eur')" :min='0' :autofocus='true' :precision="2"/>
                                     <div class="btns">
                                         <a-button type="primary" ghost @click="handleCloseBatchSet">取消</a-button>
-                                        <a-button type="primary" @click="handleBatchSpec('fob')">确定</a-button>
+                                        <a-button type="primary" @click="handleBatchSpec('fob_eur')">确定</a-button>
                                     </div>
                                 </div>
                             </template>
-                            <a-button type="link">FOB</a-button>
+                            <a-button type="link">FOB(EUR)</a-button>
                         </a-popover>
-                        <a-popover v-model:visible="batchSet.priceVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseBatchSet()}'>
+                        <a-popover v-model:visible="batchSet.fobUsdVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseBatchSet()}'>
+                            <template #content>
+                                <div class="batch-set-edit-popover">
+                                    <a-input-number v-model:value="batchSet.fob_usd" placeholder="请输入FOB(USD)价" @keydown.enter="handleBatchSpec('fob_usd')" :min='0' :autofocus='true' :precision="2"/>
+                                    <div class="btns">
+                                        <a-button type="primary" ghost @click="handleCloseBatchSet">取消</a-button>
+                                        <a-button type="primary" @click="handleBatchSpec('fob_usd')">确定</a-button>
+                                    </div>
+                                </div>
+                            </template>
+                            <a-button type="link">FOB(USD)</a-button>
+                        </a-popover>
+                        <!-- <a-popover v-model:visible="batchSet.priceVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseBatchSet()}'>
                             <template #content>
                                 <div class="batch-set-edit-popover">
                                     <a-input-number v-model:value="batchSet.price" placeholder="请输入建议零售价" @keydown.enter="handleBatchSpec('price')" :min='0' :autofocus='true' :precision="2"/>
@@ -259,7 +271,7 @@
                                 </div>
                             </template>
                             <a-button type="link">建议零售价</a-button>
-                        </a-popover>
+                        </a-popover> -->
                     </div>
                     <a-button class="spec-add" type="primary" ghost @click="handleAddSpecItem"><i class="icon i_add"/>添加规格</a-button>
                 </div>
@@ -272,34 +284,34 @@
             <div class="title">价格信息</div>
         </div>
         <div class="form-content">
-            <div class="form-item required">
+            <div class="form-item">
                 <div class="key">成本价格</div>
-                <div class="value input-number">
+                <div class="value input-number-unit">
                     <a-input-number v-model:value="form.original_price" :min="0" :precision="2" placeholder="0.00"/>
                     <a-select v-model:value="form.original_price_currency">
-                        <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="val">{{ val }}</a-select-option>
+                        <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">{{ val }}</a-select-option>
                     </a-select>
                 </div>
             </div>
-            <div class="form-item">
-                <div class="key">FOB</div>
+            <!-- <div class="form-item">
+                <div class="key">建议零售价</div>
+                <div class="value input-number">
+                    <a-input-number v-model:value="form.price" :min="0" :precision="2" placeholder="0.00"/>
+                    <span>€</span>
+                </div>
+            </div> -->
+            <div class="form-item required">
+                <div class="key">FOB(EUR)</div>
                 <div class="value input-number">
                     <a-input-number v-model:value="form.fob_eur" :min="0" :precision="2" placeholder="0.00"/>
                     <span>€</span>
                 </div>
             </div>
-            <div class="form-item">
-                <div class="key">FOB</div>
+            <div class="form-item required">
+                <div class="key">FOB(USD)</div>
                 <div class="value input-number">
                     <a-input-number v-model:value="form.fob_usd" :min="0" :precision="2" placeholder="0.00"/>
                     <span>$</span>
-                </div>
-            </div>
-            <div class="form-item">
-                <div class="key">建议零售价</div>
-                <div class="value input-number">
-                    <a-input-number v-model:value="form.price" :min="0" :precision="2" placeholder="0.00"/>
-                    <span>€</span>
                 </div>
             </div>
         </div>
@@ -345,14 +357,13 @@ export default {
                 imgs: '',
                 category_id: undefined,
                 price: undefined,
-                original_price_currency: '',
+                original_price_currency: undefined,
                 original_price: undefined,
                 config: '',
                 man_hour: '',
                 sales_area_ids: undefined,
                 fob_eur: '',
                 fob_usd: '',
-                fob_currency: '',
             },
             salesList: [],
             // 商品分类
@@ -361,16 +372,20 @@ export default {
 
             specific: { // 规格
                 mode: 1,
-                                  list: [], // [{id: '', name: '', key: '', option: [], addVisible: false, addValue: ''}]
+                list: [], // [{id: '', name: '', key: '', option: [], addVisible: false, addValue: ''}]
                 data: [], // [{code: '', price: '', original_price: [], ……, attr_list}]
             },
             batchSet: { // 批量设置
                 priceVisible: false,
                 price: '',
+
                 originalVisible: false,
                 original_price: '',
-                fobVisible: false,
+
+                fobEurVisible: false,
                 fob_eur: '',
+
+                fobUsdVisible: false,
                 fob_usd: '',
             },
 
@@ -427,9 +442,9 @@ export default {
             )
             column.push(
                 {title: '成本价格', key: 'money', dataIndex: 'original_price', fixed: 'right'},
-                {title: 'FOB(EUR)', key: 'money', dataIndex: 'fob_eur', fixed: 'right'},
-                {title: 'FOB(USD)', key: 'money', dataIndex: 'fob_usd', fixed: 'right'},
-                {title: '建议零售价', key: 'money', dataIndex: 'price', fixed: 'right'},
+                {title: 'FOB(EUR)', key: 'money', dataIndex: 'fob_eur', fixed: 'right', unit: '€'},
+                {title: 'FOB(USD)', key: 'money', dataIndex: 'fob_usd', fixed: 'right', unit: '$'},
+                // {title: '建议零售价', key: 'money', dataIndex: 'price', fixed: 'right'},
             )
             return column
         }
@@ -581,7 +596,6 @@ export default {
                         fob_eur: Core.Util.countFilter(item.fob_eur),
                         fob_usd: Core.Util.countFilter(item.fob_usd),
                         original_price_currency: item.original_price_currency,
-                        fob_currency: item.fob_currency,
                         original_price: Core.Util.countFilter(item.original_price),
                         target_id: item.id,
                         attr_list: item.attr_list,
@@ -634,7 +648,6 @@ export default {
                         fob_usd: Math.round(data.fob_usd * 100),
                         original_price: Math.round(data.original_price * 100),
                         original_price_currency: data.original_price_currency,
-                        fob_currency: data.fob_currency,
                         attr_params: attrDef.map((attr,index) => {
                             let id = ''
                             if (data.attr_list && data.attr_list.length) {
@@ -688,14 +701,20 @@ export default {
                 if (!form.code) {
                     return this.$message.warning('请输入商品编码')
                 }
-               /* if (!form.price) {
+                /* if (!form.price) {
                     return this.$message.warning('请输入商品建议零售价')
-                }*/
+                }
                 if (!form.original_price) {
                     return this.$message.warning('请输入商品成本价格')
                 }
                 if (form.original_price > form.price) {
                     return this.$message.warning('商品成本价格应小于商品建议零售价')
+                } */
+                if (!form.fob_eur) {
+                    return this.$message.warning('请输入FOB(EUR)价格')
+                }
+                if (!form.fob_usd) {
+                    return this.$message.warning('请输入FOB(USD)价格')
                 }
             } else { // 多规格
                 // 规格定义 检查
@@ -718,15 +737,21 @@ export default {
                     if (!item.code) {
                         return this.$message.warning('请输入商品编码')
                     }
-                    if (!item.price) {
+                    /* if (!item.price) {
                         return this.$message.warning('请输入商品建议零售价')
                     }
                     if (!item.original_price) {
                         return this.$message.warning('请输入商品成本价格')
                     }
                     if (item.original_price > item.price) {
-                    return this.$message.warning('商品成本价格应小于商品建议零售价')
-                }
+                        return this.$message.warning('商品成本价格应小于商品建议零售价')
+                    } */
+                    if (!item.fob_eur) {
+                        return this.$message.warning('请输入FOB(EUR)价格')
+                    }
+                    if (!item.fob_usd) {
+                        return this.$message.warning('请输入FOB(USD)价格')
+                    }
                     let str = ''
                     for (let j = 0; j < this.specific.list.length; j++) {
                         const {name, key} = this.specific.list[j];
@@ -829,6 +854,7 @@ export default {
                     fob_eur: this.form.fob_eur,
                     fob_usd: this.form.fob_usd,
                     original_price: this.form.original_price,
+                    original_price_currency: this.form.original_price_currency
                 }]
             } else if (this.specific.mode === 1) {
                 this.form.code = this.specific.data[0].code
@@ -965,8 +991,9 @@ export default {
                 price: '',
                 originalVisible: false,
                 original_price: '',
-                fobVisible: false,
+                fobEurVisible: false,
                 fob_eur: '',
+                fobUsdVisible: false,
                 fob_usd: '',
             }
         },
@@ -1118,7 +1145,8 @@ export default {
         th {
             background-color: #fff;
         }
-        .ant-select, .ant-input-number {
+        .ant-input-number,
+        .ant-select:not(.ant-input-number + .ant-select) {
             width: 120px;
         }
         .code {
