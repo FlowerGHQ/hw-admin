@@ -277,7 +277,7 @@ export default {
     },
     methods: {
         authOrg(orgId, orgType) {
-            console.log(orgId, orgType, this.loginOrgId, this.loginOrgType)
+            console.log("authOrg", orgId, orgType, this.loginOrgId, this.loginOrgType)
             if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
                 return true
             }
@@ -412,11 +412,11 @@ export default {
                 pay_method: form.pay_method,
                 payment: form.payment * 100
             }).then(res => {
+                this.$message.success('支付成功')
                 this.getPurchaseInfo()
                 this.paymentShow = false
             }).catch(err => {
                 console.log('getPurchaseInfo err', err)
-                this.$message.success('支付成功')
             }).finally(() => {
                 this.loading = false;
             });

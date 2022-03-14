@@ -49,9 +49,9 @@
                     <a-button @click="handleSearchReset">重置</a-button>
                 </div>
             </div>
-            <div class="operate-container" v-if="type==='pending' && selectedRowItems.length > 0">
-                <a-button type="primary"  @click="handleEntryShow('batch')">批量入库</a-button>
-                <a-button type="primary"  @click="handleAuditShow('batch')">批量审核</a-button>
+            <div class="operate-container" v-if="type==='pending'">
+                <a-button type="primary" @click="handleEntryShow('batch')" :disabled="!selectedRowItems.length">批量入库</a-button>
+                <a-button type="primary" @click="handleAuditShow('batch')" :disabled="!selectedRowItems.length">批量审核</a-button>
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -193,7 +193,7 @@
                     <a-button @click="handleEntryClose">取消</a-button>
                     <a-button @click="handleEntrySubmit" type="primary">确定</a-button>
                 </template>
-            </a-modal>       
+            </a-modal>
         </template>
     </div>
 </template>

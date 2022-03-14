@@ -76,18 +76,17 @@
                     <a-button @click="handleSearchReset">重置</a-button>
                 </div>
             </div>
-            <div class="operate-container" v-if="this.selectedRowKeys.length > 0">
-                <a-button type="primary" @click="handleSetShow">批量设置到港时间</a-button>
+            <div class="operate-container">
+                <a-button type="primary" @click="handleSetShow" :disabled="!selectedRowKeys.length">批量设置到港时间</a-button>
             </div>
             <div class="table-container">
                 <a-table :check-mode='true' :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                         :row-key="record => record.id" :pagination='false' :row-selection="rowSelection"
-                         :expandedRowKeys="expandedRowKeys" :indentSize='0'
-                         :expandIconColumnIndex="expandIconColumnIndex">
+                    :row-key="record => record.id" :pagination='false' :row-selection="rowSelection"
+                    :expandedRowKeys="expandedRowKeys" :indentSize='0'
+                    :expandIconColumnIndex="expandIconColumnIndex">
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail'">
-                            <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)"
-                                     fallback='无'/>
+                            <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" fallback='无'/>
                             <a-button type="link" @click="routerChange('detail', record)">
                                 <div class="ell" style="max-width: 150px">{{ text || '-' }}</div>
                             </a-button>

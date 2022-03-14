@@ -7,8 +7,8 @@
             <div class="form-item required">
                 <div class="key">审核结果:</div>
                 <a-radio-group v-model:value="form.status">
-                    <a-radio :value="passStatus">通过</a-radio>
-                    <a-radio :value="refuseStatus">不通过</a-radio>
+                    <a-radio :value="sPass">通过</a-radio>
+                    <a-radio :value="sRefuse">不通过</a-radio>
                 </a-radio-group>
             </div>
             <div class="form-item textarea required" v-if="form.status === refuseStatus">
@@ -58,6 +58,7 @@ export default {
     data() {
         return {
             loading: false,
+            modalShow: false,
             form: {
                 status: '',
                 audit_message: '',
@@ -70,13 +71,14 @@ export default {
     mounted() {},
     methods: {
         handleModalShow() {
+            console.log('handleModalShow:')
             this.modalShow = true
         },
         handleModalClose() {
             this.modalShow = false
         },
         handleConfirm() {
-            Core.Api[apiList[0]][apiList[1]]({
+            Core.Api[this.apiList[0]][this.apiList[1]]({
                 id: this.id,
                 ...this.form
             }).then(res => {

@@ -66,8 +66,8 @@
                     {{ text || '-' }}
                 </template>
                 <template v-if="column.key === 'money'">
-                    €{{ $Util.countFilter(text)  }}
-                </template>å
+                    {{record.refund_money_currency || '€'}} {{ $Util.countFilter(text)  }}
+                </template>
                 <template v-if="column.key === 'tip_time'">
                     <a-tooltip :title="text" destroyTooltipOnHide>
                         <div class="ell" style="max-width: 200px">{{ text || '-' }}</div>
@@ -83,7 +83,7 @@
                     </AuditHandle>
                     <template v-if="canEdit(record) && sameOrg(record.org_id, record.org_type)">
                         <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>修改</a-button>
-                        <a-button type="link" @click="handleCancel(record.id)"><i class="icon i_m_error"/>取消</a-button>
+                        <a-button type="link" @click="handleCancel(record.id)" class="danger"><i class="icon i_m_error"/>取消</a-button>
                     </template>
                 </template>
             </template>
@@ -144,20 +144,11 @@ export default {
                 order_sn: '',
                 begin_time: '',
                 end_time: '',
+                status: -1
             },
             statusList: [],
             // 表格
             tableData: [],
-            tableColumns: [
-                {title: '售后单号', dataIndex: 'sn', key: 'detail'},
-                {title: '售后单状态', dataIndex: 'status',key: 'status', align: 'center'},
-                {title: '售后类型', dataIndex: 'type'},
-                {title: '退款金额', dataIndex: 'money', key: 'money'},
-                {title: '申请组织', dataIndex: 'org_name' ,key: 'org'},
-                {title: '采购单号', dataIndex: 'order_sn'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '操作', key: 'operation', fixed: 'right', width: 100,},
-            ],
         };
     },
     watch: {
@@ -172,7 +163,24 @@ export default {
             }
         }
     },
-    computed: {},
+    computed: {
+        tableColumns() {
+            let tableColumns = [
+                {title: '售后单号', dataIndex: 'sn', key: 'detail'},
+                {title: '售后单状态', dataIndex: 'status',key: 'status', align: 'center'},
+                {title: '售后类型', dataIndex: 'type'},
+                {title: '退款金额', dataIndex: 'refund_money', key: 'money'},
+                {title: '申请组织', dataIndex: 'org_name' ,key: 'org'},
+                {title: '采购单号', dataIndex: 'order_sn'},
+                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
+                {title: '操作', key: 'operation', fixed: 'right', width: 100,},
+            ]
+            if (this.query_type === Core.Const.AFTERSALES.QUERY_TYPE.APPLY) {
+                tableColumns.splice(4, 1)
+            }
+            return tableColumns
+        }
+    },
     mounted() {},
     methods: {
         sameOrg(orgId, orgType) {
@@ -184,7 +192,6 @@ export default {
         canEdit(record) {
             switch (record.status) {
                 case STATUS.INIT:
-                case STATUS.APPLY:
                 case STATUS.AUDIT_FAIL:
                     return true
                 default: return false

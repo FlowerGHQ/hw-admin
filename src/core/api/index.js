@@ -215,6 +215,7 @@ const apiList = {
         cancel: ['PostJson', 'purchase-order/cancel'], // 取消采购订单
         create: ['PostJson', 'purchase-order/create'], // 创建采购订单
         detail: ['PostJson', 'purchase-order/detail'], // 采购订单详情
+        detailSn: ['PostJson', 'purchase-order/detail-sn'],
         detailByUid: ['PostJson', 'purchase-order/detail-uid'], // 采购订单详情
         itemList: ['PostJson', 'purchase-order-item/list'], // 采购订单明细列表
         itemByIdList: ['PostJson', 'purchase-order-item/list-by-item-id'], // 采购订单明细列表
@@ -224,7 +225,6 @@ const apiList = {
         review: ['PostJson', 'purchase-order/review'], // 评论
         statusList: ['PostJson', 'purchase-order/status-list'], // 保存
         recreate: ['PostJson', 'purchase-order/recreate'], // 再来一单
-        detailSn: ['PostJson', 'purchase-order/detail-sn'],
     },
     Aftersales: { // 售后单
         list: ['PostJson', 'after-sales-order/list'],
@@ -232,6 +232,18 @@ const apiList = {
         audit: ['PostJson', 'after-sales-order/audit'],
         detail: ['PostJson', 'after-sales-order/detail'],
         cancel: ['PostJson', 'after-sales-order/cancel'],
+        submit: ['PostJson', 'after-sales-order/submit'], // 提交审核
+
+        deliver: ['PostJson', 'after-sales-order/create-waybill'],
+        receive: ['PostJson', 'after-sales-order/receive-waybill'],
+        applyRefund: ['PostJson', 'after-sales-order/apply-refund'],
+    },
+    AftersalesItem: { // 售后单明细
+        list:   ['PostJson', 'after-sales-order-item/list'],
+        save:   ['PostJson', 'after-sales-order-item/save-list'], //批量修改
+        edit:   ['PostJson', 'after-sales-order-item/save'],      //单个修改
+        detail: ['PostJson', 'after-sales-order-item/detail'],
+        delete: ['PostJson', 'after-sales-order-item/delete'],
     },
     Refund: { // 退款管理
         list: ['PostJson', 'order-refund-record/list'],
@@ -241,6 +253,7 @@ const apiList = {
         audit: ['PostJson', 'order-refund-record/audit'],
         cancel: ['PostJson', 'order-refund-record/cancel'],
         status: ['PostJson', 'order-refund-record/status-list'], // 状态
+        handle: ['PostJson', 'order-refund-record/handle'],
     },
     Store: { // 门店管理
         list: ['PostJson', 'store/list'],

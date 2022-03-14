@@ -2,12 +2,11 @@
     <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
         <slot>{{ btnText }}</slot>
     </a-button>
-    <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'
-             @ok="handleConfirm">
+    <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'>
         <div class="modal-content">
             <div class="search-container">
                 <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :md='12' class="search-item">
+                    <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!purchaseId">
                         <div class="key"><span>商品分类:</span></div>
                         <div class="value">
                             <CategoryTreeSelect @change="handleCategorySelect" :category-id='searchForm.category_id' />
@@ -20,7 +19,7 @@
                                      @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :md='12' class="search-item">
+                    <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!purchaseId">
                         <div class="key"><span>商品名称:</span></div>
                         <div class="value">
                             <a-input placeholder="请输入商品名称" v-model:value="searchForm.name"
@@ -35,14 +34,13 @@
             </div>
             <div class="table-container">
                 <ItemTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow"
-                           :check-mode='true' :disabled-checked='disabledChecked' @submit="handleSelectItem"
-                           :radio-mode='radioMode'/>
+                    :check-mode='true' :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode'/>
             </div>
         </div>
         <template #footer>
             <div class="modal-footer">
                 <div class="paging-area">
-                    <a-pagination
+                    <a-pagination v-if="!purchaseId"
                         show-less-items
                         :hide-on-single-page='false'
                         :total="total"
@@ -69,7 +67,7 @@ export default {
         CategoryTreeSelect: () => import("@/components/popup-btn/CategoryTreeSelect.vue")
 
     },
-    emits: ['select'],
+    emits: ['select', 'option'],
     props: {
         btnText: {
             type: String,
@@ -86,7 +84,7 @@ export default {
             type: Boolean,
             default: false,
         },
-        
+
         radioMode: { // 是否只能选一个商品
             type: Boolean,
             default: false,
@@ -103,6 +101,10 @@ export default {
             default: ''
         },
         warehouseId: {
+            type: Number,
+            default: 0
+        },
+        purchaseId: {
             type: Number,
             default: 0
         }
@@ -142,7 +144,10 @@ export default {
                 {title: '建议零售价', dataIndex: 'price', key: 'money',},
             ]
             if (this.warehouseId !== 0) {
-                tableColumns.splice(3, 0, {title: '仓库库存', dataIndex: 'stock', key: 'stock'})
+                tableColumns.splice(3, 0, {title: '仓库库存', dataIndex: 'stock', key: 'count'})
+            }
+            if (this.purchaseId !== 0) {
+                tableColumns.splice(3, 0, {title: '下单数量', dataIndex: 'count', key: 'count'})
             }
             return tableColumns
         },
@@ -174,25 +179,45 @@ export default {
         },
 
         getTableData() {
-            Core.Api.Item.list({
-                ...this.searchForm,
-                warehouse_id: this.warehouseId,
-                page: this.currPage,
-                page_size: this.pageSize,
-                flag_spread: 1,
-            }).then(res => {
-                console.log('getTableData res:', res)
-                res.list.forEach(item => {
-                    item.children = null
-                    let element = item || {}
-                    if (element.attr_list && element.attr_list.length) {
-                        let str = element.attr_list.map(i => i.value).join(' ')
-                        element.attr_str = str
-                    }
+            if (this.purchaseId) {
+                Core.Api.Purchase.itemList({
+                    order_id: this.purchaseId,
+                    item_code: this.searchForm.code
+                }).then(res => {
+                    console.log('Purchase.itemList:', res)
+                    this.tableData = res.list.map(item => {
+                        return {
+                            ...item.item,
+                            count: item.amount
+                        }
+                    })
+                    this.$emit('option', this.tableData)
+                }).catch(err => {
+                    console.log('Purchase.itemList err', err)
+                }).finally(() => {
+                    this.loading = false;
+                });
+            } else {
+                Core.Api.Item.list({
+                    ...this.searchForm,
+                    warehouse_id: this.warehouseId,
+                    page: this.currPage,
+                    page_size: this.pageSize,
+                    flag_spread: 1,
+                }).then(res => {
+                    console.log('Item.list res:', res)
+                    res.list.forEach(item => {
+                        item.children = null
+                        let element = item || {}
+                        if (element.attr_list && element.attr_list.length) {
+                            let str = element.attr_list.map(i => i.value).join(' ')
+                            element.attr_str = str
+                        }
+                    })
+                    this.tableData = res.list
+                    this.total = res.count;
                 })
-                this.tableData = res.list
-                this.total = res.count;
-            })
+            }
         },
         pageChange(curr) {  // 页码改变
             this.currPage = curr

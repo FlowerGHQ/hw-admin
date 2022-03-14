@@ -56,10 +56,12 @@
                 </a-col>
             </a-row>
             <div class="btn-area">
-                <a-button @click="handleExportConfirm">{{$t('def.export')}}</a-button>
                 <a-button @click="handleSearch" type="primary">{{$t('def.search')}}</a-button>
                 <a-button @click="handleSearchReset">{{$t('def.reset')}}</a-button>
             </div>
+        </div>
+        <div class="operate-container">
+            <a-button type="primary" @click="handleExportConfirm"><i class="icon i_download"/>{{$t('def.export')}}</a-button>
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
