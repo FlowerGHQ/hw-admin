@@ -36,14 +36,8 @@
                     </div>
                 </div>
                 <div class="price">
-                    {{ handleMonetaryChange(item.fob_eur) }}
+                    {{ handleMonetaryChange(item.item) }}
                 </div>
-<!--                <div class="price" v-if="currency == currencyType.EUR">
-                    €{{$Util.countFilter(item.fob_eur)}}
-                </div>
-                <div class="price" v-else>
-                    ${{$Util.countFilter(item.fob_usd)}}
-                </div>-->
             </div>
             <SimpleImageEmpty v-if="!shopCartList.length" desc='您的购物车中暂无商品'/>
         </div>
@@ -84,7 +78,8 @@
                     </div>
                 </div>
                 <div class="price">
-                    €{{$Util.countFilter(item.item ? item.item.purchase_price : item.price) }}
+                    {{ handleMonetaryChange(item.item) }}
+<!--                    €{{$Util.countFilter(item.item ? item.item.purchase_price : item.price) }}-->
                 </div>
             </div>
             <SimpleImageEmpty v-if="!favoriteList.length" desc='您的收藏夹中暂无商品'/>
@@ -254,10 +249,28 @@ export default {
             });
         },
         handleMonetaryChange(item) {
-            if (this.currency == this.currencyType.EUR) {
-                return "€" + Core.Util.countFilter(item.fob_eur)
+            if (this.$auth('DISTRIBUTOR')) {
+                if (this.currency == this.currencyType.EUR ) {
+                    return "€" + Core.Util.countFilter(item.fob_eur)
+                }
+                if (this.currency == this.currencyType.USD ) {
+                    return "$" + Core.Util.countFilter(item.fob_usd)
+                }
             }
-
+            if (this.$auth('AGENT','STORE')) {
+                if (this.currency == this.currencyType.GBP) {
+                    return "£" + Core.Util.countFilter(item.purchase_price_gbp)
+                }
+                if (this.currency == this.currencyType.CNY) {
+                    return "￥" + Core.Util.countFilter(item.purchase_price)
+                }
+                if (this.currency == this.currencyType.EUR ) {
+                    return "€" + Core.Util.countFilter(item.purchase_price_eur)
+                }
+                if (this.currency == this.currencyType.USD ) {
+                    return "$" + Core.Util.countFilter(item.purchase_price_usd)
+                }
+            }
         },
     }
 };

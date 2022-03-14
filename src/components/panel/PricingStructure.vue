@@ -195,7 +195,7 @@ export default {
                 res.list.forEach(item => {
                     item.purchase_price = Core.Util.countFilter(item.purchase_price)
                     item.purchase_price_gbp = Core.Util.countFilter(item.purchase_price_gbp)
-                    item.purchase_price_eur = Core.Util.countFilter(item.fob)
+                    item.purchase_price_eur = Core.Util.countFilter(item.purchase_price_eur)
                     item.purchase_price_usd = Core.Util.countFilter(item.purchase_price_usd)
                     item.edit_show = false
                 });
@@ -250,11 +250,39 @@ export default {
                 purchase_price_gbp: Math.round(item.purchase_price_gbp * 100),
                 purchase_price_usd: Math.round(item.purchase_price_usd * 100),
                 purchase_price_eur: Math.round(item.purchase_price_eur * 100),
-
                 org_id: this.orgId,
                 org_type: this.orgType,
                 parent_id: item.item_price_id || 0
             }))
+            for (let i = 0; i < items.length; i++) {
+                let item = items[i]
+                if (item.purchase_price <= 0) {
+                    return this.$message.warning('请填写供货价(CNY)')
+                }
+                if (item.purchase_price_eur <= 0) {
+                    return this.$message.warning('请填写供货价(EUR)')
+                }
+                if (item.purchase_price_usd <= 0) {
+                    return this.$message.warning('请填写供货价(USD)')
+                }
+                if (item.purchase_price_gbp <= 0) {
+                    return this.$message.warning('请填写供货价(GBP)')
+                }
+            }
+            /*items.forEach(item => {
+                if (item.purchase_price <= 0) {
+                    return false
+                }
+                if (item.purchase_price_gbp <= 0) {
+                    return this.$message.warning('请填写供货价(GBP)')
+                }
+                if (item.purchase_price_usd <= 0) {
+                    return this.$message.warning('请填写供货价(USD)')
+                }
+                if (item.purchase_price_eur <= 0) {
+                    return this.$message.warning('请填写供货价(EUR)')
+                }
+            })*/
             console.log('handleAddItemConfirm items:', items)
             Core.Api.ItemPrice.batchSave(items).then(() => {
                 this.$message.success('添加成功')

@@ -1,12 +1,26 @@
 <template>
     <div id="ItemDisplay" class="list-container">
         <div class="info-content">
-            <p class="name">{{ detail.name }}</p>
+            <div class="name-currency">
+                <div class="name">{{ detail.name }}</div>
+                <div class="value" v-if="$auth('AGENT','STORE')">
+                    <a-select v-model:value="currency" class="monetary-select">
+                        <a-select-option v-for="(val,key) in currencyList" :key="key" :value="key">{{ val }}
+                        </a-select-option>
+                    </a-select>
+                </div>
+                <div class="value" v-if="$auth('DISTRIBUTOR')">
+                    <a-select v-model:value="currency" class="monetary-select">
+                        <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">{{ val }}
+                        </a-select-option>
+                    </a-select>
+                </div>
+            </div>
             <p class="code">商品编号：{{ detail.code }}</p>
             <p class="spec" v-if="detail.attr_str"><span>规格：</span>{{ detail.attr_str }}</p>
-            <p class="price">{{detail.fob_currency + $Util.countFilter(detail.fob) }}</p>
+            <p class="price">{{ detail.fob_currency + $Util.countFilter(detail.fob) }}</p>
             <p class="category">{{ category.name }}</p>
-            <p class="sale-price">建议零售价：€{{ $Util.countFilter(detail.price) }}</p>
+            <!--            <p class="sale-price">建议零售价：€{{ $Util.countFilter(detail.price) }}</p>-->
             <div class="desc" v-if="config && config.length">
                 <template v-for="(item, index) of config" :key="index">
                     <p v-if="item.value">
@@ -28,12 +42,12 @@
             </a-carousel>
         </div>
         <div class="spec-content" v-if='specList.length'>
-            <div class="title">规格({{specList.length}})</div>
+            <div class="title">规格({{ specList.length }})</div>
             <div class="spec-list">
                 <div class="spec-item" v-for="item of specList" :key="item.id"
-                    :class="this.id === item.id ? 'active' : ''" @click="handleSpecChange(item)">
+                     :class="this.id === item.id ? 'active' : ''" @click="handleSpecChange(item)">
                     <img :src="$Util.imageFilter(item.logo, 2)"/>
-                    <p>{{item.name}}</p>
+                    <p>{{ item.name }}</p>
                 </div>
             </div>
         </div>
@@ -68,6 +82,18 @@ export default {
             activeKey: 0,
 
             specList: [],
+            monetaryList: {
+                '€': '€ (EUR)',
+                '$': '$ (USD)',
+            },
+            currencyList: {
+                '￥': '￥(CNY)',
+                '€': '€ (EUR)',
+                '$': '$ (USD)',
+                '£': '£ (GBP)',
+            },
+            currency: Core.Const.ITEM.MONETARY_TYPE_MAP.EUR,
+            currencyType: Core.Const.ITEM.MONETARY_TYPE_MAP,
         };
     },
     watch: {},
@@ -88,7 +114,11 @@ export default {
                 detail.attr_str = detail.attr_list ? detail.attr_list.map(item => item.value).join(' ') : ''
                 this.detail = detail
                 this.category = detail.category
-                try { this.config = JSON.parse(detail.config) } catch (err) { this.config = [] }
+                try {
+                    this.config = JSON.parse(detail.config)
+                } catch (err) {
+                    this.config = []
+                }
                 this.imgs = detail.imgs ? detail.imgs.split(',') : []
                 if (detail.set_id) {
                     this.getSpecList();
@@ -176,13 +206,32 @@ export default {
         box-sizing: border-box;
         padding-right: 32px;
 
-        .name {
-            font-size: 28px;
-            line-height: 39px;
+        .name-currency {
+            display: flex;
+            .name {
+                font-size: 28px;
+                line-height: 39px;
+                margin-right: 40px;
+            }
+            .value {
+                .fac();
+                .monetary-select {
+                    min-width: 126px;
+
+                    .ant-select-selector {
+                        border-color: #006EF9;
+                    }
+
+                    .ant-select-selection-item {
+                        color: #006EF9;
+                    }
+                }
+            }
         }
         .code {
             margin-top: 6px;
         }
+
         .spec {
             display: inline-block;
             color: #757575;
@@ -192,6 +241,7 @@ export default {
             background: #F9F9F9;
             border-radius: 2px;
             padding: 0 10px;
+
             span {
                 color: #111111;
             }
@@ -200,6 +250,7 @@ export default {
         .price {
             margin: 20px 0 44px;
         }
+
         .sale-price {
             color: #000000;
             font-weight: 400;
@@ -264,6 +315,7 @@ export default {
     .spec-content {
         margin-top: 30px;
         width: 100%;
+
         > .title {
             font-weight: 500;
             font-size: 16px;
@@ -271,9 +323,11 @@ export default {
             color: #000000;
             margin-bottom: 22px;
         }
+
         .spec-list {
             display: flex;
             flex-wrap: wrap;
+
             .spec-item {
                 .flex();
                 width: 200px;
@@ -284,12 +338,15 @@ export default {
                 margin-right: 30px;
                 margin-bottom: 30px;
                 transition: border-color 0.3s ease;
+
                 &.active {
                     border-color: #006EF9;
                 }
+
                 img {
                     height: 152px;
                 }
+
                 p {
                     padding: 0 8px;
                     box-sizing: border-box;
