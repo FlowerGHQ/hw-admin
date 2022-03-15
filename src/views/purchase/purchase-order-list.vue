@@ -75,6 +75,9 @@
                     <template v-if="column.dataIndex === 'price'">
                         {{$Util.priceUnitFilter(record.currency)}} {{$Util.countFilter(text)}}
                     </template>
+                    <template v-if="column.dataIndex === 'payment'">
+                        €{{$Util.countFilter(text)}}
+                    </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text,'color')">
                             {{$Util.purchaseStatusFilter(text)}}
@@ -217,6 +220,7 @@ export default {
                 { title: '订单状态', dataIndex: 'status' },
                 { title: '下单时间', dataIndex: 'create_time', key: 'time' },
                 { title: '支付状态', dataIndex: 'payment_status' },
+                { title: '已支付金额', dataIndex: 'payment' },
                 { title: '支付时间', dataIndex: 'pay_time', key: 'time' },
                 { title: '完成时间', dataIndex: 'close_time', key: 'time' },
                 { title: '操作', key: 'operation', fixed: 'right'}
