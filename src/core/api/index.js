@@ -118,6 +118,8 @@ const apiList = {
         saveList: ['PostJson', 'transfer-order-item/save-list'], //调货单提交
         status: ['PostJson', 'transfer-order/status-list'], // 状态
         cancel: ['PostJson', 'transfer-order/cancel'], // 取消调货单
+        deliver: ['PostJson', 'transfer-order/deliver'], // 调货单发货
+        receive: ['PostJson', 'transfer-order/receive'], // 调货单收货
         detailByUid: ['PostJson', 'transfer-order/detail-by-uid'], // 取消调货单
     },
     Repair: { // 维修单
