@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div class="price">
-                    {{currency}} {{$Util.countFilter(item.item ? item.item['purchase_price' + unitMap[currency].key] : item.price)}}
+                    {{currency}} {{$Util.countFilter(item.item ? item.item[priceKey + unitMap[currency].key] : item.price)}}
                 </div>
             </div>
             <SimpleImageEmpty v-if="!shopCartList.length" desc='您的购物车中暂无商品'/>
@@ -41,7 +41,7 @@
                         {{$Util.itemSpecFilter(item.item.attr_list)}}
                     </span>
                 </p>
-                <span class="price">{{currency}} {{$Util.countFilter(item.item['purchase_price' + unitMap[currency].key] * item.amount)}}</span>
+                <span class="price">{{currency}} {{$Util.countFilter(item.item[priceKey + unitMap[currency].key] * item.amount)}}</span>
             </div>
             <div class="settle-item sum">
                 <p class="name">总计</p>
@@ -69,7 +69,7 @@
                     </div>
                 </div>
                 <div class="price">
-                    {{currency}} {{$Util.countFilter(item.item ? item.item['purchase_price' + unitMap[currency].key] : item.price)}}
+                    {{currency}} {{$Util.countFilter(item.item ? item.item[priceKey + unitMap[currency].key] : item.price)}}
                 </div>
             </div>
             <SimpleImageEmpty v-if="!favoriteList.length" desc='您的收藏夹中暂无商品'/>
@@ -108,9 +108,13 @@ export default {
     },
     watch: {},
     computed: {
+        priceKey() {
+            let priceKey = this.$auth('DISTRIBUTOR') ? 'fob' : 'purchase_price'
+            return priceKey
+        },
         sum_price() {
             let sum = 0
-            let key = 'purchase_price' + this.unitMap[this.currency].key
+            let key = this.priceKey + this.unitMap[this.currency].key
             for (const item of this.shopCartList) {
                 sum += item.item[key] * item.amount
             }

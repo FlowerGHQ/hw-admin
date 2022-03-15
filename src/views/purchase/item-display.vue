@@ -1,26 +1,11 @@
 <template>
     <div id="ItemDisplay" class="list-container">
         <div class="info-content">
-            <div class="name-currency">
-                <div class="name">{{ detail.name }}</div>
-                <!-- <div class="value" v-if="$auth('AGENT','STORE')">
-                    <a-select v-model:value="currency" class="monetary-select">
-                        <a-select-option v-for="(val,key) in currencyList" :key="key" :value="key">{{ val }}
-                        </a-select-option>
-                    </a-select>
-                </div>
-                <div class="value" v-if="$auth('DISTRIBUTOR')">
-                    <a-select v-model:value="currency" class="monetary-select">
-                        <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">{{ val }}
-                        </a-select-option>
-                    </a-select>
-                </div> -->
-            </div>
+            <div class="name">{{ detail.name }}</div>
             <p class="code">商品编号：{{ detail.code }}</p>
             <p class="spec" v-if="detail.attr_str"><span>规格：</span>{{ detail.attr_str }}</p>
-            <p class="price">€{{$Util.countFilter(detail.purchase_price_eur)}} | ${{$Util.countFilter(detail.purchase_price_usd)}}</p>
+            <p class="price">€{{$Util.countFilter(detail[priceKey + 'eur'])}} | ${{$Util.countFilter(detail[priceKey + 'usd'])}}</p>
             <p class="category">{{ category.name }}</p>
-            <!-- <p class="sale-price">建议零售价：€{{ $Util.countFilter(detail.price) }}</p>-->
             <div class="desc" v-if="config && config.length">
                 <template v-for="(item, index) of config" :key="index">
                     <p v-if="item.value">
@@ -45,7 +30,7 @@
             <div class="title">规格({{ specList.length }})</div>
             <div class="spec-list">
                 <div class="spec-item" v-for="item of specList" :key="item.id"
-                     :class="this.id === item.id ? 'active' : ''" @click="handleSpecChange(item)">
+                    :class="this.id === item.id ? 'active' : ''" @click="handleSpecChange(item)">
                     <img :src="$Util.imageFilter(item.logo, 2)"/>
                     <p>{{ item.name }}</p>
                 </div>
@@ -82,22 +67,16 @@ export default {
             activeKey: 0,
 
             specList: [],
-            monetaryList: {
-                '€': '€ (EUR)',
-                '$': '$ (USD)',
-            },
-            currencyList: {
-                '￥': '￥(CNY)',
-                '€': '€ (EUR)',
-                '$': '$ (USD)',
-                '£': '£ (GBP)',
-            },
-            currency: Core.Const.ITEM.MONETARY_TYPE_MAP.EUR,
-            currencyType: Core.Const.ITEM.MONETARY_TYPE_MAP,
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        priceKey() {
+            let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
+            console.log('priceKey:', priceKey)
+            return priceKey
+        }
+    },
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         this.getItemDetail();
@@ -206,27 +185,10 @@ export default {
         box-sizing: border-box;
         padding-right: 32px;
 
-        .name-currency {
-            display: flex;
-            .name {
-                font-size: 28px;
-                line-height: 39px;
-                margin-right: 40px;
-            }
-            .value {
-                .fac();
-                .monetary-select {
-                    min-width: 126px;
-
-                    .ant-select-selector {
-                        border-color: #006EF9;
-                    }
-
-                    .ant-select-selection-item {
-                        color: #006EF9;
-                    }
-                }
-            }
+        .name {
+            font-size: 28px;
+            line-height: 39px;
+            margin-right: 40px;
         }
         .code {
             margin-top: 6px;

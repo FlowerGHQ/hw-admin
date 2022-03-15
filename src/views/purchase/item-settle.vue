@@ -119,7 +119,6 @@ export default {
     props: {},
     data() {
         return {
-            loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
 
@@ -159,7 +158,8 @@ export default {
     mounted() {
         this.unit = this.$route.query.unit
         let currency = this.$route.query.currency;
-        this.priceKey = 'purchase_price' + currency
+        this.priceKey = (this.$auth('DISTRIBUTOR') ? 'fob' : 'purchase_price') + currency
+
         this.currency = currency ? currency.slice(1).toUpperCase() : 'CNY'
 
         this.getReceiveList()

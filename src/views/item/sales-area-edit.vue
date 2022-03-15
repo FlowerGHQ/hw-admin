@@ -17,13 +17,7 @@
                 <div class="form-item required">
                     <div class="key">区域:</div>
                     <div class="value">
-                        <a-cascader
-                            placeholder="请选择大洲/国家"
-                            v-model:value="country_cascader"
-                            :options="countryOptions"
-                            :field-names="{ label: 'value', value: 'value' , children: 'children'}"
-                        />
-
+                        <AreaCascader v-model:value="areaList" :def-area='defArea'></AreaCascader>
                     </div>
                 </div>
             </div>
@@ -44,18 +38,20 @@ export default {
     props: {},
     data() {
         return {
-            loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
-            typeList: Core.Const.DISTRIBUTOR.TYPE,
-            country_cascader: [],
             detail: {},
             form: {
                 id: '',
                 name: '',
-                country: undefined,
-                continent: undefined,
+            },
+            areaList: [],
+            defArea: [],
+            area: {
+                continent: '',
+                country: '',
+                country_en: '',
+                country_code: '',
             }
         };
     },
@@ -78,18 +74,18 @@ export default {
         },
         getSalesAreaDetail() {
             this.loading = true;
-            console.log("id", this.form.id)
             Core.Api.SalesArea.detail({
                 id: this.form.id,
             }).then(res => {
-                console.log('getSalesAreaDetail res', res)
-                this.detail = res.detail
+                let d = res.detail
+                this.detail = d
                 for (const key in this.form) {
-                    this.form[key] = res.detail[key]
+                    this.form[key] = d[key]
                 }
-                // 回显大洲国家
-                this.country_cascader[0] = this.detail.continent || ''
-                this.country_cascader[1] = this.detail.country || ''
+                for (const key in this.area) {
+                    this.area[key] = d[key]
+                }
+                this.defArea = [d.continent || '', d.country || '']
             }).catch(err => {
                 console.log('getSalesAreaDetail err', err)
             }).finally(() => {
@@ -97,16 +93,27 @@ export default {
             });
         },
         handleSubmit() {
-            this.form.continent = this.country_cascader[0] || ''
-            this.form.country = this.country_cascader[1] || ''
             let form = Core.Util.deepCopy(this.form)
+            let area = Core.Util.deepCopy(this.area)
+            if (this.areaList.length) {
+                console.log('this.areaList:', this.areaList)
+                area = {
+                    continent: this.areaList[0].name,
+                    country: this.areaList[1].name,
+                    country_en: this.areaList[1].name_en,
+                    country_code: this.areaList[1].code,
+                }
+            }
             if (!form.name) {
                 return this.$message.warning('请输入区域名称')
             }
-            if (!form.country) {
+            if (!area.country) {
                 return this.$message.warning('请选择大洲/国家')
             }
-            Core.Api.SalesArea.save(form).then(() => {
+            Core.Api.SalesArea.save({
+                ...form,
+                ...area
+            }).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
             }).catch(err => {

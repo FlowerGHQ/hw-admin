@@ -26,7 +26,7 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">地区:</div>
                     <div class="value">
-                        <AreaSearch @search="handleOtherSearch" ref='AreaSearch'/>
+                        <AreaCascader @search="handleOtherSearch" ref='AreaCascader'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
@@ -101,20 +101,18 @@
 
 <script>
 import Core from '../../core';
-const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 
 import TimeSearch from '@/components/common/TimeSearch.vue'
-import AreaSearch from '@/components/common/AreaSearch.vue'
+import AreaCascader from '@/components/common/AreaCascader.vue'
 export default {
     name: 'AgentList',
     components: {
         TimeSearch,
-        AreaSearch,
+        AreaCascader,
     },
     props: {},
     data() {
         return {
-            loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
             // 分页
@@ -212,7 +210,7 @@ export default {
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
             this.$refs.TimeSearch.handleReset()
-            this.$refs.AreaSearch.handleReset()
+            this.$refs.AreaCascader.handleReset()
             this.pageChange(1);
         },
         getDistributorListAll() {

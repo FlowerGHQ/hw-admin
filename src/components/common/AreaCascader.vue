@@ -6,7 +6,6 @@
     :options="countryOptions"
     @change="handleChange"
     :field-names="fieldNames"
-    ref='AreaCascader'
 />
 </template>
 
@@ -15,7 +14,7 @@ import Core from '../../core';
 import axios from 'axios';
 
 export default {
-    name: 'AreaSearch',
+    name: 'AreaCascader',
     components: {},
     props: {
         defArea: Array,
@@ -36,7 +35,6 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                console.log('$i18n.locale n:', n)
                 let fieldNames = { label: 'name_en', value: 'name' , children: 'children', }
                 switch (n) {
                     case 'ch': fieldNames.label = 'name'; break;
@@ -48,7 +46,7 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                if (n.length && n[1]) {
+                if (n && n.length && n[1]) {
                     this.selectCode = [...n]
                 }
             }
@@ -67,6 +65,7 @@ export default {
             })
         },
         handleChange(value, selectedOptions) {
+            console.log('handleChange value:', value)
             this.selectItems = selectedOptions
 
             this.$emit('search', {continent: value[0], country: value[1]})
