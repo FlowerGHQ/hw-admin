@@ -193,6 +193,7 @@ export default {
         getTableData() { // 获取 商品 数据
             this.loading = true;
             Core.Api.Item.list({
+                flag_spread: 1,
                 category_id: this.searchForm.category_id,
                 name: this.searchForm.name,
                 page: this.currPage,

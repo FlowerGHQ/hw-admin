@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">工单详情</div>
             <div class="btns-area">
-                <template v-if="!$auth('ADMIN') && detail.org_type == OrgType">
+                <template v-if="sameOrg">
                     <!-- <template v-if="detail.account_id == User.id || $auth('MANAGER')"> -->
                     <!-- </template> -->
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION && !$auth('ADMIN')">
@@ -85,7 +85,7 @@
         </div>
         <MySteps :stepsList='stepsList' :current='currStep' v-if="detail.status != STATUS.CLOSE"/>
         <div class="form-container">
-            <CheckFault  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DETECTION && !$auth('ADMIN')" ref="CheckFault"/>
+            <CheckFault  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DETECTION && sameOrg" ref="CheckFault"/>
             <CheckResult :id='id' :detail='detail' @hasTransfer='hasTransfer = true' v-if="showCheckResult"/>
             <RepairInfo  :id='id' :detail='detail'/>
             <AttachmentFile :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER'/>
@@ -170,7 +170,8 @@ export default {
     props: {},
     data() {
         return {
-            OrgType: Core.Data.getOrgType(),
+            orgType: Core.Data.getOrgType(),
+            orgId: Core.Data.getOrgId(),
             STATUS,
             AUDIT,
             REPAIR_RESULTS: REPAIR.RESULTS,
@@ -213,8 +214,6 @@ export default {
                 waybill_uid: "",
                 company_uid: undefined,
             },
-
-
         };
     },
     watch: {},
@@ -226,7 +225,13 @@ export default {
                 default:
                     return true
             }
-        }
+        },
+        sameOrg() {
+            if (this.detail.org_id === this.orgId && this.detail.org_type === this.orgType) {
+                return true
+            }
+            return false
+        },
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
