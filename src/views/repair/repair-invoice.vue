@@ -66,7 +66,7 @@
                                     <div class="row"><p>工时费</p> <span>€{{$Util.countFilter(settle.man_hour_money)}}</span></div>
                                     <div class="row"><p>总金额</p> <span>€{{$Util.countFilter(sum_price + settle.man_hour_money)}}</span></div>
                                 </div>
-                                <div class="sum-price" v-if="detail.service_type === SERVICE_TYPE.OUT_REPAIR_TIME">
+                                <div class="sum-price" v-else>
                                     <div class="row"><p>总金额</p> <span>€{{$Util.countFilter(sum_price)}}</span></div>
                                 </div>
                             </a-table-summary-cell>
