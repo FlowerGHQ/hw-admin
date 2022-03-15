@@ -267,7 +267,6 @@ let Const = {
         STATUS: {
             WAIT_DETECTION: 30,
             WAIT_REPAIR: 40,
-            REPAIR_END: 50,
             SETTLEMENT: 60,
             AUDIT_SUCCESS: 80,
             FINISH: 100,
@@ -277,17 +276,14 @@ let Const = {
         STATUS_MAP: {
             '30': '待检测',
             '40': '维修中',
-            '50': '已维修',
             '60': '已结算待审核',
             '80': '审核通过',
             '100': '结算完成',
-            '-10': '已取消',
             '-30': '审核未通过',
         },
         STATUS_COLOR_MAP: {
             '30': 'yellow',
             '40': 'blue',
-            '50': 'light',
             '60': 'orange',
             '80': 'purple',
             '100': 'green',
@@ -360,7 +356,7 @@ let Const = {
         },
         TYPE_MAP: {
             1: '整车',
-            2: '零件',
+            2: '零部件',
         },
         MONETARY_TYPE: {
             '￥': 'CNY',
@@ -657,10 +653,10 @@ let Const = {
             GBP: 4,
         },
         TYPE_MAP: {
-            '1': '人民币',
-            '2': '欧元',
-            '3': '美元',
-            '4': '英镑',
+            '1': 'CNY',
+            '2': 'EUR',
+            '3': 'USD',
+            '4': 'GBP',
         },
         OPERATE_TYPE: {
             IN: 1,

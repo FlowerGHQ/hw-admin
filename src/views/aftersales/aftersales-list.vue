@@ -73,6 +73,9 @@
                         <div class="ell" style="max-width: 200px">{{ text || '-' }}</div>
                     </a-tooltip>
                 </template>
+                <template v-if="column.key === 'org'">
+                    {{ text || '-' }}
+                </template>
                 <template v-if="column.key === 'time'">
                     {{ $Util.timeFilter(text) }}
                 </template>

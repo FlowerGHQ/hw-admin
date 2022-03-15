@@ -34,14 +34,17 @@
                     <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                         :row-key="record => record.id" :pagination='false'>
                         <template #bodyCell="{ column, text }">
-                            <template v-if="column.key === 'name'">
+<!--                            <template v-if="column.key === 'name'">
                                 <a-tooltip placement="top" :title='text'>
                                     {{ text || '-' }}
                                 </a-tooltip>
-                            </template>
+                            </template>-->
                             <template v-if="column.key === 'code'">
                                 {{ text || '-' }}
                             </template>
+<!--                            <template v-if="column.key === 'model'">
+                                {{ text || '-' }}
+                            </template>-->
                             <template v-if="column.key === 'amount'">
                                 {{ text || '-' }}件
                             </template>
@@ -99,8 +102,8 @@ export default {
             tableData: [],
             tableColumns: [
                 {title: '商品名称', dataIndex: ['item', 'name'], key: 'name'},
-                {title: '商品品号', dataIndex: ['item', 'model']},
-                {title: '商品编码', dataIndex: ['item', 'code']},
+                {title: '商品品号', dataIndex: ['item', 'model'], key: 'model' },
+                {title: '商品编码', dataIndex: ['item', 'code'] },
                 {title: '商品规格', dataIndex: ['item', 'attr_str'],},
                 {title: '数量', dataIndex: 'amount', key: 'amount'},
             ],

@@ -26,10 +26,10 @@
                     </a-select>
                 </div>
             </div>
-            <div class="form-item required" >
-                <div class="key">申请退款金额:</div>
+            <div class="form-item" :class="needRefund ? 'required' : ''">
+                <div class="key">申请{{needRefund ? '退款' : '补偿'}}金额:</div>
                 <div class="value input-number">
-                    <a-input-number v-model:value="form.refund_money" placeholder="申请退款金额"/>
+                    <a-input-number v-model:value="form.refund_money" :placeholder="`申请${needRefund ? '退款' : '补偿'}金额`"/>
                     <span>{{$Util.priceUnitFilter(form.refund_money_currency)}}</span>
                 </div>
             </div>
@@ -232,6 +232,14 @@ export default {
                 default: return false
             }
         },
+        needRefund() {
+            switch (this.form.type) {
+                case TYPE.ONLY_REFUND:
+                case TYPE.REFUND_WITH_ITEMS:
+                    return true
+                default: return false
+            }
+        }
     },
     created() {
         let q = this.$route.query
@@ -328,7 +336,6 @@ export default {
         // 提交 售后单 基本信息
         handleSubmitInfo() {
             let form = Core.Util.deepCopy(this.form)
-            form.refund_money
             if (!form.order_sn) {
                 return this.$message.warning('请输入采购单单号')
             }
@@ -338,12 +345,12 @@ export default {
             if (!form.type) {
                 return this.$message.warning('请选择售后类型')
             }
-            if (!form.refund_money) {
-                return this.$message.warning('请选择售后类型')
+            if (this.needRefund && !form.refund_money) {
+                return this.$message.warning('请输入申请退款金额')
             }
             form.refund_money = Math.round(form.refund_money * 100)
             if (form.refund_money > this.purchase.charge) {
-                return this.$message.warning('退款金额不可大采购单实际支付金额')
+                return this.$message.warning((this.needRefund ? '退款' : '补偿') + '金额不可大采购单实际支付金额')
             }
             if (this.upload.fileList.length) {
                 let list = this.upload.fileList.map(item => {

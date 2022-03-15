@@ -72,7 +72,6 @@
                         <div class="key">金额:</div>
                         <div class="value form-item-value">
                             <a-input-number v-model:value="operateForm.money" :min="0" :precision="2" placeholder="0.00"/>
-                            <span class="money">元</span>
                         </div>
                     </div>
                     <div class="form-item required">
@@ -99,18 +98,27 @@
                         <div class="value">
                             <a-input class="purchase-order-detail" v-model:value="operateForm.source_id"
                                      placeholder="请输入相关的采购单号"
-                                     @blur="onblurPurchase"/>
-                            <span v-if="isExist === true"><i class="icon i_confirm"/></span>
-                            <span v-else-if="isExist === false"><i class="icon i_close_c"/></span>
+                                     @blur="handleSelectBlur('purchase')"/>
+                            <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
+                            <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                         </div>
                     </div>
                     <div class="form-item required" v-if="operateForm.source_type == 40">
                         <div class="key">调货单号：</div>
                         <div class="value">
                             <a-input v-model:value="operateForm.source_id" placeholder="请输入调货单号"
-                                     @blur="onblurTransfer"/>
-                            <span v-if="isRight === true"><i class="icon i_confirm"/></span>
-                            <span v-else-if="isRight === false"><i class="icon i_close_c"/></span>
+                                     @blur="handleSelectBlur('transfer')"/>
+                            <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
+                            <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
+                        </div>
+                    </div>
+                    <div class="form-item required" v-if="operateForm.source_type == 50">
+                        <div class="key">维修单号：</div>
+                        <div class="value">
+                            <a-input v-model:value="operateForm.source_id" placeholder="请输入维修单号"
+                                     @blur="handleSelectBlur('repair')"/>
+                            <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
+                            <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                         </div>
                     </div>
                 </div>
@@ -336,33 +344,61 @@ export default {
                 console.log('handleOperateSubmit err:', err)
             })
         },
-        onblurPurchase() {  // 获取 采购订单号
-            if (!this.operateForm.source_id) {
+        handleSelectBlur(type) {
+            switch (type) {
+                case'repair':
+                    this.handleRepairBlur();
+                    break;
+                case'transfer':
+                    this.handleTransferBlur();
+                    break;
+                case'purchase':
+                    this.handlePurchaseBlur();
+                    break;
+            }
+        },
+        handlePurchaseBlur() {  // 获取 采购订单号
+            if (!this.form.source_id) {
                 return this.isExist = ''
             }
             Core.Api.Purchase.detailSn({
-                sn: this.operateForm.source_id,
+                sn: this.form.source_id,
             }).then(res => {
-                this.isExist = res != null
+                this.isExist = res.detail == null ? 2 : 1
+                this.source_id = res.detail.id
+                this.defaultTime = res.detail.arrival_time
+            }).catch(err => {
+                console.log('onblur err', err)
+            }).finally(() => {
+            });
+        },
+        handleTransferBlur() {
+            if (!this.form.source_id) {
+                return this.isExist = ''
+            }
+            Core.Api.Transfer.detailByUid({
+                uid: this.form.source_id,
+            }).then(res => {
+                this.isExist = res.detail == null ? 2 : 1
+                this.source_id = res.detail.id
                 console.log("onblur res", res)
             }).catch(err => {
                 console.log('onblur err', err)
             }).finally(() => {
             });
         },
-        onblurTransfer() {
-            if (!this.operateForm.source_id) {
-                return this.isRight = ''
+        handleRepairBlur() {
+            if (!this.form.source_id) {
+                return this.isExist = ''
             }
-            Core.Api.Transfer.detailByUid({
-                uid: this.operateForm.source_id,
+            Core.Api.Repair.detailByUid({
+                uid: this.form.source_id,
             }).then(res => {
-                this.isRight = res.detail != null
-                console.log("onblur res", res)
+                this.isExist = res.detail == null ? 2 : 1
+                this.source_id = res.detail.id
             }).catch(err => {
-                console.log('onblur err', err)
-            }).finally(() => {
-            });
+                console.log('handleBlur err', err)
+            })
         },
     }
 };
