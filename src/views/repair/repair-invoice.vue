@@ -61,16 +61,10 @@
                         <a-table-summary-row>
                             <a-table-summary-cell :index="0" :col-span="2"></a-table-summary-cell>
                             <a-table-summary-cell :index="1" :col-span="3">
-                                <div class="sum-price">
-                                    <div v-if="detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME">
-                                        <p>零件费</p> <span>€{{$Util.countFilter(sum_price)}}</span>
-                                        <p>工时费</p> <span>€{{$Util.countFilter(sum_price)}}</span>
-                                        <p>总金额</p> <span>€{{$Util.countFilter(sum_price)}}</span>
-                                    </div>
-                                    <div v-else>
-                                        <p>实际花费</p> <span>€{{$Util.countFilter(sum_price)}}</span>
-                                        <p>实际</p> <span>€{{$Util.countFilter(sum_price)}}</span>
-                                    </div>
+                                <div class="sum-price" v-if="detail.service_type === SERVICE_TYPE.OUT_REPAIR_TIME">
+                                    <div class="row"><p>零件费</p> <span>€{{$Util.countFilter(sum_price)}}</span></div>
+                                    <div class="row"><p>工时费</p> <span>€{{$Util.countFilter(sum_price)}}</span></div>
+                                    <div class="row"><p>总金额</p> <span>€{{$Util.countFilter(sum_price)}}</span></div>
                                 </div>
                             </a-table-summary-cell>
                         </a-table-summary-row>
@@ -94,6 +88,7 @@ export default {
     props: {},
     data() {
         return {
+            SERVICE_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -307,7 +302,9 @@ export default {
                 height: 2px;
                 opacity: 0.9;
                 border-top: 2px solid #000022;
-                .fsb();
+                .row {
+                    .fsb();
+                }
                 p, span {
                     padding-top: 25px;
                     font-size: 12px;
