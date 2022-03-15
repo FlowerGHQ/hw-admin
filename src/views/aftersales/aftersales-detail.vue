@@ -103,7 +103,7 @@
                                         {{record.amount}} 件
                                     </template>
                                     <template v-if="column.key === 'money'">
-                                        {{'€'}} {{$Util.countFilter(text)}}
+                                        {{$Util.priceUtilFilter(record.currency)}} {{$Util.countFilter(text)}}
                                     </template>
                                     <template v-if="column.key === 'spec'">
                                         {{$Util.itemSpecFilter(text)}}
@@ -164,7 +164,7 @@
                                         {{record.amount}} 件
                                     </template>
                                     <template v-if="column.key === 'money'">
-                                        {{'€'}} {{$Util.countFilter(text)}}
+                                        {{$Util.priceUtilFilter(record.currency)}} {{$Util.countFilter(text)}}
                                     </template>
                                     <template v-if="column.key === 'spec'">
                                         {{$Util.itemSpecFilter(text)}}

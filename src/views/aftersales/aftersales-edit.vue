@@ -264,7 +264,7 @@ export default {
                 case 'item':
                     routeUrl = this.$router.resolve({
                         path: this.$auth('ADMIN') ? "/item/item-detail" : '/purchase/item-display',
-                        query: { id: item.id }
+                        query: { id: item.item_id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -439,6 +439,11 @@ export default {
                 console.log('getOrderItemList res:', res)
                 let inItem = [], outItem = []
                 res.list.forEach(item => {
+                    let id = item.id
+                    if (item.item) {
+                        item = {...item, ...item.item}
+                    }
+                    item.id = id
                     if (item.type == 1) {
                         inItem.push(item)
                     } else {
