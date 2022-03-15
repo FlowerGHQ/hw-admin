@@ -86,6 +86,7 @@ export default {
 
             id: '',
             detail: {},
+            settle: {},
 
             tableData: [],
         }
@@ -115,6 +116,7 @@ export default {
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         this.getRepairDetail();
+        this.getSettleDetail();
         this.getTableData();
     },
     methods: {
@@ -150,6 +152,16 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
+        },
+        // 获取结算单详情
+        getSettleDetail() {
+            Core.Api.Repair.settleDetail({
+                source_type: 10,
+                source_id: this.id,
+            }).then(res => {
+                console.log('getSettleDetail res:', res)
+                this.settle = res.detail
+            })
         },
         getTableData() {  // 获取 表格 数据
             console.log(this.id);

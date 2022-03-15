@@ -135,7 +135,7 @@
             <div class="form-item">
                 <div class="key">维修地址</div>
                 <div class="value">
-                    <AddressCascader @select='handleAddressSelect' :default-address='[form.customer_province, form.customer_city, form.customer_county]'/>
+                    <AddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
                 </div>
             </div>
             <div class="form-item" :class="form.channel == 1 ? 'required' : ''">
@@ -226,6 +226,7 @@ export default {
                 repair_message: "", // 处理信息、工单备注
                 priority: 0, // 紧急程度
             },
+            defAddr: [],
             arrival_time: '',
         };
     },
@@ -441,6 +442,7 @@ export default {
             this.form.customer_city = item.city
             this.form.customer_county = item.county
             this.form.customer_address = item.address
+            this.defAddr = [item.province, item.city, item.county]
         },
 
         handleAddressSelect(address) {

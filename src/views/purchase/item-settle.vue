@@ -28,7 +28,7 @@
                 <div class="form-item required">
                     <div class="key">收货地址</div>
                     <div class="value">
-                        <AddressCascader @select='handleAddressSelect' :default-address='[form.province, form.city, form.county]'/>
+                        <AddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
                     </div>
                 </div>
                 <div class="form-item">
@@ -137,6 +137,7 @@ export default {
                 address: '',
                 email: '',
             },
+            defAddr: [],
 
             shopCartList: [],
 
@@ -214,8 +215,10 @@ export default {
             console.log('handleConfigEdit item:', item)
             if (item) {
                 this.form = Core.Util.deepCopy(item)
+                this.defAddr = [item.province, item.city, item.county]
             } else {
                 Object.assign(this.form, this.$options.data().form)
+                this.defAddr = []
             }
             this.editMode = true
         },

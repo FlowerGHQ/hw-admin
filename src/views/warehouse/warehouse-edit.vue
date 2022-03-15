@@ -26,7 +26,7 @@
                 <div class="form-item required">
                     <div class="key">仓库地址：</div>
                     <div class="value">
-                        <AddressCascader @select='handleAddressSelect' :default-address='[form.province, form.city, form.county]'/>
+                        <AddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
                     </div>
                 </div>
                 <div class="form-item ">
@@ -69,6 +69,7 @@ export default {
                 address: '',
                 type: '',
             },
+            defAddr: []
         };
     },
     watch: {},
@@ -98,6 +99,7 @@ export default {
                 for (const key in this.form) {
                     this.form[key] = res.detail[key]
                 }
+                this.defAddr = [this.detail.province, this.detail.city, this.detail.county]
             }).catch(err => {
                 console.log('getWarehouseDetail err', err)
             }).finally(() => {

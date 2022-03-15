@@ -35,8 +35,8 @@
                             <div class="value">{{$Util.timeFilter(detail.create_time) || '-'}}</div>
                         </div>
                         <div class="info-item">
-                            <div class="key">完成时间</div>
-                            <div class="value">{{$Util.timeFilter(detail.finish_time) || '-'}}</div>
+                            <div class="key">处理时间</div>
+                            <div class="value">{{$Util.timeFilter(detail.operate_time) || '-'}}</div>
                         </div>
                         <div class="info-item">
                             <div class="key">申请退款金额</div>
@@ -59,17 +59,19 @@
                             <div class="key">售后单编号</div>
                             <div class="value">
                                 <a-button type="link" @click="routerChange('aftersales')"
-                                    style="font-size: 12px;line-height: 17px;height: 17px;">{{detail.order_sn || '-'}}</a-button>
+                                    style="font-size: 12px;line-height: 17px;height: 17px;">{{detail.source_uid || '-'}}</a-button>
                             </div>
                         </div>
                         <div class="info-item">
                             <div class="key">申请人</div>
                             <div class="value">
+                                {{detail.apply_user_name || '-'}}
                             </div>
                         </div>
                         <div class="info-item">
                             <div class="key">审核人</div>
                             <div class="value">
+                                {{detail.audit_user_name || '-'}}
                             </div>
                         </div>
                     </a-col>
@@ -178,7 +180,7 @@ export default {
                 case 'aftersales': // 退款单 详情
                     routeUrl = this.$router.resolve({
                         path: '/aftersales/aftersales-detail',
-                        query: {id: this.detail.order_id}
+                        query: {id: this.detail.source_uid}
                     })
                     window.open(routeUrl.href, '_blank')
                     break;

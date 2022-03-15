@@ -13,7 +13,7 @@
                     <a-button type="primary" ghost @click="handleDeliveryShow()"
                         v-if="needDelivery"><i class="icon i_deliver"/>转单物流
                     </a-button>
-<!--                    <a-button type="primary" @click="handleSecondRepairShow()"
+                    <!-- <a-button type="primary" @click="handleSecondRepairShow()"
                         v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_REPAIR].includes(detail.status) ">
                         <i class="icon i_edit_l"/>二次维修
                     </a-button>-->
@@ -29,14 +29,14 @@
                     v-if="detail.status == STATUS.SETTLEMENT || detail.status == STATUS.FINISH || detail.status == STATUS.AUDIT_SUCCESS"><i class="icon i_detail_l"/>查看结算单
                 </a-button>
                 <a-button type="primary" @click="handleAuditShow()"
-                          v-if="detail.status == STATUS.SETTLEMENT && $auth('ADMIN')"><i class="icon i_audit"/>审核
+                    v-if="detail.status == STATUS.SETTLEMENT && $auth('ADMIN')"><i class="icon i_audit"/>审核
                 </a-button>
             </div>
         </div>
         <div class="gray-panel info">
             <div class="panel-title">
                 <div class="left"><span>工单编号</span> {{ detail.uid }}</div>
-<!--                <div class="right">
+                <!-- <div class="right">
                     <div class="staff" v-if="detail.repair_user_id">员工：{{ detail.repair_user_name || '-' }}</div>
                     <div class="status">
                         <i class="icon i_point" :class="$Util.repairStatusFilter(detail.status,'color')"/>
@@ -69,7 +69,7 @@
                     <div class="key">创建时间</div>
                     <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
                 </div>
-<!--                <div class="info-item">
+                <!-- <div class="info-item">
                     <div class="key">计划时间</div>
                     <div class="value">{{ $Util.timeFilter(detail.plan_time) || '-' }}</div>
                 </div>
@@ -85,8 +85,8 @@
         </div>
         <MySteps :stepsList='stepsList' :current='currStep' v-if="detail.status != STATUS.CLOSE"/>
         <div class="form-container">
-            <CheckFault   :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DETECTION && !$auth('ADMIN')" ref="CheckFault"/>
-            <CheckResult  :id='id' :detail='detail' v-if="showCheckResult" @hasTransfer='hasTransfer = true'/>
+            <CheckFault  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DETECTION && !$auth('ADMIN')" ref="CheckFault"/>
+            <CheckResult :id='id' :detail='detail' @hasTransfer='hasTransfer = true' v-if="showCheckResult"/>
             <RepairInfo  :id='id' :detail='detail'/>
             <AttachmentFile :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER'/>
             <WaybillInfo :id='id' :detail='detail' v-if="hasTransfer" @needDelivery='needDelivery = true' ref="WaybillInfo"/>
@@ -221,12 +221,10 @@ export default {
     computed: {
         showCheckResult() {
             switch (this.detail.status) {
-                case STATUS.WAIT_REPAIR:
-                case STATUS.REPAIR_END:
-                case STATUS.SETTLEMENT:
-                    return true
-                default:
+                case STATUS.WAIT_DETECTION:
                     return false
+                default:
+                    return true
             }
         }
     },

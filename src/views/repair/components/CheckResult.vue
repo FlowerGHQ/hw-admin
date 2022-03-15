@@ -26,31 +26,31 @@
                             {{ $Util.repairServiceFilter(detail.service_type) }}
                         </template>
                         <template v-if="column.dataIndex === 'price'">
-                            €{{ $Util.countFilter(text) }}
+                            € {{ $Util.countFilter(text) }}
                         </template>
                         <template v-if="column.dataIndex === 'amount'">
                             {{ text }}件
                         </template>
                         <template v-if="column.key === 'total_price'">
-                            €{{ $Util.countFilter(record.price * record.amount) }}
+                            € {{ $Util.countFilter(record.price * record.amount) }}
                         </template>
                         <template v-if="column.dataIndex === 'type'">
                             {{repairTypeMap[text]}}
                         </template>
                         <template v-if="column.dataIndex === 'man_hour'">
-                            {{ text }}小时
+                            {{ $Util.countFilter(text) }}工时
                         </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
                     </template>
-                    <template #summary>
+                    <template #summary v-if="detail.service_type === SERVICE_TYPE.OUT_REPAIR_TIME">
                         <a-table-summary>
                             <a-table-summary-row>
                                 <a-table-summary-cell :index="0" :col-span="4">合计</a-table-summary-cell>
-                                <a-table-summary-cell :index="1" :col-span="1">{{ total.amount }}件</a-table-summary-cell>
-                                <a-table-summary-cell :index="2" :col-span="2">€{{ $Util.countFilter(total.price) }}</a-table-summary-cell>
-                                <a-table-summary-cell :index="3" :col-span="1" v-if="detail.service_type === SERVICE_TYPE.OUT_REPAIR_TIME">{{ $Util.countFilter(total.man_hour) }}小时</a-table-summary-cell>
+                                <a-table-summary-cell :index="1" :col-span="2">{{ total.amount }}件</a-table-summary-cell>
+                                <a-table-summary-cell :index="2" :col-span="3">€ {{ $Util.countFilter(total.price) }}</a-table-summary-cell>
+                                <a-table-summary-cell :index="3" :col-span="1">{{ total.man_hour }}工时</a-table-summary-cell>
                             </a-table-summary-row>
                         </a-table-summary>
                     </template>
@@ -104,24 +104,23 @@ export default {
             return {price, man_hour, amount}
         },
         tableColumns() {
-            let { filteredInfo } = this;
-            filteredInfo = filteredInfo || {};
             let tableColumns = [
                 {title: '维修帐类', key: 'service_type'},
                 {title: '故障原因', dataIndex: 'item_fault_id'},
                 {title: '商品名称', dataIndex: ['item','name'], key: 'item'},
                 {title: '商品编号', dataIndex: ['item','code'], key: 'item'},
-                {title: '单价', dataIndex: 'price'},
                 {title: '数量', dataIndex: 'amount'},
+                {title: '单价', dataIndex: 'price'},
                 {title: '总价', key: 'total_price'},
                 {title: '维修类型', dataIndex: 'type'},
-                {title: '回收仓', dataIndex: 'recycle_warehouse_name', key: 'item'},
+                // {title: '回收仓', dataIndex: 'recycle_warehouse_name', key: 'item'},
                 {title: '良品仓', dataIndex: 'warehouse_name', key: 'item'},
-                // {title: '接收门店', dataIndex: 'store_id'},
-                // {title: '工时', dataIndex: 'man_hour'},
             ]
-            if (this.detail.service_type === SERVICE_TYPE.OUT_REPAIR_TIME) {
-                tableColumns.splice(10, 0, {title: '工时', dataIndex: 'man_hour'})
+            if (this.detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME) {
+                tableColumns.splice(8, 0, {title: '回收仓', dataIndex: 'recycle_warehouse_name', key: 'item'})
+                tableColumns.splice(5, 2)
+            } else {
+                tableColumns.push({title: '工时', dataIndex: 'man_hour'})
             }
             return tableColumns
         }

@@ -136,7 +136,9 @@ const apiList = {
 	    post: ['PostJson', 'repair/post-for-transfer'], // 增加快递
 	    export: ['PostJson', 'repair/export-repair-order-record'], // 导出
         detailByUid: ['PostJson', 'repair/detail-by-uid'],
-        pay: ['PostJson', 'repair/pay']
+        pay: ['PostJson', 'repair/pay'],
+
+        settleDetail: ['PostJson', 'clearing-order/detail-by-source'], //结算单
     },
     RepairItem: { // 维修单
         saveList: ['PostJson', 'repair-order-item/save-list'], // 列表
