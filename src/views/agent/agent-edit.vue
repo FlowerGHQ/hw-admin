@@ -107,14 +107,15 @@ export default {
                 id: this.form.id,
             }).then(res => {
                 console.log('getAgentDetail res', res)
-                this.detail = res.detail
+                let d = res.detail
+                this.detail = d
                 for (const key in this.form) {
-                    this.form[key] = res.detail[key]
+                    this.form[key] = d[key]
                 }
                 for (const key in this.area) {
                     this.area[key] = d[key]
                 }
-                this.defArea = [d.continent || '', d.country_code || '']
+                this.defArea = [d.continent || '', d.country || '']
             }).catch(err => {
                 console.log('getAgentDetail err', err)
             }).finally(() => {

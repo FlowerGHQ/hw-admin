@@ -136,7 +136,7 @@ export default {
                     this.area[key] = d[key]
                 }
                 this.form.sales_area_ids = this.detail.sales_area_list ? this.detail.sales_area_list.map(i => i.id): []
-                this.defArea = [d.continent || '', d.country_code || '']
+                this.defArea = [d.continent || '', d.country || '']
             }).catch(err => {
                 console.log('getDistributorDetail err', err)
             }).finally(() => {
