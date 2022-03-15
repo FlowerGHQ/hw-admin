@@ -50,7 +50,7 @@
                                 <a-table-summary-cell :index="0" :col-span="4">合计</a-table-summary-cell>
                                 <a-table-summary-cell :index="1" :col-span="2">{{ total.amount }}件</a-table-summary-cell>
                                 <a-table-summary-cell :index="2" :col-span="3">€ {{ $Util.countFilter(total.price) }}</a-table-summary-cell>
-                                <a-table-summary-cell :index="3" :col-span="1">{{ total.man_hour }}工时</a-table-summary-cell>
+                                <a-table-summary-cell :index="3" :col-span="1">{{ $Util.countFilter(total.man_hour) }}工时</a-table-summary-cell>
                             </a-table-summary-row>
                         </a-table-summary>
                     </template>

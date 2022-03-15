@@ -40,23 +40,37 @@
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
                     </template>
+                    <template v-if="column.dataIndex === 'item_fault_id'">
+                        {{ faultMap[text] }}
+                    </template>
+                    <template v-if="column.dataIndex === 'amount'">
+                        {{ text }} 件
+                    </template>
                     <template v-if="column.dataIndex === 'price'">
-                        €{{ $Util.countFilter(text) }}
+                        € {{ $Util.countFilter(text) }}
                     </template>
                     <template v-if="column.dataIndex === 'sum_price'">
-                        €{{ $Util.countFilter(record.price * record.amount) }}
+                        € {{ $Util.countFilter(record.price * record.amount) }}
                     </template>
                     <template v-if="column.dataIndex === 'man_hour'">
-                        {{ text }}
+                        {{ $Util.countFilter(text) }}工时
                     </template>
                 </template>
                 <template #summary>
                     <a-table-summary>
                         <a-table-summary-row>
                             <a-table-summary-cell :index="0" :col-span="2"></a-table-summary-cell>
-                            <a-table-summary-cell :index="1" :col-span="2">
+                            <a-table-summary-cell :index="1" :col-span="3">
                                 <div class="sum-price">
-                                    <p>总金额</p> <span>€{{$Util.countFilter(sum_price)}}</span>
+                                    <div v-if="detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME">
+                                        <p>零件费</p> <span>€{{$Util.countFilter(sum_price)}}</span>
+                                        <p>工时费</p> <span>€{{$Util.countFilter(sum_price)}}</span>
+                                        <p>总金额</p> <span>€{{$Util.countFilter(sum_price)}}</span>
+                                    </div>
+                                    <div v-else>
+                                        <p>实际花费</p> <span>€{{$Util.countFilter(sum_price)}}</span>
+                                        <p>实际</p> <span>€{{$Util.countFilter(sum_price)}}</span>
+                                    </div>
                                 </div>
                             </a-table-summary-cell>
                         </a-table-summary-row>
@@ -89,19 +103,22 @@ export default {
             settle: {},
 
             tableData: [],
+            faultMap: {}
         }
     },
     watch: {},
     computed: {
         tableColumns() {
             let tableColumns = [
-                {width: '30%', title: '维修材料', dataIndex: ['item', 'name'], key: 'item'},
-                {width: '20%', title: '数量', dataIndex: 'amount', key: 'item'},
-                {width: '20%', title: '单价', dataIndex: 'price'},
-                {width: '20%', title: '金额', dataIndex: 'sum_price'},
+                {title: '故障类型', dataIndex: 'item_fault_id'},
+                {title: '维修材料', dataIndex: ['item', 'name'], key: 'item'},
+                {title: '数量', dataIndex: 'amount'},
+                {title: '单价', dataIndex: 'price'},
+                {title: '金额', dataIndex: 'sum_price'},
+                {title: '工时费', dataIndex: 'man_hour'}
             ]
-            if (this.detail.service_type === SERVICE_TYPE.OUT_REPAIR_TIME) {
-                tableColumns.splice(10, 0, {title: '工时费', dataIndex: 'man_hour'})
+            if (this.detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME) {
+                tableColumns.pop()
             }
             return tableColumns
         },
@@ -147,6 +164,7 @@ export default {
             }).then(res => {
                 console.log('getRepairDetail res', res)
                 this.detail = res
+                this.getFaultData()
             }).catch(err => {
                 console.log('getRepairDetail err', err)
             }).finally(() => {
@@ -163,8 +181,28 @@ export default {
                 this.settle = res.detail
             })
         },
+
+        getFaultData() {
+            this.loading = true;
+            Core.Api.Fault.list({
+                org_id: this.detail.org_id,
+                org_type: this.detail.org_type,
+            }).then(res => {
+                console.log("getFaultData res:", res)
+                let list = res.list;
+                let map = {};
+                for (const item of list) {
+                    map[item.id] = item.name
+                }
+                console.log('getFaultData faultMap:', map)
+                this.faultMap = map;
+            }).catch(err => {
+                console.log('getFaultData err:', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
         getTableData() {  // 获取 表格 数据
-            console.log(this.id);
             this.loading = true;
             Core.Api.RepairItem.list({
                 repair_order_id: this.id
@@ -177,6 +215,7 @@ export default {
                 this.loading = false;
             });
         },
+
 
         // 打印
         handleExport() {

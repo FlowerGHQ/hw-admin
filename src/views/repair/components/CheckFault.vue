@@ -35,7 +35,7 @@
 
                             <template v-if="column.key === 'amount'">
                                 <a-input-number v-model:value="record.amount" style="width: 66px;"
-                                    :min="1" :precision="0" placeholder="请输入" @change="handleItemAmountChange(fault, index)"/>
+                                    :min="1" :precision="0" placeholder="请输入" @change="handleItemAmountChange(fault, index)"/> 件
                             </template>
 
                             <template v-if="column.key === 'total_price'">
@@ -265,7 +265,7 @@ export default {
             for (let i = 0; i < items.length; i++) {
                 const element = items[i];
                 element.amount = 1
-                element.price = Core.Util.countFilter(element.fob_eur || element.price_eur || 0)
+                element.price = Core.Util.countFilter(this.$auth('DISTRIBUTOR') ? element.fob_eur : element.price_eur)
                 element.type = 2
                 element.recycle_warehouse_id = this.warehouseFailList.length ? this.warehouseFailList[0].id : undefined
                 element.warehouse_out_list = await this.getWarehouseListByItem(element.id)
@@ -377,11 +377,11 @@ export default {
                         this.$message.warning('仓库库存不足,请及时调仓或采购')
                     }
                     item.price = Math.round(item.price * 100)
+                    item.charge = item.price
                     itemList.push(item)
                 }
             }
             console.log('handleFaultSubmit itemList:', itemList)
-            return
             Core.Api.RepairItem.saveList({
                 repair_order_id: this.id,
                 item_list: itemList,
