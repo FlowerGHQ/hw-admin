@@ -63,7 +63,10 @@
                             <a-table-summary-cell :index="1" :col-span="3">
                                 <div class="sum-price" v-if="detail.service_type === SERVICE_TYPE.OUT_REPAIR_TIME">
                                     <div class="row"><p>零件费</p> <span>€{{$Util.countFilter(sum_price)}}</span></div>
-                                    <div class="row"><p>工时费</p> <span>€{{$Util.countFilter(sum_price)}}</span></div>
+                                    <div class="row"><p>工时费</p> <span>€{{$Util.countFilter(settle.man_hour_money)}}</span></div>
+                                    <div class="row"><p>总金额</p> <span>€{{$Util.countFilter(sum_price + settle.man_hour_money)}}</span></div>
+                                </div>
+                                <div class="sum-price" v-if="detail.service_type === SERVICE_TYPE.OUT_REPAIR_TIME">
                                     <div class="row"><p>总金额</p> <span>€{{$Util.countFilter(sum_price)}}</span></div>
                                 </div>
                             </a-table-summary-cell>
@@ -110,7 +113,7 @@ export default {
                 {title: '数量', dataIndex: 'amount'},
                 {title: '单价', dataIndex: 'price'},
                 {title: '金额', dataIndex: 'sum_price'},
-                {title: '工时费', dataIndex: 'man_hour'}
+                {title: '工时', dataIndex: 'man_hour'}
             ]
             if (this.detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME) {
                 tableColumns.pop()
@@ -293,24 +296,33 @@ export default {
                 .ant-table-cell {
                     padding: 0;
                     border-bottom: 1px solid transparent;
-                    height: 40px;
+                    height: 120px;
+                    position: relative;
                 }
             }
             .sum-price {
+                position: absolute;
+                top: 12px;
                 margin-left: 16px;
-                width: 70%;
-                height: 2px;
+                width: 78%;
                 opacity: 0.9;
                 border-top: 2px solid #000022;
+                padding-top: 4px;
                 .row {
                     .fsb();
-                }
-                p, span {
-                    padding-top: 25px;
-                    font-size: 12px;
-                    font-weight: 500;
-                    color: #000022;
-                    line-height: 17px;
+                    width: 100%;
+                    height: 20px;
+                    line-height: 20px;
+                    p, span {
+                        font-size: 12px;
+                        color: #000022;
+                        font-weight: 400;
+                    }
+                    &:last-child {
+                        p, span {
+                            font-weight: 500;
+                        }
+                    }
                 }
             }
         }
