@@ -434,9 +434,12 @@ export default {
                     res.status_list.forEach(item => {
                         if ( statusItem.key == item.status) {
                             statusItem.value = item.amount
-                            total += item.amount
                         }
                     })
+                })
+
+                res.status_list.forEach(item => {
+                    total += item.amount
                 })
                 this.statusList[0].value = total
             }).catch(err => {
