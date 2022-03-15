@@ -42,7 +42,10 @@
                                     {{record.amount}} 件
                                 </template>
                                 <template v-if="column.key === 'money'">
-                                    {{$Util.countFilter(text)}}元
+                                    {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(text)}}
+                                </template>
+                                <template v-if="column.key === 'spec'">
+                                    {{$Util.itemSpecFilter(text)}}
                                 </template>
                             </template>
                             <template #summary>
@@ -50,8 +53,8 @@
                                     <a-table-summary-row>
                                         <a-table-summary-cell :index="0" :col-span="4">合计</a-table-summary-cell>
                                         <a-table-summary-cell :index="1" :col-span="2">总数量:{{total.amount}}件</a-table-summary-cell>
-                                        <a-table-summary-cell :index="4" :col-span="1">总售价:{{$Util.countFilter(total.price)}}元</a-table-summary-cell>
-                                        <a-table-summary-cell :index="5" :col-span="1">总金额:{{$Util.countFilter(total.charge)}}元</a-table-summary-cell>
+                                        <a-table-summary-cell :index="4" :col-span="1">总售价:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price)}}</a-table-summary-cell>
+                                        <!-- <a-table-summary-cell :index="5" :col-span="1">总金额:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.charge)}}</a-table-summary-cell> -->
                                     </a-table-summary-row>
                                 </a-table-summary>
                             </template>
@@ -135,8 +138,8 @@
                 <div class="form-item required">
                     <div class="key">收款金额</div>
                     <div class="value">
-                        <a-input-number v-model:value="form.payment" :min="0" :max="(detail.charge -detail.payment)/100" :precision="2" placeholder="0.00"/>
-                        <span>元</span>
+                        <a-input-number v-model:value="form.payment" :min="0" :max="(detail.charge-detail.payment)/100" :precision="2" placeholder="0.00"/>
+                        <span>{{$Util.priceUnitFilter(detail.currency)}}</span>
                     </div>
                 </div>
             </div>
@@ -177,11 +180,11 @@ const itemColumns = [
     { title: '商品', dataIndex: 'item' },
     { title: '品号', dataIndex: ['item', "model"] },
     { title: '编号', dataIndex: ['item', "code"] },
-    { title: '规格', dataIndex: ['item', 'attr_str'], key: 'attrs' },
+    { title: '规格', dataIndex: ['item', 'attr_list'], key: 'spec' },
     { title: '数量', dataIndex: 'amount'},
     { title: '单价', dataIndex: 'unit_price', key: 'money'},
     { title: '售价', dataIndex: 'price', key: 'money'},
-    { title: '实际金额（元）', dataIndex: 'charge', key: 'money'},
+    // { title: '实际金额', dataIndex: 'charge', key: 'money'},
 ]
 
 export default {

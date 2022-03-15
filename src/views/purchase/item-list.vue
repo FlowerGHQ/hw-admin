@@ -62,7 +62,7 @@
                     <p class="sub">{{item.code}}</p>
                     <p class="name">{{item.name}}</p>
                     <p class="desc">&nbsp;</p>
-                    <p class="price">€{{$Util.countFilter(item.purchase_price)}}</p>
+                    <p class="price">€{{$Util.countFilter(item.purchase_price_eur)}} | ${{$Util.countFilter(item.purchase_price_usd)}}</p>
                     <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">添加到购物车</a-button>
                 </div>
             </div>

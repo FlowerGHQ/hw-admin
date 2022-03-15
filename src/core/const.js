@@ -370,10 +370,10 @@ let Const = {
             '£': 'GBP',
         },
         MONETARY_TYPE_MAP: {
-            CNY: '￥',
-            EUR: '€',
-            USD: '$',
-            GBP: '£',
+            'CNY': '￥',
+            'EUR': '€',
+            'USD': '$',
+            'GBP': '£',
         }
     },
     PURCHASE: { // 采购订单

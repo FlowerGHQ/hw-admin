@@ -55,7 +55,7 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'money'">
-                            €{{ $Util.countFilter(text)  }}
+                            {{$Util.priceUnitFilter(record.currency)}} {{ $Util.countFilter(text) }}
                         </template>
                         <template v-if="column.key === 'tip_time'">
                             <a-tooltip :title="text" destroyTooltipOnHide>

@@ -106,6 +106,9 @@
             background: transparent !important;
             border-color: transparent;
         }
+        &.ant-btn-background-ghost {
+            color: #ff4d4f;
+        }
     }
     &[disabled], &[disabled]:hover, &[disabled]:focus, &[disabled]:active {
         color: rgba(0, 0, 0, 0.25);
@@ -528,7 +531,8 @@ div.ant-input-number {
         }
     }
 }
-.value.input-number {
+.input-number,
+.form-item .input-number {
     display: flex;
     .ant-input-number {
         width: 120px;
@@ -540,6 +544,24 @@ div.ant-input-number {
         margin-top: 7px;
     }
 }
+.input-number-unit,
+.form-item .input-number-unit {
+    display: flex;
+    .ant-input-number {
+        width: 120px;
+        border-radius: 2px 0 0 2px;
+    }
+    > .ant-input-number + .ant-select {
+        width: 60px;
+        position: relative;
+        .ant-select-selector {
+            border-radius:  0 2px 2px 0;
+            border-left: 0;
+            background: #fafafa;
+        }
+    }
+}
+
 // 复选框
 div.ant-checkbox-group {
     font-size: 12px;

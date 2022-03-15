@@ -60,7 +60,7 @@
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                             <div class="info-item">
                                 <div class="key">申请退款金额</div>
-                                <div class="value">{{detail.refund_money_currency || '€'}} {{$Util.countFilter(detail.refund_money)}}</div>
+                                <div class="value">{{$Util.priceUnitFilter(detail.refund_money_currency)}} {{$Util.countFilter(detail.refund_money)}}</div>
                             </div>
                             <div class="info-item">
                                 <div class="key">申请组织</div>

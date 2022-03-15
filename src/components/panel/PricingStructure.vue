@@ -35,9 +35,6 @@
                             </a-tooltip>
                         </div>
                     </template>
-                    <template v-if="column.key === 'money'">
-                        {{ $Util.countFilter(text) }}
-                    </template>
                     <template v-if="column.dataIndex === 'price'">
                         €{{ $Util.countFilter(text) }}
                     </template>
@@ -49,15 +46,21 @@
                     </template>
                     <template v-if="column.key === 'supply'">
                         <template v-if="record.edit_show || editShow || addMode">
-                            <a-input-number v-model:value="record.purchase_price" v-if="column.dataIndex === 'purchase_price'" style="width: 120px;" :min="0.00" :precision="2"
-                                :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')"/>
                             <a-input-number v-model:value="record.purchase_price_eur" v-if="column.dataIndex === 'purchase_price_eur'" style="width: 120px;" :min="0.00" :precision="2"
-                                            :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')"/>
+                                :formatter="value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')"/>
                             <a-input-number v-model:value="record.purchase_price_usd" v-if="column.dataIndex === 'purchase_price_usd'" style="width: 120px;" :min="0.00" :precision="2"
-                                            :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')"/>
+                                :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/\$\s?|(,*)/g, '')"/>
                             <a-input-number v-model:value="record.purchase_price_gbp" v-if="column.dataIndex === 'purchase_price_gbp'" style="width: 120px;" :min="0.00" :precision="2"
-                                            :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')"/>
+                                :formatter="value => `£ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/£\s?|(,*)/g, '')"/>
+                            <a-input-number v-model:value="record.purchase_price" v-if="column.dataIndex === 'purchase_price'" style="width: 120px;" :min="0.00" :precision="2"
+                                :formatter="value => `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/￥\s?|(,*)/g, '')"/>
                         </template>
+                        <template v-else>
+                            {{column.unit}} {{text}}
+                        </template>
+                    </template>
+                    <template v-if="column.key === 'parent_price'">
+                        $ {{$Util.countFilter(record.parent_price_usd)}} | € {{$Util.countFilter(record.parent_price_eur)}}
                     </template>
                     <template v-if="column.key === 'operation'">
                         <a-button type='link' @click="handleEditChange(record)" v-if="!editShow">
@@ -126,8 +129,8 @@ export default {
             editShow: false,
             addMode: false,
             addData: [],
-            purchase_price_gbp: '',
             purchase_price: '',
+            purchase_price_gbp: '',
             purchase_price_eur: '',
             purchase_price_gbp_usd: '',
         };
@@ -140,12 +143,12 @@ export default {
                 { title: '商品规格', dataIndex: 'attr_list', key: 'spec' },
                 { title: '商品品号', dataIndex: 'model', key: 'item' },
                 { title: '商品编码', dataIndex: 'code',  key: 'item' },
-                { title: '供货价(CNY)',  dataIndex: 'purchase_price', key: 'supply', },
-                { title: '供货价(EUR)',  dataIndex: 'purchase_price_eur', key: 'supply', },
-                { title: '供货价(USD)',  dataIndex: 'purchase_price_usd', key: 'supply', },
-                { title: '供货价(GBP)',  dataIndex: 'purchase_price_gbp', key: 'supply', },
-                { title: '采购价', dataIndex: 'parent_price', key: 'money', },
-                { title: '建议零售价', dataIndex: 'price' },
+                // { title: '供货价(CNY)', key: 'supply', dataIndex: 'purchase_price', unit: '￥', },
+                { title: '供货价(EUR)', key: 'supply', dataIndex: 'purchase_price_eur', unit: '€', },
+                { title: '供货价(USD)', key: 'supply', dataIndex: 'purchase_price_usd', unit: '$', },
+                // { title: '供货价(GBP)', key: 'supply', dataIndex: 'purchase_price_gbp', unit: '£', },
+                { title: '采购价', key: 'parent_price' },
+                // { title: '建议零售价', dataIndex: 'price' },
                 { title: '操作', key: 'operation', fixed: 'right'},
             ]
             if (this.addMode || !this.canEdit) {
@@ -199,6 +202,7 @@ export default {
                     item.purchase_price_usd = Core.Util.countFilter(item.purchase_price_usd)
                     item.edit_show = false
                 });
+                console.log('this.tableData:', this.tableData)
                 this.tableData = res.list;
             }).catch(err => {
                 console.log('getTableData err', err)
@@ -229,9 +233,11 @@ export default {
             console.log('handleAddItemShow items:', items)
             items.forEach(item => {
                 item.edit_price = Core.Util.countFilter(item.price)
-                item.parent_price = item.purchase_price || item.original_price
+                item.parent_price_eur = item.fob_eur
+                item.parent_price_usd = item.fob_usd
             })
             this.addData = items
+            console.log('handleAddItemShow this.addData:', this.addData)
             this.addMode = true
             this.editShow = false
         },
@@ -239,6 +245,7 @@ export default {
             this.addMode = false
         },
         handleAddItemConfirm() {
+            console.log('this.addData:', this.addData)
             let items = this.addData.map(item => ({
                 category_id: item.category_id,
                 code: item.code,
@@ -246,43 +253,29 @@ export default {
                 item_id: item.id,
                 name: item.name,
                 price: item.price,
-                purchase_price: Math.round(item.purchase_price * 100),
-                purchase_price_gbp: Math.round(item.purchase_price_gbp * 100),
-                purchase_price_usd: Math.round(item.purchase_price_usd * 100),
-                purchase_price_eur: Math.round(item.purchase_price_eur * 100),
+                purchase_price: Math.round(item.purchase_price * 100) || 0,
+                purchase_price_gbp: Math.round(item.purchase_price_gbp * 100) || 0,
+                purchase_price_usd: Math.round(item.purchase_price_usd * 100) || 0,
+                purchase_price_eur: Math.round(item.purchase_price_eur * 100) || 0,
                 org_id: this.orgId,
                 org_type: this.orgType,
                 parent_id: item.item_price_id || 0
             }))
             for (let i = 0; i < items.length; i++) {
                 let item = items[i]
+                if (item.purchase_price_eur <= 0) {
+                    return this.$message.warning('请填写供货价(EUR)')
+                }
+                if (item.purchase_price_usd <= 0) {
+                    return this.$message.warning('请填写供货价(USD)')
+                }
+                /* if (item.purchase_price_gbp <= 0) {
+                    return this.$message.warning('请填写供货价(GBP)')
+                }
                 if (item.purchase_price <= 0) {
                     return this.$message.warning('请填写供货价(CNY)')
-                }
-                if (item.purchase_price_eur <= 0) {
-                    return this.$message.warning('请填写供货价(EUR)')
-                }
-                if (item.purchase_price_usd <= 0) {
-                    return this.$message.warning('请填写供货价(USD)')
-                }
-                if (item.purchase_price_gbp <= 0) {
-                    return this.$message.warning('请填写供货价(GBP)')
-                }
+                } */
             }
-            /*items.forEach(item => {
-                if (item.purchase_price <= 0) {
-                    return false
-                }
-                if (item.purchase_price_gbp <= 0) {
-                    return this.$message.warning('请填写供货价(GBP)')
-                }
-                if (item.purchase_price_usd <= 0) {
-                    return this.$message.warning('请填写供货价(USD)')
-                }
-                if (item.purchase_price_eur <= 0) {
-                    return this.$message.warning('请填写供货价(EUR)')
-                }
-            })*/
             console.log('handleAddItemConfirm items:', items)
             Core.Api.ItemPrice.batchSave(items).then(() => {
                 this.$message.success('添加成功')
@@ -298,6 +291,12 @@ export default {
                 item.edit_show = true
             } else {
                 // 关闭编辑模式
+                if (item.purchase_price_eur <= 0) {
+                    return this.$message.warning('请填写供货价(EUR)')
+                }
+                if (item.purchase_price_usd <= 0) {
+                    return this.$message.warning('请填写供货价(USD)')
+                }
                 this.loading = true
                 Core.Api.ItemPrice.save({
                     id: item.id,
@@ -321,7 +320,6 @@ export default {
                 this.editShow = true
             } else {
                 // 关闭编辑模式
-                this.loading = true
                 let items = this.tableData.map(item => ({
                     id: item.id,
                     item_id: item.item_id,
@@ -330,11 +328,28 @@ export default {
                     purchase_price_usd: Math.round(item.purchase_price_usd * 100),
                     purchase_price_eur: Math.round(item.purchase_price_eur * 100),
                 }))
+                for (let i = 0; i < items.length; i++) {
+                    let item = items[i]
+                    if (item.purchase_price_eur <= 0) {
+                        return this.$message.warning('请填写供货价(EUR)')
+                    }
+                    if (item.purchase_price_usd <= 0) {
+                        return this.$message.warning('请填写供货价(USD)')
+                    }
+                    /* if (item.purchase_price_gbp <= 0) {
+                        return this.$message.warning('请填写供货价(GBP)')
+                    }
+                    if (item.purchase_price <= 0) {
+                        return this.$message.warning('请填写供货价(CNY)')
+                    } */
+                }
+                this.loading = true
                 Core.Api.ItemPrice.batchSave(items).then(() => {
                     this.$message.success('更改成功')
                 }).catch(err => {
                     console.log('handleMutiEditChange err:', err)
                 }).finally(() => {
+                    this.loading = false
                     this.getTableData()
                 })
             }

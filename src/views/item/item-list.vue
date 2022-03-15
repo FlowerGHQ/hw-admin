@@ -80,10 +80,10 @@
                         {{ text || '-'}}
                     </template>
                     <template v-if="column.key === 'money'">
-                        €{{$Util.countFilter(text)}}
+                        € {{$Util.countFilter(text)}}
                     </template>
                     <template v-if="column.key === 'fob_money'">
-                        {{$Util.countFilter(text)}}
+                        {{column.unit}} {{$Util.countFilter(text)}}
                     </template>
                     <template v-if="column.key === 'man_hour'">
                         {{ $Util.countFilter(text) }}
@@ -171,9 +171,9 @@ export default {
                 { title: '商品品号', dataIndex: 'model', key: 'item' },
                 { title: '商品编码', dataIndex: 'code', key: 'item' },
                 { title: '成本价格', dataIndex: 'original_price' ,key: 'money'},
-                { title: 'FOB(EUR)', dataIndex: 'fob_eur', key: 'fob_money' },
-                { title: 'FOB(USD)', dataIndex: 'fob_usd', key: 'fob_money' },
-                { title: '建议零售价', dataIndex: 'price', key: 'money' },
+                { title: 'FOB(EUR)', dataIndex: 'fob_eur', key: 'fob_money', unit: '€'},
+                { title: 'FOB(USD)', dataIndex: 'fob_usd', key: 'fob_money', unit: '$'},
+                // { title: '建议零售价', dataIndex: 'price', key: 'money' },
                 { title: '工时', dataIndex: 'man_hour', key: 'man_hour' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 { title: '操作', key: 'operation', fixed: 'right', width: 180 }

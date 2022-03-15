@@ -3,7 +3,7 @@
         <div class="info-content">
             <div class="name-currency">
                 <div class="name">{{ detail.name }}</div>
-                <div class="value" v-if="$auth('AGENT','STORE')">
+                <!-- <div class="value" v-if="$auth('AGENT','STORE')">
                     <a-select v-model:value="currency" class="monetary-select">
                         <a-select-option v-for="(val,key) in currencyList" :key="key" :value="key">{{ val }}
                         </a-select-option>
@@ -14,13 +14,13 @@
                         <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">{{ val }}
                         </a-select-option>
                     </a-select>
-                </div>
+                </div> -->
             </div>
             <p class="code">商品编号：{{ detail.code }}</p>
             <p class="spec" v-if="detail.attr_str"><span>规格：</span>{{ detail.attr_str }}</p>
-            <p class="price">{{ detail.fob_currency + $Util.countFilter(detail.fob) }}</p>
+            <p class="price">€{{$Util.countFilter(detail.purchase_price_eur)}} | ${{$Util.countFilter(detail.purchase_price_usd)}}</p>
             <p class="category">{{ category.name }}</p>
-            <!--            <p class="sale-price">建议零售价：€{{ $Util.countFilter(detail.price) }}</p>-->
+            <!-- <p class="sale-price">建议零售价：€{{ $Util.countFilter(detail.price) }}</p>-->
             <div class="desc" v-if="config && config.length">
                 <template v-for="(item, index) of config" :key="index">
                     <p v-if="item.value">

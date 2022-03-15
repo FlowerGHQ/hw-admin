@@ -31,16 +31,22 @@
                             <div class="key">销售区域</div>
                             <div class="value">{{ detail.sales_area_name || '-'}}</div>
                         </div>
-                        <div class="info-item">
-                            <div class="key">建议零售价</div>
-                            <div class="value">€{{$Util.countFilter(detail.price)}}</div>
-                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" v-if="indep_flag">
                         <div class="info-item">
                             <div class="key">成本价格</div>
-                            <div class="value">{{detail.fob_currency + $Util.countFilter(detail.original_price)}}</div>
+                            <div class="value">{{$Util.priceUnitFilter(detail.original_price_currency)}} {{$Util.countFilter(detail.original_price)}}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="key">FOB(EUR)</div>
+                            <div class="value">€{{$Util.countFilter(detail.fob_eur)}}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="key">FOB(USD)</div>
+                            <div class="value">${{$Util.countFilter(detail.fob_usd)}}</div>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :lg='12' :xl='16' :xxl='18' class="info-block">
+                    <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='12' class="info-block">
                         <template v-for="(item, index) of config" :key="index">
                             <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='8' class="info-item"
                                 :class="item.type" v-if="item.value">
@@ -61,7 +67,10 @@
                                 {{text || ''}}
                             </template>
                             <template v-if="column.key === 'money'">
-                                €{{$Util.countFilter(text)}}
+                                {{$Util.priceUnitFilter(record.original_price_currency)}} {{$Util.countFilter(text)}}
+                            </template>
+                            <template v-if="column.key === 'fob'">
+                                {{column.unit}} {{$Util.countFilter(text)}}
                             </template>
                             <template v-if="column.dataIndex === 'flag_independent_info'">
                                 <template v-if="index === 0">
@@ -137,7 +146,9 @@ export default {
             )
             column.push(
                 {title: '成本价格', key: 'money', dataIndex: 'original_price'},
-                {title: '建议零售价', key: 'money', dataIndex: 'price'},
+                {title: 'FOB(EUR)', key: 'fob', dataIndex: 'fob_eur', unit: '€'},
+                {title: 'FOB(USD)', key: 'fob', dataIndex: 'fob_usd', unit: '$'},
+                // {title: '建议零售价', key: 'money', dataIndex: 'price'},
                 {title: '是否自定义详情', dataIndex: 'flag_independent_info'},
                 {title: '操作', key: 'operation'},
             )
@@ -233,6 +244,9 @@ export default {
                         code: item.code,
                         price: item.price,
                         original_price: item.original_price,
+                        original_price_currency: item.original_price_currency,
+                        fob_eur: item.fob_eur,
+                        fob_usd: item.fob_usd,
                         flag_independent_info: item.flag_independent_info ? true : false,
                     }
                 })
