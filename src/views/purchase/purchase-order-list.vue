@@ -72,11 +72,8 @@
                             <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                         </a-tooltip>
                     </template>
-                    <template v-if="column.dataIndex === 'price'">
+                    <template v-if="column.key === 'money'">
                         {{$Util.priceUnitFilter(record.currency)}} {{$Util.countFilter(text)}}
-                    </template>
-                    <template v-if="column.dataIndex === 'payment'">
-                        €{{$Util.countFilter(text)}}
                     </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text,'color')">
@@ -216,11 +213,11 @@ export default {
         tableColumns() {
             let columns = [
                 { title: '订单编号', dataIndex: 'sn', },
-                { title: '订单总价', dataIndex: 'price' },
+                { title: '订单总价', dataIndex: 'price', key: 'money' },
                 { title: '订单状态', dataIndex: 'status' },
                 { title: '下单时间', dataIndex: 'create_time', key: 'time' },
                 { title: '支付状态', dataIndex: 'payment_status' },
-                { title: '已支付金额', dataIndex: 'payment' },
+                { title: '已支付金额', dataIndex: 'payment', key: 'money' },
                 { title: '支付时间', dataIndex: 'pay_time', key: 'time' },
                 { title: '完成时间', dataIndex: 'close_time', key: 'time' },
                 { title: '操作', key: 'operation', fixed: 'right'}
