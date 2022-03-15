@@ -808,6 +808,17 @@ const routes = [
                     parent: '/aftersales/aftersales-list'
                 }
             },
+            {
+                path: 'refund-detail',
+                name: 'RefundDetail',
+                component: () => import('@/views/aftersales/refund-detail.vue'),
+                hidden: true,
+                meta: {
+                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    title: '退款单详情',
+                    is_sub_menu: true,
+                }
+            }
         ]
     },
     { // 客户管理

@@ -36,7 +36,7 @@
         <div class="form-container">
             <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
                 <template #expandIcon ><i class="icon i_expan_l"/> </template>
-                <a-collapse-panel key="AftersalesInfo" header="订单信息" class="gray-collapse-panel">
+                <a-collapse-panel key="AftersalesInfo" header="售后单信息" class="gray-collapse-panel">
                     <a-row class="panel-content info-container">
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                             <div class="info-item">
@@ -46,18 +46,30 @@
                                 </div>
                             </div>
                             <div class="info-item">
+                                <div class="key">售后类型</div>
+                                <div class="value">
+                                    {{ $Util.aftersalesTypeFilter(detail.type) }}
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="key">售后单状态</div>
+                                <div class="value">
+                                    {{ $Util.aftersalesStatusFilter(detail.status) }}
+                                </div>
+                            </div>
+                            <div class="info-item">
                                 <div class="key">采购单编号</div>
                                 <div class="value">
                                     <a-button type="link" @click="routerChange('purchase')"
                                         style="font-size: 12px;line-height: 17px;height: 17px;">{{detail.order_sn || '-'}}</a-button>
                                 </div>
                             </div>
+                        </a-col>
+                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                             <div class="info-item">
                                 <div class="key">创建时间</div>
                                 <div class="value">{{$Util.timeFilter(detail.create_time) || '-'}}</div>
                             </div>
-                        </a-col>
-                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                             <div class="info-item">
                                 <div class="key">申请退款金额</div>
                                 <div class="value">{{$Util.priceUnitFilter(detail.refund_money_currency)}} {{$Util.countFilter(detail.refund_money)}}</div>
@@ -72,13 +84,22 @@
                             </div>
                         </a-col>
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" v-if="refund.id">
+                            <div class="info-item" v-if="sameOrg(detail.supply_org_id, detail.supply_org_type)">
+                                <div class="key">退款单</div>
+                                <div class="value"><a-button type="link" @click="routerChange('refund')"
+                                    style="font-size: 12px;line-height: 17px;height: 17px;">查看详情</a-button></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="key">退款状态</div>
+                                <div class="value">{{AFTERSALES.REFUND_STATUS_MAP[detail.refund_status] || '-'}}</div>
+                            </div>
                             <div class="info-item">
                                 <div class="key">退款单创建时间</div>
                                 <div class="value">{{$Util.timeFilter(refund.create_time) || '-'}}</div>
                             </div>
                             <div class="info-item">
-                                <div class="key">退款状态</div>
-                                <div class="value">{{AFTERSALES.REFUND_STATUS_MAP[detail.refund_status] || '-'}}</div>
+                                <div class="key">退款单完成时间</div>
+                                <div class="value">{{$Util.timeFilter(refund.finish_time) || '-'}}</div>
                             </div>
                         </a-col>
                     </a-row>
@@ -408,7 +429,7 @@ export default {
                     break;
                 case 'refund': // 退款单 详情
                     routeUrl = this.$router.resolve({
-                        path: '/refund/refund-detail',
+                        path: '/aftersales/refund-detail',
                         query: {id: this.refund.id}
                     })
                     window.open(routeUrl.href, '_blank')

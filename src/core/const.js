@@ -441,45 +441,6 @@ let Const = {
             ALL: 3, //所有子级采购单
         },
     },
-    REFUND: { // 退款管理
-        TYPE_LIST: [
-            { text: '零售商申请退款', value: 100 },
-            { text: '分销商申请退款', value: 110 },
-            { text: '门店申请退款', value: 120 },
-            { text: '后台主动退款', value: 200 },
-        ],
-        TYPE_MAP: {
-            100: '零售商申请退款',
-            110: '分销商申请退款',
-            120: '门店申请退款',
-            200: '后台主动退款'
-        },
-        STATUS: {
-            WAIT_AUDIT: 10, // 待审核
-            AUDIT_PASS: 20, // 审核通过
-            SUCCESS: 40, // 退款成功
-            AUDIT_REFUSE: -10, // 审核失败
-            CANCEL: -20, // 已取消
-        },
-        STATUS_MAP: {
-            '10': '待审核',
-            '20': '审核通过',
-            '40': '退款成功',
-            '-10': '审核失败',
-            '-20': '已取消',
-        },
-        STATUS_COLOR_MAP: {
-            '10': 'yellow',
-            '20': 'blue',
-            '40': 'green',
-            '-10': 'red',
-            '-20': 'grey'
-        },
-        SEARCH_TYPE: {
-            SELF: 1, //本账户申请的退款单
-            CHILDREN: 2, //待审核的退款单
-        },
-    },
 
     WAYBILL: { // 物流
         TYPE: {
@@ -793,7 +754,46 @@ let Const = {
             '100' :'已申请',
             '400' :'退款成功',
         },
-    }
+    },
+    REFUND: { // 退款管理
+        TYPE_LIST: [
+            { text: '零售商申请退款', value: 100 },
+            { text: '分销商申请退款', value: 110 },
+            { text: '门店申请退款', value: 120 },
+            { text: '后台主动退款', value: 200 },
+        ],
+        TYPE_MAP: {
+            100: '零售商申请退款',
+            110: '分销商申请退款',
+            120: '门店申请退款',
+            200: '后台主动退款'
+        },
+        STATUS: {
+            WAIT_AUDIT: 10, // 待审核
+            AUDIT_PASS: 20, // 审核通过
+            SUCCESS: 40, // 退款成功
+            AUDIT_REFUSE: -10, // 审核失败
+            CANCEL: -20, // 已取消
+        },
+        STATUS_MAP: {
+            '10': '待审核',
+            '20': '审核通过',
+            '40': '退款成功',
+            '-10': '审核失败',
+            '-20': '已取消',
+        },
+        STATUS_COLOR_MAP: {
+            '10': 'yellow',
+            '20': 'blue',
+            '40': 'green',
+            '-10': 'red',
+            '-20': 'grey'
+        },
+        SEARCH_TYPE: {
+            SELF: 1, //本账户申请的退款单
+            CHILDREN: 2, //待审核的退款单
+        },
+    },
 };
 
 export default Const;

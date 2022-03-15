@@ -47,7 +47,7 @@
                     <template #bodyCell="{ column, text , record}">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
-                                <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}
+                                <a-button type="link" @click="routerChange('purchase', record)">{{ text || '-' }}
                                 </a-button>
                             </a-tooltip>
                         </template>
@@ -82,9 +82,12 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
+                            <a-button type="link" @click="routerChange('detail', record)">
+                                <i class="icon i_detail"/>详情
+                            </a-button>
                             <a-button type="link" @click="handleCancel(record.id)"
                                 v-if="record.status === STATUS.WAIT_AUDIT && sameOrg(record.org_id, record.org_type)">
-                                <i class="icon i_m_error"/>取消
+                                <i class="icon i_close_c"/>取消
                             </a-button>
                             <template v-if="sameOrg(record.supply_org_id, record.supply_org_type)">
                                 <a-button type="link" @click="handleAuditShow(record.id)" v-if="record.status === STATUS.WAIT_AUDIT">
@@ -187,7 +190,7 @@ export default {
             // 表格
             tableData: [],
             tableColumns: [
-                {title: '订单号', dataIndex: 'order_sn', key: 'detail'},
+                {title: '采购单单号', dataIndex: 'order_sn', key: 'detail'},
                 {title: '退款金额', dataIndex: 'money', key: 'money'},
                 {title: '退款状态', dataIndex: 'status'},
                 // {title: '退款原因', dataIndex: 'apply_message', key: 'tip_time'},
@@ -231,14 +234,14 @@ export default {
             console.log(item)
             let routeUrl = ''
             switch (type) {
-                case 'create':  // 新建
+                case 'detail':  // 新建
                     routeUrl = this.$router.resolve({
-                        path: "/refund/refund-create",
+                        path: "/aftersales/refund-detail",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
-                case 'detail':  // 详情
+                case 'purchase':  // 详情
                     routeUrl = this.$router.resolve({
                         path: "/purchase/purchase-order-detail",
                         query: {id: item.order_id}
