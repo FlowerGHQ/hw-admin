@@ -28,7 +28,7 @@
                 <div class="form-item required">
                     <div class="key">收货地址</div>
                     <div class="value">
-                        <AddressCascader @change='handleAddressSelect' :default-address='[form.province, form.city, form.county]'/>
+                        <AddressCascader @select='handleAddressSelect' :default-address='[form.province, form.city, form.county]'/>
                     </div>
                 </div>
                 <div class="form-item">

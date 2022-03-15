@@ -4,7 +4,7 @@
     <div class="form-block">
         <div class="form-title"><div class="title">基本信息</div></div>
         <div class="form-content">
-            <div class="form-item required" v-if="loginType == LOGIN_TYPE.ADMIN && !form.id">
+            <div class="form-item required" v-if="$auth('ADMIN') && !form.id">
                 <div class="key">所属分销商</div>
                 <div class="value">
                     <a-select v-model:value="form.distributor_id" placeholder="请选择所属分销商">
@@ -33,12 +33,7 @@
             <div class="form-item required">
                 <div class="key">国家:</div>
                 <div class="value">
-                    <a-cascader
-                        placeholder="请选择大洲/国家"
-                        v-model:value="country_cascader"
-                        :options="countryOptions"
-                        :field-names="{ label: 'value', value: 'value' , children: 'children'}"
-                        />
+                    <AreaCascader v-model:value="areaList" :def-area='defArea'></AreaCascader>
                 </div>
             </div>
         </div>
@@ -52,7 +47,6 @@
 
 <script>
 import Core from '../../core';
-const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 
 export default {
     name: 'AgentEdit',
@@ -60,13 +54,9 @@ export default {
     props: {},
     data() {
         return {
-            loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
             distributorList: [],
-            LOGIN_TYPE,
-            country_cascader: [],
             detail: {},
             form: {
                 id: '',
@@ -76,7 +66,14 @@ export default {
                 country: undefined,
                 continent: undefined,
                 distributor_id: undefined,
-
+            },
+            areaList: [],
+            defArea: [],
+            area: {
+                continent: '',
+                country: '',
+                country_en: '',
+                country_code: '',
             }
         };
     },
@@ -89,9 +86,9 @@ export default {
         if (this.form.id) {
             this.getAgentDetail();
         }
-        if (this.loginType === LOGIN_TYPE.ADMIN) {
+        if (this.$auth('ADMIN')) {
             this.getDistributorList();
-        } else if (this.loginType === LOGIN_TYPE.DISTRIBUTOR) {
+        } else if (this.$auth('DISTRIBUTOR')) {
             this.form.distributor_id = Core.Data.getOrgId()
         }
     },
@@ -114,9 +111,10 @@ export default {
                 for (const key in this.form) {
                     this.form[key] = res.detail[key]
                 }
-                // 回显大洲国家
-                this.country_cascader[0] = this.detail.continent || ''
-                this.country_cascader[1] = this.detail.country || ''
+                for (const key in this.area) {
+                    this.area[key] = d[key]
+                }
+                this.defArea = [d.continent || '', d.country_code || '']
             }).catch(err => {
                 console.log('getAgentDetail err', err)
             }).finally(() => {
@@ -129,9 +127,17 @@ export default {
             })
         },
         handleSubmit() {
-            this.form.continent = this.country_cascader[0] || ''
-            this.form.country = this.country_cascader[1] || ''
             let form = Core.Util.deepCopy(this.form)
+            let area = Core.Util.deepCopy(this.area)
+            if (this.areaList.length) {
+                console.log('this.areaList:', this.areaList)
+                area = {
+                    continent: this.areaList[0].name,
+                    country: this.areaList[1].name,
+                    country_en: this.areaList[1].name_en,
+                    country_code: this.areaList[1].code,
+                }
+            }
             if (!form.name) {
                 return this.$message.warning('请输入零售商名')
             }
@@ -141,10 +147,13 @@ export default {
             if (!form.email) {
                 return this.$message.warning('请输入零售商邮箱')
             }
-            if (!form.country) {
+            if (!area.country) {
                 return this.$message.warning('请选择零售商国家')
             }
-            Core.Api.Agent.save(form).then(() => {
+            Core.Api.Agent.save({
+                ...form,
+                ...area
+            }).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
             }).catch(err => {

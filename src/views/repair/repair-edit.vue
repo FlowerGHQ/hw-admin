@@ -135,7 +135,7 @@
             <div class="form-item">
                 <div class="key">维修地址</div>
                 <div class="value">
-                    <AddressCascader @change='handleAddressSelect' :default-address='[form.customer_province, form.customer_city, form.customer_county]'/>
+                    <AddressCascader @select='handleAddressSelect' :default-address='[form.customer_province, form.customer_city, form.customer_county]'/>
                 </div>
             </div>
             <div class="form-item" :class="form.channel == 1 ? 'required' : ''">

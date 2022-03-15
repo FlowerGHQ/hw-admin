@@ -79,16 +79,15 @@ let Const = {
             ],
         }
     },
-    // 大洲列表
-    CONTINENT_LIST: [
-        { "code": "AS", "name": "亚洲", "name_en": "Asia" },
-        { "code": "EU", "name": "欧洲", "name_en": "Europe" },
-        { "code": "AF", "name": "非洲", "name_en": "Africa" },
-        { "code": "NA", "name": "北美洲", "name_en": "North America" },
-        { "code": "SA", "name": "南美洲", "name_en": "South America" },
-        { "code": "OA", "name": "大洋洲", "name_en": "Oceania" },
-        { "code": "AN", "name": "南极洲", "name_en": "Antarctica" }
-    ],
+    CONTINENT_MAP: {
+        "亚洲": "Asia",
+        "欧洲": "Europe",
+        "非洲": "Africa",
+        "北美洲": "North America",
+        "南美洲": "South America",
+        "大洋洲": "Oceania",
+        "南极洲": "Antarctica",
+    },
     COUNTRY_LIST: [ // 国家列表
         {
             "short": "CN",

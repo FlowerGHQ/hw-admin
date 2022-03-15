@@ -20,7 +20,7 @@ export default {
             type: Array,
         }
     },
-    emit: ['change'],
+    emit: ['select'],
     data() {
         return {
             addressOptions: [], // 地址选择

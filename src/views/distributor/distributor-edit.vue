@@ -18,8 +18,8 @@
                     <div class="key">分销商类型:</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.type">
-                            <a-radio :value="DISTRIBUTOR.INTERNAL">国内</a-radio>
-                            <a-radio :value="DISTRIBUTOR.EXPORT">出口</a-radio>
+                            <a-radio :value="TYPE.INTERNAL">国内</a-radio>
+                            <a-radio :value="TYPE.EXPORT">出口</a-radio>
                         </a-radio-group>
                     </div>
                 </div>
@@ -44,20 +44,14 @@
                 <div class="form-item required">
                     <div class="key">国家:</div>
                     <div class="value">
-                        <a-cascader
-                            placeholder="请选择大洲/国家"
-                            v-model:value="country_cascader"
-                            :options="countryOptions"
-                            :field-names="{ label: 'value', value: 'value' , children: 'children'}"
-                        />
-
+                        <AreaCascader v-model:value="areaList" :def-area='defArea'></AreaCascader>
                     </div>
                 </div>
                 <div class="form-item required">
                     <div class="key">销售区域</div>
                     <div class="value">
                         <a-select v-model:value="form.sales_area_ids" mode="tags" placeholder="请选择销售区域">
-                            <a-select-option v-for="(val,key) in salesList" :key="key" :value="val.id">{{ val.name }}</a-select-option>
+                            <a-select-option v-for="(item,index) of salesList" :key="index" :value="item.id">{{ item.name }}</a-select-option>
                         </a-select>
                     </div>
                 </div>
@@ -72,32 +66,40 @@
 
 <script>
 import Core from '../../core';
+import AreaCascader from '@/components/common/AreaCascader.vue';
 
 export default {
     name: 'DistributorEdit',
-    components: {},
+    components: {
+        AreaCascader
+    },
     props: {},
     data() {
         return {
-            loginType: Core.Data.getLoginType(),
+            TYPE: Core.Const.DISTRIBUTOR.TYPE,
             // 加载
             loading: false,
-            countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
-            DISTRIBUTOR: Core.Const.DISTRIBUTOR.TYPE,
-            country_cascader: [],
             detail: {},
+            salesList: [], // 销售区域
+
             form: {
                 id: '',
                 name: '',
                 contact: '',
                 phone: '',
                 email: '',
-                country: undefined,
-                continent: undefined,
                 type: undefined,
                 sales_area_ids: undefined,
             },
-            salesList: [],
+
+            areaList: [],
+            defArea: [],
+            area: {
+                continent: '',
+                country: '',
+                country_en: '',
+                country_code: '',
+            }
         };
     },
     watch: {},
@@ -125,22 +127,21 @@ export default {
                 id: this.form.id,
             }).then(res => {
                 console.log('getDistributorDetail res', res)
-                this.detail = res.detail
+                let d = res.detail
+                this.detail = d
                 for (const key in this.form) {
-                    this.form[key] = res.detail[key]
+                    this.form[key] = d[key]
+                }
+                for (const key in this.area) {
+                    this.area[key] = d[key]
                 }
                 this.form.sales_area_ids = this.detail.sales_area_list ? this.detail.sales_area_list.map(i => i.id): []
-                // 回显大洲国家
-                this.country_cascader[0] = this.detail.continent || ''
-                this.country_cascader[1] = this.detail.country || ''
+                this.defArea = [d.continent || '', d.country_code || '']
             }).catch(err => {
                 console.log('getDistributorDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
-        },
-        handleTypeSelect(val) {
-            this.type = val
         },
         getSalesAreaList() {
             Core.Api.SalesArea.list().then(res => {
@@ -148,9 +149,17 @@ export default {
             });
         },
         handleSubmit() {
-            this.form.continent = this.country_cascader[0] || ''
-            this.form.country = this.country_cascader[1] || ''
             let form = Core.Util.deepCopy(this.form)
+            let area = Core.Util.deepCopy(this.area)
+            if (this.areaList.length) {
+                console.log('this.areaList:', this.areaList)
+                area = {
+                    continent: this.areaList[0].name,
+                    country: this.areaList[1].name,
+                    country_en: this.areaList[1].name_en,
+                    country_code: this.areaList[1].code,
+                }
+            }
             if (!form.name) {
                 return this.$message.warning('请输入分销商名')
             }
@@ -163,14 +172,17 @@ export default {
             if (!form.email) {
                 return this.$message.warning('请输入分销商邮箱')
             }
-            if (!form.country) {
+            if (!area.country) {
                 return this.$message.warning('请选择分销商国家')
             }
             if (!form.sales_area_ids) {
                 return this.$message.warning('请选择销售区域')
             }
             form.sales_area_ids = form.sales_area_ids.join(',')
-            Core.Api.Distributor.save(form).then(() => {
+            Core.Api.Distributor.save({
+                ...form,
+                ...area
+            }).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
             }).catch(err => {
