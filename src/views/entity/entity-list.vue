@@ -87,9 +87,10 @@
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail'">
                             <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" fallback='无'/>
-                            <a-button type="link" @click="routerChange('detail', record)">
+                            {{ text || '-' }}
+                            <!-- <a-button type="link" @click="routerChange('detail', record)">
                                 <div class="ell" style="max-width: 150px">{{ text || '-' }}</div>
-                            </a-button>
+                            </a-button> -->
                         </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
@@ -110,8 +111,8 @@
                             <template v-if="!record.default_item_id">
                                 <a-button type='link' @click="handleVehicleShow(record)"><i class="icon i_edit"/>编辑
                                 </a-button>
-                                <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>详情
-                                </a-button>
+                                <!-- <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>详情
+                                </a-button> -->
                             </template>
                             <a-button type='link' @click="handleDelete(record.id)" class="danger"><i
                                 class="icon i_delete"/>删除
