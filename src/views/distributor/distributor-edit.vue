@@ -53,6 +53,14 @@
 
                     </div>
                 </div>
+                <div class="form-item required">
+                    <div class="key">销售区域</div>
+                    <div class="value">
+                        <a-select v-model:value="form.sales_area_ids" mode="tags" placeholder="请选择销售区域">
+                            <a-select-option v-for="(val,key) in salesList" :key="key" :value="val.id">{{ val.name }}</a-select-option>
+                        </a-select>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-btns">
@@ -87,7 +95,9 @@ export default {
                 country: undefined,
                 continent: undefined,
                 type: undefined,
-            }
+                sales_area_ids: undefined,
+            },
+            salesList: [],
         };
     },
     watch: {},
@@ -98,6 +108,7 @@ export default {
         if (this.form.id) {
             this.getDistributorDetail();
         }
+        this.getSalesAreaList()
     },
     methods: {
         routerChange(type, item) {
@@ -118,6 +129,7 @@ export default {
                 for (const key in this.form) {
                     this.form[key] = res.detail[key]
                 }
+                this.form.sales_area_ids = this.detail.sales_area_list ? this.detail.sales_area_list.map(i => i.id): []
                 // 回显大洲国家
                 this.country_cascader[0] = this.detail.continent || ''
                 this.country_cascader[1] = this.detail.country || ''
@@ -129,6 +141,11 @@ export default {
         },
         handleTypeSelect(val) {
             this.type = val
+        },
+        getSalesAreaList() {
+            Core.Api.SalesArea.list().then(res => {
+                this.salesList = res.list
+            });
         },
         handleSubmit() {
             this.form.continent = this.country_cascader[0] || ''
@@ -149,6 +166,10 @@ export default {
             if (!form.country) {
                 return this.$message.warning('请选择分销商国家')
             }
+            if (!form.sales_area_ids) {
+                return this.$message.warning('请选择销售区域')
+            }
+            form.sales_area_ids = form.sales_area_ids.join(',')
             Core.Api.Distributor.save(form).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
