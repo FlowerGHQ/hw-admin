@@ -8,8 +8,7 @@
             </div>
             <div class="btns-area" v-if="$auth('ADMIN')">
                 <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
-                <a-button :type="detail.status ? '' : 'primary'" :danger="detail.status ? true : false" ghost
-                          @click="handleStatusChange()">
+                <a-button :type="detail.status ? '' : 'primary'" :danger="detail.status ? true : false" ghost @click="handleStatusChange()">
                     <template v-if="detail.status"><i class="icon i_forbidden"/>禁用</template>
                     <template v-else><i class="icon i_enable"/>启用</template>
                 </a-button>
@@ -39,6 +38,13 @@
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">国家：</span>
                         <span class="value">{{ detail.country }}</span>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">销售区域：</span>
+                        <span class="value" v-if="detail.sales_area_list && detail.sales_area_list.length">
+                            {{ detail.sales_area_list.map(i => i.name).join(' , ') }}
+                        </span>
+                        <span class="value" v-else>-</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">创建时间：</span>

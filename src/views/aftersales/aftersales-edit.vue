@@ -69,7 +69,7 @@
             <div class="table-container">
                 <a-table :columns="itemInColumns" :data-source="itemInList" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, text, record }">
+                    <template #bodyCell="{ column, text, record, index }">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
                                 <a-button type="link" @click="routerChange('item', record)">{{ text || '-' }}
@@ -88,6 +88,9 @@
                         <template v-if="column.dataIndex  === 'count'">
                             {{ text || '-'}} 件
                         </template>
+                        <template v-if="column.key  === 'operation'">
+                            <a-button type="link" class="danger" @click="handleRemove('In',index)"><i class="icon i_delete"/> 移除</a-button>
+                        </template>
                     </template>
                 </a-table>
             </div>
@@ -104,7 +107,7 @@
             <div class="table-container">
                 <a-table :columns="itemOutColumns" :data-source="itemOutList" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, text, record }">
+                    <template #bodyCell="{ column, text, record, index }">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
                                 <a-button type="link" @click="routerChange('item', record)">{{ text || '-' }}
@@ -120,8 +123,8 @@
                         <template v-if="column.key === 'item'">
                             {{ text || '-'}}
                         </template>
-                        <template v-if="column.key === 'money'">
-                            €{{$Util.countFilter(text)}}
+                        <template v-if="column.key  === 'operation'">
+                            <a-button type="link" class="danger" @click="handleRemove('Out',index)"><i class="icon i_delete"/> 移除</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -193,6 +196,7 @@ export default {
                 // { title: '成本价格', dataIndex: 'original_price' ,key: 'money'},
                 // { title: 'FOB价', dataIndex: 'fob', key: 'money' },
                 // { title: '建议零售价', dataIndex: 'price', key: 'money' },
+                { title: '操作', key: 'operation' },
             ],
             itemInListAll: [], // 采购单下单时的商品
             itemInList: [],
@@ -203,6 +207,7 @@ export default {
                 { title: '商品分类', dataIndex: ['category','name'], key: 'item' },
                 { title: '商品品号', dataIndex: 'model', key: 'item' },
                 { title: '商品编码', dataIndex: 'code', key: 'item' },
+                { title: '操作', key: 'operation' },
             ],
             itemOutList: [], // 需要补发、换货的商品
             upload: { // 上传图片
@@ -485,7 +490,11 @@ export default {
             console.log('items:', items)
             this.itemOutList.push(...items)
         },
-        
+        handleRemove(type, index) {
+            console.log('handleRemove:', index)
+            let key = 'item' + type + 'List'
+            this[key].splice(index, 1)
+        }
     }
 };
 </script>

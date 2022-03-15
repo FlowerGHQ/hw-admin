@@ -44,6 +44,14 @@
                                 {{ text ? '启用中' : '已禁用' }}
                             </div>
                         </template>
+                        <template v-if="column.dataIndex === 'sales_area_list'">
+                            <div v-if="text && text.length" class="ell" style="max-width: 300px">
+                                <a-tooltip :title="text.map(i => i.name).join(' , ')" destroyTooltipOnHide placement="topLeft">
+                                    <a-tag v-for="item of text" :key="item.id">{{item.name}}</a-tag>
+                                </a-tooltip>
+                            </div>
+                            <div v-else>-</div>
+                        </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
@@ -124,6 +132,7 @@ export default {
                 {title: '国家', dataIndex: 'country'},
                 {title: '联系人', dataIndex: 'contact'},
                 {title: '手机号', dataIndex: 'phone'},
+                {title: '销售区域', dataIndex: 'sales_area_list'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '状态', dataIndex: 'status', key: 'status',
                     filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [1] },
