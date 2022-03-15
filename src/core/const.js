@@ -603,7 +603,7 @@ let Const = {
         COMMODITY_TYPE: {
             ENTITY: 20,
             ITEM: 10,
-            MATERIALS: 20,
+            MATERIALS: 30,
         },
         COMMODITY_TYPE_MAP: {
             20: '整车',

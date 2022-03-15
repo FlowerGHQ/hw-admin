@@ -60,8 +60,8 @@
                     <a-button type="link" v-if="addMode" @click.stop="handleAddItemSubmit">确认添加</a-button>
                 </template>
 
-                <div class="panel-content table-container no-mg">
-                    <a-table :columns="tableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
+                <div class="panel-content table-container no-mg" v-if="detail.target_type === COMMODITY_TYPE.ITEM">
+                    <a-table :columns="itemTableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
                              :row-key="record => record.id" :pagination='false'>
                         <template #bodyCell="{ column, text, record }">
                             <template v-if="column.key === 'tip_item'">
@@ -69,13 +69,55 @@
                                     <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
                                 </a-tooltip>
                             </template>
-                            <template v-if="column.dataIndex === 'entity'">
+                            <template v-if="column.key === 'entity-uid'">
                                 <template v-if="addMode || record.editMode">
-                                    <a-input v-model:value="record.uid" class="input-number" placeholder="请输入车架号" @blur="handleVehicleBlur(id)"/>
+                                    <a-input v-model:value="record.uid" class="input-number" placeholder="请输入车架号" @blur="handleVehicleBlur(record)"/>
                                     <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
                                     <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                                 </template>
+                                <template v-else>{{ text }}</template>
+                            </template>
+                            <template v-if="column.key === 'attr_list'">
+                                {{ $Util.itemSpecFilter(text) }}
+                            </template>
+                            <template v-if="column.key === 'item'">
+                                {{ text || '-' }}
+                            </template>
+                            <template v-if="column.key === 'count'">
+                                {{ text || '-' }}件
+                            </template>
+                            <template v-if="column.key === 'amount'">
+                                <template v-if="addMode || record.editMode">
+                                    <a-input-number v-model:value="record.amount" placeholder="请输入"
+                                                    :min="1" :max="detail.type === TYPE.IN ? 99999: record.item.stock" :precision="0"/> 件
+                                </template>
                                 <template v-else>{{ text || '-' }}件</template>
+                            </template>
+                            <template v-if="column.key === 'operation'" >
+                                <a-button type="link" @click="handleItemSubmit(record)" v-if="record.editMode"><i class="icon i_confirm"/>确认更改</a-button>
+                                <a-button type="link" @click="handleItemChange(record)" v-else><i class="icon i_edit"/>更改数量</a-button>
+                                <a-button type="link" @click="handleRemoveItem(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
+                            </template>
+                        </template>
+                    </a-table>
+                </div>
+
+                <div class="panel-content table-container no-mg" v-if="detail.target_type === COMMODITY_TYPE.ENTITY">
+                    <a-table :columns="entityTableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
+                             :row-key="record => record.id" :pagination='false'>
+                        <template #bodyCell="{ column, text, record }">
+                            <template v-if="column.key === 'tip_item'">
+                                <a-tooltip placement="top" :title='text'>
+                                    <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
+                                </a-tooltip>
+                            </template>
+                            <template v-if="column.key === 'entity-uid'">
+                                <template v-if="addMode || record.editMode">
+                                    <a-input v-model:value="record.uid" class="input-number" placeholder="请输入车架号" @blur="handleVehicleBlur(record)"/>
+                                    <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
+                                    <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
+                                </template>
+                                <template v-else>{{ text }}</template>
                             </template>
                             <template v-if="column.key === 'attr_list'">
                                 {{ $Util.itemSpecFilter(text) }}
@@ -119,6 +161,7 @@ export default {
     data() {
         return {
             // 加载
+            COMMODITY_TYPE,
             loading: false,
             STATUS,
             TYPE,
@@ -132,6 +175,7 @@ export default {
             map: [],
             isExist: '',
             uid: '',
+
         };
     },
     watch: {},
@@ -139,12 +183,12 @@ export default {
         type_ch() {
             return this.detail.type == TYPE.IN ? '入库' : '出库'
         },
-        tableColumns() {
+        itemTableColumns() {
             let columns = [
-                {title: '商品名称', dataIndex: ['item', 'name'],  key: 'tip_item'},
+                {title: '商品名称', dataIndex: ['name'],  key: 'tip_item'},
                 // {title: '车架号', dataIndex: 'target_type'},
-                {title: '商品品号', dataIndex: ['item', 'model'], key: 'item'},
-                {title: '商品编码', dataIndex: ['item', 'code'],  key: 'item'},
+                {title: '商品品号', dataIndex: [ 'item', 'model'], key: 'item'},
+                {title: '商品编码', dataIndex: [ 'item', 'code'],  key: 'item'},
                 {title: '商品规格', dataIndex: ['item', 'attr_list'], key: 'attr_list'},
                 // {title: '库存数量', dataIndex: ['item', 'stock'],     key: 'count'},
                 {title: this.type_ch + '数量', dataIndex: 'amount' , key: 'amount'},
@@ -160,7 +204,32 @@ export default {
                 columns.splice(4, 0, {title: '库存数量', dataIndex: ['item', 'stock'], key: 'count'})
             }
             if (this.detail.target_type == COMMODITY_TYPE.ENTITY) {
-                columns.splice(1, 0, {title: '车架号', dataIndex: 'entity'})
+                columns.splice(1, 0, {title: '车架号', dataIndex: ['entity', 'uid'], key: 'entity-uid'})
+            }
+            return columns
+        },
+        entityTableColumns() {
+            let columns = [
+                {title: '商品名称', dataIndex: ['entity', 'item', 'name'],  key: 'tip_item'},
+                // {title: '车架号', dataIndex: 'target_type'},
+                {title: '商品品号', dataIndex: ['entity', 'item', 'model'], key: 'item'},
+                {title: '商品编码', dataIndex: ['entity', 'item', 'code'],  key: 'item'},
+                {title: '商品规格', dataIndex: ['entity', 'item', 'attr_list'], key: 'attr_list'},
+                // {title: '库存数量', dataIndex: ['item', 'stock'],     key: 'count'},
+                {title: this.type_ch + '数量', dataIndex: 'amount' , key: 'amount'},
+                {title: '操作', key: 'operation'},
+            ]
+            /* if (this.detail.type == TYPE.IN) { // 入库不显示库存数量
+                 columns.splice(4, 1)
+             }*/
+            if (this.detail.status !== STATUS.INIT || this.addMode) { // 入库不显示库存数量
+                columns.pop()
+            }
+            if (this.detail.type == TYPE.OUT) { // 入库不显示库存数量
+                columns.splice(4, 0, {title: '库存数量', dataIndex: ['item', 'stock'], key: 'count'})
+            }
+            if (this.detail.target_type == COMMODITY_TYPE.ENTITY) {
+                columns.splice(1, 0, {title: '车架号', dataIndex: ['entity', 'uid'], key: 'entity-uid'})
             }
             return columns
         },
@@ -273,15 +342,13 @@ export default {
             this.addData = list
             this.addMode = true
         },
-        handleVehicleBlur(id) {  // 获取 车架号
-            /* if (!this.uid) {
-                 return this.isExist = ''
-             }*/
+        handleVehicleBlur(record) {  // 获取 车架号
+
             Core.Api.Entity.detailByUid({
-                ...this.addData,
-                uid: this.addData.uid,
+                uid: record.uid
             }).then(res => {
                 this.isExist = res.detail == null ? 2 : 1
+                record.entity_id = res.detail.id
                 console.log("handleVehicleBlur res", res)
             }).catch(err => {
                 console.log('handleVehicleBlur err', err)
@@ -294,10 +361,9 @@ export default {
             let list = data.map(item => ({
                 id: item.id,
                 amount: item.amount,
-                target_id: item.item.id,
+                target_id: item.entity_id,
                 invoice_id: this.id,
                 target_type: item.target_type,
-                uid: item.uid,
             }))
             Core.Api.InvoiceItem.saveList(list).then(() => {
                 this.$message.success('保存成功')
