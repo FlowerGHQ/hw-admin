@@ -691,9 +691,9 @@ export default {
             if (!form.category_id) {
                 return this.$message.warning('请选择商品分类')
             }
-            if (!form.man_hour) {
+           /* if (!form.man_hour) {
                 return this.$message.warning('请输入工时')
-            }
+            }*/
             if (!form.sales_area_ids) {
                 return this.$message.warning('请选择销售区域')
             }
@@ -760,7 +760,6 @@ export default {
                         }
                         str += item[key]
                     }
-                    attrs.push(str)
                 }
                 if (Core.Util.hasSameItem(specData.map(i => i.code))) {
                     return this.$message.warning('商品编码不可重复')

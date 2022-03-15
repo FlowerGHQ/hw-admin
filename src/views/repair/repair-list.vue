@@ -206,7 +206,6 @@ export default {
                 {text: '全  部', value: '0', color: 'primary', key: '-1'},
                 {text: '待检测', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
                 {text: '维修中', value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
-                {text: '已维修', value: '0', color: 'light',  key: STATUS.REPAIR_END },
                 {text: '已结算待审核', value: '0', color: 'orange',  key: STATUS.SETTLEMENT },
                 {text: '审核未通过', value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
                 {text: '审核通过', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
