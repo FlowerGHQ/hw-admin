@@ -103,7 +103,7 @@
                                         {{record.amount}} 件
                                     </template>
                                     <template v-if="column.key === 'money'">
-                                        {{$Util.priceUtilFilter(record.currency)}} {{$Util.countFilter(text)}}
+                                        {{$Util.priceUnitFilter(record.currency)}} {{$Util.countFilter(text)}}
                                     </template>
                                     <template v-if="column.key === 'spec'">
                                         {{$Util.itemSpecFilter(text)}}
@@ -147,7 +147,7 @@
                 <template v-if="needItemOut">
                     <a-collapse-panel key="ItemOutInfo" :header="$Util.aftersalesTypeFilter(detail.type) + '商品信息'" class="gray-collapse-panel">
                         <div class="panel-content">
-                            <a-table :columns="itemColumns" :data-source="itemOutList" :scroll="{ x: true }"
+                            <a-table :columns="itemColumns.slice(0,5)" :data-source="itemOutList" :scroll="{ x: true }"
                                 :row-key="record => record.id" :pagination='false'>
                                 <template #bodyCell="{ column, text , record}">
                                     <template v-if="column.dataIndex === 'item'">
@@ -164,7 +164,7 @@
                                         {{record.amount}} 件
                                     </template>
                                     <template v-if="column.key === 'money'">
-                                        {{$Util.priceUtilFilter(record.currency)}} {{$Util.countFilter(text)}}
+                                        {{$Util.priceUnitFilter(record.currency)}} {{$Util.countFilter(text)}}
                                     </template>
                                     <template v-if="column.key === 'spec'">
                                         {{$Util.itemSpecFilter(text)}}
@@ -244,10 +244,10 @@ const TYPE = Core.Const.AFTERSALES.TYPE;
 
 const itemColumns = [
     { title: '商品', dataIndex: 'item' },
+    { title: '数量', dataIndex: 'amount'},
     { title: '品号', dataIndex: ['item', "model"] },
     { title: '编号', dataIndex: ['item', "code"] },
     { title: '规格', dataIndex: ['item', 'attr_list'], key: 'spec' },
-    { title: '数量', dataIndex: 'amount'},
     { title: '单价', dataIndex: 'unit_price', key: 'money'},
     { title: '售价', dataIndex: 'price', key: 'money'},
     { title: '实际金额（元）', dataIndex: 'charge', key: 'money'},
@@ -402,7 +402,7 @@ export default {
                 case 'item': // 商品详情
                     routeUrl = this.$router.resolve({
                         path: this.$auth('ADMIN') ? "/item/item-detail" : '/purchase/item-display',
-                        query: {id: item.item_id}
+                        query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
