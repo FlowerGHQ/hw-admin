@@ -5,8 +5,11 @@
             <div class="title-area">工单详情</div>
             <div class="btns-area">
                 <template v-if="sameOrg">
-                    <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION && !$auth('ADMIN')">
+                    <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION">
                         <i class="icon i_edit"/>编辑
+                    </a-button>
+                    <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.AUDIT_FAIL">
+                        重新编辑
                     </a-button>
                     <a-button type="primary" ghost @click="handleDeliveryShow()" v-if="needDelivery">
                         <i class="icon i_deliver"/>转单物流
@@ -29,13 +32,15 @@
         <div class="gray-panel info">
             <div class="panel-title">
                 <div class="left"><span>工单编号</span> {{ detail.uid }}</div>
-                <!-- <div class="right">
-                    <div class="staff" v-if="detail.repair_user_id">员工：{{ detail.repair_user_name || '-' }}</div>
-                    <div class="status">
-                        <i class="icon i_point" :class="$Util.repairStatusFilter(detail.status,'color')"/>
-                        {{ $Util.repairStatusFilter(detail.status) }}
-                    </div>
-                </div>-->
+                <div class="right">
+                    <a-tooltip :title='detail.audit_message'>
+                        <div class="status">
+                            <i class="icon i_point" :class="$Util.repairStatusFilter(detail.status,'color')"/>
+                            {{ $Util.repairStatusFilter(detail.status) }}
+                            <i class="icon i_hint" style="font-size: 12px; padding-left: 6px;"  v-if="detail.status == STATUS.AUDIT_FAIL"/>
+                        </div>
+                    </a-tooltip>
+                </div>
             </div>
             <div class="panel-content">
                 <div class="info-item">
@@ -117,7 +122,7 @@
                     <div class="key">原因:</div>
                     <div class="value">
                         <a-textarea v-model:value="auditForm.audit_message" placeholder="请输入不通过原因"
-                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                            :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                     </div>
                 </div>
             </div>
@@ -336,6 +341,12 @@ export default {
         },
         handleAuditSubmit() { // 审核提交
             let form = Core.Util.deepCopy(this.auditForm)
+            if (!form.status) {
+                return this.$message.warning('请选择审核结果')
+            }
+            if (form.status === AUDIT.REFUSE && !form.audit_message) {
+                return this.$message.warning('请输入审核未通过的原因')
+            }
             this.loading = true;
             Core.Api.Repair.audit({
                 ...form,
