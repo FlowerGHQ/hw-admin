@@ -1,5 +1,8 @@
 <template>
 <div id="ItemSettle" class="list-container">
+    <a-select v-model:value="unit" class="monetary-select" @change="handleUnitChange">
+        <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>
+    </a-select>
     <div class="title-area">结算</div>
     <div class="config-list">
         <div class="config-item receive">
@@ -144,6 +147,10 @@ export default {
             unit: '', // €、$
             currency: '', // EUR、USD
             priceKey: '', // purchase_price_eur
+            unitMap: {
+                "€": { key: '_eur', text: '€ (EUR)', currency: 'EUR'},
+                "$": { key: '_usd', text: '$ (USD)', currency: 'USD'},
+            },
         };
     },
     watch: {},
@@ -157,10 +164,9 @@ export default {
         }
     },
     mounted() {
-        this.unit = this.$route.query.unit
-        let currency = this.$route.query.currency;
+        this.unit = this.$route.query.unit || '€'
+        let currency = this.$route.query.currency || '_eur';
         this.priceKey = (this.$auth('DISTRIBUTOR') ? 'fob' : 'purchase_price') + currency
-
         this.currency = currency ? currency.slice(1).toUpperCase() : 'CNY'
 
         this.getReceiveList()
@@ -202,6 +208,13 @@ export default {
                 })
                 this.shopCartList = res.list
             })
+        },
+
+        handleUnitChange(val) {
+            console.log('handleUnitChange val:', val)
+            let item = this.unitMap[val]
+            this.priceKey = (this.$auth('DISTRIBUTOR') ? 'fob' : 'purchase_price') + item.key
+            this.currency = item.currency
         },
 
         handleAddressSelect(address = []) {
@@ -298,16 +311,29 @@ export default {
         },
         handleClearShopCart() {
             Core.Api.ShopCart.clear()
-        }
+        },
     }
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 #ItemSettle {
     padding: 60px 105px 150px;
     display: flex;
     flex-wrap: wrap;
+    position: relative;
+    .monetary-select {
+        position: absolute;
+        top: 60px;
+        right: 105px;
+        min-width: 126px;
+        .ant-select-selector {
+            border-color: #006EF9;
+        }
+        .ant-select-selection-item {
+            color: #006EF9;
+        }
+    }
     .ant-btn-link {
         color: #757575;
         border-bottom: 1px solid #757575;

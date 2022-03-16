@@ -247,7 +247,7 @@ export default {
 };
 </script>
 
-<style lang="less" >
+<style lang="less">
 #ItemCollect {
     padding: 60px 56px 150px 48px;
     position: relative;
