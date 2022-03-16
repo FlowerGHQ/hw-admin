@@ -487,18 +487,29 @@ const routes = [
         redirect: '/entity/entity-list',
         name: 'EntityManagement',
         meta: {
-            title: '车架管理',
+            title: '实例管理',
             icon: 'i_s_item',
             roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
             {
-                path: 'entity-list',
-                name: 'EntityList',
+                path: 'vehicle-list',
+                name: 'VehicleList',
                 component: () => import('@/views/entity/entity-list.vue'),
                 meta: {
-                    title: '车架列表',
+                    title: '整车列表',
                     roles: [LOGIN_TYPE.ADMIN],
+                    type: "vehicle"
+                }
+            },
+            {
+                path: 'part-list',
+                name: 'PartList',
+                component: () => import('@/views/entity/entity-list.vue'),
+                meta: {
+                    title: '零部件列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    type: "part"
                 }
             },
             /*{

@@ -209,6 +209,7 @@ export default {
                 {text: '已结算待审核', value: '0', color: 'orange',  key: STATUS.SETTLEMENT },
                 {text: '审核未通过', value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
                 {text: '审核通过', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
+                {text: '结算完成', value: '0', color: 'green',  key: STATUS.FINISH },
                 {text: '已取消', value: '0', color: 'gray',  key: STATUS.CLOSE },
             ],
             distributorList: [], // 分销商下拉框数据

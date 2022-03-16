@@ -4,16 +4,16 @@
             <div class="title-container">
                 <div class="title-area">车架列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleVehicleShow"><i class="icon i_add"/>新增车架</a-button>
+                    <a-button type="primary" @click="handleVehicleShow"><i class="icon i_add"/>{{'新增' + title}}</a-button>
                     <a-upload name="file" class="file-uploader"
                               :file-list="upload.fileList" :action="upload.action"
                               :show-upload-list='false'
                               :headers="upload.headers" :data='upload.data'
                               accept=".xlsx,.xls"
                               @change="handleMatterChange">
-                        <a-button type="primary" class="file-upload-btn">
+<!--                        <a-button type="primary" class="file-upload-btn">
                             <i class="icon i_add"/> 批量导入
-                        </a-button>
+                        </a-button>-->
                     </a-upload>
                 </div>
             </div>
@@ -76,7 +76,7 @@
                     <a-button @click="handleSearchReset">重置</a-button>
                 </div>
             </div>
-            <div class="operate-container">
+            <div class="operate-container" v-if="viewType === 'vehicle'">
                 <a-button type="primary" @click="handleSetShow" :disabled="!selectedRowKeys.length">批量设置到港时间</a-button>
             </div>
             <div class="table-container">
@@ -139,7 +139,7 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="vehicleShow" :title="editForm.uid ? '车架编辑' : '新增车架'" class="vehicle-edit-modal"
+            <a-modal v-model:visible="vehicleShow" :title="editForm.uid ? title + '编辑' : '新增' + title" class="vehicle-edit-modal"
                      :after-close='handleVehicleClose'>
                 <div class="modal-content">
                     <div class="form-item required">
@@ -150,8 +150,8 @@
                         <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                     </div>
                     <div class="form-item required">
-                        <div class="key">车架号:</div>
-                        <a-input v-model:value="editForm.uid" placeholder="请输入车架号"/>
+                        <div class="key">BOM编号:</div>
+                        <a-input v-model:value="editForm.uid" placeholder="请输入BOM编号"/>
                     </div>
                 </div>
                 <template #footer>
@@ -194,6 +194,7 @@ export default {
     props: {},
     data() {
         return {
+            ITEM_TYPE: Core.Const.ITEM.TYPE,
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
             // 加载
             loading: false,
@@ -248,9 +249,25 @@ export default {
                 ids: '',
                 arrival_time: '',
             },
+            viewType: 'vehicle',
+            title: '整车'
         };
     },
-    watch: {},
+    watch: {
+        $route: {
+            deep: true,
+            immediate: true,
+            handler(newRoute) {
+                let type = newRoute.meta ? newRoute.meta.type : 'vehicle'
+                this.viewType = type
+                if (type === "part")  {
+                    this.title = "零部件"
+                }
+                Object.assign(this.searchForm, this.$options.data().searchForm)
+                this.pageChange(1)
+            }
+        },
+    },
     computed: {
         tableColumns() {
             let columns = [
@@ -275,9 +292,6 @@ export default {
                 },
             };
         },
-        title() {
-            return this.type !== 'pending' ? '故障件列表' : '待处理故障件列表'
-        }
     },
     mounted() {
         this.getTableData();
@@ -290,7 +304,7 @@ export default {
         if (!this.$auth('STORE')) {
             this.getStoreListAll();
         }
-        this.getEntityList();
+        // this.getEntityList();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -336,6 +350,7 @@ export default {
             });
         },
         getAgentListAll() {
+
             Core.Api.Agent.listAll().then(res => {
                 this.agentList = res.list
             });
@@ -347,13 +362,15 @@ export default {
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-            let flag_spread = ''
-            if (this.searchForm.name !== '' || this.searchForm.code !== '') {
-                flag_spread = 1
+            let type = this.ITEM_TYPE.COMPONENT;
+            if (this.viewType == 'part') {
+                type = this.ITEM_TYPE.COMPONENT
+            } else {
+                type = this.ITEM_TYPE.PRODUCT
             }
             Core.Api.Entity.list({
                 ...this.searchForm,
-                flag_spread: flag_spread,
+                type: type,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -362,11 +379,6 @@ export default {
                     entity.attr_desc = entity.item.attr_list ? entity.item.attr_list.map(i => i.value).join(',') : ''
                     return entity
                 })
-                if (flag_spread == 1) {
-                    this.expandIconColumnIndex = -1
-                } else {
-                    this.expandIconColumnIndex = 0
-                }
                 console.log("res.list", res.list)
                 this.total = res.count;
                 this.tableData = list;
@@ -426,6 +438,14 @@ export default {
             if (this.isExist == 2) {
                 return this.$message.warning('请输入正确的商品编码')
             }
+
+            let type = this.ITEM_TYPE.COMPONENT;
+            if (this.viewType == 'part') {
+                type = this.ITEM_TYPE.COMPONENT
+            } else {
+                type = this.ITEM_TYPE.PRODUCT
+            }
+            form.type = type
             Core.Api.Entity.save(form).then(res => {
                 console.log('handleRefundSubmit res', res)
                 this.handleVehicleClose()
@@ -463,7 +483,7 @@ export default {
             }
             this.upload.fileList = fileList
         },
-        getEntityList() {  // 获取 车架列表
+        /*getEntityList() {  // 获取 车架列表
             Core.Api.Entity.list({}).then(res => {
                 console.log("getEntityList res", res)
                 let list = res.list;
@@ -477,7 +497,7 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
-        },
+        },*/
         handleSetShow() {
             this.entityShow = true
         },
