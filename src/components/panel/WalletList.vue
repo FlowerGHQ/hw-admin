@@ -361,7 +361,7 @@ export default {
             if (!this.form.source_id) {
                 return this.isExist = ''
             }
-            Core.Api.Purchase.detailSn({
+            Core.Api.Purchase.detailBySn({
                 sn: this.form.source_id,
             }).then(res => {
                 this.isExist = res.detail == null ? 2 : 1

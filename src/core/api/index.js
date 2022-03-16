@@ -220,8 +220,7 @@ const apiList = {
         cancel: ['PostJson', 'purchase-order/cancel'], // 取消采购订单
         create: ['PostJson', 'purchase-order/create'], // 创建采购订单
         detail: ['PostJson', 'purchase-order/detail'], // 采购订单详情
-        detailSn: ['PostJson', 'purchase-order/detail-sn'],
-        detailByUid: ['PostJson', 'purchase-order/detail-uid'], // 采购订单详情
+        detailBySn: ['PostJson', 'purchase-order/detail-sn'],
         itemList: ['PostJson', 'purchase-order-item/list'], // 采购订单明细列表
         itemByIdList: ['PostJson', 'purchase-order-item/list-by-item-id'], // 采购订单明细列表
         payment: ['PostJson', 'purchase-order/payment'], // 支付订单

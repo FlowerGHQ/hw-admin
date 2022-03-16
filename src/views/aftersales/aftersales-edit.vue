@@ -317,7 +317,7 @@ export default {
         getPurchaseDetail() {
             this.form.order_id = ''
             this.form.refund_money_currency = ''
-            Core.Api.Purchase.detailSn({
+            Core.Api.Purchase.detailBySn({
                 sn: this.form.order_sn,
             }).then(res => {
                 console.log('getPurchaseDetail res', res)

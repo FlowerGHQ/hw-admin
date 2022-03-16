@@ -564,14 +564,14 @@ let Const = {
     },
     STOCK_RECORD: { // 出入库明细
         COMMODITY_TYPE: {
-            ENTITY: 20,
             ITEM: 10,
+            ENTITY: 20,
             MATERIALS: 30,
         },
         COMMODITY_TYPE_MAP: {
-            20: '整车',
-            10: '零部件',
-            30: '物料',
+            10: '无实例商品',
+            20: '有实例商品',
+            // 30: '物料',
         },
         TYPE: {
             IN: 1, //入库
@@ -587,7 +587,7 @@ let Const = {
             CANCEL: -20, // 取消
         },
         STATUS_MAP: {
-            '0': '初始化',
+            '0': '待提交',
             '40': '已完成',
             '-20': '已取消'
         },
@@ -597,24 +597,24 @@ let Const = {
             '-20': 'grey'
         },
         STATUS_LIST: [ //出入库单审核
-            { text: '初始化', value: 0 },
+            { text: '待提交', value: 0 },
             { text: '已完成', value: 40 },
             { text: '已取消', value: -20 },
         ],
         SOURCE_TYPE: {
-            ADMIN: 10, //管理员创建
-            PRODUCTION: 15,
-            PURCHASE_ORDER: 20, //采购单
-            AFTER_SALES_ORDER: 30, //售后
-            TRANSFER_ORDER: 40,
-            REPAIR_ORDER: 50,
+            ADMIN: 10,       //管理员创建
+            PRODUCTION: 15,  // 生产单
+            PURCHASE: 20,    // 采购单
+            AFTER_SALES: 30, // 售后单
+            TRANSFER: 40,    // 调货单
+            REPAIR: 50,      // 维修单
         },
         SOURCE_TYPE_MAP: {
             10: '管理员创建',
-            20: '采购',
             15: '生产单',
-            30: '售后',
-            40: '调货',
+            20: '采购单',
+            30: '售后单',
+            40: '调货单',
             50: '维修单'
         },
     },

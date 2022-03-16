@@ -20,7 +20,7 @@
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">仓库名称:</div>
+                        <div class="key">所属仓库:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.warehouse_id" placeholder="请选择仓库" @change="handleSearch">
                                 <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">{{ warehouse.name }}</a-select-option>
@@ -34,7 +34,7 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">出入库单类型:</div>
+                        <div class="key">出入库类型:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择出入库类型">
                                 <a-select-option v-for="(val, key) in typeMap" :key='key' :value='key'>{{ val }}</a-select-option>
@@ -61,29 +61,29 @@
                                 </a-button>
                             </a-tooltip>
                         </template>
-                        <template v-if="column.key === 'stock_type'">
-                            {{ $Util.stockRecordFilter(text) }}
-                        </template>
-                        <template v-if="column.key === 'type'">
-                            {{ $Util.warehouseTypeFilter(text) }}
-                        </template>
-                        <template v-if="column.key === 'target_type'">
-                            {{ $Util.targetTypeFilter(text) }}
-                        </template>
-                        <template v-if="column.key === 'warehouse_name'">
-                            {{ text || '-' }}
-                        </template>
-                        <template v-if="column.key === 'time'">
-                            {{ $Util.timeFilter(text) }}
-                        </template>
                         <template v-if="column.dataIndex === 'status'">
                             <div class="status status-bg status-tag" :class="$Util.invoiceStatusFilter(text,'color')">
                                 {{ $Util.invoiceStatusFilter(text) }}
                             </div>
                         </template>
-                        <template v-if="column.key === 'operation' && record.status === STATUS.INIT">
-                            <a-button type="link" @click="routerChange('detail',record)"><i class="icon i_edit"/>修改</a-button>
-                            <a-button type="link" @click="handleCancel(record.id)" class="danger"><i class="icon i_m_error"/>取消</a-button>
+                        <template v-if="column.dataIndex === 'type'">
+                            {{ $Util.stockRecordFilter(text) }}
+                        </template>
+                        <template v-if="column.dataIndex === 'target_type'">
+                            {{ $Util.targetTypeFilter(text) }}
+                        </template>
+                        <template v-if="column.key === 'warehouse_type'">
+                            {{ $Util.warehouseTypeFilter(text) }}
+                        </template>
+                        <template v-if="column.key === 'item'">
+                            {{ text || '-' }}
+                        </template>
+                        <template v-if="column.key === 'time'">
+                            {{ $Util.timeFilter(text) }}
+                        </template>
+                        <template v-if="column.key === 'operation'">
+                            <a-button type="link" @click="routerChange('detail',record)"><i class="icon i_detail"/>详情</a-button>
+                            <a-button type="link" @click="handleCancel(record.id)" class="danger" v-if="record.status === STATUS.INIT"><i class="icon i_close_c"/>取消</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -104,54 +104,6 @@
                 />
             </div>
         </div>
-        <template class="modal-container">
-            <a-modal v-model:visible="stockShow" title="库存管理" class="stock-edit-modal" :after-close="handleStockClose">
-                <div class="form-item required">
-                    <div class="key">仓库：</div>
-                    <div class="value">
-                        <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库">
-                            <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">
-                                {{ item.name }}
-                            </a-select-option>
-                        </a-select>
-                    </div>
-                </div>
-                <div class="form-item required">
-                    <div class="key">类目：</div>
-                    <div class="value">
-                        <a-radio-group v-model:value="form.targetType">
-                            <a-radio v-for="(val, key) in targetMap" :key='key' :value='key'>{{ val }}</a-radio>
-                        </a-radio-group>
-                    </div>
-                </div>
-                <div class="form-item required">
-                    <div class="key">类型：</div>
-                    <div class="value">
-                        <a-radio-group v-model:value="form.type">
-                            <a-radio v-for="(val, key) in typeMap" :key='key' :value='key'>{{ val }}</a-radio>
-                        </a-radio-group>
-                    </div>
-                </div>
-                <div class="form-item required">
-                    <div class="key">原因：</div>
-                    <div class="value">
-                        <a-select v-model:value="form.source_type" placeholder="请选择原因">
-                            <a-select-option v-for="(val, key) of sourceTypeMap" :key='key' :value='key'>{{ val }}</a-select-option>
-                        </a-select>
-                    </div>
-                </div>
-                <div class="form-item required">
-                    <div class="key">采购单号：</div>
-                    <div class="value">
-                       <a-input v-model:value="form"/>
-                    </div>
-                </div>
-                <template #footer>
-                    <a-button @click="stockShow=false">取消</a-button>
-                    <a-button @click="handleStockSubmit" type="primary">确定</a-button>
-                </template>
-            </a-modal>
-        </template>
     </div>
 </template>
 
@@ -198,27 +150,15 @@ export default {
             tableData: [],
             tableColumns: [
                 {title: '出入库单编号', dataIndex: 'uid', key: 'detail'},
-                {title: '类型', dataIndex: 'type', key: 'stock_type',},
-                {title: '类目', dataIndex: 'target_type', key: 'target_type',},
-                {title: '所属仓库', dataIndex: ['warehouse', 'name'], key: 'warehouse_name',},
-                {title: '仓库类型', dataIndex: 'type', key: 'type',},
-                {title: '创建人', dataIndex: ['apply_user', "account", "name"], key: 'apply_user'},
+                {title: '状态', dataIndex: 'status'},
+                {title: '类型', dataIndex: 'type'},
+                {title: '类目', dataIndex: 'target_type',},
+                {title: '所属仓库', dataIndex: ['warehouse', 'name'], key: 'item',},
+                {title: '仓库类型', dataIndex: ['warehouse', 'type'], key: 'warehouse_type',},
+                {title: '创建人', dataIndex: ['apply_user', "account", "name"], key: 'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '状态', dataIndex: 'status', key: 'status'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ],
-            // 弹框
-            stockShow: false,
-            form: {
-                type: '',
-                id: '',
-                warehouse_id: undefined,
-                source_type: '',
-                source_id: '',
-                targetType: '',
-            },
-            sourceTypeMap: Core.Const.STOCK_RECORD.SOURCE_TYPE_MAP, //来源
-            targetMap: Core.Const.STOCK_RECORD.COMMODITY_TYPE_MAP, //类目
         };
     },
     watch: {},
@@ -334,35 +274,6 @@ export default {
                     })
                 },
             });
-        },
-
-        // 出入库
-        handleStockShow() {
-            this.stockShow = true;
-        },
-        handleStockClose() {
-            this.stockShow = false;
-            this.form = {
-                type: '',
-                id: '',
-                warehouse_id: undefined,
-            }
-        },
-        handleStockSubmit() {
-            let form = Core.Util.deepCopy(this.form)
-            if (!form.warehouse_id) {
-                return this.$message.warning('请选择仓库')
-            }
-            if (!form.type) {
-                return this.$message.warning('请选择类型')
-            }
-            Core.Api.Invoice.save(form).then(res => {
-                this.$message.success('保存成功')
-                this.handleStockClose()
-                this.routerChange('detail', res.detail)
-            }).catch(err => {
-                console.log('handleStockSubmit err:', err)
-            })
         },
     }
 };

@@ -3,7 +3,7 @@
         <div class="title-container">
             <div class="title-area">{{type_ch}}单详情</div>
             <div class="btn-area">
-                <a-button type="primary" ghost v-if="detail.status === STATUS.CLOSE" @click="handleComplete()" ><i class="icon i_confirm"/>
+                <a-button type="primary" ghost v-if="detail.status === STATUS.CLOSE" @click="handleComplete()"><i class="icon i_confirm"/>
                     {{detail.type === TYPE.IN ? '入库' : '出库'}}完成
                 </a-button>
                 <template v-if="detail.status === STATUS.INIT">
@@ -15,6 +15,12 @@
         <div class="gray-panel info">
             <div class="panel-title">
                 <div class="left"><span>{{type_ch}}单编号</span> {{ detail.uid }}</div>
+                <div class="right">
+                    <div class="status">
+                        <i class="icon i_point" :class="$Util.invoiceStatusFilter(detail.status,'color')"/>
+                        {{ $Util.invoiceStatusFilter(detail.status) }}
+                    </div>
+                </div>
             </div>
             <div class="panel-content">
                 <div class="info-item">
@@ -33,9 +39,9 @@
                     <div class="key">来源</div>
                     <div class="value">{{ $Util.sourceTypeFilter(detail.source_type || '-')}}</div>
                 </div>
-                <div class="info-item">
+                <div class="info-item" v-if="detail.source_type !== SOURCE_TYPE.ADMIN">
                     <div class="key">来源单号</div>
-                    <div class="value">{{ detail.uid || '无'}}</div>
+                    <div class="value">{{ detail.source_uid || '-'}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">创建人</div>
@@ -54,14 +60,14 @@
             <a-collapse-panel key="ItemList" header="商品信息" class="gray-collapse-panel">
                 <template #extra>
                     <ItemSelect btnType='link' btnText="添加商品" v-if="detail.status === STATUS.INIT && !addMode"
-                                :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
-                                @select="handleAddItemChange"/>
-                    <a-button type="link" v-if="addMode" @click.stop="handleAddItemSubmit">确认添加</a-button>
+                        :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
+                        @select="handleAddItemChange"/>
+                    <a-button type="link" style="line-height: 1;" v-if="addMode" @click.stop="handleAddItemSubmit">确认添加</a-button>
                 </template>
 
                 <div class="panel-content table-container no-mg" v-if="detail.target_type === COMMODITY_TYPE.ITEM">
                     <a-table :columns="itemTableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
-                             :row-key="record => record.id" :pagination='false'>
+                        :row-key="record => record.id" :pagination='false'>
                         <template #bodyCell="{ column, text, record }">
                             <template v-if="column.key === 'tip_item'">
                                 <a-tooltip placement="top" :title='text'>
@@ -103,7 +109,7 @@
 
                 <div class="panel-content table-container no-mg" v-if="detail.target_type === COMMODITY_TYPE.ENTITY">
                     <a-table :columns="entityTableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
-                             :row-key="record => record.id" :pagination='false'>
+                        :row-key="record => record.id" :pagination='false'>
                         <template #bodyCell="{ column, text, record }">
                             <template v-if="column.key === 'tip_item'">
                                 <a-tooltip placement="top" :title='text'>
@@ -152,6 +158,7 @@ import Core from '../../core';
 const STOCK_RECORD = Core.Const.STOCK_RECORD
 const TYPE = STOCK_RECORD.TYPE
 const STATUS = STOCK_RECORD.STATUS
+const SOURCE_TYPE = STOCK_RECORD.SOURCE_TYPE
 const COMMODITY_TYPE = STOCK_RECORD.COMMODITY_TYPE
 export default {
     name: 'InvoiceDetail',
@@ -159,28 +166,38 @@ export default {
     props: {},
     data() {
         return {
-            // 加载
             COMMODITY_TYPE,
-            loading: false,
+            SOURCE_TYPE,
             STATUS,
             TYPE,
+            // 加载
+            loading: false,
+
             id: '',
             detail: {},
             warehouse: {},
+
             activeKey: ['ItemList'],
+
             tableData: [],
             addMode: false,
             addData: [],
-            map: [],
             isExist: '',
-            uid: '',
-
         };
     },
     watch: {},
     computed: {
         type_ch() {
             return this.detail.type == TYPE.IN ? '入库' : '出库'
+        },
+        disabledChecked() {
+            let list = []
+            this.tableData.forEach(item => {
+                if (item.item && item.item.id) {
+                    list.push(item.item.id)
+                }
+            })
+            return list
         },
         itemTableColumns() {
             let columns = [
@@ -193,13 +210,10 @@ export default {
                 {title: this.type_ch + '数量', dataIndex: 'amount' , key: 'amount'},
                 {title: '操作', key: 'operation'},
             ]
-           /* if (this.detail.type == TYPE.IN) { // 入库不显示库存数量
-                columns.splice(4, 1)
-            }*/
-            if (this.detail.status !== STATUS.INIT || this.addMode) { // 入库不显示库存数量
+            if (this.detail.status !== STATUS.INIT || this.addMode) {
                 columns.pop()
             }
-            if (this.detail.type == TYPE.OUT) { // 入库不显示库存数量
+            if (this.detail.type == TYPE.OUT) {
                 columns.splice(4, 0, {title: '库存数量', dataIndex: ['item', 'stock'], key: 'count'})
             }
             if (this.detail.target_type == COMMODITY_TYPE.ENTITY) {
@@ -218,9 +232,6 @@ export default {
                 {title: this.type_ch + '数量', dataIndex: 'amount' , key: 'amount'},
                 {title: '操作', key: 'operation'},
             ]
-            /* if (this.detail.type == TYPE.IN) { // 入库不显示库存数量
-                 columns.splice(4, 1)
-             }*/
             if (this.detail.status !== STATUS.INIT || this.addMode) { // 入库不显示库存数量
                 columns.pop()
             }
@@ -231,15 +242,6 @@ export default {
                 columns.splice(1, 0, {title: '车架号', dataIndex: ['entity', 'uid'], key: 'entity-uid'})
             }
             return columns
-        },
-        disabledChecked() {
-            let list = []
-            this.tableData.forEach(item => {
-                if (item.item && item.item.id) {
-                    list.push(item.item.id)
-                }
-            })
-            return list
         },
     },
     mounted() {
@@ -342,7 +344,6 @@ export default {
             this.addMode = true
         },
         handleVehicleBlur(record) {  // 获取 车架号
-
             Core.Api.Entity.detailByUid({
                 uid: record.uid
             }).then(res => {
@@ -428,11 +429,25 @@ export default {
 </script>
 
 <style lang="less">
- #InvoiceDetail {
-     .ant-table-cell {
-         input.ant-input.input-number {
-             width: 100% - 50px;
-         }
-     }
- }
+#InvoiceDetail {
+    .gray-panel.info {
+        .right {
+            .fcc();
+            font-size: 12px;
+
+            .status {
+                .fcc();
+
+                .i_point {
+                    margin-right: 6px;
+                }
+            }
+        }
+    }
+    .ant-table-cell {
+        input.ant-input.input-number {
+            width: 100% - 50px;
+        }
+    }
+}
 </style>
