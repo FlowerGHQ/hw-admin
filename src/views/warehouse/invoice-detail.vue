@@ -36,7 +36,7 @@
                 </div>
                 <div class="info-item">
                     <div class="key">来源单号</div>
-                    <div class="value">{{ detail.source_id || '无'}}</div>
+                    <div class="value">{{ detail.uid || '无'}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">创建人</div>

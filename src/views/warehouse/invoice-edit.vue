@@ -47,7 +47,7 @@
                 <div class="form-item required" v-if="form.source_type == 20">
                     <div class="key">采购单号：</div>
                     <div class="value">
-                        <a-input v-model:value="form.source_id" placeholder="请输入相关的采购单号"
+                        <a-input v-model:value="sourceUid" placeholder="请输入相关的采购单号"
                                  @blur="handleSelectBlur('purchase')"/>
                         <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
                         <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
@@ -65,7 +65,7 @@
                 <div class="form-item required" v-if="form.source_type == 40">
                     <div class="key">调货单号：</div>
                     <div class="value">
-                        <a-input v-model:value="form.source_id" placeholder="请输入调货单号"
+                        <a-input v-model:value="sourceUid" placeholder="请输入调货单号"
                                  @blur="handleSelectBlur('transfer')"/>
                         <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
                         <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
@@ -74,7 +74,7 @@
                 <div class="form-item required" v-if="form.source_type == 50">
                     <div class="key">维修单号：</div>
                     <div class="value">
-                        <a-input v-model:value="form.source_id" placeholder="请输入维修单号"
+                        <a-input v-model:value="sourceUid" placeholder="请输入维修单号"
                                  @blur="handleSelectBlur('repair')"/>
                         <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
                         <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
@@ -113,6 +113,7 @@ export default {
                 target_type: '',
                 arrival_time: '',//到港时间
             },
+            sourceUid: '',
             warehouseList: [],
             typeMap: Core.Const.STOCK_RECORD.TYPE_MAP, //出入库
             sourceTypeMap: Core.Const.STOCK_RECORD.SOURCE_TYPE_MAP, //来源
@@ -171,14 +172,14 @@ export default {
             }
         },
         handlePurchaseBlur() {  // 获取 采购订单号
-            if (!this.form.source_id) {
+            if (!this.sourceUid) {
                 return this.isExist = ''
             }
             Core.Api.Purchase.detailSn({
-                sn: this.form.source_id,
+                sn: this.sourceUid,
             }).then(res => {
                 this.isExist = res.detail == null ? 2 : 1
-                this.source_id = res.detail.id
+                this.form.source_id = res.detail.id
                 this.defaultTime = res.detail.arrival_time
             }).catch(err => {
                 console.log('onblur err', err)
@@ -186,14 +187,14 @@ export default {
             });
         },
         handleTransferBlur() {
-            if (!this.form.source_id) {
+            if (!this.sourceUid) {
                 return this.isExist = ''
             }
             Core.Api.Transfer.detailByUid({
-                uid: this.form.source_id,
+                uid: this.sourceUid,
             }).then(res => {
                 this.isExist = res.detail == null ? 2 : 1
-                this.source_id = res.detail.id
+                this.form.source_id = res.detail.id
                 console.log("onblur res", res)
             }).catch(err => {
                 console.log('onblur err', err)
@@ -201,14 +202,14 @@ export default {
             });
         },
         handleRepairBlur() {
-            if (!this.form.source_id) {
+            if (!this.sourceUid) {
                 return this.isExist = ''
             }
             Core.Api.Repair.detailByUid({
-                uid: this.form.source_id,
+                uid: this.sourceUid,
             }).then(res => {
                 this.isExist = res.detail == null ? 2 : 1
-                this.source_id = res.detail.id
+                this.form.source_id = res.detail.id
             }).catch(err => {
                 console.log('handleBlur err', err)
             })

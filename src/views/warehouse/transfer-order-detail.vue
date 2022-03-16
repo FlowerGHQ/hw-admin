@@ -10,7 +10,7 @@
         </div>
         <div class="gray-panel info">
             <div class="panel-title">
-                <div class="left"><span>出入库单编号</span> {{ detail.uid }}</div>
+                <div class="left"><span>调货单编号</span> {{ detail.uid }}</div>
             </div>
             <div class="panel-content">
                 <div class="info-item">
