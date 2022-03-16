@@ -1170,6 +1170,7 @@ export default {
         }
     }
     .batch-set {
+        width: 100%;
         margin: 20px 0;
         > .ant-btn {
             height: 20px;
