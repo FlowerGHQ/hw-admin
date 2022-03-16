@@ -168,7 +168,7 @@ export default {
                 {title: '操作', dataIndex: 'operation'},
             ]
             if (this.detail.service_type == SERVICE_TYPE.IN_REPAIR_TIME) {
-                columns.splice(6, 0, {title: '回收仓', dataIndex: 'new'})
+                columns.splice(6, 0, {title: '回收仓', dataIndex: 'bad'})
                 columns.splice(3, 2)
             }
             return columns
