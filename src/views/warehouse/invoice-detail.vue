@@ -3,13 +3,12 @@
         <div class="title-container">
             <div class="title-area">{{type_ch}}单详情</div>
             <div class="btn-area">
-                <a-button type="primary" ghost v-if="detail.status === STATUS.CLOSE"
-                          @click="handleComplete()" ><i class="icon i_confirm"/>
+                <a-button type="primary" ghost v-if="detail.status === STATUS.CLOSE" @click="handleComplete()" ><i class="icon i_confirm"/>
                     {{detail.type === TYPE.IN ? '入库' : '出库'}}完成
                 </a-button>
                 <template v-if="detail.status === STATUS.INIT">
-                    <a-button type="primary" @click="handleInvoiceSubmit()"><i class="icon i_submit"/>提交</a-button>
-                    <a-button type="primary" ghost danger @click="handleCancel()"> <i class="icon i_close_c"/>取消</a-button>
+                    <a-button type="primary" ghost @click="handleInvoiceSubmit()"><i class="icon i_submit"/>提交</a-button>
+                    <a-button type="danger" ghost @click="handleCancel()"> <i class="icon i_close_c"/>取消</a-button>
                 </template>
             </div>
         </div>
