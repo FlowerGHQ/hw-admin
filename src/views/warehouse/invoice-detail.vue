@@ -64,8 +64,8 @@
             <template #extra>
                 <ItemSelect btnType='link' btnText="添加商品" v-if="detail.status === STATUS.INIT && !addMode"
                     :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
-                    @select="handleAddItemChange"/>
-                <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddItemSubmit">确认添加</a-button>
+                    @select="handleAddChange"/>
+                <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('item')">确认添加</a-button>
             </template>
             <div class="panel-content table-container no-mg">
                 <a-table :columns="itemTableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
@@ -93,79 +93,48 @@
                             <template v-else>{{ text || '-' }}件</template>
                         </template>
                         <template v-if="column.key === 'operation'" >
-                            <a-button type="link" @click="handleItemSubmit(record)" v-if="record.editMode"><i class="icon i_confirm"/>确认更改</a-button>
-                            <a-button type="link" @click="handleItemChange(record)" v-else><i class="icon i_edit"/>更改数量</a-button>
-                            <a-button type="link" @click="handleRemoveItem(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
+                            <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改数量</a-button>
+                            <a-button type="link" @click="handleRowSubmit(record, 'item')" v-else><i class="icon i_confirm"/>确认更改</a-button>
+                            <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
                         </template>
                     </template>
                 </a-table>
             </div>
         </a-collapse-panel>
         <!-- 有实例 -->
-        <a-collapse-panel key="ItemList" header="商品信息" class="gray-collapse-panel" v-if="detail.target_type === COMMODITY_TYPE.ENTITY && false">
+        <a-collapse-panel key="ItemList" header="商品信息" class="gray-collapse-panel" v-if="detail.target_type === COMMODITY_TYPE.ENTITY">
             <template #extra v-if="detail.type == TYPE.IN">
                 <!-- 有实例入库 选择商品并输入数量、实例号 -->
-                <ItemSelect btnType='link' btnText="添加商品" v-if="detail.status === STATUS.INIT && !addMode" @select="handleAddItemChange"/>
-                <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddItemSubmit">确认添加</a-button>
+                <ItemSelect btnType='link' btnText="添加商品" v-if="detail.status === STATUS.INIT && !addMode" @select="handleAddChange"/>
+                <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('entity')">确认添加</a-button>
             </template>
             <template #extra v-else>
                 <!-- 有实例出库 选择实例 -->
             </template>
-            <div class="panel-content table-container no-mg" v-if="detail.type == TYPE.IN">
+            <div class="panel-content table-container no-mg">
                 <a-table :columns="entityTableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, text, record }">
+                    <template #bodyCell="{ column, text, record, index}">
                         <template v-if="column.key === 'tip_item'">
                             <a-tooltip placement="top" :title='text'>
                                 <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
                             </a-tooltip>
                         </template>
-                        <template v-if="column.key === 'entity-uid'">
-                            <template v-if="addMode || record.editMode">
-                                <a-input v-model:value="record.uid" class="input-number" placeholder="请输入车架号" @blur="handleVehicleBlur(record)"/>
-                                <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
-                                <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
-                            </template>
-                            <template v-else>{{ text }}</template>
-                        </template>
-                        <template v-if="column.key === 'attr_list'">
-                            {{ $Util.itemSpecFilter(text) }}
-                        </template>
-                        <template v-if="column.key === 'item'">
-                            {{ text || '-' }}
-                        </template>
-                        <template v-if="column.key === 'count'">
-                            {{ text || '-' }}件
-                        </template>
-                        <template v-if="column.key === 'amount'">
+                        <template v-if="column.dataIndex === 'amount'">
                             <template v-if="addMode || record.editMode">
                                 <a-input-number v-model:value="record.amount" placeholder="请输入"
-                                                :min="1" :max="detail.type === TYPE.IN ? 99999: record.item.stock" :precision="0"/> 件
+                                    :min="1" :max="detail.type === TYPE.IN ? 9999: record.item.stock" :precision="0"/> 件
                             </template>
                             <template v-else>{{ text || '-' }}件</template>
                         </template>
-                        <template v-if="column.key === 'operation'" >
-                            <a-button type="link" @click="handleItemSubmit(record)" v-if="record.editMode"><i class="icon i_confirm"/>确认更改</a-button>
-                            <a-button type="link" @click="handleItemChange(record)" v-else><i class="icon i_edit"/>更改数量</a-button>
-                            <a-button type="link" @click="handleRemoveItem(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
-                        </template>
-                    </template>
-                </a-table>
-            </div>
-            <div class="panel-content table-container no-mg" v-else>
-                <a-table :columns="entityTableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
-                    :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.key === 'tip_item'">
-                            <a-tooltip placement="top" :title='text'>
-                                <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
-                            </a-tooltip>
-                        </template>
-                        <template v-if="column.key === 'entity-uid'">
+                        <template v-if="column.key === 'entity_uid'">
                             <template v-if="addMode || record.editMode">
-                                <a-input v-model:value="record.uid" class="input-number" placeholder="请输入车架号" @blur="handleVehicleBlur(record)"/>
-                                <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
-                                <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
+                                <a-input v-model:value="record.entity_uid" style="width: 200px;" placeholder="请输入车架号" @blur="handleVehicleBlur(record)">
+                                    <template #suffix>
+                                        <span v-if="record.entity_uid"><i class="icon suffix i_confirm"/></span>
+                                        <span v-else-if="record.entity_no_exist"><i class="icon suffix i_close_c"/></span>
+                                    </template>
+                                </a-input>
                             </template>
                             <template v-else>{{ text }}</template>
                         </template>
@@ -178,17 +147,13 @@
                         <template v-if="column.key === 'count'">
                             {{ text ? text + '件' : '-' }}
                         </template>
-                        <template v-if="column.key === 'amount'">
-                            <template v-if="addMode || record.editMode">
-                                <a-input-number v-model:value="record.amount" placeholder="请输入"
-                                    :min="1" :max="detail.type === TYPE.IN ? 99999: record.item.stock" :precision="0"/> 件
-                            </template>
-                            <template v-else>{{ text || '-' }}件</template>
-                        </template>
                         <template v-if="column.key === 'operation'" >
-                            <a-button type="link" @click="handleItemSubmit(record)" v-if="record.editMode"><i class="icon i_confirm"/>确认更改</a-button>
-                            <a-button type="link" @click="handleItemChange(record)" v-else><i class="icon i_edit"/>更改数量</a-button>
-                            <a-button type="link" @click="handleRemoveItem(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
+                            <template v-if="!this.addMode">
+                                <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改实例号</a-button>
+                                <a-button type="link" @click="handleRowSubmit(record, 'entity')" v-else><i class="icon i_confirm"/>确认更改</a-button>
+                                <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
+                            </template>
+                            <a-button type="link" v-if="this.addMode" @click="handleCopyEntity(index, record)"><i class="icon i_copy"/>复制</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -229,7 +194,6 @@ export default {
             tableData: [],
             addMode: false,
             addData: [],
-            isExist: '',
         };
     },
     watch: {},
@@ -265,25 +229,28 @@ export default {
             return columns
         },
         entityTableColumns() {
+            // 'entity',
             let columns = [
-                {title: '商品名称', dataIndex: ['entity', 'item', 'name'],  key: 'tip_item'},
-                {title: this.type_ch + '数量', dataIndex: 'amount'},
-                {title: '车架号', dataIndex: 'target_type'},
-                {title: '商品品号', dataIndex: ['entity', 'item', 'model'], key: 'item'},
-                {title: '商品编码', dataIndex: ['entity', 'item', 'code'],  key: 'item'},
-                {title: '商品规格', dataIndex: ['entity', 'item', 'attr_list'], key: 'attr_list'},
+                {title: '商品名称', dataIndex: ['item', 'name'],  key: 'tip_item'},
+                // {title: this.type_ch + '数量', dataIndex: 'amount'},
+                {title: '商品实例号', dataIndex: 'entity_uid', key: 'entity_uid'},
+                {title: '商品品号', dataIndex: ['item', 'model'], key: 'item'},
+                {title: '商品编码', dataIndex: ['item', 'code'],  key: 'item'},
+                {title: '商品规格', dataIndex: ['item', 'attr_list'], key: 'attr_list'},
                 {title: '操作', key: 'operation'},
             ]
-            if (this.detail.status !== STATUS.INIT || this.addMode) { // 入库不显示库存数量
+            if (this.detail.status !== STATUS.INIT) { // 入库不显示库存数量
                 columns.pop()
             }
+            /* if (this.detail.type == TYPE.IN) {
+                columns.splice(1, 0, {title: this.type_ch + '数量', dataIndex: 'amount'})
+            } */
             return columns
         },
     },
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         this.getInvoiceDetail();
-        this.getInvoiceList();
     },
     methods: {
         routerChange(type) {
@@ -312,6 +279,7 @@ export default {
                 console.log('getInvoiceDetail res', res)
                 this.detail = res.detail
                 this.warehouse = res.detail.warehouse || {}
+                this.getInvoiceList();
             }).catch(err => {
                 console.log('getInvoiceDetail err', err)
             }).finally(() => {
@@ -325,7 +293,15 @@ export default {
                 invoice_id: this.id,
             }).then(res => {
                 console.log('getInvoiceList res', res)
-                this.tableData = res.list
+                let list = res.list
+                if (this.detail.target_type === COMMODITY_TYPE.ENTITY) {
+                    list.forEach(item => {
+                        item.item = item.entity ? item.entity.item || {} : {}
+                        item.entity_id = item.target_id
+                        item.entity_uid = item.entity.uid
+                    })
+                }
+                this.tableData = list
             }).catch(err => {
                 console.log('getInvoiceList err', err)
             }).finally(() => {
@@ -366,7 +342,6 @@ export default {
                     Core.Api.Invoice.handle({id: _this.detail.id}).then(() => {
                         _this.$message.success('操作成功');
                         _this.getInvoiceDetail();
-                        _this.getInvoiceList()
                     }).catch(err => {
                         console.log("handleComplete err", err);
                     })
@@ -375,78 +350,110 @@ export default {
         },
 
         // 移除 商品
-        handleRemoveItem(record) {
+        handleRemoveRow(record) {
             Core.Api.InvoiceItem.delete({id: record.id}).then(() => {
                 this.$message.success('移除成功')
                 this.getInvoiceList()
             })
         },
 
-        // 批量 添加 无实例 商品
-        handleAddItemChange(ids, items) {
-            console.log('handleAddItemChange items:', items)
+        // 批量添加 商品
+        handleAddChange(ids, items) {
+            console.log('handleAddChange items:', items)
             let list = items.map(item => ({
                 id: 0,
                 item: item,
                 amount: 1,
-                stock: 0,
-                uid: undefined,
+                entity_uid: '',
             }))
             this.addData = list
             this.addMode = true
         },
-        handleAddItemSubmit() {
+
+        handleAddSubmit(type) {
             this.loading = true;
             let data = [...this.tableData, ...this.addData]
-            let list = data.map(item => ({
-                id: item.id,
-                amount: item.amount,
-                target_id: item.item.id,
-                invoice_id: this.id,
-                target_type: item.target_type,
-            }))
+            let list = []
+            for (const item of data) {
+                let target_id = type === 'item' ? item.item.id : item.entity_id
+                if (!target_id) {
+                    return this.$message.warning(`该${type === 'item' ? '商品' : '商品实例'}不存在`);
+                }
+                list.push({
+                    id: item.id,
+                    amount: item.amount,
+                    invoice_id: this.id,
+                    target_id,
+                })
+            }
             Core.Api.InvoiceItem.saveList(list).then(() => {
                 this.$message.success('保存成功')
                 this.getInvoiceDetail()
-                this.getInvoiceList()
                 this.addMode = false
-                this.addData = []
             }).catch(err => {
-                console.log('handleAddItemSubmit err', err)
+                console.log('handleAddSubmit err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
-        // 编辑单个商品的数量
-        handleItemChange(item) {
+
+        // 编辑单个 无实例商品
+        handleRowChange(item) {
             item.editMode = true
         },
-        handleItemSubmit(item) {
-            Core.Api.InvoiceItem.save({
+        handleRowSubmit(item, type) {
+            let target = {
                 id: item.id,
                 amount: item.amount,
-                target_id: item.item.id,
+                target_id: type === 'item' ? item.item.id : item.entity_id,
                 invoice_id: this.id,
-                uid: item.uid
-            }).then(() => {
+            }
+            if (!target.target_id) {
+                return this.$message.warning(`该${type === 'item' ? '商品' : '商品实例'}不存在`);
+            }
+            Core.Api.InvoiceItem.save(target).then(() => {
                 this.$message.success('保存成功')
                 this.getInvoiceDetail()
-                this.getInvoiceList()
             })
         },
 
-        handleVehicleBlur(record) {  // 获取 车架号
-            Core.Api.Entity.detailByUid({
-                uid: record.uid
+        handleVehicleBlur(record) {  // 获取 车架号ID
+            // HW1000T-1B00B30001
+            console.log('handleVehicleBlur:', record)
+            let apiName = this.$auth('ADMIN') ? 'getByUid' : 'detailByUid'
+            Core.Api.Entity[apiName]({
+                item_id: record.item.id,
+                uid: record.entity_uid
             }).then(res => {
-                this.isExist = res.detail == null ? 2 : 1
-                record.entity_id = res.detail.id
+                console.log('handleVehicleBlur res:', res)
+                if (this.$auth('ADMIN')) {
+                    record.entity_id = res.detail.id
+                } else {
+                    if (res.detail) {
+                        this.$message.warning('该实例号未在系统中录入！')
+                        record.entity_id = 0
+                        record.entity_no_exist = 1
+                    } else {
+                        record.entity_id = res.detail.id
+                        record.entity_no_exist = 0
+                    }
+                }
                 console.log("handleVehicleBlur res", res)
             }).catch(err => {
                 console.log('handleVehicleBlur err', err)
             }).finally(() => {
             });
         },
+
+        handleCopyEntity(index, record) {
+            this.addData.splice(index, 0, {
+                id: 0,
+                item: record.item,
+                amount: 1,
+                entity_uid: '',
+            })
+
+        }
     }
 };
 </script>
@@ -475,6 +482,11 @@ export default {
         input.ant-input.input-number {
             width: 100% - 50px;
         }
+    }
+    .suffix {
+        font-size: 14px;
+        &.i_confirm { color: @green; }
+        &.i_close_c { color: @red; }
     }
 }
 </style>
