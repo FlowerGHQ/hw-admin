@@ -435,12 +435,12 @@ export default {
             this.form.vehicle_no = ''
             Core.Api.Repair.detailByUid({uid}).then(res => {
                 console.log('handleSearchFrameNum', res)
-                if (!res || !res.id || !res.service_type || !res.vehicle_no) {
+                if (!res.detail) {
                     this.$message.warning('获取维修单信息失败')
                 } else {
-                    this.form.source_id = res.id
-                    this.form.service_type = res.service_type
-                    this.form.vehicle_no = res.vehicle_no
+                    this.form.source_id = res.detail.id
+                    this.form.service_type = res.detail.service_type
+                    this.form.vehicle_no = res.detail.vehicle_no
                 }
             }).catch(err => {
                 this.$message.warning('该维修单不存在，请输入正确的维修单号')
@@ -449,6 +449,9 @@ export default {
         // 通过故障件实例号查故障件信息
         handleSearchFaultEntity() {
             const uid = this.form.uid
+            if (uid === "") {
+                return
+            }
             Core.Api.Entity.detailByUid({uid}).then(res => {
                 if(res.item_id !== this.form.item_id) {
                     this.$message.warning('该故障件实例和故障件种类不符')

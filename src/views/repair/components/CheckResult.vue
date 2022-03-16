@@ -19,9 +19,9 @@
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => {return JSON.stringify(record)}" :pagination='false' size="small">
                     <template #bodyCell="{ column, record, text }">
-                        <template v-if="column.dataIndex === 'item_fault_id'">
+<!--                        <template v-if="column.dataIndex === 'item_fault_id'">
                             {{ faultMap[text] || '-' }}
-                        </template>
+                        </template>-->
                         <template v-if="column.key === 'service_type'">
                             {{ $Util.repairServiceFilter(detail.service_type) }}
                         </template>
@@ -106,7 +106,7 @@ export default {
         tableColumns() {
             let tableColumns = [
                 {title: '维修帐类', key: 'service_type'},
-                {title: '故障原因', dataIndex: 'item_fault_id'},
+                {title: '故障原因', dataIndex: 'item_fault_name'},
                 {title: '商品名称', dataIndex: ['item','name'], key: 'item'},
                 {title: '商品编号', dataIndex: ['item','code'], key: 'item'},
                 {title: '数量', dataIndex: 'amount'},
