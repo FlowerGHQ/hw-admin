@@ -2,7 +2,7 @@
     <div id="EntityList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">车架列表</div>
+                <div class="title-area">{{title + '列表'}}</div>
                 <div class="btns-area">
                     <a-button type="primary" @click="handleVehicleShow"><i class="icon i_add"/>{{'新增' + title}}</a-button>
                     <a-upload name="file" class="file-uploader"
@@ -20,16 +20,16 @@
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">车架名称:</div>
+                        <div class="key">{{title + '名称' + ':'}}</div>
                         <div class="value">
-                            <a-input placeholder="请输入车架名称" v-model:value="searchForm.name"
+                            <a-input :placeholder="'请输入' +  title  + '名称'" v-model:value="searchForm.name"
                                      @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">车架号:</div>
+                        <div class="key">{{title + '编号' + ':'}}</div>
                         <div class="value">
-                            <a-input placeholder="请输入车架号" v-model:value="searchForm.code"
+                            <a-input :placeholder="'请输入' +  title  + '编号'" v-model:value="searchForm.code"
                                      @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
@@ -150,8 +150,8 @@
                         <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                     </div>
                     <div class="form-item required">
-                        <div class="key">BOM编号:</div>
-                        <a-input v-model:value="editForm.uid" placeholder="请输入BOM编号"/>
+                        <div class="key">{{ title + '编号'}}</div>
+                        <a-input v-model:value="editForm.uid" :placeholder="'请输入' + title + '编号'"/>
                     </div>
                 </div>
                 <template #footer>
@@ -262,6 +262,8 @@ export default {
                 this.viewType = type
                 if (type === "part")  {
                     this.title = "零部件"
+                } else {
+                    this.title = "整车"
                 }
                 Object.assign(this.searchForm, this.$options.data().searchForm)
                 this.pageChange(1)
@@ -270,9 +272,10 @@ export default {
     },
     computed: {
         tableColumns() {
+
             let columns = [
-                {title: '车架名称', dataIndex: ['item', 'name'], key: 'detail'},
-                {title: '车架号', dataIndex: 'uid', key: 'item'},
+                {title: this.title + '名称', dataIndex: ['item', 'name'], key: 'detail'},
+                {title: this.title + '编号', dataIndex: 'uid', key: 'item'},
                 {title: '规格', dataIndex: 'attr', key: 'attr'},
                 {title: '单位类型', dataIndex: 'org_type'},
                 {title: '所属单位', dataIndex: 'org_name'},
@@ -515,6 +518,7 @@ export default {
                 console.log('handleEntitySubmit res', res)
                 this.$message.success('批量设置成功')
                 this.handleEntityClose()
+                this.getTableData()
                 this.selectedRowKeys = []
                 this.selectedRowItems = []
             }).catch(err => {
