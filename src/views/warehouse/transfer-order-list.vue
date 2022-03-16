@@ -330,7 +330,7 @@ export default {
             let columns = [
                 {title: '调货单编号', dataIndex: 'uid', key: 'detail'},
                 {title: '申请原因', dataIndex: 'apply_message', key: 'tip_time'},
-                {title: '创建单位', dataIndex: 'org_name', key: 'org-ame'},
+                {title: '收货单位', dataIndex: 'org_name', key: 'org-ame'},
                 {title: '单位类型', dataIndex: 'org_type', key: 'org-type'},
                 {title: '所属仓库', dataIndex: ['to_warehouse', 'name'], key: 'warehouse-name',},
                 {title: '仓库类型', dataIndex: ['to_warehouse', 'type'], key: 'type',},
@@ -503,7 +503,7 @@ export default {
         handleReceive(id) {   // 处理是否发货
             let _this = this;
             this.$confirm({
-                title: '确定发货吗？',
+                title: '确定收货吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',
