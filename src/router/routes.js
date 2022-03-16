@@ -499,6 +499,7 @@ const routes = [
                 meta: {
                     title: '整车列表',
                     roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true,
                     type: "vehicle"
                 }
             },
@@ -509,6 +510,7 @@ const routes = [
                 meta: {
                     title: '零部件列表',
                     roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true,
                     type: "part"
                 }
             },
