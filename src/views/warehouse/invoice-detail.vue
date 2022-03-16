@@ -1,6 +1,5 @@
 <template>
 <!--
-    有实例入库 选择商品并输入数量、实例号
     有实例出库 选择实例
 -->
 <div id="InvoiceDetail" class="list-container">

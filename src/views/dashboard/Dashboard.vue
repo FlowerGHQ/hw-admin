@@ -137,7 +137,17 @@ export default {
             return columns
         },
     },
-    mounted() {},
+    mounted() {
+        let q = this.$route.query
+        console.log('q:', q)
+        if (q && q.from === 'login') {
+            console.log('window:', window.location)
+            let href = window.location.href.split('?')[0]
+            window.location.href = href
+            window.location.reload()
+            // window.open(href)
+        }
+    },
     methods: {
         routerChange(type, item = {}) {
             let routeUrl = ''

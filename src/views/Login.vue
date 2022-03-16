@@ -32,15 +32,16 @@
 
 <script>
 import Core from '../core';
-const LOGIN_TYPE = Core.Const.LOGIN.TYPE
+const TYPE = Core.Const.LOGIN.TYPE
+const TYPE_MAP = Core.Const.LOGIN.TYPE_MAP
 export default {
     name: 'Login',
     components: {},
     props: {},
     data() {
         return {
-            LOGIN_TYPE,
-            TYPE_MAP: Core.Const.LOGIN.TYPE_MAP,
+            TYPE,
+            TYPE_MAP,
             loginTypeList: Core.Const.LOGIN.TYPE_LIST,
 
             loginForm: {
@@ -55,11 +56,10 @@ export default {
     watch: {},
     computed: {},
     created() {
-        console.log('Core.Data.getLoginType():', Core.Data.getLoginType())
         if (Core.Data.getLoginType()) {
             this.loginForm.user_type = Core.Data.getLoginType();
         } else {
-            this.loginForm.user_type = LOGIN_TYPE.AGENT;
+            this.loginForm.user_type = TYPE.AGENT;
         }
     },
     mounted() {},
@@ -85,13 +85,13 @@ export default {
                 Core.Data.setOrgId(res.user.org_id);
                 Core.Data.setOrgType(res.user.org_type);
 
-                let userType = this.TYPE_MAP[this.loginForm.user_type]
+                let userType = TYPE_MAP[this.loginForm.user_type]
                 /* switch (this.loginForm.user_type) {
-                    case LOGIN_TYPE.ADMIN:
+                    case TYPE.ADMIN:
                         break;
-                    case LOGIN_TYPE.AGENT:
+                    case TYPE.AGENT:
                         break;
-                    case LOGIN_TYPE.STORE:
+                    case TYPE.STORE:
                         break;
                 } */
                 Core.Data.setUserType(userType);
@@ -108,7 +108,7 @@ export default {
             }
             Core.Data.setAuthority(authorityMap)
             setTimeout(() => {
-                this.$router.replace({ path: '/dashboard' })
+                this.$router.replace({ path: '/dashboard?from=login' })
             }, 1000)
             return
 
