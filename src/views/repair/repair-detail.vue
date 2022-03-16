@@ -5,31 +5,24 @@
             <div class="title-area">工单详情</div>
             <div class="btns-area">
                 <template v-if="sameOrg">
-                    <!-- <template v-if="detail.account_id == User.id || $auth('MANAGER')"> -->
-                    <!-- </template> -->
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION && !$auth('ADMIN')">
                         <i class="icon i_edit"/>编辑
                     </a-button>
-                    <a-button type="primary" ghost @click="handleDeliveryShow()"
-                        v-if="needDelivery"><i class="icon i_deliver"/>转单物流
+                    <a-button type="primary" ghost @click="handleDeliveryShow()" v-if="needDelivery">
+                        <i class="icon i_deliver"/>转单物流
                     </a-button>
-                    <!-- <a-button type="primary" @click="handleSecondRepairShow()"
-                        v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_REPAIR].includes(detail.status) ">
-                        <i class="icon i_edit_l"/>二次维修
-                    </a-button>-->
-                    <a-button type="primary" @click="handleFaultSubmit()"
-                        v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_submit"/>提交
+                    <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION">
+                        <i class="icon i_submit"/>提交
                     </a-button>
-
-                    <a-button type="primary" @click="handleSettlement()"
-                        v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_settle"/>结算
+                    <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.WAIT_REPAIR">
+                        <i class="icon i_settle"/>结算
                     </a-button>
                 </template>
-                <a-button type="primary" @click="routerChange('invoice')"
-                    v-if="detail.status == STATUS.SETTLEMENT || detail.status == STATUS.FINISH || detail.status == STATUS.AUDIT_SUCCESS"><i class="icon i_detail_l"/>查看结算单
+                <a-button type="primary" @click="routerChange('invoice')" v-if="haveSettle">
+                    <i class="icon i_detail_l"/>查看结算单
                 </a-button>
-                <a-button type="primary" @click="handleAuditShow()"
-                    v-if="detail.status == STATUS.SETTLEMENT && $auth('ADMIN')"><i class="icon i_audit"/>审核
+                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT && $auth('ADMIN')">
+                    <i class="icon i_audit"/>审核
                 </a-button>
             </div>
         </div>
@@ -232,6 +225,15 @@ export default {
             }
             return false
         },
+        haveSettle() {
+            switch (this.detail.status) {
+                case STATUS.SETTLEMENT:
+                case STATUS.FINISH:
+                case STATUS.AUDIT_SUCCESS:
+                    return true
+                default: return false
+            }
+        }
     },
     created() {
         this.id = Number(this.$route.query.id) || 0

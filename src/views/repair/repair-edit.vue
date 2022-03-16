@@ -253,6 +253,15 @@ export default {
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
+                case 'detail':  // 维修单详情
+                    routeUrl = this.$router.resolve({
+                        path: "/repair/repair-detail",
+                        query: {
+                            id: item.id
+                        }
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
             }
         },
 
@@ -305,41 +314,12 @@ export default {
             await Core.Api.Repair[apiName]({
                 ...form,
                 arrival_time: this.arrival_time
-            }).then(() => {
+            }).then(res => {
                 this.$message.success('保存成功')
-                this.routerChange('back')
+                this.routerChange('detail', res.detail)
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
-  /*          if (this.detail.status == this.REPAIR.STATUS.AUDIT_FAIL) { // 未确认通过维修单 员工再次确认（重提）
-                this.loading = true;
-                await Core.Api.Repair.hand({
-                    id: this.form.id,
-                    ...this.detail
-                }).then(res => {
-                    console.log('handSubmit res', res)
-                    this.routerChange('back')
-                }).catch(err => {
-                    console.log('handSubmit err', err)
-                }).finally(() => {
-                    this.loading = false;
-                });
-            }*/
-            if (this.detail.status == this.REPAIR.STATUS.AUDIT_FAIL) { // 未审核通过维修单 员工再次确认（重提）
-                this.loading = true;
-                await Core.Api.Repair.check({
-                    id: this.form.id,
-                    audit_result: 1,
-                    audit_message: '',
-                }).then(res => {
-                    console.log('checkSubmit res', res)
-                    this.routerChange('back')
-                }).catch(err => {
-                    console.log('checkSubmit err', err)
-                }).finally(() => {
-                    this.loading = false;
-                });
-            }
         },
         handleVehicleBlur() {  // 获取 车架号
             if (!this.form.vehicle_no) {
