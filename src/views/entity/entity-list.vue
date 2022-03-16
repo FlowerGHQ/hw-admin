@@ -2,7 +2,7 @@
     <div id="EntityList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">车架列表</div>
+                <div class="title-area">{{title + '列表'}}</div>
                 <div class="btns-area">
                     <a-button type="primary" @click="handleVehicleShow"><i class="icon i_add"/>{{'新增' + title}}</a-button>
                     <a-upload name="file" class="file-uploader"
@@ -20,14 +20,14 @@
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">车架名称:</div>
+                        <div class="key">{{title + '名称' + ':'}}</div>
                         <div class="value">
                             <a-input placeholder="请输入车架名称" v-model:value="searchForm.name"
                                      @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">车架号:</div>
+                        <div class="key">{{title + '编号' + ':'}}</div>
                         <div class="value">
                             <a-input placeholder="请输入车架号" v-model:value="searchForm.code"
                                      @keydown.enter='handleSearch'/>
@@ -262,6 +262,8 @@ export default {
                 this.viewType = type
                 if (type === "part")  {
                     this.title = "零部件"
+                } else {
+                    this.title = "整车"
                 }
                 Object.assign(this.searchForm, this.$options.data().searchForm)
                 this.pageChange(1)
@@ -270,9 +272,10 @@ export default {
     },
     computed: {
         tableColumns() {
+
             let columns = [
-                {title: '车架名称', dataIndex: ['item', 'name'], key: 'detail'},
-                {title: '车架号', dataIndex: 'uid', key: 'item'},
+                {title: this.title + '名称', dataIndex: ['item', 'name'], key: 'detail'},
+                {title: this.title + '编号', dataIndex: 'uid', key: 'item'},
                 {title: '规格', dataIndex: 'attr', key: 'attr'},
                 {title: '单位类型', dataIndex: 'org_type'},
                 {title: '所属单位', dataIndex: 'org_name'},
