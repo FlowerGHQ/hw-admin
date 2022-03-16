@@ -1,9 +1,7 @@
 <template>
 <!--
     有实例入库 选择商品并输入数量、实例号
-    无实例入库 选择商品并输入数量
     有实例出库 选择实例
-    无实例出库 选择商品并输入数量 需显示商品剩余库存
 -->
 <div id="InvoiceDetail" class="list-container">
     <div class="title-container">
@@ -104,7 +102,7 @@
             </div>
         </a-collapse-panel>
         <!-- 有实例 -->
-        <a-collapse-panel key="ItemList" header="商品信息" class="gray-collapse-panel" v-if="detail.target_type === COMMODITY_TYPE.ENTITY">
+        <a-collapse-panel key="ItemList" header="商品信息" class="gray-collapse-panel" v-if="detail.target_type === COMMODITY_TYPE.ENTITY && false">
             <template #extra v-if="detail.type == TYPE.IN">
                 <!-- 有实例入库 选择商品并输入数量、实例号 -->
                 <ItemSelect btnType='link' btnText="添加商品" v-if="detail.status === STATUS.INIT && !addMode" @select="handleAddItemChange"/>
@@ -249,7 +247,7 @@ export default {
             return list
         },
         itemTableColumns() {
-            // 无实例商品的
+            // 无实例商品的 出入库
             let columns = [
                 {title: '商品名称', dataIndex: ['item', 'name'],  key: 'tip_item'},
                 {title: this.type_ch + '数量', dataIndex: 'amount' , key: 'amount'},
@@ -269,22 +267,15 @@ export default {
         entityTableColumns() {
             let columns = [
                 {title: '商品名称', dataIndex: ['entity', 'item', 'name'],  key: 'tip_item'},
-                // {title: '车架号', dataIndex: 'target_type'},
+                {title: this.type_ch + '数量', dataIndex: 'amount'},
+                {title: '车架号', dataIndex: 'target_type'},
                 {title: '商品品号', dataIndex: ['entity', 'item', 'model'], key: 'item'},
                 {title: '商品编码', dataIndex: ['entity', 'item', 'code'],  key: 'item'},
                 {title: '商品规格', dataIndex: ['entity', 'item', 'attr_list'], key: 'attr_list'},
-                // {title: '库存数量', dataIndex: ['item', 'stock'],     key: 'count'},
-                {title: this.type_ch + '数量', dataIndex: 'amount' , key: 'amount'},
                 {title: '操作', key: 'operation'},
             ]
             if (this.detail.status !== STATUS.INIT || this.addMode) { // 入库不显示库存数量
                 columns.pop()
-            }
-            if (this.detail.type == TYPE.OUT ) { // 入库不显示库存数量
-                columns.splice(4, 0, {title: '库存数量', dataIndex: ['item', 'stock'], key: 'count'})
-            }
-            if (this.detail.target_type == COMMODITY_TYPE.ENTITY) {
-                columns.splice(1, 0, {title: '车架号', dataIndex: ['entity', 'uid'], key: 'entity-uid'})
             }
             return columns
         },
