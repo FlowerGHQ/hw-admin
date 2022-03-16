@@ -56,8 +56,8 @@
             </div>
         </div>
         <div class="table-container">
-            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                :row-key="record => record.id" :pagination='false' @expand='handleTableExpand'
+            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :pagination='false'
+                :row-key="record => record.id" @expand='handleTableExpand' @change="handleTableChange"
                 :expandedRowKeys="expandedRowKeys" :indentSize='0' :expandIconColumnIndex="expandIconColumnIndex">
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.key === 'detail'">
@@ -68,7 +68,7 @@
                                     <a-button type="link" @click="routerChange('detail', record)">
                                         <div class="ell" style="max-width: 150px">{{ text || '-' }}</div>
                                     </a-button>
-                                    <p class="sub-info">{{$Util.itemSpecFilter(record.attr_list)}}</p>
+                                    <p class="sub-info" v-if="record.attr_list && record.attr_list.length">{{$Util.itemSpecFilter(record.attr_list)}}</p>
                                 </div>
                             </a-tooltip>
                         </div>
@@ -89,8 +89,8 @@
                         {{ $Util.countFilter(text) }}
                     </template>
                     <template v-if="column.dataIndex === 'status'">
-                        <div class="status status-bg status-tag" :class="text ? 'primary' : 'grey'">
-                            {{text ? '已上架' : '未上架'}}
+                        <div class="status status-bg status-tag" :class="text === 0 ? 'green' : 'red'">
+                            {{text === 0 ? '已上架' : '已下架'}}
                         </div>
                     </template>
 
@@ -107,7 +107,11 @@
                             <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/> 编辑</a-button>
                             <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
                         </template>
-                        <a-button type='link' @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button>
+                        <!-- <a-button type='link' @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button> -->
+                        <a-button type='link' @click="handleStatusChange(record)" :class="record.status === 0 ? 'danger' : ''">
+                            <template v-if="record.status === -1"><i class="icon i_putaway"/> 上架</template>
+                            <template v-if="record.status === 0"><i class="icon i_downaway"/> 下架</template>
+                        </a-button>
                     </template>
                 </template>
             </a-table>
@@ -136,7 +140,7 @@ import Core from '../../core';
 
 import TimeSearch from '@/components/common/TimeSearch.vue'
 import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue';
-
+const ITEM = Core.Const.ITEM
 export default {
     name: 'ItemList',
     components: {
@@ -153,6 +157,7 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
+            filteredInfo: null,
             searchForm: {
                 name: '',
                 code: '',
@@ -161,23 +166,9 @@ export default {
                 end_time: '',
                 type: undefined,
             },
-            itemTypeMap: Core.Const.ITEM.TYPE_MAP,
+            itemTypeMap: ITEM.TYPE_MAP,
             // 表格
             tableData: [],
-            tableColumns: [
-                { title: '商品名称', dataIndex: 'name', key: 'detail' },
-                { title: '类型', dataIndex: ['type'], key: 'type' },
-                { title: '商品分类', dataIndex: ['category','name'], key: 'item' },
-                { title: '商品品号', dataIndex: 'model', key: 'item' },
-                { title: '商品编码', dataIndex: 'code', key: 'item' },
-                { title: '成本价格', dataIndex: 'original_price' ,key: 'money'},
-                { title: 'FOB(EUR)', dataIndex: 'fob_eur', key: 'fob_money', unit: '€'},
-                { title: 'FOB(USD)', dataIndex: 'fob_usd', key: 'fob_money', unit: '$'},
-                // { title: '建议零售价', dataIndex: 'price', key: 'money' },
-                { title: '工时', dataIndex: 'man_hour', key: 'man_hour' },
-                { title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                { title: '操作', key: 'operation', fixed: 'right', width: 180 }
-            ],
             expandedRowKeys: [],
             expandIconColumnIndex: 0,
             // 上传
@@ -195,7 +186,28 @@ export default {
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        tableColumns() {
+            let { filteredInfo } = this;
+            filteredInfo = filteredInfo || {};
+            let tableColumns = [
+                { title: '商品名称', dataIndex: 'name', key: 'detail' },
+                { title: '商品状态', dataIndex: 'status',
+                    filters: ITEM.STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [0] },
+                { title: '类型', dataIndex: ['type'], key: 'type' },
+                { title: '商品分类', dataIndex: ['category','name'], key: 'item' },
+                { title: '商品品号', dataIndex: 'model', key: 'item' },
+                { title: '商品编码', dataIndex: 'code', key: 'item' },
+                { title: '成本价格', dataIndex: 'original_price' ,key: 'money'},
+                { title: 'FOB(EUR)', dataIndex: 'fob_eur', key: 'fob_money', unit: '€'},
+                { title: 'FOB(USD)', dataIndex: 'fob_usd', key: 'fob_money', unit: '$'},
+                { title: '工时', dataIndex: 'man_hour', key: 'man_hour' },
+                { title: '创建时间', dataIndex: 'create_time', key: 'time'},
+                { title: '操作', key: 'operation', fixed: 'right', width: 180 }
+            ]
+            return tableColumns
+        }
+    },
     mounted() {
         this.getTableData();
     },
@@ -243,6 +255,14 @@ export default {
             this.searchForm.category_id = val
             this.pageChange(1);
         },
+        handleTableChange(page, filters, sorter) { // 表格筛选
+            console.log('handleTableChange filters:', filters)
+            this.filteredInfo = filters;
+            for (const key in filters) {
+                this.searchForm[key] = filters[key] ? filters[key][0] : ''
+            }
+            this.pageChange(1);
+        },
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
             this.$refs.TimeSearch.handleReset()
@@ -285,6 +305,25 @@ export default {
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
+
+        handleStatusChange(record) {
+            let _this = this;
+            let name = record.status === -1 ? '上架' : '下架'
+            this.$confirm({
+                title: `确定要${name}该商品吗？`,
+                okText: '确定',
+                okType: record.status === -1 ?  '' : 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Item.updateStatus({id: record.id}).then(() => {
+                        _this.$message.success(name + '成功');
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleStatusChange err", err);
                     })
                 },
             });

@@ -7,6 +7,10 @@
             <div class="btns-area">
                 <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
                 <!-- <a-button danger @click="handleDelete()"><i class="icon i_delete"/>删除</a-button> -->
+                <a-button :type="detail.status === 0 ? 'danger' : 'primary'" ghost @click="handleStatusChange()">
+                    <template v-if="detail.status === -1"><i class="icon i_putaway"/>上架</template>
+                    <template v-if="detail.status === 0"><i class="icon i_downaway"/>下架</template>
+                </a-button>
             </div>
         </div>
         <ItemHeader :detail='detail' :showSpec='indep_flag ? true : false'/>
@@ -300,7 +304,27 @@ export default {
                     record.flag_independent_info = !record.flag_independent_info
                 }
             });
-        }
+        },
+
+        handleStatusChange() {
+            let _this = this;
+            let name = this.detail.status === -1 ? '上架' : '下架'
+            this.$confirm({
+                title: `确定要${name}该商品吗？`,
+                okText: '确定',
+                okType: _this.detail.status === -1 ?  '' : 'danger',
+                content: '商品下架后，向分销商分配的商品价格将作废；若商品需重新上架，需要重新向分销商分配商品并设置价格。',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Item.updateStatus({id: _this.detail.id}).then(() => {
+                        _this.$message.success(name + '成功');
+                        _this.getItemDetail();
+                    }).catch(err => {
+                        console.log("handleStatusChange err", err);
+                    })
+                },
+            });
+        },
     }
 };
 </script>

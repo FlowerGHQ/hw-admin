@@ -151,12 +151,13 @@ const apiList = {
         save: ['PostJson', 'item/save'],
         batchSave: ['PostJson', 'item/batch-save'],
         update: ['PostJson', 'item/update'],
+        updateStatus: ['PostJson', 'item/update-status'], // 上下架
         list: ['PostJson', 'item/list'],
         listBySet: ['PostJson', 'item/list-by-set-id'],
         detail: ['PostJson', 'item/detail'],
-        delete: ['PostJson', 'item/delete'],
         detailByCode: ['PostJson', 'item/detail-by-code'],
         detailByCodeForRepair: ['PostJson','item/detail-by-code-for-repair'],
+        delete: ['PostJson', 'item/delete'],
         setIndep: ['PostJson', 'item/set-flag-independent-info'],
     },
     Entity: {// 车架
