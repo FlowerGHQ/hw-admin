@@ -105,7 +105,8 @@ export default {
     watch: {},
     computed: {
         needUid() {
-            switch (this.form.source_type) {
+            let val = this.form.source_type
+            switch (Number(val)) {
                 case SOURCE_TYPE.PRODUCTION:
                 case SOURCE_TYPE.PURCHASE:
                 case SOURCE_TYPE.AFTER_SALES:
@@ -218,7 +219,7 @@ export default {
             let api = [];
             let key = 'uid'
             let parme = {}
-            switch (this.form.source_type) {
+            switch (Number(this.form.source_type)) {
                 case SOURCE_TYPE.PRODUCTION: return
                 case SOURCE_TYPE.PURCHASE:
                     api = ['Purchase', 'detailBySn']; key = 'sn';

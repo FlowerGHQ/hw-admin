@@ -64,7 +64,7 @@
                         <template v-if="column.key === 'type'">
                             {{ $Util.warehouseTypeFilter(text) }}
                         </template>
-                        <template v-if="column.key === 'warehouse-name'">
+                        <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'tip_time'">
@@ -332,7 +332,7 @@ export default {
                 {title: '申请原因', dataIndex: 'apply_message', key: 'tip_time'},
                 {title: '收货单位', dataIndex: 'org_name', key: 'org-ame'},
                 {title: '单位类型', dataIndex: 'org_type', key: 'org-type'},
-                {title: '所属仓库', dataIndex: ['to_warehouse', 'name'], key: 'warehouse-name',},
+                {title: '所属仓库', dataIndex: ['to_warehouse', 'name'], key: 'item',},
                 {title: '仓库类型', dataIndex: ['to_warehouse', 'type'], key: 'type',},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '审核人', dataIndex: ["audit_user", "account", "name"], key: 'audit-user'},

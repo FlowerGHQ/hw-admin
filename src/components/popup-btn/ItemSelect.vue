@@ -15,15 +15,13 @@
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
                         <div class="key"><span>商品编码:</span></div>
                         <div class="value">
-                            <a-input placeholder="请输入商品编码" v-model:value="searchForm.code"
-                                     @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入商品编码" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!purchaseId">
                         <div class="key"><span>商品名称:</span></div>
                         <div class="value">
-                            <a-input placeholder="请输入商品名称" v-model:value="searchForm.name"
-                                     @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入商品名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                 </a-row>

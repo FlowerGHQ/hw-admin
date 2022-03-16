@@ -83,7 +83,10 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="routerChange('detail',record)"><i class="icon i_detail"/>详情</a-button>
-                            <a-button type="link" @click="handleCancel(record.id)" class="danger" v-if="record.status === STATUS.INIT"><i class="icon i_close_c"/>取消</a-button>
+                            <template v-if="record.status === STATUS.INIT">
+                                <!-- <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button> -->
+                                <a-button type="link" @click="handleCancel(record.id)" class="danger"><i class="icon i_close_c"/>取消</a-button>
+                            </template>
                         </template>
                     </template>
                 </a-table>

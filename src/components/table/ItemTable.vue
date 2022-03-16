@@ -23,7 +23,7 @@
                 {{text || '-'}}
             </template>
             <template v-if="column.key === 'count'">
-                {{text || '-'}} 件
+                {{text ? text + '件' : '-'}}
             </template>
             <template v-if="column.key === 'spec'">
                 {{ $Util.itemSpecFilter(text)}}
