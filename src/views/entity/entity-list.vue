@@ -150,8 +150,8 @@
                         <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                     </div>
                     <div class="form-item required">
-                        <div class="key">BOM编号:</div>
-                        <a-input v-model:value="editForm.uid" placeholder="请输入BOM编号"/>
+                        <div class="key">{{ title + '编号'}}</div>
+                        <a-input v-model:value="editForm.uid" :placeholder="'请输入' + title + '编号'"/>
                     </div>
                 </div>
                 <template #footer>
@@ -518,6 +518,7 @@ export default {
                 console.log('handleEntitySubmit res', res)
                 this.$message.success('批量设置成功')
                 this.handleEntityClose()
+                this.getTableData()
                 this.selectedRowKeys = []
                 this.selectedRowItems = []
             }).catch(err => {
