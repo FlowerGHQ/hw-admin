@@ -153,7 +153,7 @@ export default {
                 price: this.detail.purchase_price
             }).then(res => {
                 console.log('hanldeAddToFavorite res:', res)
-                this.$message.success('添加成功')
+                this.$message.success('收藏成功')
                 this.getItemDetail();
             })
         },
