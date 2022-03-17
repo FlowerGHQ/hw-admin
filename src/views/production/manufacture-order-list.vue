@@ -7,51 +7,80 @@
                 <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建生产单</a-button>
             </div>
         </div>
-
+        <div class="search-container">
+            <a-row class="search-area">
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">生产单名称:</div>
+                    <div class="value">
+                        <a-input placeholder="请输入生产单名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">领料仓库:</div>
+                    <div class="value">
+                        <a-select v-model:value="searchForm.warehouse_id" placeholder="请选择领料仓库" @change="handleSearch">
+                            <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">{{ warehouse.name }}</a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">BOM表:</div>
+                    <div class="value">
+                        <a-select v-model:value="searchForm.bom_id" placeholder="请选择BOM表" @change="handleSearch">
+                            <a-select-option v-for="item of bomList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
+                    <div class="key">创建时间:</div>
+                    <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
+                </a-col>
+            </a-row>
+            <div class="btn-area">
+                <a-button @click="handleSearch" type="primary">查询</a-button>
+                <a-button @click="handleSearchReset">重置</a-button>
+            </div>
+        </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                     :row-key="record => record.id" :pagination='false' @change="handleTableChange">
-                <template #bodyCell="{ column, text , record }">
+                     :row-key="record => record.id" :pagination='false'>
+                <template #bodyCell="{ column, text, record }">
                     <template v-if="column.key === 'detail'">
-                        <div class="table-img">
-                            <a-image :width="30" :height="30" :src="$Util.imageFilter(record.logo)" fallback='无'/>
-                            <a-tooltip placement="top" :title='text'>
-                                <a-button type="link" @click="routerChange('detail', record)" style="margin-left: 6px;">
-                                    {{ text || '-' }}
-                                </a-button>
-                            </a-tooltip>
+                        <a-tooltip placement="top" :title='text'>
+                            <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}
+                            </a-button>
+                        </a-tooltip>
+                    </template>
+                    <template v-if="column.dataIndex === 'name'">
+                        {{ text || '-' }}
+                    </template>
+                    <template v-if="column.key === 'index'">
+                        {{ text || '-' }}
+                    </template>
+                    <template v-if="column.key === 'attr'">
+                        {{ record.attr_desc || ' ' }}
+                    </template>
+                    <template v-if="column.dataIndex === 'status'">
+                        <div class="status status-bg status-tag" :class="$Util.invoiceStatusFilter(text,'color')">
+                            {{ $Util.invoiceStatusFilter(text) }}
                         </div>
                     </template>
-                    <template v-if="column.key === 'item'">
+                    <template v-if="column.key === 'warehouse-name'">
                         {{ text || '-' }}
+                    </template>
+                    <template v-if="column.key === 'type'">
+                        {{ $Util.warehouseTypeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
-                    <template v-if="column.key === 'flag_receive_transfer'">
-                        <a-switch v-if="$auth('ADMIN')" :checked="!!record.flag_receive_transfer"
-                                  checked-children="是" un-checked-children="否" @click="handleTransferChange(record)"/>
-                        <div v-else class="status status-bg status-tag" :class="text ? 'green' : 'red'">
-                            {{ text ? '接受' : '不接受' }}
-                        </div>
-                    </template>
-                    <template v-if="column.dataIndex === 'status'">
-                        <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
-                            {{ text ? '启用中' : '已禁用' }}
-                        </div>
-                    </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
-                        <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 修改</a-button>
-                        <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
-                            <template v-if="record.status"><i class="icon i_forbidden"/>禁用</template>
-                            <template v-else><i class="icon i_enable"/>启用</template>
-                        </a-button>
+                        <a-button type="link" @click="routerChange('detail', record)"><i class="icon i_detail"/>详情</a-button>
+                        <a-button type="link" @click="handleCancel(record.id)"><i class="icon i_close_c"/>取消</a-button>
                     </template>
                 </template>
             </a-table>
         </div>
-
         <div class="paging-container">
             <a-pagination
                 v-model:current="currPage"
@@ -68,14 +97,13 @@
             />
         </div>
     </div>
-
-
 </div>
 </template>
 
 <script>
 import Core from '../../core';
 export default {
+    name: 'ManufactureList',
     components: {},
     props: {},
     data() {
@@ -84,25 +112,135 @@ export default {
             current: 1,
             pageSize: 20,
             total: 0,
+            tableData: [],
+            searchForm: {
+                name: '',
+                warehouse_id: undefined,
+                bom_id: undefined,
+                begin_time: '',
+                end_time: '',
+            },
+            warehouseList: [],
+            bomList: [],
+            tableColumns: [
+                {title: '生产单编号', dataIndex: 'uid', key: 'detail'},
+                {title: '名称', dataIndex: 'name'},
+                {title: '状态', dataIndex: 'status'},
+                {title: '生产产品', dataIndex: ['item','name'],key: 'index'},
+                {title: '产品规格', dataIndex: 'attr', key: 'attr',},
+                {title: 'BOM表', dataIndex: 'bom_name',key: 'index'},
+                {title: 'BOM分类', dataIndex: 'bom_category_name',key: 'index'},
+                {title: '生产数量', dataIndex: 'amount',},
+                {title: '领料仓库', dataIndex: 'warehouse_name', key: 'warehouse-name',},
+                {title: '仓库类型', dataIndex: 'warehouse_id', key: 'type',},
+                {title: '备注', dataIndex: 'remark',key: 'index'},
+                {title: '创建人', dataIndex: ['apply_user', "account", "name"], key: 'index'},
+                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
+                {title: '操作', key: 'operation', fixed: 'right'},
+            ],
         }
     },
     watch: {},
     computed: {},
     mounted() {
-        this.getList()
+        this.getWarehouseList();
+        this.getBomList();
+        this.getTableData();
+        console.log('this.getTableData')
     },
     methods: {
-        getList() {
-            Core.Api.ProductionOrder.list({
-                page: this.current,
-                pageSize: this.pageSize,
+        routerChange(type, item = {}) {
+            let routeUrl = ''
+            switch(type) {
+                case 'edit':
+                    routeUrl = this.$router.resolve({
+                        path: '/production/manufacture-order-edit',
+                        query: { id: item.id }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'detail':
+                    routeUrl = this.$router.resolve({
+                        path: '/production/manufacture-order-detail',
+                        query: { id: item.id }
+                    })
+                    window.open(routeUrl.href,'_self')
+                    break;
+            }
+        },
+        pageChange(curr) {  // 页码改变
+            this.currPage = curr
+            this.getTableData()
+        },
+        pageSizeChange(current, size) {  // 页码尺寸改变
+            console.log('pageSizeChange size:', size)
+            this.pageSize = size
+            this.getTableData()
+        },
+        handleSearch() {  // 搜索
+            this.pageChange(1);
+        },
+        handleTimeSearch(type, begin_time, end_time) { // 时间搜索
+            if (begin_time || end_time) {
+                this.searchForm.begin_time = begin_time
+                this.searchForm.end_time = end_time
+            }
+            this.pageChange(1);
+        },
+        handleSearchReset(flag = true) {  // 重置搜索
+            Object.assign(this.searchForm, this.$options.data().searchForm)
+            if (flag) {
+                this.$refs.TimeSearch.handleReset()
+            }
+            this.pageChange(1);
+        },
+        getWarehouseList() {
+            Core.Api.Warehouse.listAll().then(res => {
+                this.warehouseList = res.list
             })
         },
-        routerChange(type) {
-            switch(type) {
-                case edit: {}; break
-            }
-        }
+        getBomList() {
+            Core.Api.Production.list().then(res => {
+                this.bomList = res.list
+            })
+        },
+        getTableData() {    // 获取 表格 数据
+            this.loading = true;
+            Core.Api.ProductionOrder.list({
+                ...this.searchForm,
+                page: this.currPage,
+                page_size: this.pageSize
+            }).then(res => {
+                console.log("getTableData res:", res)
+                let list = res.list.map(item => {
+                    item.attr_desc = item.item.attr_list ? item.item.attr_list.map(i => i.value).join(',') : ''
+                    return item
+                })
+                this.total = res.count;
+                this.tableData = list;
+            }).catch(err => {
+                console.log('getTableData err:', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        handleCancel(id) {
+            let _this = this;
+            this.$confirm({
+                title: '确定要取消该生产单吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.ProductionOrder.cancel({id}).then(() => {
+                        _this.$message.success('取消成功');
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
     },
 }
 </script>

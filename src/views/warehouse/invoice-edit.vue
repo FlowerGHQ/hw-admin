@@ -49,7 +49,6 @@
                         <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                     </div>
                 </div>
-
                 <div class="form-item required" v-if="form.source_type == SOURCE_TYPE.PURCHASE">
                     <div class="key">到港时间</div>
                     <div class="value">

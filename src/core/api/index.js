@@ -350,7 +350,8 @@ const apiList = {
         list: ['PostJson', 'production-order/list'],
         save: ['PostJson', 'production-order/save'],
         detail: ['PostJson', 'production-order/detail'],
-        delete: ['PostJson', 'production-order/delete'],
+        cancel: ['PostJson', 'production-order/delete'],
+        detailByUid: ['PostJson', 'production-order/detail-by-uid'],
     },
     Material: { // 物料
         save: ['PostJson', 'material/save'],

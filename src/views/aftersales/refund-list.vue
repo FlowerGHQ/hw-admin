@@ -44,7 +44,7 @@
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, text , record}">
+                    <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
                                 <a-button type="link" @click="routerChange('purchase', record)">{{ text || '-' }}

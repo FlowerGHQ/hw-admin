@@ -1,51 +1,55 @@
 <template>
-<div id="ItemCategory">
-    <div class="list-container">
-        <div class="title-container">
-            <div class="title-area">商品分类</div>
-            <div class="btns-area">
-                <a-button type="primary" @click="handleModalShow({})"><i class="icon i_add"/>新增分类</a-button>
-            </div>
-        </div>
-        <div class="table-container">
-            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                :row-key="record => record.id"  :pagination='false' v-model:expandedRowKeys='expandedRowKeys'
-                @expand='handleExpandedChange'>
-                <template #bodyCell="{ column, text , record }">
-                    <template v-if="column.key === 'item'">
-                        {{ text || '-'}}
-                    </template>
-                    <template v-if="column.key === 'tip_item'">
-                        <a-tooltip placement="top" :title='text'>
-                            <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
-                        </a-tooltip>
-                    </template>
-                    <template v-if="column.key === 'time'">
-                        {{ $Util.timeFilter(text) }}
-                    </template>
-                    <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="handleModalShow(record, record)"> <i class="icon i_edit"/> 编辑名称</a-button>
-                        <a-button type='link' @click="routerChange('config', record)"> <i class="icon i_hint"/> 商品配置</a-button>
-                        <a-button type='link' @click="handleModalShow({parent_id: record.id}, null,record)"> <i class="icon i_add"/> 新增子分类</a-button>
-                        <a-button type='link' @click="handleDelete(record)"> <i class="icon i_delete"/> 删除</a-button>
-                    </template>
-                </template>
-            </a-table>
-        </div>
-    </div>
-    <template class="modal-container">
-        <a-modal v-model:visible="modalVisible" :title="editForm.id ? '编辑分类' : '新增分类'" @ok="handleModalSubmit">
-            <div class="modal-content">
-                <div class="form-item">
-                    <div class="key">分类名称</div>
-                    <div class="value">
-                        <a-input v-model:value="editForm.name" placeholder="请输入分类名称"/>
-                    </div>
+    <div id="ItemCategory">
+        <div class="list-container">
+            <div class="title-container">
+                <div class="title-area">商品分类</div>
+                <div class="btns-area">
+                    <a-button type="primary" @click="handleModalShow({})"><i class="icon i_add"/>新增分类</a-button>
                 </div>
             </div>
-        </a-modal>
-    </template>
-</div>
+            <div class="table-container">
+                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                         :row-key="record => record.id" :pagination='false' v-model:expandedRowKeys='expandedRowKeys'
+                         @expand='handleExpandedChange'>
+                    <template #bodyCell="{ column, text , record }">
+                        <template v-if="column.key === 'item'">
+                            {{ text || '-' }}
+                        </template>
+                        <template v-if="column.key === 'tip_item'">
+                            <a-tooltip placement="top" :title='text'>
+                                <div class="ell" style="max-width: 160px">{{ text || '-' }}</div>
+                            </a-tooltip>
+                        </template>
+                        <template v-if="column.key === 'time'">
+                            {{ $Util.timeFilter(text) }}
+                        </template>
+                        <template v-if="column.key === 'operation'">
+                            <a-button type='link' @click="handleModalShow(record, record)"><i class="icon i_edit"/> 编辑名称
+                            </a-button>
+                            <a-button type='link' @click="routerChange('config', record)"><i class="icon i_hint"/> 商品配置
+                            </a-button>
+                            <a-button type='link' @click="handleModalShow({parent_id: record.id}, null,record)"><i
+                                class="icon i_add"/> 新增子分类
+                            </a-button>
+                            <a-button type='link' @click="handleDelete(record)"><i class="icon i_delete"/> 删除</a-button>
+                        </template>
+                    </template>
+                </a-table>
+            </div>
+        </div>
+        <template class="modal-container">
+            <a-modal v-model:visible="modalVisible" :title="editForm.id ? '编辑分类' : '新增分类'" @ok="handleModalSubmit">
+                <div class="modal-content">
+                    <div class="form-item">
+                        <div class="key">分类名称</div>
+                        <div class="value">
+                            <a-input v-model:value="editForm.name" placeholder="请输入分类名称"/>
+                        </div>
+                    </div>
+                </div>
+            </a-modal>
+        </template>
+    </div>
 </template>
 
 <script>
@@ -79,8 +83,8 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                { title: '分类名称', dataIndex: 'name' },
-                { title: '操作', key: 'operation', fixed: 'right', width: 100, },
+                {title: '分类名称', dataIndex: 'name'},
+                {title: '操作', key: 'operation', fixed: 'right', width: 100,},
             ]
             return columns
         },
@@ -95,7 +99,7 @@ export default {
                 case 'config':  // 详情
                     routeUrl = this.$router.resolve({
                         path: "/item/item-category-config",
-                        query: { id: item.id }
+                        query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -209,7 +213,7 @@ export default {
         },
 
         // 删除分类
-        handleDelete(record){
+        handleDelete(record) {
             this.loading = false;
             let _this = this
             this.$confirm({

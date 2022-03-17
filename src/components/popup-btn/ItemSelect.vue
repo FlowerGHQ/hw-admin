@@ -9,7 +9,7 @@
                     <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!purchaseId">
                         <div class="key"><span>商品分类:</span></div>
                         <div class="value">
-                            <CategoryTreeSelect @change="handleCategorySelect" :category-id='searchForm.category_id' />
+                            <CategoryTreeSelect @change="handleCategorySelect" :category_id='searchForm.category_id' />
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
