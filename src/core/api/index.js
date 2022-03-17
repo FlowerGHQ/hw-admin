@@ -353,8 +353,10 @@ const apiList = {
         delete: ['PostJson', 'productionOrder/delete'],
     },
     MaterialCategory: { // 物料分类
+        tree: ['PostJson', 'material-category/tree'],
         list: ['PostJson', 'material-category/list'],
         save: ['PostJson', 'material-category/save'],
+        update: ['PostJson', 'material-category/update'],
         detail: ['PostJson', 'material-category/detail'],
         delete: ['PostJson', 'material-category/delete'],
     }
