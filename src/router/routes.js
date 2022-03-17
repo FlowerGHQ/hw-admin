@@ -838,7 +838,7 @@ const routes = [
         path: '/production',
         component: Layout,
         redirect: '/production/manufacture-order-list',
-        name: 'ItemManagement',
+        name: 'ProductionManagement',
         meta: {
             title: '生产管理',
             icon: 'i_s_item',
