@@ -258,7 +258,7 @@ import Core from '../../core';
 import MySteps from "@/components/common/MySteps.vue"
 import AuditHandle from '@/components/popup-btn/AuditHandle.vue';
 import WaybillShow from "@/components/popup-btn/WaybillShow.vue"
-import AttachmentFile from '@/components/popup-btn/AttachmentFile.vue';
+import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 
 const STATUS = Core.Const.AFTERSALES.STATUS;
 const TYPE = Core.Const.AFTERSALES.TYPE;

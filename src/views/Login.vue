@@ -108,7 +108,7 @@ export default {
             }
             Core.Data.setAuthority(authorityMap)
             setTimeout(() => {
-                this.$router.replace({ path: '/dashboard?from=login' })
+                this.$router.replace({ path: '/dashboard', query: {from: 'login'} })
             }, 1000)
             return
 

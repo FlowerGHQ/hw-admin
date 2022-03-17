@@ -146,7 +146,7 @@ import WaybillInfo from './components/WaybillInfo.vue';
 import Distribution from './components/Distribution.vue';
 import ActionLog from './components/ActionLog.vue';
 import MySteps from '@/components/common/MySteps.vue';
-import AttachmentFile from '@/components/popup-btn/AttachmentFile.vue';
+import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 
 const REPAIR = Core.Const.REPAIR
 const STATUS = Core.Const.REPAIR.STATUS

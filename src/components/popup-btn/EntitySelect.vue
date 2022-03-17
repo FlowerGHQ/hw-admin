@@ -6,22 +6,10 @@
         <div class="modal-content">
             <div class="search-container">
                 <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!purchaseId">
-                        <div class="key"><span>商品分类:</span></div>
-                        <div class="value">
-                            <CategoryTreeSelect @change="handleCategorySelect" :category-id='searchForm.category_id' />
-                        </div>
-                    </a-col>
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
                         <div class="key"><span>商品编码:</span></div>
                         <div class="value">
                             <a-input placeholder="请输入商品编码" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!purchaseId">
-                        <div class="key"><span>商品名称:</span></div>
-                        <div class="value">
-                            <a-input placeholder="请输入商品名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                 </a-row>
@@ -62,8 +50,6 @@ import Core from '@/core';
 export default {
     components: {
         ItemTable: () => import('@/components/table/ItemTable.vue'),
-        CategoryTreeSelect: () => import("@/components/popup-btn/CategoryTreeSelect.vue")
-
     },
     emits: ['select', 'option'],
     props: {
@@ -139,6 +125,7 @@ export default {
                 {title: '商品品号', dataIndex: 'model', key: 'item'},
                 {title: '商品编码', dataIndex: 'code', key: 'item'},
                 {title: '商品规格', dataIndex: 'attr_list', key: 'spec'},
+                // {title: '建议零售价', dataIndex: 'price', key: 'money',},
             ]
             if (this.warehouseId !== 0) {
                 tableColumns.splice(3, 0, {title: '仓库库存', dataIndex: 'stock', key: 'count'})
@@ -156,10 +143,6 @@ export default {
         this.getTableData()
     },
     methods: {
-        // handleSelectItem(ids, items ) {
-        //     this.selectItems = items
-        // },
-
         handleModalShow() {
             this.pageChange(1)
             this.modalShow = true
@@ -171,50 +154,20 @@ export default {
         },
         handleConfirm() {
             console.log('handleConfirm this.selectItems:', this.selectItems)
-            this.$emit('select', this.selectItemIds, this.selectItems, this.faultName)
+            this.$emit('select', this.selectItemIds, this.selectItems)
             this.modalShow = false
         },
 
         getTableData() {
-            if (this.purchaseId) {
-                Core.Api.Purchase.itemList({
-                    order_id: this.purchaseId,
-                    item_code: this.searchForm.code
-                }).then(res => {
-                    console.log('Purchase.itemList:', res)
-                    this.tableData = res.list.map(item => {
-                        return {
-                            ...item.item,
-                            count: item.amount
-                        }
-                    })
-                    this.$emit('option', this.tableData)
-                }).catch(err => {
-                    console.log('Purchase.itemList err', err)
-                }).finally(() => {
-                    this.loading = false;
-                });
-            } else {
-                Core.Api.Item.list({
-                    ...this.searchForm,
-                    warehouse_id: this.warehouseId,
-                    page: this.currPage,
-                    page_size: this.pageSize,
-                    flag_spread: 1,
-                }).then(res => {
-                    console.log('Item.list res:', res)
-                    res.list.forEach(item => {
-                        item.children = null
-                        let element = item || {}
-                        if (element.attr_list && element.attr_list.length) {
-                            let str = element.attr_list.map(i => i.value).join(' ')
-                            element.attr_str = str
-                        }
-                    })
-                    this.tableData = res.list
-                    this.total = res.count;
-                })
-            }
+            Core.Api.Item.list({
+                ...this.searchForm,
+                page: this.currPage,
+                page_size: this.pageSize,
+            }).then(res => {
+                console.log('Item.list res:', res)
+                this.tableData = res.list
+                this.total = res.count;
+            })
         },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
@@ -224,24 +177,13 @@ export default {
             this.pageChange(1)
         },
         handleSearchReset() {
-            this.searchForm.code = ''
-            this.searchForm.name = ''
-            this.searchForm.category_id = ''
+            Object.assign(this.searchForm, this.$options.data().searchForm)
             this.pageChange(1)
-        },
-        handleCategorySelect(val) {
-            this.searchForm.category_id = val
-            this.pageChange(1);
         },
         handleSelectItem(ids, items) {
             console.log('handleSelectItem ids, items:', ids, items)
             this.selectItems = items
             this.selectItemIds = ids
-        },
-        // 添加要寄回的商品
-        handleAddItem(ids, items) {
-            console.log('handleAddItem items:', items)
-            this.tableData.push(...items)
         },
     },
 }

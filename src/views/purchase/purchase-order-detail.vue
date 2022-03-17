@@ -171,7 +171,7 @@ import Core from '../../core';
 import PurchaseInfo from "./components/PurchaseInfo.vue"
 import WaybillShow from "@/components/popup-btn/WaybillShow.vue"
 import MySteps from "@/components/common/MySteps.vue"
-import AttachmentFile from '@/components/popup-btn/AttachmentFile.vue';
+import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 
 const PURCHASE = Core.Const.PURCHASE;
 const STATUS = Core.Const.PURCHASE.STATUS;

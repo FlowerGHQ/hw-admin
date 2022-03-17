@@ -86,7 +86,7 @@
 import Core from '../../core';
 import MySteps from "@/components/common/MySteps.vue"
 import AuditHandle from '@/components/popup-btn/AuditHandle.vue';
-import AttachmentFile from '@/components/popup-btn/AttachmentFile.vue';
+import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 
 const STATUS = Core.Const.REFUND.STATUS;
 const TYPE = Core.Const.REFUND.TYPE;
