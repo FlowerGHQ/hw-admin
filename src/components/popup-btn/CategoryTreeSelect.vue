@@ -29,6 +29,10 @@ export default {
         placeholder: {
             type: String,
             default: '请选择商品分类'
+        },
+        type: {
+            type: String,
+            default: 'item', //商品
         }
     },
     emit: ['change'],
@@ -62,11 +66,15 @@ export default {
     },
     methods: {
         getFirstItemCategory() {
-            Core.Api.ItemCategory.tree({parent_id: this.parentId}).then(res => {
+            let key = ''
+            switch (this.type) {
+                case 'item': key = 'ItemCategory'; break
+                case 'material': key = 'MaterialCategory'; break
+            }
+            Core.Api[key].tree({parent_id: this.parentId}).then(res => {
                 let list = res.list.map(item => ({
                     id: item.id,
                     parent_id: this.parentId,
-
                     key: item.id,
                     value: item.id,
                     title: item.name,
@@ -77,12 +85,16 @@ export default {
             })
         },
         async getItemCategory(parent_id, treeNode, resolve) {
-            let {list} = await Core.Api.ItemCategory.tree({parent_id})
+            let key = ''
+            switch (this.type) {
+                case 'item': key = 'ItemCategory'; break
+                case 'material': key = 'MaterialCategory'; break
+            }
+            let {list} = await Core.Api[key].tree({parent_id})
             console.log('list:', list)
             list = list.map(item => ({
                 id: item.id,
                 parent_id: parent_id,
-
                 key: item.id,
                 value: item.id,
                 title: item.name,

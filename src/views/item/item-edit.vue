@@ -513,7 +513,6 @@ export default {
         setFormData(res) {
             this.loading = true
             this.detail = res
-
             let config = []
             let _config = []
             this.item_category = res.category

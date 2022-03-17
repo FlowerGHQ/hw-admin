@@ -347,10 +347,16 @@ const apiList = {
         tree: ['PostJson', 'bom-category/tree'],
     },
     ProductionOrder: { // 生产单
-        list: ['PostJson', 'productionOrder/list'],
-        save: ['PostJson', 'productionOrder/save'],
-        detail: ['PostJson', 'productionOrder/detail'],
-        delete: ['PostJson', 'productionOrder/delete'],
+        list: ['PostJson', 'production-order/list'],
+        save: ['PostJson', 'production-order/save'],
+        detail: ['PostJson', 'production-order/detail'],
+        delete: ['PostJson', 'production-order/delete'],
+    },
+    Material: { // 物料
+        save: ['PostJson', 'material/save'],
+        delete: ['PostJson', 'material/delete'],
+        list: ['PostJson', 'material/list'],
+        detail: ['PostJson', 'material/detail'],
     },
     MaterialCategory: { // 物料分类
         tree: ['PostJson', 'material-category/tree'],
@@ -359,7 +365,7 @@ const apiList = {
         update: ['PostJson', 'material-category/update'],
         detail: ['PostJson', 'material-category/detail'],
         delete: ['PostJson', 'material-category/delete'],
-    }
+    },
 };
 
 export default new Api(baseUrl, apiList);
