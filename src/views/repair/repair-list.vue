@@ -62,12 +62,12 @@
                 </a-col>
             </a-row>
             <div class="btn-area">
-                <a-button @click="handleExportConfirm">{{$t('def.export')}}</a-button>
                 <a-button @click="handleSearch" type="primary">{{$t('def.search')}}</a-button>
                 <a-button @click="handleSearchReset">{{$t('def.reset')}}</a-button>
             </div>
         </div>
         <div class="operate-container">
+            <a-button type="primary" @click="handleExportConfirm"><i class="icon i_download"/>{{$t('def.export')}}</a-button>
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -117,7 +117,7 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.SETTLEMENT && record.service_type == 1"><i class="icon i_confirm"/>审核</a-button>
+                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.SETTLEMENT && record.service_type == 1"><i class="icon i_audit"/>审核</a-button>
                     </template>
                     <template v-if="column.key === 'operate'">
                         <a-button type='link' @click="routerChange('edit',record)" v-if="record.status == STATUS.AUDIT_FAIL"><i class="icon i_edit"/>修改</a-button>
@@ -206,10 +206,10 @@ export default {
                 {text: '全  部', value: '0', color: 'primary', key: '-1'},
                 {text: '待检测', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
                 {text: '维修中', value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
-                {text: '已维修', value: '0', color: 'light',  key: STATUS.REPAIR_END },
                 {text: '已结算待审核', value: '0', color: 'orange',  key: STATUS.SETTLEMENT },
                 {text: '审核未通过', value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
                 {text: '审核通过', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
+                {text: '结算完成', value: '0', color: 'green',  key: STATUS.FINISH },
                 {text: '已取消', value: '0', color: 'gray',  key: STATUS.CLOSE },
             ],
             distributorList: [], // 分销商下拉框数据
@@ -434,9 +434,12 @@ export default {
                     res.status_list.forEach(item => {
                         if ( statusItem.key == item.status) {
                             statusItem.value = item.amount
-                            total += item.amount
                         }
                     })
+                })
+
+                res.status_list.forEach(item => {
+                    total += item.amount
                 })
                 this.statusList[0].value = total
             }).catch(err => {

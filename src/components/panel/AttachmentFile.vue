@@ -137,10 +137,10 @@ export default {
                 target_type: this.target_type,
                 page: 0
             }).then(res => {
-                console.log("getTableData res", res)
+                console.log("AttachmentFile res", res)
                 this.tableData = res.list
             }).catch(err => {
-                console.log('getTableData err', err)
+                console.log('AttachmentFile err', err)
             }).finally(() => {
                 this.loading = false;
             });

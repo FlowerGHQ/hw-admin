@@ -64,7 +64,7 @@
                         <template v-if="column.key === 'type'">
                             {{ $Util.warehouseTypeFilter(text) }}
                         </template>
-                        <template v-if="column.key === 'warehouse-name'">
+                        <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'tip_time'">
@@ -88,10 +88,13 @@
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" v-if="record.status === STATUS.WAIT_AUDIT && type == 'out'"
                                       @click="handleTransferAuditShow(record.id)">
-                                <i class="icon i_m_success"/>审核
+                                <i class="icon i_audit"/>审核
                             </a-button>
-                             <a-button type="link"  v-else-if="record.status === STATUS.AUDIT_PASS && type == 'out'" @click="handleInvoice(record.id)">
+                             <a-button type="link"  v-else-if="record.status === STATUS.AUDIT_PASS && type == 'out'" @click="handleDeliverShow(record.id)">
                                 <i class="icon i_edit"/>确认发货
+                            </a-button>
+                            <a-button type="link"  v-else-if="record.status === STATUS.IN_TRANSIT && type == 'in'" @click="handleReceive(record.id)">
+                                <i class="icon i_edit"/>确认收货
                             </a-button>
                             <template v-if="record.status === STATUS.WAIT_AUDIT && type == 'in'">
                                 <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>修改
@@ -154,6 +157,16 @@
                         </a-select>
                     </div>
                 </div>
+                <div class="form-item required">
+                    <div class="key">收货地址:</div>
+                    <div class="value">
+                        <a-select v-model:value="form.receive_info_id" placeholder="请选择收货地址" show-search option-filter-prop="children">
+                            <a-select-option v-for="address of addressList" :key="address.id" :value="address.id">
+                                {{ address.city + '/' + address.county + '/' + address.address}}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </div>
                 <div class="form-item textarea required">
                     <div class="key">原因:</div>
                     <div class="value">
@@ -198,6 +211,24 @@
                     <a-button @click="auditShow = false">取消</a-button>
                     <a-button @click="handleTransferAuditSubmit" type="primary">确定</a-button>
                 </template>
+            </a-modal>
+            <a-modal v-model:visible="deliverShow" title="确认发货" @ok="handleInvoice">
+                <div class="modal-content">
+                    <div class="form-item required">
+                        <div class="key">快递公司</div>
+                        <div class="value">
+                            <a-select v-model:value="deliverForm.company_uid" placeholder="请选择快递公司">
+                                <a-select-option v-for="company of companyUidList" :key="company.value" :value="company.value">{{company.name}}</a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                    <div class="form-item required" >
+                        <div class="key">快递单号</div>
+                        <div class="value">
+                            <a-input v-model:value="deliverForm.waybill_uid" placeholder="请输入快递单号"/>
+                        </div>
+                    </div>
+                </div>
             </a-modal>
         </template>
     </div>
@@ -255,6 +286,7 @@ export default {
             agentList: [],
             distributorList: [],
             warehouseList: [],
+            addressList: [],
             orgList: [],
             // 创建、编辑 弹框
             editShow: false,
@@ -266,12 +298,19 @@ export default {
             },
             // 审核 弹框
             auditShow: false,
+            deliverShow: false,
             auditForm: {
                 id: '',
                 status: 20,
                 audit_message: '',
                 from_warehouse_id: undefined
             },
+            deliverForm: {
+                id: '',
+                company_uid: '',
+                waybill_uid: '',
+            },
+            companyUidList: Core.Const.WAYBILL.COMPANY_LIST,
         };
     },
     watch: {
@@ -291,9 +330,9 @@ export default {
             let columns = [
                 {title: '调货单编号', dataIndex: 'uid', key: 'detail'},
                 {title: '申请原因', dataIndex: 'apply_message', key: 'tip_time'},
-                {title: '创建单位', dataIndex: 'org_name', key: 'org-ame'},
+                {title: '收货单位', dataIndex: 'org_name', key: 'org-ame'},
                 {title: '单位类型', dataIndex: 'org_type', key: 'org-type'},
-                {title: '所属仓库', dataIndex: ['to_warehouse', 'name'], key: 'warehouse-name',},
+                {title: '所属仓库', dataIndex: ['to_warehouse', 'name'], key: 'item',},
                 {title: '仓库类型', dataIndex: ['to_warehouse', 'type'], key: 'type',},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '审核人', dataIndex: ["audit_user", "account", "name"], key: 'audit-user'},
@@ -301,6 +340,9 @@ export default {
                 {title: '状态', dataIndex: 'status', key: 'status', align: 'center'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
+            if (this.type === 'in') {
+                columns[2] = {title: '发货单位', dataIndex: 'supply_org_name', key: 'org-ame'}
+            }
 
             if (!this.$auth('ADMIN')) {
                 columns.splice(6, 1)
@@ -310,6 +352,7 @@ export default {
     },
     mounted() {
         this.getWarehouseList();
+        this.getReceiveInfoList();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -429,8 +472,16 @@ export default {
                 this.warehouseList = res.list
             })
         },
-        //确认发货后，状态未变成已完成 
-        handleInvoice(id) {   // 处理是否发货
+        getReceiveInfoList() {
+            Core.Api.Receive.list().then(res => {
+                this.addressList = res.list
+            })
+        },
+        handleDeliverShow(id) {
+            this.deliverForm.id = id
+            this.deliverShow = true
+        },
+        handleInvoice() {   // 处理是否发货
             let _this = this;
             this.$confirm({
                 title: '确定发货吗？',
@@ -438,8 +489,27 @@ export default {
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Invoice.handle({id}).then(() => {
+                    Core.Api.Transfer.deliver(_this.deliverForm).then(() => {
                         _this.$message.success('完成发货');
+                        _this.getTableData();
+                        _this.getStatusList()
+                        _this.deliverShow = false
+                    }).catch(err => {
+                        console.log("handleInvoice err", err);
+                    })
+                },
+            });
+        },
+        handleReceive(id) {   // 处理是否发货
+            let _this = this;
+            this.$confirm({
+                title: '确定收货吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Transfer.receive({id}).then(() => {
+                        _this.$message.success('完成收货');
                         _this.getTableData();
                         _this.getStatusList()
                     }).catch(err => {
@@ -546,8 +616,8 @@ export default {
             } else if (this.orgType > ORG_TYPE.DISTRIBUTOR) {
                 // todo 门店、零售 获取上属分销商的信息
                 let apiName = this.orgType === ORG_TYPE.AGENT ? 'Agent' : 'Store'
-                Core.Api[apiName].detail().then(res => {
-                    this.distributorList = [{name: res.detail.distributor_id, id:res.detail.distributor_name}]
+                Core.Api[apiName].detail({id: this.orgId}).then(res => {
+                    this.distributorList = [{name: res.detail.distributor_name, id:res.detail.distributor_id}]
                     console.log('getDistributorList distributorList', this.distributorList);
                 })
             }

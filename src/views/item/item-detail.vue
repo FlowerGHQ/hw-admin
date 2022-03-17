@@ -7,6 +7,10 @@
             <div class="btns-area">
                 <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
                 <!-- <a-button danger @click="handleDelete()"><i class="icon i_delete"/>删除</a-button> -->
+                <a-button :type="detail.status === 0 ? 'danger' : 'primary'" ghost @click="handleStatusChange()">
+                    <template v-if="detail.status === -1"><i class="icon i_putaway"/>上架</template>
+                    <template v-if="detail.status === 0"><i class="icon i_downaway"/>下架</template>
+                </a-button>
             </div>
         </div>
         <ItemHeader :detail='detail' :showSpec='indep_flag ? true : false'/>
@@ -31,16 +35,22 @@
                             <div class="key">销售区域</div>
                             <div class="value">{{ detail.sales_area_name || '-'}}</div>
                         </div>
-                        <div class="info-item">
-                            <div class="key">建议零售价</div>
-                            <div class="value">€{{$Util.countFilter(detail.price)}}</div>
-                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" v-if="indep_flag">
                         <div class="info-item">
                             <div class="key">成本价格</div>
-                            <div class="value">{{detail.fob_currency + $Util.countFilter(detail.original_price)}}</div>
+                            <div class="value">{{$Util.priceUnitFilter(detail.original_price_currency)}} {{$Util.countFilter(detail.original_price)}}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="key">FOB(EUR)</div>
+                            <div class="value">€{{$Util.countFilter(detail.fob_eur)}}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="key">FOB(USD)</div>
+                            <div class="value">${{$Util.countFilter(detail.fob_usd)}}</div>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :lg='12' :xl='16' :xxl='18' class="info-block">
+                    <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='12' class="info-block">
                         <template v-for="(item, index) of config" :key="index">
                             <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='8' class="info-item"
                                 :class="item.type" v-if="item.value">
@@ -61,7 +71,10 @@
                                 {{text || ''}}
                             </template>
                             <template v-if="column.key === 'money'">
-                                €{{$Util.countFilter(text)}}
+                                {{$Util.priceUnitFilter(record.original_price_currency)}} {{$Util.countFilter(text)}}
+                            </template>
+                            <template v-if="column.key === 'fob'">
+                                {{column.unit}} {{$Util.countFilter(text)}}
                             </template>
                             <template v-if="column.dataIndex === 'flag_independent_info'">
                                 <template v-if="index === 0">
@@ -79,9 +92,9 @@
                                     <a-button type="link" @click="routerChange('edit-indep', record)"><i class="icon i_edit"/>编辑</a-button>
                                     <a-button type="link" @click="routerChange('detail-indep', record)"><i class="icon i_detail"/>详情</a-button>
                                 </template>
-                                <template v-if="index > 0">
+<!--                                <template v-if="index > 0">
                                     <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
-                                </template>
+                                </template>-->
                             </template>
                         </template>
                     </a-table>
@@ -137,7 +150,9 @@ export default {
             )
             column.push(
                 {title: '成本价格', key: 'money', dataIndex: 'original_price'},
-                {title: '建议零售价', key: 'money', dataIndex: 'price'},
+                {title: 'FOB(EUR)', key: 'fob', dataIndex: 'fob_eur', unit: '€'},
+                {title: 'FOB(USD)', key: 'fob', dataIndex: 'fob_usd', unit: '$'},
+                // {title: '建议零售价', key: 'money', dataIndex: 'price'},
                 {title: '是否自定义详情', dataIndex: 'flag_independent_info'},
                 {title: '操作', key: 'operation'},
             )
@@ -233,6 +248,9 @@ export default {
                         code: item.code,
                         price: item.price,
                         original_price: item.original_price,
+                        original_price_currency: item.original_price_currency,
+                        fob_eur: item.fob_eur,
+                        fob_usd: item.fob_usd,
                         flag_independent_info: item.flag_independent_info ? true : false,
                     }
                 })
@@ -246,7 +264,7 @@ export default {
         },
 
         // 删除 商品
-        handleDelete() {
+       /* handleDelete(id) {
             let _this = this;
             this.$confirm({
                 title: '确定要删除该商品吗？',
@@ -265,7 +283,7 @@ export default {
                     })
                 },
             });
-        },
+        },*/
         // 开启、关闭 商品个性化
         handleIndepChange(record) {
             console.log('handleIndepChange record:', record)
@@ -286,7 +304,27 @@ export default {
                     record.flag_independent_info = !record.flag_independent_info
                 }
             });
-        }
+        },
+
+        handleStatusChange() {
+            let _this = this;
+            let name = this.detail.status === -1 ? '上架' : '下架'
+            this.$confirm({
+                title: `确定要${name}该商品吗？`,
+                okText: '确定',
+                okType: _this.detail.status === -1 ?  '' : 'danger',
+                content: '商品下架后，向分销商分配的商品价格将作废；若商品需重新上架，需要重新向分销商分配商品并设置价格。',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Item.updateStatus({id: _this.detail.id}).then(() => {
+                        _this.$message.success(name + '成功');
+                        _this.getItemDetail();
+                    }).catch(err => {
+                        console.log("handleStatusChange err", err);
+                    })
+                },
+            });
+        },
     }
 };
 </script>

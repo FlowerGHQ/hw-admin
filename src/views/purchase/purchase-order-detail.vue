@@ -4,11 +4,15 @@
         <div class="title-container">
             <div class="title-area">采购订单详情</div>
             <div class="btns-area">
-                <a-button type="primary" @click="handleModalShow('payment')" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL && authOrg(detail.supply_org_id, detail.supply_org_type)"><i class="icon i_received"/>确认收款</a-button>
-                <a-button type="primary" @click="handleModalShow('deliver')" v-if="detail.status === STATUS.WAIT_DELIVER && authOrg(detail.supply_org_id, detail.supply_org_type)"><i class="icon i_deliver"/>发货</a-button>
-                <a-button type="primary" @click="handleReceived()" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER  && authOrg(detail.org_id, detail.org_type)"><i class="icon i_goods"/>确认收货</a-button>
-                <a-button type="primary" @click="handleCancel()" v-if="detail.status === STATUS.WAIT_PAY & authOrg(detail.org_id, detail.org_type)"><i class="icon i_close_c"/>取消</a-button>
-                <a-button type="primary" @click="routerChange('refund')" ghost v-if="detail.status === STATUS.DEAL_SUCCESS & authOrg(detail.org_id, detail.org_type)"><i class="icon i_edit"/>申请退款</a-button>
+                <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
+                    <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL" @click="handleModalShow('payment')"><i class="icon i_received"/>确认收款</a-button>
+                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER" @click="handleModalShow('deliver')"><i class="icon i_deliver"/>发货</a-button>
+                </template>
+                <template v-if="authOrg(detail.org_id, detail.org_type)">
+                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER" @click="handleReceived()"><i class="icon i_goods"/>确认收货</a-button>
+                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_PAY"     @click="handleCancel()"><i class="icon i_close_c"/>取消</a-button>
+                    <a-button type="primary" v-if="detail.status === STATUS.DEAL_SUCCESS" @click="routerChange('aftersales')" ghost><i class="icon i_edit"/>申请售后</a-button>
+                </template>
             </div>
         </div>
         <div class="gray-panel">
@@ -38,7 +42,10 @@
                                     {{record.amount}} 件
                                 </template>
                                 <template v-if="column.key === 'money'">
-                                    {{$Util.countFilter(text)}}元
+                                    {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(text)}}
+                                </template>
+                                <template v-if="column.key === 'spec'">
+                                    {{$Util.itemSpecFilter(text)}}
                                 </template>
                             </template>
                             <template #summary>
@@ -46,8 +53,8 @@
                                     <a-table-summary-row>
                                         <a-table-summary-cell :index="0" :col-span="4">合计</a-table-summary-cell>
                                         <a-table-summary-cell :index="1" :col-span="2">总数量:{{total.amount}}件</a-table-summary-cell>
-                                        <a-table-summary-cell :index="4" :col-span="1">总售价:{{$Util.countFilter(total.price)}}元</a-table-summary-cell>
-                                        <a-table-summary-cell :index="5" :col-span="1">总金额:{{$Util.countFilter(total.charge)}}元</a-table-summary-cell>
+                                        <a-table-summary-cell :index="4" :col-span="1">总售价:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price)}}</a-table-summary-cell>
+                                        <!-- <a-table-summary-cell :index="5" :col-span="1">总金额:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.charge)}}</a-table-summary-cell> -->
                                     </a-table-summary-row>
                                 </a-table-summary>
                             </template>
@@ -131,8 +138,8 @@
                 <div class="form-item required">
                     <div class="key">收款金额</div>
                     <div class="value">
-                        <a-input-number v-model:value="form.payment" :min="0" :max="(detail.charge -detail.payment)/100" :precision="2" placeholder="0.00"/>
-                        <span>元</span>
+                        <a-input-number v-model:value="form.payment" :min="0" :max="(detail.charge-detail.payment)/100" :precision="2" placeholder="0.00"/>
+                        <span>{{$Util.priceUnitFilter(detail.currency)}}</span>
                     </div>
                 </div>
             </div>
@@ -164,7 +171,7 @@ import Core from '../../core';
 import PurchaseInfo from "./components/PurchaseInfo.vue"
 import WaybillShow from "@/components/popup-btn/WaybillShow.vue"
 import MySteps from "@/components/common/MySteps.vue"
-import AttachmentFile from '@/components/popup-btn/AttachmentFile.vue';
+import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 
 const PURCHASE = Core.Const.PURCHASE;
 const STATUS = Core.Const.PURCHASE.STATUS;
@@ -173,11 +180,11 @@ const itemColumns = [
     { title: '商品', dataIndex: 'item' },
     { title: '品号', dataIndex: ['item', "model"] },
     { title: '编号', dataIndex: ['item', "code"] },
-    { title: '规格', dataIndex: ['item', 'attr_str'], key: 'attrs' },
+    { title: '规格', dataIndex: ['item', 'attr_list'], key: 'spec' },
     { title: '数量', dataIndex: 'amount'},
     { title: '单价', dataIndex: 'unit_price', key: 'money'},
     { title: '售价', dataIndex: 'price', key: 'money'},
-    { title: '实际金额（元）', dataIndex: 'charge', key: 'money'},
+    // { title: '实际金额', dataIndex: 'charge', key: 'money'},
 ]
 
 export default {
@@ -273,7 +280,7 @@ export default {
     },
     methods: {
         authOrg(orgId, orgType) {
-            console.log(orgId, orgType, this.loginOrgId, this.loginOrgType)
+            console.log("authOrg", orgId, orgType, this.loginOrgId, this.loginOrgType)
             if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
                 return true
             }
@@ -301,12 +308,12 @@ export default {
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
-                case 'refund':
+                case 'aftersales':
                     routeUrl = this.$router.resolve({
-                        path: '/refund/refund-create',
+                        path: '/aftersales/aftersales-edit',
                         query: {
                             order_id: this.id,
-                            money: this.detail.charge,
+                            order_sn: this.detail.sn,
                         }
                     })
                     window.open(routeUrl.href, '_self')
@@ -318,8 +325,8 @@ export default {
             Core.Api.Purchase.detail({
                 id: this.id
             }).then(res => {
-                this.detail = res
-                console.log('getPurchaseInfo err', res)
+                this.detail = res.detail
+                console.log('getPurchaseInfo res', res)
             }).catch(err => {
                 console.log('getPurchaseInfo err', err)
             }).finally(() => {
@@ -408,11 +415,11 @@ export default {
                 pay_method: form.pay_method,
                 payment: form.payment * 100
             }).then(res => {
+                this.$message.success('支付成功')
                 this.getPurchaseInfo()
                 this.paymentShow = false
             }).catch(err => {
                 console.log('getPurchaseInfo err', err)
-                this.$message.success('支付成功')
             }).finally(() => {
                 this.loading = false;
             });

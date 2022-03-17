@@ -137,7 +137,18 @@ export default {
             return columns
         },
     },
-    mounted() {},
+    mounted() {
+        let q = this.$route.query
+        console.log('q:', q)
+        console.log('q.from :', q.from )
+        if (q && q.from === 'login') {
+            console.log('window:', window.location)
+            let href = window.location.href.split('?')[0]
+            setTimeout(() => {
+                window.location.href = href
+            }, 500)
+        }
+    },
     methods: {
         routerChange(type, item = {}) {
             let routeUrl = ''
@@ -166,7 +177,7 @@ export default {
                 this.getRepairRank();
                 this.getRepairChart();
                 this.getSystemFile();
-            }, 100)
+            }, 1000)
         },
 
         getStatData() {

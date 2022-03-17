@@ -18,13 +18,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">地区:</div>
                         <div class="value">
-                            <a-cascader
-                                placeholder="请选择大洲/国家"
-                                v-model:value="country_cascader"
-                                :options="countryOptions"
-                                @change="handleSearch"
-                                :field-names="{ label: 'value', value: 'value' , children: 'children'}"
-                            />
+                            <AreaCascader @search="handleOtherSearch" ref='AreaCascader'/>
                         </div>
                     </a-col>
                 </a-row>
@@ -45,7 +39,7 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>修改</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_delete"/>删除</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -72,13 +66,13 @@
 <script>
 import Core from '../../core';
 
+import AreaCascader from '@/components/common/AreaCascader.vue'
 export default {
     name: 'SalesAreaList',
-    components: {},
+    components: {AreaCascader},
     props: {},
     data() {
         return {
-            loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
             // 分页
@@ -86,12 +80,12 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
-            countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
-            country_cascader: [], // 搜索框 大洲>国家
             searchForm: {
                 name: '',
+                continent: '',
+                country: '',
             },
-
+            // 表格
             tableColumns: [
                 {title: '名称', dataIndex: 'name'},
                 {title: '大洲', dataIndex: 'continent'},
@@ -131,8 +125,15 @@ export default {
         handleSearch() {    // 搜索
             this.pageChange(1);
         },
+        handleOtherSearch(params) { // 大洲/国家 搜索
+            for (const key in params) {
+                this.searchForm[key] = params[key]
+            }
+            this.pageChange(1);
+        },
         handleSearchReset() {    // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
+            this.$refs.AreaCascader.handleReset()
             this.pageChange(1);
         },
         getTableData() {    // 获取 表格 数据

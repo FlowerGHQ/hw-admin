@@ -8,8 +8,7 @@
             </div>
             <div class="btns-area" v-if="$auth('ADMIN')">
                 <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
-                <a-button :type="detail.status ? 'default' : 'primary'" :danger="detail.status ? true : false" ghost
-                          @click="handleStatusChange()">
+                <a-button :type="detail.status ? '' : 'primary'" :danger="detail.status ? true : false" ghost @click="handleStatusChange()">
                     <template v-if="detail.status"><i class="icon i_forbidden"/>禁用</template>
                     <template v-else><i class="icon i_enable"/>启用</template>
                 </a-button>
@@ -41,6 +40,13 @@
                         <span class="value">{{ detail.country }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">销售区域：</span>
+                        <span class="value" v-if="detail.sales_area_list && detail.sales_area_list.length">
+                            {{ detail.sales_area_list.map(i => i.name).join(' , ') }}
+                        </span>
+                        <span class="value" v-else>-</span>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">创建时间：</span>
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
@@ -61,32 +67,26 @@
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
                 <a-tab-pane key="UserList" tab="员工管理">
-                    <UserList :orgId="distributor_id" :orgType="ORG_TYPE.DISTRIBUTOR" :type="USER_TYPE.DISTRIBUTOR"
-                              v-if="activeKey === 'UserList'"/>
+                    <UserList :orgId="distributor_id" :orgType="ORG_TYPE.DISTRIBUTOR" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'UserList'"/>
                 </a-tab-pane>
-                <!--                <a-tab-pane key="WorkerList" tab="维修工管理">
-                                    <UserList :orgId="distributor_id" :orgType="ORG_TYPE.DISTRIBUTOR" :type="USER_TYPE.WORKER" v-if="activeKey === 'WorkerList'"/>
-                                </a-tab-pane>-->
+                <!-- <a-tab-pane key="WorkerList" tab="维修工管理">
+                    <UserList :orgId="distributor_id" :orgType="ORG_TYPE.DISTRIBUTOR" :type="USER_TYPE.WORKER" v-if="activeKey === 'WorkerList'"/>
+                </a-tab-pane>-->
                 <a-tab-pane key="PurchaseList" tab="订单列表">
-                    <PurchaseList :orgId="distributor_id" :orgType="ORG_TYPE.DISTRIBUTOR"
-                                  v-if="activeKey === 'PurchaseList'"/>
+                    <PurchaseList :orgId="distributor_id" :orgType="ORG_TYPE.DISTRIBUTOR" v-if="activeKey === 'PurchaseList'"/>
                 </a-tab-pane>
                 <template v-if="$auth('ADMIN')">
                     <a-tab-pane key="AgentList" tab="零售商管理">
-                        <AgentList :distributorId="distributor_id" :type="USER_TYPE.DISTRIBUTOR"
-                                   v-if="activeKey === 'AgentList'"/>
+                        <AgentList :distributorId="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'AgentList'"/>
                     </a-tab-pane>
                     <a-tab-pane key="StoreList" tab="门店管理">
-                        <StoreList :distributorId="distributor_id" :type="USER_TYPE.DISTRIBUTOR"
-                                   v-if="activeKey === 'StoreList'"/>
+                        <StoreList :distributorId="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'StoreList'"/>
                     </a-tab-pane>
-                    <a-tab-pane key="PricingStructure" tab="商品价格">
-                        <PricingStructure :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR"
-                                          v-if="activeKey === 'PricingStructure'"/>
-                    </a-tab-pane>
+                    <!-- <a-tab-pane key="PricingStructure" tab="商品价格">
+                        <PricingStructure :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'PricingStructure'"/>
+                    </a-tab-pane>-->
                     <a-tab-pane key="WalletList" tab="账户管理">
-                        <WalletList :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR"
-                                    v-if="activeKey === 'WalletList'"/>
+                        <WalletList :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'WalletList'"/>
                     </a-tab-pane>
                 </template>
             </a-tabs>

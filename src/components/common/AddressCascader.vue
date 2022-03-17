@@ -20,7 +20,7 @@ export default {
             type: Array,
         }
     },
-    emit: ['change'],
+    emit: ['select'],
     data() {
         return {
             addressOptions: [], // 地址选择
@@ -33,6 +33,7 @@ export default {
             deep: true,
             immediate: true,
             handler(address) {
+                console.log('watch address:', address)
                 let len = address.length
                 if (this.addrLevel === len) {
                 } else {
@@ -69,7 +70,7 @@ export default {
         },
         handleChange(value, selectedOptions) {
             console.log('handleChange value:', value)
-            this.$emit('change', value)
+            this.$emit('select', value)
         }
     },
 }

@@ -1,5 +1,8 @@
 <template>
 <div id="ItemSettle" class="list-container">
+    <a-select v-model:value="unit" class="monetary-select" @change="handleUnitChange">
+        <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>
+    </a-select>
     <div class="title-area">结算</div>
     <div class="config-list">
         <div class="config-item receive">
@@ -28,7 +31,7 @@
                 <div class="form-item required">
                     <div class="key">收货地址</div>
                     <div class="value">
-                        <AddressCascader @change='handleAddressSelect' :default-address='[form.province, form.city, form.county]'/>
+                        <AddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
                     </div>
                 </div>
                 <div class="form-item">
@@ -86,11 +89,12 @@
         <div class="item-content">
             <div class="price-item" v-for="item of shopCartList" :key="item.id">
                 <p class="name">{{item.item ? item.item.name : '-'}}</p>
-                <span class="price">€{{$Util.countFilter(item.price*item.amount)}}</span>
+                <span class="price">{{unit}} {{$Util.countFilter(item.item[priceKey] * item.amount)}}
+                </span>
             </div>
             <div class="price-item sum">
                 <p class="name">总计</p>
-                <span class="price">€{{sum_price}}</span>
+                <span class="price">{{unit}} {{sum_price}}</span>
             </div>
             <div class="sub-title">预计送达</div>
             <div class="item-item" v-for="item of shopCartList" :key="item.id">
@@ -100,7 +104,7 @@
                     <span>编号：{{item.item ? item.item.code : '-'}}</span>
                     <span v-if="item.item && item.item.attr_str">规格：{{item.item ? item.item.attr_str : '-'}}</span>
                     <span>数量：{{item.amount}}</span>
-                    <span>单价：€{{$Util.countFilter(item.price)}}</span>
+                    <span>单价：{{unit}} {{$Util.countFilter(item.item[priceKey])}}</span>
                 </div>
             </div>
         </div>
@@ -118,7 +122,6 @@ export default {
     props: {},
     data() {
         return {
-            loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
 
@@ -137,8 +140,17 @@ export default {
                 address: '',
                 email: '',
             },
+            defAddr: [],
 
             shopCartList: [],
+
+            unit: '', // €、$
+            currency: '', // EUR、USD
+            priceKey: '', // purchase_price_eur
+            unitMap: {
+                "€": { key: '_eur', text: '€ (EUR)', currency: 'EUR'},
+                "$": { key: '_usd', text: '$ (USD)', currency: 'USD'},
+            },
         };
     },
     watch: {},
@@ -146,12 +158,17 @@ export default {
         sum_price() {
             let sum = 0
             for (const item of this.shopCartList) {
-                sum += item.price * item.amount
+                sum += item.item[this.priceKey] * item.amount
             }
             return Core.Util.countFilter(sum)
         }
     },
     mounted() {
+        this.unit = this.$route.query.unit || '€'
+        let currency = this.$route.query.currency || '_eur';
+        this.priceKey = (this.$auth('DISTRIBUTOR') ? 'fob' : 'purchase_price') + currency
+        this.currency = currency ? currency.slice(1).toUpperCase() : 'CNY'
+
         this.getReceiveList()
         this.getShopCartList()
     },
@@ -193,6 +210,13 @@ export default {
             })
         },
 
+        handleUnitChange(val) {
+            console.log('handleUnitChange val:', val)
+            let item = this.unitMap[val]
+            this.priceKey = (this.$auth('DISTRIBUTOR') ? 'fob' : 'purchase_price') + item.key
+            this.currency = item.currency
+        },
+
         handleAddressSelect(address = []) {
             this.form.province = address[0]
             this.form.city = address[1]
@@ -204,8 +228,10 @@ export default {
             console.log('handleConfigEdit item:', item)
             if (item) {
                 this.form = Core.Util.deepCopy(item)
+                this.defAddr = [item.province, item.city, item.county]
             } else {
                 Object.assign(this.form, this.$options.data().form)
+                this.defAddr = []
             }
             this.editMode = true
         },
@@ -268,13 +294,14 @@ export default {
                 charge: Math.round(this.sum_price * 100),
                 remark: '',
                 receive_info_id: this.selectIndex,
+                currency: this.currency,
                 item_list: this.shopCartList.map(item => ({
                     item_code: item.item.item_code,
                     amount: item.amount,
-                    charge: item.amount * item.price,
-                    price: item.amount * item.price,
                     item_id: item.item_id,
-                    unit_price: item.price,
+                    charge: item.amount * item.item[this.priceKey],
+                    price: item.amount * item.item[this.priceKey],
+                    unit_price: item.item[this.priceKey],
                 }))
             }).then(res => {
                 this.$message.success('下单成功');
@@ -284,16 +311,29 @@ export default {
         },
         handleClearShopCart() {
             Core.Api.ShopCart.clear()
-        }
+        },
     }
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 #ItemSettle {
     padding: 60px 105px 150px;
     display: flex;
     flex-wrap: wrap;
+    position: relative;
+    .monetary-select {
+        position: absolute;
+        top: 60px;
+        right: 105px;
+        min-width: 126px;
+        .ant-select-selector {
+            border-color: #006EF9;
+        }
+        .ant-select-selection-item {
+            color: #006EF9;
+        }
+    }
     .ant-btn-link {
         color: #757575;
         border-bottom: 1px solid #757575;

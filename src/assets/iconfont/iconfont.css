@@ -1,254 +1,267 @@
 @font-face {
-    font-family: "icon";
-    /* Project id 3000141 */
-    src: url('iconfont.woff2?t=1642490231080') format('woff2'), url('iconfont.woff?t=1642490231080') format('woff'), url('iconfont.ttf?t=1642490231080') format('truetype');
+  font-family: "icon"; /* Project id 3000141 */
+  src: url('iconfont.woff2?t=1647414821827') format('woff2'),
+       url('iconfont.woff?t=1647414821827') format('woff'),
+       url('iconfont.ttf?t=1647414821827') format('truetype');
 }
 
 .icon {
-    font-family: "icon" !important;
-    font-size: 16px;
-    font-style: normal;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  font-family: "icon" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.i_copy:before {
+  content: "\e66a";
+}
+
+.i_putaway:before {
+  content: "\e636";
+}
+
+.i_downaway:before {
+  content: "\e6d0";
+}
+
+.i_audit:before {
+  content: "\e620";
 }
 
 .i_m_error:before {
-    content: "\e6cc";
+  content: "\e6cc";
 }
 
 .i_m_info:before {
-    content: "\e6cd";
+  content: "\e6cd";
 }
 
 .i_m_warning:before {
-    content: "\e6ce";
+  content: "\e6ce";
 }
 
 .i_m_success:before {
-    content: "\e6cf";
+  content: "\e6cf";
 }
 
 .i_download:before {
-    content: "\e61e";
+  content: "\e61e";
 }
 
 .i_en-zh:before {
-    content: "\e69c";
+  content: "\e69c";
 }
 
 .i_zh-en:before {
-    content: "\e6a0";
+  content: "\e6a0";
 }
 
 .i_notify:before {
-    content: "\e679";
+  content: "\e679";
 }
 
 .i_minus:before {
-    content: "\e64e";
+  content: "\e64e";
 }
 
 .i_edit_l:before {
-    content: "\e6c6";
+  content: "\e6c6";
 }
 
 .i_settle:before {
-    content: "\e6c7";
+  content: "\e6c7";
 }
 
 .i_deliver:before {
-    content: "\e6c8";
+  content: "\e6c8";
 }
 
 .i_transfer:before {
-    content: "\e6c9";
+  content: "\e6c9";
 }
 
 .i_submit:before {
-    content: "\e6ca";
+  content: "\e6ca";
 }
 
 .i_received:before {
-    content: "\e6cb";
+  content: "\e6cb";
 }
 
 .i_goods:before {
-    content: "\e6c5";
+  content: "\e6c5";
 }
 
 .i_close_c:before {
-    content: "\e6c0";
+  content: "\e6c0";
 }
 
 .i_comment:before {
-    content: "\e6c1";
+  content: "\e6c1";
 }
 
 .i_confirm:before {
-    content: "\e6c2";
+  content: "\e6c2";
 }
 
 .i_completed:before {
-    content: "\e6c3";
+  content: "\e6c3";
 }
 
 .i_detail_l:before {
-    content: "\e6c4";
+  content: "\e6c4";
 }
 
 .i_s_warehouse:before {
-    content: "\e6b8";
+  content: "\e6b8";
 }
 
 .i_s_item:before {
-    content: "\e6b9";
+  content: "\e6b9";
 }
 
 .i_s_customer:before {
-    content: "\e6ba";
+  content: "\e6ba";
 }
 
 .i_s_dashboard:before {
-    content: "\e6bb";
+  content: "\e6bb";
 }
 
 .i_s_repair:before {
-    content: "\e6bc";
+  content: "\e6bc";
 }
 
 .i_s_agent:before {
-    content: "\e6bd";
+  content: "\e6bd";
 }
 
 .i_s_store:before {
-    content: "\e6be";
+  content: "\e6be";
 }
 
 .i_s_user:before {
-    content: "\e6bf";
+  content: "\e6bf";
 }
 
 .i_order:before {
-    content: "\e6b7";
+  content: "\e6b7";
 }
 
 .i_forbidden:before {
-    content: "\e64c";
+  content: "\e64c";
 }
 
 .i_enable:before {
-    content: "\e64d";
+  content: "\e64d";
 }
 
 .i_detail:before {
-    content: "\e61c";
+  content: "\e61c";
 }
 
 .i_check_b:before {
-    content: "\e63d";
+  content: "\e63d";
 }
 
 .i_expan_l:before {
-    content: "\e6b3";
+  content: "\e6b3";
 }
 
 .i_delete:before {
-    content: "\e6b4";
+  content: "\e6b4";
 }
 
 .i_s_temp:before {
-    content: "\e6b5";
+  content: "\e6b5";
 }
 
 .i_warning:before {
-    content: "\e6b6";
+  content: "\e6b6";
 }
 
 .i_cart:before {
-    content: "\e6a8";
+  content: "\e6a8";
 }
 
 .i_agora:before {
-    content: "\e6a9";
+  content: "\e6a9";
 }
 
 .i_calendar:before {
-    content: "\e6aa";
+  content: "\e6aa";
 }
 
 .i_collect:before {
-    content: "\e6ab";
+  content: "\e6ab";
 }
 
 .i_expan:before {
-    content: "\e6ac";
+  content: "\e6ac";
 }
 
 .i_list:before {
-    content: "\e6ad";
+  content: "\e6ad";
 }
 
 .i_pack_up:before {
-    content: "\e6ae";
+  content: "\e6ae";
 }
 
 .i_edit:before {
-    content: "\e6b0";
+  content: "\e6b0";
 }
 
 .i_eyes:before {
-    content: "\e650";
+  content: "\e650";
 }
 
 .i_more:before {
-    content: "\e694";
+  content: "\e694";
 }
 
 .i_back:before {
-    content: "\e697";
+  content: "\e697";
 }
 
 .i_add:before {
-    content: "\e698";
+  content: "\e698";
 }
 
 .i_upload:before {
-    content: "\e699";
+  content: "\e699";
 }
 
 .i_hint:before {
-    content: "\e69a";
+  content: "\e69a";
 }
 
 .i_search:before {
-    content: "\e69b";
+  content: "\e69b";
 }
 
 .i_close_b:before {
-    content: "\e69d";
+  content: "\e69d";
 }
 
 .i_close:before {
-    content: "\e69e";
+  content: "\e69e";
 }
 
 .i_point:before {
-    content: "\e69f";
+  content: "\e69f";
 }
 
 .i_click:before {
-    content: "\e6a4";
+  content: "\e6a4";
 }
 
 .i_lock:before {
-    content: "\e6b1";
+  content: "\e6b1";
 }
 
 .i_user:before {
-    content: "\e6b2";
+  content: "\e6b2";
 }
 
-
-/* .i_logistics:before {
-    content: "\e657";
-} */

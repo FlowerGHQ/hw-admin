@@ -18,13 +18,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">地区:</div>
                         <div class="value">
-                            <a-cascader
-                                placeholder="请选择大洲/国家"
-                                v-model:value="country_cascader"
-                                :options="countryOptions"
-                                @change="handleSearch"
-                                :field-names="{ label: 'value', value: 'value' , children: 'children'}"
-                            />
+                            <AreaCascader @search="handleOtherSearch" ref='AreaCascader'/>
                         </div>
                     </a-col>
                 </a-row>
@@ -49,6 +43,14 @@
                             <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
                                 {{ text ? '启用中' : '已禁用' }}
                             </div>
+                        </template>
+                        <template v-if="column.dataIndex === 'sales_area_list'">
+                            <div v-if="text && text.length" class="ell" style="max-width: 300px">
+                                <a-tooltip :title="text.map(i => i.name).join(' , ')" destroyTooltipOnHide placement="topLeft">
+                                    <a-tag v-for="item of text" :key="item.id">{{item.name}}</a-tag>
+                                </a-tooltip>
+                            </div>
+                            <div v-else>-</div>
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -88,9 +90,12 @@
 <script>
 import Core from '../../core';
 
+import AreaCascader from '@/components/common/AreaCascader.vue'
 export default {
     name: 'DistributorList',
-    components: {},
+    components: {
+        AreaCascader,
+    },
     props: {},
     data() {
         return {
@@ -103,15 +108,15 @@ export default {
             total: 0,
             // 搜索
             statusList: Core.Const.ORG_STATUS_LIST,
-            countryOptions: Core.Const.CONTINENT_COUNTRY_LIST, // 大洲>国家
-            country_cascader: [], // 搜索框 大洲>国家
             filteredInfo: {status: [1]},
             searchForm: {
                 name: '',
                 status: 1,
                 type: '',
+                continent: '',
+                country: '',
             },
-
+            // 表格
             tableData: [],
         };
     },
@@ -127,6 +132,7 @@ export default {
                 {title: '国家', dataIndex: 'country'},
                 {title: '联系人', dataIndex: 'contact'},
                 {title: '手机号', dataIndex: 'phone'},
+                {title: '销售区域', dataIndex: 'sales_area_list'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '状态', dataIndex: 'status', key: 'status',
                     filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [1] },
@@ -171,11 +177,15 @@ export default {
         handleSearch() {  // 搜索
             this.pageChange(1);
         },
+        handleOtherSearch(params) { // 大洲/国家 搜索
+            for (const key in params) {
+                this.searchForm[key] = params[key]
+            }
+            this.pageChange(1);
+        },
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            console.log('this.searchForm:', this.searchForm)
-            this.country_cascader = []
-            this.create_time = []
+            this.$refs.AreaCascader.handleReset()
             this.pageChange(1);
         },
         // 表格筛选
@@ -192,8 +202,6 @@ export default {
             this.loading = true;
             Core.Api.Distributor.list({
                 ...this.searchForm,
-                continent: this.country_cascader[0] || '',
-                country: this.country_cascader[1] || '',
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {

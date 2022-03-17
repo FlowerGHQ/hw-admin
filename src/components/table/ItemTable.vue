@@ -17,10 +17,13 @@
                 </div>
             </template>
             <template v-if="column.key === 'money'">
-                €{{$Util.countFilter(text)}}
+                {{column.unit}} {{$Util.countFilter(text)}}
             </template>
             <template v-if="column.key === 'item'">
                 {{text || '-'}}
+            </template>
+            <template v-if="column.key === 'count'">
+                {{text ? text + '件' : '-'}}
             </template>
             <template v-if="column.key === 'spec'">
                 {{ $Util.itemSpecFilter(text)}}
@@ -125,21 +128,6 @@ export default {
             }
             window.open(routeUrl.href, '_blank')
         },
-        handleRemoveItem(index, item) {
-            this.$emit('remove', index, item)
-        },
-        setSendCount(){
-            this.$emit('setTableDate',this.dataList);
-        },
-        taxMoneyCheck(record) {
-            record.totle_charge = record.charge * record.amount
-            record.tax_money = record.tax_rate * record.totle_charge / 100
-            this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
-        },
-
-        itemSpecFilter() {
-            return '-'
-        }
     }
 }
 </script>

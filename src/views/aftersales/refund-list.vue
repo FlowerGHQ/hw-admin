@@ -22,16 +22,16 @@
                             <a-input placeholder="请输入退款订单编号" v-model:value="searchForm.sn" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
+                    <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
                         <div class="key">退款类型:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择退款类型">
                                 <a-select-option v-for="(item, index) of typeList" :key="index" :value="item.value">{{item.text}}</a-select-option>
                             </a-select>
                         </div>
-                    </a-col>
+                    </a-col> -->
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
-                        <div class="key">退款时间:</div>
+                        <div class="key">创建时间:</div>
                         <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
                     </a-col>
                 </a-row>
@@ -47,7 +47,7 @@
                     <template #bodyCell="{ column, text , record}">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
-                                <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}
+                                <a-button type="link" @click="routerChange('purchase', record)">{{ text || '-' }}
                                 </a-button>
                             </a-tooltip>
                         </template>
@@ -55,7 +55,7 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'money'">
-                            €{{ $Util.countFilter(text)  }}
+                            {{$Util.priceUnitFilter(record.currency)}} {{ $Util.countFilter(text) }}
                         </template>
                         <template v-if="column.key === 'tip_time'">
                             <a-tooltip :title="text" destroyTooltipOnHide>
@@ -64,6 +64,9 @@
                         </template>
                         <template v-if="column.dataIndex === 'type'">
                             {{ $Util.refundTypeFilter(text) }}
+                        </template>
+                        <template v-if="column.dataIndex === 'org_name'">
+                            {{ $Util.userTypeFilter(record.org_type) }} {{text}}
                         </template>
                         <template v-if="column.dataIndex === 'status'">
                             <div class="status status-bg status-tag" :class="$Util.refundStatusFilter(text,'color')">
@@ -79,18 +82,21 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('create',record)"
-                                v-if="record.status === STATUS.WAIT_AUDIT && authOrg(record.org_id, record.org_type)">
-                                <i class="icon i_edit"/>修改
-                            </a-button>
-                            <a-button type="link" @click="handleRefundShow(record.id)"
-                                v-if="record.status === STATUS.WAIT_AUDIT && authOrg(record.supply_org_id, record.supply_org_type)">
-                                <i class="icon i_m_success"/>审核
+                            <a-button type="link" @click="routerChange('detail', record)">
+                                <i class="icon i_detail"/>详情
                             </a-button>
                             <a-button type="link" @click="handleCancel(record.id)"
-                                v-if="record.status === STATUS.WAIT_AUDIT && authOrg(record.org_id, record.org_type)">
-                                <i class="icon i_m_error"/>取消
+                                v-if="record.status === STATUS.WAIT_AUDIT && sameOrg(record.org_id, record.org_type)">
+                                <i class="icon i_close_c"/>取消
                             </a-button>
+                            <template v-if="sameOrg(record.supply_org_id, record.supply_org_type)">
+                                <a-button type="link" @click="handleAuditShow(record.id)" v-if="record.status === STATUS.WAIT_AUDIT">
+                                    <i class="icon i_audit"/>审核
+                                </a-button>
+                                <a-button type="link" @click="handleRefundConfirm(record.id)" v-if="record.status === STATUS.AUDIT_PASS">
+                                    <i class="icon i_confirm"/>确认退款
+                                </a-button>
+                            </template>
                         </template>
                     </template>
                 </a-table>
@@ -112,33 +118,33 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="refundShow" title="审核" class="refund-edit-modal" :after-close='handleRefundClose'>
+            <a-modal v-model:visible="auditShow" title="审核" class="refund-edit-modal" :after-close='handleAuditClose'>
                 <div class="modal-content">
                     <div class="form-item required">
                         <div class="key">审核结果:</div>
-                        <a-radio-group v-model:value="editForm.status">
+                        <a-radio-group v-model:value="auditForm.status">
                             <a-radio :value="STATUS.AUDIT_PASS">通过</a-radio>
-                            <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio>
+                            <!-- <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio> -->
                         </a-radio-group>
                     </div>
-                    <div class="form-item textarea required" v-if="editForm.status === STATUS.AUDIT_REFUSE">
+                    <div class="form-item textarea required" v-if="auditForm.status === STATUS.AUDIT_REFUSE">
                         <div class="key">原因:</div>
                         <div class="value">
-                            <a-textarea v-model:value="editForm.audit_message" placeholder="请输入不通过原因"
+                            <a-textarea v-model:value="auditForm.audit_message" placeholder="请输入不通过原因"
                                 :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                         </div>
                     </div>
                 </div>
                 <template #footer>
-                    <a-button @click="refundShow = false">取消</a-button>
-                    <a-button @click="handleRefundSubmit" type="primary">确定</a-button>
+                    <a-button @click="auditShow = false">取消</a-button>
+                    <a-button @click="handleAuditSubmit" type="primary">确定</a-button>
                 </template>
             </a-modal>
         </template>
     </div>
 </template>
-<script>
 
+<script>
 import Core from '../../core';
 import TimeSearch from '../../components/common/TimeSearch.vue'
 const STATUS = Core.Const.REFUND.STATUS
@@ -184,18 +190,19 @@ export default {
             // 表格
             tableData: [],
             tableColumns: [
-                {title: '订单号', dataIndex: 'order_sn', key: 'detail'},
+                {title: '采购单单号', dataIndex: 'order_sn', key: 'detail'},
                 {title: '退款金额', dataIndex: 'money', key: 'money'},
-                {title: '退款原因', dataIndex: 'apply_message', key: 'tip_time'},
-                {title: '退款类型', dataIndex: 'type'},
+                {title: '退款状态', dataIndex: 'status'},
+                // {title: '退款原因', dataIndex: 'apply_message', key: 'tip_time'},
+                {title: '收款组织', dataIndex: 'org_name'},
                 {title: '申请人', dataIndex: ['apply_user','account','name'],key: 'item'},
-                {title: '订单状态', dataIndex: 'status',key: 'status', align: 'center'},
+                {title: '处理人', dataIndex: ['audit_user','account','name'],key: 'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right', width: 100,},
             ],
             // 审核
-            refundShow: false,
-            editForm: {
+            auditShow: false,
+            auditForm: {
                 id: '',
                 status: '',
                 audit_message: '',
@@ -217,7 +224,7 @@ export default {
     computed: {},
     mounted() {},
     methods: {
-        authOrg(orgId, orgType) {
+        sameOrg(orgId, orgType) {
             if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
                 return true
             }
@@ -227,14 +234,14 @@ export default {
             console.log(item)
             let routeUrl = ''
             switch (type) {
-                case 'create':  // 新建
+                case 'detail':  // 新建
                     routeUrl = this.$router.resolve({
-                        path: "/refund/refund-create",
+                        path: "/aftersales/refund-detail",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
-                case 'detail':  // 详情
+                case 'purchase':  // 详情
                     routeUrl = this.$router.resolve({
                         path: "/purchase/purchase-order-detail",
                         query: {id: item.order_id}
@@ -356,32 +363,50 @@ export default {
             });
         },
         // 退款审核
-        handleRefundShow(id) { // 显示弹框
-            this.refundShow = true
-            this.editForm.id = id
+        handleAuditShow(id) { // 显示弹框
+            this.auditShow = true
+            this.auditForm.id = id
         },
-        handleRefundClose() { // 关闭弹框
-            this.refundShow = false;
+        handleAuditClose() { // 关闭弹框
+            this.auditShow = false;
         },
-        handleRefundSubmit() { // 审核提交
+        handleAuditSubmit() { // 审核提交
             this.loading = true;
             Core.Api.Refund.audit({
-                ...this.editForm
+                ...this.auditForm
             }).then(res => {
-                console.log('handleRefundSubmit res', res)
-                this.handleRefundClose()
+                console.log('handleAuditSubmit res', res)
+                this.handleAuditClose()
                 this.getTableData()
                 this.getStatusList()
             }).catch(err => {
-                console.log('handleRefundSubmit err', err)
+                console.log('handleAuditSubmit err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
+        // 确认退款
+        handleRefundConfirm(id) {
+            let _this = this;
+            this.$confirm({
+                title: '确定要该退款单已退款吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Refund.handle({id}).then(() => {
+                        _this.$message.success('操作成功');
+                        _this.getStatusList();
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        }
     },
 };
 </script>
 
-<style scoped>
-
+<style lang='less'>
+/* #RefundList {} */
 </style>

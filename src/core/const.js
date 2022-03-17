@@ -81,16 +81,15 @@ let Const = {
             ],
         }
     },
-    // 大洲列表
-    CONTINENT_LIST: [
-        { "code": "AS", "name": "亚洲", "name_en": "Asia" },
-        { "code": "EU", "name": "欧洲", "name_en": "Europe" },
-        { "code": "AF", "name": "非洲", "name_en": "Africa" },
-        { "code": "NA", "name": "北美洲", "name_en": "North America" },
-        { "code": "SA", "name": "南美洲", "name_en": "South America" },
-        { "code": "OA", "name": "大洋洲", "name_en": "Oceania" },
-        { "code": "AN", "name": "南极洲", "name_en": "Antarctica" }
-    ],
+    CONTINENT_MAP: {
+        "亚洲": "Asia",
+        "欧洲": "Europe",
+        "非洲": "Africa",
+        "北美洲": "North America",
+        "南美洲": "South America",
+        "大洋洲": "Oceania",
+        "南极洲": "Antarctica",
+    },
     COUNTRY_LIST: [ // 国家列表
         {
             "short": "CN",
@@ -270,32 +269,28 @@ let Const = {
         STATUS: {
             WAIT_DETECTION: 30,
             WAIT_REPAIR: 40,
-            REPAIR_END: 50,
             SETTLEMENT: 60,
-            AUDIT_FAIL: -30,
             AUDIT_SUCCESS: 80,
             FINISH: 100,
             CLOSE: -10,
+            AUDIT_FAIL: -30,
         },
         STATUS_MAP: {
             '30': '待检测',
             '40': '维修中',
-            '50': '已维修',
             '60': '已结算待审核',
-            '-30': '审核未通过',
             '80': '审核通过',
-            '100': '已完成',
-            '-10': '已取消',
+            '100': '结算完成',
+            '-30': '审核未通过',
         },
         STATUS_COLOR_MAP: {
             '30': 'yellow',
             '40': 'blue',
-            '50': 'light',
             '60': 'orange',
-            '-30': 'red',
             '80': 'purple',
             '100': 'green',
             '-10': 'gray',
+            '-30': 'red',
         },
         // 故障类型 - 放弃使用
         FAULT_OPTIONS_MAP: {
@@ -337,22 +332,20 @@ let Const = {
         SOURCE_TYPE: {
             PURCHASE_ORDER: 10,
             REPAIR_ORDER: 20,
+            AFTER_SALES_ORDER: 40,
         },
         TYPE_MAP: {
-            101: '维修单创建',
-            102: '维修单信息完善/修改',
-            103: '维修单分配维修人员',
-            104: '维修单删除',
-            105: '维修单取消',
-            110: '二次上门',
-            201: '维修单确认',
-            211: '维修单审核',
+            201: '维修单创建',
+            202: '维修单信息完善/修改',
+            204: '维修单删除',
+            205: '维修单取消',
+            212: '维修单审核',
             301: '维修检测',
-            303: '删除故障零件',
-            304: '删除故障零件',
-            401: '维修完成',
-            501: '结算完成',
-            1001: '订单转移',
+            213: '增加故障零件',
+            215: '删除故障零件',
+            216: '维修完成',
+            217: '结算完成',
+            218: '订单转移',
         },
     },
 
@@ -363,7 +356,7 @@ let Const = {
         },
         TYPE_MAP: {
             1: '整车',
-            2: '零件',
+            2: '零部件',
         },
         MONETARY_TYPE: {
             '￥': 'CNY',
@@ -372,11 +365,18 @@ let Const = {
             '£': 'GBP',
         },
         MONETARY_TYPE_MAP: {
-            CNY: '￥',
-            EUR: '€',
-            USD: '$',
-            GBP: '£',
-        }
+            'CNY': '￥',
+            'EUR': '€',
+            'USD': '$',
+            'GBP': '£',
+        },
+        STATUS: {
+        },
+        STATUS_LIST: [
+            { text: '全部', value: '1' },
+            { text: '上架中', value: '0' },
+            { text: '已下架', value: '-1' },
+        ]
     },
     PURCHASE: { // 采购订单
         // 状态
@@ -442,45 +442,6 @@ let Const = {
             SELF: 1, //本账户的采购单
             CHILDREN: 2, //子级采购单
             ALL: 3, //所有子级采购单
-        },
-    },
-    REFUND: { // 退款管理
-        TYPE_LIST: [
-            { text: '零售商申请退款', value: 100 },
-            { text: '分销商申请退款', value: 110 },
-            { text: '门店申请退款', value: 120 },
-            { text: '后台主动退款', value: 200 },
-        ],
-        TYPE_MAP: {
-            100: '零售商申请退款',
-            110: '分销商申请退款',
-            120: '门店申请退款',
-            200: '后台主动退款'
-        },
-        STATUS: {
-            WAIT_AUDIT: 10, // 待审核
-            AUDIT_PASS: 20, // 审核通过
-            SUCCESS: 40, // 退款成功
-            AUDIT_REFUSE: -10, // 审核失败
-            CANCEL: -20, // 已取消
-        },
-        STATUS_MAP: {
-            '10': '待审核',
-            '20': '审核通过',
-            '40': '退款成功',
-            '-10': '审核失败',
-            '-20': '已取消',
-        },
-        STATUS_COLOR_MAP: {
-            '10': 'yellow',
-            '20': 'blue',
-            '40': 'green',
-            '-10': 'red',
-            '-20': 'grey'
-        },
-        SEARCH_TYPE: {
-            SELF: 1, //本账户申请的退款单
-            CHILDREN: 2, //待审核的退款单
         },
     },
 
@@ -603,14 +564,14 @@ let Const = {
     },
     STOCK_RECORD: { // 出入库明细
         COMMODITY_TYPE: {
-            ENTITY: 20,
             ITEM: 10,
-            MATERIALS: 20,
+            ENTITY: 20,
+            MATERIALS: 30,
         },
         COMMODITY_TYPE_MAP: {
-            20: '整车',
-            10: '零部件',
-            30: '物料',
+            10: '无实例商品',
+            20: '有实例商品',
+            // 30: '物料',
         },
         TYPE: {
             IN: 1, //入库
@@ -626,7 +587,7 @@ let Const = {
             CANCEL: -20, // 取消
         },
         STATUS_MAP: {
-            '0': '初始化',
+            '0': '待提交',
             '40': '已完成',
             '-20': '已取消'
         },
@@ -636,24 +597,24 @@ let Const = {
             '-20': 'grey'
         },
         STATUS_LIST: [ //出入库单审核
-            { text: '初始化', value: 0 },
+            { text: '待提交', value: 0 },
             { text: '已完成', value: 40 },
             { text: '已取消', value: -20 },
         ],
         SOURCE_TYPE: {
-            ADMIN: 10, //管理员创建
-            PRODUCTION: 15,
-            PURCHASE_ORDER: 20, //采购单
-            AFTER_SALES_ORDER: 30, //售后
-            TRANSFER_ORDER: 40,
-            REPAIR_ORDER: 50,
+            ADMIN: 10,       //管理员创建
+            PRODUCTION: 15,  // 生产单
+            PURCHASE: 20,    // 采购单
+            AFTER_SALES: 30, // 售后单
+            TRANSFER: 40,    // 调货单
+            REPAIR: 50,      // 维修单
         },
         SOURCE_TYPE_MAP: {
             10: '管理员创建',
-            20: '采购',
             15: '生产单',
-            30: '售后',
-            40: '调货',
+            20: '采购单',
+            30: '售后单',
+            40: '调货单',
             50: '维修单'
         },
     },
@@ -699,10 +660,10 @@ let Const = {
             GBP: 4,
         },
         TYPE_MAP: {
-            '1': '人民币',
-            '2': '欧元',
-            '3': '美元',
-            '4': '英镑',
+            '1': 'CNY',
+            '2': 'EUR',
+            '3': 'USD',
+            '4': 'GBP',
         },
         OPERATE_TYPE: {
             IN: 1,
@@ -751,6 +712,90 @@ let Const = {
             FAIL: 0,
             SUCCESS: 1,
         }
+    },
+    AFTERSALES: { // 售后
+        STATUS: {
+            INIT: 0,         // 待提交
+            APPLY: 100,      // 待审核
+            AUDIT_PASS: 200, // 处理中
+            FINISH: 600 ,    // 已完成
+            CANCEL: -100,    // 已取消
+            AUDIT_FAIL: -200,// 审核失败
+        },
+        STATUS_MAP: {
+            '0'   : { color: 'purple', text: '待提交'},
+            '100' : { color: 'orange', text: '待审核'},
+            '200' : { color: 'blue',   text: '处理中'},
+            '600' : { color: 'green',  text: '已完成'},
+            '-100': { color: 'gray',   text: '已取消'},
+            '-200': { color: 'red',    text: '审核失败'},
+        },
+        TYPE: {
+            ONLY_REFUND: 1,       // 仅退款
+            REFUND_WITH_ITEMS: 2, // 退款且退货
+            EXCHANGE_ITEMS: 3,    // 换货
+            REISSUE: 4,           // 补发
+        },
+        TYPE_MAP: {
+            '1': '仅退款',
+            '2': '退款且退货',
+            '3': '换货',
+            '4': '补发',
+        },
+        QUERY_TYPE: {
+            APPLY: 1,
+            SUPPLY: 2,
+        },
+        WAYBILL_STATUS_MAP: {
+            '0' :'初始化',
+            '100' :'已发货',
+            '200' :'已接收',
+            '400' :'已入库',
+        },
+        REFUND_STATUS_MAP: {
+            '0' :'初始化',
+            '100' :'已申请',
+            '400' :'退款成功',
+        },
+    },
+    REFUND: { // 退款管理
+        TYPE_LIST: [
+            { text: '零售商申请退款', value: 100 },
+            { text: '分销商申请退款', value: 110 },
+            { text: '门店申请退款', value: 120 },
+            { text: '后台主动退款', value: 200 },
+        ],
+        TYPE_MAP: {
+            100: '零售商申请退款',
+            110: '分销商申请退款',
+            120: '门店申请退款',
+            200: '后台主动退款'
+        },
+        STATUS: {
+            WAIT_AUDIT: 10, // 待审核
+            AUDIT_PASS: 20, // 审核通过
+            SUCCESS: 40, // 退款成功
+            AUDIT_REFUSE: -10, // 审核失败
+            CANCEL: -20, // 已取消
+        },
+        STATUS_MAP: {
+            '10': '待审核',
+            '20': '审核通过',
+            '40': '退款成功',
+            '-10': '审核失败',
+            '-20': '已取消',
+        },
+        STATUS_COLOR_MAP: {
+            '10': 'yellow',
+            '20': 'blue',
+            '40': 'green',
+            '-10': 'red',
+            '-20': 'grey'
+        },
+        SEARCH_TYPE: {
+            SELF: 1, //本账户申请的退款单
+            CHILDREN: 2, //待审核的退款单
+        },
     },
 };
 

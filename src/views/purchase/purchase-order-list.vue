@@ -56,10 +56,12 @@
                 </a-col>
             </a-row>
             <div class="btn-area">
-                <a-button @click="handleExportConfirm">{{$t('def.export')}}</a-button>
                 <a-button @click="handleSearch" type="primary">{{$t('def.search')}}</a-button>
                 <a-button @click="handleSearchReset">{{$t('def.reset')}}</a-button>
             </div>
+        </div>
+        <div class="operate-container">
+            <a-button type="primary" @click="handleExportConfirm"><i class="icon i_download"/>{{$t('def.export')}}</a-button>
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -70,8 +72,8 @@
                             <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                         </a-tooltip>
                     </template>
-                    <template v-if="column.dataIndex === 'price'">
-                        €{{$Util.countFilter(text)}}
+                    <template v-if="column.key === 'money'">
+                        {{$Util.priceUnitFilter(record.currency)}} {{$Util.countFilter(text)}}
                     </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text,'color')">
@@ -211,10 +213,11 @@ export default {
         tableColumns() {
             let columns = [
                 { title: '订单编号', dataIndex: 'sn', },
-                { title: '订单总价', dataIndex: 'price' },
+                { title: '订单总价', dataIndex: 'price', key: 'money' },
                 { title: '订单状态', dataIndex: 'status' },
                 { title: '下单时间', dataIndex: 'create_time', key: 'time' },
                 { title: '支付状态', dataIndex: 'payment_status' },
+                { title: '已支付金额', dataIndex: 'payment', key: 'money' },
                 { title: '支付时间', dataIndex: 'pay_time', key: 'time' },
                 { title: '完成时间', dataIndex: 'close_time', key: 'time' },
                 { title: '操作', key: 'operation', fixed: 'right'}
@@ -321,9 +324,11 @@ export default {
                     res.status_list.forEach(item => {
                         if ( statusItem.key == item.status) {
                             statusItem.value = item.amount
-                            total += item.amount
                         }
                     })
+                })
+                res.status_list.forEach(item => {
+                    total += item.amount
                 })
                 this.statusList[0].value = total
             }).catch(err => {

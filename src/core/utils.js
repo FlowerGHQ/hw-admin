@@ -283,6 +283,10 @@ const Util = {
         }
         return CH_NUM_MAP[value] || value
     },
+    priceUnitFilter(val) {
+        const MAP = Const.ITEM.MONETARY_TYPE_MAP
+        return MAP[val]
+    },
     /* =============== 数值 ================ */
 
     /* =============== 通用过滤器 ================ */
@@ -345,6 +349,12 @@ const Util = {
     },
     /* =============== 通用过滤器 ================ */
 
+    /* ===============  ================ */
+    distributorTypeFilter(val) {
+        const MAP = Const.DISTRIBUTOR.TYPE_MAP
+        return MAP[val] || '未知'
+    },
+    /* =============== 通用过滤器 ================ */
 
     /* =============== 商品 ================ */
     itemTypeFilter(val) {
@@ -398,15 +408,14 @@ const Util = {
                 return COLOR_MAP[val] || 'grey'
         }
     },
-
-    // repairItemTypeFilter(val) {
-    //     const MAP = Const.REPAIR.ITEM_TYPE_MAP
-    //     return MAP[val] || '未知'
-    // },
-    // repairFaultOptionsListFilter(val) {
-    //     const MAP = Const.REPAIR.FAULT_OPTIONS_MAP
-    //     return MAP[val] || '未知'
-    // },
+    /* repairItemTypeFilter(val) {
+        const MAP = Const.REPAIR.ITEM_TYPE_MAP
+        return MAP[val] || '未知'
+    },
+    repairFaultOptionsListFilter(val) {
+        const MAP = Const.REPAIR.FAULT_OPTIONS_MAP
+        return MAP[val] || '未知'
+    }, */
     actionLogTypeFilter(val) {
         const MAP = Const.ACTION_LOG.TYPE_MAP
         return MAP[val] || '未知'
@@ -414,7 +423,7 @@ const Util = {
     /* =============== 维修单 ================ */
 
 
-    /* =============== 采购单 ================ */
+    /* =============== 采购单 && 售后管理 && 退款管理 ================ */
     purchaseStatusFilter(val, to = 'word') {
         const MAP = Const.PURCHASE.STATUS_MAP
         const COLOR_MAP = Const.PURCHASE.STATUS_COLOR_MAP
@@ -443,38 +452,17 @@ const Util = {
                 return COLOR_MAP[val + ''] || 'grey'
         }
     },
-    /* =============== 采购单 ================ */
 
-    /* =============== 员工/账号/用户 ================ */
-    userTypeFilter(val) {
-        const MAP = Const.USER.TYPE_MAP
-        return MAP[val] || '未知'
+    aftersalesTypeFilter(val) {
+        const MAP = Const.AFTERSALES.TYPE_MAP
+        return MAP[val + ''] || '未知'
     },
-    /* =============== 员工/账号/用户 ================ */
+    aftersalesStatusFilter(val, to = 'text') {
+        const MAP = Const.AFTERSALES.STATUS_MAP
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
+    },
 
-    /* =============== 物流信息 ================ */
-    waybillCompanyFilter(key) {
-        const MAP = Const.WAYBILL.COMPANY_MAP
-        return MAP[key] || '未知物流公司'
-    },
-    waybillTargetFilter(val) {
-        const MAP = Const.WAYBILL.TARGET_TYPE_MAP
-        return MAP[val] || '未知货物订单'
-    },
-    /* =============== 物流信息 ================ */
-
-    /* =============== 系统管理 ================ */
-    noticeTypeFilter(val) {
-        const MAP = Const.NOTICE.TYPE_MAP
-        return MAP[val] || '未知'
-    },
-    fileTargetTypeFilter(val) {
-        const MAP = Const.SYSTEM.FILE.TARGET_TYPE_MAP
-        return MAP[val] || '未知'
-    },
-    /* =============== 系统管理 ================ */
-
-    /* =============== 退款管理 ================ */
     refundTypeFilter(val) {
         const MAP = Const.REFUND.TYPE_MAP
         return MAP[val] || '未知'
@@ -489,11 +477,39 @@ const Util = {
                 return COLOR_MAP[val + ''] || 'grey'
         }
     },
-    distributorTypeFilter(val) {
-        const MAP = Const.DISTRIBUTOR.TYPE_MAP
+    /* =============== 采购单 && 售后管理 && 退款管理  ================ */
+
+    /* =============== 员工/账号/用户 ================ */
+    userTypeFilter(val) {
+        const MAP = Const.USER.TYPE_MAP
         return MAP[val] || '未知'
     },
-    /* =============== 退款管理 ================ */
+    /* =============== 员工/账号/用户 ================ */
+
+
+    /* =============== 物流信息 ================ */
+    waybillCompanyFilter(key) {
+        const MAP = Const.WAYBILL.COMPANY_MAP
+        return MAP[key] || '未知物流公司'
+    },
+    waybillTargetFilter(val) {
+        const MAP = Const.WAYBILL.TARGET_TYPE_MAP
+        return MAP[val] || '未知货物订单'
+    },
+    /* =============== 物流信息 ================ */
+
+
+    /* =============== 系统管理 ================ */
+    noticeTypeFilter(val) {
+        const MAP = Const.NOTICE.TYPE_MAP
+        return MAP[val] || '未知'
+    },
+    fileTargetTypeFilter(val) {
+        const MAP = Const.SYSTEM.FILE.TARGET_TYPE_MAP
+        return MAP[val] || '未知'
+    },
+    /* =============== 系统管理 ================ */
+
 
     /* =============== 出入库 ================ */
     stockRecordFilter(val) {
@@ -527,6 +543,7 @@ const Util = {
         return MAP[val] || '未知'
     },
     /* =============== 出入库 ================ */
+
     /* =============== 调货单 ================ */
     transferStatusFilter(val, to = 'word') {
         const MAP = Const.TRANSFER_ORDER.STATUS_MAP
@@ -562,7 +579,7 @@ const Util = {
     operateTypeFilter(val) {
         const MAP = Const.WALLET.OPERATE_TYPE_MAP
         return MAP[val] || '未知'
-    }
+    },
     /* =============== 账户 ================ */
 
 }

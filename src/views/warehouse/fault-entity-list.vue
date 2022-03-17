@@ -49,9 +49,9 @@
                     <a-button @click="handleSearchReset">重置</a-button>
                 </div>
             </div>
-            <div class="operate-container" v-if="type==='pending' && selectedRowItems.length > 0">
-                <a-button type="primary"  @click="handleEntryShow('batch')">批量入库</a-button>
-                <a-button type="primary"  @click="handleAuditShow('batch')">批量审核</a-button>
+            <div class="operate-container" v-if="type==='pending'">
+                <a-button type="primary" @click="handleEntryShow('batch')" :disabled="!selectedRowItems.length">批量入库</a-button>
+                <a-button type="primary" @click="handleAuditShow('batch')" :disabled="!selectedRowItems.length">批量审核</a-button>
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -82,7 +82,7 @@
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="handleFaultItemShow(record)" v-if="type !== 'pending'"><i class="icon i_edit"/> 修改</a-button>
                             <a-button type="link" @click="handleEntryShow('', record)" v-if="type == 'pending' && record.org_type !== LOGIN_TYPE.ADMIN"><i class="icon i_s_warehouse"/> 入库</a-button>
-                            <a-button type="link" @click="handleAuditShow('', record)" v-if="type == 'pending' && record.status === AUDIT_TYPE.WAIT"><i class="icon i_m_success"/> 审核</a-button>
+                            <a-button type="link" @click="handleAuditShow('', record)" v-if="type == 'pending' && record.status === AUDIT_TYPE.WAIT"><i class="icon i_audit"/> 审核</a-button>
                             <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button>
                         </template>
                     </template>
@@ -193,7 +193,7 @@
                     <a-button @click="handleEntryClose">取消</a-button>
                     <a-button @click="handleEntrySubmit" type="primary">确定</a-button>
                 </template>
-            </a-modal>       
+            </a-modal>
         </template>
     </div>
 </template>
@@ -435,12 +435,12 @@ export default {
             this.form.vehicle_no = ''
             Core.Api.Repair.detailByUid({uid}).then(res => {
                 console.log('handleSearchFrameNum', res)
-                if (!res || !res.id || !res.service_type || !res.vehicle_no) {
+                if (!res.detail) {
                     this.$message.warning('获取维修单信息失败')
                 } else {
-                    this.form.source_id = res.id
-                    this.form.service_type = res.service_type
-                    this.form.vehicle_no = res.vehicle_no
+                    this.form.source_id = res.detail.id
+                    this.form.service_type = res.detail.service_type
+                    this.form.vehicle_no = res.detail.vehicle_no
                 }
             }).catch(err => {
                 this.$message.warning('该维修单不存在，请输入正确的维修单号')
@@ -449,6 +449,9 @@ export default {
         // 通过故障件实例号查故障件信息
         handleSearchFaultEntity() {
             const uid = this.form.uid
+            if (uid === "") {
+                return
+            }
             Core.Api.Entity.detailByUid({uid}).then(res => {
                 if(res.item_id !== this.form.item_id) {
                     this.$message.warning('该故障件实例和故障件种类不符')

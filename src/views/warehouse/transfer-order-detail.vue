@@ -5,12 +5,12 @@
             <div class="title-area">调货单详情</div>
             <a-button type="primary" ghost @click="handleTransferAuditShow"
                 v-if="[STATUS.WAIT_AUDIT].includes(detail.status) && $auth('ADMIN')">
-                <i class="icon i_m_success"/>审核
+                <i class="icon i_audit"/>审核
             </a-button>
         </div>
         <div class="gray-panel info">
             <div class="panel-title">
-                <div class="left"><span>出入库单编号</span> {{ detail.uid }}</div>
+                <div class="left"><span>调货单编号</span> {{ detail.uid }}</div>
             </div>
             <div class="panel-content">
                 <div class="info-item">
@@ -34,14 +34,17 @@
                     <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                         :row-key="record => record.id" :pagination='false'>
                         <template #bodyCell="{ column, text }">
-                            <template v-if="column.key === 'name'">
+<!--                            <template v-if="column.key === 'name'">
                                 <a-tooltip placement="top" :title='text'>
                                     {{ text || '-' }}
                                 </a-tooltip>
-                            </template>
+                            </template>-->
                             <template v-if="column.key === 'code'">
                                 {{ text || '-' }}
                             </template>
+<!--                            <template v-if="column.key === 'model'">
+                                {{ text || '-' }}
+                            </template>-->
                             <template v-if="column.key === 'amount'">
                                 {{ text || '-' }}件
                             </template>
@@ -99,8 +102,8 @@ export default {
             tableData: [],
             tableColumns: [
                 {title: '商品名称', dataIndex: ['item', 'name'], key: 'name'},
-                {title: '商品品号', dataIndex: ['item', 'model']},
-                {title: '商品编码', dataIndex: ['item', 'code']},
+                {title: '商品品号', dataIndex: ['item', 'model'], key: 'model' },
+                {title: '商品编码', dataIndex: ['item', 'code'] },
                 {title: '商品规格', dataIndex: ['item', 'attr_str'],},
                 {title: '数量', dataIndex: 'amount', key: 'amount'},
             ],

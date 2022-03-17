@@ -1,7 +1,12 @@
 <template>
 <div id="ItemCollect" class="list-container">
+    <a-select v-model:value="currency" class="monetary-select">
+        <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>
+    </a-select>
     <div class="list-container shop-cart-container">
-        <div class="title-area">购物车</div>
+        <div class="title-area">
+            <div class="shop-area">购物车</div>
+        </div>
         <div class="list-content">
             <div class="list-item" v-for="item of shopCartList" :key="item.id">
                 <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
@@ -22,7 +27,7 @@
                     </div>
                 </div>
                 <div class="price">
-                    €{{$Util.countFilter(item.price)}}
+                    {{currency}} {{$Util.countFilter(item.item ? item.item[priceKey + unitMap[currency].key] : item.price)}}
                 </div>
             </div>
             <SimpleImageEmpty v-if="!shopCartList.length" desc='您的购物车中暂无商品'/>
@@ -36,11 +41,11 @@
                         {{$Util.itemSpecFilter(item.item.attr_list)}}
                     </span>
                 </p>
-                <span class="price">€{{$Util.countFilter(item.item.purchase_price * item.amount)}}</span>
+                <span class="price">{{currency}} {{$Util.countFilter(item.item[priceKey + unitMap[currency].key] * item.amount)}}</span>
             </div>
             <div class="settle-item sum">
                 <p class="name">总计</p>
-                <span class="price">€{{sum_price}}</span>
+                <span class="price">{{currency}} {{sum_price}}</span>
             </div>
             <a-button type="primary" ghost @click="routerChange('settle')">结算</a-button>
         </div>
@@ -64,7 +69,7 @@
                     </div>
                 </div>
                 <div class="price">
-                    €{{$Util.countFilter(item.item ? item.item.purchase_price : item.price) }}
+                    {{currency}} {{$Util.countFilter(item.item ? item.item[priceKey + unitMap[currency].key] : item.price)}}
                 </div>
             </div>
             <SimpleImageEmpty v-if="!favoriteList.length" desc='您的收藏夹中暂无商品'/>
@@ -91,14 +96,27 @@ export default {
             detail: {},
             shopCartList: [],
             favoriteList: [],
+
+            unitMap: {
+                // "￥": { key: '', text: '￥ (CNY)'},
+                "€": { key: '_eur', text: '€ (EUR)'},
+                "$": { key: '_usd', text: '$ (USD)'},
+                // "£": { key: '_gbp', text: '£ (GBP)'},
+            },
+            currency: Core.Const.ITEM.MONETARY_TYPE_MAP.EUR,
         };
     },
     watch: {},
     computed: {
+        priceKey() {
+            let priceKey = this.$auth('DISTRIBUTOR') ? 'fob' : 'purchase_price'
+            return priceKey
+        },
         sum_price() {
             let sum = 0
+            let key = this.priceKey + this.unitMap[this.currency].key
             for (const item of this.shopCartList) {
-                sum += item.item.purchase_price * item.amount
+                sum += item.item[key] * item.amount
             }
             return Core.Util.countFilter(sum)
         }
@@ -113,6 +131,10 @@ export default {
                 case 'settle':  // 结算
                     routeUrl = this.$router.resolve({
                         path: "/purchase/item-settle",
+                        query: {
+                            unit: this.currency,
+                            currency: this.unitMap[this.currency].key
+                        }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -228,20 +250,33 @@ export default {
 <style lang="less">
 #ItemCollect {
     padding: 60px 56px 150px 48px;
+    position: relative;
+    .monetary-select {
+        position: absolute;
+        top: 28px;
+        right: 28px;
+        min-width: 126px;
+        .ant-select-selector {
+            border-color: #006EF9;
+        }
+        .ant-select-selection-item {
+            color: #006EF9;
+        }
+    }
     .list-container {
         display: flex;
         flex-wrap: wrap;
         align-items: flex-start;
         + .list-container { margin-top: 76px; }
         .title-area {
+            display: flex;
             width: 100%;
             font-size: 24px;
-
             font-weight: 500;
             color: #111111;
             line-height: 28px;
-
             margin-bottom: 8px;
+            
         }
         .list-content {
             width: 72%;
@@ -354,6 +389,7 @@ export default {
                 line-height: 26px;
                 margin-bottom: 24px;
                 margin-top: 22px;
+
             }
             .settle-item {
                 width: 100%;

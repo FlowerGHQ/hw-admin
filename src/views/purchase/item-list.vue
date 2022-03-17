@@ -20,11 +20,11 @@
                                 <i class="icon i_check_b"/>已加入购物车
                             </div>
                             <div class="item" v-for="item of briefList" :key="item.id">
-                                <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
+                                <img class="cover" :src="$Util.imageFilter(item.logo, 2)" />
                                 <div class="desc">
-                                    <p>{{item.item.name}}</p>
-                                    <span>{{item.attr_str || item.item.code}}</span>
-                                    <p class="price">€{{$Util.countFilter(item.price)}}</p>
+                                    <p>{{item.name || '-'}}</p>
+                                    <span>{{item.code || '-'}}</span>
+                                    <p class="price">€{{$Util.countFilter(item[priceKey + 'eur'])}} | ${{$Util.countFilter(item[priceKey + 'usd'])}}</p>
                                 </div>
                             </div>
                             <div class="btns">
@@ -62,7 +62,7 @@
                     <p class="sub">{{item.code}}</p>
                     <p class="name">{{item.name}}</p>
                     <p class="desc">&nbsp;</p>
-                    <p class="price">€{{$Util.countFilter(item.purchase_price)}}</p>
+                    <p class="price">€{{$Util.countFilter(item[priceKey + 'eur'])}} | ${{$Util.countFilter(item[priceKey + 'usd'])}}</p>
                     <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">添加到购物车</a-button>
                 </div>
             </div>
@@ -127,7 +127,11 @@ export default {
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        priceKey() {
+            return this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
+        }
+    },
     mounted() {
         this.getTableData();
         this.getCategoryList()
@@ -189,6 +193,7 @@ export default {
         getTableData() { // 获取 商品 数据
             this.loading = true;
             Core.Api.Item.list({
+                flag_spread: 1,
                 category_id: this.searchForm.category_id,
                 name: this.searchForm.name,
                 page: this.currPage,
@@ -208,11 +213,8 @@ export default {
             Core.Api.ShopCart.list().then(res => {
                 console.log('getShopCartData res:', res)
                 this.briefVisible = flag
-                let item = res.list[0]
-                if (item && item.item.attr_list instanceof Array) {
-                    item.attr_str = item.item.attr_list.map(item => item.value).join(' ')
-                }
-                this.briefList = [item || {}]
+                let item = res.list[0] || {}
+                this.briefList = [item.item || {}]
                 console.log('this.briefList: ', this.briefList);
                 this.briefCount = res.count;
             })

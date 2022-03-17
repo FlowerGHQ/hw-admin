@@ -14,7 +14,7 @@
             <div class="info-block">
                 <div class="title">托修方</div>
                 <p>车主姓名：{{detail.customer_name}}</p>
-                <p>车架号：{{detail.item_code}}</p>
+                <p>车架号：{{detail.vehicle_no}}</p>
                 <p>送修日期：{{$Util.timeFormat(detail.create_time)}}</p>
                 <div class="title">联系电话</div>
                 <p>{{detail.customer_phone}}</p>
@@ -40,20 +40,34 @@
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
                     </template>
+                    <template v-if="column.dataIndex === 'item_fault_id'">
+                        {{ faultMap[text] }}
+                    </template>
+                    <template v-if="column.dataIndex === 'amount'">
+                        {{ text }} 件
+                    </template>
                     <template v-if="column.dataIndex === 'price'">
-                        {{ $Util.countFilter(text) }}€
+                        € {{ $Util.countFilter(text) }}
                     </template>
                     <template v-if="column.dataIndex === 'sum_price'">
-                        {{ $Util.countFilter(record.price * record.amount) }}€
+                        € {{ $Util.countFilter(record.price * record.amount) }}
+                    </template>
+                    <template v-if="column.dataIndex === 'man_hour'">
+                        {{ $Util.countFilter(text) }}工时
                     </template>
                 </template>
                 <template #summary>
                     <a-table-summary>
                         <a-table-summary-row>
                             <a-table-summary-cell :index="0" :col-span="2"></a-table-summary-cell>
-                            <a-table-summary-cell :index="1" :col-span="2">
-                                <div class="sum-price">
-                                    <p>总金额</p> <span>€{{$Util.countFilter(sum_price)}}</span>
+                            <a-table-summary-cell :index="1" :col-span="3">
+                                <div class="sum-price" v-if="detail.service_type === SERVICE_TYPE.OUT_REPAIR_TIME">
+                                    <div class="row"><p>零件费</p> <span>€{{$Util.countFilter(sum_price)}}</span></div>
+                                    <div class="row"><p>工时费</p> <span>€{{$Util.countFilter(settle.man_hour_money)}}</span></div>
+                                    <div class="row"><p>总金额</p> <span>€{{$Util.countFilter(sum_price + settle.man_hour_money)}}</span></div>
+                                </div>
+                                <div class="sum-price" v-else>
+                                    <div class="row"><p>总金额</p> <span>€{{$Util.countFilter(sum_price)}}</span></div>
                                 </div>
                             </a-table-summary-cell>
                         </a-table-summary-row>
@@ -70,30 +84,42 @@
 </template>
 <script>
 import Core from '../../core';
+const SERVICE_TYPE = Core.Const.REPAIR.SERVICE_TYPE
 export default {
     name: 'RepairInvoice',
     components: {},
     props: {},
     data() {
         return {
+            SERVICE_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
 
             id: '',
             detail: {},
+            settle: {},
 
             tableData: [],
-            tableColumns: [
-                { width: '40%', title: '维修材料', dataIndex: ['item', 'name'], key: 'item' },
-                { width: '20%', title: '数量', dataIndex: 'amount', key: 'item' },
-                { width: '20%', title: '单价', dataIndex: 'price' },
-                { width: '20%', title: '金额（元）', dataIndex: 'sum_price' },
-            ]
+            faultMap: {}
         }
     },
     watch: {},
     computed: {
+        tableColumns() {
+            let tableColumns = [
+                {title: '故障类型', dataIndex: 'item_fault_id'},
+                {title: '维修材料', dataIndex: ['item', 'name'], key: 'item'},
+                {title: '数量', dataIndex: 'amount'},
+                {title: '单价', dataIndex: 'price'},
+                {title: '金额', dataIndex: 'sum_price'},
+                {title: '工时', dataIndex: 'man_hour'}
+            ]
+            if (this.detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME) {
+                tableColumns.pop()
+            }
+            return tableColumns
+        },
         sum_price() {
             let sum = 0
             this.tableData.forEach(item => {
@@ -105,6 +131,7 @@ export default {
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         this.getRepairDetail();
+        this.getSettleDetail();
         this.getTableData();
     },
     methods: {
@@ -135,14 +162,45 @@ export default {
             }).then(res => {
                 console.log('getRepairDetail res', res)
                 this.detail = res
+                this.getFaultData()
             }).catch(err => {
                 console.log('getRepairDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
+        // 获取结算单详情
+        getSettleDetail() {
+            Core.Api.Repair.settleDetail({
+                source_type: 10,
+                source_id: this.id,
+            }).then(res => {
+                console.log('getSettleDetail res:', res)
+                this.settle = res.detail
+            })
+        },
+
+        getFaultData() {
+            this.loading = true;
+            Core.Api.Fault.list({
+                org_id: this.detail.org_id,
+                org_type: this.detail.org_type,
+            }).then(res => {
+                console.log("getFaultData res:", res)
+                let list = res.list;
+                let map = {};
+                for (const item of list) {
+                    map[item.id] = item.name
+                }
+                console.log('getFaultData faultMap:', map)
+                this.faultMap = map;
+            }).catch(err => {
+                console.log('getFaultData err:', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
         getTableData() {  // 获取 表格 数据
-            console.log(this.id);
             this.loading = true;
             Core.Api.RepairItem.list({
                 repair_order_id: this.id
@@ -155,6 +213,7 @@ export default {
                 this.loading = false;
             });
         },
+
 
         // 打印
         handleExport() {
@@ -237,22 +296,33 @@ export default {
                 .ant-table-cell {
                     padding: 0;
                     border-bottom: 1px solid transparent;
-                    height: 40px;
+                    height: 120px;
+                    position: relative;
                 }
             }
             .sum-price {
+                position: absolute;
+                top: 12px;
                 margin-left: 16px;
-                width: 70%;
-                height: 2px;
+                width: 78%;
                 opacity: 0.9;
                 border-top: 2px solid #000022;
-                .fsb();
-                p, span {
-                    padding-top: 25px;
-                    font-size: 12px;
-                    font-weight: 500;
-                    color: #000022;
-                    line-height: 17px;
+                padding-top: 4px;
+                .row {
+                    .fsb();
+                    width: 100%;
+                    height: 20px;
+                    line-height: 20px;
+                    p, span {
+                        font-size: 12px;
+                        color: #000022;
+                        font-weight: 400;
+                    }
+                    &:last-child {
+                        p, span {
+                            font-weight: 500;
+                        }
+                    }
                 }
             }
         }

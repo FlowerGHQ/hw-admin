@@ -12,19 +12,8 @@
                     <div class="key">仓库：</div>
                     <div class="value">
                         <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库">
-                            <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id"
-                                             :value="warehouse.id">
-                                {{ warehouse.name }}
-                            </a-select-option>
+                            <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                         </a-select>
-                    </div>
-                </div>
-                <div class="form-item required">
-                    <div class="key">类目：</div>
-                    <div class="value">
-                        <a-radio-group v-model:value="form.target_type">
-                            <a-radio v-for="(val, key) in targetMap" :key='key' :value='key'>{{ val }}</a-radio>
-                        </a-radio-group>
                     </div>
                 </div>
                 <div class="form-item required">
@@ -36,48 +25,37 @@
                     </div>
                 </div>
                 <div class="form-item required">
+                    <div class="key">类目：</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.target_type">
+                            <a-radio v-for="(val, key) in targetMap" :key='key' :value='key'>{{ val }}</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">来源：</div>
                     <div class="value">
                         <a-select v-model:value="form.source_type" placeholder="请选择来源">
-                            <a-select-option v-for="(val, key) of sourceTypeMap" :key='key' :value='key'>{{ val }}
-                            </a-select-option>
+                            <a-select-option v-for="(val, key) of sourceTypeMap" :key='key' :value='key'>{{ val }}</a-select-option>
                         </a-select>
                     </div>
                 </div>
-                <div class="form-item required" v-if="form.source_type == 20">
-                    <div class="key">采购单号：</div>
+
+                <div class="form-item required" v-if="needUid">
+                    <div class="key">{{sourceTypeMap[form.source_type]}}号：</div>
                     <div class="value">
-                        <a-input v-model:value="form.source_id" placeholder="请输入相关的采购单号"
-                                 @blur="handleSelectBlur('purchase')"/>
+                        <a-input v-model:value="sourceUid" :placeholder="`请输入相关的${sourceTypeMap[form.source_type]}号`" @blur="handleSelectBlur()"/>
                         <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
                         <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                     </div>
                 </div>
-                <div class="form-item required" v-if="form.source_type == 20">
+
+                <div class="form-item required" v-if="form.source_type == SOURCE_TYPE.PURCHASE">
                     <div class="key">到港时间</div>
                     <div class="value">
-                        <a-date-picker v-model:value="form.arrival_time" valueFormat='YYYY-MM-DD HH:mm:ss'
-                                       :show-time="defaultTime" placeholder="请选择到港时间">
+                        <a-date-picker v-model:value="form.arrival_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" placeholder="请选择到港时间">
                             <template #suffixIcon><i class="icon i_calendar"/></template>
                         </a-date-picker>
-                    </div>
-                </div>
-                <div class="form-item required" v-if="form.source_type == 40">
-                    <div class="key">调货单号：</div>
-                    <div class="value">
-                        <a-input v-model:value="form.source_id" placeholder="请输入调货单号"
-                                 @blur="handleSelectBlur('transfer')"/>
-                        <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
-                        <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
-                    </div>
-                </div>
-                <div class="form-item required" v-if="form.source_type == 50">
-                    <div class="key">维修单号：</div>
-                    <div class="value">
-                        <a-input v-model:value="form.source_id" placeholder="请输入维修单号"
-                                 @blur="handleSelectBlur('repair')"/>
-                        <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
-                        <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                     </div>
                 </div>
             </div>
@@ -93,35 +71,52 @@
 import Core from '../../core';
 import dayjs from "dayjs";
 
+const SOURCE_TYPE = Core.Const.STOCK_RECORD.SOURCE_TYPE
+
 export default {
     name: 'InvoiceEdit',
     components: {},
     props: {},
     data() {
         return {
+            SOURCE_TYPE,
             // 加载
             loading: false,
             detail: {},
+
+            warehouseList: [],
+            typeMap: Core.Const.STOCK_RECORD.TYPE_MAP, // 类型
+            targetMap: Core.Const.STOCK_RECORD.COMMODITY_TYPE_MAP, //类目
+            sourceTypeMap: Core.Const.STOCK_RECORD.SOURCE_TYPE_MAP, //来源
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
-            isExist: '',
             form: {
-                type: '',
                 id: '',
+                type: '',
+                target_type: '',
                 warehouse_id: undefined,
                 source_type: undefined,
                 source_id: '',
-                target_type: '',
                 arrival_time: '',//到港时间
             },
-            warehouseList: [],
-            typeMap: Core.Const.STOCK_RECORD.TYPE_MAP, //出入库
-            sourceTypeMap: Core.Const.STOCK_RECORD.SOURCE_TYPE_MAP, //来源
-            sourceType: Core.Const.STOCK_RECORD.SOURCE_TYPE,
-            targetMap: Core.Const.STOCK_RECORD.COMMODITY_TYPE_MAP, //类目
+            sourceUid: '',
+            isExist: '',
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        needUid() {
+            let val = this.form.source_type
+            switch (Number(val)) {
+                case SOURCE_TYPE.PRODUCTION:
+                case SOURCE_TYPE.PURCHASE:
+                case SOURCE_TYPE.AFTER_SALES:
+                case SOURCE_TYPE.TRANSFER:
+                case SOURCE_TYPE.REPAIR:
+                    return true
+                default: return false
+            }
+        }
+    },
     created() {
     },
     mounted() {
@@ -155,62 +150,6 @@ export default {
         getWarehouseList() {
             Core.Api.Warehouse.listAll().then(res => {
                 this.warehouseList = res.list
-            })
-        },
-        handleSelectBlur(type) {
-            switch (type) {
-                case'repair':
-                    this.handleRepairBlur();
-                    break;
-                case'transfer':
-                    this.handleTransferBlur();
-                    break;
-                case'purchase':
-                    this.handlePurchaseBlur();
-                    break;
-            }
-        },
-        handlePurchaseBlur() {  // 获取 采购订单号
-            if (!this.form.source_id) {
-                return this.isExist = ''
-            }
-            Core.Api.Purchase.detailSn({
-                sn: this.form.source_id,
-            }).then(res => {
-                this.isExist = res.detail == null ? 2 : 1
-                this.source_id = res.detail.id
-                this.defaultTime = res.detail.arrival_time
-            }).catch(err => {
-                console.log('onblur err', err)
-            }).finally(() => {
-            });
-        },
-        handleTransferBlur() {
-            if (!this.form.source_id) {
-                return this.isExist = ''
-            }
-            Core.Api.Transfer.detailByUid({
-                uid: this.form.source_id,
-            }).then(res => {
-                this.isExist = res.detail == null ? 2 : 1
-                this.source_id = res.detail.id
-                console.log("onblur res", res)
-            }).catch(err => {
-                console.log('onblur err', err)
-            }).finally(() => {
-            });
-        },
-        handleRepairBlur() {
-            if (!this.form.source_id) {
-                return this.isExist = ''
-            }
-            Core.Api.Repair.detailByUid({
-                uid: this.form.source_id,
-            }).then(res => {
-                this.isExist = res.detail == null ? 2 : 1
-                this.source_id = res.detail.id
-            }).catch(err => {
-                console.log('handleBlur err', err)
             })
         },
         getInvoiceDetail() {
@@ -271,6 +210,39 @@ export default {
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
+        },
+        // 验证输入的单号是否存在
+        handleSelectBlur() {
+            if (!this.sourceUid) {
+                return this.isExist = ''
+            }
+            let api = [];
+            let key = 'uid'
+            let parme = {}
+            switch (Number(this.form.source_type)) {
+                case SOURCE_TYPE.PRODUCTION: return
+                case SOURCE_TYPE.PURCHASE:
+                    api = ['Purchase', 'detailBySn']; key = 'sn';
+                    break;
+                case SOURCE_TYPE.AFTER_SALES:
+                    api = ['Purchase', 'detailBySn']; key = 'sn';
+                    break;
+                case SOURCE_TYPE.TRANSFER:
+                    api = ['Transfer', 'detailByUid']
+                    break;
+                case SOURCE_TYPE.REPAIR:
+                    api = ['Repair', 'detailByUid']
+                    break;
+            }
+            parme[key] = this.sourceUid
+            Core.Api[api[0]][api[1]](parme).then(res => {
+                console.log("handleSelectBlur res", res)
+                this.isExist = res.detail == null ? 2 : 1
+                this.form.source_id = res.detail.id
+            }).catch(err => {
+                console.log('handleSelectBlur err', err)
+            }).finally(() => {
+            });
         },
     }
 };

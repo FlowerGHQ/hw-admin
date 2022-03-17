@@ -70,7 +70,7 @@
 
 <script>
 import Core from '../../../core';
-
+const TYPE = Core.Const.STOCK_RECORD.TYPE
 export default {
     name: 'StockList',
     components: {},
@@ -90,13 +90,14 @@ export default {
     },
     data() {
         return {
+            TYPE,
             // 加载
             loading: false,
             // 分页
             currPage: 1,
             pageSize: 20,
             total: 0,
-            TYPE: Core.Const.STOCK_RECORD.TYPE,
+            
             tableData: [],
             detail: {},
             stockAddShow: false,
@@ -164,7 +165,8 @@ export default {
             if (!form.number) {
                 return this.$message.warning('请输入商品数量')
             }
-            Core.Api.Stock[this.form.type](form).then(() => {
+            let apiName = form.type === TYPE.IN ? 'add' : 'reduce'
+            Core.Api.Stock[apiName](form).then(() => {
                 this.$message.success('保存成功')
                 this.handleStockAddClose();
                 this.getTableData();

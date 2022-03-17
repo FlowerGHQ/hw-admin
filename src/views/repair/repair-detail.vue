@@ -4,45 +4,43 @@
         <div class="title-container">
             <div class="title-area">工单详情</div>
             <div class="btns-area">
-                <template v-if="!$auth('ADMIN') && detail.org_type == OrgType">
-                    <!-- <template v-if="detail.account_id == User.id || $auth('MANAGER')"> -->
-                    <!-- </template> -->
-                    <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION && !$auth('ADMIN')">
+                <template v-if="sameOrg">
+                    <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION">
                         <i class="icon i_edit"/>编辑
                     </a-button>
-                    <a-button type="primary" ghost @click="handleDeliveryShow()"
-                        v-if="needDelivery"><i class="icon i_deliver"/>转单物流
+                    <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.AUDIT_FAIL">
+                        重新编辑
                     </a-button>
-<!--                    <a-button type="primary" @click="handleSecondRepairShow()"
-                        v-if="[STATUS.WAIT_CHECK, STATUS.WAIT_DISTRIBUTION, STATUS.WAIT_REPAIR].includes(detail.status) ">
-                        <i class="icon i_edit_l"/>二次维修
-                    </a-button>-->
-                    <a-button type="primary" @click="handleFaultSubmit()"
-                        v-if="detail.status == STATUS.WAIT_DETECTION"><i class="icon i_submit"/>提交
+                    <a-button type="primary" ghost @click="handleDeliveryShow()" v-if="needDelivery">
+                        <i class="icon i_deliver"/>转单物流
                     </a-button>
-
-                    <a-button type="primary" @click="handleSettlement()"
-                        v-if="detail.status == STATUS.WAIT_REPAIR"><i class="icon i_settle"/>结算
+                    <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION">
+                        <i class="icon i_submit"/>提交
+                    </a-button>
+                    <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.WAIT_REPAIR">
+                        <i class="icon i_settle"/>结算
                     </a-button>
                 </template>
-                <a-button type="primary" @click="routerChange('invoice')"
-                    v-if="detail.status == STATUS.SETTLEMENT || STATUS.FINISH || STATUS.AUDIT_SUCCESS"><i class="icon i_detail_l"/>查看结算单
+                <a-button type="primary" @click="routerChange('invoice')" v-if="haveSettle">
+                    <i class="icon i_detail_l"/>查看结算单
                 </a-button>
-                <a-button type="primary" @click="handleAuditShow()"
-                          v-if="detail.status == STATUS.SETTLEMENT && $auth('ADMIN')"><i class="icon i_m_success"/>审核
+                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT && $auth('ADMIN')">
+                    <i class="icon i_audit"/>审核
                 </a-button>
             </div>
         </div>
         <div class="gray-panel info">
             <div class="panel-title">
                 <div class="left"><span>工单编号</span> {{ detail.uid }}</div>
-<!--                <div class="right">
-                    <div class="staff" v-if="detail.repair_user_id">员工：{{ detail.repair_user_name || '-' }}</div>
-                    <div class="status">
-                        <i class="icon i_point" :class="$Util.repairStatusFilter(detail.status,'color')"/>
-                        {{ $Util.repairStatusFilter(detail.status) }}
-                    </div>
-                </div>-->
+                <div class="right">
+                    <a-tooltip :title='detail.audit_message'>
+                        <div class="status">
+                            <i class="icon i_point" :class="$Util.repairStatusFilter(detail.status,'color')"/>
+                            {{ $Util.repairStatusFilter(detail.status) }}
+                            <i class="icon i_hint" style="font-size: 12px; padding-left: 6px;"  v-if="detail.status == STATUS.AUDIT_FAIL"/>
+                        </div>
+                    </a-tooltip>
+                </div>
             </div>
             <div class="panel-content">
                 <div class="info-item">
@@ -69,7 +67,7 @@
                     <div class="key">创建时间</div>
                     <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
                 </div>
-<!--                <div class="info-item">
+                <!-- <div class="info-item">
                     <div class="key">计划时间</div>
                     <div class="value">{{ $Util.timeFilter(detail.plan_time) || '-' }}</div>
                 </div>
@@ -85,8 +83,8 @@
         </div>
         <MySteps :stepsList='stepsList' :current='currStep' v-if="detail.status != STATUS.CLOSE"/>
         <div class="form-container">
-            <CheckFault   :id='id' :detail='detail' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DETECTION && !$auth('ADMIN')" ref="CheckFault"/>
-            <CheckResult  :id='id' :detail='detail' v-if="showCheckResult" @hasTransfer='hasTransfer = true'/>
+            <CheckFault  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DETECTION && sameOrg" ref="CheckFault"/>
+            <CheckResult :id='id' :detail='detail' @hasTransfer='hasTransfer = true' v-if="showCheckResult"/>
             <RepairInfo  :id='id' :detail='detail'/>
             <AttachmentFile :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER'/>
             <WaybillInfo :id='id' :detail='detail' v-if="hasTransfer" @needDelivery='needDelivery = true' ref="WaybillInfo"/>
@@ -124,7 +122,7 @@
                     <div class="key">原因:</div>
                     <div class="value">
                         <a-textarea v-model:value="auditForm.audit_message" placeholder="请输入不通过原因"
-                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                            :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                     </div>
                 </div>
             </div>
@@ -148,7 +146,7 @@ import WaybillInfo from './components/WaybillInfo.vue';
 import Distribution from './components/Distribution.vue';
 import ActionLog from './components/ActionLog.vue';
 import MySteps from '@/components/common/MySteps.vue';
-import AttachmentFile from '@/components/popup-btn/AttachmentFile.vue';
+import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 
 const REPAIR = Core.Const.REPAIR
 const STATUS = Core.Const.REPAIR.STATUS
@@ -170,7 +168,8 @@ export default {
     props: {},
     data() {
         return {
-            OrgType: Core.Data.getOrgType(),
+            orgType: Core.Data.getOrgType(),
+            orgId: Core.Data.getOrgId(),
             STATUS,
             AUDIT,
             REPAIR_RESULTS: REPAIR.RESULTS,
@@ -213,20 +212,31 @@ export default {
                 waybill_uid: "",
                 company_uid: undefined,
             },
-
-
         };
     },
     watch: {},
     computed: {
         showCheckResult() {
             switch (this.detail.status) {
-                case STATUS.WAIT_REPAIR:
-                case STATUS.REPAIR_END:
-                case STATUS.SETTLEMENT:
-                    return true
-                default:
+                case STATUS.WAIT_DETECTION:
                     return false
+                default:
+                    return true
+            }
+        },
+        sameOrg() {
+            if (this.detail.org_id === this.orgId && this.detail.org_type === this.orgType) {
+                return true
+            }
+            return false
+        },
+        haveSettle() {
+            switch (this.detail.status) {
+                case STATUS.SETTLEMENT:
+                case STATUS.FINISH:
+                case STATUS.AUDIT_SUCCESS:
+                    return true
+                default: return false
             }
         }
     },
@@ -331,6 +341,12 @@ export default {
         },
         handleAuditSubmit() { // 审核提交
             let form = Core.Util.deepCopy(this.auditForm)
+            if (!form.status) {
+                return this.$message.warning('请选择审核结果')
+            }
+            if (form.status === AUDIT.REFUSE && !form.audit_message) {
+                return this.$message.warning('请输入审核未通过的原因')
+            }
             this.loading = true;
             Core.Api.Repair.audit({
                 ...form,
