@@ -10,7 +10,7 @@ let URL_POINT = 'https://eos-api.hw.innotick.com'
 
 switch (window.location.hostname) {
     case 'eos.hw.innotick.com':
-        URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服 
+        URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服
         break;
     case "10.0.0.205":
         URL_POINT = 'http://10.0.0.205:8083'
@@ -28,12 +28,14 @@ switch (window.location.hostname) {
         break;
     default:
         // URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
-        URL_POINT = 'http://10.0.0.121:8083' // 谢耀圣
+        // URL_POINT = 'http://10.0.0.121:8083' // 谢耀圣
+        URL_POINT = 'http://10.0.0.134:8083' // 谭洋波
             // URL_POINT = 'http://10.0.0.205:8083' // 徐伟
             // URL_POINT = 'http://10.0.0.149:8083' // 徐伟
             // URL_POINT = 'http://10.0.0.39:8083'  // 姚志宇
             // URL_POINT = 'http://10.0.0.128:8083' // 姚志宇
             // URL_POINT = 'http://10.0.0.155:8083' // 戚哲康
+
         break;
 }
 

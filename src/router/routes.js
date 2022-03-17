@@ -540,18 +540,18 @@ const routes = [{
                     roles: [LOGIN_TYPE.ADMIN],
                 }
             },
-            {
-                path: 'entity-detail',
-                name: 'EntityDetail',
-                hidden: true,
-                component: () =>
-                    import ('@/views/item/entity-detail.vue'),
-                meta: {
-                    title: '车架详情',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/entity/entity-list',
-                }
-            },
+            // {
+            //     path: 'entity-detail',
+            //     name: 'EntityDetail',
+            //     hidden: true,
+            //     component: () =>
+            //         import ('@/views/item/entity-detail.vue'),
+            //     meta: {
+            //         title: '车架详情',
+            //         roles: [LOGIN_TYPE.ADMIN],
+            //         parent: '/entity/entity-list',
+            //     }
+            // },
         ]
     },
     { // 商品管理 - 平台端
@@ -846,6 +846,100 @@ const routes = [{
                 search_type: REFUND_TYPE.CHILDREN
             }
         },]
+    },
+    { // 生产管理 - 平台端
+        path: '/production',
+        component: Layout,
+        redirect: '/production/manufacture-order-list',
+        name: 'ItemManagement',
+        meta: {
+            title: '生产管理',
+            icon: 'i_s_item',
+            roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'manufacture-order-list',
+                name: 'ManufactureOrderList',
+                component: () =>
+                    import ('@/views/production/manufacture-order-list.vue'),
+                meta: {
+                    title: '生产单列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true
+                }
+            },
+            {
+                path: 'manufacture-order-edit',
+                name: 'ManufactureOrderEdit',
+                component: () =>
+                    import ('@/views/production/manufacture-order-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '生产单编辑',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/production/manufacture-order-list',
+                }
+            },
+            {
+                path: 'manufacture-order-detail',
+                name: 'ManufactureOrderDetail',
+                component: () =>
+                    import ('@/views/production/manufacture-order-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '生产单详情',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/item/item-list',
+                }
+            },
+            {
+                path: 'material-list',
+                name: 'MaterialList',
+                component: () =>
+                    import ('@/views/production/material-list.vue'),
+                meta: {
+                    title: '物料列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true
+                }
+            },
+            {
+                path: 'material-edit',
+                name: 'MaterialEdit',
+                component: () =>
+                    import ('@/views/production/material-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '物料编辑',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/production/material-list',
+                }
+            },
+            {
+                path: 'material-detail',
+                name: 'MaterialDetail',
+                component: () =>
+                    import ('@/views/production/material-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '物料详情',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/production/material-list',
+                }
+            },
+            {
+                path: 'material-category',
+                name: 'MaterialCategory',
+                component: () =>
+                    import ('@/views/production/material-category.vue'),
+                meta: {
+                    title: '物料分类',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true
+                }
+            },
+        ]
     },
     { // 客户管理
         path: '/customer',

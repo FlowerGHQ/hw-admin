@@ -321,6 +321,18 @@ const apiList = {
         save: ['PostJson', 'bom-category/save'],
         delete: ['PostJson', 'bom-category/delete'],
         tree: ['PostJson', 'bom-category/tree'],
+    },
+    ProductionOrder: { // 生产单
+        list: ['PostJson', 'productionOrder/list'],
+        save: ['PostJson', 'productionOrder/save'],
+        detail: ['PostJson', 'productionOrder/detail'],
+        delete: ['PostJson', 'productionOrder/delete'],
+    },
+    MaterialCategory: { // 物料分类
+        list: ['PostJson', 'material-category/list'],
+        save: ['PostJson', 'material-category/save'],
+        detail: ['PostJson', 'material-category/detail'],
+        delete: ['PostJson', 'material-category/delete'],
     }
 };
 
