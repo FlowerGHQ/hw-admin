@@ -926,6 +926,29 @@ const routes = [
                     is_sub_menu: true
                 }
             },
+            {
+                path: 'bom-list',
+                name: 'BomList',
+                component: () =>
+                    import ('@/views/production/bom-list.vue'),
+                meta: {
+                    title: 'BOM列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true
+                }
+            },
+            {
+                path: 'bom-detail',
+                name: 'BomDetail',
+                component: () =>
+                    import ('@/views/production/bom-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: 'BOM详情',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/production/bom-list',
+                }
+            },
         ]
     },
     { // 客户管理

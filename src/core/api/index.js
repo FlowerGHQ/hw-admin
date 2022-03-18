@@ -367,6 +367,19 @@ const apiList = {
         detail: ['PostJson', 'material-category/detail'],
         delete: ['PostJson', 'material-category/delete'],
     },
+    Bom: { // bom表
+        save: ['PostJson', 'bom/save'],
+        detail: ['PostJson', 'bom/detail'],
+        delete: ['PostJson', 'bom/delete'],
+        list: ['PostJson', 'bom/list'],
+        detailByItemId: ['PostJson', 'bom/detail-by-item-id']
+    },
+    BomItem: {  // bom明细
+        add: ['PostJson', 'bom-item/add'],
+        list: ['PostJson', 'bom-item/list'],
+        delete: ['PostJson', 'bom-item/delete'],
+        deleteByEditTime: ['PostJson', 'bom-item/delete-by-edit-time'],
+    }
 };
 
 export default new Api(baseUrl, apiList);

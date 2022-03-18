@@ -169,32 +169,6 @@ export default {
         // 物料分类选择
         handleCategorySelect(val, node) {
             this.form.category_id = val
-            // this.item_category = node
-            // try {
-            //     this.configTemp = JSON.parse(node.config)
-            //     console.log('this.configTemp:', this.configTemp)
-            // } catch (error) {
-            //     this.configTemp = []
-            // }
-            //
-            // let _config = Core.Util.deepCopy(this.form.config)
-            // let config = []
-            // for (let i = 0; i < this.configTemp.length; i++) {
-            //     const item = this.configTemp[i];
-            //     config.push({
-            //         name: item.name,
-            //         key: item.key,
-            //         type: item.type,
-            //         value: item.type === 'select' ? undefined : '',
-            //     })
-            // }
-            // for (let i = 0; i < config.length; i++) {
-            //     const target = config[i];
-            //     let _target = _config.find(item => item.key === target.key)
-            //     target.value = _target ? _target.value : ''
-            // }
-            // console.log('handleCategorySelect config:', config)
-            // this.form.config = config
         },
     }
 };
