@@ -146,11 +146,16 @@
 <script>
 import Core from '../../core';
 import MySteps from "@/components/common/MySteps.vue"
+import ItemSelect from '../../components/popup-btn/ItemSelect.vue'
+import EntitySelect from '../../components/popup-btn/EntitySelect.vue'
+
 const TYPE = Core.Const.AFTERSALES.TYPE
 export default {
     name: 'AftersalesEdit',
     components: {
-        MySteps
+        MySteps,
+        ItemSelect,
+        EntitySelect,
     },
     props: {},
     data() {

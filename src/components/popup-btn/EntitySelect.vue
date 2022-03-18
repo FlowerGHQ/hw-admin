@@ -80,10 +80,6 @@ export default {
             }
         },
 
-        faultName: {
-            type: String,
-            default: ''
-        },
         warehouseId: {
             type: Number,
             default: 0
@@ -96,24 +92,19 @@ export default {
     data() {
         return {
             loading: false,
-            radioValue: 1,
+
+            modalShow: false,
             currPage: 1,
             pageSize: 10,
             total: 0,
-            warehouse_id: '',
             searchForm: {
                 code: '',
-                name: '',
-                category_id: '',
             },
-            modalShow: false,
 
             tableData: [],
 
             selectItems: [],
             selectItemIds: [],
-            sourceTypeMap: [],
-            targetMap: Core.Const.STOCK_RECORD.COMMODITY_TYPE_MAP, //类目
         }
     },
     watch: {},
@@ -136,10 +127,8 @@ export default {
             return tableColumns
         },
     },
-    created() {
-    },
+    created() {},
     mounted() {
-        console.log('this.disabledChecked:', this.disabledChecked)
         this.getTableData()
     },
     methods: {
@@ -159,12 +148,13 @@ export default {
         },
 
         getTableData() {
-            Core.Api.Item.list({
+            Core.Api.Entity.list({
                 ...this.searchForm,
+                warehouse_id: this.warehouseId,
                 page: this.currPage,
                 page_size: this.pageSize,
             }).then(res => {
-                console.log('Item.list res:', res)
+                console.log('Entity.list res:', res)
                 this.tableData = res.list
                 this.total = res.count;
             })
