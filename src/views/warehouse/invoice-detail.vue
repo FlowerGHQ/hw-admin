@@ -42,7 +42,9 @@
             </div>
             <div class="info-item" v-if="detail.source_type !== SOURCE_TYPE.ADMIN">
                 <div class="key">来源单号</div>
-                <div class="value">{{ detail.source_uid || '-'}}</div>
+                <div class="value">
+                    <a-button type="link" @click="routerChange('source')">{{ detail.source_uid || '-'}}</a-button>
+                </div>
             </div>
             <div class="info-item">
                 <div class="key">创建人</div>
@@ -109,6 +111,9 @@
             </template>
             <template #extra v-else>
                 <!-- 有实例出库 选择实例 -->
+                <EntitySelect btnType='link' btnText="添加实例商品" v-if="detail.status === STATUS.INIT && !addMode"
+                    :warehouseId="detail.warehouse_id" :disabledChecked="disabledChecked"
+                    @select="handleAddEntityChange"/>
             </template>
             <div class="panel-content table-container no-mg">
                 <a-table :columns="entityTableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
@@ -164,6 +169,8 @@
 
 <script>
 import Core from '../../core';
+import ItemSelect from '../../components/popup-btn/ItemSelect.vue'
+import EntitySelect from '../../components/popup-btn/EntitySelect.vue'
 const STOCK_RECORD = Core.Const.STOCK_RECORD
 
 const TYPE = STOCK_RECORD.TYPE
@@ -173,7 +180,10 @@ const COMMODITY_TYPE = STOCK_RECORD.COMMODITY_TYPE
 
 export default {
     name: 'InvoiceDetail',
-    components: {},
+    components: {
+        ItemSelect,
+        EntitySelect,
+    },
     props: {},
     data() {
         return {
@@ -259,15 +269,39 @@ export default {
                     routeUrl = this.$router.resolve({
                         path: "/warehouse/invoice-list",
                     })
+                    window.open(routeUrl.href, '_self')
                     break;
                 case 'edit':
                     routeUrl = this.$router.resolve({
                         path: "/warehouse/invoice-edit",
                         query: { id: this.detail.id }
                     })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'source':
+                    let path = ''
+                    switch (this.detail.source_type) {
+                        case SOURCE_TYPE.PRODUCTION:
+                            path = '/production/manufacture-order-detail'
+                            break;
+                        case SOURCE_TYPE.PURCHASE:
+                            path = '/purchase/purchase-order-detail'
+                            break;
+                        case SOURCE_TYPE.AFTER_SALES:
+                            path = '/aftersales/aftersales-detail'
+                            break;
+                        case SOURCE_TYPE.TRANSFER:
+                            path = '/warehouse/transfer-order-detail'
+                            break;
+                        case SOURCE_TYPE.REPAIR:
+                            path = '/repair/repair-detail'
+                            break;
+                    }
+                    routeUrl = this.$router.resolve({path,
+                        query: { id: this.detail.source_id }
+                    })
                     break;
             }
-            window.open(routeUrl.href, '_self')
         },
         // 获取出入库单详情
         getInvoiceDetail() {
@@ -452,6 +486,10 @@ export default {
                 entity_uid: '',
             })
 
+        },
+
+        handleAddEntityChange(ids, items) {
+            console.log('handleAddEntityChange items:', items)
         }
     }
 };

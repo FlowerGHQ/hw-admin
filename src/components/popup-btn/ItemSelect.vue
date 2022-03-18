@@ -110,24 +110,21 @@ export default {
     data() {
         return {
             loading: false,
-            radioValue: 1,
+            modalShow: false,
+
             currPage: 1,
             pageSize: 10,
             total: 0,
-            warehouse_id: '',
             searchForm: {
                 code: '',
                 name: '',
                 category_id: '',
             },
-            modalShow: false,
 
             tableData: [],
 
             selectItems: [],
             selectItemIds: [],
-            sourceTypeMap: [],
-            targetMap: Core.Const.STOCK_RECORD.COMMODITY_TYPE_MAP, //类目
         }
     },
     watch: {},
@@ -156,10 +153,6 @@ export default {
         this.getTableData()
     },
     methods: {
-        // handleSelectItem(ids, items ) {
-        //     this.selectItems = items
-        // },
-
         handleModalShow() {
             this.pageChange(1)
             this.modalShow = true
@@ -203,14 +196,6 @@ export default {
                     flag_spread: 1,
                 }).then(res => {
                     console.log('Item.list res:', res)
-                    res.list.forEach(item => {
-                        item.children = null
-                        let element = item || {}
-                        if (element.attr_list && element.attr_list.length) {
-                            let str = element.attr_list.map(i => i.value).join(' ')
-                            element.attr_str = str
-                        }
-                    })
                     this.tableData = res.list
                     this.total = res.count;
                 })
@@ -237,11 +222,6 @@ export default {
             console.log('handleSelectItem ids, items:', ids, items)
             this.selectItems = items
             this.selectItemIds = ids
-        },
-        // 添加要寄回的商品
-        handleAddItem(ids, items) {
-            console.log('handleAddItem items:', items)
-            this.tableData.push(...items)
         },
     },
 }
