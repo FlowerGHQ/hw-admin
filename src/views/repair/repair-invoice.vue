@@ -68,6 +68,7 @@
                                 </div>
                                 <div class="sum-price" v-else>
                                     <div class="row"><p>总金额</p> <span>€{{$Util.countFilter(sum_price)}}</span></div>
+                                    <div class="row"><p>实付金额</p><span>€0</span></div>
                                 </div>
                             </a-table-summary-cell>
                         </a-table-summary-row>

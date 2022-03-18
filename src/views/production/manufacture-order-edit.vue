@@ -37,7 +37,7 @@
                     <div class="key">生产数量：</div>
                     <div class="value">
                         <a-input-number v-model:value="form.amount" :min="0"/>
-                        <span>件</span>
+                        <span class="amount">件</span>
                     </div>
                 </div>
                 <div class="form-item required">
@@ -151,8 +151,13 @@ export default {
 <style lang="less">
 #ManufactureEdit {
     .value {
+        font-size: 12px;
+        color: #8090A6;
         .fac();
         display: flex;
+        .amount {
+            margin-left: 5px;
+        }
         .select-item-btn {
             height: 32px;
             margin-right: 10px;

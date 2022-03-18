@@ -236,7 +236,7 @@ export default {
                         _this.$message.success('取消成功');
                         _this.getTableData();
                     }).catch(err => {
-                        console.log("handleDelete err", err);
+                        console.log("handleCancel err", err);
                     })
                 },
             });
