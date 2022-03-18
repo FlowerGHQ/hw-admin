@@ -118,6 +118,12 @@
                     </div>
                 </div>
                 <div class="form-item required">
+                    <div class="key">故障件编号:</div>
+                    <div class="value">
+                        <a-input v-model:value="form.uid" placeholder="请输入工故障件编号" />
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">维修单号:</div>
                     <div class="value">
                         <a-input v-model:value="form.source_uid" placeholder="请输入工单编号" @blur="handleSearchFrameNum"/>
@@ -242,7 +248,8 @@ export default {
             selectedRowKeys: [],
             selectedRowItems: [],
             tableColumns: [
-                {title: '车架编号', dataIndex: 'vehicle_no', key: 'item'},
+                {title: '编号', dataIndex: 'uid'},
+                {title: '车架号', dataIndex: 'vehicle_no', key: 'item'},
                 {title: '状态', dataIndex: 'status'},
                 {title: '维修单号', dataIndex: 'source_uid', key: 'detail'},
                 {title: '所处机构', dataIndex: 'org_type'},
@@ -429,6 +436,9 @@ export default {
         // 通过维修单号找车架号
         handleSearchFrameNum() {
             const uid = this.form.source_uid
+            if (uid === '') {
+                return
+            }
             console.log('handleSearchFrameNum',uid)
             this.form.source_id = ''
             this.form.service_type = ''
