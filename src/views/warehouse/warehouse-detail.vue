@@ -34,14 +34,16 @@
         </div>
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
-                <a-tab-pane key="StockList" tab="库存数量">
+                <a-tab-pane key="StockList" tab="库存数量" v-if="detail.type == WAREHOUSE_TYPE.QUALITY">
                     <StockList :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"/>
                 </a-tab-pane>
-                <a-tab-pane key="StockRecord" tab="出入库记录">
-                    <StockRecord :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
-                                 v-if="activeKey === 'StockRecord'"/>
+                <a-tab-pane key="ImperfectList" tab="残次品数量" v-if="detail.type == WAREHOUSE_TYPE.DEFECTIVE">
+                    <ImperfectList :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"/>
                 </a-tab-pane>
-                <a-tab-pane key="StockModify" tab="库存变更明细" v-if="detail.type === typeMap.DEFECTIVE">
+                <a-tab-pane key="StockRecord" tab="出入库记录" v-if="detail.type == WAREHOUSE_TYPE.QUALITY">
+                    <StockRecord :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail" v-if="activeKey === 'StockRecord'"/>
+                </a-tab-pane>
+                <a-tab-pane key="StockModify" tab="库存变更明细" v-if="detail.type === WAREHOUSE_TYPE.QUALITY">
                     <StockModify :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"/>
                 </a-tab-pane>
             </a-tabs>
@@ -55,20 +57,22 @@ import Core from "../../core";
 import StockList from "./components/StockList.vue";
 import StockRecord from "./components/StockRecord.vue";
 import StockModify from "./components/StockModify.vue";
+import ImperfectList from "./components/ImperfectList.vue";
+const WAREHOUSE_TYPE = Core.Const.WAREHOUSE.TYPE
 
 export default {
     name: "WarehouseDetail",
-    components: {StockList, StockRecord, StockModify},
+    components: {StockList, StockRecord, StockModify, ImperfectList},
     props: {},
     data() {
         return {
             // 加载
             loading: false,
+            WAREHOUSE_TYPE,
             //标签页
             detail: {},
             warehouse_id: "",
             activeKey: ["affirm"],
-            typeMap: Core.Const.WAREHOUSE.TYPE,
         }
     },
     watch: {},

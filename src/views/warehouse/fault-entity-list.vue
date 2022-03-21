@@ -108,11 +108,11 @@
             <a-modal v-model:visible="modalShow" title="新增故障件" class="fault-entity-modal"
             :after-close="handleFaultItemClose">
                 <div class="form-item required">
-                    <div class="key">所处仓库:</div>
+                    <div class="key">所属仓库:</div>
                     <div class="value">
                         <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库" show-search option-filter-prop="children" :disabled="!!form.id" >
-                            <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">
-                                {{ warehouse.name }}
+                            <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">
+                                {{ item.name }}
                             </a-select-option>
                         </a-select>
                     </div>
@@ -120,19 +120,19 @@
                 <div class="form-item required">
                     <div class="key">故障件编号:</div>
                     <div class="value">
-                        <a-input v-model:value="form.uid" placeholder="请输入工故障件编号" />
+                        <a-input v-model:value="form.uid" placeholder="请输入故障件编号"/>
                     </div>
                 </div>
                 <div class="form-item required">
                     <div class="key">维修单号:</div>
                     <div class="value">
-                        <a-input v-model:value="form.source_uid" placeholder="请输入工单编号" @blur="handleSearchFrameNum"/>
+                        <a-input v-model:value="form.source_uid" placeholder="请输入维修单编号" @blur="handleSearchFrameNum"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">产品故障类型:</div>
+                    <div class="key">故障原因:</div>
                     <div class="value">
-                        <a-select v-model:value="form.item_fault_id" placeholder="请选择产品故障类型" show-search option-filter-prop="children">
+                        <a-select v-model:value="form.item_fault_id" placeholder="请选择产品故障原因" show-search option-filter-prop="children">
                             <a-select-option v-for="faultType of faultTypeList" :key="faultType.id" :value="faultType.id">
                                 {{ faultType.name }}
                             </a-select-option>
@@ -145,7 +145,7 @@
                         <ItemSelect @select="handleSelectItem" :disabled-checked='[form.item_id]'
                             :radio-mode='true' btn-type='primary' btnText="选择商品" btn-class="select-item-btn"/>
                         <div v-if="!$Util.isEmptyObj(selectItem)">
-                            <img :src="$Util.imageFilter(selectItem.logo)" alt="" />
+                            <img :src="$Util.imageFilter(selectItem.logo)" alt="" style="max-width: 60px"/>
                             {{selectItem.name}}
                         </div>
                     </div>
@@ -153,7 +153,7 @@
                 <div class="form-item">
                     <div class="key">故障件实例:</div>
                     <div class="value">
-                        <a-input v-model:value="form.uid" placeholder="请输入故障件实例号" @blur="handleSearchFaultEntity"/>
+                        <a-input v-model:value="form.entity_uid" placeholder="请输入故障件实例号" @blur="handleSearchEntity"/>
                     </div>
                 </div>
                 <template #footer>
@@ -185,7 +185,7 @@
             <a-modal v-model:visible="entryShow" title="入库" class="entry-modal" :after-close='handleEntryClose'>
                 <div class="modal-content">
                     <div class="form-item required">
-                        <div class="key">所处仓库:</div>
+                        <div class="key">所属仓库:</div>
                         <div class="value">
                             <a-select v-model:value="entryForm.warehouse_id" placeholder="请选择仓库" show-search option-filter-prop="children" >
                                 <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">
@@ -242,22 +242,24 @@ export default {
                 item_fault_id: undefined,
                 begin_time: '',
                 end_time: '',
+                need_handle: 0,
             },
             // 表格
             tableData: [],
             selectedRowKeys: [],
             selectedRowItems: [],
             tableColumns: [
-                {title: '编号', dataIndex: 'uid'},
+                {title: '故障件编号', dataIndex: 'uid'},
                 {title: '车架号', dataIndex: 'vehicle_no', key: 'item'},
                 {title: '状态', dataIndex: 'status'},
                 {title: '维修单号', dataIndex: 'source_uid', key: 'detail'},
-                {title: '所处机构', dataIndex: 'org_type'},
-                {title: '所处仓库', dataIndex: 'warehouse_name', key: 'item'},
-                {title: '商品', dataIndex: ['item','name'], key: 'item'},
-                {title: '产品故障类型', dataIndex: 'item_fault_name', key: 'item'},
-                {title: '审核人', dataIndex: 'audit_user_name', key: 'item'},
                 {title: '工单帐类', dataIndex: 'service_type'},
+                {title: '所属单位', dataIndex: 'source_org_name'},
+                {title: '所属仓库', dataIndex: 'warehouse_name', key: 'item'},
+                {title: '商品', dataIndex: ['item','name'], key: 'item'},
+                {title: '故障原因', dataIndex: 'item_fault_name', key: 'item'},
+                {title: '故障件实例', dataIndex: 'entity_uid', key: 'item'},
+                {title: '审核人', dataIndex: 'audit_user_name', key: 'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right' },
             ],
@@ -270,10 +272,11 @@ export default {
                 item_fault_id: undefined,
                 source_uid: '',
                 source_id: '',
-                service_type: undefined,
-                vehicle_no: '',
                 source_type: 200,
-                uid: ''
+                uid: '',
+                entity_uid: '',
+                vehicle_no: '',
+                entity_id: '',
             },
             selectItem: {},
             // 审核
@@ -289,6 +292,7 @@ export default {
                 ids: '',
                 warehouse_id: undefined
             },
+            entityDetail: {},
         };
     },
     watch: {
@@ -394,7 +398,6 @@ export default {
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
-            // return
             if (this.type === 'pending') {
                 this.searchForm.need_handle = 1
             } else {
@@ -441,36 +444,35 @@ export default {
             }
             console.log('handleSearchFrameNum',uid)
             this.form.source_id = ''
-            this.form.service_type = ''
-            this.form.vehicle_no = ''
+            this.form.item_id = ''
             Core.Api.Repair.detailByUid({uid}).then(res => {
                 console.log('handleSearchFrameNum', res)
                 if (!res.detail) {
-                    this.$message.warning('获取维修单信息失败')
+                    this.$message.warning('该维修单不存在，请输入正确的维修单号')
                 } else {
                     this.form.source_id = res.detail.id
-                    this.form.service_type = res.detail.service_type
                     this.form.vehicle_no = res.detail.vehicle_no
                 }
             }).catch(err => {
-                this.$message.warning('该维修单不存在，请输入正确的维修单号')
+                this.$message.warning('获取维修单信息失败')
             })
         },
         // 通过故障件实例号查故障件信息
-        handleSearchFaultEntity() {
-            const uid = this.form.uid
-            if (uid === "") {
+        handleSearchEntity() {
+            let uid = this.form.entity_uid
+            if (uid === '') {
                 return
             }
-            Core.Api.Entity.detailByUid({uid}).then(res => {
-                if(res.item_id !== this.form.item_id) {
-                    this.$message.warning('该故障件实例和故障件种类不符')
-                }               
+            Core.Api.Entity.detailByUid({uid: uid}).then(res => {
+                if(res.detail.item_id !== this.form.item_id) {
+                    return this.$message.warning('该故障件实例和故障件种类不符')
+                } else {
+                    this.form.entity_id = res.detail.id
+                }
             }).catch(err => {
                 this.$message.warning('该故障件实例不存在')
             })
         },
-
         // 故障件表单
         handleFaultItemShow(record) {  // 新增故障件表单创建
             if (record) {
@@ -488,7 +490,6 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             console.log('handleFaultItemSubmit', form);
             console.log('this.form.source_uid' , this.form.source_uid)
-            console.log('this.form.vehicle_no' , this.form.vehicle_no)
             if (!form.warehouse_id) {
                 return this.$message.warning('请选择所处仓库')
             }
@@ -496,14 +497,18 @@ export default {
                 return this.$message.warning('请选择商品')
             }
             if (!form.item_fault_id) {
-                return this.$message.warning('请选择产品故障类型')
+                return this.$message.warning('请选择故障原因')
             }
             if (!form.source_uid) {
                 return this.$message.warning('请输入工单编号')
             }
-            if (!form.vehicle_no) {
-                return this.$message.warning('请输入车架号')
+            if (form.source_uid && form.source_id === '') {
+                return this.$message.warning('请输入正确的维修单号')
             }
+            if (form.entity_uid && form.entity_id === '') {
+                return this.$message.warning('该故障件实例和故障件种类不符')
+            }
+            console.log('form', form)
             Core.Api.FaultEntity.save(form).then(() => {
                 this.$message.success('保存成功')
                 this.getTableData();
@@ -611,13 +616,27 @@ export default {
 <style lang="less">
 // #WarehouseList {}
 .fault-entity-modal {
-    .select-item-btn {
-        height: 32px;
-    }
-    .item-display {
+    .value {
+        font-size: 12px;
+        color: #8090A6;
+        .fac();
         display: flex;
-        img {
-            max-width:60px
+
+        .amount {
+            margin-left: 5px;
+        }
+
+        .select-item-btn {
+            height: 32px;
+            margin-right: 10px;
+        }
+
+        .item-display {
+            display: flex;
+
+            img {
+                max-width: 60px
+            }
         }
     }
 }
