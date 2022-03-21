@@ -1,162 +1,199 @@
 <template>
-    <div id="tableData">
-        <div class="list-container">
-            <div class="title-container">
-                <div class="title-area">BOM列表</div>
-                <div class="btns-area">
-                    <a-button type="primary" @click="handleModalOpen()"><i class="icon i_add"/>新建BOM</a-button>
-                </div>
-            </div>
-            <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                         :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, text , record }">
-                        <template v-if="column.key === 'item'">
-                            {{ text || '-' }}
-                        </template>
-                        <template v-if="column.key === 'time'">
-                            {{ $Util.timeFilter(text) }}
-                        </template>
-                        <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
-                            <a-button type="link" @click="handleModalOpen(record)"><i class="icon i_edit"/> 修改</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_edit"/> 删除</a-button>
-                        </template>
-                    </template>
-                </a-table>
-            </div>
-
-            <div class="paging-container">
-                <a-pagination
-                    v-model:current="currPage"
-                    :page-size='pageSize'
-                    :total="total"
-                    show-quick-jumper
-                    show-size-changer
-                    show-less-items
-                    :show-total="total => `共${total}条`"
-                    :hide-on-single-page='false'
-                    :pageSizeOptions="['10', '20', '30', '40']"
-                    @change="pageChange"
-                    @showSizeChange="pageSizeChange"
-                />
-            </div>
+<div id="BomList" class="list-container">
+    <div class="title-container">
+        <div class="title-area">BOM列表</div>
+        <div class="btns-area">
+            <EditBomModel @submit='getTableData'/>
+            <a-upload name="file" class="file-uploader"
+                :file-list="upload.fileList" :action="upload.action"
+                :show-upload-list='false'
+                :headers="upload.headers" :data='upload.data'
+                accept=".xlsx,.xls"
+                @change="handleFileUpload">
+                <a-button type="primary"  class="file-upload-btn" style="margin-left: 12px;">
+                    批量导入明细
+                </a-button>
+            </a-upload>
         </div>
-
-        <a-modal v-model:visible="modalShow" :title="form.id ? title + '编辑' : '新增' + BOM表" class="vehicle-edit-modal"
-                 :after-close='handleModalClose'>
-            <div class="modal-content">
-                <div class="form-item required">
-                    <div class="key">BOM名称:</div>
-                    <div class="value">
-                        <a-input v-model:value="form.name" placeholder="请输入BOM名称"/>
-                    </div>
-                </div>
-                <div class="form-item">
-                    <div class="key">版本:</div>
-                    <div class="value">
-                        <a-input v-model:value="form.version" placeholder="请输入版本"/>
-                    </div>
-                </div>
-                <div class="form-item">
-                    <div class="key">版本号:</div>
-                    <div class="value">
-                        <a-input v-model:value="form.version_num" placeholder="请输入版本号" type="number"/>
-                    </div>
-                </div>
-            </div>
-            <template #footer>
-                <a-button @click="modalShow = false">取消</a-button>
-                <a-button @click="handleBomSave" type="primary">确定</a-button>
-            </template>
-        </a-modal>
     </div>
+    <div class="search-container">
+        <a-row class="search-area">
+            <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                <div class="key">BOM名称:</div>
+                <div class="value">
+                    <a-input placeholder="请输入Bom名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                </div>
+            </a-col>
+            <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
+                <div class="key">创建时间:</div>
+                <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
+            </a-col>
+        </a-row>
+        <div class="btn-area">
+            <a-button @click="handleSearch" type="primary">查询</a-button>
+            <a-button @click="handleSearchReset">重置</a-button>
+        </div>
+    </div>
+    <div class="table-container">
+        <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+            :row-key="record => record.id" :pagination='false'>
+            <template #bodyCell="{ column, text , record }">
+                <template v-if="column.key === 'detail'">
+                    <a-tooltip placement="top" :title='text'>
+                        <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
+                    </a-tooltip>
+                </template>
+                <template v-if="column.key === 'item-detail'">
+                    <a-tooltip placement="top" :title='text'>
+                        <a-button type="link" @click="routerChange('item', record.item)">{{text || '-'}}</a-button>
+                    </a-tooltip>
+                </template>
+                <template v-if="column.key === 'item'">
+                    {{ text || '-' }}
+                </template>
+                <template v-if="column.key === 'time'">
+                    {{ $Util.timeFilter(text) }}
+                </template>
+                <template v-if="column.key === 'operation'">
+                    <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
+                    <EditBomModel @submit='getTableData' btnType="link" :detail="record">
+                        <i class="icon i_edit"/>编辑
+                    </EditBomModel>
+                    <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button>
+                </template>
+            </template>
+        </a-table>
+    </div>
+    <div class="paging-container">
+        <a-pagination
+            v-model:current="currPage"
+            :page-size='pageSize'
+            :total="total"
+            show-quick-jumper
+            show-size-changer
+            show-less-items
+            :show-total="total => `共${total}条`"
+            :hide-on-single-page='false'
+            :pageSizeOptions="['10', '20', '30', '40']"
+            @change="pageChange"
+            @showSizeChange="pageSizeChange"
+        />
+    </div>
+</div>
 </template>
 
 <script>
 import Core from '../../core'
+import TimeSearch from '@/components/common/TimeSearch.vue'
+import EditBomModel from './components/EditBomModel.vue'
+
 export default {
-    components: {},
+    components: {
+        TimeSearch,
+        EditBomModel,
+    },
     props: {},
     data() {
         return {
             currPage: 1,
             pageSize: 20,
             total: 0,
+            searchForm: {
+                name: '',
+                begin_time: '',
+                end_time: '',
+            },
+
             tableData: [],
             tableColumns: [
-                { title: '名称', dataIndex: 'name', key: 'item' },
-                { title: '版本', dataIndex: 'version', key: 'item' },
+                { title: '名称', dataIndex: 'name', key: 'detail' },
+                { title: '对应商品名', dataIndex: ['item', 'name'], key: 'item-detail' },
+                { title: '对应商品编号', dataIndex: ['item', 'code'], key: 'item' },
                 { title: '版本号', dataIndex: 'version_num', key: 'item' },
+                { title: '版本描述', dataIndex: 'version', key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '更新时间', dataIndex: 'update_time', key: 'time' },
-                {title: '操作', key: 'operation', fixed: 'right'}
+                { title: '操作', key: 'operation', fixed: 'right'}
             ],
 
-            form: {
-                name: '',
-                version: '',
-                version_num: '',
+            // 上传
+            upload: {
+                action: Core.Const.NET.URL_POINT + "/admin/1/bom-item/import",
+                fileList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'xlsx',
+                },
             },
-            modalShow: false,
         }
     },
+    watch: {},
+    computed: {},
     mounted() {
         this.getTableData()
     },
     methods: {
+        routerChange(type, item = {}) {
+            let routeUrl = ''
+            switch(type) {
+                case 'detail':
+                    routeUrl = this.$router.resolve({
+                        path: "/production/bom-detail",
+                        query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'item':
+                    routeUrl = this.$router.resolve({
+                        path: "/item/item-detail",
+                        query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+            }
+        },
+        pageChange(curr) {  // 页码改变
+            this.currPage = curr
+            this.getTableData()
+        },
+        pageSizeChange(current, size) {  // 页码尺寸改变
+            console.log('pageSizeChange size:', size)
+            this.pageSize = size
+            this.getTableData()
+        },
+        handleSearch() {  // 搜索
+            this.pageChange(1);
+        },
+        handleTimeSearch(type, begin_time, end_time) { // 时间搜索
+            if (begin_time || end_time) {
+                this.searchForm.begin_time = begin_time
+                this.searchForm.end_time = end_time
+            }
+            this.pageChange(1);
+        },
+        handleSearchReset() {  // 重置搜索
+            Object.assign(this.searchForm, this.$options.data().searchForm)
+            this.$refs.TimeSearch.handleReset()
+            this.pageChange(1);
+        },
         getTableData() {
-            Core.Api.Bom.list({page: this.currPage, pageSize: this.pageSize})
-                .then(res => {
-                    console.log('Bom.list res', res)
-                    this.tableData = res.list
-                    this.total = res.count
-                })
-                .catch(err => {
-                    console.log('Bom.list err', err)
-                })
+            Core.Api.Bom.list({
+                ...this.searchForm,
+                page: this.currPage,
+                pageSize: this.pageSize,
+            }).then(res => {
+                console.log('Bom.list res', res)
+                this.tableData = res.list
+                this.total = res.count
+            }).catch(err => {
+                console.log('Bom.list err', err)
+            })
         },
-        pageChange() {},
-        pageSizeChange() {},
-        handleModalClose() {
-            this.form = {}
-        },
-        handleModalOpen(item = {}) {
-            if(JSON.stringify(item) != '{}') {
-                this.form = {
-                    id: item.id,
-                    name: item.name,
-                    version: item.version,
-                    version_num: item.version_num,
-                }
-            }
-            this.modalShow = true
-        },
-        handleBomSave() {
-            let form = Core.Util.deepCopy(this.form)
-            console.log('form:', form)
-            if (typeof this.checkFormInput(form) === 'function') { return }
-            Core.Api.Bom.save(form)
-                .then(res => {
-                    console.log('Bom.save res', res)
-                    this.$message.success('保存成功')
-                    this.getTableData()
-                })
-                .catch(err => {
-                    console.log('Bom.save err', err)
-                    this.$message.success('保存失败')
-                })
-                .finally(() => {
-                    this.modalShow = false
-                })
-        },
-        // 保存时检查表单输入
-        checkFormInput(form) {
-            if (!form.name) {
-                return this.$message.warning('请输入BOM表名称')
-            }
-            return 0
-        },
+
+        // 删除bom
         handleDelete(id) {
             let _this = this;
             this.$confirm({
@@ -174,23 +211,23 @@ export default {
                 },
             });
         },
-        routerChange(type, item = {}) {
-            let routeUrl = ''
-            switch(type) {
-                case 'detail': {
-                    routeUrl = this.$router.resolve({
-                        path: "/production/bom-detail",
-                        query: {id: item.id}
-                    })
-                    window.open(routeUrl.href, '_self')
-                } break;
+
+        // 上传文件
+        handleFileUpload({file, fileList}) {
+            console.log("handleFileUpload status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                let res = file.response
+                if (res && res.code === 0) {
+                    return this.$message.success('上传成功');
+                } else {
+                    return this.$message.error('上传失败:' + res.message)
+                }
             }
+            this.upload.fileList = fileList
         },
     },
-    watch: {},
-    computed: {},
 }
 </script>
 
-<style lang='less' scoped>
+<style lang='less'>
 </style>

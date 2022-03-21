@@ -372,11 +372,11 @@ const Util = {
 
 
     /* =============== 维修单 ================ */
-    repairStatusFilter(val, to = 'word') {
+    repairStatusFilter(val, to = 'text') {
         const MAP = Const.REPAIR.STATUS_MAP
         const COLOR_MAP = Const.REPAIR.STATUS_COLOR_MAP
         switch (to) {
-            case 'word':
+            case 'text':
                 return MAP[val + ''] || '未知'
             case 'color':
                 return COLOR_MAP[val] || 'grey'
@@ -398,11 +398,11 @@ const Util = {
         const MAP = Const.REPAIR.SERVICE_TYPE_MAP
         return MAP[val] || '未知'
     },
-    repairPriorityFilter(val, to = 'word') {
+    repairPriorityFilter(val, to = 'text') {
         const MAP = Const.REPAIR.PRIORITY_MAP
         const COLOR_MAP = Const.REPAIR.PRIORITY_COLOR_MAP
         switch (to) {
-            case 'word':
+            case 'text':
                 return MAP[val] || '未知'
             case 'color':
                 return COLOR_MAP[val] || 'grey'
@@ -424,11 +424,11 @@ const Util = {
 
 
     /* =============== 采购单 && 售后管理 && 退款管理 ================ */
-    purchaseStatusFilter(val, to = 'word') {
+    purchaseStatusFilter(val, to = 'text') {
         const MAP = Const.PURCHASE.STATUS_MAP
         const COLOR_MAP = Const.PURCHASE.STATUS_COLOR_MAP
         switch (to) {
-            case 'word':
+            case 'text':
                 return MAP[val + ''] || '未知'
             case 'color':
                 return COLOR_MAP[val + ''] || 'grey'
@@ -442,11 +442,11 @@ const Util = {
         const MAP = Const.PURCHASE.FLAG_REVIEW_MAP
         return MAP[val] || '-'
     },
-    paymentStatusFilter(val, to = 'word') {
+    paymentStatusFilter(val, to = 'text') {
         const MAP = Const.PURCHASE.PAYMENT_STATUS_MAP
         const COLOR_MAP = Const.PURCHASE.PAYMENT_COLOR_MAP
         switch (to) {
-            case 'word':
+            case 'text':
                 return MAP[val + ''] || '未知'
             case 'color':
                 return COLOR_MAP[val + ''] || 'grey'
@@ -467,11 +467,11 @@ const Util = {
         const MAP = Const.REFUND.TYPE_MAP
         return MAP[val] || '未知'
     },
-    refundStatusFilter(val, to = 'word') {
+    refundStatusFilter(val, to = 'text') {
         const MAP = Const.REFUND.STATUS_MAP
         const COLOR_MAP = Const.REFUND.STATUS_COLOR_MAP
         switch (to) {
-            case 'word':
+            case 'text':
                 return MAP[val + ''] || '未知'
             case 'color':
                 return COLOR_MAP[val + ''] || 'grey'
@@ -524,11 +524,11 @@ const Util = {
         const MAP = Const.WAREHOUSE.TYPE_MAP
         return MAP[val] || '未知'
     },
-    invoiceStatusFilter(val, to = 'word') {
+    invoiceStatusFilter(val, to = 'text') {
         const MAP = Const.STOCK_RECORD.STATUS_MAP
         const COLOR_MAP = Const.STOCK_RECORD.STATUS_COLOR_MAP
         switch (to) {
-            case 'word':
+            case 'text':
                 return MAP[val + ''] || '未知'
             case 'color':
                 return COLOR_MAP[val + ''] || 'grey'
@@ -545,11 +545,11 @@ const Util = {
     /* =============== 出入库 ================ */
 
     /* =============== 调货单 ================ */
-    transferStatusFilter(val, to = 'word') {
+    transferStatusFilter(val, to = 'text') {
         const MAP = Const.TRANSFER_ORDER.STATUS_MAP
         const COLOR_MAP = Const.TRANSFER_ORDER.STATUS_COLOR_MAP
         switch (to) {
-            case 'word':
+            case 'text':
                 return MAP[val + ''] || '未知'
             case 'color':
                 return COLOR_MAP[val + ''] || 'grey'
@@ -558,11 +558,11 @@ const Util = {
     /* =============== 调货单 ================ */
 
     /* =============== 故障件管理 ================ */
-    faultStatusFilter(val, to = 'word') {
+    faultStatusFilter(val, to = 'text') {
         const MAP = Const.FAULT_ENTITY.STATUS_MAP
         const COLOR_MAP = Const.FAULT_ENTITY.STATUS_COLOR_MAP
         switch (to) {
-            case 'word':
+            case 'text':
                 return MAP[val + ''] || '未知'
             case 'color':
                 return COLOR_MAP[val + ''] || 'grey'
@@ -581,6 +581,14 @@ const Util = {
         return MAP[val] || '未知'
     },
     /* =============== 账户 ================ */
+
+    /* =============== 生产管理 ================ */
+    bomTargetTypeFilter(val, to = 'text') {
+        const MAP = Const.BOM.TARGET_TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    }
+    /* =============== 生产管理 ================ */
 
 }
 

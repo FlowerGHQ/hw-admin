@@ -9,11 +9,9 @@
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id"  :pagination='false'>
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.key === 'detail'">
-                        <div class="table-img">
-                            <a-tooltip placement="top" :title='text'>
-                                <a-button type="link" @click="routerChange('detail', record)" style="margin-left: 6px;">{{text || '-'}}</a-button>
-                            </a-tooltip>
-                        </div>
+                        <a-tooltip placement="top" :title='text'>
+                            <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
+                        </a-tooltip>
                     </template>
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
@@ -25,7 +23,7 @@
                     </template>
                     <template v-if="column.key === 'operation'">
                         <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>详情</a-button>
-                        <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>修改</a-button>
+                        <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button>
                         <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
                             <template v-if="record.status"><i class="icon i_forbidden"/>禁用</template>
                             <template v-else><i class="icon i_enable"/>启用</template>

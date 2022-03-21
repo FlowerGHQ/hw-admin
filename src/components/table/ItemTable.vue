@@ -77,11 +77,10 @@ export default {
     },
     watch: {
         dataSource: function(n) {
-            console.log('defaultChecked n:', n)
             this.dataList = Core.Util.deepCopy(this.dataSource)
         },
         defaultChecked: function(n) {
-            console.log('defaultChecked n:', n)
+            console.log('defaultChecked:', n)
             this.selectedRowKeys = Core.Util.deepCopy(this.defaultChecked)
         }
     },

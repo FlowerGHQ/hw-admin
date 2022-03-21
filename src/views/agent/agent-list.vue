@@ -56,11 +56,6 @@
                             <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
                         </a-tooltip>
                     </template>
-                    <template v-if="column.key === 'tip_item'">
-                        <a-tooltip placement="top" :title='text'>
-                            <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
-                        </a-tooltip>
-                    </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
                             {{ text ? '启用中' : '已禁用' }}

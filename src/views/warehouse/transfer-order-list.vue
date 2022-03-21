@@ -97,8 +97,7 @@
                                 <i class="icon i_edit"/>确认收货
                             </a-button>
                             <template v-if="record.status === STATUS.WAIT_AUDIT && type == 'in'">
-                                <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>修改
-                                </a-button>
+                                <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button>
                                 <a-button type="link" @click="handleCancel(record.id)" class="danger">
                                     <i class="icon i_m_error"/>取消
                                 </a-button>

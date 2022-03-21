@@ -45,7 +45,6 @@ let Const = {
         OSS_POINT: OSS_POINT,
         FILE_URL_PREFIX: `${OSS_POINT}/`,
         FILE_UPLOAD_END_POINT: `${URL_POINT}/core/1/file/file-upload`,
-        FILE_UPLOAD_ACTION: `${URL_POINT}/admin/1/item/import`,
     },
     DATA: { // 本地存储
         KEY_PREFIX: 'haowan.admin.data.',
@@ -811,6 +810,17 @@ let Const = {
             CHILDREN: 2, //待审核的退款单
         },
     },
+
+    BOM: {
+        TARGET_TYPE: {
+            ITEM: 1,     //商品
+            MATERIAL: 2, //物料
+        },
+        TARGET_TYPE_MAP: {
+            '1': {text: '商品'},
+            '2': {text: '物料'},
+        }
+    }
 };
 
 export default Const;

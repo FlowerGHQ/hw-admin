@@ -368,17 +368,19 @@ const apiList = {
         delete: ['PostJson', 'material-category/delete'],
     },
     Bom: { // bom表
+        list: ['PostJson', 'bom/list'],
         save: ['PostJson', 'bom/save'],
         detail: ['PostJson', 'bom/detail'],
         delete: ['PostJson', 'bom/delete'],
-        list: ['PostJson', 'bom/list'],
         detailByItemId: ['PostJson', 'bom/detail-by-item-id']
     },
     BomItem: {  // bom明细
-        add: ['PostJson', 'bom-item/add'],
+        save: ['PostJson', 'bom-item/save'],
+        batchSave: ['PostJson', 'bom-item/batch-add'],
         list: ['PostJson', 'bom-item/list'],
+        listAll: ['PostJson', 'bom-item/list-all'],
         delete: ['PostJson', 'bom-item/delete'],
-        deleteByEditTime: ['PostJson', 'bom-item/delete-by-edit-time'],
+        batchDelete: ['PostJson', 'bom-item/batch-delete'],
     }
 };
 

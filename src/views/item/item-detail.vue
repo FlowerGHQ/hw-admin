@@ -92,7 +92,7 @@
                                     <a-button type="link" @click="routerChange('edit-indep', record)"><i class="icon i_edit"/>编辑</a-button>
                                     <a-button type="link" @click="routerChange('detail-indep', record)"><i class="icon i_detail"/>详情</a-button>
                                 </template>
-<!--                                <template v-if="index > 0">
+                                <!-- <template v-if="index > 0">
                                     <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
                                 </template>-->
                             </template>
@@ -162,6 +162,8 @@ export default {
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         this.indep_flag = Number(this.$route.query.indep_flag) || 0
+
+        this.getItemDetail();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -206,9 +208,6 @@ export default {
                         this.activeKey.push('itemSpec')
                     }
                     this.getAttrDef();
-                }
-                if(!detail.set_id) {
-                    this.getBomDetail()
                 }
             }).catch(err => {
                 console.log('getItemDetail err', err)
@@ -266,7 +265,7 @@ export default {
         },
 
         // 删除 商品
-       /* handleDelete(id) {
+        /* handleDelete(id) {
             let _this = this;
             this.$confirm({
                 title: '确定要删除该商品吗？',

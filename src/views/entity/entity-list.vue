@@ -223,7 +223,7 @@ export default {
 
             // 上传
             upload: {
-                action: Core.Const.NET.FILE_UPLOAD_ACTION,
+                action: Core.Const.NET.URL_POINT + "/admin/1/entity/import",
                 fileList: [],
                 headers: {
                     ContentType: false

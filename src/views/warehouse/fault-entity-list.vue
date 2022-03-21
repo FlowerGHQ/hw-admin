@@ -80,10 +80,10 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleFaultItemShow(record)" v-if="type !== 'pending'"><i class="icon i_edit"/> 修改</a-button>
-                            <a-button type="link" @click="handleEntryShow('', record)" v-if="type == 'pending' && record.org_type !== LOGIN_TYPE.ADMIN"><i class="icon i_s_warehouse"/> 入库</a-button>
-                            <a-button type="link" @click="handleAuditShow('', record)" v-if="type == 'pending' && record.status === AUDIT_TYPE.WAIT"><i class="icon i_audit"/> 审核</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button>
+                            <a-button type="link" @click="handleFaultItemShow(record)" v-if="type !== 'pending'"><i class="icon i_edit"/>编辑</a-button>
+                            <a-button type="link" @click="handleEntryShow('', record)" v-if="type == 'pending' && record.org_type !== LOGIN_TYPE.ADMIN"><i class="icon i_s_warehouse"/>入库</a-button>
+                            <a-button type="link" @click="handleAuditShow('', record)" v-if="type == 'pending' && record.status === AUDIT_TYPE.WAIT"><i class="icon i_audit"/>审核</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
                         </template>
                     </template>
                 </a-table>

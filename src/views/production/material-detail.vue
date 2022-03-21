@@ -10,7 +10,7 @@
             </div>
             <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
                 <template #expandIcon><i class="icon i_expan_l"/></template>
-                <a-collapse-panel key="itemInfo" header="详情信息" class="gray-collapse-panel">
+                <a-collapse-panel key="ItemInfo" header="详情信息" class="gray-collapse-panel">
                     <a-row class="panel-content info-container">
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                             <div class="info-item">
@@ -59,6 +59,8 @@ export default {
             id: '',
             detail: {}, // 详情
             categoryName: '-',
+
+            activeKey: ['ItemInfo']
         };
     },
     watch: {},
@@ -98,7 +100,6 @@ export default {
                 .then(res => {
                     this.categoryName = res.detail.name
                 })
-
         }
     }
 };

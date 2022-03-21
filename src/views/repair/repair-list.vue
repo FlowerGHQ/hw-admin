@@ -120,7 +120,7 @@
                         <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.SETTLEMENT && record.service_type == 1"><i class="icon i_audit"/>审核</a-button>
                     </template>
                     <template v-if="column.key === 'operate'">
-                        <a-button type='link' @click="routerChange('edit',record)" v-if="record.status == STATUS.AUDIT_FAIL"><i class="icon i_edit"/>修改</a-button>
+                        <a-button type='link' @click="routerChange('edit',record)" v-if="record.status == STATUS.AUDIT_FAIL"><i class="icon i_edit"/>编辑</a-button>
                     </template>
                     <template v-if="column.key === 'handle'">
                         <a-button type='link' @click="handleInvoice(record.id)" v-if="record.status == STATUS.AUDIT_SUCCESS"><i class="icon i_edit"/>结算</a-button>

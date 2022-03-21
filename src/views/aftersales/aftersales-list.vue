@@ -85,7 +85,7 @@
                         :s-pass="STATUS.AUDIT_PASS" :s-refuse="STATUS.AUDIT_REFUSE"><i class="icon i_audit"/>审核
                     </AuditHandle>
                     <template v-if="canEdit(record) && sameOrg(record.org_id, record.org_type)">
-                        <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>修改</a-button>
+                        <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button>
                         <a-button type="link" @click="handleCancel(record.id)" class="danger"><i class="icon i_m_error"/>取消</a-button>
                     </template>
                 </template>

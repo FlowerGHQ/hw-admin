@@ -9,8 +9,8 @@
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                         :row-key="record => record.id"  :pagination='false' v-model:expandedRowKeys='expandedRowKeys'
-                         @expand='handleExpandedChange'>
+                    :row-key="record => record.id" :pagination='false'
+                    v-model:expandedRowKeys='expandedRowKeys' @expand='handleExpandedChange'>
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'item'">
                             {{ text || '-'}}
@@ -24,9 +24,9 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="handleModalShow(record, record)"> <i class="icon i_edit"/> 编辑名称</a-button>
-                            <a-button type='link' @click="handleModalShow({parent_id: record.id}, null,record)"> <i class="icon i_add"/> 新增子分类</a-button>
-                            <a-button type='link' @click="handleDelete(record)"> <i class="icon i_delete"/> 删除</a-button>
+                            <a-button type='link' @click="handleModalShow(record, record)"><i class="icon i_edit"/>编辑名称</a-button>
+                            <a-button type='link' @click="handleModalShow({parent_id: record.id}, null,record)"><i class="icon i_add"/>新增子分类</a-button>
+                            <a-button type='link' @click="handleDelete(record)" class="danger"><i class="icon i_delete"/>删除</a-button>
                         </template>
                     </template>
                 </a-table>

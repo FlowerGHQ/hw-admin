@@ -19,8 +19,8 @@
                     <div class="key">物料分类</div>
                     <div class="value">
                         <CategoryTreeSelect @change="handleCategorySelect"
-                                            :category='item_category' :category-id='form.category_id'
-                                            placeholder="请选择物料分类" type="material"
+                            :category='item_category' :category-id='form.category_id'
+                            placeholder="请选择物料分类" type="material"
                         />
                     </div>
                 </div>
