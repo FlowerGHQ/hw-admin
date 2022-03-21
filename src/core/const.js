@@ -376,6 +376,20 @@ let Const = {
             { text: '全部', value: '1' },
             { text: '上架中', value: '0' },
             { text: '已下架', value: '-1' },
+        ],
+        TARGET_TYPE_MAP: {
+            ITEM: 1, // 商品
+            MATERIAL: 2, // 物料
+        },
+        TARGET_TYPE_LIST: [
+            {
+                text: '商品',
+                value: 1
+            },
+            {
+                text: '物料',
+                value: 2
+            },
         ]
     },
     PURCHASE: { // 采购订单

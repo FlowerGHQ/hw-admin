@@ -1,0 +1,169 @@
+<template>
+    <div id="AgentDetail" class='list-container'>
+        <div class="title-container">
+            <div class="title-area">零售商详情 <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>{{detail.status ? '启用中' : '已禁用'}}</a-tag></div>
+            <div class="btns-area" v-if="$auth('ADMIN')">
+                <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
+                <!-- <a-button type="primary" ghost @click="handleDelete(agent_id)"><i class="icon i_delete"/>删除</a-button> -->
+                <a-button :type="detail.status ? 'default' : 'primary'" :danger="detail.status ? true : false" ghost @click="handleStatusChange()">
+                    <template v-if="detail.status"><i class="icon i_forbidden"/>禁用</template>
+                    <template v-else><i class="icon i_enable"/>启用</template>
+                </a-button>
+            </div>
+        </div>
+        <div class="gray-panel">
+            <div class="panel-content desc-container">
+                <div class="desc-title">
+                    <div class="title-area">
+                        <img :src="$Util.imageFilter(detail.logo, 3)" />
+                        <span class="title">{{detail.name}}</span>
+                    </div>
+                </div>
+                <a-row class="desc-detail has-logo">
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">手机号：</span>
+                        <span class="value">{{detail.phone}}</span>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">邮箱：</span>
+                        <span class="value">{{detail.email}}</span>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">国家：</span>
+                        <span class="value">{{detail.country}}</span>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">创建时间：</span>
+                        <span class="value">{{$Util.timeFilter(detail.create_time)}}</span>
+                    </a-col>
+                </a-row>
+                <div class='desc-stat'>
+                    <a-statistic title="门店数" :value="detail.store_count" />
+                    <a-divider type="vertical" />
+                    <a-statistic title="员工数" :value="detail.user_count"/>
+                    <a-divider type="vertical" />
+                    <a-statistic title="累计营收" :value="0" :precision="2" prefix='€'/>
+                    <a-divider type="vertical" />
+                    <a-statistic title="总订单数" :value="detail.order_count" />
+                </div>
+            </div>
+        </div>
+        <div class="tabs-container">
+
+        </div>
+    </div>
+</template>
+
+<script>
+import Core from '../../core';
+
+import UserList from '@/components/panel/UserList.vue';
+import StoreList from '@/components/panel/StoreList.vue';
+import PurchaseList from '@/components/panel/PurchaseList.vue';
+import PricingStructure from '@/components/panel/PricingStructure.vue';
+
+const USER_TYPE = Core.Const.USER.TYPE;
+export default {
+    name: 'AgentDetail',
+    components: {
+        UserList,
+        StoreList,
+        PurchaseList,
+        PricingStructure,
+    },
+    props: {},
+    data() {
+        return {
+            USER_TYPE,
+            ORG_TYPE: Core.Const.LOGIN.TYPE,
+            loginType: Core.Data.getLoginType(),
+            // 加载
+            loading: false,
+            //标签页
+            activeKey: 'UserList',
+            agent_id: '',
+            detail: {}
+        };
+    },
+    watch: {},
+    computed: {},
+    created() {
+        this.agent_id = Number(this.$route.query.id) || Core.Data.getOrgId()
+        this.getAgentDetail();
+    },
+    methods: {
+        routerChange(type) {
+            let routeUrl = ''
+            switch (type) {
+                case 'edit':  // 编辑
+                    routeUrl = this.$router.resolve({
+                        path: "/agent/agent-edit",
+                        query: { id: this.agent_id }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'list':  // liebiao
+                    routeUrl = this.$router.resolve({
+                        path: "/agent/agent-list",
+                        query: { id: this.agent_id }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+            }
+        },
+        getAgentDetail() {
+            this.loading = true;
+            Core.Api.Agent.detail({
+                id: this.agent_id,
+            }).then(res => {
+                console.log('getAgentDetail res', res)
+                this.detail = res.detail
+            }).catch(err => {
+                console.log('getAgentDetail err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        // 删除 零售商
+        handleDelete(id) {
+            let _this = this;
+            this.$confirm({
+                title: '确定要删除该零售商吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    // console.log(this.agent_id);
+                    Core.Api.Agent.delete({id}).then(() => {
+                        _this.$message.success('删除成功');
+                        _this.routerChange('list');
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
+        handleStatusChange() {
+            let _this = this;
+            this.$confirm({
+                title: `确定要${_this.detail.status ? '禁用' : '启用'}该零售商吗？`,
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Agent.updateStatus({id:_this.detail.id}).then(() => {
+                        _this.$message.success(`${_this.detail.status ? '禁用' : '启用'}成功`);
+                        _this.getAgentDetail();
+                    }).catch(err => {
+                        console.log("handleStatusChange err", err);
+                    })
+                },
+            });
+        }
+    }
+};
+</script>
+
+<style lang="less" scoped>
+// #AgentDetail {}
+</style>

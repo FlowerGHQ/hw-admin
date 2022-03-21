@@ -162,7 +162,6 @@ export default {
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         this.indep_flag = Number(this.$route.query.indep_flag) || 0
-        this.getItemDetail();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -207,6 +206,9 @@ export default {
                         this.activeKey.push('itemSpec')
                     }
                     this.getAttrDef();
+                }
+                if(!detail.set_id) {
+                    this.getBomDetail()
                 }
             }).catch(err => {
                 console.log('getItemDetail err', err)
