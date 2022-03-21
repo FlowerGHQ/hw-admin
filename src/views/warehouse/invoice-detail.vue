@@ -153,8 +153,8 @@
                         </template>
                         <template v-if="column.key === 'operation'" >
                             <template v-if="!this.addMode">
-                                <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改实例号</a-button>
-                                <a-button type="link" @click="handleRowSubmit(record, 'entity')" v-else><i class="icon i_confirm"/>确认更改</a-button>
+                                <!-- <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改实例号</a-button> -->
+                                <!-- <a-button type="link" @click="handleRowSubmit(record, 'entity')" v-else><i class="icon i_confirm"/>确认更改</a-button> -->
                                 <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
                             </template>
                             <a-button type="link" v-if="this.addMode" @click="handleCopyEntity(index, record)"><i class="icon i_copy"/>复制</a-button>
@@ -403,14 +403,33 @@ export default {
             this.addMode = true
         },
 
-        handleAddSubmit(type) {
+        async handleAddSubmit(type) {
             this.loading = true;
             let data = [...this.tableData, ...this.addData]
             let list = []
             for (const item of data) {
                 let target_id = type === 'item' ? item.item.id : item.entity_id
-                if (!target_id) {
-                    return this.$message.warning(`该${type === 'item' ? '商品' : '商品实例'}不存在`);
+                if (type === 'item') {
+                    if (item.item && item.item.id) {
+                        target_id = item.item.id
+                    } else {
+                        return this.$message.warning("该商品不存在");
+                    }
+                } else if (type === 'entity') {
+                    if (!item.entity_uid) {
+                        return this.$message.warning("请输入商品实例号");
+                    } else if (item.entity_id) {
+                        target_id = item.entity_id
+                    } else if (!this.$auth('ADMIN')) {
+                        return this.$message.warning("该商品实例不存在");
+                    } else {
+                        try {
+                            let {detail} = await Core.Api.Entity.getByUid({ item_id: item.item.id, uid: item.entity_uid })
+                            target_id = detail.id
+                        } catch (error) {
+                            return this.$message.warning("该商品实例不存在");
+                        }
+                    }
                 }
                 list.push({
                     id: item.id,
@@ -419,6 +438,7 @@ export default {
                     target_id,
                 })
             }
+            console.log('handleAddSubmit list:', list)
             Core.Api.InvoiceItem.saveList(list).then(() => {
                 this.$message.success('保存成功')
                 this.getInvoiceDetail()
@@ -453,25 +473,19 @@ export default {
         handleVehicleBlur(record) {  // 获取 车架号ID
             // HW1000T-1B00B30001
             console.log('handleVehicleBlur:', record)
-            let apiName = this.$auth('ADMIN') ? 'getByUid' : 'detailByUid'
-            Core.Api.Entity[apiName]({
+            Core.Api.Entity.detailByUid({
                 item_id: record.item.id,
                 uid: record.entity_uid
             }).then(res => {
                 console.log('handleVehicleBlur res:', res)
-                if (this.$auth('ADMIN')) {
-                    record.entity_id = res.detail.id
+                if (res.detail) {
+                    this.$message.warning('该商品实例号未在系统中录入！')
+                    record.entity_id = 0
+                    record.entity_no_exist = 1
                 } else {
-                    if (res.detail) {
-                        this.$message.warning('该实例号未在系统中录入！')
-                        record.entity_id = 0
-                        record.entity_no_exist = 1
-                    } else {
-                        record.entity_id = res.detail.id
-                        record.entity_no_exist = 0
-                    }
+                    record.entity_id = res.detail.id
+                    record.entity_no_exist = 0
                 }
-                console.log("handleVehicleBlur res", res)
             }).catch(err => {
                 console.log('handleVehicleBlur err', err)
             }).finally(() => {
