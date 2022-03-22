@@ -7,9 +7,9 @@
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
-                        <div class="key"><span>商品编码:</span></div>
+                        <div class="key"><span>实例号:</span></div>
                         <div class="value">
-                            <a-input placeholder="请输入商品编码" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入商品编码" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                 </a-row>
@@ -98,7 +98,7 @@ export default {
             pageSize: 10,
             total: 0,
             searchForm: {
-                code: '',
+                uid: '',
             },
 
             tableData: [],
