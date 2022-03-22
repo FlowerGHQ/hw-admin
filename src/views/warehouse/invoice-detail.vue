@@ -488,6 +488,7 @@ export default {
                         item.entity_uid = item.entity ? item.entity.uid : ''
                     })
                 }
+                this.total = res.count
                 this.tableData = list
                 if (this.isProd) {
                     this.getProductionItem()
@@ -515,7 +516,7 @@ export default {
                 console.log('getProductionItem res:', res)
                 let d = res.detail || {}
                 this.production.addItem = d.item
-                let maxCount = d.amount - d.in_warehouse_count - this.tableData.length
+                let maxCount = d.amount - d.in_warehouse_count - this.total
                 this.production.addCount = maxCount
                 this.production.maxCount = maxCount
             })
