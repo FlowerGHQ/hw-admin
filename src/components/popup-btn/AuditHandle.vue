@@ -50,6 +50,7 @@ export default {
             default: false,
         },
 
+
         id: {},
         sPass: {},
         sRefuse: {},

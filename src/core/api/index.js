@@ -377,6 +377,14 @@ const apiList = {
         listAll: ['PostJson', 'bom-item/list-all'],
         delete: ['PostJson', 'bom-item/delete'],
         batchDelete: ['PostJson', 'bom-item/batch-delete'],
+        deleteByEditTime: ['PostJson', 'bom-item/delete-by-edit-time'],
+    },
+    ReceiveAddress: { //收货地址管理
+        list: ['PostJson', 'receive-info/list'],
+        save: ['PostJson', 'receive-info/save'],
+        detail: ['PostJson', 'receive-info/detail'],
+        delete: ['PostJson', 'receive-info/delete'],
+
     }
 };
 
