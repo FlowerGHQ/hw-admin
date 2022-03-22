@@ -846,41 +846,6 @@ const routes = [
         },
         children: [
             {
-                path: 'manufacture-order-list',
-                name: 'ManufactureOrderList',
-                component: () =>
-                    import ('@/views/production/manufacture-order-list.vue'),
-                meta: {
-                    title: '生产单列表',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    is_sub_menu: true
-                }
-            },
-            {
-                path: 'manufacture-order-edit',
-                name: 'ManufactureOrderEdit',
-                component: () =>
-                    import ('@/views/production/manufacture-order-edit.vue'),
-                hidden: true,
-                meta: {
-                    title: '生产单编辑',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/production/manufacture-order-list',
-                }
-            },
-            {
-                path: 'manufacture-order-detail',
-                name: 'ManufactureOrderDetail',
-                component: () =>
-                    import ('@/views/production/manufacture-order-detail.vue'),
-                hidden: true,
-                meta: {
-                    title: '生产单详情',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/item/item-list',
-                }
-            },
-            {
                 path: 'material-list',
                 name: 'MaterialList',
                 component: () =>
@@ -947,6 +912,41 @@ const routes = [
                     title: 'BOM详情',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/production/bom-list',
+                }
+            },
+            {
+                path: 'manufacture-order-list',
+                name: 'ManufactureOrderList',
+                component: () =>
+                    import ('@/views/production/manufacture-order-list.vue'),
+                meta: {
+                    title: '生产单列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true
+                }
+            },
+            {
+                path: 'manufacture-order-edit',
+                name: 'ManufactureOrderEdit',
+                component: () =>
+                    import ('@/views/production/manufacture-order-edit.vue'),
+                hidden: true,
+                meta: {
+                    title: '生产单编辑',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/production/manufacture-order-list',
+                }
+            },
+            {
+                path: 'manufacture-order-detail',
+                name: 'ManufactureOrderDetail',
+                component: () =>
+                    import ('@/views/production/manufacture-order-detail.vue'),
+                hidden: true,
+                meta: {
+                    title: '生产单详情',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/item/item-list',
                 }
             },
         ]

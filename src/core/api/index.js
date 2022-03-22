@@ -334,18 +334,7 @@ const apiList = {
         walletDetail:  ['PostJson', 'wallet-money/detail'],
         walletList: ['PostJson', 'wallet-money/list'],
     },
-    Production: { // 生产管理
-        list: ['PostJson', 'bom/list'],
-        delete: ['PostJson', 'bom/delete'],
-        detail: ['PostJson', 'bom/detail'],
-        save: ['PostJson', 'bom/save'],
-    },
-    BomCategory: {
-        list: ['PostJson', 'bom-category/list'],
-        save: ['PostJson', 'bom-category/save'],
-        delete: ['PostJson', 'bom-category/delete'],
-        tree: ['PostJson', 'bom-category/tree'],
-    },
+    // 生产管理
     ProductionOrder: { // 生产单
         list: ['PostJson', 'production-order/list'],
         save: ['PostJson', 'production-order/save'],
@@ -367,8 +356,15 @@ const apiList = {
         detail: ['PostJson', 'material-category/detail'],
         delete: ['PostJson', 'material-category/delete'],
     },
+    BomCategory: {
+        list: ['PostJson', 'bom-category/list'],
+        save: ['PostJson', 'bom-category/save'],
+        delete: ['PostJson', 'bom-category/delete'],
+        tree: ['PostJson', 'bom-category/tree'],
+    },
     Bom: { // bom表
         list: ['PostJson', 'bom/list'],
+        listAll: ['PostJson', 'bom/list-name'],
         save: ['PostJson', 'bom/save'],
         detail: ['PostJson', 'bom/detail'],
         delete: ['PostJson', 'bom/delete'],

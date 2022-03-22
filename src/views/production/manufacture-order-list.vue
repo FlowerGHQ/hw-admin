@@ -1,101 +1,93 @@
 <template>
-<div id="ManufactureList">
-    <div class="list-container">
-        <div class="title-container">
-            <div class="title-area">生产单列表</div>
-            <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建生产单</a-button>
-            </div>
+<div id="ManufactureList" class="list-container">
+    <div class="title-container">
+        <div class="title-area">生产单列表</div>
+        <div class="btns-area">
+            <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建生产单</a-button>
         </div>
-        <div class="search-container">
-            <a-row class="search-area">
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">生产单名称:</div>
-                    <div class="value">
-                        <a-input placeholder="请输入生产单名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
-                    </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">领料仓库:</div>
-                    <div class="value">
-                        <a-select v-model:value="searchForm.warehouse_id" placeholder="请选择领料仓库" @change="handleSearch">
-                            <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">{{ warehouse.name }}</a-select-option>
-                        </a-select>
-                    </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">BOM表:</div>
-                    <div class="value">
-                        <a-select v-model:value="searchForm.bom_id" placeholder="请选择BOM表" @change="handleSearch">
-                            <a-select-option v-for="item of bomList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
-                        </a-select>
-                    </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
-                    <div class="key">创建时间:</div>
-                    <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
-                </a-col>
-            </a-row>
-            <div class="btn-area">
-                <a-button @click="handleSearch" type="primary">查询</a-button>
-                <a-button @click="handleSearchReset">重置</a-button>
-            </div>
+    </div>
+    <div class="search-container">
+        <a-row class="search-area">
+            <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                <div class="key">生产单名称:</div>
+                <div class="value">
+                    <a-input placeholder="请输入生产单名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                </div>
+            </a-col>
+            <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                <div class="key">领料仓库:</div>
+                <div class="value">
+                    <a-select v-model:value="searchForm.warehouse_id" placeholder="请选择领料仓库" @change="handleSearch">
+                        <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">{{ warehouse.name }}</a-select-option>
+                    </a-select>
+                </div>
+            </a-col>
+            <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                <div class="key">BOM表:</div>
+                <div class="value">
+                    <a-select v-model:value="searchForm.bom_id" placeholder="请选择BOM表" @change="handleSearch">
+                        <a-select-option v-for="item of bomList" :key="item.id" :value="item.id" :title='item.name'>{{ item.name }}</a-select-option>
+                    </a-select>
+                </div>
+            </a-col>
+            <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
+                <div class="key">创建时间:</div>
+                <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
+            </a-col>
+        </a-row>
+        <div class="btn-area">
+            <a-button @click="handleSearch" type="primary">查询</a-button>
+            <a-button @click="handleSearchReset">重置</a-button>
         </div>
-        <div class="table-container">
-            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                     :row-key="record => record.id" :pagination='false'>
-                <template #bodyCell="{ column, text, record }">
-                    <template v-if="column.key === 'detail'">
-                        <a-tooltip placement="top" :title='text'>
-                            <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}
-                            </a-button>
-                        </a-tooltip>
-                    </template>
-                    <template v-if="column.dataIndex === 'name'">
-                        {{ text || '-' }}
-                    </template>
-                    <template v-if="column.key === 'index'">
-                        {{ text || '-' }}
-                    </template>
-                    <template v-if="column.key === 'attr'">
-                        {{ record.attr_desc || ' ' }}
-                    </template>
-                    <template v-if="column.dataIndex === 'status'">
-                        <div class="status status-bg status-tag" :class="$Util.invoiceStatusFilter(text,'color')">
-                            {{ $Util.invoiceStatusFilter(text) }}
-                        </div>
-                    </template>
-                    <template v-if="column.key === 'warehouse-name'">
-                        {{ text || '-' }}
-                    </template>
-                    <template v-if="column.key === 'type'">
-                        {{ $Util.warehouseTypeFilter(text) }}
-                    </template>
-                    <template v-if="column.key === 'time'">
-                        {{ $Util.timeFilter(text) }}
-                    </template>
-                    <template v-if="column.key === 'operation'">
-                        <a-button type="link" @click="routerChange('detail', record)"><i class="icon i_detail"/>详情</a-button>
-                        <a-button type="link" @click="handleCancel(record.id)"><i class="icon i_close_c"/>取消</a-button>
-                    </template>
+    </div>
+    <div class="table-container">
+        <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+            :row-key="record => record.id" :pagination='false'>
+            <template #bodyCell="{ column, text, record }">
+                <template v-if="column.key === 'detail'">
+                    <a-tooltip placement="top" :title='text'>
+                        <a-button type="link" @click="routerChange(column.to, record)">{{ text || '-' }}
+                        </a-button>
+                    </a-tooltip>
                 </template>
-            </a-table>
-        </div>
-        <div class="paging-container">
-            <a-pagination
-                v-model:current="currPage"
-                :page-size='pageSize'
-                :total="total"
-                show-quick-jumper
-                show-size-changer
-                show-less-items
-                :show-total="total => `共${total}条`"
-                :hide-on-single-page='false'
-                :pageSizeOptions="['10', '20', '30', '40']"
-                @change="pageChange"
-                @showSizeChange="pageSizeChange"
-            />
-        </div>
+                <template v-if="column.key === 'item'">
+                    {{ text || '-' }}
+                </template>
+                <template v-if="column.key === 'count'">
+                    {{ text ? text + '件' : '-' }}
+                </template>
+                <template v-if="column.key === 'spec'">
+                    {{ $Util.itemSpecFilter(text) }}
+                </template>
+                <template v-if="column.dataIndex === 'status'">
+                    <div class="status status-bg status-tag" :class="$Util.invoiceStatusFilter(text,'color')">
+                        {{ $Util.invoiceStatusFilter(text) }}
+                    </div>
+                </template>
+                <template v-if="column.key === 'time'">
+                    {{ $Util.timeFilter(text) }}
+                </template>
+                <template v-if="column.key === 'operation'">
+                    <a-button type="link" @click="routerChange('detail', record)"><i class="icon i_detail"/>详情</a-button>
+                    <a-button type="link" @click="handleCancel(record.id)" class="danger"><i class="icon i_close_c"/>取消</a-button>
+                </template>
+            </template>
+        </a-table>
+    </div>
+    <div class="paging-container">
+        <a-pagination
+            v-model:current="currPage"
+            :page-size='pageSize'
+            :total="total"
+            show-quick-jumper
+            show-size-changer
+            show-less-items
+            :show-total="total => `共${total}条`"
+            :hide-on-single-page='false'
+            :pageSizeOptions="['10', '20', '30', '40']"
+            @change="pageChange"
+            @showSizeChange="pageSizeChange"
+        />
     </div>
 </div>
 </template>
@@ -112,7 +104,9 @@ export default {
             current: 1,
             pageSize: 20,
             total: 0,
-            tableData: [],
+            // 搜索
+            warehouseList: [],
+            bomList: [],
             searchForm: {
                 name: '',
                 warehouse_id: undefined,
@@ -120,24 +114,23 @@ export default {
                 begin_time: '',
                 end_time: '',
             },
-            warehouseList: [],
-            bomList: [],
+            // 表格
             tableColumns: [
-                {title: '生产单编号', dataIndex: 'uid', key: 'detail'},
-                {title: '名称', dataIndex: 'name'},
+                {title: '生产单编号', dataIndex: 'uid', key: 'detail', to: 'detail'},
+                {title: '名称', dataIndex: 'name',key: 'item'},
                 {title: '状态', dataIndex: 'status'},
-                {title: '生产产品', dataIndex: ['item','name'],key: 'index'},
-                {title: '产品规格', dataIndex: 'attr', key: 'attr',},
-                {title: 'BOM表', dataIndex: 'bom_name',key: 'index'},
-                {title: 'BOM分类', dataIndex: 'bom_category_name',key: 'index'},
-                {title: '生产数量', dataIndex: 'amount',},
-                {title: '领料仓库', dataIndex: 'warehouse_name', key: 'warehouse-name',},
-                {title: '仓库类型', dataIndex: 'warehouse_id', key: 'type',},
-                {title: '备注', dataIndex: 'remark',key: 'index'},
-                {title: '创建人', dataIndex: ['apply_user', "account", "name"], key: 'index'},
+                {title: '生产产品', dataIndex: ['item','name'], key: 'item'},
+                {title: '产品规格', dataIndex: ['item','attr_list'], key: 'spec'},
+                {title: 'BOM表', dataIndex: 'bom_name',key: 'item'},
+                {title: 'BOM分类', dataIndex: 'bom_category_name',key: 'item'},
+                {title: '生产数量', dataIndex: 'amount', key: 'count',},
+                {title: '领料仓库', dataIndex: 'warehouse_name', key: 'detail', to: 'warehouse'},
+                {title: '备注', dataIndex: 'remark',key: 'item'},
+                {title: '创建人', dataIndex: ['apply_user', "account", "name"], key: 'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ],
+            tableData: [],
         }
     },
     watch: {},
@@ -146,7 +139,6 @@ export default {
         this.getWarehouseList();
         this.getBomList();
         this.getTableData();
-        console.log('this.getTableData')
     },
     methods: {
         routerChange(type, item = {}) {
@@ -165,6 +157,13 @@ export default {
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href,'_self')
+                    break;
+                case 'warehouse':
+                    routeUrl = this.$router.resolve({
+                        path: '/warehouse/warehouse-detail',
+                        query: { id: item.id }
+                    })
+                    window.open(routeUrl.href,'_blank')
                     break;
             }
         },
@@ -200,7 +199,7 @@ export default {
             })
         },
         getBomList() {
-            Core.Api.Production.list().then(res => {
+            Core.Api.Bom.listAll().then(res => {
                 this.bomList = res.list
             })
         },
@@ -212,18 +211,15 @@ export default {
                 page_size: this.pageSize
             }).then(res => {
                 console.log("getTableData res:", res)
-                let list = res.list.map(item => {
-                    item.attr_desc = item.item.attr_list ? item.item.attr_list.map(i => i.value).join(',') : ''
-                    return item
-                })
                 this.total = res.count;
-                this.tableData = list;
+                this.tableData = res.list;
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
+        // 取消生产单
         handleCancel(id) {
             let _this = this;
             this.$confirm({

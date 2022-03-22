@@ -3,6 +3,16 @@
         <div class="title-container">
             <div class="title-area">BOM表详情</div>
             <div class="btns-area" v-if="$auth('ADMIN')">
+                <a-upload name="file" class="file-uploader"
+                    :file-list="upload.fileList" :action="upload.action"
+                    :show-upload-list='false'
+                    :headers="upload.headers" :data='upload.data'
+                    accept=".xlsx,.xls"
+                    @change="handleFileUpload">
+                    <a-button type="primary"  class="file-upload-btn" style="margin-right: 12px;">
+                        导入明细
+                    </a-button>
+                </a-upload>
                 <EditBomModel @submit='getBomDetail' :ghost='true' :detail="detail">
                     <i class="icon i_edit"/>编辑
                 </EditBomModel>
@@ -13,7 +23,7 @@
             <div class="panel-content desc-container">
                 <div class="desc-title">
                     <div class="title-area">
-                        <span class="title">{{detail.name}}</span>
+                        <span class="title">{{detail.name || '-'}}</span>
                     </div>
                 </div>
                 <a-row class="desc-detail">
@@ -75,6 +85,20 @@ export default {
             //标签页
             activeKey: 'BomItems',
 
+            // 上传
+            upload: {
+                action: Core.Const.NET.URL_POINT + "/admin/1/bom-item/import",
+                fileList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'xlsx',
+                    bom_id: '',
+                    bom_name: '',
+                },
+            },
         };
     },
     watch: {},
@@ -112,6 +136,8 @@ export default {
                 let d = res.detail
                 this.detail = d
                 this.item = d.item ? d.item : {}
+                this.upload.data.bom_id = d.id
+                this.upload.data.bom_name = d.name
             }).catch(err => {
                 console.log('getBomDetail err', err)
             }).finally(() => {
@@ -136,6 +162,20 @@ export default {
                     })
                 },
             });
+        },
+
+        // 上传文件
+        handleFileUpload({file, fileList}) {
+            console.log("handleFileUpload status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                let res = file.response
+                if (res && res.code === 0) {
+                    return this.$message.success('上传成功');
+                } else {
+                    return this.$message.error('上传失败:' + res.message)
+                }
+            }
+            this.upload.fileList = fileList
         },
     }
 };

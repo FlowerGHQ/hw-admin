@@ -1,7 +1,4 @@
 <template>
-<!--
-    有实例出库 选择实例
--->
 <div id="InvoiceDetail" class="list-container">
     <div class="title-container">
         <div class="title-area">{{type_ch}}单详情</div>
@@ -134,8 +131,8 @@
                         <template v-if="column.key === 'entity_uid'">
                             <template v-if="addMode || record.editMode">
                                 <a-input v-model:value="record.entity_uid" style="width: 200px;" placeholder="请输入车架号" @blur="handleVehicleBlur(record)">
-                                    <template #suffix>
-                                        <span v-if="record.entity_uid"><i class="icon suffix i_confirm"/></span>
+                                    <template #suffix v-if="!$auth('ADMIN')">
+                                        <span v-if="record.entity_id"><i class="icon suffix i_confirm"/></span>
                                         <span v-else-if="record.entity_no_exist"><i class="icon suffix i_close_c"/></span>
                                     </template>
                                 </a-input>
@@ -470,15 +467,18 @@ export default {
             })
         },
 
-        handleVehicleBlur(record) {  // 获取 车架号ID
+        handleVehicleBlur(record) { // 获取 车架号ID
             // HW1000T-1B00B30001
             console.log('handleVehicleBlur:', record)
+            if (!record.entity_uid) {
+                return
+            }
             Core.Api.Entity.detailByUid({
                 item_id: record.item.id,
                 uid: record.entity_uid
             }).then(res => {
                 console.log('handleVehicleBlur res:', res)
-                if (res.detail) {
+                if (Core.Util.isEmptyObj(res.detail)) {
                     this.$message.warning('该商品实例号未在系统中录入！')
                     record.entity_id = 0
                     record.entity_no_exist = 1

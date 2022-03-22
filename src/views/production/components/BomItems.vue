@@ -1,7 +1,7 @@
 <template>
 <div class="BomItems gray-panel no-margin">
     <div class="panel-title">
-        <div class="title">商品价格管理</div>
+        <div class="title">BOM表明细</div>
         <div class="btn-area" v-if="!addMode && !editShow">
             <ItemSelect @select="(ids,items) => handleAddShow(TARGET_TYPE.ITEM,ids,items)" btn-class="panel-btn" :disabled-checked='checkedIds.items'>
                 添加商品
@@ -19,7 +19,6 @@
                     <template v-else>批量编辑</template>
                 </a-button>
                 <a-button class="panel-btn" @click="getTableData" v-if="editShow">取消设置</a-button>
-
                 <a-button class="panel-btn" @click="handleRemove('muti', selectedRowItems)" type="danger" ghost :disabled="!selectedRowKeys.length" v-if="!editShow">
                     批量删除
                 </a-button>
