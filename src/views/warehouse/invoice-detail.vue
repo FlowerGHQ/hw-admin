@@ -62,9 +62,25 @@
         <!-- 无实例 -->
         <a-collapse-panel key="ItemList" header="商品信息" class="gray-collapse-panel" v-if="detail.target_type === COMMODITY_TYPE.ITEM">
             <template #extra>
-                <ItemSelect btnType='link' btnText="添加商品" v-if="detail.status === STATUS.INIT && !addMode"
-                    :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
-                    @select="handleAddChange"/>
+                <template  v-if="detail.status === STATUS.INIT && !addMode">
+                    <ItemSelect btnType='link' btnText="添加商品" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION"
+                        :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
+                        @select="handleAddChange"/>
+                    <a-popover v-model:visible="production.addVisible" trigger="click" placement="left" v-else-if="production.addCount"
+                        @visibleChange='(visible) => {!visible && handleProdAddCancel()}' title="请输入添加数量">
+                        <template #content>
+                            <div class="prod-edit-popover">
+                                <a-input-number v-model:value="production.addCount" placeholder="添加数量"
+                                    @keydown.enter="handleProdAddChange(index)" :autofocus="true" :max="production.maxCount" :min='1' :precision="0"/>
+                                <div class="btns">
+                                    <a-button type="primary" @click="handleProdAddCancel()" ghost>取消</a-button>
+                                    <a-button type="primary" @click="handleProdAddChange()">确定</a-button>
+                                </div>
+                            </div>
+                        </template>
+                        <a-button type="link" class="extra-btn" @click.stop >添加商品</a-button>
+                    </a-popover>
+                </template>
                 <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('item')">确认添加</a-button>
             </template>
             <div class="panel-content">
@@ -392,7 +408,6 @@ export default {
         isProd() {
             let d = this.detail
             if (d.source_type == SOURCE_TYPE.PRODUCTION &&
-                d.target_type == COMMODITY_TYPE.ENTITY &&
                 d.type == TYPE.IN) {
                 return true
             }
@@ -516,9 +531,13 @@ export default {
                 console.log('getProductionItem res:', res)
                 let d = res.detail || {}
                 this.production.addItem = d.item
-                let maxCount = d.amount - d.in_warehouse_count - this.total
+                let maxCount = d.amount - d.in_warehouse_count
+                if (this.detail.target_type == COMMODITY_TYPE.ENTITY) {
+                    maxCount = maxCount - this.total
+                }
                 this.production.addCount = maxCount
                 this.production.maxCount = maxCount
+                console.log('this.production:', this.production)
             })
         },
 
@@ -702,16 +721,44 @@ export default {
 
         handleAddEntityChange(ids, items) {
             console.log('handleAddEntityChange items:', items)
+            let list = items.map(item => {
+                console.log('item:', item)
+                return {
+                    id: 0,
+                    amount: 1,
+                    invoice_id: this.id,
+                    target_id: item.id,
+                    target_uid: item.uid,
+                }
+            })
+            Core.Api.InvoiceItem.saveList(list).then(() => {
+                this.$message.success('保存成功')
+                this.getInvoiceDetail()
+                this.addMode = false
+            }).catch(err => {
+                console.log('handleAddSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
         },
 
         handleProdAddChange() {
-            let list = new Array(this.production.addCount).fill({})
-            list = list.map(item => ({
-                id: 0,
-                item: this.production.addItem,
-                amount: 1,
-                entity_uid: '',
-            }))
+            let list
+            if (this.detail.target_type == COMMODITY_TYPE.ENTITY) {
+                list = new Array(this.production.addCount).fill({})
+                list = list.map(item => ({
+                    id: 0,
+                    item: this.production.addItem,
+                    amount: 1,
+                    entity_uid: '',
+                }))
+            } else if (this.detail.target_type == COMMODITY_TYPE.ITEM) {
+                list = [{
+                    id: 0,
+                    item: this.production.addItem,
+                    amount: this.production.addCount,
+                }]
+            }
             this.production.addVisible = false
             this.addData = list
             this.addMode = true
