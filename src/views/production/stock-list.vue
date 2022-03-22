@@ -43,10 +43,17 @@
                 <template v-if="column.key === 'count'">
                     {{ text || 0 }}
                 </template>
-                <!-- <template v-if="column.key === 'name'">
-                    {{ text || '-' }}
-                </template> -->
+                <template v-if="column.key === 'warehouse'">
+                    <a-tooltip placement="top" :title='text'>
+                        <a-button type="link" @click="routerChange('warehouse', record)">{{ text || '-'}}</a-button>
+                    </a-tooltip>
+                </template>
                 <template v-if="record.target_type === 1 && record.item">
+                    <template v-if="column.type === 'name'">
+                        <a-tooltip placement="top" :title='text'>
+                            <a-button type="link" @click="routerChange('item', record.item)">{{record.item.name || '-'}}</a-button>
+                        </a-tooltip>
+                    </template>
                     <template v-if="column.type === 'target'">
                         {{record.item[column.key]}}
                     </template>
@@ -58,8 +65,11 @@
                     </template>
                 </template>
                 <template v-if="record.target_type === 2 && record.material">
+                    <template v-if="column.type === 'name'">
+                        {{record.material.name || '-'}}
+                    </template>
                     <template v-if="column.type === 'target'">
-                        {{record.material[column.key]}}
+                        {{record.material[column.key] || '-'}}
                     </template>
                     <template v-if="column.type === 'category'">
                         {{record.material.category ? record.material.category.name || '-' : '-'}}
@@ -116,9 +126,9 @@ export default {
             tableData: [],
             tableColumns: [
                 { title: '类型', dataIndex: 'target_type'},
-                { title: '名称', type: 'target', key: 'name'},
+                { title: '名称', type: 'name'},
                 { title: '编号', type: 'target', key: 'code'},
-                { title: '所属仓库', dataIndex: ['warehouse', 'name'] },
+                { title: '所属仓库', dataIndex: ['warehouse', 'name'], key: 'warehouse' },
                 { title: '库存数量', dataIndex: 'stock', key: 'count'},
                 { title: '需求数量', dataIndex: 'request_count', key: 'count'},
                 { title: '生产中数量', dataIndex: 'production_count', key: 'count'},
@@ -137,17 +147,17 @@ export default {
         routerChange(type, item = {}) {
             let routeUrl = ''
             switch(type) {
-                case 'detail':
-                    routeUrl = this.$router.resolve({
-                        path: "/production/bom-detail",
-                        query: {id: item.id}
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
                 case 'item':
                     routeUrl = this.$router.resolve({
                         path: "/item/item-detail",
                         query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+                case 'warehouse':
+                    routeUrl = this.$router.resolve({
+                        path: "/warehouse/warehouse-detail",
+                        query: {id: item.warehouse_id}
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
