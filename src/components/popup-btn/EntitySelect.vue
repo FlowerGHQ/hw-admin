@@ -111,19 +111,14 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: '商品名称', dataIndex: 'name', key: 'detail'},
-                {title: '商品分类', dataIndex: ['category','name']},
-                {title: '商品品号', dataIndex: 'model', key: 'item'},
-                {title: '商品编码', dataIndex: 'code', key: 'item'},
-                {title: '商品规格', dataIndex: 'attr_list', key: 'spec'},
-                // {title: '建议零售价', dataIndex: 'price', key: 'money',},
+                {title: '商品名称', dataIndex: ['item','name'], key: 'item'},
+                {title: '商品实例号', dataIndex: 'uid', key: 'item'},
+                {title: '商品分类', dataIndex: ['item','category','name'], key: 'item'},
+                {title: '商品品号', dataIndex: ['item','model'], key: 'item'},
+                {title: '商品编码', dataIndex: ['item','code'], key: 'item'},
+                {title: '商品规格', dataIndex: ['item','attr_list'], key: 'spec'},
+                {title: '到港时间', dataIndex: 'arrival_time', key: 'time'},
             ]
-            if (this.warehouseId !== 0) {
-                tableColumns.splice(3, 0, {title: '仓库库存', dataIndex: 'stock', key: 'count'})
-            }
-            if (this.purchaseId !== 0) {
-                tableColumns.splice(3, 0, {title: '下单数量', dataIndex: 'count', key: 'count'})
-            }
             return tableColumns
         },
     },

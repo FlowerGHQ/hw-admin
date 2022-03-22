@@ -28,6 +28,9 @@
             <template v-if="column.key === 'spec'">
                 {{ $Util.itemSpecFilter(text)}}
             </template>
+            <template v-if="column.key === 'time'">
+                {{ $Util.timeFilter(text)}}
+            </template>
         </template>
     </a-table>
 </template>
