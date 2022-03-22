@@ -3,14 +3,22 @@
     <div class="panel-title">
         <div class="title">已生产产品列表</div>
         <div class="btn-area">
-            <a-button type="primary" @click="routerChange('put_in')" class="panel-btn"><i class="icon i_add"/>产品入库</a-button>
+            <a-button type="primary" @click="handleEntityPutIn" class="panel-btn" v-if="remain_count > 0"><i class="icon i_add"/>产品入库</a-button>
         </div>
     </div>
     <div class="panel-content">
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :pagination='false'>
-                <template #bodyCell="{ column, text }">
+                <template #bodyCell="{ column, text, record }">
+                    <template v-if="column.key === 'detail'">
+                        <div class="table-img">
+                            <a-image :width="24" :height="24" :src="$Util.imageFilter(record.item.logo)" fallback='无'/>
+                            <a-tooltip placement="top" :title='text'>
+                                <p class="ell" style="max-width:120px;margin-left:12px;">{{text || '-'}}</p>
+                            </a-tooltip>
+                        </div>
+                    </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}
                     </template>
@@ -18,12 +26,7 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <!-- <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>详情</a-button>
-                        <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button>
-                        <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
-                            <template v-if="record.status"><i class="icon i_forbidden"/>禁用</template>
-                            <template v-else><i class="icon i_enable"/>启用</template>
-                        </a-button> -->
+                        <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
                     </template>
                 </template>
             </a-table>
@@ -34,15 +37,19 @@
 
 <script>
 import Core from '../../../core';
+const STOCK_RECORD = Core.Const.STOCK_RECORD
 export default {
     name: 'ProductionItem',
     components: {},
     props: {
-        orderId: {
+        id: {
             type: Number,
         },
-        type: {
-            type: Number,
+        uid: {
+            type: String,
+        },
+        detail: {
+            type: Object,
         },
     },
     data() {
@@ -54,20 +61,23 @@ export default {
             pageSize: 20,
             total: 0,
             tableData: []
-
         };
     },
     watch: {},
     computed: {
         tableColumns() {
             let tableColumns = [
-                { title: '产品名称', dataIndex: 'name'},
-                { title: '产品编号', dataIndex: 'uid' },
+                { title: '产品名称', dataIndex: ['item','name'], key: 'detail'},
+                { title: '产品编号', dataIndex: 'item_code', key: 'item' },
+                { title: '产品实例号', dataIndex: 'uid', key: 'item'},
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '操作', key: 'operation', fixed: 'right'},
             ]
             return tableColumns
         },
+        remain_count() {
+            return this.detail.amount - this.tableData.length
+        }
     },
     mounted() {
         this.getTableData();
@@ -77,13 +87,31 @@ export default {
             let routeUrl = ''
             switch (type) {
                 case 'put_in':    // 实例入库
+                    let source = {
+                        sourceUid: this.uid,
+                        form: {
+                            type: STOCK_RECORD.TYPE.IN,
+                            target_type: STOCK_RECORD.COMMODITY_TYPE.ENTITY,
+                            source_id: this.id,
+                            source_type: STOCK_RECORD.SOURCE_TYPE.PRODUCTION
+                        },
+                    }
+                    console.log('source:', source)
                     routeUrl = this.$router.resolve({
                         path: "/warehouse/invoice-edit",
-                        query: {id: item.id }
+                        query: {
+                            source: JSON.stringify(source)
+                        }
                     })
-                    window.open(routeUrl.href, '_blank')
+                    break;
+                case 'invoice':
+                    routeUrl = this.$router.resolve({
+                        path: "/warehouse/invoice-detail",
+                        query: { id: item.id }
+                    })
                     break;
             }
+            window.open(routeUrl.href, '_blank')
         },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
@@ -96,13 +124,11 @@ export default {
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-            let obj = {
-                production_order_id: this.orderId,
+            Core.Api.Entity.list({
+                production_order_id: this.id,
                 page: this.currPage,
                 page_size: this.pageSize
-            }
-            console.log('getTableDataobj:', obj)
-            Core.Api.Entity.list(obj).then(res => {
+            }).then(res => {
                 console.log("getTableData res", res)
                 this.total = res.count;
                 this.tableData = res.list;
@@ -111,6 +137,22 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
+        },
+        // 创建入库单
+        handleEntityPutIn() {
+            let form = {
+                type: STOCK_RECORD.TYPE.IN,
+                target_type: STOCK_RECORD.COMMODITY_TYPE.ENTITY,
+                warehouse_id: this.detail.warehouse_id,
+                source_type: STOCK_RECORD.SOURCE_TYPE.PRODUCTION,
+                source_id: this.id,
+            }
+            Core.Api.Invoice.save(form).then(res => {
+                this.$message.success('保存成功')
+                this.routerChange('invoice', res.detail)
+            }).catch(err => {
+                console.log('handleSubmit err:', err)
+            })
         },
         // 删除
         handleDelete(id) {

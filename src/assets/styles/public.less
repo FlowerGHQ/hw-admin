@@ -510,7 +510,14 @@
 }
 
 // 输入框
-input.ant-input, textarea.ant-input {
+span.ant-input-affix-wrapper {
+    border-color: @BC_N;
+    border-radius: 4px;
+    font-size: @fz_sm;
+    box-sizing: border-box;
+}
+input.ant-input,
+textarea.ant-input {
     border-color: @BC_N;
     box-sizing: border-box;
     border-radius: 4px;
@@ -559,6 +566,14 @@ div.ant-input-number {
             border-left: 0;
             background: #fafafa;
         }
+    }
+}
+
+.ant-input-suffix {
+    .icon.suffix {
+        font-size: 14px;
+        &.i_confirm { color: @green; }
+        &.i_close_c { color: @red; }
     }
 }
 
@@ -1199,6 +1214,11 @@ p {
             .value {
                 margin-top: 10px;
                 color: #363D42;
+                .ant-btn {
+                    font-size: 12px;
+                    line-height: 1.5;
+                    height: 1.5em;
+                }
             }
         }
     }

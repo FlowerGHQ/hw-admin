@@ -23,7 +23,9 @@
         <div class="panel-content">
             <div class="info-item">
                 <div class="key">所属仓库</div>
-                <div class="value">{{ warehouse.name || '-' }}</div>
+                <div class="value">
+                    <a-button type="link" @click="routerChange('warehouse')">{{ warehouse.name || '-' }}</a-button>
+                </div>
             </div>
             <div class="info-item">
                 <div class="key">仓库类型</div>
@@ -103,10 +105,26 @@
         <a-collapse-panel key="ItemList" header="商品信息" class="gray-collapse-panel" v-if="detail.target_type === COMMODITY_TYPE.ENTITY">
             <template #extra v-if="detail.type == TYPE.IN">
                 <!-- 有实例入库 选择商品并输入数量、实例号 -->
-                <ItemSelect btnType='link' btnText="添加商品" v-if="detail.status === STATUS.INIT && !addMode" @select="handleAddChange"/>
+                <template v-if="detail.status === STATUS.INIT && !addMode">
+                    <ItemSelect btnType='link' btnText="添加商品" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION" @select="handleAddChange"/>
+
+                    <a-popover v-model:visible="production.addVisible" trigger="click" placement="left" v-else-if="production.addCount"
+                        @visibleChange='(visible) => {!visible && handleProdAddCancel()}' title="请输入添加数量">
+                        <template #content>
+                            <div class="prod-edit-popover">
+                                <a-input-number v-model:value="production.addCount" placeholder="添加数量" @keydown.enter="handleProdAddChange(index)" :autofocus="true"/>
+                                <div class="btns">
+                                    <a-button type="primary" @click="handleProdAddCancel()" ghost>取消</a-button>
+                                    <a-button type="primary" @click="handleProdAddChange()">确定</a-button>
+                                </div>
+                            </div>
+                        </template>
+                        <a-button type="link" class="extra-btn" @click.stop   >添加商品</a-button>
+                    </a-popover>
+                </template>
                 <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('entity')">确认添加</a-button>
             </template>
-            <template #extra v-else>
+            <template #extra v-else-if="detail.type == TYPE.OUT">
                 <!-- 有实例出库 选择实例 -->
                 <EntitySelect btnType='link' btnText="添加实例商品" v-if="detail.status === STATUS.INIT && !addMode"
                     :warehouseId="detail.warehouse_id" :disabledChecked="disabledChecked"
@@ -200,6 +218,12 @@ export default {
             tableData: [],
             addMode: false,
             addData: [],
+
+            production: {
+                addVisible: false,
+                addCount: 1,
+                addItem: {},
+            }
         };
     },
     watch: {},
@@ -235,7 +259,6 @@ export default {
             return columns
         },
         entityTableColumns() {
-            // 'entity',
             let columns = [
                 {title: '商品名称', dataIndex: ['item', 'name'],  key: 'tip_item'},
                 // {title: this.type_ch + '数量', dataIndex: 'amount'},
@@ -245,14 +268,20 @@ export default {
                 {title: '商品规格', dataIndex: ['item', 'attr_list'], key: 'attr_list'},
                 {title: '操作', key: 'operation'},
             ]
-            if (this.detail.status !== STATUS.INIT) { // 入库不显示库存数量
+            if (this.detail.status !== STATUS.INIT || this.isProd) { // 入库不显示库存数量
                 columns.pop()
             }
-            /* if (this.detail.type == TYPE.IN) {
-                columns.splice(1, 0, {title: this.type_ch + '数量', dataIndex: 'amount'})
-            } */
             return columns
         },
+        isProd() {
+            let d = this.detail
+            if (d.source_type == SOURCE_TYPE.PRODUCTION &&
+                d.target_type == COMMODITY_TYPE.ENTITY &&
+                d.type == TYPE.IN) {
+                return true
+            }
+            return false
+        }
     },
     mounted() {
         this.id = Number(this.$route.query.id) || 0
@@ -275,6 +304,13 @@ export default {
                     })
                     window.open(routeUrl.href, '_self')
                     break;
+                case 'warehouse':
+                    routeUrl = this.$router.resolve({
+                        path: "/warehouse/warehouse-detail",
+                        query: { id: this.detail.warehouse_id }
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
                 case 'source':
                     let path = ''
                     switch (this.detail.source_type) {
@@ -294,9 +330,11 @@ export default {
                             path = '/repair/repair-detail'
                             break;
                     }
-                    routeUrl = this.$router.resolve({path,
+                    routeUrl = this.$router.resolve({
+                        path,
                         query: { id: this.detail.source_id }
                     })
+                    window.open(routeUrl.href, '_blank')
                     break;
             }
         },
@@ -307,8 +345,9 @@ export default {
                 id: this.id
             }).then(res => {
                 console.log('getInvoiceDetail res', res)
-                this.detail = res.detail
-                this.warehouse = res.detail.warehouse || {}
+                let d = res.detail || {}
+                this.detail = d
+                this.warehouse = d.warehouse || {}
                 this.getInvoiceList();
             }).catch(err => {
                 console.log('getInvoiceDetail err', err)
@@ -332,11 +371,25 @@ export default {
                     })
                 }
                 this.tableData = list
+                if (this.isProd) {
+                    this.getProductionItem()
+                }
             }).catch(err => {
                 console.log('getInvoiceList err', err)
             }).finally(() => {
                 this.loading = false;
             });
+        },
+        // 获取生产单对应商品
+        getProductionItem() {
+            Core.Api.ProductionOrder.detail({
+                id: this.detail.source_id
+            }).then(res => {
+                console.log('getProductionItem res:', res)
+                let d = res.detail || {}
+                this.production.addItem = d.item
+                this.production.addCount = d.amount - this.tableData.length
+            })
         },
 
         // 取消 出入库单
@@ -405,7 +458,7 @@ export default {
             let data = [...this.tableData, ...this.addData]
             let list = []
             for (const item of data) {
-                let target_id = type === 'item' ? item.item.id : item.entity_id
+                let target_id,target_uid
                 if (type === 'item') {
                     if (item.item && item.item.id) {
                         target_id = item.item.id
@@ -414,6 +467,12 @@ export default {
                     }
                 } else if (type === 'entity') {
                     if (!item.entity_uid) {
+                        return this.$message.warning("请输入商品实例号");
+                    } else {
+                        target_id = item.entity_id
+                        target_uid = item.entity_uid
+                    }
+                    /* if (!item.entity_uid) {
                         return this.$message.warning("请输入商品实例号");
                     } else if (item.entity_id) {
                         target_id = item.entity_id
@@ -426,13 +485,14 @@ export default {
                         } catch (error) {
                             return this.$message.warning("该商品实例不存在");
                         }
-                    }
+                    } */
                 }
                 list.push({
                     id: item.id,
                     amount: item.amount,
                     invoice_id: this.id,
                     target_id,
+                    target_uid,
                 })
             }
             console.log('handleAddSubmit list:', list)
@@ -479,7 +539,9 @@ export default {
             }).then(res => {
                 console.log('handleVehicleBlur res:', res)
                 if (Core.Util.isEmptyObj(res.detail)) {
-                    this.$message.warning('该商品实例号未在系统中录入！')
+                    if (!this.$auth('ADMIN')) {
+                        this.$message.warning('该商品实例号未在系统中录入！')
+                    }
                     record.entity_id = 0
                     record.entity_no_exist = 1
                 } else {
@@ -504,6 +566,23 @@ export default {
 
         handleAddEntityChange(ids, items) {
             console.log('handleAddEntityChange items:', items)
+        },
+
+        handleProdAddChange() {
+            let list = new Array(this.production.addCount).fill({})
+            list = list.map(item => ({
+                id: 0,
+                item: this.production.addItem,
+                amount: 1,
+                entity_uid: '',
+            }))
+            this.production.addVisible = false
+            this.addData = list
+            this.addMode = true
+        },
+        handleProdAddCancel() {
+            this.production.addVisible = false
+            // this.getProductionItem()
         }
     }
 };
@@ -534,10 +613,26 @@ export default {
             width: 100% - 50px;
         }
     }
-    .suffix {
-        font-size: 14px;
-        &.i_confirm { color: @green; }
-        &.i_close_c { color: @red; }
+}
+.prod-edit-popover {
+    margin: 0 -4px;
+    display: flex;
+    .flex(flex-start,flex-end);
+    .ant-input, .ant-input-number {
+        width: 155px;
+        margin-bottom: 8px;
+    }
+    .btns {
+        margin-top: 16px;
+        .fcc();
+        .ant-btn {
+            width: 48px;
+            height: 25px;
+            font-size: 12px;
+            border-radius: 2px;
+            padding: 0;
+            line-height: 25px;
+        }
     }
 }
 </style>

@@ -66,7 +66,7 @@
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
                 <a-tab-pane key="ProductionItem" tab="已生产产品">
-                    <ProductionItem :orderId='id' @submit="getOrderDetail" v-if="activeKey === 'ProductionItem'"/>
+                    <ProductionItem :id='id' :uid="detail.uid" :detail='detail' @submit="getOrderDetail" v-if="activeKey === 'ProductionItem'"/>
                 </a-tab-pane>
                 <a-tab-pane key="MaterialList" tab="材料总览">
                     <MaterialList />
@@ -99,7 +99,7 @@ export default {
             bom: {},    // BOM表详情
             warehouse: {},  // 仓库详情
             //标签页
-            activeKey: 'ProductionItem',
+            activeKey: '',
         }
     },
     watch: {},
@@ -158,6 +158,7 @@ export default {
                 let d = res.detail || {}
                 this.detail = d;
                 this.item = d.item || {};
+                this.activeKey = 'ProductionItem'
             }).catch((err) => {
                 console.log('getOrderDetail err', err);
             }).finally(() => {
