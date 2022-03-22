@@ -32,7 +32,7 @@
                     <a-tab-pane key="ItemStockList" tab="库存商品">
                         <StockList type='item' :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail" v-if="activeKey === 'ItemStockList'"/>
                     </a-tab-pane>
-                    <a-tab-pane key="MaterialStockList" tab="库存物料">
+                    <a-tab-pane key="MaterialStockList" tab="库存物料" v-if="$auth('ADMIN')">
                         <StockList type='material' :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail" v-if="activeKey === 'MaterialStockList'"/>
                     </a-tab-pane>
                     <a-tab-pane key="StockRecord" tab="出入库记录">
