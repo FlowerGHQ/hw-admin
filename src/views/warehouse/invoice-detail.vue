@@ -606,6 +606,9 @@ export default {
                         }
                         break;
                     case 'material':
+                        console.log('item.material', item.material)
+                        console.log('item.material.id:', item.material.id)
+                        console.log('item.material && item.material.id:', item.material && item.material.id)
                         if (item.material && item.material.id) {
                             target_id = item.material.id
                         } else {
