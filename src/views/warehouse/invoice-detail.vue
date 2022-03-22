@@ -66,7 +66,7 @@
                     <ItemSelect btnType='link' btnText="添加商品" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION"
                         :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
                         @select="handleAddChange"/>
-                    <a-popover v-model:visible="production.addVisible" trigger="click" placement="left" v-else-if="production.addCount"
+                    <a-popover v-model:visible="production.addVisible" trigger="click" placement="left" v-else-if="production.maxCount"
                         @visibleChange='(visible) => {!visible && handleProdAddCancel()}' title="请输入添加数量">
                         <template #content>
                             <div class="prod-edit-popover">
@@ -141,7 +141,7 @@
                 <template v-if="detail.status === STATUS.INIT && !addMode">
                     <ItemSelect btnType='link' btnText="添加商品" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION" @select="handleAddChange"/>
 
-                    <a-popover v-model:visible="production.addVisible" trigger="click" placement="left" v-else-if="production.addCount"
+                    <a-popover v-model:visible="production.addVisible" trigger="click" placement="left" v-else-if="production.maxCount"
                         @visibleChange='(visible) => {!visible && handleProdAddCancel()}' title="请输入添加数量">
                         <template #content>
                             <div class="prod-edit-popover">
