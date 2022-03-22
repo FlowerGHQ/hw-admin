@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div class="table-container">
-                <ItemTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow"
+                <ItemTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :showStock='warehouseId'
                     :check-mode='true' :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode'/>
             </div>
         </div>

@@ -10,7 +10,7 @@
                 :headers="upload.headers" :data='upload.data'
                 accept=".xlsx,.xls"
                 @change="handleFileUpload">
-                <a-button type="primary"  class="file-upload-btn" style="margin-left: 12px;">
+                <a-button type="primary" class="file-upload-btn" style="margin-left: 12px;">
                     批量导入明细
                 </a-button>
             </a-upload>

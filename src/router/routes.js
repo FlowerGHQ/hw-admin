@@ -837,7 +837,7 @@ const routes = [
     { // 生产管理 - 平台端
         path: '/production',
         component: Layout,
-        redirect: '/production/manufacture-order-list',
+        redirect: '/production/stock-list',
         name: 'ProductionManagement',
         meta: {
             title: '生产管理',

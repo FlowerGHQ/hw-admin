@@ -64,6 +64,10 @@ export default {
         disabledChecked: { // 不可被选中的
             type: Array,
             default: () => { return [] }
+        },
+        showStock: {
+            type: Boolean,
+            default: false,
         }
     },
     emit: ['submit'],
@@ -85,6 +89,7 @@ export default {
         }
     },
     created() {
+        console.log('created this.defaultChecked:', this.defaultChecked)
         if (this.defaultChecked.length) {
             this.selectedRowKeys = Core.Util.deepCopy(this.defaultChecked)
         }
@@ -107,7 +112,7 @@ export default {
                     this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
                 },
                 getCheckboxProps: record => ({
-                    disabled: record.stock === 0 || this.disabledChecked.includes(record.id)
+                    disabled: (this.showStock && record.stock === 0) || this.disabledChecked.includes(record.id)
                 }),
             };
         },

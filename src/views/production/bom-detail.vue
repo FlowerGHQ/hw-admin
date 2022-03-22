@@ -3,7 +3,7 @@
         <div class="title-container">
             <div class="title-area">BOM表详情</div>
             <div class="btns-area" v-if="$auth('ADMIN')">
-                <a-upload name="file" class="file-uploader"
+                <!-- <a-upload name="file" class="file-uploader"
                     :file-list="upload.fileList" :action="upload.action"
                     :show-upload-list='false'
                     :headers="upload.headers" :data='upload.data'
@@ -12,7 +12,7 @@
                     <a-button type="primary"  class="file-upload-btn" style="margin-right: 12px;">
                         导入明细
                     </a-button>
-                </a-upload>
+                </a-upload> -->
                 <EditBomModel @submit='getBomDetail' :ghost='true' :detail="detail">
                     <i class="icon i_edit"/>编辑
                 </EditBomModel>
