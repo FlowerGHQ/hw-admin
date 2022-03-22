@@ -1,5 +1,5 @@
 <template>
-    <div id="ItemDetail">
+    <div id="MaterialDetail">
         <div class="list-container">
             <a-spin :spinning="loading" class='loading-incontent' v-if="loading"></a-spin>
             <div class="title-container">
@@ -106,5 +106,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #ItemDetail {}
+// #MaterialDetail {}
 </style>
