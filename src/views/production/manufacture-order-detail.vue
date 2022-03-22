@@ -212,15 +212,15 @@ export default {
 
 <style lang='less'>
 #ManufactureDetail {
-.desc-title {
-    .title-area {
-        .title {
-            margin-right: 20px;
-        }
-        .status-title {
-        font-size: 14px;
+    .desc-title {
+        .title-area {
+            .title {
+                margin-right: 20px;
+            }
+            .status-title {
+            font-size: 14px;
+            }
         }
     }
-}
 }
 </style>

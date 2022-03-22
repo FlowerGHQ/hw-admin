@@ -3,7 +3,8 @@
     <div class="panel-title">
         <div class="title">已生产产品列表</div>
         <div class="btn-area">
-            <a-button type="primary" @click="handleEntityPutIn" class="panel-btn" v-if="remain_count > 0"><i class="icon i_add"/>产品入库</a-button>
+            <!-- <a-button type="primary" @click="handleEntityPutIn" class="panel-btn" v-if="remain_count > 0"><i class="icon i_add"/>产品入库</a-button> -->
+            <a-button type="primary" @click="routerChange('put_in')" class="panel-btn" v-if="remain_count > 0"><i class="icon i_add"/>产品入库</a-button>
         </div>
     </div>
     <div class="panel-content">
@@ -93,7 +94,8 @@ export default {
                             type: STOCK_RECORD.TYPE.IN,
                             target_type: STOCK_RECORD.COMMODITY_TYPE.ENTITY,
                             source_id: this.id,
-                            source_type: STOCK_RECORD.SOURCE_TYPE.PRODUCTION
+                            source_type: STOCK_RECORD.SOURCE_TYPE.PRODUCTION,
+                            warehouse_id: this.detail.warehouse_id,
                         },
                     }
                     console.log('source:', source)
