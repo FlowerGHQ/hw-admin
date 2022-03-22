@@ -426,7 +426,7 @@ export default {
                     list.forEach(item => {
                         item.item = item.entity ? item.entity.item || {} : {}
                         item.entity_id = item.target_id
-                        item.entity_uid = item.entity.uid
+                        item.entity_uid = item.entity ? item.entity.uid : ''
                     })
                 }
                 this.tableData = list
