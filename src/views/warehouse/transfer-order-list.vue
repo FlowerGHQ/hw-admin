@@ -159,11 +159,18 @@
                 <div class="form-item required">
                     <div class="key">收货地址:</div>
                     <div class="value">
-                        <a-select v-model:value="form.receive_info_id" placeholder="请选择收货地址" show-search option-filter-prop="children">
+<!--                        <a-select v-model:value="form.receive_info_id" placeholder="请选择收货地址" show-search option-filter-prop="children">
                             <a-select-option v-for="address of addressList" :key="address.id" :value="address.id">
                                 {{ address.city + '/' + address.county + '/' + address.address}}
                             </a-select-option>
-                        </a-select>
+                        </a-select>-->
+                        <AddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <div class="key"></div>
+                    <div class="value">
+                        <a-input v-model:value="form.address" placeholder="请输入详细地址"/>
                     </div>
                 </div>
                 <div class="form-item textarea required">
@@ -236,14 +243,13 @@
 <script>
 import Core from '../../core';
 import TimeSearch from '@/components/common/TimeSearch.vue'
+import AddressCascader from '../../components/common/AddressCascader.vue'
 const TRANSFER_ORDER = Core.Const.TRANSFER_ORDER
 const STATUS = Core.Const.TRANSFER_ORDER.STATUS
 const ORG_TYPE = Core.Const.LOGIN.TYPE
 export default {
     name: 'TransferOrderList',
-    components: {
-        TimeSearch,
-    },
+    components: {TimeSearch, AddressCascader},
     props: {},
     data() {
         return {
@@ -287,6 +293,7 @@ export default {
             warehouseList: [],
             addressList: [],
             orgList: [],
+            defAddr: [],
             // 创建、编辑 弹框
             editShow: false,
             form: {
@@ -399,6 +406,11 @@ export default {
                 this.$refs.TimeSearch.handleReset()
             }
             this.pageChange(1);
+        },
+        handleAddressSelect(address = []) {
+            this.form.province = address[0]
+            this.form.city = address[1]
+            this.form.county = address[2]
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;

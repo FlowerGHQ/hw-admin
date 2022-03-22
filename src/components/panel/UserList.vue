@@ -1,7 +1,7 @@
 <template>
 <div class="UserList gray-panel no-margin">
     <div class="panel-title">
-        <div class="title">{{type == USER_TYPE.WORKER ? '维修工' : '员工'}}列表</div>
+        <div class="title">员工列表</div>
     </div>
     <div class="panel-content">
         <div class="table-container">
