@@ -213,7 +213,9 @@ export default {
             let key = 'uid'
             let parme = {}
             switch (Number(this.form.source_type)) {
-                case SOURCE_TYPE.PRODUCTION: return
+                case SOURCE_TYPE.PRODUCTION:
+                    api = ['ProductionOrder', 'detailByUid'];
+                    break;
                 case SOURCE_TYPE.PURCHASE:
                     api = ['Purchase', 'detailBySn']; key = 'sn';
                     break;

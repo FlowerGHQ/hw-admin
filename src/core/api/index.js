@@ -339,6 +339,7 @@ const apiList = {
         list: ['PostJson', 'production-order/list'],
         save: ['PostJson', 'production-order/save'],
         detail: ['PostJson', 'production-order/detail'],
+        detailByUid: ['PostJson', 'production-order/detail-by-uid'],
         cancel: ['PostJson', 'production-order/cancel'],
         detailByUid: ['PostJson', 'production-order/detail-by-uid'],
     },

@@ -846,10 +846,19 @@ const routes = [
         },
         children: [
             {
+                path: 'stock-list',
+                name: 'StockList',
+                component: () => import ('@/views/production/stock-list.vue'),
+                meta: {
+                    title: '库存总览',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true
+                }
+            },
+            {
                 path: 'material-list',
                 name: 'MaterialList',
-                component: () =>
-                    import ('@/views/production/material-list.vue'),
+                component: () => import ('@/views/production/material-list.vue'),
                 meta: {
                     title: '物料列表',
                     roles: [LOGIN_TYPE.ADMIN],
