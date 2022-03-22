@@ -18,7 +18,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <ReceiverAddress :detail="record" btnType="link"><i class="icon i_edit"/>编辑</ReceiverAddress>
+                            <ReceiverAddress :detail="record" :orgId = "orgId" :orgType = "orgType" :btnText="'修改收货地址'" btnType="link"><i class="icon i_edit"/>编辑</ReceiverAddress>
                             <a-button type='link' class="danger" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button>
                         </template>
                     </template>
