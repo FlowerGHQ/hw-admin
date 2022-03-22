@@ -9,6 +9,9 @@
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}
                     </template>
+                    <template v-if="column.key === 'spec'">
+                        {{ $Util.itemSpecFilter(text) }}
+                    </template>
                     <template v-if="column.key === 'count'">
                         {{ text || 0 }} 件
                     </template>
@@ -92,9 +95,9 @@ export default {
             currPage: 1,
             pageSize: 20,
             total: 0,
-
+            // 表格
             tableData: [],
-            detail: {},
+            // 弹框
             stockAddShow: false,
             isExist: '',
             form: {
@@ -231,7 +234,6 @@ export default {
 };
 </script>
 
-
 <style lang="less" scoped>
 .StockList {
     .table-container {
@@ -239,7 +241,6 @@ export default {
     }
 }
 </style>
-
 <style lang="less">
 .stock-change-modal {
     .form-item-value {

@@ -67,38 +67,55 @@
                     @select="handleAddChange"/>
                 <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('item')">确认添加</a-button>
             </template>
-            <div class="panel-content table-container no-mg">
-                <a-table :columns="itemTableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
-                    :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.key === 'tip_item'">
-                            <a-tooltip placement="top" :title='text'>
-                                <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
-                            </a-tooltip>
-                        </template>
-                        <template v-if="column.key === 'attr_list'">
-                            {{ $Util.itemSpecFilter(text) }}
-                        </template>
-                        <template v-if="column.key === 'item'">
-                            {{ text || '-' }}
-                        </template>
-                        <template v-if="column.key === 'count'">
-                            {{ text ? text + '件' : '-' }}
-                        </template>
-                        <template v-if="column.key === 'amount'">
-                            <template v-if="addMode || record.editMode">
-                                <a-input-number v-model:value="record.amount" placeholder="请输入"
-                                    :min="1" :max="detail.type === TYPE.IN ? 99999: record.item.stock" :precision="0"/> 件
+            <div class="panel-content">
+                <div class="table-container">
+                    <a-table :columns="itemTableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
+                        :row-key="record => record.id" :pagination='false'>
+                        <template #bodyCell="{ column, text, record }">
+                            <template v-if="column.key === 'tip_item'">
+                                <a-tooltip placement="top" :title='text'>
+                                    <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
+                                </a-tooltip>
                             </template>
-                            <template v-else>{{ text ? text + '件' : '-' }}</template>
+                            <template v-if="column.key === 'attr_list'">
+                                {{ $Util.itemSpecFilter(text) }}
+                            </template>
+                            <template v-if="column.key === 'item'">
+                                {{ text || '-' }}
+                            </template>
+                            <template v-if="column.key === 'count'">
+                                {{ text ? text + '件' : '-' }}
+                            </template>
+                            <template v-if="column.key === 'amount'">
+                                <template v-if="addMode || record.editMode">
+                                    <a-input-number v-model:value="record.amount" placeholder="请输入"
+                                        :min="1" :max="detail.type === TYPE.IN ? 99999: record.item.stock" :precision="0"/> 件
+                                </template>
+                                <template v-else>{{ text ? text + '件' : '-' }}</template>
+                            </template>
+                            <template v-if="column.key === 'operation'" >
+                                <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改数量</a-button>
+                                <a-button type="link" @click="handleRowSubmit(record, 'item')" v-else><i class="icon i_confirm"/>确认更改</a-button>
+                                <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
+                            </template>
                         </template>
-                        <template v-if="column.key === 'operation'" >
-                            <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改数量</a-button>
-                            <a-button type="link" @click="handleRowSubmit(record, 'item')" v-else><i class="icon i_confirm"/>确认更改</a-button>
-                            <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
-                        </template>
-                    </template>
-                </a-table>
+                    </a-table>
+                </div>
+                <div class="paging-container">
+                    <a-pagination
+                        v-model:current="currPage"
+                        :page-size='pageSize'
+                        :total="total"
+                        show-quick-jumper
+                        show-size-changer
+                        show-less-items
+                        :show-total="total => `共${total}条`"
+                        :hide-on-single-page='false'
+                        :pageSizeOptions="['10', '20', '30', '40']"
+                        @change="pageChange"
+                        @showSizeChange="pageSizeChange"
+                    />
+                </div>
             </div>
         </a-collapse-panel>
         <!-- 有实例 -->
@@ -131,52 +148,69 @@
                     :warehouseId="detail.warehouse_id" :disabledChecked="disabledChecked"
                     @select="handleAddEntityChange"/>
             </template>
-            <div class="panel-content table-container no-mg">
-                <a-table :columns="entityTableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
-                    :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, text, record, index}">
-                        <template v-if="column.key === 'tip_item'">
-                            <a-tooltip placement="top" :title='text'>
-                                <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
-                            </a-tooltip>
-                        </template>
-                        <template v-if="column.dataIndex === 'amount'">
-                            <template v-if="addMode || record.editMode">
-                                <a-input-number v-model:value="record.amount" placeholder="请输入"
-                                    :min="1" :max="detail.type === TYPE.IN ? 9999: record.item.stock" :precision="0"/> 件
+            <div class="panel-content">
+                <div class="table-container">
+                    <a-table :columns="entityTableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
+                        :row-key="record => record.id" :pagination='false'>
+                        <template #bodyCell="{ column, text, record, index}">
+                            <template v-if="column.key === 'tip_item'">
+                                <a-tooltip placement="top" :title='text'>
+                                    <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
+                                </a-tooltip>
                             </template>
-                            <template v-else>{{ text ? text + '件' : '-' }}</template>
-                        </template>
-                        <template v-if="column.key === 'entity_uid'">
-                            <template v-if="addMode || record.editMode">
-                                <a-input v-model:value="record.entity_uid" style="width: 200px;" placeholder="请输入车架号" @blur="handleVehicleBlur(record)">
-                                    <template #suffix v-if="!$auth('ADMIN')">
-                                        <span v-if="record.entity_id"><i class="icon suffix i_confirm"/></span>
-                                        <span v-else-if="record.entity_no_exist"><i class="icon suffix i_close_c"/></span>
-                                    </template>
-                                </a-input>
+                            <template v-if="column.dataIndex === 'amount'">
+                                <template v-if="addMode || record.editMode">
+                                    <a-input-number v-model:value="record.amount" placeholder="请输入"
+                                        :min="1" :max="detail.type === TYPE.IN ? 9999: record.item.stock" :precision="0"/> 件
+                                </template>
+                                <template v-else>{{ text ? text + '件' : '-' }}</template>
                             </template>
-                            <template v-else>{{ text }}</template>
-                        </template>
-                        <template v-if="column.key === 'attr_list'">
-                            {{ $Util.itemSpecFilter(text) }}
-                        </template>
-                        <template v-if="column.key === 'item'">
-                            {{ text || '-' }}
-                        </template>
-                        <template v-if="column.key === 'count'">
-                            {{ text ? text + '件' : '-' }}
-                        </template>
-                        <template v-if="column.key === 'operation'" >
-                            <template v-if="!this.addMode">
-                                <!-- <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改实例号</a-button> -->
-                                <!-- <a-button type="link" @click="handleRowSubmit(record, 'entity')" v-else><i class="icon i_confirm"/>确认更改</a-button> -->
-                                <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
+                            <template v-if="column.key === 'entity_uid'">
+                                <template v-if="addMode || record.editMode">
+                                    <a-input v-model:value="record.entity_uid" style="width: 200px;" placeholder="请输入车架号" @blur="handleVehicleBlur(record)">
+                                        <template #suffix v-if="!$auth('ADMIN')">
+                                            <span v-if="record.entity_id"><i class="icon suffix i_confirm"/></span>
+                                            <span v-else-if="record.entity_no_exist"><i class="icon suffix i_close_c"/></span>
+                                        </template>
+                                    </a-input>
+                                </template>
+                                <template v-else>{{ text }}</template>
                             </template>
-                            <a-button type="link" v-if="this.addMode" @click="handleCopyEntity(index, record)"><i class="icon i_copy"/>复制</a-button>
+                            <template v-if="column.key === 'attr_list'">
+                                {{ $Util.itemSpecFilter(text) }}
+                            </template>
+                            <template v-if="column.key === 'item'">
+                                {{ text || '-' }}
+                            </template>
+                            <template v-if="column.key === 'count'">
+                                {{ text ? text + '件' : '-' }}
+                            </template>
+                            <template v-if="column.key === 'operation'" >
+                                <template v-if="!this.addMode">
+                                    <!-- <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改实例号</a-button> -->
+                                    <!-- <a-button type="link" @click="handleRowSubmit(record, 'entity')" v-else><i class="icon i_confirm"/>确认更改</a-button> -->
+                                    <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
+                                </template>
+                                <a-button type="link" v-if="this.addMode" @click="handleCopyEntity(index, record)"><i class="icon i_copy"/>复制</a-button>
+                            </template>
                         </template>
-                    </template>
-                </a-table>
+                    </a-table>
+                </div>
+                <div class="paging-container">
+                    <a-pagination
+                        v-model:current="currPage"
+                        :page-size='pageSize'
+                        :total="total"
+                        show-quick-jumper
+                        show-size-changer
+                        show-less-items
+                        :show-total="total => `共${total}条`"
+                        :hide-on-single-page='false'
+                        :pageSizeOptions="['10', '20', '30', '40']"
+                        @change="pageChange"
+                        @showSizeChange="pageSizeChange"
+                    />
+                </div>
             </div>
         </a-collapse-panel>
         <!-- 物料 -->
@@ -187,35 +221,52 @@
                     @select="handleAddChange"/>
                 <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('material')">确认添加</a-button>
             </template>
-            <div class="panel-content table-container no-mg">
-                <a-table :columns="materialTableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
-                    :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.key === 'tip_item'">
-                            <a-tooltip placement="top" :title='text'>
-                                <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
-                            </a-tooltip>
-                        </template>
-                        <template v-if="column.key === 'item'">
-                            {{ text || '-' }}
-                        </template>
-                        <template v-if="column.key === 'count'">
-                            {{ text ? text + '件' : '-' }}
-                        </template>
-                        <template v-if="column.key === 'amount'">
-                            <template v-if="addMode || record.editMode">
-                                <a-input-number v-model:value="record.amount" placeholder="请输入"
-                                    :min="1" :max="detail.type === TYPE.IN ? 99999: record.material.stock" :precision="0"/> 件
+            <div class="panel-content">
+                <div class="table-container no-mg">
+                    <a-table :columns="materialTableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
+                        :row-key="record => record.id" :pagination='false'>
+                        <template #bodyCell="{ column, text, record }">
+                            <template v-if="column.key === 'tip_item'">
+                                <a-tooltip placement="top" :title='text'>
+                                    <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
+                                </a-tooltip>
                             </template>
-                            <template v-else>{{ text ? text + '件' : '-' }}</template>
+                            <template v-if="column.key === 'item'">
+                                {{ text || '-' }}
+                            </template>
+                            <template v-if="column.key === 'count'">
+                                {{ text ? text + '件' : '-' }}
+                            </template>
+                            <template v-if="column.key === 'amount'">
+                                <template v-if="addMode || record.editMode">
+                                    <a-input-number v-model:value="record.amount" placeholder="请输入"
+                                        :min="1" :max="detail.type === TYPE.IN ? 99999: record.material.stock" :precision="0"/> 件
+                                </template>
+                                <template v-else>{{ text ? text + '件' : '-' }}</template>
+                            </template>
+                            <template v-if="column.key === 'operation'" >
+                                <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改数量</a-button>
+                                <a-button type="link" @click="handleRowSubmit(record, 'material')" v-else><i class="icon i_confirm"/>确认更改</a-button>
+                                <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
+                            </template>
                         </template>
-                        <template v-if="column.key === 'operation'" >
-                            <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改数量</a-button>
-                            <a-button type="link" @click="handleRowSubmit(record, 'material')" v-else><i class="icon i_confirm"/>确认更改</a-button>
-                            <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
-                        </template>
-                    </template>
-                </a-table>
+                    </a-table>
+                </div>
+                <div class="paging-container">
+                    <a-pagination
+                        v-model:current="currPage"
+                        :page-size='pageSize'
+                        :total="total"
+                        show-quick-jumper
+                        show-size-changer
+                        show-less-items
+                        :show-total="total => `共${total}条`"
+                        :hide-on-single-page='false'
+                        :pageSizeOptions="['10', '20', '30', '40']"
+                        @change="pageChange"
+                        @showSizeChange="pageSizeChange"
+                    />
+                </div>
             </div>
         </a-collapse-panel>
     </a-collapse>
@@ -239,6 +290,7 @@ export default {
     components: {
         ItemSelect,
         EntitySelect,
+        MaterialSelect
     },
     props: {},
     data() {
@@ -249,6 +301,10 @@ export default {
             TYPE,
             // 加载
             loading: false,
+            // 分页
+            currPage: 1,
+            pageSize: 20,
+            total: 0,
 
             id: '',
             detail: {},
@@ -256,6 +312,7 @@ export default {
 
             activeKey: ['ItemList'],
 
+            total: 0,
             tableData: [],
             addMode: false,
             addData: [],
@@ -419,6 +476,8 @@ export default {
             this.loading = true;
             Core.Api.InvoiceItem.list({
                 invoice_id: this.id,
+                page: this.currPage,
+                page_size: this.pageSize
             }).then(res => {
                 console.log('getInvoiceList res', res)
                 let list = res.list
@@ -439,6 +498,15 @@ export default {
                 this.loading = false;
             });
         },
+        pageChange(curr) {    // 页码改变
+            this.currPage = curr
+            this.getInvoiceList()
+        },
+        pageSizeChange(current, size) {    // 页码尺寸改变
+            this.pageSize = size
+            this.getInvoiceList()
+        },
+
         // 获取生产单对应商品
         getProductionItem() {
             Core.Api.ProductionOrder.detail({
@@ -447,7 +515,7 @@ export default {
                 console.log('getProductionItem res:', res)
                 let d = res.detail || {}
                 this.production.addItem = d.item
-                let maxCount = d.amount - this.tableData.length
+                let maxCount = d.amount - d.in_warehouse_count - this.tableData.length
                 this.production.addCount = maxCount
                 this.production.maxCount = maxCount
             })
@@ -676,6 +744,8 @@ export default {
         input.ant-input.input-number {
             width: 100% - 50px;
         }
+    }
+    .panel-content {
     }
 }
 .prod-edit-popover {

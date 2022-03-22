@@ -103,8 +103,13 @@ export default {
             Core.Api.Warehouse.detail({
                 id: this.warehouse_id,
             }).then(res => {
-                    console.log("getWarehouseDetail res", res);
+                console.log("getWarehouseDetail res", res);
                 this.detail = res.detail;
+                if (this.detail.type == WAREHOUSE_TYPE.QUALITY) {
+                    this.activeKey = 'ItemStockList'
+                } else if (this.detail.type == WAREHOUSE_TYPE.DEFECTIVE) {
+                    this.activeKey = 'ImperfectList'
+                }
             }).catch(err => {
                 console.log("getWarehouseDetail err", err);
             }).finally(() => {
