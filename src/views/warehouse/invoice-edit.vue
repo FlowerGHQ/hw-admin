@@ -11,7 +11,7 @@
             <div class="form-item required">
                 <div class="key">仓库：</div>
                 <div class="value">
-                    <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库" :disabled="isProd">
+                    <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库" :disabled="!!isProd">
                         <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                     </a-select>
                 </div>
@@ -242,7 +242,6 @@ export default {
         },
 
         setInvoiceSource(source) {
-            this.isProd = true
             console.log('setInvoiceSource source:', source)
             let form = source.form
             for (const key in form) {
@@ -250,6 +249,9 @@ export default {
             }
             this.form.warehouse_id = Number(this.form.warehouse_id) || ''
             this.sourceUid = source.sourceUid
+            if (this.form.source_type === SOURCE_TYPE.PRODUCTION) {
+                this.isProd = true
+            }
         }
     }
 };
