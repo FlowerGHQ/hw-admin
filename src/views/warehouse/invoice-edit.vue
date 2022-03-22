@@ -244,6 +244,7 @@ export default {
             for (const key in form) {
                 this.form[key] = form[key] + ''
             }
+            this.form.warehouse_id = Number(this.form.warehouse_id) || ''
             this.sourceUid = source.sourceUid
         }
     }

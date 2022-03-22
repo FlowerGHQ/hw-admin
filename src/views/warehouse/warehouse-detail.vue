@@ -3,14 +3,8 @@
         <div class="title-container">
             <div class="title-area">仓库详情</div>
             <div class="btns-area">
-                <a-button type="primary" ghost @click="routerChange('edit', record)"
-                ><i class="icon i_edit"/>编辑
-                </a-button
-                >
-                <a-button type="primary" ghost @click="handleDelete(warehouse_id)"
-                ><i class="icon i_delete"/>删除
-                </a-button
-                >
+                <a-button type="primary" ghost @click="routerChange('edit', record)"><i class="icon i_edit"/>编辑</a-button>
+                <a-button type="danger" ghost @click="handleDelete(warehouse_id)"><i class="icon i_delete"/>删除</a-button>
             </div>
         </div>
         <div class="gray-panel">
@@ -20,7 +14,7 @@
                         <span class="title">{{ detail.name }}</span>
                     </div>
                 </div>
-                <a-row class="desc-detail has-logo">
+                <a-row class="desc-detail">
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">创建时间：</span>
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
@@ -34,17 +28,22 @@
         </div>
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
-                <a-tab-pane key="StockList" tab="库存数量" v-if="detail.type == WAREHOUSE_TYPE.QUALITY">
-                    <StockList :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"/>
-                </a-tab-pane>
+                <template v-if="detail.type == WAREHOUSE_TYPE.QUALITY">
+                    <a-tab-pane key="ItemStockList" tab="库存商品">
+                        <StockList type='item' :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail" v-if="activeKey === 'ItemStockList'"/>
+                    </a-tab-pane>
+                    <a-tab-pane key="MaterialStockList" tab="库存物料">
+                        <StockList type='material' :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail" v-if="activeKey === 'MaterialStockList'"/>
+                    </a-tab-pane>
+                    <a-tab-pane key="StockRecord" tab="出入库记录">
+                        <StockRecord :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail" v-if="activeKey === 'StockRecord'"/>
+                    </a-tab-pane>
+                    <a-tab-pane key="StockModify" tab="库存变更明细">
+                        <StockModify :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail" v-if="activeKey === 'StockModify'"/>
+                    </a-tab-pane>
+                </template>
                 <a-tab-pane key="ImperfectList" tab="残次品数量" v-if="detail.type == WAREHOUSE_TYPE.DEFECTIVE">
-                    <ImperfectList :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"/>
-                </a-tab-pane>
-                <a-tab-pane key="StockRecord" tab="出入库记录" v-if="detail.type == WAREHOUSE_TYPE.QUALITY">
-                    <StockRecord :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail" v-if="activeKey === 'StockRecord'"/>
-                </a-tab-pane>
-                <a-tab-pane key="StockModify" tab="库存变更明细" v-if="detail.type === WAREHOUSE_TYPE.QUALITY">
-                    <StockModify :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"/>
+                    <ImperfectList :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail" v-if="activeKey === 'ImperfectList'"/>
                 </a-tab-pane>
             </a-tabs>
         </div>
@@ -58,6 +57,7 @@ import StockList from "./components/StockList.vue";
 import StockRecord from "./components/StockRecord.vue";
 import StockModify from "./components/StockModify.vue";
 import ImperfectList from "./components/ImperfectList.vue";
+
 const WAREHOUSE_TYPE = Core.Const.WAREHOUSE.TYPE
 
 export default {
@@ -66,13 +66,14 @@ export default {
     props: {},
     data() {
         return {
+            WAREHOUSE_TYPE,
             // 加载
             loading: false,
-            WAREHOUSE_TYPE,
-            //标签页
+            // 详情
             detail: {},
             warehouse_id: "",
-            activeKey: ["affirm"],
+            //标签页
+            activeKey: 'ItemStockList'
         }
     },
     watch: {},
@@ -105,17 +106,14 @@ export default {
             this.loading = true;
             Core.Api.Warehouse.detail({
                 id: this.warehouse_id,
-            })
-                .then((res) => {
+            }).then(res => {
                     console.log("getWarehouseDetail res", res);
-                    this.detail = res.detail;
-                })
-                .catch((err) => {
-                    console.log("getWarehouseDetail err", err);
-                })
-                .finally(() => {
-                    this.loading = false;
-                });
+                this.detail = res.detail;
+            }).catch(err => {
+                console.log("getWarehouseDetail err", err);
+            }).finally(() => {
+                this.loading = false;
+            });
         },
         handleDelete(id) {
             let _this = this;
@@ -125,14 +123,12 @@ export default {
                 okType: "danger",
                 cancelText: "取消",
                 onOk() {
-                    Core.Api.Warehouse.delete({id})
-                        .then(() => {
-                            _this.$message.success("删除成功");
-                            _this.routerChange("list");
-                        })
-                        .catch((err) => {
-                            console.log("handleDelete err", err);
-                        });
+                    Core.Api.Warehouse.delete({id}).then(() => {
+                        _this.$message.success("删除成功");
+                        _this.routerChange("list");
+                    }).catch((err) => {
+                        console.log("handleDelete err", err);
+                    });
                 },
             });
         },

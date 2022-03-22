@@ -13,7 +13,7 @@
                 </a-button> -->
                 <a-divider type="vertical"/>
                 <a-button class="notice" type="link">
-                    <a-badge :count="un_count"  @click="routerChange('notice')">
+                    <a-badge :count="unread.org + unread.master"  @click="routerChange('notice')">
                         <i class="icon i_notify" />
                     </a-badge>
                 </a-button>
@@ -132,7 +132,10 @@ export default {
                 new_password: '',
                 old_password: '',
             },
-            un_count: '', //未读消息存放数量
+            unread: {
+                master: '',
+                org: '',
+            }
         };
     },
     computed: {
@@ -217,11 +220,22 @@ export default {
             }
         },
         getUnreadCount() {    // 获取 未读消息数 数据
-            Core.Api.Notice.list().then(res => {
-                console.log("getNoticeData res", res)
-                this.un_count = res.un_count;
+            let CATEGORY = Core.Const.NOTICE.CATEGORY
+            Core.Api.Notice.list({
+                category: CATEGORY.ORG
+            }).then(res => {
+                console.log('getUnreadCount res: ORG', res)
+                this.unread.org = res.un_count;
             }).catch(err => {
-                console.log('getNoticeData err', err)
+                console.log('getUnreadCount err', err)
+            })
+            Core.Api.Notice.list({
+                category: CATEGORY.MASTER
+            }).then(res => {
+                console.log('getUnreadCount res: MASTER', res)
+                this.unread.master = res.un_count;
+            }).catch(err => {
+                console.log('getUnreadCount err', err)
             })
         },
         handleLink(path) {

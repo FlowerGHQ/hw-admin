@@ -53,11 +53,12 @@ export default {
             // 加载
             loading: false,
             detail: {},
-            typeMap: Core.Const.NOTICE.TYPE_MAP,
+            typeMap: Core.Const.NOTICE.MASTER_TYPE_MAP,
             form: {
                 id: '',
                 title: '',
                 content: '',
+                category: NOTICE.CATEGORY.MASTER,
                 type: undefined,
             },
             tinymce_setting: {
