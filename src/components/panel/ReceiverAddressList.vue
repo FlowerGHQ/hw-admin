@@ -12,14 +12,13 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'address'">
-<!--                            {{ record.province + record.city + record.county + record.address }}-->
                             {{$Util.addressFilter(record)}}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <ReceiverAddress :detail="record.detail" btnType="link" @submit="getAddressDetail(record)"><i class="icon i_edit"/>编辑</ReceiverAddress>
+                            <ReceiverAddress :detail="record" btnType="link"><i class="icon i_edit"/>编辑</ReceiverAddress>
                             <a-button type='link' class="danger" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button>
                         </template>
                     </template>

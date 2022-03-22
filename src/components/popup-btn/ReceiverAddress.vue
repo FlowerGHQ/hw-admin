@@ -1,5 +1,6 @@
 <template>
-    <a-button class="ReceiverAddress" @click.stop="handleAddressShow()" :ghost='ghost' :type="btnType" :class="btnClass">
+    <a-button class="ReceiverAddress" @click.stop="handleAddressShow()" :ghost='ghost' :type="btnType"
+              :class="btnClass">
         <slot>{{ btnText }}</slot>
     </a-button>
     <a-modal :title="btnText" v-model:visible="addressShow" :after-close='handleAddressClose' class="transfer-modal">
@@ -44,10 +45,12 @@
 
 <script>
 import Core from '@/core';
+
+import AreaCascader from '../../components/common/AreaCascader.vue'
 import AddressCascader from '../../components/common/AddressCascader.vue'
 
 export default {
-    components: { AddressCascader },
+    components: {AddressCascader, AreaCascader},
     emits: ['submit'],
     props: {
         btnText: {
@@ -72,7 +75,6 @@ export default {
     data() {
         return {
             loading: false,
-            detail: {},
             addressShow: false,
             form: {
                 id: '',
@@ -82,7 +84,6 @@ export default {
                 county: '',
                 province: '',
                 address: '',
-                areaList: '',
             },
             areaList: [],
             defArea: [],
@@ -97,10 +98,14 @@ export default {
     },
     watch: {},
     computed: {},
-    created() {},
+    created() {
+    },
     mounted() {
-        if (this.form.id) {
-            this.getAddressDetail();
+        if (this.detail) {
+            this.form.id = this.detail.id,
+                this.form.name = this.detail.name,
+                this.form.phone = this.detail.phone,
+                this.form.address = this.detail.address
         }
     },
     methods: {
@@ -109,23 +114,20 @@ export default {
             this.form.city = address[1]
             this.form.county = address[2]
         },
-        handleAddressShow(id) {
-            console.log('handleAddressShow',id)
+        handleAddressShow() {
+            if (this.detail) {
+                console.log('handleAddressShow detail', this.detail)
+            }
             this.addressShow = true
-            this.form.id = id
         },
         handleAddressClose() {
             this.addressShow = false
-            this.form = {
-                id: '',
-                name: '',
-                phone: '',
-                country: '',
-                city: '',
-                county: '',
-                province: '',
-                address: '',
-            }
+            Object.assign(this.form, this.$options.data().form)
+            Object.assign(this.area, this.$options.data().area)
+            this.areaList = []
+            this.defArea = []
+            this.defAddr = []
+
         },
         handleConfirm() {
             let form = Core.Util.deepCopy(this.form)
@@ -153,18 +155,6 @@ export default {
                 this.loading = false;
             });
         },
-        getAddressDetail() {
-            Core.Api.ReceiveAddress.detail({
-                id: this.form.id,
-            }).then(res => {
-                console.log('getAddressDetail res', res)
-                this.detail = res.detail
-            }).catch(err => {
-                console.log('getAddressDetail err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
     },
 }
 </script>
@@ -176,6 +166,7 @@ export default {
     height: 30px;
     padding: 4px 14px;
     margin-bottom: 10px;
+
     .icon {
         font-size: 12px;
     }

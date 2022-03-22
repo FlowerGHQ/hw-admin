@@ -313,7 +313,9 @@ const Util = {
             case 1:
                 return `${province} ${city} ${county} ${address}`;
             case 2:
-                return `${province} ${city} ${county}`
+                return `${province} ${city} ${county}`;
+            case 3:
+                return `${country} ${province} ${city} ${county}`
         }
     },
 
