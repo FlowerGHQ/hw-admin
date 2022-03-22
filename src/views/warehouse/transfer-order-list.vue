@@ -67,6 +67,9 @@
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
+                        <template v-if="column.key === 'address'">
+                            {{$Util.addressFilter(record.receive_info)}}
+                        </template>
                         <template v-if="column.key === 'tip_time'">
                             <a-tooltip :title="text" destroyTooltipOnHide>
                                 <div class="ell" style="max-width: 200px">{{ text || '-' }}</div>
@@ -136,9 +139,9 @@
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">货物来源:</div>
+                    <div class="key">调货单位:</div>
                     <div class="value">
-                        <a-select placeholder="请选择货物来源" v-model:value='form.supply_org_id' show-search option-filter-prop="children">
+                        <a-select placeholder="请选择调货单位" v-model:value='form.supply_org_id' show-search option-filter-prop="children">
                             <a-select-option v-for="item of orgList" :key="item.id" :value="item.id"
                                 :disabled="form.supply_org_type === orgType && orgId === item.id">
                                 {{ item.name }}
@@ -146,7 +149,7 @@
                         </a-select>
                     </div>
                 </div>
-                <div class="form-item required">
+<!--                <div class="form-item required">
                     <div class="key">仓库:</div>
                     <div class="value">
                         <a-select v-model:value="form.to_warehouse_id" placeholder="请选择仓库" show-search option-filter-prop="children">
@@ -155,22 +158,13 @@
                             </a-select-option>
                         </a-select>
                     </div>
-                </div>
+                </div>-->
                 <div class="form-item required">
                     <div class="key">收货地址:</div>
                     <div class="value">
-<!--                        <a-select v-model:value="form.receive_info_id" placeholder="请选择收货地址" show-search option-filter-prop="children">
-                            <a-select-option v-for="address of addressList" :key="address.id" :value="address.id">
-                                {{ address.city + '/' + address.county + '/' + address.address}}
-                            </a-select-option>
-                        </a-select>-->
-                        <AddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
-                    </div>
-                </div>
-                <div class="form-item">
-                    <div class="key"></div>
-                    <div class="value">
-                        <a-input v-model:value="form.address" placeholder="请输入详细地址"/>
+                        <a-select v-model:value="form.receive_info_id" placeholder="请选择收货地址" show-search option-filter-prop="children">
+                            <a-select-option v-for="item of receiveList" :key='item.id' :value="item.id">{{$Util.addressFilter(item)}}</a-select-option>
+                        </a-select>
                     </div>
                 </div>
                 <div class="form-item textarea required">
@@ -287,6 +281,7 @@ export default {
             orgId: Core.Data.getOrgId(),     // 操作者的组织id
 
             orgTypeList: Core.Const.LOGIN.TYPE_LIST,
+            receiveList: [],
             storeList: [],
             agentList: [],
             distributorList: [],
@@ -302,6 +297,7 @@ export default {
                 to_warehouse_id: undefined,
                 apply_message: '',
             },
+            receive_info_id: {},
             // 审核 弹框
             auditShow: false,
             deliverShow: false,
@@ -309,7 +305,8 @@ export default {
                 id: '',
                 status: 20,
                 audit_message: '',
-                from_warehouse_id: undefined
+                from_warehouse_id: undefined,
+                receive_info_id: '',
             },
             deliverForm: {
                 id: '',
@@ -338,8 +335,9 @@ export default {
                 {title: '申请原因', dataIndex: 'apply_message', key: 'tip_time'},
                 {title: '收货单位', dataIndex: 'org_name', key: 'org-ame'},
                 {title: '单位类型', dataIndex: 'org_type', key: 'org-type'},
-                {title: '所属仓库', dataIndex: ['to_warehouse', 'name'], key: 'item',},
-                {title: '仓库类型', dataIndex: ['to_warehouse', 'type'], key: 'type',},
+              /*  {title: '所属仓库', dataIndex: ['to_warehouse', 'name'], key: 'item',},
+                {title: '仓库类型', dataIndex: ['to_warehouse', 'type'], key: 'type',},*/
+                {title: '收货地址', dataIndex: 'address', key: 'address'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '审核人', dataIndex: ["audit_user", "account", "name"], key: 'audit-user'},
                 {title: '审核时间', dataIndex: 'audit_time', key: 'time'},
@@ -348,6 +346,7 @@ export default {
             ]
             if (this.type === 'in') {
                 columns[2] = {title: '发货单位', dataIndex: 'supply_org_name', key: 'org-ame'}
+                columns[3] = {title: '单位类型', dataIndex: 'supply_org_type', key: 'org-type'}
             }
 
             if (!this.$auth('ADMIN')) {
@@ -359,6 +358,7 @@ export default {
     mounted() {
         this.getWarehouseList();
         this.getReceiveInfoList();
+        this.getReceiveList()
     },
     methods: {
         routerChange(type, item = {}) {
@@ -581,6 +581,12 @@ export default {
             this.getAgentList();
             this.getDistributorList();
             this.editShow = true;
+        },
+        getReceiveList() {
+            Core.Api.Receive.list().then(res => {
+                console.log('res:', res)
+                this.receiveList = res.list
+            })
         },
         getStoreList() {
             if (this.orgType === ORG_TYPE.STORE) {

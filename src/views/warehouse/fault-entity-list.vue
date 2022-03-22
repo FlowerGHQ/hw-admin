@@ -527,6 +527,7 @@ export default {
             console.log('handleSelectItem', ids, items);
             this.form.item_id = ids[0]
             this.selectItem = items[0]
+            this.form.entity_uid = ''
         },
 
         // 审核
