@@ -20,7 +20,7 @@
                         <span class="title">{{ $Util.walletTypeFilter(detail.type) }}账户</span>
                     </div>
                 </div>
-                <a-row class="desc-detail has-logo">
+                <a-row class="desc-detail">
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">账户余额：</span>
                         <span class="value">{{ walletMap[detail.type] + (detail.balance / 100) }}</span>

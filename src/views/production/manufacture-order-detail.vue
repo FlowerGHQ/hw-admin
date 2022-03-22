@@ -3,7 +3,8 @@
         <div class='title-container'>
             <div class='title-area'>生产订单详情</div>
             <div class="btns-area">
-                <a-button type="primary" ghost @click="routerChange('edit', record)"><i class="icon i_edit"/>编辑</a-button>
+                <a-button type="primary" ghost @click="routerChange('picking')"><i class="icon i_goods"/>领料</a-button>
+                <!-- <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button> -->
                 <a-button type="danger" ghost @click="handleCancel(id)"><i class="icon i_close_c"/>取消</a-button>
             </div>
         </div>
@@ -68,9 +69,9 @@
                 <a-tab-pane key="ProductionItem" tab="已生产产品">
                     <ProductionItem :id='id' :uid="detail.uid" :detail='detail' @submit="getOrderDetail" v-if="activeKey === 'ProductionItem'"/>
                 </a-tab-pane>
-                <a-tab-pane key="MaterialList" tab="材料总览">
+                <!-- <a-tab-pane key="MaterialList" tab="材料总览">
                     <MaterialList />
-                </a-tab-pane>
+                </a-tab-pane> -->
             </a-tabs>
         </div>
     </div>
@@ -80,6 +81,8 @@
 import Core from '../../core';
 import ProductionItem from './components/ProductionItem.vue'
 import MaterialList from './components/MaterialList.vue'
+
+const STOCK_RECORD = Core.Const.STOCK_RECORD
 
 export default {
     name: 'ManufactureDetail',
@@ -145,6 +148,25 @@ export default {
                         path: '/warehouse/warehouse-list',
                         query: {id: this.detail.warehouse_id},
                     });
+                    window.open(routeUrl.href, '_self');
+                    break;
+                case 'picking': // 仓库详情
+                    let source = {
+                        sourceUid: this.detail.uid,
+                        form: {
+                            type: STOCK_RECORD.TYPE.OUT,
+                            target_type: STOCK_RECORD.COMMODITY_TYPE.MATERIALS,
+                            source_id: this.id,
+                            source_type: STOCK_RECORD.SOURCE_TYPE.PRODUCTION,
+                            warehouse_id: this.detail.warehouse_id,
+                        },
+                    }
+                    routeUrl = this.$router.resolve({
+                        path: "/warehouse/invoice-edit",
+                        query: {
+                            source: JSON.stringify(source)
+                        }
+                    })
                     window.open(routeUrl.href, '_self');
                     break;
             }

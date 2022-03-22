@@ -83,14 +83,14 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'count'">
-                            {{ text || '-' }}件
+                            {{ text ? text + '件' : '-' }}
                         </template>
                         <template v-if="column.key === 'amount'">
                             <template v-if="addMode || record.editMode">
                                 <a-input-number v-model:value="record.amount" placeholder="请输入"
                                     :min="1" :max="detail.type === TYPE.IN ? 99999: record.item.stock" :precision="0"/> 件
                             </template>
-                            <template v-else>{{ text || '-' }}件</template>
+                            <template v-else>{{ text ? text + '件' : '-' }}</template>
                         </template>
                         <template v-if="column.key === 'operation'" >
                             <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改数量</a-button>
@@ -145,7 +145,7 @@
                                 <a-input-number v-model:value="record.amount" placeholder="请输入"
                                     :min="1" :max="detail.type === TYPE.IN ? 9999: record.item.stock" :precision="0"/> 件
                             </template>
-                            <template v-else>{{ text || '-' }}件</template>
+                            <template v-else>{{ text ? text + '件' : '-' }}</template>
                         </template>
                         <template v-if="column.key === 'entity_uid'">
                             <template v-if="addMode || record.editMode">
@@ -179,6 +179,45 @@
                 </a-table>
             </div>
         </a-collapse-panel>
+        <!-- 物料 -->
+        <a-collapse-panel key="ItemList" header="物料信息" class="gray-collapse-panel" v-if="detail.target_type === COMMODITY_TYPE.MATERIALS">
+            <template #extra>
+                <MaterialSelect btnType='link' btnText="添加物料" v-if="detail.status === STATUS.INIT && !addMode"
+                    :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
+                    @select="handleAddChange"/>
+                <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('material')">确认添加</a-button>
+            </template>
+            <div class="panel-content table-container no-mg">
+                <a-table :columns="materialTableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
+                    :row-key="record => record.id" :pagination='false'>
+                    <template #bodyCell="{ column, text, record }">
+                        <template v-if="column.key === 'tip_item'">
+                            <a-tooltip placement="top" :title='text'>
+                                <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
+                            </a-tooltip>
+                        </template>
+                        <template v-if="column.key === 'item'">
+                            {{ text || '-' }}
+                        </template>
+                        <template v-if="column.key === 'count'">
+                            {{ text ? text + '件' : '-' }}
+                        </template>
+                        <template v-if="column.key === 'amount'">
+                            <template v-if="addMode || record.editMode">
+                                <a-input-number v-model:value="record.amount" placeholder="请输入"
+                                    :min="1" :max="detail.type === TYPE.IN ? 99999: record.material.stock" :precision="0"/> 件
+                            </template>
+                            <template v-else>{{ text ? text + '件' : '-' }}</template>
+                        </template>
+                        <template v-if="column.key === 'operation'" >
+                            <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改数量</a-button>
+                            <a-button type="link" @click="handleRowSubmit(record, 'material')" v-else><i class="icon i_confirm"/>确认更改</a-button>
+                            <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
+                        </template>
+                    </template>
+                </a-table>
+            </div>
+        </a-collapse-panel>
     </a-collapse>
 </div>
 </template>
@@ -187,6 +226,7 @@
 import Core from '../../core';
 import ItemSelect from '../../components/popup-btn/ItemSelect.vue'
 import EntitySelect from '../../components/popup-btn/EntitySelect.vue'
+import MaterialSelect from '../../components/popup-btn/MaterialSelect.vue'
 const STOCK_RECORD = Core.Const.STOCK_RECORD
 
 const TYPE = STOCK_RECORD.TYPE
@@ -271,6 +311,23 @@ export default {
             ]
             if (this.detail.status !== STATUS.INIT || this.isProd) { // 入库不显示库存数量
                 columns.pop()
+            }
+            return columns
+        },
+        materialTableColumns() {
+            // 无实例商品的 出入库
+            let columns = [
+                {title: '物料名称', dataIndex: ['material', 'name'],  key: 'tip_item'},
+                {title: this.type_ch + '数量', dataIndex: 'amount' , key: 'amount'},
+                {title: '物料编码', dataIndex: ['material', 'code'],  key: 'item'},
+                {title: '物料规格', dataIndex: ['material', 'spec'], key: 'item'},
+                {title: '操作', key: 'operation'},
+            ]
+            if (this.detail.status !== STATUS.INIT || this.addMode) {
+                columns.pop()
+            }
+            if (this.detail.type == TYPE.OUT) {
+                columns.splice(2, 0, {title: '库存数量', dataIndex: ['material', 'stock'], key: 'count'})
             }
             return columns
         },
@@ -447,6 +504,7 @@ export default {
             let list = items.map(item => ({
                 id: 0,
                 item: item,
+                material: item,
                 amount: 1,
                 entity_uid: '',
             }))
@@ -460,33 +518,29 @@ export default {
             let list = []
             for (const item of data) {
                 let target_id,target_uid
-                if (type === 'item') {
-                    if (item.item && item.item.id) {
-                        target_id = item.item.id
-                    } else {
-                        return this.$message.warning("该商品不存在");
-                    }
-                } else if (type === 'entity') {
-                    if (!item.entity_uid) {
-                        return this.$message.warning("请输入商品实例号");
-                    } else {
-                        target_id = item.entity_id
-                        target_uid = item.entity_uid
-                    }
-                    /* if (!item.entity_uid) {
-                        return this.$message.warning("请输入商品实例号");
-                    } else if (item.entity_id) {
-                        target_id = item.entity_id
-                    } else if (!this.$auth('ADMIN')) {
-                        return this.$message.warning("该商品实例不存在");
-                    } else {
-                        try {
-                            let {detail} = await Core.Api.Entity.getByUid({ item_id: item.item.id, uid: item.entity_uid })
-                            target_id = detail.id
-                        } catch (error) {
-                            return this.$message.warning("该商品实例不存在");
+                switch (type) {
+                    case 'item':
+                        if (item.item && item.item.id) {
+                            target_id = item.item.id
+                        } else {
+                            return this.$message.warning("该商品不存在");
                         }
-                    } */
+                        break;
+                    case 'entity':
+                        if (!item.entity_uid) {
+                            return this.$message.warning("请输入商品实例号");
+                        } else {
+                            target_id = item.entity_id
+                            target_uid = item.entity_uid
+                        }
+                        break;
+                    case 'material':
+                        if (item.material && item.material.id) {
+                            target_id = item.material.id
+                        } else {
+                            return this.$message.warning("该物料不存在");
+                        }
+                        break;
                 }
                 list.push({
                     id: item.id,
@@ -513,10 +567,16 @@ export default {
             item.editMode = true
         },
         handleRowSubmit(item, type) {
+            let target_id = ''
+            switch (type) {
+                case 'item': target_id = item.item.id; break;
+                case 'entity': target_id = item.entity_id; break;
+                case 'material': target_id = item.material.id; break;
+            }
             let target = {
                 id: item.id,
                 amount: item.amount,
-                target_id: type === 'item' ? item.item.id : item.entity_id,
+                target_id,
                 invoice_id: this.id,
             }
             if (!target.target_id) {

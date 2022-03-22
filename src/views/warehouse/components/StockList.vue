@@ -2,20 +2,15 @@
 <div class="StockList gray-panel no-margin">
     <div class="panel-content">
         <div class="table-container">
-            <a-button type="primary" ghost @click="handleStockAddShow" class="panel-btn"><i class="icon i_add"/>库存增减</a-button>
+            <!-- <a-button type="primary" ghost @click="handleStockAddShow" class="panel-btn" v-if="$auth('MANAGER')"><i class="icon i_add"/>库存增减</a-button> -->
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                        :row-key="record => record.id" :pagination='false'>
+                :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text}">
-                    <template v-if="column.key === 'item-name'">
-                        <a-tooltip placement="top" :title='text'>
-                            {{ text ? text.name : '-' }}
-                        </a-tooltip>
+                    <template v-if="column.key === 'item'">
+                        {{ text || '-' }}
                     </template>
-                    <template v-if="column.key === 'item-code'">
-                        {{ text ? text.code : '-' }}
-                    </template>
-                    <template v-if="column.dataIndex === 'stock'">
-                        {{ text || 0 }}
+                    <template v-if="column.key === 'count'">
+                        {{ text || 0 }} 件
                     </template>
                 </template>
             </a-table>
@@ -85,7 +80,7 @@ export default {
             }
         },
         type: {
-            type: Number,
+            type: String,
         },
     },
     data() {
@@ -97,7 +92,7 @@ export default {
             currPage: 1,
             pageSize: 20,
             total: 0,
-            
+
             tableData: [],
             detail: {},
             stockAddShow: false,
@@ -114,13 +109,21 @@ export default {
     watch: {},
     computed: {
         tableColumns() {
+            let type = this.type
+            let name = this.type === 'item' ? '商品' : '物料'
             let tableColumns = [
-                {title: '商品名称', dataIndex: 'item', key: 'item-name'},
-                {title: '商品品号', dataIndex: ['item', 'model'], key: 'item-model'},
-                {title: '商品规格', dataIndex: ['item', 'attr_str']},
-                {title: '商品编码', dataIndex: 'item', key: 'item-code'},
-                {title: '库存数量', dataIndex: 'stock', key: 'item'},
+                {title: name + '名称', dataIndex: [type, 'name'], key: 'item'},
+                {title: name + '品号', dataIndex: [type, 'model'], key: 'item'},
+                {title: name + '规格', dataIndex: [type, 'attr_list'], key: 'spec'},
+                {title: name + '编码', dataIndex: [type, 'code'], key: 'item'},
+                {title: '库存数量', dataIndex: 'stock', key: 'count'},
             ]
+            if (type === 'material') {
+                tableColumns.splice(1, 2,
+                    {title: name + '编号', dataIndex: [type, 'code'], key: 'item'},
+                    {title: name + '规格', dataIndex: [type, 'spec'], key: 'item'},
+                )
+            }
             return tableColumns
         },
     },
@@ -135,6 +138,42 @@ export default {
                     break;
             }
         },
+        
+        pageChange(curr) {  // 页码改变
+            this.currPage = curr
+            this.getTableData()
+        },
+        pageSizeChange(current, size) {  // 页码尺寸改变
+            console.log('pageSizeChange size:', size)
+            this.pageSize = size
+            this.getTableData()
+        },
+        getTableData() {  // 获取 表格 数据
+            this.loading = true;
+            let target_type = this.type === 'item' ? 1 : 2
+            Core.Api.Stock.list({
+                warehouse_id: this.warehouseId,
+                target_type,
+                page: this.currPage,
+                page_size: this.pageSize,
+            }).then(res => {
+                console.log("getTableData res", res)
+                this.total = res.count;
+                res.list.forEach(item => {
+                    let element = item.item || {}
+                    if (element.attr_list && element.attr_list.length) {
+                        let str = element.attr_list.map(i => i.value).join(' ')
+                        element.attr_str = str
+                    }
+                })
+                this.tableData = res.list;
+            }).catch(err => {
+                console.log('getTableData err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+
         //仓库库存增减
         handleStockAddShow() {
             this.stockAddShow = true;
@@ -186,38 +225,6 @@ export default {
             }).catch(err => {
                 console.log('onblur err', err)
             }).finally(() => {
-            });
-        },
-        pageChange(curr) {  // 页码改变
-            this.currPage = curr
-            this.getTableData()
-        },
-        pageSizeChange(current, size) {  // 页码尺寸改变
-            console.log('pageSizeChange size:', size)
-            this.pageSize = size
-            this.getTableData()
-        },
-        getTableData() {  // 获取 表格 数据
-            this.loading = true;
-            Core.Api.Stock.list({
-                warehouse_id: this.warehouseId,
-                page: this.currPage,
-                page_size: this.pageSize,
-            }).then(res => {
-                console.log("getTableData res", res)
-                this.total = res.count;
-                res.list.forEach(item => {
-                    let element = item.item || {}
-                    if (element.attr_list && element.attr_list.length) {
-                        let str = element.attr_list.map(i => i.value).join(' ')
-                        element.attr_str = str
-                    }
-                })
-                this.tableData = res.list;
-            }).catch(err => {
-                console.log('getTableData err', err)
-            }).finally(() => {
-                this.loading = false;
             });
         },
     }
