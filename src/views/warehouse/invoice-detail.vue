@@ -113,7 +113,7 @@
                         <template #content>
                             <div class="prod-edit-popover">
                                 <a-input-number v-model:value="production.addCount" placeholder="添加数量"
-                                    @keydown.enter="handleProdAddChange(index)" :autofocus="true" :max="production.addCount" :min='1' :precision="0"/>
+                                    @keydown.enter="handleProdAddChange(index)" :autofocus="true" :max="production.maxCount" :min='1' :precision="0"/>
                                 <div class="btns">
                                     <a-button type="primary" @click="handleProdAddCancel()" ghost>取消</a-button>
                                     <a-button type="primary" @click="handleProdAddChange()">确定</a-button>
@@ -262,7 +262,8 @@ export default {
 
             production: {
                 addVisible: false,
-                addCount: 1,
+                addCount: '',
+                maxCount: '',
                 addItem: {},
             }
         };
@@ -446,7 +447,9 @@ export default {
                 console.log('getProductionItem res:', res)
                 let d = res.detail || {}
                 this.production.addItem = d.item
-                this.production.addCount = d.amount - this.tableData.length
+                let maxCount = d.amount - this.tableData.length
+                this.production.addCount = maxCount
+                this.production.maxCount = maxCount
             })
         },
 
