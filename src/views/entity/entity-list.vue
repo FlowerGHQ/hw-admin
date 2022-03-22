@@ -6,12 +6,12 @@
                 <div class="btns-area">
                     <a-button type="primary" @click="handleVehicleShow"><i class="icon i_add"/>{{'新增' + title}}</a-button>
                     <a-upload name="file" class="file-uploader"
-                              :file-list="upload.fileList" :action="upload.action"
-                              :show-upload-list='false'
-                              :headers="upload.headers" :data='upload.data'
-                              accept=".xlsx,.xls"
-                              @change="handleMatterChange">
-<!--                        <a-button type="primary" class="file-upload-btn">
+                        :file-list="upload.fileList" :action="upload.action"
+                        :show-upload-list='false'
+                        :headers="upload.headers" :data='upload.data'
+                        accept=".xlsx,.xls"
+                        @change="handleMatterChange">
+                        <!-- <a-button type="primary" class="file-upload-btn">
                             <i class="icon i_add"/> 批量导入
                         </a-button>-->
                     </a-upload>
@@ -22,25 +22,20 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{title + '名称' + ':'}}</div>
                         <div class="value">
-                            <a-input :placeholder="'请输入' +  title  + '名称'" v-model:value="searchForm.name"
-                                     @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="'请输入' +  title  + '名称'" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{title + '编号' + ':'}}</div>
                         <div class="value">
-                            <a-input :placeholder="'请输入' +  title  + '编号'" v-model:value="searchForm.code"
-                                     @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="'请输入' +  title  + '编号'" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
                         <div class="key">所属分销商:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.distributor_id" placeholder="请选择所属分销商"
-                                      @change="handleSearch">
-                                <a-select-option v-for="distributor of distributorList" :key="distributor.id"
-                                                 :value="distributor.id">{{ distributor.name }}
-                                </a-select-option>
+                            <a-select v-model:value="searchForm.distributor_id" placeholder="请选择所属分销商" @change="handleSearch">
+                                <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -48,9 +43,7 @@
                         <div class="key">所属零售商:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.agent_id" placeholder="请选择所属零售商" @change='handleSearch'>
-                                <a-select-option v-for="agent of agentList" :key="agent.id" :value="agent.id">
-                                    {{ agent.name }}
-                                </a-select-option>
+                                <a-select-option v-for="item of agentList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -58,9 +51,7 @@
                         <div class="key">所属门店:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.store_id" placeholder="请选择所属门店" @change='handleSearch'>
-                                <a-select-option v-for="store of storeList" :key="store.id" :value="store.id">
-                                    {{ store.name }}
-                                </a-select-option>
+                                <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -119,7 +110,6 @@
                             </a-button>
                         </template>
                     </template>
-
                 </a-table>
             </div>
             <div class="paging-container">
@@ -140,12 +130,11 @@
         </div>
         <template class="modal-container">
             <a-modal v-model:visible="vehicleShow" :title="editForm.uid ? title + '编辑' : '新增' + title" class="vehicle-edit-modal"
-                     :after-close='handleVehicleClose'>
+                :after-close='handleVehicleClose'>
                 <div class="modal-content">
                     <div class="form-item required">
                         <div class="key">商品编码:</div>
-                        <a-input v-model:value="editForm.item_code" placeholder="请输入对应的商品编码"
-                                 @blur="handleItemCodeBlur"/>
+                        <a-input v-model:value="editForm.item_code" placeholder="请输入对应的商品编码" @blur="handleItemCodeBlur"/>
                         <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
                         <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                     </div>
@@ -159,14 +148,12 @@
                     <a-button @click="handleVehicleSubmit" type="primary">确定</a-button>
                 </template>
             </a-modal>
-            <a-modal v-model:visible="entityShow" title="批量设置到港时间" class="arrival-time-modal"
-                     :after-close='handleEntityClose'>
+            <a-modal v-model:visible="entityShow" title="批量设置到港时间" class="arrival-time-modal" :after-close='handleEntityClose'>
                 <div class="modal-content">
                     <div class="form-item required">
                         <div class="key">到港时间:</div>
                         <div class="value">
-                            <a-date-picker v-model:value="entityForm.arrival_time" valueFormat='YYYY-MM-DD HH:mm:ss'
-                                           :show-time="defaultTime" placeholder="请选择到港时间">
+                            <a-date-picker v-model:value="entityForm.arrival_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" placeholder="请选择到港时间">
                                 <template #suffixIcon><i class="icon i_calendar"/></template>
                             </a-date-picker>
                         </div>
@@ -183,8 +170,10 @@
 
 <script>
 import Core from '../../core';
-import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue';
 import dayjs from "dayjs";
+import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue';
+
+const ITEM_TYPE = Core.Const.ITEM.TYPE
 
 export default {
     name: 'EntityList',
@@ -194,7 +183,7 @@ export default {
     props: {},
     data() {
         return {
-            ITEM_TYPE: Core.Const.ITEM.TYPE,
+            ITEM_TYPE,
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
             // 加载
             loading: false,
@@ -365,12 +354,7 @@ export default {
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-            let type = this.ITEM_TYPE.COMPONENT;
-            if (this.viewType == 'part') {
-                type = this.ITEM_TYPE.COMPONENT
-            } else {
-                type = this.ITEM_TYPE.PRODUCT
-            }
+            let type = this.viewType == 'part' ? ITEM_TYPE.COMPONENT : ITEM_TYPE.PRODUCT;
             Core.Api.Entity.list({
                 ...this.searchForm,
                 type: type,
@@ -442,12 +426,7 @@ export default {
                 return this.$message.warning('请输入正确的商品编码')
             }
 
-            let type = this.ITEM_TYPE.COMPONENT;
-            if (this.viewType == 'part') {
-                type = this.ITEM_TYPE.COMPONENT
-            } else {
-                type = this.ITEM_TYPE.PRODUCT
-            }
+            let type = this.viewType == 'part' ? ITEM_TYPE.COMPONENT : ITEM_TYPE.PRODUCT;
             form.type = type
             Core.Api.Entity.save(form).then(res => {
                 console.log('handleRefundSubmit res', res)

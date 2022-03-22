@@ -654,6 +654,28 @@ button.ant-switch {
     }
 }
 
+.ant-tag {
+    &-yellow {
+        color: @yellow;
+        background: @yellow_l;
+        border-color: @yellow_l;
+    }
+    &-grey, &-gray {
+        color: @grey;
+        background: @grey_l;
+        border-color: @grey_l;
+    }
+    &-primary {
+        color: @primary;
+        background: @primary_l;
+        border-color: @primary_l;
+    }
+    &-primary {
+        color: @light;
+        background: @light_l;
+        border-color: @light_l;
+    }
+}
 /* =================== ant组件重写 =================== */
 
 
@@ -1108,6 +1130,17 @@ p {
     &.no-margin {
         margin: 0;
     }
+    .panel-btn {
+        &.ant-btn, > .ant-btn {
+            font-size: 12px;
+            line-height: 20px;
+            height: 30px;
+            padding: 4px 14px;
+            .icon {
+                font-size: 12px;
+            }
+        }
+    }
     .panel-title {
         .fsb();
         .title {
@@ -1127,24 +1160,15 @@ p {
         background: #FFFFFF;
         border-radius: 4px;
         padding: 20px;
+        .panel-btn {
+            margin-bottom: 10px;
+        }
         .table-container {
             margin: 0 0 20px;
         }
         .paging-container {
             margin: 0;
             height: 30px;
-        }
-    }
-    .panel-btn {
-        &.ant-btn, > .ant-btn {
-            font-size: 12px;
-            line-height: 20px;
-            height: 30px;
-            padding: 4px 14px;
-            margin-bottom: 10px;
-            .icon {
-                font-size: 12px;
-            }
         }
     }
     &.info {

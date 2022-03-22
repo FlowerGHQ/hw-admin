@@ -820,6 +820,20 @@ let Const = {
             '1': {text: '商品'},
             '2': {text: '物料'},
         }
+    },
+    PRODUCTION: {
+        STATUS: {
+            INIT: 0,  // 待生产
+            PRODUCTION: 100,  // 生产中
+            COMPLETE: 200, // 已完成
+            CANCEL: -100,  // 已取消
+        },
+        STATUS_MAP: {
+            '0':   { text: '待生产', color: 'yellow' },
+            '100': { text: '生产中', color: 'orange' },
+            '200': { text: '已完成', color: 'green' },
+            '-100':{ text: '已取消', color: 'gray' },
+        }
     }
 };
 

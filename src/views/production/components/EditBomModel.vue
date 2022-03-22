@@ -95,6 +95,18 @@ export default {
     mounted() {
     },
     methods: {
+        routerChange(type, item = {}) {
+            let routeUrl = ''
+            switch(type) {
+                case 'item':
+                    routeUrl = this.$router.resolve({
+                        path: "/item/item-detail",
+                        query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+            }
+        },
          // 新增编辑bom
         handleModalShow() {
             if (this.detail) {

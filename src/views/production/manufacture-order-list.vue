@@ -60,8 +60,8 @@
                     {{ $Util.itemSpecFilter(text) }}
                 </template>
                 <template v-if="column.dataIndex === 'status'">
-                    <div class="status status-bg status-tag" :class="$Util.invoiceStatusFilter(text,'color')">
-                        {{ $Util.invoiceStatusFilter(text) }}
+                    <div class="status status-bg status-tag" :class="$Util.productionStatusFilter(text,'color')">
+                        {{ $Util.productionStatusFilter(text) }}
                     </div>
                 </template>
                 <template v-if="column.key === 'time'">
@@ -122,11 +122,10 @@ export default {
                 {title: '生产产品', dataIndex: ['item','name'], key: 'item'},
                 {title: '产品规格', dataIndex: ['item','attr_list'], key: 'spec'},
                 {title: 'BOM表', dataIndex: 'bom_name',key: 'item'},
-                {title: 'BOM分类', dataIndex: 'bom_category_name',key: 'item'},
                 {title: '生产数量', dataIndex: 'amount', key: 'count',},
                 {title: '领料仓库', dataIndex: 'warehouse_name', key: 'detail', to: 'warehouse'},
                 {title: '备注', dataIndex: 'remark',key: 'item'},
-                {title: '创建人', dataIndex: ['apply_user', "account", "name"], key: 'item'},
+                {title: '创建人', dataIndex: 'apply_user_name', key: 'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ],

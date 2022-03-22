@@ -587,6 +587,11 @@ const Util = {
         const MAP = Const.BOM.TARGET_TYPE_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
+    },
+    productionStatusFilter(val, to = 'text') {
+        const MAP = Const.PRODUCTION.STATUS_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
     }
     /* =============== 生产管理 ================ */
 

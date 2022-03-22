@@ -4,73 +4,109 @@
             <div class='title-area'>生产订单详情</div>
             <div class="btns-area">
                 <a-button type="primary" ghost @click="routerChange('edit', record)"><i class="icon i_edit"/>编辑</a-button>
-                <a-button type="primary" ghost @click="handleCancel(id)"><i class="icon i_delete"/>删除</a-button>
+                <a-button type="danger" ghost @click="handleCancel(id)"><i class="icon i_close_c"/>取消</a-button>
             </div>
         </div>
         <div class="gray-panel">
             <div class="panel-content desc-container">
                 <div class="desc-title">
                     <div class="title-area">
-                        <span class="title">{{ detail.item.name }}</span>
-<!--                        <span class="status-title">{{ detail.status }}</span>-->
+                        <span class="title">{{ detail.name }}</span>
+                        <a-tag :color="$Util.productionStatusFilter(detail.status,'color')">
+                            {{ $Util.productionStatusFilter(detail.status) }}
+                        </a-tag>
                     </div>
                 </div>
-                <a-row class="desc-detail has-logo">
+                <a-row class="desc-detail">
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">生产订单号：</span>
                         <span class="value">{{ detail.uid }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">创建时间：</span>
-                        <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
+                        <span class="key">生产产品：</span>
+                        <span class="value">
+                            <a-button type="link" @click='routerChange("item")'>{{item.name}}</a-button>
+                        </span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">仓库地址：</span>
-                        <span class="value">{{ $Util.addressFilter(detail) }}</span>
+                        <span class="key">生产数量：</span>
+                        <span class="value">{{ detail.amount }} 件</span>
+                    </a-col>
+                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                        <span class="key">BOM表：</span>
+                        <span class="value">
+                            <a-button type="link" @click='routerChange("bom")'>{{detail.bom_name}}</a-button>
+                        </span>
+                    </a-col>
+                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                        <span class="key">领料仓库：</span>
+                        <span class="value">
+                            <a-button type="link" @click='routerChange("warehouse")'>{{detail.warehouse_name}}</a-button>
+                        </span>
+                    </a-col>
+                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                        <span class="key">订单备注：</span>
+                        <span class="value">
+                            <a-tooltip :title="detail.remark" placement="topLeft">
+                                {{ detail.remark || '-' }}
+                            </a-tooltip>
+                        </span>
+                    </a-col>
+                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                        <span class="key">创建人：</span>
+                        <span class="value">{{ detail.apply_user_name || '-' }}</span>
+                    </a-col>
+                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                        <span class="key">创建时间：</span>
+                        <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
                 </a-row>
             </div>
         </div>
-<!--        <div class="tabs-container">
+        <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
-                <a-tab-pane key="StockList" tab="库存数量">
-                    <StockList :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"/>
+                <a-tab-pane key="ProductionItem" tab="已生产产品">
+                    <ProductionItem :orderId='id' @submit="getOrderDetail" v-if="activeKey === 'ProductionItem'"/>
                 </a-tab-pane>
-                <a-tab-pane key="StockRecord" tab="出入库记录">
-                    <StockRecord :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
-                                 v-if="activeKey === 'StockRecord'"/>
-                </a-tab-pane>
-                <a-tab-pane key="StockModify" tab="库存变更明细" v-if="detail.type === typeMap.DEFECTIVE">
-                    <StockModify :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"/>
+                <a-tab-pane key="MaterialList" tab="材料总览">
+                    <MaterialList />
                 </a-tab-pane>
             </a-tabs>
-        </div>-->
+        </div>
     </div>
 </template>
 
 <script>
 import Core from '../../core';
-
+import ProductionItem from './components/ProductionItem.vue'
+import MaterialList from './components/MaterialList.vue'
 
 export default {
     name: 'ManufactureDetail',
-    components: {},
+    components: {
+        ProductionItem,
+        MaterialList,
+    },
     props: {},
     data() {
         return {
             // 加载
             loading: false,
-            //标签页
+            // 详情
             id: '',
-            detail: {},
-            activeKey: ['affirm'],
+            detail: {}, // 生产单详情
+            item: {},   // 商品详情
+            bom: {},    // BOM表详情
+            warehouse: {},  // 仓库详情
+            //标签页
+            activeKey: 'ProductionItem',
         }
     },
     watch: {},
     computed: {},
     created() {
         this.id = Number(this.$route.query.id) || '';
-        this.getManufactureDetail();
+        this.getOrderDetail();
     },
     methods: {
         routerChange(type) {
@@ -90,17 +126,40 @@ export default {
                     });
                     window.open(routeUrl.href, '_self');
                     break;
+                case 'item': // 商品详情
+                    routeUrl = this.$router.resolve({
+                        path: '/item/item-detail',
+                        query: {id: this.detail.item_id},
+                    });
+                    window.open(routeUrl.href, '_self');
+                    break;
+                case 'bom': // BOM表详情
+                    routeUrl = this.$router.resolve({
+                        path: '/production/bom-detail',
+                        query: {id: this.detail.bom_id},
+                    });
+                    window.open(routeUrl.href, '_self');
+                    break;
+                case 'warehouse': // 仓库详情
+                    routeUrl = this.$router.resolve({
+                        path: '/warehouse/warehouse-list',
+                        query: {id: this.detail.warehouse_id},
+                    });
+                    window.open(routeUrl.href, '_self');
+                    break;
             }
         },
-        getManufactureDetail() {
+        getOrderDetail() {
             this.loading = true;
             Core.Api.ProductionOrder.detail({
                 id: this.id,
             }).then((res) => {
-                console.log('getManufactureDetail res', res);
-                this.detail = res.detail;
+                console.log('getOrderDetail res', res);
+                let d = res.detail || {}
+                this.detail = d;
+                this.item = d.item || {};
             }).catch((err) => {
-                console.log('getManufactureDetail err', err);
+                console.log('getOrderDetail err', err);
             }).finally(() => {
                 this.loading = false;
             });
@@ -129,16 +188,16 @@ export default {
 </script>
 
 <style lang='less'>
- #ManufactureDetail {
-     .desc-title {
-         .title-area {
-             .title {
-                 margin-right: 20px;
-             }
-             .status-title {
-                font-size: 14px;
-             }
-         }
-     }
- }
+#ManufactureDetail {
+.desc-title {
+    .title-area {
+        .title {
+            margin-right: 20px;
+        }
+        .status-title {
+        font-size: 14px;
+        }
+    }
+}
+}
 </style>
