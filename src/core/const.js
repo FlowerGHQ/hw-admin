@@ -512,17 +512,26 @@ let Const = {
     },
 
     NOTICE: { //系统消息
-        TYPE: {
-            ADMIN: 10, // 系统消息
-            DISTRIBUTOR: 15, // 分销商
-            AGENT: 20, // 零售商
-            STORE: 30, // 门店
+        CATEGORY: {
+            MASTER: 10, //平台消息
+            ORG: 20,    //机构消息
         },
-        TYPE_MAP: {
-            10: '系统消息',
-            15: '分销商消息',
-            20: '零售商消息',
-            30: '门店消息',
+        CATEGORY_MAP: {
+            '10': { text: '平台消息'},
+            '20': { text: '机构消息'},
+        },
+        TYPE: {
+            ADMIN: 10,        // 系统消息，所有人都可以看到
+            DISTRIBUTOR: 20,  // 分销商消息，只有分销商可以看到
+
+            STOCK_ALARM: 100, // 库存告警消息，可配置权限
+        },
+        MASTER_TYPE_MAP: {
+            '10': { text: '系统消息' },
+            '20': { text: '分销商消息' },
+        },
+        ORG_TYPE_MAP: {
+            '100': { text: '库存预警' },
         },
     },
     SYSTEM: { //系统

@@ -2,7 +2,8 @@
     <div id="NoticeList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">消息列表</div>
+                <div class="title-area">消息列表
+                </div>
                 <div class="btns-area">
                     <a-button type="primary" @click="routerChange('edit')" v-if="$auth('ADMIN')"><i class="icon i_add"/>新建消息</a-button>
                 </div>
@@ -10,10 +11,18 @@
             <div class="search-container" v-if="$auth('ADMIN')">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
+                        <div class="key">消息分类:</div>
+                        <div class="value">
+                            <a-select v-model:value="searchForm.category" @change="handleSearch" placeholder="请选择消息分类">
+                                <a-select-option v-for="(val, key) in categoryMap" :key="key" :value="key">{{val.text}}</a-select-option>
+                            </a-select>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
                         <div class="key">消息类型:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择消息类型">
-                                <a-select-option v-for="(val, key) in typeMap" :key="key" :value="key">{{val}}</a-select-option>
+                                <a-select-option v-for="(val, key) in typeMap" :key="key" :value="key">{{val.text}}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -75,13 +84,15 @@
 <script>
 import Core from '../../core';
 
+const NOTICE = Core.Const.NOTICE
+
 export default {
     name: 'NoticeList',
     components: {},
     props: {},
     data() {
         return {
-            loginType: Core.Data.getLoginType(),
+            CATEGORY: NOTICE.CATEGORY,
             // 加载
             loading: false,
             // 分页
@@ -89,15 +100,27 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
-            typeMap: Core.Const.NOTICE.TYPE_MAP,
+
+            categoryMap: NOTICE.CATEGORY_MAP,
+            typeMap: NOTICE.MASTER_TYPE_MAP,
             searchForm: {
                 type: undefined,
+                category: NOTICE.CATEGORY.MASTER + ''
             },
             // 表格
             tableData: [],
         };
     },
-    watch: {},
+    watch: {
+        'searchForm.category': function(n) {
+            if (n == NOTICE.CATEGORY.MASTER) {
+                this.typeMap = NOTICE.MASTER_TYPE_MAP
+            } else if (n == NOTICE.CATEGORY.ORG) {
+                this.typeMap = NOTICE.ORG_TYPE_MAP
+            }
+            this.searchForm.type = undefined
+        }
+    },
     computed: {
         tableColumns() {
             let columns = [
@@ -111,7 +134,7 @@ export default {
                 columns.splice(1,1)
             }
             return columns
-        }
+        },
     },
     mounted() {
         this.getTableData();
@@ -151,12 +174,6 @@ export default {
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
             this.pageChange(1);
-        },
-        handleTableChange(page, filters, sorter) {
-            console.log('handleTableChange filters:', filters)
-            for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : ''
-            }
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;

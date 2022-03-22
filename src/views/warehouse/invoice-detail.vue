@@ -112,14 +112,15 @@
                         @visibleChange='(visible) => {!visible && handleProdAddCancel()}' title="请输入添加数量">
                         <template #content>
                             <div class="prod-edit-popover">
-                                <a-input-number v-model:value="production.addCount" placeholder="添加数量" @keydown.enter="handleProdAddChange(index)" :autofocus="true"/>
+                                <a-input-number v-model:value="production.addCount" placeholder="添加数量"
+                                    @keydown.enter="handleProdAddChange(index)" :autofocus="true" :max="production.addCount" :min='1' :precision="0"/>
                                 <div class="btns">
                                     <a-button type="primary" @click="handleProdAddCancel()" ghost>取消</a-button>
                                     <a-button type="primary" @click="handleProdAddChange()">确定</a-button>
                                 </div>
                             </div>
                         </template>
-                        <a-button type="link" class="extra-btn" @click.stop   >添加商品</a-button>
+                        <a-button type="link" class="extra-btn" @click.stop >添加商品</a-button>
                     </a-popover>
                 </template>
                 <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('entity')">确认添加</a-button>

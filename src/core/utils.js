@@ -500,9 +500,12 @@ const Util = {
 
 
     /* =============== 系统管理 ================ */
-    noticeTypeFilter(val) {
-        const MAP = Const.NOTICE.TYPE_MAP
-        return MAP[val] || '未知'
+    noticeTypeFilter(val, to='text') {
+        const MASTER_MAP = Const.NOTICE.MASTER_TYPE_MAP
+        const ORG_MAP = Const.NOTICE.ORG_TYPE_MAP
+        const MAP = { ...MASTER_MAP, ...ORG_MAP }
+        const item = MAP[val] || {}
+        return item[to] || '未知'
     },
     fileTargetTypeFilter(val) {
         const MAP = Const.SYSTEM.FILE.TARGET_TYPE_MAP
