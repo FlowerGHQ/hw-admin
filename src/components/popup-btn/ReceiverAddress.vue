@@ -71,6 +71,14 @@ export default {
         detail: {
             type: Object,
         },
+        orgId: {
+            type: Number,
+            default: 0
+        },
+        orgType: {
+            type: Number,
+            default: 0
+        }
     },
     data() {
         return {
@@ -103,9 +111,13 @@ export default {
     mounted() {
         if (this.detail) {
             this.form.id = this.detail.id,
-                this.form.name = this.detail.name,
-                this.form.phone = this.detail.phone,
-                this.form.address = this.detail.address
+            this.form.name = this.detail.name,
+            this.form.phone = this.detail.phone,
+            this.form.address = this.detail.address,
+            this.form.province = this.detail.province,
+            this.form.city = this.detail.city,
+            this.form.county = this.detail.county,
+            this.defAddr = [this.detail.province, this.detail.city, this.detail.county]
         }
     },
     methods: {
@@ -142,8 +154,9 @@ export default {
                 }
             }
             Core.Api.ReceiveAddress.save({
-                id: this.id,
                 ...form,
+                orgId: this.orgId,
+                orgType: this.orgType,
                 ...area
             }).then(res => {
                 console.log('handleAuditSubmit res', res)
