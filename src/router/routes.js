@@ -403,6 +403,7 @@ const routes = [
                 meta: {
                     title: '调货收货管理',
                     is_sub_menu: true,
+                    roles: [LOGIN_TYPE.AGENT,LOGIN_TYPE.DISTRIBUTOR,LOGIN_TYPE.STORE],
                     type: 'in'
                 }
             },

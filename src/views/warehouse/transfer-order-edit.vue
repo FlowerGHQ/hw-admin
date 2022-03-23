@@ -27,7 +27,7 @@
         <a-collapse v-model:activeKey="activeKey" ghost>
             <a-collapse-panel key="affirm" header="商品信息" class="gray-collapse-panel">
                 <template #extra>
-                    <ItemSelect :warehouseId="detail.type == STOCK_RECORD.TYPE_OUT ? detail.warehouse_id: 0 "
+                    <ItemSelect :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id: 0 "
                         :disabledChecked="disabledChecked"
                         btnType='link'
                         @select="handleAddTransferItem" btn-text="添加商品"/>
@@ -44,6 +44,9 @@
                                 </template>
                                 <template v-if="column.key === 'item-code'">
                                     {{ text ? text.code : '-' }}
+                                </template>
+                                <template v-if="column.key === 'attr_list'">
+                                    {{$Util.itemSpecFilter(text)}}
                                 </template>
                                 <template v-if="column.key === 'amount'">
                                     <a-input-number v-model:value="record.amount" :min="1"
@@ -84,7 +87,7 @@ export default {
                 to_warehouse: {}
             },
             activeKey: ['affirm'],
-            STOCK_RECORD: Core.Const.STOCK_RECORD.TYPE,
+            TYPE: Core.Const.STOCK_RECORD.TYPE,
             failActive: [],
             tableData: [],
         };
@@ -96,7 +99,7 @@ export default {
                 {title: '商品名称', dataIndex: 'item', key: 'item-name'},
                 {title: '商品品号', dataIndex: ['item', 'model'], key: 'item-model'},
                 {title: '商品编码', dataIndex: 'item', key: 'item-code'},
-                {title: '商品规格', dataIndex: ['item', 'attr_str'], key: 'item-str'},
+                {title: '商品规格', dataIndex: ['item', 'attr_list'], key: 'attr_list'},
                 {title: '数量', dataIndex: 'amount', key: 'amount'},
                 {title: '操作', dataIndex: 'operation'},
             ]
@@ -149,14 +152,6 @@ export default {
             Core.Api.Transfer.itemList({
                 transfer_order_id: this.id,
             }).then(res => {
-                console.log('getTransferList res', res)
-                res.list.forEach(item => {
-                    let element = item.item || {}
-                    if (element.attr_list && element.attr_list.length) {
-                        let str = element.attr_list.map(i => i.value).join(' ')
-                        element.attr_str = str
-                    }
-                })
                 this.tableData = res.list
             }).catch(err => {
                 console.log('getTransferList err', err)

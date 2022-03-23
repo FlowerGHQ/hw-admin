@@ -149,7 +149,7 @@
                         </a-select>
                     </div>
                 </div>
-<!--                <div class="form-item required">
+                <div class="form-item required">
                     <div class="key">仓库:</div>
                     <div class="value">
                         <a-select v-model:value="form.to_warehouse_id" placeholder="请选择仓库" show-search option-filter-prop="children">
@@ -158,7 +158,7 @@
                             </a-select-option>
                         </a-select>
                     </div>
-                </div>-->
+                </div>
                 <div class="form-item required">
                     <div class="key">收货地址:</div>
                     <div class="value">
@@ -297,8 +297,9 @@ export default {
                 supply_org_id: undefined,
                 to_warehouse_id: undefined,
                 apply_message: '',
+                receive_info_id: undefined,
+                type: '',
             },
-            receive_info_id: {},
             // 审核 弹框
             auditShow: false,
             deliverShow: false,
@@ -307,7 +308,6 @@ export default {
                 status: 20,
                 audit_message: '',
                 from_warehouse_id: undefined,
-                receive_info_id: '',
             },
             deliverForm: {
                 id: '',
@@ -675,7 +675,10 @@ export default {
             }
             if (!form.supply_org_id) {
                 console.log(form.supply_org_id)
-                return this.$message.warning('请选择货物来源')
+                return this.$message.warning('请选择调货单位')
+            }
+            if (!form.receive_info_id) {
+                return this.$message.warning('请选择收货地址')
             }
             if (!form.to_warehouse_id) {
                 return this.$message.warning('请选择仓库')

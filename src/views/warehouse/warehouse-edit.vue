@@ -111,6 +111,9 @@ export default {
             if (!form.name) {
                 return this.$message.warning('请输入仓库名称')
             }
+            if (!form.type) {
+                return this.$message.warning('请选择仓库类型')
+            }
             if (!form.address) {
                 return this.$message.warning('请输入仓库地址')
             }

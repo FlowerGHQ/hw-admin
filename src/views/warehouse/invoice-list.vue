@@ -133,14 +133,14 @@ export default {
             // 搜索
             typeMap: Core.Const.STOCK_RECORD.TYPE_MAP, //出入库
             warehouseList: [],
-            statusList: [
+           /* statusList: [
                 {text: '全  部', value: '0', color: 'primary', key: '0'},
                 {text: '待审核', value: '0', color: 'yellow', key: STATUS.AIT_AUDIT},
                 {text: '审核通过', value: '0', color: 'blue', key: STATUS.AUDIT_PASS},
                 {text: '审核失败', value: '0', color: 'red', key: STATUS.AUDIT_REFUSE},
                 {text: '处理完成', value: '0', color: 'green', key: STATUS.CLOSE},
                 {text: '已取消', value: '0', color: 'grey', key: STATUS.CANCEL},
-            ],
+            ],*/
             searchForm: {
                 warehouse_id: undefined,
                 uid: '',
