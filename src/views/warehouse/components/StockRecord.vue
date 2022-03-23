@@ -21,7 +21,7 @@
                             {{ $Util.stockRecordFilter(text) }}
                         </template>
                         <template v-if="column.dataIndex === 'source_type'">
-                            {{ $Util.stockRecordSourceFilter(text) }}
+                            {{ $Util.sourceFormFilter(text) }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}

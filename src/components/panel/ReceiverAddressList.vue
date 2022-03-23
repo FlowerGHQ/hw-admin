@@ -5,7 +5,7 @@
         </div>
         <div class="panel-content">
             <div class="table-container">
-               <ReceiverAddress btnType="primary" :ghost="true"><i class="icon i_add"/>新增收货地址</ReceiverAddress>
+               <ReceiverAddress btnType="primary" :ghost="true" v-if="!$auth('ADMIN')"><i class="icon i_add"/>新增收货地址</ReceiverAddress>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'item'">

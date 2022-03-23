@@ -42,10 +42,10 @@
                         <a-input v-model:value="form.spec" placeholder="请输入物料规格"/>
                     </div>
                 </div>
-                <div class="form-item required">
-                    <div class="key">供应商编码</div>
+                <div class="form-item">
+                    <div class="key">供应商料号</div>
                     <div class="value">
-                        <a-input v-model:value="form.supplier_code" placeholder="请输入供应商编码"/>
+                        <a-input v-model:value="form.supplier_code" placeholder="请输入供应商料号"/>
                     </div>
                 </div>
                 <div class="form-item required">
@@ -157,9 +157,9 @@ export default {
             if (!form.spec) {
                 return this.$message.warning('请输入物料规格')
             }
-            if (!form.supplier_code) {
-                return this.$message.warning('请选择供应商编码')
-            }
+           /* if (!form.supplier_code) {
+                return this.$message.warning('请选择供应商料号')
+            }*/
             if (!form.unit) {
                 return this.$message.warning('请输入单位')
             }

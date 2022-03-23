@@ -547,6 +547,10 @@ const Util = {
         const MAP = Const.STOCK_RECORD.SOURCE_TYPE_MAP
         return MAP[val] || '未知'
     },
+    sourceFormFilter(val) {
+        const MAP = Const.STOCK_RECORD.SOURCE_FORM_MAP
+        return MAP[val] || '未知'
+    },
     /* =============== 出入库 ================ */
 
     /* =============== 调货单 ================ */

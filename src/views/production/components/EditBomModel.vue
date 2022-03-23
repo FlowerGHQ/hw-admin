@@ -26,16 +26,16 @@
                     </div>
                 </div>
             </div>
-            <div class="form-item">
+<!--            <div class="form-item">
                 <div class="key">版本号:</div>
                 <div class="value">
                     <a-input-number v-model:value="form.version_num" placeholder="请输入版本号" :min="0" :precision="0" style="width: 100%;"/>
                 </div>
-            </div>
+            </div>-->
             <div class="form-item textarea">
-                <div class="key">版本描述:</div>
+                <div class="key">版本号:</div>
                 <div class="value">
-                    <a-textarea v-model:value="form.version" placeholder="请输入版本描述" :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                    <a-textarea v-model:value="form.version" placeholder="请输入版本号" :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                     <span class="content-length">{{form.version.length}}/99</span>
                 </div>
             </div>
@@ -86,7 +86,7 @@ export default {
                 name: '',
                 item_id: '',
                 version: '',
-                version_num: '',
+                // version_num: '',
             },
         };
     },

@@ -109,8 +109,8 @@ export default {
                 { title: '名称', dataIndex: 'name', key: 'detail' },
                 { title: '对应商品名', dataIndex: ['item', 'name'], key: 'item-detail' },
                 { title: '对应商品编号', dataIndex: ['item', 'code'], key: 'item' },
-                { title: '版本号', dataIndex: 'version_num', key: 'item' },
-                { title: '版本描述', dataIndex: 'version', key: 'item' },
+                // { title: '版本号', dataIndex: 'version_num', key: 'item' },
+                { title: '版本号', dataIndex: 'version', key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '更新时间', dataIndex: 'update_time', key: 'time' },
                 { title: '操作', key: 'operation', fixed: 'right'}

@@ -639,6 +639,18 @@ let Const = {
             40: '调货单',
             50: '维修单'
         },
+        SOURCE_FORM: { //出入库单变更来源
+            UNKNOWN: 0,
+            ADMIN: 1,
+            REPAIR_ORDER_ITEM: 21,
+            INVOICE: 31,
+        },
+        SOURCE_FORM_MAP: {
+            0: '未知操作',
+            1: '操作员操作',
+            21: '维修单明细',
+            31: '出入库单',
+        }
     },
     TRANSFER_ORDER: { //调货单
         STATUS: { //调货单审核状态
