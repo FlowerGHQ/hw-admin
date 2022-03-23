@@ -229,7 +229,9 @@ export default {
 
 <style lang='less' scoped>
 .ItemSelectBtn {
-    line-height: 1;
-    height: 1em;
+    &.ant-btn-link {
+        line-height: 1;
+        height: 1em;
+    }
 }
 </style>

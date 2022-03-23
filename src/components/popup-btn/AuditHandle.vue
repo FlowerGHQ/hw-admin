@@ -97,8 +97,10 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.ItemSelectBtn {
-    line-height: 1;
-    height: 1em;
+.AuditHandleBtn {
+    &.ant-btn-link {
+        line-height: 1;
+        height: 1em;
+    }
 }
 </style>
