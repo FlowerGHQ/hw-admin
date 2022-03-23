@@ -305,6 +305,9 @@ const Util = {
     },
 
     addressFilter(obj, type = 1) {
+        if (typeof obj !== 'object' || !obj) {
+            return '-'
+        }
         let { province, city, county, address } = obj
         if (!province && !city && !county && !address) {
             return '-'
@@ -314,8 +317,6 @@ const Util = {
                 return `${province} ${city} ${county} ${address}`;
             case 2:
                 return `${province} ${city} ${county}`;
-            case 3:
-                return `${country} ${province} ${city} ${county}`
         }
     },
 

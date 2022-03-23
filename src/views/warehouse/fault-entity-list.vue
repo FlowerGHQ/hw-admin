@@ -329,7 +329,9 @@ export default {
         this.getWarehouseList();
         this.getFaultTypeList();
         this.getStoreList();
-        this.getAgentList();
+        if(this.$auth('ADMIN')) {
+            this.getAgentList();
+        }
     },
     methods: {
         // 维修单详情入口 
