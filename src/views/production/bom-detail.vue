@@ -33,12 +33,12 @@
                             <a-button type="link" @click="routerChange('item')" v-if="item && item.id">{{item.name || "-"}}</a-button>
                         </span>
                     </a-col>
-                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+<!--                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">版本号：</span>
                         <span class="value">{{detail.version_num}}</span>
-                    </a-col>
+                    </a-col>-->
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">版本描述：</span>
+                        <span class="key">版本号：</span>
                         <span class="value">{{detail.version}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>

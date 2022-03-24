@@ -28,7 +28,7 @@ switch (window.location.hostname) {
         break;
     default:
         // URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
-        URL_POINT = 'http://10.0.0.121:8083' // 谢耀圣
+        URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.134:8083' // 谭洋波
             // URL_POINT = 'http://10.0.0.205:8083' // 徐伟
             // URL_POINT = 'http://10.0.0.149:8083' // 徐伟
@@ -855,7 +855,23 @@ let Const = {
             '200': { text: '已完成', color: 'green' },
             '-100':{ text: '已取消', color: 'gray' },
         }
-    }
+    },
+    SUPPLIER: {
+        PAYMENT_TYPE: {
+            FIFTEEN: 20,
+            THIRTY: 30,
+            FORTY_FIVE: 40,
+            SIXTY: 50,
+            CASH_AND_DELIVERY: 10,
+        },
+        PAYMENT_TYPE_MAP: {
+            '10': '款到发货',
+            '20': '15日内',
+            '30': '30日内',
+            '40': '45日内',
+            '50': '60日内'
+        }
+    },
 };
 
 export default Const;

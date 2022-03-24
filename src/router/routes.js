@@ -847,6 +847,38 @@ const routes = [
         },
         children: [
             {
+                path: 'supplier-list',
+                name: 'SupplierList',
+                component: () => import ('@/views/production/supplier-list.vue'),
+                meta: {
+                    title: '供应商列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true
+                }
+            },
+            {
+                path: 'supplier-edit',
+                name: 'SupplierEdit',
+                hidden: true,
+                component: () => import ('@/views/production/supplier-edit.vue'),
+                meta: {
+                    title: '供应商编辑',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/production/supplier-list',
+                }
+            },
+            {
+                path: 'supplier-detail',
+                name: 'SupplierDetail',
+                hidden: true,
+                component: () => import ('@/views/production/supplier-detail.vue'),
+                meta: {
+                    title: '供应商详情',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/production/supplier-list',
+                }
+            },
+            {
                 path: 'stock-list',
                 name: 'StockList',
                 component: () => import ('@/views/production/stock-list.vue'),

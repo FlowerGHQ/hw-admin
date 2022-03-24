@@ -341,7 +341,6 @@ const apiList = {
         detail: ['PostJson', 'production-order/detail'],
         detailByUid: ['PostJson', 'production-order/detail-by-uid'],
         cancel: ['PostJson', 'production-order/cancel'],
-        detailByUid: ['PostJson', 'production-order/detail-by-uid'],
     },
     Material: { // 物料
         save: ['PostJson', 'material/save'],
@@ -385,8 +384,15 @@ const apiList = {
         save: ['PostJson', 'receive-info/save'],
         detail: ['PostJson', 'receive-info/detail'],
         delete: ['PostJson', 'receive-info/delete'],
+    },
+    Supplier: { //供应商
+        list: ['PostJson', 'supplier/list'],
+        save: ['PostJson', 'supplier/save'],
+        detail: ['PostJson', 'supplier/detail'],
+        delete: ['PostJson', 'supplier/delete'],
+        listAll: ['PostJson', 'supplier/list-name'],
+    },
 
-    }
 };
 
 export default new Api(baseUrl, apiList);

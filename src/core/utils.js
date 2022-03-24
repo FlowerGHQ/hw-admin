@@ -602,8 +602,16 @@ const Util = {
         const MAP = Const.PRODUCTION.STATUS_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
-    }
+    },
     /* =============== 生产管理 ================ */
+
+    /* =============== 供应商管理 ================ */
+    supplierPaymentTypeFilter(val, to = 'text') {
+        const MAP = Const.SUPPLIER.PAYMENT_TYPE_MAP
+        return MAP[val] || '未知'
+    }
+    /* =============== 供应商管理 ================ */
+
 
 }
 
