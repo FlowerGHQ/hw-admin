@@ -392,6 +392,12 @@ const apiList = {
         delete: ['PostJson', 'supplier/delete'],
         listAll: ['PostJson', 'supplier/list-name'],
     },
+    SupplierItem: { //供应商物料管理
+        list: ['PostJson', 'supplier-material/list'],
+        save: ['PostJson', 'supplier-material/save'],
+        detail: ['PostJson', 'supplier-material/detail'],
+        delete: ['PostJson', 'supplier-material/delete'],
+    },
 
 };
 

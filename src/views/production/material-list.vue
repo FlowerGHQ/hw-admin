@@ -7,9 +7,33 @@
                     <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建物料</a-button>
                 </div>
             </div>
+            <div class="search-container">
+                <a-row class="search-area">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">物料名称:</div>
+                        <div class="value">
+                           <a-input v-model:value="searchForm.name" placeholder="请输入物料名称" @keydown.enter='handleSearch'/>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">物料分类:</div>
+                        <div class="value">
+                            <CategoryTreeSelect @change="handleCategorySelect" :category='item_category' :category-id='searchForm.category_id' placeholder="请选择物料分类" type="material"/>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
+                        <div class="key">创建时间:</div>
+                        <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
+                    </a-col>
+                </a-row>
+                <div class="btn-area">
+                    <a-button @click="handleSearch" type="primary">查询</a-button>
+                    <a-button @click="handleSearchReset">重置</a-button>
+                </div>
+            </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                    :row-key="record => record.id" :pagination='false' @change="handleTableChange">
+                    :row-key="record => record.id" :pagination='false' :loading="loading">
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
@@ -49,24 +73,27 @@
 
 <script>
 import Core from '../../core';
+import CategoryTreeSelect from '../../components/popup-btn/CategoryTreeSelect.vue'
+import TimeSearch from '@/components/common/TimeSearch.vue'
 export default {
-    components: {},
+    components: {
+        CategoryTreeSelect,
+        TimeSearch
+    },
     props: {},
     data() {
         return {
+            loading: false,
             // 分页
-            current: 1,
+            currPage: 1,
             pageSize: 20,
             total: 0,
-            tableData: []
-        }
-    },
-    watch: {},
-    computed: {
-        tableColumns() {
-            let { filteredInfo } = this;
-            filteredInfo = filteredInfo || {};
-            let tableColumns = [
+            searchForm: {
+                category_id: undefined,
+                name: undefined,
+            },
+            item_category: {},
+            tableColumns: [
                 { title: '物料名称', dataIndex: 'name', key: 'detail' },
                 { title: '物料分类', dataIndex: ['category','name'], key: 'item' },
                 { title: '物料编码', dataIndex: 'code', key: 'item' },
@@ -76,24 +103,77 @@ export default {
                 { title: '供应商料号', dataIndex: 'supplier_code', key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 { title: '操作', key: 'operation', fixed: 'right', width: 180 }
-            ]
-            return tableColumns
+            ],
+            tableData: []
         }
     },
+    watch: {},
+    computed: {},
     mounted() {
         this.getTableData()
     },
     methods: {
+        routerChange(type, item = {}) {
+            switch(type) {
+                case 'edit': {
+                    let routeUrl = this.$router.resolve({
+                        path: "/production/material-edit",
+                        query: { id: item.id }
+                    })
+                    window.open(routeUrl.href, '_self')
+                }; break
+                case 'detail': {
+                    let routeUrl = this.$router.resolve({
+                        path: "/production/material-detail",
+                        query: { id: item.id }
+                    })
+                    window.open(routeUrl.href, '_self')
+                }; break
+            }
+        },
+        pageChange(curr) {  // 页码改变
+            this.currPage = curr
+            this.getTableData()
+        },
+        pageSizeChange(current, size) {  // 页码尺寸改变
+            console.log('pageSizeChange size:', size)
+            this.pageSize = size
+            this.getTableData()
+        },
+        handleSearch() {  // 搜索
+            this.pageChange(1);
+        },
+        handleTimeSearch(type, begin_time, end_time) { // 时间搜索
+            if (begin_time || end_time) {
+                this.searchForm.begin_time = begin_time
+                this.searchForm.end_time = end_time
+            }
+            this.pageChange(1);
+        },
+        handleCategorySelect(val) {
+            this.searchForm.category_id = val
+            this.pageChange(1);
+        },
+        handleSearchReset() {  // 重置搜索
+            Object.assign(this.searchForm, this.$options.data().searchForm)
+            this.$refs.TimeSearch.handleReset()
+            this.pageChange(1);
+        },
         getTableData() {
+            this.loading = true
             Core.Api.Material.list({
+                ...this.searchForm,
                 page: this.current,
                 pageSize: this.pageSize,
             }).then(res => {
                 console.log('ProductionOrderlist res', res)
                 this.tableData = res.list
                 this.total = res.count
+            }).finally(() => {
+                this.loading = false
             })
         },
+
         handleDelete(id) {
             let _this = this
             this.$confirm({
@@ -113,24 +193,6 @@ export default {
 
 
         },
-        routerChange(type, item = {}) {
-            switch(type) {
-                case 'edit': {
-                    let routeUrl = this.$router.resolve({
-                        path: "/production/material-edit",
-                        query: { id: item.id }
-                    })
-                    window.open(routeUrl.href, '_self')
-                }; break
-                case 'detail': {
-                    let routeUrl = this.$router.resolve({
-                        path: "/production/material-detail",
-                        query: { id: item.id }
-                    })
-                    window.open(routeUrl.href, '_self')
-                }; break
-            }
-        }
     },
 }
 </script>

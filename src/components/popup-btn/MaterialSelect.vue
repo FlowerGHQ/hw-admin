@@ -140,7 +140,6 @@ export default {
             this.$emit('select', this.selectItemIds, this.selectItems)
             this.modalShow = false
         },
-
         getTableData() {
             Core.Api.Material.list({
                 ...this.searchForm,

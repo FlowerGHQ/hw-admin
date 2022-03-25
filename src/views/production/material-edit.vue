@@ -66,7 +66,6 @@
 
 <script>
 import Core from '../../core';
-// import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue'
 import CategoryTreeSelect from '../../components/popup-btn/CategoryTreeSelect.vue'
 
 export default {
@@ -90,6 +89,8 @@ export default {
                 unit: ''
             },
             supplierList: [],
+            item_category: {},
+            configTemp: [],
         };
     },
     watch: {},
@@ -126,7 +127,6 @@ export default {
             }).then(res => {
                 console.log('Material.detail res', res)
                 this.form = res
-                this.form.category_id = res.category.name
             }).finally(() => {
                 this.loading = false
             })

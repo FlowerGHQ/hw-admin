@@ -1,11 +1,10 @@
 <template>
     <div id='SupplierDetail' class='list-container'>
         <div class='title-container'>
-            <div class='title-area'>生产订单详情</div>
+            <div class='title-area'>供应商详情</div>
             <div class="btns-area">
-                <a-button type="primary" ghost @click="routerChange('picking')"><i class="icon i_goods"/>领料</a-button>
-                <!-- <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button> -->
-                <a-button type="danger" ghost @click="handleCancel(id)"><i class="icon i_close_c"/>取消</a-button>
+                <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
+                <a-button type="danger" ghost @click="handleDelete(id)"><i class="icon i_close_c"/>取消</a-button>
             </div>
         </div>
         <div class="gray-panel">
@@ -13,49 +12,40 @@
                 <div class="desc-title">
                     <div class="title-area">
                         <span class="title">{{ detail.name }}</span>
-                        <a-tag :color="$Util.productionStatusFilter(detail.status,'color')">
-                            {{ $Util.productionStatusFilter(detail.status) }}
-                        </a-tag>
                     </div>
                 </div>
                 <a-row class="desc-detail">
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">生产订单号：</span>
-                        <span class="value">{{ detail.uid }}</span>
+                        <span class="key">联系人：</span>
+                        <span class="value">{{ detail.contact_name }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">生产产品：</span>
-                        <span class="value">
-                            <a-button type="link" @click='routerChange("item")'>{{item.name}}</a-button>
-                        </span>
+                        <span class="key">联系人电话：</span>
+                        <span class="value">{{ detail.contact_phone }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">生产数量：</span>
-                        <span class="value">{{ detail.amount }} 件</span>
+                        <span class="key">信用代码：</span>
+                        <span class="value">{{ detail.credit_code }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">BOM表：</span>
-                        <span class="value">
-                            <a-button type="link" @click='routerChange("bom")'>{{detail.bom_name}}</a-button>
-                        </span>
+                        <span class="key">开户银行：</span>
+                        <span class="value">{{ detail.deposit_bank }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">领料仓库：</span>
-                        <span class="value">
-                            <a-button type="link" @click='routerChange("warehouse")'>{{detail.warehouse_name}}</a-button>
-                        </span>
+                        <span class="key">开户行支行：</span>
+                        <span class="value">{{ detail.account_bank }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">订单备注：</span>
-                        <span class="value">
-                            <a-tooltip :title="detail.remark" placement="topLeft">
-                                {{ detail.remark || '-' }}
-                            </a-tooltip>
-                        </span>
+                        <span class="key">开户行账号：</span>
+                        <span class="value">{{ detail.bank_card_no }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">创建人：</span>
-                        <span class="value">{{ detail.apply_user_name || '-' }}</span>
+                        <span class="key">付款期限：</span>
+                        <span class="value">{{ $Util.supplierPaymentTypeFilter(detail.payment_term) }}</span>
+                    </a-col>
+                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                        <span class="key">供应商地址：</span>
+                        <span class="value">{{ $Util.addressFilter(detail) }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">创建时间：</span>
@@ -66,12 +56,9 @@
         </div>
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
-                <a-tab-pane key="ProductionItem" tab="已生产产品">
-                    <ProductionItem :id='id' :uid="detail.uid" :detail='detail' @submit="getOrderDetail" v-if="activeKey === 'ProductionItem'"/>
+                 <a-tab-pane key="MaterialList" tab="供应物料">
+                    <MaterialList :MaterialId="material_id" />
                 </a-tab-pane>
-                <!-- <a-tab-pane key="MaterialList" tab="材料总览">
-                    <MaterialList />
-                </a-tab-pane> -->
             </a-tabs>
         </div>
     </div>
@@ -79,15 +66,11 @@
 
 <script>
 import Core from '../../core';
-import ProductionItem from './components/ProductionItem.vue'
 import MaterialList from './components/MaterialList.vue'
 
-const STOCK_RECORD = Core.Const.STOCK_RECORD
-
 export default {
-    name: 'ManufactureDetail',
+    name: 'SupplierDetail',
     components: {
-        ProductionItem,
         MaterialList,
     },
     props: {},
@@ -95,21 +78,16 @@ export default {
         return {
             // 加载
             loading: false,
-            // 详情
-            id: '',
-            detail: {}, // 生产单详情
-            item: {},   // 商品详情
-            bom: {},    // BOM表详情
-            warehouse: {},  // 仓库详情
-            //标签页
-            activeKey: '',
+            material_id: '',
+            detail: {},
+            activeKey: 'MaterialList',
         }
     },
     watch: {},
     computed: {},
     created() {
         this.id = Number(this.$route.query.id) || '';
-        this.getOrderDetail();
+        this.getSupplierDetail();
     },
     methods: {
         routerChange(type) {
@@ -117,91 +95,48 @@ export default {
             switch (type) {
                 case 'edit': // 编辑
                     routeUrl = this.$router.resolve({
-                        path: '/production/manufacture-order-edit',
+                        path: '/production/supplier-edit',
                         query: {id: this.id},
                     });
                     window.open(routeUrl.href, '_self');
                     break;
                 case 'list': // 列表
                     routeUrl = this.$router.resolve({
-                        path: '/production/manufacture-order-list',
+                        path: '/production/supplier-list',
                         query: {id: this.id},
                     });
                     window.open(routeUrl.href, '_self');
                     break;
-                case 'item': // 商品详情
-                    routeUrl = this.$router.resolve({
-                        path: '/item/item-detail',
-                        query: {id: this.detail.item_id},
-                    });
-                    window.open(routeUrl.href, '_self');
-                    break;
-                case 'bom': // BOM表详情
-                    routeUrl = this.$router.resolve({
-                        path: '/production/bom-detail',
-                        query: {id: this.detail.bom_id},
-                    });
-                    window.open(routeUrl.href, '_self');
-                    break;
-                case 'warehouse': // 仓库详情
-                    routeUrl = this.$router.resolve({
-                        path: '/warehouse/warehouse-list',
-                        query: {id: this.detail.warehouse_id},
-                    });
-                    window.open(routeUrl.href, '_self');
-                    break;
-                case 'picking': // 仓库详情
-                    let source = {
-                        sourceUid: this.detail.uid,
-                        form: {
-                            type: STOCK_RECORD.TYPE.OUT,
-                            target_type: STOCK_RECORD.COMMODITY_TYPE.MATERIALS,
-                            source_id: this.id,
-                            source_type: STOCK_RECORD.SOURCE_TYPE.PRODUCTION,
-                            warehouse_id: this.detail.warehouse_id,
-                        },
-                    }
-                    routeUrl = this.$router.resolve({
-                        path: "/warehouse/invoice-edit",
-                        query: {
-                            source: JSON.stringify(source)
-                        }
-                    })
-                    window.open(routeUrl.href, '_self');
-                    break;
             }
         },
-        getOrderDetail() {
+        getSupplierDetail() {
             this.loading = true;
-            Core.Api.ProductionOrder.detail({
+            Core.Api.Supplier.detail({
                 id: this.id,
             }).then((res) => {
-                console.log('getOrderDetail res', res);
-                let d = res.detail || {}
-                this.detail = d;
-                this.item = d.item || {};
-                this.activeKey = 'ProductionItem'
+                console.log('getSupplierDetail res', res);
+                this.detail = res.detail
+                this.activeKey = 'getSupplierDetail'
             }).catch((err) => {
-                console.log('getOrderDetail err', err);
+                console.log('getSupplierDetail err', err);
             }).finally(() => {
                 this.loading = false;
             });
         },
-        handleCancel(id) {
+        handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要取消该生产单吗？',
+                title: '确定要删除该供应商吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.ProductionOrder.cancel({id})
+                    Core.Api.Supplier.delete({id})
                         .then(() => {
                             _this.$message.success('删除成功');
                             _this.routerChange('list');
-                        })
-                        .catch((err) => {
-                            console.log('handleCancel err', err);
+                        }).catch((err) => {
+                            console.log('handleDelete err', err);
                         });
                 },
             });
@@ -211,7 +146,7 @@ export default {
 </script>
 
 <style lang='less'>
-#ManufactureDetail {
+#SuppliereDetail {
     .desc-title {
         .title-area {
             .title {

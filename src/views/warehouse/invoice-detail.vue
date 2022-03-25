@@ -328,7 +328,6 @@ export default {
 
             activeKey: ['ItemList'],
 
-            total: 0,
             tableData: [],
             addMode: false,
             addData: [],
