@@ -79,7 +79,9 @@ export default {
                 return []
             }
         },
-
+        materialId: {
+            type: Number,
+        },
         warehouseId: {
             type: Number,
             default: 0

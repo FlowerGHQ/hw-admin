@@ -3,32 +3,33 @@
         <div class="panel-title">
             <div class="title">供应物料列表</div>
             <div class="btn-area">
-                <MaterialSelect @select="(ids,items) => handleAddShow(TARGET_TYPE.MATERIAL,ids,items)"
-                                btn-class="panel-btn" :disabled-checked='checkedIds.materials' v-if="!addMode">
+                <MaterialSelect @select="(ids,items) => handleAddShow(ids,items)"
+                                btn-class="panel-btn" :disabled-checked='checkedIds'>
                     添加物料
                 </MaterialSelect>
-                <a-button type="primary" class="panel-btn" v-if="addMode" @click.stop="handleAddConfirm()">确认添加
-                </a-button>
+                <!--                <a-button type="primary" class="panel-btn" v-if="addMode" @click.stop="handleAddConfirm()">确认添加
+                                </a-button>-->
             </div>
         </div>
         <div class="panel-content">
             <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
-                         :row-key="record => record.id" :pagination='false' :loading='loading'
-                         :row-selection="addMode ? null : rowSelection">
+                <a-table :columns="tableColumns" :data-source="addData" :scroll="{ x: true }"
+                         :row-key="record => record.id" :pagination='false' :loading='loading'>
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
+                        <template v-if="column.key === 'time'">
+                            {{ $Util.timeFilter(text) }}
+                        </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' class="danger" @click="handleRemove('', [record])"><i
-                                class="icon i_delete"/>移出
+                            <a-button type='link' class="danger" @click="handleRemove(record)"><i class="icon i_delete"/>移出
                             </a-button>
                         </template>
                     </template>
                 </a-table>
             </div>
-            <div class="paging-container" v-if="!addMode">
+            <div class="paging-container">
                 <a-pagination
                     v-model:current="currPage"
                     :page-size='pageSize'
@@ -52,7 +53,6 @@ import Core from '../../../core';
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 import MaterialSelect from '@/components/popup-btn/MaterialSelect.vue';
 
-const TARGET_TYPE = Core.Const.BOM.TARGET_TYPE
 export default {
     name: 'BomItems',
     components: {
@@ -60,13 +60,12 @@ export default {
         MaterialSelect,
     },
     props: {
-        MaterialId: {
+        supplierId: {
             type: Number,
         },
     },
     data() {
         return {
-            TARGET_TYPE,
             // 加载
             loading: false,
             // 分页
@@ -74,12 +73,13 @@ export default {
             pageSize: 20,
             total: 0,
             // 表格数据
+            material_id: '',
             tableData: [],
+
             details: {
                 items: [],
                 materials: [],
             },
-            addMode: false,
             addData: [],
         };
     },
@@ -99,26 +99,13 @@ export default {
         },
         // 已经添加到物料表中的ids
         checkedIds() {
-            let checkedIds = {
-                items: this.details.items.map(i => i.target_id),
-                materials: this.details.materials.map(i => i.target_id)
-            }
+            let checkedIds = this.addData.map(item => item.id)
             console.log('checkedIds:', checkedIds)
             return checkedIds
-        },
-        rowSelection() {
-            return {
-                selectedRowKeys: this.selectedRowKeys,
-                onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
-                    this.selectedRowKeys = selectedRowKeys
-                    this.selectedRowItems = selectedRows
-                },
-            };
         },
     },
     mounted() {
         this.getTableData();
-        this.getAllDetails();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -145,60 +132,30 @@ export default {
         },
         getTableData() { // 获取 表格 数据
             this.loading = true;
-            Core.Api.BomItem.list({
-                Material_id: this.MaterialId,
+            Core.Api.SupplierItem.list({
+                supplier_id: this.supplierId,
             }).then(res => {
-                console.log("getTableData res", res)
-                let list = res.list
-                list.forEach(item => {
-                    item.target = item.target_type === TARGET_TYPE.ITEM ? item.item : item.material
-                })
                 this.total = res.count;
-                this.tableData = res.list;
+                this.addData = res.list.map(item => item.material)
             }).catch(err => {
                 console.log('getTableData err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
-        getAllDetails() { // 获取所有已添加材料
-            Core.Api.SupplierItem.list({
-                Material_id: this.MaterialId,
-            }).then(res => {
-                console.log("getAllDetails res", res)
-                let list = res.list
-                let items = [], materials = []
-                list.forEach(item => {
-                    if (item.target_type === TARGET_TYPE.ITEM) {
-                        items.push(item)
-                    } else if (item.target_type === TARGET_TYPE.MATERIAL) {
-                        materials.push(item)
-                    }
-                });
-                this.details.items = items
-                this.details.materials = materials
-                console.log('getAllDetails this.details:', this.details)
-            }).catch(err => {
-                console.log('getAllDetails err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
         // 移出材料
-        handleRemove(type, items) {
+        handleRemove(item) {
             let _this = this;
-            let name = items[0] ? `[${items[0].target.name}]` : ''
-            let title = items.length > 1 ? `${name}等${items.length}件材料` : `材料${name}`
-            let ids = items.map(item => item.id).join(',')
+            let name = item ? `[${item.name}]` : ''
             this.$confirm({
-                title: '确定要移出' + title + '吗？',
+                title: '确定要移出' + name + '吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
                     Core.Api.SupplierItem.delete({
-                        Material_id: _this.MaterialId,
-                        ids
+                        material_id: item.id,
+                        supplier_id: _this.supplierId
                     }).then(() => {
                         _this.$message.success('移出成功');
                         _this.getTableData();
@@ -210,31 +167,18 @@ export default {
         },
 
         // 添加材料
-        handleAddShow(type, ids, items) {
+        handleAddShow(ids, items) {
             console.log('handleAddShow items:', items)
-            let _items = items.map(item => {
-                return {
-                    target: item,
-                    target_type: type,
-                    target_id: item.id,
-                    comment: '',
-                }
-            })
-            this.addData = _items
-            this.addMode = true
+            this.addData = items
             console.log('handleAddShow this.addData:', this.addData)
+            this.handleAddConfirm(ids);
         },
-       handleAddConfirm() {
+        handleAddConfirm(ids) {
             console.log('this.addData:', this.addData)
-            let items = this.addData.map(item => ({
-                Material_id: this.MaterialId,
-                id: item.id,
-                comment: item.comment,
-                target_id: item.target_id,
-                target_type: item.target_type,
-            }))
-            console.log('handleAddConfirm items:', items)
-            Core.Api.SupplierItem.save(items).then(() => {
+            Core.Api.SupplierItem.batchSave({
+                material_ids: ids.join(','),
+                supplier_id: this.supplierId,
+            }).then(() => {
                 this.$message.success('添加成功')
                 this.getTableData()
             }).catch(err => {
