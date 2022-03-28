@@ -4,7 +4,7 @@
             <div class='title-area'>供应商详情</div>
             <div class="btns-area">
                 <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
-                <a-button type="danger" ghost @click="handleDelete(id)"><i class="icon i_close_c"/>取消</a-button>
+                <a-button type="danger" ghost @click="handleDelete(id)"><i class="icon i_close_c"/>删除</a-button>
             </div>
         </div>
         <div class="gray-panel">
@@ -57,7 +57,7 @@
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
                  <a-tab-pane key="MaterialList" tab="供应物料">
-                    <MaterialList :MaterialId="material_id" />
+                    <MaterialList :supplierId="id" :materialId="material_id"/>
                 </a-tab-pane>
             </a-tabs>
         </div>
@@ -78,6 +78,7 @@ export default {
         return {
             // 加载
             loading: false,
+            id: '',
             material_id: '',
             detail: {},
             activeKey: 'MaterialList',
