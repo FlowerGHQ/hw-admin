@@ -31,7 +31,7 @@
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">创建时间:</div>
-                    <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
+                    <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                 </a-col>
             </a-row>
             <div class="btn-area">
@@ -189,14 +189,7 @@ export default {
         handleSearch() {  // 搜索
             this.pageChange(1);
         },
-        handleTimeSearch(type, begin_time, end_time) { // 时间搜索
-            if (begin_time || end_time) {
-                this.searchForm.begin_time = begin_time
-                this.searchForm.end_time = end_time
-            }
-            this.pageChange(1);
-        },
-        handleOtherSearch(params) { // 大洲/国家 搜索
+        handleOtherSearch(params) { // 时间等组件化的搜索
             for (const key in params) {
                 this.searchForm[key] = params[key]
             }

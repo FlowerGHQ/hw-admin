@@ -19,7 +19,7 @@
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='16' class="search-item">
                     <div class="key">创建时间:</div>
-                    <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
+                    <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                 </a-col>
             </a-row>
             <div class="btn-area">
@@ -69,13 +69,17 @@
     </div>
 </div>
 </template>
+
 <script>
 import Core from '../../core';
+import TimeSearch from '@/components/common/TimeSearch.vue'
 
 const USER_TYPE = Core.Const.USER.TYPE;
 export default {
     name: 'SystemFileList',
-    components: {},
+    components: {
+        TimeSearch,
+    },
     props: {},
     data() {
         return {
@@ -143,9 +147,15 @@ export default {
         handleSearch() {  // 搜索
             this.pageChange(1);
         },
+        handleOtherSearch(params) { // 时间等组件化的搜索
+            for (const key in params) {
+                this.searchForm[key] = params[key]
+            }
+            this.pageChange(1);
+        },
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.create_time = []
+            this.$refs.TimeSearch.handleReset()
             this.pageChange(1);
         },
         getTableData() {  // 获取 表格 数据

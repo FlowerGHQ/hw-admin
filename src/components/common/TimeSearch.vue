@@ -11,9 +11,9 @@ export default {
     name: 'TimeSearch',
     components: {},
     props: {
-        type: {
-            type: String,
-            default: '',
+        keys: {
+            type: Array,
+            default: ['begin_time', 'end_time']
         }
     },
     emits: ['search'],
@@ -29,7 +29,11 @@ export default {
     mounted() {},
     methods: {
         handleSearch() {
-            this.$emit('search', this.type, ...this.createTime);
+            let obj = {}
+            obj[this.keys[0]] = this.createTime[0]
+            obj[this.keys[1]] = this.createTime[1]
+            console.log('handleSearch obj:', obj)
+            this.$emit('search', obj);
         },
         handleReset() {
             this.createTime = []

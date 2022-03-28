@@ -26,7 +26,7 @@
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">创建时间:</div>
-                    <div class="value"><TimeSearch @search="handleTimeSearch" ref='TimeSearch'/></div>
+                    <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                 </a-col>
             </a-row>
             <div class="btn-area">
@@ -109,7 +109,7 @@ export default {
                 { title: '联系人', dataIndex: 'contact_name',key: 'contact'},
                 { title: '联系人电话', dataIndex: 'contact_phone',key: 'contact' },
                 { title: '联系人邮箱', dataIndex: 'contact_email',key: 'contact' },
-               /* { title: '供应商信用代码', dataIndex: 'credit_code',key: 'contact' },
+                /* { title: '供应商信用代码', dataIndex: 'credit_code',key: 'contact' },
                 { title: '开户行账号', dataIndex: 'bank_card_no',key: 'contact' },
                 { title: '开户银行', dataIndex: 'deposit_bank',key: 'contact' },
                 { title: '开户行支行', dataIndex: 'account_bank',key: 'contact' },*/
@@ -169,10 +169,9 @@ export default {
         handleSearch() {  // 搜索
             this.pageChange(1);
         },
-        handleTimeSearch(type, begin_time, end_time) { // 时间搜索
-            if (begin_time || end_time) {
-                this.searchForm.begin_time = begin_time
-                this.searchForm.end_time = end_time
+        handleOtherSearch(params) { // 时间等组件化的搜索
+            for (const key in params) {
+                this.searchForm[key] = params[key]
             }
             this.pageChange(1);
         },

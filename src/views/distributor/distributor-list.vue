@@ -177,7 +177,7 @@ export default {
         handleSearch() {  // 搜索
             this.pageChange(1);
         },
-        handleOtherSearch(params) { // 大洲/国家 搜索
+        handleOtherSearch(params) { // 时间等组件化的搜索
             for (const key in params) {
                 this.searchForm[key] = params[key]
             }
