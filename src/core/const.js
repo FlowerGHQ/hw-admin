@@ -603,19 +603,28 @@ let Const = {
             1: '入库',
             2: '出库'
         },
-        STATUS: { //出入库单审核状态
+        STATUS: { //出入库单状态
             INIT: 0, //初始化
+            WAIT_AUDIT: 10, //待审核
+            AUDIT_PASS: 20, //审核通过
             CLOSE: 40, //已完成
+            AUDIT_REFUSE: -10,//审核失败
             CANCEL: -20, // 取消
         },
         STATUS_MAP: {
             '0': '待提交',
+            '10': '待审核',
+            '20': '审核通过',
             '40': '已完成',
+            '-10': '审核未通过',
             '-20': '已取消'
         },
         STATUS_COLOR_MAP: {
-            '0': 'yellow',
+            '0': 'orange',
+            '10': 'yellow',
+            '20': 'blue',
             '40': 'green',
+            '-10': 'red',
             '-20': 'grey'
         },
         STATUS_LIST: [ //出入库单审核
