@@ -8,6 +8,9 @@
                 <!-- <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button> -->
                 <a-button type="danger" ghost @click="handleCancel()"> <i class="icon i_close_c"/>取消</a-button>
             </template>
+            <template v-if="detail.status === STATUS.INIT">
+                <AuditHandle btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"> <i class="icon i_audit"/>审核</AuditHandle>
+            </template>
         </div>
     </div>
     <div class="gray-panel info">
@@ -294,6 +297,8 @@ import Core from '../../core';
 import ItemSelect from '../../components/popup-btn/ItemSelect.vue'
 import EntitySelect from '../../components/popup-btn/EntitySelect.vue'
 import MaterialSelect from '../../components/popup-btn/MaterialSelect.vue'
+import AuditHandle from '../../components/popup-btn/AuditHandle.vue'
+
 const STOCK_RECORD = Core.Const.STOCK_RECORD
 
 const TYPE = STOCK_RECORD.TYPE
@@ -306,7 +311,8 @@ export default {
     components: {
         ItemSelect,
         EntitySelect,
-        MaterialSelect
+        MaterialSelect,
+        AuditHandle
     },
     props: {},
     data() {

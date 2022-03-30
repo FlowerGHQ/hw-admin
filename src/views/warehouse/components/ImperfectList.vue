@@ -22,6 +22,9 @@
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
+                        <template v-if="column.dataIndex === 'operation'">
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
+                        </template>
                     </template>
                 </a-table>
             </div>
@@ -86,6 +89,7 @@ export default {
                 {title: '故障件实例', dataIndex: 'entity_uid', key: 'item'},
                 {title: '审核人', dataIndex: 'audit_user_name', key: 'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
+                {title: '操作', dataIndex: 'operation'},
             ],
         };
     },
@@ -124,6 +128,23 @@ export default {
                 console.log('getTableData err:', err)
             }).finally(() => {
                 this.loading = false;
+            });
+        },
+        handleDelete(id) {
+            let _this = this;
+            this.$confirm({
+                title: '确定要删除该故障件吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.FaultEntity.delete({id}).then(() => {
+                        _this.$message.success('删除成功');
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
             });
         },
     }
