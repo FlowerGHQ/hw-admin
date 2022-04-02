@@ -1,0 +1,1885 @@
+[
+    {
+        "id": "1",
+        "country_id": "2",
+        "name": "",
+        "name_en": "",
+        "code": "AFG000"
+    },
+    {
+        "id": "2",
+        "country_id": "3",
+        "name": "",
+        "name_en": "",
+        "code": "AGO000"
+    },
+    {
+        "id": "3",
+        "country_id": "6",
+        "name": "",
+        "name_en": "",
+        "code": "ALB000"
+    },
+    {
+        "id": "4",
+        "country_id": "7",
+        "name": "",
+        "name_en": "",
+        "code": "AND000"
+    },
+    {
+        "id": "5",
+        "country_id": "9",
+        "name": "",
+        "name_en": "",
+        "code": "ARE000"
+    },
+    {
+        "id": "6",
+        "country_id": "10",
+        "name": "",
+        "name_en": "",
+        "code": "ARG000"
+    },
+    {
+        "id": "7",
+        "country_id": "11",
+        "name": "",
+        "name_en": "",
+        "code": "ARM000"
+    },
+    {
+        "id": "8",
+        "country_id": "13",
+        "name": "",
+        "name_en": "",
+        "code": "ASM000"
+    },
+    {
+        "id": "9",
+        "country_id": "17",
+        "name": "北部地区",
+        "name_en": "Northern Territory",
+        "code": "AUS0NT"
+    },
+    {
+        "id": "10",
+        "country_id": "17",
+        "name": "南澳大利亚",
+        "name_en": "South Australia",
+        "code": "AUS0SA"
+    },
+    {
+        "id": "11",
+        "country_id": "17",
+        "name": "西澳大利亚",
+        "name_en": "Western Australia",
+        "code": "AUS0WA"
+    },
+    {
+        "id": "12",
+        "country_id": "17",
+        "name": "堪培拉",
+        "name_en": "Canberra",
+        "code": "AUSACT"
+    },
+    {
+        "id": "13",
+        "country_id": "17",
+        "name": "新南威尔士",
+        "name_en": "New South Wales",
+        "code": "AUSNSW"
+    },
+    {
+        "id": "14",
+        "country_id": "17",
+        "name": "昆士兰",
+        "name_en": "Queensland",
+        "code": "AUSQLD"
+    },
+    {
+        "id": "15",
+        "country_id": "17",
+        "name": "塔斯马尼亚",
+        "name_en": "Tasmania",
+        "code": "AUSTAS"
+    },
+    {
+        "id": "16",
+        "country_id": "17",
+        "name": "维多利亚",
+        "name_en": "Victoria",
+        "code": "AUSVIC"
+    },
+    {
+        "id": "17",
+        "country_id": "18",
+        "name": "",
+        "name_en": "",
+        "code": "AUT000"
+    },
+    {
+        "id": "18",
+        "country_id": "19",
+        "name": "",
+        "name_en": "",
+        "code": "AZE000"
+    },
+    {
+        "id": "19",
+        "country_id": "20",
+        "name": "",
+        "name_en": "",
+        "code": "BDI000"
+    },
+    {
+        "id": "20",
+        "country_id": "21",
+        "name": "",
+        "name_en": "",
+        "code": "BEL000"
+    },
+    {
+        "id": "21",
+        "country_id": "22",
+        "name": "",
+        "name_en": "",
+        "code": "BEN000"
+    },
+    {
+        "id": "22",
+        "country_id": "23",
+        "name": "",
+        "name_en": "",
+        "code": "BFA000"
+    },
+    {
+        "id": "23",
+        "country_id": "24",
+        "name": "",
+        "name_en": "",
+        "code": "BGD000"
+    },
+    {
+        "id": "24",
+        "country_id": "25",
+        "name": "",
+        "name_en": "",
+        "code": "BGR000"
+    },
+    {
+        "id": "25",
+        "country_id": "26",
+        "name": "",
+        "name_en": "",
+        "code": "BHR000"
+    },
+    {
+        "id": "26",
+        "country_id": "28",
+        "name": "",
+        "name_en": "",
+        "code": "BIH000"
+    },
+    {
+        "id": "27",
+        "country_id": "29",
+        "name": "",
+        "name_en": "",
+        "code": "BLR000"
+    },
+    {
+        "id": "28",
+        "country_id": "30",
+        "name": "",
+        "name_en": "",
+        "code": "BLZ000"
+    },
+    {
+        "id": "29",
+        "country_id": "32",
+        "name": "",
+        "name_en": "",
+        "code": "BOL000"
+    },
+    {
+        "id": "30",
+        "country_id": "33",
+        "name": "",
+        "name_en": "",
+        "code": "BRA000"
+    },
+    {
+        "id": "31",
+        "country_id": "39",
+        "name": "",
+        "name_en": "",
+        "code": "CAF000"
+    },
+    {
+        "id": "32",
+        "country_id": "40",
+        "name": "",
+        "name_en": "",
+        "code": "CAN000"
+    },
+    {
+        "id": "33",
+        "country_id": "42",
+        "name": "",
+        "name_en": "",
+        "code": "CHE000"
+    },
+    {
+        "id": "34",
+        "country_id": "43",
+        "name": "",
+        "name_en": "",
+        "code": "CHL000"
+    },
+    {
+        "id": "35",
+        "country_id": "44",
+        "name": "北京",
+        "name_en": "Beijing",
+        "code": "CHN011"
+    },
+    {
+        "id": "36",
+        "country_id": "44",
+        "name": "天津",
+        "name_en": "Tianjin",
+        "code": "CHN012"
+    },
+    {
+        "id": "37",
+        "country_id": "44",
+        "name": "河北",
+        "name_en": "Hebei",
+        "code": "CHN013"
+    },
+    {
+        "id": "38",
+        "country_id": "44",
+        "name": "山西",
+        "name_en": "Shanxi",
+        "code": "CHN014"
+    },
+    {
+        "id": "39",
+        "country_id": "44",
+        "name": "内蒙古",
+        "name_en": "Inner Mongolia",
+        "code": "CHN015"
+    },
+    {
+        "id": "40",
+        "country_id": "44",
+        "name": "辽宁",
+        "name_en": "Liaoning",
+        "code": "CHN021"
+    },
+    {
+        "id": "41",
+        "country_id": "44",
+        "name": "吉林",
+        "name_en": "Jilin",
+        "code": "CHN022"
+    },
+    {
+        "id": "42",
+        "country_id": "44",
+        "name": "黑龙江",
+        "name_en": "Heilongjiang",
+        "code": "CHN023"
+    },
+    {
+        "id": "43",
+        "country_id": "44",
+        "name": "上海",
+        "name_en": "Shanghai",
+        "code": "CHN031"
+    },
+    {
+        "id": "44",
+        "country_id": "44",
+        "name": "江苏",
+        "name_en": "Jiangsu",
+        "code": "CHN032"
+    },
+    {
+        "id": "45",
+        "country_id": "44",
+        "name": "浙江",
+        "name_en": "Zhejiang",
+        "code": "CHN033"
+    },
+    {
+        "id": "46",
+        "country_id": "44",
+        "name": "安徽",
+        "name_en": "Anhui",
+        "code": "CHN034"
+    },
+    {
+        "id": "47",
+        "country_id": "44",
+        "name": "福建",
+        "name_en": "Fujian",
+        "code": "CHN035"
+    },
+    {
+        "id": "48",
+        "country_id": "44",
+        "name": "江西",
+        "name_en": "Jiangxi",
+        "code": "CHN036"
+    },
+    {
+        "id": "49",
+        "country_id": "44",
+        "name": "山东",
+        "name_en": "Shandong",
+        "code": "CHN037"
+    },
+    {
+        "id": "50",
+        "country_id": "44",
+        "name": "河南",
+        "name_en": "Henan",
+        "code": "CHN041"
+    },
+    {
+        "id": "51",
+        "country_id": "44",
+        "name": "湖北",
+        "name_en": "Hubei",
+        "code": "CHN042"
+    },
+    {
+        "id": "52",
+        "country_id": "44",
+        "name": "湖南",
+        "name_en": "Hunan",
+        "code": "CHN043"
+    },
+    {
+        "id": "53",
+        "country_id": "44",
+        "name": "广东",
+        "name_en": "Guangdong",
+        "code": "CHN044"
+    },
+    {
+        "id": "54",
+        "country_id": "44",
+        "name": "广西",
+        "name_en": "Guangxi",
+        "code": "CHN045"
+    },
+    {
+        "id": "55",
+        "country_id": "44",
+        "name": "海南",
+        "name_en": "Hainan",
+        "code": "CHN046"
+    },
+    {
+        "id": "56",
+        "country_id": "44",
+        "name": "重庆",
+        "name_en": "Chongqing",
+        "code": "CHN050"
+    },
+    {
+        "id": "57",
+        "country_id": "44",
+        "name": "四川",
+        "name_en": "Sichuan",
+        "code": "CHN051"
+    },
+    {
+        "id": "58",
+        "country_id": "44",
+        "name": "贵州",
+        "name_en": "Guizhou",
+        "code": "CHN052"
+    },
+    {
+        "id": "59",
+        "country_id": "44",
+        "name": "云南",
+        "name_en": "Yunnan",
+        "code": "CHN053"
+    },
+    {
+        "id": "60",
+        "country_id": "44",
+        "name": "西藏",
+        "name_en": "Tibet",
+        "code": "CHN054"
+    },
+    {
+        "id": "61",
+        "country_id": "44",
+        "name": "陕西",
+        "name_en": "Shaanxi",
+        "code": "CHN061"
+    },
+    {
+        "id": "62",
+        "country_id": "44",
+        "name": "甘肃",
+        "name_en": "Gansu",
+        "code": "CHN062"
+    },
+    {
+        "id": "63",
+        "country_id": "44",
+        "name": "青海",
+        "name_en": "Qinghai",
+        "code": "CHN063"
+    },
+    {
+        "id": "64",
+        "country_id": "44",
+        "name": "宁夏",
+        "name_en": "Ningxia",
+        "code": "CHN064"
+    },
+    {
+        "id": "65",
+        "country_id": "44",
+        "name": "新疆",
+        "name_en": "Xinjiang",
+        "code": "CHN065"
+    },
+    {
+        "id": "66",
+        "country_id": "44",
+        "name": "台湾",
+        "name_en": "Taiwan",
+        "code": "CHN071"
+    },
+    {
+        "id": "67",
+        "country_id": "44",
+        "name": "香港",
+        "name_en": "Hongkong",
+        "code": "CHN081"
+    },
+    {
+        "id": "68",
+        "country_id": "44",
+        "name": "澳门",
+        "name_en": "Macao",
+        "code": "CHN082"
+    },
+    {
+        "id": "69",
+        "country_id": "45",
+        "name": "",
+        "name_en": "",
+        "code": "CIV000"
+    },
+    {
+        "id": "70",
+        "country_id": "46",
+        "name": "",
+        "name_en": "",
+        "code": "CMR000"
+    },
+    {
+        "id": "71",
+        "country_id": "50",
+        "name": "",
+        "name_en": "",
+        "code": "COL000"
+    },
+    {
+        "id": "72",
+        "country_id": "52",
+        "name": "",
+        "name_en": "",
+        "code": "CPV000"
+    },
+    {
+        "id": "73",
+        "country_id": "53",
+        "name": "",
+        "name_en": "",
+        "code": "CRI000"
+    },
+    {
+        "id": "74",
+        "country_id": "54",
+        "name": "",
+        "name_en": "",
+        "code": "CUB000"
+    },
+    {
+        "id": "75",
+        "country_id": "57",
+        "name": "",
+        "name_en": "",
+        "code": "CYP000"
+    },
+    {
+        "id": "76",
+        "country_id": "58",
+        "name": "",
+        "name_en": "",
+        "code": "CZE000"
+    },
+    {
+        "id": "77",
+        "country_id": "59",
+        "name": "",
+        "name_en": "",
+        "code": "DEU000"
+    },
+    {
+        "id": "78",
+        "country_id": "60",
+        "name": "",
+        "name_en": "",
+        "code": "DJI000"
+    },
+    {
+        "id": "79",
+        "country_id": "62",
+        "name": "",
+        "name_en": "",
+        "code": "DNK000"
+    },
+    {
+        "id": "80",
+        "country_id": "64",
+        "name": "",
+        "name_en": "",
+        "code": "DZA000"
+    },
+    {
+        "id": "81",
+        "country_id": "65",
+        "name": "",
+        "name_en": "",
+        "code": "ECU000"
+    },
+    {
+        "id": "82",
+        "country_id": "66",
+        "name": "",
+        "name_en": "",
+        "code": "EGY000"
+    },
+    {
+        "id": "83",
+        "country_id": "67",
+        "name": "",
+        "name_en": "",
+        "code": "ERI000"
+    },
+    {
+        "id": "84",
+        "country_id": "68",
+        "name": "",
+        "name_en": "",
+        "code": "ESP000"
+    },
+    {
+        "id": "85",
+        "country_id": "69",
+        "name": "",
+        "name_en": "",
+        "code": "EST000"
+    },
+    {
+        "id": "86",
+        "country_id": "70",
+        "name": "",
+        "name_en": "",
+        "code": "ETH000"
+    },
+    {
+        "id": "87",
+        "country_id": "71",
+        "name": "",
+        "name_en": "",
+        "code": "FIN000"
+    },
+    {
+        "id": "88",
+        "country_id": "74",
+        "name": "",
+        "name_en": "",
+        "code": "FRA000"
+    },
+    {
+        "id": "89",
+        "country_id": "77",
+        "name": "",
+        "name_en": "",
+        "code": "GAB000"
+    },
+    {
+        "id": "90",
+        "country_id": "78",
+        "name": "英格兰",
+        "name_en": "England",
+        "code": "GBRENG"
+    },
+    {
+        "id": "91",
+        "country_id": "78",
+        "name": "北爱尔兰",
+        "name_en": "Northern Ireland",
+        "code": "GBRNIR"
+    },
+    {
+        "id": "92",
+        "country_id": "78",
+        "name": "苏格兰",
+        "name_en": "Scotland",
+        "code": "GBRSCT"
+    },
+    {
+        "id": "93",
+        "country_id": "78",
+        "name": "威尔士",
+        "name_en": "Wales",
+        "code": "GBRWLS"
+    },
+    {
+        "id": "94",
+        "country_id": "81",
+        "name": "",
+        "name_en": "",
+        "code": "GHA000"
+    },
+    {
+        "id": "95",
+        "country_id": "83",
+        "name": "",
+        "name_en": "",
+        "code": "GIN000"
+    },
+    {
+        "id": "96",
+        "country_id": "87",
+        "name": "",
+        "name_en": "",
+        "code": "GRC000"
+    },
+    {
+        "id": "97",
+        "country_id": "90",
+        "name": "",
+        "name_en": "",
+        "code": "GTM000"
+    },
+    {
+        "id": "98",
+        "country_id": "93",
+        "name": "",
+        "name_en": "",
+        "code": "GUY000"
+    },
+    {
+        "id": "99",
+        "country_id": "95",
+        "name": "",
+        "name_en": "",
+        "code": "HND000"
+    },
+    {
+        "id": "100",
+        "country_id": "96",
+        "name": "",
+        "name_en": "",
+        "code": "HRV000"
+    },
+    {
+        "id": "101",
+        "country_id": "98",
+        "name": "",
+        "name_en": "",
+        "code": "HUN000"
+    },
+    {
+        "id": "102",
+        "country_id": "99",
+        "name": "",
+        "name_en": "",
+        "code": "IDN000"
+    },
+    {
+        "id": "103",
+        "country_id": "101",
+        "name": "",
+        "name_en": "",
+        "code": "IND000"
+    },
+    {
+        "id": "104",
+        "country_id": "103",
+        "name": "",
+        "name_en": "",
+        "code": "IRL000"
+    },
+    {
+        "id": "105",
+        "country_id": "107",
+        "name": "",
+        "name_en": "",
+        "code": "ISR000"
+    },
+    {
+        "id": "106",
+        "country_id": "108",
+        "name": "",
+        "name_en": "",
+        "code": "ITA000"
+    },
+    {
+        "id": "107",
+        "country_id": "109",
+        "name": "",
+        "name_en": "",
+        "code": "JAM000"
+    },
+    {
+        "id": "108",
+        "country_id": "111",
+        "name": "",
+        "name_en": "",
+        "code": "JOR000"
+    },
+    {
+        "id": "109",
+        "country_id": "112",
+        "name": "",
+        "name_en": "",
+        "code": "JPN000"
+    },
+    {
+        "id": "110",
+        "country_id": "113",
+        "name": "",
+        "name_en": "",
+        "code": "KAZ000"
+    },
+    {
+        "id": "111",
+        "country_id": "114",
+        "name": "",
+        "name_en": "",
+        "code": "KEN000"
+    },
+    {
+        "id": "112",
+        "country_id": "115",
+        "name": "",
+        "name_en": "",
+        "code": "KGZ000"
+    },
+    {
+        "id": "113",
+        "country_id": "116",
+        "name": "",
+        "name_en": "",
+        "code": "KHM000"
+    },
+    {
+        "id": "114",
+        "country_id": "117",
+        "name": "",
+        "name_en": "",
+        "code": "KIR000"
+    },
+    {
+        "id": "115",
+        "country_id": "119",
+        "name": "首尔",
+        "name_en": "",
+        "code": "KOR011"
+    },
+    {
+        "id": "116",
+        "country_id": "119",
+        "name": "釜山",
+        "name_en": "",
+        "code": "KOR026"
+    },
+    {
+        "id": "117",
+        "country_id": "119",
+        "name": "大邱",
+        "name_en": "Daegu",
+        "code": "KOR027"
+    },
+    {
+        "id": "118",
+        "country_id": "119",
+        "name": "仁川",
+        "name_en": "",
+        "code": "KOR028"
+    },
+    {
+        "id": "119",
+        "country_id": "119",
+        "name": "光州",
+        "name_en": "",
+        "code": "KOR029"
+    },
+    {
+        "id": "120",
+        "country_id": "119",
+        "name": "大田",
+        "name_en": "",
+        "code": "KOR030"
+    },
+    {
+        "id": "121",
+        "country_id": "119",
+        "name": "蔚山",
+        "name_en": "",
+        "code": "KOR031"
+    },
+    {
+        "id": "122",
+        "country_id": "119",
+        "name": "济州特别自治道",
+        "name_en": "",
+        "code": "KOR041"
+    },
+    {
+        "id": "123",
+        "country_id": "119",
+        "name": "江原道",
+        "name_en": "Gangwon-do",
+        "code": "KOR042"
+    },
+    {
+        "id": "124",
+        "country_id": "119",
+        "name": "庆尚北道",
+        "name_en": "Chungcheongbuk-do",
+        "code": "KOR043"
+    },
+    {
+        "id": "125",
+        "country_id": "119",
+        "name": "庆尚南道",
+        "name_en": "Chungcheongnam-do",
+        "code": "KOR044"
+    },
+    {
+        "id": "126",
+        "country_id": "119",
+        "name": "忠清北道",
+        "name_en": "Jeollabuk-do",
+        "code": "KOR045"
+    },
+    {
+        "id": "127",
+        "country_id": "119",
+        "name": "忠清南道",
+        "name_en": "Jeollanam-do",
+        "code": "KOR046"
+    },
+    {
+        "id": "128",
+        "country_id": "119",
+        "name": "全罗北道",
+        "name_en": "Gyeongsangbuk-do",
+        "code": "KOR047"
+    },
+    {
+        "id": "129",
+        "country_id": "119",
+        "name": "全罗南道",
+        "name_en": "Gyeongsangnam-do",
+        "code": "KOR048"
+    },
+    {
+        "id": "130",
+        "country_id": "119",
+        "name": "京畿道",
+        "name_en": "Gyeonggi-do",
+        "code": "KOR049"
+    },
+    {
+        "id": "131",
+        "country_id": "121",
+        "name": "",
+        "name_en": "",
+        "code": "LAO000"
+    },
+    {
+        "id": "132",
+        "country_id": "122",
+        "name": "",
+        "name_en": "",
+        "code": "LBN000"
+    },
+    {
+        "id": "133",
+        "country_id": "123",
+        "name": "",
+        "name_en": "",
+        "code": "LBR000"
+    },
+    {
+        "id": "134",
+        "country_id": "127",
+        "name": "",
+        "name_en": "",
+        "code": "LKA000"
+    },
+    {
+        "id": "135",
+        "country_id": "128",
+        "name": "",
+        "name_en": "",
+        "code": "LSO000"
+    },
+    {
+        "id": "136",
+        "country_id": "129",
+        "name": "",
+        "name_en": "",
+        "code": "LTU000"
+    },
+    {
+        "id": "137",
+        "country_id": "130",
+        "name": "",
+        "name_en": "",
+        "code": "LUX000"
+    },
+    {
+        "id": "138",
+        "country_id": "131",
+        "name": "",
+        "name_en": "",
+        "code": "LVA000"
+    },
+    {
+        "id": "139",
+        "country_id": "132",
+        "name": "",
+        "name_en": "",
+        "code": "MAR000"
+    },
+    {
+        "id": "140",
+        "country_id": "135",
+        "name": "",
+        "name_en": "",
+        "code": "MDG000"
+    },
+    {
+        "id": "141",
+        "country_id": "136",
+        "name": "",
+        "name_en": "",
+        "code": "MDV000"
+    },
+    {
+        "id": "142",
+        "country_id": "137",
+        "name": "",
+        "name_en": "",
+        "code": "MEX000"
+    },
+    {
+        "id": "143",
+        "country_id": "140",
+        "name": "",
+        "name_en": "",
+        "code": "MLI000"
+    },
+    {
+        "id": "144",
+        "country_id": "142",
+        "name": "",
+        "name_en": "",
+        "code": "MMR000"
+    },
+    {
+        "id": "145",
+        "country_id": "143",
+        "name": "",
+        "name_en": "",
+        "code": "MNG000"
+    },
+    {
+        "id": "146",
+        "country_id": "146",
+        "name": "",
+        "name_en": "",
+        "code": "MRT000"
+    },
+    {
+        "id": "147",
+        "country_id": "150",
+        "name": "",
+        "name_en": "",
+        "code": "MWI000"
+    },
+    {
+        "id": "148",
+        "country_id": "151",
+        "name": "柔佛",
+        "name_en": "Johor",
+        "code": "MYS0JH"
+    },
+    {
+        "id": "149",
+        "country_id": "151",
+        "name": "吉打",
+        "name_en": "Kedah",
+        "code": "MYS0KD"
+    },
+    {
+        "id": "150",
+        "country_id": "151",
+        "name": "吉隆坡",
+        "name_en": "Kuala Lumpur",
+        "code": "MYS0KL"
+    },
+    {
+        "id": "151",
+        "country_id": "151",
+        "name": "吉兰丹",
+        "name_en": "Kelantan",
+        "code": "MYS0KN"
+    },
+    {
+        "id": "152",
+        "country_id": "151",
+        "name": "纳闽",
+        "name_en": "Labuan",
+        "code": "MYS0LB"
+    },
+    {
+        "id": "153",
+        "country_id": "151",
+        "name": "马六甲",
+        "name_en": "Malacca",
+        "code": "MYS0ML"
+    },
+    {
+        "id": "154",
+        "country_id": "151",
+        "name": "森美兰",
+        "name_en": "Negeri Sembilan",
+        "code": "MYS0NS"
+    },
+    {
+        "id": "155",
+        "country_id": "151",
+        "name": "彭亨",
+        "name_en": "Pahang",
+        "code": "MYS0PG"
+    },
+    {
+        "id": "156",
+        "country_id": "151",
+        "name": "槟榔屿",
+        "name_en": "Pulau Pinang",
+        "code": "MYS0PH"
+    },
+    {
+        "id": "157",
+        "country_id": "151",
+        "name": "霹雳",
+        "name_en": "Perak",
+        "code": "MYS0PK"
+    },
+    {
+        "id": "158",
+        "country_id": "151",
+        "name": "玻璃市",
+        "name_en": "Perlis",
+        "code": "MYS0PS"
+    },
+    {
+        "id": "159",
+        "country_id": "151",
+        "name": "沙巴",
+        "name_en": "Sabah",
+        "code": "MYS0SB"
+    },
+    {
+        "id": "160",
+        "country_id": "151",
+        "name": "雪兰莪",
+        "name_en": "Selangor",
+        "code": "MYS0SL"
+    },
+    {
+        "id": "161",
+        "country_id": "151",
+        "name": "沙捞越",
+        "name_en": "Sarawak",
+        "code": "MYS0SR"
+    },
+    {
+        "id": "162",
+        "country_id": "151",
+        "name": "丁加奴",
+        "name_en": "Terengganu",
+        "code": "MYS0TR"
+    },
+    {
+        "id": "163",
+        "country_id": "153",
+        "name": "",
+        "name_en": "",
+        "code": "NAM000"
+    },
+    {
+        "id": "164",
+        "country_id": "155",
+        "name": "",
+        "name_en": "",
+        "code": "NER000"
+    },
+    {
+        "id": "165",
+        "country_id": "157",
+        "name": "",
+        "name_en": "",
+        "code": "NGA000"
+    },
+    {
+        "id": "166",
+        "country_id": "158",
+        "name": "",
+        "name_en": "",
+        "code": "NIC000"
+    },
+    {
+        "id": "167",
+        "country_id": "160",
+        "name": "",
+        "name_en": "",
+        "code": "NLD000"
+    },
+    {
+        "id": "168",
+        "country_id": "161",
+        "name": "",
+        "name_en": "",
+        "code": "NOR000"
+    },
+    {
+        "id": "169",
+        "country_id": "162",
+        "name": "",
+        "name_en": "",
+        "code": "NPL000"
+    },
+    {
+        "id": "170",
+        "country_id": "164",
+        "name": "",
+        "name_en": "",
+        "code": "NZL000"
+    },
+    {
+        "id": "171",
+        "country_id": "165",
+        "name": "",
+        "name_en": "",
+        "code": "OMN000"
+    },
+    {
+        "id": "172",
+        "country_id": "166",
+        "name": "",
+        "name_en": "",
+        "code": "PAK000"
+    },
+    {
+        "id": "173",
+        "country_id": "169",
+        "name": "",
+        "name_en": "",
+        "code": "PER000"
+    },
+    {
+        "id": "174",
+        "country_id": "170",
+        "name": "",
+        "name_en": "",
+        "code": "PHL000"
+    },
+    {
+        "id": "175",
+        "country_id": "172",
+        "name": "",
+        "name_en": "",
+        "code": "PNG000"
+    },
+    {
+        "id": "176",
+        "country_id": "173",
+        "name": "",
+        "name_en": "",
+        "code": "POL000"
+    },
+    {
+        "id": "177",
+        "country_id": "175",
+        "name": "",
+        "name_en": "",
+        "code": "PRK000"
+    },
+    {
+        "id": "178",
+        "country_id": "176",
+        "name": "",
+        "name_en": "",
+        "code": "PRT000"
+    },
+    {
+        "id": "179",
+        "country_id": "177",
+        "name": "",
+        "name_en": "",
+        "code": "PRY000"
+    },
+    {
+        "id": "180",
+        "country_id": "178",
+        "name": "",
+        "name_en": "",
+        "code": "PSE000"
+    },
+    {
+        "id": "181",
+        "country_id": "180",
+        "name": "",
+        "name_en": "",
+        "code": "QAT000"
+    },
+    {
+        "id": "182",
+        "country_id": "182",
+        "name": "",
+        "name_en": "",
+        "code": "ROU000"
+    },
+    {
+        "id": "183",
+        "country_id": "183",
+        "name": "",
+        "name_en": "",
+        "code": "RUS000"
+    },
+    {
+        "id": "184",
+        "country_id": "184",
+        "name": "",
+        "name_en": "",
+        "code": "RWA000"
+    },
+    {
+        "id": "185",
+        "country_id": "185",
+        "name": "",
+        "name_en": "",
+        "code": "SAU000"
+    },
+    {
+        "id": "186",
+        "country_id": "186",
+        "name": "",
+        "name_en": "",
+        "code": "SCG000"
+    },
+    {
+        "id": "187",
+        "country_id": "187",
+        "name": "",
+        "name_en": "",
+        "code": "SDN000"
+    },
+    {
+        "id": "188",
+        "country_id": "188",
+        "name": "",
+        "name_en": "",
+        "code": "SEN000"
+    },
+    {
+        "id": "189",
+        "country_id": "193",
+        "name": "",
+        "name_en": "",
+        "code": "SLB000"
+    },
+    {
+        "id": "190",
+        "country_id": "194",
+        "name": "",
+        "name_en": "",
+        "code": "SLE000"
+    },
+    {
+        "id": "191",
+        "country_id": "195",
+        "name": "",
+        "name_en": "",
+        "code": "SLV000"
+    },
+    {
+        "id": "192",
+        "country_id": "200",
+        "name": "",
+        "name_en": "",
+        "code": "SUR000"
+    },
+    {
+        "id": "193",
+        "country_id": "201",
+        "name": "",
+        "name_en": "",
+        "code": "SVK000"
+    },
+    {
+        "id": "194",
+        "country_id": "202",
+        "name": "",
+        "name_en": "",
+        "code": "SVN000"
+    },
+    {
+        "id": "195",
+        "country_id": "203",
+        "name": "",
+        "name_en": "",
+        "code": "SWE000"
+    },
+    {
+        "id": "196",
+        "country_id": "206",
+        "name": "",
+        "name_en": "",
+        "code": "SYR000"
+    },
+    {
+        "id": "197",
+        "country_id": "210",
+        "name": "",
+        "name_en": "",
+        "code": "TGO000"
+    },
+    {
+        "id": "198",
+        "country_id": "211",
+        "name": "",
+        "name_en": "",
+        "code": "THA000"
+    },
+    {
+        "id": "199",
+        "country_id": "212",
+        "name": "",
+        "name_en": "",
+        "code": "TJK000"
+    },
+    {
+        "id": "200",
+        "country_id": "214",
+        "name": "",
+        "name_en": "",
+        "code": "TKM000"
+    },
+    {
+        "id": "201",
+        "country_id": "215",
+        "name": "",
+        "name_en": "",
+        "code": "TLS000"
+    },
+    {
+        "id": "202",
+        "country_id": "216",
+        "name": "",
+        "name_en": "",
+        "code": "TON000"
+    },
+    {
+        "id": "203",
+        "country_id": "218",
+        "name": "",
+        "name_en": "",
+        "code": "TUN000"
+    },
+    {
+        "id": "204",
+        "country_id": "219",
+        "name": "",
+        "name_en": "",
+        "code": "TUR000"
+    },
+    {
+        "id": "205",
+        "country_id": "221",
+        "name": "",
+        "name_en": "",
+        "code": "TZA000"
+    },
+    {
+        "id": "206",
+        "country_id": "222",
+        "name": "",
+        "name_en": "",
+        "code": "UGA000"
+    },
+    {
+        "id": "207",
+        "country_id": "223",
+        "name": "",
+        "name_en": "",
+        "code": "UKR000"
+    },
+    {
+        "id": "208",
+        "country_id": "225",
+        "name": "",
+        "name_en": "",
+        "code": "URY000"
+    },
+    {
+        "id": "209",
+        "country_id": "226",
+        "name": "阿拉斯加",
+        "name_en": "Alaska",
+        "code": "USA0AK"
+    },
+    {
+        "id": "210",
+        "country_id": "226",
+        "name": "阿拉巴马",
+        "name_en": "Alabama",
+        "code": "USA0AL"
+    },
+    {
+        "id": "211",
+        "country_id": "226",
+        "name": "阿肯色",
+        "name_en": "Arkansas",
+        "code": "USA0AR"
+    },
+    {
+        "id": "212",
+        "country_id": "226",
+        "name": "亚利桑那",
+        "name_en": "Arizona",
+        "code": "USA0AZ"
+    },
+    {
+        "id": "213",
+        "country_id": "226",
+        "name": "加利福尼亚",
+        "name_en": "California",
+        "code": "USA0CA"
+    },
+    {
+        "id": "214",
+        "country_id": "226",
+        "name": "科罗拉多",
+        "name_en": "Colorado",
+        "code": "USA0CO"
+    },
+    {
+        "id": "215",
+        "country_id": "226",
+        "name": "康涅狄格",
+        "name_en": "Connecticut",
+        "code": "USA0CT"
+    },
+    {
+        "id": "216",
+        "country_id": "226",
+        "name": "哥伦比亚特区",
+        "name_en": "District of Columbia",
+        "code": "USA0DC"
+    },
+    {
+        "id": "217",
+        "country_id": "226",
+        "name": "特拉华",
+        "name_en": "Delaware",
+        "code": "USA0DE"
+    },
+    {
+        "id": "218",
+        "country_id": "226",
+        "name": "佛罗里达",
+        "name_en": "Florida",
+        "code": "USA0FL"
+    },
+    {
+        "id": "219",
+        "country_id": "226",
+        "name": "佐治亚",
+        "name_en": "Georgia",
+        "code": "USA0GA"
+    },
+    {
+        "id": "220",
+        "country_id": "226",
+        "name": "夏威夷",
+        "name_en": "Hawaii",
+        "code": "USA0HI"
+    },
+    {
+        "id": "221",
+        "country_id": "226",
+        "name": "爱荷华",
+        "name_en": "Iowa",
+        "code": "USA0IA"
+    },
+    {
+        "id": "222",
+        "country_id": "226",
+        "name": "爱达荷",
+        "name_en": "Idaho",
+        "code": "USA0ID"
+    },
+    {
+        "id": "223",
+        "country_id": "226",
+        "name": "伊利诺斯",
+        "name_en": "Illinois",
+        "code": "USA0IL"
+    },
+    {
+        "id": "224",
+        "country_id": "226",
+        "name": "印第安那",
+        "name_en": "Indiana",
+        "code": "USA0IN"
+    },
+    {
+        "id": "225",
+        "country_id": "226",
+        "name": "堪萨斯",
+        "name_en": "Kansas",
+        "code": "USA0KS"
+    },
+    {
+        "id": "226",
+        "country_id": "226",
+        "name": "肯塔基",
+        "name_en": "Kentucky",
+        "code": "USA0KY"
+    },
+    {
+        "id": "227",
+        "country_id": "226",
+        "name": "路易斯安那",
+        "name_en": "Louisiana",
+        "code": "USA0LA"
+    },
+    {
+        "id": "228",
+        "country_id": "226",
+        "name": "马萨诸塞",
+        "name_en": "Massachusetts",
+        "code": "USA0MA"
+    },
+    {
+        "id": "229",
+        "country_id": "226",
+        "name": "马里兰",
+        "name_en": "Maryland",
+        "code": "USA0MD"
+    },
+    {
+        "id": "230",
+        "country_id": "226",
+        "name": "缅因",
+        "name_en": "Maine",
+        "code": "USA0ME"
+    },
+    {
+        "id": "231",
+        "country_id": "226",
+        "name": "密歇根",
+        "name_en": "Michigan",
+        "code": "USA0MI"
+    },
+    {
+        "id": "232",
+        "country_id": "226",
+        "name": "明尼苏达",
+        "name_en": "Minnesota",
+        "code": "USA0MN"
+    },
+    {
+        "id": "233",
+        "country_id": "226",
+        "name": "密苏里",
+        "name_en": "Missouri",
+        "code": "USA0MO"
+    },
+    {
+        "id": "234",
+        "country_id": "226",
+        "name": "密西西比",
+        "name_en": "Mississippi",
+        "code": "USA0MS"
+    },
+    {
+        "id": "235",
+        "country_id": "226",
+        "name": "蒙大拿",
+        "name_en": "Montana",
+        "code": "USA0MT"
+    },
+    {
+        "id": "236",
+        "country_id": "226",
+        "name": "北卡罗来纳",
+        "name_en": "North Carolina",
+        "code": "USA0NC"
+    },
+    {
+        "id": "237",
+        "country_id": "226",
+        "name": "北达科他",
+        "name_en": "North Dakota",
+        "code": "USA0ND"
+    },
+    {
+        "id": "238",
+        "country_id": "226",
+        "name": "内布拉斯加",
+        "name_en": "Nebraska",
+        "code": "USA0NE"
+    },
+    {
+        "id": "239",
+        "country_id": "226",
+        "name": "新罕布什尔",
+        "name_en": "New Hampshire",
+        "code": "USA0NH"
+    },
+    {
+        "id": "240",
+        "country_id": "226",
+        "name": "新泽西",
+        "name_en": "New Jersey",
+        "code": "USA0NJ"
+    },
+    {
+        "id": "241",
+        "country_id": "226",
+        "name": "新墨西哥",
+        "name_en": "New Mexico",
+        "code": "USA0NM"
+    },
+    {
+        "id": "242",
+        "country_id": "226",
+        "name": "内华达",
+        "name_en": "Nevada",
+        "code": "USA0NV"
+    },
+    {
+        "id": "243",
+        "country_id": "226",
+        "name": "纽约",
+        "name_en": "New York",
+        "code": "USA0NY"
+    },
+    {
+        "id": "244",
+        "country_id": "226",
+        "name": "俄亥俄",
+        "name_en": "Ohio",
+        "code": "USA0OH"
+    },
+    {
+        "id": "245",
+        "country_id": "226",
+        "name": "俄克拉荷马",
+        "name_en": "Oklahoma",
+        "code": "USA0OK"
+    },
+    {
+        "id": "246",
+        "country_id": "226",
+        "name": "俄勒冈",
+        "name_en": "Oregon",
+        "code": "USA0OR"
+    },
+    {
+        "id": "247",
+        "country_id": "226",
+        "name": "宾夕法尼亚",
+        "name_en": "Pennsylvania",
+        "code": "USA0PA"
+    },
+    {
+        "id": "248",
+        "country_id": "226",
+        "name": "罗德岛",
+        "name_en": "Rhode Island",
+        "code": "USA0RI"
+    },
+    {
+        "id": "249",
+        "country_id": "226",
+        "name": "南卡罗来纳",
+        "name_en": "South Carolina",
+        "code": "USA0SC"
+    },
+    {
+        "id": "250",
+        "country_id": "226",
+        "name": "南达科他",
+        "name_en": "South Dakota",
+        "code": "USA0SD"
+    },
+    {
+        "id": "251",
+        "country_id": "226",
+        "name": "田纳西",
+        "name_en": "Tennessee",
+        "code": "USA0TN"
+    },
+    {
+        "id": "252",
+        "country_id": "226",
+        "name": "德克萨斯",
+        "name_en": "Texas",
+        "code": "USA0TX"
+    },
+    {
+        "id": "253",
+        "country_id": "226",
+        "name": "犹他",
+        "name_en": "Utah",
+        "code": "USA0UT"
+    },
+    {
+        "id": "254",
+        "country_id": "226",
+        "name": "维吉尼亚",
+        "name_en": "Virginia",
+        "code": "USA0VA"
+    },
+    {
+        "id": "255",
+        "country_id": "226",
+        "name": "佛蒙特",
+        "name_en": "Vermont",
+        "code": "USA0VT"
+    },
+    {
+        "id": "256",
+        "country_id": "226",
+        "name": "华盛顿",
+        "name_en": "Washington",
+        "code": "USA0WA"
+    },
+    {
+        "id": "257",
+        "country_id": "226",
+        "name": "威斯康星",
+        "name_en": "Wisconsin",
+        "code": "USA0WI"
+    },
+    {
+        "id": "258",
+        "country_id": "226",
+        "name": "西佛吉尼亚",
+        "name_en": "West Virginia",
+        "code": "USA0WV"
+    },
+    {
+        "id": "259",
+        "country_id": "226",
+        "name": "怀俄明",
+        "name_en": "Wyoming",
+        "code": "USA0WY"
+    },
+    {
+        "id": "260",
+        "country_id": "227",
+        "name": "",
+        "name_en": "",
+        "code": "UZB000"
+    },
+    {
+        "id": "261",
+        "country_id": "230",
+        "name": "",
+        "name_en": "",
+        "code": "VEN000"
+    },
+    {
+        "id": "262",
+        "country_id": "233",
+        "name": "",
+        "name_en": "",
+        "code": "VNM000"
+    },
+    {
+        "id": "263",
+        "country_id": "234",
+        "name": "",
+        "name_en": "",
+        "code": "VUT000"
+    },
+    {
+        "id": "264",
+        "country_id": "237",
+        "name": "",
+        "name_en": "",
+        "code": "YEM000"
+    },
+    {
+        "id": "265",
+        "country_id": "238",
+        "name": "",
+        "name_en": "",
+        "code": "ZAF000"
+    },
+    {
+        "id": "266",
+        "country_id": "239",
+        "name": "",
+        "name_en": "",
+        "code": "ZMB000"
+    },
+    {
+        "id": "267",
+        "country_id": "240",
+        "name": "",
+        "name_en": "",
+        "code": "ZWE000"
+    },
+    {
+        "id": "268",
+        "country_id": "226",
+        "name": "波多黎各",
+        "name_en": "PuertoRico",
+        "code": "USA0PR"
+    },
+    {
+        "id": "269",
+        "country_id": "226",
+        "name": "维尔京群岛",
+        "name_en": "VirginIslands",
+        "code": "USA0VI"
+    }
+]

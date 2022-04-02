@@ -65,12 +65,11 @@
             </div>
         </a-layout-header>
         <a-layout class="layout-container">
-            <a-layout-sider class="layout-sider" v-model:collapsed="collapsed" :width="144" :collapsedWidth='64'
-                            theme='light'>
+            <a-layout-sider class="layout-sider" v-model:collapsed="collapsed" :width="144" :collapsedWidth='64' theme='light'>
                 <a-menu theme="light" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" mode="inline"
-                        :inlineCollapsed='collapsed' :inlineIndent='8'>
+                    :inlineCollapsed='collapsed' :inlineIndent='8'>
                     <template v-for="item of showList">
-                        <a-menu-item :key="item.path" v-if="$auth(...item.auth) && item.children.length === 1" @click="handleLink(item.path)">
+                        <a-menu-item :key="item.path" v-if="$auth(...item.auth) && item.not_sub_menu" @click="handleLink(item.path)">
                             <i class='icon' :class="item.meta.icon"/>
                             <span :class="{'collapsed-title': collapsed}">{{ item.meta.title }}</span>
                         </a-menu-item>
@@ -80,8 +79,8 @@
                                 <span v-show="!collapsed">{{ item.meta.title }}</span>
                             </template>
                             <template v-for="i of item.children">
-                                <template v-if="!i.hidden && $auth(...i.auth)">
-                                    <a-menu-item :key="item.path + '/' + i.path" @click="handleLink(item.path + '/' + i.path)" v-if="showMenuItem(i)">
+                                <template v-if="$auth(...i.auth)">
+                                    <a-menu-item :key="item.path + '/' + i.path" @click="handleLink(item.path + '/' + i.path)">
                                         <span>{{ i.meta.title }}</span>
                                     </a-menu-item>
                                 </template>
@@ -103,7 +102,7 @@
 
 <script>
 import Core from '../../core';
-import routes from '../../router/routes';
+import {SIDER} from '../../router/routes';
 
 import MyBreadcrumb from './components/Breadcrumb.vue';
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
@@ -140,23 +139,23 @@ export default {
     },
     computed: {
         showList() {
-            // console.log('computed routes:', routes)
-            let showList = routes.filter((item) => {
-                // console.log('this.loginType:', this.loginType)
-                const roles = item.meta ? item.meta.roles : '';
-                return roles ? (roles.includes(this.loginType) && !item.hidden) : !item.hidden;
-            });
+            let showList
+            let LOGIN_TYPE = Core.Const.USER.TYPE
+            switch (this.loginType) {
+                case LOGIN_TYPE.ADMIN: showList = SIDER.ADMIN; break;
+                case LOGIN_TYPE.DISTRIBUTOR: showList = SIDER.DISTRIBUTOR; break;
+                case LOGIN_TYPE.AGENT: showList = SIDER.AGENT; break;
+                case LOGIN_TYPE.STORE: showList = SIDER.STORE; break;
+            }
             showList.forEach(item => {
                 item.auth = item.meta ? (item.meta.auth || []) : [];
-                item.children = item.children.filter((i) => {
-                    const roles = i.meta ? i.meta.roles : '';
-                    return roles ? (roles.includes(this.loginType) && !i.hidden) : !i.hidden;
-                });
+                item.not_sub_menu = item.meta ? (item.meta.not_sub_menu || false) : false;
                 item.children = item.children.map(i => {
                     i.auth = i.meta ? (i.meta.auth || []) : [];
                     return i
                 })
             })
+            console.log('computed showList:', showList)
             return showList
         },
         lang() {
@@ -189,22 +188,9 @@ export default {
         }
     },
     created() {
-        // console.log('created routes:', routes)
-        for (const item of routes) {
-            if (item.hidden || item.children.length === 1) {
-                continue;
-            }
-            for (const i of item.children) {
-                if (item.path + '/' + i.path === this.$route.path) {
-                    this.openKeys = [item.path];
-                    break;
-                }
-            }
-        }
-        // console.log('created routes:', routes)
     },
     mounted() {
-        // this.getTableData();
+        this.loginType = Core.Data.getLoginType()
         this.getUnreadCount();
     },
     methods: {
@@ -240,10 +226,6 @@ export default {
         },
         handleLink(path) {
             this.$router.push(path);
-        },
-        showMenuItem(i) {
-            const roles = i.meta ? i.meta.roles : '';
-            return roles ? !i.hidden && roles.includes(this.loginType) : !i.hidden;
         },
 
         handleLogout() {
