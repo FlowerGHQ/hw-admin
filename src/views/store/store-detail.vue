@@ -66,8 +66,8 @@
             <a-tab-pane key="PurchaseList" tab="订单列表">
                 <PurchaseList :orgId="store_id" :orgType="ORG_TYPE.STORE" v-if="activeKey == 'PurchaseList'"/>
             </a-tab-pane>
-            <a-tab-pane key="ReceiverAddressList" tab="收货地址">
-                <ReceiverAddressList :orgId="store_id" :orgType="USER_TYPE.STORE" v-if="activeKey === 'ReceiverAddressList'"/>
+            <a-tab-pane key="ReceiverAddress" tab="收货地址">
+                <ReceiverAddress :orgId="store_id" :orgType="USER_TYPE.STORE" v-if="activeKey === 'ReceiverAddress'"/>
             </a-tab-pane>
         </a-tabs>
     </div>
@@ -79,7 +79,7 @@ import Core from '../../core';
 
 import UserList from '@/components/panel/UserList.vue';
 import PurchaseList from '@/components/panel/PurchaseList.vue';
-import ReceiverAddress from '@/components/panel/ReceiverAddressList.vue';
+import ReceiverAddress from '@/components/panel/ReceiverAddress.vue';
 
 const USER_TYPE = Core.Const.USER.TYPE;
 export default {

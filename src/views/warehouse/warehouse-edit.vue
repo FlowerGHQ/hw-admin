@@ -46,7 +46,7 @@
 
 <script>
 import Core from '../../core';
-import AddressCascader from '../../components/common/AddressCascader.vue'
+import AddressCascader from '../../components/common/ChinaAddressCascader.vue'
 
 export default {
     name: 'WarehouseEdit',

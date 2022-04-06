@@ -1,11 +1,11 @@
 <template>
-    <div class="ReceiverAddressList gray-panel no-margin">
+    <div class="ReceiverAddress gray-panel no-margin">
         <div class="panel-title">
-            <div class="title">收货地址</div>
+            <div class="title">收货地址管理</div>
         </div>
         <div class="panel-content">
             <div class="table-container">
-               <ReceiverAddress btnType="primary" :ghost="true" v-if="!$auth('ADMIN')"><i class="icon i_add"/>新增收货地址</ReceiverAddress>
+                <AddressEdit btnType="primary" :ghost="true" :orgId="orgId" :orgType="orgType" v-if="!$auth('ADMIN')" @submit='getTableData'><i class="icon i_add"/>新增收货地址</AddressEdit>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'item'">
@@ -18,7 +18,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <ReceiverAddress :detail="record" :orgId = "orgId" :orgType = "orgType" :btnText="'修改收货地址'" btnType="link"><i class="icon i_edit"/>编辑</ReceiverAddress>
+                            <AddressEdit :detail="record" :orgId="orgId" :orgType="orgType" btnType="link" @submit='getTableData'><i class="icon i_edit"/>编辑</AddressEdit>
                             <a-button type='link' class="danger" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button>
                         </template>
                     </template>
@@ -45,12 +45,12 @@
 
 <script>
 import Core from '../../core';
-import ReceiverAddress from '@/components/popup-btn/ReceiverAddress.vue';
+import AddressEdit from '@/components/popup-btn/ReceiverAddressEdit.vue';
 const USER_TYPE = Core.Const.USER.TYPE
 
 export default {
-    name: 'ReceiverAddressList',
-    components: { ReceiverAddress, },
+    name: 'ReceiverAddress',
+    components: { AddressEdit, },
     props: {
         orgId: {
             type: Number,
@@ -146,5 +146,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-//.ReceiverAddressList {}
+//.ReceiverAddress {}
 </style>

@@ -67,7 +67,7 @@
                 <div class="form-item required">
                     <div class="key">供应商地址：</div>
                     <div class="value">
-                        <AddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
+                        <ChinaAddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
                     </div>
                 </div>
                 <div class="form-item ">
@@ -87,11 +87,11 @@
 
 <script>
 import Core from '../../core';
-import AddressCascader from '../../components/common/AddressCascader.vue'
+import ChinaAddressCascader from '../../components/common/ChinaAddressCascader.vue'
 
 export default {
     name: 'SupplierEdit',
-    components: { AddressCascader },
+    components: { ChinaAddressCascader },
     props: {},
     data() {
         return {

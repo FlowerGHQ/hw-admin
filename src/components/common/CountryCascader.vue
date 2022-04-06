@@ -1,6 +1,6 @@
 <template>
 <a-cascader
-    class="AreaCascader"
+    class="CountryCascader"
     placeholder="请选择大洲/国家"
     v-model:value="selectCode"
     :options="countryOptions"
@@ -14,7 +14,7 @@ import Core from '../../core';
 import axios from 'axios';
 
 export default {
-    name: 'AreaCascader',
+    name: 'CountryCascader',
     components: {},
     props: {
         defArea: Array,

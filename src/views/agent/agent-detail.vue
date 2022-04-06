@@ -69,8 +69,8 @@
                     <PricingStructure :orgId="agent_id" :orgType="USER_TYPE.AGENT" v-if="activeKey === 'PricingStructure'" :can-edit="$auth('DISTRIBUTOR')"/>
                 </a-tab-pane>
             </template>
-            <a-tab-pane key="ReceiverAddressList" tab="收货地址">
-                <ReceiverAddressList :orgId="agent_id" :orgType="USER_TYPE.AGENT" v-if="activeKey === 'ReceiverAddressList'"/>
+            <a-tab-pane key="ReceiverAddress" tab="收货地址">
+                <ReceiverAddress :orgId="agent_id" :orgType="USER_TYPE.AGENT" v-if="activeKey === 'ReceiverAddress'"/>
             </a-tab-pane>
         </a-tabs>
     </div>
@@ -84,7 +84,7 @@ import UserList from '@/components/panel/UserList.vue';
 import StoreList from '@/components/panel/StoreList.vue';
 import PurchaseList from '@/components/panel/PurchaseList.vue';
 import PricingStructure from '@/components/panel/PricingStructure.vue';
-import ReceiverAddress from '@/components/panel/ReceiverAddressList.vue';
+import ReceiverAddress from '@/components/panel/ReceiverAddress.vue';
 
 const USER_TYPE = Core.Const.USER.TYPE;
 export default {

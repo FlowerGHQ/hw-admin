@@ -237,13 +237,12 @@
 <script>
 import Core from '../../core';
 import TimeSearch from '@/components/common/TimeSearch.vue'
-import AddressCascader from '../../components/common/AddressCascader.vue'
 const TRANSFER_ORDER = Core.Const.TRANSFER_ORDER
 const STATUS = Core.Const.TRANSFER_ORDER.STATUS
 const ORG_TYPE = Core.Const.LOGIN.TYPE
 export default {
     name: 'TransferOrderList',
-    components: {TimeSearch, AddressCascader},
+    components: {TimeSearch},
     props: {},
     data() {
         return {

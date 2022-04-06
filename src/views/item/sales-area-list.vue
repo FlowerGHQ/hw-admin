@@ -18,7 +18,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">地区:</div>
                         <div class="value">
-                            <AreaCascader @search="handleOtherSearch" ref='AreaCascader'/>
+                            <CountryCascader @search="handleOtherSearch" ref='CountryCascader'/>
                         </div>
                     </a-col>
                 </a-row>
@@ -66,10 +66,10 @@
 <script>
 import Core from '../../core';
 
-import AreaCascader from '@/components/common/AreaCascader.vue'
+import CountryCascader from '@/components/common/CountryCascader.vue'
 export default {
     name: 'SalesAreaList',
-    components: {AreaCascader},
+    components: {CountryCascader},
     props: {},
     data() {
         return {
@@ -133,7 +133,7 @@ export default {
         },
         handleSearchReset() {    // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.$refs.AreaCascader.handleReset()
+            this.$refs.CountryCascader.handleReset()
             this.pageChange(1);
         },
         getTableData() {    // 获取 表格 数据

@@ -26,7 +26,7 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">地区:</div>
                     <div class="value">
-                        <AreaCascader @search="handleOtherSearch" ref='AreaCascader'/>
+                        <CountryCascader @search="handleOtherSearch" ref='CountryCascader'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
@@ -98,12 +98,12 @@
 import Core from '../../core';
 
 import TimeSearch from '@/components/common/TimeSearch.vue'
-import AreaCascader from '@/components/common/AreaCascader.vue'
+import CountryCascader from '@/components/common/CountryCascader.vue'
 export default {
     name: 'AgentList',
     components: {
         TimeSearch,
-        AreaCascader,
+        CountryCascader,
     },
     props: {},
     data() {
@@ -198,7 +198,7 @@ export default {
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
             this.$refs.TimeSearch.handleReset()
-            this.$refs.AreaCascader.handleReset()
+            this.$refs.CountryCascader.handleReset()
             this.pageChange(1);
         },
         getDistributorListAll() {

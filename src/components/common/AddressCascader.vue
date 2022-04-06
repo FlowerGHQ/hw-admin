@@ -1,81 +1,98 @@
 <template>
 <a-cascader
     class="AddressCascader"
-    v-model:value="address"
-    :options="addressOptions"
-    placeholder="请选择省/市/区县"
-    :field-names="{ label: 'name', value: 'name' , children: 'children'}"
-    :show-search="{ filter }"
-    @change='handleChange'
+    placeholder="请选择大致区域"
+    v-model:value="selectCode"
+    :options="countryOptions"
+    @change="handleChange"
+    :field-names="fieldNames"
 />
 </template>
 
 <script>
 import Core from '../../core';
 import axios from 'axios';
+
 export default {
+    name: 'AddressCascader',
     components: {},
     props: {
-        defaultAddress: {
-            type: Array,
-        }
+        defArea: Object,
+        value: Object,
     },
-    emit: ['select'],
+    emits: ['select', 'update:value'],
     data() {
         return {
-            addressOptions: [], // 地址选择
-            addrLevel: '',
-            address: [],
+            fieldNames: {},
+            countryOptions: [],
+
+            selectCode: [],
+            selectItems: [],
         }
     },
     watch: {
-        defaultAddress: {
+        '$i18n.locale': {
             deep: true,
             immediate: true,
-            handler(address) {
-                console.log('watch address:', address)
-                let len = address.length
-                if (this.addrLevel === len) {
-                } else {
-                    this.addrLevel = len
-                    this.getRoughlyAddressList(len)
+            handler(n) {
+                let fieldNames = { label: 'name_en', value: 'name' , children: 'children', }
+                switch (n) {
+                    case 'ch': fieldNames.label = 'name'; break;
                 }
-                let _address = Core.Util.deepCopy(address)
-                if (_address.every(item => item)) {
-                    this.address = _address
-                } else {
-                    this.address = []
+                this.fieldNames = fieldNames
+            }
+        },
+        defArea: {
+            deep: true,
+            immediate: true,
+            handler(n) {
+                console.log('defArea n:', n)
+                if (!Core.Util.isEmptyObj(n)) {
+                    let selectCode = [n.country, n.province, n.city, n.county]
+                    console.log('selectCode:', selectCode)
+                    this.selectCode = selectCode.filter(item => item)
+                    console.log('this.selectCode:', this.selectCode)
                 }
             }
         }
     },
     computed: {},
     created() {},
-    mounted() {},
+    mounted() {
+        this.getCountryOptions();
+    },
     methods: {
         // 获取 地址选择列表
-        getRoughlyAddressList(level) {
-            let url = '/ext/province-city-county.json'
-            switch (level) {
-                case 3: url = '/ext/province-city-county.json'; break;
-                case 4: url = '/ext/province-city-county-street.json'; break;
-            }
-            axios.get(url).then(response => {
-                this.addressOptions = response.data;
+        getCountryOptions() {
+            axios.get('/ext/address-cascader.json').then(response => {
+                this.countryOptions = response.data;
+                for (let i = 0; i < this.countryOptions.length; i++) {
+                    const element = this.countryOptions[i];
+                    if (element.children && element.children.length === 1) {
+                        if (!element.children[0].name && !element.children[0].name_en) {
+                            element.children = element.children[0].children || null
+                        }
+                    }
+                }
             })
         },
-        // 地址选择搜索
-        filter(inputValue, path) {
-            return path.some(option => option.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
-        },
         handleChange(value, selectedOptions) {
-            console.log('handleChange value:', value)
-            this.$emit('select', value)
+            this.selectItems = selectedOptions
+
+            let update = {}
+            for (const item of selectedOptions) {
+                update[item.key] = {
+                    code: item.code,
+                    name: item.name,
+                    name_en: item.name_en
+                }
+            }
+            this.$emit('update:value', update)
+        },
+        handleReset() {
+            this.selectCode = []
+            this.selectItems = []
         }
     },
 }
 </script>
-
-<style lang='less' scoped>
-// .AddressCascader {}
-</style>

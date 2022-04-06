@@ -33,7 +33,7 @@
             <div class="form-item required">
                 <div class="key">国家:</div>
                 <div class="value">
-                    <AreaCascader v-model:value="areaList" :def-area='defArea'/>
+                    <CountryCascader v-model:value="areaList" :def-area='defArea'/>
                 </div>
             </div>
         </div>
@@ -47,11 +47,11 @@
 
 <script>
 import Core from '../../core';
-import AreaCascader from '@/components/common/AreaCascader.vue'
+import CountryCascader from '@/components/common/CountryCascader.vue'
 
 export default {
     name: 'AgentEdit',
-    components: {AreaCascader},
+    components: {CountryCascader},
     props: {},
     data() {
         return {

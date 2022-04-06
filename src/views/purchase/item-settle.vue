@@ -7,54 +7,7 @@
     <div class="config-list">
         <div class="config-item receive">
             <div class="config-title">1.配送选项</div>
-            <div class="config-content edit-mode" v-if="editMode">
-                <div class="form-item required">
-                    <div class="key">姓名</div>
-                    <div class="value">
-                        <a-input v-model:value="form.name" placeholder="请输入收货人姓名"/>
-                    </div>
-                </div>
-                <div class="form-item required">
-                    <div class="key">手机号码</div>
-                    <div class="value">
-                        <a-input v-model:value="form.phone" placeholder="请输入收货人手机号码"/>
-                    </div>
-                </div>
-                <div class="form-item">
-                    <div class="key">国家/地区</div>
-                    <div class="value">
-                        <a-select placeholder="请选择国家" v-model:value="form.country" show-search option-filter-prop="children" allow-clear>
-                            <a-select-option v-for="(item,index) of countryList" :key="index" :value="item.name">{{item.name}}</a-select-option>
-                        </a-select>
-                    </div>
-                </div>
-                <div class="form-item required">
-                    <div class="key">收货地址</div>
-                    <div class="value">
-                        <AddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
-                    </div>
-                </div>
-                <div class="form-item">
-                    <div class="key"></div>
-                    <div class="value">
-                        <a-input v-model:value="form.address" placeholder="请输入详细地址"/>
-                    </div>
-                </div>
-                <div class="form-item">
-                    <div class="key">邮箱地址</div>
-                    <div class="value">
-                        <a-input v-model:value="form.email" placeholder="请输入收货人邮箱"/>
-                    </div>
-                </div>
-                <div class="form-item btn">
-                    <div class="key"></div>
-                    <div class="value">
-                        <a-button type="primary" @click="handleConfigSave">保存并继续</a-button>
-                        <a-button type="link" @click="handleConfigCancel" v-if="receiveList.length">取消编辑</a-button>
-                    </div>
-                </div>
-            </div>
-            <div class="config-content select-mode" v-else>
+            <div class="config-content select-mode">
                 <div class="select-item" :class="selectIndex === item.id ? 'active' : ''"
                     v-for="item of receiveList" :key='item.id' @click="handleConfigSelect(item)">
                     <div class="info">
@@ -66,12 +19,12 @@
                         </div>
                     </div>
                     <div class="btn">
-                        <a-button type="link" @click.stop="handleConfigEdit(item)">编辑</a-button>
+                        <ReceiverAddressEdit btnType="link" :detail='item' :orgId='orgId' :orgType='orgType' btnClass='edit-btn' @click.stop @submit='getReceiveList'>编辑</ReceiverAddressEdit>
                         <a-button type="link" @click.stop="handleConfigDelete(item)">删除</a-button>
                     </div>
                 </div>
                 <div class="add">
-                    <a-button type="link" @click="handleConfigEdit()">添加新地址</a-button>
+                    <ReceiverAddressEdit btnType="link" :orgId='orgId' :orgType='orgType' btnClass='edit-btn' @submit='getReceiveList'>添加新地址</ReceiverAddressEdit>
                 </div>
                 <a-button type="primary" class="orange" @click="handleCreateOrder()">下单</a-button>
             </div>
@@ -115,14 +68,17 @@
 <script>
 import Core from '../../core';
 
-import AddressCascader from '../../components/common/AddressCascader.vue'
+import ReceiverAddressEdit from '../../components/popup-btn/ReceiverAddressEdit.vue'
+
 export default {
     name: 'ItemSettle',
-    components: { AddressCascader },
+    components: { ReceiverAddressEdit },
     props: {},
     data() {
         return {
             // 加载
+            orgId: Core.Data.getOrgId(),
+            orgType: Core.Data.getOrgType(),
             loading: false,
 
             receiveList: [],
@@ -190,9 +146,9 @@ export default {
         // 获取已保存的 地址信息列表
         getReceiveList() {
             Core.Api.Receive.list().then(res => {
-                console.log('res:', res)
+                console.log('getReceiveList res:', res)
                 this.receiveList = res.list
-                this.editMode = res.list.length ? false : true
+                // this.editMode = res.list.length ? false : true
             })
         },
         // 获取购物车列表
@@ -334,11 +290,13 @@ export default {
             color: #006EF9;
         }
     }
-    .ant-btn-link {
+    .ant-btn-link, .edit-btn {
         color: #757575;
         border-bottom: 1px solid #757575;
         border-radius: 0;
         height: 22px;
+        font-size: 14px;
+        margin-bottom: 0;
         &:hover {
             opacity: 0.8;
         }

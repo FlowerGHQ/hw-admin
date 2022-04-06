@@ -89,8 +89,8 @@
                         <WalletList :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'WalletList'"/>
                     </a-tab-pane>
                 </template>
-                <a-tab-pane key="ReceiverAddressList" tab="收货地址">
-                    <ReceiverAddressList :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'ReceiverAddressList'"/>
+                <a-tab-pane key="ReceiverAddress" tab="收货地址">
+                    <ReceiverAddress :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'ReceiverAddress'"/>
                 </a-tab-pane>
             </a-tabs>
         </div>
@@ -104,7 +104,7 @@ import AgentList from '@/components/panel/AgentList.vue';
 import StoreList from '@/components/panel/StoreList.vue';
 import WalletList from '@/components/panel/WalletList.vue';
 import PurchaseList from '@/components/panel/PurchaseList.vue';
-import ReceiverAddress from '@/components/panel/ReceiverAddressList.vue';
+import ReceiverAddress from '@/components/panel/ReceiverAddress.vue';
 
 // import PricingStructure from '@/components/panel/PricingStructure.vue';
 
