@@ -117,6 +117,8 @@ export default {
             zhCN,
             enUS,
 
+            breadcrumbList: [],
+
             loginType: Core.Data.getLoginType(),
             USER_TYPE: Core.Const.USER.TYPE_MAP,
             collapsed: false,
@@ -167,11 +169,28 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                n = n.redirectedFrom ? n.redirectedFrom : n
-                let is_sub_menu = n.meta ? n.meta.is_sub_menu : false
+                let meta = n.meta || {}
+                console.log('watch $route:', n)
+                let not_sub_menu = n.matched.length > 1 ? n.matched[0].meta.not_sub_menu : n.meta.not_sub_menu
+                let is_sp = n.matched.length > 1 ? n.matched[0].meta.sp : n.meta.sp
+                console.log('is_sp:', is_sp)
                 let path = n.path.split('/').slice(1)
-                this.selectedKeys = is_sub_menu ? [n.fullPath] : ['/' + path[0]]
+
+                if (n.meta.parent) {
+                    this.selectedKeys = [n.meta.parent]
+                } else if (not_sub_menu && !is_sp) {
+                    this.selectedKeys = ['/' + path[0]]
+                } else {
+                    this.selectedKeys = [n.fullPath]
+                }
                 console.log('this.selectedKeys:', this.selectedKeys)
+
+                if (!meta.hidden || (this.breadcrumbList[0] && this.breadcrumbList[0].key !== path[0])) {
+                    this.breadcrumbList = [{text: meta.title, path: n.path, key: path[0]}]
+                } else {
+                    this.breadcrumbList.push({text: meta.title, path: n.path, key: path[0]})
+                }
+                console.log('this.breadcrumbList:', this.breadcrumbList)
             }
         },
         $lang: {

@@ -1,7 +1,7 @@
 <template>
     <div class="ReceiverAddressList gray-panel no-margin">
         <div class="panel-title">
-            <div class="title">收货地址列表</div>
+            <div class="title">收货地址</div>
         </div>
         <div class="panel-content">
             <div class="table-container">

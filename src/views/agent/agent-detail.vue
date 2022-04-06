@@ -69,7 +69,7 @@
                     <PricingStructure :orgId="agent_id" :orgType="USER_TYPE.AGENT" v-if="activeKey === 'PricingStructure'" :can-edit="$auth('DISTRIBUTOR')"/>
                 </a-tab-pane>
             </template>
-            <a-tab-pane key="ReceiverAddressList" tab="收货地址列表">
+            <a-tab-pane key="ReceiverAddressList" tab="收货地址">
                 <ReceiverAddressList :orgId="agent_id" :orgType="USER_TYPE.AGENT" v-if="activeKey === 'ReceiverAddressList'"/>
             </a-tab-pane>
         </a-tabs>

@@ -66,7 +66,7 @@
             <a-tab-pane key="PurchaseList" tab="订单列表">
                 <PurchaseList :orgId="store_id" :orgType="ORG_TYPE.STORE" v-if="activeKey == 'PurchaseList'"/>
             </a-tab-pane>
-            <a-tab-pane key="ReceiverAddressList" tab="收货地址列表">
+            <a-tab-pane key="ReceiverAddressList" tab="收货地址">
                 <ReceiverAddressList :orgId="store_id" :orgType="USER_TYPE.STORE" v-if="activeKey === 'ReceiverAddressList'"/>
             </a-tab-pane>
         </a-tabs>

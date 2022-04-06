@@ -17,7 +17,7 @@
                 <div class="form-item required">
                     <div class="key">区域:</div>
                     <div class="value">
-                        <AreaCascader v-model:value="areaList" :def-area='defArea'></AreaCascader>
+                        <AreaCascader v-model:value="areaList" :def-area='defArea'/>
                     </div>
                 </div>
             </div>
@@ -31,10 +31,10 @@
 
 <script>
 import Core from '../../core';
-
+import AreaCascader from '@/components/common/AreaCascader.vue'
 export default {
     name: 'SalesAreaEdit',
-    components: {},
+    components: {AreaCascader},
     props: {},
     data() {
         return {

@@ -1,6 +1,5 @@
 <template>
-    <a-button class="ReceiverAddress" @click.stop="handleAddressShow()" :ghost='ghost' :type="btnType"
-              :class="btnClass">
+    <a-button class="ReceiverAddress" @click.stop="handleAddressShow()" :ghost='ghost' :type="btnType" :class="btnClass">
         <slot>{{ btnText }}</slot>
     </a-button>
     <a-modal :title="btnText" v-model:visible="addressShow" :after-close='handleAddressClose' class="transfer-modal">

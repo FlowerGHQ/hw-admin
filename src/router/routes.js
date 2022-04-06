@@ -192,6 +192,7 @@ const routes = [
             icon: 'i_s_agent',
             roles: [LOGIN_TYPE.DISTRIBUTOR],
             not_sub_menu: true,
+            sp: true,
         },
         children: [
             {
@@ -258,6 +259,7 @@ const routes = [
             icon: 'i_s_agent',
             roles: [LOGIN_TYPE.AGENT],
             not_sub_menu: true,
+            sp: true,
         },
         children: [
             {
@@ -321,6 +323,7 @@ const routes = [
             icon: 'i_s_store',
             roles: [LOGIN_TYPE.STORE],
             not_sub_menu: true,
+            sp: true,
         },
         children: [
             {
@@ -1179,12 +1182,11 @@ export default routes;
 
 let ADMIN = [], DISTRIBUTOR = [], AGENT = [], STORE = []
 
-let target = routes.filter(first => {
+let target = Util.deepCopy(routes).filter(first => {
     return first.meta && !first.meta.hidden
 })
 target.forEach(first => {
     let children = first.children.filter(second => {
-        console.log(second.meta.title, second.meta && !second.meta.hidden)
         return second.meta && !second.meta.hidden
     })
     first.children = children
@@ -1201,7 +1203,6 @@ ADMIN.forEach(first => {
     })
     first.children = children
 })
-console.log('ADMIN:', ADMIN)
 
 DISTRIBUTOR = Util.deepCopy(target).filter(first => {
     let meta = first.meta

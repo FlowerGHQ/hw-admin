@@ -89,7 +89,7 @@
                         <WalletList :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'WalletList'"/>
                     </a-tab-pane>
                 </template>
-                <a-tab-pane key="ReceiverAddressList" tab="收货地址列表">
+                <a-tab-pane key="ReceiverAddressList" tab="收货地址">
                     <ReceiverAddressList :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'ReceiverAddressList'"/>
                 </a-tab-pane>
             </a-tabs>
