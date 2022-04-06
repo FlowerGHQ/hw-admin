@@ -49,8 +49,6 @@ export default {
             type: Boolean,
             default: false,
         },
-
-
         id: {},
         sPass: {},
         sRefuse: {},

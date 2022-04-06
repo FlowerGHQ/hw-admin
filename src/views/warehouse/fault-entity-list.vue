@@ -9,12 +9,22 @@
             </div>
             <div class="search-container">
                 <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="!$auth('ADMIN')">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">故障类型:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.item_fault_id" placeholder="请选择产品故障类型" show-search option-filter-prop="children">
                                 <a-select-option v-for="faultType of faultTypeList" :key="faultType.id" :value="faultType.id">
                                     {{ faultType.name }}
+                                </a-select-option>
+                            </a-select>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
+                        <div class="key">所属分销商:</div>
+                        <div class="value">
+                            <a-select v-model:value="searchForm.distributor_id" placeholder="请选择分销商" @change="handleSearch" show-search option-filter-prop="children">
+                                <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">
+                                    {{ item.name }}
                                 </a-select-option>
                             </a-select>
                         </div>
@@ -80,9 +90,9 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleFaultItemShow(record)" v-if="type !== 'pending'"><i class="icon i_edit"/>编辑</a-button>
-                            <a-button type="link" @click="handleEntryShow('', record)" v-if="type == 'pending' && record.org_type !== LOGIN_TYPE.ADMIN"><i class="icon i_s_warehouse"/>入库</a-button>
-                            <a-button type="link" @click="handleAuditShow('', record)" v-if="type == 'pending' && record.status === AUDIT_TYPE.WAIT"><i class="icon i_audit"/>审核</a-button>
+                            <a-button type="link" @click="handleFaultItemShow(record)" v-if="type !== 'pending' && !$auth('ADMIN') && [STATUS.WAIT_AUDIT, STATUS.INIT].indexOf(record.status) != -1"><i class="icon i_edit"/>编辑</a-button>
+                            <a-button type="link" @click="handleEntryShow('', record)" v-if="type == 'pending' && record.org_type !== LOGIN_TYPE.ADMIN && record.status === STATUS.AUDIT_SUCCESS"><i class="icon i_s_warehouse"/>入库</a-button>
+                            <a-button type="link" @click="handleAuditShow('', record)" v-if="type == 'pending' && record.status === STATUS.WAIT_AUDIT"><i class="icon i_audit"/>审核</a-button>
                             <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
                         </template>
                     </template>
@@ -210,6 +220,7 @@ import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 import TimeSearch from '@/components/common/TimeSearch.vue'
 const FAULT_ENTITY = Core.Const.FAULT_ENTITY
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE
+const STATUS = Core.Const.FAULT_ENTITY.STATUS
 
 export default {
     name: 'FaultEntityList',
@@ -224,6 +235,7 @@ export default {
             loginType: Core.Data.getLoginType(),
             AUDIT_TYPE: FAULT_ENTITY.AUDIT_TYPE,
             LOGIN_TYPE,
+            STATUS,
             // 加载
             loading: false,
             // 分页
@@ -231,7 +243,8 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
-            storeList: [], // 分销商列表
+            storeList: [], // 门店列表
+            distributorList: [],//分销商列表
             agentList: [], // 零售商列表
             warehouseList: [], // 所处仓库列表
             faultTypeList: [], // 产品故障类型列表
@@ -329,9 +342,8 @@ export default {
         this.getWarehouseList();
         this.getFaultTypeList();
         this.getStoreList();
-        if(this.$auth('ADMIN')) {
-            this.getAgentList();
-        }
+        this.getAgentList();
+        this.getDistributorList();
     },
     methods: {
         // 维修单详情入口 
@@ -383,6 +395,12 @@ export default {
             Core.Api.Store.list().then(res => {
                 console.log('this.storeList', res.list);  
                 this.storeList = res.list
+            })
+        },
+        getDistributorList() { // 获取分销商列表
+            Core.Api.Distributor.list().then(res => {
+                console.log('this.distributorList', res.list);
+                this.distributorList = res.list
             })
         },
         getWarehouseList() { // 获取仓库数据
