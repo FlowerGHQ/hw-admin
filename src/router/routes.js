@@ -1,4 +1,5 @@
 import Const from "../core/const"
+import Util from "../core/utils"
 
 import Layout from '../views/layout/index.vue';
 
@@ -1182,89 +1183,60 @@ let target = routes.filter(first => {
     return first.meta && !first.meta.hidden
 })
 target.forEach(first => {
-    console.log('first name:', first.meta.title)
-    first.children = first.children.filter(second => {
+    let children = first.children.filter(second => {
         console.log(second.meta.title, second.meta && !second.meta.hidden)
         return second.meta && !second.meta.hidden
     })
-    console.log('first.children:', first.children)
-    console.log('first:', first)
+    first.children = children
 })
-console.log('target:', target)
 
-ADMIN = target.filter(first => {
+ADMIN = Util.deepCopy(target).filter(first => {
     let meta = first.meta
     return !meta.roles || meta.roles.includes(LOGIN_TYPE.ADMIN)
 })
-console.log('ADMIN:', ADMIN)
-/* ADMIN = ADMIN.map(first => {
-    console.log('first:', first)
-    console.log('first name:', first.meta.title)
+ADMIN.forEach(first => {
     let children = first.children.filter(second => {
         let meta = second.meta
-        console.log('second name:', meta.title, !meta.roles || meta.roles.includes(LOGIN_TYPE.ADMIN))
         return !meta.roles || meta.roles.includes(LOGIN_TYPE.ADMIN)
     })
-    console.log('children:', children)
     first.children = children
-    console.log('first:', first)
-    console.log('first.children:', first.children)
-    return first
+})
+console.log('ADMIN:', ADMIN)
 
-    if (first.children) {
-        console.log('first name:', first.meta.title)
-        first.children = first.children.filter(second => {
-            let meta = second.meta
-            console.log('second name:', meta.title, !meta.roles || meta.roles.includes(LOGIN_TYPE.ADMIN))
-            return !meta.roles || meta.roles.includes(LOGIN_TYPE.ADMIN)
-        })
-        console.log('first:', first)
-        console.log('first.children:', first.children)
-    }
-    console.log('first:', first)
-    return first
-}) */
-
-DISTRIBUTOR = target.filter(first => {
+DISTRIBUTOR = Util.deepCopy(target).filter(first => {
     let meta = first.meta
     return !meta.roles || meta.roles.includes(LOGIN_TYPE.DISTRIBUTOR)
 })
-DISTRIBUTOR = DISTRIBUTOR.map(first => {
-    if (first.children) {
-        first.children = first.children.filter(second => {
-            let meta = second.meta
-            return !meta.roles || meta.roles.includes(LOGIN_TYPE.DISTRIBUTOR)
-        })
-    }
-    return first
+DISTRIBUTOR.forEach(first => {
+    let children = first.children.filter(second => {
+        let meta = second.meta
+        return !meta.roles || meta.roles.includes(LOGIN_TYPE.DISTRIBUTOR)
+    })
+    first.children = children
 })
 
-AGENT = target.filter(first => {
+AGENT = Util.deepCopy(target).filter(first => {
     let meta = first.meta
     return !meta.roles || meta.roles.includes(LOGIN_TYPE.AGENT)
 })
-AGENT = AGENT.map(first => {
-    if (first.children) {
-        first.children = first.children.filter(second => {
-            let meta = second.meta
-            return !meta.roles || meta.roles.includes(LOGIN_TYPE.AGENT)
-        })
-    }
-    return first
+AGENT.forEach(first => {
+    let children = first.children.filter(second => {
+        let meta = second.meta
+        return !meta.roles || meta.roles.includes(LOGIN_TYPE.AGENT)
+    })
+    first.children = children
 })
 
-STORE = target.filter(first => {
+STORE = Util.deepCopy(target).filter(first => {
     let meta = first.meta
     return !meta.roles || meta.roles.includes(LOGIN_TYPE.STORE)
 })
-STORE = STORE.map(first => {
-    if (first.children) {
-        first.children = first.children.filter(second => {
-            let meta = second.meta
-            return !meta.roles || meta.roles.includes(LOGIN_TYPE.STORE)
-        })
-    }
-    return first
+STORE.forEach(first => {
+    let children = first.children.filter(second => {
+        let meta = second.meta
+        return !meta.roles || meta.roles.includes(LOGIN_TYPE.STORE)
+    })
+    first.children = children
 })
 
 export const SIDER = {
@@ -1274,5 +1246,3 @@ export const SIDER = {
     STORE,
 }
 console.log('SIDER:', SIDER)
-
-
