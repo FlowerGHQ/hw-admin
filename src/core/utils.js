@@ -375,41 +375,34 @@ const Util = {
 
 
     /* =============== 维修单 ================ */
-    repairStatusFilter(val, to = 'text') {
+    repairStatusFilter(val, to = 'key') {
         const MAP = Const.REPAIR.STATUS_MAP
-        const COLOR_MAP = Const.REPAIR.STATUS_COLOR_MAP
-        switch (to) {
-            case 'text':
-                return MAP[val + ''] || '未知'
-            case 'color':
-                return COLOR_MAP[val] || 'grey'
-        }
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
     },
     repairTypeFilter(val) {
         const MAP = Const.REPAIR.TYPE_MAP
         return MAP[val] || '未知'
     },
-    repairChannelFilter(val) {
+    repairChannelFilter(val, to='key') {
         const MAP = Const.REPAIR.CHANNEL_MAP
-        return MAP[val] || '未知'
+        let value = MAP[val] || {}
+        return value[to] || '-'
     },
-    repairMethodFilter(val) {
+    repairMethodFilter(val, to='key') {
         const MAP = Const.REPAIR.METHOD_MAP
-        return MAP[val] || '未知'
+        let value = MAP[val] || {}
+        return value[to] || '-'
     },
-    repairServiceFilter(val) {
+    repairServiceFilter(val, to='key') {
         const MAP = Const.REPAIR.SERVICE_TYPE_MAP
-        return MAP[val] || '未知'
+        let value = MAP[val] || {}
+        return value[to] || '-'
     },
-    repairPriorityFilter(val, to = 'text') {
+    repairPriorityFilter(val, to = 'key') {
         const MAP = Const.REPAIR.PRIORITY_MAP
-        const COLOR_MAP = Const.REPAIR.PRIORITY_COLOR_MAP
-        switch (to) {
-            case 'text':
-                return MAP[val] || '未知'
-            case 'color':
-                return COLOR_MAP[val] || 'grey'
-        }
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
     },
     /* repairItemTypeFilter(val) {
         const MAP = Const.REPAIR.ITEM_TYPE_MAP
@@ -460,7 +453,8 @@ const Util = {
         const MAP = Const.AFTERSALES.TYPE_MAP
         return MAP[val + ''] || '未知'
     },
-    aftersalesStatusFilter(val, to = 'text') {
+    aftersalesStatusFilter(val, to = 'key') {
+        console.log('aftersalesStatusFilter to', to)
         const MAP = Const.AFTERSALES.STATUS_MAP
         let value = MAP[val + ''] || {}
         return value[to] || '-'
@@ -606,10 +600,34 @@ const Util = {
     /* =============== 生产管理 ================ */
 
     /* =============== 供应商管理 ================ */
-    supplierPaymentTypeFilter(val, to = 'text') {
+    supplierPaymentTypeFilter(val) {
         const MAP = Const.SUPPLIER.PAYMENT_TYPE_MAP
         return MAP[val] || '未知'
-    }
+    },
+    flagPurchaseFilter(val, to = 'text') {
+        const MAP = Const.SUPPLIER.STATUS_PURCHASE_MAP
+        const COLOR_MAP = Const.SUPPLIER.STATUS_PURCHASE_COLOR_MAP
+        switch (to) {
+            case 'text':
+                return MAP[val + ''] || '未知'
+            case 'color':
+                return COLOR_MAP[val + ''] || 'grey'
+        }
+    },
+    flagSettlementFilter(val, to = 'text') {
+        const MAP = Const.SUPPLIER.STATUS_SETTLEMENT_MAP
+        const COLOR_MAP = Const.SUPPLIER.STATUS_SETTLEMENT_COLOR_MAP
+        switch (to) {
+            case 'text':
+                return MAP[val + ''] || '未知'
+            case 'color':
+                return COLOR_MAP[val + ''] || 'grey'
+        }
+    },
+    supplierTypeFilter(val) {
+        const MAP = Const.SUPPLIER.SUPPLIER_TYPE_MAP
+        return MAP[val] || '未知'
+    },
     /* =============== 供应商管理 ================ */
 
 

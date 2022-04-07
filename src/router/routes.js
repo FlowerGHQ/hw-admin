@@ -96,6 +96,7 @@ const routes = [
                     hidden: true,
                     title: '维修单编辑',
                     parent: '/repair/repair-list',
+                    roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
                 }
             },
             {
@@ -895,6 +896,38 @@ const routes = [
                     title: '供应商详情',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/production/supplier-list',
+                }
+            },
+            {
+                path: 'material-purchase-list',
+                name: 'MaterialPurchaseList',
+                component: () => import ('@/views/production/material-purchase-list.vue'),
+                meta: {
+                    title: '采购单列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true
+                }
+            },
+            {
+                path: 'material-purchase-edit',
+                name: 'MaterialPurchaseEdit',
+                hidden: true,
+                component: () => import ('@/views/production/material-purchase-edit.vue'),
+                meta: {
+                    title: '新建采购单',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/production/material-purchase-list',
+                }
+            },
+            {
+                path: 'material-purchase-detail',
+                name: 'MaterialPurchaseDetail',
+                hidden: true,
+                component: () => import ('@/views/production/material-purchase-detail.vue'),
+                meta: {
+                    title: '采购单详情',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/production/material-purchase-list',
                 }
             },
             {

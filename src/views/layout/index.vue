@@ -8,9 +8,9 @@
                 <a-tag color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType] }}端</a-tag>
             </div>
             <div class="header-right">
-                <!-- <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
+                <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
                     <i class="icon" :class="lang =='zh' ? 'i_zh-en' : 'i_en-zh'"/>
-                </a-button> -->
+                </a-button>
                 <a-divider type="vertical"/>
                 <a-button class="notice" type="link">
                     <a-badge :count="unread.org + unread.master"  @click="routerChange('notice')">

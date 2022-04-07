@@ -217,12 +217,12 @@ let Const = {
             OUT_REPAIR_TIME: 2,
         },
         SERVICE_TYPE_LIST: [
-            { text: '保内', value: 1 },
-            { text: '保外', value: 2 },
+            { text: '保内', en: 'Under warranty', value: 1 },
+            { text: '保外', en: 'Out of warranty', value: 2 },
         ],
         SERVICE_TYPE_MAP: {
-            1: '保内',
-            2: '保外',
+            '1' : { zh: '保内', en: 'Under warranty'},
+            '2' : { zh: '保外', en: 'Out of warranty'},
         },
         // 维修方式
         CHANNEL_LIST: [
@@ -231,9 +231,9 @@ let Const = {
             { text: '寄修', value: 3 },
         ],
         CHANNEL_MAP: {
-            1: '上门',
-            2: '到店',
-            3: '寄修',
+            '1' : { zh: '上门', en: 'Home repair'},
+            '2' : { zh: '到店', en: 'Repair in store'},
+            '3' : { zh: '寄修', en: 'Send by courier'},
         },
         ORG_TYPE_LIST: [
             { text: '零售商', value: 20 },
@@ -245,8 +245,8 @@ let Const = {
             { text: '更换', value: 2 },
         ],
         METHOD_MAP: {
-            1: '维修',
-            2: '更换',
+            '1' : { zh: '维修', en: 'Repair'},
+            '2' : { zh: '更换', en: 'Replace'},
         },
         // 优先级
         PRIORITY_LIST: [
@@ -255,14 +255,9 @@ let Const = {
             { text: '低', value: 3 },
         ],
         PRIORITY_MAP: {
-            1: '高',
-            2: '中',
-            3: '低',
-        },
-        PRIORITY_COLOR_MAP: {
-            1: 'red',
-            2: 'blue',
-            3: 'green',
+            '1' : { color: 'red',  zh: '高', en: 'high'},
+            '2' : { color: 'blue', zh: '中', en: 'medium'},
+            '3' : { color: 'green', zh: '低', en: 'low'},
         },
         // 状态
         STATUS: {
@@ -275,21 +270,13 @@ let Const = {
             AUDIT_FAIL: -30,
         },
         STATUS_MAP: {
-            '30': '待检测',
-            '40': '维修中',
-            '60': '已结算待审核',
-            '80': '审核通过',
-            '100': '结算完成',
-            '-30': '审核未通过',
-        },
-        STATUS_COLOR_MAP: {
-            '30': 'yellow',
-            '40': 'blue',
-            '60': 'orange',
-            '80': 'purple',
-            '100': 'green',
-            '-10': 'gray',
-            '-30': 'red',
+            '30':  { color: 'yellow', zh: '待检测', en: 'Waiting detect'},
+            '40': { color: 'blue', zh: '维修中', en: 'Under repair'},
+            '60': { color: 'orange', zh: '已结算待审核', en: 'Settled accounts and awaiting audit'},
+            '80': { color: 'purple', zh: '审核通过', en: 'Passed audit'},
+            '100': { color: 'green', zh: '结算完成', en: 'Finished settle accounts'},
+            '-10': { color: 'gray', zh: '已取消', en: 'Cancelled'},
+            '-30': { color: 'red', zh: '审核未通过', en: 'Failed audit'},
         },
         // 故障类型 - 放弃使用
         FAULT_OPTIONS_MAP: {
@@ -766,12 +753,12 @@ let Const = {
             AUDIT_FAIL: -200,// 审核失败
         },
         STATUS_MAP: {
-            '0'   : { color: 'purple', text: '待提交'},
-            '100' : { color: 'orange', text: '待审核'},
-            '200' : { color: 'blue',   text: '处理中'},
-            '600' : { color: 'green',  text: '已完成'},
-            '-100': { color: 'gray',   text: '已取消'},
-            '-200': { color: 'red',    text: '审核失败'},
+            '0'   : { color: 'purple', zh: '待提交', en: 'Wait Submit'},
+            '100' : { color: 'orange', text: '待审核', text_en: 'Wait Submit'},
+            '200' : { color: 'blue',   text: '处理中', text_en: 'Wait Submit'},
+            '600' : { color: 'green',  text: '已完成', text_en: 'Wait Submit'},
+            '-100': { color: 'gray',   text: '已取消', text_en: 'Wait Submit'},
+            '-200': { color: 'red',    text: '审核失败', text_en: 'Wait Submit'},
         },
         TYPE: {
             ONLY_REFUND: 1,       // 仅退款
@@ -865,7 +852,7 @@ let Const = {
             '-100':{ text: '已取消', color: 'gray' },
         }
     },
-    SUPPLIER: {
+    SUPPLIER: { //供应商
         PAYMENT_TYPE: {
             FIFTEEN: 20,
             THIRTY: 30,
@@ -879,7 +866,42 @@ let Const = {
             '30': '30日内',
             '40': '45日内',
             '50': '60日内'
-        }
+        },
+        SUPPLIER_TYPE: {
+            QUALIFIED: 10,
+            DISPOSABLE: 20,
+            OBSOLETE: 30,
+        },
+        SUPPLIER_TYPE_MAP: {
+            '10': '合格',
+            '20': '一次性',
+            '30': '淘汰',
+        },
+        STATUS_PURCHASE: {
+            ON_PURCHASE: 0, //正常采购
+            OFF_PURCHASE: -1
+        },
+        STATUS_PURCHASE_MAP: {
+            '0': '采购正常',
+            '-1': '采购冻结',
+        },
+        STATUS_PURCHASE_COLOR_MAP: {
+            '0': 'green',
+            '-1': 'red',
+        },
+        STATUS_SETTLEMENT: {
+            ON_SETTLEMENT: 0, //正常结算
+            OFF_SETTLEMENT: -1
+        },
+        STATUS_SETTLEMENT_MAP: {
+            '0': '结算正常',
+            '-1': '结算冻结',
+        },
+        STATUS_SETTLEMENT_COLOR_MAP: {
+            '0': 'green',
+            '-1': 'red',
+        },
+
     },
 };
 

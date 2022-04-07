@@ -58,7 +58,7 @@
                 <template v-if="column.dataIndex === 'status'">
                     <div class="status status-bg status-tag" :class="$Util.aftersalesStatusFilter(text,'color')">
                         <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>
-                            {{ $Util.aftersalesStatusFilter(text) }}
+                            {{ $Util.aftersalesStatusFilter(text, $i18n.locale) }}
                         </a-tooltip>
                     </div>
                 </template>

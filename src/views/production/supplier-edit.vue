@@ -15,6 +15,32 @@
                     </div>
                 </div>
                 <div class="form-item required">
+                    <div class="key">供应商简称：</div>
+                    <div class="value">
+                        <a-input v-model:value="form.short_name" placeholder="请输入供应商简称"/>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">供应商类型：</div>
+                    <div class="value">
+                        <a-select v-model:value="form.type" placeholder="请选择供应商类型">
+                            <a-select-option  v-for="(val,key) in SUPPLIER_TYPE" :key="key" :value="key">{{ val }}</a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">供应商代码：</div>
+                    <div class="value">
+                        <a-input v-model:value="form.uid" placeholder="请输入供应商代码"/>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">物料分类:</div>
+                    <div class="value">
+                        <CategoryTreeSelect @change="handleCategorySelect" :category='item_category' :category-id='form.category_id' placeholder="请选择物料分类" type="material"/>
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">联系人：</div>
                     <div class="value">
                         <a-input v-model:value="form.contact_name" placeholder="请输入联系人名称"/>
@@ -26,7 +52,7 @@
                         <a-input v-model:value="form.contact_phone" placeholder="请输入联系人电话"/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">联系人邮箱：</div>
                     <div class="value">
                         <a-input v-model:value="form.contact_email" placeholder="请输入联系人邮箱"/>
@@ -50,18 +76,25 @@
                         <a-input v-model:value="form.deposit_bank" placeholder="请输入开户银行"/>
                     </div>
                 </div>
-                <div class="form-item required">
+<!--                <div class="form-item required">
                     <div class="key">开户行支行：</div>
                     <div class="value">
                         <a-input v-model:value="form.account_bank" placeholder="请输入开户行支行"/>
                     </div>
-                </div>
+                </div>-->
                 <div class="form-item required">
                     <div class="key">付款期限：</div>
                     <div class="value">
                         <a-select v-model:value="form.payment_term" placeholder="请选择付款期限">
                             <a-select-option  v-for="(val,key) in PAYMENT_TYPE" :key="key" :value="key">{{ val }}</a-select-option>
                         </a-select>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">到货周期：</div>
+                    <div class="value form-item-value">
+                        <a-input-number v-model:value="form.arrival_period" :min="0" :precision="0"/>
+                        <sapn>天</sapn>
                     </div>
                 </div>
                 <div class="form-item required">
@@ -87,10 +120,13 @@
 
 <script>
 import Core from '../../core';
+import CategoryTreeSelect from '../../components/popup-btn/CategoryTreeSelect.vue'
 import ChinaAddressCascader from '../../components/common/ChinaAddressCascader.vue'
 
+const SUPPLIER_TYPE = Core.Const.SUPPLIER.SUPPLIER_TYPE_MAP
 export default {
     name: 'SupplierEdit',
+    components: { AddressCascader, CategoryTreeSelect },
     components: { ChinaAddressCascader },
     props: {},
     data() {
@@ -98,11 +134,16 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
+            SUPPLIER_TYPE,
             detail: {},
             PAYMENT_TYPE: Core.Const.SUPPLIER.PAYMENT_TYPE_MAP,
             form: {
                 id: '',
+                type: undefined,
+                uid: '',
                 name: '',
+                short_name: '',
+                category_id: '',
                 province: '',
                 city: '',
                 county: '',
@@ -115,7 +156,8 @@ export default {
                 account_bank: '',
                 deposit_bank: '',
                 bank_card_no: '',
-                buyer_id: '',
+                // buyer_id: '',
+                arrival_period: '',
             },
             defAddr: []
         };
@@ -159,19 +201,31 @@ export default {
             this.form.city = address[1]
             this.form.county = address[2]
         },
+        handleCategorySelect(val, node) {
+            this.form.category_id = val
+        },
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
             if (!form.name) {
                 return this.$message.warning('请输入供应商名称')
+            }
+            if (!form.short_name) {
+                return this.$message.warning('请输入供应商简称')
+            }
+            if (!form.type) {
+                return this.$message.warning('请选择供应商类型')
+            }
+            if (!form.uid) {
+                return this.$message.warning('请输入供应商代码')
+            }
+            if (!form.category_id) {
+                return this.$message.warning('请选择物料分类')
             }
             if (!form.contact_name) {
                 return this.$message.warning('请输入联系人名称')
             }
             if (!form.contact_phone) {
                 return this.$message.warning('请输入联系人电话')
-            }
-            if (!form.contact_email) {
-                return this.$message.warning('请输入联系人邮箱')
             }
             if (!form.credit_code) {
                 return this.$message.warning('请输入供应商信用代码')
@@ -182,11 +236,14 @@ export default {
             if (!form.deposit_bank) {
                 return this.$message.warning('请输入开户银行')
             }
-            if (!form.account_bank) {
+          /*  if (!form.account_bank) {
                 return this.$message.warning('请输入开户行支行')
-            }
+            }*/
             if (!form.payment_term) {
                 return this.$message.warning('请选择付款期限')
+            }
+            if (!form.arrival_period) {
+                return this.$message.warning('请输入到货周期')
             }
             if (!form.address) {
                 return this.$message.warning('请输入供应商地址')

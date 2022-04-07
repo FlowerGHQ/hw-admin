@@ -310,7 +310,9 @@ export default {
                         short_path: item,
                         status: 'done',
                     }))
+                    console.log('getOrderDetail this.upload.fileList', this.upload.fileList)
                 }
+
                 this.getPurchaseDetail();
             }).catch(err => {
                 console.log('getOrderDetail err', err)
@@ -340,6 +342,8 @@ export default {
         },
         // 提交 售后单 基本信息
         handleSubmitInfo() {
+            console.log('handleSubmitInfo', this.upload.fileList)
+
             let form = Core.Util.deepCopy(this.form)
             if (!form.order_sn) {
                 return this.$message.warning('请输入采购单单号')
@@ -357,12 +361,15 @@ export default {
             if (form.refund_money > this.purchase.charge) {
                 return this.$message.warning((this.needRefund ? '退款' : '补偿') + '金额不可大采购单实际支付金额')
             }
+            console.log('handleSubmitInfo this.upload.fileList', this.upload.fileList)
             if (this.upload.fileList.length) {
                 let list = this.upload.fileList.map(item => {
-                    return list.short_path || item.response.data.filename
+                    return item.short_path || item.response.data.filename
                 })
                 form.images = list.join(',')
             }
+            console.log('form.images', form.images)
+
             Core.Api.Aftersales.save(form).then(res => {
                 console.log('handleSubmitInfo res:', res)
                 this.$message.success('保存成功')
@@ -441,6 +448,7 @@ export default {
                 }
             }
             this.upload.fileList = fileList
+            console.log('handleImgChange this.upload.fileList:', this.upload.fileList)
         },
 
         getAllInItemList(items) {

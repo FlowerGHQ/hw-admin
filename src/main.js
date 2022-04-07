@@ -4,6 +4,8 @@ import router from './router';
 import store from './store';
 import Util from './core/utils'
 import i18n from './core/i18n'
+
+console.log('i18n', i18n)
 import {message,notification} from 'ant-design-vue';
 
 // import address from './assets/js/address/cascader-address-options.js'

@@ -11,7 +11,7 @@
             <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
                 <a-tab-pane :key="item.key" v-for="item of statusList">
                     <template #tab>
-                        <div class="tabs-title">{{item.text}}<span :class="item.color">{{item.value}}</span></div>
+                        <div class="tabs-title">{{item[$i18n.locale]}}<span :class="item.color">{{item.value}}</span></div>
                     </template>
                 </a-tab-pane>
             </a-tabs>
@@ -19,39 +19,39 @@
         <div class="search-container">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">工单编号:</div>
+                    <div class="key">{{$t('search.repair_sn')}}:</div>
                     <div class="value">
-                        <a-input placeholder="请输入工单编号" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                        <a-input :placeholder="$t('search.enter_repair_sn')" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">车架编号:</div>
+                    <div class="key">{{$t('search.vehicle_no')}}:</div>
                     <div class="value">
-                        <a-input placeholder="请输入车架编号" v-model:value="searchForm.vehicle_no" @keydown.enter='handleSearch'/>
+                        <a-input :placeholder="$t('search.enter_vehicle_no')" v-model:value="searchForm.vehicle_no" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
-                    <div class="key">所属分销商:</div>
+                    <div class="key">{{$t('n.distributor')}}:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.distributor_id" placeholder="请选择所属分销商" @change="handleSearch" show-search option-filter-prop="children">
+                        <a-select v-model:value="searchForm.distributor_id" :placeholder="$t('search.select_distributor')" @change="handleSearch" show-search option-filter-prop="children">
                             <a-select-option v-for="distributor of distributorList" :key="distributor.id" :value="distributor.id">{{ distributor.name }}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
-                    <div class="key">所属零售商:</div>
+                    <div class="key">{{$t('n.agent')}}:</div>
                     <div class="value">
                         <a-select v-model:value="searchForm.agent_id" @change='handleSearch' show-search option-filter-prop="children"
-                            :placeholder="searchForm.distributor_id ? '请选择所属零售商' : '请先选择所属分销商'" :disabled="!searchForm.distributor_id">
+                            :placeholder="searchForm.distributor_id ? $t('search.select_agent') : $t('search.select_d_first')" :disabled="!searchForm.distributor_id">
                             <a-select-option v-for="agent of agentList" :key="agent.id" :value="agent.id">{{ agent.name }}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR', 'AGENT')">
-                    <div class="key">所属门店:</div>
+                    <div class="key">{{$t('n.store')}}:</div>
                     <div class="value">
                         <a-select v-model:value="searchForm.store_id" @change='handleSearch' show-search option-filter-prop="children"
-                            :placeholder="searchForm.agent_id ? '请选择所属门店' : '请先选择所属零售商'" :disabled="!searchForm.agent_id">
+                            :placeholder="searchForm.agent_id ? $t('search.select_store') : $t('search.select_a_first')" :disabled="!searchForm.agent_id">
                             <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
@@ -81,7 +81,7 @@
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="$Util.repairStatusFilter(text,'color')">
                             <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>
-                                {{ $Util.repairStatusFilter(text) }}
+                                {{ $Util.repairStatusFilter(text, $i18n.locale) }}
                                 <template v-if="[STATUS.AUDIT_FAIL].includes(record.status)">
                                     <i class="icon i_hint" style="font-size: 12px;padding-left: 6px;"/>
                                 </template>
@@ -93,17 +93,17 @@
                     </template>
                     <template v-if="column.dataIndex === 'priority'">
                         <div class="status status-bg status-tag smell" :class="$Util.repairPriorityFilter(text,'color')">
-                            {{$Util.repairPriorityFilter(text)}}
+                            {{$Util.repairPriorityFilter(text, $i18n.locale)}}
                         </div>
                     </template>
                     <template v-if="column.dataIndex === 'channel'">
-                        {{$Util.repairChannelFilter(text)}}
+                        {{$Util.repairChannelFilter(text, $i18n.locale)}}
                     </template>
                     <template v-if="column.dataIndex === 'repair_method'">
-                        {{$Util.repairMethodFilter(text)}}
+                        {{$Util.repairMethodFilter(text, $i18n.locale)}}
                     </template>
                     <template v-if="column.dataIndex === 'service_type'">
-                        {{$Util.repairServiceFilter(text)}}
+                        {{$Util.repairServiceFilter(text, $i18n.locale)}}
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
@@ -203,14 +203,14 @@ export default {
             // 搜索
             operMode: '',
             statusList: [
-                {text: '全  部', value: '0', color: 'primary', key: '-1'},
-                {text: '待检测', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
-                {text: '维修中', value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
-                {text: '已结算待审核', value: '0', color: 'orange',  key: STATUS.SETTLEMENT },
-                {text: '审核未通过', value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
-                {text: '审核通过', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
-                {text: '结算完成', value: '0', color: 'green',  key: STATUS.FINISH },
-                {text: '已取消', value: '0', color: 'gray',  key: STATUS.CLOSE },
+                {zh: '全  部',en: 'All', value: '0', color: 'primary', key: '-1'},
+                {zh: '待检测',en: 'Waiting detect', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
+                {zh: '维修中', en: 'Under repair',value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
+                {zh: '已结算待审核',en: 'Settled accounts and awaiting audit', value: '0', color: 'orange',  key: STATUS.SETTLEMENT },
+                {zh: '审核未通过', en: 'Failed audit',value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
+                {zh: '审核通过',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
+                {zh: '结算完成',en: 'Finished settle accounts', value: '0', color: 'green',  key: STATUS.FINISH },
+                {zh: '已取消',en: 'Cancelled', value: '0', color: 'gray',  key: STATUS.CLOSE },
             ],
             distributorList: [], // 分销商下拉框数据
             storeList: [],
@@ -268,36 +268,39 @@ export default {
             let { filteredInfo } = this;
             filteredInfo = filteredInfo || {};
             let columns = [
-                { title: '工单编号', dataIndex: 'uid', key: 'detail' },
-                { title: '工单名称', dataIndex: 'name', key: 'tip_item' },
-                { title: '紧急程度', dataIndex: 'priority' },
-                { title: '订单状态', dataIndex: 'status'},
-                { title: '工单帐类', dataIndex: 'service_type',
+                { title: this.$t('table.repair_sn'), dataIndex: 'uid', key: 'detail' },
+                { title: this.$t('search.vehicle_no'), dataIndex: 'vehicle_no',key: 'item'},
+                { title: this.$t('table.repair_name'), dataIndex: 'name', key: 'tip_item' },
+                { title: this.$t('table.emergency_level'), dataIndex: 'priority' },
+                { title: this.$t('table.repair_status'), dataIndex: 'status'},
+                { title: this.$t('table.repair_type'), dataIndex: 'service_type',
                     filters: REPAIR.SERVICE_TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.service_type || null },
-                { title: '维修方式', dataIndex: 'channel',
+                { title: this.$t('table.repair_way'), dataIndex: 'channel',
                     filters: REPAIR.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.channel || null },
-                { title: '维修类别', dataIndex: 'repair_method',
+                { title: this.$t('table.repair_category'), dataIndex: 'repair_method',
                     filters: REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.repair_method || null },
-                { title: '维修单位', dataIndex: 'repair_name', key: 'item' },
-                { title: '维修电话', dataIndex: 'repair_phone', key: 'item' },
-                { title: '创建人',   dataIndex: 'user_name', key: 'item' },
-                { title: '关联客户', dataIndex: 'customer_name', key: 'item' },
-                { title: '创建时间', dataIndex: 'create_time', key: 'time' },
+                { title: this.$t('table.repair_unit'), dataIndex: 'repair_name', key: 'item' },
+                { title: this.$t('table.repair_phone'), dataIndex: 'repair_phone', key: 'item' },
+                { title: this.$t('table.creator_name'),   dataIndex: 'user_name', key: 'item' },
+                { title: this.$t('table.associated_customers'), dataIndex: 'customer_name', key: 'item' },
+                { title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time' },
                 // { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
             ]
             if (this.operMode === 'audit' && this.$auth('ADMIN', 'DISTRIBUTOR')) {
-                columns.push({ title: '操作', key: 'operation', fixed: 'right'},)
+                columns.push({ title: this.$t('def.operate'), key: 'operation', fixed: 'right'},)
             }
             if (this.operMode === 'redit' && !this.$auth('ADMIN')) {
-                columns.push({ title: '操作', key: 'operate', fixed: 'right'},)
+                columns.push({ title: this.$t('def.operate'), key: 'operate', fixed: 'right'},)
             }
             if (this.operMode === 'invoice' && this.$auth('ADMIN')) {
-                columns.push({ title: '操作', key: 'handle', fixed: 'right'},)
+                columns.push({ title: this.$t('def.operate'), key: 'handle', fixed: 'right'},)
             }
             return columns
         },
     },
-    mounted() {},
+    mounted() {
+    },
+
     methods: {
         routerChange(type, item = {}) {
             console.log('routerChange item:', item)

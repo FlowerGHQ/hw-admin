@@ -91,6 +91,7 @@ export default {
                 {title: '物料分类', dataIndex: ['category', 'name'], key: 'item'},
                 {title: '物料编码', dataIndex: 'code', key: 'item'},
                 {title: '单位', dataIndex: 'unit', key: 'item'},
+                {title: '单价', dataIndex: 'price', key: 'item'},
                 {title: '规格', dataIndex: 'spec', key: 'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'},

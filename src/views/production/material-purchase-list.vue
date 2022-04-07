@@ -1,9 +1,9 @@
 <template>
-    <div id="SupplierList" class="list-container">
+    <div id="MaterialPurchaseList" class="list-container">
         <div class="title-container">
-            <div class="title-area">供应商列表</div>
+            <div class="title-area">采购订单列表</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建供应商</a-button>
+                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建采购单</a-button>
                 <a-upload name="file" class="file-uploader"
                           :file-list="upload.fileList" :action="upload.action"
                           :show-upload-list='false'
@@ -36,7 +36,7 @@
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                     :row-key="record => record.id" :pagination='false'>
+                     :row-key="record => record.id" :pagination='false' :loading="loading">
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.key === 'detail'">
                         <a-tooltip placement="top" :title='text'>
@@ -45,19 +45,6 @@
                     </template>
                     <template v-if="column.key === 'contact'">
                         {{ text || '-'}}
-                    </template>
-                    <template v-if="column.dataIndex === 'type'">
-                        {{ $Util.supplierTypeFilter(text) }}
-                    </template>
-                    <template v-if="column.dataIndex === 'flag_purchase'">
-                        <div class="status status-bg status-tag" :class="$Util.flagPurchaseFilter(text,'color')">
-                            {{ $Util.flagPurchaseFilter(text) }}
-                        </div>
-                    </template>
-                    <template v-if="column.dataIndex === 'flag_settlement'">
-                        <div class="status status-bg status-tag" :class="$Util.flagSettlementFilter(text,'color')">
-                            {{ $Util.flagSettlementFilter(text) }}
-                        </div>
                     </template>
                     <template v-if="column.dataIndex === 'payment_term'">
                         {{ $Util.supplierPaymentTypeFilter(text) }}
@@ -100,6 +87,7 @@ import TimeSearch from '@/components/common/TimeSearch.vue'
 import EditBomModel from './components/EditBomModel.vue'
 
 export default {
+    name: 'MaterialPurchaseList',
     components: {
         TimeSearch,
         EditBomModel,
@@ -110,6 +98,7 @@ export default {
             currPage: 1,
             pageSize: 20,
             total: 0,
+            loading: false,
             searchForm: {
                 name: '',
                 begin_time: '',
@@ -118,21 +107,16 @@ export default {
 
             tableData: [],
             tableColumns: [
-                { title: '供应商名称', dataIndex: 'name', key: 'detail' },
-                { title: '简称', dataIndex: 'short_name', key: 'contact' },
-                { title: '供应商类型', dataIndex: 'type'},
-                { title: '物料分类', dataIndex: ['category','name'],key: 'contact'},
-                { title: '联系人', dataIndex: 'contact_name',key: 'contact'},
-                { title: '联系人电话', dataIndex: 'contact_phone',key: 'contact' },
-                { title: '联系人邮箱', dataIndex: 'contact_email',key: 'contact' },
-                { title: '采购状态', dataIndex: 'flag_purchase'},
-                { title: '结算状态', dataIndex: 'flag_settlement'},
-                /* { title: '供应商信用代码', dataIndex: 'credit_code',key: 'contact' },
-                { title: '开户行账号', dataIndex: 'bank_card_no',key: 'contact' },
-                { title: '开户银行', dataIndex: 'deposit_bank',key: 'contact' },
-                { title: '开户行支行', dataIndex: 'account_bank',key: 'contact' },*/
-                { title: '付款期限', dataIndex: 'payment_term' },
-                { title: '供应商地址', dataIndex: 'address' },
+                { title: '订单号', dataIndex: 'sn', key: 'detail' },
+                { title: '供应商', dataIndex: 'name'},
+                { title: '物料名称', dataIndex: 'contact_name',key: 'contact'},
+                { title: '物料编码', dataIndex: 'contact_phone',key: 'contact' },
+                { title: '单位', dataIndex: 'contact_email',key: 'contact' },
+                { title: '数量', dataIndex: 'payment_term' },
+                { title: '单价', dataIndex: 'payment_term' },
+                { title: '总价', dataIndex: 'payment_term' },
+                { title: '到货日期', dataIndex: 'address' },
+                { title: '备注', dataIndex: 'payment_term' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '操作', key: 'operation', fixed: 'right'}
             ],
@@ -161,14 +145,14 @@ export default {
             switch(type) {
                 case 'detail':
                     routeUrl = this.$router.resolve({
-                        path: "/production/supplier-detail",
+                        path: "/production/material-purchase-detail",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'edit':
                     routeUrl = this.$router.resolve({
-                        path: "/production/supplier-edit",
+                        path: "/production/material-purchase-edit",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
@@ -199,7 +183,7 @@ export default {
             this.pageChange(1);
         },
         getTableData() {
-            Core.Api.Supplier.list({
+            Core.Api.MaterialPurchase.list({
                 ...this.searchForm,
                 page: this.currPage,
                 pageSize: this.pageSize,

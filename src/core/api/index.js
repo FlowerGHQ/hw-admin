@@ -399,6 +399,14 @@ const apiList = {
         detail: ['PostJson', 'supplier-material/detail'],
         delete: ['PostJson', 'supplier-material/delete-material'],
     },
+    MaterialPurchase: { //物料采购单
+        list: ['PostJson', 'material-purchase-order/list'],
+        detail: ['PostJson', 'material-purchase-order/detail'],
+        cancel: ['PostJson', 'material-purchase-order/cancel'],
+        save: ['PostJson', 'material-purchase-order/save'],
+        export: ['PostJson', 'material-purchase-order/export'], // 导出
+
+    }
 
 };
 

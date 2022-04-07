@@ -2,14 +2,17 @@
     <div id="FaultList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">故障列表</div>
+                <div class="title-area">{{$t('n.list_of_faults')}}</div>
                 <div class="btns-area">
-                    <FaultList :id="id" ref="FaultList" @saveFault="getTableData" />
+                    <FaultList :id="id" btnType="primary" :ghost="false" ref="FaultList" @saveFault="getTableData"><i class="icon i_add"/>{{ $t('n.new_fault') }}</FaultList>
                 </div>
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false'>
+                    <template #headerCell="{ column, title}">
+                        {{ $t(title) }}
+                    </template>
                     <template #bodyCell="{ column, text , record}">
                         <template v-if="column.dataIndex === 'name'">
                             <a-tooltip placement="top" :title='text'>
@@ -20,7 +23,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除
                             </a-button>
                         </template>
                     </template>
@@ -69,19 +72,21 @@ export default {
             form: {
                 id: '',
             },
-
+            id: 0,
             tableColumns: [
-                {title: '名称', dataIndex: 'name'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '操作', key: 'operation', fixed: 'right'},
+                {title: 'table.name', dataIndex: 'name'},
+                {title: 'def.create_time', dataIndex: 'create_time', key: 'time'},
+                {title: 'def.operate', key: 'operation', fixed: 'right'},
             ],
             tableData: [],
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+    },
     mounted() {
         this.getTableData();
+
     },
     methods: {
         routerChange(type, item) {
@@ -111,7 +116,6 @@ export default {
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
-            this.loading = false;
             // return
             Core.Api.Fault.list({
                 ...this.form,

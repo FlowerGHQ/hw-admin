@@ -1,21 +1,21 @@
 <template>
     <a-button class="FaultlistBtn" @click.stop="handleFaultShow()" :ghost='ghost' :type="btnType" :class="btnClass">
-        <slot><i class="icon i_add"/></slot>
+<!--        <slot><i class="icon i_add"/></slot>-->
         <slot>{{ btnText }}</slot>
     </a-button>
-    <a-modal v-model:visible="faultShow" title="新增故障" class="fault-modal"
+    <a-modal v-model:visible="faultShow" :title="$t('n.new_fault')" class="fault-modal"
              :after-close='handleFaultClose'>
         <div class="modal-content">
             <div class="form-item required">
-                <div class="key">原因:</div>
+                <div class="key">{{$t('table.name')}}:</div>
                 <div class="value">
-                    <a-input v-model:value="form.name" placeholder="请输入故障名称"/>
+                    <a-input v-model:value="form.name" :placeholder="$t('pop_up.enter_fault')"/>
                 </div>
             </div>
         </div>
         <template #footer>
-            <a-button @click="faultShow = false">取消</a-button>
-            <a-button @click="handleFaultSubmit" type="primary">确定</a-button>
+            <a-button @click="faultShow = false">{{ $t('def.cancel') }}</a-button>
+            <a-button @click="handleFaultSubmit" type="primary">{{ $t('def.submit') }}</a-button>
         </template>
     </a-modal>
 </template>
@@ -26,6 +26,7 @@ import Core from '../../core';
 export default {
     name: 'FaultList',
     components: {},
+    emits: ['saveFault'],
     props: {
         btnText: {
             type: String,

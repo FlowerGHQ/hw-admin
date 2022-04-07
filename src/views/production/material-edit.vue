@@ -19,16 +19,15 @@
                     <div class="value">
                         <CategoryTreeSelect @change="handleCategorySelect"
                             :category='item_category' :category-id='form.category_id'
-                            placeholder="请选择物料分类" type="material"
-                        />
+                            placeholder="请选择物料分类" type="material"/>
                     </div>
                 </div>
-                <div class="form-item required">
+<!--                <div class="form-item required">
                     <div class="key">物料包装</div>
                     <div class="value">
                         <a-input v-model:value="form.encapsulation" placeholder="请输入物料包装"/>
                     </div>
-                </div>
+                </div>-->
                 <div class="form-item required">
                     <div class="key">物料编码</div>
                     <div class="value">
@@ -45,6 +44,12 @@
                     <div class="key">单位</div>
                     <div class="value">
                         <a-input v-model:value="form.unit" placeholder="请输入单位"/>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">单价</div>
+                    <div class="value">
+                        <a-input v-model:value="form.unit_price" placeholder="请输入单位"/>
                     </div>
                 </div>
                 <div class="form-item" required>

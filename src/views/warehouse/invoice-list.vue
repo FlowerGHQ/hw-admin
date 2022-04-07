@@ -86,7 +86,7 @@
                             <template v-if="record.status === STATUS.INIT">
                                 <!-- <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button> -->
                                 <a-button type="link" @click="handleCancel(record.id)" class="danger"><i class="icon i_close_c"/>取消</a-button>
-                                <AuditHandle v-if="record.status === STATUS.WAIT_AUDIT" btnType="link" :api-list="['Invoice', 'audit']" :id="id"> <i class="icon i_audit"/>审核</AuditHandle>
+                                <AuditHandle v-if="record.status === STATUS.WAIT_AUDIT" btnType="link" :api-list="['Invoice', 'audit']" :id="record.id"> <i class="icon i_audit"/>审核</AuditHandle>
                             </template>
                         </template>
                     </template>
