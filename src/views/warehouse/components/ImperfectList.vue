@@ -14,7 +14,7 @@
                             {{ $Util.userTypeFilter(text) }}
                         </template>
                         <template v-if="column.dataIndex === 'service_type'">
-                            {{ $Util.repairServiceFilter(text) }}
+                            {{ $Util.repairServiceFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}

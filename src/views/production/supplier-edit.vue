@@ -94,7 +94,7 @@
                     <div class="key">到货周期：</div>
                     <div class="value form-item-value">
                         <a-input-number v-model:value="form.arrival_period" :min="0" :precision="0"/>
-                        <sapn>天</sapn>
+                        <span class="date">天</span>
                     </div>
                 </div>
                 <div class="form-item required">
@@ -126,8 +126,7 @@ import ChinaAddressCascader from '../../components/common/ChinaAddressCascader.v
 const SUPPLIER_TYPE = Core.Const.SUPPLIER.SUPPLIER_TYPE_MAP
 export default {
     name: 'SupplierEdit',
-    components: { AddressCascader, CategoryTreeSelect },
-    components: { ChinaAddressCascader },
+    components: { ChinaAddressCascader, CategoryTreeSelect },
     props: {},
     data() {
         return {
@@ -136,6 +135,7 @@ export default {
             loading: false,
             SUPPLIER_TYPE,
             detail: {},
+            item_category: {},
             PAYMENT_TYPE: Core.Const.SUPPLIER.PAYMENT_TYPE_MAP,
             form: {
                 id: '',
@@ -143,7 +143,7 @@ export default {
                 uid: '',
                 name: '',
                 short_name: '',
-                category_id: '',
+                category_id: undefined,
                 province: '',
                 city: '',
                 county: '',
@@ -260,4 +260,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/*#SupplierEdit {
+    .form-block {
+        .form-item-value {
+            .date {
+
+            }
+        }
+    }
+}*/
 </style>

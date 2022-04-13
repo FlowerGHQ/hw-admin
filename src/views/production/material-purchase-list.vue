@@ -3,17 +3,7 @@
         <div class="title-container">
             <div class="title-area">采购订单列表</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建采购单</a-button>
-                <a-upload name="file" class="file-uploader"
-                          :file-list="upload.fileList" :action="upload.action"
-                          :show-upload-list='false'
-                          :headers="upload.headers" :data='upload.data'
-                          accept=".xlsx,.xls"
-                          @change="handleFileUpload">
-                    <a-button type="primary" class="file-upload-btn" style="margin-left: 12px;">
-                        批量导入明细
-                    </a-button>
-                </a-upload>
+                <a-button type="primary" @click="handlePurchaseShow"><i class="icon i_add"/>新建采购单</a-button>
             </div>
         </div>
         <div class="search-container">
@@ -26,7 +16,9 @@
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">创建时间:</div>
-                    <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
+                    <div class="value">
+                        <TimeSearch @search="handleOtherSearch" ref='TimeSearch'/>
+                    </div>
                 </a-col>
             </a-row>
             <div class="btn-area">
@@ -40,11 +32,11 @@
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.key === 'detail'">
                         <a-tooltip placement="top" :title='text'>
-                            <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
+                            <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}</a-button>
                         </a-tooltip>
                     </template>
                     <template v-if="column.key === 'contact'">
-                        {{ text || '-'}}
+                        {{ text || '-' }}
                     </template>
                     <template v-if="column.dataIndex === 'payment_term'">
                         {{ $Util.supplierPaymentTypeFilter(text) }}
@@ -56,9 +48,12 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
-                        <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/>编辑</a-button>
-                        <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button>
+                        <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>详情
+                        </a-button>
+                        <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/>编辑
+                        </a-button>
+                        <a-button type="link" @click="handleCancel(record.id)" class="danger"><i class="icon i_delete"/>取消
+                        </a-button>
                     </template>
                 </template>
             </a-table>
@@ -79,6 +74,23 @@
             />
         </div>
     </div>
+    <template class="modal-container">
+        <a-modal title="新建采购单" v-model:visible="purchaseShow" class="material-purchase-modal"
+                 :after-close='handlePurchaseClose'>
+            <div class="form-item required">
+                <div class="key">请选择供应商:</div>
+                <div class="value">
+                    <a-select v-model:value="form.supplier_id" placeholder="请选择供应商">
+                        <a-select-option v-for="item of supplierList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handlePurchaseClose">取消</a-button>
+                <a-button @click="handlePurchaseSubmit" type="primary">确定</a-button>
+            </template>
+        </a-modal>
+    </template>
 </template>
 
 <script>
@@ -104,21 +116,26 @@ export default {
                 begin_time: '',
                 end_time: '',
             },
-
+            form: {
+                id: '',
+                supplier_id: undefined,
+            },
+            supplierList: [],
+            purchaseShow: false,
             tableData: [],
             tableColumns: [
-                { title: '订单号', dataIndex: 'sn', key: 'detail' },
-                { title: '供应商', dataIndex: 'name'},
-                { title: '物料名称', dataIndex: 'contact_name',key: 'contact'},
-                { title: '物料编码', dataIndex: 'contact_phone',key: 'contact' },
-                { title: '单位', dataIndex: 'contact_email',key: 'contact' },
-                { title: '数量', dataIndex: 'payment_term' },
-                { title: '单价', dataIndex: 'payment_term' },
-                { title: '总价', dataIndex: 'payment_term' },
-                { title: '到货日期', dataIndex: 'address' },
-                { title: '备注', dataIndex: 'payment_term' },
-                { title: '创建时间', dataIndex: 'create_time', key: 'time' },
-                { title: '操作', key: 'operation', fixed: 'right'}
+                {title: '订单号', dataIndex: 'sn', key: 'detail'},
+                {title: '供应商', dataIndex: 'name'},
+                {title: '物料名称', dataIndex: 'contact_name', key: 'contact'},
+                {title: '物料编码', dataIndex: 'contact_phone', key: 'contact'},
+                {title: '单位', dataIndex: 'contact_email', key: 'contact'},
+                {title: '数量', dataIndex: 'payment_term'},
+                {title: '单价', dataIndex: 'payment_term'},
+                {title: '总价', dataIndex: 'payment_term'},
+                {title: '到货日期', dataIndex: 'address'},
+                {title: '备注', dataIndex: 'payment_term'},
+                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
+                {title: '操作', key: 'operation', fixed: 'right'}
             ],
             // 上传
             upload: {
@@ -138,11 +155,12 @@ export default {
     computed: {},
     mounted() {
         this.getTableData()
+        this.getSupplierList()
     },
     methods: {
         routerChange(type, item = {}) {
             let routeUrl = ''
-            switch(type) {
+            switch (type) {
                 case 'detail':
                     routeUrl = this.$router.resolve({
                         path: "/production/material-purchase-detail",
@@ -182,6 +200,35 @@ export default {
             this.$refs.TimeSearch.handleReset()
             this.pageChange(1);
         },
+        getSupplierList() {
+            Core.Api.Supplier.listAll().then(res => {
+                this.supplierList = res.list
+            })
+        },
+        handlePurchaseShow() {
+            console.log('handleModalShow:')
+            this.purchaseShow = true
+        },
+        handlePurchaseClose() {
+            this.purchaseShow = false
+            this.form = {
+                id: '',
+                supplier_id: undefined,
+            }
+        },
+        handlePurchaseSubmit() {
+            Core.Api.MaterialPurchase.save({
+                supplier_id: this.form.supplier_id
+            }).then(res => {
+                console.log('handlePurchaseSubmit res', res)
+                this.routerChange('detail')
+                this.handlePurchaseClose()
+            }).catch(err => {
+                console.log('handlePurchaseSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
         getTableData() {
             Core.Api.MaterialPurchase.list({
                 ...this.searchForm,
@@ -196,20 +243,19 @@ export default {
             })
         },
 
-        // 删除供应商
-        handleDelete(id) {
+        handleCancel(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该供应商吗？',
+                title: '确定要取消该采购单吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Supplier.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                    Core.Api.MaterialPurchase.cancel({id}).then(() => {
+                        _this.$message.success('取消成功');
                         _this.getTableData();
                     }).catch(err => {
-                        console.log("handleDelete err", err);
+                        console.log("handleCancel err", err);
                     })
                 },
             });

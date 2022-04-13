@@ -2,7 +2,26 @@
 <div class="StockList gray-panel no-margin">
     <div class="panel-content">
         <div class="table-container">
-            <!-- <a-button type="primary" ghost @click="handleStockAddShow" class="panel-btn" v-if="$auth('MANAGER')"><i class="icon i_add"/>库存增减</a-button> -->
+            <a-upload v-if="type === 'material'" name="file" class="file-uploader"
+                      :file-list="upload.fileList" :action="upload.action"
+                      :show-upload-list='false'
+                      :headers="upload.headers" :data='upload.data'
+                      accept=".xlsx,.xls"
+                      @change="handleMatterChange">
+                <a-button type="primary"  class="panel-btn">
+                    批量领料
+                </a-button>
+            </a-upload>
+            <a-upload v-if="type === 'material'" name="file" class="file-uploader"
+                      :file-list="upload.fileList" :action="upload.action"
+                      :show-upload-list='false'
+                      :headers="upload.headers" :data='upload.data'
+                      accept=".xlsx,.xls"
+                      @change="handleMatterChange">
+                <a-button type="primary"  class="panel-btn">
+                    批量采购
+                </a-button>
+            </a-upload>
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text}">
@@ -106,6 +125,18 @@ export default {
                 target_code: '', //商品编码
                 number: '',
                 warehouse_id: '',
+            },
+            // 上传
+            upload: {
+                action: Core.Const.NET.URL_POINT + "/admin/1/item/import",
+                fileList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'xlsx',
+                },
             },
         };
     },
@@ -229,6 +260,18 @@ export default {
                 console.log('onblur err', err)
             }).finally(() => {
             });
+        },
+        // 上传文件
+        handleMatterChange({file, fileList}) {
+            console.log("handleMatterChange status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                if (file.response && file.response.code < 0) {
+                    return this.$message.error(file.response.message)
+                } else {
+                    return this.$message.success('领料成功');
+                }
+            }
+            this.upload.fileList = fileList
         },
     }
 };

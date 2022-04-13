@@ -8,7 +8,7 @@
             </div>
             <div class="btns-area" v-if="$auth('ADMIN')">
                 <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>{{$t('def.edit')}}</a-button>
-                <a-button :type="detail.status ? '' : 'primary'" :danger="detail.status ? true : false" ghost @click="handleStatusChange()">
+                <a-button :type="detail.status ? 'null' : 'primary'" :danger="detail.status ? true : false" ghost @click="handleStatusChange()">
                     <template v-if="detail.status"><i class="icon i_forbidden"/>{{$t('def.disable')}}</template>
                     <template v-else><i class="icon i_enable"/>{{$t('def.enable')}}</template>
                 </a-button>
@@ -24,72 +24,72 @@
                 </div>
                 <a-row class="desc-detail has-logo">
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">联系人：</span>
+                        <span class="key">{{ $t('d.contact') }}：</span>
                         <span class="value">{{ detail.contact }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">手机号：</span>
+                        <span class="key">{{ $t('d.phone') }}：</span>
                         <span class="value">{{ detail.phone }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">邮箱：</span>
+                        <span class="key">{{ $t('d.email') }}：</span>
                         <span class="value">{{ detail.email }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">国家：</span>
+                        <span class="key">{{ $t('d.country') }}：</span>
                         <span class="value">{{ detail.country }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">销售区域：</span>
+                        <span class="key">{{ $t('d.sales_area') }}：</span>
                         <span class="value" v-if="detail.sales_area_list && detail.sales_area_list.length">
                             {{ detail.sales_area_list.map(i => i.name).join(' , ') }}
                         </span>
                         <span class="value" v-else>-</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">创建时间：</span>
+                        <span class="key">{{ $t('d.create_time') }}：</span>
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
                 </a-row>
                 <div class='desc-stat'>
-                    <a-statistic title="零售商数" :value="detail.agent_count"/>
+                    <a-statistic :title="$t('d.agent')" :value="detail.agent_count"/>
                     <a-divider type="vertical"/>
-                    <a-statistic title="门店数" :value="detail.store_count"/>
+                    <a-statistic :title="$t('d.store')" :value="detail.store_count"/>
                     <a-divider type="vertical"/>
-                    <a-statistic title="员工数" :value="detail.user_count"/>
+                    <a-statistic :title="$t('d.user')" :value="detail.user_count"/>
                     <a-divider type="vertical"/>
-                    <a-statistic title="累计营收" :value="0" :precision="2" prefix='€'/>
+                    <a-statistic :title="$t('d.revenue')" :value="0" :precision="2" prefix='€'/>
                     <a-divider type="vertical"/>
-                    <a-statistic title="总订单数" :value="detail.order_count"/>
+                    <a-statistic :title="$t('d.orders')" :value="detail.order_count"/>
                 </div>
             </div>
         </div>
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
-                <a-tab-pane key="UserList" tab="员工管理">
+                <a-tab-pane key="UserList" :tab="$t('d.manage_employees')">
                     <UserList :orgId="distributor_id" :orgType="ORG_TYPE.DISTRIBUTOR" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'UserList'"/>
                 </a-tab-pane>
                 <!-- <a-tab-pane key="WorkerList" tab="维修工管理">
                     <UserList :orgId="distributor_id" :orgType="ORG_TYPE.DISTRIBUTOR" :type="USER_TYPE.WORKER" v-if="activeKey === 'WorkerList'"/>
                 </a-tab-pane>-->
-                <a-tab-pane key="PurchaseList" tab="订单列表">
+                <a-tab-pane key="PurchaseList" :tab="$t('d.order')">
                     <PurchaseList :orgId="distributor_id" :orgType="ORG_TYPE.DISTRIBUTOR" v-if="activeKey === 'PurchaseList'"/>
                 </a-tab-pane>
                 <template v-if="$auth('ADMIN')">
-                    <a-tab-pane key="AgentList" tab="零售商管理">
+                    <a-tab-pane key="AgentList" :tab="$t('d.manage_agent')">
                         <AgentList :distributorId="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'AgentList'"/>
                     </a-tab-pane>
-                    <a-tab-pane key="StoreList" tab="门店管理">
+                    <a-tab-pane key="StoreList" :tab="$t('d.manage_store')">
                         <StoreList :distributorId="distributor_id" :type="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'StoreList'"/>
                     </a-tab-pane>
                     <!-- <a-tab-pane key="PricingStructure" tab="商品价格">
                         <PricingStructure :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'PricingStructure'"/>
                     </a-tab-pane>-->
-                    <a-tab-pane key="WalletList" tab="账户管理">
+                    <a-tab-pane key="WalletList" :tab="$t('d.manage_account')">
                         <WalletList :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'WalletList'"/>
                     </a-tab-pane>
                 </template>
-                <a-tab-pane key="ReceiverAddress" tab="收货地址">
+                <a-tab-pane key="ReceiverAddress" :tab="$t('d.address')">
                     <ReceiverAddress :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'ReceiverAddress'"/>
                 </a-tab-pane>
             </a-tabs>
@@ -174,7 +174,7 @@ export default {
                 this.loading = false;
             });
         },
-        // 删除 零售商
+     /*   // 删除 零售商
         handleDelete(id) {
             let _this = this;
             this.$confirm({
@@ -191,17 +191,17 @@ export default {
                     })
                 },
             });
-        },
+        },*/
         handleStatusChange() {
             let _this = this;
             this.$confirm({
-                title: `确定要${_this.detail.status ? '禁用' : '启用'}该分销商吗？`,
-                okText: '确定',
+                title: this.$t('pop_up.sure') + `${_this.detail.status ? this.$t('pop_up.disable') : this.$t('pop_up.enable')}` + this.$t('pop_up.distributor'),
+                okText: this.$t('pop_up.yes'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Distributor.updateStatus({id: _this.detail.id}).then(() => {
-                        _this.$message.success(`${_this.detail.status ? '禁用' : '启用'}成功`);
+                        _this.$message.success(`${_this.detail.status ? _this.$t('pop_up.success_disable') : _this.$t('pop_up.success_enable')}` + _this.$t('pop_up.succeed'));
                         _this.getDistributorDetail();
                     }).catch(err => {
                         console.log("handleStatusChange err", err);

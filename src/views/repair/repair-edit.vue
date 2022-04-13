@@ -1,55 +1,55 @@
 <template>
 <div id="RepairEdit" class="edit-container">
     <div class="title-container">
-        <div class="title-area">{{ form.id ? '编辑工单' : '新建工单' }}</div>
+        <div class="title-area">{{ form.id ? $t('n.repair.edit') : $t('n.repair_create') }}</div>
     </div>
     <div class="form-block"> <!-- 工单内容 -->
-        <div class="form-title"><div class="title">工单内容</div></div>
+        <div class="form-title"><div class="title">{{ $t('r.repair_content') }}</div></div>
         <div class="form-content">
             <div class="form-item required">
-                <div class="key">工单分类</div>
+                <div class="key">{{ $t('r.repair_classify') }}</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.type" :disabled="!!form.id">
-                        <a-radio v-for="item of typeList" :key="item.value" :value="item.value">{{item.text}}</a-radio>
+                        <a-radio v-for="item of typeList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
             <div class="form-item required" v-if="form.type == 1">
-                <div class="key">类别</div>
+                <div class="key">{{ $t('r.category') }}</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.category">
-                        <a-radio v-for="item of categoryList" :key="item.value" :value="item.value">{{item.text}}</a-radio>
+                        <a-radio v-for="item of categoryList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">紧急程度</div>
+                <div class="key">{{ $t('r.urgency') }}</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.priority">
-                        <a-radio v-for="item of priorityList" :key="item.value" :value="item.value">{{item.text}}</a-radio>
+                        <a-radio v-for="item of priorityList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">工单帐类</div>
+                <div class="key">{{ $t('r.warranty') }}</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.service_type" :disabled="!!form.id">
-                        <a-radio v-for="item of serviceList" :key="item.value" :value="item.value">{{item.text}}</a-radio>
+                        <a-radio v-for="item of serviceList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
             <!-- <a-date-picker v-model:value="form.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/> -->
             <div class="form-item required">
-                <div class="key">工单名称</div>
+                <div class="key">{{ $t('r.repair_name') }}</div>
                 <div class="value">
-                    <a-input v-model:value="form.name" placeholder="请输入工单名称(最多输入50个字符)" :maxlength='50'/>
+                    <a-input v-model:value="form.name" :placeholder="$t('r.enter_name')" :maxlength='50'/>
                 </div>
             </div>
 
             <div class="form-item required textarea">
-                <div class="key">问题描述</div>
+                <div class="key">{{ $t('r.description') }}</div>
                 <div class="value">
-                    <a-textarea v-model:value="form.desc" placeholder="请输入问题描述"
+                    <a-textarea v-model:value="form.desc" :placeholder="$t('r.fault_description')"
                         :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500'/>
                     <span class="content-length">{{ form.desc.length }}/500</span>
                 </div>
@@ -58,57 +58,57 @@
     </div>
     <div class="form-block"> <!-- 车辆信息 -->
         <div class="form-title">
-            <div class="title">车辆信息</div>
+            <div class="title">{{ $t('r.vehicle_information') }}</div>
         </div>
         <div class="form-content">
             <div class="form-item required">
-                <div class="key">维修方式</div>
+                <div class="key">{{ $t('r.repair_way') }}</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.channel">
-                        <a-radio v-for="item of channelList" :key="item.value" :value="item.value">{{ item.text }}</a-radio>
+                        <a-radio v-for="item of channelList" :key="item.value" :value="item.value">{{ item[$i18n.locale] }}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">维修类别</div>
+                <div class="key">{{ $t('r.repair_category') }}</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.repair_method">
-                        <a-radio v-for="item of methodList" :key="item.value" :value="item.value">{{ item.text }}</a-radio>
+                        <a-radio v-for="item of methodList" :key="item.value" :value="item.value">{{ item[$i18n.locale] }}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">车架号</div>
+                <div class="key">{{ $t('search.vehicle_no') }}</div>
                 <div class="value">
-                    <a-input v-model:value="form.vehicle_no" placeholder="请输入车架号" @blur="handleVehicleBlur"/>
+                    <a-input v-model:value="form.vehicle_no" :placeholder="$t('search.enter_vehicle_no')" @blur="handleVehicleBlur"/>
                     <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
                     <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                 </div>
             </div>
             <div class="form-item" v-if="form.vehicle_no && isExist == 1">
-                <div class="key">到港时间</div>
+                <div class="key">{{ $t('r.arrival_time') }}</div>
                 <div class="value" >
                     {{ $Util.timeFilter(arrival_time) }}
                 </div>
             </div>
             <div class="form-item">
-                <div class="key">行程公里数</div>
+                <div class="key">{{ $t('r.miles_driven') }}</div>
                 <div class="value">
                     <a-input-number v-model:value="form.travel_distance" :min="0" :precision="3"/>
-                    <span class="unit">公里</span>
+                    <span class="unit">{{ $t('r.km') }}</span>
                 </div>
             </div>
         </div>
     </div>
     <div class="form-block"> <!-- 车主信息 -->
         <div class="form-title">
-            <div class="title">车主信息</div>
+            <div class="title">{{ $t('r.customer') }}</div>
         </div>
         <div class="form-content">
             <div class="form-item required">
-                <div class="key">相关客户</div>
+                <div class="key">{{ $t('r.associated_customers') }}</div>
                 <div class="value">
-                    <a-select placeholder="请选择相关客户" v-model:value="form.customer_id" @change="handleCustomerSelect" show-search option-filter-prop="children"
+                    <a-select :placeholder="$t('r.select_customer')" v-model:value="form.customer_id" @change="handleCustomerSelect" show-search option-filter-prop="children"
                         :disabled="detail.status == REPAIR.STATUS.WAIT_DETECTION">
                         <a-select-option v-for="(item,index) of customerList" :key="index" :value="item.id">
                             {{ item.name }}
@@ -116,38 +116,38 @@
                     </a-select>
                 </div>
                 <div class="sp">
-                    <a-button type="link" @click="routerChange('customer')">新建客户</a-button>
-                    <a-button type="link" @click="getCustomerList('refresh')">刷新</a-button>
+                    <a-button type="link" @click="routerChange('customer')">{{ $t('r.add_customer') }}</a-button>
+                    <a-button type="link" @click="getCustomerList('refresh')">{{ $t('r.refresh') }}</a-button>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">客户电话</div>
+                <div class="key">{{ $t('r.customer_phone') }}</div>
                 <div class="value">
-                    <a-input v-model:value="form.customer_phone" placeholder="请输入客户电话"/>
+                    <a-input v-model:value="form.customer_phone" :placeholder="$t('r.enter_phone')"/>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">客户邮箱</div>
+                <div class="key">{{ $t('r.email') }}</div>
                 <div class="value">
-                    <a-input v-model:value="form.customer_email" placeholder="请输入客户邮箱"/>
+                    <a-input v-model:value="form.customer_email" :placeholder="$t('r.enter_email')"/>
                 </div>
             </div>
-            <div class="form-item">
-                <div class="key">维修地址</div>
+            <div class="form-item required">
+                <div class="key">{{ $t('r.address') }}</div>
                 <div class="value">
                     <AddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
                 </div>
             </div>
             <div class="form-item" :class="form.channel == 1 ? 'required' : ''">
-                <div class="key">详细地址</div>
+                <div class="key">{{ $t('r.specific_address') }}</div>
                 <div class="value">
-                    <a-input v-model:value="form.customer_address" placeholder="请输入详细地址"/>
+                    <a-input v-model:value="form.customer_address" :placeholder="$t('r.enter_specific')"/>
                 </div>
             </div>
             <div class="form-item textarea">
-                <div class="key">工单备注</div>
+                <div class="key">{{ $t('r.remark') }}</div>
                 <div class="value">
-                    <a-textarea v-model:value="form.remark" placeholder="请输入工单备注"
+                    <a-textarea v-model:value="form.remark" :placeholder="$t('r.enter_remark')"
                         :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
                     <span class="content-length">{{ form.remark.length }}/500</span>
                 </div>
@@ -155,8 +155,8 @@
         </div>
     </div>
     <div class="form-btns">
-        <a-button @click="handleSubmit" type="primary">确定</a-button>
-        <a-button @click="routerChange('back')">取消</a-button>
+        <a-button @click="handleSubmit" type="primary">{{ $t('def.ok') }}</a-button>
+        <a-button @click="routerChange('back')">{{ $t('def.cancel') }}</a-button>
     </div>
 </div>
 </template>

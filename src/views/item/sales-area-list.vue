@@ -107,7 +107,7 @@ export default {
             switch (type) {
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/item/sales-area-edit",
+                        path: "/distributor/sales-area-edit",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')

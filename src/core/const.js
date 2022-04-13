@@ -28,7 +28,9 @@ switch (window.location.hostname) {
         break;
     default:
         // URL_POINT = 'http://10.0.0.198:8083' // 谢耀圣
-        URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
+        // URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
+        URL_POINT = 'http://10.0.0.7:8083' // 谢耀圣
+
         // URL_POINT = 'http://10.0.0.134:8083' // 谭洋波
             // URL_POINT = 'http://10.0.0.205:8083' // 徐伟
             // URL_POINT = 'http://10.0.0.149:8083' // 徐伟
@@ -197,8 +199,8 @@ let Const = {
     REPAIR: { // 维修工单
         // 工单分类
         TYPE_LIST: [
-            { text: '维修工单', value: 1 }, // 普通工单
-            { text: '特批订单', value: 2 },
+            { zh: '维修工单', en: 'repair order', value: 1 }, // 普通工单
+            { zh: '特批工单', en: 'special repair order', value: 2 },
         ],
         TYPE_MAP: {
             1: '维修工单',
@@ -206,10 +208,10 @@ let Const = {
         },
         // 维修单类别
         CATEGORY_LIST: [
-            { text: '维修', value: 1 },
-            { text: '换车', value: 2 },
-            { text: '开箱损', value: 3 },
-            { text: '电池维修', value: 4 },
+            { zh: '维修', en: 'repair', value: 1 },
+            { zh: '换车', en: 'replace car', value: 2 },
+            { zh: '开箱损', en: 'unpacking damage', value: 3 },
+            { zh: '电池维修', en: 'battery', value: 4 },
         ],
         // 工单帐类
         SERVICE_TYPE: {
@@ -217,8 +219,8 @@ let Const = {
             OUT_REPAIR_TIME: 2,
         },
         SERVICE_TYPE_LIST: [
-            { text: '保内', en: 'Under warranty', value: 1 },
-            { text: '保外', en: 'Out of warranty', value: 2 },
+            { zh: '保内', en: 'under warranty', value: 1 },
+            { zh: '保外', en: 'out of warranty', value: 2 },
         ],
         SERVICE_TYPE_MAP: {
             '1' : { zh: '保内', en: 'Under warranty'},
@@ -226,9 +228,9 @@ let Const = {
         },
         // 维修方式
         CHANNEL_LIST: [
-            { text: '上门', value: 1 },
-            { text: '到店', value: 2 },
-            { text: '寄修', value: 3 },
+            { zh: '上门', en: 'home repair', value: 1 },
+            { zh: '到店', en: 'repair in store', value: 2 },
+            { zh: '寄修', en: 'send by courier', value: 3 },
         ],
         CHANNEL_MAP: {
             '1' : { zh: '上门', en: 'Home repair'},
@@ -241,8 +243,8 @@ let Const = {
         ],
         // 维修类别
         METHOD_LIST: [
-            { text: '维修', value: 1 },
-            { text: '更换', value: 2 },
+            { zh: '维修', en: 'repair', value: 1 },
+            { zh: '更换', en: 'replace', value: 2 },
         ],
         METHOD_MAP: {
             '1' : { zh: '维修', en: 'Repair'},
@@ -250,9 +252,9 @@ let Const = {
         },
         // 优先级
         PRIORITY_LIST: [
-            { text: '高', value: 1 },
-            { text: '中', value: 2 },
-            { text: '低', value: 3 },
+            { zh: '高', en: 'high', value: 1 },
+            { zh: '中', en: 'medium', value: 2 },
+            { zh: '低', en: 'low', value: 3 },
         ],
         PRIORITY_MAP: {
             '1' : { color: 'red',  zh: '高', en: 'high'},

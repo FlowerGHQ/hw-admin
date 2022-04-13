@@ -122,14 +122,14 @@ export default {
             switch (type) {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/agent/agent-edit",
+                        path: "/distributor/agent-edit",
                         query: { id: this.agent_id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'list':  // liebiao
                     routeUrl = this.$router.resolve({
-                        path: "/agent/agent-list",
+                        path: "/distributor/agent-list",
                         query: { id: this.agent_id }
                     })
                     window.open(routeUrl.href, '_self')

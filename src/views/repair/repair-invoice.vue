@@ -4,7 +4,7 @@
         <div class="title-content">
             <div class="title">结算清单 Invoice</div>
             <p>维修帐类</p>
-            <span>{{ $Util.repairServiceFilter(detail.service_type) }}</span>
+            <span>{{ $Util.repairServiceFilter(detail.service_type,  $i18n.locale) }}</span>
             <p>结算编号</p>
             <span>{{detail.uid || '-'}}</span>
             <p>交易日期</p>
@@ -28,7 +28,7 @@
             <div class="info-block">
                 <div class="title">维修方</div>
                 <p>维修人：{{detail.repair_user_name}}</p>
-                <p>维修方式：{{$Util.repairChannelFilter(detail.channel)}}</p>
+                <p>维修方式：{{$Util.repairChannelFilter(detail.channel, $i18n.locale)}}</p>
                 <div class="title">联系电话</div>
                 <p>{{detail.repair_user_phone}}</p>
             </div>

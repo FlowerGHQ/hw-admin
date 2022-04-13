@@ -1,5 +1,5 @@
 <template>
-    <div id="MaterialPurchaseEdit" class="list-container">
+    <div id="MaterialPurchaseDetail" class="list-container">
         <div class="title-container">
             <div class="title-area">采购单详情</div>
             <div class="btn-area">
@@ -57,26 +57,32 @@
                 </div>
             </div>
         </div>
-        <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
-            <template #expandIcon ><i class="icon i_expan_l"/> </template>
+        <a-collapse v-model:activeKey="activeKey" ghost>
             <a-collapse-panel key="affirm" header="物料信息" class="gray-collapse-panel">
-                <div class="panel-content table-container no-mg">
-                    <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                <template #extra>
+                    <MaterialSelect btnType='link' btnText="添加物料" v-if="!addMode" :disabledChecked="disabledChecked"
+                                    @select="handleAddChange"/>
+                    <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('material')">确认添加</a-button>
+                </template>
+                <div class="panel-content">
+                <div class="panel-content no-mg">
+                    <a-table :columns="tableColumns" :data-source="addData" :scroll="{ x: true }"
                              :row-key="record => record.id" :pagination='false'>
-                        <template #bodyCell="{ column, text }">
-                            <!--                            <template v-if="column.key === 'name'">
-                                                            <a-tooltip placement="top" :title='text'>
-                                                                {{ text || '-' }}
-                                                            </a-tooltip>
-                                                        </template>-->
+                        <template #bodyCell="{ column, text, record }">
                             <template v-if="column.key === 'code'">
                                 {{ text || '-' }}
                             </template>
-                            <!--                            <template v-if="column.key === 'model'">
-                                                            {{ text || '-' }}
-                                                        </template>-->
                             <template v-if="column.key === 'amount'">
-                                {{ text || '-' }}件
+                                <template v-if="addMode || record.editMode">
+                                    <a-input-number v-model:value="record.amount" placeholder="请输入"
+                                                    :min="1" :max="99999" :precision="0"/> 件
+                                </template>
+                                <template v-else>{{ text ? text + '件' : '-' }}</template>
+                            </template>
+                            <template v-if="column.key === 'operation'" >
+                                <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改数量</a-button>
+                                <a-button type="link" @click="handleRowSubmit(record, 'material')" v-else><i class="icon i_confirm"/>确认更改</a-button>
+                                <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
                             </template>
                         </template>
                     </a-table>
@@ -95,6 +101,7 @@
                             @showSizeChange="pageSizeChange"
                         />
                     </div>
+                </div>
                 </div>
             </a-collapse-panel>
         </a-collapse>
@@ -116,7 +123,7 @@ const SOURCE_TYPE = STOCK_RECORD.SOURCE_TYPE
 const COMMODITY_TYPE = STOCK_RECORD.COMMODITY_TYPE
 
 export default {
-    name: 'InvoiceDetail',
+    name: 'MaterialPurchaseDetail',
     components: {
         ItemSelect,
         EntitySelect,
@@ -170,27 +177,17 @@ export default {
             let columns = [
                 { title: '供应商', dataIndex: 'name'},
                 { title: '物料名称', dataIndex: 'name',key: 'contact'},
-                { title: '物料分类', dataIndex: 'type',key: 'contact'},
                 { title: '物料编码', dataIndex: 'contact_phone',key: 'contact' },
                 { title: '单位', dataIndex: 'contact_email',key: 'contact' },
-                { title: '数量', dataIndex: 'payment_term' },
+                { title: '数量', dataIndex: 'amount',key: 'amount' },
                 { title: '单价', dataIndex: 'payment_term' },
                 { title: '总价', dataIndex: 'payment_term' },
                 { title: '到货日期', dataIndex: 'address' },
                 { title: '备注', dataIndex: 'payment_term' },
-                { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '操作', key: 'operation', fixed: 'right'}
             ]
             return columns
         },
-        isProd() {
-            let d = this.detail
-            if (d.source_type == SOURCE_TYPE.PRODUCTION &&
-                d.type == TYPE.IN) {
-                return true
-            }
-            return false
-        }
     },
     mounted() {
         this.id = Number(this.$route.query.id) || 0
@@ -220,84 +217,135 @@ export default {
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
-                case 'source':
-                    let path = ''
-                    switch (this.detail.source_type) {
-                        case SOURCE_TYPE.PRODUCTION:
-                            path = '/production/manufacture-order-detail'
-                            break;
-                        case SOURCE_TYPE.PURCHASE:
-                            path = '/purchase/purchase-order-detail'
-                            break;
-                        case SOURCE_TYPE.AFTER_SALES:
-                            path = '/aftersales/aftersales-detail'
-                            break;
-                        case SOURCE_TYPE.TRANSFER:
-                            path = '/warehouse/transfer-order-detail'
-                            break;
-                        case SOURCE_TYPE.REPAIR:
-                            path = '/repair/repair-detail'
-                            break;
-                    }
-                    routeUrl = this.$router.resolve({
-                        path,
-                        query: { id: this.detail.source_id }
-                    })
-                    window.open(routeUrl.href, '_blank')
-                    break;
             }
         },
-        // 获取出入库单详情
+        pageChange(curr) {    // 页码改变
+            this.currPage = curr
+            this.getMaterialItemList()
+        },
+        pageSizeChange(current, size) {    // 页码尺寸改变
+            this.pageSize = size
+            this.getMaterialItemList()
+        },
+        getMaterialItemList() {
+            this.loading = true;
+            Core.Api.MaterialPurchase.itemList({
+                material_purchase_order_id: this.id,
+                page: this.currPage,
+                page_size: this.pageSize
+            }).then(res => {
+                console.log('getInvoiceList res', res)
+                let list = res.list
+                if (this.detail.target_type === COMMODITY_TYPE.ENTITY) {
+                    list.forEach(item => {
+                        item.item = item.entity ? item.entity.item || {} : {}
+                        item.entity_id = item.target_id
+                        item.entity_uid = item.entity ? item.entity.uid : ''
+                    })
+                }
+                this.total = res.count
+                this.tableData = list
+            }).catch(err => {
+                console.log('getInvoiceList err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
         getMaterialPurchaseDetail() {
             this.loading = true;
-            Core.Api.MaterialPurchase.save({
+            Core.Api.MaterialPurchase.detail({
                 id: this.id
             }).then(res => {
                 console.log('getMaterialPurchaseDetail res', res)
                 let d = res.detail || {}
                 this.detail = d
-                this.warehouse = d.warehouse || {}
-                this.getInvoiceList();
+                this.getMaterialItemList();
             }).catch(err => {
-                console.log('getInvoiceDetail err', err)
+                console.log('getMaterialPurchaseDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
-        pageChange(curr) {    // 页码改变
-            this.currPage = curr
-            this.getInvoiceList()
+        handleRowChange(item) {
+            item.editMode = true
         },
-        pageSizeChange(current, size) {    // 页码尺寸改变
-            this.pageSize = size
-            this.getInvoiceList()
-        },
-
-        // 取消 出入库单
-        handleCancel() {
-            let _this = this;
-            this.$confirm({
-                title: `确定要取消该${_this.type_ch}单吗？`,
-                okText: '确定',
-                okType: 'danger',
-                cancelText: '取消',
-                onOk() {
-                    Core.Api.Invoice.cancel({id: _this.detail.id}).then(() => {
-                        _this.$message.success('取消成功');
-                        _this.routerChange('list');
-                    }).catch(err => {
-                        console.log("handleCancel err", err);
-                    })
-                },
-            });
+        handleRowSubmit(item, type) {
+            let target_id = ''
+            switch (type) {
+                case 'item': target_id = item.item.id; break;
+                case 'entity': target_id = item.entity_id; break;
+                case 'material': target_id = item.material.id; break;
+            }
+            let target = {
+                id: item.id,
+                amount: item.amount,
+                target_id,
+                invoice_id: this.id,
+            }
+            if (!target.target_id) {
+                return this.$message.warning(`该${type === 'item' ? '商品' : '商品实例'}不存在`);
+            }
+            Core.Api.MaterialPurchase.save(target).then(() => {
+                this.$message.success('保存成功')
+                this.getInvoiceDetail()
+            })
         },
 
         // 移除 商品
         handleRemoveRow(record) {
-            Core.Api.InvoiceItem.delete({id: record.id}).then(() => {
+            Core.Api.MaterialPurchase.itemDelete({id: record.id}).then(() => {
                 this.$message.success('移除成功')
-                this.getInvoiceList()
+                this.getMaterialItemList()
             })
+        },
+        handleAddChange(ids, items) {
+            console.log('handleAddChange items:', items)
+            let list = items.map(item => ({
+                id: 0,
+                item: item,
+                material: item,
+                amount: 1,
+            }))
+            this.addData = list
+            this.addMode = true
+        },
+
+        async handleAddSubmit(type) {
+            this.loading = true;
+            let data = [...this.tableData, ...this.addData]
+            let list = []
+            for (const item of data) {
+                let target_id,target_uid
+                switch (type) {
+                    case 'material':
+                        console.log('item.material', item.material)
+                        console.log('item.material.id:', item.material.id)
+                        console.log('item.material && item.material.id:', item.material && item.material.id)
+                        if (item.material && item.material.id) {
+                            target_id = item.material.id
+                        } else {
+                            return this.$message.warning("该物料不存在");
+                        }
+                        break;
+                }
+                list.push({
+                    id: item.id,
+                    amount: item.amount,
+                    invoice_id: this.id,
+                    target_id,
+                    target_uid,
+                })
+            }
+            console.log('handleAddSubmit list:', list)
+            Core.Api.MaterialPurchase.batchSave(list).then(() => {
+                this.$message.success('保存成功')
+                this.getMaterialPurchaseDetail()
+                this.addMode = false
+            }).catch(err => {
+                console.log('handleAddSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
         },
 
     }
@@ -305,7 +353,7 @@ export default {
 </script>
 
 <style lang="less">
-#InvoiceDetail {
+#MaterialPurchaseDetail {
     .extra-btn {
         height: 14px;
         line-height: 14px;

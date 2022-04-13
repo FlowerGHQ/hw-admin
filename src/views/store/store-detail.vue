@@ -22,11 +22,11 @@
             <a-row class="desc-detail has-logo">
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item' v-if="$auth('ADMIN')">
                     <span class="key">所属分销商：</span>
-                    <a-button type="link" @click="routerChange('agent')">{{detail.agent_name}}</a-button>
+                    <a-button type="link" @click="routerChange('distributor')">{{detail.distributor_name}}</a-button>
                 </a-col>
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item' v-if="$auth('ADMIN', 'DISTRIBUTOR')">
                     <span class="key">所属零售商：</span>
-                    <a-button type="link" @click="routerChange('distributor')">{{detail.distributor_name}}</a-button>
+                    <a-button type="link" @click="routerChange('agent')">{{detail.agent_name}}</a-button>
                 </a-col>
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                     <span class="key">转单接受：</span>
@@ -116,26 +116,26 @@ export default {
             switch (type) {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/store/store-edit",
+                        path: "/distributor/store-edit",
                         query: { id: this.store_id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'list':  // 列表
                     routeUrl = this.$router.resolve({
-                        path: "/store/store-list",
+                        path: "/distributor/store-list",
                         query: { id: this.store_id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'agent':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/agent/agent-detail",
+                        path: "/distributor/agent-detail",
                         query: { id: this.detail.agent_id }
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
-                case 'agent':  // 详情
+                case 'distributor':  // 详情
                     routeUrl = this.$router.resolve({
                         path: "/distributor/distributor-detail",
                         query: { id: this.detail.distributor_id }

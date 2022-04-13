@@ -29,7 +29,7 @@
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
                 <template v-if="detail.type == WAREHOUSE_TYPE.QUALITY">
-                    <a-tab-pane key="ItemStockList" tab="库存商品">
+                    <a-tab-pane key="ItemStockList" tab="库存产品">
                         <StockList type='item' :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail" v-if="activeKey === 'ItemStockList'"/>
                     </a-tab-pane>
                     <a-tab-pane key="MaterialStockList" tab="库存物料" v-if="$auth('ADMIN')">

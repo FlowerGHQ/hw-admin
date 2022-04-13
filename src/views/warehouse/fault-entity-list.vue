@@ -76,7 +76,7 @@
                             {{ $Util.userTypeFilter(text) }}
                         </template>
                         <template v-if="column.dataIndex === 'service_type'">
-                            {{ $Util.repairServiceFilter(text) }}
+                            {{ $Util.repairServiceFilter(text,  $i18n.locale) }}
                         </template>
                         <template v-if="column.dataIndex === 'status'">
                             <div class="status status-bg status-tag" :class="$Util.faultStatusFilter(text,'color')">
@@ -115,8 +115,7 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="modalShow" title="新增故障件" class="fault-entity-modal"
-            :after-close="handleFaultItemClose">
+            <a-modal v-model:visible="modalShow" title="新增故障件" class="fault-entity-modal" :after-close="handleFaultItemClose">
                 <div class="form-item required">
                     <div class="key">所属仓库:</div>
                     <div class="value">

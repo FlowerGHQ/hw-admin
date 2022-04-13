@@ -110,7 +110,7 @@
 import Core from '../../../core';
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 import SimpleImageEmpty from '@/components/common/SimpleImageEmpty.vue';
-import FaultList from '@/components/popup-btn/FaultList.vue';
+import FaultEdit from '@/components/popup-btn/FaultEdit.vue';
 
 const REPAIR_TYPE = Core.Const.REPAIR_ITEM.TYPE
 const SERVICE_TYPE = Core.Const.REPAIR.SERVICE_TYPE
@@ -118,7 +118,7 @@ export default {
     name: 'RepairDetail',
     components: {
         ItemSelect,
-        FaultList,
+        FaultEdit,
         SimpleImageEmpty,
         VNodes: (_, { attrs }) => { return attrs.vnodes; },
     },

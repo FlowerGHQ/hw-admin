@@ -134,7 +134,7 @@ export default {
             switch (type) {
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/user/user-edit",
+                        path: "/system/user-edit",
                         query: {
                             id: item.id,
                             org_id: this.orgId,
@@ -146,7 +146,7 @@ export default {
                     break;
                 case 'detail':    // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/user/user-detail",
+                        path: "/system/user-detail",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_blank')

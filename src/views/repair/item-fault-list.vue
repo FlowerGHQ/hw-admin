@@ -2,9 +2,9 @@
     <div id="FaultList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">{{$t('n.list_of_faults')}}</div>
+                <div class="title-area">{{ $t('n.list_of_faults') }}</div>
                 <div class="btns-area">
-                    <FaultList :id="id" btnType="primary" :ghost="false" ref="FaultList" @saveFault="getTableData"><i class="icon i_add"/>{{ $t('n.new_fault') }}</FaultList>
+                    <FaultEdit :id="id" btnType="primary" :ghost="false" ref="FaultList" @saveFault="getTableData"><i class="icon i_add"/>{{ $t('n.new_fault') }}</FaultEdit>
                 </div>
             </div>
             <div class="table-container">
@@ -23,7 +23,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>{{ $t('def.delete') }}
                             </a-button>
                         </template>
                     </template>
@@ -49,13 +49,13 @@
 </template>
 <script>
 import Core from '../../core';
-import FaultList from '@/components/popup-btn/FaultList.vue';
+import FaultEdit from '@/components/popup-btn/FaultEdit.vue';
 
 export default {
     name: 'FaultList',
     components: {},
     props: {
-        FaultList
+        FaultEdit
     },
     data() {
         return {

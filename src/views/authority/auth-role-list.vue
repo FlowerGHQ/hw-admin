@@ -108,7 +108,7 @@ export default {
     methods: {
         routerChange(item = {}) {
             let routeUrl = this.$router.resolve({
-                path: "/authority/auth-role-edit",
+                path: "/system/auth-role-edit",
                 query: {id: item.id}
             })
             window.open(routeUrl.href, '_self')

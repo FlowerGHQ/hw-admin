@@ -2,23 +2,23 @@
 <div id="RepairDetail">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">工单详情</div>
+            <div class="title-area">{{ $t('n.repair_detail') }}</div>
             <div class="btns-area">
                 <template v-if="sameOrg">
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION">
-                        <i class="icon i_edit"/>编辑
+                        <i class="icon i_edit"/>{{ $t('def.edit') }}
                     </a-button>
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.AUDIT_FAIL">
-                        重新编辑
+                        {{ $t('def.re_edit') }}
                     </a-button>
                     <a-button type="primary" ghost @click="handleDeliveryShow()" v-if="needDelivery">
                         <i class="icon i_deliver"/>转单物流
                     </a-button>
                     <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION">
-                        <i class="icon i_submit"/>提交
+                        <i class="icon i_submit"/>{{ $t('def.submit') }}
                     </a-button>
                     <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.WAIT_REPAIR">
-                        <i class="icon i_settle"/>结算
+                        <i class="icon i_settle"/>{{ $t('r.settle_accounts') }}
                     </a-button>
                 </template>
                 <a-button type="primary" @click="routerChange('invoice')" v-if="haveSettle">
@@ -36,7 +36,7 @@
                     <a-tooltip :title='detail.audit_message'>
                         <div class="status">
                             <i class="icon i_point" :class="$Util.repairStatusFilter(detail.status,'color')"/>
-                            {{ $Util.repairStatusFilter(detail.status) }}
+                            {{ $Util.repairStatusFilter(detail.status, $i18n.locale) }}
                             <i class="icon i_hint" style="font-size: 12px; padding-left: 6px;"  v-if="detail.status == STATUS.AUDIT_FAIL"/>
                         </div>
                     </a-tooltip>
@@ -45,7 +45,7 @@
             <div class="panel-content">
                 <div class="info-item">
                     <div class="key">工单帐类</div>
-                    <div class="value">{{ $Util.repairServiceFilter(detail.service_type || '-') }}</div>
+                    <div class="value">{{ $Util.repairServiceFilter(detail.service_type, $i18n.locale) }}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">车架号</div>
@@ -61,7 +61,7 @@
                 </div>
                 <div class="info-item">
                     <div class="key">优先级</div>
-                    <div class="value">{{ $Util.repairPriorityFilter(detail.priority) }}</div>
+                    <div class="value">{{ $Util.repairPriorityFilter(detail.priority, $i18n.locale) }}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">创建时间</div>

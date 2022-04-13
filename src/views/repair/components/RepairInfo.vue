@@ -6,7 +6,7 @@
             <a-col :xs='24' :sm='24' :lg='12' :xl='6' :xxl='6' class="info-block">
                 <div class="info-item">
                     <div class="key">工单帐类</div>
-                    <div class="value">{{$Util.repairServiceFilter(detail.service_type || '-') }}</div>
+                    <div class="value">{{$Util.repairServiceFilter(detail.service_type, $i18n.locale || '-') }}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">工单名称</div>
@@ -24,11 +24,11 @@
             <a-col :xs='24' :sm='24' :lg='12' :xl='6' :xxl='6' class="info-block">
                 <div class="info-item">
                     <div class="key">维修方式</div>
-                    <div class="value">{{$Util.repairChannelFilter(detail.channel)}}</div>
+                    <div class="value">{{$Util.repairChannelFilter(detail.channel, $i18n.locale)}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">维修类别</div>
-                    <div class="value">{{$Util.repairMethodFilter(detail.repair_method) || '-'}}</div>
+                    <div class="value">{{$Util.repairMethodFilter(detail.repair_method, $i18n.locale) || '-'}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">问题描述</div>

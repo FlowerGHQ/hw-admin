@@ -57,7 +57,7 @@
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
-                    <div class="key">{{$t('def.create_time')}}</div>
+                    <div class="key">{{$t('def.create_time')}}:</div>
                     <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                 </a-col>
             </a-row>
@@ -268,21 +268,21 @@ export default {
             let { filteredInfo } = this;
             filteredInfo = filteredInfo || {};
             let columns = [
-                { title: this.$t('table.repair_sn'), dataIndex: 'uid', key: 'detail' },
+                { title: this.$t('r.repair_sn'), dataIndex: 'uid', key: 'detail' },
                 { title: this.$t('search.vehicle_no'), dataIndex: 'vehicle_no',key: 'item'},
-                { title: this.$t('table.repair_name'), dataIndex: 'name', key: 'tip_item' },
-                { title: this.$t('table.emergency_level'), dataIndex: 'priority' },
-                { title: this.$t('table.repair_status'), dataIndex: 'status'},
-                { title: this.$t('table.repair_type'), dataIndex: 'service_type',
+                { title: this.$t('r.repair_name'), dataIndex: 'name', key: 'tip_item' },
+                { title: this.$t('r.urgency'), dataIndex: 'priority' },
+                { title: this.$t('r.repair_status'), dataIndex: 'status'},
+                { title: this.$t('r.warranty'), dataIndex: 'service_type',
                     filters: REPAIR.SERVICE_TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.service_type || null },
-                { title: this.$t('table.repair_way'), dataIndex: 'channel',
+                { title: this.$t('r.repair_way'), dataIndex: 'channel',
                     filters: REPAIR.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.channel || null },
-                { title: this.$t('table.repair_category'), dataIndex: 'repair_method',
+                { title: this.$t('r.repair_category'), dataIndex: 'repair_method',
                     filters: REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.repair_method || null },
-                { title: this.$t('table.repair_unit'), dataIndex: 'repair_name', key: 'item' },
-                { title: this.$t('table.repair_phone'), dataIndex: 'repair_phone', key: 'item' },
-                { title: this.$t('table.creator_name'),   dataIndex: 'user_name', key: 'item' },
-                { title: this.$t('table.associated_customers'), dataIndex: 'customer_name', key: 'item' },
+                { title: this.$t('r.repair_unit'), dataIndex: 'repair_name', key: 'item' },
+                { title: this.$t('r.repair_phone'), dataIndex: 'repair_phone', key: 'item' },
+                { title: this.$t('r.creator_name'),   dataIndex: 'user_name', key: 'item' },
+                { title: this.$t('r.associated_customers'), dataIndex: 'customer_name', key: 'item' },
                 { title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time' },
                 // { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
             ]

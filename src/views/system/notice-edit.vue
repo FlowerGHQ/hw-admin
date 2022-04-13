@@ -58,7 +58,7 @@ export default {
                 id: '',
                 title: '',
                 content: '',
-                category: NOTICE.CATEGORY.MASTER,
+                category: Core.Const.NOTICE.CATEGORY.MASTER,
                 type: undefined,
             },
             tinymce_setting: {

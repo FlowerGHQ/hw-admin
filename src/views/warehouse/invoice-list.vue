@@ -5,6 +5,16 @@
                 <div class="title-area">出入库单列表</div>
                 <div class="btns-area">
                     <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>库存管理</a-button>
+                    <a-upload name="file" class="file-uploader"
+                              :file-list="upload.fileList" :action="upload.action"
+                              :show-upload-list='false'
+                              :headers="upload.headers" :data='upload.data'
+                              accept=".xlsx,.xls"
+                              @change="handleMatterChange">
+                        <a-button type="primary"  class="file-upload-btn">
+                            <i class="icon i_add"/> 批量入库
+                        </a-button>
+                    </a-upload>
                 </div>
             </div>
             <!-- <div class="tabs-container colorful">
@@ -166,6 +176,18 @@ export default {
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ],
+            // 上传
+            upload: {
+                action: Core.Const.NET.URL_POINT + "/admin/1/item/import",
+                fileList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'xlsx',
+                },
+            },
         };
     },
     watch: {},
@@ -281,10 +303,32 @@ export default {
                 },
             });
         },
+        // 上传文件
+        handleMatterChange({file, fileList}) {
+            console.log("handleMatterChange status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                if (file.response && file.response.code < 0) {
+                    return this.$message.error(file.response.message)
+                } else {
+                    return this.$message.success('入库成功');
+                }
+            }
+            this.upload.fileList = fileList
+        },
     }
 };
 </script>
 
 <style lang="less" scoped>
-//#InvoiceList {}
+#InvoiceList {
+    .list-container {
+        .title-container {
+            .btns-area {
+                .file-upload-btn {
+                    margin-left: 15px;
+                }
+            }
+        }
+    }
+}
 </style>

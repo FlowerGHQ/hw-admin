@@ -93,7 +93,7 @@ export default {
             switch (type) {
                 case 'staff':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/user/user-edit",
+                        path: "/system/user-edit",
                         query: {
                             org_id: Core.Data.getOrgId(),
                             org_type: Core.Data.getOrgType(),

@@ -405,9 +405,12 @@ const apiList = {
         cancel: ['PostJson', 'material-purchase-order/cancel'],
         save: ['PostJson', 'material-purchase-order/save'],
         export: ['PostJson', 'material-purchase-order/export'], // 导出
-
+        itemList: ['PostJson', 'material-purchase-order-item/list'],
+        itemDetail: ['PostJson', 'material-purchase-order-item/detail'],
+        itemDelete: ['PostJson', 'material-purchase-order-item/delete'],
+        itemSave: ['PostJson', 'material-purchase-order-item/save'],
+        batchSave: ['PostJson', 'material-purchase-order-item/batch-save'],
     }
-
 };
 
 export default new Api(baseUrl, apiList);

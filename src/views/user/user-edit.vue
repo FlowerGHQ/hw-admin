@@ -117,7 +117,7 @@ export default {
             switch (type) {
                 case 'back':
                     let routeUrl = this.$router.resolve({
-                        path: "/user/user-list",
+                        path: "/system/user-list",
                     })
                     window.open(routeUrl.href, '_self')
                     break;

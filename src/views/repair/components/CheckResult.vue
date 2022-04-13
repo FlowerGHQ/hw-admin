@@ -2,7 +2,7 @@
 <div class="CheckResult">
     <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
         <template #expandIcon><i class="icon i_expan_l"/></template>
-        <a-collapse-panel key="affirm" header="故障确认" class="gray-collapse-panel">
+        <a-collapse-panel key="affirm" header="故障确认" class="gray-collapse-panel" v-if="!$auth('ADMIN')">
             <div class="panel-content affirm">
                 <div class="title">
                     <i class="icon i_warning"/>共{{ faultList.length }}个故障
@@ -23,7 +23,7 @@
                             {{ faultMap[text] || '-' }}
                         </template>-->
                         <template v-if="column.key === 'service_type'">
-                            {{ $Util.repairServiceFilter(detail.service_type) }}
+                            {{ $Util.repairServiceFilter(detail.service_type,  $i18n.locale) }}
                         </template>
                         <template v-if="column.dataIndex === 'price'">
                             € {{ $Util.countFilter(text) }}

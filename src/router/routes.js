@@ -40,13 +40,282 @@ const routes = [
             }
         }]
     },
+
+    { // 维修单 结算下载
+        path: '/repair/invoice-download',
+        name: 'RepairInvoiceExport',
+        component: () => import ('@/views/repair/repair-invoice.vue'),
+        meta: {
+            hidden: true,
+            title: '维修单结算',
+            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN],
+        },
+    },
+    { // 分销管理 - 平台端
+        path: '/distributor',
+        component: Layout,
+        redirect: '/distributor/distributor-list',
+        name: 'DistributorManagement',
+        meta: {
+            title: '分销管理',
+            icon: 'i_s_agent',
+            roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+
+            {
+                path: 'distributor-list',
+                name: 'DistributorList',
+                component: () => import('@/views/distributor/distributor-list.vue'),
+                meta: {
+                    title: '分销商列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+            {
+                path: 'distributor-edit',
+                name: 'DistributorEdit',
+                component: () => import('@/views/distributor/distributor-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '分销商编辑',
+                    parent: '/distributor/distributor-list',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+            {
+                path: 'distributor-detail',
+                name: 'DistributorDetail',
+                component: () => import('@/views/distributor/distributor-detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '分销商详情',
+                    parent: '/distributor/distributor-list',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+            {
+                path: 'agent-list',
+                name: 'AgentList',
+                component: () => import('@/views/agent/agent-list.vue'),
+                meta: {
+                    title: '零售商列表',
+                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                }
+            },
+            {
+                path: 'agent-edit',
+                name: 'AgentEdit',
+                component: () => import('@/views/agent/agent-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '零售商编辑',
+                    parent: '/agent/agent-list',
+                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                }
+            },
+            {
+                path: 'agent-detail',
+                name: 'AgentDetail',
+                component: () => import('@/views/agent/agent-detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '零售商详情',
+                    parent: '/agent/agent-list',
+                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                }
+            },
+            {
+                path: 'store-list',
+                name: 'StoreList',
+                component: () => import('@/views/store/store-list.vue'),
+                meta: {
+                    title: '门店列表',
+                }
+            },
+            {
+                path: 'store-edit',
+                name: 'StoreEdit',
+                component: () => import('@/views/store/store-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '门店编辑',
+                    parent: '/store/store-list',
+                }
+            },
+            {
+                path: 'store-detail',
+                name: 'StoreDetail',
+                component: () => import('@/views/store/store-detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '门店详情',
+                    parent: '/store/store-list',
+                }
+            },
+            {
+                path: 'purchase-order-list',
+                name: 'AdminPurchaseOrderListAll',
+                component: () => import('@/views/purchase/purchase-order-list.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    title: '订单列表',
+                    search_type: PURCHASE_SEARCH_TYPE.ALL
+                }
+            },
+            {
+                path: 'purchase-order-children',
+                name: 'AdminPurchaseOrderListChildren',
+                component: () => import('@/views/purchase/purchase-order-list.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    title: '供货订单',
+                    search_type: PURCHASE_SEARCH_TYPE.CHILDREN
+                }
+            },
+            {
+                path: 'sales-area-list',
+                name: 'SalesList',
+                component: () => import('@/views/item/sales-area-list.vue'),
+                meta: {
+                    title: '销售区域',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+            {
+                path: 'sales-area-edit',
+                name: 'SalesEdit',
+                component: () => import('@/views/item/sales-area-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '区域编辑',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/item/sales-area-list',
+                }
+            },
+        ]
+    },
+    { // 分销商管理 - 分销商端
+        path: '/distributor/distributor-detail-sp',
+        component: Layout,
+        meta: {
+            title: '分销商管理',
+            icon: 'i_s_agent',
+            roles: [LOGIN_TYPE.DISTRIBUTOR],
+            not_sub_menu: true,
+            sp: true,
+        },
+        children: [
+            {
+                path: '',
+                name: 'DistributorManagementSp',
+                component: () => import('@/views/distributor/distributor-detail.vue'),
+                meta: {
+                    title: '分销商详情',
+                    roles: [LOGIN_TYPE.DISTRIBUTOR],
+                }
+            }
+        ]
+    },
+    { // 采购管理 - 经销商端 && 门店端 && 分销商端
+        path: '/purchase',
+        component: Layout,
+        redirect: '/purchase/item-list',
+        name: 'PurchaseManagement',
+        meta: {
+            title: '采购管理',
+            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+            auth: ['AGENT', 'STORE', 'DISTRIBUTOR'],
+            icon: 'i_s_item',
+        },
+        children: [
+            {
+                path: 'item-list',
+                name: 'PurchaseItemList',
+                component: () => import('@/views/purchase/item-list.vue'),
+                meta: {
+                    title: '采购',
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
+                }
+            },
+            {
+                path: 'item-display',
+                name: 'ItemDisplay',
+                component: () => import('@/views/purchase/item-display.vue'),
+                meta: {
+                    hidden: true,
+                    title: '商品详情',
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
+                }
+            },
+            {
+                path: 'item-collect',
+                name: 'ItemCollect',
+                component: () => import('@/views/purchase/item-collect.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
+                    title: '购物车',
+                }
+            },
+            {
+                path: 'item-settle',
+                name: 'ItemSettle',
+                component: () => import('@/views/purchase/item-settle.vue'),
+                meta: {
+                    hidden: true,
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
+                    title: '结算',
+                }
+            },
+            {
+                path: 'purchase-order-list',
+                name: 'PurchaseOrderList',
+                component: () => import('@/views/purchase/purchase-order-list.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.ADMIN],
+                    title: '订单列表',
+                    search_type: PURCHASE_SEARCH_TYPE.ALL
+                }
+            },
+            {
+                path: 'purchase-order-self',
+                name: 'PurchaseOrderListSelf',
+                component: () => import('@/views/purchase/purchase-order-list.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
+                    title: '采购订单',
+                    search_type: PURCHASE_SEARCH_TYPE.SELF
+                }
+            },
+            {
+                path: 'purchase-order-children',
+                name: 'PurchaseOrderListChildren',
+                component: () => import('@/views/purchase/purchase-order-list.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    title: '供货订单',
+                    search_type: PURCHASE_SEARCH_TYPE.CHILDREN
+                }
+            },
+            {
+                path: 'purchase-order-detail',
+                name: 'PurchaseOrderDetail',
+                component: () => import('@/views/purchase/purchase-order-detail.vue'),
+                meta: {
+                    hidden: true,
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    title: '采购订单详情',
+                }
+            },
+        ]
+    },
     { // 维修单
         path: '/repair',
         component: Layout,
         name: 'RepairManagement',
         redirect: '/repair/repair-list',
         meta: {
-            title: '维修单管理',
+            title: '工单管理',
             icon: 'i_s_repair',
         },
         children: [
@@ -55,7 +324,7 @@ const routes = [
                 name: 'RepairList',
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
-                    title: '维修单',
+                    title: '工单列表',
                 }
             },
             {
@@ -130,128 +399,7 @@ const routes = [
             },
         ]
     },
-    { // 维修单 结算下载
-        path: '/repair/invoice-download',
-        name: 'RepairInvoiceExport',
-        component: () => import ('@/views/repair/repair-invoice.vue'),
-        meta: {
-            hidden: true,
-            title: '维修单结算',
-            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN],
-        },
-    },
-    { // 分销商管理 - 平台端
-        path: '/distributor',
-        component: Layout,
-        redirect: '/distributor/distributor-list',
-        name: 'DistributorManagement',
-        meta: {
-            title: '分销商管理',
-            icon: 'i_s_agent',
-            roles: [LOGIN_TYPE.ADMIN],
-            not_sub_menu: true,
-        },
-        children: [
-            {
-                path: 'distributor-list',
-                name: 'DistributorList',
-                component: () => import('@/views/distributor/distributor-list.vue'),
-                meta: {
-                    title: '分销商列表',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-            {
-                path: 'distributor-edit',
-                name: 'DistributorEdit',
-                component: () => import('@/views/distributor/distributor-edit.vue'),
-                meta: {
-                    hidden: true,
-                    title: '分销商编辑',
-                    parent: '/distributor/distributor-list',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-            {
-                path: 'distributor-detail',
-                name: 'DistributorDetail',
-                component: () => import('@/views/distributor/distributor-detail.vue'),
-                meta: {
-                    hidden: true,
-                    title: '分销商详情',
-                    parent: '/distributor/distributor-list',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-        ]
-    },
-    { // 分销商管理 - 分销商端
-        path: '/distributor/distributor-detail-sp',
-        component: Layout,
-        meta: {
-            title: '分销商管理',
-            icon: 'i_s_agent',
-            roles: [LOGIN_TYPE.DISTRIBUTOR],
-            not_sub_menu: true,
-            sp: true,
-        },
-        children: [
-            {
-                path: '',
-                name: 'DistributorManagementSp',
-                component: () => import('@/views/distributor/distributor-detail.vue'),
-                meta: {
-                    title: '分销商详情',
-                    roles: [LOGIN_TYPE.DISTRIBUTOR],
-                }
-            }
-        ]
-    },
-    { // 零售商管理 - 平台端 分销商端
-        path: '/agent',
-        component: Layout,
-        redirect: '/agent/agent-list',
-        name: 'AgentManagement',
-        meta: {
-            title: '零售商管理',
-            icon: 'i_s_agent',
-            roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-            not_sub_menu: true,
-        },
-        children: [
-            {
-                path: 'agent-list',
-                name: 'AgentList',
-                component: () => import('@/views/agent/agent-list.vue'),
-                meta: {
-                    title: '零售商列表',
-                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-                }
-            },
-            {
-                path: 'agent-edit',
-                name: 'AgentEdit',
-                component: () => import('@/views/agent/agent-edit.vue'),
-                meta: {
-                    hidden: true,
-                    title: '零售商编辑',
-                    parent: '/agent/agent-list',
-                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-                }
-            },
-            {
-                path: 'agent-detail',
-                name: 'AgentDetail',
-                component: () => import('@/views/agent/agent-detail.vue'),
-                meta: {
-                    hidden: true,
-                    title: '零售商详情',
-                    parent: '/agent/agent-list',
-                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-                }
-            },
-        ]
-    },
+
     { // 零售商管理 - 零售商端
         path: '/agent/agent-detail-sp',
         component: Layout,
@@ -274,48 +422,6 @@ const routes = [
             }
         ]
     },
-    { // 门店管理 - 平台端&零售商端
-        path: '/store',
-        component: Layout,
-        redirect: '/store/store-list',
-        name: 'StoreManagement',
-        meta: {
-            title: '门店管理',
-            icon: 'i_s_store',
-            roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
-            not_sub_menu: true,
-        },
-        children: [
-            {
-                path: 'store-list',
-                name: 'StoreList',
-                component: () => import('@/views/store/store-list.vue'),
-                meta: {
-                    title: '门店列表',
-                }
-            },
-            {
-                path: 'store-edit',
-                name: 'StoreEdit',
-                component: () => import('@/views/store/store-edit.vue'),
-                meta: {
-                    hidden: true,
-                    title: '门店编辑',
-                    parent: '/store/store-list',
-                }
-            },
-            {
-                path: 'store-detail',
-                name: 'StoreDetail',
-                component: () => import('@/views/store/store-detail.vue'),
-                meta: {
-                    hidden: true,
-                    title: '门店详情',
-                    parent: '/store/store-list',
-                }
-            },
-        ]
-    },
     { // 门店管理 - 门店端
         path: '/store/store-detail-sp',
         component: Layout,
@@ -336,6 +442,317 @@ const routes = [
                     roles: [LOGIN_TYPE.STORE],
                 }
             }
+        ]
+    },
+    { // 产品管理 - 平台端
+        path: '/item',
+        component: Layout,
+        redirect: '/item/item-list',
+        name: 'ItemManagement',
+        meta: {
+            title: '产品管理',
+            icon: 'i_s_item',
+            roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'item-list',
+                name: 'ItemList',
+                component: () => import('@/views/item/item-list.vue'),
+                meta: {
+                    title: '产品列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+            {
+                path: 'item-edit',
+                name: 'ItemEdit',
+                component: () => import('@/views/item/item-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '产品编辑',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/item/item-list',
+                }
+            },
+            {
+                path: 'item-detail',
+                name: 'ItemDetail',
+                component: () => import('@/views/item/item-detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '产品详情',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/item/item-list',
+                }
+            },
+            {
+                path: 'item-category',
+                name: 'ItemCategory',
+                component: () => import('@/views/item/item-category.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.ADMIN],
+                    title: '产品分类',
+                }
+            },
+            {
+                path: 'item-category-config',
+                name: 'ItemCategoryConfig',
+                component: () => import('@/views/item/item-category-config.vue'),
+                meta: {
+                    hidden: true,
+                    roles: [LOGIN_TYPE.ADMIN],
+                    title: '产品分类配置',
+                }
+            },
+        ]
+    },
+
+    { // 物流管理
+        path: '/waybill',
+        component: Layout,
+        redirect: '/waybill/waybill-list',
+        name: 'WayBillManagement',
+        meta: {
+            title: '物流管理',
+            icon: 'i_deliver',
+            roles: [LOGIN_TYPE.ADMIN],
+            not_sub_menu: true,
+            hidden: false,
+        },
+        children: [
+            {
+                path: 'waybill-list',
+                name: 'waybillList',
+                component: () => import('@/views/waybill/waybill-list.vue'),
+                meta: {
+                    title: '物流管理列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+        ]
+    },
+    { // 实例管理
+        path: '/entity',
+        component: Layout,
+        redirect: '/entity/entity-list',
+        name: 'EntityManagement',
+        meta: {
+            title: '实例管理',
+            icon: 'i_s_item',
+            roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'vehicle-list',
+                name: 'VehicleList',
+                component: () => import('@/views/entity/entity-list.vue'),
+                meta: {
+                    title: '整车列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    type: "vehicle"
+                }
+            },
+            {
+                path: 'part-list',
+                name: 'PartList',
+                component: () => import('@/views/entity/entity-list.vue'),
+                meta: {
+                    title: '零部件列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    type: "part"
+                }
+            },
+            /*{
+                path: 'entity-detail',
+                name: 'EntityDetail',
+                component: () => import('@/views/item/entity-detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '车架详情',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/entity/entity-list',
+                }
+            },*/
+        ]
+    },
+    { // 生产管理 - 平台端
+        path: '/production',
+        component: Layout,
+        redirect: '/production/stock-list',
+        name: 'ProductionManagement',
+        meta: {
+            title: '生产管理',
+            icon: 'i_s_item',
+            roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'supplier-list',
+                name: 'SupplierList',
+                component: () => import ('@/views/production/supplier-list.vue'),
+                meta: {
+                    title: '供应商列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+            {
+                path: 'supplier-edit',
+                name: 'SupplierEdit',
+                component: () => import ('@/views/production/supplier-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '供应商编辑',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/production/supplier-list',
+                }
+            },
+            {
+                path: 'supplier-detail',
+                name: 'SupplierDetail',
+                component: () => import ('@/views/production/supplier-detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '供应商详情',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/production/supplier-list',
+                }
+            },
+            {
+                path: 'material-purchase-list',
+                name: 'MaterialPurchaseList',
+                component: () => import ('@/views/production/material-purchase-list.vue'),
+                meta: {
+                    title: '采购单列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    is_sub_menu: true
+                }
+            },
+            {
+                path: 'material-purchase-edit',
+                name: 'MaterialPurchaseEdit',
+                component: () => import ('@/views/production/material-purchase-edit.vue'),
+                meta: {
+                    title: '新建采购单',
+                    hidden: true,
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/production/material-purchase-list',
+                }
+            },
+            {
+                path: 'material-purchase-detail',
+                name: 'MaterialPurchaseDetail',
+                component: () => import ('@/views/production/material-purchase-detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '采购单详情',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/production/material-purchase-list',
+                }
+            },
+            {
+                path: 'stock-list',
+                name: 'StockList',
+                component: () => import ('@/views/production/stock-list.vue'),
+                meta: {
+                    title: '库存总览',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+            {
+                path: 'material-list',
+                name: 'MaterialList',
+                component: () => import ('@/views/production/material-list.vue'),
+                meta: {
+                    title: '物料列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+            {
+                path: 'material-edit',
+                name: 'MaterialEdit',
+                component: () => import ('@/views/production/material-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '物料编辑',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/production/material-list',
+                }
+            },
+            {
+                path: 'material-detail',
+                name: 'MaterialDetail',
+                component: () => import ('@/views/production/material-detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '物料详情',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/production/material-list',
+                }
+            },
+            {
+                path: 'material-category',
+                name: 'MaterialCategory',
+                component: () =>
+                    import ('@/views/production/material-category.vue'),
+                meta: {
+                    title: '物料分类',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+            {
+                path: 'bom-list',
+                name: 'BomList',
+                component: () =>
+                    import ('@/views/production/bom-list.vue'),
+                meta: {
+                    title: 'BOM列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+            {
+                path: 'bom-detail',
+                name: 'BomDetail',
+                component: () => import ('@/views/production/bom-detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: 'BOM详情',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/production/bom-list',
+                }
+            },
+            {
+                path: 'manufacture-order-list',
+                name: 'ManufactureOrderList',
+                component: () =>
+                    import ('@/views/production/manufacture-order-list.vue'),
+                meta: {
+                    title: '生产单列表',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+            {
+                path: 'manufacture-order-edit',
+                name: 'ManufactureOrderEdit',
+                component: () => import ('@/views/production/manufacture-order-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '生产单编辑',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/production/manufacture-order-list',
+                }
+            },
+            {
+                path: 'manufacture-order-detail',
+                name: 'ManufactureOrderDetail',
+                component: () => import ('@/views/production/manufacture-order-detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '生产单详情',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/item/item-list',
+                }
+            },
         ]
     },
     { // 仓库管理
@@ -460,269 +877,6 @@ const routes = [
                     title: '待处理故障件',
                     roles: [LOGIN_TYPE.ADMIN],
                     type: 'pending'
-                }
-            },
-        ]
-    },
-    { // 物流管理
-        path: '/waybill',
-        component: Layout,
-        redirect: '/waybill/waybill-list',
-        name: 'WayBillManagement',
-        meta: {
-            title: '物流管理',
-            icon: 'i_deliver',
-            roles: [LOGIN_TYPE.ADMIN],
-            not_sub_menu: true,
-            hidden: false,
-        },
-        children: [
-            {
-                path: 'waybill-list',
-                name: 'waybillList',
-                component: () => import('@/views/waybill/waybill-list.vue'),
-                meta: {
-                    title: '物流管理列表',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-        ]
-    },
-    { // 实例管理
-        path: '/entity',
-        component: Layout,
-        redirect: '/entity/entity-list',
-        name: 'EntityManagement',
-        meta: {
-            title: '实例管理',
-            icon: 'i_s_item',
-            roles: [LOGIN_TYPE.ADMIN],
-        },
-        children: [
-            {
-                path: 'vehicle-list',
-                name: 'VehicleList',
-                component: () => import('@/views/entity/entity-list.vue'),
-                meta: {
-                    title: '整车列表',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    type: "vehicle"
-                }
-            },
-            {
-                path: 'part-list',
-                name: 'PartList',
-                component: () => import('@/views/entity/entity-list.vue'),
-                meta: {
-                    title: '零部件列表',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    type: "part"
-                }
-            },
-            /*{
-                path: 'entity-detail',
-                name: 'EntityDetail',
-                component: () => import('@/views/item/entity-detail.vue'),
-                meta: {
-                    hidden: true,
-                    title: '车架详情',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/entity/entity-list',
-                }
-            },*/
-        ]
-    },
-    { // 商品管理 - 平台端
-        path: '/item',
-        component: Layout,
-        redirect: '/item/item-list',
-        name: 'ItemManagement',
-        meta: {
-            title: '商品管理',
-            icon: 'i_s_item',
-            roles: [LOGIN_TYPE.ADMIN],
-        },
-        children: [
-            {
-                path: 'item-list',
-                name: 'ItemList',
-                component: () => import('@/views/item/item-list.vue'),
-                meta: {
-                    title: '商品列表',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-            {
-                path: 'item-edit',
-                name: 'ItemEdit',
-                component: () => import('@/views/item/item-edit.vue'),
-                meta: {
-                    hidden: true,
-                    title: '商品编辑',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/item/item-list',
-                }
-            },
-            {
-                path: 'item-detail',
-                name: 'ItemDetail',
-                component: () => import('@/views/item/item-detail.vue'),
-                meta: {
-                    hidden: true,
-                    title: '商品详情',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/item/item-list',
-                }
-            },
-            {
-                path: 'sales-area-list',
-                name: 'SalesList',
-                component: () => import('@/views/item/sales-area-list.vue'),
-                meta: {
-                    title: '销售区域',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-            {
-                path: 'sales-area-edit',
-                name: 'SalesEdit',
-                component: () => import('@/views/item/sales-area-edit.vue'),
-                meta: {
-                    hidden: true,
-                    title: '区域编辑',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/item/sales-area-list',
-                }
-            },
-            {
-                path: 'item-category',
-                name: 'ItemCategory',
-                component: () => import('@/views/item/item-category.vue'),
-                meta: {
-                    roles: [LOGIN_TYPE.ADMIN],
-                    title: '商品分类',
-                }
-            },
-            {
-                path: 'item-category-config',
-                name: 'ItemCategoryConfig',
-                component: () => import('@/views/item/item-category-config.vue'),
-                meta: {
-                    hidden: true,
-                    roles: [LOGIN_TYPE.ADMIN],
-                    title: '商品分类配置',
-                }
-            },
-            {
-                path: 'purchase-order-list',
-                name: 'AdminPurchaseOrderListAll',
-                component: () => import('@/views/purchase/purchase-order-list.vue'),
-                meta: {
-                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-                    title: '订单列表',
-                    search_type: PURCHASE_SEARCH_TYPE.ALL
-                }
-            },
-            {
-                path: 'purchase-order-children',
-                name: 'AdminPurchaseOrderListChildren',
-                component: () => import('@/views/purchase/purchase-order-list.vue'),
-                meta: {
-                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-                    title: '供货订单',
-                    search_type: PURCHASE_SEARCH_TYPE.CHILDREN
-                }
-            },
-        ]
-    },
-    { // 采购管理 - 经销商端 && 门店端 && 分销商端
-        path: '/purchase',
-        component: Layout,
-        redirect: '/purchase/item-list',
-        name: 'PurchaseManagement',
-        meta: {
-            title: '采购管理',
-            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-            auth: ['AGENT', 'STORE', 'DISTRIBUTOR'],
-            icon: 'i_s_item',
-        },
-        children: [
-            {
-                path: 'item-list',
-                name: 'PurchaseItemList',
-                component: () => import('@/views/purchase/item-list.vue'),
-                meta: {
-                    title: '采购',
-                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
-                }
-            },
-            {
-                path: 'item-display',
-                name: 'ItemDisplay',
-                component: () => import('@/views/purchase/item-display.vue'),
-                meta: {
-                    hidden: true,
-                    title: '商品详情',
-                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
-                }
-            },
-            {
-                path: 'item-collect',
-                name: 'ItemCollect',
-                component: () => import('@/views/purchase/item-collect.vue'),
-                meta: {
-                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
-                    title: '购物车',
-                }
-            },
-            {
-                path: 'item-settle',
-                name: 'ItemSettle',
-                component: () => import('@/views/purchase/item-settle.vue'),
-                meta: {
-                    hidden: true,
-                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
-                    title: '结算',
-                }
-            },
-            {
-                path: 'purchase-order-list',
-                name: 'PurchaseOrderList',
-                component: () => import('@/views/purchase/purchase-order-list.vue'),
-                meta: {
-                    roles: [LOGIN_TYPE.ADMIN],
-                    title: '订单列表',
-                    search_type: PURCHASE_SEARCH_TYPE.ALL
-                }
-            },
-            {
-                path: 'purchase-order-self',
-                name: 'PurchaseOrderListSelf',
-                component: () => import('@/views/purchase/purchase-order-list.vue'),
-                meta: {
-                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
-                    title: '采购订单',
-                    search_type: PURCHASE_SEARCH_TYPE.SELF
-                }
-            },
-            {
-                path: 'purchase-order-children',
-                name: 'PurchaseOrderListChildren',
-                component: () => import('@/views/purchase/purchase-order-list.vue'),
-                meta: {
-                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-                    title: '供货订单',
-                    search_type: PURCHASE_SEARCH_TYPE.CHILDREN
-                }
-            },
-            {
-                path: 'purchase-order-detail',
-                name: 'PurchaseOrderDetail',
-                component: () => import('@/views/purchase/purchase-order-detail.vue'),
-                meta: {
-                    hidden: true,
-                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-                    title: '采购订单详情',
                 }
             },
         ]
@@ -856,185 +1010,6 @@ const routes = [
             },
         ]
     },
-    { // 生产管理 - 平台端
-        path: '/production',
-        component: Layout,
-        redirect: '/production/stock-list',
-        name: 'ProductionManagement',
-        meta: {
-            title: '生产管理',
-            icon: 'i_s_item',
-            roles: [LOGIN_TYPE.ADMIN],
-        },
-        children: [
-            {
-                path: 'supplier-list',
-                name: 'SupplierList',
-                component: () => import ('@/views/production/supplier-list.vue'),
-                meta: {
-                    title: '供应商列表',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-            {
-                path: 'supplier-edit',
-                name: 'SupplierEdit',
-                component: () => import ('@/views/production/supplier-edit.vue'),
-                meta: {
-                    hidden: true,
-                    title: '供应商编辑',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/production/supplier-list',
-                }
-            },
-            {
-                path: 'supplier-detail',
-                name: 'SupplierDetail',
-                component: () => import ('@/views/production/supplier-detail.vue'),
-                meta: {
-                    hidden: true,
-                    title: '供应商详情',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/production/supplier-list',
-                }
-            },
-            {
-                path: 'material-purchase-list',
-                name: 'MaterialPurchaseList',
-                component: () => import ('@/views/production/material-purchase-list.vue'),
-                meta: {
-                    title: '采购单列表',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    is_sub_menu: true
-                }
-            },
-            {
-                path: 'material-purchase-edit',
-                name: 'MaterialPurchaseEdit',
-                hidden: true,
-                component: () => import ('@/views/production/material-purchase-edit.vue'),
-                meta: {
-                    title: '新建采购单',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/production/material-purchase-list',
-                }
-            },
-            {
-                path: 'material-purchase-detail',
-                name: 'MaterialPurchaseDetail',
-                hidden: true,
-                component: () => import ('@/views/production/material-purchase-detail.vue'),
-                meta: {
-                    title: '采购单详情',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/production/material-purchase-list',
-                }
-            },
-            {
-                path: 'stock-list',
-                name: 'StockList',
-                component: () => import ('@/views/production/stock-list.vue'),
-                meta: {
-                    title: '库存总览',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-            {
-                path: 'material-list',
-                name: 'MaterialList',
-                component: () => import ('@/views/production/material-list.vue'),
-                meta: {
-                    title: '物料列表',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-            {
-                path: 'material-edit',
-                name: 'MaterialEdit',
-                component: () => import ('@/views/production/material-edit.vue'),
-                meta: {
-                    hidden: true,
-                    title: '物料编辑',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/production/material-list',
-                }
-            },
-            {
-                path: 'material-detail',
-                name: 'MaterialDetail',
-                component: () => import ('@/views/production/material-detail.vue'),
-                meta: {
-                    hidden: true,
-                    title: '物料详情',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/production/material-list',
-                }
-            },
-            {
-                path: 'material-category',
-                name: 'MaterialCategory',
-                component: () =>
-                    import ('@/views/production/material-category.vue'),
-                meta: {
-                    title: '物料分类',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-            {
-                path: 'bom-list',
-                name: 'BomList',
-                component: () =>
-                    import ('@/views/production/bom-list.vue'),
-                meta: {
-                    title: 'BOM列表',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-            {
-                path: 'bom-detail',
-                name: 'BomDetail',
-                component: () => import ('@/views/production/bom-detail.vue'),
-                meta: {
-                    hidden: true,
-                    title: 'BOM详情',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/production/bom-list',
-                }
-            },
-            {
-                path: 'manufacture-order-list',
-                name: 'ManufactureOrderList',
-                component: () =>
-                    import ('@/views/production/manufacture-order-list.vue'),
-                meta: {
-                    title: '生产单列表',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-            {
-                path: 'manufacture-order-edit',
-                name: 'ManufactureOrderEdit',
-                component: () => import ('@/views/production/manufacture-order-edit.vue'),
-                meta: {
-                    hidden: true,
-                    title: '生产单编辑',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/production/manufacture-order-list',
-                }
-            },
-            {
-                path: 'manufacture-order-detail',
-                name: 'ManufactureOrderDetail',
-                component: () => import ('@/views/production/manufacture-order-detail.vue'),
-                meta: {
-                    hidden: true,
-                    title: '生产单详情',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/item/item-list',
-                }
-            },
-        ]
-    },
     { // 客户管理
         path: '/customer',
         component: Layout,
@@ -1066,15 +1041,14 @@ const routes = [
             },
         ]
     },
-    { // 员工管理
-        path: '/user',
+    { // 系统管理
+        path: '/system',
         component: Layout,
-        redirect: '/user/user-list',
-        name: 'UserManagement',
+        redirect: '/system/system-file-list',
+        name: 'SystemManagement',
         meta: {
-            title: '员工管理',
-            icon: 'i_s_user',
-            not_sub_menu: true,
+            title: '系统管理',
+            icon: 'i_s_temp',
         },
         children: [
             {
@@ -1105,20 +1079,6 @@ const routes = [
                     parent: '/user/user-list',
                 }
             },
-        ]
-    },
-    { // 角色管理
-        path: '/authority',
-        component: Layout,
-        redirect: '/authority/auth-role-list',
-        name: 'AuthManagement',
-        meta: {
-            title: '角色管理',
-            icon: 'i_s_temp',
-            auth: ['MANAGER'],
-            not_sub_menu: true,
-        },
-        children: [
             {
                 path: 'auth-role-list',
                 name: 'RoleList',
@@ -1137,24 +1097,13 @@ const routes = [
                     parent: '/authority/auth-role-list',
                 }
             },
-        ]
-    },
-    { // 系统管理
-        path: '/system',
-        component: Layout,
-        redirect: '/system/system-file-list',
-        name: 'SystemManagement',
-        meta: {
-            title: '系统管理',
-            icon: 'i_s_temp',
-        },
-        children: [
             {
-                path: 'system-file-list',
-                name: 'SystemFileList',
-                component: () => import('@/views/system/system-file-list.vue'),
+                path: 'allot-org-auth',
+                name: 'AllotOrgAuth',
+                component: () => import('@/views/system/allot-org-auth.vue'),
                 meta: {
-                    title: '系统附件',
+                    title: '权限管理',
+                    roles: [LOGIN_TYPE.ADMIN],
                 }
             },
             {
@@ -1198,14 +1147,15 @@ const routes = [
                 }
             },
             {
-                path: 'allot-org-auth',
-                name: 'AllotOrgAuth',
-                component: () => import('@/views/system/allot-org-auth.vue'),
+                path: 'system-file-list',
+                name: 'SystemFileList',
+                component: () => import('@/views/system/system-file-list.vue'),
                 meta: {
-                    title: '组织权限管理',
-                    roles: [LOGIN_TYPE.ADMIN],
+                    title: '文件管理',
                 }
             },
+
+
         ]
     },
 ];

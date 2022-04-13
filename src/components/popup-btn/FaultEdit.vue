@@ -1,5 +1,5 @@
 <template>
-    <a-button class="FaultlistBtn" @click.stop="handleFaultShow()" :ghost='ghost' :type="btnType" :class="btnClass">
+    <a-button class="FaultEdit" @click.stop="handleFaultShow()" :ghost='ghost' :type="btnType" :class="btnClass">
 <!--        <slot><i class="icon i_add"/></slot>-->
         <slot>{{ btnText }}</slot>
     </a-button>
@@ -15,7 +15,7 @@
         </div>
         <template #footer>
             <a-button @click="faultShow = false">{{ $t('def.cancel') }}</a-button>
-            <a-button @click="handleFaultSubmit" type="primary">{{ $t('def.submit') }}</a-button>
+            <a-button @click="handleFaultSubmit" type="primary">{{ $t('def.ok') }}</a-button>
         </template>
     </a-modal>
 </template>
@@ -24,7 +24,7 @@
 import Core from '../../core';
 
 export default {
-    name: 'FaultList',
+    name: 'FaultEdit',
     components: {},
     emits: ['saveFault'],
     props: {

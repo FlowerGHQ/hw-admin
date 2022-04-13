@@ -247,7 +247,9 @@ export default {
                 price: Math.round(Math.random() * 10000),
                 count: Math.round(Math.random() * 100),
             }))
-            this.drawPurchaseChart(list)
+            setTimeout(() => {
+                this.drawPurchaseChart(list)
+            }, 100)
         },
         getRepairChart() {
             let list = Core.Util.deepCopy(this.dateList)
@@ -255,7 +257,9 @@ export default {
                 date: i,
                 count: Math.round(Math.random() * 100),
             }))
-            this.drawRepairChart(list)
+            setTimeout(() => {
+                this.drawRepairChart(list)
+            }, 100)
         },
 
         drawPurchaseChart(data) {
