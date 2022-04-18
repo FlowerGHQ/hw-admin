@@ -22,12 +22,12 @@
                             placeholder="请选择物料分类" type="material"/>
                     </div>
                 </div>
-<!--                <div class="form-item required">
+                <div class="form-item required">
                     <div class="key">物料包装</div>
                     <div class="value">
                         <a-input v-model:value="form.encapsulation" placeholder="请输入物料包装"/>
                     </div>
-                </div>-->
+                </div>
                 <div class="form-item required">
                     <div class="key">物料编码</div>
                     <div class="value">
@@ -46,12 +46,12 @@
                         <a-input v-model:value="form.unit" placeholder="请输入单位"/>
                     </div>
                 </div>
-                <div class="form-item required">
+<!--                <div class="form-item required">
                     <div class="key">单价</div>
                     <div class="value">
                         <a-input v-model:value="form.unit_price" placeholder="请输入单位"/>
                     </div>
-                </div>
+                </div>-->
                 <div class="form-item" required>
                     <div class="key">供应商</div>
                     <div class="value">
@@ -164,9 +164,9 @@ export default {
             if (!form.category_id) {
                 return this.$message.warning('请选择物料分类')
             }
-          /*  if (!form.encapsulation) {
+            if (!form.encapsulation) {
                 return this.$message.warning('请输入物料包装')
-            }*/
+            }
             if (!form.code) {
                 return this.$message.warning('请输入物料编码')
             }
