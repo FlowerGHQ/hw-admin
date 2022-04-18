@@ -29,7 +29,7 @@ switch (window.location.hostname) {
     default:
         // URL_POINT = 'http://10.0.0.226:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
-        URL_POINT = 'http://10.0.0.7:8083' // 但
+        // URL_POINT = 'http://10.0.0.7:8083' // 但
         // URL_POINT = 'http://10.0.0.183:8083'
 
 
@@ -38,7 +38,7 @@ switch (window.location.hostname) {
             // URL_POINT = 'http://10.0.0.149:8083' // 徐伟
             // URL_POINT = 'http://10.0.0.39:8083'  // 姚志宇
             // URL_POINT = 'http://10.0.0.128:8083' // 姚志宇
-            // URL_POINT = 'http://10.0.0.125:8083' // 戚哲康
+            URL_POINT = 'http://10.0.0.238:8083' // 戚哲康
 
         break;
 }
@@ -551,6 +551,12 @@ let Const = {
         { list: [], select: [], key: 'customer', name: '客户管理' },
         { list: [], select: [], key: 'org-user', name: '员工管理' },
         { list: [], select: [], key: 'item', name: '商品管理' },
+        { list: [], select: [], key: 'invoice', name: '出入库单管理' },
+        { list: [], select: [], key: 'material-category', name: '物料分类' },
+        { list: [], select: [], key: 'material', name: '物料管理' },
+        { list: [], select: [], key: 'production-order', name: '生产单管理' },
+        { list: [], select: [], key: 'bom', name: 'BOM表管理' },
+        { list: [], select: [], key: 'supplier', name: '供应商管理' },
         { list: [], select: [], key: 'warehouse', name: '仓库管理' },
         { list: [], select: [], key: 'purchase-order', name: '采购订单管理' },
         { list: [], select: [], key: 'refund', name: '退款管理' },

@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">物料分类</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleModalShow({})"><i class="icon i_add"/>新增分类</a-button>
+                    <a-button type="primary" @click="handleModalShow({})" v-if="$auth('material-category.save')"><i class="icon i_add"/>新增分类</a-button>
                 </div>
             </div>
             <div class="table-container">
@@ -24,9 +24,9 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="handleModalShow(record, record)"><i class="icon i_edit"/>编辑名称</a-button>
-                            <a-button type='link' @click="handleModalShow({parent_id: record.id}, null,record)"><i class="icon i_add"/>新增子分类</a-button>
-                            <a-button type='link' @click="handleDelete(record)" class="danger"><i class="icon i_delete"/>删除</a-button>
+                            <a-button type='link' @click="handleModalShow(record, record)" v-if="$auth('material-category.save')"><i class="icon i_edit"/>编辑名称</a-button>
+                            <a-button type='link' @click="handleModalShow({parent_id: record.id}, null,record)" v-if="$auth('material-category.save')"><i class="icon i_add"/>新增子分类</a-button>
+                            <a-button type='link' @click="handleDelete(record)" class="danger" v-if="$auth('material-category.delete')"><i class="icon i_delete"/>删除</a-button>
                         </template>
                     </template>
                 </a-table>

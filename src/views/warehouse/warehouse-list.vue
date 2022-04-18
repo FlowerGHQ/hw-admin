@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">仓库列表</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建仓库</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('warehouse.save')"><i class="icon i_add"/>新建仓库</a-button>
             </div>
         </div>
         <div class="search-container">
@@ -31,7 +31,7 @@
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text , record}">
-                    <template v-if="column.key === 'detail'">
+                    <template v-if="column.key === 'detail' && $auth('warehouse.list')">
                         <a-tooltip placement="top" :title='text'>
                             <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                         </a-tooltip>
@@ -46,8 +46,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button>
-                        <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
+                        <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('warehouse.save')"><i class="icon i_edit"/>编辑</a-button>
+                        <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('warehouse.delete')"><i class="icon i_delete"/>删除</a-button>
                     </template>
                 </template>
             </a-table>
@@ -101,7 +101,7 @@ export default {
             tableColumns: [
                 {title: '仓库名称', dataIndex: 'name',key: 'detail',},
                 {title: '仓库类型', dataIndex: 'type',key: 'type',},
-                {title: '仓库地址', key:'address', dataIndex: 'province'},
+                {title: '仓库地址', key:'address', dataIndex: 'address'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right' },
             ],

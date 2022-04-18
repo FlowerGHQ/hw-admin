@@ -296,6 +296,7 @@ export default {
 
         // 中英文切换
         handleLangSwitch() {
+            console.log('handleLangSwitch')
             this.$store.commit('switchLang')
             this.$i18n.locale = this.$store.state.lang
         },

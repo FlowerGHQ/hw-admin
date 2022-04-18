@@ -44,6 +44,9 @@ export default {
         type: {
             type: Number,
         },
+        id: {
+            type: Number,
+        },
     },
     data() {
         return {
@@ -53,7 +56,7 @@ export default {
             currPage: 1,
             pageSize: 20,
             total: 0,
-            tableData: []
+            tableData: [],
 
         };
     },
@@ -61,8 +64,9 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                { title: '产品名称', dataIndex: 'name'},
-                { title: '产品编号', dataIndex: 'uid' },
+                { title: '产品名称', dataIndex: ['item','name'], key: 'detail'},
+                { title: '产品编号', dataIndex: 'item_code', key: 'item' },
+                { title: '产品实例号', dataIndex: 'uid', key: 'item'},
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '操作', key: 'operation', fixed: 'right'},
             ]
@@ -70,6 +74,7 @@ export default {
         },
     },
     mounted() {
+        this.getTableData();
     },
     methods: {
         routerChange(type, item = {}) {

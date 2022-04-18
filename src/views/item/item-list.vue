@@ -80,7 +80,7 @@
                         {{ text || '-'}}
                     </template>
                     <template v-if="column.key === 'money'">
-                        € {{$Util.countFilter(text)}}
+                        ￥{{$Util.countFilter(text)}}
                     </template>
                     <template v-if="column.key === 'fob_money'">
                         {{column.unit}} {{$Util.countFilter(text)}}

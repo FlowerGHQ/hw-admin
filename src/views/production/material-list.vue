@@ -4,14 +4,14 @@
             <div class="title-container">
                 <div class="title-area">物料列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建物料</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('material.save')"><i class="icon i_add"/>新建物料</a-button>
                     <a-upload name="file" class="file-uploader"
                               :file-list="upload.fileList" :action="upload.action"
                               :show-upload-list='false'
                               :headers="upload.headers" :data='upload.data'
                               accept=".xlsx,.xls"
                               @change="handleMatterChange">
-                        <a-button type="primary"  class="file-upload-btn">
+                        <a-button type="primary"  class="file-upload-btn" v-if="$auth('material.save')">
                             <i class="icon i_add"/> 批量导入
                         </a-button>
                     </a-upload>
@@ -52,9 +52,9 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>详情</a-button>
-                            <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
+                            <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('material.list')"><i class="icon i_detail"/>详情</a-button>
+                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('material.save')"><i class="icon i_edit"/>编辑</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('material.delete')"><i class="icon i_delete"/>删除</a-button>
                         </template>
                     </template>
                 </a-table>

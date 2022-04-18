@@ -3,7 +3,7 @@
     <div class="title-container">
         <div class="title-area">生产单列表</div>
         <div class="btns-area">
-            <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建生产单</a-button>
+            <a-button type="primary" @click="routerChange('edit')" v-if="$auth('production-order.save')"><i class="icon i_add"/>新建生产单</a-button>
         </div>
     </div>
     <div class="search-container">
@@ -44,7 +44,7 @@
         <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
             :row-key="record => record.id" :pagination='false'>
             <template #bodyCell="{ column, text, record }">
-                <template v-if="column.key === 'detail'">
+                <template v-if="column.key === 'detail' && $auth('production-order.list')">
                     <a-tooltip placement="top" :title='text'>
                         <a-button type="link" @click="routerChange(column.to, record)">{{ text || '-' }}
                         </a-button>
@@ -68,8 +68,8 @@
                     {{ $Util.timeFilter(text) }}
                 </template>
                 <template v-if="column.key === 'operation'">
-                    <a-button type="link" @click="routerChange('detail', record)"><i class="icon i_detail"/>详情</a-button>
-                    <a-button type="link" @click="handleCancel(record.id)" class="danger"><i class="icon i_close_c"/>取消</a-button>
+                    <a-button type="link" @click="routerChange('detail', record)" v-if="$auth('production-order.list')"><i class="icon i_detail"/>详情</a-button>
+                    <a-button type="link" @click="handleCancel(record.id)" class="danger" v-if="$auth('production-order.delete')"><i class="icon i_close_c"/>取消</a-button>
                 </template>
             </template>
         </a-table>

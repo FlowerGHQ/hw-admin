@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">出入库单列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>库存管理</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('invoice.save')"><i class="icon i_add"/>库存管理</a-button>
                 </div>
             </div>
             <!-- <div class="tabs-container colorful">
@@ -58,7 +58,7 @@
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.key === 'detail'">
+                        <template v-if="column.key === 'detail' && $auth('invoice.list')">
                             <a-tooltip placement="top" :title='text'>
                                 <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}
                                 </a-button>
@@ -85,11 +85,11 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('detail',record)"><i class="icon i_detail"/>详情</a-button>
+                            <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('invoice.list')"><i class="icon i_detail"/>详情</a-button>
                             <template v-if="record.status === STATUS.INIT">
                                 <!-- <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button> -->
-                                <a-button type="link" @click="handleCancel(record.id)" class="danger"><i class="icon i_close_c"/>取消</a-button>
-                                <AuditHandle v-if="record.status === STATUS.WAIT_AUDIT" btnType="link" :api-list="['Invoice', 'audit']" :id="record.id"> <i class="icon i_audit"/>审核</AuditHandle>
+                                <a-button type="link" @click="handleCancel(record.id)" class="danger" v-if="$auth('invoice.delete')"><i class="icon i_close_c"/>取消</a-button>
+<!--                                <AuditHandle v-if="record.status === STATUS.WAIT_AUDIT && $auth('invoice.audit')" btnType="link" :api-list="['Invoice', 'audit']" :id="record.id"> <i class="icon i_audit"/>审核</AuditHandle>-->
                             </template>
                         </template>
                     </template>

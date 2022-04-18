@@ -37,7 +37,7 @@ export default {
             handler(n) {
                 let fieldNames = { label: 'name_en', value: 'name' , children: 'children', }
                 switch (n) {
-                    case 'ch': fieldNames.label = 'name'; break;
+                    case 'zh': fieldNames.label = 'name'; break;
                 }
                 this.fieldNames = fieldNames
             }

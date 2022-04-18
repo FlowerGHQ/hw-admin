@@ -11,10 +11,10 @@
 <!--            <template v-if="detail.status === STATUS.INIT">
                 <AuditHandle btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"> <i class="icon i_audit"/>审核</AuditHandle>
             </template>-->
-            <template v-if="detail.status === STATUS.CLOSE && detail.type === TYPE.OUT && $auth('ADMIN')">
+            <template v-if="detail.status === STATUS.CLOSE && detail.type === TYPE.OUT && $auth('ADMIN') && $auth('invoice.export')">
                 <a-button type="primary" @click="handleExportOut"><i class="icon i_download"/>导出</a-button>
             </template>
-            <template v-if="detail.status === STATUS.CLOSE && detail.type === TYPE.IN && $auth('ADMIN')">
+            <template v-if="detail.status === STATUS.CLOSE && detail.type === TYPE.IN && $auth('ADMIN') && $auth('invoice.export')">
                 <a-button type="primary" @click="handleExportIn"><i class="icon i_download"/>导出</a-button>
             </template>
         </div>

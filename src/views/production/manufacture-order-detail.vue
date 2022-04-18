@@ -3,7 +3,6 @@
         <div class='title-container'>
             <div class='title-area'>生产订单详情</div>
             <div class="btns-area">
-                <a-button type="primary" ghost @click="handleMatterChange"><i class="icon i_goods"/>一键领料</a-button>
                 <a-button type="primary" ghost @click="routerChange('picking')"><i class="icon i_goods"/>领料</a-button>
                 <a-button type="danger" ghost @click="handleCancel(id)"><i class="icon i_close_c"/>取消</a-button>
             </div>

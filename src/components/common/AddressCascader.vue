@@ -12,6 +12,8 @@
 <script>
 import Core from '../../core';
 import axios from 'axios';
+import zhCN from "ant-design-vue/lib/locale-provider/zh_CN";
+import enUS from "ant-design-vue/lib/locale-provider/en_US";
 
 export default {
     name: 'AddressCascader',
@@ -35,9 +37,10 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
+                console.log('$i18n.locale', n)
                 let fieldNames = { label: 'name_en', value: 'name' , children: 'children', }
                 switch (n) {
-                    case 'ch': fieldNames.label = 'name'; break;
+                    case 'zh': fieldNames.label = 'name'; break;
                 }
                 this.fieldNames = fieldNames
             }

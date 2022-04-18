@@ -1,6 +1,8 @@
 <template>
     <div id="AuthRoleEdit" class="edit-container">
-        <div class="title-container"><div class="title-area">{{form.id ? '编辑角色' : '新建角色'}}</div></div>
+        <div class="title-container">
+            <div class="title-area">{{ form.id ? '编辑角色' : '新建角色' }}</div>
+        </div>
         <div class="form-block">
             <div class="form-title">
                 <div class="title-colorful">基本信息</div>
@@ -15,8 +17,9 @@
                 <div class="form-item textarea">
                     <div class="key">角色描述:</div>
                     <div class="value">
-                        <a-textarea v-model:value="form.remark" placeholder="请输入角色描述" :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
-                        <span class="content-length">{{form.remark.length}}/99</span>
+                        <a-textarea v-model:value="form.remark" placeholder="请输入角色描述"
+                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                        <span class="content-length">{{ form.remark.length }}/99</span>
                     </div>
                 </div>
             </div>
@@ -28,7 +31,7 @@
             <div class="form-content long-key">
                 <template v-for="item of authItems" :key="item.key">
                     <div class="form-item afs" v-if="item.list.length">
-                        <div class="key">{{item.name}}:</div>
+                        <div class="key">{{ item.name }}:</div>
                         <div class="value">
                             <a-checkbox-group :options="item.list" v-model:value="item.select"/>
                         </div>
@@ -82,7 +85,9 @@ export default {
     methods: {
         routerChange(type, item) {
             switch (type) {
-                case 'back': this.$router.go(-1); break;
+                case 'back':
+                    this.$router.go(-1);
+                    break;
             }
         },
         getAuthRoleDetail() { // 获取角色详情
@@ -112,7 +117,7 @@ export default {
                     let key = auth.key.split('.')[0];
                     let item = this.authItems.find(i => key === i.key);
                     if (item) {
-                        item.list.push({ value: auth.id, label: auth.name });
+                        item.list.push({value: auth.id, label: auth.name});
                     }
                 })
                 if (this.form.id) {
@@ -163,15 +168,12 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 #AuthRoleEdit {
-    .long-key {
-        .key {
-            width: 100px;
-        }
-        .value {
-            width: calc(~'100% - 100px');
-        }
+    .ant-checkbox + span {
+        padding-right: 8px;
+        padding-left: 8px;
+        width: 100px;
     }
 }
 </style>

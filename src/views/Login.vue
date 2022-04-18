@@ -95,22 +95,33 @@ export default {
                         break;
                 } */
                 Core.Data.setUserType(userType);
-                this.getAuthority(userType, res.user.id, res.user.flag_admin);
+                this.getAuthority(userType, res.user.role_id, res.user.flag_admin);
             });
         },
 
-        async getAuthority(userType, userId, flag_admin) {
+        async getAuthority(userType, roleId, flag_admin) {
             Core.Data.setAuthority('')
             let authorityMap = {}
             authorityMap[userType] = true
             if (flag_admin) {
                 authorityMap['MANAGER'] = true
             }
-            Core.Data.setAuthority(authorityMap)
-            setTimeout(() => {
-                this.$router.replace({ path: '/dashboard', query: {from: 'login'} })
-            }, 1000)
-            return
+            Core.Api.Authority.authSelected({
+                role_id: roleId,
+            }).then(res => {
+                console.log('res', res )
+                let list = res.list
+                // let list = []
+                for (const item of list) {
+                    authorityMap[item.key] = true
+                }
+            }).finally(() => {
+                Core.Data.setAuthority(authorityMap)
+                setTimeout(() => {
+                    this.$router.replace({ path: '/dashboard', query: {from: 'login'} })
+                }, 1000)
+            })
+
 
         }
     }

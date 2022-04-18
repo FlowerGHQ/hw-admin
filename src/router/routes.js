@@ -605,6 +605,7 @@ const routes = [
                     title: '供应商编辑',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/production/supplier-list',
+                    auth: ['supplier.save'],
                 }
             },
             {
@@ -616,6 +617,7 @@ const routes = [
                     title: '供应商详情',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/production/supplier-list',
+                    auth: ['supplier.list'],
                 }
             },
            /* {
@@ -677,6 +679,7 @@ const routes = [
                     title: '物料编辑',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/production/material-list',
+                    auth: ['material.save'],
                 }
             },
             {
@@ -688,6 +691,7 @@ const routes = [
                     title: '物料详情',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/production/material-list',
+                    auth: ['material.list'],
                 }
             },
             {
@@ -719,6 +723,7 @@ const routes = [
                     title: 'BOM详情',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/production/bom-list',
+                    auth: ['bom.list'],
                 }
             },
             {
@@ -740,6 +745,7 @@ const routes = [
                     title: '生产单编辑',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/production/manufacture-order-list',
+                    auth: ['manufacture.save'],
                 }
             },
             {
@@ -751,6 +757,7 @@ const routes = [
                     title: '生产单详情',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/item/item-list',
+                    auth: ['manufacture.list'],
                 }
             },
         ]
@@ -782,6 +789,7 @@ const routes = [
                     hidden: true,
                     title: '仓库编辑',
                     parent: '/warehouse/warehouse-list',
+                    auth: ['warehouse.save'],
                 }
             },
             {
@@ -792,6 +800,8 @@ const routes = [
                     hidden: true,
                     title: '仓库详情',
                     parent: '/warehouse/warehouse-list',
+                    auth: ['warehouse.list'],
+
                 }
             },
             {
@@ -810,6 +820,7 @@ const routes = [
                     hidden: true,
                     title: '出入库编辑',
                     parent: '/invoice/invoice-list',
+                    auth: ['invoice.save'],
                 }
             },
             {
@@ -820,6 +831,7 @@ const routes = [
                     hidden: true,
                     title: '出入库详情',
                     parent: '/invoice/invoice-list',
+                    auth: ['invoice.list'],
                 }
             },
             {
@@ -918,6 +930,7 @@ const routes = [
                 component: () => import('@/views/aftersales/refund-list.vue'),
                 meta: {
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    // auth: ['aftersales.refund', 'asjncsaij'],
                     title: '退款审核',
                 }
             }
@@ -1049,6 +1062,7 @@ const routes = [
         meta: {
             title: '系统管理',
             icon: 'i_s_temp',
+            auth: ['MANAGER'],
         },
         children: [
             {
