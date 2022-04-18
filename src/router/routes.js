@@ -628,17 +628,17 @@ const routes = [
                     is_sub_menu: true
                 }
             },
-            {
-                path: 'material-purchase-edit',
-                name: 'MaterialPurchaseEdit',
-                component: () => import ('@/views/production/material-purchase-edit.vue'),
-                meta: {
-                    title: '新建采购单',
-                    hidden: true,
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/production/material-purchase-list',
-                }
-            },
+            // {
+            //     path: 'material-purchase-edit',
+            //     name: 'MaterialPurchaseEdit',
+            //     component: () => import ('@/views/production/material-purchase-edit.vue'),
+            //     meta: {
+            //         title: '新建采购单',
+            //         hidden: true,
+            //         roles: [LOGIN_TYPE.ADMIN],
+            //         parent: '/production/material-purchase-list',
+            //     }
+            // },
             {
                 path: 'material-purchase-detail',
                 name: 'MaterialPurchaseDetail',
