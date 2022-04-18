@@ -4,9 +4,9 @@
         <div class="title-area">{{type_ch}}单详情</div>
         <div class="btn-area">
             <template v-if="detail.status === STATUS.INIT">
-                <a-button type="primary" @click="handleComplete()"><i class="icon i_confirm"/>{{type_ch}}完成</a-button>
+                <a-button type="primary" @click="handleComplete()" v-if="$auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}完成</a-button>
                 <!-- <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button> -->
-                <a-button type="danger" ghost @click="handleCancel()"> <i class="icon i_close_c"/>取消</a-button>
+                <a-button type="danger" ghost @click="handleCancel()" v-if="$auth('invoice.delete')"> <i class="icon i_close_c"/>取消</a-button>
             </template>
 <!--            <template v-if="detail.status === STATUS.INIT">
                 <AuditHandle btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"> <i class="icon i_audit"/>审核</AuditHandle>
@@ -82,8 +82,8 @@
                                 <a-input-number v-model:value="production.addCount" placeholder="添加数量"
                                     @keydown.enter="handleProdAddChange(index)" :autofocus="true" :max="production.maxCount" :min='1' :precision="0"/>
                                 <div class="btns">
-                                    <a-button type="primary" @click="handleProdAddCancel()" ghost>取消</a-button>
-                                    <a-button type="primary" @click="handleProdAddChange()">确定</a-button>
+                                    <a-button type="primary" @click="handleProdAddCancel()" ghost v-if="$auth('invoice.save')">取消</a-button>
+                                    <a-button type="primary" @click="handleProdAddChange()" v-if="$auth('invoice.save')">确定</a-button>
                                 </div>
                             </div>
                         </template>
@@ -118,7 +118,7 @@
                                 </template>
                                 <template v-else>{{ text ? text + '件' : '-' }}</template>
                             </template>
-                            <template v-if="column.key === 'operation'" >
+                            <template v-if="column.key === 'operation' && $auth('invoice.save')" >
                                 <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改数量</a-button>
                                 <a-button type="link" @click="handleRowSubmit(record, 'item')" v-else><i class="icon i_confirm"/>确认更改</a-button>
                                 <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
@@ -157,8 +157,8 @@
                                 <a-input-number v-model:value="production.addCount" placeholder="添加数量"
                                     @keydown.enter="handleProdAddChange(index)" :autofocus="true" :max="production.maxCount" :min='1' :precision="0"/>
                                 <div class="btns">
-                                    <a-button type="primary" @click="handleProdAddCancel()" ghost>取消</a-button>
-                                    <a-button type="primary" @click="handleProdAddChange()">确定</a-button>
+                                    <a-button type="primary" @click="handleProdAddCancel()" ghost v-if="$auth('invoice.save')">取消</a-button>
+                                    <a-button type="primary" @click="handleProdAddChange()" v-if="$auth('invoice.save')">确定</a-button>
                                 </div>
                             </div>
                         </template>
@@ -210,7 +210,7 @@
                             <template v-if="column.key === 'count'">
                                 {{ text ? text + '件' : '-' }}
                             </template>
-                            <template v-if="column.key === 'operation'" >
+                            <template v-if="column.key === 'operation' && $auth('invoice.save')" >
                                 <template v-if="!this.addMode">
                                     <!-- <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改实例号</a-button> -->
                                     <!-- <a-button type="link" @click="handleRowSubmit(record, 'entity')" v-else><i class="icon i_confirm"/>确认更改</a-button> -->
@@ -240,7 +240,7 @@
         </a-collapse-panel>
         <!-- 物料 -->
         <a-collapse-panel key="ItemList" header="物料信息" class="gray-collapse-panel" v-if="detail.target_type === COMMODITY_TYPE.MATERIALS">
-            <template #extra>
+            <template #extra v-if="$auth('invoice.save')">
                 <MaterialSelect btnType='link' btnText="添加物料" v-if="detail.status === STATUS.INIT && !addMode"
                     :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
                     @select="handleAddChange"/>
@@ -269,7 +269,7 @@
                                 </template>
                                 <template v-else>{{ text ? text + '件' : '-' }}</template>
                             </template>
-                            <template v-if="column.key === 'operation'" >
+                            <template v-if="column.key === 'operation' && $auth('invoice.save')" >
                                 <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改数量</a-button>
                                 <a-button type="link" @click="handleRowSubmit(record, 'material')" v-else><i class="icon i_confirm"/>确认更改</a-button>
                                 <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>

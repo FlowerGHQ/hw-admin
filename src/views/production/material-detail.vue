@@ -5,7 +5,7 @@
             <div class="title-container">
                 <div class="title-area">物料详情</div>
                 <div class="btns-area">
-                    <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
+                    <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('material.save')"><i class="icon i_edit"/>编辑</a-button>
                 </div>
             </div>
             <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">

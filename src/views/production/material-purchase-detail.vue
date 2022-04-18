@@ -3,7 +3,7 @@
         <div class="title-container">
             <div class="title-area">采购单详情</div>
             <div class="btn-area">
-                    <a-button type="primary" @click="handleSubmit()"><i class="icon i_confirm"/>提交</a-button>
+                    <a-button type="primary" @click="handleSubmit()" ><i class="icon i_confirm"/>提交</a-button>
                     <a-button type="danger" ghost @click="handleCancel()"> <i class="icon i_close_c"/>取消</a-button>
             </div>
         </div>

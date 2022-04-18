@@ -2,9 +2,9 @@
     <div class="MaterialList gray-panel no-margin">
         <div class="panel-title">
             <div class="title">供应物料列表</div>
-            <div class="btn-area">
+            <div class="btn-area" v-if="$auth('material.save')">
                 <MaterialSelect @select="(ids,items) => handleAddShow(ids,items)"
-                                btn-class="panel-btn" :disabled-checked='checkedIds'>
+                                btn-class="panel-btn" :disabled-checked='checkedIds' v-if="$auth('supplier.save')">
                     添加物料
                 </MaterialSelect>
                 <!--                <a-button type="primary" class="panel-btn" v-if="addMode" @click.stop="handleAddConfirm()">确认添加
@@ -32,9 +32,9 @@
                         </template>
                         <template v-if="column.key === 'operation'" >
                             <template v-if="!this.addMode">
-                                <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>修改单价</a-button>
+                                <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode && $auth('supplier.save')"><i class="icon i_edit"/>修改单价</a-button>
                                 <a-button type="link" @click="handleRowSubmit(record)" v-else><i class="icon i_confirm"/>确认更改</a-button>
-                                <a-button type="link" @click="handleRemove(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
+                                <a-button type="link" @click="handleRemove(record)" class="danger && $auth('supplier.save')"><i class="icon i_delete"/>移除</a-button>
                             </template>
                         </template>
                     </template>

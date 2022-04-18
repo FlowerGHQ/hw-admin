@@ -121,7 +121,7 @@ export default {
                 { title: '供应商名称', dataIndex: 'name', key: 'detail' },
                 { title: '简称', dataIndex: 'short_name', key: 'contact' },
                 { title: '供应商类型', dataIndex: 'type'},
-                { title: '物料分类', dataIndex: ['category','name'],key: 'contact'},
+                // { title: '物料分类', dataIndex: ['category','name'],key: 'contact'},
                 { title: '联系人', dataIndex: 'contact_name',key: 'contact'},
                 { title: '联系人电话', dataIndex: 'contact_phone',key: 'contact' },
                 { title: '联系人邮箱', dataIndex: 'contact_email',key: 'contact' },

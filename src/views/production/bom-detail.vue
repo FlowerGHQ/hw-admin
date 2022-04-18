@@ -13,10 +13,10 @@
                         导入明细
                     </a-button>
                 </a-upload> -->
-                <EditBomModel @submit='getBomDetail' :ghost='true' :detail="detail">
+                <EditBomModel @submit='getBomDetail' :ghost='true' :detail="detail" v-if="$auth('bom.save')">
                     <i class="icon i_edit"/>编辑
                 </EditBomModel>
-                <a-button ghost danger @click="handleDelete()"><i class="icon i_delete"/>删除</a-button>
+                <a-button ghost danger @click="handleDelete()" v-if="$auth('bom.delete')"><i class="icon i_delete"/>删除</a-button>
             </div>
         </div>
         <div class="gray-panel">

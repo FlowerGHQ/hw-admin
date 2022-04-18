@@ -2,7 +2,7 @@
 <div class="BomItems gray-panel no-margin">
     <div class="panel-title">
         <div class="title">BOM表明细</div>
-        <div class="btn-area" v-if="!addMode && !editShow">
+        <div class="btn-area" v-if="!addMode && !editShow && $auth('bom.save')">
             <ItemSelect @select="(ids,items) => handleAddShow(TARGET_TYPE.ITEM,ids,items)" btn-class="panel-btn" :disabled-checked='checkedIds.items'>
                 添加商品
             </ItemSelect>
@@ -14,9 +14,9 @@
     <div class="panel-content">
         <div class="table-container">
             <template v-if="!addMode">
-                <a-button class="panel-btn" @click="handleMutiEditChange()" type="primary" :ghost='editShow ? false : true'>
+                <a-button class="panel-btn" @click="handleMutiEditChange()" type="primary" :ghost='editShow ? false : true' v-if="$auth('bom.save')">
                     <template v-if='editShow'>确认设置</template>
-                    <template v-else>批量编辑</template>
+                    <template v-else >批量编辑</template>
                 </a-button>
                 <a-button class="panel-btn" @click="getTableData" v-if="editShow">取消设置</a-button>
                 <a-button class="panel-btn" @click="handleRemove('muti', selectedRowItems)" type="danger" ghost :disabled="!selectedRowKeys.length" v-if="!editShow">
@@ -78,11 +78,11 @@
                         {{ text || '-' }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="handleEditChange(record)">
+                        <a-button type='link' @click="handleEditChange(record)" v-if="$auth('bom.save')">
                             <template v-if="record.edit_show"><i class="icon i_confirm"/>确认</template>
                             <template v-else><i class="icon i_edit"/>编辑</template>
                         </a-button>
-                        <a-button type='link' class="danger" @click="handleRemove('', [record])"><i class="icon i_delete"/>移出</a-button>
+                        <a-button type='link' class="danger" @click="handleRemove('', [record])" v-if="$auth('bom.save')"><i class="icon i_delete"/>移出</a-button>
                     </template>
                 </template>
             </a-table>
