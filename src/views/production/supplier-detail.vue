@@ -31,10 +31,10 @@
                         <span class="key">开户银行：</span>
                         <span class="value">{{ detail.deposit_bank }}</span>
                     </a-col>
-                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+<!--                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">开户行支行：</span>
                         <span class="value">{{ detail.account_bank }}</span>
-                    </a-col>
+                    </a-col>-->
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">开户行账号：</span>
                         <span class="value">{{ detail.bank_card_no }}</span>

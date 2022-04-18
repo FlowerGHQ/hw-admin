@@ -83,7 +83,7 @@
                     </div>
                 </div>-->
                 <div class="form-item required">
-                    <div class="key">付款期限及方式：</div>
+                    <div class="key">付款期限：</div>
                     <div class="value">
                         <a-select v-model:value="form.payment_term" placeholder="请选择付款期限及方式">
                             <a-select-option  v-for="(val,key) in PAYMENT_TYPE" :key="key" :value="key">{{ val }}</a-select-option>
