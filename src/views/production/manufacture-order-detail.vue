@@ -3,16 +3,7 @@
         <div class='title-container'>
             <div class='title-area'>生产订单详情</div>
             <div class="btns-area">
-                <a-upload name="file" class="file-uploader"
-                          :file-list="upload.fileList" :action="upload.action"
-                          :show-upload-list='false'
-                          :headers="upload.headers" :data='upload.data'
-                          accept=".xlsx,.xls"
-                          @change="handleMatterChange">
-                    <a-button type="primary" ghost class="file-upload-btn">
-                        <i class="icon i_add"/>批量领料
-                    </a-button>
-                </a-upload>
+                <a-button type="primary" ghost @click="handleMatterChange"><i class="icon i_goods"/>一键领料</a-button>
                 <a-button type="primary" ghost @click="routerChange('picking')"><i class="icon i_goods"/>领料</a-button>
                 <a-button type="danger" ghost @click="handleCancel(id)"><i class="icon i_close_c"/>取消</a-button>
             </div>
@@ -227,17 +218,16 @@ export default {
                 },
             });
         },
-        // 上传文件
-        handleMatterChange({file, fileList}) {
-            console.log("handleMatterChange status:", file.status, "file:", file)
-            if (file.status == 'done') {
-                if (file.response && file.response.code < 0) {
-                    return this.$message.error(file.response.message)
-                } else {
-                    return this.$message.success('上传成功');
+        handleExportConfirm() { // 确认是否一键领料
+            let _this = this;
+            this.$confirm({
+                title: '确认要一键领料吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    _this.handleRepairExport();
                 }
-            }
-            this.upload.fileList = fileList
+            })
         },
     },
 };

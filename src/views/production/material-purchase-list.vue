@@ -3,15 +3,15 @@
         <div class="title-container">
             <div class="title-area">采购订单列表</div>
             <div class="btns-area">
-                <a-button type="primary" @click="handlePurchaseShow"><i class="icon i_add"/>新建采购单</a-button>
+                <a-button type="primary" @click="handleMaterialPurchase"><i class="icon i_add"/>新建采购单</a-button>
             </div>
         </div>
         <div class="search-container">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">供应商名称:</div>
+                    <div class="key">订单号:</div>
                     <div class="value">
-                        <a-input placeholder="请输入供应商名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                        <a-input placeholder="请输入采购订单号" v-model:value="searchForm.sn" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
@@ -74,7 +74,7 @@
             />
         </div>
     </div>
-    <template class="modal-container">
+<!--    <template class="modal-container">
         <a-modal title="新建采购单" v-model:visible="purchaseShow" class="material-purchase-modal"
                  :after-close='handlePurchaseClose'>
             <div class="form-item required">
@@ -90,7 +90,7 @@
                 <a-button @click="handlePurchaseSubmit" type="primary">确定</a-button>
             </template>
         </a-modal>
-    </template>
+    </template>-->
 </template>
 
 <script>
@@ -112,7 +112,7 @@ export default {
             total: 0,
             loading: false,
             searchForm: {
-                name: '',
+                sn: '',
                 begin_time: '',
                 end_time: '',
             },
@@ -125,7 +125,7 @@ export default {
             tableData: [],
             tableColumns: [
                 {title: '订单号', dataIndex: 'sn', key: 'detail'},
-                {title: '供应商', dataIndex: 'name'},
+              /*  {title: '供应商', dataIndex: 'name'},
                 {title: '物料名称', dataIndex: 'contact_name', key: 'contact'},
                 {title: '物料编码', dataIndex: 'contact_phone', key: 'contact'},
                 {title: '单位', dataIndex: 'contact_email', key: 'contact'},
@@ -133,7 +133,8 @@ export default {
                 {title: '单价', dataIndex: 'payment_term'},
                 {title: '总价', dataIndex: 'payment_term'},
                 {title: '到货日期', dataIndex: 'address'},
-                {title: '备注', dataIndex: 'payment_term'},
+                {title: '备注', dataIndex: 'payment_term'},*/
+                {title: '创建人', dataIndex: ['apply_user', "account", "name"], key: 'contact'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'}
             ],
@@ -164,13 +165,6 @@ export default {
                 case 'detail':
                     routeUrl = this.$router.resolve({
                         path: "/production/material-purchase-detail",
-                        query: {id: item.id}
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
-                case 'edit':
-                    routeUrl = this.$router.resolve({
-                        path: "/production/material-purchase-edit",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
@@ -260,7 +254,14 @@ export default {
                 },
             });
         },
-
+        handleMaterialPurchase() {
+            Core.Api.MaterialPurchase.save().then(() => {
+                this.$message.success('创建成功');
+                this.routerChange('detail');
+            }).catch(err => {
+                console.log("handleMaterialPurchase err", err);
+            })
+        },
         // 上传文件
         handleFileUpload({file, fileList}) {
             console.log("handleFileUpload status:", file.status, "file:", file)

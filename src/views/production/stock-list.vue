@@ -2,28 +2,6 @@
     <div id="StockList" class="list-container">
         <div class="title-container">
             <div class="title-area">库存总览</div>
-            <div class="btns-area">
-                <a-upload name="file" class="file-uploader"
-                          :file-list="upload.fileList" :action="upload.action"
-                          :show-upload-list='false'
-                          :headers="upload.headers" :data='upload.data'
-                          accept=".xlsx,.xls"
-                          @change="handleMatterChange">
-                    <a-button type="primary" class="file-upload-btn">
-                        <i class="icon i_add" />批量入库
-                    </a-button>
-                </a-upload>
-                <a-upload name="file" class="file-uploader"
-                          :file-list="upload.fileList" :action="upload.action"
-                          :show-upload-list='false'
-                          :headers="upload.headers" :data='upload.data'
-                          accept=".xlsx,.xls"
-                          @change="handleMatterChange">
-                    <a-button type="primary" class="file-upload-btn">
-                        <i class="icon i_add" />批量领料
-                    </a-button>
-                </a-upload>
-            </div>
         </div>
 
         <div class="search-container">
@@ -56,14 +34,9 @@
                 <a-button @click="handleSearchReset">重置</a-button>
             </div>
         </div>
-        <div class="operate-container">
-            <a-button type="primary" @click="handleExportConfirm" :disabled="!selectedRowKeys.length">批量采购</a-button>
-        </div>
         <div class="table-container">
-            <a-table :check-mode='true' :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                     :row-key="record => record.id" :pagination='false' :row-selection="rowSelection"
-                     :expandedRowKeys="expandedRowKeys" :indentSize='0'
-                     :expandIconColumnIndex="expandIconColumnIndex">
+            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                     :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.key === 'detail'">
                         <a-tooltip placement="top" :title='text'>
@@ -160,23 +133,6 @@ export default {
                 warehouse_id: undefined,
             },
             tableData: [],
-            expandedRowKeys: [],
-            expandIconColumnIndex: 0,
-            selectedRowKeys: [],
-            selectedRowItems: [],
-            exportDisabled: false,
-            // 上传
-            upload: {
-                action: Core.Const.NET.URL_POINT + "/admin/1/item/import",
-                fileList: [],
-                headers: {
-                    ContentType: false
-                },
-                data: {
-                    token: Core.Data.getToken(),
-                    type: 'xlsx',
-                },
-            },
         }
     },
     watch: {},
@@ -194,16 +150,6 @@ export default {
                 {title: '规格', type: 'spec'},
             ]
             return columns
-        },
-        rowSelection() {
-            return {
-                selectedRowKeys: this.selectedRowKeys,
-                onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
-                    this.selectedRowKeys = selectedRowKeys
-                    this.selectedRowItems = selectedRows
-                    console.log('rowSelection onChange this.selectedRowKeys', this.selectedRowKeys);
-                },
-            };
         },
     },
     mounted() {
@@ -264,44 +210,7 @@ export default {
                 console.log('getTableData err', err)
             })
         },
-        // 上传文件
-        handleMatterChange({file, fileList}) {
-            console.log("handleMatterChange status:", file.status, "file:", file)
-            if (file.status == 'done') {
-                if (file.response && file.response.code < 0) {
-                    return this.$message.error(file.response.message)
-                } else {
-                    return this.$message.success('上传成功');
-                }
-            }
-            this.upload.fileList = fileList
-        },
 
-        handleExportConfirm() { // 确认订单是否导出
-            let _this = this;
-            this.$confirm({
-                title: '确认要生成采购订单吗？',
-                okText: '确定',
-                cancelText: '取消',
-                onOk() {
-                    _this.handleRepairExport();
-                }
-            })
-        },
-        handleRepairExport() { // 订单导出
-            this.exportDisabled = true;
-            // let selectedRowKeys = this.selectedRowKeys
-            let selectedRowItems = this.selectedRowItems
-            for (const key in selectedRowItems) {
-                selectedRowItems[key] = selectedRowItems[key] || ''
-            }
-            let exportUrl = Core.Api.MaterialPurchase.export({
-                selectedRowItems,
-            })
-            console.log("handleRepairExport _exportUrl", exportUrl)
-            window.open(exportUrl, '_blank')
-            this.exportDisabled = false;
-        },
     },
 }
 </script>

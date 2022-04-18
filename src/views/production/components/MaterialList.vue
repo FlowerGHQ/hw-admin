@@ -22,9 +22,20 @@
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
-                        <template v-if="column.key === 'operation'">
-                            <a-button type='link' class="danger" @click="handleRemove(record)"><i class="icon i_delete"/>移出
-                            </a-button>
+                        <template v-if="column.key === 'price'">
+<!--                            {{ record }}-->
+                            <template v-if="addMode || record.editMode">
+                               ￥<a-input-number v-model:value="record.price" placeholder="请输入"
+                                                :min="0.00" :precision="2"/>
+                            </template>
+                            <template v-else>￥{{ text }}</template>
+                        </template>
+                        <template v-if="column.key === 'operation'" >
+                            <template v-if="!this.addMode">
+                                <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>修改单价</a-button>
+                                <a-button type="link" @click="handleRowSubmit(record)" v-else><i class="icon i_confirm"/>确认更改</a-button>
+                                <a-button type="link" @click="handleRemove(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
+                            </template>
                         </template>
                     </template>
                 </a-table>
@@ -63,6 +74,9 @@ export default {
         supplierId: {
             type: Number,
         },
+        materialId: {
+            type: Number,
+        }
     },
     data() {
         return {
@@ -75,33 +89,35 @@ export default {
             // 表格数据
             material_id: '',
             tableData: [],
-
+            addMode: false,
             details: {
                 items: [],
                 materials: [],
             },
             addData: [],
+            material: {},
         };
     },
     watch: {},
     computed: {
         tableColumns() {
             let columns = [
-                {title: '物料名称', dataIndex: 'name', key: 'item'},
-                {title: '物料分类', dataIndex: ['category', 'name'], key: 'item'},
-                {title: '物料编码', dataIndex: 'code', key: 'item'},
-                {title: '单位', dataIndex: 'unit', key: 'item'},
-                {title: '单价', dataIndex: 'price', key: 'item'},
-                {title: '规格', dataIndex: 'spec', key: 'item'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
+                {title: '物料名称', dataIndex: ['item','name'], key: 'item'},
+                {title: '物料分类', dataIndex: ['item','category', 'name'], key: 'item'},
+                {title: '物料编码', dataIndex: ['item','code'], key: 'item'},
+                {title: '单位', dataIndex: ['item','unit'], key: 'item'},
+                {title: '单价', dataIndex:  'price',key: 'price'},
+                {title: '规格', dataIndex: ['item','spec'], key: 'item'},
+                {title: '创建时间', dataIndex: ['item','create_time'], key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
             return columns
         },
         // 已经添加到物料表中的ids
         checkedIds() {
-            let checkedIds = this.addData.map(item => item.id)
+            let checkedIds = this.addData.map(i => i.id)
             console.log('checkedIds:', checkedIds)
+            console.log('addData', this.addData)
             return checkedIds
         },
     },
@@ -137,17 +153,37 @@ export default {
                 supplier_id: this.supplierId,
             }).then(res => {
                 this.total = res.count;
-                this.addData = res.list.map(item => item.material)
+                this.addData = res.list.map(item => ({
+                    item: item.material,
+                    id: item.id,
+                    price: Core.Util.countFilter(item.price) || (item.material ? item.material.price : 0) || 0,
+                }))
+                console.log('this.addData:', this.addData)
             }).catch(err => {
                 console.log('getTableData err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
+        handleRowChange(item) {
+            item.editMode = true
+        },
+        handleRowSubmit(item) {
+            Core.Api.Material.price({
+                material_id: item.item.id,
+                price: Math.round(item.price * 100),
+                supplier_id: this.supplierId
+            }).then(() => {
+                this.$message.success('保存成功')
+                this.getTableData()
+            })
+        },
+
         // 移出材料
         handleRemove(item) {
             let _this = this;
-            let name = item ? `[${item.name}]` : ''
+            let name = `[${item.item.name}]`
+            console.log('item',item)
             this.$confirm({
                 title: '确定要移出' + name + '吗？',
                 okText: '确定',
@@ -187,8 +223,8 @@ export default {
             })
         },
     }
-}
-;
+
+};
 </script>
 
 <style lang="less">

@@ -31,7 +31,7 @@
         </div>
         <div class="gray-panel info">
             <div class="panel-title">
-                <div class="left"><span>工单编号</span> {{ detail.uid }}</div>
+                <div class="left"><span>{{ $t('r.serial_number') }}:</span> {{ detail.uid }}</div>
                 <div class="right">
                     <a-tooltip :title='detail.audit_message'>
                         <div class="status">
@@ -44,27 +44,27 @@
             </div>
             <div class="panel-content">
                 <div class="info-item">
-                    <div class="key">工单帐类</div>
+                    <div class="key">{{ $t('r.warranty') }}</div>
                     <div class="value">{{ $Util.repairServiceFilter(detail.service_type, $i18n.locale) }}</div>
                 </div>
                 <div class="info-item">
-                    <div class="key">车架号</div>
+                    <div class="key">{{ $t('search.vehicle_no') }}</div>
                     <div class="value">{{ detail.vehicle_no || '-' }}</div>
                 </div>
                 <div class="info-item">
-                    <div class="key">创建人</div>
+                    <div class="key">{{ $t('r.creator_name') }}</div>
                     <div class="value">{{ detail.user_name || '-' }}</div>
                 </div>
                 <div class="info-item">
-                    <div class="key">相关客户</div>
-                    <div class="value">{{ detail.customer_name || '-' }}</div>
+                    <div class="key">{{ $t('r.associated_customer') }}</div>
+                    <div class="value">{{ detail.customer_name || '-' }}</div>s
                 </div>
                 <div class="info-item">
-                    <div class="key">优先级</div>
+                    <div class="key">{{ $t('r.urgency') }}</div>
                     <div class="value">{{ $Util.repairPriorityFilter(detail.priority, $i18n.locale) }}</div>
                 </div>
                 <div class="info-item">
-                    <div class="key">创建时间</div>
+                    <div class="key">{{ $t('r.create_time') }}</div>
                     <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
                 </div>
                 <!-- <div class="info-item">

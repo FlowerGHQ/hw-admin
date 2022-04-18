@@ -7,9 +7,16 @@
                 <a-button type="primary" @click="handleComplete()"><i class="icon i_confirm"/>{{type_ch}}完成</a-button>
                 <!-- <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button> -->
                 <a-button type="danger" ghost @click="handleCancel()"> <i class="icon i_close_c"/>取消</a-button>
+
             </template>
-            <template v-if="detail.status === STATUS.INIT">
+<!--            <template v-if="detail.status === STATUS.INIT">
                 <AuditHandle btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"> <i class="icon i_audit"/>审核</AuditHandle>
+            </template>-->
+            <template v-if="detail.status === STATUS.CLOSE && detail.type === TYPE.OUT && $auth('ADMIN')">
+                <a-button type="primary" @click="handleExportOut"><i class="icon i_download"/>导出</a-button>
+            </template>
+            <template v-if="detail.status === STATUS.CLOSE && detail.type === TYPE.IN && $auth('ADMIN')">
+                <a-button type="primary" @click="handleExportIn"><i class="icon i_download"/>导出</a-button>
             </template>
         </div>
     </div>
@@ -343,7 +350,20 @@ export default {
                 addCount: '',
                 maxCount: '',
                 addItem: {},
-            }
+            },
+            exportDisabled: false,
+            // 上传
+            upload: {
+                action: Core.Const.NET.URL_POINT + "/admin/1/item/import",
+                fileList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'xlsx',
+                },
+            },
         };
     },
     watch: {},
@@ -771,7 +791,47 @@ export default {
         handleProdAddCancel() {
             this.production.addVisible = false
             // this.getProductionItem()
-        }
+        },
+        handleExportOut() { // 确认入库单是否导出
+            let _this = this;
+            this.$confirm({
+                title: '确认要导出吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    _this.handleInvoiceExportOut();
+                }
+            })
+        },
+        handleInvoiceExportOut() { // 订单导出
+            this.exportDisabled = true;
+            let exportUrl = Core.Api.Export.invoiceOutExport({
+               invoice_id: this.id,
+            })
+            console.log("handleRepairExport _exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
+        },
+        handleExportIn() { // 确认库单是否导出
+            let _this = this;
+            this.$confirm({
+                title: '确认要导出吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    _this.handleInvoiceExportIn();
+                }
+            })
+        },
+        handleInvoiceExportIn() { // 订单导出
+            this.exportDisabled = true;
+            let exportUrl = Core.Api.Export.invoiceInExport({
+                invoice_id: this.id,
+            })
+            console.log("handleRepairExport _exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
+        },
     }
 };
 </script>

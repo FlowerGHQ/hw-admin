@@ -2,7 +2,7 @@
 <div class="StockList gray-panel no-margin">
     <div class="panel-content">
         <div class="table-container">
-            <a-upload v-if="type === 'material'" name="file" class="file-uploader"
+<!--            <a-upload v-if="type === 'material'" name="file" class="file-uploader"
                       :file-list="upload.fileList" :action="upload.action"
                       :show-upload-list='false'
                       :headers="upload.headers" :data='upload.data'
@@ -21,7 +21,7 @@
                 <a-button type="primary"  class="panel-btn">
                     批量采购
                 </a-button>
-            </a-upload>
+            </a-upload>-->
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text}">

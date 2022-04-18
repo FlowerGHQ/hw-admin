@@ -39,6 +39,7 @@ class ApiBase {
     }
 
     http(config, moduleName, args = {}) {
+        console.log('config', config)
 
         let mark = ApiBase.getMark()
         const token = Data.getToken()
@@ -67,6 +68,7 @@ class ApiBase {
                     params: {token, ...args},
                 })
             case 'Post':
+                console.log('config', config)
                 return ajax({
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     method: 'post',

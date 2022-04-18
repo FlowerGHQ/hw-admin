@@ -131,7 +131,7 @@ export default {
                 { title: '开户行账号', dataIndex: 'bank_card_no',key: 'contact' },
                 { title: '开户银行', dataIndex: 'deposit_bank',key: 'contact' },
                 { title: '开户行支行', dataIndex: 'account_bank',key: 'contact' },*/
-                { title: '付款期限', dataIndex: 'payment_term' },
+                { title: '付款期限及方式', dataIndex: 'payment_term' },
                 { title: '供应商地址', dataIndex: 'address' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '操作', key: 'operation', fixed: 'right'}

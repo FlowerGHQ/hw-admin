@@ -5,6 +5,16 @@
                 <div class="title-area">物料列表</div>
                 <div class="btns-area">
                     <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建物料</a-button>
+                    <a-upload name="file" class="file-uploader"
+                              :file-list="upload.fileList" :action="upload.action"
+                              :show-upload-list='false'
+                              :headers="upload.headers" :data='upload.data'
+                              accept=".xlsx,.xls"
+                              @change="handleMatterChange">
+                        <a-button type="primary"  class="file-upload-btn">
+                            <i class="icon i_add"/> 批量导入
+                        </a-button>
+                    </a-upload>
                 </div>
             </div>
             <div class="search-container">
@@ -100,11 +110,23 @@ export default {
                 { title: '物料包装', dataIndex: 'encapsulation', key: 'item' },
                 { title: '规格', dataIndex: 'spec', key: 'item' },
                 { title: '单位', dataIndex: 'unit', key: 'item' },
-                { title: '供应商料号', dataIndex: 'supplier_code', key: 'item' },
+                // { title: '供应商料号', dataIndex: 'supplier_code', key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 { title: '操作', key: 'operation', fixed: 'right', width: 180 }
             ],
-            tableData: []
+            tableData: [],
+            // 上传
+            upload: {
+                action: Core.Const.NET.URL_POINT + "/admin/1/material/import",
+                fileList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'xlsx',
+                },
+            },
         }
     },
     watch: {},
@@ -189,15 +211,33 @@ export default {
                     })
                 },
             });
-
-
+        },
+        // 上传文件
+        handleMatterChange({file, fileList}) {
+            console.log("handleMatterChange status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                if (file.response && file.response.code < 0) {
+                    return this.$message.error(file.response.message)
+                } else {
+                    return this.$message.success('上传成功');
+                }
+            }
+            this.upload.fileList = fileList
         },
     },
 }
 </script>
 
 <style lang='less' scoped>
-#MaterialsCategory {
-
+#MaterialsList {
+    .list-container {
+        .title-container {
+            .btns-area {
+               .file-uploader {
+                   margin-left: 15px;
+               }
+            }
+        }
+    }
 }
 </style>

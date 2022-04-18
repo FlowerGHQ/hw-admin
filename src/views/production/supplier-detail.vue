@@ -40,7 +40,7 @@
                         <span class="value">{{ detail.bank_card_no }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">付款期限：</span>
+                        <span class="key">付款方式：</span>
                         <span class="value">{{ $Util.supplierPaymentTypeFilter(detail.payment_term) }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">

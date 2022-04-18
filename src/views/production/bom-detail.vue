@@ -164,7 +164,7 @@ export default {
             });
         },
 
-        // 上传文件
+       /* // 上传文件
         handleFileUpload({file, fileList}) {
             console.log("handleFileUpload status:", file.status, "file:", file)
             if (file.status == 'done') {
@@ -176,7 +176,7 @@ export default {
                 }
             }
             this.upload.fileList = fileList
-        },
+        },*/
     }
 };
 </script>

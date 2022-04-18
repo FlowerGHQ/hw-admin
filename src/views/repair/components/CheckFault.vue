@@ -13,7 +13,7 @@
                 </div>
             </div>
         </a-collapse-panel>
-        <a-collapse-panel key="change" header="零部件更换" class="gray-collapse-panel">
+        <a-collapse-panel key="change" :header="$t('r.replacement_items')" class="gray-collapse-panel">
             <div class="panel-content change">
                 <div class="fault-item" v-for="fault of faultSelect" :key="fault">
                     <div class="fault-title">

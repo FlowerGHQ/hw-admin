@@ -23,6 +23,8 @@ const apiList = {
     Export: { // 导出
         purchaseExport: ['PostJson', 'purchase-order/export'],
         repairExport: ['PostJson', 'repair/export-repair-order-record'],
+        invoiceOutExport: ['PostJson', 'invoice/export-out-invoice'],//导出
+        invoiceInExport: ['PostJson', 'invoice/export-in-invoice'],//导出
     },
     User: { // 员工
         save: ['PostJson', 'user/save'],
@@ -101,6 +103,7 @@ const apiList = {
         status: ['PostJson', 'invoice/status-list'], // 状态
         handle: ['PostJson', 'invoice/handle'], // 处理完成
         cancel: ['PostJson', 'invoice/cancel'], // 取消出入库单
+
     },
     InvoiceItem: {
         list: ['PostJson', 'invoice-item/list'], // 出入库单明细列表
@@ -347,6 +350,7 @@ const apiList = {
         delete: ['PostJson', 'material/delete'],
         list: ['PostJson', 'material/list'],
         detail: ['PostJson', 'material/detail'],
+        price: ['PostJson', 'material/set-supplier-material-price'],
     },
     MaterialCategory: { // 物料分类
         tree: ['PostJson', 'material-category/tree'],

@@ -59,6 +59,10 @@ const messages = {
             remark: '工单备注',
             enter_remark: '请输入工单备注',
             settle_accounts: '结算',
+            serial_number: '工单编号',
+            create_time: '创建时间',
+            replacement_items: '零部件更换',
+            fault_cause: '故障原因',
         },
         d: {
             contact: '联系人',
@@ -80,6 +84,7 @@ const messages = {
             manage_account: '账户管理',
         },
         c: {
+            amount: '数量',
         },
         def: {
             search: '查询',
@@ -174,7 +179,11 @@ const messages = {
             enter_specific: 'Please enter the specific address.',
             remark: 'Remark',
             enter_remark: 'You can remark here.',
-            settle_accounts: 'Close an account'
+            settle_accounts: 'Close an account',
+            serial_number: 'serial number',
+            create_time: 'Create time',
+            replacement_items: 'Replacement items',
+            fault_cause: 'Fault cause',
         },
         d: {
             contact: 'Contact',
@@ -196,6 +205,7 @@ const messages = {
             manage_account: 'Accounts',
         },
         c: {
+            amount: '数量',
         },
         def: {
             search: 'Search',

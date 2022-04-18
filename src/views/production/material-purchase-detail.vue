@@ -3,10 +3,8 @@
         <div class="title-container">
             <div class="title-area">采购单详情</div>
             <div class="btn-area">
-                <template>
-                    <a-button type="primary" @click="handleComplete()"><i class="icon i_confirm"/>提交</a-button>
+                    <a-button type="primary" @click="handleSubmit()"><i class="icon i_confirm"/>提交</a-button>
                     <a-button type="danger" ghost @click="handleCancel()"> <i class="icon i_close_c"/>取消</a-button>
-                </template>
             </div>
         </div>
         <div class="gray-panel info">
@@ -19,7 +17,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel-content">
+<!--            <div class="panel-content">
                 <div class="info-item">
                     <div class="key">采购总数量</div>
                     <div class="value">
@@ -45,44 +43,43 @@
                     <div class="key">创建时间</div>
                     <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
                 </div>
-                <div class="info-item">
-                    <div class="key">审核人</div>
-                    <div class="value">{{ $Util.sourceTypeFilter(detail.source_type || '-')}}</div>
-                </div>
-                <div class="info-item" v-if="detail.source_type !== SOURCE_TYPE.ADMIN">
-                    <div class="key">审核时间</div>
-                    <div class="value">
-                        <a-button type="link" @click="routerChange('source')">{{ detail.source_uid || '-'}}</a-button>
-                    </div>
-                </div>
-            </div>
+            </div>-->
         </div>
         <a-collapse v-model:activeKey="activeKey" ghost>
             <a-collapse-panel key="affirm" header="物料信息" class="gray-collapse-panel">
                 <template #extra>
                     <MaterialSelect btnType='link' btnText="添加物料" v-if="!addMode" :disabledChecked="disabledChecked"
                                     @select="handleAddChange"/>
-                    <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('material')">确认添加</a-button>
+                    <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit">确认添加</a-button>
                 </template>
                 <div class="panel-content">
                 <div class="panel-content no-mg">
                     <a-table :columns="tableColumns" :data-source="addData" :scroll="{ x: true }"
                              :row-key="record => record.id" :pagination='false'>
                         <template #bodyCell="{ column, text, record }">
-                            <template v-if="column.key === 'code'">
+                            <template v-if="column.dataIndex === 'supplier'">
+                                <template v-if="addMode || record.editMode">
+                                    <a-select v-model:value="supplier_name" placeholder="请选择供应商" style="width: 120px;">
+                                        <a-select-option v-for="item of record.supplier_list" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+                                    </a-select>
+                                </template>
+                            </template>
+                            <template v-if="column.key === 'contact'">
                                 {{ text || '-' }}
                             </template>
                             <template v-if="column.key === 'amount'">
                                 <template v-if="addMode || record.editMode">
                                     <a-input-number v-model:value="record.amount" placeholder="请输入"
-                                                    :min="1" :max="99999" :precision="0"/> 件
+                                                    :min="1" :max="99999" :precision="0"/>
                                 </template>
                                 <template v-else>{{ text ? text + '件' : '-' }}</template>
                             </template>
                             <template v-if="column.key === 'operation'" >
+                                <template v-if="!this.addMode">
                                 <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改数量</a-button>
-                                <a-button type="link" @click="handleRowSubmit(record, 'material')" v-else><i class="icon i_confirm"/>确认更改</a-button>
+                                <a-button type="link" @click="handleRowSubmit(record)" v-else><i class="icon i_confirm"/>确认更改</a-button>
                                 <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
+                                </template>
                             </template>
                         </template>
                     </a-table>
@@ -148,7 +145,7 @@ export default {
             detail: {},
             warehouse: {},
 
-            activeKey: ['ItemList'],
+            activeKey: ['affirm'],
 
             tableData: [],
             addMode: false,
@@ -159,7 +156,8 @@ export default {
                 addCount: '',
                 maxCount: '',
                 addItem: {},
-            }
+            },
+            supplier_name: undefined,
         };
     },
     watch: {},
@@ -175,15 +173,14 @@ export default {
         },
         tableColumns() {
             let columns = [
-                { title: '供应商', dataIndex: 'name'},
-                { title: '物料名称', dataIndex: 'name',key: 'contact'},
-                { title: '物料编码', dataIndex: 'contact_phone',key: 'contact' },
-                { title: '单位', dataIndex: 'contact_email',key: 'contact' },
+                { title: '供应商',dataIndex: 'supplier'},
+                { title: '物料名称', dataIndex: ['item','name'],key: 'contact'},
+                { title: '物料编码', dataIndex: ['item','spec'],key: 'contact' },
                 { title: '数量', dataIndex: 'amount',key: 'amount' },
-                { title: '单价', dataIndex: 'payment_term' },
+                { title: '单位', dataIndex: ['item','unit'],key: 'contact' },
+                { title: '单价', dataIndex: 'price',key: 'contact' },
                 { title: '总价', dataIndex: 'payment_term' },
-                { title: '到货日期', dataIndex: 'address' },
-                { title: '备注', dataIndex: 'payment_term' },
+                { title: '到货日期', dataIndex: ['supplier','arrival_period'] },
                 { title: '操作', key: 'operation', fixed: 'right'}
             ]
             return columns
@@ -194,31 +191,6 @@ export default {
         this.getMaterialPurchaseDetail();
     },
     methods: {
-        routerChange(type) {
-            let routeUrl = ''
-            switch (type) {
-                case 'list':
-                    routeUrl = this.$router.resolve({
-                        path: "/warehouse/invoice-list",
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
-                case 'edit':
-                    routeUrl = this.$router.resolve({
-                        path: "/warehouse/invoice-edit",
-                        query: { id: this.detail.id }
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
-                case 'warehouse':
-                    routeUrl = this.$router.resolve({
-                        path: "/warehouse/warehouse-detail",
-                        query: { id: this.detail.warehouse_id }
-                    })
-                    window.open(routeUrl.href, '_blank')
-                    break;
-            }
-        },
         pageChange(curr) {    // 页码改变
             this.currPage = curr
             this.getMaterialItemList()
@@ -234,17 +206,8 @@ export default {
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
-                console.log('getInvoiceList res', res)
-                let list = res.list
-                if (this.detail.target_type === COMMODITY_TYPE.ENTITY) {
-                    list.forEach(item => {
-                        item.item = item.entity ? item.entity.item || {} : {}
-                        item.entity_id = item.target_id
-                        item.entity_uid = item.entity ? item.entity.uid : ''
-                    })
-                }
+                console.log('getMaterialItemList res', res)
                 this.total = res.count
-                this.tableData = list
             }).catch(err => {
                 console.log('getInvoiceList err', err)
             }).finally(() => {
@@ -257,8 +220,7 @@ export default {
                 id: this.id
             }).then(res => {
                 console.log('getMaterialPurchaseDetail res', res)
-                let d = res.detail || {}
-                this.detail = d
+                this.detail = res.detail
                 this.getMaterialItemList();
             }).catch(err => {
                 console.log('getMaterialPurchaseDetail err', err)
@@ -269,23 +231,8 @@ export default {
         handleRowChange(item) {
             item.editMode = true
         },
-        handleRowSubmit(item, type) {
-            let target_id = ''
-            switch (type) {
-                case 'item': target_id = item.item.id; break;
-                case 'entity': target_id = item.entity_id; break;
-                case 'material': target_id = item.material.id; break;
-            }
-            let target = {
-                id: item.id,
-                amount: item.amount,
-                target_id,
-                invoice_id: this.id,
-            }
-            if (!target.target_id) {
-                return this.$message.warning(`该${type === 'item' ? '商品' : '商品实例'}不存在`);
-            }
-            Core.Api.MaterialPurchase.save(target).then(() => {
+        handleRowSubmit() {
+            Core.Api.MaterialPurchase.save().then(() => {
                 this.$message.success('保存成功')
                 this.getInvoiceDetail()
             })
@@ -293,7 +240,10 @@ export default {
 
         // 移除 商品
         handleRemoveRow(record) {
-            Core.Api.MaterialPurchase.itemDelete({id: record.id}).then(() => {
+            Core.Api.MaterialPurchase.itemDelete({
+                id: record.id,
+                material_purchase_order_id: this.id
+            }).then(() => {
                 this.$message.success('移除成功')
                 this.getMaterialItemList()
             })
@@ -301,43 +251,34 @@ export default {
         handleAddChange(ids, items) {
             console.log('handleAddChange items:', items)
             let list = items.map(item => ({
-                id: 0,
                 item: item,
-                material: item,
-                amount: 1,
+                id: item.id,
+                supplier: item.supplier_list.map(i => ({
+                    price: i.price,
+                    short_name: i.short_name,
+                    arrival_period: i.arrival_period,
+                }))
             }))
             this.addData = list
             this.addMode = true
-        },
+            // this.supplierList =
+            console.log('addData', this.addData)},
 
-        async handleAddSubmit(type) {
+        async handleAddSubmit() {
             this.loading = true;
-            let data = [...this.tableData, ...this.addData]
+            let data = [...this.addData]
             let list = []
             for (const item of data) {
-                let target_id,target_uid
-                switch (type) {
-                    case 'material':
-                        console.log('item.material', item.material)
-                        console.log('item.material.id:', item.material.id)
-                        console.log('item.material && item.material.id:', item.material && item.material.id)
-                        if (item.material && item.material.id) {
-                            target_id = item.material.id
-                        } else {
-                            return this.$message.warning("该物料不存在");
-                        }
-                        break;
-                }
                 list.push({
                     id: item.id,
                     amount: item.amount,
-                    invoice_id: this.id,
-                    target_id,
-                    target_uid,
                 })
             }
             console.log('handleAddSubmit list:', list)
-            Core.Api.MaterialPurchase.batchSave(list).then(() => {
+            Core.Api.MaterialPurchase.batchSave({
+                list,
+                id: this.id,
+            }).then(() => {
                 this.$message.success('保存成功')
                 this.getMaterialPurchaseDetail()
                 this.addMode = false
@@ -345,6 +286,40 @@ export default {
                 console.log('handleAddSubmit err', err)
             }).finally(() => {
                 this.loading = false;
+            });
+        },
+        //提交
+        handleSubmit() {
+            let _this = this;
+            this.$confirm({
+                title: `确定提交该采购单吗？`,
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.MaterialPurchase.save({id: _this.id}).then(() => {
+                        _this.$message.success('操作成功');
+                        _this.getMaterialPurchaseDetail();
+                    }).catch(err => {
+                        console.log("handleSubmit err", err);
+                    })
+                },
+            });
+        },
+        // 取消
+        handleCancel() {
+            let _this = this;
+            this.$confirm({
+                title: `确定取消该采购单吗？`,
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.MaterialPurchase.cancel({id: _this.id}).then(() => {
+                        _this.$message.success('操作成功');
+                        _this.getMaterialPurchaseDetail();
+                    }).catch(err => {
+                        console.log("handleSubmit err", err);
+                    })
+                },
             });
         },
 

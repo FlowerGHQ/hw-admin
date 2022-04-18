@@ -90,7 +90,7 @@ export default {
                 category_id: undefined,
                 encapsulation: '', // 物料包装
                 spec: '', // 规格
-                supplier_ids: '', // 供应商
+                supplier_ids: undefined, // 供应商
                 unit: ''
             },
             supplierList: [],
@@ -164,9 +164,9 @@ export default {
             if (!form.category_id) {
                 return this.$message.warning('请选择物料分类')
             }
-            if (!form.encapsulation) {
+          /*  if (!form.encapsulation) {
                 return this.$message.warning('请输入物料包装')
-            }
+            }*/
             if (!form.code) {
                 return this.$message.warning('请输入物料编码')
             }
