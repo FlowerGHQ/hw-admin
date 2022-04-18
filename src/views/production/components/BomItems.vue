@@ -13,8 +13,8 @@
     </div>
     <div class="panel-content">
         <div class="table-container">
-            <template v-if="!addMode">
-                <a-button class="panel-btn" @click="handleMutiEditChange()" type="primary" :ghost='editShow ? false : true' v-if="$auth('bom.save')">
+            <template v-if="!addMode && $auth('bom.save')">
+                <a-button class="panel-btn" @click="handleMutiEditChange()" type="primary" :ghost='editShow ? false : true'>
                     <template v-if='editShow'>确认设置</template>
                     <template v-else >批量编辑</template>
                 </a-button>
@@ -23,7 +23,7 @@
                     批量删除
                 </a-button>
             </template>
-            <template v-else>
+            <template v-if="addMode && $auth('bom.save')">
                 <a-button class="panel-btn" @click="handleAddConfirm()" type="primary">确认添加</a-button>
                 <a-button class="panel-btn" @click="handleAddClose()">取消添加</a-button>
             </template>
