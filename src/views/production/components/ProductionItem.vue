@@ -2,7 +2,7 @@
 <div class="ProductionItem gray-panel no-margin">
     <div class="panel-title">
         <div class="title">已生产产品列表</div>
-        <div class="btn-area">
+        <div class="btn-area" v-if="$auth('invoice.save')">
             <a-button type="primary" @click="routerChange('put_in')" class="panel-btn"><i class="icon i_add"/>产品入库</a-button>
         </div>
     </div>
