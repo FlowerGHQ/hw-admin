@@ -57,7 +57,7 @@
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
                  <a-tab-pane key="MaterialList" tab="供应物料">
-                    <MaterialList :supplierId="id" :materialId="material_id"/>
+                    <MaterialList :supplierId="id" :materialId="material_id" v-if="activeKey === 'MaterialList'"/>
                 </a-tab-pane>
             </a-tabs>
         </div>
@@ -81,7 +81,7 @@ export default {
             id: '',
             material_id: '',
             detail: {},
-            activeKey: 'MaterialList',
+            activeKey: '',
         }
     },
     watch: {},
@@ -117,7 +117,7 @@ export default {
             }).then((res) => {
                 console.log('getSupplierDetail res', res);
                 this.detail = res.detail
-                this.activeKey = 'getSupplierDetail'
+                this.activeKey = 'MaterialList'
             }).catch((err) => {
                 console.log('getSupplierDetail err', err);
             }).finally(() => {

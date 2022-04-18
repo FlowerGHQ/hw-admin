@@ -20,14 +20,14 @@
                         <a-input v-model:value="form.short_name" placeholder="请输入供应商简称"/>
                     </div>
                 </div>
-                <div class="form-item required">
+<!--                <div class="form-item required">
                     <div class="key">供应商类型：</div>
                     <div class="value">
                         <a-select v-model:value="form.type" placeholder="请选择供应商类型">
                             <a-select-option  v-for="(val,key) in SUPPLIER_TYPE" :key="key" :value="key">{{ val }}</a-select-option>
                         </a-select>
                     </div>
-                </div>
+                </div>-->
                 <div class="form-item required">
                     <div class="key">供应商代码：</div>
                     <div class="value">
@@ -212,9 +212,9 @@ export default {
             if (!form.short_name) {
                 return this.$message.warning('请输入供应商简称')
             }
-            if (!form.type) {
+           /* if (!form.type) {
                 return this.$message.warning('请选择供应商类型')
-            }
+            }*/
             if (!form.uid) {
                 return this.$message.warning('请输入供应商代码')
             }
@@ -260,13 +260,16 @@ export default {
 </script>
 
 <style lang="less" scoped>
-/*#SupplierEdit {
+#SupplierEdit {
     .form-block {
         .form-item-value {
             .date {
-
+                font-size: 12px;
+                line-height: 16px;
+                color: #363D42;
+                margin-left: 5px;
             }
         }
     }
-}*/
+}
 </style>

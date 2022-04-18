@@ -618,7 +618,7 @@ const routes = [
                     parent: '/production/supplier-list',
                 }
             },
-            {
+           /* {
                 path: 'material-purchase-list',
                 name: 'MaterialPurchaseList',
                 component: () => import ('@/views/production/material-purchase-list.vue'),
@@ -627,7 +627,7 @@ const routes = [
                     roles: [LOGIN_TYPE.ADMIN],
                     is_sub_menu: true
                 }
-            },
+            },*/
             // {
             //     path: 'material-purchase-edit',
             //     name: 'MaterialPurchaseEdit',
