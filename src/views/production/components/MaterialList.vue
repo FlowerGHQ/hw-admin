@@ -191,7 +191,7 @@ export default {
                 cancelText: '取消',
                 onOk() {
                     Core.Api.SupplierItem.delete({
-                        material_id: item.id,
+                        material_id: item.item.id,
                         supplier_id: _this.supplierId
                     }).then(() => {
                         _this.$message.success('移出成功');
