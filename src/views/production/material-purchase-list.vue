@@ -257,7 +257,7 @@ export default {
         handleMaterialPurchase() {
             Core.Api.MaterialPurchase.save().then(() => {
                 this.$message.success('创建成功');
-                this.routerChange('detail');
+                this.routerChange('detail', res.detail);
             }).catch(err => {
                 console.log("handleMaterialPurchase err", err);
             })

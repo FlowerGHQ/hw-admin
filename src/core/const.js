@@ -30,7 +30,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.0.0.226:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.7:8083' // 但
-        // URL_POINT = 'http://10.0.0.183:8083'
+        // URL_POINT = 'http://10.0.0.247:8083'
 
 
         // URL_POINT = 'http://10.0.0.134:8083' // 谭洋波

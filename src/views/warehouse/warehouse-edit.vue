@@ -26,7 +26,7 @@
                 <div class="form-item required">
                     <div class="key">仓库地址：</div>
                     <div class="value">
-                        <AddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
+                        <ChinaAddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
                     </div>
                 </div>
                 <div class="form-item ">
@@ -46,11 +46,11 @@
 
 <script>
 import Core from '../../core';
-import AddressCascader from '../../components/common/ChinaAddressCascader.vue'
+import ChinaAddressCascader from '../../components/common/ChinaAddressCascader.vue'
 
 export default {
     name: 'WarehouseEdit',
-    components: { AddressCascader },
+    components: { ChinaAddressCascader },
     props: {},
     data() {
         return {

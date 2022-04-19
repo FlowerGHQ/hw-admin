@@ -52,14 +52,14 @@
                     </a-input>
                 </div>
             </div>
-            <div class="form-item required" v-if="form.source_type == SOURCE_TYPE.PURCHASE">
+<!--            <div class="form-item required" v-if="form.source_type == SOURCE_TYPE.PURCHASE">
                 <div class="key">到港时间</div>
                 <div class="value">
                     <a-date-picker v-model:value="form.arrival_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" placeholder="请选择到港时间">
                         <template #suffixIcon><i class="icon i_calendar"/></template>
                     </a-date-picker>
                 </div>
-            </div>
+            </div>-->
         </div>
     </div>
     <div class="form-btns">
@@ -195,9 +195,9 @@ export default {
             if (this.needUid && !form.source_id) {
                 return this.$message.warning(`请输入正确的${this.sourceTypeMap[form.source_type]}单号`)
             }
-            if (!form.arrival_time && form.source_type == SOURCE_TYPE.PURCHASE) {
+           /* if (!form.arrival_time && form.source_type == SOURCE_TYPE.PURCHASE) {
                 return this.$message.warning('请选择到港时间')
-            }
+            }*/
             Core.Api.Invoice.save(form).then(res => {
                 this.$message.success('保存成功')
                 this.routerChange('detail', res.detail)

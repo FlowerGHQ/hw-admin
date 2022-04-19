@@ -67,6 +67,9 @@
                             <template v-if="column.key === 'contact'">
                                 {{ text || '-' }}
                             </template>
+                            <template v-if="column.key === 'price'">
+                                {{ text || '-' }}
+                            </template>
                             <template v-if="column.key === 'amount'">
                                 <template v-if="addMode || record.editMode">
                                     <a-input-number v-model:value="record.amount" placeholder="请输入"
@@ -178,7 +181,7 @@ export default {
                 { title: '物料编码', dataIndex: ['item','spec'],key: 'contact' },
                 { title: '数量', dataIndex: 'amount',key: 'amount' },
                 { title: '单位', dataIndex: ['item','unit'],key: 'contact' },
-                { title: '单价', dataIndex: 'price',key: 'contact' },
+                { title: '单价', dataIndex: 'supplier',key: 'price' },
                 { title: '总价', dataIndex: 'payment_term' },
                 { title: '到货日期', dataIndex: ['supplier','arrival_period'] },
                 { title: '操作', key: 'operation', fixed: 'right'}
@@ -254,10 +257,11 @@ export default {
                 item: item,
                 id: item.id,
                 supplier: item.supplier_list.map(i => ({
-                    price: i.price,
+                    // price: i.price,
                     short_name: i.short_name,
                     arrival_period: i.arrival_period,
-                }))
+                })),
+                // price: item.supplier_list.map(i =>item.price).join(",l)
             }))
             this.addData = list
             this.addMode = true
