@@ -26,6 +26,9 @@
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
+                        <template v-if="column.key === 'gross_weight'">
+                            {{ $Util.countFilter(text) }}
+                        </template>
                         <template v-if="column.key === 'price'">
                             <template v-if="addMode || record.editMode">
                                ￥<a-input-number v-model:value="record.price" placeholder="请输入"
@@ -110,7 +113,7 @@ export default {
                 {title: '规格', dataIndex: ['item','spec'], key: 'item'},
                 { title: '物料包装', dataIndex: ['item','encapsulation'], key: 'item' },
                 { title: '包装尺寸', dataIndex: ['item','encapsulation_size'], key: 'item' },
-                { title: '毛重(kg)', dataIndex: ['item','gross_weight'], key: 'item' },
+                { title: '毛重(kg)', dataIndex: ['item','gross_weight'], key: 'gross_weight' },
                 {title: '创建时间', dataIndex: ['item','create_time'], key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
