@@ -630,7 +630,7 @@ const routes = [
                     is_sub_menu: true
                 }
             },*/
-            {
+           /* {
                 path: 'material-purchase-edit',
                 name: 'MaterialPurchaseEdit',
                 component: () => import ('@/views/production/material-purchase-edit.vue'),
@@ -640,8 +640,8 @@ const routes = [
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/production/material-purchase-list',
                 }
-            },
-            {
+            },*/
+           /* {
                 path: 'material-purchase-detail',
                 name: 'MaterialPurchaseDetail',
                 component: () => import ('@/views/production/material-purchase-detail.vue'),
@@ -651,7 +651,7 @@ const routes = [
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/production/material-purchase-list',
                 }
-            },
+            },*/
             {
                 path: 'stock-list',
                 name: 'StockList',
