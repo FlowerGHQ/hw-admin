@@ -3,8 +3,8 @@
         <div class="list-container">
             <div class="title-container">
                 <div class="title-area">物料列表</div>
-                <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('material.save')"><i class="icon i_add"/>新建物料</a-button>
+                <div class="btns-area" v-if="$auth('material.save')">
+                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建物料</a-button>
                     <a-upload name="file" class="file-uploader"
                               :file-list="upload.fileList" :action="upload.action"
                               :show-upload-list='false'
@@ -45,8 +45,24 @@
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false' :loading="loading">
                     <template #bodyCell="{ column, text , record }">
+                        <template v-if="column.key === 'detail' && $auth('material.list')">
+                            <a-tooltip placement="top" :title='text'>
+                                <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}
+                                </a-button>
+                            </a-tooltip>
+                        </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
+                        </template>
+                        <template v-if="column.key === 'gross_weight'">
+                            {{ $Util.countFilter(text) }}
+                        </template>
+                        <template v-if="column.key === 'spec'">
+                            <a-tooltip placement="top" :title='text'>
+                                <div class="ell" style="max-width: 120px">
+                                    {{text || '-'}}
+                                </div>
+                            </a-tooltip>
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -107,10 +123,12 @@ export default {
                 { title: '物料名称', dataIndex: 'name', key: 'detail' },
                 { title: '物料分类', dataIndex: ['category','name'], key: 'item' },
                 { title: '物料编码', dataIndex: 'code', key: 'item' },
-                { title: '物料包装', dataIndex: 'encapsulation', key: 'item' },
-                { title: '规格', dataIndex: 'spec', key: 'item' },
+                { title: '规格', dataIndex: 'spec', key: 'spec' },
                 { title: '单位', dataIndex: 'unit', key: 'item' },
-                // { title: '供应商料号', dataIndex: 'supplier_code', key: 'item' },
+                { title: '物料包装', dataIndex: 'encapsulation', key: 'item' },
+                { title: '包装尺寸', dataIndex: 'encapsulation_size', key: 'item' },
+                { title: '毛重(kg)', dataIndex: 'gross_weight', key: 'gross_weight' },
+                { title: '备注', dataIndex: 'remark', key: 'spec' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 { title: '操作', key: 'operation', fixed: 'right', width: 180 }
             ],
@@ -184,7 +202,7 @@ export default {
             this.loading = true
             Core.Api.Material.list({
                 ...this.searchForm,
-                page: this.current,
+                page: this.currPage,
                 pageSize: this.pageSize,
             }).then(res => {
                 console.log('ProductionOrderlist res', res)
@@ -218,8 +236,10 @@ export default {
             if (file.status == 'done') {
                 if (file.response && file.response.code < 0) {
                     return this.$message.error(file.response.message)
+                    this.getTableData();
                 } else {
                     return this.$message.success('上传成功');
+                    this.getTableData();
                 }
             }
             this.upload.fileList = fileList

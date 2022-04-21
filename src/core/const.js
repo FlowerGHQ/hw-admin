@@ -30,7 +30,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.0.0.226:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.7:8083' // 但
-        // URL_POINT = 'http://10.0.0.247:8083'
+        URL_POINT = 'http://10.0.0.247:8083'
 
 
         // URL_POINT = 'http://10.0.0.134:8083' // 谭洋波
@@ -38,7 +38,7 @@ switch (window.location.hostname) {
             // URL_POINT = 'http://10.0.0.149:8083' // 徐伟
             // URL_POINT = 'http://10.0.0.39:8083'  // 姚志宇
             // URL_POINT = 'http://10.0.0.128:8083' // 姚志宇
-            URL_POINT = 'http://10.0.0.238:8083' // 戚哲康
+            // URL_POINT = 'http://10.0.0.238:8083' // 戚哲康
 
         break;
 }

@@ -31,10 +31,6 @@
                         <span class="key">开户银行：</span>
                         <span class="value">{{ detail.deposit_bank }}</span>
                     </a-col>
-<!--                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">开户行支行：</span>
-                        <span class="value">{{ detail.account_bank }}</span>
-                    </a-col>-->
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">开户行账号：</span>
                         <span class="value">{{ detail.bank_card_no }}</span>
@@ -42,6 +38,10 @@
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">付款方式：</span>
                         <span class="value">{{ $Util.supplierPaymentTypeFilter(detail.payment_term) }}</span>
+                    </a-col>
+                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                        <span class="key">到货周期：</span>
+                        <span class="value">{{ detail.arrival_period + '天' }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">供应商地址：</span>
@@ -147,7 +147,7 @@ export default {
 </script>
 
 <style lang='less'>
-#SuppliereDetail {
+#SupplierDetail {
     .desc-title {
         .title-area {
             .title {

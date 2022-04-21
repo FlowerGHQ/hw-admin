@@ -54,28 +54,48 @@
                 </template>
                 <div class="panel-content">
                 <div class="panel-content no-mg">
-                    <a-table :columns="tableColumns" :data-source="addData" :scroll="{ x: true }"
+                    <a-table :columns="tableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
                              :row-key="record => record.id" :pagination='false'>
                         <template #bodyCell="{ column, text, record }">
                             <template v-if="column.dataIndex === 'supplier'">
-                                <template v-if="addMode || record.editMode">
-                                    <a-select v-model:value="supplier_name" placeholder="请选择供应商" style="width: 120px;">
+                                <template v-if="addMode">
+                                    <a-select v-model:value="record.supplier_id" placeholder="请选择供应商" style="width: 120px;">
                                         <a-select-option v-for="item of record.supplier_list" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                                     </a-select>
                                 </template>
+                                <template v-else>{{ record.supplier_name }}</template>
                             </template>
                             <template v-if="column.key === 'contact'">
                                 {{ text || '-' }}
                             </template>
+                            <template v-if="column.key === 'spec'">
+                                <a-tooltip placement="top" :title='text'>
+                                    <div class="ell" style="max-width: 120px">
+                                        {{text || '-'}}
+                                    </div>
+                                </a-tooltip>
+                            </template>
+                            <template v-if="column.key === 'arrival_period'">
+                                {{ record.supplier_map[record.supplier_id].arrival_period + '天' }}
+                            </template>
                             <template v-if="column.key === 'price'">
-                                {{ text || '-' }}
+                                <template v-if="addMode">
+                                    ￥{{  record.supplier_map[record.supplier_id].price }}
+                                </template>
+                                <template v-else>￥{{ record.$Util.countFilter(text) || '-'}}</template>
                             </template>
                             <template v-if="column.key === 'amount'">
                                 <template v-if="addMode || record.editMode">
-                                    <a-input-number v-model:value="record.amount" placeholder="请输入"
-                                                    :min="1" :max="99999" :precision="0"/>
+                                    <a-input-number v-model:value="record.amount" style="width: 66px;" placeholder="请输入"
+                                                    :min="1" :precision="0"/> 件
                                 </template>
                                 <template v-else>{{ text ? text + '件' : '-' }}</template>
+                            </template>
+                            <template v-if="column.key === 'total_price'">
+                                <template v-if="addMode">
+                                    ￥{{ $Util.countFilter(record.supplier_map[record.supplier_id].price * 100 * record.amount) }}
+                                </template>
+                                <template v-else>￥{{ $Util.countFilter(record.price * record.amount) }}</template>
                             </template>
                             <template v-if="column.key === 'operation'" >
                                 <template v-if="!this.addMode">
@@ -160,7 +180,6 @@ export default {
                 maxCount: '',
                 addItem: {},
             },
-            supplier_name: undefined,
         };
     },
     watch: {},
@@ -178,12 +197,13 @@ export default {
             let columns = [
                 { title: '供应商',dataIndex: 'supplier'},
                 { title: '物料名称', dataIndex: ['item','name'],key: 'contact'},
-                { title: '物料编码', dataIndex: ['item','spec'],key: 'contact' },
+                { title: '物料编码', dataIndex: ['item','code'],key: 'contact' },
+                { title: '规格', dataIndex: ['item','spec'],key: 'spec' },
                 { title: '数量', dataIndex: 'amount',key: 'amount' },
                 { title: '单位', dataIndex: ['item','unit'],key: 'contact' },
-                { title: '单价', dataIndex: 'supplier',key: 'price' },
-                { title: '总价', dataIndex: 'payment_term' },
-                { title: '到货日期', dataIndex: ['supplier','arrival_period'] },
+                { title: '单价', dataIndex: 'price',key: 'price'},
+                { title: '总价', key: 'total_price' },
+                { title: '到货日期', dataIndex: 'arrival_period',key: 'arrival_period'},
                 { title: '操作', key: 'operation', fixed: 'right'}
             ]
             return columns
@@ -210,12 +230,29 @@ export default {
                 page_size: this.pageSize
             }).then(res => {
                 console.log('getMaterialItemList res', res)
+                this.tableData = res.list
                 this.total = res.count
+                this.getSupplierName();
             }).catch(err => {
-                console.log('getInvoiceList err', err)
+                console.log('getMaterialItemList err', err)
             }).finally(() => {
                 this.loading = false;
             });
+        },
+        getSupplierName() {
+            let data = [...this.tableData]
+            for (const item of data) {
+                let supplier_id
+                if (item.supplier_id) {
+                    supplier_id = item.supplier_id
+                }
+                Core.Api.Supplier.detail({
+                    id: supplier_id
+                }).then(res => {
+                    item.supplier_name = res.detail.name
+                    console.log('getSupplierName', res.detail.name)
+                })
+            }
         },
         getMaterialPurchaseDetail() {
             this.loading = true;
@@ -253,36 +290,71 @@ export default {
         },
         handleAddChange(ids, items) {
             console.log('handleAddChange items:', items)
-            let list = items.map(item => ({
-                item: item,
-                id: item.id,
-                supplier: item.supplier_list.map(i => ({
-                    // price: i.price,
-                    short_name: i.short_name,
+            let list = items.map(item => {
+                let supplier_list = item.supplier_list.map(i => ({
+                    id: i.id,
+                    name: i.name,
+                    price: Core.Util.countFilter(i.price),
                     arrival_period: i.arrival_period,
-                })),
-                // price: item.supplier_list.map(i =>item.price).join(",l)
-            }))
+                }))
+                return {
+                    id: item.id,
+                    item: item,
+                    material: item,
+                    amount: 1,
+                    entity_uid: '',
+                    category: item.category,
+                    supplier_list,
+                    supplier_id: supplier_list && supplier_list.length ? supplier_list[0].id : undefined
+                }
+            })
             this.addData = list
             this.addMode = true
-            // this.supplierList =
+            for (let item of list) {
+                item.supplier_map = {}
+                for(let supplier of item.supplier_list) {
+                    item.supplier_map[supplier.id] = {
+                        price: supplier.price,
+                        arrival_period: supplier.arrival_period,
+                    }
+                    console.log('getMaterialList', supplier.price )
+                }
+            }
             console.log('addData', this.addData)},
 
         async handleAddSubmit() {
             this.loading = true;
-            let data = [...this.addData]
+            let data = [...this.tableData,...this.addData]
+            console.log('data',data)
             let list = []
             for (const item of data) {
+                let target_id,supplier_id,price,arrival_period
+                if (item.material && item.id) {
+                    target_id = item.material.id
+                    supplier_id = item.supplier_id
+                    console.log('item.supplier_map', item.supplier_map)
+                    console.log('supplier_id', supplier_id)
+                    if( item.supplier_id && item.supplier_map) {
+                        price = Math.round(item.supplier_map[supplier_id].price * 100)
+                        arrival_period = item.supplier_map[supplier_id].arrival_period
+                    } else {
+                        price = Math.round(item.price * 100)
+                    }
+                } else {
+                    return this.$message.warning("该物料不存在");
+                }
                 list.push({
                     id: item.id,
                     amount: item.amount,
+                    target_id,
+                    supplier_id,
+                    price,
+                    arrival_period,
+                    material_purchase_order_id: this.id,
                 })
             }
             console.log('handleAddSubmit list:', list)
-            Core.Api.MaterialPurchase.batchSave({
-                list,
-                id: this.id,
-            }).then(() => {
+            Core.Api.MaterialPurchase.batchSave(list).then(() => {
                 this.$message.success('保存成功')
                 this.getMaterialPurchaseDetail()
                 this.addMode = false

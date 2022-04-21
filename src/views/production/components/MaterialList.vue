@@ -7,8 +7,6 @@
                                 btn-class="panel-btn" :disabled-checked='checkedIds' v-if="$auth('supplier.save')">
                     添加物料
                 </MaterialSelect>
-                <!--                <a-button type="primary" class="panel-btn" v-if="addMode" @click.stop="handleAddConfirm()">确认添加
-                                </a-button>-->
             </div>
         </div>
         <div class="panel-content">
@@ -16,6 +14,12 @@
                 <a-table :columns="tableColumns" :data-source="addData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false' :loading='loading'>
                     <template #bodyCell="{ column, text, record }">
+                        <template v-if="column.key === 'detail' && $auth('material.list')">
+                            <a-tooltip placement="top" :title='text'>
+                                <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}
+                                </a-button>
+                            </a-tooltip>
+                        </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
@@ -23,7 +27,6 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'price'">
-<!--                            {{ record }}-->
                             <template v-if="addMode || record.editMode">
                                ￥<a-input-number v-model:value="record.price" placeholder="请输入"
                                                 :min="0.00" :precision="2"/>
@@ -74,9 +77,6 @@ export default {
         supplierId: {
             type: Number,
         },
-        materialId: {
-            type: Number,
-        }
     },
     data() {
         return {
@@ -102,12 +102,15 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: '物料名称', dataIndex: ['item','name'], key: 'item'},
+                {title: '物料名称', dataIndex: ['item','name'], key: 'detail'},
                 {title: '物料分类', dataIndex: ['item','category', 'name'], key: 'item'},
                 {title: '物料编码', dataIndex: ['item','code'], key: 'item'},
                 {title: '单位', dataIndex: ['item','unit'], key: 'item'},
                 {title: '单价', dataIndex:  'price',key: 'price'},
                 {title: '规格', dataIndex: ['item','spec'], key: 'item'},
+                { title: '物料包装', dataIndex: ['item','encapsulation'], key: 'item' },
+                { title: '包装尺寸', dataIndex: ['item','encapsulation_size'], key: 'item' },
+                { title: '毛重(kg)', dataIndex: ['item','gross_weight'], key: 'item' },
                 {title: '创建时间', dataIndex: ['item','create_time'], key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
@@ -131,8 +134,8 @@ export default {
             switch (type) {
                 case 'detail':    // 详情
                     routeUrl = this.$router.resolve({
-                        path: item.type ? "/item/item-detail" : '/production/material-detail',
-                        query: {id: item.id}
+                        path: "/production/material-detail",
+                        query: {id: item.item.id}
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
@@ -150,6 +153,8 @@ export default {
         getTableData() { // 获取 表格 数据
             this.loading = true;
             Core.Api.SupplierItem.list({
+                page: this.currPage,
+                pageSize: this.pageSize,
                 supplier_id: this.supplierId,
             }).then(res => {
                 this.total = res.count;
@@ -157,6 +162,7 @@ export default {
                     item: item.material,
                     id: item.id,
                     price: Core.Util.countFilter(item.price) || (item.material ? item.material.price : 0) || 0,
+
                 }))
                 console.log('this.addData:', this.addData)
             }).catch(err => {
