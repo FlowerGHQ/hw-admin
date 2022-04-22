@@ -270,7 +270,6 @@ export default {
                     item: item,
                     material: item.material,
                     unit_price: item.unit_price,
-
                 }))
                 console.log(' this.tableData', this.tableData)
             }).catch(err => {
@@ -360,7 +359,6 @@ export default {
                     category: item.category,
                     supplier_list,
                     supplier_id: supplier_list && supplier_list.length ? supplier_list[0].id : undefined,
-                    arrival_time: dayjs(item.arrival_time).unix()
                 }
             })
             this.addData = list
@@ -375,7 +373,8 @@ export default {
                     console.log('getMaterialList', supplier.price )
                 }
             }
-            console.log('addData', this.addData)},
+            console.log('addData', this.addData)
+        },
 
         async handleAddSubmit() {
             this.loading = true;
