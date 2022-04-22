@@ -270,6 +270,7 @@ export default {
                     item: item,
                     material: item.material,
                     unit_price: item.unit_price,
+
                 }))
                 console.log(' this.tableData', this.tableData)
             }).catch(err => {
@@ -320,6 +321,8 @@ export default {
                 supplier_id: item.supplier_id,
                 price: item.price,
                 amount: item.amount,
+                arrival_time: item.arrival_time,
+
 
             }
             Core.Api.MaterialPurchase.itemSave(target).then(() => {
@@ -347,7 +350,6 @@ export default {
                     name: i.name,
                     price: Core.Util.countFilter(i.price),
                     payment_term: i.payment_term,
-
                 }))
                 return {
                     id: item.id,
@@ -385,7 +387,7 @@ export default {
                 if (item.material && item.id) {
                     material_id = item.material.id
                     supplier_id = item.supplier_id
-                    arrival_time = dayjs(item.arrival_time).unix()
+                    arrival_time = item.arrival_time
                     console.log('item.supplier_map', item.supplier_map)
                     console.log('supplier_id', supplier_id)
                     console.log('arrival_time', arrival_time)
@@ -398,13 +400,17 @@ export default {
                 } else {
                     return this.$message.warning("该物料不存在");
                 }
+                arrival_time = item.arrival_time;
+                if (typeof arrival_time === 'string') {
+                    arrival_time = dayjs(item.arrival_time).unix()
+                }
                 list.push({
                     amount: item.amount,
                     material_id,
                     supplier_id,
                     price,
                     payment_term,
-                    arrival_time,
+                    arrival_time: arrival_time,
                     material_purchase_order_id: this.id,
                 })
             }
