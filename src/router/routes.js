@@ -563,17 +563,17 @@ const routes = [
                     type: "part"
                 }
             },
-            /*{
+            {
                 path: 'entity-detail',
                 name: 'EntityDetail',
-                component: () => import('@/views/item/entity-detail.vue'),
+                component: () => import('@/views/entity/entity-detail.vue'),
                 meta: {
                     hidden: true,
                     title: '车架详情',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/entity/entity-list',
                 }
-            },*/
+            },
         ]
     },
     { // 生产管理 - 平台端

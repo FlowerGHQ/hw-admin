@@ -100,10 +100,8 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <template v-if="!record.default_item_id">
-                                <a-button type='link' @click="handleVehicleShow(record)"><i class="icon i_edit"/>编辑
-                                </a-button>
-                                <!-- <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>详情
-                                </a-button> -->
+                                <a-button type='link' @click="handleVehicleShow(record)"><i class="icon i_edit"/>编辑</a-button>
+                                <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>详情</a-button>
                             </template>
                             <a-button type='link' @click="handleDelete(record.id)" class="danger"><i
                                 class="icon i_delete"/>删除
@@ -261,7 +259,6 @@ export default {
     },
     computed: {
         tableColumns() {
-
             let columns = [
                 {title: this.title + '名称', dataIndex: ['item', 'name'], key: 'detail'},
                 {title: this.title + '编号', dataIndex: 'uid', key: 'item'},
@@ -303,9 +300,9 @@ export default {
             console.log('routerChange item:', item)
             let routeUrl = ''
             switch (type) {
-                case 'detail':  // 车架详情
+                case 'detail':  // 整车详情
                     routeUrl = this.$router.resolve({
-                        path: "/item/item-detail",
+                        path: "/entity/entity-detail",
                         query: {id: item.default_item_id || item.id, set_id: item.set_id}
                     })
                     window.open(routeUrl.href, '_blank')
@@ -341,7 +338,6 @@ export default {
             });
         },
         getAgentListAll() {
-
             Core.Api.Agent.listAll().then(res => {
                 this.agentList = res.list
             });
