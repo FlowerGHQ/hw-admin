@@ -225,6 +225,7 @@ export default {
                 })
                 this.total = res.count;
                 this.tableData = res.list;
+                console.log('tableData',this.tableData)
             }).catch(err => {
                 console.log('getTableData err', err)
             }).finally(() => {

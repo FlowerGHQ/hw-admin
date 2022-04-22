@@ -624,7 +624,7 @@ let Const = {
             '-10': 'red',
             '-20': 'grey'
         },
-        STATUS_LIST: [ //出入库单审核
+        STATUS_LIST: [
             { text: '待提交', value: 0 },
             { text: '已完成', value: 40 },
             { text: '已取消', value: -20 },
@@ -656,7 +656,19 @@ let Const = {
             1: '操作员操作',
             21: '维修单明细',
             31: '出入库单',
-        }
+        },
+        AUDIT_TYPE: {
+            STOREKEEPER: 1, //仓库管理员
+            FINANCE: 2,//财务
+        },
+        AUDIT_TYPE_MAP: {
+            1: '仓库管理员',
+            2: '财务',
+        },
+        AUDIT: { //审核结果
+            PASS: 1,
+            REFUSE: 2
+        },
     },
     TRANSFER_ORDER: { //调货单
         STATUS: { //调货单审核状态
@@ -913,6 +925,35 @@ let Const = {
         },
 
     },
+    MATERIAL_PURCHASE: {
+        STATUS: {
+            INIT: 0, //初始化
+            SUBMIT: 100, //已提交待审核
+            PASS: 200, //审核通过
+            // CLOSE: 300, //已完成
+            N_WAREHOUSE: 500,  //已入库
+            REFUSE: -200,//审核失败
+            CANCEL: -100, // 取消
+        },
+        STATUS_MAP: {
+            '0': '待提交',
+            '100': '待审核',
+            '200': '审核通过',
+            // '300': '已完成',
+            '500': '已入库',
+            '-200': '审核未通过',
+            '-100': '已取消'
+        },
+        STATUS_COLOR_MAP: {
+            '0': 'orange',
+            '100': 'yellow',
+            '200': 'green',
+            // '300': 'green',
+            '500': 'purple',
+            '-200': 'red',
+            '-100': 'grey'
+        },
+    }
 };
 
 export default Const;

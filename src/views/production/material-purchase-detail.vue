@@ -3,35 +3,25 @@
         <div class="title-container">
             <div class="title-area">采购单详情</div>
             <div class="btn-area">
-                    <a-button type="primary" @click="handleSubmit()" ><i class="icon i_confirm"/>提交</a-button>
-                    <a-button type="danger" ghost @click="handleCancel()"> <i class="icon i_close_c"/>取消</a-button>
+                <a-button type="primary" @click="handleSubmit()" v-if="detail.status === STATUS.INIT"><i class="icon i_confirm"/>提交</a-button>
+                <a-button type="danger" ghost @click="handleCancel()" v-if="detail.status === STATUS.INIT"> <i class="icon i_close_c"/>取消</a-button>
+                <a-button type="primary" @click="handlePurchaseAuditShow" v-if="detail.status === STATUS.SUBMIT"> <i class="icon i_audit"/>审核</a-button>
+                <template v-if="detail.status === STATUS.PASS && $auth('invoice.export')">
+                    <a-button type="primary" @click="handleExport"><i class="icon i_download"/>导出</a-button>
+                </template>
             </div>
         </div>
         <div class="gray-panel info">
             <div class="panel-title">
-                <div class="left">采购单编号：{{ detail.uid }}</div>
+                <div class="left">采购单编号：{{ detail.sn }}</div>
                 <div class="right">
                     <div class="status">
-                        <i class="icon i_point" :class="$Util.invoiceStatusFilter(detail.status,'color')"/>
-                        {{ $Util.invoiceStatusFilter(detail.status) }}
+                        <i class="icon i_point" :class="$Util.materialPurchaseStatusFilter(detail.status,'color')"/>
+                        {{ $Util.materialPurchaseStatusFilter(detail.status) }}
                     </div>
                 </div>
             </div>
-<!--            <div class="panel-content">
-                <div class="info-item">
-                    <div class="key">采购总数量</div>
-                    <div class="value">
-                        <template v-if="detail.apply_user && detail.apply_user.account">{{ detail.apply_user.account.name }}</template>
-                        <template v-else>-</template>
-                    </div>
-                </div>
-                <div class="info-item">
-                    <div class="key">采购总金额</div>
-                    <div class="value">
-                        <template v-if="detail.apply_user && detail.apply_user.account">{{ detail.apply_user.account.name }}</template>
-                        <template v-else>-</template>
-                    </div>
-                </div>
+            <div class="panel-content">
                 <div class="info-item">
                     <div class="key">创建人</div>
                     <div class="value">
@@ -43,12 +33,23 @@
                     <div class="key">创建时间</div>
                     <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
                 </div>
-            </div>-->
+                <div class="info-item">
+                    <div class="key">审核人</div>
+                    <div class="value">
+                        <template v-if="detail.audit_user && detail.audit_user.account">{{ detail.audit_user.account.name }}</template>
+                        <template v-else>-</template>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="key">审核时间</div>
+                    <div class="value">{{ $Util.timeFilter(detail.audit_time) || '-' }}</div>
+                </div>
+            </div>
         </div>
         <a-collapse v-model:activeKey="activeKey" ghost>
             <a-collapse-panel key="affirm" header="物料信息" class="gray-collapse-panel">
                 <template #extra>
-                    <MaterialSelect btnType='link' btnText="添加物料" v-if="!addMode" :disabledChecked="disabledChecked"
+                    <MaterialSelect btnType='link' btnText="添加物料" v-if="detail.status === STATUS.INIT && !addMode" :disabledChecked="disabledChecked"
                                     @select="handleAddChange"/>
                     <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit">确认添加</a-button>
                 </template>
@@ -65,8 +66,11 @@
                                 </template>
                                 <template v-else>{{ record.supplier_name }}</template>
                             </template>
-                            <template v-if="column.key === 'contact'">
-                                {{ text || '-' }}
+                            <template v-if="column.key === 'item'">
+                                <template v-if="addMode">
+                                    {{ text || '-' }}
+                                </template>
+                                <template v-else>{{ text}}</template>
                             </template>
                             <template v-if="column.key === 'spec'">
                                 <a-tooltip placement="top" :title='text'>
@@ -75,14 +79,17 @@
                                     </div>
                                 </a-tooltip>
                             </template>
-                            <template v-if="column.key === 'arrival_period'">
-                                {{ record.supplier_map[record.supplier_id].arrival_period + '天' }}
+                            <template v-if="column.key === 'payment_term'">
+                                <template v-if="addMode">
+                                    {{ $Util.supplierPaymentTypeFilter(record.supplier_map[record.supplier_id].payment_term) }}
+                                </template>
+                                <template v-else>{{ $Util.supplierPaymentTypeFilter(text) }}</template>
                             </template>
                             <template v-if="column.key === 'price'">
-                                <template v-if="addMode">
-                                    ￥{{  record.supplier_map[record.supplier_id].price }}
-                                </template>
-                                <template v-else>￥{{ record.$Util.countFilter(text) || '-'}}</template>
+                                ￥{{  record.supplier_map[record.supplier_id].price }}
+                            </template>
+                            <template v-if="column.key === 'unit_price'">
+                                ￥{{  $Util.countFilter(text) || '0'}}
                             </template>
                             <template v-if="column.key === 'amount'">
                                 <template v-if="addMode || record.editMode">
@@ -91,17 +98,25 @@
                                 </template>
                                 <template v-else>{{ text ? text + '件' : '-' }}</template>
                             </template>
+                            <template v-if="column.key === 'arrival_time'">
+                                <template v-if="addMode">
+                                    <a-date-picker v-model:value="record.arrival_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" placeholder="请选择到货日期">
+                                        <template #suffixIcon><i class="icon i_calendar"/></template>
+                                    </a-date-picker>
+                                </template>
+                                <template v-else>{{ $Util.timeFilter(text) || '-' }}</template>
+                            </template>
                             <template v-if="column.key === 'total_price'">
                                 <template v-if="addMode">
                                     ￥{{ $Util.countFilter(record.supplier_map[record.supplier_id].price * 100 * record.amount) }}
                                 </template>
-                                <template v-else>￥{{ $Util.countFilter(record.price * record.amount) }}</template>
+                                <template v-else>￥{{ $Util.countFilter(record.unit_price * record.amount) }}</template>
                             </template>
                             <template v-if="column.key === 'operation'" >
-                                <template v-if="!this.addMode">
-                                <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改数量</a-button>
-                                <a-button type="link" @click="handleRowSubmit(record)" v-else><i class="icon i_confirm"/>确认更改</a-button>
-                                <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
+                                <template v-if="!this.addMode && detail.status === STATUS.INIT">
+                                    <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改数量</a-button>
+                                    <a-button type="link" @click="handleRowSubmit(record)" v-else><i class="icon i_confirm"/>确认更改</a-button>
+                                    <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
                                 </template>
                             </template>
                         </template>
@@ -126,60 +141,69 @@
             </a-collapse-panel>
         </a-collapse>
     </div>
+    <template class="modal-container">
+        <a-modal v-model:visible="purchaseAuditShow" title="审核" class="purchase-audit-modal" :after-close='handlePurchaseAuditClose'>
+            <div class="modal-content">
+                <div class="form-item required">
+                    <div class="key">审核结果:</div>
+                    <a-radio-group v-model:value="auditForm.status">
+                        <a-radio :value="STATUS.PASS">通过</a-radio>
+                        <a-radio :value="STATUS.REFUSE">不通过</a-radio>
+                    </a-radio-group>
+                </div>
+                <div class="form-item textarea required" v-if="auditForm.status === STATUS.REFUSE">
+                    <div class="key">原因:</div>
+                    <div class="value">
+                        <a-textarea v-model:value="auditForm.audit_message" placeholder="请输入不通过原因"
+                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="purchaseAuditShow = false">取消</a-button>
+                <a-button @click="handlePurchaseAuditSubmit()" type="primary">确定</a-button>
+            </template>
+        </a-modal>
+    </template>
 </template>
 
 <script>
 import Core from '../../core';
-import ItemSelect from '../../components/popup-btn/ItemSelect.vue'
-import EntitySelect from '../../components/popup-btn/EntitySelect.vue'
 import MaterialSelect from '../../components/popup-btn/MaterialSelect.vue'
 import AuditHandle from '../../components/popup-btn/AuditHandle.vue'
+import dayjs from "dayjs";
 
-const STOCK_RECORD = Core.Const.STOCK_RECORD
-
-const TYPE = STOCK_RECORD.TYPE
-const STATUS = STOCK_RECORD.STATUS
-const SOURCE_TYPE = STOCK_RECORD.SOURCE_TYPE
-const COMMODITY_TYPE = STOCK_RECORD.COMMODITY_TYPE
-
+const MATERIAL_PURCHASE = Core.Const.MATERIAL_PURCHASE
+const STATUS = MATERIAL_PURCHASE.STATUS
 export default {
     name: 'MaterialPurchaseDetail',
     components: {
-        ItemSelect,
-        EntitySelect,
         MaterialSelect,
         AuditHandle
     },
     props: {},
     data() {
         return {
-            COMMODITY_TYPE,
-            SOURCE_TYPE,
             STATUS,
-            TYPE,
             // 加载
             loading: false,
             // 分页
             currPage: 1,
             pageSize: 20,
             total: 0,
-
+            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
             id: '',
             detail: {},
-            warehouse: {},
-
             activeKey: ['affirm'],
-
             tableData: [],
             addMode: false,
             addData: [],
-
-            production: {
-                addVisible: false,
-                addCount: '',
-                maxCount: '',
-                addItem: {},
+            purchaseAuditShow:false,
+            auditForm: {
+                status: '',
+                audit_message: '',
             },
+            exportDisabled: false,
         };
     },
     watch: {},
@@ -196,16 +220,24 @@ export default {
         tableColumns() {
             let columns = [
                 { title: '供应商',dataIndex: 'supplier'},
-                { title: '物料名称', dataIndex: ['item','name'],key: 'contact'},
-                { title: '物料编码', dataIndex: ['item','code'],key: 'contact' },
-                { title: '规格', dataIndex: ['item','spec'],key: 'spec' },
-                { title: '数量', dataIndex: 'amount',key: 'amount' },
-                { title: '单位', dataIndex: ['item','unit'],key: 'contact' },
-                { title: '单价', dataIndex: 'price',key: 'price'},
+                {title: '物料名称', dataIndex: ['material', 'name'],  key: 'item'},
+                {title: '物料分类', dataIndex: ['material','category','name'], key: 'item'},
+                {title: '物料编码', dataIndex: ['material', 'code'],  key: 'item'},
+                {title: '物料规格', dataIndex: ['material', 'spec'], key: 'spec'},
+                {title: '单位', dataIndex: ['material', 'unit'], key: 'item'},
+                // { title: '单价', dataIndex: 'price',key: 'price'},
+                { title: '数量', dataIndex: 'amount',key: 'amount'},
                 { title: '总价', key: 'total_price' },
-                { title: '到货日期', dataIndex: 'arrival_period',key: 'arrival_period'},
+                { title: '到货日期', dataIndex: 'arrival_time',key: 'arrival_time'},
+                { title: '付款方式', dataIndex: 'payment_term',key: 'payment_term'},
                 { title: '操作', key: 'operation', fixed: 'right'}
             ]
+            if (this.addMode == false) {
+                columns.splice(6, 0,{ title: '单价',dataIndex: 'unit_price', key: 'unit_price'})
+            }
+            if (this.addMode == true) {
+                columns.splice(6, 0,{ title: '单价', dataIndex: 'price',key: 'price'})
+            }
             return columns
         },
     },
@@ -233,6 +265,13 @@ export default {
                 this.tableData = res.list
                 this.total = res.count
                 this.getSupplierName();
+
+              this.tableData.map(item => ({
+                    item: item,
+                    material: item.material,
+                    unit_price: item.unit_price,
+                }))
+                console.log(' this.tableData', this.tableData)
             }).catch(err => {
                 console.log('getMaterialItemList err', err)
             }).finally(() => {
@@ -250,6 +289,7 @@ export default {
                     id: supplier_id
                 }).then(res => {
                     item.supplier_name = res.detail.name
+                    item.payment_term = res.detail.payment_term
                     console.log('getSupplierName', res.detail.name)
                 })
             }
@@ -257,7 +297,7 @@ export default {
         getMaterialPurchaseDetail() {
             this.loading = true;
             Core.Api.MaterialPurchase.detail({
-                id: this.id
+                id: this.id,
             }).then(res => {
                 console.log('getMaterialPurchaseDetail res', res)
                 this.detail = res.detail
@@ -271,15 +311,26 @@ export default {
         handleRowChange(item) {
             item.editMode = true
         },
-        handleRowSubmit() {
-            Core.Api.MaterialPurchase.save().then(() => {
+        handleRowSubmit(item) {
+            console.log('item',item)
+            let target = {
+                id: item.id,
+                material_id: item.material_id,
+                material_purchase_order_id: item.material_purchase_order_id,
+                supplier_id: item.supplier_id,
+                price: item.price,
+                amount: item.amount,
+
+            }
+            Core.Api.MaterialPurchase.itemSave(target).then(() => {
                 this.$message.success('保存成功')
-                this.getInvoiceDetail()
+                this.getMaterialPurchaseDetail()
             })
         },
 
         // 移除 商品
         handleRemoveRow(record) {
+            console.log('record',record)
             Core.Api.MaterialPurchase.itemDelete({
                 id: record.id,
                 material_purchase_order_id: this.id
@@ -295,7 +346,8 @@ export default {
                     id: i.id,
                     name: i.name,
                     price: Core.Util.countFilter(i.price),
-                    arrival_period: i.arrival_period,
+                    payment_term: i.payment_term,
+
                 }))
                 return {
                     id: item.id,
@@ -305,7 +357,8 @@ export default {
                     entity_uid: '',
                     category: item.category,
                     supplier_list,
-                    supplier_id: supplier_list && supplier_list.length ? supplier_list[0].id : undefined
+                    supplier_id: supplier_list && supplier_list.length ? supplier_list[0].id : undefined,
+                    arrival_time: dayjs(item.arrival_time).unix()
                 }
             })
             this.addData = list
@@ -315,7 +368,7 @@ export default {
                 for(let supplier of item.supplier_list) {
                     item.supplier_map[supplier.id] = {
                         price: supplier.price,
-                        arrival_period: supplier.arrival_period,
+                        payment_term: supplier.payment_term,
                     }
                     console.log('getMaterialList', supplier.price )
                 }
@@ -328,34 +381,37 @@ export default {
             console.log('data',data)
             let list = []
             for (const item of data) {
-                let target_id,supplier_id,price,arrival_period
+                let material_id,supplier_id,price,payment_term,arrival_time
                 if (item.material && item.id) {
-                    target_id = item.material.id
+                    material_id = item.material.id
                     supplier_id = item.supplier_id
+                    arrival_time = dayjs(item.arrival_time).unix()
                     console.log('item.supplier_map', item.supplier_map)
                     console.log('supplier_id', supplier_id)
+                    console.log('arrival_time', arrival_time)
                     if( item.supplier_id && item.supplier_map) {
-                        price = Math.round(item.supplier_map[supplier_id].price * 100)
-                        arrival_period = item.supplier_map[supplier_id].arrival_period
+                        price = item.supplier_map[supplier_id].price
+                        payment_term = item.supplier_map[supplier_id].payment_term
                     } else {
-                        price = Math.round(item.price * 100)
+                        price = item.price
                     }
                 } else {
                     return this.$message.warning("该物料不存在");
                 }
                 list.push({
-                    id: item.id,
                     amount: item.amount,
-                    target_id,
+                    material_id,
                     supplier_id,
                     price,
-                    arrival_period,
+                    payment_term,
+                    arrival_time,
                     material_purchase_order_id: this.id,
                 })
             }
             console.log('handleAddSubmit list:', list)
             Core.Api.MaterialPurchase.batchSave(list).then(() => {
                 this.$message.success('保存成功')
+                console.log('this.arrival_time',this.arrival_time)
                 this.getMaterialPurchaseDetail()
                 this.addMode = false
             }).catch(err => {
@@ -372,7 +428,7 @@ export default {
                 okText: '确定',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.MaterialPurchase.save({id: _this.id}).then(() => {
+                    Core.Api.MaterialPurchase.submit({id: _this.id}).then(() => {
                         _this.$message.success('操作成功');
                         _this.getMaterialPurchaseDetail();
                     }).catch(err => {
@@ -398,7 +454,53 @@ export default {
                 },
             });
         },
-
+        handlePurchaseAuditShow() {
+            this.purchaseAuditShow = true
+        },
+        handlePurchaseAuditClose() {
+            this.purchaseAuditShow = false
+            this.auditForm = {
+                status: '',
+                audit_message: '',
+            }
+        },
+        handlePurchaseAuditSubmit() {
+            console.log('id',this.id)
+            Core.Api.MaterialPurchase.audit({
+                id: this.id,
+                status: this.auditForm.status,
+                audit_message: this.auditForm.audit_message
+            }).then(res => {
+                console.log('handlePurchaseAuditSubmit res', res)
+                this.handlePurchaseAuditClose()
+                this.getMaterialPurchaseDetail()
+            }).catch(err => {
+                console.log('handlePurchaseAuditSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        handleExport() { // 确认库单是否导出
+            let _this = this;
+            this.$confirm({
+                title: '确认要导出吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    _this.handlePurchaseExport();
+                }
+            })
+        },
+        handlePurchaseExport() { // 订单导出
+            this.exportDisabled = true;
+            let exportUrl = Core.Api.Export.materialPurchaseExport({
+                material_purchase_order_id: this.id,
+            })
+            console.log('material_purchase_order_id',this.id)
+            console.log("handlePurchaseExport _exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
+        },
     }
 };
 </script>
