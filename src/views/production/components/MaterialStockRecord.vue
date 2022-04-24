@@ -113,8 +113,6 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                { title: "变更对象", type: "item", key: "name" },
-                { title: "变更对象编码", type: "item", key: "code" },
                 { title: "操作类型", dataIndex: "type", key: "type" },
                 { title: "数量", dataIndex: "amount", key: "count" },
                 { title: "仓库", dataIndex: ['warehouse','name'], key: "warehouse_name" },

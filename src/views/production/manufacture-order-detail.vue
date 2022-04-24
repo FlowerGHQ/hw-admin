@@ -3,6 +3,7 @@
         <div class='title-container'>
             <div class='title-area'>生产订单详情</div>
             <div class="btns-area">
+<!--                <a-button type="primary" ghost @click="handleInvoiceBom" v-if="$auth('invoice.save')"><i class="icon i_goods"/>一键领料</a-button>-->
                 <a-button type="primary" ghost @click="routerChange('picking')" v-if="$auth('invoice.save')"><i class="icon i_goods"/>领料</a-button>
                 <a-button type="danger" ghost @click="handleCancel(id)" v-if="$auth('production-order.delete')"><i class="icon i_close_c"/>取消</a-button>
             </div>
@@ -217,7 +218,21 @@ export default {
                 },
             });
         },
-        handleExportConfirm() { // 确认是否一键领料
+        handleInvoiceBom() {
+            Core.Api.Bom.invoiceBom({
+                bom_category_id: this.detail.bom_id,
+                id: this.id,
+                // version:
+            /*    id:
+                version:
+            version_num:*/
+            }).then(res =>{
+
+            }).catch((err) => {
+                console.log('handleInvoiceBom err', err)
+            })
+        },
+       /* handleExportConfirm() { // 确认是否一键领料
             let _this = this;
             this.$confirm({
                 title: '确认要一键领料吗？',
@@ -227,7 +242,7 @@ export default {
                     _this.handleRepairExport();
                 }
             })
-        },
+        },*/
     },
 };
 </script>

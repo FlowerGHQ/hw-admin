@@ -563,7 +563,7 @@ const routes = [
                     type: "part"
                 }
             },
-            {
+            /*{
                 path: 'entity-detail',
                 name: 'EntityDetail',
                 component: () => import('@/views/entity/entity-detail.vue'),
@@ -573,7 +573,7 @@ const routes = [
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/entity/entity-list',
                 }
-            },
+            },*/
         ]
     },
     { // 生产管理 - 平台端

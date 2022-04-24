@@ -4,7 +4,9 @@
             <div class="title-container">
                 <div class="title-area">出入库单列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('invoice.save')"><i class="icon i_add"/>库存管理</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('invoice.save')"><i
+                        class="icon i_add"/>库存管理
+                    </a-button>
                 </div>
             </div>
             <!-- <div class="tabs-container colorful">
@@ -22,28 +24,37 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">所属仓库:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.warehouse_id" placeholder="请选择仓库" @change="handleSearch">
-                                <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">{{ warehouse.name }}</a-select-option>
+                            <a-select v-model:value="searchForm.warehouse_id" placeholder="请选择仓库"
+                                      @change="handleSearch">
+                                <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id"
+                                                 :value="warehouse.id">{{ warehouse.name }}
+                                </a-select-option>
                             </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">出入库单编号:</div>
                         <div class="value">
-                            <a-input placeholder="请输入出入库单编号" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入出入库单编号" v-model:value="searchForm.uid"
+                                     @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">出入库类型:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择出入库类型">
-                                <a-select-option v-for="(val, key) in typeMap" :key='key' :value='key'>{{ val }}</a-select-option>
+                                <a-select-option v-for="(val, key) in typeMap" :key='key' :value='key'>{{
+                                        val
+                                    }}
+                                </a-select-option>
                             </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                         <div class="key">创建时间:</div>
-                        <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
+                        <div class="value">
+                            <TimeSearch @search="handleOtherSearch" ref='TimeSearch'/>
+                        </div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
@@ -51,12 +62,12 @@
                     <a-button @click="handleSearchReset">重置</a-button>
                 </div>
             </div>
-<!--            <div class="operate-container">
-                <a-button type="primary" @click="handleExportConfirm"><i class="icon i_download"/>{{$t('def.export')}}</a-button>
-            </div>-->
+            <!--            <div class="operate-container">
+                            <a-button type="primary" @click="handleExportConfirm"><i class="icon i_download"/>{{$t('def.export')}}</a-button>
+                        </div>-->
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                    :row-key="record => record.id" :pagination='false'>
+                         :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.key === 'detail' && $auth('invoice.list')">
                             <a-tooltip placement="top" :title='text'>
@@ -66,7 +77,12 @@
                         </template>
                         <template v-if="column.dataIndex === 'status'">
                             <div class="status status-bg status-tag" :class="$Util.invoiceStatusFilter(text,'color')">
-                                {{ $Util.invoiceStatusFilter(text) }}
+                                <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>
+                                    {{ $Util.invoiceStatusFilter(text) }}
+                                    <template v-if="[STATUS.AUDIT_REFUSE].includes(record.status)">
+                                        <i class="icon i_hint" style="font-size: 12px;padding-left: 6px;"/>
+                                    </template>
+                                </a-tooltip>
                             </div>
                         </template>
                         <template v-if="column.dataIndex === 'type'">
@@ -85,13 +101,20 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('invoice.list')"><i class="icon i_detail"/>详情</a-button>
+                            <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('invoice.list')"><i
+                                class="icon i_detail"/>详情
+                            </a-button>
                             <template v-if="record.status === STATUS.INIT">
                                 <!-- <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button> -->
-                                <a-button type="link" @click="handleCancel(record.id)" class="danger" v-if="$auth('invoice.delete')"><i class="icon i_close_c"/>取消</a-button>
+                                <a-button type="link" @click="handleCancel(record.id)" class="danger"
+                                          v-if="$auth('invoice.delete')"><i class="icon i_close_c"/>取消
+                                </a-button>
                             </template>
-<!--                                <AuditHandle v-if="record.status === STATUS.WAIT_AUDIT && $auth('invoice.audit')" btnType="link" :api-list="['Invoice', 'audit']" :id="record.id"> <i class="icon i_audit"/>审核</AuditHandle>-->
-                            <AuditMaterialPurchase v-if="record.status === STATUS.WAIT_AUDIT" btnType="link" :api-list="['Invoice', 'audit']" :invoiceId="record.id" @submit="getTableData"> <i class="icon i_audit"/>审核</AuditMaterialPurchase>
+                            <!--                                <AuditHandle v-if="record.status === STATUS.WAIT_AUDIT && $auth('invoice.audit')" btnType="link" :api-list="['Invoice', 'audit']" :id="record.id"> <i class="icon i_audit"/>审核</AuditHandle>-->
+                            <AuditMaterialPurchase v-if="record.status === STATUS.WAIT_AUDIT" btnType="link" :status="STATUS.WAIT_AUDIT"
+                                                   :api-list="['Invoice', 'audit']" :invoiceId="record.id" @submit="getTableData"><i class="icon i_audit"/>仓库审核</AuditMaterialPurchase>
+                            <AuditMaterialPurchase v-if="record.status === STATUS.AUDIT_PASS" btnType="link" :api-list="['Invoice', 'audit']" :invoiceId="record.id"
+                                                   :status="STATUS.AUDIT_PASS" @submit="getTableData" ><i class="icon i_audit"/>财务审核</AuditMaterialPurchase>
                         </template>
                     </template>
                 </a-table>
@@ -141,14 +164,14 @@ export default {
             // 搜索
             typeMap: Core.Const.STOCK_RECORD.TYPE_MAP, //出入库
             warehouseList: [],
-           /* statusList: [
-                {text: '全  部', value: '0', color: 'primary', key: '0'},
-                {text: '待审核', value: '0', color: 'yellow', key: STATUS.AIT_AUDIT},
-                {text: '审核通过', value: '0', color: 'blue', key: STATUS.AUDIT_PASS},
-                {text: '审核失败', value: '0', color: 'red', key: STATUS.AUDIT_REFUSE},
-                {text: '处理完成', value: '0', color: 'green', key: STATUS.CLOSE},
-                {text: '已取消', value: '0', color: 'grey', key: STATUS.CANCEL},
-            ],*/
+            /* statusList: [
+                 {text: '全  部', value: '0', color: 'primary', key: '0'},
+                 {text: '待审核', value: '0', color: 'yellow', key: STATUS.AIT_AUDIT},
+                 {text: '审核通过', value: '0', color: 'blue', key: STATUS.AUDIT_PASS},
+                 {text: '审核失败', value: '0', color: 'red', key: STATUS.AUDIT_REFUSE},
+                 {text: '处理完成', value: '0', color: 'green', key: STATUS.CLOSE},
+                 {text: '已取消', value: '0', color: 'grey', key: STATUS.CANCEL},
+             ],*/
             searchForm: {
                 warehouse_id: undefined,
                 uid: '',
@@ -188,7 +211,7 @@ export default {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/warehouse/invoice-edit",
-                        query: { id: item.id }
+                        query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;

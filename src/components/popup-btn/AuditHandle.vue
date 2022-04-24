@@ -11,7 +11,7 @@
                     <a-radio :value="sRefuse">不通过</a-radio>
                 </a-radio-group>
             </div>
-            <div class="form-item textarea required" v-if="form.status === refuseStatus">
+            <div class="form-item textarea required" v-if="form.status === sRefuse">
                 <div class="key">原因:</div>
                 <div class="value">
                     <a-textarea v-model:value="form.audit_message" placeholder="请输入不通过原因"

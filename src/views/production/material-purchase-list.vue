@@ -40,7 +40,12 @@
                     </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="$Util.materialPurchaseStatusFilter(text,'color')">
-                            {{ $Util.materialPurchaseStatusFilter(text) }}
+                            <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>
+                                {{ $Util.materialPurchaseStatusFilter(text) }}
+                                <template v-if="[STATUS.REFUSE].includes(record.status)">
+                                    <i class="icon i_hint" style="font-size: 12px;padding-left: 6px;"/>
+                                </template>
+                            </a-tooltip>
                         </div>
                     </template>
                     <template v-if="column.key === 'time'">
@@ -121,23 +126,11 @@ export default {
                 {title: '订单号', dataIndex: 'sn', key: 'detail'},
                 {title: '状态', dataIndex: 'status'},
                 {title: '创建人', dataIndex: ['apply_user', "account", "name"], key: 'contact'},
+                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '审核人', dataIndex: ['audit_user', "account", "name"],key: 'contact'},
                 {title: '审核时间', dataIndex: 'audit_time',key: 'time'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'}
             ],
-            // 上传
-            upload: {
-                action: Core.Const.NET.URL_POINT + "/admin/1/bom-item/import",
-                fileList: [],
-                headers: {
-                    ContentType: false
-                },
-                data: {
-                    token: Core.Data.getToken(),
-                    type: 'xlsx',
-                },
-            },
         }
     },
     watch: {},

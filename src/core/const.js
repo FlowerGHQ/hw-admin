@@ -30,17 +30,16 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.0.0.226:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.7:8083' // 但
-        URL_POINT = 'http://10.0.0.247:8083'
+        URL_POINT = 'http://10.0.0.181:8083'
 
 
         // URL_POINT = 'http://10.0.0.134:8083' // 谭洋波
             // URL_POINT = 'http://10.0.0.205:8083' // 徐伟
             // URL_POINT = 'http://10.0.0.149:8083' // 徐伟
             // URL_POINT = 'http://10.0.0.39:8083'  // 姚志宇
-            URL_POINT = 'http://10.0.0.171:8083' // 姚志宇
+            // URL_POINT = 'http://10.0.0.171:8083' // 姚志宇
             // URL_POINT = 'http://10.0.0.238:8083' // 戚哲康
-
-        break;
+       break;
 }
 
 let Const = {
@@ -899,29 +898,47 @@ let Const = {
             '20': '一次性',
             '30': '淘汰',
         },
-        STATUS_PURCHASE: {
-            ON_PURCHASE: 0, //正常采购
-            OFF_PURCHASE: -1
+        SUPPLIER_TYPE_LIST: [
+            { text: '合格', value: 10 },
+            { text: '一次性', value: 20 },
+            { text: '淘汰', value: 30 },
+        ],
+        SUPPLIER_TYPE_COLOR_MAP: {
+            '10': 'green',
+            '20': 'orange',
+            '30': 'grey',
         },
+        STATUS_PURCHASE: {
+            ON_PURCHASE: 1, //正常采购
+            OFF_PURCHASE: 2
+        },
+        STATUS_PURCHASE_LIST: [
+            { text: '采购正常', value: 1 },
+            { text: '采购冻结', value: 2 },
+        ],
         STATUS_PURCHASE_MAP: {
-            '0': '采购正常',
-            '-1': '采购冻结',
+            '1': '采购正常',
+            '2': '采购冻结',
         },
         STATUS_PURCHASE_COLOR_MAP: {
-            '0': 'green',
-            '-1': 'red',
+            '1': 'green',
+            '2': 'red',
         },
         STATUS_SETTLEMENT: {
-            ON_SETTLEMENT: 0, //正常结算
-            OFF_SETTLEMENT: -1
+            ON_SETTLEMENT: 1, //正常结算
+            OFF_SETTLEMENT: 2
         },
+        STATUS_SETTLEMENT_LIST: [
+            { text: '结算正常', value: 1 },
+            { text: '结算冻结', value: 2 },
+        ],
         STATUS_SETTLEMENT_MAP: {
-            '0': '结算正常',
-            '-1': '结算冻结',
+            '1': '结算正常',
+            '2': '结算冻结',
         },
         STATUS_SETTLEMENT_COLOR_MAP: {
-            '0': 'green',
-            '-1': 'red',
+            '1': 'green',
+            '2': 'red',
         },
 
     },

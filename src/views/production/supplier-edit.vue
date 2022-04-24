@@ -20,14 +20,6 @@
                         <a-input v-model:value="form.short_name" placeholder="请输入供应商简称"/>
                     </div>
                 </div>
-<!--                <div class="form-item required">
-                    <div class="key">供应商类型：</div>
-                    <div class="value">
-                        <a-select v-model:value="form.type" placeholder="请选择供应商类型">
-                            <a-select-option  v-for="(val,key) in SUPPLIER_TYPE" :key="key" :value="key">{{ val }}</a-select-option>
-                        </a-select>
-                    </div>
-                </div>-->
                 <div class="form-item required">
                     <div class="key">供应商代码：</div>
                     <div class="value">
@@ -109,6 +101,30 @@
                         <a-input v-model:value="form.address" placeholder="请输入详细地址"/>
                     </div>
                 </div>
+                <div class="form-item required">
+                    <div class="key">供应商类型：</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.type" placeholder="请选择供应商类型">
+                            <a-radio v-for="(val,key) in SUPPLIER_TYPE" :key="key" :value="key">{{val }}</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="form-item required" v-if="form.id">
+                    <div class="key">采购状态：</div>
+                    <div class="value">
+                        <a-radio-group  v-model:value="form.flag_purchase">
+                            <a-radio  v-for="(val,key) in STATUS_PURCHASE" :key="key" :value="key">{{ val }}</a-radio>
+                        </a-radio-group >
+                    </div>
+                </div>
+                <div class="form-item required" v-if="form.id">
+                    <div class="key">记账状态：</div>
+                    <div class="value">
+                        <a-radio-group  v-model:value="form.flag_settlement">
+                            <a-radio  v-for="(val,key) in STATUS_SETTLEMENT" :key="key" :value="key">{{ val }}</a-radio>
+                        </a-radio-group >
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-btns">
@@ -124,6 +140,8 @@ import CategoryTreeSelect from '../../components/popup-btn/CategoryTreeSelect.vu
 import ChinaAddressCascader from '../../components/common/ChinaAddressCascader.vue'
 
 const SUPPLIER_TYPE = Core.Const.SUPPLIER.SUPPLIER_TYPE_MAP
+const STATUS_PURCHASE = Core.Const.SUPPLIER.STATUS_PURCHASE_MAP
+const STATUS_SETTLEMENT = Core.Const.SUPPLIER.STATUS_SETTLEMENT_MAP
 export default {
     name: 'SupplierEdit',
     components: { ChinaAddressCascader, CategoryTreeSelect },
@@ -134,7 +152,8 @@ export default {
             // 加载
             loading: false,
             SUPPLIER_TYPE,
-            detail: {},
+            STATUS_PURCHASE,
+            STATUS_SETTLEMENT,
             item_category: {},
             PAYMENT_TYPE: Core.Const.SUPPLIER.PAYMENT_TYPE_MAP,
             form: {
@@ -158,6 +177,8 @@ export default {
                 bank_card_no: '',
                 // buyer_id: '',
                 arrival_period: '',
+                flag_settlement: '',
+                flag_purchase: '',
             },
             defAddr: []
         };
@@ -185,11 +206,11 @@ export default {
                 id: this.form.id,
             }).then(res => {
                 console.log('getSupplierDetail res', res)
-                this.detail = res.detail
-                for (const key in this.form) {
-                    this.form[key] = res.detail[key]
-                }
-                this.defAddr = [this.detail.province, this.detail.city, this.detail.county]
+                this.form = res.detail
+                this.form.type = JSON.stringify(res.detail.type)
+                this.form.flag_purchase = JSON.stringify(res.detail.flag_purchase)
+                this.form.flag_settlement = JSON.stringify(res.detail.flag_settlement)
+                this.defAddr = [this.form.province, this.form.city, this.form.county]
             }).catch(err => {
                 console.log('getSupplierDetail err', err)
             }).finally(() => {

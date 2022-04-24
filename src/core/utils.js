@@ -546,6 +546,7 @@ const Util = {
         const MAP = Const.STOCK_RECORD.SOURCE_FORM_MAP
         return MAP[val] || '未知'
     },
+
     /* =============== 出入库 ================ */
 
     /* =============== 调货单 ================ */
@@ -624,9 +625,15 @@ const Util = {
                 return COLOR_MAP[val + ''] || 'grey'
         }
     },
-    supplierTypeFilter(val) {
+    supplierTypeFilter(val, to='text') {
         const MAP = Const.SUPPLIER.SUPPLIER_TYPE_MAP
-        return MAP[val] || '未知'
+        const COLOR_MAP = Const.SUPPLIER.SUPPLIER_TYPE_COLOR_MAP
+        switch (to) {
+            case 'text':
+                return MAP[val + ''] || '未知'
+            case 'color':
+                return COLOR_MAP[val + ''] || 'grey'
+        }
     },
     /* =============== 供应商管理 ================ */
 

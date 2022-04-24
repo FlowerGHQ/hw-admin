@@ -31,6 +31,12 @@
                             <CategoryTreeSelect @change="handleCategorySelect" :category='item_category' :category-id='searchForm.category_id' placeholder="请选择物料分类" type="material"/>
                         </div>
                     </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">物料编码:</div>
+                        <div class="value">
+                            <a-input v-model:value="searchForm.code" placeholder="请输入物料编码" @keydown.enter='handleSearch'/>
+                        </div>
+                    </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
                         <div class="key">创建时间:</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
@@ -117,6 +123,7 @@ export default {
             searchForm: {
                 category_id: undefined,
                 name: undefined,
+                code: undefined,
             },
             item_category: {},
             tableColumns: [

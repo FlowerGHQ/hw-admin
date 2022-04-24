@@ -374,7 +374,8 @@ const apiList = {
         save: ['PostJson', 'bom/save'],
         detail: ['PostJson', 'bom/detail'],
         delete: ['PostJson', 'bom/delete'],
-        detailByItemId: ['PostJson', 'bom/detail-by-item-id']
+        detailByItemId: ['PostJson', 'bom/detail-by-item-id'],
+        invoiceBom: ['PostJson', 'bom/create-invoice-of-bom'], //根据bom生成领料单
     },
     BomItem: {  // bom明细
         save: ['PostJson', 'bom-item/save'],

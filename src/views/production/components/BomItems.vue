@@ -9,6 +9,16 @@
             <MaterialSelect @select="(ids,items) => handleAddShow(TARGET_TYPE.MATERIAL,ids,items)" btn-class="panel-btn" :disabled-checked='checkedIds.materials'>
                 添加物料
             </MaterialSelect>
+<!--            <a-upload name="file" class="file-uploader"
+                      :file-list="upload.fileList" :action="upload.action"
+                      :show-upload-list='false'
+                      :headers="upload.headers" :data='upload.data'
+                      accept=".xlsx,.xls"
+                      @change="handleFileUpload">
+                <a-button type="primary"  class="panel-btn">
+                    <i class="icon i_add"/> 批量导入
+                </a-button>
+            </a-upload>-->
         </div>
     </div>
     <div class="panel-content">
@@ -145,6 +155,18 @@ export default {
 
             selectedRowKeys: [],
             selectedRowItems: [],
+
+            upload: {
+                action: Core.Const.NET.URL_POINT + "/admin/1/bom/import",
+                fileList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'xlsx',
+                },
+            },
         };
     },
     watch: {},
@@ -381,7 +403,20 @@ export default {
                     this.getTableData()
                 })
             }
-        }
+        },
+        // 上传文件
+        handleFileUpload({file, fileList}) {
+            console.log("handleFileUpload status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                let res = file.response
+                if (res && res.code === 0) {
+                    return this.$message.success('上传成功');
+                } else {
+                    return this.$message.error('上传失败:' + res.message)
+                }
+            }
+            this.upload.fileList = fileList
+        },
     }
 };
 </script>
@@ -397,7 +432,7 @@ export default {
     }
     .panel-title .btn-area {
         .panel-btn {
-            margin-bottom: 0;
+            margin: 0 0 0 5px;
         }
     }
 }

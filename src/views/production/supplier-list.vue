@@ -4,16 +4,16 @@
             <div class="title-area">供应商列表</div>
             <div class="btns-area">
                 <a-button type="primary" @click="routerChange('edit')" v-if="$auth('supplier.save')"><i class="icon i_add"/>新建供应商</a-button>
-<!--                <a-upload name="file" class="file-uploader"
+                <a-upload name="file" class="file-uploader"
                           :file-list="upload.fileList" :action="upload.action"
                           :show-upload-list='false'
                           :headers="upload.headers" :data='upload.data'
                           accept=".xlsx,.xls"
                           @change="handleFileUpload">
-                    <a-button type="primary" class="file-upload-btn" style="margin-left: 12px;">
-                        批量导入明细
+                    <a-button type="primary"  class="panel-btn">
+                        <i class="icon i_add"/> 批量导入
                     </a-button>
-                </a-upload>-->
+                </a-upload>
             </div>
         </div>
         <div class="search-container">
@@ -24,6 +24,15 @@
                         <a-input placeholder="请输入供应商名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
+<!--                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">付款方式:</div>
+                    <div class="value">
+                        <a-select v-model:value="searchForm.payment_term" placeholder="请选择付款方式" @change="handleSearch">
+                            <a-select-option v-for="(val,key) in paymentList" :key="key" :value="val">{{ val }}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>-->
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">创建时间:</div>
                     <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
@@ -36,7 +45,7 @@
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                     :row-key="record => record.id" :pagination='false'>
+                     :row-key="record => record.id" :pagination='false' @change="handleTableChange">
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.key === 'detail' && $auth('supplier.list')">
                         <a-tooltip placement="top" :title='text'>
@@ -47,7 +56,9 @@
                         {{ text || '-'}}
                     </template>
                     <template v-if="column.dataIndex === 'type'">
-                        {{ $Util.supplierTypeFilter(text) }}
+                        <div class="status status-bg status-tag" :class="$Util.supplierTypeFilter(text,'color')">
+                            {{ $Util.supplierTypeFilter(text) }}
+                        </div>
                     </template>
                     <template v-if="column.dataIndex === 'flag_purchase'">
                         <div class="status status-bg status-tag" :class="$Util.flagPurchaseFilter(text,'color')">
@@ -99,6 +110,8 @@ import Core from '../../core'
 import TimeSearch from '@/components/common/TimeSearch.vue'
 import EditBomModel from './components/EditBomModel.vue'
 
+const SUPPLIER_TYPE = Core.Const.SUPPLIER
+
 export default {
     components: {
         TimeSearch,
@@ -107,6 +120,8 @@ export default {
     props: {},
     data() {
         return {
+            loading: false,
+            SUPPLIER_TYPE,
             currPage: 1,
             pageSize: 20,
             total: 0,
@@ -114,31 +129,16 @@ export default {
                 name: '',
                 begin_time: '',
                 end_time: '',
+                type: '',
+                flag_purchase: '',
+                flag_settlement: '',
+                payment_term: undefined,
             },
-
+            paymentList: Core.Const.SUPPLIER.PAYMENT_TYPE_MAP,
             tableData: [],
-            tableColumns: [
-                { title: '供应商名称', dataIndex: 'name', key: 'detail' },
-                { title: '简称', dataIndex: 'short_name', key: 'contact' },
-                { title: '供应商类型', dataIndex: 'type'},
-                // { title: '物料分类', dataIndex: ['category','name'],key: 'contact'},
-                { title: '联系人', dataIndex: 'contact_name',key: 'contact'},
-                { title: '联系人电话', dataIndex: 'contact_phone',key: 'contact' },
-                { title: '联系人邮箱', dataIndex: 'contact_email',key: 'contact' },
-                { title: '采购状态', dataIndex: 'flag_purchase'},
-                { title: '结算状态', dataIndex: 'flag_settlement'},
-                /* { title: '供应商信用代码', dataIndex: 'credit_code',key: 'contact' },
-                { title: '开户行账号', dataIndex: 'bank_card_no',key: 'contact' },
-                { title: '开户银行', dataIndex: 'deposit_bank',key: 'contact' },
-                { title: '开户行支行', dataIndex: 'account_bank',key: 'contact' },*/
-                { title: '付款期限及方式', dataIndex: 'payment_term' },
-                { title: '供应商地址', dataIndex: 'address' },
-                { title: '创建时间', dataIndex: 'create_time', key: 'time' },
-                { title: '操作', key: 'operation', fixed: 'right'}
-            ],
             // 上传
             upload: {
-                action: Core.Const.NET.URL_POINT + "/admin/1/bom-item/import",
+                action: Core.Const.NET.URL_POINT + "/admin/1/supplier//import",
                 fileList: [],
                 headers: {
                     ContentType: false
@@ -148,10 +148,35 @@ export default {
                     type: 'xlsx',
                 },
             },
+            filteredInfo: null,
         }
     },
     watch: {},
-    computed: {},
+    computed: {
+        tableColumns() {
+            let { filteredInfo } = this;
+            filteredInfo = filteredInfo || {};
+            let columns = [
+                { title: '供应商名称', dataIndex: 'name', key: 'detail' },
+                { title: '简称', dataIndex: 'short_name', key: 'contact' },
+                { title: '供应商类型', dataIndex: 'type',
+                    filters: SUPPLIER_TYPE.SUPPLIER_TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.type || null },
+                // { title: '物料分类', dataIndex: ['category','name'],key: 'contact'},
+                { title: '联系人', dataIndex: 'contact_name',key: 'contact'},
+                { title: '联系人电话', dataIndex: 'contact_phone',key: 'contact' },
+                { title: '联系人邮箱', dataIndex: 'contact_email',key: 'contact' },
+                { title: '采购状态', dataIndex: 'flag_purchase',
+                    filters: SUPPLIER_TYPE.STATUS_PURCHASE_LIST, filterMultiple: false, filteredValue: filteredInfo.flag_purchase || null},
+                { title: '结算状态', dataIndex: 'flag_settlement',
+                    filters: SUPPLIER_TYPE.STATUS_SETTLEMENT_LIST, filterMultiple: false, filteredValue: filteredInfo.flag_settlement || null},
+                { title: '付款期限及方式', dataIndex: 'payment_term' },
+                { title: '供应商地址', dataIndex: 'address' },
+                { title: '创建时间', dataIndex: 'create_time', key: 'time' },
+                { title: '操作', key: 'operation', fixed: 'right'}
+            ]
+            return columns
+        },
+    },
     mounted() {
         this.getTableData()
     },
@@ -184,6 +209,14 @@ export default {
             this.pageSize = size
             this.getTableData()
         },
+        handleTableChange(page, filters) { // 表格搜索
+            console.log('handleTableChange filters:', filters)
+            this.filteredInfo = filters;
+            for (const key in filters) {
+                this.searchForm[key] = filters[key] ? filters[key][0] : ''
+            }
+            this.pageChange(1);
+        },
         handleSearch() {  // 搜索
             this.pageChange(1);
         },
@@ -196,6 +229,7 @@ export default {
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
             this.$refs.TimeSearch.handleReset()
+            this.filteredInfo = null
             this.pageChange(1);
         },
         getTableData() {
@@ -249,4 +283,13 @@ export default {
 </script>
 
 <style lang='less'>
+#SupplierList {
+    .title-container {
+        .btns-area {
+            .panel-btn {
+                margin-left: 10px;
+            }
+        }
+    }
+}
 </style>
