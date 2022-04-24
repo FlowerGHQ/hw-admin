@@ -123,7 +123,7 @@ export default {
                 return this.$message.warning('请输入客户邮箱')
             }
             if (!form.province || !form.city || !form.county || !form.address) {
-                return this.$message.warning('请完善客户地址')
+                // return this.$message.warning('请完善客户地址')
             }
             Core.Api.Customer.save(form).then(() => {
                 this.$message.success('保存成功')

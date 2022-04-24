@@ -3,7 +3,6 @@
         <div class='title-container'>
             <div class='title-area'>整车详情</div>
             <div class="btns-area">
-                <!-- <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('supplier.save')"><i class="icon i_edit"/>编辑</a-button> -->
                 <a-button type="danger" ghost @click="handleDelete(id)" v-if="$auth('supplier.delete')"><i class="icon i_close_c"/>删除</a-button>
             </div>
         </div>
@@ -17,7 +16,7 @@
                 <a-row class="desc-detail">
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">整车名称：</span>
-                        <span class="value">{{ detail.item.name }}</span>
+                        <span class="value">{{ detail.item ? detail.item.name : '-' }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">整车编号：</span>
@@ -28,8 +27,16 @@
                         <span class="value">{{ detail.repair_count }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">客户信息：</span>
-                        <span class="value">{{ detail.org_name }}</span>
+                        <span class="key">客户名称：</span>
+                        <span class="value">{{ detail.customer_detail.name }}</span>
+                    </a-col>
+                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                        <span class="key">客户手机：</span>
+                        <span class="value">{{ detail.customer_detail.phone }}</span>
+                    </a-col>
+                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                        <span class="key">客户地址：</span>
+                        <span class="value">{{ detail.customer_detail.address }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">到港日期：</span>
@@ -43,9 +50,9 @@
             </div>
         </div>
         <div class="tabs-container">
-            <a-tabs v-model:activeKey="activeKey">
+            <a-tabs>
                  <a-tab-pane key="RepairOrderList" tab="维修单列表">
-                    <RepairOrderList :itemId="item_id" v-if="activeKey === 'RepairOrderList'"/>
+                    <repair-order-list :itemId="id"></repair-order-list>
                 </a-tab-pane>
             </a-tabs>
         </div>
@@ -67,9 +74,9 @@ export default {
             // 加载
             loading: false,
             id: '',
-            material_id: '',
+            item_id: '',
             detail: {},
-            activeKey: '',
+            activeKey: 1,
         }
     },
     watch: {},
@@ -82,13 +89,6 @@ export default {
         routerChange(type) {
             let routeUrl = '';
             switch (type) {
-                // case 'edit': // 编辑
-                //     routeUrl = this.$router.resolve({
-                //         path: '/entity/entity-edit',
-                //         query: {id: this.id},
-                //     });
-                //     window.open(routeUrl.href, '_self');
-                //     break;
                 case 'list': // 列表
                     routeUrl = this.$router.resolve({
                         path: '/entity/entity-list',

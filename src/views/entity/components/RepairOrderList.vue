@@ -30,10 +30,8 @@
                             </template>
                             <template v-else>￥{{ text }}</template>
                         </template>
-                        <template v-if="column.key === 'operation'" >
-                            <template v-if="!this.addMode">
-                                <a-button type="link" @click="routerChange('detail')" class="danger && $auth('supplier.save')"><i class="icon i_detail"/>详情</a-button>
-                            </template>
+                        <template v-if="column.dataIndex === 'operation'" >
+                            <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>详情</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -60,6 +58,7 @@
 <script>
 import Core from '../../../core';
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
+const REPAIR = Core.Const.REPAIR
 
 export default {
     name: 'BomItems',
@@ -80,7 +79,6 @@ export default {
             pageSize: 20,
             total: 0,
             // 表格数据
-            repair_order_id: '',
             tableData: [],
             addMode: false,
             details: {
@@ -94,19 +92,37 @@ export default {
     watch: {},
     computed: {
         tableColumns() {
+            let { filteredInfo } = this;
+            filteredInfo = filteredInfo || {};
             let columns = [
-                {title: '维修名称', dataIndex: ['item','name'], key: 'detail'},
-                {title: '维修分类', dataIndex: ['item','category', 'name'], key: 'item'},
-                {title: '维修编码', dataIndex: ['item','code'], key: 'item'},
-                {title: '单位', dataIndex: ['item','unit'], key: 'item'},
-                {title: '单价', dataIndex:  'price',key: 'price'},
-                {title: '规格', dataIndex: ['item','spec'], key: 'item'},
-                { title: '维修包装', dataIndex: ['item','encapsulation'], key: 'item' },
-                { title: '包装尺寸', dataIndex: ['item','encapsulation_size'], key: 'item' },
-                { title: '毛重(kg)', dataIndex: ['item','gross_weight'], key: 'gross_weight' },
-                {title: '创建时间', dataIndex: ['item','create_time'], key: 'time'},
-                {title: '操作', key: 'operation', fixed: 'right'},
+                { title: this.$t('r.repair_sn'), dataIndex: 'uid', key: 'detail' },
+                { title: this.$t('search.vehicle_no'), dataIndex: 'vehicle_no',key: 'item'},
+                { title: this.$t('r.repair_name'), dataIndex: 'name', key: 'tip_item' },
+                { title: this.$t('r.urgency'), dataIndex: 'priority' },
+                { title: this.$t('r.repair_status'), dataIndex: 'status'},
+                { title: this.$t('r.warranty'), dataIndex: 'service_type',
+                    filters: REPAIR.SERVICE_TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.service_type || null },
+                { title: this.$t('r.repair_way'), dataIndex: 'channel',
+                    filters: REPAIR.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.channel || null },
+                { title: this.$t('r.repair_category'), dataIndex: 'repair_method',
+                    filters: REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.repair_method || null },
+                { title: this.$t('r.repair_unit'), dataIndex: 'repair_name', key: 'item' },
+                { title: this.$t('r.repair_phone'), dataIndex: 'repair_phone', key: 'item' },
+                { title: this.$t('r.creator_name'),   dataIndex: 'user_name', key: 'item' },
+                { title: this.$t('r.associated_customers'), dataIndex: 'customer_name', key: 'item' },
+                { title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time' },
+                { title: "操作", dataIndex: 'operation' },
+                // { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
             ]
+            if (this.operMode === 'audit' && this.$auth('ADMIN', 'DISTRIBUTOR')) {
+                columns.push({ title: this.$t('def.operate'), key: 'operation', fixed: 'right'},)
+            }
+            if (this.operMode === 'redit' && !this.$auth('ADMIN')) {
+                columns.push({ title: this.$t('def.operate'), key: 'operate', fixed: 'right'},)
+            }
+            if (this.operMode === 'invoice' && this.$auth('ADMIN')) {
+                columns.push({ title: this.$t('def.operate'), key: 'handle', fixed: 'right'},)
+            }
             return columns
         },
         // 已经添加到维修表中的ids
@@ -145,7 +161,7 @@ export default {
         },
         getTableData() { // 获取 表格 数据
             this.loading = true;
-            Core.Api.RepairItem.list({
+            Core.Api.Repair.list({
                 page: this.currPage,
                 pageSize: this.pageSize,
                 item_id: this.itemId,
