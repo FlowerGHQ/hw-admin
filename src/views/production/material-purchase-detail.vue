@@ -513,52 +513,6 @@ export default {
 </script>
 
 <style lang="less">
-#MaterialPurchaseDetail {
-    .extra-btn {
-        height: 14px;
-        line-height: 14px;
-    }
-    .gray-panel.info {
-        .right {
-            .fcc();
-            font-size: 12px;
-
-            .status {
-                .fcc();
-
-                .i_point {
-                    margin-right: 6px;
-                }
-            }
-        }
-    }
-    .ant-table-cell {
-        input.ant-input.input-number {
-            width: 100% - 50px;
-        }
-    }
-    .panel-content {
-    }
-}
-.prod-edit-popover {
-    margin: 0 -4px;
-    display: flex;
-    .flex(flex-start,flex-end);
-    .ant-input, .ant-input-number {
-        width: 155px;
-        margin-bottom: 8px;
-    }
-    .btns {
-        margin-top: 16px;
-        .fcc();
-        .ant-btn {
-            width: 48px;
-            height: 25px;
-            font-size: 12px;
-            border-radius: 2px;
-            padding: 0;
-            line-height: 25px;
-        }
-    }
-}
+/*#MaterialPurchaseDetail {
+}*/
 </style>
