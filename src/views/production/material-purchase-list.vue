@@ -38,22 +38,24 @@
                     <template v-if="column.key === 'contact'">
                         {{ text || '-' }}
                     </template>
-                    <template v-if="column.dataIndex === 'payment_term'">
-                        {{ $Util.supplierPaymentTypeFilter(text) }}
-                    </template>
-                    <template v-if="column.dataIndex === 'address'">
-                        {{ $Util.addressFilter(record) }}
+                    <template v-if="column.dataIndex === 'status'">
+                        <div class="status status-bg status-tag" :class="$Util.materialPurchaseStatusFilter(text,'color')">
+                            {{ $Util.materialPurchaseStatusFilter(text) }}
+                        </div>
                     </template>
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>详情
+                        <a-button type='link' v-if="record.status !== STATUS.INIT" @click="routerChange('detail', record)"><i class="icon i_detail"/>详情
                         </a-button>
-                        <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/>编辑
+                        <a-button type='link' v-if="record.status === STATUS.INIT" @click="routerChange('detail', record)"><i class="icon i_edit"/>编辑
                         </a-button>
-                        <a-button type="link" @click="handleCancel(record.id)" class="danger"><i class="icon i_delete"/>取消
+                        <a-button type="link" v-if="record.status === STATUS.INIT" @click="handleCancel(record.id)" class="danger"><i class="icon i_close_c"/>取消
                         </a-button>
+                        <AuditHandle v-if="record.status === STATUS.SUBMIT" btnType='link' :api-list="['MaterialPurchase', 'audit']" :id="record.id" @submit="getTableData"
+                                     :s-pass="STATUS.PASS" :s-refuse="STATUS.REFUSE" no-refuse><i class="icon i_audit"/>审核
+                        </AuditHandle>
                     </template>
                 </template>
             </a-table>
@@ -74,39 +76,31 @@
             />
         </div>
     </div>
-<!--    <template class="modal-container">
-        <a-modal title="新建采购单" v-model:visible="purchaseShow" class="material-purchase-modal"
-                 :after-close='handlePurchaseClose'>
-            <div class="form-item required">
-                <div class="key">请选择供应商:</div>
-                <div class="value">
-                    <a-select v-model:value="form.supplier_id" placeholder="请选择供应商">
-                        <a-select-option v-for="item of supplierList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
-                    </a-select>
-                </div>
-            </div>
-            <template #footer>
-                <a-button @click="handlePurchaseClose">取消</a-button>
-                <a-button @click="handlePurchaseSubmit" type="primary">确定</a-button>
-            </template>
-        </a-modal>
-    </template>-->
+
+
 </template>
 
 <script>
 import Core from '../../core'
 import TimeSearch from '@/components/common/TimeSearch.vue'
 import EditBomModel from './components/EditBomModel.vue'
+import AuditHandle from '@/components/popup-btn/AuditHandle.vue'
+
+const MATERIAL_PURCHASE = Core.Const.MATERIAL_PURCHASE
+const STATUS = MATERIAL_PURCHASE.STATUS
 
 export default {
     name: 'MaterialPurchaseList',
     components: {
         TimeSearch,
         EditBomModel,
+        AuditHandle,
     },
     props: {},
     data() {
         return {
+            MATERIAL_PURCHASE,
+            STATUS,
             currPage: 1,
             pageSize: 20,
             total: 0,
@@ -125,16 +119,10 @@ export default {
             tableData: [],
             tableColumns: [
                 {title: '订单号', dataIndex: 'sn', key: 'detail'},
-              /*  {title: '供应商', dataIndex: 'name'},
-                {title: '物料名称', dataIndex: 'contact_name', key: 'contact'},
-                {title: '物料编码', dataIndex: 'contact_phone', key: 'contact'},
-                {title: '单位', dataIndex: 'contact_email', key: 'contact'},
-                {title: '数量', dataIndex: 'payment_term'},
-                {title: '单价', dataIndex: 'payment_term'},
-                {title: '总价', dataIndex: 'payment_term'},
-                {title: '到货日期', dataIndex: 'address'},
-                {title: '备注', dataIndex: 'payment_term'},*/
+                {title: '状态', dataIndex: 'status'},
                 {title: '创建人', dataIndex: ['apply_user', "account", "name"], key: 'contact'},
+                {title: '审核人', dataIndex: ['audit_user', "account", "name"],key: 'contact'},
+                {title: '审核时间', dataIndex: 'audit_time',key: 'time'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'}
             ],
@@ -256,24 +244,12 @@ export default {
         },
         handleMaterialPurchase() {
             Core.Api.MaterialPurchase.save().then(() => {
-                this.$message.success('创建成功');
-                this.routerChange('detail', res.detail);
+                this.$message.success('创建成功')
+                this.getTableData();
+                // this.routerChange('detail', res.detail);
             }).catch(err => {
                 console.log("handleMaterialPurchase err", err);
             })
-        },
-        // 上传文件
-        handleFileUpload({file, fileList}) {
-            console.log("handleFileUpload status:", file.status, "file:", file)
-            if (file.status == 'done') {
-                let res = file.response
-                if (res && res.code === 0) {
-                    return this.$message.success('上传成功');
-                } else {
-                    return this.$message.error('上传失败:' + res.message)
-                }
-            }
-            this.upload.fileList = fileList
         },
     },
 }

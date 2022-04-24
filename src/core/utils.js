@@ -630,6 +630,21 @@ const Util = {
     },
     /* =============== 供应商管理 ================ */
 
+    /* =============== 物料采购 ================ */
+    materialPurchaseStatusFilter(val, to = 'text') {
+        const MAP = Const.MATERIAL_PURCHASE.STATUS_MAP
+        const COLOR_MAP = Const.MATERIAL_PURCHASE.STATUS_COLOR_MAP
+        switch (to) {
+            case 'text':
+                return MAP[val + ''] || '未知'
+            case 'color':
+                return COLOR_MAP[val + ''] || 'grey'
+        }
+    },
+
+    /* =============== 物料采购 ================ */
+
+
 
 }
 

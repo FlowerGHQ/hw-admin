@@ -4,19 +4,17 @@
         <div class="title-area">{{type_ch}}单详情</div>
         <div class="btn-area">
             <template v-if="detail.status === STATUS.INIT">
-                <a-button type="primary" @click="handleComplete()" v-if="$auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}完成</a-button>
-                <!-- <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button> -->
+                <a-button type="primary" @click="handleSubmit()" v-if="$auth('invoice.save')"><i class="icon i_confirm"/>提交</a-button>
                 <a-button type="danger" ghost @click="handleCancel()" v-if="$auth('invoice.delete')"> <i class="icon i_close_c"/>取消</a-button>
             </template>
-<!--            <template v-if="detail.status === STATUS.INIT">
-                <AuditHandle btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"> <i class="icon i_audit"/>审核</AuditHandle>
-            </template>-->
             <template v-if="detail.status === STATUS.CLOSE && detail.type === TYPE.OUT && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.export')">
                 <a-button type="primary" @click="handleExportOut"><i class="icon i_download"/>导出</a-button>
             </template>
             <template v-if="detail.status === STATUS.CLOSE && detail.type === TYPE.IN && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.export')">
                 <a-button type="primary" @click="handleExportIn"><i class="icon i_download"/>导出</a-button>
             </template>
+            <AuditMaterialPurchase v-if="detail.status === STATUS.WAIT_AUDIT" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :invoiceId="id" @submit="getInvoiceDetail"> <i class="icon i_audit"/>审核</AuditMaterialPurchase>
+            <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}完成</a-button>
         </div>
     </div>
     <div class="gray-panel info">
@@ -64,6 +62,17 @@
             <div class="info-item">
                 <div class="key">创建时间</div>
                 <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
+            </div>
+            <div class="info-item">
+                <div class="key">审核人</div>
+                <div class="value">
+                    <template v-if="detail.audit_user && detail.apply_user.account">{{ detail.audit_user.account.name }}</template>
+                    <template v-else>-</template>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="key">审核时间</div>
+                <div class="value">{{ $Util.timeFilter(detail.audit_time) || '-' }}</div>
             </div>
         </div>
     </div>
@@ -287,7 +296,7 @@
                                 <template v-if="addMode">
                                     ￥ {{ $Util.countFilter(record.supplier_map[record.supplier_id]) || '-'}}
                                 </template>
-                                <template v-else>￥{{ $Util.countFilter(text) || '-'}}</template>
+                                <template v-else>￥{{ $Util.countFilter(text) || '0'}}</template>
                             </template>
                             <template v-if="column.key === 'total_price'">
                                 <template v-if="addMode">
@@ -341,7 +350,7 @@ import Core from '../../core';
 import ItemSelect from '../../components/popup-btn/ItemSelect.vue'
 import EntitySelect from '../../components/popup-btn/EntitySelect.vue'
 import MaterialSelect from '../../components/popup-btn/MaterialSelect.vue'
-import AuditHandle from '../../components/popup-btn/AuditHandle.vue'
+import AuditMaterialPurchase from '../../components/popup-btn/AuditHandle.vue'
 import data from "../../core/data";
 
 const STOCK_RECORD = Core.Const.STOCK_RECORD
@@ -357,7 +366,7 @@ export default {
         ItemSelect,
         EntitySelect,
         MaterialSelect,
-        AuditHandle
+        AuditMaterialPurchase
     },
     props: {},
     data() {
@@ -641,6 +650,26 @@ export default {
                         _this.routerChange('list');
                     }).catch(err => {
                         console.log("handleCancel err", err);
+                    })
+                },
+            });
+        },
+        // 提交出入库单
+        handleSubmit() {
+            if (!this.tableData.length) {
+                return this.$message.warning(`请先选择需要${this.type_ch}的商品`)
+            }
+            let _this = this;
+            this.$confirm({
+                title: `确定提交该${_this.type_ch}吗？`,
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Invoice.submit({id: _this.detail.id}).then(() => {
+                        _this.$message.success('操作成功');
+                        _this.getInvoiceDetail();
+                    }).catch(err => {
+                        console.log("handleComplete err", err);
                     })
                 },
             });

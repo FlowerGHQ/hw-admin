@@ -25,6 +25,7 @@ const apiList = {
         repairExport: ['PostJson', 'repair/export-repair-order-record'],
         invoiceOutExport: ['PostJson', 'invoice/export-out-invoice'],//导出
         invoiceInExport: ['PostJson', 'invoice/export-in-invoice'],//导出
+        materialPurchaseExport: ['PostJson', '/material-purchase-order/export'],//导出
     },
     User: { // 员工
         save: ['PostJson', 'user/save'],
@@ -100,6 +101,7 @@ const apiList = {
         list: ['PostJson', 'invoice/list'],
         delete: ['PostJson', 'invoice/delete'],
         audit: ['PostJson', 'invoice/audit'],
+        submit: ['PostJson', 'invoice/submit'],
         status: ['PostJson', 'invoice/status-list'], // 状态
         handle: ['PostJson', 'invoice/handle'], // 处理完成
         cancel: ['PostJson', 'invoice/cancel'], // 取消出入库单
@@ -408,6 +410,8 @@ const apiList = {
         detail: ['PostJson', 'material-purchase-order/detail'],
         cancel: ['PostJson', 'material-purchase-order/cancel'],
         save: ['PostJson', 'material-purchase-order/save'],
+        submit: ['PostJson', 'material-purchase-order/submit'],
+        audit: ['PostJson', 'material-purchase-order/audit'],
         export: ['PostJson', 'material-purchase-order/export'], // 导出
         itemList: ['PostJson', 'material-purchase-order-item/list'],
         itemDetail: ['PostJson', 'material-purchase-order-item/detail'],

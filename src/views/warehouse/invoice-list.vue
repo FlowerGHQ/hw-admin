@@ -89,8 +89,9 @@
                             <template v-if="record.status === STATUS.INIT">
                                 <!-- <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button> -->
                                 <a-button type="link" @click="handleCancel(record.id)" class="danger" v-if="$auth('invoice.delete')"><i class="icon i_close_c"/>取消</a-button>
-<!--                                <AuditHandle v-if="record.status === STATUS.WAIT_AUDIT && $auth('invoice.audit')" btnType="link" :api-list="['Invoice', 'audit']" :id="record.id"> <i class="icon i_audit"/>审核</AuditHandle>-->
                             </template>
+<!--                                <AuditHandle v-if="record.status === STATUS.WAIT_AUDIT && $auth('invoice.audit')" btnType="link" :api-list="['Invoice', 'audit']" :id="record.id"> <i class="icon i_audit"/>审核</AuditHandle>-->
+                            <AuditMaterialPurchase v-if="record.status === STATUS.WAIT_AUDIT" btnType="link" :api-list="['Invoice', 'audit']" :invoiceId="record.id" @submit="getTableData"> <i class="icon i_audit"/>审核</AuditMaterialPurchase>
                         </template>
                     </template>
                 </a-table>
@@ -117,14 +118,14 @@
 <script>
 import Core from '../../core';
 import TimeSearch from '@/components/common/TimeSearch.vue'
-import AuditHandle from '../../components/popup-btn/AuditHandle.vue'
+import AuditMaterialPurchase from '../../components/popup-btn/AuditMaterialPurchase.vue'
 
 const STATUS = Core.Const.STOCK_RECORD.STATUS
 export default {
     name: 'InvoiceList',
     components: {
         TimeSearch,
-        AuditHandle
+        AuditMaterialPurchase
     },
     props: {},
     data() {
