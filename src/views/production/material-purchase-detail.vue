@@ -146,10 +146,12 @@
             <div class="modal-content">
                 <div class="form-item required">
                     <div class="key">审核结果:</div>
+                    <div class="value">
                     <a-radio-group v-model:value="auditForm.status">
                         <a-radio :value="STATUS.PASS">通过</a-radio>
                         <a-radio :value="STATUS.REFUSE">不通过</a-radio>
                     </a-radio-group>
+                    </div>
                 </div>
                 <div class="form-item textarea required" v-if="auditForm.status === STATUS.REFUSE">
                     <div class="key">原因:</div>
