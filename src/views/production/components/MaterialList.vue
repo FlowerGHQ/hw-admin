@@ -29,6 +29,11 @@
                         <template v-if="column.key === 'gross_weight'">
                             {{ $Util.countFilter(text) }}
                         </template>
+                        <template v-if="column.key === 'spec'">
+                            <a-tooltip placement="top" :title='text'>
+                                <div class="ell" style="max-width: 100px">{{text || '-'}}</div>
+                            </a-tooltip>
+                        </template>
                         <template v-if="column.key === 'price'">
                             <template v-if="addMode || record.editMode">
                                ￥<a-input-number v-model:value="record.price" placeholder="请输入"
@@ -110,7 +115,7 @@ export default {
                 {title: '物料编码', dataIndex: ['item','code'], key: 'item'},
                 {title: '单位', dataIndex: ['item','unit'], key: 'item'},
                 {title: '单价', dataIndex:  'price',key: 'price'},
-                {title: '规格', dataIndex: ['item','spec'], key: 'item'},
+                {title: '规格', dataIndex: ['item','spec'], key: 'spec'},
                 { title: '物料包装', dataIndex: ['item','encapsulation'], key: 'item' },
                 { title: '包装尺寸', dataIndex: ['item','encapsulation_size'], key: 'item' },
                 { title: '毛重(kg)', dataIndex: ['item','gross_weight'], key: 'gross_weight' },

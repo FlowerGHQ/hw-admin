@@ -16,6 +16,18 @@
                 </div>
                 <a-row class="desc-detail">
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                        <span class="key">仓库类型：</span>
+                        <span class="value">{{ $Util.warehouseTypeFilter(detail.type) }}</span>
+                    </a-col>
+                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                        <span class="key">联系人：</span>
+                        <span class="value">{{ detail.contacts }}</span>
+                    </a-col>
+                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                        <span class="key">联系人电话：</span>
+                        <span class="value">{{ detail.phone }}</span>
+                    </a-col>
+                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">创建时间：</span>
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
@@ -28,7 +40,7 @@
         </div>
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
-                <template v-if="detail.type == WAREHOUSE_TYPE.QUALITY">
+<!--                <template v-if="detail.type == WAREHOUSE_TYPE.QUALITY">
                     <a-tab-pane key="ItemStockList" tab="库存产品">
                         <StockList type='item' :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail" v-if="activeKey === 'ItemStockList'"/>
                     </a-tab-pane>
@@ -38,9 +50,31 @@
                     <a-tab-pane key="StockRecord" tab="出入库记录">
                         <StockRecord :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail" v-if="activeKey === 'StockRecord'"/>
                     </a-tab-pane>
-                </template>
+                </template>-->
+                <a-tab-pane key="ItemStockList" tab="库存产品" v-if="detail.type == WAREHOUSE_TYPE.QUALITY">
+                    <StockList type='item' :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
+                               v-if="activeKey === 'ItemStockList'"/>
+                </a-tab-pane>
+
+                <a-tab-pane key="MaterialStockList" tab="库存物料" v-if="detail.type == WAREHOUSE_TYPE.MATERIAL">
+                    <StockList type='material' :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
+                               v-if="activeKey === 'MaterialStockList'"/>
+                </a-tab-pane>
+
+                <a-tab-pane key="CustomizeStockList" tab="库存广宣品"
+                            v-if="$auth('ADMIN') && detail.type == WAREHOUSE_TYPE.CUSTOMIZE">
+                    <StockList type='customize' :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
+                               v-if="activeKey === 'CustomizeStockList'"/>
+                </a-tab-pane>
+
                 <a-tab-pane key="ImperfectList" tab="残次品数量" v-if="detail.type == WAREHOUSE_TYPE.DEFECTIVE">
-                    <ImperfectList :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail" v-if="activeKey === 'ImperfectList'"/>
+                    <ImperfectList :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
+                                   v-if="activeKey === 'ImperfectList'"/>
+                </a-tab-pane>
+
+                <a-tab-pane key="StockRecord" tab="出入库记录" v-if="detail.type !== WAREHOUSE_TYPE.DEFECTIVE">
+                    <StockRecord :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
+                                 v-if="activeKey === 'StockRecord'"/>
                 </a-tab-pane>
             </a-tabs>
         </div>
@@ -69,7 +103,7 @@ export default {
             detail: {},
             warehouse_id: "",
             //标签页
-            activeKey: 'ItemStockList'
+            activeKey: ''
         }
     },
     watch: {},
@@ -109,6 +143,10 @@ export default {
                     this.activeKey = 'ItemStockList'
                 } else if (this.detail.type == WAREHOUSE_TYPE.DEFECTIVE) {
                     this.activeKey = 'ImperfectList'
+                } else if (this.detail.type == WAREHOUSE_TYPE.MATERIAL) {
+                    this.activeKey = 'MaterialStockList'
+                } else {
+                    this.activeKey = 'CustomizeStockList'
                 }
             }).catch(err => {
                 console.log("getWarehouseDetail err", err);

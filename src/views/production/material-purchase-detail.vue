@@ -513,14 +513,15 @@ export default {
 </script>
 
 <style lang="less">
-#MaterialPurchaseDetail {
-    .ant-radio-group {
-        .ant-radio-wrapper {
-            .ant-radio {
-                margin-bottom: 6px;
-            }
+.ant-modal-root {
+    .ant-modal .ant-modal-content .ant-modal-body span {
+        white-space: nowrap;
+
+
+        .ant-radio {
+            margin-bottom: 5px;
         }
     }
-
 }
+
 </style>

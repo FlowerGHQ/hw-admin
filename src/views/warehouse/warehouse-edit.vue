@@ -18,9 +18,27 @@
                     <div class="key">仓库类型：</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.type">
-                            <a-radio :value="WAREHOUSE_TYPE.QUALITY">正品仓</a-radio>
-                            <a-radio :value="WAREHOUSE_TYPE.DEFECTIVE">残次仓</a-radio>
+<!--                            <a-radio class="type-item" v-for="(val, key) in warehouseType" :key="key" :value="key">{{ val }}
+                            </a-radio>-->
+                            <a-radio-group v-model:value="form.type">
+                                <a-radio :value="warehouseType.QUALITY">成品仓</a-radio>
+                                <a-radio :value="warehouseType.DEFECTIVE">残次仓</a-radio>
+                                <a-radio :value="warehouseType.MATERIAL" v-if="$auth('ADMIN')">物料仓</a-radio>
+                                <a-radio :value="warehouseType.CUSTOMIZE">广宣品仓</a-radio>
+                            </a-radio-group>
                         </a-radio-group>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">联系人：</div>
+                    <div class="value">
+                        <a-input v-model:value="form.contacts" placeholder="请输入联系人"/>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">联系电话：</div>
+                    <div class="value">
+                        <a-input v-model:value="form.phone" placeholder="请输入联系人电话"/>
                     </div>
                 </div>
                 <div class="form-item required">
@@ -58,7 +76,8 @@ export default {
             // 加载
             loading: false,
             detail: {},
-            WAREHOUSE_TYPE: Core.Const.WAREHOUSE.TYPE,
+            // warehouseType: Core.Const.WAREHOUSE.TYPE_MAP,
+            warehouseType: Core.Const.WAREHOUSE.TYPE,
 
             form: {
                 id: '',
@@ -68,6 +87,8 @@ export default {
                 county: '',
                 address: '',
                 type: '',
+                phone: '',
+                contacts: '',
             },
             defAddr: []
         };
@@ -113,6 +134,12 @@ export default {
             }
             if (!form.type) {
                 return this.$message.warning('请选择仓库类型')
+            }
+            if (!form.contacts) {
+                return this.$message.warning('请输入联系人')
+            }
+            if (!form.phone) {
+                return this.$message.warning('请输入联系人电话')
             }
             if (!form.address) {
                 return this.$message.warning('请输入仓库地址')

@@ -9,15 +9,22 @@
         </div>
         <div class="search-container">
             <a-row class="search-area">
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">仓库名称:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.warehouse_id" placeholder="请选择仓库">
-                            <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">{{ warehouse.name }}</a-select-option>
+                        <a-input placeholder="请输入仓库名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">仓库名称:</div>
+                    <div class="value">
+                        <a-select v-model:value="searchForm.type" placeholder="请选择仓库" @change="handleSearch">
+                            <a-select-option v-for="(val,key) of typeList" :key="val" :value="key">{{ val }}
+                            </a-select-option>
                         </a-select>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
+                <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">创建时间:</div>
                     <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                 </a-col>
@@ -44,6 +51,9 @@
                     </template>
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
+                    </template>
+                    <template v-if="column.key === 'time'">
+                        {{ text || '-'}}
                     </template>
                     <template v-if="column.key === 'operation'">
                         <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('warehouse.save')"><i class="icon i_edit"/>编辑</a-button>
@@ -91,28 +101,29 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
-            warehouseList: [],
             searchForm: {
-                warehouse_id: undefined,
+                name: '',
                 begin_time: '',
                 end_time: '',
+                type: undefined,
             },
-
             tableColumns: [
                 {title: '仓库名称', dataIndex: 'name',key: 'detail',},
                 {title: '仓库类型', dataIndex: 'type',key: 'type',},
+                {title: '联系人', dataIndex: 'contacts',key: 'text',},
+                {title: '联系人电话', dataIndex: 'phone',key: 'text',},
                 {title: '仓库地址', key:'address', dataIndex: 'address'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right' },
             ],
             tableData: [],
+            typeList: Core.Const.WAREHOUSE.TYPE_MAP,
         };
     },
     watch: {},
     computed: {},
     mounted() {
         this.getTableData();
-        this.getWarehouseList();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -157,11 +168,6 @@ export default {
             Object.assign(this.searchForm, this.$options.data().searchForm)
             this.$refs.TimeSearch.handleReset()
             this.pageChange(1);
-        },
-        getWarehouseList() {
-            Core.Api.Warehouse.listAll().then(res => {
-                this.warehouseList = res.list
-            })
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;

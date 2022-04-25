@@ -444,13 +444,13 @@ const routes = [
             }
         ]
     },
-    { // 产品管理 - 平台端
+    { //商品管理 - 平台端
         path: '/item',
         component: Layout,
         redirect: '/item/item-list',
         name: 'ItemManagement',
         meta: {
-            title: '产品管理',
+            title: '商品管理',
             icon: 'i_s_item',
             roles: [LOGIN_TYPE.ADMIN],
         },
@@ -460,7 +460,7 @@ const routes = [
                 name: 'ItemList',
                 component: () => import('@/views/item/item-list.vue'),
                 meta: {
-                    title: '产品列表',
+                    title: '商品列表',
                     roles: [LOGIN_TYPE.ADMIN],
                 }
             },
@@ -470,7 +470,7 @@ const routes = [
                 component: () => import('@/views/item/item-edit.vue'),
                 meta: {
                     hidden: true,
-                    title: '产品编辑',
+                    title: '商品编辑',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/item/item-list',
                 }
@@ -481,7 +481,7 @@ const routes = [
                 component: () => import('@/views/item/item-detail.vue'),
                 meta: {
                     hidden: true,
-                    title: '产品详情',
+                    title: '商品详情',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/item/item-list',
                 }
@@ -492,7 +492,7 @@ const routes = [
                 component: () => import('@/views/item/item-category.vue'),
                 meta: {
                     roles: [LOGIN_TYPE.ADMIN],
-                    title: '产品分类',
+                    title: '商品分类',
                 }
             },
             {
@@ -502,7 +502,7 @@ const routes = [
                 meta: {
                     hidden: true,
                     roles: [LOGIN_TYPE.ADMIN],
-                    title: '产品分类配置',
+                    title: '商品分类配置',
                 }
             },
         ]

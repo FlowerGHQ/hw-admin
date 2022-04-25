@@ -44,6 +44,13 @@
                     </a-date-picker>
                 </div>
             </div>
+            <div class="form-item textarea required" v-if="form.status === STATUS.AUDIT_REFUSE">
+                <div class="key">原因:</div>
+                <div class="value">
+                    <a-textarea v-model:value="form.audit_message" placeholder="请输入不通过原因"
+                                :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                </div>
+            </div>
         </div>
         <template #footer>
             <a-button @click="handleModalClose">取消</a-button>
@@ -122,7 +129,13 @@ export default {
             }
         },
         handleConfirm() {
-
+            let form = Core.Util.deepCopy(this.form)
+            if (!form.status) {
+                return this.$message.warning('请选择审核状态')
+            }
+            if (!form.finance_audit_time && this.status === STATUS.AUDIT_PASS) {
+                return this.$message.warning('请选择财务审核时间')
+            }
             Core.Api[this.apiList[0]][this.apiList[1]]({
                 status: this.form.status,
                 audit_message: this.form.audit_message,

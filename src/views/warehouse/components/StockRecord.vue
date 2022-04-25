@@ -3,20 +3,19 @@
         <div class="panel-content">
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                    :row-key="(record) => record.id" :pagination="false">
+                         :row-key="(record) => record.id" :pagination="false">
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.key === 'count'">
                             {{ text || 0 }} 件
                         </template>
-                        <template v-if="column.type === 'item'">
+                        <template v-if="column.type && column.type === 'item'">
                             <template v-if="record.target_type === 1">
-                                {{record.item[column.key]}}
+                                {{ record.item ? (record.item[column.key] || '-') : '-' }}
                             </template>
                             <template v-if="record.target_type === 2">
-                                {{record.material[column.key]}}
+                                {{ record.material ? (record.material[column.key] || '-') : '-' }}
                             </template>
                         </template>
-
                         <template v-if="column.dataIndex === 'type'">
                             {{ $Util.stockRecordFilter(text) }}
                         </template>
@@ -81,13 +80,15 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                { title: "变更对象", type: "item", key: "name" },
-                { title: "变更对象编码", type: "item", key: "code" },
-                { title: "操作类型", dataIndex: "type", key: "type" },
-                { title: "数量", dataIndex: "amount", key: "count" },
-                { title: "变更后库存数量", dataIndex: "balance", key: "count" },
-                { title: "变更来源", dataIndex: "source_type", key: "source_type" },
-                { title: "创建时间", dataIndex: "create_time", key: "time" },
+                /*          { title: "变更对象", dataIndex: ['material','name'], key: "detail" },
+                          { title: "变更对象编码", dataIndex: ['material','code'], key: "text" },*/
+                {title: "变更对象", type: "item", key: "name"},
+                {title: "变更对象编码", type: "item", key: "code"},
+                {title: "操作类型", dataIndex: "type", key: "type"},
+                {title: "数量", dataIndex: "amount", key: "count"},
+                {title: "变更后库存数量", dataIndex: "balance", key: "count"},
+                {title: "变更来源", dataIndex: "source_type", key: "source_type"},
+                {title: "创建时间", dataIndex: "create_time", key: "time"},
             ];
             return tableColumns;
         },
@@ -96,6 +97,19 @@ export default {
         this.getTableData();
     },
     methods: {
+        routerChange(type, item = {}) {
+            switch (type) {
+                case 'detail': {
+                    let routeUrl = this.$router.resolve({
+                        path: "/production/material-detail",
+                        query: {id: item.material.id}
+                    })
+                    window.open(routeUrl.href, '_self')
+                }
+                    ;
+                    break
+            }
+        },
         pageChange(curr) {
             // 页码改变
             this.currPage = curr;

@@ -572,12 +572,16 @@ let Const = {
     },
     WAREHOUSE: {
         TYPE: { //仓库类型
-            QUALITY: 1, //正品仓
+            QUALITY: 1, //成品仓
             DEFECTIVE: 2, //残次仓
+            MATERIAL: 3, //物料仓
+            CUSTOMIZE: 4, // 广宣品仓
         },
         TYPE_MAP: {
-            1: '正品仓',
+            1: '成品仓',
             2: '残次仓',
+            3: '物料仓',
+            4: '广宣品仓',
         },
     },
     STOCK_RECORD: { // 出入库明细
@@ -585,11 +589,13 @@ let Const = {
             ITEM: 10,
             ENTITY: 20,
             MATERIALS: 30,
+            CUSTOMIZE: 40,
         },
         COMMODITY_TYPE_MAP: {
             10: '无实例商品',
             20: '有实例商品',
             30: '物料',
+            40: '广宣品',
         },
         TYPE: {
             IN: 1, //入库
@@ -970,6 +976,14 @@ let Const = {
             '-200': 'red',
             '-100': 'grey'
         },
+        STATUS_LIST: [
+            { text: '待提交', value: 0 },
+            { text: '待审核', value: 100 },
+            { text: '审核通过', value: 200 },
+            { text: '已入库', value: 500 },
+            { text: '审核未通过', value: -200 },
+            { text: '已取消', value: -100 },
+        ],
     }
 };
 

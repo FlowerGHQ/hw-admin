@@ -301,7 +301,7 @@
                             </template>
                             <template v-if="column.key === 'price'">
                                 <template v-if="addMode">
-                                    ￥ {{ $Util.countFilter(record.supplier_map[record.supplier_id]) || '-'}}
+                                    ￥ {{ $Util.countFilter(record.supplier_map[record.supplier_id]) || '0'}}
                                 </template>
                                 <template v-else>￥{{ $Util.countFilter(text) || '0'}}</template>
                             </template>

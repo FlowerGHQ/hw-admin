@@ -24,9 +24,20 @@
             </a-upload>-->
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :pagination='false'>
-                <template #bodyCell="{ column, text}">
+                <template #bodyCell="{ column, text, record}">
+                    <template v-if="column.key === 'detail'">
+                        <a-tooltip placement="top" :title='text'>
+                            <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}
+                            </a-button>
+                        </a-tooltip>
+                    </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}
+                    </template>
+                    <template v-if="column.key === 'material_spec'">
+                        <a-tooltip placement="top" :title='text'>
+                            <div class="ell" style="max-width: 100px">{{text || '-'}}</div>
+                        </a-tooltip>
                     </template>
                     <template v-if="column.key === 'spec'">
                         {{ $Util.itemSpecFilter(text) }}
@@ -152,11 +163,18 @@ export default {
                 {title: name + '编码', dataIndex: [type, 'code'], key: 'item'},
                 {title: '库存数量', dataIndex: 'stock', key: 'count'},
             ]
-            if (type === 'material') {
-                tableColumns.splice(1, 2,
-                    {title: name + '编号', dataIndex: [type, 'code'], key: 'item'},
-                    {title: name + '规格', dataIndex: [type, 'spec'], key: 'item'},
-                )
+            if (type === 'material' || type === 'customize') {
+                tableColumns = [
+                    {title: '名称', dataIndex: [type, 'name'], key: 'detail'},
+                    {title: '分类', dataIndex: [type, 'category','name'], key: 'item'},
+                    {title: '编码', dataIndex: [type, 'code'], key: 'item'},
+                    {title: '单位', dataIndex: [type, 'unit'], key: 'item'},
+                    {title: '规格', dataIndex: [type, 'spec'], key: 'material_spec'},
+                    {title: '包装', dataIndex: [type, 'encapsulation'], key: 'item'},
+                    {title: '包装尺寸', dataIndex: [type, 'encapsulation_size'], key: 'item'},
+                    {title: '毛重', dataIndex: [type, 'gross_weight'], key: 'item'},
+                    {title: '备注', dataIndex: [type, 'remark'], key: 'item'},
+                ]
             }
             return tableColumns
         },
@@ -165,11 +183,15 @@ export default {
         this.getTableData();
     },
     methods: {
-        routerChange(type, item) {
-            switch (type) {
-                case 'back':
-                    this.$router.go(-1)
-                    break;
+        routerChange(type, item = {}) {
+            switch(type) {
+                case 'detail': {
+                    let routeUrl = this.$router.resolve({
+                        path: "/production/material-detail",
+                        query: { id: item.material.id }
+                    })
+                    window.open(routeUrl.href, '_self')
+                }; break
             }
         },
         
