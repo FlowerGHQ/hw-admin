@@ -513,6 +513,14 @@ export default {
 </script>
 
 <style lang="less">
-/*#MaterialPurchaseDetail {
-}*/
+#MaterialPurchaseDetail {
+    .ant-radio-group {
+        .ant-radio-wrapper {
+            .ant-radio {
+                margin-bottom: 6px;
+            }
+        }
+    }
+
+}
 </style>
