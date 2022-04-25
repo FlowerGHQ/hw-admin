@@ -56,6 +56,7 @@
                         {{ text || '-'}}
                     </template>
                     <template v-if="column.key === 'operation'">
+                        <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('warehouse.list')"><i class="icon i_detail"/>详情</a-button>
                         <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('warehouse.save')"><i class="icon i_edit"/>编辑</a-button>
                         <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('warehouse.delete')"><i class="icon i_delete"/>删除</a-button>
                     </template>
@@ -110,8 +111,8 @@ export default {
             tableColumns: [
                 {title: '仓库名称', dataIndex: 'name',key: 'detail',},
                 {title: '仓库类型', dataIndex: 'type',key: 'type',},
-                {title: '联系人', dataIndex: 'contacts',key: 'text',},
-                {title: '联系人电话', dataIndex: 'phone',key: 'text',},
+                {title: '联系人', dataIndex: 'contact_name',key: 'text',},
+                {title: '联系人电话', dataIndex: 'contact_phone',key: 'text',},
                 {title: '仓库地址', key:'address', dataIndex: 'address'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right' },

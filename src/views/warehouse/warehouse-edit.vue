@@ -32,13 +32,13 @@
                 <div class="form-item required">
                     <div class="key">联系人：</div>
                     <div class="value">
-                        <a-input v-model:value="form.contacts" placeholder="请输入联系人"/>
+                        <a-input v-model:value="form.contact_name" placeholder="请输入联系人"/>
                     </div>
                 </div>
                 <div class="form-item required">
                     <div class="key">联系电话：</div>
                     <div class="value">
-                        <a-input v-model:value="form.phone" placeholder="请输入联系人电话"/>
+                        <a-input v-model:value="form.contact_phone" placeholder="请输入联系人电话"/>
                     </div>
                 </div>
                 <div class="form-item required">
@@ -87,8 +87,8 @@ export default {
                 county: '',
                 address: '',
                 type: '',
-                phone: '',
-                contacts: '',
+                contact_phone: '',
+                contact_name: '',
             },
             defAddr: []
         };
@@ -135,10 +135,10 @@ export default {
             if (!form.type) {
                 return this.$message.warning('请选择仓库类型')
             }
-            if (!form.contacts) {
+            if (!form.contact_name) {
                 return this.$message.warning('请输入联系人')
             }
-            if (!form.phone) {
+            if (!form.contact_phone) {
                 return this.$message.warning('请输入联系人电话')
             }
             if (!form.address) {

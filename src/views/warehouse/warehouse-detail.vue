@@ -21,11 +21,11 @@
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">联系人：</span>
-                        <span class="value">{{ detail.contacts }}</span>
+                        <span class="value">{{ detail.contact_name }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">联系人电话：</span>
-                        <span class="value">{{ detail.phone }}</span>
+                        <span class="value">{{ detail.contact_phone }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">创建时间：</span>
@@ -139,15 +139,23 @@ export default {
             }).then(res => {
                 console.log("getWarehouseDetail res", res);
                 this.detail = res.detail;
-                if (this.detail.type == WAREHOUSE_TYPE.QUALITY) {
-                    this.activeKey = 'ItemStockList'
-                } else if (this.detail.type == WAREHOUSE_TYPE.DEFECTIVE) {
-                    this.activeKey = 'ImperfectList'
-                } else if (this.detail.type == WAREHOUSE_TYPE.MATERIAL) {
-                    this.activeKey = 'MaterialStockList'
-                } else {
-                    this.activeKey = 'CustomizeStockList'
+                let type = this.detail.type
+                console.log('type',type)
+                switch(type) {
+                    case 1:
+                        this.activeKey = 'ItemStockList'
+                        break;
+                    case 2:
+                        this.activeKey = 'ImperfectList'
+                        break;
+                    case 3:
+                        this.activeKey = 'MaterialStockList'
+                        break;
+                    case 4:
+                        this.activeKey = 'CustomizeStockList'
+                        break;
                 }
+                console.log( 'this.activeKey',this.activeKey)
             }).catch(err => {
                 console.log("getWarehouseDetail err", err);
             }).finally(() => {
