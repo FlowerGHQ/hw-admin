@@ -419,6 +419,7 @@ const apiList = {
         itemDelete: ['PostJson', 'material-purchase-order-item/delete'],
         itemSave: ['PostJson', 'material-purchase-order-item/save'],
         batchSave: ['PostJson', 'material-purchase-order-item/batch-save'],
+        statusList: ['PostJson', 'material-purchase-order/status-list'], // 保存
     }
 };
 

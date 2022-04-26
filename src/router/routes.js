@@ -59,10 +59,8 @@ const routes = [
         meta: {
             title: '分销管理',
             icon: 'i_s_agent',
-            roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
-
             {
                 path: 'distributor-list',
                 name: 'DistributorList',
@@ -81,6 +79,7 @@ const routes = [
                     title: '分销商编辑',
                     parent: '/distributor/distributor-list',
                     roles: [LOGIN_TYPE.ADMIN],
+
                 }
             },
             {
@@ -95,12 +94,21 @@ const routes = [
                 }
             },
             {
+                path: 'distributor-detail-sp',
+                name: 'DistributorDetail',
+                component: () => import('@/views/distributor/distributor-detail.vue'),
+                meta: {
+                    title: '分销商详情',
+                    roles: [LOGIN_TYPE.DISTRIBUTOR],
+                }
+            },
+            {
                 path: 'agent-list',
                 name: 'AgentList',
                 component: () => import('@/views/agent/agent-list.vue'),
                 meta: {
                     title: '零售商列表',
-                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN],
                 }
             },
             {
@@ -111,7 +119,7 @@ const routes = [
                     hidden: true,
                     title: '零售商编辑',
                     parent: '/agent/agent-list',
-                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN],
                 }
             },
             {
@@ -122,7 +130,16 @@ const routes = [
                     hidden: true,
                     title: '零售商详情',
                     parent: '/agent/agent-list',
-                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN],
+                }
+            },
+            {
+                path: 'agent-detail-sp',
+                name: 'AgentDetail',
+                component: () => import('@/views/agent/agent-detail.vue'),
+                meta: {
+                    title: '零售商详情',
+                    roles: [LOGIN_TYPE.AGENT],
                 }
             },
             {
@@ -131,6 +148,7 @@ const routes = [
                 component: () => import('@/views/store/store-list.vue'),
                 meta: {
                     title: '门店列表',
+                    roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN, LOGIN_TYPE.AGENT],
                 }
             },
             {
@@ -141,6 +159,7 @@ const routes = [
                     hidden: true,
                     title: '门店编辑',
                     parent: '/store/store-list',
+                    roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN, LOGIN_TYPE.AGENT],
                 }
             },
             {
@@ -151,6 +170,16 @@ const routes = [
                     hidden: true,
                     title: '门店详情',
                     parent: '/store/store-list',
+                    roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN, LOGIN_TYPE.AGENT],
+                }
+            },
+            {
+                path: 'store-detail-sp',
+                name: 'StoreDetail',
+                component: () => import('@/views/store/store-detail.vue'),
+                meta: {
+                    title: '门店详情',
+                    roles: [LOGIN_TYPE.STORE],
                 }
             },
             {
@@ -158,9 +187,9 @@ const routes = [
                 name: 'AdminPurchaseOrderListAll',
                 component: () => import('@/views/purchase/purchase-order-list.vue'),
                 meta: {
-                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     title: '订单列表',
-                    search_type: PURCHASE_SEARCH_TYPE.ALL
+                    search_type: PURCHASE_SEARCH_TYPE.ALL,
+                    roles: [LOGIN_TYPE.ADMIN],
                 }
             },
             {
@@ -168,9 +197,9 @@ const routes = [
                 name: 'AdminPurchaseOrderListChildren',
                 component: () => import('@/views/purchase/purchase-order-list.vue'),
                 meta: {
-                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     title: '供货订单',
-                    search_type: PURCHASE_SEARCH_TYPE.CHILDREN
+                    search_type: PURCHASE_SEARCH_TYPE.CHILDREN,
+                    roles: [LOGIN_TYPE.ADMIN],
                 }
             },
             {
@@ -195,7 +224,7 @@ const routes = [
             },
         ]
     },
-    { // 分销商管理 - 分销商端
+/*    { // 分销商管理 - 分销商端
         path: '/distributor/distributor-detail-sp',
         component: Layout,
         meta: {
@@ -212,70 +241,10 @@ const routes = [
                 component: () => import('@/views/distributor/distributor-detail.vue'),
                 meta: {
                     title: '分销商详情',
-                    roles: [LOGIN_TYPE.DISTRIBUTOR],
-                }
-            },
-            {
-                path: 'agent-list',
-                name: 'AgentList',
-                component: () => import('@/views/agent/agent-list.vue'),
-                meta: {
-                    title: '零售商列表',
-                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-                }
-            },
-            {
-                path: 'agent-edit',
-                name: 'AgentEdit',
-                component: () => import('@/views/agent/agent-edit.vue'),
-                meta: {
-                    hidden: true,
-                    title: '零售商编辑',
-                    parent: '/agent/agent-list',
-                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-                }
-            },
-            {
-                path: 'agent-detail',
-                name: 'AgentDetail',
-                component: () => import('@/views/agent/agent-detail.vue'),
-                meta: {
-                    hidden: true,
-                    title: '零售商详情',
-                    parent: '/agent/agent-list',
-                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-                }
-            },
-            {
-                path: 'store-list',
-                name: 'StoreList',
-                component: () => import('@/views/store/store-list.vue'),
-                meta: {
-                    title: '门店列表',
-                }
-            },
-            {
-                path: 'store-edit',
-                name: 'StoreEdit',
-                component: () => import('@/views/store/store-edit.vue'),
-                meta: {
-                    hidden: true,
-                    title: '门店编辑',
-                    parent: '/store/store-list',
-                }
-            },
-            {
-                path: 'store-detail',
-                name: 'StoreDetail',
-                component: () => import('@/views/store/store-detail.vue'),
-                meta: {
-                    hidden: true,
-                    title: '门店详情',
-                    parent: '/store/store-list',
                 }
             },
         ]
-    },
+    },*/
     { // 采购管理 - 经销商端 && 门店端 && 分销商端
         path: '/purchase',
         component: Layout,
@@ -466,7 +435,7 @@ const routes = [
             title: '零售商管理',
             icon: 'i_s_agent',
             roles: [LOGIN_TYPE.AGENT],
-            // not_sub_menu: true,
+            not_sub_menu: true,
             sp: true,
         },
         children: [
@@ -478,38 +447,10 @@ const routes = [
                     title: '零售商详情',
                     roles: [LOGIN_TYPE.AGENT],
                 }
-            },
-            {
-                path: 'store-list',
-                name: 'StoreList',
-                component: () => import('@/views/store/store-list.vue'),
-                meta: {
-                    title: '门店列表',
-                }
-            },
-            {
-                path: 'store-edit',
-                name: 'StoreEdit',
-                component: () => import('@/views/store/store-edit.vue'),
-                meta: {
-                    hidden: true,
-                    title: '门店编辑',
-                    parent: '/store/store-list',
-                }
-            },
-            {
-                path: 'store-detail',
-                name: 'StoreDetail',
-                component: () => import('@/views/store/store-detail.vue'),
-                meta: {
-                    hidden: true,
-                    title: '门店详情',
-                    parent: '/store/store-list',
-                }
-            },
+            }
         ]
     },
-    { // 门店管理 - 门店端
+   /* { // 门店管理 - 门店端
         path: '/store/store-detail-sp',
         component: Layout,
         meta: {
@@ -530,7 +471,7 @@ const routes = [
                 }
             }
         ]
-    },
+    },*/
     { //商品管理 - 平台端
         path: '/item',
         component: Layout,

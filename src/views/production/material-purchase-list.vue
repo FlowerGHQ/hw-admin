@@ -6,6 +6,15 @@
                 <a-button type="primary" @click="handleMaterialPurchase"><i class="icon i_add"/>新建采购单</a-button>
             </div>
         </div>
+        <div class="tabs-container colorful" v-if="!purchaseMode">
+            <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
+                <a-tab-pane :key="item.key" v-for="item of statusList">
+                    <template #tab>
+                        <div class="tabs-title">{{item.text}}<span :class="item.color">{{item.value}}</span></div>
+                    </template>
+                </a-tab-pane>
+            </a-tabs>
+        </div>
         <div class="search-container">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -115,21 +124,29 @@ export default {
                 begin_time: '',
                 end_time: '',
             },
+            search_type: 0,
             form: {
                 id: '',
                 supplier_id: undefined,
             },
             supplierList: [],
-            purchaseShow: false,
             tableData: [],
             tableColumns: [
                 {title: '订单号', dataIndex: 'sn', key: 'detail'},
                 {title: '状态', dataIndex: 'status'},
-                {title: '创建人', dataIndex: ['apply_user', "account", "name"], key: 'contact'},
+                {title: '制单人', dataIndex: ['apply_user', "account", "name"], key: 'contact'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '审核人', dataIndex: ['audit_user', "account", "name"],key: 'contact'},
                 {title: '审核时间', dataIndex: 'audit_time',key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'}
+            ],
+            statusList: [
+                {text: '全  部', value: '0', color: 'primary',  key: '0'},
+                {text: '待审核', value: '0', color: 'yellow',  key: '100'},
+                {text: '审核通过', value: '0', color: 'orange',  key: '200'},
+                {text: '审核未通过', value: '0', color: 'primary',  key: '300'},
+                {text: '入库完成', value: '0', color: 'green',  key: '400'},
+                {text: '已取消', value: '0', color: 'grey',  key: '-100'},
             ],
         }
     },
@@ -180,26 +197,27 @@ export default {
                 this.supplierList = res.list
             })
         },
-        handlePurchaseShow() {
-            console.log('handleModalShow:')
-            this.purchaseShow = true
-        },
-        handlePurchaseClose() {
-            this.purchaseShow = false
-            this.form = {
-                id: '',
-                supplier_id: undefined,
-            }
-        },
-        handlePurchaseSubmit() {
-            Core.Api.MaterialPurchase.save({
-                supplier_id: this.form.supplier_id
+        getStatusStat() {  // 获取 状态统计 数据
+            this.loading = true;
+            Core.Api.MaterialPurchase.statusList({
+                search_type: this.search_type
             }).then(res => {
-                console.log('handlePurchaseSubmit res', res)
-                this.routerChange('detail')
-                this.handlePurchaseClose()
+                console.log("getStatusStat res:", res)
+                let total = 0
+
+                this.statusList.forEach(statusItem => {
+                    res.status_list.forEach(item => {
+                        if ( statusItem.key == item.status) {
+                            statusItem.value = item.amount
+                        }
+                    })
+                })
+                res.status_list.forEach(item => {
+                    total += item.amount
+                })
+                this.statusList[0].value = total
             }).catch(err => {
-                console.log('handlePurchaseSubmit err', err)
+                console.log('getStatusStat err:', err)
             }).finally(() => {
                 this.loading = false;
             });

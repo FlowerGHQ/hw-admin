@@ -4,17 +4,17 @@
         <div class="title-container">
             <div class="title-area">商品列表</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新增商品</a-button>
                 <a-upload name="file" class="file-uploader"
                     :file-list="upload.fileList" :action="upload.action"
                     :show-upload-list='false'
                     :headers="upload.headers" :data='upload.data'
                     accept=".xlsx,.xls"
                     @change="handleMatterChange">
-                    <a-button type="primary"  class="file-upload-btn">
+                    <a-button type="primary" ghost class="file-upload-btn">
                         <i class="icon i_add"/> 批量导入
                     </a-button>
                 </a-upload>
+                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新增商品</a-button>
             </div>
         </div>
         <div class="search-container">
@@ -370,18 +370,9 @@ export default {
         .title-container {
             .btns-area {
                 .file-upload-btn {
-                    margin-left: 15px;
+                    margin-right: 15px;
                 }
             }
-        }
-    }
-}
-</style>
-<style lang="less">
-#ItemList {
-    .ant-table-row-level-1 {
-        td.ant-table-cell {
-            background: #F7F8FA;
         }
     }
 }

@@ -45,6 +45,10 @@
                     <template v-if="column.key === 'count'">
                         {{ text || 0 }} 件
                     </template>
+                    <template v-if="column.key === 'operation'">
+                        <a-button type='link' v-if="type === 'item'" @click="routerChange('item', record.item) && $auth('material.list')"><i class="icon i_detail"/>详情</a-button>
+                        <a-button type='link' v-if="type === 'material'" @click="routerChange('material', record.material)"><i class="icon i_detail"/>详情</a-button>
+                    </template>
                 </template>
             </a-table>
         </div>
@@ -155,13 +159,14 @@ export default {
     computed: {
         tableColumns() {
             let type = this.type
-            let name = this.type === 'item' ? '商品' : '物料'
+            let name = this.type === 'item'
             let tableColumns = [
                 {title: name + '名称', dataIndex: [type, 'name'], key: 'item'},
                 {title: name + '品号', dataIndex: [type, 'model'], key: 'item'},
                 {title: name + '规格', dataIndex: [type, 'attr_list'], key: 'spec'},
                 {title: name + '编码', dataIndex: [type, 'code'], key: 'item'},
                 {title: '库存数量', dataIndex: 'stock', key: 'count'},
+                { title: '操作', key: 'operation', fixed: 'right'}
             ]
             if (type === 'material' || type === 'customize') {
                 tableColumns = [
@@ -173,7 +178,7 @@ export default {
                     {title: '包装', dataIndex: [type, 'encapsulation'], key: 'item'},
                     {title: '包装尺寸', dataIndex: [type, 'encapsulation_size'], key: 'item'},
                     {title: '毛重', dataIndex: [type, 'gross_weight'], key: 'item'},
-                    {title: '备注', dataIndex: [type, 'remark'], key: 'item'},
+                    { title: '操作', key: 'operation', fixed: 'right'}
                 ]
             }
             return tableColumns
@@ -184,14 +189,29 @@ export default {
     },
     methods: {
         routerChange(type, item = {}) {
+            let routeUrl = ''
             switch(type) {
-                case 'detail': {
-                    let routeUrl = this.$router.resolve({
+                case 'detail':
+                   routeUrl = this.$router.resolve({
                         path: "/production/material-detail",
                         query: { id: item.material.id }
                     })
                     window.open(routeUrl.href, '_self')
-                }; break
+                    break;
+                case 'material':
+                    routeUrl = this.$router.resolve({
+                        path: "/production/material-detail",
+                        query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+                case 'item':
+                    routeUrl = this.$router.resolve({
+                        path: "/item/item-detail",
+                        query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
             }
         },
         

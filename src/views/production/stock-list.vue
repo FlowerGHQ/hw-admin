@@ -3,7 +3,6 @@
         <div class="title-container">
             <div class="title-area">库存总览</div>
         </div>
-
         <div class="search-container">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -18,9 +17,9 @@
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">库存类型:</div>
+                    <div class="key">产品类型:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.target_type" placeholder="请选择库存类型" @change="handleSearch">
+                        <a-select v-model:value="searchForm.target_type" placeholder="请选择产品类型" @change="handleSearch">
                             <a-select-option v-for="(val, key) of targetTypeMap" :key="key" :value="Number(key)">{{
                                     val
                                 }}
@@ -57,7 +56,7 @@
                     </template>
                     <template v-if="record.target_type === 1 && record.item">
                         <template v-if="column.type === 'name'">
-                            <a-tooltip placement="top" :title='text'>
+                            <a-tooltip placement="top" :title='record.item.name'>
                                 <a-button type="link" @click="routerChange('item', record.item)">
                                     {{ record.item.name || '-' }}
                                 </a-button>
@@ -75,7 +74,11 @@
                     </template>
                     <template v-if="record.target_type === 2 && record.material">
                         <template v-if="column.type === 'name'">
-                            {{ record.material.name || '-' }}
+                            <a-tooltip placement="top" :title='record.material.name'>
+                                <a-button type="link" @click="routerChange('material', record)">
+                                    {{ record.material.name || '-' }}
+                                </a-button>
+                            </a-tooltip>
                         </template>
                         <template v-if="column.type === 'target'">
                             {{ record.material[column.key] || '-' }}
@@ -84,8 +87,16 @@
                             {{ record.material.category ? record.material.category.name || '-' : '-' }}
                         </template>
                         <template v-if="column.type === 'spec'">
-                            {{ record.material.spec || '-' }}
+                            <a-tooltip placement="top" :title='record.material.spec'>
+                                <div class="ell" style="max-width: 100px">
+                                    {{ record.material.spec || '-' }}
+                                </div>
+                            </a-tooltip>
                         </template>
+                    </template>
+                    <template v-if="column.key === 'operation'">
+                        <a-button type='link' v-if="record.target_type === 1" @click="routerChange('item', record.item)"><i class="icon i_detail"/>详情</a-button>
+                        <a-button type='link' v-else @click="routerChange('material', record.material)"><i class="icon i_detail"/>详情</a-button>
                     </template>
                 </template>
             </a-table>
@@ -148,6 +159,7 @@ export default {
                 {title: '生产中数量', dataIndex: 'production_count', key: 'count'},
                 {title: '分类', type: 'category'},
                 {title: '规格', type: 'spec'},
+                {title: '操作', key: 'operation', fixed: 'right'},
             ]
             return columns
         },
@@ -171,6 +183,13 @@ export default {
                     routeUrl = this.$router.resolve({
                         path: "/warehouse/warehouse-detail",
                         query: {id: item.warehouse_id}
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+                case 'material':
+                    routeUrl = this.$router.resolve({
+                        path: "/production/material-detail",
+                        query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
