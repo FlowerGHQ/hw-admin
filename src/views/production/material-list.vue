@@ -4,17 +4,17 @@
             <div class="title-container">
                 <div class="title-area">物料列表</div>
                 <div class="btns-area" v-if="$auth('material.save')">
-                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建物料</a-button>
                     <a-upload name="file" class="file-uploader"
                               :file-list="upload.fileList" :action="upload.action"
                               :show-upload-list='false'
                               :headers="upload.headers" :data='upload.data'
                               accept=".xlsx,.xls"
                               @change="handleMatterChange">
-                        <a-button type="primary"  class="file-upload-btn" v-if="$auth('material.save')">
+                        <a-button type="primary" ghost class="file-upload-btn" v-if="$auth('material.save')">
                             <i class="icon i_add"/> 批量导入
                         </a-button>
                     </a-upload>
+                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建物料</a-button>
                 </div>
             </div>
             <div class="search-container">
@@ -261,7 +261,7 @@ export default {
         .title-container {
             .btns-area {
                .file-uploader {
-                   margin-left: 15px;
+                   margin-right: 15px;
                }
             }
         }
