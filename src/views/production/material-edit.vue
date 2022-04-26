@@ -40,6 +40,21 @@
                         <a-input v-model:value="form.unit" placeholder="请输入单位"/>
                     </div>
                 </div>
+                <div class="form-item required">
+                    <div class="key">物料实物图</div>
+                    <div class="value">
+                        <a-upload name="file" class="image-uploader"
+                                  list-type="picture-card" accept='image/*'
+                                  :file-list="upload.coverList" :action="upload.action"
+                                  :headers="upload.headers" :data='upload.data'
+                                  :before-upload="handleImgCheck"
+                                  @change="handleCoverChange">
+                            <div class="image-inner" v-if="upload.coverList.length < 1">
+                                <i class="icon i_upload"/>
+                            </div>
+                        </a-upload>
+                    </div>
+                </div>
                 <div class="form-item">
                     <div class="key">物料包装</div>
                     <div class="value">
@@ -103,6 +118,19 @@ export default {
             supplierList: [],
             item_category: {},
             configTemp: [],
+
+            upload: { // 上传图片
+                action: Core.Const.NET.FILE_UPLOAD_END_POINT,
+                coverList: [],
+                detailList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'img',
+                },
+            },
         };
     },
     watch: {},
@@ -140,7 +168,15 @@ export default {
                 console.log('Material.detail res', res)
                 this.form = res
                 this.gross_weight = Core.Util.countFilter(res.gross_weight)
-
+                if (this.form.image) {
+                    this.upload.coverList = [{
+                        uid: 1,
+                        name: this.form.name,
+                        url: Core.Const.NET.FILE_URL_PREFIX + this.form.image,
+                        short_path: this.form.image,
+                        status: 'done',
+                    }]
+                }
             }).finally(() => {
                 this.loading = false
             })
@@ -153,6 +189,7 @@ export default {
         // 保存、新建 物料
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
+            form.image = this.upload.coverList[0].short_path || this.upload.coverList[0].response.data.filename
             console.log('form:', form)
             if (typeof this.checkFormInput(form) === 'function') { return }
             console.log('handleSubmit form:', form)
@@ -183,6 +220,10 @@ export default {
             if (!form.unit) {
                 return this.$message.warning('请输入单位')
             }
+            if (!form.image) {
+                return this.$message.warning('请上传图片')
+            }
+
           /*  if (!form.encapsulation) {
                 return this.$message.warning('请输入物料包装')
             }*/
@@ -192,6 +233,30 @@ export default {
         // 物料分类选择
         handleCategorySelect(val, node) {
             this.form.category_id = val
+        },
+
+        // 校验图片
+        handleImgCheck(file) {
+            const isCanUpType = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'].includes(file.type)
+            if (!isCanUpType) {
+                this.$message.warning('文件格式不正确');
+            }
+            const isLt10M = (file.size / 1024 / 1024) < 10;
+            if (!isLt10M) {
+                this.$message.warning('请上传小于10MB的图片');
+            }
+            return isCanUpType && isLt10M;
+        },
+        // 上传图片
+        handleCoverChange({ file, fileList }) {
+            console.log("handleCoverChange status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                if (file.response && file.response.code < 0) {
+                    return this.$message.error(file.response.message)
+                }
+            }
+            this.upload.coverList = fileList
+            console.log('coverList', file)
         },
     }
 };
