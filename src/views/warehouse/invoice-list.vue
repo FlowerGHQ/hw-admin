@@ -110,9 +110,9 @@
                                           v-if="$auth('invoice.delete')"><i class="icon i_close_c"/>取消
                                 </a-button>
                             </template>
-                            <AuditMaterialPurchase v-if="record.status === STATUS.AUDIT_PASS" btnType="link" :status="STATUS.WAIT_AUDIT"
+                            <AuditMaterialPurchase v-if="record.status === STATUS.WAIT_AUDIT" btnType="link" :status="STATUS.WAIT_AUDIT"
                                                    :api-list="['Invoice', 'audit']" :invoiceId="record.id" @submit="getTableData"><i class="icon i_audit"/>仓库审核</AuditMaterialPurchase>
-                            <AuditMaterialPurchase v-if="record.status === STATUS.FINANCE_PASS && record.type === TYPE.OUT" btnType="link" :api-list="['Invoice', 'audit']" :invoiceId="record.id"
+                            <AuditMaterialPurchase v-if="record.status === STATUS.AUDIT_PASS && record.type === TYPE.OUT" btnType="link" :api-list="['Invoice', 'audit']" :invoiceId="record.id"
                                                    :status="STATUS.AUDIT_PASS" @submit="getTableData" ><i class="icon i_audit"/>财务审核</AuditMaterialPurchase>
                         </template>
                     </template>
