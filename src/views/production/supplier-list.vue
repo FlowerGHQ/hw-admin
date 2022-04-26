@@ -3,17 +3,17 @@
         <div class="title-container">
             <div class="title-area">供应商列表</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('supplier.save')"><i class="icon i_add"/>新建供应商</a-button>
                 <a-upload name="file" class="file-uploader"
                           :file-list="upload.fileList" :action="upload.action"
                           :show-upload-list='false'
                           :headers="upload.headers" :data='upload.data'
                           accept=".xlsx,.xls"
                           @change="handleFileUpload">
-                    <a-button type="primary"  class="panel-btn">
+                    <a-button type="primary" ghost class="panel-btn">
                         <i class="icon i_add"/> 批量导入
                     </a-button>
                 </a-upload>
+                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('supplier.save')"><i class="icon i_add"/>新建供应商</a-button>
             </div>
         </div>
         <div class="search-container">
@@ -24,15 +24,30 @@
                         <a-input placeholder="请输入供应商名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
-<!--                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">付款方式:</div>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">供应商类型:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.payment_term" placeholder="请选择付款方式" @change="handleSearch">
-                            <a-select-option v-for="(val,key) in paymentList" :key="key" :value="val">{{ val }}
-                            </a-select-option>
+                        <a-select v-model:value="searchForm.type" placeholder="请选择供应商类型" @change='handleSearch'>
+                            <a-select-option v-for="(val,key) of typeList" :key="key" :value="key">{{ val }}</a-select-option>
                         </a-select>
                     </div>
-                </a-col>-->
+                </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">采购状态:</div>
+                    <div class="value">
+                        <a-select v-model:value="searchForm.flag_purchase" placeholder="请选择供应商采购状态" @change='handleSearch'>
+                            <a-select-option v-for="(val,key) of purchaseStatus" :key="key" :value="key">{{ val }}</a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">记账状态:</div>
+                    <div class="value">
+                        <a-select v-model:value="searchForm.flag_purchase" placeholder="请选择供应商记账状态" @change='handleSearch'>
+                            <a-select-option v-for="(val,key) of settlementStatus" :key="key" :value="key">{{ val }}</a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">创建时间:</div>
                     <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
@@ -111,6 +126,7 @@ import TimeSearch from '@/components/common/TimeSearch.vue'
 import EditBomModel from './components/EditBomModel.vue'
 
 const SUPPLIER_TYPE = Core.Const.SUPPLIER
+// const TYPE = SUPPLIER_TYPE.SUPPLIER_TYPE_MAP
 
 export default {
     components: {
@@ -125,16 +141,18 @@ export default {
             currPage: 1,
             pageSize: 20,
             total: 0,
+            typeList: SUPPLIER_TYPE.SUPPLIER_TYPE_MAP,
+            purchaseStatus: SUPPLIER_TYPE.STATUS_PURCHASE_MAP,
+            settlementStatus: SUPPLIER_TYPE.STATUS_PURCHASE_MAP,
             searchForm: {
                 name: '',
                 begin_time: '',
                 end_time: '',
-                type: '',
-                flag_purchase: '',
-                flag_settlement: '',
+                type: undefined,
+                flag_purchase: undefined,
+                flag_settlement: undefined,
                 payment_term: undefined,
             },
-            paymentList: Core.Const.SUPPLIER.PAYMENT_TYPE_MAP,
             tableData: [],
             // 上传
             upload: {
@@ -148,26 +166,20 @@ export default {
                     type: 'xlsx',
                 },
             },
-            filteredInfo: null,
         }
     },
     watch: {},
     computed: {
         tableColumns() {
-            let { filteredInfo } = this;
-            filteredInfo = filteredInfo || {};
             let columns = [
                 { title: '供应商名称', dataIndex: 'name', key: 'detail' },
                 { title: '简称', dataIndex: 'short_name', key: 'contact' },
-                { title: '供应商类型', dataIndex: 'type',
-                    filters: SUPPLIER_TYPE.SUPPLIER_TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.type || null },
+                { title: '供应商类型', dataIndex: 'type',},
                 { title: '联系人', dataIndex: 'contact_name',key: 'contact'},
                 { title: '联系人电话', dataIndex: 'contact_phone',key: 'contact' },
                 { title: '联系人邮箱', dataIndex: 'contact_email',key: 'contact' },
-                { title: '采购状态', dataIndex: 'flag_purchase',
-                    filters: SUPPLIER_TYPE.STATUS_PURCHASE_LIST, filterMultiple: false, filteredValue: filteredInfo.flag_purchase || null},
-                { title: '结算状态', dataIndex: 'flag_settlement',
-                    filters: SUPPLIER_TYPE.STATUS_SETTLEMENT_LIST, filterMultiple: false, filteredValue: filteredInfo.flag_settlement || null},
+                { title: '采购状态', dataIndex: 'flag_purchase'},
+                { title: '结算状态', dataIndex: 'flag_settlement'},
                 { title: '付款期限及方式', dataIndex: 'payment_term' },
                 { title: '供应商地址', dataIndex: 'address' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
@@ -208,14 +220,6 @@ export default {
             this.pageSize = size
             this.getTableData()
         },
-        handleTableChange(page, filters) { // 表格搜索
-            console.log('handleTableChange filters:', filters)
-            this.filteredInfo = filters;
-            for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : ''
-            }
-            this.pageChange(1);
-        },
         handleSearch() {  // 搜索
             this.pageChange(1);
         },
@@ -228,7 +232,6 @@ export default {
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
             this.$refs.TimeSearch.handleReset()
-            this.filteredInfo = null
             this.pageChange(1);
         },
         getTableData() {
@@ -286,7 +289,7 @@ export default {
     .title-container {
         .btns-area {
             .panel-btn {
-                margin-left: 10px;
+                margin-right: 15px;
             }
         }
     }

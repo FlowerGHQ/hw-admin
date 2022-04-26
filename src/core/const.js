@@ -30,7 +30,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.0.0.226:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.7:8083' // 但
-        URL_POINT = 'http://10.0.0.181:8083'
+        URL_POINT = 'http://10.0.0.181:8883'
 
 
         // URL_POINT = 'http://10.0.0.134:8083' // 谭洋波
@@ -907,11 +907,6 @@ let Const = {
             '20': '一次性',
             '30': '淘汰',
         },
-        SUPPLIER_TYPE_LIST: [
-            { text: '合格', value: 10 },
-            { text: '一次性', value: 20 },
-            { text: '淘汰', value: 30 },
-        ],
         SUPPLIER_TYPE_COLOR_MAP: {
             '10': 'green',
             '20': 'orange',
@@ -921,10 +916,6 @@ let Const = {
             ON_PURCHASE: 1, //正常采购
             OFF_PURCHASE: 2
         },
-        STATUS_PURCHASE_LIST: [
-            { text: '采购正常', value: 1 },
-            { text: '采购冻结', value: 2 },
-        ],
         STATUS_PURCHASE_MAP: {
             '1': '采购正常',
             '2': '采购冻结',
@@ -937,10 +928,6 @@ let Const = {
             ON_SETTLEMENT: 1, //正常结算
             OFF_SETTLEMENT: 2
         },
-        STATUS_SETTLEMENT_LIST: [
-            { text: '结算正常', value: 1 },
-            { text: '结算冻结', value: 2 },
-        ],
         STATUS_SETTLEMENT_MAP: {
             '1': '结算正常',
             '2': '结算冻结',

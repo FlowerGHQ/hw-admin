@@ -15,15 +15,6 @@
                         <a-input placeholder="请输入仓库名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">仓库名称:</div>
-                    <div class="value">
-                        <a-select v-model:value="searchForm.type" placeholder="请选择仓库" @change="handleSearch">
-                            <a-select-option v-for="(val,key) of typeList" :key="val" :value="key">{{ val }}
-                            </a-select-option>
-                        </a-select>
-                    </div>
-                </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">创建时间:</div>
                     <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>

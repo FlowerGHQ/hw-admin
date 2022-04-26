@@ -25,9 +25,9 @@
                 </div>
             </a-col>
             <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                <div class="key">对应商品编码:</div>
+                <div class="key">商品编码:</div>
                 <div class="value">
-                    <a-input placeholder="请输入对应商品编码" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
+                    <a-input placeholder="请输入BOM对应商品编码" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
                 </div>
             </a-col>
             <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">

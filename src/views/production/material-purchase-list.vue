@@ -6,7 +6,7 @@
                 <a-button type="primary" @click="handleMaterialPurchase"><i class="icon i_add"/>新建采购单</a-button>
             </div>
         </div>
-        <div class="tabs-container colorful" v-if="!purchaseMode">
+        <div class="tabs-container colorful">
             <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
                 <a-tab-pane :key="item.key" v-for="item of statusList">
                     <template #tab>
@@ -123,8 +123,8 @@ export default {
                 sn: '',
                 begin_time: '',
                 end_time: '',
+                status: '',
             },
-            search_type: 0,
             form: {
                 id: '',
                 supplier_id: undefined,
@@ -141,20 +141,24 @@ export default {
                 {title: '操作', key: 'operation', fixed: 'right'}
             ],
             statusList: [
-                {text: '全  部', value: '0', color: 'primary',  key: '0'},
+                {text: '全  部', value: '0', color: 'primary',  key: '1'},
+                {text: '待提交', value: '0', color: 'orange',  key: '0'},
                 {text: '待审核', value: '0', color: 'yellow',  key: '100'},
-                {text: '审核通过', value: '0', color: 'orange',  key: '200'},
-                {text: '审核未通过', value: '0', color: 'primary',  key: '300'},
-                {text: '入库完成', value: '0', color: 'green',  key: '400'},
+                {text: '审核通过', value: '0', color: 'blue',  key: '200'},
+                {text: '审核未通过', value: '0', color: 'red',  key: '-200'},
+                // {text: '入库完成', value: '0', color: 'green',  key: '400'},
                 {text: '已取消', value: '0', color: 'grey',  key: '-100'},
             ],
         }
     },
-    watch: {},
+    watch: {
+
+    },
     computed: {},
     mounted() {
         this.getTableData()
         this.getSupplierList()
+        this.getStatusStat()
     },
     methods: {
         routerChange(type, item = {}) {
@@ -172,11 +176,13 @@ export default {
         pageChange(curr) {  // 页码改变
             this.currPage = curr
             this.getTableData()
+            this.getStatusStat()
         },
         pageSizeChange(current, size) {  // 页码尺寸改变
             console.log('pageSizeChange size:', size)
             this.pageSize = size
             this.getTableData()
+            this.getStatusStat()
         },
         handleSearch() {  // 搜索
             this.pageChange(1);
@@ -200,24 +206,24 @@ export default {
         getStatusStat() {  // 获取 状态统计 数据
             this.loading = true;
             Core.Api.MaterialPurchase.statusList({
-                search_type: this.search_type
+                ...this.searchForm,
             }).then(res => {
                 console.log("getStatusStat res:", res)
                 let total = 0
-
+                this.statusList.forEach(statusItem => {
+                    statusItem.value = 0
+                })
                 this.statusList.forEach(statusItem => {
                     res.status_list.forEach(item => {
-                        if ( statusItem.key == item.status) {
+                        if (statusItem.key == item.status) {
                             statusItem.value = item.amount
+                            total += item.amount
                         }
                     })
                 })
-                res.status_list.forEach(item => {
-                    total += item.amount
-                })
                 this.statusList[0].value = total
             }).catch(err => {
-                console.log('getStatusStat err:', err)
+                console.log('getStatusList err:', err)
             }).finally(() => {
                 this.loading = false;
             });
@@ -231,6 +237,7 @@ export default {
                 console.log('getTableData res', res)
                 this.tableData = res.list
                 this.total = res.count
+                this.getStatusStat()
             }).catch(err => {
                 console.log('getTableData err', err)
             })
@@ -247,6 +254,7 @@ export default {
                     Core.Api.MaterialPurchase.cancel({id}).then(() => {
                         _this.$message.success('取消成功');
                         _this.getTableData();
+                        this.getStatusStat()
                     }).catch(err => {
                         console.log("handleCancel err", err);
                     })
@@ -257,6 +265,7 @@ export default {
             Core.Api.MaterialPurchase.save().then(() => {
                 this.$message.success('创建成功')
                 this.getTableData();
+                this.getStatusStat()
                 // this.routerChange('detail', res.detail);
             }).catch(err => {
                 console.log("handleMaterialPurchase err", err);

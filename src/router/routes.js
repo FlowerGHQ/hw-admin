@@ -95,7 +95,7 @@ const routes = [
             },
             {
                 path: 'distributor-detail-sp',
-                name: 'DistributorDetail',
+                name: 'DistributorDetailSp',
                 component: () => import('@/views/distributor/distributor-detail.vue'),
                 meta: {
                     title: '分销商详情',
@@ -118,7 +118,7 @@ const routes = [
                 meta: {
                     hidden: true,
                     title: '零售商编辑',
-                    parent: '/agent/agent-list',
+                    parent: '/distributor/agent-list',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN],
                 }
             },
@@ -129,13 +129,13 @@ const routes = [
                 meta: {
                     hidden: true,
                     title: '零售商详情',
-                    parent: '/agent/agent-list',
+                    parent: '/distributor/agent-list',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN],
                 }
             },
             {
                 path: 'agent-detail-sp',
-                name: 'AgentDetail',
+                name: 'AgentDetailSp',
                 component: () => import('@/views/agent/agent-detail.vue'),
                 meta: {
                     title: '零售商详情',
@@ -158,7 +158,7 @@ const routes = [
                 meta: {
                     hidden: true,
                     title: '门店编辑',
-                    parent: '/store/store-list',
+                    parent: '/distributor/store-list',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN, LOGIN_TYPE.AGENT],
                 }
             },
@@ -169,13 +169,13 @@ const routes = [
                 meta: {
                     hidden: true,
                     title: '门店详情',
-                    parent: '/store/store-list',
+                    parent: '/distributor/store-list',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN, LOGIN_TYPE.AGENT],
                 }
             },
             {
                 path: 'store-detail-sp',
-                name: 'StoreDetail',
+                name: 'StoreDetailSp',
                 component: () => import('@/views/store/store-detail.vue'),
                 meta: {
                     title: '门店详情',
