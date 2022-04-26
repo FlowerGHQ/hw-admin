@@ -7,17 +7,18 @@
                 <a-button type="primary" @click="handleSubmit()" v-if="$auth('invoice.save')"><i class="icon i_confirm"/>提交</a-button>
                 <a-button type="danger" ghost @click="handleCancel()" v-if="$auth('invoice.delete')"> <i class="icon i_close_c"/>取消</a-button>
             </template>
-            <template v-if="detail.status === STATUS.CLOSE && detail.type === TYPE.OUT && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.export')">
-                <a-button type="primary" @click="handleExportOut"><i class="icon i_download"/>导出</a-button>
-            </template>
             <template v-if="detail.status === STATUS.CLOSE && detail.type === TYPE.IN && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.export')">
                 <a-button type="primary" @click="handleExportIn"><i class="icon i_download"/>导出</a-button>
             </template>
             <AuditMaterialPurchase v-if="detail.status === STATUS.WAIT_AUDIT" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :invoiceId="id"
                                    :status="STATUS.WAIT_AUDIT" @submit="getInvoiceDetail" ><i class="icon i_audit"/>仓库审核</AuditMaterialPurchase>
-            <AuditMaterialPurchase v-if="detail.status === STATUS.FINANCE_PASS && detail.type === TYPE.OUT" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :invoiceId="id"
-                                  :status="STATUS.AUDIT_PASS" @submit="getInvoiceDetail" ><i class="icon i_audit"/>财务审核</AuditMaterialPurchase>
-            <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}完成</a-button>
+            <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && detail.type === TYPE.IN && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}完成</a-button>
+            <template v-if="detail.type === TYPE.OUT">
+                <AuditMaterialPurchase v-if="detail.status === STATUS.AUDIT_PASS" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :invoiceId="id"
+                                       :status="STATUS.AUDIT_PASS" @submit="getInvoiceDetail" ><i class="icon i_audit"/>财务审核</AuditMaterialPurchase>
+                <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.FINANCE_PASS && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}完成</a-button>
+                <a-button type="primary" @click="handleExportOut" v-if="detail.status === STATUS.CLOSE && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.export')"><i class="icon i_download"/>导出</a-button>
+            </template>
         </div>
     </div>
     <div class="gray-panel info">
@@ -77,7 +78,7 @@
                 <div class="key">审核时间</div>
                 <div class="value">{{ $Util.timeFilter(detail.audit_time) || '-' }}</div>
             </div>
-            <div class="info-item">
+            <div class="info-item" v-if="detail.type === TYPE.OUT">
                 <div class="key">财务审核时间</div>
                 <div class="value">{{ $Util.timeFilter(detail.finance_audit_time) || '-' }}</div>
             </div>
