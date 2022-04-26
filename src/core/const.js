@@ -609,6 +609,7 @@ let Const = {
             INIT: 0, //初始化
             WAIT_AUDIT: 10, //待审核
             AUDIT_PASS: 20, //审核通过
+            FINANCE_PASS: 30, //财务审核
             CLOSE: 40, //已完成
             AUDIT_REFUSE: -10,//审核失败
             CANCEL: -20, // 取消
@@ -616,7 +617,8 @@ let Const = {
         STATUS_MAP: {
             '0': '待提交',
             '10': '待审核',
-            '20': '审核通过',
+            '20': '仓库审核通过',
+            '30': '财务审核通过',
             '40': '已完成',
             '-10': '审核未通过',
             '-20': '已取消'
@@ -625,6 +627,7 @@ let Const = {
             '0': 'orange',
             '10': 'yellow',
             '20': 'blue',
+            '30': 'purple',
             '40': 'green',
             '-10': 'red',
             '-20': 'grey'
@@ -976,14 +979,14 @@ let Const = {
             '-200': 'red',
             '-100': 'grey'
         },
-        STATUS_LIST: [
+/*        STATUS_LIST: [
             { text: '待提交', value: 0 },
             { text: '待审核', value: 100 },
             { text: '审核通过', value: 200 },
             { text: '已入库', value: 500 },
             { text: '审核未通过', value: -200 },
             { text: '已取消', value: -100 },
-        ],
+        ],*/
     }
 };
 

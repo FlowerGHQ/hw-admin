@@ -15,7 +15,7 @@
             </template>
             <AuditMaterialPurchase v-if="detail.status === STATUS.WAIT_AUDIT" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :invoiceId="id"
                                    :status="STATUS.WAIT_AUDIT" @submit="getInvoiceDetail" ><i class="icon i_audit"/>仓库审核</AuditMaterialPurchase>
-            <AuditMaterialPurchase v-if="detail.status === STATUS.AUDIT_PASS" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :invoiceId="id"
+            <AuditMaterialPurchase v-if="detail.status === STATUS.FINANCE_PASS && detail.type === TYPE.OUT" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :invoiceId="id"
                                   :status="STATUS.AUDIT_PASS" @submit="getInvoiceDetail" ><i class="icon i_audit"/>财务审核</AuditMaterialPurchase>
             <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}完成</a-button>
         </div>

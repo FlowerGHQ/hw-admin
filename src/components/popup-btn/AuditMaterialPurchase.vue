@@ -32,7 +32,7 @@
             <div class="form-item required">
                 <div class="key">审核结果:</div>
                 <a-radio-group v-model:value="form.status">
-                    <a-radio :value="STATUS.AUDIT_PASS">通过</a-radio>
+                    <a-radio :value="STATUS.FINANCE_PASS">通过</a-radio>
                     <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio>
                 </a-radio-group>
             </div>

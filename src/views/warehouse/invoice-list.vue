@@ -110,10 +110,9 @@
                                           v-if="$auth('invoice.delete')"><i class="icon i_close_c"/>取消
                                 </a-button>
                             </template>
-                            <!--                                <AuditHandle v-if="record.status === STATUS.WAIT_AUDIT && $auth('invoice.audit')" btnType="link" :api-list="['Invoice', 'audit']" :id="record.id"> <i class="icon i_audit"/>审核</AuditHandle>-->
-                            <AuditMaterialPurchase v-if="record.status === STATUS.WAIT_AUDIT" btnType="link" :status="STATUS.WAIT_AUDIT"
+                            <AuditMaterialPurchase v-if="record.status === STATUS.AUDIT_PASS" btnType="link" :status="STATUS.WAIT_AUDIT"
                                                    :api-list="['Invoice', 'audit']" :invoiceId="record.id" @submit="getTableData"><i class="icon i_audit"/>仓库审核</AuditMaterialPurchase>
-                            <AuditMaterialPurchase v-if="record.status === STATUS.AUDIT_PASS" btnType="link" :api-list="['Invoice', 'audit']" :invoiceId="record.id"
+                            <AuditMaterialPurchase v-if="record.status === STATUS.FINANCE_PASS && record.type === TYPE.OUT" btnType="link" :api-list="['Invoice', 'audit']" :invoiceId="record.id"
                                                    :status="STATUS.AUDIT_PASS" @submit="getTableData" ><i class="icon i_audit"/>财务审核</AuditMaterialPurchase>
                         </template>
                     </template>
@@ -144,6 +143,7 @@ import TimeSearch from '@/components/common/TimeSearch.vue'
 import AuditMaterialPurchase from '../../components/popup-btn/AuditMaterialPurchase.vue'
 
 const STATUS = Core.Const.STOCK_RECORD.STATUS
+const TYPE = Core.Const.STOCK_RECORD.TYPE
 export default {
     name: 'InvoiceList',
     components: {
@@ -154,6 +154,7 @@ export default {
     data() {
         return {
             STATUS,
+            TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
