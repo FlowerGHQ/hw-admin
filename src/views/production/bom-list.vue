@@ -24,6 +24,12 @@
                     <a-input placeholder="请输入Bom名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                 </div>
             </a-col>
+            <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                <div class="key">对应商品编码:</div>
+                <div class="value">
+                    <a-input placeholder="请输入对应商品编码" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
+                </div>
+            </a-col>
             <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                 <div class="key">创建时间:</div>
                 <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
@@ -100,13 +106,14 @@ export default {
             total: 0,
             searchForm: {
                 name: '',
+                code: '',
                 begin_time: '',
                 end_time: '',
             },
 
             tableData: [],
             tableColumns: [
-                { title: '名称', dataIndex: 'name', key: 'detail' },
+                { title: 'BOM名称', dataIndex: 'name', key: 'detail' },
                 { title: '对应商品名', dataIndex: ['item', 'name'], key: 'item-detail' },
                 { title: '对应商品编号', dataIndex: ['item', 'code'], key: 'item' },
                 // { title: '版本号', dataIndex: 'version_num', key: 'item' },
