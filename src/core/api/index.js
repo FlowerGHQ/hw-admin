@@ -196,11 +196,16 @@ const apiList = {
         delete: ['PostJson', 'attr-def/delete'],
         listBySet: ['PostJson', 'attr-def/list-by-set-id'],
     },
-    SalesArea: { // 车辆销售区域
+    SalesArea: { // 销售区域
         list: ['PostJson', 'sales-area/list'],
         save: ['PostJson', 'sales-area/save'],
         delete: ['PostJson', 'sales-area/delete'],
         detail: ['PostJson', 'sales-area/detail'],
+    },
+    SalesAreaItem: { //销售区域商品管理
+        list: ['PostJson', 'item-sales-area/list'],
+        bind: ['PostJson', 'item-sales-area/sales-ares-bind'],
+        delete: ['PostJson', 'item-sales-area/delete'],
     },
     ShopCart: { // 购物车
         save: ['PostJson', 'shopping-cart/save'],

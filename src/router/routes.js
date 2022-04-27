@@ -212,6 +212,17 @@ const routes = [
                 }
             },
             {
+                path: 'sales-area-detail',
+                name: 'SalesAreaDetail',
+                component: () => import('@/views/item//sales-area-detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '销售区域详情',
+                    parent: '/sales-area-list',
+                    // auth: ['warehouse.list'],
+                }
+            },
+            {
                 path: 'sales-area-edit',
                 name: 'SalesEdit',
                 component: () => import('@/views/item/sales-area-edit.vue'),

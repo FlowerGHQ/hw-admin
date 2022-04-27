@@ -105,6 +105,13 @@ export default {
             console.log(item)
             let routeUrl = ''
             switch (type) {
+                case 'detail':    // 详情
+                    routeUrl = this.$router.resolve({
+                        path: "/distributor/sales-area-detail",
+                        query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/distributor/sales-area-edit",
