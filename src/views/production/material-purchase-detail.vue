@@ -13,7 +13,7 @@
         </div>
         <div class="gray-panel info">
             <div class="panel-title">
-                <div class="left">采购单编号：{{ detail.sn }}</div>
+                <div class="left"><span>采购单编号：{{ detail.sn }}</span></div>
                 <div class="right">
                     <div class="status">
                         <i class="icon i_point" :class="$Util.materialPurchaseStatusFilter(detail.status,'color')"/>
@@ -213,8 +213,8 @@ export default {
         disabledChecked() {
             let list = []
             this.tableData.forEach(item => {
-                if (item.item && item.item.id) {
-                    list.push(item.item.id)
+                if (item.material && item.material.id) {
+                    list.push(item.material.id)
                 }
             })
             return list
@@ -513,13 +513,20 @@ export default {
 </script>
 
 <style lang="less">
-.ant-modal-root {
-    .ant-modal .ant-modal-content .ant-modal-body span {
-        white-space: nowrap;
+#MaterialPurchaseDetail {
 
+    .gray-panel.info {
+        .right {
+            .fcc();
+            font-size: 12px;
 
-        .ant-radio {
-            margin-bottom: 5px;
+            .status {
+                .fcc();
+
+                .i_point {
+                    margin-right: 6px;
+                }
+            }
         }
     }
 }

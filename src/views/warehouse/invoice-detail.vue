@@ -427,12 +427,16 @@ export default {
         },
         disabledChecked() {
             let list = []
+            console.log('disabledChecked.list',list)
             this.tableData.forEach(item => {
                 if (item.item && item.item.id) {
                     list.push(item.item.id)
+                } else if (item.material && item.material.id) {
+                    list.push(item.material.id)
                 }
             })
             return list
+
         },
         itemTableColumns() {
             // 无实例商品的 出入库
