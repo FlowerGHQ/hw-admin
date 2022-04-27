@@ -123,7 +123,7 @@ export default {
                 sn: '',
                 begin_time: '',
                 end_time: '',
-                status: '',
+                status: 1,
             },
             form: {
                 id: '',

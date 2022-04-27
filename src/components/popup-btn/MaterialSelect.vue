@@ -114,7 +114,7 @@ export default {
                 {title: '物料编码', dataIndex: 'code', key: 'item'},
                 {title: '物料规格', dataIndex: 'spec', key: 'item'},
                 {title: '物料包装', dataIndex: 'encapsulation', key: 'item'},
-                {title: '供应商编码', dataIndex: 'supplier_code', key: 'item'},
+                // {title: '供应商编码', dataIndex: 'supplier_code', key: 'item'},
             ]
             if (this.warehouseId !== 0) {
                 tableColumns.splice(3, 0, {title: '仓库库存', dataIndex: 'stock', key: 'count'})

@@ -3,7 +3,7 @@
     <div class="title-container">
         <div class="title-area">BOM列表</div>
         <div class="btns-area">
-           <EditBomModel @submit='getTableData' v-if="$auth('bom.save')"/>
+            <EditBomModel @submit='getTableData' v-if="$auth('bom.save')"><i class="icon i_add"/>新增BOM表</EditBomModel>
 <!--            <a-upload name="file" class="file-uploader"
                 :file-list="upload.fileList" :action="upload.action"
                 :show-upload-list='false'

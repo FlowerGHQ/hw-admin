@@ -3,22 +3,22 @@
     <div class="panel-title">
         <div class="title">BOM表明细</div>
         <div class="btn-area" v-if="!addMode && !editShow && $auth('bom.save')">
-            <ItemSelect @select="(ids,items) => handleAddShow(TARGET_TYPE.ITEM,ids,items)" btn-class="panel-btn" :disabled-checked='checkedIds.items'>
-                添加商品
-            </ItemSelect>
-            <MaterialSelect @select="(ids,items) => handleAddShow(TARGET_TYPE.MATERIAL,ids,items)" btn-class="panel-btn" :disabled-checked='checkedIds.materials'>
-                添加物料
-            </MaterialSelect>
 <!--            <a-upload name="file" class="file-uploader"
                       :file-list="upload.fileList" :action="upload.action"
                       :show-upload-list='false'
                       :headers="upload.headers" :data='upload.data'
                       accept=".xlsx,.xls"
                       @change="handleFileUpload">
-                <a-button type="primary"  class="panel-btn">
+                <a-button type="primary" ghost class="panel-btn">
                     <i class="icon i_add"/> 批量导入
                 </a-button>
             </a-upload>-->
+            <ItemSelect @select="(ids,items) => handleAddShow(TARGET_TYPE.ITEM,ids,items)" btn-class="panel-btn" :disabled-checked='checkedIds.items'>
+                添加商品
+            </ItemSelect>
+            <MaterialSelect @select="(ids,items) => handleAddShow(TARGET_TYPE.MATERIAL,ids,items)" btn-class="panel-btn" :disabled-checked='checkedIds.materials'>
+                添加物料
+            </MaterialSelect>
         </div>
     </div>
     <div class="panel-content">
@@ -158,7 +158,7 @@ export default {
             selectedRowItems: [],
 
             upload: {
-                action: Core.Const.NET.URL_POINT + "/admin/1/bom/import",
+                action: Core.Const.NET.URL_POINT + "/admin/1/bom-item/import",
                 fileList: [],
                 headers: {
                     ContentType: false
@@ -431,10 +431,8 @@ export default {
             width: 60px;
         }
     }
-    .panel-title .btn-area {
-        .panel-btn {
-            margin: 0 0 0 5px;
-        }
+    .panel-btn {
+        margin-left: 10px;
     }
 }
 </style>

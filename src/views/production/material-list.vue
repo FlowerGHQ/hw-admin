@@ -52,10 +52,16 @@
                     :row-key="record => record.id" :pagination='false' :loading="loading">
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail' && $auth('material.list')">
-                            <a-tooltip placement="top" :title='text'>
+<!--                            <a-tooltip placement="top" :title='text'>
                                 <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}
                                 </a-button>
-                            </a-tooltip>
+                            </a-tooltip>-->
+                            <div class="table-img">
+                                <a-image class="image" :width="30" :height="30" :src="$Util.imageFilter(record.image)" fallback='无'/>
+                                <a-tooltip placement="top" :title='text'>
+                                    <a-button type="link" @click="routerChange('detail', record)" style="margin-left: 6px;">{{ text || '-' }}</a-button>
+                                </a-tooltip>
+                            </div>
                         </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}

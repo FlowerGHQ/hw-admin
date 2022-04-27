@@ -175,6 +175,7 @@ export default {
                     {title: '编码', dataIndex: [type, 'code'], key: 'item'},
                     {title: '单位', dataIndex: [type, 'unit'], key: 'item'},
                     {title: '规格', dataIndex: [type, 'spec'], key: 'material_spec'},
+                    {title: '库存数量', dataIndex: 'stock', key: 'count'},
                     {title: '包装', dataIndex: [type, 'encapsulation'], key: 'item'},
                     {title: '包装尺寸', dataIndex: [type, 'encapsulation_size'], key: 'item'},
                     {title: '毛重', dataIndex: [type, 'gross_weight'], key: 'item'},
@@ -196,7 +197,7 @@ export default {
                         path: "/production/material-detail",
                         query: { id: item.material.id }
                     })
-                    window.open(routeUrl.href, '_self')
+                    window.open(routeUrl.href, '_blank')
                     break;
                 case 'material':
                     routeUrl = this.$router.resolve({
