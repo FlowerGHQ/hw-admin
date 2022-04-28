@@ -24,6 +24,22 @@
                 </div>
                 <a-row class="desc-detail has-logo">
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">简称：</span>
+                        <span class="value">{{detail.short_name}}</span>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">公司名称：</span>
+                        <span class="value">{{detail.company_name}}</span>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">税号：</span>
+                        <span class="value">{{detail.tax_no}}</span>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">收货港口：</span>
+                        <span class="value">{{detail.receive_port}}</span>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('d.contact') }}：</span>
                         <span class="value">{{ detail.contact }}</span>
                     </a-col>

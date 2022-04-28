@@ -137,6 +137,7 @@ export default {
             filteredInfo = filteredInfo || {};
             let tableColumns = [
                 { title: '零售商', dataIndex: 'name' },
+                { title: '简称', dataIndex: 'short_name' },
                 { title: '国家', dataIndex: 'country', key: 'item' },
                 { title: '手机号', dataIndex: 'phone', key: 'item'},
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
@@ -145,7 +146,7 @@ export default {
                 { title: '操作', key: 'operation', fixed: 'right'},
             ]
             if (this.$auth('ADMIN')) {
-                tableColumns.splice(1, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'item'})
+                tableColumns.splice(2, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'item'})
             }
             return tableColumns
         },

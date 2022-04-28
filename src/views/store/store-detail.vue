@@ -20,6 +20,10 @@
                 </div>
             </div>
             <a-row class="desc-detail has-logo">
+                <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                    <span class="key">简称：</span>
+                    <span class="value">{{detail.short_name}}</span>
+                </a-col>
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item' v-if="$auth('ADMIN')">
                     <span class="key">所属分销商：</span>
                     <a-button type="link" @click="routerChange('distributor')">{{detail.distributor_name}}</a-button>

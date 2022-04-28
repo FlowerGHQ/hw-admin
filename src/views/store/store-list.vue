@@ -153,6 +153,7 @@ export default {
             filteredInfo = filteredInfo || {};
             let tableColumns = [
                 {title: '门店名称', dataIndex: 'name', key: 'detail'},
+                {title: '简称', dataIndex: 'short_name'},
                 {title: '联系人姓名', dataIndex: 'contact_name', key:'item'},
                 {title: '联系人电话', dataIndex: 'contact_phone',key:'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
@@ -161,11 +162,11 @@ export default {
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
             if (this.$auth('ADMIN')) {
-                tableColumns.splice(1, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'item'})
-                tableColumns.splice(5, 0, {title: '是否接受转单', dataIndex: 'flag_receive_transfer', key: 'flag_receive_transfer'})
+                tableColumns.splice(2, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'item'})
+                tableColumns.splice(6, 0, {title: '是否接受转单', dataIndex: 'flag_receive_transfer', key: 'flag_receive_transfer'})
             }
             if (this.$auth('ADMIN', 'DISTRIBUTOR')) {
-                tableColumns.splice(2, 0, {title: '所属零售商', dataIndex: 'agent_name', key: 'item'})
+                tableColumns.splice(3, 0, {title: '所属零售商', dataIndex: 'agent_name', key: 'item'})
             }
             return tableColumns
         },

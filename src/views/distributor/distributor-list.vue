@@ -127,9 +127,11 @@ export default {
             filteredInfo = filteredInfo || {};
             let columns = [
                 {title: '分销商', dataIndex: 'name'},
+                {title: '简称', dataIndex: 'short_name'},
                 {title: '类型', dataIndex: 'type',
                     filters: Core.Const.DISTRIBUTOR.TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.type || null },
                 {title: '国家', dataIndex: 'country'},
+                {title: '港口', dataIndex: 'receive_port'},
                 {title: '联系人', dataIndex: 'contact'},
                 {title: '手机号', dataIndex: 'phone'},
                 {title: '销售区域', dataIndex: 'sales_area_list'},

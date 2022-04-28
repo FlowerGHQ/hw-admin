@@ -21,6 +21,10 @@
             </div>
             <a-row class="desc-detail has-logo">
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                    <span class="key">简称：</span>
+                    <span class="value">{{detail.short_name}}</span>
+                </a-col>
+                <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                     <span class="key">手机号：</span>
                     <span class="value">{{detail.phone}}</span>
                 </a-col>
