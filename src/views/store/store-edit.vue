@@ -31,6 +31,12 @@
                     </div>
                 </div>
                 <div class="form-item required">
+                    <div class="key">简称:</div>
+                    <div class="value">
+                        <a-input v-model:value="form.short_name" placeholder="请输入简称"/>
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">联系人：</div>
                     <div class="value">
                         <a-input v-model:value="form.contact_name" placeholder="请输入联系人"/>
@@ -89,6 +95,7 @@ export default {
                 distributor_id: undefined,
                 agent_id: undefined,
                 name: '',
+                short_name: '',
                 contact_name: '',
                 contact_phone: '',
                 logo: '',
@@ -199,6 +206,9 @@ export default {
             }
             if (!form.name) {
                 return this.$message.warning('请输入门店名称')
+            }
+            if (!form.short_name) {
+                return this.$message.warning('请输入简称')
             }
             if (!form.contact_name) {
                 return this.$message.warning('请输入联系人')
