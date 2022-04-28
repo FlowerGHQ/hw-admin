@@ -7,7 +7,7 @@
              :after-close='handleFaultClose'>
         <div class="modal-content">
             <div class="form-item required">
-                <div class="key">{{$t('table.name')}}:</div>
+                <div class="key">{{$t('n.new_fault')}}:</div>
                 <div class="value">
                     <a-input v-model:value="form.name" :placeholder="$t('pop_up.enter_fault')"/>
                 </div>

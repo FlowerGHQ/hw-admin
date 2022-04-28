@@ -21,10 +21,16 @@
                         <i class="icon i_settle"/>{{ $t('r.settle_accounts') }}
                     </a-button>
                 </template>
+                <a-button type="primary" ghost @click="handleAuditShow()" v-if="detail.status == STATUS.FINISH && $auth('ADMIN')">
+                    <i class="icon i_add"/>一键入库
+                </a-button>
                 <a-button type="primary" @click="routerChange('invoice')" v-if="haveSettle">
                     <i class="icon i_detail_l"/>查看结算单
                 </a-button>
-                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT && $auth('ADMIN')">
+                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT && $auth('DISTRIBUTOR')">
+                    <i class="icon i_audit"/>审核
+                </a-button>
+                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS && $auth('ADMIN')">
                     <i class="icon i_audit"/>审核
                 </a-button>
             </div>
@@ -57,7 +63,7 @@
                 </div>
                 <div class="info-item">
                     <div class="key">{{ $t('r.associated_customer') }}</div>
-                    <div class="value">{{ detail.customer_name || '-' }}</div>s
+                    <div class="value">{{ detail.customer_name || '-' }}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">{{ $t('r.urgency') }}</div>

@@ -135,7 +135,7 @@
             <div class="form-item required">
                 <div class="key">{{ $t('r.address') }}</div>
                 <div class="value">
-                    <AddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
+                    <ChinaAddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
                 </div>
             </div>
             <div class="form-item" :class="form.channel == 1 ? 'required' : ''">
@@ -166,11 +166,11 @@ import Core from '../../core';
 import dayjs from 'dayjs';
 
 const REPAIR = Core.Const.REPAIR
-import AddressCascader from '@/components/common/AddressCascader.vue'
+import ChinaAddressCascader from '@/components/common/ChinaAddressCascader.vue'
 
 export default {
     name: 'RepairEdit',
-    components: {AddressCascader},
+    components: {ChinaAddressCascader},
     props: {},
     data() {
         return {
