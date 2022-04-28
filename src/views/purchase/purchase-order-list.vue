@@ -320,6 +320,7 @@ export default {
                 let total = 0
 
                 this.statusList.forEach(statusItem => {
+                    statusItem.value = 0;
                     res.status_list.forEach(item => {
                         if ( statusItem.key == item.status) {
                             statusItem.value = item.amount
