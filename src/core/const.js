@@ -185,6 +185,18 @@ let Const = {
             1: '国内',
             2: '出口',
         },
+        PAY_TIME_LIST: [
+            { text: 'TT(30%定金,70%尾款)', value: 1 },
+            { text: 'OA30天', value: 2 },
+            { text: 'OA60天', value: 3 },
+            { text: 'OA90天', value: 4 },
+        ],
+        PAY_TIME_MAP: {
+            1: 'TT(30%定金,70%尾款)',
+            2: 'OA30天',
+            3: 'OA60天',
+            4: 'OA90天',
+        },
     },
 
     ORG_STATUS_LIST: [ // 组织状态
@@ -446,6 +458,24 @@ let Const = {
             CHILDREN: 2, //子级采购单
             ALL: 3, //所有子级采购单
         },
+        // 分批发货
+        FLAG_PART_SHIPMENT_LIST: [
+            { name: '同意', value: 1 },
+            { name: '不同意', value: 2 },
+        ],
+        FLAG_PART_SHIPMENT_MAP: {
+            1: '同意',
+            2: '不同意',
+        },
+        // 转运
+        FLAG_TRANSFER_LIST: [
+            { name: '同意', value: 1 },
+            { name: '不同意', value: 2 },
+        ],
+        FLAG_TRANSFER_MAP: {
+            1: '同意',
+            2: '不同意',
+        }
     },
 
     WAYBILL: { // 物流
@@ -499,6 +529,22 @@ let Const = {
             { name: '邮政包裹', value: 'CHINAPOST' },
             { name: '跨越速运', value: 'KYEXPRESS' },
         ],
+        COURIER_LIST: [
+            { name: '国际物流', value: 1 },
+            { name: '货代公司', value: 2 },
+        ],
+        COURIER_MAP: {
+            1: '国际物流',
+            2: '货代公司',
+        },
+        RECEIPT_LIST: [
+            { name: '快递', value: 1 },
+            { name: '自提', value: 2 },
+        ],
+        RECEIPT_MAP: {
+            1: '快递',
+            2: '自提',
+        }
     },
 
     NOTICE: { //系统消息
