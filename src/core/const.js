@@ -187,15 +187,15 @@ let Const = {
         },
         PAY_TIME_LIST: [
             { text: 'TT(30%定金,70%尾款)', value: 1 },
-            { text: 'OA30天', value: 2 },
-            { text: 'OA60天', value: 3 },
-            { text: 'OA90天', value: 4 },
+            { text: 'OA 30天', value: 2 },
+            { text: 'OA 60天', value: 3 },
+            { text: 'OA 90天', value: 4 },
         ],
         PAY_TIME_MAP: {
             1: 'TT(30%定金,70%尾款)',
-            2: 'OA30天',
-            3: 'OA60天',
-            4: 'OA90天',
+            2: 'OA 30天',
+            3: 'OA 60天',
+            4: 'OA 90天',
         },
     },
 

@@ -79,14 +79,6 @@
                         </a-select>
                     </div>
                 </div>
-                <!-- <div class="form-item required">
-                    <div class="key">支付条款:</div>
-                    <div class="value">
-                        <a-select v-model:value="form.pay_type" placeholder="请选择支付条款">
-                            <a-select-option v-for="(item,index) of paymentTimeList" :key="index" :value="item.value">{{ item.text }}</a-select-option>
-                        </a-select>
-                    </div>
-                </div> -->
             </div>
         </div>
         <div class="form-btns">
@@ -109,7 +101,6 @@ export default {
     data() {
         return {
             TYPE: Core.Const.DISTRIBUTOR.TYPE,
-            paymentTimeList: Core.Const.DISTRIBUTOR.PAY_TIME_LIST,
             // 加载
             loading: false,
             detail: {},

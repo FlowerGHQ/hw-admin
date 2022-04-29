@@ -26,13 +26,30 @@
                 <div class="add">
                     <ReceiverAddressEdit btnType="link" :orgId='orgId' :orgType='orgType' btnClass='edit-btn' @submit='getReceiveList'>添加新地址</ReceiverAddressEdit>
                 </div>
-                <a-button type="primary" class="orange" @click="handleCreateOrder()">下单</a-button>
             </div>
         </div>
-        <div class="config-item pay">
-            <div class="config-title">2.付款</div>
-            <!-- <div class="config-content"></div> -->
+        <div class="config-item pay" v-if="$auth('DISTRIBUTOR')">
+            <div class="config-title">2.配送设置</div>
+            <div class="config-content">
+                <div class="radio-item">
+                    <div class="desc">是否分批发货：</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.flag_part_shipment">
+                            <a-radio v-for="(item, index) in flagPartShipmentList" :key="index" :value="item.value">{{item.name}}</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="radio-item">
+                    <div class="desc">是否转运：</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.flag_transfer">
+                            <a-radio v-for="(item, index) in flagTransferList" :key="index" :value="item.value">{{item.name}}</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+            </div>
         </div>
+        <a-button type="primary" class="orange" @click="handleCreateOrder()">下单</a-button>
     </div>
     <div class="settel-item">
         <div class="item-title">
@@ -68,8 +85,8 @@
 <script>
 import Core from '../../core';
 
-import ReceiverAddressEdit from '../../components/popup-btn/ReceiverAddressEdit.vue'
-
+import ReceiverAddressEdit from '../../components/popup-btn/ReceiverAddressEdit.vue';
+const PURCHASE = Core.Const.PURCHASE;
 export default {
     name: 'ItemSettle',
     components: { ReceiverAddressEdit },
@@ -82,6 +99,8 @@ export default {
             loading: false,
 
             receiveList: [],
+            flagPartShipmentList: PURCHASE.FLAG_PART_SHIPMENT_LIST, // 分批发货
+            flagTransferList: PURCHASE.FLAG_TRANSFER_LIST, // 转运
             selectIndex: '',
 
             countryList: Core.Const.COUNTRY_LIST,
@@ -95,6 +114,8 @@ export default {
                 county: '',
                 address: '',
                 email: '',
+                flag_part_shipment: undefined,
+                flag_transfer: undefined,
             },
             defAddr: [],
 
@@ -245,12 +266,19 @@ export default {
             if (!this.selectIndex) {
                 return this.$message.warning('请选择本次下单的配送选项')
             }
-            Core.Api.Purchase.create({
+            if(this.$auth('DISTRIBUTOR') && !this.form.flag_part_shipment) {
+                return this.$message.warning('请选择是否同意分批发货')
+            }
+            if(this.$auth('DISTRIBUTOR') && !this.form.flag_transfer) {
+                return this.$message.warning('请选择是否同意转运')
+            }
+            const parms = {
                 price: Math.round(this.sum_price * 100),
                 charge: Math.round(this.sum_price * 100),
                 remark: '',
                 receive_info_id: this.selectIndex,
                 currency: this.currency,
+                flag_part_shipment: this.form.flag_part_shipment,
                 item_list: this.shopCartList.map(item => ({
                     item_code: item.item.item_code,
                     amount: item.amount,
@@ -259,7 +287,12 @@ export default {
                     price: item.amount * item.item[this.priceKey],
                     unit_price: item.item[this.priceKey],
                 }))
-            }).then(res => {
+            }
+            if(this.$auth('DISTRIBUTOR')) {
+                parms['flag_part_shipment'] = this.form.flag_part_shipment;
+                parms['flag_transfer'] = this.form.flag_transfer;
+            }
+            Core.Api.Purchase.create(parms).then(res => {
                 this.$message.success('下单成功');
                 this.routerChange('order');
                 this.handleClearShopCart()
@@ -304,6 +337,7 @@ export default {
     .ant-btn.orange {
         width: 112px;
         height: 40px;
+        margin-top: 30px;
         background: #F4752E;
         border-radius: 2px;
         border-color: #F4752E;
@@ -402,6 +436,26 @@ export default {
                         display: flex;
                         justify-content: flex-end;
                         margin-bottom: 10px;
+                    }
+                }
+                .radio-item {
+                     + .radio-item {
+                        margin-top: 12px;
+                    }
+                    .fac();
+                    .desc {
+                        position: relative;
+                        font-size: 14px;
+                        font-weight: 400;
+                        color: #181818;
+                        line-height: 20px;
+                        width: 100px;
+                        // &:after {
+                        //     content: ':';
+                        //     position: absolute;
+                        //     top: 0;
+                        //     right: 0;
+                        // }
                     }
                 }
             }

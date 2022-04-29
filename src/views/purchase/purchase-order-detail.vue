@@ -23,6 +23,7 @@
         <div class="form-container">
             <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
                 <template #expandIcon ><i class="icon i_expan_l"/> </template>
+                <!-- 商品信息 -->
                 <a-collapse-panel key="ItemInfo" header="商品信息" class="gray-collapse-panel">
                     <div class="panel-content">
                         <a-table :columns="itemColumns" :data-source="itemList" :scroll="{ x: true }"
@@ -52,8 +53,9 @@
                                 <a-table-summary>
                                     <a-table-summary-row>
                                         <a-table-summary-cell :index="0" :col-span="4">合计</a-table-summary-cell>
-                                        <a-table-summary-cell :index="1" :col-span="2">总数量:{{total.amount}}件</a-table-summary-cell>
-                                        <a-table-summary-cell :index="4" :col-span="1">总售价:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price)}}</a-table-summary-cell>
+                                        <a-table-summary-cell :index="1" :col-span="1">总数量:{{total.amount}}件</a-table-summary-cell>
+                                        <a-table-summary-cell :index="1" :col-span="1">运费:{{$Util.priceUnitFilter(detail.currency)}}{{$Util.countFilter(total.freight) || '0'}}</a-table-summary-cell>
+                                        <a-table-summary-cell :index="4" :col-span="1">总售价:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price + (total.freight || 0))}}</a-table-summary-cell>
                                         <!-- <a-table-summary-cell :index="5" :col-span="1">总金额:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.charge)}}</a-table-summary-cell> -->
                                     </a-table-summary-row>
                                 </a-table-summary>
@@ -61,6 +63,8 @@
                         </a-table>
                     </div>
                 </a-collapse-panel>
+
+                <!-- 订单信息 -->
                 <a-collapse-panel key="PurchaseInfo" header="订单信息" class="gray-collapse-panel">
                     <a-row class="panel-content info-container">
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
@@ -83,15 +87,38 @@
                                 <div class="value" v-if="detail.receive_info != null">{{detail.receive_info.phone || '-'}}</div>
                                 <div class="value" v-else>-</div>
                             </div>
+                            <template v-if="detail.supply_org_type === USER_TYPE.ADMIN">
+                                <div class="info-item">
+                                    <div class="key">支付条款</div>
+                                    <div class="value">{{DISTRIBUTOR.PAY_TIME_MAP[detail.pay_clause] || '-'}}</div>
+                                </div>
+                            </template>
                             <div class="info-item">
+                                <div class="key">备注信息</div>
+                                <div class="value">{{detail.remark || '-'}}</div>
+                            </div>
+                            <!-- <div class="info-item">
                                 <div class="key">支付方式</div>
                                 <div class="value">{{$Util.purchasePayMethodFilter(detail.pay_method) || '-'}}</div>
+                            </div> -->
+                        </a-col>
+                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" v-if="detail.supply_org_type === USER_TYPE.ADMIN">
+                            <div class="info-item">
+                                <div class="key">是否同意分批发货</div>
+                                <div class="value">{{ FLAG_PART_SHIPMENT_MAP[detail.flag_part_shipment] || '-' }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="key">是否同意转运</div>
+                                <div class="value">{{ FLAG_TRANSFER_MAP[detail.flag_transfer] || '-' }}</div>
                             </div>
                         </a-col>
                     </a-row>
                 </a-collapse-panel>
+
                 <AttachmentFile :target_id='id' :target_type='Core.Const.ATTACHMENT.TARGET_TYPE.PURCHASE_ORDER' :detail='detail' @submit="getPurchaseInfo" ref="AttachmentFile"/>
-                <a-collapse-panel key="WaybillInfo" header="物流信息" class="gray-collapse-panel">
+                
+                <!-- 物流信息 -->
+                <a-collapse-panel key="WaybillInfo" header="收货信息" class="gray-collapse-panel">
                     <a-row class="panel-content info-container">
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                             <div class="info-item">
@@ -105,18 +132,42 @@
                                 <div class="value" v-else>-</div>
                             </div>
                         </a-col>
-                        <a-col :xs='24' :sm='24' :lg='12' :xl='16' :xxl='12' class="info-block">
+                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='12' class="info-block">
                             <div class="info-item">
                                 <div class="key">联系方式</div>
                                 <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.phone || '-'}}</div>
                                 <div class="value" v-else>-</div>
                             </div>
-                            <div class="info-item">
+                            <!-- <div class="info-item">
                                 <div class="key">物流信息</div>
                                 <div class="value">
                                     <WaybillShow v-if="waybillInfo && showWaybill" @change="getWaybillDetail" :detail='waybill' :list='waybillInfo.list' :can-edit="$auth('ADMIN')" />
                                     <template v-else>暂无物流信息</template>
                                 </div>
+                            </div> -->
+                        </a-col>
+                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" v-if="detail.supply_org_type === USER_TYPE.ADMIN">
+                            <div class="info-item">
+                                <div class="key">快递方式</div>
+                                <div class="value" >{{WAYBILL.COURIER_MAP[detail.express_type] || '-'}}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="key">单号</div>
+                                <div class="value" >{{detail.waybill || '-'}}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="key">发货港口</div>
+                                <div class="value" >{{detail.harbour || '-'}}</div>
+                            </div>
+                        </a-col>
+                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" v-if="detail.supply_org_type === USER_TYPE.DISTRIBUTOR">
+                            <div class="info-item">
+                                <div class="key">收货方式</div>
+                                <div class="value" >{{WAYBILL.RECEIPT_MAP[detail.receive_type] || '-'}}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="key">快递单号</div>
+                                <div class="value" >{{detail.waybill_uid || '-'}}</div>
                             </div>
                         </a-col>
                     </a-row>
@@ -125,28 +176,98 @@
         </div>
     </div>
     <template class="modal-container">
+        <!-- 确认收款 -->
         <a-modal v-model:visible="paymentShow" title="确认收款" @ok="handlePayment">
             <div class="modal-content">
-                <div class="form-item required">
+                <!-- 国外暂无支付宝微信银行卡支付方式，先隐藏 -->
+                <!-- <div class="form-item required">
                     <div class="key">收款方式</div>
                     <div class="value">
                         <a-select v-model:value="form.pay_method" placeholder="请选择收款方式">
                             <a-select-option v-for="pay of payMethodList" :key="pay.value" :value="pay.value">{{pay.name}}</a-select-option>
                         </a-select>
                     </div>
-                </div>
+                </div> -->
                 <div class="form-item required">
                     <div class="key">收款金额</div>
                     <div class="value">
-                        <a-input-number v-model:value="form.payment" :min="0" :max="(detail.charge-detail.payment)/100" :precision="2" placeholder="0.00"/>
-                        <span>{{$Util.priceUnitFilter(detail.currency)}}</span>
+                        <a-input-number 
+                            v-model:value="form.payment" 
+                            :min="0" 
+                            :max="(detail.charge-detail.payment)/100" 
+                            :precision="2" 
+                            :prefix="`${$Util.priceUnitFilter(detail.currency)}`"
+                            placeholder="0.00"
+                        />
+                        <!-- <span>{{$Util.priceUnitFilter(detail.currency)}}</span> -->
                     </div>
                 </div>
             </div>
         </a-modal>
+        <!-- 确认发货 -->
         <a-modal v-model:visible="deliverShow" title="确认发货" @ok="handleDeliver">
             <div class="modal-content">
+                <div class="form-item required" v-if="$auth('ADMIN')">
+                    <div class="key">快递方式</div>
+                    <div class="value">
+                        <a-select v-model:value="form.express_type" placeholder="请选择快递方式">
+                            <a-select-option v-for="courier of courierTypeList" :key="courier.value" :value="courier.value">{{courier.name}}</a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item" v-if="$auth('ADMIN')">
+                    <div class="key">单号:</div>
+                    <div class="value">
+                        <a-input v-model:value="form.waybill" placeholder="请输入单号"/>
+                    </div>
+                </div>
+                <div class="form-item required" v-if="$auth('ADMIN')">
+                    <div class="key">发货港口:</div>
+                    <div class="value">
+                        <a-input v-model:value="form.harbour" placeholder="请输入发货港口"/>
+                    </div>
+                </div>
+                <div class="form-item required" v-if="$auth('DISTRIBUTOR')">
+                    <div class="key">收货方式</div>
+                    <div class="value">
+                        <a-select v-model:value="form.receive_type" placeholder="请选择收货方式">
+                            <a-select-option v-for="receive of receiveTypeList" :key="receive.value" :value="receive.value">{{receive.name}}</a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item" v-if="$auth('DISTRIBUTOR')">
+                    <div class="key">快递单号:</div>
+                    <div class="value">
+                        <a-input v-model:value="form.waybill_uid" placeholder="请输入快递单号"/>
+                    </div>
+                </div>
                 <div class="form-item required">
+                    <div class="key">{{$Util.priceUnitFilter(detail.currency)}} 运费:</div>
+                    <div class="value">
+                        <a-input-number 
+                            v-model:value="form.freight_price"
+                            placeholder="0.00"
+                            style="width: 120px"
+                            :min="0.00" 
+                            :precision="2"
+                            :prefix="`${$Util.priceUnitFilter(detail.currency)}`" />
+                    </div>
+                </div>
+                <div class="form-item required" v-if="$auth('ADMIN')">
+                    <div class="key">支付条款:</div>
+                    <div class="value">
+                        <a-select v-model:value="form.pay_clause" placeholder="请选择支付条款">
+                            <a-select-option v-for="(item,index) of paymentTimeList" :key="index" :value="item.value">{{ item.text }}</a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item" >
+                    <div class="key">备注信息:</div>
+                    <div class="value">
+                        <a-input v-model:value="form.remark" placeholder="请输入备注信息"/>
+                    </div>
+                </div>
+                <!-- <div class="form-item required">
                     <div class="key">快递公司</div>
                     <div class="value">
                         <a-select v-model:value="form.company_uid" placeholder="请选择快递公司">
@@ -159,7 +280,7 @@
                     <div class="value">
                         <a-input v-model:value="form.waybill_uid" placeholder="请输入快递单号"/>
                     </div>
-                </div>
+                </div> -->
             </div>
         </a-modal>
     </template>
@@ -174,8 +295,14 @@ import MySteps from "@/components/common/MySteps.vue"
 import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 
 const PURCHASE = Core.Const.PURCHASE;
+const DISTRIBUTOR = Core.Const.DISTRIBUTOR;
+const WAYBILL = Core.Const.WAYBILL;
+
 const STATUS = Core.Const.PURCHASE.STATUS;
-const PAYMENT_STATUS =Core.Const.PURCHASE.PAYMENT_STATUS;
+const PAYMENT_STATUS = Core.Const.PURCHASE.PAYMENT_STATUS;
+const FLAG_PART_SHIPMENT_MAP = Core.Const.PURCHASE.FLAG_PART_SHIPMENT_MAP;
+const FLAG_TRANSFER_MAP = Core.Const.PURCHASE.FLAG_TRANSFER_MAP;
+const USER_TYPE = Core.Const.USER.TYPE;
 const itemColumns = [
     { title: '商品', dataIndex: 'item' },
     { title: '品号', dataIndex: ['item', "model"] },
@@ -202,8 +329,16 @@ export default {
             loginType: Core.Data.getLoginType(),
             loginOrgId: Core.Data.getOrgId(),
             loginOrgType: Core.Data.getOrgType(),
+
             STATUS,
             PAYMENT_STATUS,
+            FLAG_PART_SHIPMENT_MAP,
+            FLAG_TRANSFER_MAP,
+            PURCHASE ,
+            DISTRIBUTOR,
+            WAYBILL,
+            USER_TYPE,
+
             // 加载
             loading: false,
             id: '',
@@ -223,6 +358,7 @@ export default {
                 amount: 0,
                 price: 0,
                 charge: 0,
+                freight: 0, // 运费
             },
 
             waybill: {},
@@ -230,15 +366,25 @@ export default {
 
             paymentShow: false,
             payMethodList: PURCHASE.PAY_METHOD_LIST,
+            paymentTimeList: DISTRIBUTOR.PAY_TIME_LIST,
 
             deliverShow: false,
-            companyUidList: Core.Const.WAYBILL.COMPANY_LIST,
+            companyUidList: WAYBILL.COMPANY_LIST,
+            courierTypeList: WAYBILL.COURIER_LIST,
+            receiveTypeList: WAYBILL.RECEIPT_LIST,
 
             form: {
-                pay_method: undefined,
+                express_type: undefined, // 快递方式
+                waybill: '', // 物流单号
+                harbour: '', // 发货港口
+                receive_type: undefined, // 收货方式
+                freight_price: '', // 运费
+                pay_method: undefined, // 收款方式
+                pay_clause: undefined, // 支付条款
+                remark: '', // 备注
                 company_uid: undefined,
-                waybill_uid: '',
-                payment: '',
+                waybill_uid: '', // 快递单号
+                payment: '', // 收款金额
             },
         };
     },
@@ -273,7 +419,7 @@ export default {
     mounted() {
         this.getPurchaseItemList();
         this.getPurchaseInfo()
-        this.getWaybillDetail()
+        // this.getWaybillDetail()
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
@@ -325,7 +471,8 @@ export default {
             Core.Api.Purchase.detail({
                 id: this.id
             }).then(res => {
-                this.detail = res.detail
+                this.detail = res.detail;
+                this.total.freight = res.detail.freight_price || 0;
                 console.log('getPurchaseInfo res', res)
             }).catch(err => {
                 console.log('getPurchaseInfo err', err)
@@ -404,9 +551,9 @@ export default {
         // 确认收款
         handlePayment() {
             let form = Core.Util.deepCopy(this.form)
-            if (!form.pay_method) {
-                return this.$message.warning('请选择收款方式')
-            }
+            // if (!form.pay_method) {
+            //     return this.$message.warning('请选择收款方式')
+            // }
             if (!form.payment) {
                 return this.$message.warning('请输入收款金额')
             }
@@ -426,18 +573,37 @@ export default {
         },
         // 确认发货
         handleDeliver() {
-            let form = Core.Util.deepCopy(this.form)
-            if (!form.company_uid) {
-                return this.$message.warning('请选择快递公司')
-            }
-            if (!form.waybill_uid) {
-                return this.$message.warning('请输入快递单号')
-            }
-            Core.Api.Purchase.deliver({
+            let form = Core.Util.deepCopy(this.form);
+            const param = {
                 id: this.id,
-                company_uid: form.company_uid,
-                waybill_uid: form.waybill_uid,
-            }).then(res => {
+                remark: form.remark,
+            }
+            let adminRequire = [];
+            if(this.$auth('ADMIN')) {
+                adminRequire = [
+                    { key: 'express_type', msg: '请选择快递方式' },
+                    { key: 'harbour', msg: '请填写发货港口' },
+                    { key: 'freight_price', msg: '请填写运费' },
+                    { key: 'pay_clause', msg: '请选择支付条款' },
+                ]
+                param['waybill'] = form['waybill'];
+            } else if (this.$auth('DISTRIBUTOR')) {
+                adminRequire = [
+                    { key: 'receive_type', msg: '请选择收货方式' },
+                    { key: 'freight_price', msg: '请填写运费' },
+                ]
+                param['waybill_uid'] = form['waybill_uid'];
+            }
+            for(let index in adminRequire) {
+                let key = adminRequire[index].key
+                if(!this.form[key]) {
+                    return this.$message.warning(adminRequire[index].msg)
+                } else {
+                    param[key] = form[key];
+                }
+            }
+            param['freight_price'] = Math.round(param['freight_price'] * 100)
+            Core.Api.Purchase.deliver(param).then(res => {
                 this.$message.success('发货成功')
                 this.deliverShow = false
                 this.getPurchaseInfo()
