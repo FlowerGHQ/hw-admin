@@ -118,6 +118,7 @@
                     </template>
                     <template v-if="column.key === 'operation'">
                         <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.SETTLEMENT && record.service_type == 1"><i class="icon i_audit"/>审核</a-button>
+                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS && record.service_type == 1"><i class="icon i_audit"/>审核</a-button>
                     </template>
                     <template v-if="column.key === 'operate'">
                         <a-button type='link' @click="routerChange('edit',record)" v-if="record.status == STATUS.AUDIT_FAIL"><i class="icon i_edit"/>编辑</a-button>
@@ -179,6 +180,7 @@ const REPAIR = Core.Const.REPAIR
 const STATUS = Core.Const.REPAIR.STATUS
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 const USER_TYPE = Core.Const.USER.TYPE
+// const STATUS_MAP = STATUS.STATUS_MAP
 import TimeSearch from '@/components/common/TimeSearch.vue'
 export default {
     name: 'RepairList',
@@ -210,6 +212,7 @@ export default {
                 {zh: '审核未通过', en: 'Failed audit',value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
                 {zh: '审核通过',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
                 {zh: '结算完成',en: 'Finished settle accounts', value: '0', color: 'green',  key: STATUS.FINISH },
+                {zh: '入库完成', value: '0', color: 'blue',  key: STATUS.SAVE_TO_INVOICE },
                 {zh: '已取消',en: 'Cancelled', value: '0', color: 'gray',  key: STATUS.CLOSE },
             ],
             distributorList: [], // 分销商下拉框数据
@@ -353,8 +356,10 @@ export default {
             if (flag) {
                 this.$refs.TimeSearch.handleReset()
             }
-            if (this.operMode == 'audit') {
+            if (this.operMode == 'audit' && this.$auth('DISTRIBUTOR')) {
                 this.searchForm.status = STATUS.SETTLEMENT
+            } else if (this.operMode == 'audit' && this.$auth('ADMIN')) {
+                this.searchForm.status = STATUS.DISTRIBUTOR_AUDIT_SUCCESS
             } else if (this.operMode == 'redit') {
                 this.searchForm.status = STATUS.AUDIT_FAIL
             } else if (this.operMode == 'invoice') {
@@ -368,7 +373,7 @@ export default {
                 this.getAgentListAll();
             }
             else if (this.$auth('AGENT')) {
-                this.searchForm.agent_id = Core.Data.getOrgId()
+                // this.searchForm.agent_id = Core.Data.getOrgId()
                 this.getStoreListAll();
             }
             else if (this.$auth('STORE')) {
@@ -402,11 +407,12 @@ export default {
             }
         },
         getTableData() {  // 获取 表格 数据
+            console.log('this.operMode', this.operMode)
             this.loading = true;
             console.log('this.searchForm:', this.searchForm)
-            if(this.operMode == 'audit' && this.loginType == 10) {
+            /*if(this.operMode == 'audit' && this.loginType == 10) {
                 this.searchForm.org_type = 15
-            }
+            }*/
             Core.Api.Repair.list({
                 ...this.searchForm,
                 page: this.currPage,
