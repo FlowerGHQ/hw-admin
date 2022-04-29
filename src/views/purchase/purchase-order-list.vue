@@ -214,6 +214,8 @@ export default {
             let columns = [
                 { title: '订单编号', dataIndex: 'sn', },
                 { title: '订单总价', dataIndex: 'price', key: 'money' },
+                { title: '运费', dataIndex: 'freight_price', key: 'money' },
+                // { title: '订单总价', dataIndex: 'total_price', key: 'money' },
                 { title: '订单状态', dataIndex: 'status' },
                 { title: '下单时间', dataIndex: 'create_time', key: 'time' },
                 { title: '支付状态', dataIndex: 'payment_status' },
@@ -304,6 +306,9 @@ export default {
                 console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
+                // this.tableData.forEach(item=>{
+                //     item['total_price'] = (item['price'] || 0) + (item['freight_price'] || 0);
+                // })
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {

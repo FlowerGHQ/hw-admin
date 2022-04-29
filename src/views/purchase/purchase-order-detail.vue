@@ -4,9 +4,13 @@
         <div class="title-container">
             <div class="title-area">采购订单详情</div>
             <div class="btns-area">
+                <template v-if="detail.status >= STATUS.WAIT_TAKE_DELIVER && $auth('ADMIN')">
+                    <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
+                    <a-button @click="handleExportIn"><i class="icon i_download"/>导出订单</a-button>
+                </template>
                 <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
                     <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL" @click="handleModalShow('payment')"><i class="icon i_received"/>确认收款</a-button>
-                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER" @click="handleModalShow('deliver')"><i class="icon i_deliver"/>发货</a-button>
+                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER" @click="handleModalShow('deliver')" :disabled="exportDisabled"><i class="icon i_deliver"/>发货</a-button>
                 </template>
                 <template v-if="authOrg(detail.org_id, detail.org_type)">
                     <a-button type="primary" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER" @click="handleReceived()"><i class="icon i_goods"/>确认收货</a-button>
@@ -138,6 +142,14 @@
                                 <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.phone || '-'}}</div>
                                 <div class="value" v-else>-</div>
                             </div>
+                            <div class="info-item" v-if="detail.supply_org_type === USER_TYPE.ADMIN">
+                                <div class="key">发货港口</div>
+                                <div class="value" >{{detail.harbour || '-'}}</div>
+                            </div>
+                            <div class="info-item" v-if="detail.supply_org_type === USER_TYPE.DISTRIBUTOR">
+                                <div class="key">收货方式</div>
+                                <div class="value" >{{WAYBILL.RECEIPT_MAP[detail.receive_type] || '-'}}</div>
+                            </div>
                             <!-- <div class="info-item">
                                 <div class="key">物流信息</div>
                                 <div class="value">
@@ -155,17 +167,9 @@
                                 <div class="key">单号</div>
                                 <div class="value" >{{detail.waybill || '-'}}</div>
                             </div>
-                            <div class="info-item">
-                                <div class="key">发货港口</div>
-                                <div class="value" >{{detail.harbour || '-'}}</div>
-                            </div>
                         </a-col>
-                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" v-if="detail.supply_org_type === USER_TYPE.DISTRIBUTOR">
-                            <div class="info-item">
-                                <div class="key">收货方式</div>
-                                <div class="value" >{{WAYBILL.RECEIPT_MAP[detail.receive_type] || '-'}}</div>
-                            </div>
-                            <div class="info-item">
+                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" >
+                            <div class="info-item" v-if="detail.supply_org_type === USER_TYPE.DISTRIBUTOR">
                                 <div class="key">快递单号</div>
                                 <div class="value" >{{detail.waybill_uid || '-'}}</div>
                             </div>
@@ -194,7 +198,7 @@
                         <a-input-number 
                             v-model:value="form.payment" 
                             :min="0" 
-                            :max="(detail.charge-detail.payment)/100" 
+                            :max="((detail.freight_price||0)+detail.charge-detail.payment)/100" 
                             :precision="2" 
                             :prefix="`${$Util.priceUnitFilter(detail.currency)}`"
                             placeholder="0.00"
@@ -267,20 +271,6 @@
                         <a-input v-model:value="form.remark" placeholder="请输入备注信息"/>
                     </div>
                 </div>
-                <!-- <div class="form-item required">
-                    <div class="key">快递公司</div>
-                    <div class="value">
-                        <a-select v-model:value="form.company_uid" placeholder="请选择快递公司">
-                            <a-select-option v-for="company of companyUidList" :key="company.value" :value="company.value">{{company.name}}</a-select-option>
-                        </a-select>
-                    </div>
-                </div>
-                <div class="form-item required" >
-                    <div class="key">快递单号</div>
-                    <div class="value">
-                        <a-input v-model:value="form.waybill_uid" placeholder="请输入快递单号"/>
-                    </div>
-                </div> -->
             </div>
         </a-modal>
     </template>
@@ -386,6 +376,8 @@ export default {
                 waybill_uid: '', // 快递单号
                 payment: '', // 收款金额
             },
+
+            exportDisabled: false, // 导出按钮禁用
         };
     },
     watch: {},
@@ -653,6 +645,30 @@ export default {
                 },
             });
         },
+        confirmExport() {
+            let _this = this;
+            this.$confirm({
+                title: '确认要导出吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    _this.handleExportIn();
+                }
+            })
+        },
+        // 导出订单 
+        handleExportIn() {
+            const params = {
+                id: this.id, // 订单id
+                currency: this.detail.currency, // 货币类型
+            };
+
+            this.exportDisabled = true;
+            let exportUrl = Core.Api.Export.purchaseTemplateExport(params);
+            console.log("handlePurchaseExport _exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
+        }
     }
 };
 </script>
