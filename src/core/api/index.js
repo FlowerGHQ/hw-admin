@@ -145,6 +145,7 @@ const apiList = {
 	    export: ['PostJson', 'repair/export-repair-order-record'], // 导出
         detailByUid: ['PostJson', 'repair/detail-by-uid'],
         pay: ['PostJson', 'repair/pay'],
+        stock: ['PostJson', 'repair/save-to-invoice'], //入库
 
         settleDetail: ['PostJson', 'clearing-order/detail-by-source'], //结算单
     },

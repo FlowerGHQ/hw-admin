@@ -30,7 +30,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.0.0.226:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.7:8083' // 但
-        URL_POINT = 'http://10.0.0.181:8883'
+        URL_POINT = 'http://10.0.0.146:8883'
 
 
         // URL_POINT = 'http://10.0.0.134:8083' // 谭洋波
@@ -292,7 +292,7 @@ let Const = {
             '60': { key: 60, color: 'orange', zh: '已结算待审核', en: 'Settled accounts and awaiting audit'},
             '80': { key: 80, color: 'purple', zh: '分销商审核通过', en: 'Passed audit'},
             '90': { key: 90, color: 'purple', zh: '平台审核通过', en: 'Passed audit'},
-            '100': { key: 100, color: 'blue', zh: '结算完成', en: 'Finished settle accounts'},
+            '100': { key: 100, color: 'blue', zh: '已完成', en: 'Finished settle accounts'},
             '110': { key: 110, color: 'green', zh: '入库完成'},
             '-10': { key: -10, color: 'gray', zh: '已取消', en: 'Cancelled'},
             '-30': { key: -30, color: 'red', zh: '审核未通过', en: 'Failed audit'},
@@ -942,10 +942,10 @@ let Const = {
         },
         PAYMENT_TYPE_MAP: {
             '10': '款到发货',
-            '20': '15日内',
-            '30': '30日内',
-            '40': '45日内',
-            '50': '60日内'
+            '20': '见票15天',
+            '30': '见票30天',
+            '40': '见票45天',
+            '50': '见票60天'
         },
         SUPPLIER_TYPE: {
             QUALIFIED: 10,

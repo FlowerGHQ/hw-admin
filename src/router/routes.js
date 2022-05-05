@@ -391,9 +391,19 @@ const routes = [
                 name: 'RepairInvoiceList',
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
-                    title: '待结算工单',
+                    title: '待审核故障件',
                     roles: [LOGIN_TYPE.ADMIN],
                     type: 'invoice'
+                }
+            },
+            {
+                path: 'repair-fault-list',
+                name: 'RepairFaultList',
+                component: () => import('@/views/repair/repair-list.vue'),
+                meta: {
+                    title: '待入库故障件',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    type: 'fault'
                 }
             },
             {
@@ -602,7 +612,7 @@ const routes = [
                     type: "part"
                 }
             },
-            /*{
+            {
                 path: 'entity-detail',
                 name: 'EntityDetail',
                 component: () => import('@/views/entity/entity-detail.vue'),
@@ -612,7 +622,7 @@ const routes = [
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/entity/entity-list',
                 }
-            },*/
+            },
         ]
     },
     { // 生产管理 - 平台端

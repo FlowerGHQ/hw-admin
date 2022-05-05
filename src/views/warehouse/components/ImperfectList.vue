@@ -83,11 +83,11 @@ export default {
                 {title: '维修单号', dataIndex: 'source_uid', key: 'detail'},
                 {title: '工单帐类', dataIndex: 'service_type'},
                 {title: '所属单位', dataIndex: 'source_org_name'},
-                {title: '所属仓库', dataIndex: 'warehouse_name', key: 'item'},
+                // {title: '所属仓库', dataIndex: 'warehouse_name', key: 'item'},
                 {title: '商品', dataIndex: ['item','name'], key: 'item'},
                 {title: '故障原因', dataIndex: 'item_fault_name', key: 'item'},
-                {title: '故障件实例', dataIndex: 'entity_uid', key: 'item'},
-                {title: '审核人', dataIndex: 'audit_user_name', key: 'item'},
+                // {title: '故障件实例', dataIndex: 'entity_uid', key: 'item'},
+                // {title: '审核人', dataIndex: 'audit_user_name', key: 'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', dataIndex: 'operation'},
             ],
@@ -99,10 +99,16 @@ export default {
         this.getTableData();
     },
     methods: {
-        routerChange(type, item) {
+        routerChange(type, item = {}) {
+            console.log('item',item)
+            let routeUrl = ''
             switch (type) {
-                case 'back':
-                    this.$router.go(-1)
+                case 'detail':
+                    routeUrl = this.$router.resolve({
+                        path: "/repair/repair-detail",
+                        query: {id: item.source_id}
+                    })
+                    window.open(routeUrl.href, '_blank')
                     break;
             }
         },
