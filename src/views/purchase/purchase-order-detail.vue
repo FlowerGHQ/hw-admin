@@ -106,16 +106,18 @@
                                 <div class="value">{{$Util.purchasePayMethodFilter(detail.pay_method) || '-'}}</div>
                             </div> -->
                         </a-col>
-                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" v-if="detail.supply_org_type === USER_TYPE.ADMIN">
-                            <div class="info-item">
-                                <div class="key">是否同意分批发货</div>
-                                <div class="value">{{ FLAG_PART_SHIPMENT_MAP[detail.flag_part_shipment] || '-' }}</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="key">是否同意转运</div>
-                                <div class="value">{{ FLAG_TRANSFER_MAP[detail.flag_transfer] || '-' }}</div>
-                            </div>
-                        </a-col>
+                        <template v-if="detail.supply_org_type === USER_TYPE.ADMIN">
+                            <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" >
+                                <div class="info-item">
+                                    <div class="key">是否同意分批发货</div>
+                                    <div class="value">{{ FLAG_PART_SHIPMENT_MAP[detail.flag_part_shipment] || '-' }}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="key">是否同意转运</div>
+                                    <div class="value">{{ FLAG_TRANSFER_MAP[detail.flag_transfer] || '-' }}</div>
+                                </div>
+                            </a-col>
+                        </template>
                     </a-row>
                 </a-collapse-panel>
 
@@ -158,22 +160,26 @@
                                 </div>
                             </div> -->
                         </a-col>
-                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" v-if="detail.supply_org_type === USER_TYPE.ADMIN">
-                            <div class="info-item">
-                                <div class="key">快递方式</div>
-                                <div class="value" >{{WAYBILL.COURIER_MAP[detail.express_type] || '-'}}</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="key">单号</div>
-                                <div class="value" >{{detail.waybill || '-'}}</div>
-                            </div>
-                        </a-col>
-                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" >
-                            <div class="info-item" v-if="detail.supply_org_type === USER_TYPE.DISTRIBUTOR">
-                                <div class="key">快递单号</div>
-                                <div class="value" >{{detail.waybill_uid || '-'}}</div>
-                            </div>
-                        </a-col>
+                        <template v-if="detail.supply_org_type === USER_TYPE.ADMIN">
+                            <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
+                                <div class="info-item">
+                                    <div class="key">快递方式</div>
+                                    <div class="value" >{{WAYBILL.COURIER_MAP[detail.express_type] || '-'}}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="key">单号</div>
+                                    <div class="value" >{{detail.waybill || '-'}}</div>
+                                </div>
+                            </a-col>
+                        </template>
+                        <template v-if="detail.supply_org_type === USER_TYPE.DISTRIBUTOR">
+                            <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" >
+                                <div class="info-item">
+                                    <div class="key">快递单号</div>
+                                    <div class="value" >{{detail.waybill_uid || '-'}}</div>
+                                </div>
+                            </a-col>
+                        </template>
                     </a-row>
                 </a-collapse-panel>
             </a-collapse>
@@ -197,6 +203,7 @@
                     <div class="value">
                         <a-input-number 
                             v-model:value="form.payment" 
+                            style="width: 120px"
                             :min="0" 
                             :max="((detail.freight_price||0)+detail.charge-detail.payment)/100" 
                             :precision="2" 
@@ -211,40 +218,44 @@
         <!-- 确认发货 -->
         <a-modal v-model:visible="deliverShow" title="确认发货" @ok="handleDeliver">
             <div class="modal-content">
-                <div class="form-item required" v-if="$auth('ADMIN')">
-                    <div class="key">快递方式</div>
-                    <div class="value">
-                        <a-select v-model:value="form.express_type" placeholder="请选择快递方式">
-                            <a-select-option v-for="courier of courierTypeList" :key="courier.value" :value="courier.value">{{courier.name}}</a-select-option>
-                        </a-select>
+                <template v-if="$auth('ADMIN')">
+                    <div class="form-item required">
+                        <div class="key">快递方式</div>
+                        <div class="value">
+                            <a-select v-model:value="form.express_type" placeholder="请选择快递方式">
+                                <a-select-option v-for="courier of courierTypeList" :key="courier.value" :value="courier.value">{{courier.name}}</a-select-option>
+                            </a-select>
+                        </div>
                     </div>
-                </div>
-                <div class="form-item" v-if="$auth('ADMIN')">
-                    <div class="key">单号:</div>
-                    <div class="value">
-                        <a-input v-model:value="form.waybill" placeholder="请输入单号"/>
+                    <div class="form-item">
+                        <div class="key">单号:</div>
+                        <div class="value">
+                            <a-input v-model:value="form.waybill" placeholder="请输入单号"/>
+                        </div>
                     </div>
-                </div>
-                <div class="form-item required" v-if="$auth('ADMIN')">
-                    <div class="key">发货港口:</div>
-                    <div class="value">
-                        <a-input v-model:value="form.harbour" placeholder="请输入发货港口"/>
+                    <div class="form-item required">
+                        <div class="key">发货港口:</div>
+                        <div class="value">
+                            <a-input v-model:value="form.harbour" placeholder="请输入发货港口"/>
+                        </div>
                     </div>
-                </div>
-                <div class="form-item required" v-if="$auth('DISTRIBUTOR')">
-                    <div class="key">收货方式</div>
-                    <div class="value">
-                        <a-select v-model:value="form.receive_type" placeholder="请选择收货方式">
-                            <a-select-option v-for="receive of receiveTypeList" :key="receive.value" :value="receive.value">{{receive.name}}</a-select-option>
-                        </a-select>
+                </template>
+                <template v-if="$auth('DISTRIBUTOR')">
+                    <div class="form-item required">
+                        <div class="key">收货方式</div>
+                        <div class="value">
+                            <a-select v-model:value="form.receive_type" placeholder="请选择收货方式">
+                                <a-select-option v-for="receive of receiveTypeList" :key="receive.value" :value="receive.value">{{receive.name}}</a-select-option>
+                            </a-select>
+                        </div>
                     </div>
-                </div>
-                <div class="form-item" v-if="$auth('DISTRIBUTOR')">
-                    <div class="key">快递单号:</div>
-                    <div class="value">
-                        <a-input v-model:value="form.waybill_uid" placeholder="请输入快递单号"/>
+                    <div class="form-item">
+                        <div class="key">快递单号:</div>
+                        <div class="value">
+                            <a-input v-model:value="form.waybill_uid" placeholder="请输入快递单号"/>
+                        </div>
                     </div>
-                </div>
+                </template>
                 <div class="form-item required">
                     <div class="key">{{$Util.priceUnitFilter(detail.currency)}} 运费:</div>
                     <div class="value">
@@ -257,14 +268,16 @@
                             :prefix="`${$Util.priceUnitFilter(detail.currency)}`" />
                     </div>
                 </div>
-                <div class="form-item required" v-if="$auth('ADMIN')">
-                    <div class="key">支付条款:</div>
-                    <div class="value">
-                        <a-select v-model:value="form.pay_clause" placeholder="请选择支付条款">
-                            <a-select-option v-for="(item,index) of paymentTimeList" :key="index" :value="item.value">{{ item.text }}</a-select-option>
-                        </a-select>
+                <template v-if="$auth('ADMIN')">
+                    <div class="form-item required">
+                        <div class="key">支付条款:</div>
+                        <div class="value">
+                            <a-select v-model:value="form.pay_clause" placeholder="请选择支付条款">
+                                <a-select-option v-for="(item,index) of paymentTimeList" :key="index" :value="item.value">{{ item.text }}</a-select-option>
+                            </a-select>
+                        </div>
                     </div>
-                </div>
+                </template>
                 <div class="form-item" >
                     <div class="key">备注信息:</div>
                     <div class="value">
