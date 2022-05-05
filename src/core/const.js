@@ -282,9 +282,11 @@ let Const = {
             DISTRIBUTOR_AUDIT_SUCCESS: 80,
             AUDIT_SUCCESS: 90,
             FINISH: 100,
+            FAULT_ENTITY_AUDIT: 105,
             SAVE_TO_INVOICE: 110,
             CLOSE: -10,
             AUDIT_FAIL: -30,
+            FAULT_ENTITY_AUDIT_FAIL: -40,
         },
         STATUS_MAP: {
             '30': { key: 30, color: 'yellow', zh: '待检测', en: 'Waiting detect'},
@@ -293,9 +295,11 @@ let Const = {
             '80': { key: 80, color: 'purple', zh: '分销商审核通过', en: 'Passed audit'},
             '90': { key: 90, color: 'purple', zh: '平台审核通过', en: 'Passed audit'},
             '100': { key: 100, color: 'blue', zh: '已完成', en: 'Finished settle accounts'},
+            '105': { key: 105, color: 'blue', zh: '故障件审核通过'},
             '110': { key: 110, color: 'green', zh: '入库完成'},
             '-10': { key: -10, color: 'gray', zh: '已取消', en: 'Cancelled'},
-            '-30': { key: -30, color: 'red', zh: '审核未通过', en: 'Failed audit'},
+            '-30': { key: -30, color: 'red', zh: '工单审核未通过', en: 'Failed audit'},
+            '-40': { key: -40, color: 'red', zh: '故障件审核未通过'},
         },
         // 故障类型 - 放弃使用
         FAULT_OPTIONS_MAP: {

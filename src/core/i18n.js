@@ -24,7 +24,7 @@ const messages = {
         r: {
             repair_sn: '工单编号',
             repair_name: '工单名称',
-            repair_status: '维修状态',
+            repair_status: '工单状态',
             repair_way: '维修方式',
             repair_category: '维修类别',
             repair_unit: '维修单位',

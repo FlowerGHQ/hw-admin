@@ -9,6 +9,30 @@
             </div>
             <div class="form-content">
                 <div class="form-item required">
+                    <div class="key">供应商类型：</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.type" placeholder="请选择供应商类型">
+                            <a-radio v-for="(val,key) in SUPPLIER_TYPE" :key="key" :value="key">{{val }}</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="form-item required" v-if="form.id">
+                    <div class="key">采购状态：</div>
+                    <div class="value">
+                        <a-radio-group  v-model:value="form.flag_purchase">
+                            <a-radio  v-for="(val,key) in STATUS_PURCHASE" :key="key" :value="key">{{ val }}</a-radio>
+                        </a-radio-group >
+                    </div>
+                </div>
+                <div class="form-item required" v-if="form.id">
+                    <div class="key">记账状态：</div>
+                    <div class="value">
+                        <a-radio-group  v-model:value="form.flag_settlement">
+                            <a-radio  v-for="(val,key) in STATUS_SETTLEMENT" :key="key" :value="key">{{ val }}</a-radio>
+                        </a-radio-group >
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">供应商名称：</div>
                     <div class="value">
                         <a-input v-model:value="form.name" placeholder="请输入供应商名称"/>
@@ -101,30 +125,6 @@
                         <a-input v-model:value="form.address" placeholder="请输入详细地址"/>
                     </div>
                 </div>
-                <div class="form-item required">
-                    <div class="key">供应商类型：</div>
-                    <div class="value">
-                        <a-radio-group v-model:value="form.type" placeholder="请选择供应商类型">
-                            <a-radio v-for="(val,key) in SUPPLIER_TYPE" :key="key" :value="key">{{val }}</a-radio>
-                        </a-radio-group>
-                    </div>
-                </div>
-                <div class="form-item required" v-if="form.id">
-                    <div class="key">采购状态：</div>
-                    <div class="value">
-                        <a-radio-group  v-model:value="form.flag_purchase">
-                            <a-radio  v-for="(val,key) in STATUS_PURCHASE" :key="key" :value="key">{{ val }}</a-radio>
-                        </a-radio-group >
-                    </div>
-                </div>
-                <div class="form-item required" v-if="form.id">
-                    <div class="key">记账状态：</div>
-                    <div class="value">
-                        <a-radio-group  v-model:value="form.flag_settlement">
-                            <a-radio  v-for="(val,key) in STATUS_SETTLEMENT" :key="key" :value="key">{{ val }}</a-radio>
-                        </a-radio-group >
-                    </div>
-                </div>
             </div>
         </div>
         <div class="form-btns">
@@ -210,6 +210,7 @@ export default {
                 this.form.type = JSON.stringify(res.detail.type)
                 this.form.flag_purchase = JSON.stringify(res.detail.flag_purchase)
                 this.form.flag_settlement = JSON.stringify(res.detail.flag_settlement)
+                // this.form.payment_term = Core.Util.supplierPaymentTypeFilter(res.detail.payment_term)
                 this.defAddr = [this.form.province, this.form.city, this.form.county]
             }).catch(err => {
                 console.log('getSupplierDetail err', err)
@@ -257,9 +258,6 @@ export default {
             if (!form.deposit_bank) {
                 return this.$message.warning('请输入开户银行')
             }
-          /*  if (!form.account_bank) {
-                return this.$message.warning('请输入开户行支行')
-            }*/
             if (!form.payment_term) {
                 return this.$message.warning('请选择付款期限')
             }
