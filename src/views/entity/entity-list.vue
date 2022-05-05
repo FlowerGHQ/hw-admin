@@ -77,8 +77,12 @@
                     :expandIconColumnIndex="expandIconColumnIndex">
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail'">
-                            <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" fallback='无'/>
-                            {{ text || '-' }}
+                            <a-button type="link" @click="routerChange('detail', record)">
+                                <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" fallback='无'/>
+                                {{ text || '-' }}
+                            </a-button>
+                            <!-- <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" fallback='无'/>
+                            {{ text || '-' }} -->
                             <!-- <a-button type="link" @click="routerChange('detail', record)">
                                 <div class="ell" style="max-width: 150px">{{ text || '-' }}</div>
                             </a-button> -->

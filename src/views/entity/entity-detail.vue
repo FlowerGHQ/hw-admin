@@ -28,15 +28,15 @@
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">客户名称：</span>
-                        <span class="value">{{ detail.customer_detail.name }}</span>
+                        <span class="value">{{ detail.customer_detail ? detail.customer_detail.name : '-' }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">客户手机：</span>
-                        <span class="value">{{ detail.customer_detail.phone }}</span>
+                        <span class="value">{{ detail.customer_detail ? detail.customer_detail.phone : '-' }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">客户地址：</span>
-                        <span class="value">{{ detail.customer_detail.address }}</span>
+                        <span class="value">{{ detail.customer_detail ? detail.customer_detail.address : '-' }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">到港日期：</span>
