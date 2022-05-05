@@ -21,9 +21,6 @@
                         <i class="icon i_settle"/>{{ $t('r.settle_accounts') }}
                     </a-button>
                 </template>
-                <a-button type="primary" ghost @click="handleAuditShow()" v-if="detail.status == STATUS.FINISH && $auth('ADMIN')">
-                    <i class="icon i_add"/>一键入库
-                </a-button>
                 <a-button type="primary" @click="routerChange('invoice')" v-if="haveSettle">
                     <i class="icon i_detail_l"/>查看结算单
                 </a-button>

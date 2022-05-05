@@ -174,6 +174,7 @@ export default {
             let columns = [
                 { title: '供应商名称', dataIndex: 'name', key: 'detail' },
                 { title: '简称', dataIndex: 'short_name', key: 'contact' },
+                { title: '代码', dataIndex: 'uid', key: 'contact' },
                 { title: '供应商类型', dataIndex: 'type',},
                 { title: '联系人', dataIndex: 'contact_name',key: 'contact'},
                 { title: '联系人电话', dataIndex: 'contact_phone',key: 'contact' },

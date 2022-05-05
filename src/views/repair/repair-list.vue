@@ -116,15 +116,17 @@
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
-                    <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.SETTLEMENT && record.service_type == 1"><i class="icon i_audit"/>审核</a-button>
-                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS && record.service_type == 1"><i class="icon i_audit"/>审核</a-button>
+                    <template v-if="column.key === 'audit'">
+                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="(record.status == STATUS.SETTLEMENT || record.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS) && record.service_type == 1"><i class="icon i_audit"/>审核</a-button>
                     </template>
-                    <template v-if="column.key === 'operate'">
+                    <template v-if="column.key === 'redit'">
                         <a-button type='link' @click="routerChange('edit',record)" v-if="record.status == STATUS.AUDIT_FAIL"><i class="icon i_edit"/>编辑</a-button>
                     </template>
-                    <template v-if="column.key === 'handle'">
-                        <a-button type='link' @click="handleInvoice(record.id)" v-if="record.status == STATUS.AUDIT_SUCCESS"><i class="icon i_edit"/>结算</a-button>
+                    <template v-if="column.key === 'invoice'">
+                        <a-button type='link' @click="handleInvoice(record.id)" v-if="record.status == STATUS.AUDIT_SUCCESS"><i class="icon i_audit"/>审核</a-button>
+                    </template>
+                    <template v-if="column.key === 'fault'">
+                        <a-button type='link' @click="handleModalShow(record.id, 'fault')" v-if="record.status == STATUS.FINISH && record.service_type == 1"><i class="icon i_s_warehouse"/>入库</a-button>
                     </template>
                 </template>
             </a-table>
@@ -146,7 +148,7 @@
         </div>
     </div>
     <!-- 审核 -->
-    <template class="modal-container">
+    <template class="modal-container" v-if="operMode == 'audit'">
         <a-modal v-model:visible="modalShow" title="审核" :after-close='handleModalClose'>
             <div class="modal-content">
                 <div class="form-item required">
@@ -168,6 +170,33 @@
             <template #footer>
                 <a-button @click="modalShow = false">取消</a-button>
                 <a-button @click="handleModalSubmit" type="primary" >确定</a-button>
+            </template>
+        </a-modal>
+    </template>
+    <!-- 入库 -->
+    <template class="modal-container" v-if="operMode == 'fault'">
+        <a-modal v-model:visible="modalShow" title="入库" :after-close='handleModalClose'>
+            <div class="modal-content">
+                <div class="form-item required">
+                    <div class="key">仓库:</div>
+                    <div class="value">
+                        <a-select v-model:value="faultForm.warehouse_id" placeholder="请选择仓库" show-search option-filter-prop="children">
+                            <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">
+                                {{ item.name }}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">故障件编号:</div>
+                    <div class="value">
+                        <a-input v-model:value="faultForm.fault_entity_uid" placeholder="请输入故障件编号"/>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="modalShow = false">取消</a-button>
+                <a-button @click="handleStock" type="primary" >确定</a-button>
             </template>
         </a-modal>
     </template>
@@ -211,8 +240,8 @@ export default {
                 {zh: '已结算待审核',en: 'Settled accounts and awaiting audit', value: '0', color: 'orange',  key: STATUS.SETTLEMENT },
                 {zh: '审核未通过', en: 'Failed audit',value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
                 {zh: '审核通过',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
-                {zh: '结算完成',en: 'Finished settle accounts', value: '0', color: 'green',  key: STATUS.FINISH },
-                {zh: '入库完成', value: '0', color: 'blue',  key: STATUS.SAVE_TO_INVOICE },
+                {zh: '结算完成',en: 'Finished settle accounts', value: '0', color: 'blue',  key: STATUS.FINISH },
+                {zh: '入库完成', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },
                 {zh: '已取消',en: 'Cancelled', value: '0', color: 'gray',  key: STATUS.CLOSE },
             ],
             distributorList: [], // 分销商下拉框数据
@@ -244,6 +273,12 @@ export default {
                 audit_result: 1,
                 audit_message: '',
             },
+            warehouseList: [],
+            faultForm: {
+                id: '',
+                warehouse_id: undefined,
+                fault_entity_uid: undefined,
+            }
         };
     },
     watch: {
@@ -290,18 +325,22 @@ export default {
                 // { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
             ]
             if (this.operMode === 'audit' && this.$auth('ADMIN', 'DISTRIBUTOR')) {
-                columns.push({ title: this.$t('def.operate'), key: 'operation', fixed: 'right'},)
+                columns.push({ title: this.$t('def.operate'), key: 'audit', fixed: 'right'},)
             }
             if (this.operMode === 'redit' && !this.$auth('ADMIN')) {
-                columns.push({ title: this.$t('def.operate'), key: 'operate', fixed: 'right'},)
+                columns.push({ title: this.$t('def.operate'), key: 'redit', fixed: 'right'},)
             }
             if (this.operMode === 'invoice' && this.$auth('ADMIN')) {
-                columns.push({ title: this.$t('def.operate'), key: 'handle', fixed: 'right'},)
+                columns.push({ title: this.$t('def.operate'), key: 'invoice', fixed: 'right'},)
+            }
+            if (this.operMode === 'fault' && this.$auth('ADMIN')) {
+                columns.push({ title: this.$t('def.operate'), key: 'fault', fixed: 'right'},)
             }
             return columns
         },
     },
     mounted() {
+        this.getWarehouseList();
     },
 
     methods: {
@@ -364,6 +403,8 @@ export default {
                 this.searchForm.status = STATUS.AUDIT_FAIL
             } else if (this.operMode == 'invoice') {
                 this.searchForm.status = STATUS.AUDIT_SUCCESS
+            } else if (this.operMode == 'fault') {
+                this.searchForm.status = STATUS.FINISH
             }
             if (this.$auth('ADMIN')) {
                 this.getDistributorListAll();
@@ -486,10 +527,12 @@ export default {
             this.modalShow = true
             this.modalType = type
             this.editForm.id = id
+            this.faultForm.id = id
         },
         handleModalClose() { // 关闭弹框
             this.modalShow = false;
             Object.assign(this.editForm, this.$options.data().editForm)
+            Object.assign(this.faultForm, this.$options.data().faultForm)
         },
         handleModalSubmit() { // 审核提交
             this.loading = true;
@@ -501,11 +544,42 @@ export default {
                 this.loading = false;
             });
         },
-        handleInvoice(id) { //结算
-            Core.Api.Repair.pay({id}).then(() => {
-                this.$message.success('结算完成')
-                this.getTableData()
+      handleInvoice(id) {
+            let _this = this;
+            this.$confirm({
+                title: '确定要结算吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Repair.pay({id})
+                        .then(() => {
+                            _this.$message.success('结算完成');
+                            _this.getTableData();
+                        }).catch((err) => {
+                        console.log('handleInvoice err', err);
+                    });
+                },
+            });
+        },
+        getWarehouseList() {
+            Core.Api.Warehouse.listAll().then(res => {
+                this.warehouseList = res.list
+                console.log('getWarehouseList', this.warehouseList)
             })
+        },
+        handleStock(id) {
+            console.log('id',id)
+            let faultForm = Core.Util.deepCopy(this.faultForm)
+            Core.Api.Repair.stock({
+                ...faultForm
+            }).then(() => {
+                this.$message.success('入库完成');
+                this.handleModalClose()
+                this.getTableData();
+            }).catch((err) => {
+                console.log('handleStock err', err);
+            });
         },
     }
 };
