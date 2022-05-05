@@ -54,7 +54,6 @@
                     <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit">确认添加</a-button>
                 </template>
                 <div class="panel-content">
-                <div class="panel-content no-mg">
                     <a-table :columns="tableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
                              :row-key="record => record.id" :pagination='false'>
                         <template #bodyCell="{ column, text, record }">
@@ -136,7 +135,6 @@
                             @showSizeChange="pageSizeChange"
                         />
                     </div>
-                </div>
                 </div>
             </a-collapse-panel>
         </a-collapse>
