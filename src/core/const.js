@@ -718,7 +718,7 @@ let Const = {
         SOURCE_FORM_MAP: {
             0: '未知操作',
             1: '操作员操作',
-            21: '维修单明细',
+            21: '维修单',
             31: '出入库单',
         },
         AUDIT_TYPE: {
@@ -1000,7 +1000,7 @@ let Const = {
             SUBMIT: 100, //已提交待审核
             PASS: 200, //审核通过
             // CLOSE: 300, //已完成
-            N_WAREHOUSE: 500,  //已入库
+            N_WAREHOUSE: 500,  //入库完成
             REFUSE: -200,//审核失败
             CANCEL: -100, // 取消
         },
@@ -1018,7 +1018,7 @@ let Const = {
             '100': 'yellow',
             '200': 'green',
             // '300': 'green',
-            '500': 'purple',
+            '500': 'green',
             '-200': 'red',
             '-100': 'grey'
         },

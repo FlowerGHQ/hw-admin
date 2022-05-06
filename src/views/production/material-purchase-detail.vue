@@ -5,10 +5,9 @@
             <div class="btn-area">
                 <a-button type="primary" @click="handleSubmit()" v-if="detail.status === STATUS.INIT"><i class="icon i_confirm"/>提交</a-button>
                 <a-button type="danger" ghost @click="handleCancel()" v-if="detail.status === STATUS.INIT"> <i class="icon i_close_c"/>取消</a-button>
-                <a-button type="primary" @click="handlePurchaseAuditShow" v-if="detail.status === STATUS.SUBMIT"> <i class="icon i_audit"/>审核</a-button>
-                <template v-if="detail.status === STATUS.PASS && $auth('invoice.export')">
-                    <a-button type="primary" @click="handleExport"><i class="icon i_download"/>导出</a-button>
-                </template>
+                <a-button type="primary" @click="handlePurchaseShow" v-if="detail.status === STATUS.SUBMIT"> <i class="icon i_audit"/>审核</a-button>
+                <a-button v-if="detail.status === STATUS.PASS" type="primary" @click="handlePurchaseShow"><i class="icon i_s_warehouse"/>入库</a-button>
+                <a-button v-if="detail.status === STATUS.PASS || detail.status === STATUS.N_WAREHOUSE" type="primary" @click="handleExport"><i class="icon i_download"/>导出</a-button>
             </div>
         </div>
         <div class="gray-panel info">
@@ -138,33 +137,54 @@
                 </div>
             </a-collapse-panel>
         </a-collapse>
+        <template class="modal-container" v-if="detail.status === STATUS.SUBMIT">
+            <a-modal v-model:visible="purchaseShow" title="审核" class="purchase-audit-modal" :after-close='handlePurchaseClose'>
+                <div class="modal-content">
+                    <div class="form-item required">
+                        <div class="key">审核结果:</div>
+                        <div class="value">
+                            <a-radio-group v-model:value="auditForm.status">
+                                <a-radio :value="STATUS.PASS">通过</a-radio>
+                                <a-radio :value="STATUS.REFUSE">不通过</a-radio>
+                            </a-radio-group>
+                        </div>
+                    </div>
+                    <div class="form-item textarea required" v-if="auditForm.status === STATUS.REFUSE">
+                        <div class="key">原因:</div>
+                        <div class="value">
+                            <a-textarea v-model:value="auditForm.audit_message" placeholder="请输入不通过原因"
+                                        :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                        </div>
+                    </div>
+                </div>
+                <template #footer>
+                    <a-button @click="purchaseShow = false">取消</a-button>
+                    <a-button @click="handlePurchaseSubmit()" type="primary">确定</a-button>
+                </template>
+            </a-modal>
+        </template>
+        <!-- 入库 -->
+        <template class="modal-container" v-if="detail.status === STATUS.PASS">
+            <a-modal v-model:visible="purchaseShow" title="入库" :after-close='handleModalClose'>
+                <div class="modal-content">
+                    <div class="form-item required">
+                        <div class="key">仓库:</div>
+                        <div class="value">
+                            <a-select v-model:value="editForm.warehouse_id" placeholder="请选择仓库" show-search option-filter-prop="children">
+                                <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">
+                                    {{ item.name }}
+                                </a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                </div>
+                <template #footer>
+                    <a-button @click="modalShow = false">取消</a-button>
+                    <a-button @click="handleStock" type="primary" >确定</a-button>
+                </template>
+            </a-modal>
+        </template>
     </div>
-    <template class="modal-container">
-        <a-modal v-model:visible="purchaseAuditShow" title="审核" class="purchase-audit-modal" :after-close='handlePurchaseAuditClose'>
-            <div class="modal-content">
-                <div class="form-item required">
-                    <div class="key">审核结果:</div>
-                    <div class="value">
-                    <a-radio-group v-model:value="auditForm.status">
-                        <a-radio :value="STATUS.PASS">通过</a-radio>
-                        <a-radio :value="STATUS.REFUSE">不通过</a-radio>
-                    </a-radio-group>
-                    </div>
-                </div>
-                <div class="form-item textarea required" v-if="auditForm.status === STATUS.REFUSE">
-                    <div class="key">原因:</div>
-                    <div class="value">
-                        <a-textarea v-model:value="auditForm.audit_message" placeholder="请输入不通过原因"
-                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
-                    </div>
-                </div>
-            </div>
-            <template #footer>
-                <a-button @click="purchaseAuditShow = false">取消</a-button>
-                <a-button @click="handlePurchaseAuditSubmit()" type="primary">确定</a-button>
-            </template>
-        </a-modal>
-    </template>
 </template>
 
 <script>
@@ -198,12 +218,18 @@ export default {
             tableData: [],
             addMode: false,
             addData: [],
-            purchaseAuditShow:false,
+            purchaseShow:false,
+            warehouseList: [],
             auditForm: {
                 status: '',
                 audit_message: '',
             },
+            editForm: {
+                id: '',
+                warehouse_id: undefined,
+            },
             exportDisabled: false,
+            modalShow: false,
         };
     },
     watch: {},
@@ -244,6 +270,7 @@ export default {
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         this.getMaterialPurchaseDetail();
+        this.getWarehouseList();
     },
     methods: {
         pageChange(curr) {    // 页码改变
@@ -459,28 +486,26 @@ export default {
                 },
             });
         },
-        handlePurchaseAuditShow() {
-            this.purchaseAuditShow = true
+        handlePurchaseShow() {
+            this.purchaseShow = true
         },
-        handlePurchaseAuditClose() {
-            this.purchaseAuditShow = false
-            this.auditForm = {
-                status: '',
-                audit_message: '',
-            }
+        handlePurchaseClose() {
+            this.purchaseShow = false
+            Object.assign(this.editForm, this.$options.data().editForm)
+            Object.assign(this.auditForm, this.$options.data().auditForm)
         },
-        handlePurchaseAuditSubmit() {
+        handlePurchaseSubmit() {
             console.log('id',this.id)
             Core.Api.MaterialPurchase.audit({
                 id: this.id,
                 status: this.auditForm.status,
                 audit_message: this.auditForm.audit_message
             }).then(res => {
-                console.log('handlePurchaseAuditSubmit res', res)
-                this.handlePurchaseAuditClose()
+                console.log('handlePurchaseSubmit res', res)
+                this.handlePurchaseClose()
                 this.getMaterialPurchaseDetail()
             }).catch(err => {
-                console.log('handlePurchaseAuditSubmit err', err)
+                console.log('handlePurchaseSubmit err', err)
             }).finally(() => {
                 this.loading = false;
             });
@@ -495,6 +520,25 @@ export default {
                     _this.handlePurchaseExport();
                 }
             })
+        },
+        getWarehouseList() {
+            Core.Api.Warehouse.listAll().then(res => {
+                this.warehouseList = res.list
+                console.log('getWarehouseList', this.warehouseList)
+            })
+        },
+        handleStock() {
+            this.editForm.id = this.id
+            let editForm = Core.Util.deepCopy(this.editForm)
+            Core.Api.MaterialPurchase.stock({
+                ...editForm
+            }).then(() => {
+                this.$message.success('入库完成');
+                this.handlePurchaseClose()
+                this.getMaterialPurchaseDetail()
+            }).catch((err) => {
+                console.log('handleStock err', err);
+            });
         },
         handlePurchaseExport() { // 订单导出
             this.exportDisabled = true;
