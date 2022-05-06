@@ -104,7 +104,7 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <template v-if="!record.default_item_id">
-                                <a-button type='link' @click="handleVehicleShow(record)"><i class="icon i_edit"/>编辑</a-button>
+<!--                                <a-button type='link' @click="handleVehicleShow(record)"><i class="icon i_edit"/>编辑</a-button>-->
                                 <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>详情</a-button>
                             </template>
                             <a-button type='link' @click="handleDelete(record.id)" class="danger"><i
@@ -380,7 +380,7 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该商品吗？',
+                title: '确定要删除该整车吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',

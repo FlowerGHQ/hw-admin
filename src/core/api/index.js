@@ -427,6 +427,7 @@ const apiList = {
         itemSave: ['PostJson', 'material-purchase-order-item/save'],
         batchSave: ['PostJson', 'material-purchase-order-item/batch-save'],
         statusList: ['PostJson', 'material-purchase-order/status-list'], // 保存
+        detailByUid: ['PostJson', 'material-purchase-order/detail-by-sn'], // 保存
     }
 };
 

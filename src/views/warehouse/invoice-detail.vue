@@ -53,7 +53,8 @@
             <div class="info-item" v-if="detail.source_type !== SOURCE_TYPE.ADMIN">
                 <div class="key">来源单号</div>
                 <div class="value">
-                    <a-button type="link" @click="routerChange('source')">{{ detail.source_uid || '-'}}</a-button>
+                    <a-button type="link" v-if="detail.source_uid" @click="routerChange('source')">{{ detail.source_uid }}</a-button>
+                    <a-button type="link" v-if="detail.uid" @click="routerChange('source')">{{ detail.uid }}</a-button>
                 </div>
             </div>
             <div class="info-item">

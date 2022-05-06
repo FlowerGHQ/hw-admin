@@ -154,7 +154,6 @@ export default {
             SUPPLIER_TYPE,
             STATUS_PURCHASE,
             STATUS_SETTLEMENT,
-            item_category: {},
             PAYMENT_TYPE: Core.Const.SUPPLIER.PAYMENT_TYPE_MAP,
             form: {
                 id: '',
@@ -224,6 +223,7 @@ export default {
             this.form.county = address[2]
         },
         handleCategorySelect(val, node) {
+            console.log('handleCategorySelect',val)
             this.form.category_id = val
         },
         handleSubmit() {
@@ -234,9 +234,6 @@ export default {
             if (!form.short_name) {
                 return this.$message.warning('请输入供应商简称')
             }
-           /* if (!form.type) {
-                return this.$message.warning('请选择供应商类型')
-            }*/
             if (!form.uid) {
                 return this.$message.warning('请输入供应商代码')
             }

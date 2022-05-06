@@ -115,6 +115,7 @@ export default {
                 case SOURCE_TYPE.AFTER_SALES:
                 case SOURCE_TYPE.TRANSFER:
                 case SOURCE_TYPE.REPAIR:
+                case SOURCE_TYPE.MATERIAL_PURCHASE:
                     return true
                 default: return false
             }
@@ -229,18 +230,25 @@ export default {
                 case SOURCE_TYPE.REPAIR:
                     api = ['Repair', 'detailByUid']
                     break;
+                case SOURCE_TYPE.MATERIAL_PURCHASE:
+                    api = ['MaterialPurchase', 'detailByUid']; key ='sn';
+                    break;
             }
             parme[key] = this.sourceUid
             Core.Api[api[0]][api[1]](parme).then(res => {
                 console.log("handleSelectBlur res", res)
-                this.isExist = res.detail == null ? 2 : 1
-                this.form.source_id = res.detail.id
+                if (this.form.source_type == SOURCE_TYPE.MATERIAL_PURCHASE) {
+                    this.isExist = !res ? 2 : 1
+                    this.form.source_id = res.id
+                } else {
+                    this.isExist = res.detail == null ? 2 : 1
+                    this.form.source_id = res.detail.id
+                }
             }).catch(err => {
                 console.log('handleSelectBlur err', err)
             }).finally(() => {
             });
         },
-
         setInvoiceSource(source) {
             console.log('setInvoiceSource source:', source)
             let form = source.form

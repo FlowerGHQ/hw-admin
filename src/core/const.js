@@ -698,6 +698,7 @@ let Const = {
             AFTER_SALES: 30, // 售后单
             TRANSFER: 40,    // 调货单
             REPAIR: 50,      // 维修单
+            MATERIAL_PURCHASE: 60, //物料采购单
         },
         SOURCE_TYPE_MAP: {
             10: '管理员创建',
@@ -705,7 +706,8 @@ let Const = {
             20: '采购单',
             30: '售后单',
             40: '调货单',
-            50: '维修单'
+            50: '维修单',
+            60: '物料采购单',
         },
         SOURCE_FORM: { //出入库单变更来源
             UNKNOWN: 0,
