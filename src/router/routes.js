@@ -933,7 +933,7 @@ const routes = [
                     parent: '/transfer/transfer-order-list',
                 }
             },
-            {
+    /*        {
                 path: 'fault-entity-list',
                 name: 'faultEntityList',
                 component: () => import('@/views/warehouse/fault-entity-list.vue'),
@@ -950,7 +950,7 @@ const routes = [
                     roles: [LOGIN_TYPE.ADMIN],
                     type: 'pending'
                 }
-            },
+            },*/
         ]
     },
     { // 售后管理 - 平台 && 分销

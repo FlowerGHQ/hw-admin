@@ -159,7 +159,7 @@ export default {
     computed: {
         tableColumns() {
             let type = this.type
-            let name = this.type === 'item'
+            let name = '商品'
             let tableColumns = [
                 {title: name + '名称', dataIndex: [type, 'name'], key: 'item'},
                 {title: name + '品号', dataIndex: [type, 'model'], key: 'item'},

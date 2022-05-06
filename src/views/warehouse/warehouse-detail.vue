@@ -67,7 +67,7 @@
                                v-if="activeKey === 'CustomizeStockList'"/>
                 </a-tab-pane>
 
-                <a-tab-pane key="ImperfectList" tab="残次品数量" v-if="detail.type == WAREHOUSE_TYPE.DEFECTIVE">
+                <a-tab-pane key="ImperfectList" tab="故障件列表" v-if="detail.type == WAREHOUSE_TYPE.DEFECTIVE">
                     <ImperfectList :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
                                    v-if="activeKey === 'ImperfectList'"/>
                 </a-tab-pane>

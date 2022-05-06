@@ -3,28 +3,28 @@
         <div class='title-container'>
             <div class='title-area'>整车详情</div>
             <div class="btns-area">
-                <a-button type="danger" ghost @click="handleDelete(id)" v-if="$auth('supplier.delete')"><i class="icon i_close_c"/>删除</a-button>
+                <a-button type="danger" ghost @click="handleDelete(id)"><i class="icon i_close_c"/>删除</a-button>
             </div>
         </div>
         <div class="gray-panel">
             <div class="panel-content desc-container">
                 <div class="desc-title">
                     <div class="title-area">
-                        <span class="title">{{ detail.name }}</span>
+                        <span class="title">{{ detail.item ? detail.item.name : '-' }}</span>
                     </div>
                 </div>
                 <a-row class="desc-detail">
-                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+<!--                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">整车名称：</span>
                         <span class="value">{{ detail.item ? detail.item.name : '-' }}</span>
-                    </a-col>
+                    </a-col>-->
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">整车编号：</span>
                         <span class="value">{{ detail.uid }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">维修次数：</span>
-                        <span class="value">{{ detail.repair_count }}</span>
+                        <span class="value">{{ detail.repair_count }}次</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">客户名称：</span>
@@ -42,17 +42,17 @@
                         <span class="key">到港日期：</span>
                         <span class="value">{{ $Util.timeFilter(detail.arrival_time) }}</span>
                     </a-col>
-                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+<!--                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">创建时间：</span>
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
-                    </a-col>
+                    </a-col>-->
                 </a-row>
             </div>
         </div>
         <div class="tabs-container">
             <a-tabs>
                  <a-tab-pane key="RepairOrderList" tab="维修单列表">
-                    <repair-order-list :itemId="id"></repair-order-list>
+                    <RepairOrderList :itemId="id"></RepairOrderList>
                 </a-tab-pane>
             </a-tabs>
         </div>
@@ -76,7 +76,7 @@ export default {
             id: '',
             item_id: '',
             detail: {},
-            activeKey: 1,
+            activeKey: '',
         }
     },
     watch: {},
@@ -105,7 +105,6 @@ export default {
             }).then((res) => {
                 console.log('getEntityDetail res', res);
                 this.detail = res.detail
-                this.activeKey = 'EntityList'
             }).catch((err) => {
                 console.log('getEntityDetail err', err);
             }).finally(() => {

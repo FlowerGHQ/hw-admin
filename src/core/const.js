@@ -284,9 +284,11 @@ let Const = {
             DISTRIBUTOR_AUDIT_SUCCESS: 80,
             AUDIT_SUCCESS: 90,
             FINISH: 100,
+            FAULT_ENTITY_AUDIT: 105,
             SAVE_TO_INVOICE: 110,
             CLOSE: -10,
             AUDIT_FAIL: -30,
+            FAULT_ENTITY_AUDIT_FAIL: -40,
         },
         STATUS_MAP: {
             '30': { key: 30, color: 'yellow', zh: '待检测', en: 'Waiting detect'},
@@ -295,9 +297,11 @@ let Const = {
             '80': { key: 80, color: 'purple', zh: '分销商审核通过', en: 'Passed audit'},
             '90': { key: 90, color: 'purple', zh: '平台审核通过', en: 'Passed audit'},
             '100': { key: 100, color: 'blue', zh: '已完成', en: 'Finished settle accounts'},
+            '105': { key: 105, color: 'blue', zh: '故障件审核通过'},
             '110': { key: 110, color: 'green', zh: '入库完成'},
             '-10': { key: -10, color: 'gray', zh: '已取消', en: 'Cancelled'},
-            '-30': { key: -30, color: 'red', zh: '审核未通过', en: 'Failed audit'},
+            '-30': { key: -30, color: 'red', zh: '工单审核未通过', en: 'Failed audit'},
+            '-40': { key: -40, color: 'red', zh: '故障件审核未通过'},
         },
         // 故障类型 - 放弃使用
         FAULT_OPTIONS_MAP: {
@@ -696,6 +700,7 @@ let Const = {
             AFTER_SALES: 30, // 售后单
             TRANSFER: 40,    // 调货单
             REPAIR: 50,      // 维修单
+            MATERIAL_PURCHASE: 60, //物料采购单
         },
         SOURCE_TYPE_MAP: {
             10: '管理员创建',
@@ -703,7 +708,8 @@ let Const = {
             20: '采购单',
             30: '售后单',
             40: '调货单',
-            50: '维修单'
+            50: '维修单',
+            60: '物料采购单',
         },
         SOURCE_FORM: { //出入库单变更来源
             UNKNOWN: 0,
@@ -714,7 +720,7 @@ let Const = {
         SOURCE_FORM_MAP: {
             0: '未知操作',
             1: '操作员操作',
-            21: '维修单明细',
+            21: '维修单',
             31: '出入库单',
         },
         AUDIT_TYPE: {
@@ -996,7 +1002,7 @@ let Const = {
             SUBMIT: 100, //已提交待审核
             PASS: 200, //审核通过
             // CLOSE: 300, //已完成
-            N_WAREHOUSE: 500,  //已入库
+            N_WAREHOUSE: 500,  //入库完成
             REFUSE: -200,//审核失败
             CANCEL: -100, // 取消
         },
@@ -1014,7 +1020,7 @@ let Const = {
             '100': 'yellow',
             '200': 'green',
             // '300': 'green',
-            '500': 'purple',
+            '500': 'green',
             '-200': 'red',
             '-100': 'grey'
         },

@@ -430,6 +430,8 @@ const apiList = {
         itemSave: ['PostJson', 'material-purchase-order-item/save'],
         batchSave: ['PostJson', 'material-purchase-order-item/batch-save'],
         statusList: ['PostJson', 'material-purchase-order/status-list'], // 保存
+        detailByUid: ['PostJson', 'material-purchase-order/detail-by-sn'],
+        stock: ['PostJson', 'material-purchase-order/save-to-invoice'],//入库
     }
 };
 

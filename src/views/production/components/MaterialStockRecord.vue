@@ -25,6 +25,11 @@
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="(record) => record.id" :pagination="false">
                     <template #bodyCell="{ column, text, record }">
+                        <template v-if="column.key === 'detail'">
+                            <a-tooltip placement="top" :title='text'>
+                                <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}</a-button>
+                            </a-tooltip>
+                        </template>
                         <template v-if="column.key === 'count'">
                             {{ text || 0 }} 件
                         </template>
@@ -118,6 +123,7 @@ export default {
                 { title: "仓库", dataIndex: ['warehouse','name'], key: "warehouse_name" },
                 { title: "变更后库存数量", dataIndex: "balance", key: "count" },
                 { title: "变更来源", dataIndex: "source_type", key: "source_type" },
+                { title: "来源单号", dataIndex: "sn", key: "detail" },
                 { title: "创建时间", dataIndex: "create_time", key: "time" },
             ];
             return tableColumns;
@@ -128,6 +134,18 @@ export default {
         this.getWarehouseList();
     },
     methods: {
+        routerChange(type, item = {}) {
+            let routeUrl = ''
+            switch (type) {
+                case 'detail':
+                    routeUrl = this.$router.resolve({
+                        path: "/warehouse/invoice-detail",
+                        query: {id: item.source_id}
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+            }
+        },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
             this.getTableData()

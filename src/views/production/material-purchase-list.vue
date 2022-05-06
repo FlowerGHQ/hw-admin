@@ -146,7 +146,7 @@ export default {
                 {text: '待审核', value: '0', color: 'yellow',  key: '100'},
                 {text: '审核通过', value: '0', color: 'blue',  key: '200'},
                 {text: '审核未通过', value: '0', color: 'red',  key: '-200'},
-                // {text: '入库完成', value: '0', color: 'green',  key: '400'},
+                {text: '已入库', value: '0', color: 'green',  key: '500'},
                 {text: '已取消', value: '0', color: 'grey',  key: '-100'},
             ],
         }
