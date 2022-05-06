@@ -5,7 +5,8 @@ import defult_item from '@images/defult_item.png'
 import defult_file from '@images/defult_file.png'
 
 
-let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com'
+// let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' // 正式
+let OSS_POINT = 'https://rebuild-mel-erp.oss-cn-hangzhou.aliyuncs.com' // 
 let URL_POINT = 'https://eos-api.hw.innotick.com'
 
 switch (window.location.hostname) {
@@ -30,7 +31,8 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.0.0.226:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.7:8083' // 但
-        URL_POINT = 'http://10.0.0.146:8883'
+        // URL_POINT = 'http://10.0.0.146:8883'
+        URL_POINT = 'http://10.0.0.171:8883' // 姚志宇
 
 
         // URL_POINT = 'http://10.0.0.134:8083' // 谭洋波

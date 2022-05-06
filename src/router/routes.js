@@ -536,6 +536,17 @@ const routes = [
                 }
             },
             {
+                path: 'item-explored-edit',
+                name: 'ItemExploredEdit',
+                component: () => import('@/views/item/item-explored-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '商品爆炸图详情',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    parent: '/item/item-list',
+                }
+            },
+            {
                 path: 'item-category',
                 name: 'ItemCategory',
                 component: () => import('@/views/item/item-category.vue'),

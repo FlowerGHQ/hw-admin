@@ -166,6 +166,9 @@ const apiList = {
         detailByCodeForRepair: ['PostJson','item/detail-by-code-for-repair'],
         delete: ['PostJson', 'item/delete'],
         setIndep: ['PostJson', 'item/set-flag-independent-info'],
+        getItemComponent: ['PostJson', 'item/item-component-list'], // 查询绑定零部件
+        bindItemComponent: ['PostJson', 'item/bind-item-component'], // 绑定零部件
+        deleteItemComponent: ['PostJson', 'item/delete-item-component'], // 解绑零部件
     },
     Entity: {// 车架
         list: ['PostJson', 'entity/list'],
