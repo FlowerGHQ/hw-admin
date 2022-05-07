@@ -36,6 +36,7 @@
                 </div>
             </div>
         </div>
+        <!-- <ExploredContent /> -->
         <div class="btn-content">
             <a-button type="primary" class="disabled" v-if="detail.in_shopping_cart">已在购物车中</a-button>
             <a-button type="primary" @click="hanldeAddToShopCart" v-else>添加到购物车</a-button>
@@ -48,10 +49,13 @@
 
 <script>
 import Core from '../../core';
+import ExploredContent from './components/ExploredContent.vue';
 
 export default {
     name: 'ItemDisplay',
-    components: {},
+    components: {
+        ExploredContent
+    },
     props: {},
     data() {
         return {
@@ -260,7 +264,7 @@ export default {
             > li {
                 width: 46px;
                 height: 46px;
-
+                text-indent: 0;
                 a, img {
                     width: 46px;
                     height: 46px;

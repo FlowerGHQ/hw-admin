@@ -5,6 +5,7 @@
         <div class="title-container">
             <div class="title-area">商品详情</div>
             <div class="btns-area">
+                <!-- <a-button @click="routerChange('edit-explored')"><i class="icon i_relevance"/>爆炸图</a-button> -->
                 <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
                 <!-- <a-button danger @click="handleDelete()"><i class="icon i_delete"/>删除</a-button> -->
                 <a-button :type="detail.status === 0 ? 'danger' : 'primary'" ghost @click="handleStatusChange()">
@@ -89,6 +90,7 @@
 
                             <template v-if="column.key === 'operation'">
                                 <template v-if="record.flag_independent_info">
+                                    <!-- <a-button type="link" @click="routerChange('edit-explored-indep', record)"><i class="icon i_relevance"/>爆炸图</a-button> -->
                                     <a-button type="link" @click="routerChange('edit-indep', record)"><i class="icon i_edit"/>编辑</a-button>
                                     <a-button type="link" @click="routerChange('detail-indep', record)"><i class="icon i_detail"/>详情</a-button>
                                 </template>
@@ -189,6 +191,20 @@ export default {
                         query: { id: item.id, indep_flag: 1 }
                     })
                     window.open(routeUrl.href, '_blank')
+                    break;
+                case 'edit-explored':
+                    routeUrl = this.$router.resolve({
+                        path: "/item/item-explored-edit",
+                        query: { id: this.id, indep_flag: this.indep_flag }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'edit-explored-indep':
+                    routeUrl = this.$router.resolve({
+                        path: "/item/item-explored-edit",
+                        query: { id: item.id, indep_flag: 1 }
+                    })
+                    window.open(routeUrl.href, '_self')
                     break;
             }
         },
