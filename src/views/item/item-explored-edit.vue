@@ -50,6 +50,7 @@
                             @dblclick="showEdit(index)" @mousemove.stop="">
                             {{index + 1}}
                             <!-- <div class="component" v-show="moveIndex === null"> -->
+
                             <div class="component" v-show="moveIndex !== index">
                                 <div class="component-contain">
                                     <template v-if="item.target_id">
@@ -85,12 +86,13 @@
 </div>
 </template>
 <script>
+import { get } from 'lodash';
 import Core from '../../core';
 import ItemHeader from './components/ItemHeader.vue'
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 
 const TARGET_TYPE = Core.Const.BOM.TARGET_TYPE;
-const TEST_IMAGE = 'https://img.51miz.com/Element/00/90/53/37/8334ff2e_E905337_d68765b3.jpg';
+const TEST_IMAGE = 'https://rebuild-mel-erp.oss-cn-hangzhou.aliyuncs.com/img/700ad6f5592c78946f85a22c19551a1c6bc7c3a1dc77b19edab6012d2e2d0b33.png';
 export default {
     components: {
         ItemHeader,
@@ -136,6 +138,7 @@ export default {
             },
             details: {},
             detailImageUrl: '',
+            shortPath: '',
 
             canvas: null,
             ctx: null,
@@ -249,7 +252,13 @@ export default {
                 if (file.response && file.response.code < 0) {
                     return this.$message.error(file.response.message)
                 }
-                this.loadImage(TEST_IMAGE);
+                this.shortPath = get(fileList,'[0].response.data.filename', null);
+                // Core.Const.NET.FILE_URL_PREFIX + item
+                // this.loadImage(TEST_IMAGE);
+                if(this.shortPath) {
+                    this.detailImageUrl = Core.Const.NET.FILE_URL_PREFIX + this.shortPath;
+                    this.loadImage(this.detailImageUrl);
+                }
             }
             this.upload.coverList = fileList;
         },
@@ -351,6 +360,7 @@ export default {
             if(!this.canvas) return;
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.ctx.lineWidth = 1;
+            // this.ctx.strokeStyle = '#000000';
             this.ctx.strokeStyle = '#1890ff';
             this.ctx.beginPath();
             for (var i = 0; i < this.pointerList.length; i++) {
@@ -457,6 +467,7 @@ export default {
             border-radius: 50px;
             user-select: none;
             opacity: 0.6;
+            transition: opacity 0.2s ease;
             cursor: pointer;
             &:hover {
                 z-index: 20;
@@ -466,10 +477,7 @@ export default {
         .item-pointer {
             width: 8px;
             height: 8px;
-            background-color: #1890ff;
-            &:hover {
-                background-color: #ffffff;
-            }
+            background-color: @BG_LP;
         }
         .item-pos {
             position: absolute;
@@ -478,7 +486,7 @@ export default {
             line-height: 20px;
             text-align: center;
             font-size: 12px;
-            border: 1px solid #1890ff;
+            border: 1px solid @BG_LP;
             background-color: white;
             .component {
                 position: relative;
@@ -491,12 +499,11 @@ export default {
                     z-index: 2;
                     padding: 12px 24px;
                     top: 10px;
-                    left: -24px;
+                    left: -26px;
                     width: 100%;
                     border-radius: 5px;
                     background-color: #ffffff;
-                    border: 1px solid #1890ff;
-                    // color: #1890ff;
+                    border: 1px solid @BG_LP;
                     &:before, &:after {
                         content: "";
                         display: block;
@@ -505,7 +512,7 @@ export default {
                         top: -24px;
                         left: 22px;
                         border-style: solid dashed dashed;
-                        border-color: transparent transparent #1890ff  transparent;
+                        border-color: transparent transparent @BG_LP  transparent;
                         font-size: 0;
                         line-height: 0;
                     } 
