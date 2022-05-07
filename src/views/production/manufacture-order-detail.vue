@@ -3,7 +3,7 @@
         <div class='title-container'>
             <div class='title-area'>生产订单详情</div>
             <div class="btns-area">
-<!--                <a-button type="primary" ghost @click="handleInvoiceBom" v-if="$auth('invoice.save')"><i class="icon i_goods"/>一键领料</a-button>-->
+                <a-button type="primary" ghost @click="handleSubmit" v-if="$auth('invoice.save')"><i class="icon i_goods"/>一键领料</a-button>
                 <a-button type="primary" ghost @click="routerChange('picking')" v-if="$auth('invoice.save')"><i class="icon i_goods"/>领料</a-button>
                 <a-button type="danger" ghost @click="handleCancel(id)" v-if="$auth('production-order.delete')"><i class="icon i_close_c"/>取消</a-button>
             </div>
@@ -74,6 +74,26 @@
                 </a-tab-pane> -->
             </a-tabs>
         </div>
+<!--        <template class="modal-container">
+            <a-modal v-model:visible="materialShow" title="一键领料" :after-close='handleModalClose'>
+                <div class="modal-content">
+                    <div class="form-item required">
+                        <div class="key">仓库:</div>
+                        <div class="value">
+                            <a-select v-model:value="editForm.warehouse_id" placeholder="请选择仓库" show-search option-filter-prop="children">
+                                <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">
+                                    {{ item.name }}
+                                </a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                </div>
+                <template #footer>
+                    <a-button @click="materialShow = false">取消</a-button>
+                    <a-button @click="handleModalSubmit" type="primary" >确定</a-button>
+                </template>
+            </a-modal>
+        </template>-->
     </div>
 </template>
 
@@ -115,6 +135,12 @@ export default {
                     type: 'xlsx',
                 },
             },
+            warehouseList: [],
+            materialShow: false,
+            editForm: {
+                production_order_id: '',
+                warehouse_id: undefined,
+            }
         }
     },
     watch: {},
@@ -122,6 +148,7 @@ export default {
     created() {
         this.id = Number(this.$route.query.id) || '';
         this.getOrderDetail();
+        this.getWarehouseList();
     },
     methods: {
         routerChange(type) {
@@ -218,31 +245,38 @@ export default {
                 },
             });
         },
-        handleInvoiceBom() {
-            Core.Api.Bom.invoiceBom({
-                bom_category_id: this.detail.bom_id,
-                id: this.id,
-                // version:
-            /*    id:
-                version:
-            version_num:*/
-            }).then(res =>{
-
-            }).catch((err) => {
-                console.log('handleInvoiceBom err', err)
+        getWarehouseList() {
+            Core.Api.Warehouse.listAll().then(res => {
+                this.warehouseList = res.list
+                console.log('getWarehouseList', this.warehouseList)
             })
         },
-       /* handleExportConfirm() { // 确认是否一键领料
+      /*  handleModalShow() { // 显示弹框
+            this.materialShow = true
+        },
+        handleModalClose() { // 关闭弹框
+            this.materialShow = false;
+            Object.assign(this.editForm, this.$options.data().editForm)
+        },*/
+        handleSubmit() {
             let _this = this;
             this.$confirm({
-                title: '确认要一键领料吗？',
+                title: '确定要一键领料吗？',
                 okText: '确定',
+                okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    _this.handleRepairExport();
-                }
-            })
-        },*/
+                    Core.Api.Invoice.save({
+                        production_order_id: _this.id,
+                    }).then(() => {
+                        this.$message.success('领料完成');
+                        this.getOrderDetail();
+                    }).catch((err) => {
+                        console.log('handleSubmit err', err);
+                    });
+                },
+            });
+        },
     },
 };
 </script>

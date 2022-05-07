@@ -116,7 +116,7 @@
                     </a-select>
                 </div>
                 <div class="sp">
-                    <a-button type="link" @click="routerChange('customer')">{{ $t('r.add_customer') }}</a-button>
+                    <a-button type="link" v-if="$auth('customer.save')" @click="routerChange('customer')">{{ $t('r.add_customer') }}</a-button>
                     <a-button type="link" @click="getCustomerList('refresh')">{{ $t('r.refresh') }}</a-button>
                 </div>
             </div>
@@ -155,7 +155,7 @@
         </div>
     </div>
     <div class="form-btns">
-        <a-button @click="handleSubmit" type="primary">{{ $t('def.ok') }}</a-button>
+        <a-button @click="handleSubmit" type="primary" v-if="$auth('repair-order.save')">{{ $t('def.ok') }}</a-button>
         <a-button @click="routerChange('back')">{{ $t('def.cancel') }}</a-button>
     </div>
 </div>

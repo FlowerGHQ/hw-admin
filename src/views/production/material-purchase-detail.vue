@@ -165,7 +165,7 @@
         </template>
         <!-- 入库 -->
         <template class="modal-container" v-if="detail.status === STATUS.PASS">
-            <a-modal v-model:visible="purchaseShow" title="入库" :after-close='handleModalClose'>
+            <a-modal v-model:visible="purchaseShow" title="入库" :after-close='handlePurchaseClose'>
                 <div class="modal-content">
                     <div class="form-item required">
                         <div class="key">仓库:</div>
@@ -179,7 +179,7 @@
                     </div>
                 </div>
                 <template #footer>
-                    <a-button @click="modalShow = false">取消</a-button>
+                    <a-button @click="purchaseShow = false">取消</a-button>
                     <a-button @click="handleStock" type="primary" >确定</a-button>
                 </template>
             </a-modal>
@@ -229,7 +229,6 @@ export default {
                 warehouse_id: undefined,
             },
             exportDisabled: false,
-            modalShow: false,
         };
     },
     watch: {},
