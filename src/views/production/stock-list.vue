@@ -189,7 +189,7 @@ export default {
                 case 'material':
                     routeUrl = this.$router.resolve({
                         path: "/production/material-detail",
-                        query: {id: item.id}
+                        query: {id: item.material.id}
                     })
                     window.open(routeUrl.href, '_blank')
                     break;

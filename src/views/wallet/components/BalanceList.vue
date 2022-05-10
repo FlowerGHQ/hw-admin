@@ -77,6 +77,8 @@ export default {
                 {title: '变动类型', dataIndex: 'type'},
                 {title: '变动金额', dataIndex: 'money', key: 'money'},
                 {title: '变动后余额', dataIndex: 'balance', key: 'money'},
+                {title: '来源', dataIndex: 'source_type'},
+                {title: '来源单号', dataIndex: 'source_type'},
                 {title: '操作时间', dataIndex: 'create_time', key: 'time'},
             ]
             return tableColumns

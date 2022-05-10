@@ -122,7 +122,6 @@ export default {
             upload: { // 上传图片
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
                 coverList: [],
-                detailList: [],
                 headers: {
                     ContentType: false
                 },
@@ -189,8 +188,16 @@ export default {
         // 保存、新建 物料
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
-            form.image = this.upload.coverList[0].short_path || this.upload.coverList[0].response.data.filename
+            // form.image = this.upload.coverList[0].short_path || this.upload.coverList[0].response.data.filename
             console.log('form:', form)
+            if (this.upload.coverList.length) {
+                let file_url = this.upload.coverList.map(item => {
+                    return item.short_path || item.response.data.filename
+                })
+                if (file_url.length > 0) {
+                    form.logo = file_url[0]
+                }
+            }
             if (typeof this.checkFormInput(form) === 'function') { return }
             console.log('handleSubmit form:', form)
             Core.Api.Material.save({
@@ -220,10 +227,9 @@ export default {
             if (!form.unit) {
                 return this.$message.warning('请输入单位')
             }
-            if (!form.image) {
+           /* if (!form.image) {
                 return this.$message.warning('请上传图片')
-            }
-
+            }*/
           /*  if (!form.encapsulation) {
                 return this.$message.warning('请输入物料包装')
             }*/

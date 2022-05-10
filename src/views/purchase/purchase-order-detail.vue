@@ -199,7 +199,7 @@
                     </div>
                 </div> -->
                 <div class="form-item required">
-                    <div class="key">收款金额</div>
+                    <div class="key">收款金额：</div>
                     <div class="value">
                         <a-input-number 
                             v-model:value="form.payment" 

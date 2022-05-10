@@ -40,7 +40,6 @@
                     </a-select>
                 </div>
             </div>
-
             <div class="form-item required" v-if="needUid">
                 <div class="key">{{sourceTypeMap[form.source_type]}}号：</div>
                 <div class="value">

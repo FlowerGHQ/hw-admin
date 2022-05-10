@@ -73,7 +73,7 @@
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
                 <template #bodyCell="{ column, text , record }">
-                    <template v-if="column.key === 'detail'">
+                    <template v-if="column.key === 'detail' && $auth('repair-order.detail')">
                         <a-tooltip placement="top" :title='text' >
                             <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                         </a-tooltip>
@@ -117,16 +117,17 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'audit'">
-                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="(record.status == STATUS.SETTLEMENT || record.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS) && record.service_type == 1"><i class="icon i_audit"/>审核</a-button>
+                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="(record.status == STATUS.SETTLEMENT ||
+                        record.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS) && record.service_type == 1 && $auth('repair-order.audit')"><i class="icon i_audit"/>审核</a-button>
                     </template>
                     <template v-if="column.key === 'redit'">
-                        <a-button type='link' @click="routerChange('edit',record)" v-if="record.status == STATUS.AUDIT_FAIL"><i class="icon i_edit"/>编辑</a-button>
+                        <a-button type='link' @click="routerChange('edit',record)" v-if="record.status == STATUS.AUDIT_FAIL && $auth('repair-order.save')"><i class="icon i_edit"/>编辑</a-button>
                     </template>
                     <template v-if="column.key === 'invoice'">
-                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.AUDIT_SUCCESS"><i class="icon i_audit"/>审核</a-button>
+                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.AUDIT_SUCCESS && $auth('repair-order.audit')"><i class="icon i_audit"/>审核</a-button>
                     </template>
                     <template v-if="column.key === 'fault'">
-                        <a-button type='link' @click="handleModalShow(record.id, 'fault')" v-if="record.status == STATUS.FAULT_ENTITY_AUDIT && record.service_type == 1"><i class="icon i_s_warehouse"/>入库</a-button>
+                        <a-button type='link' @click="handleModalShow(record.id, 'fault')" v-if="record.status == STATUS.FAULT_ENTITY_AUDIT && record.service_type == 1 && $auth('repair-order.save-to-invoice')"><i class="icon i_s_warehouse"/>入库</a-button>
                     </template>
                 </template>
             </a-table>
