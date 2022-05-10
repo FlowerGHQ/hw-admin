@@ -36,7 +36,7 @@
                 </div>
             </div>
         </div>
-        <!-- <ExploredContent /> -->
+        <ExploredContent />
         <div class="btn-content">
             <a-button type="primary" class="disabled" v-if="detail.in_shopping_cart">已在购物车中</a-button>
             <a-button type="primary" @click="hanldeAddToShopCart" v-else>添加到购物车</a-button>

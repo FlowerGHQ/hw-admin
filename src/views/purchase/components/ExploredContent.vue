@@ -44,7 +44,7 @@ export default {
     mounted () {
         this.canvas = this.$refs.exploreCanvas;
         this.ctx = this.canvas.getContext("2d");
-        this.exploredImageUrl = 'https://img.51miz.com/Element/00/90/53/37/8334ff2e_E905337_d68765b3.jpg';
+        this.exploredImageUrl = 'https://rebuild-mel-erp.oss-cn-hangzhou.aliyuncs.com/img/700ad6f5592c78946f85a22c19551a1c6bc7c3a1dc77b19edab6012d2e2d0b33.png';
         this.pointerList = [
             {id: null, start: {x: 170, y: 281}, end: {x: 73, y: 461}, target_id: 532, target_type: 1},
             {id: null, start: {x: 444, y: 317}, end: {x: 341, y: 484}, target_id: 532, target_type: 1}
@@ -163,7 +163,7 @@ export default {
             cursor: pointer;
             &:hover {
                 background-color: @TC_LP;
-                color: #ffffff;
+                color: @TC_L;
             }
         }
         .item-pointer {
@@ -182,7 +182,7 @@ export default {
         }
         .item-pos-select {
             background-color: @TC_LP;
-            color: #ffffff;
+            color: @TC_L;
         }
         img {
             width: 100%;
@@ -202,8 +202,8 @@ export default {
             padding: 12px 24px;
             width: 200px;
             border-radius: 5px;
-            border: 1px solid @TC_LP;
-            background-color: #ffffff;
+            border: 1px solid @BG_LP;
+            background-color: @BG_N;
             &:before, &:after {
                 content: "";
                 display: block;
@@ -212,14 +212,14 @@ export default {
                 top: -24px;
                 left: 22px;
                 border-style: solid dashed dashed;
-                border-color: transparent transparent @TC_LP  transparent;
+                border-color: transparent transparent @BG_LP  transparent;
                 font-size: 0;
                 line-height: 0;
             } 
             &:after {
                 top: -23px;
                 left: 22px;
-                border-color: transparent transparent #ffffff transparent;
+                border-color: transparent transparent @BG_N transparent;
             }
         }
     }

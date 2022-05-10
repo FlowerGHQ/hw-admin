@@ -40,11 +40,11 @@
                     <div class="image-contain" @mouseup="mouseupHandler" @mousemove="mousemoveHandler">
                         <img :src="detailImageUrl" ref="exploreImg" alt="">
                         <canvas ref="exploreCanvas"></canvas>
-                        <div class="item-pointer" v-for="(item, index) in pointerList" :key="index" 
+                        <div class="pointer-start" v-for="(item, index) in pointerList" :key="index" 
                             :style="{'left': `${item.start.x - 4}px`, 'top': `${item.start.y - 4}px`}"
                             @mousedown="pointMousedown(index, 'start')" @mouseup="pointMouseup" @mousemove.stop=""></div>
 
-                        <div class="item-pos" v-for="(item, index) in pointerList" :key="index" 
+                        <div class="pointer-end" v-for="(item, index) in pointerList" :key="index" 
                             :style="{'left': `${item.end.x - 10}px`, 'top': `${item.end.y - 10}px`}"
                             @mousedown="pointMousedown(index, 'end')" @mouseup="pointMouseup"
                             @dblclick="showEdit(index)" @mousemove.stop="">
@@ -253,8 +253,6 @@ export default {
                     return this.$message.error(file.response.message)
                 }
                 this.shortPath = get(fileList,'[0].response.data.filename', null);
-                // Core.Const.NET.FILE_URL_PREFIX + item
-                // this.loadImage(TEST_IMAGE);
                 if(this.shortPath) {
                     this.detailImageUrl = Core.Const.NET.FILE_URL_PREFIX + this.shortPath;
                     this.loadImage(this.detailImageUrl);
@@ -461,7 +459,7 @@ export default {
         max-height: 800px;
         min-height: 100px;
 
-        .item-pos, .item-pointer {
+        .pointer-end, .pointer-start {
             position: absolute;
             z-index: 10;
             border-radius: 50px;
@@ -474,12 +472,12 @@ export default {
                 opacity: 1;
             }
         }
-        .item-pointer {
+        .pointer-start {
             width: 8px;
             height: 8px;
             background-color: @BG_LP;
         }
-        .item-pos {
+        .pointer-end {
             position: absolute;
             width: 20px;
             height: 20px;
