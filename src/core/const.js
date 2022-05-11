@@ -30,11 +30,14 @@ switch (window.location.hostname) {
     case "10.0.0.228":
         URL_POINT = 'http://10.0.0.228:8083'
         break;
+    case "10.0.0.221":
+        URL_POINT = 'http://eos-api-dev.hw.innotick.com'
+        break;
     default:
-        // URL_POINT = 'http://10.0.0.226:8083' // 谢耀圣
+        URL_POINT = 'http://47.96.173.229:9001' //
         // URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.7:8083' // 但
-        URL_POINT = 'http://10.0.0.225:8883'
+        // URL_POINT = 'http://10.0.0.225:8883'
         // URL_POINT = 'http://10.0.0.171:8883' // 姚志宇
 
 
