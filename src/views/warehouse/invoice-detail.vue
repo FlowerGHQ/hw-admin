@@ -7,17 +7,17 @@
                 <a-button type="primary" @click="handleSubmit()" v-if="$auth('invoice.save')"><i class="icon i_confirm"/>提交</a-button>
                 <a-button type="danger" ghost @click="handleCancel()" v-if="$auth('invoice.delete')"> <i class="icon i_close_c"/>取消</a-button>
             </template>
-            <template v-if="detail.status === STATUS.CLOSE && detail.type === TYPE.IN && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.export')">
+            <template v-if="detail.status === STATUS.CLOSE && detail.type === TYPE.IN && detail.target_type === 30 && $auth('ADMIN' && 'invoice.import-export')">
                 <a-button type="primary" @click="handleExportIn"><i class="icon i_download"/>导出</a-button>
             </template>
-            <AuditMaterialPurchase v-if="detail.status === STATUS.WAIT_AUDIT" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :invoiceId="id"
+            <AuditMaterialPurchase v-if="detail.status === STATUS.WAIT_AUDIT && $auth('invoice.warehouse-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :invoiceId="id"
                                    :status="STATUS.WAIT_AUDIT" @submit="getInvoiceDetail" ><i class="icon i_audit"/>仓库审核</AuditMaterialPurchase>
             <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && detail.type === TYPE.IN && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}完成</a-button>
             <template v-if="detail.type === TYPE.OUT">
-                <AuditMaterialPurchase v-if="detail.status === STATUS.AUDIT_PASS" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :invoiceId="id"
+                <AuditMaterialPurchase v-if="detail.status === STATUS.AUDIT_PASS && $auth('invoice.finance-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :invoiceId="id"
                                        :status="STATUS.AUDIT_PASS" @submit="getInvoiceDetail" ><i class="icon i_audit"/>财务审核</AuditMaterialPurchase>
                 <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.FINANCE_PASS && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}完成</a-button>
-                <a-button type="primary" @click="handleExportOut" v-if="detail.status === STATUS.CLOSE && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.export')"><i class="icon i_download"/>导出</a-button>
+                <a-button type="primary" @click="handleExportOut" v-if="detail.status === STATUS.CLOSE && detail.target_type === 30 && $auth('ADMIN' && 'invoice.import-export')"><i class="icon i_download"/>导出</a-button>
             </template>
         </div>
     </div>
@@ -88,7 +88,7 @@
         <!-- 无实例 -->
         <a-collapse-panel key="ItemList" header="商品信息" class="gray-collapse-panel" v-if="detail.target_type === COMMODITY_TYPE.ITEM">
             <template #extra>
-                <template  v-if="detail.status === STATUS.INIT && !addMode">
+                <template  v-if="detail.status === STATUS.INIT && !addMode && $auth('invoice.save')">
                     <ItemSelect btnType='link' btnText="添加商品" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION"
                         :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
                         @select="handleAddItemChange"/>
@@ -99,12 +99,12 @@
                                 <a-input-number v-model:value="production.addCount" placeholder="添加数量"
                                     @keydown.enter="handleProdAddChange(index)" :autofocus="true" :max="production.maxCount" :min='1' :precision="0"/>
                                 <div class="btns">
-                                    <a-button type="primary" @click="handleProdAddCancel()" ghost v-if="$auth('invoice.save')">取消</a-button>
-                                    <a-button type="primary" @click="handleProdAddChange()" v-if="$auth('invoice.save')">确定</a-button>
+                                    <a-button type="primary" @click="handleProdAddCancel()" ghost >取消</a-button>
+                                    <a-button type="primary" @click="handleProdAddChange()" >确定</a-button>
                                 </div>
                             </div>
                         </template>
-                        <a-button type="link" class="extra-btn" @click.stop >添加商品</a-button>
+                        <a-button type="link" class="extra-btn" @click.stop>添加商品</a-button>
                     </a-popover>
                 </template>
                 <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('item')">确认添加</a-button>
@@ -166,7 +166,7 @@
         </a-collapse-panel>
         <!-- 有实例 -->
         <a-collapse-panel key="ItemList" header="商品信息" class="gray-collapse-panel" v-if="detail.target_type === COMMODITY_TYPE.ENTITY">
-            <template #extra v-if="detail.type == TYPE.IN">
+            <template #extra v-if="detail.type == TYPE.IN && $auth('invoice.save')">
                 <!-- 有实例入库 选择商品并输入数量、实例号 -->
                 <template v-if="detail.status === STATUS.INIT && !addMode">
                     <ItemSelect btnType='link' btnText="添加商品" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION" @select="handleAddItemChange"/>
@@ -178,8 +178,8 @@
                                 <a-input-number v-model:value="production.addCount" placeholder="添加数量"
                                     @keydown.enter="handleProdAddChange(index)" :autofocus="true" :max="production.maxCount" :min='1' :precision="0"/>
                                 <div class="btns">
-                                    <a-button type="primary" @click="handleProdAddCancel()" ghost v-if="$auth('invoice.save')">取消</a-button>
-                                    <a-button type="primary" @click="handleProdAddChange()" v-if="$auth('invoice.save')">确定</a-button>
+                                    <a-button type="primary" @click="handleProdAddCancel()" ghost>取消</a-button>
+                                    <a-button type="primary" @click="handleProdAddChange()">确定</a-button>
                                 </div>
                             </div>
                         </template>
@@ -283,11 +283,17 @@
                                         <a-select-option v-for="item of record.supplier_list" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                                     </a-select>
                                 </template>
-                                <template v-else>{{ record.supplier_name }}</template>
+                                <template v-else>
+                                    <a-tooltip placement="top" :title='text'>
+                                        <a-button type="link" @click="routerChange('supplier', record )">{{ record.supplier_name }}</a-button>
+                                    </a-tooltip>
+                                </template>
                             </template>
                             <template v-if="column.key === 'tip_item'">
                                 <a-tooltip placement="top" :title='text'>
-                                    <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
+                                    <div class="ell" style="max-width: 120px">
+                                        <a-button type="link" @click="routerChange('material', record )">{{ text || '-' }}</a-button>
+                                    </div>
                                 </a-tooltip>
                             </template>
                             <template v-if="column.key === 'item'">
@@ -332,7 +338,7 @@
 
                     </a-table>
                 </div>
-                <div class="paging-container">
+                <div class="paging-container" v-if="!addMode">
                     <a-pagination
                         v-model:current="currPage"
                         :page-size='pageSize'
@@ -507,7 +513,7 @@ export default {
         this.getInvoiceDetail();
     },
     methods: {
-        routerChange(type) {
+        routerChange(type, item= {}) {
             let routeUrl = ''
             switch (type) {
                 case 'list':
@@ -527,6 +533,20 @@ export default {
                     routeUrl = this.$router.resolve({
                         path: "/warehouse/warehouse-detail",
                         query: { id: this.detail.warehouse_id }
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+                case 'supplier':
+                    routeUrl = this.$router.resolve({
+                        path: "/production/supplier-detail",
+                        query: { id: item.supplier_id }
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+                case 'material':
+                    routeUrl = this.$router.resolve({
+                        path: "/production/material-detail",
+                        query: { id: item.target_id }
                     })
                     window.open(routeUrl.href, '_blank')
                     break;

@@ -4,16 +4,16 @@
         <div class="title-container">
             <div class="title-area">{{ $t('n.repair_detail') }}</div>
             <div class="btns-area">
-                <template v-if="sameOrg">
+                <template v-if="sameOrg && $auth('repair-order.save')">
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION">
                         <i class="icon i_edit"/>{{ $t('def.edit') }}
                     </a-button>
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.AUDIT_FAIL">
                         {{ $t('def.re_edit') }}
                     </a-button>
-                    <a-button type="primary" ghost @click="handleDeliveryShow()" v-if="needDelivery">
+<!--                    <a-button type="primary" ghost @click="handleDeliveryShow()" v-if="needDelivery">
                         <i class="icon i_deliver"/>转单物流
-                    </a-button>
+                    </a-button>-->
                     <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION">
                         <i class="icon i_submit"/>{{ $t('def.submit') }}
                     </a-button>
@@ -21,13 +21,13 @@
                         <i class="icon i_settle"/>{{ $t('r.settle_accounts') }}
                     </a-button>
                 </template>
-                <a-button type="primary" @click="routerChange('invoice')" v-if="haveSettle">
+                <a-button type="primary" @click="routerChange('invoice')" v-if="haveSettle && $auth('repair-order.settlement')">
                     <i class="icon i_detail_l"/>查看结算单
                 </a-button>
-                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT && $auth('DISTRIBUTOR')">
+                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT && $auth('DISTRIBUTOR' && 'repair-order.audit')">
                     <i class="icon i_audit"/>审核
                 </a-button>
-                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS && $auth('ADMIN')">
+                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS && $auth('ADMIN' && 'repair-order.audit')">
                     <i class="icon i_audit"/>审核
                 </a-button>
             </div>
@@ -116,12 +116,12 @@
             <div class="modal-content">
                 <div class="form-item required">
                     <div class="key">审核结果:</div>
-                    <a-radio-group v-model:value="auditForm.status">
-                        <a-radio :value="AUDIT.PASS">通过</a-radio>
-                        <a-radio :value="AUDIT.REFUSE">不通过</a-radio>
+                    <a-radio-group v-model:value="auditForm.audit_result">
+                        <a-radio :value="1">通过</a-radio>
+                        <a-radio :value="0">不通过</a-radio>
                     </a-radio-group>
                 </div>
-                <div class="form-item textarea required" v-if="auditForm.status === AUDIT.REFUSE">
+                <div class="form-item textarea required" v-if="auditForm.audit_result === 0">
                     <div class="key">原因:</div>
                     <div class="value">
                         <a-textarea v-model:value="auditForm.audit_message" placeholder="请输入不通过原因"
@@ -197,7 +197,7 @@ export default {
             repairAuditShow: false, //审核
             // auditType: '',
             auditForm: {
-                status: '',
+                audit_result: '',
                 audit_message: '',
             },
 
@@ -337,19 +337,16 @@ export default {
         },
         handleAuditClose() { // 关闭弹框
             this.repairAuditShow = false;
-            this.auditForm = {
-                status: '',
-                audit_message: '',
-            }
+            Object.assign(this.auditForm, this.$options.data().auditForm)
         },
         handleAuditSubmit() { // 审核提交
             let form = Core.Util.deepCopy(this.auditForm)
-            if (!form.status) {
+            if (!form.audit_result) {
                 return this.$message.warning('请选择审核结果')
             }
-            if (form.status === AUDIT.REFUSE && !form.audit_message) {
+            /*if (form.audit_result === 0 && !form.audit_message) {
                 return this.$message.warning('请输入审核未通过的原因')
-            }
+            }*/
             this.loading = true;
             Core.Api.Repair.audit({
                 ...form,

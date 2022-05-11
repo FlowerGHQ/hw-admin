@@ -5,7 +5,7 @@
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, record, text}">
-                        <template v-if="column.key === 'detail'">
+                        <template v-if="column.key === 'detail' && $auth('repair-order.detail')">
                             <a-tooltip placement="top" :title='text' >
                                 <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                             </a-tooltip>
@@ -23,7 +23,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.dataIndex === 'operation'">
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" v-if="$auth('warehouse.save')" class="danger"><i class="icon i_delete"/>删除</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -83,12 +83,11 @@ export default {
                 {title: '维修单号', dataIndex: 'source_uid', key: 'detail'},
                 {title: '工单帐类', dataIndex: 'service_type'},
                 {title: '所属单位', dataIndex: 'source_org_name'},
-                // {title: '所属仓库', dataIndex: 'warehouse_name', key: 'item'},
                 {title: '更换商品', dataIndex: ['item','name'], key: 'item'},
                 {title: '商品编码', dataIndex: ['item','code'], key: 'item'},
                 {title: '故障原因', dataIndex: 'item_fault_name', key: 'item'},
                 // {title: '故障件实例', dataIndex: 'entity_uid', key: 'item'},
-                // {title: '审核人', dataIndex: 'audit_user_name', key: 'item'},
+                {title: '审核人', dataIndex: 'audit_user_name', key: 'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', dataIndex: 'operation'},
             ],

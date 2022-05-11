@@ -2,32 +2,18 @@
 <div class="StockList gray-panel no-margin">
     <div class="panel-content">
         <div class="table-container">
-<!--            <a-upload v-if="type === 'material'" name="file" class="file-uploader"
-                      :file-list="upload.fileList" :action="upload.action"
-                      :show-upload-list='false'
-                      :headers="upload.headers" :data='upload.data'
-                      accept=".xlsx,.xls"
-                      @change="handleMatterChange">
-                <a-button type="primary"  class="panel-btn">
-                    批量领料
-                </a-button>
-            </a-upload>
-            <a-upload v-if="type === 'material'" name="file" class="file-uploader"
-                      :file-list="upload.fileList" :action="upload.action"
-                      :show-upload-list='false'
-                      :headers="upload.headers" :data='upload.data'
-                      accept=".xlsx,.xls"
-                      @change="handleMatterChange">
-                <a-button type="primary"  class="panel-btn">
-                    批量采购
-                </a-button>
-            </a-upload>-->
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text, record}">
-                    <template v-if="column.key === 'detail'">
+                    <template v-if="column.key === 'material_detail' && $auth('material.detail')">
                         <a-tooltip placement="top" :title='text'>
-                            <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}
+                            <a-button type="link" @click="routerChange('material', record.material)">{{ text || '-' }}
+                            </a-button>
+                        </a-tooltip>
+                    </template>
+                    <template v-if="column.key === 'item_detail' && $auth('item.detail')">
+                        <a-tooltip placement="top" :title='text'>
+                            <a-button type="link" @click="routerChange('item', record.item)">{{ text || '-' }}
                             </a-button>
                         </a-tooltip>
                     </template>
@@ -40,14 +26,14 @@
                         </a-tooltip>
                     </template>
                     <template v-if="column.key === 'spec'">
-                        {{ $Util.itemSpecFilter(text) }}
+                        {{ $Util.itemSpecFilter(text) || '-'}}
                     </template>
                     <template v-if="column.key === 'count'">
                         {{ text || 0 }} 件
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' v-if="type === 'item'" @click="routerChange('item', record.item) && $auth('material.list')"><i class="icon i_detail"/>详情</a-button>
-                        <a-button type='link' v-if="type === 'material'" @click="routerChange('material', record.material)"><i class="icon i_detail"/>详情</a-button>
+                        <a-button type='link' v-if="type === 'item' && $auth('item.detail')" @click="routerChange('item', record.item)"><i class="icon i_detail"/>详情</a-button>
+                        <a-button type='link' v-if="type === 'material' && $auth('material.detail')" @click="routerChange('material', record.material)"><i class="icon i_detail"/>详情</a-button>
                     </template>
                 </template>
             </a-table>
@@ -159,18 +145,17 @@ export default {
     computed: {
         tableColumns() {
             let type = this.type
-            let name = '商品'
             let tableColumns = [
-                {title: name + '名称', dataIndex: [type, 'name'], key: 'item'},
-                {title: name + '品号', dataIndex: [type, 'model'], key: 'item'},
-                {title: name + '规格', dataIndex: [type, 'attr_list'], key: 'spec'},
-                {title: name + '编码', dataIndex: [type, 'code'], key: 'item'},
+                {title: '商品名称', dataIndex: [type, 'name'], key: 'item_detail'},
+                {title: '商品品号', dataIndex: [type, 'model'], key: 'item'},
+                {title: '商品规格', dataIndex: [type, 'attr_list'], key: 'spec'},
+                {title: '商品编码', dataIndex: [type, 'code'], key: 'item'},
                 {title: '库存数量', dataIndex: 'stock', key: 'count'},
-                { title: '操作', key: 'operation', fixed: 'right'}
+                {title: '操作', key: 'operation', fixed: 'right'}
             ]
             if (type === 'material' || type === 'customize') {
                 tableColumns = [
-                    {title: '名称', dataIndex: [type, 'name'], key: 'detail'},
+                    {title: '名称', dataIndex: [type, 'name'], key: 'material_detail'},
                     {title: '分类', dataIndex: [type, 'category','name'], key: 'item'},
                     {title: '编码', dataIndex: [type, 'code'], key: 'item'},
                     {title: '单位', dataIndex: [type, 'unit'], key: 'item'},
@@ -192,13 +177,6 @@ export default {
         routerChange(type, item = {}) {
             let routeUrl = ''
             switch(type) {
-                case 'detail':
-                   routeUrl = this.$router.resolve({
-                        path: "/production/material-detail",
-                        query: { id: item.material.id }
-                    })
-                    window.open(routeUrl.href, '_blank')
-                    break;
                 case 'material':
                     routeUrl = this.$router.resolve({
                         path: "/production/material-detail",

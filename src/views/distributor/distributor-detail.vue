@@ -7,10 +7,10 @@
                 </a-tag>
             </div>
             <div class="btns-area" v-if="$auth('ADMIN')">
-                <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>{{$t('def.edit')}}</a-button>
+                <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('distributor.save')"><i class="icon i_edit"/>{{$t('def.edit')}}</a-button>
                 <a-button :type="detail.status ? 'null' : 'primary'" :danger="detail.status ? true : false" ghost @click="handleStatusChange()">
-                    <template v-if="detail.status"><i class="icon i_forbidden"/>{{$t('def.disable')}}</template>
-                    <template v-else><i class="icon i_enable"/>{{$t('def.enable')}}</template>
+                    <template v-if="detail.status && $auth('distributor.delete')"><i class="icon i_forbidden"/>{{$t('def.disable')}}</template>
+                    <template v-if="!detail.status && $auth('distributor.enable')"><i class="icon i_enable"/>{{$t('def.enable')}}</template>
                 </a-button>
             </div>
         </div>

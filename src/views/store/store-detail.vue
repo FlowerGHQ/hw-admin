@@ -3,11 +3,10 @@
     <div class="title-container">
         <div class="title-area">门店详情 <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>{{detail.status ? '启用中' : '已禁用'}}</a-tag></div>
         <div class="btns-area" v-if="$auth('ADMIN')">
-            <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
-            <!-- <a-button type="primary" ghost @click="handleDelete(store_id)"><i class="icon i_delete"/>删除</a-button> -->
+            <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('store.save')"><i class="icon i_edit"/>编辑</a-button>
             <a-button type="primary" ghost :danger='detail.status ? true : false'  @click="handleStatusChange()">
-                <template v-if="detail.status"><i class="icon i_forbidden"/>禁用</template>
-                <template v-else><i class="icon i_enable"/>启用</template>
+                <template v-if="detail.status && $auth('store.delete')"><i class="icon i_forbidden"/>禁用</template>
+                <template v-if="!detail.status && $auth('store.enable')"><i class="icon i_enable"/>启用</template>
             </a-button>
         </div>
     </div>

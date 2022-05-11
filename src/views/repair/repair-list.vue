@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">{{$t('n.repair_list')}}</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')" v-if="!$auth('ADMIN')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="!$auth('ADMIN') && $auth('repair-order.save')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
             </div>
         </div>
         <div class="tabs-container colorful" v-if="!operMode">
@@ -67,7 +67,7 @@
             </div>
         </div>
         <div class="operate-container">
-            <a-button type="primary" @click="handleExportConfirm"><i class="icon i_download"/>{{$t('def.export')}}</a-button>
+            <a-button type="primary" @click="handleExportConfirm" v-if="$auth('repair-order.export')"><i class="icon i_download"/>{{$t('def.export')}}</a-button>
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -127,7 +127,8 @@
                         <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.AUDIT_SUCCESS && $auth('repair-order.audit')"><i class="icon i_audit"/>审核</a-button>
                     </template>
                     <template v-if="column.key === 'fault'">
-                        <a-button type='link' @click="handleModalShow(record.id, 'fault')" v-if="record.status == STATUS.FAULT_ENTITY_AUDIT && record.service_type == 1 && $auth('repair-order.save-to-invoice')"><i class="icon i_s_warehouse"/>入库</a-button>
+                        <a-button type='link' @click="handleModalShow(record.id, 'fault')" v-if="(record.status == STATUS.FAULT_ENTITY_AUDIT || record.status == STATUS.IN_WAREHOUSE) &&
+                        record.service_type == 1 && $auth('repair-order.save-to-invoice')"><i class="icon i_s_warehouse"/>入库</a-button>
                     </template>
                 </template>
             </a-table>
@@ -234,7 +235,7 @@ export default {
             total: 0,
             // 搜索
             operMode: '',
-            statusList: [
+           /* statusList: [
                 {zh: '全  部',en: 'All', value: '0', color: 'primary', key: '-1'},
                 {zh: '待检测',en: 'Waiting detect', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
                 {zh: '维修中', en: 'Under repair',value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
@@ -245,7 +246,7 @@ export default {
                 {zh: '入库完成', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },
                 {zh: '已完成',en: 'Finished settle accounts', value: '0', color: 'blue',  key: STATUS.FINISH },
                 {zh: '已取消',en: 'Cancelled', value: '0', color: 'gray',  key: STATUS.CLOSE },
-            ],
+            ],*/
             distributorList: [], // 分销商下拉框数据
             storeList: [],
             agentList: [],
@@ -335,11 +336,33 @@ export default {
             if (this.operMode === 'invoice' && this.$auth('ADMIN')) {
                 columns.push({ title: this.$t('def.operate'), key: 'invoice', fixed: 'right'},)
             }
-            if (this.operMode === 'fault' && this.$auth('ADMIN')) {
+            if (this.operMode === 'fault' && this.$auth('ADMIN', 'DISTRIBUTOR')) {
                 columns.push({ title: this.$t('def.operate'), key: 'fault', fixed: 'right'},)
             }
             return columns
         },
+        statusList() {
+            let columns = [
+                {zh: '全  部',en: 'All', value: '0', color: 'primary', key: '-1'},
+                {zh: '待检测',en: 'Waiting detect', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
+                {zh: '维修中', en: 'Under repair',value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
+                {zh: '已结算待审核',en: 'Settled accounts and awaiting audit', value: '0', color: 'orange',  key: STATUS.SETTLEMENT },
+                {zh: '工单审核通过',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
+                {zh: '工单审核未通过', en: 'Failed audit',value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
+                {zh: '故障件审核未通过', value: '0', color: 'red',  key: STATUS.FAULT_ENTITY_AUDIT_FAIL },
+                // {zh: '入库完成', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },
+                {zh: '已完成',en: 'Finished settle accounts', value: '0', color: 'blue',  key: STATUS.FINISH },
+                {zh: '已取消',en: 'Cancelled', value: '0', color: 'gray',  key: STATUS.CLOSE },
+            ]
+            if (this.$auth('ADMIN')) {
+                columns.splice(7, 0, {zh: '已入库', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },)
+            }
+            if (this.$auth('DISTRIBUTOR')) {
+                columns.splice(7, 0, {zh: '已入库', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },)
+            }
+            return columns
+        }
+
     },
     mounted() {
         this.getWarehouseList();
@@ -405,8 +428,10 @@ export default {
                 this.searchForm.status = STATUS.AUDIT_FAIL
             } else if (this.operMode == 'invoice') {
                 this.searchForm.status = STATUS.AUDIT_SUCCESS
-            } else if (this.operMode == 'fault') {
+            } else if (this.operMode == 'fault' && this.$auth('ADMIN')) {
                 this.searchForm.status = STATUS.FAULT_ENTITY_AUDIT
+            } else if (this.operMode == 'fault' && this.$auth('DISTRIBUTOR')) {
+                this.searchForm.status = STATUS.IN_WAREHOUSE
             }
             if (this.$auth('ADMIN')) {
                 this.getDistributorListAll();

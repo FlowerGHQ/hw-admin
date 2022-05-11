@@ -44,12 +44,12 @@
         <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
             :row-key="record => record.id" :pagination='false'>
             <template #bodyCell="{ column, text , record }">
-                <template v-if="column.key === 'detail' && $auth('bom.list')">
+                <template v-if="column.key === 'detail' && $auth('bom.detail')">
                     <a-tooltip placement="top" :title='text'>
                         <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                     </a-tooltip>
                 </template>
-                <template v-if="column.key === 'item-detail'">
+                <template v-if="column.key === 'item-detail' && $auth('item.detail')">
                     <a-tooltip placement="top" :title='text'>
                         <a-button type="link" @click="routerChange('item', record.item)">{{text || '-'}}</a-button>
                     </a-tooltip>
@@ -61,7 +61,7 @@
                     {{ $Util.timeFilter(text) }}
                 </template>
                 <template v-if="column.key === 'operation'">
-                    <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('bom.list')"><i class="icon i_detail"/> 详情</a-button>
+                    <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('bom.detail')"><i class="icon i_detail"/> 详情</a-button>
                     <EditBomModel @submit='getTableData' btnType="link" :detail="record" v-if="$auth('bom.save')">
                         <i class="icon i_edit"/>编辑
                     </EditBomModel>

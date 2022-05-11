@@ -88,7 +88,7 @@
                         {{ text || '-' }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('detail', record.target)" v-if="$auth('bom.save')"><i class="icon i_detail"/> 详情</a-button>
+                        <a-button type='link' @click="routerChange('detail', record.target)" v-if="$auth('material.detail')"><i class="icon i_detail"/> 详情</a-button>
                         <a-button type='link' @click="handleEditChange(record)" v-if="$auth('bom.save')">
                             <template v-if="record.edit_show"><i class="icon i_confirm"/>确认</template>
                             <template v-else><i class="icon i_edit"/>编辑</template>

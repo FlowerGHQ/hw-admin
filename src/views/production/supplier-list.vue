@@ -2,7 +2,7 @@
     <div id="SupplierList" class="list-container">
         <div class="title-container">
             <div class="title-area">供应商列表</div>
-            <div class="btns-area">
+            <div class="btns-area" v-if="$auth('supplier.import-export')">
                 <a-upload name="file" class="file-uploader"
                           :file-list="upload.fileList" :action="upload.action"
                           :show-upload-list='false'

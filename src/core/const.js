@@ -13,6 +13,9 @@ switch (window.location.hostname) {
     case 'eos.hw.innotick.com':
         URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服
         break;
+    case 'eos-dev.hw.innotick.com':
+        URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
+        break;
     case "10.0.0.205":
         URL_POINT = 'http://10.0.0.205:8083'
         break;
@@ -31,7 +34,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.0.0.226:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.7:8083' // 但
-        URL_POINT = 'http://10.0.0.146:8883' // 郑昌盛
+        URL_POINT = 'http://10.0.0.225:8883'
         // URL_POINT = 'http://10.0.0.171:8883' // 姚志宇
 
 

@@ -67,7 +67,7 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary">确定</a-button>
+            <a-button @click="handleSubmit" type="primary" v-if="$auth('store.save')">确定</a-button>
             <a-button @click="routerChange('back')" type="primary" ghost>取消</a-button>
         </div>
     </div>

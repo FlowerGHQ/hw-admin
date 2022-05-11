@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">分销商列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建分销商</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('distributor.save')"><i class="icon i_add"/>新建分销商</a-button>
                 </div>
             </div>
             <div class="search-container">
@@ -34,7 +34,7 @@
                         <template v-if="column.dataIndex === 'type'">
                             {{ $Util.distributorTypeFilter(text) }}
                         </template>
-                        <template v-if="column.dataIndex === 'name'">
+                        <template v-if="column.dataIndex === 'name' && $auth('distributor.detail')">
                             <a-tooltip placement="top" :title='text'>
                                 <a-button type="link" @click="routerChange('detail', record)">{{ text }}</a-button>
                             </a-tooltip>
@@ -56,13 +56,13 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情
+                            <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('distributor.detail')"><i class="icon i_detail"/> 详情
                             </a-button>
-                            <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/> 编辑
+                            <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('distributor.save')"><i class="icon i_edit"/> 编辑
                             </a-button>
                             <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
-                                <template v-if="record.status"><i class="icon i_forbidden"/>禁用</template>
-                                <template v-else><i class="icon i_enable"/>启用</template>
+                                <template v-if="record.status && $auth('distributor.delete')"><i class="icon i_forbidden"/>禁用</template>
+                                <template v-if="$auth('distributor.enable') && !record.status"><i class="icon i_enable"/>启用</template>
                             </a-button>
                         </template>
                     </template>

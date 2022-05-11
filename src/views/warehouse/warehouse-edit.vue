@@ -24,7 +24,7 @@
                                 <a-radio :value="warehouseType.QUALITY">成品仓</a-radio>
                                 <a-radio :value="warehouseType.DEFECTIVE">残次仓</a-radio>
                                 <a-radio :value="warehouseType.MATERIAL" v-if="$auth('ADMIN')">物料仓</a-radio>
-                                <a-radio :value="warehouseType.CUSTOMIZE">广宣品仓</a-radio>
+                                <a-radio :value="warehouseType.CUSTOMIZE" v-if="$auth('ADMIN')">广宣品仓</a-radio>
                             </a-radio-group>
                         </a-radio-group>
                     </div>
