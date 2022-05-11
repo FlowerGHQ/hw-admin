@@ -903,7 +903,7 @@ const routes = [
                     auth: ['invoice.list'],
                 }
             },
-            {
+           /* {
                 path: 'material-transfer-list',
                 name: 'MaterialTransferList',
                 component: () => import('@/views/warehouse/material-transfer-list.vue'),
@@ -921,7 +921,7 @@ const routes = [
                     parent: '/warehouse/material-transfer-list',
                 }
             },
-
+*/
             {
                 path: 'transfer-order-list-in',
                 name: 'TransferOrderListIn',
