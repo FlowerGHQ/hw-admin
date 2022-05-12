@@ -36,7 +36,7 @@
                 </div>
             </div>
         </div>
-        <ExploredContent />
+        <ExploredContent ref="ExploredContent" :id="id"/>
         <div class="btn-content">
             <a-button type="primary" class="disabled" v-if="detail.in_shopping_cart">已在购物车中</a-button>
             <a-button type="primary" @click="hanldeAddToShopCart" v-else>添加到购物车</a-button>
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import { get } from 'lodash';
 import Core from '../../core';
 import ExploredContent from './components/ExploredContent.vue';
 
@@ -63,7 +64,7 @@ export default {
             // 加载
             loading: false,
 
-            id: '',
+            id: null,
             detail: {},
             category: {},
             config: [],
@@ -110,6 +111,7 @@ export default {
                 console.log('getItemDetail err', err)
             }).finally(() => {
                 this.loading = false;
+                this.getExploreDetail(this.id);
             });
         },
         // 获取 同规格商品 列表
@@ -122,7 +124,7 @@ export default {
                     ...item,
                     attr_desc: item.attr_list.map(i => i.value).join(',')
                 }))
-                this.specList = data
+                this.specList = data;
                 console.log('getSpecList this.specific.data:', data)
             }).catch(err => {
                 console.log('getSpecList err', err)
@@ -134,6 +136,10 @@ export default {
         handleSpecChange(item) {
             this.id = item.id;
             this.getItemDetail()
+        },
+        // 根据id获取爆炸图
+        getExploreDetail (id) {
+            this.$refs.ExploredContent.getItemExploreList(id);
         },
         // 添加到购物车
         hanldeAddToShopCart() {

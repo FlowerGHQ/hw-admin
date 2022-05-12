@@ -1,39 +1,62 @@
 <template>
-    <div class="explored-content">
+    <div class="explored-content" v-if="tabsArray.length > 0">
         <div class="title">爆炸图</div>
-        <div class="explored-canvas-conten" @click.stop="showDetail(-1)">
-            <div class="image-contain">
-                <img :src="exploredImageUrl" ref="exploreImg" alt="">
-                <canvas ref="exploreCanvas"></canvas>
-                <div class="item-pointer" v-for="(item, index) in pointerList" :key="index" 
-                    :style="{'left': `${item.start.x - 4}px`, 'top': `${item.start.y - 4}px`}"></div>
-                <div class="item-pos" :class="{'item-pos-select': selectIndex===index}" v-for="(item, index) in pointerList" :key="index" 
-                    :style="{'left': `${item.end.x - 10}px`, 'top': `${item.end.y - 10}px`}"
-                    @mouseenter.stop="showDetail(index)" @mouseleave="showDetail(-1)">
-                        {{index + 1}}
-                </div>
-                <transition name="fade">
-                    <div class="component-contain" :style="componentStyle" v-if="selectIndex > -1" @mouseenter.stop="showDetail()" @mouseleave="showDetail(-1)">
-                        <div>name</div>
-                        <div>type</div>
-                        <div>€{{$Util.countFilter(componentDetail[priceKey + 'eur'])}} | ${{$Util.countFilter(componentDetail[priceKey + 'usd'])}}</div>
-                        <a-button type="primary" class="disabled" v-if="componentDetail.in_shopping_cart">已在购物车中</a-button>
-                        <a-button type="primary" @click="hanldeAddToShopCart" v-else>添加到购物车</a-button>
+        <div class="explore-content">
+            <a-carousel autoplay class="carousel-list">
+                <div class="carousel-item" v-for="(item,i) of tabsArray" :key="i">
+                    <img :src="$Util.imageFilter(item.img)"/>
+                    <canvas :ref="`exploreCanvas${i}`"></canvas>
+                    <div 
+                        class="point-start"
+                        v-for="(point, j) in (item.item_component_list || [])"
+                        :key="j" 
+                        :style="{'left': `${(point.start.x * (point.rate || 1)) - 4}px`, 'top': `${(point.start.y * (point.rate || 1))- 4}px`}"></div>
+                    <div 
+                        class="point-end"
+                        :class="{'point-end-select': selectIndex===j}"
+                        v-for="(point, j) in (item.item_component_list || [])"
+                        :key="j" 
+                        :style="{'left': `${(point.end.x * (point.rate || 1)) - 4* (point.rate || 1)}px`, 'top': `${(point.end.y * (point.rate || 1))- 4* (point.rate || 1)}px`}"
+                        @mouseenter.stop="showDetail(i,j)" @mouseleave="showDetail(-1)"
+                    >
+                        {{j + 1}}
                     </div>
-                </transition>
-            </div>
+                </div>
+            </a-carousel>
+            <transition name="fade">
+                <div 
+                    class="component-contain"
+                    v-if="selectIndex > -1"
+                    :style="componentStyle"
+                    @mouseenter.stop="showDetail(currentExplore.i, currentExplore.j)"
+                    @mouseleave="showDetail(-1)">
+                    <div class="contain-name">
+                        <i class="icon i_skew-bg" />
+                        <span class="icon-name">产品名称</span>
+                        {{ componentDetail.name }}
+                    </div>
+                    <div class="contain-type">
+                        <div class="type-left">型号:&nbsp;{{ componentDetail.model}}</div>
+                        <div class="type-left">€{{$Util.countFilter(componentDetail[priceKey + 'eur'])}} | ${{$Util.countFilter(componentDetail[priceKey + 'usd'])}}</div>
+                    </div>
+                    <div class="edit-btn">
+                        <!-- <a-button type="primary" ghost @click="hanldeAddToShopCart">添加到购物车</a-button> -->
+                        <a-button type="primary" class="disabled" v-if="componentDetail.in_shopping_cart">已在购物车中</a-button>
+                        <a-button type="primary" @click="hanldeAddToShopCart" v-else>添加到购物车</a-button> -->
+                    </div>
+                    <!-- <div>€{{$Util.countFilter(componentDetail[priceKey + 'eur'])}} | ${{$Util.countFilter(componentDetail[priceKey + 'usd'])}}</div>
+                    <a-button type="primary" class="disabled" v-if="componentDetail.in_shopping_cart">已在购物车中</a-button>
+                    <a-button type="primary" @click="hanldeAddToShopCart" v-else>添加到购物车</a-button> -->
+                </div>
+            </transition>
         </div>
     </div>
 </template>
 <script>
+import { get } from 'lodash';
 import Core from '../../../core';
 export default {
-    props: {
-        detail: {
-            type: Object,
-            default: ()=>{}
-        }
-    },
+    props: {},
     computed: {
         priceKey() {
             let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
@@ -41,20 +64,16 @@ export default {
             return priceKey
         }
     },
-    mounted () {
-        this.canvas = this.$refs.exploreCanvas;
-        this.ctx = this.canvas.getContext("2d");
-        this.exploredImageUrl = 'https://rebuild-mel-erp.oss-cn-hangzhou.aliyuncs.com/img/700ad6f5592c78946f85a22c19551a1c6bc7c3a1dc77b19edab6012d2e2d0b33.png';
-        this.pointerList = [
-            {id: null, start: {x: 170, y: 281}, end: {x: 73, y: 461}, target_id: 532, target_type: 1},
-            {id: null, start: {x: 444, y: 317}, end: {x: 341, y: 484}, target_id: 532, target_type: 1}
-        ]
-        this.loadImage(this.exploredImageUrl);
-    },
+    mounted () {},
     data() {
         return {
-            exploredImageUrl: "",
+            id: undefined,
+            
+            canvasGroup: [],
+
             pointerList: [],
+            tabsArray: [],
+
             selectIndex: -1,
             componentDetail: {},
             componentStyle: {
@@ -62,61 +81,98 @@ export default {
                 'left': '0'
             },
             timer: null,
+            currentExplore: {
+                i: null,
+                j: null
+            }
         }
     },
     methods: {
+        /** 获取 商品爆炸图 */ 
+        getItemExploreList(id) {
+            if(!id) return;
+            const ths = this;
+            this.pointerList = [];
+            this.tabsArray = [];
+            Core.Api.Item.getItemComponent({ id }).then((res)=>{
+                this.tabsArray = get(res, "list.list" , []);
+                this.parsePoint();
+                ths.$nextTick(()=>{
+                    ths.tabsArray.forEach((item, index) => {
+                        ths.loadImage(item.img, index);
+                    })
+                })
+            }).catch( err => {
+                console.log('getItemExploreList err', err);
+            });
+        },
+        parsePoint () {
+            this.tabsArray.forEach(item => {
+                let list = get(item, "item_component_list", []);
+                list.forEach(point => {
+                    point.start = point.start_point ? JSON.parse(point.start_point) : { x: 50, y: 50 };
+                    point.end = point.end_point ? JSON.parse(point.end_point) : { x: 50, y: 150 };
+                })
+            })
+        },
         /** 加载图片，获取宽高 */
-        loadImage(url){
+        loadImage(url, index){
             let img = new Image();
             const ths = this;
             
             img.onload = ()=>{
-                ths.imageLoadCallback(img.naturalWidth, img.naturalHeight);
-                ths.detailImageUrl = url;
+                ths.imageLoadCallback(img.naturalWidth, img.naturalHeight, index);
                 img.onload = null;
             };
-            img.src = url;
+            img.src = this.$Util.imageFilter(url);
         },
-        imageLoadCallback(width, height) {
-            if(width > 800 || height > 800) {
-                let rate = width / height;
-
-                this.canvas.width = rate >= 1 ? 800 : width / height * 800;
-                this.canvas.height = rate <= 1 ? 800 : height / width * 800;
-            } else {
-                this.canvas.width = width;
-                this.canvas.height = height;
-            }
-            this.canvasUpdata();
+        imageLoadCallback(width, height, index) {
+            let cvs = this.$refs[`exploreCanvas${index}`] || [];
+            if(cvs.length > 0) this.canvasGroup[index] = cvs;
+            else return;
+            let rate = width > 800 ? 1 : 800 / width;
+            // let rate = 1;
+            cvs.forEach(canvas=>{
+                canvas.width = 800;
+                canvas.height = height / width * 800;
+                this.canvasUpdata(canvas, index, rate);
+            })
         },
         /** 刷新canvas画布 */
-        canvasUpdata(){
-            if(!this.canvas) return;
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.ctx.lineWidth = 1;
-            this.ctx.strokeStyle = '#1890ff';
-            this.ctx.beginPath();
-            for (var i = 0; i < this.pointerList.length; i++) {
-                var p1 = this.pointerList[i].start;
-                var p2 = this.pointerList[i].end;
-                this.ctx.moveTo(p1.x, p1.y);
-                this.ctx.lineTo(p2.x, p2.y);
-            }
-            this.ctx.stroke();
+        canvasUpdata(cv, index, rate){
+            let ctx = cv.getContext("2d");
+            let pointerList = get(this.tabsArray, `[${index}].item_component_list`, []);
+
+            ctx.clearRect(0, 0, cv.width, cv.height);
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = '#1890ff';
+            ctx.beginPath();
+            pointerList.forEach(item=>{
+                item.rate = rate;
+                ctx.moveTo(get(item,'start.x', 0) * rate , get(item,'start.y', 0) * rate);
+                ctx.lineTo(get(item,'end.x', 0) * rate, get(item,'end.y', 0) * rate);
+            })
+            ctx.stroke();
         },
         /** 显示点位详情 */
-        showDetail(index = null) {
+        showDetail(i, j) {
             let delay = 350;
-            if(index > -1) {
+            if(i > -1) {
                 delay = 150;
             }
             if(this.timer) clearTimeout(this.timer);
             const ths = this;
             ths.timer = setTimeout(()=>{
-                index === null ? '' : ths.selectIndex = index;
+                j === null ? '' : ths.selectIndex = j;
+                ths.currentExplore = { i, j };
                 if(ths.selectIndex < 0) return;
-                ths.componentStyle.top = `${ths.pointerList[ths.selectIndex].end.y + 20}px`;
-                ths.componentStyle.left = `${ths.pointerList[ths.selectIndex].end.x - 34}px`;
+                let rate = get(ths.tabsArray, `[${i}].item_component_list[${ths.selectIndex }].rate`, 1);
+                let y = (get(ths.tabsArray, `[${i}].item_component_list[${ths.selectIndex }].end.y`, 0) + 10) * rate;
+                let x = (get(ths.tabsArray, `[${i}].item_component_list[${ths.selectIndex }].end.x`, 0) - 15) * rate;
+
+                ths.componentDetail = get(ths.tabsArray, `[${i}].item_component_list[${ths.selectIndex }].item`, {})
+                ths.componentStyle.top = `${y}px`;
+                ths.componentStyle.left = `${x}px`;
                 ths.timer = null;
             }, delay)
         },
@@ -150,78 +206,152 @@ export default {
         color: #000000;
         margin-bottom: 22px;
     }
-    .image-contain {
-        display: inline-block;
-        position: relative;
-        max-width: 800px;
-        max-height: 800px;
-        min-height: 100px;
-        .item-pos, .item-pointer {
-            position: absolute;
-            border-radius: 50px;
-            user-select: none;
-            cursor: pointer;
-            &:hover {
+    .carousel-list {
+        width: 800px;
+        .carousel-item {
+            position: relative;
+            >img {
+                width: 800px;
+            }
+            canvas {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+            }
+            .point-end, .point-start {
+                position: absolute;
+                border-radius: 50px;
+                user-select: none;
+                &:hover {
+                    background-color: @TC_LP;
+                    color: @TC_L;
+                }
+            }
+            .point-start {
+                width: 8px;
+                height: 8px;
+                background-color: @TC_LP;
+            }
+            .point-end {
+                width: 20px;
+                height: 20px;
+                line-height: 20px;
+                text-align: center;
+                font-size: 12px;
+                border: 1px solid @TC_LP;
+                background-color: white;
+                cursor: pointer;
+            }
+            .point-end-select {
                 background-color: @TC_LP;
                 color: @TC_L;
             }
         }
-        .item-pointer {
-            width: 8px;
-            height: 8px;
-            background-color: @TC_LP;
+    }
+    .explore-content {
+        position: relative;
+    }
+    .component-contain {
+        position: absolute;
+        display: flex;
+        flex-wrap: wrap;
+        z-index: 2;
+        padding: 12px 0;
+        width: 250px;
+        border-radius: 2px;
+        background-color: @BG_LP;
+        border: 1px solid @BG_LP;
+        font-size: 0;
+        &:before, &:after {
+            content: "";
+            display: block;
+            border-width: 5px;
+            position: absolute;
+            top: -10px;
+            left: 30px;
+            border-style: solid dashed dashed;
+            border-color: transparent transparent @BG_LP  transparent;
+            font-size: 0;
+            line-height: 0;
+        } 
+        &:after {
+            top: -9px;
+            left: 30px;
+            border-color: transparent transparent @BG_LP transparent;
         }
-        .item-pos {
-            width: 20px;
+        .contain-name {
+            position: relative;
+            padding: 0 16px;
+            width: 100%;
             height: 20px;
             line-height: 20px;
-            text-align: center;
-            font-size: 12px;
-            border: 1px solid @TC_LP;
-            background-color: white;
-        }
-        .item-pos-select {
-            background-color: @TC_LP;
+            font-size: 16px;
             color: @TC_L;
-        }
-        img {
-            width: 100%;
-            height: 100%;
-            border: 1px solid #D2D2D7;
-            -webkit-user-drag: none;
-        }
-        canvas {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-        }
-        .component-contain {
-            position: absolute;
-            padding: 12px 24px;
-            width: 200px;
-            border-radius: 5px;
-            border: 1px solid @BG_LP;
-            background-color: @BG_N;
-            &:before, &:after {
-                content: "";
-                display: block;
-                border-width: 12px;
+            text-align: left;
+            overflow: hidden; //超出的文本隐藏
+            text-overflow: ellipsis; //溢出用省略号显示
+            white-space: nowrap;
+            .i_skew-bg {
+                font-size: 16px;
+                color: @TC_L;
+            }
+            .icon-name {
                 position: absolute;
-                top: -24px;
-                left: 22px;
-                border-style: solid dashed dashed;
-                border-color: transparent transparent @BG_LP  transparent;
-                font-size: 0;
-                line-height: 0;
-            } 
-            &:after {
-                top: -23px;
-                left: 22px;
-                border-color: transparent transparent @BG_N transparent;
+                top: 0;
+                left: 16px;
+                font-style: italic;
+                font-size: 12px;
+                font-weight: bold;
+                color: @TC_LP;
+                transform-origin: 50% 50%;
+                transform: scale(90%, 90%);
             }
         }
+        .contain-type {
+            display: flex;
+            margin-top: 12px;
+            padding: 0 16px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        .type-left {
+            width: 100%;
+            color: @TC_L;
+            font-size: 16px;
+            overflow: hidden; //超出的文本隐藏
+            text-overflow: ellipsis; //溢出用省略号显示
+            white-space: nowrap;
+        }
+        .edit-btn {
+            margin-top: 12px;
+            width: 100%;
+            text-align: center;
+        }
+        // position: absolute;
+        // padding: 12px 24px;
+        // width: 200px;
+        // border-radius: 5px;
+        // border: 1px solid @BG_LP;
+        // background-color: @BG_N;
+        // &:before, &:after {
+        //     content: "";
+        //     display: block;
+        //     border-width: 12px;
+        //     position: absolute;
+        //     top: -24px;
+        //     left: 22px;
+        //     border-style: solid dashed dashed;
+        //     border-color: transparent transparent @BG_LP  transparent;
+        //     font-size: 0;
+        //     line-height: 0;
+        // } 
+        // &:after {
+        //     top: -23px;
+        //     left: 22px;
+        //     border-color: transparent transparent @BG_N transparent;
+        // }
     }
 }
 .fade-enter-active {
