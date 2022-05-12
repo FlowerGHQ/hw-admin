@@ -58,13 +58,13 @@
     </a-collapse>
     <div class="gray-panel">
         <div class="panel-tabs">
-            <a-tabs v-model:activeKey="currentTab" @change="changTab">
+            <a-tabs v-model:activeKey="currentTab" @change="clickChangTab">
                 <a-tab-pane :key="index" :tab="item.name || '-'" v-for="(item, index) of tabsArray">
                 </a-tab-pane>
             </a-tabs>
         </div>
         <div class="btn-area">
-            <a-button class="panel-btn" v-if="tabsArray.length > 0">
+            <a-button class="panel-btn" v-if="tabsArray.length > 0" @click="clickDeleteExplore">
                 删除爆炸图
             </a-button>
             <a-button type="primary" class="panel-btn" @click="clickShowAdd(true)">
@@ -76,10 +76,10 @@
                 :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, record, index }">
                     <template v-if="column.dataIndex === 'name'">
-                        {{ (record.target_detail || {}).name }}
+                        {{ (record.item || {}).name }}
                     </template>
                     <template v-if="column.dataIndex === 'model'">
-                        {{ (record.target_detail || {}).model }}
+                        {{ (record.item || {}).model }}
                     </template>
                     <template v-if="column.key === 'operation'">
                         <a-button type='link' @click="showEdit(index)"> <i class="icon i_edit_l"/>修改</a-button>
@@ -104,12 +104,12 @@
                 <img :src="detailImageUrl" ref="exploreImg" alt="">
                 <canvas ref="exploreCanvas"></canvas>
                 <div class="pointer-start" v-for="(item, index) in pointerList" :key="index" 
-                    :style="{'left': `${item.start_point.x}px`, 'top': `${item.start_point.y }px`}"
-                    @mousedown="pointMousedown(index, 'start_point')" @mouseup="pointMouseup" @mousemove.stop=""></div>
+                    :style="{'left': `${item.start.x}px`, 'top': `${item.start.y }px`}"
+                    @mousedown="pointMousedown(index, 'start')" @mouseup="pointMouseup" @mousemove.stop=""></div>
 
                 <div class="pointer-end" v-for="(item, index) in pointerList" :key="index" 
-                    :style="{'left': `${item.end_point.x}px`, 'top': `${item.end_point.y}px`}"
-                    @mousedown="pointMousedown(index, 'end_point')" @mouseup="pointMouseup"
+                    :style="{'left': `${item.end.x}px`, 'top': `${item.end.y}px`}"
+                    @mousedown="pointMousedown(index, 'end')" @mouseup="pointMouseup"
                     @dblclick="showEdit(index)" @mousemove.stop="">
                     {{index + 1}}
                     <div class="component" v-show="moveIndex !== index" @mousedown.stop="">
@@ -118,17 +118,17 @@
                             <div class="contain-name">
                                 <i class="icon i_skew-bg" />
                                 <span class="icon-name">产品名称</span>
-                                {{ (item.target_detail || {}).name }}
+                                {{ (item.item || {}).name }}
                             </div>
                             <div class="contain-type">
-                                <div class="type-left">型号:&nbsp;{{ (item.target_detail || {}).model}}</div>
+                                <div class="type-left">型号:&nbsp;{{ (item.item || {}).model}}</div>
                                 <div class="edit-btn" @click="showEdit(index)">编辑</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="foot-btn">
+            <div class="foot-btn" v-if="isChangedPoint">
                 <a-button type="primary" @click="clickSave">保存</a-button>
                 <a-button @click="clickCancel">取消</a-button>
             </div>
@@ -158,7 +158,7 @@ import AddExploreImage from "./components/AddExploreImage.vue";
 import resData from './test.json';
 
 const TARGET_TYPE = Core.Const.BOM.TARGET_TYPE;
-const TEST_IMAGE = 'https://rebuild-mel-erp.oss-cn-hangzhou.aliyuncs.com/img/700ad6f5592c78946f85a22c19551a1c6bc7c3a1dc77b19edab6012d2e2d0b33.png';
+// const TEST_IMAGE = 'https://rebuild-mel-erp.oss-cn-hangzhou.aliyuncs.com/img/700ad6f5592c78946f85a22c19551a1c6bc7c3a1dc77b19edab6012d2e2d0b33.png';
 export default {
     components: {
         ItemHeader,
@@ -175,11 +175,11 @@ export default {
     data(){
         return {
             TARGET_TYPE,
-            TEST_IMAGE,
+            // TEST_IMAGE,
             // 载入
             loading: false,
 
-            activeKey: ['itemInfo'],
+            activeKey: [],
 
             // 商品
             id: null,
@@ -204,6 +204,10 @@ export default {
                 },
             },
             detailImageUrl: '',
+            imageSize: {
+                width: 0,
+                height: 0
+            },
 
             canvas: null,
             ctx: null,
@@ -211,7 +215,7 @@ export default {
             isStart: false,
 
             pointerList: [], // 点位列表
-            // pointerListData: [], // 点位列表初始数据
+            pointerListData: [], // 点位列表初始数据
             editPointer: {}, // 编辑点位
             moveIndex: null,
             moveType: null, // 0:起点,1:终点
@@ -223,6 +227,8 @@ export default {
             currentTab: null,
 
             showAddModal: false,
+
+            isChangedPoint: false,
         }
     },
     computed: {
@@ -251,7 +257,7 @@ export default {
         checkedIds() {
             let arr = [], id;
 
-            id = get(this.editPointer, "target_detail.id", null);
+            id = get(this.editPointer, "item.id", null);
             id ? arr.push(id) : "";
             return arr;
         },
@@ -265,15 +271,60 @@ export default {
         this.getItemDetail();
     },
     methods: {
-        changTab(key) {
+        /** 点击切换爆炸图 */
+        clickChangTab(key) {
+            if(this.isChangedPoint === true) {
+                this.changeTabConfirm(key);
+                return;
+            }
             if(!this.tabsArray[key].item_component_list) {
                 this.tabsArray[key]['item_component_list'] = [];
             }
-            this.pointerList = get(this.tabsArray, `[${key}].item_component_list`, []);
+            this.pointerList = this.tabsArray[key].item_component_list;
+            this.pointerListData = Core.Util.deepCopy(this.pointerList);
             this.loadImage(get(this.tabsArray, `[${key}].img`, ""));
+        },
+        changeTabConfirm (key) {
+            const ths = this;
+            ths.$confirm({
+                title: `${ths.tabsArray[ths.currentTab].name} 此图点位已经修改变更，是否保存？`,
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    ths.parsePoint(false);
+                    const param = {
+                        item_component_set_list: ths.tabsArray,
+                        item_id: ths.id,
+                    }
+                    ths.requestSave(param,"保存",ths.getItemExploreList.bind(ths))
+                },
+                onCancel () {
+                    ths.isChangedPoint = false;
+                    ths.clickChangTab(key);
+                    ths.parsePoint(true);
+                }
+            });
         },
         clickShowAdd(show) {
             this.showAddModal = show;
+        },
+        /** 删除当前爆炸图 */
+        clickDeleteExplore() {
+            const ths = this;
+            this.$confirm({
+                title: `确定要删除 ${this.tabsArray[this.currentTab].name} 爆炸图？`,
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    const param = {
+                        item_component_set_list: ths.tabsArray.filter((item,index) => index !== ths.currentTab),
+                        item_id: ths.id,
+                    }
+                    ths.requestSave(param,"删除",ths.getItemExploreList.bind(ths))
+                },
+            });
         },
         /** 添加｜编辑弹窗确认回调 */
         handlerAdd(info) {
@@ -300,10 +351,6 @@ export default {
                 console.log('getItemDetail err', err)
             }).finally(() => {
                 this.getItemExploreList();
-                // this.tabsArray = resData;
-                // this.currentTab = 0;
-                // this.changTab(0);
-                // this.loading = false;
             });
         },
         /** 获取 商品爆炸图 */ 
@@ -314,10 +361,10 @@ export default {
                 id: this.id
             }).then((res)=>{
                 this.tabsArray = get(res, "list.list" , []);
-                this.parsePoint();
+                this.parsePoint(true);
                 this.currentTab = 0;
                 if(this.tabsArray.length > 0) {
-                    this.changTab(0);
+                    this.clickChangTab(0);
                 }
             }).catch( err => {
                 console.log('getItemExploreList err', err);
@@ -326,23 +373,29 @@ export default {
             });
         },
 
-        parsePoint () {
+        parsePoint (isParse) {
             this.tabsArray.forEach(item => {
                 let list = get(item, "item_component_list", []);
                 list.forEach(point => {
-                    point.start_point = point.start_point ? JSON.parse(point.start_point) : { x: 50, y: 50 };
-                    point.end_point = point.end_point ? JSON.parse(point.end_point) : { x: 50, y: 150 };
+                    if(isParse) {
+                        point.start = point.start_point ? JSON.parse(point.start_point) : { x: 50, y: 50 };
+                        point.end = point.end_point ? JSON.parse(point.end_point) : { x: 50, y: 150 };
+                    } else {
+                        point.start_point = JSON.stringify(point.start || { x: 50, y: 50 });
+                        point.end_point = JSON.stringify(point.end || { x: 50, y: 150 });
+                    }
                 })
             })
-            console.log("parsePoint>>>", this.tabsArray)
         },
 
         // 加载图片，获取宽高
         loadImage(str){
             let img = new Image(), url = Core.Const.NET.FILE_URL_PREFIX + str;
             const ths = this;
-            
+            ths.canvasClear();
             img.onload = ()=>{
+                ths.imageSize.width = img.naturalWidth;
+                ths.imageSize.height = img.naturalHeight;
                 ths.imageLoadCallback(img.naturalWidth, img.naturalHeight);
                 ths.detailImageUrl = url;
                 img.onload = null;
@@ -391,19 +444,23 @@ export default {
             this.pointerList[this.moveIndex][this.moveType].x = e.offsetX;
             this.pointerList[this.moveIndex][this.moveType].y = e.offsetY;
             const ths = this;
+            this.isChangedPoint = true;
             window.requestAnimationFrame(()=>{
                 ths.canvasUpdata();
             },16.7)
         },
+        canvasClear () {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        },
         canvasUpdata(){
             if(!this.canvas) return;
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.canvasClear();
             this.ctx.lineWidth = 1;
             this.ctx.strokeStyle = '#1890ff';
             this.ctx.beginPath();
             for (var i = 0; i < this.pointerList.length; i++) {
-                var p1 = this.pointerList[i].start_point;
-                var p2 = this.pointerList[i].end_point;
+                var p1 = this.pointerList[i].start;
+                var p2 = this.pointerList[i].end;
                 this.ctx.moveTo(p1.x, p1.y);
                 this.ctx.lineTo(p2.x, p2.y);
             }
@@ -418,6 +475,7 @@ export default {
 
         /** 删除点位 */
         clickDeletePoint (index = -1) {
+            this.isChangedPoint = true;
             if(index === -1) {
                 this.pointerList = [];
             } else {
@@ -435,15 +493,16 @@ export default {
         // 添加材料
         handleAddShow(type, ids, items) {
             let obj;
+            this.isChangedPoint = true;
             if(this.editPointer === null) {
                 obj = {
                     id: null,
-                    start_point: { x: 50, y: 50 },
-                    end_point: { x: 50, y: 150 },
+                    start: { x: 50, y: 50 },
+                    end: { x: 50, y: 150 },
                     set_id: get(this.tabsArray, `[${this.currentTab}].id`, null),
                     target_id: null,
                     target_type: null,
-                    target_detail: null,
+                    item: null,
                 }
                 this.pointerList.push(obj);
                 this.canvasUpdata();
@@ -453,39 +512,51 @@ export default {
             items.map(item => {
                 obj.target_id = item.id;
                 obj.target_type = type;
-                obj.target_detail = item;
+                obj.item = item;
             });
         },
         /** 点击保存 */
         clickSave () {
-            let emptyArray = [];
+            // let emptyArray = [];
 
-            this.pointerList.forEach((item, index) => {
-                if(!item.target_id) emptyArray.push(index + 1);
-            });
+            // this.pointerList.forEach((item, index) => {
+            //     if(!item.target_id) emptyArray.push(index + 1);
+            // });
             
-            if(emptyArray.length > 0) {
-                this.$message.warning(`第${emptyArray.join(',')}点位尚未设置配件。`)
-                return;
-            };
+            // if(emptyArray.length > 0) {
+            //     this.$message.warning(`第${emptyArray.join(',')}点位尚未设置配件。`)
+            //     return;
+            // };
             const ths = this;
 
             this.errorArray = [];
             this.savePointNum = this.pointerList.length;
+            this.parsePoint();
             const param = {
                 item_component_set_list: this.tabsArray,
                 item_id: this.id,
             }
-            console.log("pointerList>>>", param)
+            this.requestSave(param)
+        },
+        requestSave(param, msg = "点位保存", cb) {
             Core.Api.Item.bindItemComponent(param).then(res => {
-                this.$message.success(`点位保存成功`);
+                this.$message.success(`${msg}成功`);
+                this.isChangedPoint = false;
+                if(cb) cb();
             }).catch(err => {
-                this.$message.error('点位保存失败');
+                console.log("requestSave>>",msg, err)
             });
         },
         /** 点击取消 */
         clickCancel () {
-            // this.pointerList = Core.Util.deepCopy(this.pointerListData);
+            this.pointerList = Core.Util.deepCopy(this.pointerListData);
+            this.pointerListData.forEach((item, index)=>{
+                this.pointerList[index] = Core.Util.deepCopy(item);
+            })
+            this.pointerList.slice(this.pointerListData.length);
+            this.parsePoint(true);
+            this.canvasUpdata();
+            this.isChangedPoint = false;
             this.canvasUpdata();
         },
         /** 解除绑定 */
