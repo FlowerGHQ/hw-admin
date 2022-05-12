@@ -3,8 +3,8 @@
         <div class='title-container'>
             <div class='title-area'>生产订单详情</div>
             <div class="btns-area">
-                <a-button type="primary" ghost @click="handleSubmit" v-if="$auth('invoice.save')"><i class="icon i_goods"/>一键领料</a-button>
-                <a-button type="primary" ghost @click="routerChange('picking')" v-if="$auth('invoice.save')"><i class="icon i_goods"/>领料</a-button>
+                <a-button type="primary" ghost @click="handleSubmit" v-if="$auth('production-order.picking')"><i class="icon i_goods"/>一键领料</a-button>
+                <a-button type="primary" ghost @click="routerChange('picking')" v-if="$auth('production-order.picking')"><i class="icon i_goods"/>领料</a-button>
                 <a-button type="danger" ghost @click="handleCancel(id)" v-if="$auth('production-order.delete')"><i class="icon i_close_c"/>取消</a-button>
             </div>
         </div>
@@ -184,7 +184,7 @@ export default {
                     break;
                 case 'warehouse': // 仓库详情
                     routeUrl = this.$router.resolve({
-                        path: '/warehouse/warehouse-list',
+                        path: '/warehouse/warehouse-detail',
                         query: {id: this.detail.warehouse_id},
                     });
                     window.open(routeUrl.href, '_self');

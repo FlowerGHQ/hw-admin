@@ -10,7 +10,7 @@
                     <a-tooltip placement="top" :title='text'>
                         <div class="info">
                             <a-button type="link" @click="routerChange('detail', record)">
-                                <div class="ell" style="max-width: 150px">{{ text || '-' }}</div>
+                                <div class="ell" style="max-width: 100px">{{ text || '-' }}</div>
                             </a-button>
                         </div>
                     </a-tooltip>
@@ -27,6 +27,16 @@
             </template>
             <template v-if="column.key === 'spec'">
                 {{ $Util.itemSpecFilter(text)}}
+            </template>
+            <template v-if="column.key === 'supplier_list'"  >
+                <template v-for="item of record.supplier_list">
+                    <a-tag>{{ item.short_name }}</a-tag>
+                </template>
+            </template>
+            <template v-if="column.key === 'material_spec'">
+                <a-tooltip placement="top" :title='text'>
+                    <div class="ell" style="max-width: 80px">{{ text || '-'}}</div>
+                </a-tooltip>
             </template>
             <template v-if="column.key === 'time'">
                 {{ $Util.timeFilter(text)}}
@@ -80,6 +90,7 @@ export default {
             selectedRowItems: [],
             selectedRowItemsAll: [],
             dataList:[],
+            tableDataAll: {},
         }
     },
     watch: {
@@ -92,12 +103,14 @@ export default {
         }
     },
     created() {
+
         console.log('created this.defaultChecked:', this.defaultChecked)
         if (this.defaultChecked.length) {
             this.selectedRowKeys = Core.Util.deepCopy(this.defaultChecked)
         }
     },
     computed: {
+
         rowSelection() {
             return {
                 type: this.radioMode ? 'radio' : 'checkbox',
@@ -107,10 +120,20 @@ export default {
                     this.selectedRowItemsAll.push(...selectedRows)
                     let selectedRowItems = []
                     selectedRowKeys.forEach(id => {
-                        let element = this.selectedRowItemsAll.find(i => i.id == id)
-                        selectedRowItems.push(element)
+                        console.log('this.selectedRowItemsAll',this.selectedRowItemsAll)
+                        let list = []
+                        this.selectedRowItemsAll.forEach(i => list.push(i))
+                        console.log('list', list)
+                        let newList = list.filter((element,index,self) => {
+                            return self.findIndex(x => x.code === element.code) === index
+                        })
+                        console.log('newList',newList)
+                        selectedRowItems = newList
+                        console.log('selectedRowItems',selectedRowItems)
                     });
+                    console.log('selectedRowKeys',selectedRowKeys)
                     this.selectedRowItems = selectedRowItems
+                    console.log('selectedRowItems',selectedRowItems)
                     console.log('rowSelection this.selectedRowKeys:', this.selectedRowKeys,'selectedRowItems:', selectedRowItems)
                     this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
                 },
@@ -135,6 +158,16 @@ export default {
             }
             window.open(routeUrl.href, '_blank')
         },
+        e() {
+            let list = this.supplier_list
+            for (let item of list) {
+                item.supplier_map = {}
+                for(let supplier of item.supplier_list) {
+                    item.supplier_map[supplier.id] = supplier.supplier_list
+                    console.log('getMaterialList', supplier.price )
+                }
+            }
+        }
     }
 }
 </script>

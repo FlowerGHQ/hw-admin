@@ -5,7 +5,7 @@
         </div>
         <div class="panel-content">
             <div class="table-container">
-                <a-button type="primary" ghost @click="handleModalShow('addWalletShow')" class="panel-btn"><i
+                <a-button type="primary" ghost @click="handleModalShow('addWalletShow')" v-if="$auth('account.save')" class="panel-btn"><i
                     class="icon i_add"/>新建账户
                 </a-button>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -20,19 +20,9 @@
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
-                        <!--                        <template v-if="column.dataIndex === 'status'">
-                                                    <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
-                                                        {{ text ? '启用中' : '已禁用' }}
-                                                    </div>
-                                                </template>-->
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleModalShow('operate',record.id)"><i class="icon i_settle"/>账户操作
+                            <a-button type="link" @click="handleModalShow('operate',record.id)" v-if="$auth('account.operate')"><i class="icon i_settle"/>账户操作
                             </a-button>
-                            <!--                            <a-button type='link' @click="handleStatusChange(record)"
-                                                                  :class="record.status ? 'danger' : ''">
-                                                            <template v-if="record.status"><i class="icon i_forbidden"/>禁用</template>
-                                                            <template v-else><i class="icon i_enable"/>启用</template>
-                                                        </a-button>-->
                         </template>
                     </template>
                 </a-table>

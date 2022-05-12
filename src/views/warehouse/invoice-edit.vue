@@ -62,7 +62,7 @@
         </div>
     </div>
     <div class="form-btns">
-        <a-button @click="handleSubmit" type="primary">确定</a-button>
+        <a-button @click="handleSubmit" type="primary" v-if="$auth('invoice.save')">确定</a-button>
         <a-button @click="routerChange('list')" type="primary" ghost>取消</a-button>
     </div>
 </div>

@@ -356,7 +356,7 @@ const routes = [
         meta: {
             title: '工单管理',
             icon: 'i_s_repair',
-            auth: ['repair-order.list'],
+            // auth: ['repair-order.list'],
         },
         children: [
             {
@@ -375,7 +375,7 @@ const routes = [
                     title: '待审工单',
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     type: 'audit',
-                    auth: ['repair-order.audit'],
+                    // auth: ['repair-order.audit'],
                 }
             },
             {
@@ -386,7 +386,7 @@ const routes = [
                     title: '待改工单',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
                     type: 'redit',
-                    auth: ['repair-order.save'],
+                    // auth: ['repair-order.save'],
                 }
             },
             {
@@ -397,7 +397,7 @@ const routes = [
                     title: '待审核故障件',
                     roles: [LOGIN_TYPE.ADMIN],
                     type: 'invoice',
-                    auth: ['repair-order.audit'],
+                    // auth: ['repair-order.audit'],
                 }
             },
             {
@@ -406,9 +406,9 @@ const routes = [
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
                     title: '待入库故障件',
-                    roles: [LOGIN_TYPE.ADMIN],
+                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     type: 'fault',
-                    auth: ['repair-order.save-to-invoice'],
+                    // auth: ['repair-order.save-to-invoice'],
                 }
             },
             {
@@ -420,7 +420,7 @@ const routes = [
                     title: '维修单编辑',
                     parent: '/repair/repair-list',
                     roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
-                    auth: ['repair-order.save'],
+                    // auth: ['repair-order.save'],
                 }
             },
             {
@@ -431,7 +431,7 @@ const routes = [
                     hidden: true,
                     title: '维修单详情',
                     parent: '/repair/repair-list',
-                    auth: ['repair-order.detail'],
+                    // auth: ['repair-order.detail'],
                 }
             },
             {
@@ -442,7 +442,7 @@ const routes = [
                     hidden: true,
                     title: '维修单结算',
                     parent: '/repair/repair-list',
-                    auth: ['repair-order.settlement'],
+                    // auth: ['repair-order.settlement'],
                 }
             },
             {
@@ -452,7 +452,7 @@ const routes = [
                 meta: {
                     title: '故障管理',
                     roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
-                    auth: ['repair-order.save'],
+                    // auth: ['repair-order.save'],
                 }
             },
         ]
@@ -903,6 +903,25 @@ const routes = [
                     auth: ['invoice.list'],
                 }
             },
+           /* {
+                path: 'material-transfer-list',
+                name: 'MaterialTransferList',
+                component: () => import('@/views/warehouse/material-transfer-list.vue'),
+                meta: {
+                    title: '调货单管理',
+                }
+            },
+            {
+                path: 'material-transfer-edit',
+                name: 'MaterialTransferEdit',
+                component: () => import('@/views/warehouse/material-transfer-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '调货单编辑',
+                    parent: '/warehouse/material-transfer-list',
+                }
+            },
+*/
             {
                 path: 'transfer-order-list-in',
                 name: 'TransferOrderListIn',

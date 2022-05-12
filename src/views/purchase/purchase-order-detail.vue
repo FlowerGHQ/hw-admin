@@ -4,17 +4,17 @@
         <div class="title-container">
             <div class="title-area">采购订单详情</div>
             <div class="btns-area">
-                <template v-if="detail.status >= STATUS.WAIT_TAKE_DELIVER && $auth('ADMIN')">
+                <template v-if="detail.status >= STATUS.WAIT_TAKE_DELIVER && $auth('ADMIN' && 'purchase-order.export')">
                     <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
                     <a-button @click="handleExportIn"><i class="icon i_download"/>导出订单</a-button>
                 </template>
                 <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
-                    <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL" @click="handleModalShow('payment')"><i class="icon i_received"/>确认收款</a-button>
-                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER" @click="handleModalShow('deliver')" :disabled="exportDisabled"><i class="icon i_deliver"/>发货</a-button>
+                    <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>确认收款</a-button>
+                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver')" @click="handleModalShow('deliver')" :disabled="exportDisabled"><i class="icon i_deliver"/>发货</a-button>
                 </template>
                 <template v-if="authOrg(detail.org_id, detail.org_type)">
                     <a-button type="primary" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER" @click="handleReceived()"><i class="icon i_goods"/>确认收货</a-button>
-                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_PAY"     @click="handleCancel()"><i class="icon i_close_c"/>取消</a-button>
+                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_PAY" @click="handleCancel()"><i class="icon i_close_c"/>取消</a-button>
                     <a-button type="primary" v-if="detail.status === STATUS.DEAL_SUCCESS" @click="routerChange('aftersales')" ghost><i class="icon i_edit"/>申请售后</a-button>
                 </template>
             </div>
@@ -122,7 +122,6 @@
                 </a-collapse-panel>
 
                 <AttachmentFile :target_id='id' :target_type='Core.Const.ATTACHMENT.TARGET_TYPE.PURCHASE_ORDER' :detail='detail' @submit="getPurchaseInfo" ref="AttachmentFile"/>
-                
                 <!-- 物流信息 -->
                 <a-collapse-panel key="WaybillInfo" header="收货信息" class="gray-collapse-panel">
                     <a-row class="panel-content info-container">

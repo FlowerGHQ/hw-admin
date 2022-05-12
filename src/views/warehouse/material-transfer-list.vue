@@ -1,8 +1,8 @@
 <template>
-    <div id="InvoiceList">
+    <div id="MaterialTransferList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">出入库单列表</div>
+                <div class="title-area">调货单列表</div>
                 <div class="btns-area">
                     <a-button type="primary" @click="routerChange('edit')" v-if="$auth('invoice.save')"><i
                         class="icon i_add"/>新建出入库单
@@ -146,7 +146,7 @@ import AuditMaterialPurchase from '../../components/popup-btn/AuditMaterialPurch
 const STATUS = Core.Const.STOCK_RECORD.STATUS
 const TYPE = Core.Const.STOCK_RECORD.TYPE
 export default {
-    name: 'InvoiceList',
+    name: 'MaterialTransferList',
     components: {
         TimeSearch,
         AuditMaterialPurchase
@@ -317,7 +317,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#InvoiceList {
+#MaterialTransferList {
     .list-container {
         .title-container {
             .btns-area {

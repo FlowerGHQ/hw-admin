@@ -5,7 +5,7 @@
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="(record) => record.id" :pagination="false">
                     <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.key === 'detail'">
+                        <template v-if="column.key === 'detail' && $auth('invoice.detail')">
                             <a-tooltip placement="top" :title='text'>
                                 <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}</a-button>
                             </a-tooltip>

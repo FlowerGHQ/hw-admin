@@ -82,7 +82,7 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button type="primary" @click="handleSubmit">确定</a-button>
+            <a-button type="primary" @click="handleSubmit" v-if="$auth('material.save')">确定</a-button>
             <a-button type="primary" ghost @click="routerChange('back')">取消</a-button>
         </div>
     </div>
@@ -113,6 +113,7 @@ export default {
                 unit: '',
                 encapsulation_size: '',
                 remark: '',
+                image: '',
             },
             gross_weight: '',
             supplierList: [],
@@ -195,7 +196,7 @@ export default {
                     return item.short_path || item.response.data.filename
                 })
                 if (file_url.length > 0) {
-                    form.logo = file_url[0]
+                    form.image = file_url[0]
                 }
             }
             if (typeof this.checkFormInput(form) === 'function') { return }

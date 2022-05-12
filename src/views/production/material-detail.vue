@@ -11,6 +11,7 @@
             <div class="panel-content desc-container">
                 <div class="desc-title">
                     <div class="title-area">
+                        <img :src="$Util.imageFilter(detail.image, 3)" />
                         <span class="title">{{ detail.name }}</span>
                     </div>
                 </div>
@@ -45,7 +46,9 @@
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">供应商：</span>
-                        <span class="value">{{ detail.supplier_name }}</span>
+                        <template v-for="item of detail.supplier_list">
+                            <a-tag>{{ item.short_name }}</a-tag>
+                        </template>
                     </a-col>
 <!--                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">价格：</span>
@@ -123,18 +126,12 @@ export default {
                     this.detail = res
                     this.category_name = res.category.name
                     console.log('category_id',res.category_id)
-                    this.getSupplierListName();
                     this.activeKey = 'StockWarehouseList'
                 })
                 .finally(() => {
                     this.loading = false
                 })
             console.log('detail',this.detail)
-        },
-        getSupplierListName() {
-            let data = this.detail
-            console.log('data',data)
-            data.supplier_name = data.supplier_list.map(item => item.short_name).join(' , ')
         },
         handleDelete(id) {
             let _this = this;

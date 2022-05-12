@@ -3,7 +3,7 @@
         <div class="title-container">
             <div class="title-area">采购订单列表</div>
             <div class="btns-area">
-                <a-button type="primary" @click="handleMaterialPurchase"><i class="icon i_add"/>新建采购单</a-button>
+                <a-button type="primary" @click="handleMaterialPurchase" v-if="$auth('material-purchase-order.save')"><i class="icon i_add"/>新建采购单</a-button>
             </div>
         </div>
         <div class="tabs-container colorful">
@@ -39,7 +39,7 @@
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                      :row-key="record => record.id" :pagination='false' :loading="loading">
                 <template #bodyCell="{ column, text , record }">
-                    <template v-if="column.key === 'detail'">
+                    <template v-if="column.key === 'detail' && $auth('material-purchase-order.detail')">
                         <a-tooltip placement="top" :title='text'>
                             <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}</a-button>
                         </a-tooltip>
@@ -60,14 +60,17 @@
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
+                    <template v-if="column.key === 'total_price'">
+                        ￥{{ $Util.countFilter(text) }}
+                    </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' v-if="record.status !== STATUS.INIT" @click="routerChange('detail', record)"><i class="icon i_detail"/>详情
+                        <a-button type='link' v-if="record.status !== STATUS.INIT && $auth('material-purchase-order.detail')" @click="routerChange('detail', record)"><i class="icon i_detail"/>详情
                         </a-button>
-                        <a-button type='link' v-if="record.status === STATUS.INIT" @click="routerChange('detail', record)"><i class="icon i_edit"/>编辑
+                        <a-button type='link' v-if="record.status === STATUS.INIT && $auth('material-purchase-order.save')" @click="routerChange('detail', record)"><i class="icon i_edit"/>编辑
                         </a-button>
-                        <a-button type="link" v-if="record.status === STATUS.INIT" @click="handleCancel(record.id)" class="danger"><i class="icon i_close_c"/>取消
+                        <a-button type="link" v-if="record.status === STATUS.INIT && $auth('material-purchase-order.delete')" @click="handleCancel(record.id)" class="danger"><i class="icon i_close_c"/>取消
                         </a-button>
-                        <AuditHandle v-if="record.status === STATUS.SUBMIT" btnType='link' :api-list="['MaterialPurchase', 'audit']" :id="record.id" @submit="getTableData"
+                        <AuditHandle v-if="record.status === STATUS.SUBMIT && $auth('material-purchase-order.audit')" btnType='link' :api-list="['MaterialPurchase', 'audit']" :id="record.id" @submit="getTableData"
                                      :s-pass="STATUS.PASS" :s-refuse="STATUS.REFUSE" no-refuse><i class="icon i_audit"/>审核
                         </AuditHandle>
                     </template>
@@ -134,6 +137,7 @@ export default {
             tableColumns: [
                 {title: '订单号', dataIndex: 'sn', key: 'detail'},
                 {title: '状态', dataIndex: 'status'},
+                {title: '总金额', dataIndex: 'total_price', key: 'total_price'},
                 {title: '制单人', dataIndex: ['apply_user', "account", "name"], key: 'contact'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '审核人', dataIndex: ['audit_user', "account", "name"],key: 'contact'},

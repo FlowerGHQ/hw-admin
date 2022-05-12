@@ -433,6 +433,7 @@ const apiList = {
         statusList: ['PostJson', 'material-purchase-order/status-list'], // 保存
         detailByUid: ['PostJson', 'material-purchase-order/detail-by-sn'],
         stock: ['PostJson', 'material-purchase-order/save-to-invoice'],//入库
+        cancelAudit: ['PostJson', 'material-purchase-order/cancel-audit'],//入库
     }
 };
 

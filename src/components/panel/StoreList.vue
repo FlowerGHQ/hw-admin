@@ -5,11 +5,11 @@
     </div>
     <div class="panel-content">
         <div class="table-container">
-            <a-button type="primary" ghost @click="routerChange('edit')" class="panel-btn"><i class="icon i_add"/>新增门店</a-button>
+            <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('store.save')" class="panel-btn"><i class="icon i_add"/>新增门店</a-button>
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false'>
                 <template #bodyCell="{ column, text , record }">
-                    <template v-if="column.key === 'detail'">
+                    <template v-if="column.key === 'detail' && $auth('store.detail')">
                         <div class="table-img">
                             <a-image :width="30" :height="30" :src="$Util.imageFilter(record.logo)" fallback='无'/>
                             <a-tooltip placement="top" :title='text'>
@@ -26,12 +26,11 @@
                         </div>
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
-                        <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/> 编辑</a-button>
-                        <!-- <a-button type="link" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button> -->
+                        <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('store.detail')"><i class="icon i_detail"/> 详情</a-button>
+                        <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('store.save')"><i class="icon i_edit"/> 编辑</a-button>
                         <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
-                            <template v-if="record.status"><i class="icon i_forbidden"/>禁用</template>
-                            <template v-else><i class="icon i_enable"/>启用</template>
+                            <template v-if="record.status && $auth('store.delete')"><i class="icon i_forbidden"/>禁用</template>
+                            <template v-if="!record.status && $auth('store.enable')"><i class="icon i_enable"/>启用</template>
                         </a-button>
                     </template>
                 </template>

@@ -7,9 +7,21 @@
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
+                        <div class="key"><span>供应商名:</span></div>
+                        <div class="value">
+                            <a-input placeholder="请输入供应商名称" v-model:value="searchForm.short_name" @keydown.enter='handleSearch'/>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :md='12' class="search-item">
                         <div class="key"><span>物料编码:</span></div>
                         <div class="value">
                             <a-input placeholder="请输入物料编码" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :md='12' class="search-item">
+                        <div class="key"><span>物料名称:</span></div>
+                        <div class="value">
+                            <a-input placeholder="请输入物料名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                 </a-row>
@@ -97,10 +109,12 @@ export default {
             total: 0,
             searchForm: {
                 code: '',
+                short_name: '',
+                name: '',
             },
 
             tableData: [],
-
+            supplier_list: [],
             selectItems: [],
             selectItemIds: [],
         }
@@ -110,11 +124,12 @@ export default {
         tableColumns() {
             let tableColumns = [
                 {title: '物料名称', dataIndex: 'name', key: 'detail'},
+                {title: '供应商',  key: 'supplier_list'},
                 {title: '物料分类', dataIndex: ['category','name'], key: 'item'},
                 {title: '物料编码', dataIndex: 'code', key: 'item'},
-                {title: '物料规格', dataIndex: 'spec', key: 'item'},
-                {title: '物料包装', dataIndex: 'encapsulation', key: 'item'},
-                // {title: '供应商编码', dataIndex: 'supplier_code', key: 'item'},
+                {title: '物料规格', dataIndex: 'spec', key: 'material_spec'},
+                // {title: '物料包装', dataIndex: ['item','encapsulation'], key: 'item'},
+
             ]
             if (this.warehouseId !== 0) {
                 tableColumns.splice(3, 0, {title: '仓库库存', dataIndex: 'stock', key: 'count'})
@@ -136,6 +151,7 @@ export default {
             this.modalShow = false
             this.selectItemIds = []
             this.selectItems = []
+            this.searchForm = []
         },
         handleConfirm() {
             console.log('handleConfirm this.selectItems:', this.selectItems)

@@ -9,7 +9,7 @@
                     <a-checkbox v-for="(value,key) of faultMap" :key='key' :value='key'>{{ value }}</a-checkbox>
                 </a-checkbox-group>
                 <div class="title-fault">
-                    <FaultEdit :id="id" ref="FaultEdit" @saveFault="getFaultData" btn-type="primary"/>
+                    <FaultEdit :id="id" ref="FaultEdit" @saveFault="getFaultData" btn-type="primary" v-if="$auth('fault.save')"/>
                 </div>
             </div>
         </a-collapse-panel>
@@ -20,7 +20,7 @@
                         <span class="fault-name">故障：{{ faultMap[fault] }}</span>
                         <ItemSelect @select="handleAddFailItem" :fault-name="fault"
                             :disabled-checked='failData[fault].map(i => i.id)'
-                            btn-type='primary' btn-text="添加商品" btn-class="fault-btn"/>
+                            btn-type='primary' btn-text="添加商品" btn-class="fault-btn" v-if="$auth('repair-order.save')"/>
                     </div>
                     <a-table :columns="tableColumns" :data-source="failData[fault]" :scroll="{ x: true }"
                         :row-key="record => record.id" :pagination='false' size="small">

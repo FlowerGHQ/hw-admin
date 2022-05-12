@@ -3,24 +3,19 @@
         <div class="panel-title">
             <div class="title">商品列表</div>
             <div class="btn-area">
-                <ItemSelect @select="(ids,items) => handleAddShow(TARGET_TYPE.ITEM,ids,items)" btn-class="panel-btn" :disabledChecked='checkedIds'>
+                <ItemSelect @select="(ids,items) => handleAddShow(TARGET_TYPE.ITEM,ids,items)" btn-class="panel-btn" :disabledChecked='checkedIds' v-if="$auth('sales-area.save')">
                     添加商品
                 </ItemSelect>
-                <!-- <MaterialSelect @select="(ids,items) => handleAddShow(ids,items)"
-                                btn-class="panel-btn" :disabled-checked='checkedIds'>
-                    添加物料
-                </MaterialSelect> -->
             </div>
         </div>
         <div class="panel-content">
             <div class="table-container">
-
                 <a-table :columns="tableColumns" :data-source="addData" :scroll="{ x: true }" :pagination='false'
                     :row-key="record => record.id" @expand='handleTableExpand'
                     :expandedRowKeys="expandedRowKeys" :indentSize='0' :expandIconColumnIndex="expandIconColumnIndex"
                     :loading='loading'>
                     <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.key === 'detail'">
+                        <template v-if="column.key === 'detail' && $auth('item.detail')">
                                 <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" fallback='无'/>
                                 <a-tooltip placement="top" :title='text' destroy-tooltip-on-hide>
                                         <a-button type="link" @click="routerChange('detail', record)">
@@ -61,8 +56,8 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
-                            <a-button type='link' @click="handleDelete(record)" class="danger"><i class="icon i_delete"/> 删除</a-button>
+                            <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('item.detail')"><i class="icon i_detail"/> 详情</a-button>
+                            <a-button type='link' @click="handleDelete(record)" class="danger" v-if="$auth('sales-area.delete')"><i class="icon i_delete"/> 删除</a-button>
                         </template>
                     </template>
                 </a-table>

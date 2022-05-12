@@ -44,9 +44,15 @@
         <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
             :row-key="record => record.id" :pagination='false'>
             <template #bodyCell="{ column, text, record }">
-                <template v-if="column.key === 'detail' && $auth('production-order.list')">
+                <template v-if="column.key === 'detail' && $auth('production-order.detail')">
                     <a-tooltip placement="top" :title='text'>
-                        <a-button type="link" @click="routerChange(column.to, record)">{{ text || '-' }}
+                        <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}
+                        </a-button>
+                    </a-tooltip>
+                </template>
+                <template v-if="column.key === 'warehouse' && $auth('warehouse.detail')">
+                    <a-tooltip placement="top" :title='text'>
+                        <a-button type="link" @click="routerChange('warehouse', record)">{{ text || '-' }}
                         </a-button>
                     </a-tooltip>
                 </template>
@@ -68,7 +74,7 @@
                     {{ $Util.timeFilter(text) }}
                 </template>
                 <template v-if="column.key === 'operation'">
-                    <a-button type="link" @click="routerChange('detail', record)" v-if="$auth('production-order.list')"><i class="icon i_detail"/>详情</a-button>
+                    <a-button type="link" @click="routerChange('detail', record)" v-if="$auth('production-order.detail')"><i class="icon i_detail"/>详情</a-button>
                     <a-button type="link" @click="handleCancel(record.id)" class="danger" v-if="$auth('production-order.delete')"><i class="icon i_close_c"/>取消</a-button>
                 </template>
             </template>
@@ -116,14 +122,14 @@ export default {
             },
             // 表格
             tableColumns: [
-                {title: '生产单编号', dataIndex: 'uid', key: 'detail', to: 'detail'},
+                {title: '生产单编号', dataIndex: 'uid', key: 'detail'},
                 {title: '名称', dataIndex: 'name',key: 'item'},
                 {title: '状态', dataIndex: 'status'},
                 {title: '生产产品', dataIndex: ['item','name'], key: 'item'},
                 {title: '产品规格', dataIndex: ['item','attr_list'], key: 'spec'},
                 {title: 'BOM表', dataIndex: 'bom_name',key: 'item'},
                 {title: '生产数量', dataIndex: 'amount', key: 'count',},
-                {title: '领料仓库', dataIndex: 'warehouse_name', key: 'detail', to: 'warehouse'},
+                {title: '领料仓库', dataIndex: 'warehouse_name', key: 'warehouse'},
                 {title: '备注', dataIndex: 'remark',key: 'item'},
                 {title: '创建人', dataIndex: 'apply_user_name', key: 'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},

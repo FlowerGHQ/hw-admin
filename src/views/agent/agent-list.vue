@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">零售商列表</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建零售商</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('agent.save')"><i class="icon i_add"/>新建零售商</a-button>
             </div>
         </div>
         <div class="search-container">
@@ -43,7 +43,7 @@
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
                 <template #bodyCell="{ column, text , record }">
-                    <template v-if="column.dataIndex === 'name'">
+                    <template v-if="column.dataIndex === 'name' && $auth('agent.detail')">
                         <a-tooltip placement="top" :title='text'>
                             <a-button type="link" @click="routerChange('detail', record)">{{text}}</a-button>
                         </a-tooltip>
@@ -65,11 +65,11 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_detail"/> 详情</a-button>
-                        <a-button type='link' @click="routerChange('edit', record)"> <i class="icon i_edit"/> 编辑</a-button>
+                        <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('agent.detail')"> <i class="icon i_detail"/> 详情</a-button>
+                        <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('agent.save')"> <i class="icon i_edit"/> 编辑</a-button>
                         <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
-                            <template v-if="record.status"><i class="icon i_forbidden"/>禁用</template>
-                            <template v-else><i class="icon i_enable"/>启用</template>
+                            <template v-if="record.status && $auth('agent.delete')"><i class="icon i_forbidden"/>禁用</template>
+                            <template v-if="!record.status && $auth('agent.enable')"><i class="icon i_enable"/>启用</template>
                         </a-button>
                     </template>
                 </template>

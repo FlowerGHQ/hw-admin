@@ -5,8 +5,8 @@
     </div>
     <div class="panel-content">
         <div class="table-container">
-            <a-button type="primary" ghost @click="routerChange('edit')" class="panel-btn">
-                <i class="icon i_add"/>新增{{type == USER_TYPE.WORKER ? '维修工' : '员工'}}
+            <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('user.save')" class="panel-btn">
+                <i class="icon i_add"/>新增员工
             </a-button>
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text , record }">
@@ -31,8 +31,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/> 编辑</a-button>
-                        <a-button type='link' class="danger" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button>
+                        <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('user.save')"><i class="icon i_edit"/> 编辑</a-button>
+                        <a-button type='link' class="danger" @click="handleDelete(record.id)" v-if="$auth('user.delete')"><i class="icon i_delete"/> 删除</a-button>
                     </template>
                 </template>
             </a-table>
@@ -100,13 +100,12 @@ export default {
                 {title: '手机号', dataIndex: ['account', 'phone']},
                 {title: '邮箱', dataIndex: ['account', 'email']},
                 {title: '类型', dataIndex: 'type'},
-                {title: '是否为管理员', dataIndex: 'flag_admin'},
                 {title: '最近登录', dataIndex: ['account', 'last_login_time'], key: 'time'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
-            if (this.type == USER_TYPE.WORKER) { // 维修工不显示管理员
-                columns.splice(5, 1)
+            if (this.$auth('user.set-admin')) { // 维修工不显示管理员
+                columns.splice(5, 0,{title: '是否为管理员', dataIndex: 'flag_admin'},)
             }
             return columns
         },

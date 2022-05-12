@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('n.list_of_faults') }}</div>
                 <div class="btns-area">
-                    <FaultEdit :id="id" btnType="primary" :ghost="false" ref="FaultList" @saveFault="getTableData"><i class="icon i_add"/>{{ $t('n.new_fault') }}</FaultEdit>
+                    <FaultEdit :id="id" btnType="primary" :ghost="false" ref="FaultList" @saveFault="getTableData" v-if="$auth('fault.save')"><i class="icon i_add"/>{{ $t('n.new_fault') }}</FaultEdit>
                 </div>
             </div>
             <div class="table-container">
@@ -15,15 +15,13 @@
                     </template>
                     <template #bodyCell="{ column, text , record}">
                         <template v-if="column.dataIndex === 'name'">
-                            <a-tooltip placement="top" :title='text'>
-                                <a-button type="link">{{ text }}</a-button>
-                            </a-tooltip>
+                          {{ text }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>{{ $t('def.delete') }}
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('fault.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}
                             </a-button>
                         </template>
                     </template>

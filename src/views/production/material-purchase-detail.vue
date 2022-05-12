@@ -3,11 +3,11 @@
         <div class="title-container">
             <div class="title-area">采购单详情</div>
             <div class="btn-area">
-                <a-button type="primary" @click="handleSubmit()" v-if="detail.status === STATUS.INIT"><i class="icon i_confirm"/>提交</a-button>
-                <a-button type="danger" ghost @click="handleCancel()" v-if="detail.status === STATUS.INIT"> <i class="icon i_close_c"/>取消</a-button>
-                <a-button type="primary" @click="handlePurchaseShow" v-if="detail.status === STATUS.SUBMIT"> <i class="icon i_audit"/>审核</a-button>
-                <a-button v-if="detail.status === STATUS.PASS" type="primary" @click="handlePurchaseShow"><i class="icon i_s_warehouse"/>入库</a-button>
-                <a-button v-if="detail.status === STATUS.PASS || detail.status === STATUS.N_WAREHOUSE" type="primary" @click="handleExport"><i class="icon i_download"/>导出</a-button>
+                <a-button type="danger" ghost @click="handleCancel()" v-if="(detail.status === STATUS.INIT || detail.status === STATUS.PASS) && $auth('material-purchase-order.delete')"> <i class="icon i_close_c"/>撤销</a-button>
+                <a-button type="primary" @click="handleSubmit()" v-if="detail.status === STATUS.INIT && $auth('material-purchase-order.save')"><i class="icon i_confirm"/>提交</a-button>
+                <a-button type="primary" @click="handlePurchaseShow" v-if="detail.status === STATUS.SUBMIT && $auth('material-purchase-order.audit')"> <i class="icon i_audit"/>审核</a-button>
+                <a-button v-if="detail.status === STATUS.PASS && $auth('material-purchase-order.save-to-invoice')" type="primary" @click="handlePurchaseShow"><i class="icon i_s_warehouse"/>入库</a-button>
+                <a-button v-if="(detail.status === STATUS.PASS || detail.status === STATUS.N_WAREHOUSE) && $auth('material-purchase-order.export')" type="primary" @click="handleExport"><i class="icon i_download"/>导出</a-button>
             </div>
         </div>
         <div class="gray-panel info">
@@ -62,7 +62,11 @@
                                         <a-select-option v-for="item of record.supplier_list" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                                     </a-select>
                                 </template>
-                                <template v-else>{{ record.supplier_name }}</template>
+                                <template v-else>
+                                    <a-tooltip placement="top" :title='text'>
+                                        <a-button type="link" @click="routerChange('supplier', record )">{{ record.supplier_name }}</a-button>
+                                    </a-tooltip>
+                                </template>
                             </template>
                             <template v-if="column.key === 'item'">
                                 <template v-if="addMode">
@@ -74,6 +78,13 @@
                                 <a-tooltip placement="top" :title='text'>
                                     <div class="ell" style="max-width: 120px">
                                         {{text || '-'}}
+                                    </div>
+                                </a-tooltip>
+                            </template>
+                            <template v-if="column.key === 'material'">
+                                <a-tooltip placement="top" :title='text'>
+                                    <div class="ell" style="max-width: 120px">
+                                        <a-button type="link" @click="routerChange('material', record )">{{ text || '-' }}</a-button>
                                     </div>
                                 </a-tooltip>
                             </template>
@@ -119,7 +130,7 @@
                             </template>
                         </template>
                     </a-table>
-                    <div class="paging-container">
+                    <div class="paging-container" v-if="!addMode">
                         <a-pagination
                             v-model:current="currPage"
                             :page-size='pageSize'
@@ -245,7 +256,7 @@ export default {
         tableColumns() {
             let columns = [
                 { title: '供应商',dataIndex: 'supplier'},
-                {title: '物料名称', dataIndex: ['material', 'name'],  key: 'item'},
+                {title: '物料名称', dataIndex: ['material', 'name'],  key: 'material'},
                 {title: '物料分类', dataIndex: ['material','category','name'], key: 'item'},
                 {title: '物料编码', dataIndex: ['material', 'code'],  key: 'item'},
                 {title: '物料规格', dataIndex: ['material', 'spec'], key: 'spec'},
@@ -272,6 +283,25 @@ export default {
         this.getWarehouseList();
     },
     methods: {
+        routerChange(type, item= {}) {
+            let routeUrl = ''
+            switch (type) {
+                case 'supplier':
+                    routeUrl = this.$router.resolve({
+                        path: "/production/supplier-detail",
+                        query: { id: item.supplier_id }
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+                case 'material':
+                    routeUrl = this.$router.resolve({
+                        path: "/production/material-detail",
+                        query: { id: item.material_id }
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+            }
+        },
         pageChange(curr) {    // 页码改变
             this.currPage = curr
             this.getMaterialItemList()
@@ -472,9 +502,9 @@ export default {
         handleCancel() {
             let _this = this;
             this.$confirm({
-                title: `确定取消该采购单吗？`,
+                title: `确定撤销该采购单吗？`,
                 okText: '确定',
-                cancelText: '取消',
+                cancelText: '撤销',
                 onOk() {
                     Core.Api.MaterialPurchase.cancel({id: _this.id}).then(() => {
                         _this.$message.success('操作成功');

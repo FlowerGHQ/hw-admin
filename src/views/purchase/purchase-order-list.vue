@@ -61,13 +61,13 @@
             </div>
         </div>
         <div class="operate-container">
-            <a-button type="primary" @click="handleExportConfirm"><i class="icon i_download"/>{{$t('def.export')}}</a-button>
+            <a-button type="primary" @click="handleExportConfirm" v-if="$auth('purchase-order.export')"><i class="icon i_download"/>{{$t('def.export')}}</a-button>
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text , record}">
-                    <template v-if="column.dataIndex === 'sn'">
+                    <template v-if="column.dataIndex === 'sn' && $auth('purchase-order.detail')">
                         <a-tooltip placement="top" :title='text'>
                             <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                         </a-tooltip>
@@ -107,7 +107,7 @@
                     </template>
                     <template v-if="column.key === 'operation'">
                         <a-button type='link' @click="handleRecreate(record)" v-if='search_type === SEARCH_TYPE.SELF'>  <i class="icon i_cart"/> 再次购买</a-button>
-                        <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_detail"/> 详情</a-button>
+                        <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('purchase-order.detail')"> <i class="icon i_detail"/> 详情</a-button>
                     </template>
                 </template>
             </a-table>

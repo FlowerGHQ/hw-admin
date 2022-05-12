@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">销售区域列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建销售区域</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('sales-area.save')"><i class="icon i_add"/>新建销售区域</a-button>
                 </div>
             </div>
             <div class="search-container">
@@ -32,14 +32,14 @@
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record}">
-                        <template v-if="column.dataIndex === 'name'">
+                        <template v-if="column.dataIndex === 'name' && $auth('sales-area.detail')">
                             <a-tooltip placement="top" :title='text'>
                                 <a-button type="link" @click="routerChange('detail', record)">{{ text }}</a-button>
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
+                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('sales-area.save')"><i class="icon i_edit"/>编辑</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('sales-area.delete')"><i class="icon i_delete"/>删除</a-button>
                         </template>
                     </template>
                 </a-table>
