@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "29652344",
+      "name": "skew-bg",
+      "font_class": "skew-bg",
+      "unicode": "e6e0",
+      "unicode_decimal": 59104
+    },
+    {
       "icon_id": "9603867",
       "name": "关联图谱",
       "font_class": "relevance",

@@ -4,85 +4,149 @@
     <div class="title-container">
         <div class="title-area">编辑爆炸图</div>
     </div>
+
     <ItemHeader :detail='detail' :showSpec='indep_flag ? true : false'/>
-    <!-- 图片信息 -->
-    <div class="form-block"> 
-        <div class="form-title">
-            <div class="title">图片信息</div>
+
+    <a-collapse ghost expand-icon-position="right">
+        <template #expandIcon ><i class="icon i_expan_l"/> </template>
+        <a-collapse-panel key="itemInfo" header="详情信息" class="gray-collapse-panel" >
+            <a-row class="panel-content info-container">
+                <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
+                    <div class="info-item">
+                        <div class="key">商品编码</div>
+                        <div class="value">{{detail.code || '-'}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">商品类型</div>
+                        <div class="value"> {{ $Util.itemTypeFilter(detail.type) }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">商品分类</div>
+                        <div class="value">{{detail.category ? detail.category.name : '-'}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">销售区域</div>
+                        <div class="value">{{ detail.sales_area_name || '-'}}</div>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" v-if="indep_flag">
+                    <div class="info-item">
+                        <div class="key">成本价格</div>
+                        <div class="value">{{$Util.priceUnitFilter(detail.original_price_currency)}} {{$Util.countFilter(detail.original_price)}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">FOB(EUR)</div>
+                        <div class="value">€{{$Util.countFilter(detail.fob_eur)}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">FOB(USD)</div>
+                        <div class="value">${{$Util.countFilter(detail.fob_usd)}}</div>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='12' class="info-block">
+                    <template v-for="(item, index) of config" :key="index">
+                        <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='8' class="info-item"
+                            :class="item.type" v-if="item.value">
+                            <div class="key">{{item.name}}</div>
+                            <div class="value" v-if="item.type == 'rich_text'" v-html='item.value'></div>
+                            <div class="value" v-else>{{item.value || '-'}}</div>
+                        </a-col>
+                    </template>
+                </a-col>
+            </a-row>
+        </a-collapse-panel>
+    </a-collapse>
+    <div class="gray-panel">
+        <div class="panel-tabs">
+            <a-tabs v-model:activeKey="currentTab" @change="changTab">
+                <a-tab-pane :key="index" :tab="item.name || '-'" v-for="(item, index) of tabsArray">
+                </a-tab-pane>
+            </a-tabs>
         </div>
-        <div class="form-content">
-            <div class="form-item img-upload">
-                <div class="key">爆炸图</div>
-                <div class="value">
-                    <a-upload name="file" class="image-uploader"
-                        list-type="picture-card" accept='image/*'
-                        :file-list="upload.coverList" :action="upload.action"
-                        :headers="upload.headers" :data='upload.data'
-                        :before-upload="handleImgCheck"
-                        @change="handleCoverChange">
-                        <div class="image-inner" v-if="upload.coverList.length < 1">
-                            <i class="icon i_upload"/>
-                        </div>
-                    </a-upload>
-                    <div class="tip">建议尺寸：800*800像素</div>
-                </div>
-            </div>
+        <div class="btn-area">
+            <a-button class="panel-btn" v-if="tabsArray.length > 0">
+                删除爆炸图
+            </a-button>
+            <a-button type="primary" class="panel-btn" @click="clickShowAdd(true)">
+                新增爆炸图
+            </a-button>
+        </div>
+        <div class="panel-content">
+            <a-table :columns="specificColumns" :data-source="pointerList" :scroll="{ x: true }"
+                :row-key="record => record.id" :pagination='false'>
+                <template #bodyCell="{ column, record, index }">
+                    <template v-if="column.dataIndex === 'name'">
+                        {{ (record.target_detail || {}).name }}
+                    </template>
+                    <template v-if="column.dataIndex === 'model'">
+                        {{ (record.target_detail || {}).model }}
+                    </template>
+                    <template v-if="column.key === 'operation'">
+                        <a-button type='link' @click="showEdit(index)"> <i class="icon i_edit_l"/>修改</a-button>
+                        <a-button type='link' @click="clickDeletePoint(index)"> <i class="icon i_delete"/>删除</a-button>
+                    </template>
+                   <!-- {{ text }}
+                   {{ column }}
+                   {{ record }} -->
+                </template>
+            </a-table>
         </div>
     </div>
     <!-- 编辑爆炸图 -->
-    <div class="form-block" v-show="detailImageUrl"> 
-        <div class="form-title">
-            <div class="title">编辑信息</div>
+    <div class="gray-panel" v-show="detailImageUrl">
+        <div class="panel-title">点位详情</div>
+        <div class="btn-area">
+            <a-button class="panel-btn" @click="clickDeletePoint(-1)">清空点位</a-button>
+            <a-button class="panel-btn" @click="clickAdd" type="primary">新增点位</a-button>
         </div>
-        <div class="form-content">
-            <div class="value">
-                <div class="contain">
-                    <div class="image-contain" @mouseup="mouseupHandler" @mousemove="mousemoveHandler">
-                        <img :src="detailImageUrl" ref="exploreImg" alt="">
-                        <canvas ref="exploreCanvas"></canvas>
-                        <div class="pointer-start" v-for="(item, index) in pointerList" :key="index" 
-                            :style="{'left': `${item.start.x - 4}px`, 'top': `${item.start.y - 4}px`}"
-                            @mousedown="pointMousedown(index, 'start')" @mouseup="pointMouseup" @mousemove.stop=""></div>
+        <div class="panel-content text-c">
+            <div class="image-contain" @mouseup="mouseupHandler" @mousemove="mousemoveHandler">
+                <img :src="detailImageUrl" ref="exploreImg" alt="">
+                <canvas ref="exploreCanvas"></canvas>
+                <div class="pointer-start" v-for="(item, index) in pointerList" :key="index" 
+                    :style="{'left': `${item.start_point.x}px`, 'top': `${item.start_point.y }px`}"
+                    @mousedown="pointMousedown(index, 'start_point')" @mouseup="pointMouseup" @mousemove.stop=""></div>
 
-                        <div class="pointer-end" v-for="(item, index) in pointerList" :key="index" 
-                            :style="{'left': `${item.end.x - 10}px`, 'top': `${item.end.y - 10}px`}"
-                            @mousedown="pointMousedown(index, 'end')" @mouseup="pointMouseup"
-                            @dblclick="showEdit(index)" @mousemove.stop="">
-                            {{index + 1}}
-                            <!-- <div class="component" v-show="moveIndex === null"> -->
-
-                            <div class="component" v-show="moveIndex !== index">
-                                <div class="component-contain">
-                                    <template v-if="item.target_id">
-                                        <!-- <span>{{item.target_detail.name}}</span>
-                                        <span>&nbsp;|&nbsp;</span> -->
-                                        <!-- <span>{{item.target_detail.}}</span> -->
-                                        <!-- <div>€{{$Util.countFilter(item.target_detail[priceKey + 'eur'])}} | ${{$Util.countFilter(item.target_detail[priceKey + 'usd'])}}</div> -->
-                                    </template>
-                                    <div @mousedown.stop="">
-                                        <a-button size="small" type="primary" @click="showEdit(index)">编辑</a-button>
-                                        <a-button size="small" @click="clickDeletePoint(index)">删除</a-button>
-                                    </div>
-                                </div>
+                <div class="pointer-end" v-for="(item, index) in pointerList" :key="index" 
+                    :style="{'left': `${item.end_point.x}px`, 'top': `${item.end_point.y}px`}"
+                    @mousedown="pointMousedown(index, 'end_point')" @mouseup="pointMouseup"
+                    @dblclick="showEdit(index)" @mousemove.stop="">
+                    {{index + 1}}
+                    <div class="component" v-show="moveIndex !== index" @mousedown.stop="">
+                        <div class="component-contain">
+                            <div class="contain-header"><i class="icon i_close" style="color: #fff" @click.stop="clickDeletePoint(index)"/></div>
+                            <div class="contain-name">
+                                <i class="icon i_skew-bg" />
+                                <span class="icon-name">产品名称</span>
+                                {{ (item.target_detail || {}).name }}
+                            </div>
+                            <div class="contain-type">
+                                <div class="type-left">型号:&nbsp;{{ (item.target_detail || {}).model}}</div>
+                                <div class="edit-btn" @click="showEdit(index)">编辑</div>
                             </div>
                         </div>
                     </div>
-                    <div class="contain-action">
-                        <a-button @click="clickAdd" type="primary">新增点位</a-button>
-                        <a-button @click="clickDeletePoint(-1)">清空点位</a-button>
-                        <a-button @click="clickSave">保存</a-button>
-                        <a-button @click="clickCancel">撤销</a-button>
-                    </div>
                 </div>
+            </div>
+            <div class="foot-btn">
+                <a-button type="primary" @click="clickSave">保存</a-button>
+                <a-button @click="clickCancel">取消</a-button>
             </div>
         </div>
     </div>
     <!-- 绑定配件弹窗 -->
     <div class="form-block form-hide">
-        <ItemSelect ref="itemSelect" @select="(ids,items) => handleAddShow(TARGET_TYPE.ITEM,ids,items)" btn-class="panel-btn" :radioMode="true" :disabled-checked='checkedIds'>
+        <ItemSelect 
+            ref="itemSelect"
+            btn-class="panel-btn"
+            :radioMode="true"
+            :disabled-checked='checkedIds'
+            @select="(ids,items) => handleAddShow(TARGET_TYPE.ITEM, ids, items)"
+        >
             添加商品
         </ItemSelect>
     </div>
+    <AddExploreImage :modalShow="showAddModal" @addExplore="handlerAdd" @closeModal="clickShowAdd(false)"/>
 </div>
 </template>
 <script>
@@ -90,6 +154,8 @@ import { get } from 'lodash';
 import Core from '../../core';
 import ItemHeader from './components/ItemHeader.vue'
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
+import AddExploreImage from "./components/AddExploreImage.vue";
+import resData from './test.json';
 
 const TARGET_TYPE = Core.Const.BOM.TARGET_TYPE;
 const TEST_IMAGE = 'https://rebuild-mel-erp.oss-cn-hangzhou.aliyuncs.com/img/700ad6f5592c78946f85a22c19551a1c6bc7c3a1dc77b19edab6012d2e2d0b33.png';
@@ -97,6 +163,7 @@ export default {
     components: {
         ItemHeader,
         ItemSelect,
+        AddExploreImage
     },
     computed: {
         priceKey() {
@@ -112,7 +179,7 @@ export default {
             // 载入
             loading: false,
 
-            activeKey: ['itemSpec'],
+            activeKey: ['itemInfo'],
 
             // 商品
             id: null,
@@ -136,9 +203,7 @@ export default {
                     type: 'img',
                 },
             },
-            details: {},
             detailImageUrl: '',
-            shortPath: '',
 
             canvas: null,
             ctx: null,
@@ -146,13 +211,18 @@ export default {
             isStart: false,
 
             pointerList: [], // 点位列表
-            pointerListData: [], // 点位列表初始数据
+            // pointerListData: [], // 点位列表初始数据
             editPointer: {}, // 编辑点位
             moveIndex: null,
             moveType: null, // 0:起点,1:终点
 
             savePointNum: 0,
             errorArray: [],
+
+            tabsArray: [],
+            currentTab: null,
+
+            showAddModal: false,
         }
     },
     computed: {
@@ -168,7 +238,9 @@ export default {
             }))
             column = column.filter(item => item.title && item.dataIndex)
             column.unshift(
-                {title: '商品编码', key: 'input', dataIndex: 'code', fixed: 'left'},
+                {title: '商品名称', key: 'name', dataIndex: 'name'},
+                {title: '商品型号', key: 'model', dataIndex: 'model'},
+                // {title: '商品编码', key: 'input', dataIndex: 'code', fixed: 'left'},
             )
             column.push(
                 {title: '操作', key: 'operation'},
@@ -177,10 +249,11 @@ export default {
         },
         // 已经添加到BOM表中的ids
         checkedIds() {
-            // let checkedIds = this.details.items.map(i=>i.target_id);
-            // console.log('checkedIds:', checkedIds)
-            // return checkedIds
-            return []
+            let arr = [], id;
+
+            id = get(this.editPointer, "target_detail.id", null);
+            id ? arr.push(id) : "";
+            return arr;
         },
     },
     mounted (){
@@ -192,6 +265,28 @@ export default {
         this.getItemDetail();
     },
     methods: {
+        changTab(key) {
+            if(!this.tabsArray[key].item_component_list) {
+                this.tabsArray[key]['item_component_list'] = [];
+            }
+            this.pointerList = get(this.tabsArray, `[${key}].item_component_list`, []);
+            this.loadImage(get(this.tabsArray, `[${key}].img`, ""));
+        },
+        clickShowAdd(show) {
+            this.showAddModal = show;
+        },
+        /** 添加｜编辑弹窗确认回调 */
+        handlerAdd(info) {
+            // addItemComponent
+            Core.Api.Item.addItemComponent({...info, ...{ item_id: this.id }}).then(()=>{
+                this.loadImage(info.img);
+                this.$message.success(info.id ? "修改成功" : "新增成功");
+                this.clickShowAdd(false);
+                this.getItemExploreList();
+            }).catch(err => {
+                console.log('handlerAdd err', err);
+            });
+        },
         /** 获取 商品详情 */ 
         getItemDetail() {
             this.loading = true;
@@ -204,66 +299,47 @@ export default {
             }).catch(err => {
                 console.log('getItemDetail err', err)
             }).finally(() => {
-                this.getItemComponent();
+                this.getItemExploreList();
+                // this.tabsArray = resData;
+                // this.currentTab = 0;
+                // this.changTab(0);
+                // this.loading = false;
             });
         },
-        /** 获取 商品详情 */ 
-        getItemComponent() {
+        /** 获取 商品爆炸图 */ 
+        getItemExploreList() {
+            this.pointerList = [];
+            this.tabsArray = [];
             Core.Api.Item.getItemComponent({
                 id: this.id
-            }).then(res => {
-                console.log("getItemComponent res", res);
-                let list = (res.list || {}).list || [];
-                this.pointerListData = list.map(item=>{
-                    item.start = JSON.parse(item.start_point);
-                    item.end = JSON.parse(item.end_point);
-                    return item;
-                })
-                this.pointerList = Core.Util.deepCopy(this.pointerListData);
-                this.detailImageUrl = TEST_IMAGE;
-                if(this.detailImageUrl) {
-                    this.loadImage(this.detailImageUrl);
+            }).then((res)=>{
+                this.tabsArray = get(res, "list.list" , []);
+                this.parsePoint();
+                this.currentTab = 0;
+                if(this.tabsArray.length > 0) {
+                    this.changTab(0);
                 }
-            }).catch(err => {
-                console.log('getItemComponent err', err)
-            }).finally(() => {
+            }).catch( err => {
+                console.log('getItemExploreList err', err);
+            }).finally(()=>{
                 this.loading = false;
             });
         },
 
-        // 校验图片
-        handleImgCheck(file) {
-            const isCanUpType = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'].includes(file.type)
-            if (!isCanUpType) {
-                this.$message.warning('文件格式不正确');
-            }
-            const isLt10M = (file.size / 1024 / 1024) < 10;
-            if (!isLt10M) {
-                this.$message.warning('请上传小于10MB的图片');
-            }
-
-            this.loadImage(TEST_IMAGE);
-            return false;
-            // return isCanUpType && isLt10M;
-        },
-        // 上传图片
-        handleCoverChange({ file, fileList }) {
-            if (file.status == 'done') {
-                if (file.response && file.response.code < 0) {
-                    return this.$message.error(file.response.message)
-                }
-                this.shortPath = get(fileList,'[0].response.data.filename', null);
-                if(this.shortPath) {
-                    this.detailImageUrl = Core.Const.NET.FILE_URL_PREFIX + this.shortPath;
-                    this.loadImage(this.detailImageUrl);
-                }
-            }
-            this.upload.coverList = fileList;
+        parsePoint () {
+            this.tabsArray.forEach(item => {
+                let list = get(item, "item_component_list", []);
+                list.forEach(point => {
+                    point.start_point = point.start_point ? JSON.parse(point.start_point) : { x: 50, y: 50 };
+                    point.end_point = point.end_point ? JSON.parse(point.end_point) : { x: 50, y: 150 };
+                })
+            })
+            console.log("parsePoint>>>", this.tabsArray)
         },
 
         // 加载图片，获取宽高
-        loadImage(url){
-            let img = new Image();
+        loadImage(str){
+            let img = new Image(), url = Core.Const.NET.FILE_URL_PREFIX + str;
             const ths = this;
             
             img.onload = ()=>{
@@ -283,53 +359,18 @@ export default {
                 this.canvas.width = width;
                 this.canvas.height = height;
             }
-            if(this.pointerList.length > 0) {
+            // if(this.pointerList.length > 0) {
                 this.canvasUpdata();
-            }
+            // }
         },
 
-        /** 点击添加点位 */
-        clickAdd(){
-            this.pointerList.push({
-                id: null,
-                start: { x: 50, y: 50 },
-                end: { x: 50, y: 150 },
-                target_id: null,
-                target_type: null,
-                target_detail: null,
-            });
-            this.canvasUpdata();
-        },
-        /** 
-         * @description 删除点位 
-         * @param index 序列： -1则删除全部
-         * */
-        clickDeletePoint (index = -1) {
-            if(index === -1) {
-                this.pointerList = [];
-            } else {
-                this.pointerList.splice(index, 1);
-            }
-            this.canvasUpdata();
-        },
-
-        /** 
-         * @description 点位鼠标点下 
-         * @param e event
-         * @param index 序列
-         * @param type 起/始点
-         * */
+        /** 点位鼠标点下 */
         pointMousedown (index, type) {
             this.moveIndex = index;
             this.moveType = type;
             this.isStart = true;
         },
-        /** 
-         * @description 点位鼠标抬起 
-         * @param e event
-         * @param index 序列
-         * @param type 起/始点
-         * */
+        /** 点位鼠标抬起 */
         pointMouseup () {
             this.moveIndex = null;
             this.moveType = null;
@@ -358,17 +399,33 @@ export default {
             if(!this.canvas) return;
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.ctx.lineWidth = 1;
-            // this.ctx.strokeStyle = '#000000';
             this.ctx.strokeStyle = '#1890ff';
             this.ctx.beginPath();
             for (var i = 0; i < this.pointerList.length; i++) {
-                var p1 = this.pointerList[i].start;
-                var p2 = this.pointerList[i].end;
+                var p1 = this.pointerList[i].start_point;
+                var p2 = this.pointerList[i].end_point;
                 this.ctx.moveTo(p1.x, p1.y);
                 this.ctx.lineTo(p2.x, p2.y);
             }
             this.ctx.stroke();
         },
+
+        /** 点击添加点位 */
+        clickAdd(){
+            this.editPointer = null;
+            this.$refs.itemSelect.handleModalShow();
+        },
+
+        /** 删除点位 */
+        clickDeletePoint (index = -1) {
+            if(index === -1) {
+                this.pointerList = [];
+            } else {
+                this.pointerList.splice(index, 1);
+            }
+            this.canvasUpdata();
+        },
+
         /** 编辑点位详情 */
         showEdit (index) {
             this.editPointer = this.pointerList[index];
@@ -377,10 +434,26 @@ export default {
 
         // 添加材料
         handleAddShow(type, ids, items) {
+            let obj;
+            if(this.editPointer === null) {
+                obj = {
+                    id: null,
+                    start_point: { x: 50, y: 50 },
+                    end_point: { x: 50, y: 150 },
+                    set_id: get(this.tabsArray, `[${this.currentTab}].id`, null),
+                    target_id: null,
+                    target_type: null,
+                    target_detail: null,
+                }
+                this.pointerList.push(obj);
+                this.canvasUpdata();
+            } else {
+                obj = this.editPointer;
+            }
             items.map(item => {
-                this.editPointer.target_id = item.id;
-                this.editPointer.target_type = type;
-                this.editPointer.target_name = item.name;
+                obj.target_id = item.id;
+                obj.target_type = type;
+                obj.target_detail = item;
             });
         },
         /** 点击保存 */
@@ -399,38 +472,21 @@ export default {
 
             this.errorArray = [];
             this.savePointNum = this.pointerList.length;
-            this.pointerList.forEach((item, index)=>{
-                item.index = index + 1;
-                ths.bindComponent(item);
-            })
+            const param = {
+                item_component_set_list: this.tabsArray,
+                item_id: this.id,
+            }
+            console.log("pointerList>>>", param)
+            Core.Api.Item.bindItemComponent(param).then(res => {
+                this.$message.success(`点位保存成功`);
+            }).catch(err => {
+                this.$message.error('点位保存失败');
+            });
         },
         /** 点击取消 */
         clickCancel () {
-            this.pointerList = Core.Util.deepCopy(this.pointerListData);
+            // this.pointerList = Core.Util.deepCopy(this.pointerListData);
             this.canvasUpdata();
-        },
-        /** 请求绑定 */
-        bindComponent (info) {
-            const param = {
-                id: info.id,
-                img: TEST_IMAGE,
-                item_id: this.id,
-                start_point: JSON.stringify(info.start),
-                end_point: JSON.stringify(info.end),
-                target_id: info.target_id,
-                target_type: info.target_type
-            };
-            Core.Api.Item.bindItemComponent(param).then(res => {
-            }).catch(err => {
-                this.errorArray.push(info.index);
-            }).finally(() => {
-                this.savePointNum--;
-                if(this.savePointNum === 0 && this.errorArray.length > 0) {
-                    this.$message.error(`${this.errorArray.join(',')}点位保存失败`);
-                } else if (this.savePointNum === 0){
-                    if(this.savePointNum === 0) this.$message.success('保存成功');
-                }
-            });
         },
         /** 解除绑定 */
         deleteComponent () {
@@ -447,14 +503,50 @@ export default {
     }
 }
 </script>
+
 <style lang="less" scoped>
 .form-block .form-content .value .contain {
     width: 100%;
     height: 100%;
+    .contain-action {
+        text-align: center;
+        margin-bottom: 24px;
+    }
+}
+.delete-point {
+    text-decoration:underline;
+    cursor: pointer;
+    &:hover {
+        color: red;
+    }
+}
+.form-hide {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+.gray-panel {
+    .panel-title {
+        display: inline-block;
+        padding: 0 0 0 10px;
+        width: calc(100% - 300px);
+        height: 40px;
+        font-weight: 500;
+        font-size: 12px;
+        color: #000000;
+    }
+    .panel-tabs {
+        display: inline-block;
+        width: calc(100% - 300px);
+    }
+    .btn-area {
+        display: inline-block;
+        width:  300px;
+        text-align: right;
+    }
     .image-contain {
         display: inline-block;
         position: relative;
-        margin-bottom: 80px;
         max-width: 800px;
         max-height: 800px;
         min-height: 100px;
@@ -465,7 +557,8 @@ export default {
             border-radius: 50px;
             user-select: none;
             opacity: 0.6;
-            transition: opacity 0.2s ease;
+            transition: opacity 0.15s ease;
+            transform: translate(-50%, -50%);
             cursor: pointer;
             &:hover {
                 z-index: 20;
@@ -484,40 +577,117 @@ export default {
             line-height: 20px;
             text-align: center;
             font-size: 12px;
+            color: @TC_L;
             border: 1px solid @BG_LP;
-            background-color: white;
+            background-color: @BG_LP;
             .component {
                 position: relative;
                 display: inline-block;
                 width: 150px;
                 height: 100px;
-                text-align: center;
+                text-align: left;
                 .component-contain {
                     position: absolute;
+                    display: flex;
+                    flex-wrap: wrap;
                     z-index: 2;
-                    padding: 12px 24px;
-                    top: 10px;
+                    padding-bottom: 12px;
+                    top: 4px;
                     left: -26px;
-                    width: 100%;
-                    border-radius: 5px;
-                    background-color: #ffffff;
+                    width: 250px;
+                    border-radius: 2px;
+                    background-color: @BG_LP;
                     border: 1px solid @BG_LP;
+                    font-size: 0;
                     &:before, &:after {
                         content: "";
                         display: block;
-                        border-width: 12px;
+                        border-width: 5px;
                         position: absolute;
-                        top: -24px;
-                        left: 22px;
+                        top: -10px;
+                        left: 30px;
                         border-style: solid dashed dashed;
                         border-color: transparent transparent @BG_LP  transparent;
                         font-size: 0;
                         line-height: 0;
                     } 
                     &:after {
-                        top: -23px;
-                        left: 22px;
-                        border-color: transparent transparent #ffffff transparent;
+                        top: -9px;
+                        left: 30px;
+                        border-color: transparent transparent @BG_LP transparent;
+                    }
+                    .contain-header {
+                        padding-top: 4px;
+                        padding-right: 6px;
+                        width: 100%;
+                        height: 16px;
+                        text-align: right;
+                        .i_close {
+                            float: right;
+                            color: @TC_L;
+                            font-size: 12px;
+                        }
+                    }
+                    .contain-name {
+                        position: relative;
+                        padding: 0 16px;
+                        width: 100%;
+                        height: 20px;
+                        line-height: 20px;
+                        font-size: 16px;
+                        color: @TC_L;
+                        text-align: left;
+                        overflow: hidden; //超出的文本隐藏
+                        text-overflow: ellipsis; //溢出用省略号显示
+                        white-space: nowrap;
+                        .i_skew-bg {
+                        //     position: relative;
+                        //     display: inline-block;
+                        //     width: 53px;
+                        //     height: 16px;
+                        //     line-height: 16px;
+                            font-size: 16px;
+                        //     font-style: italic;
+                        //     text-align: center;
+                            color: @TC_L;
+                        }
+                        .icon-name {
+                            position: absolute;
+                            top: 0;
+                            left: 16px;
+                            font-style: italic;
+                            font-size: 12px;
+                            font-weight: bold;
+                            color: @TC_LP;
+                            transform-origin: 50% 50%;
+                            transform: scale(90%, 90%);
+                        }
+                    }
+                    .contain-type {
+                        display: flex;
+                        margin-top: 22px;
+                        padding: 0 16px;
+                        width: 100%;
+                    }
+                    .type-left {
+                        padding-right: 6px;
+                        width: calc(100% - 48px);
+                        color: @TC_L;
+                        font-size: 16px;
+                        overflow: hidden; //超出的文本隐藏
+                        text-overflow: ellipsis; //溢出用省略号显示
+                        white-space: nowrap;
+                    }
+                    .edit-btn {
+                        width: 48px;
+                        height: 34px;
+                        line-height: 34px;
+                        border-radius: 2px;
+                        font-size: 14px;
+                        text-align: center;
+                        color: @BG_LP;
+                        background-color: @BG_panel;
+                        border: 1px solid @BG_LP;
                     }
                 }
             }
@@ -535,21 +705,13 @@ export default {
             left: 0;
         }
     }
-    .contain-action {
+    .foot-btn {
+        margin-top: 24px;
+        width: 100%;
         text-align: center;
-        margin-bottom: 24px;
     }
 }
-.delete-point {
-    text-decoration:underline;
-    cursor: pointer;
-    &:hover {
-        color: red;
-    }
-}
-.form-hide {
-    width: 0;
-    height: 0;
-    overflow: hidden;
+.text-c {
+    text-align: center;
 }
 </style>
