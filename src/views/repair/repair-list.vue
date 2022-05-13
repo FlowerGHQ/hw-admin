@@ -127,7 +127,7 @@
                         <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.AUDIT_SUCCESS && $auth('repair-order.audit')"><i class="icon i_audit"/>审核</a-button>
                     </template>
                     <template v-if="column.key === 'fault'">
-                        <a-button type='link' @click="handleModalShow(record.id, 'fault')" v-if="(record.status == STATUS.FAULT_ENTITY_AUDIT || record.status == STATUS.IN_WAREHOUSE) &&
+                        <a-button type='link' @click="handleModalShow(record.id, 'fault')" v-if="(record.status == STATUS.FAULT_ENTITY_AUDIT || record.status == STATUS.AUDIT_SUCCESS) &&
                         record.service_type == 1 && $auth('repair-order.save-to-invoice')"><i class="icon i_s_warehouse"/>入库</a-button>
                     </template>
                 </template>
@@ -235,18 +235,6 @@ export default {
             total: 0,
             // 搜索
             operMode: '',
-           /* statusList: [
-                {zh: '全  部',en: 'All', value: '0', color: 'primary', key: '-1'},
-                {zh: '待检测',en: 'Waiting detect', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
-                {zh: '维修中', en: 'Under repair',value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
-                {zh: '已结算待审核',en: 'Settled accounts and awaiting audit', value: '0', color: 'orange',  key: STATUS.SETTLEMENT },
-                {zh: '工单审核通过',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
-                {zh: '工单审核未通过', en: 'Failed audit',value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
-                {zh: '故障件审核未通过', value: '0', color: 'red',  key: STATUS.FAULT_ENTITY_AUDIT_FAIL },
-                {zh: '入库完成', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },
-                {zh: '已完成',en: 'Finished settle accounts', value: '0', color: 'blue',  key: STATUS.FINISH },
-                {zh: '已取消',en: 'Cancelled', value: '0', color: 'gray',  key: STATUS.CLOSE },
-            ],*/
             distributorList: [], // 分销商下拉框数据
             storeList: [],
             agentList: [],
@@ -358,7 +346,7 @@ export default {
                 columns.splice(7, 0, {zh: '已入库', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },)
             }
             if (this.$auth('DISTRIBUTOR')) {
-                columns.splice(7, 0, {zh: '已入库', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },)
+                columns.splice(7, 0, {zh: '已入库', value: '0', color: 'green',  key: STATUS.DISTRIBUTOR_WAREHOUSE },)
             }
             return columns
         }
@@ -431,7 +419,7 @@ export default {
             } else if (this.operMode == 'fault' && this.$auth('ADMIN')) {
                 this.searchForm.status = STATUS.FAULT_ENTITY_AUDIT
             } else if (this.operMode == 'fault' && this.$auth('DISTRIBUTOR')) {
-                this.searchForm.status = STATUS.IN_WAREHOUSE
+                this.searchForm.status = STATUS.AUDIT_SUCCESS
             }
             if (this.$auth('ADMIN')) {
                 this.getDistributorListAll();

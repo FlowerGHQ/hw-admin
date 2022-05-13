@@ -650,8 +650,17 @@ const Util = {
     },
 
     /* =============== 物料采购 ================ */
-
-
+    /* =============== 调货单 ================ */
+    warehouseTransferStatusFilter(val, to = 'text') {
+        const MAP = Const.WAREHOUSE_TRANSFER.STATUS_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    transferTypeFilter(val) {
+        const MAP = Const.WAREHOUSE_TRANSFER.COMMODITY_TYPE_MAP
+        return MAP[val] || '未知'
+    },
+    /* =============== 调货单 ================ */
 
 }
 

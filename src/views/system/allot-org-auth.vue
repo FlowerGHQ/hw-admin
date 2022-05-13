@@ -8,10 +8,10 @@
             <template #expandIcon></template>
             <a-collapse-panel v-for="(org,key) of orgType" :key="key" :header="org.name" class="gray-collapse-panel">
                 <template #extra>
-                    <a-button @click.stop="handleEditShow(key)" type="link" v-if="!org.edit"><i class="icon i_edit"/>设置</a-button>
+                    <a-button @click.stop="handleEditShow(key)" type="link" v-if="!org.edit && $auth('authority.save')"><i class="icon i_edit"/>设置</a-button>
                     <template v-else>
-                        <a-button @click.stop="handleEditSubmit(key)" type="link"><i class="icon i_confirm"/>保存</a-button>
-                        <a-button @click.stop="handleEditClose(key)" type="link" class="cancel"><i class="icon i_close_c"/>取消</a-button>
+                        <a-button @click.stop="handleEditSubmit(key)" type="link" v-if="$auth('authority.save')"><i class="icon i_confirm"/>保存</a-button>
+                        <a-button @click.stop="handleEditClose(key)" type="link" class="cancel" v-if="$auth('authority.save')"><i class="icon i_close_c"/>取消</a-button>
                     </template>
                 </template>
                 <div class="panel-content" v-if="!org.edit">

@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">系统附件列表</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('ADMIN')"><i class="icon i_add"/>新建文件</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('ADMIN' && 'file.save')"><i class="icon i_add"/>新建文件</a-button>
             </div>
         </div>
         <div class="search-container">
@@ -44,8 +44,8 @@
                     <template v-if="column.key === 'operation'" >
                         <a-button type="link" @click="handleDownload(record)"><i class="icon i_download"/>下载</a-button>
                         <template v-if="$auth('ADMIN')">
-                            <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
+                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('file.save')"><i class="icon i_edit"/>编辑</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('file.delete')"><i class="icon i_delete"/>删除</a-button>
                         </template>
                     </template>
                 </template>

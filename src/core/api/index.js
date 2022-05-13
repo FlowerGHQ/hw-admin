@@ -429,10 +429,28 @@ const apiList = {
         itemDelete: ['PostJson', 'material-purchase-order-item/delete'],
         itemSave: ['PostJson', 'material-purchase-order-item/save'],
         batchSave: ['PostJson', 'material-purchase-order-item/batch-save'],
-        statusList: ['PostJson', 'material-purchase-order/status-list'], // 保存
+        statusList: ['PostJson', 'material-purchase-order/status-list'],
         detailByUid: ['PostJson', 'material-purchase-order/detail-by-sn'],
         stock: ['PostJson', 'material-purchase-order/save-to-invoice'],//入库
-        cancelAudit: ['PostJson', 'material-purchase-order/cancel-audit'],//入库
+    },
+    WarehouseTransfer: { //物料调货单
+        list: ['PostJson', 'warehouse-transfer-order/list'],
+        detail: ['PostJson', 'warehouse-transfer-order/detail'],
+        cancel: ['PostJson', 'warehouse-transfer-order/cancel'],
+        save: ['PostJson', 'warehouse-transfer-order/save'],
+        submit: ['PostJson', 'warehouse-transfer-order/submit'],
+        statusList: ['PostJson', 'warehouse-transfer-order/status-list'],
+        audit: ['PostJson', 'warehouse-transfer-order/audit'],
+        itemList: ['PostJson', 'warehouse-transfer-order-item/list'],
+        itemSave: ['PostJson', 'warehouse-transfer-order-item/save'],
+        saveList: ['PostJson', 'warehouse-transfer-order-item/save-list'],
+        itemDelete: ['PostJson', 'warehouse-transfer-order-item/delete'],
+        deliver: ['PostJson', 'warehouse-transfer-order/deliver'],
+        receive: ['PostJson', 'warehouse-transfer-order/receive'],
+        stock: ['PostJson', 'warehouse-transfer-order/save-to-invoice'],//入库
+        detailByUid: ['PostJson', 'warehouse-transfer-order/detail-by-uid'],//入库
+
+
     }
 };
 

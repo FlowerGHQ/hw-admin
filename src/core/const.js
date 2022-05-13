@@ -30,13 +30,10 @@ switch (window.location.hostname) {
     case "10.0.0.228":
         URL_POINT = 'http://10.0.0.228:8083'
         break;
-    case "10.0.0.221":
-        URL_POINT = 'http://eos-api-dev.hw.innotick.com'
-        break;
     default:
         // URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.7:8083' // 但
-        // URL_POINT = 'http://10.0.0.225:8883'
+        URL_POINT = 'http://10.0.0.225:8883'
         // URL_POINT = 'http://10.0.0.171:8883' // 姚志宇
 
 
@@ -288,6 +285,7 @@ let Const = {
             SETTLEMENT: 60,
             DISTRIBUTOR_AUDIT_SUCCESS: 80,
             AUDIT_SUCCESS: 90,
+            DISTRIBUTOR_WAREHOUSE: 95,
             FINISH: 100,
             FAULT_ENTITY_AUDIT: 105,
             SAVE_TO_INVOICE: 110,
@@ -301,9 +299,10 @@ let Const = {
             '60': { key: 60, color: 'orange', zh: '已结算待审核', en: 'Settled accounts and awaiting audit'},
             '80': { key: 80, color: 'purple', zh: '分销商审核通过', en: 'Passed audit'},
             '90': { key: 90, color: 'purple', zh: '平台审核通过', en: 'Passed audit'},
+            '95': { key: 95, color: 'purple', zh: '分销商已入库'},
             '100': { key: 100, color: 'blue', zh: '已完成', en: 'Finished settle accounts'},
             '105': { key: 105, color: 'blue', zh: '故障件审核通过'},
-            '110': { key: 110, color: 'green', zh: '入库完成'},
+            '110': { key: 110, color: 'green', zh: '平台方已入库'},
             '-10': { key: -10, color: 'gray', zh: '已取消', en: 'Cancelled'},
             '-30': { key: -30, color: 'red', zh: '工单审核未通过', en: 'Failed audit'},
             '-40': { key: -40, color: 'red', zh: '故障件审核未通过'},
@@ -610,7 +609,7 @@ let Const = {
         { list: [], select: [], key: 'store', name: '门店管理' },
         { list: [], select: [], key: 'repair-order', name: '维修单' },
         { list: [], select: [], key: 'customer', name: '客户管理' },
-        { list: [], select: [], key: 'org-user', name: '员工管理' },
+        { list: [], select: [], key: 'user', name: '员工管理' },
         { list: [], select: [], key: 'item', name: '商品管理' },
         { list: [], select: [], key: 'invoice', name: '出入库单' },
         { list: [], select: [], key: 'supplier', name: '供应商' },
@@ -623,8 +622,10 @@ let Const = {
         { list: [], select: [], key: 'warehouse', name: '仓库' },
         { list: [], select: [], key: 'purchase-order', name: '采购订单' },
         { list: [], select: [], key: 'refund', name: '退款' },
-        { list: [], select: [], key: 'notice', name: '消息' },
-        { list: [], select: [], key: 'system-file', name: '系统文件' },
+        { list: [], select: [], key: 'message', name: '消息' },
+        { list: [], select: [], key: 'authority', name: '权限' },
+        { list: [], select: [], key: 'role', name: '角色' },
+        { list: [], select: [], key: 'file', name: '文件' },
     ],
 
     ATTACHMENT: {
@@ -708,6 +709,7 @@ let Const = {
             TRANSFER: 40,    // 调货单
             REPAIR: 50,      // 维修单
             MATERIAL_PURCHASE: 60, //物料采购单
+            WAREHOUSE_TRANSFER: 70, //仓库调货单
         },
         SOURCE_TYPE_MAP: {
             10: '管理员创建',
@@ -717,6 +719,7 @@ let Const = {
             40: '调货单',
             50: '维修单',
             60: '物料采购单',
+            70: '仓库调货单'
         },
         SOURCE_FORM: { //出入库单变更来源
             UNKNOWN: 0,
@@ -1008,7 +1011,7 @@ let Const = {
             INIT: 0, //初始化
             SUBMIT: 100, //已提交待审核
             PASS: 200, //审核通过
-            // CLOSE: 300, //已完成
+            PART: 400,//部分入库
             N_WAREHOUSE: 500,  //入库完成
             REFUSE: -200,//审核失败
             CANCEL: -100, // 取消
@@ -1017,16 +1020,16 @@ let Const = {
             '0': '待提交',
             '100': '待审核',
             '200': '审核通过',
-            // '300': '已完成',
-            '500': '已入库',
+            '400':'部分入库',
+            '500': '全部入库',
             '-200': '审核未通过',
             '-100': '已取消'
         },
         STATUS_COLOR_MAP: {
             '0': 'orange',
             '100': 'yellow',
-            '200': 'green',
-            // '300': 'green',
+            '200': 'blue',
+            '400': 'purple',
             '500': 'green',
             '-200': 'red',
             '-100': 'grey'
@@ -1039,6 +1042,40 @@ let Const = {
             { text: '审核未通过', value: -200 },
             { text: '已取消', value: -100 },
         ],*/
+    },
+    WAREHOUSE_TRANSFER: {
+        STATUS: {
+            INIT: 5,
+            APPLICANT_AUDIT: 10,
+            SENDER_AUDIT: 20,
+            AUDIT_PASS: 30,
+            DELIVERED: 40,
+            RECEIVED: 50,
+            CLOSE: 60,
+            APPLICANT_AUDIT_REFUSE: -10,
+            SENDER_AUDIT_REFUSE: -20,
+            CANCEL: -30,
+        },
+        STATUS_MAP: {
+            '5': { key: 5, color: 'yellow', text: '待提交',value: '0'},
+            '10': { key: 10, color: 'orange', text: '收货方审核',value: '0'},
+            '20': { key: 20, color: 'orange', text: '发货方待审核',value: '0'},
+            '30': { key: 30, color: 'blue', text: '待发货',value: '0'},
+            '40': { key: 40, color: 'purple', text: '已发货',value: '0'},
+            '50': { key: 50, color: 'purple', text: '已收货',value: '0'},
+            '60': { key: 60, color: 'green', text: '已完成', value: '0'},
+            '-10': { key: -10, color: 'red', text: '收货方审核失败', value: '0'},
+            '-20': { key: -20, color: 'red', text: '发货方审核失败', value: '0'},
+            '-30': { key: -30, color: 'grey', text: '已取消', value: '0'},
+        },
+        COMMODITY_TYPE: {
+            ITEM: 10,
+            MATERIALS: 30,
+        },
+        COMMODITY_TYPE_MAP: {
+            10: '商品',
+            30: '物料',
+        },
     }
 };
 
