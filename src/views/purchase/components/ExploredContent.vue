@@ -40,13 +40,9 @@
                         <div class="type-left">€{{$Util.countFilter(componentDetail[priceKey + 'eur'])}} | ${{$Util.countFilter(componentDetail[priceKey + 'usd'])}}</div>
                     </div>
                     <div class="edit-btn">
-                        <!-- <a-button type="primary" ghost @click="hanldeAddToShopCart">添加到购物车</a-button> -->
                         <a-button type="primary" class="disabled" v-if="componentDetail.in_shopping_cart">已在购物车中</a-button>
                         <a-button type="primary" @click="hanldeAddToShopCart" v-else>添加到购物车</a-button> -->
                     </div>
-                    <!-- <div>€{{$Util.countFilter(componentDetail[priceKey + 'eur'])}} | ${{$Util.countFilter(componentDetail[priceKey + 'usd'])}}</div>
-                    <a-button type="primary" class="disabled" v-if="componentDetail.in_shopping_cart">已在购物车中</a-button>
-                    <a-button type="primary" @click="hanldeAddToShopCart" v-else>添加到购物车</a-button> -->
                 </div>
             </transition>
         </div>
@@ -131,7 +127,6 @@ export default {
             if(cvs.length > 0) this.canvasGroup[index] = cvs;
             else return;
             let rate = width > 800 ? 1 : 800 / width;
-            // let rate = 1;
             cvs.forEach(canvas=>{
                 canvas.width = 800;
                 canvas.height = height / width * 800;

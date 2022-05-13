@@ -85,9 +85,6 @@
                         <a-button type='link' @click="showEdit(index)"> <i class="icon i_edit_l"/>修改</a-button>
                         <a-button type='link' @click="clickDeletePoint(index)"> <i class="icon i_delete"/>删除</a-button>
                     </template>
-                   <!-- {{ text }}
-                   {{ column }}
-                   {{ record }} -->
                 </template>
             </a-table>
         </div>
@@ -158,7 +155,6 @@ import AddExploreImage from "./components/AddExploreImage.vue";
 import resData from './test.json';
 
 const TARGET_TYPE = Core.Const.BOM.TARGET_TYPE;
-// const TEST_IMAGE = 'https://rebuild-mel-erp.oss-cn-hangzhou.aliyuncs.com/img/700ad6f5592c78946f85a22c19551a1c6bc7c3a1dc77b19edab6012d2e2d0b33.png';
 export default {
     components: {
         ItemHeader,
@@ -175,7 +171,6 @@ export default {
     data(){
         return {
             TARGET_TYPE,
-            // TEST_IMAGE,
             // 载入
             loading: false,
 
@@ -246,7 +241,6 @@ export default {
             column.unshift(
                 {title: '商品名称', key: 'name', dataIndex: 'name'},
                 {title: '商品型号', key: 'model', dataIndex: 'model'},
-                // {title: '商品编码', key: 'input', dataIndex: 'code', fixed: 'left'},
             )
             column.push(
                 {title: '操作', key: 'operation'},
@@ -517,16 +511,6 @@ export default {
         },
         /** 点击保存 */
         clickSave () {
-            // let emptyArray = [];
-
-            // this.pointerList.forEach((item, index) => {
-            //     if(!item.target_id) emptyArray.push(index + 1);
-            // });
-            
-            // if(emptyArray.length > 0) {
-            //     this.$message.warning(`第${emptyArray.join(',')}点位尚未设置配件。`)
-            //     return;
-            // };
             const ths = this;
 
             this.errorArray = [];
