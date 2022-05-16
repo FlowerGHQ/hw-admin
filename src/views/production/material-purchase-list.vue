@@ -47,6 +47,12 @@
                     <template v-if="column.key === 'contact'">
                         {{ text || '-' }}
                     </template>
+                    <template v-if="column.key === 'stock_in_amount'">
+                        {{ text || '-' }}
+                    </template>
+                    <template v-if="column.key === 'total'">
+                        {{ text + '件' || '-' }}
+                    </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="$Util.materialPurchaseStatusFilter(text,'color')">
                             <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>
@@ -137,7 +143,9 @@ export default {
             tableColumns: [
                 {title: '订单号', dataIndex: 'sn', key: 'detail'},
                 {title: '状态', dataIndex: 'status'},
+                {title: '物料总数量', dataIndex: 'total', key: 'total'},
                 {title: '总金额', dataIndex: 'total_price', key: 'total_price'},
+                // {title: '已入库数量', key: 'stock_in_amount'},
                 {title: '制单人', dataIndex: ['apply_user', "account", "name"], key: 'contact'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '审核人', dataIndex: ['audit_user', "account", "name"],key: 'contact'},

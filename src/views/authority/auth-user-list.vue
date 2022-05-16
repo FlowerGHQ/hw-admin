@@ -1,72 +1,72 @@
 <template>
-<div id="AuthRoleList">
-    <div class="list-container">
-        <div class="title-container">
-            <div class="title-area">角色管理</div>
-            <div class="btns-area">
-                <a-button type="primary" @click="routerChange()" class="menu-item-btn" v-if="$auth('role.save')"><i class="icon i_add"/>新建角色</a-button>
+    <div id="AuthUserList">
+        <div class="list-container">
+            <div class="title-container">
+                <div class="title-area">用户权限管理</div>
+                <div class="btns-area">
+                    <a-button type="primary" @click="routerChange()" class="menu-item-btn" v-if="$auth('role.save')"><i class="icon i_add"/>新建用户权限</a-button>
+                </div>
             </div>
-        </div>
-        <!-- <div class="search-container">
-            <a-row class="search-area">
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
-                    <div class="key">角色名称:</div>
-                    <div class="value">
-                        <a-input placeholder="请输入角色名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
-                    </div>
-                </a-col>
-            </a-row>
-            <div class="btn-area">
-                <a-button @click="handleSearch" type="primary">查询</a-button>
-                <a-button @click="handleSearchReset">重置</a-button>
+            <!-- <div class="search-container">
+                <a-row class="search-area">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
+                        <div class="key">角色名称:</div>
+                        <div class="value">
+                            <a-input placeholder="请输入角色名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                        </div>
+                    </a-col>
+                </a-row>
+                <div class="btn-area">
+                    <a-button @click="handleSearch" type="primary">查询</a-button>
+                    <a-button @click="handleSearchReset">重置</a-button>
+                </div>
+            </div> -->
+            <div class="table-container">
+                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                         :row-key="record => record.id" :pagination='false'>
+                    <template #bodyCell="{ column, text , record }">
+                        <template v-if="column.dataIndex === 'name'">
+                            {{ text || '-' }}
+                        </template>
+                        <template v-if="column.key === 'tip_item'">
+                            <a-tooltip placement="top" :title='text'>
+                                <div class="ell" style="max-width: 40em">{{text || '-'}}</div>
+                            </a-tooltip>
+                        </template>
+                        <template v-if="column.key === 'time'">
+                            {{ $Util.timeFilter(text) }}
+                        </template>
+                        <template v-if="column.key === 'operation'">
+                            <a-button type='link' @click="routerChange(record)" v-if="$auth('role.save')"><i class="icon i_edit"/>编辑</a-button>
+                            <a-button type='link' danger @click="handleDelete(record.id)" v-if="$auth('role.delete')"><i class="icon i_delete"/>删除</a-button>
+                        </template>
+                    </template>
+                </a-table>
             </div>
-        </div> -->
-        <div class="table-container">
-            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                :row-key="record => record.id" :pagination='false'>
-                <template #bodyCell="{ column, text , record }">
-                    <template v-if="column.dataIndex === 'name'">
-                        {{ text || '-' }}
-                    </template>
-                    <template v-if="column.key === 'tip_item'">
-                        <a-tooltip placement="top" :title='text'>
-                            <div class="ell" style="max-width: 40em">{{text || '-'}}</div>
-                        </a-tooltip>
-                    </template>
-                    <template v-if="column.key === 'time'">
-                        {{ $Util.timeFilter(text) }}
-                    </template>
-                    <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange(record)" v-if="$auth('role.save')"><i class="icon i_edit"/>编辑</a-button>
-                        <a-button type='link' danger @click="handleDelete(record.id)" v-if="$auth('role.delete')"><i class="icon i_delete"/>删除</a-button>
-                    </template>
-                </template>
-            </a-table>
-        </div>
-        <div class="paging-container">
-            <a-pagination
-                v-model:current="currPage"
-                :page-size='pageSize'
-                :total="total"
-                show-quick-jumper
-                show-size-changer
-                show-less-items
-                :show-total="total => `共${total}条`"
-                :hide-on-single-page='false'
-                :pageSizeOptions="['10', '20', '30', '40']"
-                @change="pageChange"
-                @showSizeChange="pageSizeChange"
-            />
+            <div class="paging-container">
+                <a-pagination
+                    v-model:current="currPage"
+                    :page-size='pageSize'
+                    :total="total"
+                    show-quick-jumper
+                    show-size-changer
+                    show-less-items
+                    :show-total="total => `共${total}条`"
+                    :hide-on-single-page='false'
+                    :pageSizeOptions="['10', '20', '30', '40']"
+                    @change="pageChange"
+                    @showSizeChange="pageSizeChange"
+                />
+            </div>
         </div>
     </div>
-</div>
 </template>
 
 <script>
 import Core from '../../core';
 
 export default {
-    name: 'AuthRoleList',
+    name: 'AuthUserList',
     components: {},
     props: {},
     data() {
@@ -206,5 +206,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-//#AuthRoleList {}
+//#AuthUserList {}
 </style>

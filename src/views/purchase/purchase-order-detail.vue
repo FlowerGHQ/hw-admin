@@ -106,9 +106,19 @@
                                 <div class="value">{{$Util.purchasePayMethodFilter(detail.pay_method) || '-'}}</div>
                             </div> -->
                         </a-col>
-                        <template v-if="detail.supply_org_type === USER_TYPE.ADMIN">
+                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
+                            <div class="info-item" >
+                                <div class="key">是否同意分批发货</div>
+                                <div class="value">{{ FLAG_PART_SHIPMENT_MAP[detail.flag_part_shipment] || '-' }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="key">是否同意转运</div>
+                                <div class="value">{{ FLAG_TRANSFER_MAP[detail.flag_transfer] || '-' }}</div>
+                            </div>
+                        </a-col>
+<!--                        <template v-if="detail.supply_org_type === USER_TYPE.ADMIN">
                             <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" >
-                                <div class="info-item">
+                                <div class="info-item" >
                                     <div class="key">是否同意分批发货</div>
                                     <div class="value">{{ FLAG_PART_SHIPMENT_MAP[detail.flag_part_shipment] || '-' }}</div>
                                 </div>
@@ -117,7 +127,7 @@
                                     <div class="value">{{ FLAG_TRANSFER_MAP[detail.flag_transfer] || '-' }}</div>
                                 </div>
                             </a-col>
-                        </template>
+                        </template>-->
                     </a-row>
                 </a-collapse-panel>
 
@@ -132,17 +142,17 @@
                                 <div class="value" v-else>-</div>
                             </div>
                             <div class="info-item">
+                                <div class="key">联系方式</div>
+                                <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.phone || '-'}}</div>
+                                <div class="value" v-else>-</div>
+                            </div>
+                            <div class="info-item">
                                 <div class="key">收货地址</div>
                                 <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.country + detail.receive_info.province + detail.receive_info.city + detail.receive_info.county + detail.receive_info.address || '-'}}</div>
                                 <div class="value" v-else>-</div>
                             </div>
                         </a-col>
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='12' class="info-block">
-                            <div class="info-item">
-                                <div class="key">联系方式</div>
-                                <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.phone || '-'}}</div>
-                                <div class="value" v-else>-</div>
-                            </div>
                             <div class="info-item" v-if="detail.supply_org_type === USER_TYPE.ADMIN">
                                 <div class="key">发货港口</div>
                                 <div class="value" >{{detail.harbour || '-'}}</div>
@@ -150,6 +160,14 @@
                             <div class="info-item" v-if="detail.supply_org_type === USER_TYPE.DISTRIBUTOR">
                                 <div class="key">收货方式</div>
                                 <div class="value" >{{WAYBILL.RECEIPT_MAP[detail.receive_type] || '-'}}</div>
+                            </div>
+                            <div class="info-item" v-if="detail.supply_org_type === USER_TYPE.ADMIN">
+                                <div class="key">快递方式</div>
+                                <div class="value" >{{WAYBILL.COURIER_MAP[detail.express_type] || '-'}}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="key">发货单号</div>
+                                <div class="value" >{{detail.waybill || '-'}}</div>
                             </div>
                             <!-- <div class="info-item">
                                 <div class="key">物流信息</div>
@@ -159,9 +177,9 @@
                                 </div>
                             </div> -->
                         </a-col>
-                        <template v-if="detail.supply_org_type === USER_TYPE.ADMIN">
+<!--                        <template v-if="detail.supply_org_type === USER_TYPE.ADMIN">
                             <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
-                                <div class="info-item">
+                                <div class="info-item" v-if="detail.supply_org_type === USER_TYPE.ADMIN">
                                     <div class="key">快递方式</div>
                                     <div class="value" >{{WAYBILL.COURIER_MAP[detail.express_type] || '-'}}</div>
                                 </div>
@@ -178,7 +196,7 @@
                                     <div class="value" >{{detail.waybill_uid || '-'}}</div>
                                 </div>
                             </a-col>
-                        </template>
+                        </template>-->
                     </a-row>
                 </a-collapse-panel>
             </a-collapse>

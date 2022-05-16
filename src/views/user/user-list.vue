@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">员工列表</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新增员工</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('user.save')"><i class="icon i_add"/>新增员工</a-button>
             </div>
         </div>
         <div class="search-container">
@@ -54,9 +54,9 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/>编辑</a-button>
-                        <a-button type="link" @click="handleEditShow(record)"><i class="icon i_lock"/>重置密码</a-button>
-                        <a-button type='link' @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
+                        <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('user.save')"><i class="icon i_edit"/>编辑</a-button>
+                        <a-button type="link" @click="handleEditShow(record)" v-if="$auth('user.save')"><i class="icon i_lock"/>重置密码</a-button>
+                        <a-button type='link' @click="handleDelete(record.id)" class="danger" v-if="$auth('user.delete')"><i class="icon i_delete"/>删除</a-button>
                     </template>
                 </template>
             </a-table>

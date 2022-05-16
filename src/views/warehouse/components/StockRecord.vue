@@ -14,11 +14,30 @@
                             {{ text || 0 }} 件
                         </template>
                         <template v-if="column.type && column.type === 'item'">
-                            <template v-if="record.target_type === 1">
-                                {{ record.item ? (record.item[column.key] || '-') : '-' }}
+                            <template v-if="record.target_type === 1 && column.key === 'name'">
+                                <a-tooltip placement="top" :title='record.item[column.key]'>
+                                    <div class="ell" style="max-width: 120px">
+                                        <a-button type="link" @click="routerChange('item', record)">
+                                            {{ record.item.name || '-' }}
+                                        </a-button>
+                                    </div>
+                                </a-tooltip>
                             </template>
-                            <template v-if="record.target_type === 2">
-                                {{ record.material ? (record.material[column.key] || '-') : '-' }}
+                            <template v-if="record.target_type === 1 && column.key === 'code'">
+                                {{ record.item.code || '-' }}
+                            </template>
+                            <template v-if="record.target_type === 2 && column.key === 'name'">
+                                <a-tooltip placement="top" :title='record.material[column.key]'>
+                                    <div class="ell" style="max-width: 120px">
+                                        <a-button type="link" @click="routerChange('material', record)">
+                                            {{ record.material.name || '-' }}
+                                        </a-button>
+                                    </div>
+                                </a-tooltip>
+                            </template>
+
+                            <template v-if="record.target_type === 2 && column.key === 'code'">
+                                {{ record.material.code || '-' }}
                             </template>
                         </template>
                         <template v-if="column.dataIndex === 'type'">
@@ -114,7 +133,21 @@ export default {
                         path: "/warehouse/invoice-detail",
                         query: {id: item.source_id}
                     })
-                    window.open(routeUrl.href, '_self')
+                    window.open(routeUrl.href, '_blank')
+                    break;
+                case 'material':
+                    routeUrl = this.$router.resolve({
+                        path: "/production/material-detail",
+                        query: {id: item.target_id}
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+                case 'item':
+                    routeUrl = this.$router.resolve({
+                        path: "/item/item-detail",
+                        query: {id: item.target_id}
+                    })
+                    window.open(routeUrl.href, '_blank')
                     break;
             }
         },

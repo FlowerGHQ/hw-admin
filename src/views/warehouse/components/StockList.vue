@@ -7,8 +7,10 @@
                 <template #bodyCell="{ column, text, record}">
                     <template v-if="column.key === 'material_detail' && $auth('material.detail')">
                         <a-tooltip placement="top" :title='text'>
+                            <div class="ell" style="max-width: 120px">
                             <a-button type="link" @click="routerChange('material', record.material)">{{ text || '-' }}
                             </a-button>
+                            </div>
                         </a-tooltip>
                     </template>
                     <template v-if="column.key === 'item_detail' && $auth('item.detail')">
@@ -26,7 +28,9 @@
                         </a-tooltip>
                     </template>
                     <template v-if="column.key === 'spec'">
-                        {{ $Util.itemSpecFilter(text) || '-'}}
+                        <a-tooltip placement="top" :title='text'>
+                            <div class="ell" style="max-width: 100px">{{ $Util.itemSpecFilter(text) || '-'}}</div>
+                        </a-tooltip>
                     </template>
                     <template v-if="column.key === 'count'">
                         {{ text || 0 }} 件

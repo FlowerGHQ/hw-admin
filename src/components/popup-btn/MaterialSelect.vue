@@ -31,6 +31,9 @@
                 </div>
             </div>
             <div class="table-container">
+                <div class="hint-count">
+                    <a-button type="primary">{{ `已选中 ${this.selectItemIds.length} 条` }}</a-button>
+                </div>
                 <ItemTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :showStock='!!warehouseId'
                     :check-mode='true' :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode'/>
             </div>
@@ -98,6 +101,15 @@ export default {
             type: Number,
             default: 0
         },
+        sourceId: {
+            type: Number,
+        },
+        sourceType: {
+            type: Number,
+        },
+        type: {
+            type: Number,
+        }
     },
     data() {
         return {
@@ -162,6 +174,8 @@ export default {
             Core.Api.Material.list({
                 ...this.searchForm,
                 warehouse_id: this.warehouseId,
+                source_id: this.sourceId,
+                source_type: this.sourceType,
                 page: this.currPage,
                 page_size: this.pageSize,
             }).then(res => {
@@ -190,9 +204,16 @@ export default {
 }
 </script>
 
-<style lang='less' scoped>
+<style lang='less'>
 .MaterialSelectBtn {
     line-height: 1;
     height: 1em;
+}
+.ant-modal-content {
+    .ant-modal-body {
+        .hint-count {
+           margin-bottom: 5px;
+        }
+    }
 }
 </style>

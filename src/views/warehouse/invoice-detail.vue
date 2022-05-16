@@ -68,7 +68,7 @@
                 <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
             </div>
             <div class="info-item">
-                <div class="key">审核人</div>
+                <div class="key">仓库审核</div>
                 <div class="value">
                     <template v-if="detail.audit_user && detail.apply_user.account">{{ detail.audit_user.account.name }}</template>
                     <template v-else>-</template>
@@ -86,11 +86,11 @@
     </div>
     <a-collapse v-model:activeKey="activeKey" ghost>
         <!-- 无实例 -->
-        <a-collapse-panel key="ItemList" header="商品信息" class="gray-collapse-panel" v-if="detail.target_type === COMMODITY_TYPE.ITEM">
+        <a-collapse-panel key="ItemList" header="商品信息" class="gray-collapse-panel" collapsible="disabled" v-if="detail.target_type === COMMODITY_TYPE.ITEM">
             <template #extra>
                 <template  v-if="detail.status === STATUS.INIT && !addMode && $auth('invoice.save')">
-                    <ItemSelect btnType='link' btnText="添加商品" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION"
-                        :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
+                    <ItemSelect btnType='link' btnText="添加商品" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION" :sourceId="detail.type == TYPE.IN ? detail.source_id : 0"
+                                :sourceType="detail.type == TYPE.IN ? detail.source_type : 0"  :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
                         @select="handleAddItemChange"/>
                     <a-popover v-model:visible="production.addVisible" trigger="click" placement="left" v-else-if="production.maxCount"
                         @visibleChange='(visible) => {!visible && handleProdAddCancel()}' title="请输入添加数量">
@@ -116,7 +116,9 @@
                         <template #bodyCell="{ column, text, record }">
                             <template v-if="column.key === 'tip_item'">
                                 <a-tooltip placement="top" :title='text'>
-                                    <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
+                                    <div class="ell" style="max-width: 160px">
+                                        <a-button type="link" @click="routerChange('item', record )">{{ text || '-' }}</a-button>
+                                    </div>
                                 </a-tooltip>
                             </template>
                             <template v-if="column.key === 'attr_list'">
@@ -165,7 +167,7 @@
             </div>
         </a-collapse-panel>
         <!-- 有实例 -->
-        <a-collapse-panel key="ItemList" header="商品信息" class="gray-collapse-panel" v-if="detail.target_type === COMMODITY_TYPE.ENTITY">
+        <a-collapse-panel key="ItemList" header="商品信息" class="gray-collapse-panel" collapsible="disabled" v-if="detail.target_type === COMMODITY_TYPE.ENTITY">
             <template #extra v-if="detail.type == TYPE.IN && $auth('invoice.save')">
                 <!-- 有实例入库 选择商品并输入数量、实例号 -->
                 <template v-if="detail.status === STATUS.INIT && !addMode">
@@ -190,8 +192,8 @@
             </template>
             <template #extra v-else-if="detail.type == TYPE.OUT">
                 <!-- 有实例出库 选择实例 -->
-                <EntitySelect btnType='link' btnText="添加实例商品" v-if="detail.status === STATUS.INIT && !addMode"
-                    :warehouseId="detail.warehouse_id" :disabledChecked="disabledChecked"
+                <EntitySelect btnType='link' btnText="添加实例商品" v-if="detail.status === STATUS.INIT && !addMode" :sourceId="detail.type == TYPE.IN ? detail.source_id : 0"
+                              :sourceType="detail.type == TYPE.IN ? detail.source_type : 0"  :warehouseId="detail.warehouse_id" :disabledChecked="disabledChecked"
                     @select="handleAddEntityChange"/>
             </template>
             <div class="panel-content">
@@ -201,7 +203,9 @@
                         <template #bodyCell="{ column, text, record, index}">
                             <template v-if="column.key === 'tip_item'">
                                 <a-tooltip placement="top" :title='text'>
-                                    <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
+                                    <div class="ell" style="max-width: 160px">
+                                        <a-button type="link" @click="routerChange('item', record )">{{ text || '-' }}</a-button>
+                                    </div>
                                 </a-tooltip>
                             </template>
                             <template v-if="column.dataIndex === 'amount'">
@@ -265,10 +269,10 @@
             </div>
         </a-collapse-panel>
         <!-- 物料 -->
-        <a-collapse-panel key="ItemList" header="物料信息" class="gray-collapse-panel" v-if="detail.target_type === COMMODITY_TYPE.MATERIALS">
+        <a-collapse-panel key="ItemList" header="物料信息" class="gray-collapse-panel" collapsible="disabled" v-if="detail.target_type === COMMODITY_TYPE.MATERIALS">
             <template #extra v-if="$auth('invoice.save')">
-                <MaterialSelect btnType='link' btnText="添加物料" v-if="detail.status === STATUS.INIT && !addMode"
-                    :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
+                <MaterialSelect btnType='link' btnText="添加物料" v-if="detail.status === STATUS.INIT && !addMode" :sourceId="detail.type == TYPE.IN ? detail.source_id : 0"
+                                :sourceType="detail.type == TYPE.IN ? detail.source_type : 0" :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
                     @select="handleAddChange"/>
                 <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('material')">确认添加</a-button>
             </template>
@@ -533,6 +537,13 @@ export default {
                     routeUrl = this.$router.resolve({
                         path: "/warehouse/warehouse-detail",
                         query: { id: this.detail.warehouse_id }
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+                case 'item':
+                    routeUrl = this.$router.resolve({
+                        path: "/item/item-detail",
+                        query: { id: item.item.id }
                     })
                     window.open(routeUrl.href, '_blank')
                     break;

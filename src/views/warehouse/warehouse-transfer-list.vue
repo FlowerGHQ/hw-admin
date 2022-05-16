@@ -1,15 +1,15 @@
 <template>
-    <div id="MaterialTransferList">
+    <div id="WarehouseTransferList">
         <div class="list-container">
             <div class="title-container">
                 <div class="title-area">调货单列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('invoice.save')"><i
-                        class="icon i_add"/>新建出入库单
+                    <a-button type="primary" @click="handleModalShow" v-if="$auth('invoice.save')"><i
+                        class="icon i_add"/>新建调货单
                     </a-button>
                 </div>
             </div>
-            <!-- <div class="tabs-container colorful">
+             <div class="tabs-container colorful">
                 <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
                     <a-tab-pane :key="item.key" v-for="item of statusList">
                         <template #tab>
@@ -18,7 +18,7 @@
                         </template>
                     </a-tab-pane>
                 </a-tabs>
-            </div>-->
+            </div>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -33,23 +33,21 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">出入库单编号:</div>
+                        <div class="key">调货单编号:</div>
                         <div class="value">
-                            <a-input placeholder="请输入出入库单编号" v-model:value="searchForm.uid"
+                            <a-input placeholder="请输入调货单编号" v-model:value="searchForm.uid"
                                      @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">出入库类型:</div>
+<!--                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">调货类型:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择出入库类型">
-                                <a-select-option v-for="(val, key) in typeMap" :key='key' :value='key'>{{
-                                        val
-                                    }}
+                                <a-select-option v-for="(val, key) in typeMap" :key='key' :value='key'>{{val }}
                                 </a-select-option>
                             </a-select>
                         </div>
-                    </a-col>
+                    </a-col>-->
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                         <div class="key">创建时间:</div>
                         <div class="value">
@@ -62,10 +60,10 @@
                     <a-button @click="handleSearchReset">重置</a-button>
                 </div>
             </div>
-            <div class="operate-container">
+<!--            <div class="operate-container">
                 <a-button type="primary" @click="handleExportConfirm" v-if="$auth('invoice.import-export')"><i class="icon i_download"/>{{ $t('def.export') }}
                 </a-button>
-            </div>
+            </div>-->
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false'>
@@ -77,10 +75,10 @@
                             </a-tooltip>
                         </template>
                         <template v-if="column.dataIndex === 'status'">
-                            <div class="status status-bg status-tag" :class="$Util.invoiceStatusFilter(text,'color')">
+                            <div class="status status-bg status-tag" :class="$Util.warehouseTransferStatusFilter(text,'color')">
                                 <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>
-                                    {{ $Util.invoiceStatusFilter(text) }}
-                                    <template v-if="[STATUS.AUDIT_REFUSE].includes(record.status)">
+                                    {{ $Util.warehouseTransferStatusFilter(text) }}
+                                    <template v-if="[STATUS.APPLICANT_AUDIT_REFUSE].includes(record.status)">
                                         <i class="icon i_hint" style="font-size: 12px;padding-left: 6px;"/>
                                     </template>
                                 </a-tooltip>
@@ -90,7 +88,7 @@
                             {{ $Util.stockRecordFilter(text) }}
                         </template>
                         <template v-if="column.dataIndex === 'target_type'">
-                            {{ $Util.targetTypeFilter(text) }}
+                            {{ $Util.transferTypeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'warehouse_type'">
                             {{ $Util.warehouseTypeFilter(text) }}
@@ -106,15 +104,12 @@
                                 class="icon i_detail"/>详情
                             </a-button>
                             <template v-if="record.status === STATUS.INIT">
-                                <!-- <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button> -->
-                                <a-button type="link" @click="handleCancel(record.id)" class="danger"
-                                          v-if="$auth('invoice.delete')"><i class="icon i_close_c"/>取消
+<!--                                 <a-button type="link" @click="routerChange('detail',record)" v-if="record.status === STATUS.INIT"><i class="icon i_edit"/>编辑</a-button>-->
+                                <a-button type="link" @click="handleCancel(record.id)" class="danger" v-if="$auth('invoice.delete')"><i class="icon i_close_c"/>取消
                                 </a-button>
                             </template>
-                            <AuditMaterialPurchase v-if="record.status === STATUS.WAIT_AUDIT && $auth('invoice.warehouse-audit')" btnType="link" :status="STATUS.WAIT_AUDIT"
-                                                   :api-list="['Invoice', 'audit']" :invoiceId="record.id" @submit="getTableData"><i class="icon i_audit"/>仓库审核</AuditMaterialPurchase>
-                            <AuditMaterialPurchase v-if="record.status === STATUS.AUDIT_PASS && record.type === TYPE.OUT && $auth('invoice.finance-audit')" btnType="link" :api-list="['Invoice', 'audit']" :invoiceId="record.id"
-                                                   :status="STATUS.AUDIT_PASS" @submit="getTableData" ><i class="icon i_audit"/>财务审核</AuditMaterialPurchase>
+                            <AuditMaterialPurchase v-if="record.status === STATUS.WAIT_AUDIT && $auth('invoice.warehouse-audit')" btnType="link" :status="STATUS.APPLICANT_AUDIT"
+                                                   :api-list="['WarehouseTransfer', 'audit']" :invoiceId="record.id" @submit="getTableData"><i class="icon i_audit"/>仓库审核</AuditMaterialPurchase>
                         </template>
                     </template>
                 </a-table>
@@ -135,6 +130,46 @@
                 />
             </div>
         </div>
+<!--        新建调货单-->
+        <template class="modal-container">
+            <a-modal v-model:visible="modalShow" title="调货" :after-close='handleModalClose'>
+                <div class="modal-content">
+                    <div class="form-item required">
+                        <div class="key">调货类目：</div>
+                        <div class="value">
+                            <a-radio-group v-model:value="editForm.target_type">
+                                <a-radio :value="10">商品</a-radio>
+                                <a-radio :value="30">物料</a-radio>
+                            </a-radio-group>
+                        </div>
+                    </div>
+                    <div class="form-item required">
+                        <div class="key">发货仓库:</div>
+                        <div class="value">
+                            <a-select v-model:value="editForm.from_warehouse_id" placeholder="请选择发货仓库" show-search option-filter-prop="children">
+                                <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">
+                                    {{ item.name }}
+                                </a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                    <div class="form-item required">
+                        <div class="key">收货仓库:</div>
+                        <div class="value">
+                            <a-select v-model:value="editForm.to_warehouse_id" placeholder="请选择收货仓库" show-search option-filter-prop="children">
+                                <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">
+                                    {{ item.name }}
+                                </a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                </div>
+                <template #footer>
+                    <a-button @click="modalShow = false">取消</a-button>
+                    <a-button @click="handleModalSubmit" type="primary" >确定</a-button>
+                </template>
+            </a-modal>
+        </template>
     </div>
 </template>
 
@@ -143,10 +178,10 @@ import Core from '../../core';
 import TimeSearch from '@/components/common/TimeSearch.vue'
 import AuditMaterialPurchase from '../../components/popup-btn/AuditMaterialPurchase.vue'
 
-const STATUS = Core.Const.STOCK_RECORD.STATUS
-const TYPE = Core.Const.STOCK_RECORD.TYPE
+const STATUS = Core.Const.WAREHOUSE_TRANSFER.STATUS
+const TYPE = Core.Const.WAREHOUSE_TRANSFER.TYPE
 export default {
-    name: 'MaterialTransferList',
+    name: 'WarehouseTransferList',
     components: {
         TimeSearch,
         AuditMaterialPurchase
@@ -164,39 +199,40 @@ export default {
             pageSize: 20,
             total: 0,
             // 搜索
-            typeMap: Core.Const.STOCK_RECORD.TYPE_MAP, //出入库
+            targetMap: Core.Const.WAREHOUSE_TRANSFER.COMMODITY_TYPE_MAP, //类目
             warehouseList: [],
-            /* statusList: [
-                 {text: '全  部', value: '0', color: 'primary', key: '0'},
-                 {text: '待审核', value: '0', color: 'yellow', key: STATUS.AIT_AUDIT},
-                 {text: '审核通过', value: '0', color: 'blue', key: STATUS.AUDIT_PASS},
-                 {text: '审核失败', value: '0', color: 'red', key: STATUS.AUDIT_REFUSE},
-                 {text: '处理完成', value: '0', color: 'green', key: STATUS.CLOSE},
-                 {text: '已取消', value: '0', color: 'grey', key: STATUS.CANCEL},
-             ],*/
+            // statusList: Core.Const.WAREHOUSE_TRANSFER.STATUS_MAP,
+            statusList: {
+                '0': { key: 0, color: 'yellow', text: '全部',value: '0'},
+                ...Core.Const.WAREHOUSE_TRANSFER.STATUS_MAP,
+            },
             searchForm: {
                 warehouse_id: undefined,
                 uid: '',
-                status: undefined,
+                status: 0,
                 type: undefined,
                 begin_time: '',
                 end_time: '',
             },
             exportDisabled: false,
-
             // 表格
             tableData: [],
             tableColumns: [
-                {title: '出入库单编号', dataIndex: 'uid', key: 'detail'},
+                {title: '调货单编号', dataIndex: 'uid', key: 'detail'},
                 {title: '状态', dataIndex: 'status'},
-                {title: '类型', dataIndex: 'type'},
-                {title: '类目', dataIndex: 'target_type',},
-                {title: '所属仓库', dataIndex: ['warehouse', 'name'], key: 'item',},
-                {title: '仓库类型', dataIndex: ['warehouse', 'type'], key: 'warehouse_type',},
-                {title: '创建人', dataIndex: ['apply_user', "account", "name"], key: 'item'},
+                {title: '调货类目', dataIndex: 'target_type',},
+                {title: '发货仓库', dataIndex: ['from_warehouse', 'name'], key: 'item',},
+                {title: '收货仓库', dataIndex: ['to_warehouse', 'name'], key: 'item',},
+                {title: '申请人', dataIndex: ['apply_user', "account", "name"], key: 'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ],
+            modalShow: false,
+            editForm: {
+                from_warehouse_id: undefined,
+                to_warehouse_id: undefined,
+                target_type: '',
+            }
         };
     },
     watch: {},
@@ -204,22 +240,23 @@ export default {
     mounted() {
         this.getTableData();
         this.getWarehouseList();
+        this.getStatusList();
     },
     methods: {
         routerChange(type, item = {}) {
             console.log('routerChange item:', item)
             let routeUrl = ''
             switch (type) {
-                case 'edit':  // 编辑
+                /*case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/warehouse/invoice-edit",
+                        path: "/warehouse/warehouse-transfer-edit",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
-                    break;
+                    break;*/
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/warehouse/invoice-detail",
+                        path: "/warehouse/warehouse-transfer-detail",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
@@ -251,7 +288,7 @@ export default {
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
-            Core.Api.Invoice.list({
+            Core.Api.WarehouseTransfer.list({
                 ...this.searchForm,
                 page: this.currPage,
                 page_size: this.pageSize
@@ -259,6 +296,7 @@ export default {
                 console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
+
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {
@@ -266,18 +304,17 @@ export default {
             });
         },
         getStatusList() {    // 获取 状态 列表
-            Core.Api.Invoice.status({
+            Core.Api.WarehouseTransfer.statusList({
                 ...this.searchForm,
             }).then(res => {
                 console.log("getStatusList res:", res)
                 let total = 0
-                this.statusList.forEach(statusItem => {
-                    statusItem.value = 0
-                })
-                this.statusList.forEach(statusItem => {
-                    res.status_list.forEach(item => {
-                        if (statusItem.key == item.status) {
-                            statusItem.value = item.amount
+                let list = res.status_list
+                let statusList = this.statusList
+                Object.keys(statusList).forEach( key => {
+                    list.forEach( item => {
+                        if (key == item.status) {
+                            statusList[key].value = item.amount
                             total += item.amount
                         }
                     })
@@ -303,7 +340,7 @@ export default {
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Invoice.cancel({id}).then(() => {
+                    Core.Api.WarehouseTransfer.cancel({id}).then(() => {
                         _this.$message.success('取消成功');
                         _this.getTableData();
                     }).catch(err => {
@@ -312,12 +349,42 @@ export default {
                 },
             });
         },
+        handleModalShow() { // 显示弹框
+            this.modalShow = true
+        },
+        handleModalClose() { // 关闭弹框
+            this.modalShow = false;
+            Object.assign(this.editForm, this.$options.data().editForm)
+        },
+        handleModalSubmit() { // 提交
+            this.loading = true;
+            let form = Core.Util.deepCopy(this.editForm)
+            if (!form.target_type) {
+                return this.$message.warning('请选择调货类目')
+            }
+            if (!form.from_warehouse_id) {
+                return this.$message.warning('请选择发货仓')
+            }
+            if (!form.to_warehouse_id) {
+                return this.$message.warning('请选择收货仓')
+            }
+            if (form.to_warehouse_id === form.from_warehouse_id) {
+                return this.$message.warning('发货仓和收货仓不能相同')
+            }
+            Core.Api.WarehouseTransfer.save(form).then(() => {
+                this.$message.success('操作成功')
+                this.handleModalClose()
+                this.getTableData()
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
     }
 };
 </script>
 
 <style lang="less" scoped>
-#MaterialTransferList {
+#WarehouseTransferList {
     .list-container {
         .title-container {
             .btns-area {

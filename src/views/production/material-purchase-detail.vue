@@ -5,14 +5,17 @@
             <div class="btn-area">
                 <a-button type="danger" ghost @click="handleCancel()" v-if="(detail.status === STATUS.INIT || detail.status === STATUS.PASS) && $auth('material-purchase-order.delete')"> <i class="icon i_close_c"/>撤销</a-button>
                 <a-button type="primary" @click="handleSubmit()" v-if="detail.status === STATUS.INIT && $auth('material-purchase-order.save')"><i class="icon i_confirm"/>提交</a-button>
-                <a-button type="primary" @click="handlePurchaseShow" v-if="detail.status === STATUS.SUBMIT && $auth('material-purchase-order.audit')"> <i class="icon i_audit"/>审核</a-button>
-                <a-button v-if="detail.status === STATUS.PASS && $auth('material-purchase-order.save-to-invoice')" type="primary" @click="handlePurchaseShow"><i class="icon i_s_warehouse"/>入库</a-button>
-                <a-button v-if="(detail.status === STATUS.PASS || detail.status === STATUS.N_WAREHOUSE) && $auth('material-purchase-order.export')" type="primary" @click="handleExport"><i class="icon i_download"/>导出</a-button>
+                <AuditHandle v-if="detail.status === STATUS.SUBMIT && $auth('material-purchase-order.audit')" btnType='primary' :api-list="['MaterialPurchase', 'audit']" :id="id" @submit="getMaterialPurchaseDetail"
+                             :s-pass="STATUS.PASS" :s-refuse="STATUS.REFUSE" no-refuse><i class="icon i_audit"/>审核
+                </AuditHandle>
+                <a-button v-if="(detail.status === STATUS.PASS || detail.status === STATUS.PART) && $auth('material-purchase-order.save-to-invoice')" type="primary" @click="routerChange('invoice')"><i class="icon i_s_warehouse"/>入库</a-button>
+                <a-button v-if="(detail.status === STATUS.PASS || detail.status === STATUS.PART) && $auth('material-purchase-order.save-to-invoice')" type="primary" @click="handlePurchaseShow"><i class="icon i_s_warehouse"/>全部入库</a-button>
+                <a-button v-if="(detail.status === STATUS.PASS || detail.status === STATUS.N_WAREHOUSE || detail.status === STATUS.PART || detail.status === STATUS.WAREHOUSE_AUDIT) && $auth('material-purchase-order.export')" type="primary" @click="handleExport"><i class="icon i_download"/>导出</a-button>
             </div>
         </div>
         <div class="gray-panel info">
             <div class="panel-title">
-                <div class="left"><span>采购单编号：{{ detail.sn }}</span></div>
+                <div class="left"><span>采购单编号：</span>{{ detail.sn }}</div>
                 <div class="right">
                     <div class="status">
                         <i class="icon i_point" :class="$Util.materialPurchaseStatusFilter(detail.status,'color')"/>
@@ -21,6 +24,18 @@
                 </div>
             </div>
             <div class="panel-content">
+                <div class="info-item">
+                    <div class="key">订单总金额</div>
+                    <div class="value">￥{{ $Util.countFilter(detail.total_price) || 0 }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">总数量</div>
+                    <div class="value">{{ detail.total || 0 }}件</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">已入库数量</div>
+                    <div class="value">{{ count || 0 }}件</div>
+                </div>
                 <div class="info-item">
                     <div class="key">创建人</div>
                     <div class="value">
@@ -46,7 +61,7 @@
             </div>
         </div>
         <a-collapse v-model:activeKey="activeKey" ghost>
-            <a-collapse-panel key="affirm" header="物料信息" class="gray-collapse-panel">
+            <a-collapse-panel key="affirm" header="物料信息" class="gray-collapse-panel" collapsible="disabled">
                 <template #extra>
                     <MaterialSelect btnType='link' btnText="添加物料" v-if="detail.status === STATUS.INIT && !addMode" :disabledChecked="disabledChecked"
                                     @select="handleAddChange"/>
@@ -121,6 +136,9 @@
                                 </template>
                                 <template v-else>￥{{ $Util.countFilter(record.unit_price * record.amount) }}</template>
                             </template>
+                            <template v-if="column.key === 'stock_in_amount'">
+                                {{  text || '0'}} 件
+                            </template>
                             <template v-if="column.key === 'operation'" >
                                 <template v-if="!this.addMode && detail.status === STATUS.INIT">
                                     <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改数量</a-button>
@@ -148,34 +166,8 @@
                 </div>
             </a-collapse-panel>
         </a-collapse>
-        <template class="modal-container" v-if="detail.status === STATUS.SUBMIT">
-            <a-modal v-model:visible="purchaseShow" title="审核" class="purchase-audit-modal" :after-close='handlePurchaseClose'>
-                <div class="modal-content">
-                    <div class="form-item required">
-                        <div class="key">审核结果:</div>
-                        <div class="value">
-                            <a-radio-group v-model:value="auditForm.status">
-                                <a-radio :value="STATUS.PASS">通过</a-radio>
-                                <a-radio :value="STATUS.REFUSE">不通过</a-radio>
-                            </a-radio-group>
-                        </div>
-                    </div>
-                    <div class="form-item textarea required" v-if="auditForm.status === STATUS.REFUSE">
-                        <div class="key">原因:</div>
-                        <div class="value">
-                            <a-textarea v-model:value="auditForm.audit_message" placeholder="请输入不通过原因"
-                                        :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
-                        </div>
-                    </div>
-                </div>
-                <template #footer>
-                    <a-button @click="purchaseShow = false">取消</a-button>
-                    <a-button @click="handlePurchaseSubmit()" type="primary">确定</a-button>
-                </template>
-            </a-modal>
-        </template>
         <!-- 入库 -->
-        <template class="modal-container" v-if="detail.status === STATUS.PASS">
+        <template class="modal-container" v-if="detail.status === STATUS.PASS || detail.status === STATUS.PART">
             <a-modal v-model:visible="purchaseShow" title="入库" :after-close='handlePurchaseClose'>
                 <div class="modal-content">
                     <div class="form-item required">
@@ -206,6 +198,7 @@ import dayjs from "dayjs";
 
 const MATERIAL_PURCHASE = Core.Const.MATERIAL_PURCHASE
 const STATUS = MATERIAL_PURCHASE.STATUS
+const STOCK_RECORD = Core.Const.STOCK_RECORD
 export default {
     name: 'MaterialPurchaseDetail',
     components: {
@@ -216,6 +209,7 @@ export default {
     data() {
         return {
             STATUS,
+            STOCK_RECORD,
             // 加载
             loading: false,
             // 分页
@@ -235,6 +229,7 @@ export default {
                 status: '',
                 audit_message: '',
             },
+            count: '',
             editForm: {
                 id: '',
                 warehouse_id: undefined,
@@ -268,12 +263,19 @@ export default {
                 { title: '付款方式', dataIndex: 'payment_term',key: 'payment_term'},
                 { title: '操作', key: 'operation', fixed: 'right'}
             ]
-            if (this.addMode == false) {
-                columns.splice(6, 0,{ title: '单价',dataIndex: 'unit_price', key: 'unit_price'})
+            if (this.detail.status !== STATUS.INIT || this.addMode) {
+                columns.pop()
             }
-            if (this.addMode == true) {
+            if (this.addMode) {
                 columns.splice(6, 0,{ title: '单价', dataIndex: 'price',key: 'price'})
             }
+            if (!this.addMode) {
+                columns.splice(6, 0,{ title: '单价',dataIndex: 'unit_price', key: 'unit_price'})
+            }
+            if (this.detail.status === STATUS.N_WAREHOUSE || this.detail.status === STATUS.PART || this.detail.status === STATUS.WAREHOUSE_AUDIT || this.detail.status === STATUS.PASS) {
+                columns.splice(9, 0,{ title: '已入库数量', dataIndex: 'stock_in_amount',key: 'stock_in_amount'})
+            }
+            console.log('columns', columns)
             return columns
         },
     },
@@ -300,6 +302,25 @@ export default {
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
+                case 'invoice':
+                    let source = {
+                        sourceUid: this.detail.sn,
+                        form: {
+                            type: STOCK_RECORD.TYPE.IN,
+                            target_type: STOCK_RECORD.COMMODITY_TYPE.MATERIALS,
+                            source_id: this.id,
+                            source_type: STOCK_RECORD.SOURCE_TYPE.MATERIAL_PURCHASE,
+                            warehouse_id: this.detail.warehouse_id,
+                        },
+                    }
+                    routeUrl = this.$router.resolve({
+                        path: "/warehouse/invoice-edit",
+                        query: {
+                            source: JSON.stringify(source)
+                        }
+                    })
+                    window.open(routeUrl.href, '_blank');
+                    break;
             }
         },
         pageChange(curr) {    // 页码改变
@@ -320,9 +341,14 @@ export default {
                 console.log('getMaterialItemList res', res)
                 this.tableData = res.list
                 this.total = res.count
+                let list = []
+                this.tableData.forEach(i => list.push(i.stock_in_amount))
+                let sum = 0
+                list.forEach( item => sum += item)
+                this.count = sum
+                console.log('list1111',list)
                 this.getSupplierName();
-
-              this.tableData.map(item => ({
+                this.tableData.map(item => ({
                     item: item,
                     material: item.material,
                     unit_price: item.unit_price,
@@ -483,6 +509,9 @@ export default {
         },
         //提交
         handleSubmit() {
+            if (!this.tableData.length) {
+                return this.$message.warning(`请先选择需要采购的商品`)
+            }
             let _this = this;
             this.$confirm({
                 title: `确定提交该采购单吗？`,
@@ -521,22 +550,18 @@ export default {
         handlePurchaseClose() {
             this.purchaseShow = false
             Object.assign(this.editForm, this.$options.data().editForm)
-            Object.assign(this.auditForm, this.$options.data().auditForm)
         },
-        handlePurchaseSubmit() {
-            console.log('id',this.id)
-            Core.Api.MaterialPurchase.audit({
-                id: this.id,
-                status: this.auditForm.status,
-                audit_message: this.auditForm.audit_message
-            }).then(res => {
-                console.log('handlePurchaseSubmit res', res)
+        handleStock() {
+            this.editForm.id = this.id
+            let editForm = Core.Util.deepCopy(this.editForm)
+            Core.Api.MaterialPurchase.stock({
+                ...editForm
+            }).then(() => {
+                this.$message.success('入库完成');
                 this.handlePurchaseClose()
                 this.getMaterialPurchaseDetail()
-            }).catch(err => {
-                console.log('handlePurchaseSubmit err', err)
-            }).finally(() => {
-                this.loading = false;
+            }).catch((err) => {
+                console.log('handleStock err', err);
             });
         },
         handleExport() { // 确认库单是否导出
@@ -556,19 +581,7 @@ export default {
                 console.log('getWarehouseList', this.warehouseList)
             })
         },
-        handleStock() {
-            this.editForm.id = this.id
-            let editForm = Core.Util.deepCopy(this.editForm)
-            Core.Api.MaterialPurchase.stock({
-                ...editForm
-            }).then(() => {
-                this.$message.success('入库完成');
-                this.handlePurchaseClose()
-                this.getMaterialPurchaseDetail()
-            }).catch((err) => {
-                console.log('handleStock err', err);
-            });
-        },
+
         handlePurchaseExport() { // 订单导出
             this.exportDisabled = true;
             let exportUrl = Core.Api.Export.materialPurchaseExport({

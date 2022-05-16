@@ -97,7 +97,6 @@ export default {
                 warehouse_id: undefined,
                 source_type: undefined,
                 source_id: '',
-                arrival_time: '',//到港时间
             },
             isProd: '',
             sourceUid: '',
@@ -115,6 +114,7 @@ export default {
                 case SOURCE_TYPE.TRANSFER:
                 case SOURCE_TYPE.REPAIR:
                 case SOURCE_TYPE.MATERIAL_PURCHASE:
+                case SOURCE_TYPE.WAREHOUSE_TRANSFER:
                     return true
                 default: return false
             }
@@ -232,11 +232,14 @@ export default {
                 case SOURCE_TYPE.MATERIAL_PURCHASE:
                     api = ['MaterialPurchase', 'detailByUid']; key ='sn';
                     break;
+                case SOURCE_TYPE.WAREHOUSE_TRANSFER:
+                    api = ['WarehouseTransfer', 'detailByUid']; key ='sn';
+                    break;
             }
             parme[key] = this.sourceUid
             Core.Api[api[0]][api[1]](parme).then(res => {
                 console.log("handleSelectBlur res", res)
-                if (this.form.source_type == SOURCE_TYPE.MATERIAL_PURCHASE) {
+                if (this.form.source_type == SOURCE_TYPE.MATERIAL_PURCHASE || this.form.source_type == SOURCE_TYPE.WAREHOUSE_TRANSFER) {
                     this.isExist = !res ? 2 : 1
                     this.form.source_id = res.id
                 } else {

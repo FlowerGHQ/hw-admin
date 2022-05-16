@@ -1,4 +1,7 @@
 <template>
+<!--    <div style="margin-left: 8px">
+          {{ `已选择 ${selectedRowItems.length} items` }}
+      </div>-->
     <a-table
         :columns="columns" :data-source="dataList" :scroll="{ x: true }"
         :row-key="record => record.id" :loading='loading' :pagination='false'
@@ -110,30 +113,20 @@ export default {
         }
     },
     computed: {
-
         rowSelection() {
             return {
                 type: this.radioMode ? 'radio' : 'checkbox',
                 selectedRowKeys: this.selectedRowKeys,
+                preserveSelectedRowKeys: true,
                 onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
                     this.selectedRowKeys = selectedRowKeys
                     this.selectedRowItemsAll.push(...selectedRows)
                     let selectedRowItems = []
                     selectedRowKeys.forEach(id => {
-                        console.log('this.selectedRowItemsAll',this.selectedRowItemsAll)
-                        let list = []
-                        this.selectedRowItemsAll.forEach(i => list.push(i))
-                        console.log('list', list)
-                        let newList = list.filter((element,index,self) => {
-                            return self.findIndex(x => x.code === element.code) === index
-                        })
-                        console.log('newList',newList)
-                        selectedRowItems = newList
-                        console.log('selectedRowItems',selectedRowItems)
+                        let element = this.selectedRowItemsAll.find(i => i.id == id)
+                        selectedRowItems.push(element)
                     });
-                    console.log('selectedRowKeys',selectedRowKeys)
                     this.selectedRowItems = selectedRowItems
-                    console.log('selectedRowItems',selectedRowItems)
                     console.log('rowSelection this.selectedRowKeys:', this.selectedRowKeys,'selectedRowItems:', selectedRowItems)
                     this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
                 },
@@ -158,16 +151,6 @@ export default {
             }
             window.open(routeUrl.href, '_blank')
         },
-        e() {
-            let list = this.supplier_list
-            for (let item of list) {
-                item.supplier_map = {}
-                for(let supplier of item.supplier_list) {
-                    item.supplier_map[supplier.id] = supplier.supplier_list
-                    console.log('getMaterialList', supplier.price )
-                }
-            }
-        }
     }
 }
 </script>

@@ -9,7 +9,7 @@
                     </a-button>
                 </div>
             </div>
-            <!-- <div class="tabs-container colorful">
+             <div class="tabs-container colorful">
                 <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
                     <a-tab-pane :key="item.key" v-for="item of statusList">
                         <template #tab>
@@ -18,7 +18,7 @@
                         </template>
                     </a-tab-pane>
                 </a-tabs>
-            </div>-->
+            </div>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -166,18 +166,20 @@ export default {
             // 搜索
             typeMap: Core.Const.STOCK_RECORD.TYPE_MAP, //出入库
             warehouseList: [],
-            /* statusList: [
-                 {text: '全  部', value: '0', color: 'primary', key: '0'},
-                 {text: '待审核', value: '0', color: 'yellow', key: STATUS.AIT_AUDIT},
+             statusList: [
+                 {text: '全  部', value: '0', color: 'primary', key: -1},
+                 {text: '待提交', value: '0', color: 'yellow', key: STATUS.INIT},
+                 {text: '仓库审核', value: '0', color: 'yellow', key: STATUS.WAIT_AUDIT},
                  {text: '审核通过', value: '0', color: 'blue', key: STATUS.AUDIT_PASS},
+                 {text: '财务审核', value: '0', color: 'yellow', key: STATUS.FINANCE_PASS},
                  {text: '审核失败', value: '0', color: 'red', key: STATUS.AUDIT_REFUSE},
-                 {text: '处理完成', value: '0', color: 'green', key: STATUS.CLOSE},
+                 {text: '入库完成', value: '0', color: 'green', key: STATUS.CLOSE},
                  {text: '已取消', value: '0', color: 'grey', key: STATUS.CANCEL},
-             ],*/
+             ],
             searchForm: {
                 warehouse_id: undefined,
                 uid: '',
-                status: undefined,
+                status: -1,
                 type: undefined,
                 begin_time: '',
                 end_time: '',
@@ -204,6 +206,7 @@ export default {
     mounted() {
         this.getTableData();
         this.getWarehouseList();
+        this.getStatusList();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -259,6 +262,7 @@ export default {
                 console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
+                this.getStatusList();
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {
@@ -283,6 +287,7 @@ export default {
                     })
                 })
                 this.statusList[0].value = total
+                console.log('total,',total)
             }).catch(err => {
                 console.log('getStatusList err:', err)
             }).finally(() => {

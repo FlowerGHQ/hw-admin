@@ -115,6 +115,8 @@ export default {
         sum_price() {
             let sum = 0
             let key = this.priceKey + this.unitMap[this.currency].key
+            console.log('key',key)
+            console.log('shopCartList',this.shopCartList)
             for (const item of this.shopCartList) {
                 sum += item.item[key] * item.amount
             }

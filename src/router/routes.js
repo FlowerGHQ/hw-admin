@@ -903,26 +903,25 @@ const routes = [
                     auth: ['invoice.list'],
                 }
             },
-           /* {
-                path: 'material-transfer-list',
-                name: 'MaterialTransferList',
-                component: () => import('@/views/warehouse/material-transfer-list.vue'),
+            {
+                path: 'warehouse-transfer-list',
+                name: 'WarehouseTransferList',
+                component: () => import('@/views/warehouse/warehouse-transfer-list.vue'),
                 meta: {
                     title: '调货单管理',
                 }
             },
             {
-                path: 'material-transfer-edit',
-                name: 'MaterialTransferEdit',
-                component: () => import('@/views/warehouse/material-transfer-edit.vue'),
+                path: 'warehouse-transfer-detail',
+                name: 'WarehouseTransferDetail',
+                component: () => import('@/views/warehouse/warehouse-transfer-detail.vue'),
                 meta: {
                     hidden: true,
-                    title: '调货单编辑',
-                    parent: '/warehouse/material-transfer-list',
+                    title: '调货单详情',
+                    parent: '/warehouse/warehouse-transfer-list',
                 }
             },
-*/
-            {
+          /*  {
                 path: 'transfer-order-list-in',
                 name: 'TransferOrderListIn',
                 component: () => import('@/views/warehouse/transfer-order-list.vue'),
@@ -931,8 +930,8 @@ const routes = [
                     roles: [LOGIN_TYPE.AGENT,LOGIN_TYPE.DISTRIBUTOR,LOGIN_TYPE.STORE],
                     type: 'in'
                 }
-            },
-            {
+            },*/
+          /*  {
                 path: 'transfer-order-list-out',
                 name: 'TransferOrderListOut',
                 component: () => import('@/views/warehouse/transfer-order-list.vue'),
@@ -960,7 +959,7 @@ const routes = [
                     title: '调货单详情',
                     parent: '/transfer/transfer-order-list',
                 }
-            },
+            },*/
     /*        {
                 path: 'fault-entity-list',
                 name: 'faultEntityList',
@@ -1179,6 +1178,24 @@ const routes = [
                     hidden: true,
                     title: '员工详情',
                     parent: '/user/user-list',
+                }
+            },
+            {
+                path: 'auth-user-list',
+                name: 'AuthUserList',
+                component: () => import('@/views/authority/auth-user-list.vue'),
+                meta: {
+                    title: '用户权限',
+                }
+            },
+            {
+                path: 'auth-user-edit',
+                name: 'AuthUserEdit',
+                component: () => import('@/views/authority/auth-user-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '用户权限编辑',
+                    parent: '/authority/auth-user-list',
                 }
             },
             {
