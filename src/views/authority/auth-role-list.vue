@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">角色管理</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange()" class="menu-item-btn" v-if="$auth('role.save')"><i class="icon i_add"/>新建角色</a-button>
+                <a-button type="primary" @click="routerChange()" class="menu-item-btn"><i class="icon i_add"/>新建角色</a-button>
             </div>
         </div>
         <!-- <div class="search-container">
@@ -37,8 +37,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange(record)" v-if="$auth('role.save')"><i class="icon i_edit"/>编辑</a-button>
-                        <a-button type='link' danger @click="handleDelete(record.id)" v-if="$auth('role.delete')"><i class="icon i_delete"/>删除</a-button>
+                        <a-button type='link' @click="routerChange(record)"><i class="icon i_edit"/>编辑</a-button>
+                        <a-button type='link' danger @click="handleDelete(record.id)"><i class="icon i_delete"/>删除</a-button>
                     </template>
                 </template>
             </a-table>
