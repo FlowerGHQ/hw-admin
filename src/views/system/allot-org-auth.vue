@@ -7,6 +7,9 @@
         <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
             <template #expandIcon></template>
             <a-collapse-panel v-for="(org,key) of orgType" :key="key" :header="org.name" class="gray-collapse-panel">
+<!--                <div v-model:checked="checkAll"
+                       :indeterminate="indeterminate"
+                       @change="onCheckAllChange">  Check all</div>-->
                 <template #extra>
                     <a-button @click.stop="handleEditShow(key)" type="link" v-if="!org.edit && $auth('authority.save')"><i class="icon i_edit"/>设置</a-button>
                     <template v-else>

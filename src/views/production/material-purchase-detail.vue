@@ -8,8 +8,9 @@
                 <AuditHandle v-if="detail.status === STATUS.SUBMIT && $auth('material-purchase-order.audit')" btnType='primary' :api-list="['MaterialPurchase', 'audit']" :id="id" @submit="getMaterialPurchaseDetail"
                              :s-pass="STATUS.PASS" :s-refuse="STATUS.REFUSE" no-refuse><i class="icon i_audit"/>审核
                 </AuditHandle>
-                <a-button v-if="detail.status === STATUS.PASS && $auth('material-purchase-order.save-to-invoice')" type="primary" @click="handlePurchaseShow"><i class="icon i_s_warehouse"/>入库</a-button>
-                <a-button v-if="(detail.status === STATUS.PASS || detail.status === STATUS.N_WAREHOUSE) && $auth('material-purchase-order.export')" type="primary" @click="handleExport"><i class="icon i_download"/>导出</a-button>
+                <a-button v-if="(detail.status === STATUS.PASS || detail.status === STATUS.PART) && $auth('material-purchase-order.save-to-invoice')" type="primary" @click="routerChange('invoice')"><i class="icon i_s_warehouse"/>入库</a-button>
+                <a-button v-if="(detail.status === STATUS.PASS || detail.status === STATUS.PART) && $auth('material-purchase-order.save-to-invoice')" type="primary" @click="handlePurchaseShow"><i class="icon i_s_warehouse"/>全部入库</a-button>
+                <a-button v-if="(detail.status === STATUS.PASS || detail.status === STATUS.N_WAREHOUSE || detail.status === STATUS.PART || detail.status === STATUS.WAREHOUSE_AUDIT) && $auth('material-purchase-order.export')" type="primary" @click="handleExport"><i class="icon i_download"/>导出</a-button>
             </div>
         </div>
         <div class="gray-panel info">
@@ -25,7 +26,7 @@
             <div class="panel-content">
                 <div class="info-item">
                     <div class="key">订单总金额</div>
-                    <div class="value">￥{{ $Util.countFilter(detail.total_price) || '-' }}</div>
+                    <div class="value">￥{{ $Util.countFilter(detail.total_price) || 0 }}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">总数量</div>
@@ -166,7 +167,7 @@
             </a-collapse-panel>
         </a-collapse>
         <!-- 入库 -->
-        <template class="modal-container" v-if="detail.status === STATUS.PASS">
+        <template class="modal-container" v-if="detail.status === STATUS.PASS || detail.status === STATUS.PART">
             <a-modal v-model:visible="purchaseShow" title="入库" :after-close='handlePurchaseClose'>
                 <div class="modal-content">
                     <div class="form-item required">
@@ -197,6 +198,7 @@ import dayjs from "dayjs";
 
 const MATERIAL_PURCHASE = Core.Const.MATERIAL_PURCHASE
 const STATUS = MATERIAL_PURCHASE.STATUS
+const STOCK_RECORD = Core.Const.STOCK_RECORD
 export default {
     name: 'MaterialPurchaseDetail',
     components: {
@@ -207,6 +209,7 @@ export default {
     data() {
         return {
             STATUS,
+            STOCK_RECORD,
             // 加载
             loading: false,
             // 分页
@@ -269,7 +272,7 @@ export default {
             if (!this.addMode) {
                 columns.splice(6, 0,{ title: '单价',dataIndex: 'unit_price', key: 'unit_price'})
             }
-            if (this.detail.status === STATUS.N_WAREHOUSE || this.detail.status === STATUS.PART) {
+            if (this.detail.status === STATUS.N_WAREHOUSE || this.detail.status === STATUS.PART || this.detail.status === STATUS.WAREHOUSE_AUDIT || this.detail.status === STATUS.PASS) {
                 columns.splice(9, 0,{ title: '已入库数量', dataIndex: 'stock_in_amount',key: 'stock_in_amount'})
             }
             console.log('columns', columns)
@@ -298,6 +301,25 @@ export default {
                         query: { id: item.material_id }
                     })
                     window.open(routeUrl.href, '_blank')
+                    break;
+                case 'invoice':
+                    let source = {
+                        sourceUid: this.detail.sn,
+                        form: {
+                            type: STOCK_RECORD.TYPE.IN,
+                            target_type: STOCK_RECORD.COMMODITY_TYPE.MATERIALS,
+                            source_id: this.id,
+                            source_type: STOCK_RECORD.SOURCE_TYPE.MATERIAL_PURCHASE,
+                            warehouse_id: this.detail.warehouse_id,
+                        },
+                    }
+                    routeUrl = this.$router.resolve({
+                        path: "/warehouse/invoice-edit",
+                        query: {
+                            source: JSON.stringify(source)
+                        }
+                    })
+                    window.open(routeUrl.href, '_blank');
                     break;
             }
         },

@@ -133,7 +133,7 @@ export default {
                         path: "/warehouse/invoice-detail",
                         query: {id: item.source_id}
                     })
-                    window.open(routeUrl.href, '_self')
+                    window.open(routeUrl.href, '_blank')
                     break;
                 case 'material':
                     routeUrl = this.$router.resolve({

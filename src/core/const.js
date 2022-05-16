@@ -33,7 +33,7 @@ switch (window.location.hostname) {
     default:
         // URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.7:8083' // 但
-        URL_POINT = 'http://10.0.0.225:8883'
+        URL_POINT = 'http://10.0.0.214:8889'
         // URL_POINT = 'http://10.0.0.171:8883' // 姚志宇
 
 
@@ -604,16 +604,17 @@ let Const = {
 
     AUTH_LIST_TEMP: [ // 权限
         { list: [], select: [], key: 'home', name: '总览' },
-        { list: [], select: [], key: 'distributor', name: '代理商管理' },
+        { list: [], select: [], key: 'distributor', name: '分销商管理' },
         { list: [], select: [], key: 'agent', name: '零售商管理' },
         { list: [], select: [], key: 'store', name: '门店管理' },
         { list: [], select: [], key: 'repair-order', name: '维修单' },
         { list: [], select: [], key: 'customer', name: '客户管理' },
         { list: [], select: [], key: 'user', name: '员工管理' },
         { list: [], select: [], key: 'item', name: '商品管理' },
+        { list: [], select: [], key: 'sales-area', name: '销售区域' },
         { list: [], select: [], key: 'invoice', name: '出入库单' },
         { list: [], select: [], key: 'supplier', name: '供应商' },
-        { list: [], select: [], key: 'material-purchase', name: '物料采购单'},
+        { list: [], select: [], key: 'material-purchase-order', name: '物料采购单'},
         { list: [], select: [], key: 'stock', name: '库存总览'},
         { list: [], select: [], key: 'material', name: '物料' },
         { list: [], select: [], key: 'material-category', name: '物料分类' },
@@ -1012,6 +1013,7 @@ let Const = {
             SUBMIT: 100, //已提交待审核
             PASS: 200, //审核通过
             PART: 400,//部分入库
+            WAREHOUSE_AUDIT: 450, //一键入库，等待仓库审核
             N_WAREHOUSE: 500,  //入库完成
             REFUSE: -200,//审核失败
             CANCEL: -100, // 取消
@@ -1020,7 +1022,8 @@ let Const = {
             '0': '待提交',
             '100': '待审核',
             '200': '审核通过',
-            '400':'部分入库',
+            '400': '部分入库',
+            '450': '等待仓库审核',
             '500': '全部入库',
             '-200': '审核未通过',
             '-100': '已取消'
@@ -1030,6 +1033,7 @@ let Const = {
             '100': 'yellow',
             '200': 'blue',
             '400': 'purple',
+            '450': 'purple',
             '500': 'green',
             '-200': 'red',
             '-100': 'grey'

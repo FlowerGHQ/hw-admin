@@ -4,20 +4,20 @@
             <div class="title-area">调货单详情</div>
             <div class="btn-area">
                 <template v-if="detail.status === STATUS.INIT">
-                    <a-button type="danger" ghost @click="handleCancel()" v-if="$auth('material-purchase-order.delete')"> <i class="icon i_close_c"/>撤销</a-button>
-                    <a-button type="primary" @click="handleSubmit()" v-if="$auth('material-purchase-order.save')"><i class="icon i_confirm"/>提交</a-button>
+                    <a-button type="danger" ghost @click="handleCancel()"> <i class="icon i_close_c"/>撤销</a-button>
+                    <a-button type="primary" @click="handleSubmit()"><i class="icon i_confirm"/>提交</a-button>
                 </template>
-                <AuditHandle v-if="(detail.status === STATUS.APPLICANT_AUDIT || detail.status === STATUS.SENDER_AUDIT) && $auth('material-purchase-order.audit')" btnType="primary"
+                <AuditHandle v-if="(detail.status === STATUS.APPLICANT_AUDIT || detail.status === STATUS.SENDER_AUDIT)" btnType="primary"
                              :s-pass="STATUS.AUDIT_PASS" :s-refuse="STATUS.APPLICANT_AUDIT_REFUSE"  :api-list="['WarehouseTransfer', 'audit']" :id="id" @submit="getWarehouseTransferDetail"><i class="icon i_audit"/>仓库审核</AuditHandle>
                 <a-button v-if="detail.status === STATUS.AUDIT_PASS" type="primary" @click="handleReceive"><i class="icon i_s_warehouse"/>发货</a-button>
                 <a-button v-if="detail.status === STATUS.DELIVERED" type="primary" @click="handleReceive"><i class="icon i_s_warehouse"/>收货</a-button>
-                <a-button v-if="detail.status === STATUS.RECEIVED && $auth('material-purchase-order.save-to-invoice')" type="primary" @click="handleReceive"><i class="icon i_s_warehouse"/>入库</a-button>
+                <a-button v-if="detail.status === STATUS.RECEIVED" type="primary" @click="handleReceive"><i class="icon i_s_warehouse"/>入库</a-button>
 <!--                <a-button v-if="(detail.status === STATUS.PASS || detail.status === STATUS.N_WAREHOUSE) && $auth('material-purchase-order.export')" type="primary" @click="handleExport"><i class="icon i_download"/>导出</a-button>-->
             </div>
         </div>
         <div class="gray-panel info">
             <div class="panel-title">
-                <div class="left"><span>调货单编号：{{ detail.sn }}</span></div>
+                <div class="left"><span>调货单编号：</span>{{ detail.uid }}</div>
                 <div class="right">
                     <div class="status">
                         <i class="icon i_point" :class="$Util.warehouseTransferStatusFilter(detail.status,'color')"/>

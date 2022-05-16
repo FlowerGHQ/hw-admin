@@ -1181,6 +1181,24 @@ const routes = [
                 }
             },
             {
+                path: 'auth-user-list',
+                name: 'AuthUserList',
+                component: () => import('@/views/authority/auth-user-list.vue'),
+                meta: {
+                    title: '用户权限',
+                }
+            },
+            {
+                path: 'auth-user-edit',
+                name: 'AuthUserEdit',
+                component: () => import('@/views/authority/auth-user-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '用户权限编辑',
+                    parent: '/authority/auth-user-list',
+                }
+            },
+            {
                 path: 'auth-role-list',
                 name: 'RoleList',
                 component: () => import('@/views/authority/auth-role-list.vue'),

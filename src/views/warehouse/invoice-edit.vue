@@ -239,7 +239,7 @@ export default {
             parme[key] = this.sourceUid
             Core.Api[api[0]][api[1]](parme).then(res => {
                 console.log("handleSelectBlur res", res)
-                if (this.form.source_type == SOURCE_TYPE.MATERIAL_PURCHASE) {
+                if (this.form.source_type == SOURCE_TYPE.MATERIAL_PURCHASE || this.form.source_type == SOURCE_TYPE.WAREHOUSE_TRANSFER) {
                     this.isExist = !res ? 2 : 1
                     this.form.source_id = res.id
                 } else {

@@ -58,6 +58,11 @@ const apiList = {
         allotOrgAuth: ['PostJson', 'authority/save-org-type-authority'], // 向组织分配 可分配权限
         allotAuth: ['PostJson', 'authority/save-role-authority'], // 向角色分配权限
         allotRole: ['PostJson', 'authority/save-user-role'], // 向员工账号分配角色
+
+    },
+    AuthUser: {
+        list:  ['PostJson', 'authority/role-list'], // 用户权限列表
+        authUserList: ['PostJson', 'authority/save-user_authority_scope'],
     },
     Agent: { // 零售商
         list: ['PostJson', 'agent/list'], // 列表
@@ -448,7 +453,7 @@ const apiList = {
         deliver: ['PostJson', 'warehouse-transfer-order/deliver'],
         receive: ['PostJson', 'warehouse-transfer-order/receive'],
         stock: ['PostJson', 'warehouse-transfer-order/save-to-invoice'],//入库
-        detailByUid: ['PostJson', 'warehouse-transfer-order/detail-by-uid'],//入库
+        detailByUid: ['PostJson', 'warehouse-transfer-order/detail-by-sn'],//入库
 
 
     }

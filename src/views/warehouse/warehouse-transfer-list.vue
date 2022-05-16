@@ -104,9 +104,8 @@
                                 class="icon i_detail"/>详情
                             </a-button>
                             <template v-if="record.status === STATUS.INIT">
-                                <!-- <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button> -->
-                                <a-button type="link" @click="handleCancel(record.id)" class="danger"
-                                          v-if="$auth('invoice.delete')"><i class="icon i_close_c"/>取消
+<!--                                 <a-button type="link" @click="routerChange('detail',record)" v-if="record.status === STATUS.INIT"><i class="icon i_edit"/>编辑</a-button>-->
+                                <a-button type="link" @click="handleCancel(record.id)" class="danger" v-if="$auth('invoice.delete')"><i class="icon i_close_c"/>取消
                                 </a-button>
                             </template>
                             <AuditMaterialPurchase v-if="record.status === STATUS.WAIT_AUDIT && $auth('invoice.warehouse-audit')" btnType="link" :status="STATUS.APPLICANT_AUDIT"
@@ -248,13 +247,13 @@ export default {
             console.log('routerChange item:', item)
             let routeUrl = ''
             switch (type) {
-                case 'edit':  // 编辑
+                /*case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/warehouse/material-transfer-edit",
+                        path: "/warehouse/warehouse-transfer-edit",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
-                    break;
+                    break;*/
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
                         path: "/warehouse/warehouse-transfer-detail",
@@ -341,7 +340,7 @@ export default {
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Invoice.cancel({id}).then(() => {
+                    Core.Api.WarehouseTransfer.cancel({id}).then(() => {
                         _this.$message.success('取消成功');
                         _this.getTableData();
                     }).catch(err => {

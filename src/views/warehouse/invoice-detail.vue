@@ -68,7 +68,7 @@
                 <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
             </div>
             <div class="info-item">
-                <div class="key">审核人</div>
+                <div class="key">仓库审核</div>
                 <div class="value">
                     <template v-if="detail.audit_user && detail.apply_user.account">{{ detail.audit_user.account.name }}</template>
                     <template v-else>-</template>
