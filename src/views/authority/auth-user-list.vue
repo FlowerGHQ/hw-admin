@@ -108,7 +108,7 @@ export default {
     methods: {
         routerChange(item = {}) {
             let routeUrl = this.$router.resolve({
-                path: "/system/auth-role-edit",
+                path: "/system/auth-user-edit",
                 query: {id: item.id}
             })
             window.open(routeUrl.href, '_self')
@@ -132,7 +132,7 @@ export default {
 
         getTableData() {    // 获取 表格 数据
             this.loading = true;
-            Core.Api.Authority.roleList({
+            Core.Api.AuthorityUser.list({
                 ...this.searchForm,
                 page: this.currPage,
                 page_size: this.pageSize
@@ -174,7 +174,7 @@ export default {
             }
 
             this.loading = true;
-            Core.Api.Authority.roleEdit(this.form).then(() => {
+            Core.Api.AuthorityUser.save(this.form).then(() => {
                 this.$message.success('保存成功')
                 this.handleRoleClose();
                 this.getTableData();
@@ -192,7 +192,7 @@ export default {
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Authority.roleDelete({id}).then(() => {
+                    Core.Api.AuthorityUser.delete({id}).then(() => {
                         _this.$message.success('删除成功');
                         _this.getTableData();
                     }).catch(err => {

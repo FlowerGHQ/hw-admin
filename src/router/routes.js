@@ -1180,7 +1180,7 @@ const routes = [
                     parent: '/user/user-list',
                 }
             },
-           /* {
+         /*   {
                 path: 'auth-user-list',
                 name: 'AuthUserList',
                 component: () => import('@/views/authority/auth-user-list.vue'),

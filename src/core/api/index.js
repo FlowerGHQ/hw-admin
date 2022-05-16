@@ -60,9 +60,12 @@ const apiList = {
         allotRole: ['PostJson', 'authority/save-user-role'], // 向员工账号分配角色
 
     },
-    AuthUser: {
-        list:  ['PostJson', 'authority/role-list'], // 用户权限列表
-        authUserList: ['PostJson', 'authority/save-user_authority_scope'],
+    AuthorityUser: {
+        list:  ['PostJson', 'authority/user_authority_scope-list'], // 用户权限列表
+        save: ['PostJson', 'authority/save-user_authority_scope'],
+        detail: ['PostJson', 'authority/user_authority_scope-detail'],
+        delete: ['PostJson', 'authority/detail-user_authority_scope'],
+
     },
     Agent: { // 零售商
         list: ['PostJson', 'agent/list'], // 列表

@@ -1,7 +1,7 @@
 <template>
     <div id="AuthRoleEdit" class="edit-container">
         <div class="title-container">
-            <div class="title-area">{{ form.id ? '编辑角色' : '新建角色' }}</div>
+            <div class="title-area">{{ form.id ? '编辑用户权限' : '新建用户权限' }}</div>
         </div>
         <div class="form-block">
             <div class="form-title">
@@ -9,15 +9,15 @@
             </div>
             <div class="form-content">
                 <div class="form-item required">
-                    <div class="key">角色名称</div>
+                    <div class="key">权限名称</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" placeholder="请输入角色名称"/>
+                        <a-input v-model:value="form.name" placeholder="请输入权限名称"/>
                     </div>
                 </div>
                 <div class="form-item textarea">
-                    <div class="key">角色描述:</div>
+                    <div class="key">权限描述:</div>
                     <div class="value">
-                        <a-textarea v-model:value="form.remark" placeholder="请输入角色描述"
+                        <a-textarea v-model:value="form.remark" placeholder="请输入权限描述"
                                     :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                         <span class="content-length">{{ form.remark.length }}/99</span>
                     </div>
@@ -40,7 +40,7 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary">确定</a-button>
+            <a-button @click="handleSubmit" type="primary" v-if="$auth('role.save')">确定</a-button>
             <a-button @click="routerChange('back')" type="primary" ghost>取消</a-button>
         </div>
     </div>
@@ -83,16 +83,16 @@ export default {
         this.getAuthOptions()
     },
     methods: {
-        routerChange(type, item) {
+       /* routerChange(type, item) {
             switch (type) {
                 case 'back':
                     this.$router.go(-1);
                     break;
             }
-        },
-        getAuthRoleDetail() { // 获取角色详情
+        },*/
+     /*   getAuthRoleDetail() { // 获取角色详情
             this.loading = true;
-            Core.Api.Authority.roleDetail({
+            Core.Api.AuthorityUser.detail({
                 id: this.form.id,
             }).then(res => {
                 console.log('getAuthRoleDetail res', res)
@@ -105,8 +105,8 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
-        },
-        getAuthOptions() { // 获取 某个身份下 可选的权限项
+        },*/
+       /* getAuthOptions() { // 获取 某个身份下 可选的权限项
             let apiName = this.$auth('ADMIN') ? 'allOptions' : 'authOptions'
             Core.Api.Authority[apiName]({
                 org_type: Core.Data.getOrgType(),
@@ -126,9 +126,9 @@ export default {
             }).catch(err => {
                 console.log('getAuthOptions err:', err)
             })
-        },
-        getRoleSelectedAuth() { // 某个角色 已选的权限
-            Core.Api.Authority.authSelected({
+        },*/
+       /* getRoleSelectedAuth() { // 某个角色 已选的权限
+            Core.Api.AuthorityUser.authSelected({
                 role_id: this.form.id,
             }).then(res => {
                 console.log('getRoleSelectedAuth res:', res)
@@ -142,9 +142,9 @@ export default {
             }).catch(err => {
                 console.log('getRoleSelectedAuth err:', err)
             })
-        },
+        },*/
 
-        handleSubmit() {
+     /*   handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
             console.log('handleSubmit form:', form)
             if (!form.name) {
@@ -154,7 +154,7 @@ export default {
             for (const item of this.authItems) {
                 list.push(...item.select)
             }
-            Core.Api.Authority.roleEdit({
+            Core.Api.AuthorityUser.save({
                 ...form,
                 authority_ids: list.join(','),
             }).then(() => {
@@ -163,7 +163,7 @@ export default {
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
-        }
+        }*/
     }
 };
 </script>
