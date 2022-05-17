@@ -583,6 +583,12 @@ let Const = {
         ORG_TYPE_MAP: {
             '100': { text: '库存预警' },
         },
+        RESOURCE_TYPE: {
+            WAREHOUSE: 10,
+        },
+        RESOURCE_TYPE_MAP: {
+            '10': {text: '仓库'}
+        }
     },
     SYSTEM: { //系统
         FILE: {

@@ -9,34 +9,35 @@
             </div>
             <div class="form-content">
                 <div class="form-item required">
-                    <div class="key">权限名称</div>
+                    <div class="key">名称</div>
                     <div class="value">
                         <a-input v-model:value="form.name" placeholder="请输入权限名称"/>
                     </div>
                 </div>
-                <div class="form-item textarea">
-                    <div class="key">权限描述:</div>
+                <div class="form-item required">
+                    <div class="key">类型</div>
                     <div class="value">
-                        <a-textarea v-model:value="form.remark" placeholder="请输入权限描述"
-                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
-                        <span class="content-length">{{ form.remark.length }}/99</span>
+                        <a-select v-model:value="form.resource_type" placeholder="请选择权限对象">
+                            <a-select-option v-for="(val,key) in resourceMap" :key="key" :value="key">{{ val.text }}</a-select-option>
+                        </a-select>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="form-block">
-            <div class="form-title">
-                <div class="title-colorful">权限分配</div>
-            </div>
-            <div class="form-content long-key">
-                <template v-for="item of authItems" :key="item.key">
-                    <div class="form-item afs" v-if="item.list.length">
-                        <div class="key">{{ item.name }}:</div>
-                        <div class="value">
-                            <a-checkbox-group :options="item.list" v-model:value="item.select"/>
-                        </div>
+                <div class="form-item required" >
+                    <div class="key">对象</div>
+                    <div class="value">
+                        <a-select v-model:value="form.warehouse_id" placeholder="请选择权限对象">
+                            <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+                        </a-select>
                     </div>
-                </template>
+                </div>
+                <div class="form-item required">
+                    <div class="key">员工</div>
+                    <div class="value">
+                        <a-select v-model:value="form.user_id" mode="tags"  placeholder="请选择权限对象">
+                            <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+                        </a-select>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-btns">
@@ -50,26 +51,30 @@
 import Core from '../../core';
 
 const AUTH_LIST_TEMP = Core.Const.AUTH_LIST_TEMP
-
+const RESOURCE_TYPE = Core.Const.NOTICE.RESOURCE_TYPE
 export default {
     name: 'AuthRoleEdit',
     components: {},
     props: {},
     data() {
         return {
+            RESOURCE_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-
+            resourceMap: Core.Const.NOTICE.RESOURCE_TYPE_MAP,
             id: '',
             detail: {},
 
             authItems: Core.Util.deepCopy(AUTH_LIST_TEMP),
-
+            warehouseList: [],
+            userList: [],
             form: {
                 id: '',
                 name: '',
-                remark: '',
+                resource_type: undefined,
+                warehouse_id: undefined,
+                user_id: undefined,
             }
         };
     },
@@ -78,81 +83,60 @@ export default {
     created() {
         this.form.id = Number(this.$route.query.id) || 0
         if (this.form.id) {
-            this.getAuthRoleDetail();
+            this.getAuthUserDetail();
         }
-        this.getAuthOptions()
+        this.getWarehouseList()
+        this.getUserList()
     },
     methods: {
-       /* routerChange(type, item) {
+        routerChange(type, item) {
             switch (type) {
                 case 'back':
                     this.$router.go(-1);
                     break;
             }
-        },*/
-     /*   getAuthRoleDetail() { // 获取角色详情
+        },
+        getWarehouseList() {
+            Core.Api.Warehouse.listAll().then(res => {
+                this.warehouseList = res.list
+            })
+        },
+        getUserList() {
+            Core.Api.User.list().then(res => {
+                this.userList = res.list
+            })
+        },
+        getAuthUserDetail() { // 获取角色详情
             this.loading = true;
             Core.Api.AuthorityUser.detail({
                 id: this.form.id,
             }).then(res => {
-                console.log('getAuthRoleDetail res', res)
+                console.log('getAuthUserDetail res', res)
                 this.detail = res.role
                 for (const key in this.form) {
                     this.form[key] = res.role[key]
                 }
             }).catch(err => {
-                console.log('getAuthRoleDetail err', err)
+                console.log('getAuthUserDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
-        },*/
-       /* getAuthOptions() { // 获取 某个身份下 可选的权限项
-            let apiName = this.$auth('ADMIN') ? 'allOptions' : 'authOptions'
-            Core.Api.Authority[apiName]({
-                org_type: Core.Data.getOrgType(),
-            }).then(res => {
-                console.log('getAuthOptions res:', res)
-                let list = res.list
-                list.map(auth => {
-                    let key = auth.key.split('.')[0];
-                    let item = this.authItems.find(i => key === i.key);
-                    if (item) {
-                        item.list.push({value: auth.id, label: auth.name});
-                    }
-                })
-                if (this.form.id) {
-                    this.getRoleSelectedAuth();
-                }
-            }).catch(err => {
-                console.log('getAuthOptions err:', err)
-            })
-        },*/
-       /* getRoleSelectedAuth() { // 某个角色 已选的权限
-            Core.Api.AuthorityUser.authSelected({
-                role_id: this.form.id,
-            }).then(res => {
-                console.log('getRoleSelectedAuth res:', res)
-                res.list.forEach(auth => {
-                    let key = auth.key.split('.')[0];
-                    let item = this.authItems.find(i => key === i.key);
-                    if (item) {
-                        item.select.push(auth.id);
-                    }
-                })
-            }).catch(err => {
-                console.log('getRoleSelectedAuth err:', err)
-            })
-        },*/
+        },
 
-     /*   handleSubmit() {
+        handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
             console.log('handleSubmit form:', form)
             if (!form.name) {
-                return this.$message.warning('请输入角色名称')
+                return this.$message.warning('请输入权限名称')
             }
-            let list = []
-            for (const item of this.authItems) {
-                list.push(...item.select)
+            if (!form.resource_type) {
+                return this.$message.warning('请选择用户权限类型')
+            }
+            if (!form.warehouse_id) {
+                return this.$message.warning('请选择仓库')
+            }
+            if (!form.user_id) {
+                return this.$message.warning('请选择员工')
             }
             Core.Api.AuthorityUser.save({
                 ...form,
@@ -163,7 +147,7 @@ export default {
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
-        }*/
+        }
     }
 };
 </script>

@@ -103,7 +103,7 @@ export default {
     watch: {},
     computed: {},
     mounted() {
-        this.getTableData();
+        // this.getTableData();
     },
     methods: {
         routerChange(item = {}) {
@@ -129,7 +129,6 @@ export default {
             Object.assign(this.searchForm, this.$options.data().searchForm)
             this.pageChange(1);
         },
-
         getTableData() {    // 获取 表格 数据
             this.loading = true;
             Core.Api.AuthorityUser.list({
@@ -148,7 +147,7 @@ export default {
         },
 
 
-        // 新建角色
+/*        // 新建角色
         handleRoleShow(item) {
             if (item) {
                 console.log('handleRoleShow item:', item)
@@ -181,10 +180,10 @@ export default {
             }).catch(err => {
                 console.log('handleRoleSubmit err:', err)
             })
-        },
+        },*/
 
         // 删除角色
-        handleDelete(id) {
+ /*       handleDelete(id) {
             let _this = this;
             this.$confirm({
                 title: '确定要删除该角色吗？',
@@ -200,7 +199,7 @@ export default {
                     })
                 },
             });
-        },
+        },*/
     }
 };
 </script>
