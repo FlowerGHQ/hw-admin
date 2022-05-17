@@ -27,7 +27,13 @@
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">客户地址：</div>
+                    <div class="key">客户地址:</div>
+                    <div class="value">
+                        <CountryCascader v-model:value="areaList" :def-area='defArea' @search="getCountry"/>
+                    </div>
+                </div>
+                <div class="form-item" v-if="countryShow == true">
+                    <div class="key"></div>
                     <div class="value">
                         <ChinaAddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
                     </div>
@@ -50,10 +56,11 @@
 <script>
 import Core from '../../core';
 import ChinaAddressCascader from '@/components/common/ChinaAddressCascader.vue'
+import CountryCascader from '@/components/common/CountryCascader.vue'
 
 export default {
     name: 'CustomerEdit',
-    components: { ChinaAddressCascader },
+    components: { ChinaAddressCascader, CountryCascader},
     props: {},
     data() {
         return {
@@ -72,6 +79,15 @@ export default {
                 address: '',
             },
             defAddr: [],
+            areaList: [],
+            defArea: [],
+            area: {
+                continent: '',
+                country: '',
+                country_en: '',
+                country_code: '',
+            },
+            countryShow: false,
         };
     },
     watch: {},
@@ -100,11 +116,16 @@ export default {
                 id: this.form.id,
             }).then(res => {
                 console.log('getCustomerDetail res', res)
-                this.detail = res.detail
+                let d = res.detail
+                this.detail = d
                 for (const key in this.form) {
-                    this.form[key] = res.detail[key]
+                    this.form[key] = d[key]
                 }
-                this.defAddr = [this.detail.province, this.detail.city, this.detail.county]
+                for (const key in this.area) {
+                    this.area[key] = d[key]
+                }
+                this.defAddr = [d.province, d.city, d.county]
+                this.defArea = [d.continent || '', d.country || '']
             }).catch(err => {
                 console.log('getCustomerDetail err', err)
             }).finally(() => {
@@ -113,6 +134,16 @@ export default {
         },
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
+            let area = Core.Util.deepCopy(this.area)
+            if (this.areaList.length) {
+                console.log('this.areaList:', this.areaList)
+                area = {
+                    continent: this.areaList[0].name,
+                    country: this.areaList[1].name,
+                    country_en: this.areaList[1].name_en,
+                    country_code: this.areaList[1].code,
+                }
+            }
             if (!form.name) {
                 return this.$message.warning('请输入客户名称')
             }
@@ -137,6 +168,17 @@ export default {
             this.form.province = address[0]
             this.form.city = address[1]
             this.form.county = address[2]
+        },
+        getCountry(data) {
+            console.log('getCountry data',data)
+            if (data.country == '中国' || data.country == 'China') {
+                this.countryShow = true
+            } else {
+                this.countryShow = false
+            }
+            console.log('data.country',data.country)
+            console.log('countryShow',this.countryShow)
+
         },
     }
 };

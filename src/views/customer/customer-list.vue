@@ -13,6 +13,12 @@
                         <div class="key">客户名称：</div>
                         <div class="value">
                             <a-input placeholder="请输入客户名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                        </div>q
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">客户名称：</div>
+                        <div class="value">
+                            <a-input placeholder="请输入客户名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
