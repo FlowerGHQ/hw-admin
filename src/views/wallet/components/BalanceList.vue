@@ -4,12 +4,24 @@
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, text}">
+                    <template #bodyCell="{ column, text, record}">
                         <template v-if="column.dataIndex === 'type'">
-                            {{ $Util.walletTypeFilter(text) }}
+                            {{ $Util.operateTypeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'money'">
                             {{ walletMap[detail.type] + ( text /100)}}
+                        </template>
+                        <template v-if="column.dataIndex === 'source_type'">
+                            {{ $Util.subjectTypeFilter(text) }}
+                        </template>
+                        <template v-if="column.key === 'remark'">
+                            {{ text || '-'}}
+                        </template>
+                        <template v-if="column.key === 'sn'">
+                            <a-tooltip placement="top" :title='text'>
+                                <a-button type="link" @click="routerChange(record)">{{ text || '-' }}
+                                </a-button>
+                            </a-tooltip>
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -38,7 +50,7 @@
 
 <script>
 import Core from '../../../core';
-
+const SUBJECT = Core.Const.WALLET.SUBJECT
 export default {
     name: 'BalanceList',
     components: {},
@@ -55,6 +67,7 @@ export default {
     },
     data() {
         return {
+            SUBJECT,
             // 加载
             loading: false,
             // 分页
@@ -78,7 +91,8 @@ export default {
                 {title: '变动金额', dataIndex: 'money', key: 'money'},
                 {title: '变动后余额', dataIndex: 'balance', key: 'money'},
                 {title: '来源', dataIndex: 'source_type'},
-                {title: '来源单号', dataIndex: 'source_type'},
+                {title: '来源单号', dataIndex: 'sn', key: 'sn'},
+                {title: '原因', dataIndex: 'remark', key: 'remark'},
                 {title: '操作时间', dataIndex: 'create_time', key: 'time'},
             ]
             return tableColumns
@@ -88,13 +102,31 @@ export default {
         this.getTableData();
     },
     methods: {
-      /*  routerChange(type, item) {
+        routerChange(item = {}) {
+            let routeUrl = ''
+            let type = ''
+            if (item.source_type === SUBJECT.PURCHASE_ORDER) {
+                type = 'purchase'
+            } else {
+                type = 'repair'
+            }
             switch (type) {
-                case 'back':
-                    this.$router.go(-1)
+                case 'purchase':    // 编辑
+                    routeUrl = this.$router.resolve({
+                        path: "/purchase/purchase-order-detail",
+                        query: {id: item.source_id}
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+                case 'repair':    // 编辑
+                    routeUrl = this.$router.resolve({
+                        path: "/repair/repair-detail",
+                        query: {id: item.source_id}
+                    })
+                    window.open(routeUrl.href, '_blank')
                     break;
             }
-        },*/
+        },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
             this.getTableData()

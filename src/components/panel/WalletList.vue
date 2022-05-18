@@ -11,8 +11,10 @@
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record }">
-                        <template v-if="column.dataIndex === 'type'">
-                            {{ $Util.walletTypeFilter(text) }}
+                        <template v-if="column.key === 'detail'">
+                            <a-tooltip placement="top" :title=$Util.walletTypeFilter(text)>
+                                <a-button type="link" @click="routerChange('detail', record)"> {{ $Util.walletTypeFilter(text) }}</a-button>
+                            </a-tooltip>
                         </template>
                         <template v-if="column.dataIndex === 'balance'">
                             {{ walletMap[record.type] +  (text / 100) }}
@@ -22,6 +24,8 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="handleModalShow('operate',record.id)" v-if="$auth('account.operate')"><i class="icon i_settle"/>账户操作
+                            </a-button>
+                            <a-button type="link" @click="routerChange('detail',record)"><i class="icon i_detail"/>详情
                             </a-button>
                         </template>
                     </template>
@@ -65,50 +69,29 @@
                         </div>
                     </div>
                     <div class="form-item required">
-                        <div class="key">来源:</div>
-                        <div class="value form-item-value">
-                            <a-select v-model:value="operateForm.source_type" placeholder="请选择来源" @change="operateForm.subject = undefined">
-                                <a-select-option v-for="(val, key) of object" :key="key" :value="key">{{ val.name }}
-                                </a-select-option>
+                        <div class="key">来源：</div>
+                        <div class="value">
+                            <a-select v-model:value="operateForm.source_type" placeholder="请选择来源" @change="handleSelectChange">
+                                <a-select-option v-for="(val, key) of sourceTypeMap" :key='key' :value='key'>{{ val }}</a-select-option>
                             </a-select>
                         </div>
                     </div>
-                    <div class="form-item required" v-if="operateForm.source_type">
-                        <div class="key">具体原因:</div>
+                    <div class="form-item required" v-if="needUid">
+                        <div class="key">{{sourceTypeMap[operateForm.source_type]}}号：</div>
+                        <div class="value">
+                            <a-input v-model:value="sourceUid" :placeholder="`请输入相关的${sourceTypeMap[operateForm.source_type]}号`" @blur="handleSelectBlur()">
+                                <template #suffix>
+                                    <span v-if="isExist == 1"><i class="icon suffix i_confirm"/></span>
+                                    <span v-else-if="isExist == 2"><i class="icon suffix i_close_c"/></span>
+                                </template>
+                            </a-input>
+                        </div>
+                    </div>
+                    <div class="form-item textarea">
+                        <div class="key">原因:</div>
                         <div class="value form-item-value">
-                            <a-select v-model:value="operateForm.subject" placeholder="请选择具体原因">
-                                <a-select-option v-for="(val, key) of object[operateForm.source_type].subject"
-                                    :key="key" :value="key">{{ val }}
-                                </a-select-option>
-                            </a-select>
-                        </div>
-                    </div>
-                    <div class="form-item required" v-if="operateForm.source_type == 20">
-                        <div class="key">采购单号：</div>
-                        <div class="value">
-                            <a-input class="purchase-order-detail" v-model:value="operateForm.source_id"
-                                     placeholder="请输入相关的采购单号"
-                                     @blur="handleSelectBlur('purchase')"/>
-                            <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
-                            <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
-                        </div>
-                    </div>
-                    <div class="form-item required" v-if="operateForm.source_type == 40">
-                        <div class="key">调货单号：</div>
-                        <div class="value">
-                            <a-input v-model:value="operateForm.source_id" placeholder="请输入调货单号"
-                                     @blur="handleSelectBlur('transfer')"/>
-                            <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
-                            <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
-                        </div>
-                    </div>
-                    <div class="form-item required" v-if="operateForm.source_type == 50">
-                        <div class="key">维修单号：</div>
-                        <div class="value">
-                            <a-input v-model:value="operateForm.source_id" placeholder="请输入维修单号"
-                                     @blur="handleSelectBlur('repair')"/>
-                            <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
-                            <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
+                            <a-textarea v-model:value="operateForm.remark" placeholder="请输入原因"
+                                        :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                         </div>
                     </div>
                 </div>
@@ -124,6 +107,7 @@
 <script>
 import Core from '../../core';
 const TYPE = Core.Const.WALLET.TYPE
+const SUBJECT = Core.Const.WALLET.SUBJECT
 export default {
     name: 'WalletList',
     components: {},
@@ -157,73 +141,64 @@ export default {
             operateTypeMAP: Core.Const.WALLET.OPERATE_TYPE_MAP,
          /*   subjectMap: Core.Const.WALLET.SUBJECT_MAP,
             sourceMap: Core.Const.STOCK_RECORD.SOURCE_TYPE_MAP,*/
+            sourceTypeMap: Core.Const.WALLET.SUBJECT_MAP,
             operateForm: {
                 type: '',
                 money: '',
                 wallet_id: '',
                 remark: '',
-                subject: undefined,
+                // subject: undefined,
                 source_id: '',
                 source_type: undefined,
             },
+            sourceUid: '',
             isExist: '',
-            isRight: '',
             walletMap: {
                 1: '¥',
                 2: '€',
                 3: '$',
                 4: '£'
             },
-            object: {
-                '10': {
-                    name: '管理员创建', subject: {
-                        '101': '调整余额',
-                        '200': '其他',
-                    }
-                },
-                '20': {
-                    name: '采购', subject: {
-                        '201': '采购单支付',
-                        '202': '采购单补偿',
-                        '300': '其他',
-                    }
-                },
-                '50': {
-                    name: '维修', subject: {
-                        '501': '维修单扣款',
-                        '502': '维修单补偿',
-                        '600': '其他',
-                    }
-                },
-                '30': {
-                    name: '售后', subject: {
-                        '0': '其他',
-                    }
-                },
-                '40': {
-                    name: '调货', subject: {
-                        '0': '其他',
-                    }
-                },
-            }
         };
     },
     watch: {},
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: '账户类型', dataIndex: 'type'},
+                {title: '账户类型', dataIndex: 'type', key: 'detail'},
                 {title: '余额', dataIndex: 'balance'},
                 // {title: '状态', dataIndex: 'status', key: 'status'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ]
             return tableColumns
         },
+        needUid() {
+            let val = Number(this.operateForm.source_type)
+            switch (val) {
+                case SUBJECT.PURCHASE_ORDER:
+                case SUBJECT.REPAIR_ORDER_DEDUCTIONS:
+                    return true
+                default: return false
+            }
+        }
     },
     mounted() {
         this.getTableData();
     },
     methods: {
+        routerChange(type, item = {}) {
+            console.log(item)
+            let routeUrl = ''
+            switch (type) {
+                case 'detail':    // 详情
+                    routeUrl = this.$router.resolve({
+                        path: "/wallet/wallet-detail",
+                        query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+            }
+        },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
             this.getTableData()
@@ -287,15 +262,8 @@ export default {
         },
         handleOperateClose() {
             this.operateShow = false;
-            this.operateForm = {
-                type: '',
-                money: '',
-                wallet_id: '',
-                remark: '',
-                subject: undefined,
-                source_id: '',
-                source_type: undefined,
-            }
+            Object.assign(this.operateForm, this.$options.data().operateForm)
+            this.sourceUid = ''
         },
         handleOperateSubmit() {
             let form = Core.Util.deepCopy(this.operateForm)
@@ -308,20 +276,14 @@ export default {
             if (!form.source_type) {
                 return this.$message.warning('请选择来源')
             }
-            if (!form.subject) {
-                return this.$message.warning('请选择具体原因')
+            if (this.needUid && !this.sourceUid) {
+                return this.$message.warning(`请输入相关的${this.sourceTypeMap[form.source_type]}单号`)
             }
-            if (!form.source_id && form.source_type == 20) {
-                return this.$message.warning('请输入相关的采购单号')
+            if (this.needUid && !form.source_id) {
+                return this.$message.warning(`请输入正确的${this.sourceTypeMap[form.source_type]}单号`)
             }
-            if (this.isExist === false) {
-                return this.$message.warning('请输入正确的采购单号')
-            }
-            if (!form.source_id && form.source_type == 40) {
-                return this.$message.warning('请输入相关的调货单号')
-            }
-            if (this.isRight === false) {
-                return this.$message.warning('请输入正确的调货单号')
+            if (this.isExist == 2) {
+                return this.$message.warning(`请输入正确的${this.sourceTypeMap[form.source_type]}单号`)
             }
             Core.Api.Wallet.update({
                 ...form,
@@ -334,62 +296,36 @@ export default {
                 console.log('handleOperateSubmit err:', err)
             })
         },
-        handleSelectBlur(type) {
-            switch (type) {
-                case'repair':
-                    this.handleRepairBlur();
-                    break;
-                case'transfer':
-                    this.handleTransferBlur();
-                    break;
-                case'purchase':
-                    this.handlePurchaseBlur();
-                    break;
-            }
-        },
-        handlePurchaseBlur() {  // 获取 采购订单号
-            if (!this.form.source_id) {
+        handleSelectBlur() {
+            if (!this.sourceUid) {
                 return this.isExist = ''
             }
-            Core.Api.Purchase.detailBySn({
-                sn: this.form.source_id,
-            }).then(res => {
+            let api = [];
+            let key = 'uid'
+            let parme = {}
+            switch (Number(this.operateForm.source_type)) {
+                case SUBJECT.PURCHASE_ORDER:
+                    api = ['Purchase', 'detailBySn']; key = 'sn';
+                    break;
+                case SUBJECT.REPAIR_ORDER_DEDUCTIONS:
+                    api = ['Repair', 'detailByUid']; key = 'uid';
+                    break;
+            }
+            parme[key] = this.sourceUid
+            Core.Api[api[0]][api[1]](parme).then(res => {
+                console.log("handleSelectBlur res", res)
                 this.isExist = res.detail == null ? 2 : 1
-                this.source_id = res.detail.id
-                this.defaultTime = res.detail.arrival_time
+                this.operateForm.source_id = res.detail.id
             }).catch(err => {
-                console.log('onblur err', err)
+                console.log('handleSelectBlur err', err)
             }).finally(() => {
             });
         },
-        handleTransferBlur() {
-            if (!this.form.source_id) {
-                return this.isExist = ''
-            }
-            Core.Api.Transfer.detailByUid({
-                uid: this.form.source_id,
-            }).then(res => {
-                this.isExist = res.detail == null ? 2 : 1
-                this.source_id = res.detail.id
-                console.log("onblur res", res)
-            }).catch(err => {
-                console.log('onblur err', err)
-            }).finally(() => {
-            });
-        },
-        handleRepairBlur() {
-            if (!this.form.source_id) {
-                return this.isExist = ''
-            }
-            Core.Api.Repair.detailByUid({
-                uid: this.form.source_id,
-            }).then(res => {
-                this.isExist = res.detail == null ? 2 : 1
-                this.source_id = res.detail.id
-            }).catch(err => {
-                console.log('handleBlur err', err)
-            })
-        },
+        handleSelectChange(val) {
+            console.log('handleSelectChange',val)
+            this.sourceUid = ''
+            this.isExist = ''
+        }
     }
 };
 </script>

@@ -136,7 +136,6 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             let area = Core.Util.deepCopy(this.area)
             if (this.areaList.length) {
-                console.log('this.areaList:', this.areaList)
                 area = {
                     continent: this.areaList[0].name,
                     country: this.areaList[1].name,
@@ -156,7 +155,10 @@ export default {
             if (!form.province || !form.city || !form.county || !form.address) {
                 // return this.$message.warning('请完善客户地址')
             }
-            Core.Api.Customer.save(form).then(() => {
+            Core.Api.Customer.save({
+                ...form,
+                ...area
+            }).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
             }).catch(err => {

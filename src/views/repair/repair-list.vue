@@ -118,13 +118,13 @@
                     </template>
                     <template v-if="column.key === 'audit'">
                         <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="(record.status == STATUS.SETTLEMENT ||
-                        record.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS) && record.service_type == 1 && $auth('repair-order.audit')"><i class="icon i_audit"/>审核</a-button>
+                        record.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS ||  record.status == STATUS.SETTLEMENT_DISTRIBUTOR) && record.service_type == 1 && $auth('repair-order.audit')"><i class="icon i_audit"/>审核</a-button>
                     </template>
                     <template v-if="column.key === 'redit'">
                         <a-button type='link' @click="routerChange('edit',record)" v-if="record.status == STATUS.AUDIT_FAIL && $auth('repair-order.save')"><i class="icon i_edit"/>编辑</a-button>
                     </template>
                     <template v-if="column.key === 'invoice'">
-                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.AUDIT_SUCCESS && $auth('repair-order.audit')"><i class="icon i_audit"/>审核</a-button>
+                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.DISTRIBUTOR_WAREHOUSE && $auth('repair-order.audit')"><i class="icon i_audit"/>审核</a-button>
                     </template>
                     <template v-if="column.key === 'fault'">
                         <a-button type='link' @click="handleModalShow(record.id, 'fault')" v-if="(record.status == STATUS.FAULT_ENTITY_AUDIT || record.status == STATUS.AUDIT_SUCCESS) &&
@@ -335,19 +335,22 @@ export default {
                 {zh: '待检测',en: 'Waiting detect', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
                 {zh: '维修中', en: 'Under repair',value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
                 {zh: '已结算待审核',en: 'Settled accounts and awaiting audit', value: '0', color: 'orange',  key: STATUS.SETTLEMENT },
-                {zh: '工单审核通过',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
+                {zh: '分销商审核通过',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.DISTRIBUTOR_AUDIT_SUCCESS },
+                {zh: '平台方审核通过',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
+                {zh: '分销商已入库', value: '0', color: 'green',  key: STATUS.DISTRIBUTOR_WAREHOUSE},
+                {zh: '平台方已入库', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE},
                 {zh: '工单审核未通过', en: 'Failed audit',value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
                 {zh: '故障件审核未通过', value: '0', color: 'red',  key: STATUS.FAULT_ENTITY_AUDIT_FAIL },
                 // {zh: '入库完成', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },
                 {zh: '已完成',en: 'Finished settle accounts', value: '0', color: 'blue',  key: STATUS.FINISH },
                 {zh: '已取消',en: 'Cancelled', value: '0', color: 'gray',  key: STATUS.CLOSE },
             ]
-            if (this.$auth('ADMIN')) {
+           /* if (this.$auth('ADMIN')) {
                 columns.splice(7, 0, {zh: '已入库', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },)
             }
             if (this.$auth('DISTRIBUTOR')) {
                 columns.splice(7, 0, {zh: '已入库', value: '0', color: 'green',  key: STATUS.DISTRIBUTOR_WAREHOUSE },)
-            }
+            }*/
             return columns
         }
 
@@ -404,22 +407,22 @@ export default {
             this.pageChange(1);
         },
         handleSearchReset(flag = true) {  // 重置搜索
-            Object.assign(this.searchForm, this.$options.data().searchForm)
+            let search = Object.assign(this.searchForm, this.$options.data().searchForm)
             if (flag) {
                 this.$refs.TimeSearch.handleReset()
             }
             if (this.operMode == 'audit' && this.$auth('DISTRIBUTOR')) {
-                this.searchForm.status = STATUS.SETTLEMENT
+                search.status = STATUS.SETTLEMENT
             } else if (this.operMode == 'audit' && this.$auth('ADMIN')) {
-                this.searchForm.status = STATUS.DISTRIBUTOR_AUDIT_SUCCESS
+                search.status = STATUS.DISTRIBUTOR_AUDIT_SUCCESS
             } else if (this.operMode == 'redit') {
-                this.searchForm.status = STATUS.AUDIT_FAIL
+                search.status = STATUS.AUDIT_FAIL
             } else if (this.operMode == 'invoice') {
-                this.searchForm.status = STATUS.AUDIT_SUCCESS
+                search.status = STATUS.DISTRIBUTOR_WAREHOUSE
             } else if (this.operMode == 'fault' && this.$auth('ADMIN')) {
-                this.searchForm.status = STATUS.FAULT_ENTITY_AUDIT
+                search.status = STATUS.FAULT_ENTITY_AUDIT
             } else if (this.operMode == 'fault' && this.$auth('DISTRIBUTOR')) {
-                this.searchForm.status = STATUS.AUDIT_SUCCESS
+                search.status = STATUS.AUDIT_SUCCESS
             }
             if (this.$auth('ADMIN')) {
                 this.getDistributorListAll();
@@ -586,6 +589,12 @@ export default {
         handleStock(id) {
             console.log('id',id)
             let faultForm = Core.Util.deepCopy(this.faultForm)
+            if (!faultForm.warehouse_id) {
+                return this.$message.warning('请选择仓库')
+            }
+            if (!faultForm.fault_entity_uid) {
+                return this.$message.warning('请输入故障件编号')
+            }
             Core.Api.Repair.stock({
                 ...faultForm
             }).then(() => {

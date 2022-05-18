@@ -25,9 +25,9 @@
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record }">
-                        <template v-if="column.dataIndex === 'name'">
+<!--                        <template v-if="column.dataIndex === 'name'">
                             {{ text || '-' }}
-                        </template>
+                        </template>-->
                         <template v-if="column.key === 'tip_item'">
                             <a-tooltip placement="top" :title='text'>
                                 <div class="ell" style="max-width: 40em">{{text || '-'}}</div>
@@ -82,28 +82,24 @@ export default {
             searchForm: {
                 name: '',
             },
-
             // 表格数据
             tableData: [],
             tableColumns: [
-                {title: '角色名称', dataIndex: 'name'},
-                {title: '角色描述', dataIndex: 'remark', key: 'tip_item' },
+                // {title: '权限名称', dataIndex: 'name'},
+                {title: '权限类型', dataIndex: 'resource_type', key: 'tip_item' },
+                {title: '权限对象', dataIndex: 'warehouse_id', key: 'tip_item' },
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right', width: 100,},
             ],
-            // 弹框
-            roleShow: false,
-            form: {
-                id: '',
-                name: '',
-                remark: '',
-            },
         };
     },
     watch: {},
     computed: {},
     mounted() {
         // this.getTableData();
+    },
+    created() {
+        this.getTableData();
     },
     methods: {
         routerChange(item = {}) {
@@ -122,71 +118,33 @@ export default {
             this.pageSize = size
             this.getTableData()
         },
-        handleSearch() {  // 搜索
-            this.pageChange(1);
-        },
-        handleSearchReset() {  // 重置搜索
-            Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.pageChange(1);
-        },
+        // handleSearch() {  // 搜索
+        //     this.pageChange(1);
+        // },
+        // handleSearchReset() {  // 重置搜索
+        //     Object.assign(this.searchForm, this.$options.data().searchForm)
+        //     this.pageChange(1);
+        // },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
             Core.Api.AuthorityUser.list({
-                ...this.searchForm,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
-                console.log("AuthRole.list res", res)
+                console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
             }).catch(err => {
-                console.log('AuthRole.list err', err)
+                console.log('getTableData err:', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
-
-
-/*        // 新建角色
-        handleRoleShow(item) {
-            if (item) {
-                console.log('handleRoleShow item:', item)
-                this.form.id = item.id
-                this.form.name = item.name
-                this.form.remark = item.remark
-            }
-            this.roleShow = true;
-        },
-        handleRoleClose() {
-            this.roleShow = false;
-            this.form = {
-                id: '',
-                name: '',
-                remark: '',
-            }
-        },
-        handleRoleSubmit() {
-            let form = Core.Util.deepCopy(this.form)
-            console.log('handleRoleSubmit form:', form)
-            if (!form.name) {
-                return this.$message.warning('请输入角色名称')
-            }
-
-            this.loading = true;
-            Core.Api.AuthorityUser.save(this.form).then(() => {
-                this.$message.success('保存成功')
-                this.handleRoleClose();
-                this.getTableData();
-            }).catch(err => {
-                console.log('handleRoleSubmit err:', err)
-            })
-        },*/
-
-        // 删除角色
- /*       handleDelete(id) {
+        // 删除用户权限
+        handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该角色吗？',
+                title: '确定要删除该用户权限吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',
@@ -199,7 +157,7 @@ export default {
                     })
                 },
             });
-        },*/
+        },
     }
 };
 </script>

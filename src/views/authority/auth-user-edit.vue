@@ -8,12 +8,12 @@
                 <div class="title-colorful">基本信息</div>
             </div>
             <div class="form-content">
-                <div class="form-item required">
+<!--                <div class="form-item required">
                     <div class="key">名称</div>
                     <div class="value">
                         <a-input v-model:value="form.name" placeholder="请输入权限名称"/>
                     </div>
-                </div>
+                </div>-->
                 <div class="form-item required">
                     <div class="key">类型</div>
                     <div class="value">
@@ -25,7 +25,7 @@
                 <div class="form-item required" >
                     <div class="key">对象</div>
                     <div class="value">
-                        <a-select v-model:value="form.warehouse_id" placeholder="请选择权限对象">
+                        <a-select v-model:value="form.resource_id" placeholder="请选择权限对象">
                             <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                         </a-select>
                     </div>
@@ -33,8 +33,8 @@
                 <div class="form-item required">
                     <div class="key">员工</div>
                     <div class="value">
-                        <a-select v-model:value="form.user_id" mode="tags"  placeholder="请选择权限对象">
-                            <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+                        <a-select v-model:value="form.user_ids" mode="tags"  placeholder="请选择权限对象">
+                            <a-select-option v-for="item of userList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                         </a-select>
                     </div>
                 </div>
@@ -71,10 +71,10 @@ export default {
             userList: [],
             form: {
                 id: '',
-                name: '',
+                // name: '',
                 resource_type: undefined,
-                warehouse_id: undefined,
-                user_id: undefined,
+                resource_id: undefined,
+                user_ids: undefined,
             }
         };
     },
@@ -102,7 +102,7 @@ export default {
             })
         },
         getUserList() {
-            Core.Api.User.list().then(res => {
+            Core.Api.User.listAll().then(res => {
                 this.userList = res.list
             })
         },
@@ -126,21 +126,25 @@ export default {
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
             console.log('handleSubmit form:', form)
-            if (!form.name) {
+         /*   if (!form.name) {
                 return this.$message.warning('请输入权限名称')
-            }
+            }*/
             if (!form.resource_type) {
                 return this.$message.warning('请选择用户权限类型')
             }
-            if (!form.warehouse_id) {
+            if (!form.resource_id) {
                 return this.$message.warning('请选择仓库')
             }
-            if (!form.user_id) {
+            if (!form.user_ids) {
                 return this.$message.warning('请选择员工')
             }
+            let list = []
+            for (const item of this.authItems) {
+                list.push(...item.select)
+            }
+            form.user_ids = form.user_ids
             Core.Api.AuthorityUser.save({
                 ...form,
-                authority_ids: list.join(','),
             }).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')

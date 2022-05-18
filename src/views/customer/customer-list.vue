@@ -13,7 +13,7 @@
                         <div class="key">客户名称：</div>
                         <div class="value">
                             <a-input placeholder="请输入客户名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
-                        </div>q
+                        </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">客户名称：</div>
@@ -25,6 +25,18 @@
                         <div class="key">客户电话：</div>
                         <div class="value">
                             <a-input placeholder="请输入客户电话" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">大洲：</div>
+                        <div class="value">
+                            <a-input placeholder="请输入大洲" v-model:value="searchForm.continent" @keydown.enter='handleSearch'/>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">国家：</div>
+                        <div class="value">
+                            <a-input placeholder="请输入国家" v-model:value="searchForm.country" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
@@ -40,11 +52,11 @@
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record }">
-                        <template v-if="column.key === 'detail'">
+<!--                        <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
                                 <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                             </a-tooltip>
-                        </template>
+                        </template>-->
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
@@ -105,13 +117,17 @@ export default {
                 phone:'',
                 begin_time: '',
                 end_time: '',
+                continent: '',
+                country: '',
             },
             // 表格
             tableColumns: [
                 {title: '名称', dataIndex: 'name', key:'detail'},
                 {title: '电话', dataIndex: 'phone', key:'item'},
                 {title: '邮箱', dataIndex: 'email', key:'item'},
-                {title: '地址', dataIndex: 'address'},
+                {title: '大洲', dataIndex: 'continent', key:'item'},
+                {title: '国家', dataIndex: 'country', key:'item'},
+                {title: '详细地址', dataIndex: 'address'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right'},
             ],
@@ -179,7 +195,7 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该用户吗？',
+                title: '确定要删除该客户吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',

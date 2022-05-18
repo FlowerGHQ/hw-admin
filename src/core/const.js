@@ -283,6 +283,7 @@ let Const = {
             WAIT_DETECTION: 30,
             WAIT_REPAIR: 40,
             SETTLEMENT: 60,
+            SETTLEMENT_DISTRIBUTOR: 70,
             DISTRIBUTOR_AUDIT_SUCCESS: 80,
             AUDIT_SUCCESS: 90,
             DISTRIBUTOR_WAREHOUSE: 95,
@@ -297,6 +298,7 @@ let Const = {
             '30': { key: 30, color: 'yellow', zh: '待检测', en: 'Waiting detect'},
             '40': { key: 40, color: 'blue', zh: '维修中', en: 'Under repair'},
             '60': { key: 60, color: 'orange', zh: '已结算待审核', en: 'Settled accounts and awaiting audit'},
+            '70': { key: 70, color: 'orange', zh: '已结算待审核',},
             '80': { key: 80, color: 'purple', zh: '分销商审核通过', en: 'Passed audit'},
             '90': { key: 90, color: 'purple', zh: '平台审核通过', en: 'Passed audit'},
             '95': { key: 95, color: 'purple', zh: '分销商已入库'},
@@ -613,6 +615,7 @@ let Const = {
         { list: [], select: [], key: 'distributor', name: '分销商管理' },
         { list: [], select: [], key: 'agent', name: '零售商管理' },
         { list: [], select: [], key: 'store', name: '门店管理' },
+        { list: [], select: [], key: 'account', name: '账户管理' },
         { list: [], select: [], key: 'repair-order', name: '维修单' },
         { list: [], select: [], key: 'customer', name: '客户管理' },
         { list: [], select: [], key: 'user', name: '员工管理' },
@@ -811,16 +814,12 @@ let Const = {
         SUBJECT: {
             MANAGER_ADJUSTMENT: 101,
             PURCHASE_ORDER: 201,
-            PURCHASE_ORDER_COMPENSATION: 202,
             REPAIR_ORDER_DEDUCTIONS: 501,
-            REPAIR_ORDER_COMPENSATION: 502,
         },
         SUBJECT_MAP: {
-            '101': '调整余额',
-            '201': '采购单支付',
-            '202': '采购单补偿',
-            '501': '维修单扣款',
-            '502': '维修单补偿',
+            '101': '管理员操作',
+            '201': '采购单',
+            '501': '维修单',
         }
     },
     FAULT_ENTITY: { //故障件

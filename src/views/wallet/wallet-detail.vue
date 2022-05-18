@@ -3,14 +3,8 @@
         <div class="title-container">
             <div class="title-area">账户详情</div>
             <div class="btns-area">
-                <a-button type="primary" ghost @click="routerChange('edit', record)"
-                ><i class="icon i_edit"/>编辑
-                </a-button
-                >
-                <a-button type="primary" ghost @click="handleDelete(wallet_id)"
-                ><i class="icon i_delete"/>删除
-                </a-button
-                >
+                <a-button type="primary" ghost @click="routerChange('edit', record)"><i class="icon i_edit"/>编辑</a-button>
+<!--                <a-button type="primary" ghost @click="handleDelete(wallet_id)"><i class="icon i_delete"/>删除</a-button>-->
             </div>
         </div>
         <div class="gray-panel">

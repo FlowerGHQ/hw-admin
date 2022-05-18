@@ -31,12 +31,9 @@
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record }">
-                        <template v-if="column.dataIndex === 'type'">
-                            {{ $Util.walletTypeFilter(text) }}
-                        </template>
                         <template v-if="column.key === 'detail'">
-                            <a-tooltip placement="top" :title='text'>
-                                <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
+                            <a-tooltip placement="top" :title=$Util.walletTypeFilter(text)>
+                                <a-button type="link" @click="routerChange('detail', record)"> {{ $Util.walletTypeFilter(text) }}</a-button>
                             </a-tooltip>
                         </template>
                         <template v-if="column.dataIndex === 'balance'">
@@ -106,7 +103,7 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: '账户类型', dataIndex: 'type'},
+                {title: '账户类型', dataIndex: 'type', key: 'detail'},
                 {title: '余额', dataIndex: 'balance'},
                 // {title: '状态', dataIndex: 'status', key: 'status'},
                 {title: '操作', key: 'operation', fixed: 'right'},

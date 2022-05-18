@@ -5,10 +5,17 @@ import { createI18n } from 'vue-i18n'
  * n：name
  * c：const const.js
  * def
+ * r: 工单
+ * d: 分销商
  */
 const messages = {
     zh: {
         n: {
+            distribution_management: '分销管理',
+            distributor_list: '分销商列表',
+            list_of_retailers: '零售商列表',
+            store_list: '门店列表',
+            order_list: '订单列表',
             repair: '维修工单',
             repair_list: '维修工单列表',
             repair_detail: '维修详情',
@@ -129,6 +136,10 @@ const messages = {
     },
     en: {
         n: {
+            distribution_management: 'Distribution management',
+            distributor_list: 'Distributor list',
+            list_of_retailers: 'List of retailers',
+            store_list: 'Store list',
             repair: 'Repair Order',
             repair_list: 'Repair Order List',
             repair_detail: 'Repair Order Detail',

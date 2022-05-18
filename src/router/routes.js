@@ -1086,7 +1086,7 @@ const routes = [
         meta: {
             title: '账户管理',
             icon: 'i_s_user',
-            roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
+            roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN],
             not_sub_menu: true,
         },
         children: [
@@ -1180,7 +1180,7 @@ const routes = [
                     parent: '/user/user-list',
                 }
             },
-            /*{
+            {
                 path: 'auth-user-list',
                 name: 'AuthUserList',
                 component: () => import('@/views/authority/auth-user-list.vue'),
@@ -1197,7 +1197,7 @@ const routes = [
                     title: '用户权限编辑',
                     parent: '/authority/auth-user-list',
                 }
-            },*/
+            },
             {
                 path: 'auth-role-list',
                 name: 'RoleList',

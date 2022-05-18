@@ -578,11 +578,15 @@ const Util = {
 
     /* =============== 账户 ================ */
     walletTypeFilter(val) {
-        const MAP = Const.WALLET.OPERATE_TYPE_MAP
+        const MAP = Const.WALLET.TYPE_MAP
         return MAP[val] || '未知'
     },
     operateTypeFilter(val) {
         const MAP = Const.WALLET.OPERATE_TYPE_MAP
+        return MAP[val] || '未知'
+    },
+    subjectTypeFilter(val) {
+        const MAP = Const.WALLET.SUBJECT_MAP
         return MAP[val] || '未知'
     },
     /* =============== 账户 ================ */

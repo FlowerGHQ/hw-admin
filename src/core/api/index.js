@@ -31,6 +31,7 @@ const apiList = {
     User: { // 员工
         save: ['PostJson', 'user/save'],
         list: ['PostJson', 'user/list'],
+        listAll: ['PostJson', 'user/list-name'],
         detail: ['PostJson', 'user/detail'],
         delete: ['PostJson', 'user/delete'],
         setAdmin: ['PostJson', 'user/set-admin'],

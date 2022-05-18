@@ -13,7 +13,7 @@
                     <template v-if="column.dataIndex === 'type'">
                         {{ $Util.userTypeFilter(text) }}
                     </template>
-                    <template v-if="column.dataIndex === 'flag_admin'">
+                    <template v-if="column.dataIndex === 'flag_admin' && $auth('user.set-admin')">
                         <template v-if="loginType < type">
                             <a-switch :checked="!!record.flag_admin" checked-children="是" un-checked-children="否" @click="handleManagerChange(record)"/>
                         </template>
