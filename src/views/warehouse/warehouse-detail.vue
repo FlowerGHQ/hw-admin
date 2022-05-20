@@ -3,7 +3,7 @@
         <div class="title-container">
             <div class="title-area">仓库详情</div>
             <div class="btns-area">
-                <a-button type="primary" ghost @click="routerChange('edit', record)" v-if="$auth('warehouse.save')"><i class="icon i_edit"/>编辑</a-button>
+                <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('warehouse.save')"><i class="icon i_edit"/>编辑</a-button>
                 <a-button type="danger" ghost @click="handleDelete(warehouse_id)" v-if="$auth('warehouse.delete')"><i class="icon i_delete"/>删除</a-button>
             </div>
         </div>

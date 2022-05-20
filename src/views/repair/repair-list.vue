@@ -2,9 +2,9 @@
 <div id="RepairList">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">{{$t('n.repair_list')}}</div>
+            <div class="title-area">{{$t('r.repair_list')}}</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')" v-if="!$auth('ADMIN') && $auth('repair-order.save')"><i class="icon i_add" />{{$t('n.repair_create')}}</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="!$auth('ADMIN') && $auth('repair-order.save')"><i class="icon i_add" />{{$t('r.repair_create')}}</a-button>
             </div>
         </div>
         <div class="tabs-container colorful" v-if="!operMode">

@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">用户权限管理</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange()" class="menu-item-btn" v-if="$auth('role.save')"><i class="icon i_add"/>新建用户权限</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" class="menu-item-btn" v-if="$auth('role.save')"><i class="icon i_add"/>新建用户权限</a-button>
                 </div>
             </div>
             <!-- <div class="search-container">
@@ -28,6 +28,9 @@
 <!--                        <template v-if="column.dataIndex === 'name'">
                             {{ text || '-' }}
                         </template>-->
+                        <template v-if="column.key === 'type'">
+                            {{ $Util.authUserTypeFilter(text) }}
+                        </template>
                         <template v-if="column.key === 'tip_item'">
                             <a-tooltip placement="top" :title='text'>
                                 <div class="ell" style="max-width: 40em">{{text || '-'}}</div>
@@ -37,7 +40,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="routerChange(record)" v-if="$auth('role.save')"><i class="icon i_edit"/>编辑</a-button>
+                            <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('role.save')"><i class="icon i_edit"/>编辑</a-button>
                             <a-button type='link' danger @click="handleDelete(record.id)" v-if="$auth('role.delete')"><i class="icon i_delete"/>删除</a-button>
                         </template>
                     </template>
@@ -86,8 +89,8 @@ export default {
             tableData: [],
             tableColumns: [
                 // {title: '权限名称', dataIndex: 'name'},
-                {title: '权限类型', dataIndex: 'resource_type', key: 'tip_item' },
-                {title: '权限对象', dataIndex: 'warehouse_id', key: 'tip_item' },
+                {title: '权限类型', dataIndex: 'resource_type', key: 'type' },
+                {title: '权限对象', dataIndex: ['resource', 'name'], key: 'tip_item' },
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right', width: 100,},
             ],
@@ -96,18 +99,20 @@ export default {
     watch: {},
     computed: {},
     mounted() {
-        // this.getTableData();
-    },
-    created() {
         this.getTableData();
     },
     methods: {
-        routerChange(item = {}) {
-            let routeUrl = this.$router.resolve({
-                path: "/system/auth-user-edit",
-                query: {id: item.id}
-            })
-            window.open(routeUrl.href, '_self')
+        routerChange(type, item = {}) {
+            let routeUrl = ''
+            switch (type) {
+                case 'edit':  // 编辑
+                    routeUrl = this.$router.resolve({
+                        path: "/system/auth-user-edit",
+                        query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+            }
         },
         pageChange(curr) {    // 页码改变
             this.currPage = curr

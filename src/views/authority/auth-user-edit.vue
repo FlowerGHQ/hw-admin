@@ -30,14 +30,14 @@
                         </a-select>
                     </div>
                 </div>
-                <div class="form-item required">
+<!--                <div class="form-item required">
                     <div class="key">员工</div>
                     <div class="value">
                         <a-select v-model:value="form.user_ids" mode="tags"  placeholder="请选择权限对象">
                             <a-select-option v-for="item of userList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                         </a-select>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
         <div class="form-btns">
@@ -112,9 +112,11 @@ export default {
                 id: this.form.id,
             }).then(res => {
                 console.log('getAuthUserDetail res', res)
-                this.detail = res.role
-                for (const key in this.form) {
-                    this.form[key] = res.role[key]
+                this.detail = res
+                console.log('res',res)
+                for (const key in this.detail) {
+                    this.form[key] = this.detail[key]
+                    console.log('key',key)
                 }
             }).catch(err => {
                 console.log('getAuthUserDetail err', err)

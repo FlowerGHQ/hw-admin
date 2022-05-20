@@ -1,55 +1,55 @@
 <template>
     <div id="StoreEdit" class="edit-container">
         <div class="title-container">
-            <div class="title-area">{{ form.id ? '门店编辑' : '新建门店' }}</div>
+            <div class="title-area">{{ form.id ? $t('s.edit') : $t('s.new_store') }}</div>
         </div>
         <div class="form-block">
             <div class="form-title">
-                <div class="title">基本信息</div>
+                <div class="title">{{ $t('n.information') }}</div>
             </div>
             <div class="form-content">
                 <div class="form-item required" v-if="$auth('ADMIN') && !form.id">
-                    <div class="key">所属分销商</div>
+                    <div class="key">{{ $t('n.distributor') }}</div>
                     <div class="value">
-                        <a-select v-model:value="form.distributor_id" placeholder="请选择所属分销商" @change="onDistributorChange">
+                        <a-select v-model:value="form.distributor_id" :placeholder="$t('search.select_distributor')" @change="onDistributorChange">
                             <a-select-option v-for="distributor of distributorList" :key="distributor.id" :value="distributor.id">{{ distributor.name }}</a-select-option>
                         </a-select>
                     </div>
                 </div>
                 <div class="form-item required"  v-if="$auth('ADMIN','DISTRIBUTOR') && !form.id">
-                    <div class="key">所属零售商</div>
+                    <div class="key">{{ $t('n.agent') }}</div>
                     <div class="value">
-                        <a-select v-model:value="form.agent_id" placeholder="请选择所属零售商">
+                        <a-select v-model:value="form.agent_id" :placeholder="$t('search.select_agent')">
                             <a-select-option v-for="agent of agentList" :key="agent.id" :value="agent.id">{{ agent.name }}</a-select-option>
                         </a-select>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">门店名称：</div>
+                    <div class="key">{{ $t('n.name') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" placeholder="请输入门店名称"/>
+                        <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">简称:</div>
+                    <div class="key">{{ $t('d.short_name') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.short_name" placeholder="请输入简称"/>
+                        <a-input v-model:value="form.short_name" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">联系人：</div>
+                    <div class="key">{{ $t('n.contact') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.contact_name" placeholder="请输入联系人"/>
+                        <a-input v-model:value="form.contact_name" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">联系人电话：</div>
+                    <div class="key">{{ $t('n.phone') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.contact_phone" placeholder="请输入联系人电话"/>
+                        <a-input v-model:value="form.contact_phone" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item img-upload">
-                    <div class="key">门店Logo：</div>
+                    <div class="key">Logo:</div>
                     <div class="value">
                         <a-upload name="file" class="image-uploader"
                                   list-type="picture-card" accept='image/*'
@@ -61,7 +61,7 @@
                                 <i class="icon i_upload"/>
                             </div>
                         </a-upload>
-                        <div class="tip">建议尺寸：400*400像素</div>
+                        <div class="tip">{{ $t('n.size') }}: 400*400px</div>
                     </div>
                 </div>
             </div>

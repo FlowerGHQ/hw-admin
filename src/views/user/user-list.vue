@@ -45,6 +45,13 @@
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}
                     </template>
+                    <template v-if="column.key === 'user'">
+                        <a-tooltip placement="top" :title='text'>
+                            <a-button type="link" @click="routerChange('detail', record)" style="margin-left: 6px;">
+                                {{ text || '-' }}
+                            </a-button>
+                        </a-tooltip>
+                    </template>
                     <template v-if="column.key === 'tip_item'">
                         <a-tooltip placement="top" :title='text'>
                             <div class="ell" style="max-width: 160px">{{ text || '-' }}</div>
@@ -54,6 +61,7 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
+                        <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>详情</a-button>
                         <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('user.save','MANAGER')"><i class="icon i_edit"/>编辑</a-button>
                         <a-button type="link" @click="handleEditShow(record)" v-if="$auth('user.save','MANAGER')"><i class="icon i_lock"/>重置密码</a-button>
                         <a-button type='link' @click="handleDelete(record.id)" class="danger" v-if="$auth('user.delete','MANAGER')"><i class="icon i_delete"/>删除</a-button>
@@ -134,7 +142,7 @@ export default {
             // 表格
             tableData: [],
             tableColumns: [
-                {title: '员工姓名', dataIndex: ['account', 'name'], key: 'item'},
+                {title: '员工姓名', dataIndex: ['account', 'name'], key: 'user'},
                 {title: '账号', dataIndex: ['account', 'username'], key: 'item'},
                 {title: '手机号', dataIndex: ['account', 'phone'], key: 'item'},
                 {title: '邮箱', dataIndex: ['account', 'email'], key: 'item'},

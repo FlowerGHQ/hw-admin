@@ -2,7 +2,7 @@
 <div id="RepairDetail">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">{{ $t('n.repair_detail') }}</div>
+            <div class="title-area">{{ $t('r.repair_detail') }}</div>
             <div class="btns-area">
                 <template v-if="sameOrg && $auth('repair-order.save')">
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION">

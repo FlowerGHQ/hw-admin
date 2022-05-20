@@ -1,7 +1,7 @@
 <template>
 <a-cascader
     class="CountryCascader"
-    placeholder="请选择大洲/国家"
+    :placeholder="$t('n.choose')"
     v-model:value="selectCode"
     :options="countryOptions"
     @change="handleChange"
@@ -87,3 +87,8 @@ export default {
     },
 }
 </script>
+<style lang="less">
+.ant-cascader-input.ant-input {
+    width: 100%;
+}
+</style>

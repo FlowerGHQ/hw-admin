@@ -1,12 +1,12 @@
 <template>
     <div class="WalletList gray-panel no-margin">
         <div class="panel-title">
-            <div class="title">账户列表</div>
+            <div class="title">{{ $t('ac.account_list') }}</div>
         </div>
         <div class="panel-content">
             <div class="table-container">
                 <a-button type="primary" ghost @click="handleModalShow('addWalletShow')" v-if="$auth('account.save')" class="panel-btn"><i
-                    class="icon i_add"/>新建账户
+                    class="icon i_add"/>{{ $t('ac.new_account') }}
                 </a-button>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false'>
@@ -23,9 +23,9 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleModalShow('operate',record.id)" v-if="$auth('account.operate')"><i class="icon i_settle"/>账户操作
+                            <a-button type="link" @click="handleModalShow('operate',record.id)" v-if="$auth('account.operate')"><i class="icon i_settle"/>{{ $t('ac.operation') }}
                             </a-button>
-                            <a-button type="link" @click="routerChange('detail',record)"><i class="icon i_detail"/>详情
+                            <a-button type="link" @click="routerChange('detail',record)"><i class="icon i_detail"/>{{ $t('def.detail') }}
                             </a-button>
                         </template>
                     </template>
@@ -165,10 +165,10 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: '账户类型', dataIndex: 'type', key: 'detail'},
-                {title: '余额', dataIndex: 'balance'},
+                {title: this.$t('ac.type'), dataIndex: 'type', key: 'detail'},
+                {title: this.$t('ac.balance'), dataIndex: 'balance'},
                 // {title: '状态', dataIndex: 'status', key: 'status'},
-                {title: '操作', key: 'operation', fixed: 'right'},
+                {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             return tableColumns
         },

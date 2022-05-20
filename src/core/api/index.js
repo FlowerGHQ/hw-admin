@@ -62,7 +62,7 @@ const apiList = {
 
     },
     AuthorityUser: {
-        list:  ['PostJson', 'authority/list-user-authority-scope'], // 用户权限范围列表
+        list: ['PostJson', 'authority/list-user-authority-scope'], // 用户权限范围列表
         save: ['PostJson', 'authority/save-user-authority-scope'],//新增/编辑用户权限范围
         detail: ['PostJson', 'authority/detail-user-authority-scope'],//用户权限范围详情
         delete: ['PostJson', 'authority//delete-user-authority-scope'],//删除用户权限范围
@@ -257,6 +257,7 @@ const apiList = {
         review: ['PostJson', 'purchase-order/review'], // 评论
         statusList: ['PostJson', 'purchase-order/status-list'], // 保存
         recreate: ['PostJson', 'purchase-order/recreate'], // 再来一单
+        transfer: ['PostJson', 'purchase-order/transfer'], // 转单
     },
     Aftersales: { // 售后单
         list: ['PostJson', 'after-sales-order/list'],

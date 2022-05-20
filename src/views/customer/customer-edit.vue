@@ -28,6 +28,7 @@
                 </div>
                 <div class="form-item required">
                     <div class="key">客户地址:</div>
+<!--                    <CountryCascader v-model:value="areaList" :def-area='defArea' @search="getCountry"/>-->
                     <div class="value">
                         <CountryCascader v-model:value="areaList" :def-area='defArea' @search="getCountry"/>
                     </div>
@@ -186,6 +187,11 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-// #DistributorEdit {}
+<style lang="less">
+.CustomerEdit {
+
+    .icon {
+        font-size: 12px;
+    }
+}
 </style>

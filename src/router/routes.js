@@ -58,6 +58,7 @@ const routes = [
         name: 'DistributorManagement',
         meta: {
             title: '分销管理',
+            title_en: 'Distribution',
             icon: 'i_s_agent',
         },
         children: [
@@ -67,6 +68,7 @@ const routes = [
                 component: () => import('@/views/distributor/distributor-list.vue'),
                 meta: {
                     title: '分销商列表',
+                    title_en: 'Distributors',
                     roles: [LOGIN_TYPE.ADMIN],
                 }
             },
@@ -108,6 +110,7 @@ const routes = [
                 component: () => import('@/views/agent/agent-list.vue'),
                 meta: {
                     title: '零售商列表',
+                    title_en: 'Retailers',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN],
                 }
             },
@@ -148,6 +151,7 @@ const routes = [
                 component: () => import('@/views/store/store-list.vue'),
                 meta: {
                     title: '门店列表',
+                    title_en: 'Stores',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN, LOGIN_TYPE.AGENT],
                 }
             },
@@ -188,6 +192,7 @@ const routes = [
                 component: () => import('@/views/purchase/purchase-order-list.vue'),
                 meta: {
                     title: '订单列表',
+                    title_en: 'Orders',
                     search_type: PURCHASE_SEARCH_TYPE.ALL,
                     roles: [LOGIN_TYPE.ADMIN],
                 }
@@ -1180,7 +1185,7 @@ const routes = [
                     parent: '/user/user-list',
                 }
             },
-            {
+           /* {
                 path: 'auth-user-list',
                 name: 'AuthUserList',
                 component: () => import('@/views/authority/auth-user-list.vue'),
@@ -1197,7 +1202,7 @@ const routes = [
                     title: '用户权限编辑',
                     parent: '/authority/auth-user-list',
                 }
-            },
+            },*/
             {
                 path: 'auth-role-list',
                 name: 'RoleList',

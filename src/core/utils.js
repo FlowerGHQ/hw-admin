@@ -508,6 +508,11 @@ const Util = {
         const MAP = Const.SYSTEM.FILE.TARGET_TYPE_MAP
         return MAP[val] || '未知'
     },
+    authUserTypeFilter(val, to='text') {
+        const MAP = Const.NOTICE.RESOURCE_TYPE_MAP
+        const item = MAP[val] || {}
+        return item[to] || '未知'
+    },
     /* =============== 系统管理 ================ */
 
 
@@ -665,6 +670,15 @@ const Util = {
         return MAP[val] || '未知'
     },
     /* =============== 调货单 ================ */
+
+    /* =============== 权限 ================ */
+    userAuthFilter(val, to = 'text') {
+        const MAP = Const.NOTICE.RESOURCE_TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== 权限 ================ */
+
 
 }
 

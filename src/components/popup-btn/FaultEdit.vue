@@ -3,11 +3,11 @@
 <!--        <slot><i class="icon i_add"/></slot>-->
         <slot>{{ btnText }}</slot>
     </a-button>
-    <a-modal v-model:visible="faultShow" :title="$t('n.new_fault')" class="fault-modal"
+    <a-modal v-model:visible="faultShow" :title="$t('r.new_fault')" class="fault-modal"
              :after-close='handleFaultClose'>
         <div class="modal-content">
             <div class="form-item required">
-                <div class="key">{{$t('n.new_fault')}}:</div>
+                <div class="key">{{$t('r.new_fault')}}:</div>
                 <div class="value">
                     <a-input v-model:value="form.name" :placeholder="$t('pop_up.enter_fault')"/>
                 </div>

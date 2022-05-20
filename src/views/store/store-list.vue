@@ -2,43 +2,43 @@
     <div id="StoreList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">门店列表</div>
+                <div class="title-area">{{ $t('s.store_list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('store.save')"><i class="icon i_add"/>新建门店</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('store.save')"><i class="icon i_add"/>{{ $t('s.new_store') }}</a-button>
                 </div>
             </div>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">门店名称:</div>
+                        <div class="key">{{ $t('n.name') }}:</div>
                         <div class="value">
-                            <a-input placeholder="请输入门店名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
-                        <div class="key">所属分销商:</div>
+                        <div class="key">{{ $t('n.distributor') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.distributor_id" placeholder="请选择所属分销商" @change="handleSearch">
+                            <a-select v-model:value="searchForm.distributor_id" :placeholder="$t('def.select')" @change="handleSearch">
                                 <a-select-option v-for="distributor of distributorList" :key="distributor.id" :value="distributor.id">{{ distributor.name }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
-                        <div class="key">所属零售商:</div>
+                        <div class="key">{{ $t('n.agent') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.agent_id" placeholder="请选择所属零售商" @change='handleSearch'>
+                            <a-select v-model:value="searchForm.agent_id" :placeholder="$t('def.select')" @change='handleSearch'>
                                 <a-select-option v-for="agent of agentList" :key="agent.id" :value="agent.id">{{ agent.name }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
-                        <div class="key">创建时间:</div>
+                        <div class="key">{{ $t('def.create_time') }}:</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">查询</a-button>
-                    <a-button @click="handleSearchReset">重置</a-button>
+                    <a-button @click="handleSearch" type="primary">{{ $t('def.search')}}</a-button>
+                    <a-button @click="handleSearchReset">{{ $t('def.reset')}}</a-button>
                 </div>
 
             </div>
@@ -75,11 +75,11 @@
                             </div>
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('store.detail')"><i class="icon i_detail"/>详情</a-button>
-                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('store.save')"><i class="icon i_edit"/>编辑</a-button>
+                            <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('store.detail')"><i class="icon i_detail"/> {{ $t('def.detail') }}</a-button>
+                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('store.save')"><i class="icon i_edit"/> {{ $t('def.edit') }}</a-button>
                             <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
-                                <template v-if="record.status && $auth('store.delete')"><i class="icon i_forbidden"/>禁用</template>
-                                <template v-if="!record.status && $auth('store.enable')"><i class="icon i_enable"/>启用</template>
+                                <template v-if="record.status && $auth('store.delete')"><i class="icon i_forbidden"/> {{ $t('def.disable') }}</template>
+                                <template v-if="!record.status && $auth('store.enable')"><i class="icon i_enable"/>{{ $t('def.enable') }}</template>
                             </a-button>
                         </template>
                     </template>
@@ -152,21 +152,21 @@ export default {
             let { filteredInfo } = this;
             filteredInfo = filteredInfo || {};
             let tableColumns = [
-                {title: '门店名称', dataIndex: 'name', key: 'detail'},
-                {title: '简称', dataIndex: 'short_name'},
-                {title: '联系人姓名', dataIndex: 'contact_name', key:'item'},
-                {title: '联系人电话', dataIndex: 'contact_phone',key:'item'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '状态', dataIndex: 'status', key: 'status',
+                {title: this.$t('n.name'), dataIndex: 'name', key: 'detail'},
+                {title: this.$t('d.short_name'), dataIndex: 'short_name'},
+                {title: this.$t('n.contact'), dataIndex: 'contact_name', key:'item'},
+                {title: this.$t('n.phone'), dataIndex: 'contact_phone',key:'item'},
+                {title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time'},
+                {title: this.$t('n.state'), dataIndex: 'status', key: 'status',
                     filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [1] },
-                {title: '操作', key: 'operation', fixed: 'right'},
+                {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             if (this.$auth('ADMIN')) {
-                tableColumns.splice(2, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'item'})
+                tableColumns.splice(2, 0, {title: this.$t('n.distributor'), dataIndex: 'distributor_name', key: 'item'})
                 tableColumns.splice(6, 0, {title: '是否接受转单', dataIndex: 'flag_receive_transfer', key: 'flag_receive_transfer'})
             }
             if (this.$auth('ADMIN', 'DISTRIBUTOR')) {
-                tableColumns.splice(3, 0, {title: '所属零售商', dataIndex: 'agent_name', key: 'item'})
+                tableColumns.splice(3, 0, {title: this.$t('n.agent'), dataIndex: 'agent_name', key: 'item'})
             }
             return tableColumns
         },

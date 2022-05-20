@@ -2,7 +2,7 @@
 <div id="PurchaseList">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">采购订单</div>
+            <div class="title-area">{{ $t('p.list')}}</div>
             <!-- <div class="btns-area">
                 <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新增工单</a-button>
             </div> -->
@@ -11,7 +11,7 @@
             <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
                 <a-tab-pane :key="item.key" v-for="item of statusList">
                     <template #tab>
-                        <div class="tabs-title">{{item.text}}<span :class="item.color">{{item.value}}</span></div>
+                        <div class="tabs-title">{{item[$i18n.locale]}}<span :class="item.color">{{item.value}}</span></div>
                     </template>
                 </a-tab-pane>
             </a-tabs>
@@ -19,21 +19,21 @@
         <div class="search-container">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">订单编号:</div>
+                    <div class="key">{{ $t('p.number')}}:</div>
                     <div class="value">
-                        <a-input placeholder="请输入订单编号" v-model:value="searchForm.sn" @keydown.enter='handleSearch'/>
+                        <a-input :placeholder="$t('def.input')" v-model:value="searchForm.sn" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
-                    <div class="key">所属分销商:</div>
+                    <div class="key">{{ $t('n.distributor') }}:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.distributor_id" placeholder="请选择分销商" @change="handleSearch" show-search option-filter-prop="children">
+                        <a-select v-model:value="searchForm.distributor_id" :placeholder="$t('def.select')" @change="handleSearch" show-search option-filter-prop="children">
                             <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
-                    <div class="key">所属零售商：</div>
+                    <div class="key">{{ $t('n.agent') }}：</div>
                     <div class="value">
                         <a-select v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children"
                             :placeholder="searchForm.distributor_id ? '请选择所属零售商' : '请先选择所属分销商'" :disabled="!searchForm.distributor_id">
@@ -161,12 +161,12 @@ export default {
             purchaseMode: '',
             search_type: 0,
             statusList: [
-                {text: '全  部', value: '0', color: 'primary',  key: '0'},
-                {text: '待支付', value: '0', color: 'yellow',  key: '100'},
-                {text: '待发货', value: '0', color: 'orange',  key: '200'},
-                {text: '已发货', value: '0', color: 'primary',  key: '300'},
-                {text: '交易完成', value: '0', color: 'green',  key: '400'},
-                {text: '交易取消', value: '0', color: 'grey',  key: '-100'},
+                {zh: '全  部', en: 'All', value: '0', color: 'primary',  key: '0'},
+                {zh: '待支付', en: 'Wait to pay', value: '0', color: 'yellow',  key: '100'},
+                {zh: '待发货', en: 'Wait for delivery', value: '0', color: 'orange',  key: '200'},
+                {zh: '已发货', en: 'Shipped',value: '0', color: 'primary',  key: '300'},
+                {zh: '交易完成', en: 'Transaction completed', value: '0', color: 'green',  key: '400'},
+                {zh: '交易取消', en: 'Canceled', value: '0', color: 'grey',  key: '-100'},
             ],
             agentList: [],
             storeList: [],

@@ -11,6 +11,7 @@
                 <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
                     <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>确认收款</a-button>
                     <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver')" @click="handleModalShow('deliver')" :disabled="exportDisabled"><i class="icon i_deliver"/>发货</a-button>
+                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && $auth('ADMIN')" @click="handleModalShow('transfer')"><i class="icon i_deliver"/>转单</a-button>
                 </template>
                 <template v-if="authOrg(detail.org_id, detail.org_type)">
                     <a-button type="primary" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER" @click="handleReceived()"><i class="icon i_goods"/>确认收货</a-button>
@@ -232,6 +233,22 @@
                 </div>
             </div>
         </a-modal>
+        <a-modal v-model:visible="transferShow" title="确认转单" :after-close="handleTransferClose">
+            <div class="modal-content">
+                <div class="form-item required">
+                    <div class="key">分销商：</div>
+                    <div class="value">
+                        <a-select v-model:value="editForm.distributor_id" placeholder="请选择分销商">
+                            <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handleTransferSubmit" type="primary">确定</a-button>
+                <a-button @click="transferShow = false">取消</a-button>
+            </template>
+        </a-modal>
         <!-- 确认发货 -->
         <a-modal v-model:visible="deliverShow" title="确认发货" @ok="handleDeliver">
             <div class="modal-content">
@@ -276,11 +293,11 @@
                 <div class="form-item required">
                     <div class="key">{{$Util.priceUnitFilter(detail.currency)}} 运费:</div>
                     <div class="value">
-                        <a-input-number 
+                        <a-input-number
                             v-model:value="form.freight_price"
                             placeholder="0.00"
                             style="width: 120px"
-                            :min="0.00" 
+                            :min="0.00"
                             :precision="2"
                             :prefix="`${$Util.priceUnitFilter(detail.currency)}`" />
                     </div>
@@ -383,7 +400,7 @@ export default {
 
             waybill: {},
             waybillInfo: {},
-
+            transferShow: false,
             paymentShow: false,
             payMethodList: PURCHASE.PAY_METHOD_LIST,
             paymentTimeList: DISTRIBUTOR.PAY_TIME_LIST,
@@ -406,7 +423,10 @@ export default {
                 waybill_uid: '', // 快递单号
                 payment: '', // 收款金额
             },
-
+            editForm: {
+                distributor_id: undefined,
+            },
+            distributorList: [],
             exportDisabled: false, // 导出按钮禁用
         };
     },
@@ -568,7 +588,41 @@ export default {
                 case "deliver":
                     this.deliverShow = true
                     break;
+                case "transfer":
+                    this.transferShow = true
+                    this.getDistributorListAll();
+                    break;
             }
+        },
+        //获取分销商列表
+        getDistributorListAll() {
+            Core.Api.Distributor.listAll().then(res => {
+                this.distributorList = res.list
+            });
+        },
+        handleTransferClose() {
+            this.transferShow = false
+            Object.assign(this.editForm, this.$options.data().editForm)
+        },
+        handleTransferSubmit() {
+            let _this = this
+            this.$confirm({
+                title: '确认转单吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Purchase.transfer({
+                        distributor_id: _this.editForm.distributor_id,
+                        id: _this.id
+                    }).then(res => {
+                        _this.$message.success('转单成功')
+                        _this.handleTransferClose()
+                        _this.getPurchaseInfo()
+                    }).catch(err => {
+                        console.log('handleReceived err', err)
+                    })
+                },
+            });
         },
         // 确认收款
         handlePayment() {
