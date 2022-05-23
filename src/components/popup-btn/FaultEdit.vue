@@ -15,7 +15,7 @@
         </div>
         <template #footer>
             <a-button @click="faultShow = false">{{ $t('def.cancel') }}</a-button>
-            <a-button @click="handleFaultSubmit" type="primary">{{ $t('def.ok') }}</a-button>
+            <a-button @click="handleFaultSubmit" type="primary">{{ $t('def.sure') }}</a-button>
         </template>
     </a-modal>
 </template>

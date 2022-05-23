@@ -155,7 +155,7 @@
         </div>
     </div>
     <div class="form-btns">
-        <a-button @click="handleSubmit" type="primary" v-if="$auth('repair-order.save')">{{ $t('def.ok') }}</a-button>
+        <a-button @click="handleSubmit" type="primary" v-if="$auth('repair-order.save')">{{ $t('def.sure') }}</a-button>
         <a-button @click="routerChange('back')">{{ $t('def.cancel') }}</a-button>
     </div>
 </div>

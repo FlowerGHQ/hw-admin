@@ -414,7 +414,7 @@ export default {
             if (this.operMode == 'audit' && this.$auth('DISTRIBUTOR')) {
                 search.status = STATUS.SETTLEMENT
             } else if (this.operMode == 'audit' && this.$auth('ADMIN')) {
-                search.status = STATUS.DISTRIBUTOR_AUDIT_SUCCESS
+                search.status = 75
             } else if (this.operMode == 'redit') {
                 search.status = STATUS.AUDIT_FAIL
             } else if (this.operMode == 'invoice') {

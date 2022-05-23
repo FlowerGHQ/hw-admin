@@ -2,11 +2,11 @@
 <div class="AttachmentFile">
     <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
         <template #expandIcon><i class="icon i_expan_l"/></template>
-        <a-collapse-panel key="attachmentFile" header="上传附件" class="gray-collapse-panel">
+        <a-collapse-panel key="attachmentFile" :header="$t('n.upload_attachment')" class="gray-collapse-panel">
             <div class="panel-content table-container no-mg">
                 <div class="panel-header">
-                    <span class="name">附件列表</span>
-                    <a-button type="primary" @click="handleModalShow" v-if="can_upload">上传附件</a-button>
+                    <span class="name">{{ $t('n.attachment_list') }}</span>
+                    <a-button type="primary" @click="handleModalShow" v-if="can_upload">{{$t('n.upload_attachment')}}</a-button>
                 </div>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'>
@@ -20,7 +20,7 @@
                             </div>
                         </template>
                         <template v-if="column.key === 'org'">
-                            {{ $Util.userTypeFilter(text.org_type) }}·{{ text.org_name }}
+                            {{ $Util.userTypeFilter(text.org_type, $i18n.locale) }}·{{ text.org_name }}
                         </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-'}}
@@ -29,8 +29,8 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="handleDownload(record)"><i class="icon i_download"/>下载</a-button>
-                            <a-button type='link' @click="handleDelete(record.id)" class="danger" v-if="can_delete"><i class="icon i_delete"/>删除</a-button>
+                            <a-button type='link' @click="handleDownload(record)"><i class="icon i_download"/>{{ $t('n.download') }}</a-button>
+                            <a-button type='link' @click="handleDelete(record.id)" class="danger" v-if="can_delete"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -89,14 +89,6 @@ export default {
             activeKey: ['attachmentFile'],
 
             tableData: [],
-            tableColumns: [
-                { title: '附件名称', dataIndex: 'name', key: 'detail' },
-                { title: '文件类型', dataIndex: 'type', key: 'item' },
-                { title: '上传人', dataIndex: ['user', 'account', 'name'], key: 'item' },
-                { title: '上传组织', dataIndex: 'user', key: 'org' },
-                { title: '上传时间', dataIndex: 'create_time', key: 'time' },
-                { title: '操作', key: 'operation', fixed: 'right'},
-            ],
 
             modalShow: false,
             form: {
@@ -119,6 +111,17 @@ export default {
         };
     },
     computed: {
+        tableColumns() {
+            let columns = [
+                { title: this.$t('n.name'), dataIndex: 'name', key: 'detail' },
+                { title: this.$t('n.type'), dataIndex: 'type', key: 'item' },
+                { title: this.$t('n.uploader'), dataIndex: ['user', 'account', 'name'], key: 'item' },
+                { title: this.$t('n.uploading_agency'), dataIndex: 'user', key: 'org' },
+                { title: this.$t('n.upload_time'), dataIndex: 'create_time', key: 'time' },
+                { title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
+            ]
+            return columns
+        },
         can_upload() {
             return true
         },

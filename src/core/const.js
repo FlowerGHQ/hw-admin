@@ -33,7 +33,7 @@ switch (window.location.hostname) {
     default:
         // URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.7:8083' // 但
-        URL_POINT = 'http://10.0.0.214:8889'
+        URL_POINT = 'http://10.0.0.184:8889'
         // URL_POINT = 'http://10.0.0.171:8883' // 姚志宇
 
 
@@ -141,11 +141,15 @@ let Const = {
             CUSTOMER: 100, // 顾客
         },
         TYPE_MAP: {
-            10: '平台方',
+            '10': { key: 10, zh: '平台方',en: 'Admin'},
+            '15': { key: 15, zh: '分销商',en: 'Distributor'},
+            '20': { key: 20, zh: '零售商',en: 'Retailer'},
+            '30': { key: 30, zh: '门店',en: 'Store'},
+          /*  10: '平台方',
             15: '分销商',
             20: '零售商',
             30: '门店',
-            100: '顾客',
+            100: '顾客',*/
         },
     },
     LOGIN: { // 登录
@@ -420,20 +424,21 @@ let Const = {
             CANCEL: -100,
         },
         STATUS_MAP: {
-            '0': '未知',
-            '200': '待发货',
-            '300': '已发货',
-            '350': '已收货',
-            '400': '交易完成',
-            '-100': '交易关闭',
+            '0': { key: 0, color: 'red', zh: '未知', en: 'Unknown', value: '0'},
+            '200': { key: 200, color: 'orange', zh: '待发货', en: 'Wait for delivery', value: '0'},
+            '250': { key: 400, color: 'blue', zh: '已转单',en: 'Order transferred', value: '0'},
+            '300': { key: 300, color: 'blue', zh: '已发货',en: 'Shipped', value: '0'},
+            '350': { key: 350, color: 'yellow', zh: '已收货', en: 'Received', value: '0'},
+            '400': { key: 400, color: 'green', zh: '交易完成',en: 'Transaction completed', value: '0'},
+            '-100': { key: -100, color: 'gray', zh: '交易关闭',en: 'Canceled', value: '0'},
         },
-        STATUS_COLOR_MAP: {
+       /* STATUS_COLOR_MAP: {
             '0': 'red',
             '200': 'orange',
             '300': 'blue',
             '350': 'yellow',
             '400': 'green',
-        },
+        },*/
         // 支付方式
         PAY_METHOD: {
             1: "支付宝",
@@ -451,15 +456,15 @@ let Const = {
             PAY_ALL: 400,//全部付款
         },
         PAYMENT_STATUS_MAP: {
-            '100': '待支付',
-            '200': '预付款',
-            '400': '全额付款',
+            '100': { key: 100, color: 'yellow', zh: '待支付', en: 'Wait to pay', value: '0'},
+            '200': { key: 200, color: 'blue', zh: '预付款', en: 'Partial payment', value: '0'},
+            '400': { key: 400, color: 'green', zh: '全额付款',en: 'Full payment', value: '0'},
         },
-        PAYMENT_COLOR_MAP: {
+       /* PAYMENT_COLOR_MAP: {
             '100': 'yellow',
             '200': 'blue',
             '400': 'green',
-        },
+        },*/
         // 评论
         FLAG_REVIEW: {
             SUCCESS: 1,
@@ -489,8 +494,8 @@ let Const = {
             { name: '不同意', value: 2 },
         ],
         FLAG_TRANSFER_MAP: {
-            1: '同意',
-            2: '不同意',
+            '1': { key: 1, zh: '同意', en: 'Allowed'},
+            '2': { key: 2, zh: '不同意', en: 'Disagreed'},
         }
     },
 
@@ -550,16 +555,16 @@ let Const = {
             { name: '货代公司', value: 2 },
         ],
         COURIER_MAP: {
-            1: '国际物流',
-            2: '货代公司',
+            '1': { key: 1, zh: '国际物流', en: 'International logistics'},
+            '2': { key: 2, zh: '货代公司', en: 'Shipping agent' },
         },
         RECEIPT_LIST: [
             { name: '快递', value: 1 },
             { name: '自提', value: 2 },
         ],
         RECEIPT_MAP: {
-            1: '快递',
-            2: '自提',
+            '1': { key: 1, zh: '快递', en: 'Send by post'},
+            '2': { key: 2, zh: '自提', en: 'Self pick up' },
         }
     },
 
@@ -620,7 +625,10 @@ let Const = {
         { list: [], select: [], key: 'customer', name: '客户管理' },
         { list: [], select: [], key: 'user', name: '员工管理' },
         { list: [], select: [], key: 'item', name: '商品管理' },
+        { list: [], select: [], key: 'purchase-order', name: '采购订单' },
+        { list: [], select: [], key: 'refund', name: '退款' },
         { list: [], select: [], key: 'sales-area', name: '销售区域' },
+        { list: [], select: [], key: 'warehouse', name: '仓库' },
         { list: [], select: [], key: 'invoice', name: '出入库单' },
         { list: [], select: [], key: 'supplier', name: '供应商' },
         { list: [], select: [], key: 'material-purchase-order', name: '物料采购单'},
@@ -629,9 +637,6 @@ let Const = {
         { list: [], select: [], key: 'material-category', name: '物料分类' },
         { list: [], select: [], key: 'bom', name: 'BOM表' },
         { list: [], select: [], key: 'production-order', name: '生产单' },
-        { list: [], select: [], key: 'warehouse', name: '仓库' },
-        { list: [], select: [], key: 'purchase-order', name: '采购订单' },
-        { list: [], select: [], key: 'refund', name: '退款' },
         { list: [], select: [], key: 'message', name: '消息' },
         { list: [], select: [], key: 'authority', name: '权限' },
         { list: [], select: [], key: 'role', name: '角色' },

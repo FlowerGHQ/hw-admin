@@ -27,7 +27,7 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
                     <div class="key">{{ $t('n.distributor') }}:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.distributor_id" :placeholder="$t('def.select')" @change="handleSearch" show-search option-filter-prop="children">
+                        <a-select v-model:value="searchForm.distributor_id" :placeholder="$t('def.select')" @change="handleSearch">
                             <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
@@ -35,23 +35,22 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
                     <div class="key">{{ $t('n.agent') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.agent_id" @change="handleSearch" show-search option-filter-prop="children"
-                            :placeholder="searchForm.distributor_id ? '请选择所属零售商' : '请先选择所属分销商'" :disabled="!searchForm.distributor_id">
+                        <a-select v-model:value="searchForm.agent_id" @change="handleSearch"
+                            :placeholder="$t('def.select')">
                             <a-select-option v-for="(item,index) of agentList" :key="index" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR', 'AGENT')">
-                    <div class="key">所属门店：</div>
+                    <div class="key">{{ $t('n.store') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.store_id" @change="handleSearch" show-search option-filter-prop="children"
-                            :placeholder="searchForm.agent_id ? '请选择所属门店' : '请先选择所属零售商'" :disabled="!searchForm.agent_id">
+                        <a-select v-model:value="searchForm.store_id" @change="handleSearch" :placeholder="$t('def.select')">
                             <a-select-option v-for="(item,index) of storeList" :key="index" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
-                    <div class="key">下单时间:</div>
+                    <div class="key">{{ $t('n.order_time') }}:</div>
                     <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                 </a-col>
             </a-row>
@@ -77,12 +76,12 @@
                     </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text,'color')">
-                            {{$Util.purchaseStatusFilter(text)}}
+                            {{$Util.purchaseStatusFilter(text, $i18n.locale)}}
                         </div>
                     </template>
                     <template v-if="column.dataIndex === 'payment_status'">
                         <div class="status status-bg status-tag" :class="$Util.paymentStatusFilter(text,'color')">
-                            {{$Util.paymentStatusFilter(text)}}
+                            {{$Util.paymentStatusFilter(text, $i18n.locale)}}
                         </div>
                     </template>
                     <template v-if="column.dataIndex === 'flag_review'">
@@ -106,8 +105,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="handleRecreate(record)" v-if='search_type === SEARCH_TYPE.SELF'>  <i class="icon i_cart"/> 再次购买</a-button>
-                        <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('purchase-order.detail')"> <i class="icon i_detail"/> 详情</a-button>
+                        <a-button type='link' @click="handleRecreate(record)" v-if='search_type === SEARCH_TYPE.SELF'>  <i class="icon i_cart"/> {{ $t('p.buy_again') }}</a-button>
+                        <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('purchase-order.detail')"> <i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
                     </template>
                 </template>
             </a-table>
@@ -160,14 +159,14 @@ export default {
             // 搜索
             purchaseMode: '',
             search_type: 0,
-            statusList: [
+           /* statusList: [
                 {zh: '全  部', en: 'All', value: '0', color: 'primary',  key: '0'},
                 {zh: '待支付', en: 'Wait to pay', value: '0', color: 'yellow',  key: '100'},
                 {zh: '待发货', en: 'Wait for delivery', value: '0', color: 'orange',  key: '200'},
                 {zh: '已发货', en: 'Shipped',value: '0', color: 'primary',  key: '300'},
                 {zh: '交易完成', en: 'Transaction completed', value: '0', color: 'green',  key: '400'},
                 {zh: '交易取消', en: 'Canceled', value: '0', color: 'grey',  key: '-100'},
-            ],
+            ],*/
             agentList: [],
             storeList: [],
             distributorList: [],
@@ -199,7 +198,7 @@ export default {
             }
         },
 
-        'searchForm.distributor_id': function () {
+       /* 'searchForm.distributor_id': function () {
             this.getAgentListAll();
             this.searchForm.agent_id = undefined
             this.searchForm.store_id = undefined
@@ -207,24 +206,24 @@ export default {
         'searchForm.agent_id': function () {
             this.getStoreListAll()
             this.searchForm.store_id = undefined
-        },
+        },*/
     },
     computed: {
         tableColumns() {
             let columns = [
-                { title: '订单编号', dataIndex: 'sn', },
-                { title: '订单总价', dataIndex: 'price', key: 'money' },
-                { title: '运费', dataIndex: 'freight_price', key: 'money' },
-                // { title: '订单总价', dataIndex: 'total_price', key: 'money' },
-                { title: '订单状态', dataIndex: 'status' },
-                { title: '下单时间', dataIndex: 'create_time', key: 'time' },
-                { title: '支付状态', dataIndex: 'payment_status' },
-                { title: '已支付金额', dataIndex: 'payment', key: 'money' },
-                { title: '支付时间', dataIndex: 'pay_time', key: 'time' },
-                { title: '完成时间', dataIndex: 'close_time', key: 'time' },
-                { title: '操作', key: 'operation', fixed: 'right'}
+                { title: this.$t('p.number'), dataIndex: 'sn', },
+                { title: this.$t('n.institution'), dataIndex: ['create_org', 'name'], key: 'item' },
+                { title: this.$t('p.total_price'), dataIndex: 'price', key: 'money' },
+                { title: this.$t('p.freight'), dataIndex: 'freight_price', key: 'money' },
+                { title: this.$t('p.order_status'), dataIndex: 'status' },
+                { title: this.$t('n.order_time'), dataIndex: 'create_time', key: 'time' },
+                { title: this.$t('p.payment_status'), dataIndex: 'payment_status' },
+                { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'money' },
+                { title: this.$t('p.payment_time'), dataIndex: 'pay_time', key: 'time' },
+                { title: this.$t('p.complete_time'), dataIndex: 'close_time', key: 'time' },
+                { title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
             ]
-            if ((this.$auth('AGENT', 'DISTRIBUTOR') && this.search_type != SEARCH_TYPE.SELF) ||  (this.$auth('ADMIN') && this.search_type == SEARCH_TYPE.ALL)) {
+     /*       if ((this.$auth('AGENT', 'DISTRIBUTOR') && this.search_type != SEARCH_TYPE.SELF) ||  (this.$auth('ADMIN') && this.search_type == SEARCH_TYPE.ALL)) {
                 columns.splice(2, 0, {title: '所属门店', dataIndex: 'store_name', key: 'item'})
             }
             if ((this.$auth( 'DISTRIBUTOR') && this.search_type !== SEARCH_TYPE.SELF) || (this.$auth('ADMIN') && this.search_type == SEARCH_TYPE.ALL)) {
@@ -232,11 +231,29 @@ export default {
             }
             if (this.$auth('ADMIN')) {
                 columns.splice(2, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'item'})
+            }*/
+            return columns
+        },
+        statusList() {
+            let columns = [
+                {zh: '全  部', en: 'All', value: '0', color: 'primary',  key: '0'},
+                {zh: '待支付', en: 'Wait to pay', value: '0', color: 'yellow',  key: '100'},
+                {zh: '待发货', en: 'Wait for delivery', value: '0', color: 'orange',  key: '200'},
+                {zh: '已发货', en: 'Shipped',value: '0', color: 'primary',  key: '300'},
+                {zh: '交易完成', en: 'Transaction completed', value: '0', color: 'green',  key: '400'},
+                {zh: '交易取消', en: 'Canceled', value: '0', color: 'grey',  key: '-100'},
+            ]
+            if (this.$auth('ADMIN')) {
+                columns.splice(4, 0, {zh: '已转单', en: 'Order transferred', value: '0', color: 'blue',  key: '250'})
             }
             return columns
         }
     },
-    mounted() {},
+    mounted() {
+        this.getDistributorListAll();
+        this.getAgentListAll();
+        this.getStoreListAll();
+    },
     methods: {
         async routerChange(type, item = {}) {
             console.log('routerChange item:', item)
@@ -282,7 +299,7 @@ export default {
             if (flag) {
                 this.$refs.TimeSearch.handleReset()
             }
-            if (this.$auth('ADMIN')) {
+          /*  if (this.$auth('ADMIN')) {
                 this.getDistributorListAll();
             } else if (this.$auth('DISTRIBUTOR')) {
                 this.searchForm.distributor_id = Core.Data.getOrgId()
@@ -292,7 +309,7 @@ export default {
                 this.getStoreListAll();
             } else if (this.$auth('STORE')) {
                 this.searchForm.store_id = Core.Data.getOrgId()
-            }
+            }*/
             this.pageChange(1);
         },
         getTableData() {  // 获取 表格 数据
@@ -348,22 +365,14 @@ export default {
             });
         },
         getAgentListAll() { // 获取 零售商 数据
-            if (this.searchForm.distributor_id) {
-                Core.Api.Agent.listAll({distributor_id: this.searchForm.distributor_id}).then(res => {
-                    this.agentList = res.list
-                });
-            } else {
-                this.agentList = []
-            }
+            Core.Api.Agent.listAll({distributor_id: this.searchForm.distributor_id}).then(res => {
+                this.agentList = res.list
+            });
         },
         getStoreListAll() { // 通过零售商Id 获取所有门店
-            if (this.searchForm.agent_id) {
-                Core.Api.Store.listAll({agent_id: this.searchForm.agent_id}).then(res => {
-                    this.storeList = res.list
-                });
-            } else {
-                this.storeList = []
-            }
+            Core.Api.Store.listAll({agent_id: this.searchForm.agent_id}).then(res => {
+                this.storeList = res.list
+            });
         },
 
         handleRecreate(item){ // 再来一单

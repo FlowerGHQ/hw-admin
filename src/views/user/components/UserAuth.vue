@@ -18,8 +18,8 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="handleAuthShow(record)"><i class="icon i_edit"/>编辑</a-button>
-                            <a-button type='link' @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
+<!--                            <a-button type='link' @click="handleAuthShow(record)"><i class="icon i_edit"/>编辑</a-button>-->
+                            <a-button type='link' @click="handleDelete(record)" class="danger"><i class="icon i_delete"/>删除</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -113,6 +113,7 @@ export default {
                 {title: "权限类型", dataIndex: 'resource_type', key: "type"},
                 {title: "权限对象", dataIndex: ['resource', 'name'], key: "text"},
                 {title: "创建时间", dataIndex: "create_time", key: "time"},
+                {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ];
             return tableColumns;
         },
@@ -153,7 +154,10 @@ export default {
         handleAuthShow() {
             this.authShow = true;
             this.getWarehouseList()
-            this.form.warehouse_id = this.warehouseId
+            /*if (item) {
+                this.form.resource_type = item.resource_type
+                this.form.resource_id = item.resource_id
+            }*/
         },
         handleAuthClose() {
             this.authShow = false;
@@ -161,8 +165,9 @@ export default {
         },
         handleAuthSubmit() {
             let form = Core.Util.deepCopy(this.form)
-            form.user_id = this.id
+            form.user_id = this.detail.id
             form.user_type = this.detail.type
+            console.log('user', this.detail.id)
             if (!form.resource_type) {
                 return this.$message.warning('请选择权限类型')
             }
@@ -177,7 +182,15 @@ export default {
                 console.log('handleStockAddSubmit err:', err)
             })
         },
-        handleDelete(id) {
+        handleDelete(item) {
+
+            let form = {
+                user_id: this.detail.id,
+                user_type: this.detail.type,
+                resource_id: item.resource_id,
+                resource_type: item.resource_type
+            }
+            console.log('form',form)
             let _this = this;
             this.$confirm({
                 title: '确定要删除该权限吗？',
@@ -185,7 +198,7 @@ export default {
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.AuthorityUser.delete({id}).then(() => {
+                    Core.Api.AuthorityUser.delete(form).then(() => {
                         _this.$message.success('删除成功');
                         _this.getTableData();
                     }).catch(err => {

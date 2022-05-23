@@ -142,6 +142,7 @@ export default {
                 { title: this.$t('n.name'), dataIndex: 'name' },
                 { title: this.$t('d.short_name'), dataIndex: 'short_name' },
                 { title: this.$t('n.country'), dataIndex: 'country', key: 'country' },
+                { title: this.$t('n.contact'), dataIndex: 'contact', key: 'item'},
                 { title: this.$t('n.phone'), dataIndex: 'phone', key: 'item'},
                 { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('n.state'), dataIndex: 'status', key: 'status',

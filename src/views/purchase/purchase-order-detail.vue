@@ -2,16 +2,16 @@
 <div id="PurchaseOrderDetail">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">采购订单详情</div>
+            <div class="title-area">{{ $t('p.details')}}</div>
             <div class="btns-area">
                 <template v-if="detail.status >= STATUS.WAIT_TAKE_DELIVER && $auth('ADMIN') && $auth('purchase-order.export')">
                     <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
                     <a-button @click="handleExportIn"><i class="icon i_download"/>导出订单</a-button>
                 </template>
                 <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
-                    <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>确认收款</a-button>
-                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver')" @click="handleModalShow('deliver')" :disabled="exportDisabled"><i class="icon i_deliver"/>发货</a-button>
-                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && $auth('ADMIN')" @click="handleModalShow('transfer')"><i class="icon i_deliver"/>转单</a-button>
+                    <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.confirm_payment')}}</a-button>
+                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver')" @click="handleModalShow('deliver')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.ship')}}</a-button>
+                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && $auth('ADMIN')" @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>
                 </template>
                 <template v-if="authOrg(detail.org_id, detail.org_type)">
                     <a-button type="primary" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER" @click="handleReceived()"><i class="icon i_goods"/>确认收货</a-button>
@@ -29,11 +29,11 @@
             <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
                 <template #expandIcon ><i class="icon i_expan_l"/> </template>
                 <!-- 商品信息 -->
-                <a-collapse-panel key="ItemInfo" header="商品信息" class="gray-collapse-panel">
+                <a-collapse-panel key="ItemInfo" :header="$t('i.product_information')" class="gray-collapse-panel">
                     <div class="panel-content">
                         <a-table :columns="itemColumns" :data-source="itemList" :scroll="{ x: true }"
                             :row-key="record => record.id" :pagination='false'>
-                            <template #bodyCell="{ column, text , record}">
+                            <template #bodyCell="{ column, text, record}">
                                 <template v-if="column.dataIndex === 'item'">
                                     <div class="table-img">
                                         <a-image :width="30" :height="30" :src="$Util.imageFilter(text ? text.logo : '', 2)"/>
@@ -45,7 +45,7 @@
                                     </div>
                                 </template>
                                 <template v-if="column.dataIndex === 'amount'">
-                                    {{record.amount}} 件
+                                    {{record.amount}}
                                 </template>
                                 <template v-if="column.key === 'money'">
                                     {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(text)}}
@@ -57,10 +57,10 @@
                             <template #summary>
                                 <a-table-summary>
                                     <a-table-summary-row>
-                                        <a-table-summary-cell :index="0" :col-span="4">合计</a-table-summary-cell>
-                                        <a-table-summary-cell :index="1" :col-span="1">总数量:{{total.amount}}件</a-table-summary-cell>
-                                        <a-table-summary-cell :index="1" :col-span="1">运费:{{$Util.priceUnitFilter(detail.currency)}}{{$Util.countFilter(total.freight) || '0'}}</a-table-summary-cell>
-                                        <a-table-summary-cell :index="4" :col-span="1">总售价:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price + (total.freight || 0))}}</a-table-summary-cell>
+                                        <a-table-summary-cell :index="0" :col-span="4">{{ $t('p.total')}}</a-table-summary-cell>
+                                        <a-table-summary-cell :index="1" :col-span="1">{{ $t('p.freight')}}:{{$Util.priceUnitFilter(detail.currency)}}{{$Util.countFilter(total.freight) || '0'}}</a-table-summary-cell>
+                                        <a-table-summary-cell :index="1" :col-span="1">{{ $t('i.total_quantity') }}:{{total.amount}}</a-table-summary-cell>
+                                        <a-table-summary-cell :index="4" :col-span="1">{{ $t('i.total_price')}}:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price + (total.freight || 0))}}</a-table-summary-cell>
                                         <!-- <a-table-summary-cell :index="5" :col-span="1">总金额:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.charge)}}</a-table-summary-cell> -->
                                     </a-table-summary-row>
                                 </a-table-summary>
@@ -70,36 +70,34 @@
                 </a-collapse-panel>
 
                 <!-- 订单信息 -->
-                <a-collapse-panel key="PurchaseInfo" header="订单信息" class="gray-collapse-panel">
+                <a-collapse-panel key="PurchaseInfo" :header="$t('p.order_information')" class="gray-collapse-panel">
                     <a-row class="panel-content info-container">
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                             <div class="info-item">
-                                <div class="key">订单编号</div>
+                                <div class="key">{{ $t('p.order_number')}}</div>
                                 <div class="value">{{detail.sn || '-'}}</div>
                             </div>
                             <div class="info-item">
-                                <div class="key">下单人</div>
+                                <div class="key">{{ $t('p.person')}}</div>
                                 <div class="value">{{detail.user_name|| '-'}}</div>
                             </div>
                             <div class="info-item">
-                                <div class="key">下单时间</div>
+                                <div class="key">{{ $t('p.order_time')}}</div>
                                 <div class="value">{{$Util.timeFilter(detail.create_time) || '-'}}</div>
                             </div>
                         </a-col>
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                             <div class="info-item">
-                                <div class="key">联系方式</div>
+                                <div class="key">{{ $t('n.contact')}}</div>
                                 <div class="value" v-if="detail.receive_info != null">{{detail.receive_info.phone || '-'}}</div>
                                 <div class="value" v-else>-</div>
                             </div>
-                            <template v-if="detail.supply_org_type === USER_TYPE.ADMIN">
-                                <div class="info-item">
-                                    <div class="key">支付条款</div>
-                                    <div class="value">{{DISTRIBUTOR.PAY_TIME_MAP[detail.pay_clause] || '-'}}</div>
-                                </div>
-                            </template>
                             <div class="info-item">
-                                <div class="key">备注信息</div>
+                                <div class="key">{{ $t('p.payment_terms')}}</div>
+                                <div class="value">{{ DISTRIBUTOR.PAY_TIME_MAP[detail.pay_clause] || '-' }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="key">{{ $t('p.remark')}}</div>
                                 <div class="value">{{detail.remark || '-'}}</div>
                             </div>
                             <!-- <div class="info-item">
@@ -108,66 +106,54 @@
                             </div> -->
                         </a-col>
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
+                            <div class="info-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
+                                <div class="key">{{ $t('p.shipping_port')}}</div>
+                                <div class="value" >{{detail.harbour || '-'}}</div>
+                            </div>
                             <div class="info-item" >
-                                <div class="key">是否同意分批发货</div>
-                                <div class="value">{{ FLAG_PART_SHIPMENT_MAP[detail.flag_part_shipment] || '-' }}</div>
+                                <div class="key">{{ $t('p.partial_shipments')}}</div>
+                                <div class="value">{{$Util.purchaseTransferFilter(detail.flag_part_shipment, $i18n.locale)}}</div>
                             </div>
                             <div class="info-item">
-                                <div class="key">是否同意转运</div>
-                                <div class="value">{{ FLAG_TRANSFER_MAP[detail.flag_transfer] || '-' }}</div>
+                                <div class="key">{{ $t('p.transshipment')}}</div>
+                                <div class="value">{{$Util.purchaseTransferFilter(detail.flag_transfer, $i18n.locale)}}</div>
                             </div>
                         </a-col>
-<!--                        <template v-if="detail.supply_org_type === USER_TYPE.ADMIN">
-                            <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" >
-                                <div class="info-item" >
-                                    <div class="key">是否同意分批发货</div>
-                                    <div class="value">{{ FLAG_PART_SHIPMENT_MAP[detail.flag_part_shipment] || '-' }}</div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="key">是否同意转运</div>
-                                    <div class="value">{{ FLAG_TRANSFER_MAP[detail.flag_transfer] || '-' }}</div>
-                                </div>
-                            </a-col>
-                        </template>-->
                     </a-row>
                 </a-collapse-panel>
 
                 <AttachmentFile :target_id='id' :target_type='Core.Const.ATTACHMENT.TARGET_TYPE.PURCHASE_ORDER' :detail='detail' @submit="getPurchaseInfo" ref="AttachmentFile"/>
                 <!-- 物流信息 -->
-                <a-collapse-panel key="WaybillInfo" header="收货信息" class="gray-collapse-panel">
+                <a-collapse-panel key="WaybillInfo" :header="$t('n.delivery_information')" class="gray-collapse-panel">
                     <a-row class="panel-content info-container">
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                             <div class="info-item">
-                                <div class="key">收货人</div>
+                                <div class="key">{{ $t('n.consignee')}}</div>
                                 <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.name || '-'}}</div>
                                 <div class="value" v-else>-</div>
                             </div>
                             <div class="info-item">
-                                <div class="key">联系方式</div>
+                                <div class="key">{{ $t('n.phone')}}</div>
                                 <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.phone || '-'}}</div>
                                 <div class="value" v-else>-</div>
                             </div>
                             <div class="info-item">
-                                <div class="key">收货地址</div>
+                                <div class="key">{{ $t('ad.shipping_address')}}</div>
                                 <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.country + detail.receive_info.province + detail.receive_info.city + detail.receive_info.county + detail.receive_info.address || '-'}}</div>
                                 <div class="value" v-else>-</div>
                             </div>
                         </a-col>
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='12' class="info-block">
-                            <div class="info-item" v-if="detail.supply_org_type === USER_TYPE.ADMIN">
-                                <div class="key">发货港口</div>
-                                <div class="value" >{{detail.harbour || '-'}}</div>
+                            <div class="info-item" v-if="detail.org_type === USER_TYPE.AGENT || detail.org_type === USER_TYPE.STORE">
+                                <div class="key">{{ $t('p.delivery_method')}}</div>
+                                <div class="value" >{{$Util.purchaseWaybillFilter(detail.receive_type, $i18n.locale || '-')}}</div>
                             </div>
-                            <div class="info-item" v-if="detail.supply_org_type === USER_TYPE.DISTRIBUTOR">
-                                <div class="key">收货方式</div>
-                                <div class="value" >{{WAYBILL.RECEIPT_MAP[detail.receive_type] || '-'}}</div>
+                            <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
+                                <div class="key">{{ $t('p.delivery_method')}}</div>
+                                <div class="value" >{{$Util.purchaseExpressFilter(detail.express_type, $i18n.locale || '-')}}</div>
                             </div>
-                            <div class="info-item" v-if="detail.supply_org_type === USER_TYPE.ADMIN">
-                                <div class="key">快递方式</div>
-                                <div class="value" >{{WAYBILL.COURIER_MAP[detail.express_type] || '-'}}</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="key">发货单号</div>
+                            <div class="info-item" v-if="detail.waybill">
+                                <div class="key">{{ $t('p.shipment_number')}}</div>
                                 <div class="value" >{{detail.waybill || '-'}}</div>
                             </div>
                             <!-- <div class="info-item">
@@ -178,26 +164,6 @@
                                 </div>
                             </div> -->
                         </a-col>
-<!--                        <template v-if="detail.supply_org_type === USER_TYPE.ADMIN">
-                            <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
-                                <div class="info-item" v-if="detail.supply_org_type === USER_TYPE.ADMIN">
-                                    <div class="key">快递方式</div>
-                                    <div class="value" >{{WAYBILL.COURIER_MAP[detail.express_type] || '-'}}</div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="key">单号</div>
-                                    <div class="value" >{{detail.waybill || '-'}}</div>
-                                </div>
-                            </a-col>
-                        </template>
-                        <template v-if="detail.supply_org_type === USER_TYPE.DISTRIBUTOR">
-                            <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" >
-                                <div class="info-item">
-                                    <div class="key">快递单号</div>
-                                    <div class="value" >{{detail.waybill_uid || '-'}}</div>
-                                </div>
-                            </a-col>
-                        </template>-->
                     </a-row>
                 </a-collapse-panel>
             </a-collapse>
@@ -205,7 +171,7 @@
     </div>
     <template class="modal-container">
         <!-- 确认收款 -->
-        <a-modal v-model:visible="paymentShow" title="确认收款" @ok="handlePayment">
+        <a-modal v-model:visible="paymentShow" :title="$t('p.confirm_payment')" @ok="handlePayment">
             <div class="modal-content">
                 <!-- 国外暂无支付宝微信银行卡支付方式，先隐藏 -->
                 <!-- <div class="form-item required">
@@ -217,7 +183,7 @@
                     </div>
                 </div> -->
                 <div class="form-item required">
-                    <div class="key">收款金额：</div>
+                    <div class="key">{{ $t('ac.money') }}：</div>
                     <div class="value">
                         <a-input-number 
                             v-model:value="form.payment" 
@@ -233,65 +199,65 @@
                 </div>
             </div>
         </a-modal>
-        <a-modal v-model:visible="transferShow" title="确认转单" :after-close="handleTransferClose">
+        <a-modal v-model:visible="transferShow" :title="$t('p.confirm_transfer')" :after-close="handleTransferClose">
             <div class="modal-content">
                 <div class="form-item required">
-                    <div class="key">分销商：</div>
+                    <div class="key">{{ $t('n.distributor') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="editForm.distributor_id" placeholder="请选择分销商">
+                        <a-select v-model:value="editForm.distributor_id" :placeholder="$t('def.select')">
                             <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
                         </a-select>
                     </div>
                 </div>
             </div>
             <template #footer>
-                <a-button @click="handleTransferSubmit" type="primary">确定</a-button>
-                <a-button @click="transferShow = false">取消</a-button>
+                <a-button @click="handleTransferSubmit" type="primary">{{ $t('def.sure') }}</a-button>
+                <a-button @click="transferShow = false">{{ $t('def.cancel') }}</a-button>
             </template>
         </a-modal>
         <!-- 确认发货 -->
-        <a-modal v-model:visible="deliverShow" title="确认发货" @ok="handleDeliver">
+        <a-modal v-model:visible="deliverShow" :title="$t('p.shipping_confirmation')" @ok="handleDeliver">
             <div class="modal-content">
                 <template v-if="$auth('ADMIN')">
                     <div class="form-item required">
-                        <div class="key">快递方式</div>
+                        <div class="key">{{ $t('p.delivery_method') }}</div>
                         <div class="value">
-                            <a-select v-model:value="form.express_type" placeholder="请选择快递方式">
+                            <a-select v-model:value="form.express_type" :placeholder="$t('def.select')">
                                 <a-select-option v-for="courier of courierTypeList" :key="courier.value" :value="courier.value">{{courier.name}}</a-select-option>
                             </a-select>
                         </div>
                     </div>
                     <div class="form-item">
-                        <div class="key">单号:</div>
+                        <div class="key">{{ $t('p.sn_number') }}:</div>
                         <div class="value">
-                            <a-input v-model:value="form.waybill" placeholder="请输入单号"/>
+                            <a-input v-model:value="form.waybill" :placeholder="$t('def.input')"/>
                         </div>
                     </div>
                     <div class="form-item required">
-                        <div class="key">发货港口:</div>
+                        <div class="key">{{ $t('p.shipping_port') }}:</div>
                         <div class="value">
-                            <a-input v-model:value="form.harbour" placeholder="请输入发货港口"/>
+                            <a-input v-model:value="form.harbour" :placeholder="$t('def.input')"/>
                         </div>
                     </div>
                 </template>
                 <template v-if="$auth('DISTRIBUTOR')">
                     <div class="form-item required">
-                        <div class="key">收货方式</div>
+                        <div class="key">{{ $t('p.ship') }}</div>
                         <div class="value">
-                            <a-select v-model:value="form.receive_type" placeholder="请选择收货方式">
+                            <a-select v-model:value="form.receive_type" :placeholder="$t('def.select')">
                                 <a-select-option v-for="receive of receiveTypeList" :key="receive.value" :value="receive.value">{{receive.name}}</a-select-option>
                             </a-select>
                         </div>
                     </div>
                     <div class="form-item">
-                        <div class="key">快递单号:</div>
+                        <div class="key">{{ $t('p.sn_number') }}:</div>
                         <div class="value">
-                            <a-input v-model:value="form.waybill_uid" placeholder="请输入快递单号"/>
+                            <a-input v-model:value="form.waybill_uid" :placeholder="$t('def.input')"/>
                         </div>
                     </div>
                 </template>
                 <div class="form-item required">
-                    <div class="key">{{$Util.priceUnitFilter(detail.currency)}} 运费:</div>
+                    <div class="key">{{$t('p.freight')}}:</div>
                     <div class="value">
                         <a-input-number
                             v-model:value="form.freight_price"
@@ -300,22 +266,23 @@
                             :min="0.00"
                             :precision="2"
                             :prefix="`${$Util.priceUnitFilter(detail.currency)}`" />
+                        &nbsp<span>{{$Util.priceUnitFilter(detail.currency)}}</span>
                     </div>
                 </div>
                 <template v-if="$auth('ADMIN')">
                     <div class="form-item required">
-                        <div class="key">支付条款:</div>
+                        <div class="key">{{$t('p.payment_terms')}}:</div>
                         <div class="value">
-                            <a-select v-model:value="form.pay_clause" placeholder="请选择支付条款">
+                            <a-select v-model:value="form.pay_clause" :placeholder="$t('def.select')">
                                 <a-select-option v-for="(item,index) of paymentTimeList" :key="index" :value="item.value">{{ item.text }}</a-select-option>
                             </a-select>
                         </div>
                     </div>
                 </template>
                 <div class="form-item" >
-                    <div class="key">备注信息:</div>
+                    <div class="key">{{$t('p.remark')}}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.remark" placeholder="请输入备注信息"/>
+                        <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
             </div>
@@ -340,16 +307,6 @@ const PAYMENT_STATUS = Core.Const.PURCHASE.PAYMENT_STATUS;
 const FLAG_PART_SHIPMENT_MAP = Core.Const.PURCHASE.FLAG_PART_SHIPMENT_MAP;
 const FLAG_TRANSFER_MAP = Core.Const.PURCHASE.FLAG_TRANSFER_MAP;
 const USER_TYPE = Core.Const.USER.TYPE;
-const itemColumns = [
-    { title: '商品', dataIndex: 'item' },
-    { title: '品号', dataIndex: ['item', "model"] },
-    { title: '编号', dataIndex: ['item', "code"] },
-    { title: '规格', dataIndex: ['item', 'attr_list'], key: 'spec' },
-    { title: '数量', dataIndex: 'amount'},
-    { title: '单价', dataIndex: 'unit_price', key: 'money'},
-    { title: '售价', dataIndex: 'price', key: 'money'},
-    // { title: '实际金额', dataIndex: 'charge', key: 'money'},
-]
 
 export default {
     name: 'PurchaseOrderDetail',
@@ -383,14 +340,13 @@ export default {
             activeKey: ['ItemInfo', 'PurchaseInfo', 'WaybillInfo'],
 
             stepsList: [
-                {status: '100', title: '支付'},
-                {status: '200', title: '发货'},
-                {status: '300', title: '收货'},
-                {status: '400', title: '交易完成'},
+                {status: '100', zh: '支付', en: 'Payment'},
+                {status: '200', zh: '发货', en: 'Deliver'},
+                {status: '300', zh: '收货',en: 'Receipt'},
+                {status: '400', zh: '交易完成',en: 'Transaction completed'},
             ],
 
             itemList: [],
-            itemColumns: itemColumns,
             total: {
                 amount: 0,
                 price: 0,
@@ -432,6 +388,18 @@ export default {
     },
     watch: {},
     computed: {
+        itemColumns() {
+            let columns = [
+                { title: this.$t('i.item'), dataIndex: 'item' },
+                { title: this.$t('i.number'),dataIndex: ['item', "model"] },
+                { title: this.$t('i.code'), dataIndex: ['item', "code"] },
+                { title: this.$t('i.specification'), dataIndex: ['item', 'attr_list'], key: 'spec' },
+                { title: this.$t('i.quantity'), dataIndex: 'amount'},
+                { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'money'},
+                { title: this.$t('i.total_price'),dataIndex: 'price', key: 'money'},
+            ]
+            return columns
+        },
         currStep() {
             for (let i = 0; i < this.stepsList.length; i++) {
                 const item = this.stepsList[i];
@@ -468,11 +436,10 @@ export default {
     },
     methods: {
         authOrg(orgId, orgType) {
-            console.log("authOrg", orgId, orgType, this.loginOrgId, this.loginOrgType)
+            console.log('org',this.loginOrgId === orgId && this.loginOrgType === orgType)
             if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
                 return true
-            }
-            return false
+            } else{ return false }
         },
         routerChange(type, item = {}) {
             let routeUrl = ''

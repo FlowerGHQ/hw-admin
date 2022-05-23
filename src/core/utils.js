@@ -422,13 +422,9 @@ const Util = {
     /* =============== 采购单 && 售后管理 && 退款管理 ================ */
     purchaseStatusFilter(val, to = 'text') {
         const MAP = Const.PURCHASE.STATUS_MAP
-        const COLOR_MAP = Const.PURCHASE.STATUS_COLOR_MAP
-        switch (to) {
-            case 'text':
-                return MAP[val + ''] || '未知'
-            case 'color':
-                return COLOR_MAP[val + ''] || 'grey'
-        }
+        // const COLOR_MAP = Const.PURCHASE.STATUS_COLOR_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
     },
     purchasePayMethodFilter(val) {
         const MAP = Const.PURCHASE.PAY_METHOD
@@ -438,17 +434,35 @@ const Util = {
         const MAP = Const.PURCHASE.FLAG_REVIEW_MAP
         return MAP[val] || '-'
     },
-    paymentStatusFilter(val, to = 'text') {
+    paymentStatusFilter(val, to = 'zh') {
         const MAP = Const.PURCHASE.PAYMENT_STATUS_MAP
-        const COLOR_MAP = Const.PURCHASE.PAYMENT_COLOR_MAP
-        switch (to) {
-            case 'text':
-                return MAP[val + ''] || '未知'
-            case 'color':
-                return COLOR_MAP[val + ''] || 'grey'
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    purchaseTransferFilter(val, to='zh') {
+        const MAP = Const.PURCHASE.FLAG_TRANSFER_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    purchaseExpressFilter(val, to='zh') {
+        if ( val === 0) {
+            return '-'
+        } else {
+            const MAP = Const.PURCHASE.COURIER_MAP
+            let item = MAP[val + ''] || {}
+            return item[to] || ''
         }
     },
-
+    purchaseWaybillFilter(val, to='zh') {
+        console.log('val',val)
+        if ( val === 0) {
+            return '-'
+        } else {
+            const MAP = Const.PURCHASE.RECEIPT_MAP
+            let item = MAP[val + ''] || {}
+            return item[to] || ''
+        }
+    },
     aftersalesTypeFilter(val) {
         const MAP = Const.AFTERSALES.TYPE_MAP
         return MAP[val + ''] || '未知'
@@ -477,9 +491,10 @@ const Util = {
     /* =============== 采购单 && 售后管理 && 退款管理  ================ */
 
     /* =============== 员工/账号/用户 ================ */
-    userTypeFilter(val) {
+    userTypeFilter(val, to='zh') {
         const MAP = Const.USER.TYPE_MAP
-        return MAP[val] || '未知'
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
     },
     /* =============== 员工/账号/用户 ================ */
 

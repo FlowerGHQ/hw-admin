@@ -5,7 +5,7 @@
             <div class="header-left" @click="collapsed = !collapsed" :class="{'collapsed': collapsed}">
                 <img src="@images/header-logo.png" class="logo" alt="浩万"/>
                 <a-divider type="vertical"/>
-                <a-tag color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType] }}端</a-tag>
+                <a-tag color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType][$i18n.locale] }}</a-tag>
             </div>
             <div class="header-right">
                 <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
@@ -116,7 +116,6 @@ export default {
         return {
             zhCN,
             enUS,
-
             breadcrumbList: [],
 
             loginType: Core.Data.getLoginType(),
