@@ -1,7 +1,7 @@
 <template>
     <a-tree-select class="CategoryTreeSelect"
                    v-model:value="value"
-                   :placeholder="placeholder"
+                   :placeholder="$t('def.select')"
                    :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
                    :tree-data="treeData"
                    :load-data='onLoadData'
@@ -26,10 +26,9 @@ export default {
         category: {
             type: Object,
         },
-        placeholder: {
+       /* placeholder: {
             type: String,
-            default: '请选择商品分类'
-        },
+        },*/
         type: {
             type: String,
             default: 'item', //商品

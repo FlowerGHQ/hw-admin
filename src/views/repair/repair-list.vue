@@ -334,7 +334,7 @@ export default {
                 {zh: '全  部',en: 'All', value: '0', color: 'primary', key: '-1'},
                 {zh: '待检测',en: 'Waiting detect', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
                 {zh: '维修中', en: 'Under repair',value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
-                {zh: '已结算待审核',en: 'Settled accounts and awaiting audit', value: '0', color: 'orange',  key: STATUS.SETTLEMENT },
+                {zh: '已结算待审核',en: 'Settled accounts and awaiting audit', value: '0', color: 'orange',  key: 65 },
                 {zh: '分销商审核通过',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.DISTRIBUTOR_AUDIT_SUCCESS },
                 {zh: '平台方审核通过',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
                 {zh: '分销商已入库', value: '0', color: 'green',  key: STATUS.DISTRIBUTOR_WAREHOUSE},

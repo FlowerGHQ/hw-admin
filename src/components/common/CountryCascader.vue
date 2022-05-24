@@ -74,11 +74,6 @@ export default {
                 name_en: item.name_en
             })))
             this.$emit('search', {continent: value[0], country: value[1]})
-            console.log("handleChange>>>", selectedOptions.map(item => ({
-                code: item.code,
-                name: item.name,
-                name_en: item.name_en
-            })))
         },
         handleReset() {
             this.selectCode = []

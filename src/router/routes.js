@@ -192,7 +192,7 @@ const routes = [
                 component: () => import('@/views/purchase/purchase-order-list.vue'),
                 meta: {
                     title: '订单列表',
-                    title_en: 'Orders',
+                    title_en: 'All orders',
                     search_type: PURCHASE_SEARCH_TYPE.ALL,
                     roles: [LOGIN_TYPE.ADMIN],
                 }
@@ -203,6 +203,7 @@ const routes = [
                 component: () => import('@/views/purchase/purchase-order-list.vue'),
                 meta: {
                     title: '供货订单',
+                    title_en: 'Supply orders',
                     search_type: PURCHASE_SEARCH_TYPE.CHILDREN,
                     roles: [LOGIN_TYPE.ADMIN],
                 }
@@ -213,6 +214,7 @@ const routes = [
                 component: () => import('@/views/item/sales-area-list.vue'),
                 meta: {
                     title: '销售区域',
+                    title_en: 'Sales areas',
                     roles: [LOGIN_TYPE.ADMIN],
                 }
             },
@@ -318,6 +320,7 @@ const routes = [
                 meta: {
                     roles: [LOGIN_TYPE.ADMIN],
                     title: '订单列表',
+                    title_en: 'All orders',
                     search_type: PURCHASE_SEARCH_TYPE.ALL
                 }
             },
@@ -328,6 +331,7 @@ const routes = [
                 meta: {
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
                     title: '采购订单',
+                    title_en: 'Supply orders',
                     search_type: PURCHASE_SEARCH_TYPE.SELF
                 }
             },
@@ -338,6 +342,7 @@ const routes = [
                 meta: {
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     title: '供货订单',
+                    title_en: 'Supply orders',
                     search_type: PURCHASE_SEARCH_TYPE.CHILDREN
                 }
             },
@@ -360,6 +365,7 @@ const routes = [
         redirect: '/repair/repair-list',
         meta: {
             title: '工单管理',
+            title_en: 'Repair',
             icon: 'i_s_repair',
             // auth: ['repair-order.list'],
         },
@@ -370,6 +376,7 @@ const routes = [
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
                     title: '工单列表',
+                    title_en: 'Repair orders',
                 }
             },
             {
@@ -378,6 +385,7 @@ const routes = [
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
                     title: '待审工单',
+                    title_en: 'Awaiting audit',
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     type: 'audit',
                     // auth: ['repair-order.audit'],
@@ -389,6 +397,7 @@ const routes = [
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
                     title: '待改工单',
+                    title_en: 'Awaiting revise',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
                     type: 'redit',
                     // auth: ['repair-order.save'],
@@ -400,6 +409,7 @@ const routes = [
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
                     title: '待审核故障件',
+                    title_en: 'Check fault',
                     roles: [LOGIN_TYPE.ADMIN],
                     type: 'invoice',
                     // auth: ['repair-order.audit'],
@@ -411,6 +421,7 @@ const routes = [
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
                     title: '待入库故障件',
+                    title_en: 'Warehousing',
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     type: 'fault',
                     // auth: ['repair-order.save-to-invoice'],
@@ -514,6 +525,7 @@ const routes = [
         name: 'ItemManagement',
         meta: {
             title: '商品管理',
+            title_en: 'Product',
             icon: 'i_s_item',
             roles: [LOGIN_TYPE.ADMIN],
         },
@@ -524,6 +536,7 @@ const routes = [
                 component: () => import('@/views/item/item-list.vue'),
                 meta: {
                     title: '商品列表',
+                    title_en: 'Product list',
                     roles: [LOGIN_TYPE.ADMIN],
                 }
             },
@@ -567,6 +580,7 @@ const routes = [
                 meta: {
                     roles: [LOGIN_TYPE.ADMIN],
                     title: '商品分类',
+                    title_en: 'Categories',
                 }
             },
             {

@@ -341,7 +341,17 @@ const Util = {
             }
         }
     },
+    tableFilterFormat(list, lang) {
+        let arr = list.map(i => {
+            return {
+                value: i.value,
+                text: i[lang]
+            }
+        })
+        console.log('tableFilterFormat', arr)
+        return arr
 
+    },
     tableFieldsFilter(columns = [], role) {
         if (!columns.length) {
             return []
@@ -350,6 +360,7 @@ const Util = {
             return item.role === undefined || item.role.includes(role)
         })
     },
+
     /* =============== 通用过滤器 ================ */
 
     /* =============== 分销商管理 ================ */
@@ -360,9 +371,10 @@ const Util = {
     /* =============== 分销商管理 ================ */
 
     /* =============== 商品 ================ */
-    itemTypeFilter(val) {
+    itemTypeFilter(val, to='zh') {
         const MAP = Const.ITEM.TYPE_MAP
-        return MAP[val] || '未知'
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
     },
     itemSpecFilter(attr_list) {
         if (!(attr_list instanceof Array) || !attr_list.length) {

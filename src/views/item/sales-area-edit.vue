@@ -1,21 +1,21 @@
 <template>
     <div id="SalesAreaEdit" class="edit-container">
         <div class="title-container">
-            <div class="title-area">{{ form.id ? '编辑区域' : '新建区域' }}</div>
+            <div class="title-area">{{ form.id ? $t('ar.edit') : $t('ar.save') }}</div>
         </div>
         <div class="form-block">
             <div class="form-title">
-                <div class="title">基本信息</div>
+                <div class="title">{{ $t('n.information') }}</div>
             </div>
             <div class="form-content">
                 <div class="form-item required">
-                    <div class="key">名称</div>
+                    <div class="key">{{ $t('n.name') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" placeholder="请输入区域名称"/>
+                        <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">区域:</div>
+                    <div class="key">{{ $t('n.area') }}:</div>
                     <div class="value">
                         <CountryCascader v-model:value="areaList" :def-area='defArea'/>
                     </div>
@@ -23,8 +23,8 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary" v-if="$auth('sales-area.save')">确定</a-button>
-            <a-button @click="routerChange('back')" type="primary" ghost="">取消</a-button>
+            <a-button @click="handleSubmit" type="primary" v-if="$auth('sales-area.save')">{{ $t('def.sure') }}</a-button>
+            <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
         </div>
     </div>
 </template>
@@ -49,6 +49,7 @@ export default {
             defArea: [],
             area: {
                 continent: '',
+                continent_en: '',
                 country: '',
                 country_en: '',
                 country_code: '',
@@ -99,22 +100,25 @@ export default {
                 console.log('this.areaList:', this.areaList)
                 area = {
                     continent: this.areaList[0].name,
+                    continent_en: this.areaList[0].name_en,
                     country: this.areaList[1].name,
                     country_en: this.areaList[1].name_en,
                     country_code: this.areaList[1].code,
                 }
+                console.log('this.areaList[0].name_en,',this.areaList[0].name_en,)
             }
+            console.log('are',area)
             if (!form.name) {
-                return this.$message.warning('请输入区域名称')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!area.country) {
-                return this.$message.warning('请选择大洲/国家')
+                return this.$message.warning(this.$t('def.enter'))
             }
             Core.Api.SalesArea.save({
                 ...form,
                 ...area
             }).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)

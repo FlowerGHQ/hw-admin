@@ -393,7 +393,7 @@ export default {
                 { title: this.$t('i.item'), dataIndex: 'item' },
                 { title: this.$t('i.number'),dataIndex: ['item', "model"] },
                 { title: this.$t('i.code'), dataIndex: ['item', "code"] },
-                { title: this.$t('i.specification'), dataIndex: ['item', 'attr_list'], key: 'spec' },
+                { title: this.$t('i.spec'), dataIndex: ['item', 'attr_list'], key: 'spec' },
                 { title: this.$t('i.quantity'), dataIndex: 'amount'},
                 { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'money'},
                 { title: this.$t('i.total_price'),dataIndex: 'price', key: 'money'},

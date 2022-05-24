@@ -71,7 +71,7 @@
                         </template>
                         <template v-if="column.dataIndex === 'status'">
                             <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
-                                {{ text ? '启用中' : '已禁用' }}
+                                {{ text ? $t('def.enable_ing') : $t('def.disable_ing') }}
                             </div>
                         </template>
                         <template v-if="column.key === 'operation'">

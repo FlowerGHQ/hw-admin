@@ -64,6 +64,7 @@ let Const = {
         KEY_AUTHORITY_LIST: 'authority.list',
 
         KEY_FIELD_DISPLAY: 'field.display',
+        KEY_LANGUAGE: 'language'
     },
     DEFULT_IMG: {
         1: defult_img,
@@ -302,12 +303,12 @@ let Const = {
             '30': { key: 30, color: 'yellow', zh: '待检测', en: 'Waiting detect'},
             '40': { key: 40, color: 'blue', zh: '维修中', en: 'Under repair'},
             '60': { key: 60, color: 'orange', zh: '已结算待审核', en: 'Settled accounts and awaiting audit'},
-            '70': { key: 70, color: 'orange', zh: '已结算待审核',},
+            '70': { key: 70, color: 'orange', zh: '已结算待审核',en: 'Settled accounts and awaiting audit'},
             '80': { key: 80, color: 'purple', zh: '分销商审核通过', en: 'Passed audit'},
             '90': { key: 90, color: 'purple', zh: '平台审核通过', en: 'Passed audit'},
-            '95': { key: 95, color: 'purple', zh: '分销商已入库'},
+            '95': { key: 95, color: 'purple', zh: '分销商已入库',},
             '100': { key: 100, color: 'blue', zh: '已完成', en: 'Finished settle accounts'},
-            '105': { key: 105, color: 'blue', zh: '故障件审核通过'},
+            '105': { key: 105, color: 'blue', zh: '故障件审核通过',en: ''},
             '110': { key: 110, color: 'green', zh: '平台方已入库'},
             '-10': { key: -10, color: 'gray', zh: '已取消', en: 'Cancelled'},
             '-30': { key: -30, color: 'red', zh: '工单审核未通过', en: 'Failed audit'},
@@ -376,8 +377,8 @@ let Const = {
             COMPONENT: 2//零件
         },
         TYPE_MAP: {
-            1: '整车',
-            2: '零部件',
+            '1': {key: 1, zh: '整车', en: 'Vehicle'},
+            '2': {key: 2, zh: '零部件', en: 'Parts'}
         },
         MONETARY_TYPE: {
             '￥': 'CNY',
@@ -394,9 +395,9 @@ let Const = {
         STATUS: {
         },
         STATUS_LIST: [
-            { text: '全部', value: '1' },
-            { text: '上架中', value: '0' },
-            { text: '已下架', value: '-1' },
+            { zh: '全部', en: 'All', value: '1' },
+            { zh: '上架中',en: 'Active', value: '0' },
+            { zh: '已下架', en: 'Inactive', value: '-1' },
         ],
         TARGET_TYPE_MAP: {
             ITEM: 1, // 商品

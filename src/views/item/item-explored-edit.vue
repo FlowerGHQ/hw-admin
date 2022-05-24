@@ -2,36 +2,36 @@
 <div id="ItemEdit" class="edit-container">
     <a-spin :spinning="loading" class='loading-incontent' v-if="loading"></a-spin>
     <div class="title-container">
-        <div class="title-area">编辑爆炸图</div>
+        <div class="title-area">{{ $t('i.edit_view') }}</div>
     </div>
 
     <ItemHeader :detail='detail' :showSpec='indep_flag ? true : false'/>
 
-    <a-collapse ghost expand-icon-position="right">
+    <a-collapse ghost expand-icon-position="right" v-model:activeKey="activeKey">
         <template #expandIcon ><i class="icon i_expan_l"/> </template>
-        <a-collapse-panel key="itemInfo" header="详情信息" class="gray-collapse-panel" >
+        <a-collapse-panel key="item" :header="$t('i.product_information')" class="gray-collapse-panel" >
             <a-row class="panel-content info-container">
                 <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                     <div class="info-item">
-                        <div class="key">商品编码</div>
+                        <div class="key">{{ $t('i.code') }}</div>
                         <div class="value">{{detail.code || '-'}}</div>
                     </div>
                     <div class="info-item">
-                        <div class="key">商品类型</div>
-                        <div class="value"> {{ $Util.itemTypeFilter(detail.type) }}</div>
+                        <div class="key">{{ $t('n.type') }}</div>
+                        <div class="value"> {{ $Util.itemTypeFilter(detail.type, $i18n.locale) }}</div>
                     </div>
                     <div class="info-item">
-                        <div class="key">商品分类</div>
+                        <div class="key">{{ $t('i.categories') }}</div>
                         <div class="value">{{detail.category ? detail.category.name : '-'}}</div>
                     </div>
                     <div class="info-item">
-                        <div class="key">销售区域</div>
+                        <div class="key">{{ $t('d.sales_area') }}</div>
                         <div class="value">{{ detail.sales_area_name || '-'}}</div>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" v-if="indep_flag">
                     <div class="info-item">
-                        <div class="key">成本价格</div>
+                        <div class="key">{{ $t('i.cost_price') }}</div>
                         <div class="value">{{$Util.priceUnitFilter(detail.original_price_currency)}} {{$Util.countFilter(detail.original_price)}}</div>
                     </div>
                     <div class="info-item">
@@ -68,7 +68,7 @@
                 删除爆炸图
             </a-button>
             <a-button type="primary" class="panel-btn" @click="clickShowAdd(true)">
-                新增爆炸图
+               {{ $t('i.save_view') }}
             </a-button>
         </div>
         <div class="panel-content">
@@ -174,7 +174,7 @@ export default {
             // 载入
             loading: false,
 
-            activeKey: [],
+            activeKey: ['item'],
 
             // 商品
             id: null,
@@ -239,11 +239,12 @@ export default {
             }))
             column = column.filter(item => item.title && item.dataIndex)
             column.unshift(
-                {title: '商品名称', key: 'name', dataIndex: 'name'},
-                {title: '商品型号', key: 'model', dataIndex: 'model'},
+                {title: this.$t('n.name'), key: 'name', dataIndex: 'name'},
+                {title: this.$t('i.number'), key: 'model', dataIndex: 'model'},
+                {title: this.$t('i.code'), key: 'code', dataIndex: 'name'},
             )
             column.push(
-                {title: '操作', key: 'operation'},
+                {title: this.$t('def.operate'), key: 'operation'},
             )
             return column
         },
@@ -339,7 +340,7 @@ export default {
                 id: this.id
             }).then(res => {
                 let detail = res.detail || {}
-                detail.sales_area_name = detail.sales_area_list ? detail.sales_area_list.map(i => i.name).join(',') : ''
+                detail.sales_area_name = detail.sales_area_list ? detail.sales_area_list.map(i => i.name).join(' , ') : ''
                 this.detail = detail;
             }).catch(err => {
                 console.log('getItemDetail err', err)
