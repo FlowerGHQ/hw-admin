@@ -249,11 +249,7 @@ export default {
         },
         // 已经添加到BOM表中的ids
         checkedIds() {
-            let arr = [], id;
-
-            id = get(this.editPointer, "item.id", null);
-            id ? arr.push(id) : "";
-            return arr;
+            return this.pointerList.map(item=> { return get(item, 'item.id', null) });
         },
     },
     mounted (){
