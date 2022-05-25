@@ -115,6 +115,7 @@ export default {
         loadImage(url, index){
             let img = new Image();
             const ths = this;
+            
             img.onload = ()=>{
                 ths.imageLoadCallback(img.naturalWidth, img.naturalHeight, index);
                 img.onload = null;
@@ -122,12 +123,13 @@ export default {
             img.src = this.$Util.imageFilter(url);
         },
         imageLoadCallback(width, height, index) {
-            let cvs = this.$refs[`exploreCanvas${index}`] || [];
-            if (!cvs) return;
-            if (cvs.length > 0) return;
-            if (Array.isArray(cvs) !== true) {
+            let cvs = this.$refs[`exploreCanvas${index}`];
+            if(!cvs) return;
+            if(cvs.length > 0) return;
+            if(Array.isArray(cvs) !== true) {
                 cvs = [cvs]
             }
+            this.canvasGroup[index] = cvs
             // if(cvs.length > 0) this.canvasGroup[index] = cvs;
             // else return;
             let rate = width > 800 ? 1 : 800 / width;
