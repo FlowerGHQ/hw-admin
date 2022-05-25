@@ -33,7 +33,7 @@ switch (window.location.hostname) {
     default:
         // URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.7:8083' // 但
-        URL_POINT = 'http://10.0.0.234:8883'
+        URL_POINT = 'http://10.0.0.184:8889'
         // URL_POINT = 'http://10.0.0.171:8883' // 姚志宇
 
 
