@@ -814,8 +814,8 @@ let Const = {
             OUT: 2,
         },
         OPERATE_TYPE_MAP: {
-            '1': '充值',
-            '2': '扣款',
+            '1': {key: 1, zh: '充值', en: 'Recharge'},
+            '2': {key: 2, zh: '扣款', en: 'Deduction'},
         },
         SUBJECT: {
             MANAGER_ADJUSTMENT: 101,

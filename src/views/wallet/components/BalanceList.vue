@@ -6,7 +6,7 @@
                          :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text, record}">
                         <template v-if="column.dataIndex === 'type'">
-                            {{ $Util.operateTypeFilter(text) }}
+                            {{ $Util.operateTypeFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'money'">
                             {{ walletMap[detail.type] + ( text /100)}}
@@ -87,13 +87,13 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: '变动类型', dataIndex: 'type'},
-                {title: '变动金额', dataIndex: 'money', key: 'money'},
-                {title: '变动后余额', dataIndex: 'balance', key: 'money'},
-                {title: '来源', dataIndex: 'source_type'},
-                {title: '来源单号', dataIndex: 'sn', key: 'sn'},
-                {title: '原因', dataIndex: 'remark', key: 'remark'},
-                {title: '操作时间', dataIndex: 'create_time', key: 'time'},
+                {title: this.$t('n.type'), dataIndex: 'type'},
+                {title: this.$t('w.money'), dataIndex: 'money', key: 'money'},
+                {title: this.$t('w.change'), dataIndex: 'balance', key: 'money'},
+                {title: this.$t('n.source'), dataIndex: 'source_type'},
+                {title: this.$t('n.source_number'), dataIndex: 'sn', key: 'sn'},
+                {title: this.$t('p.remark'), dataIndex: 'remark', key: 'remark'},
+                {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
             ]
             return tableColumns
         },

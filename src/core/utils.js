@@ -613,9 +613,10 @@ const Util = {
         const MAP = Const.WALLET.TYPE_MAP
         return MAP[val] || '未知'
     },
-    operateTypeFilter(val) {
+    operateTypeFilter(val, to= 'zh') {
         const MAP = Const.WALLET.OPERATE_TYPE_MAP
-        return MAP[val] || '未知'
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
     },
     subjectTypeFilter(val) {
         const MAP = Const.WALLET.SUBJECT_MAP

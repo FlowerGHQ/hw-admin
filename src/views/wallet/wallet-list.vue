@@ -2,18 +2,18 @@
     <div id="WalletList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">账户列表</div>
+                <div class="title-area">{{ $t('w.list') }}</div>
             </div>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
-                        <div class="key">账户名称:</div>
+                        <div class="key">{{ $t('n.name') }}:</div>
                         <div class="value">
-                            <a-input v-model:value="searchForm.wallet_id" placeholder="请输入账户名称"/>
+                            <a-input v-model:value="searchForm.wallet_id" :placeholder="$t('def.input')"/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
-                        <div class="key">创建时间:</div>
+                        <div class="key">{{ $t('d.create_time') }}:</div>
                         <div class="value">
                             <a-range-picker v-model:value="create_time" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
                                 <template #suffixIcon><i class="icon i_calendar"/></template>
@@ -22,8 +22,8 @@
                     </a-col>
                 </a-row>
                 <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">查询</a-button>
-                    <a-button @click="handleSearchReset">重置</a-button>
+                    <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
+                    <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
 
             </div>
@@ -43,7 +43,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('detail',record)"><i class="icon i_detail"/>详情
+                            <a-button type="link" @click="routerChange('detail',record)"><i class="icon i_detail"/>{{ $t('def.detail') }}
                             </a-button>
                         </template>
                     </template>
@@ -103,10 +103,10 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: '账户类型', dataIndex: 'type', key: 'detail'},
-                {title: '余额', dataIndex: 'balance'},
+                {title: this.$t('w.type'), dataIndex: 'type', key: 'detail'},
+                {title: this.$t('w.balance'), dataIndex: 'balance'},
                 // {title: '状态', dataIndex: 'status', key: 'status'},
-                {title: '操作', key: 'operation', fixed: 'right'},
+                {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             return tableColumns
         },

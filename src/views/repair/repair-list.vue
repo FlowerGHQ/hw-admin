@@ -118,17 +118,17 @@
                     </template>
                     <template v-if="column.key === 'audit'">
                         <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="(record.status == STATUS.SETTLEMENT ||
-                        record.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS ||  record.status == STATUS.SETTLEMENT_DISTRIBUTOR) && record.service_type == 1 && $auth('repair-order.audit')"><i class="icon i_audit"/>审核</a-button>
+                        record.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS ||  record.status == STATUS.SETTLEMENT_DISTRIBUTOR) && record.service_type == 1 && $auth('repair-order.audit')"><i class="icon i_audit"/>{{ $t('n.audit') }}</a-button>
                     </template>
                     <template v-if="column.key === 'redit'">
-                        <a-button type='link' @click="routerChange('edit',record)" v-if="record.status == STATUS.AUDIT_FAIL && $auth('repair-order.save')"><i class="icon i_edit"/>编辑</a-button>
+                        <a-button type='link' @click="routerChange('edit',record)" v-if="record.status == STATUS.AUDIT_FAIL && $auth('repair-order.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
                     </template>
                     <template v-if="column.key === 'invoice'">
-                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.DISTRIBUTOR_WAREHOUSE && $auth('repair-order.audit')"><i class="icon i_audit"/>审核</a-button>
+                        <a-button type='link' @click="handleModalShow(record.id, 'audit')" v-if="record.status == STATUS.DISTRIBUTOR_WAREHOUSE && $auth('repair-order.audit')"><i class="icon i_audit"/>{{ $t('n.audit') }}</a-button>
                     </template>
                     <template v-if="column.key === 'fault'">
                         <a-button type='link' @click="handleModalShow(record.id, 'fault')" v-if="(record.status == STATUS.FAULT_ENTITY_AUDIT || record.status == STATUS.AUDIT_SUCCESS) &&
-                        record.service_type == 1 && $auth('repair-order.save-to-invoice')"><i class="icon i_s_warehouse"/>入库</a-button>
+                        record.service_type == 1 && $auth('repair-order.save-to-invoice')"><i class="icon i_s_warehouse"/>{{ $t('n.storage') }}</a-button>
                     </template>
                 </template>
             </a-table>
@@ -151,38 +151,38 @@
     </div>
     <!-- 审核 -->
     <template class="modal-container">
-        <a-modal v-model:visible="modalShow" title="审核" :after-close='handleModalClose'>
+        <a-modal v-model:visible="modalShow" :title="$t('audit')" :after-close='handleModalClose'>
             <div class="modal-content">
                 <div class="form-item required">
-                    <div class="key">审核结果:</div>
+                    <div class="key">{{ $t('n.result') }}:</div>
                     <div class="value">
                     <a-radio-group v-model:value="editForm.audit_result">
-                        <a-radio :value="1">通过</a-radio>
-                        <a-radio :value="0">不通过</a-radio>
+                        <a-radio :value="1">{{ $t('n.pass') }}</a-radio>
+                        <a-radio :value="0">{{ $t('n.fail') }}</a-radio>
                     </a-radio-group>
                     </div>
                 </div>
                 <div class="form-item" v-if="editForm.audit_result === 0">
-                    <div class="key">原因:</div>
+                    <div class="key">{{ $t('n.reason') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="editForm.audit_message" placeholder="请输入不通过原因"/>
+                        <a-input v-model:value="editForm.audit_message" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
             </div>
             <template #footer>
-                <a-button @click="modalShow = false">取消</a-button>
-                <a-button @click="handleModalSubmit" type="primary" >确定</a-button>
+                <a-button @click="modalShow = false">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleModalSubmit" type="primary" >{{ $t('def.sure') }}</a-button>
             </template>
         </a-modal>
     </template>
     <!-- 入库 -->
     <template class="modal-container" v-if="operMode == 'fault'">
-        <a-modal v-model:visible="modalShow" title="入库" :after-close='handleModalClose'>
+        <a-modal v-model:visible="modalShow" :title="$t('n.storage')" :after-close='handleModalClose'>
             <div class="modal-content">
                 <div class="form-item required">
-                    <div class="key">仓库:</div>
+                    <div class="key">{{ $t('n.warehouse') }}:</div>
                     <div class="value">
-                        <a-select v-model:value="faultForm.warehouse_id" placeholder="请选择仓库" show-search option-filter-prop="children">
+                        <a-select v-model:value="faultForm.warehouse_id" :placeholder="$t('def.select')" show-search option-filter-prop="children">
                             <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">
                                 {{ item.name }}
                             </a-select-option>
@@ -190,15 +190,15 @@
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">故障件编号:</div>
+                    <div class="key">{{ $t('n.fault') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="faultForm.fault_entity_uid" placeholder="请输入故障件编号"/>
+                        <a-input v-model:value="faultForm.fault_entity_uid" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
             </div>
             <template #footer>
-                <a-button @click="modalShow = false">取消</a-button>
-                <a-button @click="handleStock" type="primary" >确定</a-button>
+                <a-button @click="modalShow = false">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleStock" type="primary" >{{ $t('def.sure') }}</a-button>
             </template>
         </a-modal>
     </template>
@@ -303,11 +303,11 @@ export default {
                 { title: this.$t('r.urgency'), dataIndex: 'priority' },
                 { title: this.$t('r.repair_status'), dataIndex: 'status'},
                 { title: this.$t('r.warranty'), dataIndex: 'service_type',
-                    filters: REPAIR.SERVICE_TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.service_type || null },
+                    filters: this.$Util.tableFilterFormat(REPAIR.SERVICE_TYPE_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.service_type || null },
                 { title: this.$t('r.repair_way'), dataIndex: 'channel',
-                    filters: REPAIR.CHANNEL_LIST, filterMultiple: false, filteredValue: filteredInfo.channel || null },
+                    filters: this.$Util.tableFilterFormat(REPAIR.CHANNEL_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.channel || null },
                 { title: this.$t('r.repair_category'), dataIndex: 'repair_method',
-                    filters: REPAIR.METHOD_LIST, filterMultiple: false, filteredValue: filteredInfo.repair_method || null },
+                    filters: this.$Util.tableFilterFormat(REPAIR.METHOD_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.repair_method || null },
                 { title: this.$t('r.repair_unit'), dataIndex: 'repair_name', key: 'item' },
                 { title: this.$t('r.repair_phone'), dataIndex: 'repair_phone', key: 'item' },
                 { title: this.$t('r.creator_name'),   dataIndex: 'user_name', key: 'item' },
@@ -519,9 +519,9 @@ export default {
         handleExportConfirm() { // 确认订单是否导出
             let _this = this;
             this.$confirm({
-                title: '确认要导出吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('pop_up.sure') + _this.$t('n.export') + '?',
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     _this.handleRepairExport();
                 }

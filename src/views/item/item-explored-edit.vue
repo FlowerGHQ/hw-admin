@@ -64,11 +64,11 @@
             </a-tabs>
         </div>
         <div class="btn-area">
-            <a-button class="panel-btn" v-if="tabsArray.length > 0" @click="clickDeleteExplore">
-                删除爆炸图
+            <a-button class="panel-btn" type="danger" ghost v-if="tabsArray.length > 0" @click="clickDeleteExplore">
+                <i class="icon i_delete"/>{{ $t('def.delete') }}
             </a-button>
             <a-button type="primary" class="panel-btn" @click="clickShowAdd(true)">
-               {{ $t('i.save_view') }}
+                <i class="icon i_add"/>{{ $t('i.save_view') }}
             </a-button>
         </div>
         <div class="panel-content">
@@ -82,8 +82,8 @@
                         {{ (record.item || {}).model }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="showEdit(index)"> <i class="icon i_edit_l"/>修改</a-button>
-                        <a-button type='link' @click="clickDeletePoint(index)"> <i class="icon i_delete"/>删除</a-button>
+                        <a-button type='link' @click="showEdit(index)"> <i class="icon i_edit_l"/>{{ $t('def.edit') }}</a-button>
+                        <a-button type='link' class="danger" @click="clickDeletePoint(index)"> <i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                     </template>
                 </template>
             </a-table>
@@ -91,10 +91,10 @@
     </div>
     <!-- 编辑爆炸图 -->
     <div class="gray-panel" v-show="detailImageUrl">
-        <div class="panel-title">点位详情</div>
+        <div class="panel-title"> {{ $t('i.point_location') }}</div>
         <div class="btn-area">
-            <a-button class="panel-btn" @click="clickDeletePoint(-1)">清空点位</a-button>
-            <a-button class="panel-btn" @click="clickAdd" type="primary">新增点位</a-button>
+            <a-button class="panel-btn" @click="clickDeletePoint(-1)" type="danger" ghost> <i class="icon i_delete"/>{{ $t('i.clear') }}</a-button>
+            <a-button class="panel-btn" @click="clickAdd" type="primary"><i class="icon i_add"/>{{ $t('i.save_a') }} </a-button>
         </div>
         <div class="panel-content text-c">
             <div class="image-contain" @mouseup="mouseupHandler" @mousemove="mousemoveHandler">
@@ -114,20 +114,20 @@
                             <div class="contain-header"><i class="icon i_close" style="color: #fff" @click.stop="clickDeletePoint(index)"/></div>
                             <div class="contain-name">
                                 <i class="icon i_skew-bg" />
-                                <span class="icon-name">产品名称</span>
+                                <span class="icon-name">{{ $t('n.name') }}</span>
                                 {{ (item.item || {}).name }}
                             </div>
                             <div class="contain-type">
                                 <div class="type-left">型号:&nbsp;{{ (item.item || {}).model}}</div>
-                                <div class="edit-btn" @click="showEdit(index)">编辑</div>
+                                <div class="edit-btn" @click="showEdit(index)">{{ $t('def.edit') }}</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="foot-btn" v-if="isChangedPoint">
-                <a-button type="primary" @click="clickSave">保存</a-button>
-                <a-button @click="clickCancel">取消</a-button>
+                <a-button type="primary" @click="clickSave">{{ $t('def.sure') }}</a-button>
+                <a-button @click="clickCancel">{{ $t('def.cancel') }}</a-button>
             </div>
         </div>
     </div>
@@ -282,10 +282,10 @@ export default {
         changeTabConfirm (key) {
             const ths = this;
             ths.$confirm({
-                title: `${ths.tabsArray[ths.currentTab].name} 此图点位已经修改变更，是否保存？`,
-                okText: '确定',
+                title: `${ths.tabsArray[ths.currentTab].name},` + ths.$t('i.point'),
+                okText: ths.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: ths.$t('def.cancel'),
                 onOk() {
                     ths.parsePoint(false);
                     const param = {

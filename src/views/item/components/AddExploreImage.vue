@@ -1,11 +1,11 @@
 <template>
     <div>
-        <a-modal v-model:visible="modalShow" :title="form.id ? '编辑爆炸图' : '新增爆炸图'" class="EditExploreModal"
+        <a-modal v-model:visible="modalShow" :title="form.id ? $t('i.edit_view') : $t('i.save_view')"  class="EditExploreModal"
             :after-close='closeModal'>
             <div class="modal-content">
                 <div class="form-item required">
                     <div class="form-item img-upload">
-                        <div class="key">爆炸图</div>
+                        <div class="key">{{ $t('i.diagram') }}</div>
                         <div class="value">
                             <a-upload name="file" class="image-uploader"
                                 list-type="picture-card" accept='image/*'
@@ -17,20 +17,20 @@
                                     <i class="icon i_upload"/>
                                 </div>
                             </a-upload>
-                            <div class="tip">建议尺寸：800*800像素</div>
+                            <div class="tip">{{ $t('n.size') }}：800*800px</div>
                         </div>
                     </div>
                 </div>
                 <div class="form-item required afs">
-                    <div class="key">爆炸图名称:</div>
+                    <div class="key">{{ $t('n.name') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" placeholder="请输入BOM名称"/>
+                        <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
             </div>
             <template #footer>
-                <a-button @click="closeModal">取消</a-button>
-                <a-button @click="handleModalSubmit" type="primary">确定</a-button>
+                <a-button @click="closeModal">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleModalSubmit" type="primary">{{ $t('def.sure') }}</a-button>
             </template>
         </a-modal>
     </div>

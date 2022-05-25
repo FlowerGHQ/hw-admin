@@ -1,9 +1,9 @@
 <template>
     <div id="WalletDetail" class="list-container">
         <div class="title-container">
-            <div class="title-area">账户详情</div>
+            <div class="title-area">{{ $t('w.detail') }}</div>
             <div class="btns-area">
-                <a-button type="primary" ghost @click="routerChange('edit', record)"><i class="icon i_edit"/>编辑</a-button>
+                <a-button type="primary" ghost @click="routerChange('edit', record)"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
 <!--                <a-button type="primary" ghost @click="handleDelete(wallet_id)"><i class="icon i_delete"/>删除</a-button>-->
             </div>
         </div>
@@ -11,16 +11,16 @@
             <div class="panel-content desc-container">
                 <div class="desc-title">
                     <div class="title-area">
-                        <span class="title">{{ $Util.walletTypeFilter(detail.type) }}账户</span>
+                        <span class="title">{{ $t('w.account') }}: {{ $Util.walletTypeFilter(detail.type) }}</span>
                     </div>
                 </div>
                 <a-row class="desc-detail">
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">账户余额：</span>
+                        <span class="key">{{ $t('w.balance') }}：</span>
                         <span class="value">{{ walletMap[detail.type] + (detail.balance / 100) }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">创建时间：</span>
+                        <span class="key">{{ $t('n.time') }}：</span>
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
                 </a-row>
@@ -28,7 +28,7 @@
         </div>
         <div class="tabs-container">
             <a-tabs v-model:activeKey='activeKey'>
-                <a-tab-pane key="BalanceList" tab="余额变动记录">
+                <a-tab-pane key="BalanceList" :tab="$t('w.record')">
                     <BalanceList :walletId='wallet_id' :detail='detail' @submit="getWalletDetail"/>
                 </a-tab-pane>
             </a-tabs>

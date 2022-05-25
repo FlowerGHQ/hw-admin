@@ -101,6 +101,7 @@ const routes = [
                 component: () => import('@/views/distributor/distributor-detail.vue'),
                 meta: {
                     title: '分销商详情',
+                    title_en: 'Details',
                     roles: [LOGIN_TYPE.DISTRIBUTOR],
                 }
             },
@@ -142,6 +143,7 @@ const routes = [
                 component: () => import('@/views/agent/agent-detail.vue'),
                 meta: {
                     title: '零售商详情',
+                    title_en: 'Details',
                     roles: [LOGIN_TYPE.AGENT],
                 }
             },
@@ -183,6 +185,7 @@ const routes = [
                 component: () => import('@/views/store/store-detail.vue'),
                 meta: {
                     title: '门店详情',
+                    title_en: 'Details',
                     roles: [LOGIN_TYPE.STORE],
                 }
             },
@@ -270,6 +273,7 @@ const routes = [
         name: 'PurchaseManagement',
         meta: {
             title: '采购管理',
+            title_en: 'Purchase',
             roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
             auth: ['AGENT', 'STORE', 'DISTRIBUTOR'],
             icon: 'i_s_item',
@@ -281,6 +285,7 @@ const routes = [
                 component: () => import('@/views/purchase/item-list.vue'),
                 meta: {
                     title: '采购',
+                    title_en: 'Purchase',
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
                 }
             },
@@ -301,6 +306,7 @@ const routes = [
                 meta: {
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
                     title: '购物车',
+                    title_en: 'Shopping cart',
                 }
             },
             {
@@ -331,7 +337,7 @@ const routes = [
                 meta: {
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
                     title: '采购订单',
-                    title_en: 'Supply orders',
+                    title_en: 'Purchase orders',
                     search_type: PURCHASE_SEARCH_TYPE.SELF
                 }
             },

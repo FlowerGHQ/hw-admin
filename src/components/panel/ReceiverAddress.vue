@@ -17,10 +17,10 @@
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
-                        <template v-if="column.key === 'operation'">
+<!--                        <template v-if="column.key === 'operation'">
                             <AddressEdit :detail="record" :orgId="orgId" :orgType="orgType" btnType="link" @submit='getTableData'><i class="icon i_edit"/>{{ $t('def.edit') }}</AddressEdit>
                             <a-button type='link' class="danger" @click="handleDelete(record.id)"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>
-                        </template>
+                        </template>-->
                     </template>
                 </a-table>
             </div>
@@ -85,11 +85,11 @@ export default {
         tableColumns() {
             let columns = [
                 {title: this.$t('e.name'), dataIndex: 'name', key: 'item'},
-                {title: this.$t('n.contact'), dataIndex: 'phone',key: 'item'},
+                {title: this.$t('n.phone'), dataIndex: 'phone',key: 'item'},
                 {title: this.$t('n.country'), dataIndex: 'country',key: 'item'},
                 {title: this.$t('ad.specific_address'), dataIndex: 'address', key: 'address'},
                 {title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time'},
-                {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
+                // {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             return columns
         },

@@ -47,31 +47,31 @@
                     </div>
                 </div>
                 <template #footer>
-                    <a-button @click="addWalletShow = false">取消</a-button>
-                    <a-button @click="handleWalletSubmit" type="primary">确定</a-button>
+                    <a-button @click="addWalletShow = false">{{ $t('def.cancel') }}</a-button>
+                    <a-button @click="handleWalletSubmit" type="primary">{{ $t('def.sure') }}</a-button>
                 </template>
             </a-modal>
-            <a-modal v-model:visible="operateShow" title="充值扣款" class="repair-audit-modal"
+            <a-modal v-model:visible="operateShow" :title="$t('ac.operation')" class="repair-audit-modal"
                      :after-close='handleOperateClose'>
                 <div class="modal-content">
                     <div class="form-item required">
-                        <div class="key">类型:</div>
+                        <div class="key">{{ $t('n.type') }}:</div>
                         <a-radio-group v-model:value="operateForm.type">
-                            <a-radio class="type-item" v-for="(val, key) in operateTypeMAP" :key="key"
-                                     :value="key">{{ val }}
+                            <a-radio class="type-item" v-for="item of operateTypeMAP" :key="item.key"
+                                     :value="item.key">{{ item[$i18n.locale] }}
                             </a-radio>
                         </a-radio-group>
                     </div>
                     <div class="form-item required">
-                        <div class="key">金额:</div>
+                        <div class="key">{{ $t('ac.money') }}:</div>
                         <div class="value form-item-value">
                             <a-input-number v-model:value="operateForm.money" :min="0" :precision="2" placeholder="0.00"/>
                         </div>
                     </div>
                     <div class="form-item required">
-                        <div class="key">来源：</div>
+                        <div class="key">{{ $t('n.source') }}：</div>
                         <div class="value">
-                            <a-select v-model:value="operateForm.source_type" placeholder="请选择来源" @change="handleSelectChange">
+                            <a-select v-model:value="operateForm.source_type" :placeholder="$t('def.select')" @change="handleSelectChange">
                                 <a-select-option v-for="(val, key) of sourceTypeMap" :key='key' :value='key'>{{ val }}</a-select-option>
                             </a-select>
                         </div>
@@ -88,16 +88,16 @@
                         </div>
                     </div>
                     <div class="form-item textarea">
-                        <div class="key">原因:</div>
+                        <div class="key">{{ $t('p.remark') }}:</div>
                         <div class="value form-item-value">
-                            <a-textarea v-model:value="operateForm.remark" placeholder="请输入原因"
+                            <a-textarea v-model:value="operateForm.remark" :placeholder="$t('def.input')"
                                         :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                         </div>
                     </div>
                 </div>
                 <template #footer>
-                    <a-button @click="operateShow = false">取消</a-button>
-                    <a-button @click="handleOperateSubmit" type="primary">确定</a-button>
+                    <a-button @click="operateShow = false">{{ $t('def.cancel') }}</a-button>
+                    <a-button @click="handleOperateSubmit" type="primary">{{ $t('def.sure') }}</a-button>
                 </template>
             </a-modal>
         </template>
