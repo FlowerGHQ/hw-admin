@@ -1,7 +1,8 @@
 <template>
     <div>
         <a-modal v-model:visible="modalShow" :title="form.id ? '编辑爆炸图' : '新增爆炸图'" class="EditExploreModal"
-            :after-close='closeModal'>
+            :after-close='closeModal'
+            :destroyOnClose='true'>
             <div class="modal-content">
                 <div class="form-item required">
                     <div class="form-item img-upload">
@@ -65,6 +66,8 @@ export default {
     },
     methods: {
         closeModal () {
+            this.form = {};
+            this.upload.coverList = [];
             this.$emit("closeModal", false);
         },
         handleModalSubmit() {

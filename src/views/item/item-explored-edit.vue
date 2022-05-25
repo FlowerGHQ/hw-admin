@@ -295,8 +295,10 @@ export default {
                 },
                 onCancel () {
                     ths.isChangedPoint = false;
+                    ths.clickCancel();
                     ths.clickChangTab(key);
                     ths.parsePoint(true);
+                    console.log(ths.tabsArray)
                 }
             });
         },
@@ -356,9 +358,9 @@ export default {
             }).then((res)=>{
                 this.tabsArray = get(res, "list.list" , []);
                 this.parsePoint(true);
-                this.currentTab = 0;
+                this.currentTab ? "" : this.currentTab = 0;
                 if(this.tabsArray.length > 0) {
-                    this.clickChangTab(0);
+                    this.clickChangTab(this.currentTab);
                 }
             }).catch( err => {
                 console.log('getItemExploreList err', err);
@@ -526,6 +528,7 @@ export default {
             Core.Api.Item.bindItemComponent(param).then(res => {
                 this.$message.success(`${msg}成功`);
                 this.isChangedPoint = false;
+                this.getItemExploreList();
                 if(cb) cb();
             }).catch(err => {
                 console.log("requestSave>>",msg, err)
@@ -533,7 +536,7 @@ export default {
         },
         /** 点击取消 */
         clickCancel () {
-            this.pointerList = Core.Util.deepCopy(this.pointerListData);
+            // this.pointerList = Core.Util.deepCopy(this.pointerListData);
             this.pointerListData.forEach((item, index)=>{
                 this.pointerList[index] = Core.Util.deepCopy(item);
             })
@@ -761,7 +764,7 @@ export default {
         }
     }
     .foot-btn {
-        margin-top: 24px;
+        margin-top: 110px;
         width: 100%;
         text-align: center;
     }
