@@ -2,9 +2,9 @@
     <div id="EntityList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">{{title + '列表'}}</div>
+                <div class="title-area">{{ viewType === 'part' ? $t('v.parts') : $t('v.vehicle')}}{{ $t('v.list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleVehicleShow"><i class="icon i_add"/>{{'新增' + title}}</a-button>
+                    <a-button type="primary" @click="handleVehicleShow"><i class="icon i_add"/>{{ $t('v.save')}}{{ viewType === 'part' ? $t('v.parts') : $t('v.vehicle')}}</a-button>
                     <a-upload name="file" class="file-uploader"
                         :file-list="upload.fileList" :action="upload.action"
                         :show-upload-list='false'
@@ -240,7 +240,7 @@ export default {
                 ids: '',
                 arrival_time: '',
             },
-            viewType: 'vehicle',
+            viewType: '',
             title: '整车'
         };
     },
@@ -252,9 +252,9 @@ export default {
                 let type = newRoute.meta ? newRoute.meta.type : 'vehicle'
                 this.viewType = type
                 if (type === "part")  {
-                    this.title = "零部件"
+                    this.title = this.$t('v.parts')
                 } else {
-                    this.title = "整车"
+                    this.title = this.$t('v.vehicle')
                 }
                 Object.assign(this.searchForm, this.$options.data().searchForm)
                 this.pageChange(1)

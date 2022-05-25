@@ -161,10 +161,10 @@ let Const = {
             STORE: 30, // 门店
         },
         TYPE_LIST: [
-            { value: 30, text: '门店' },
-            { value: 20, text: '零售商' },
-            { value: 15, text: '分销商' },
-            { value: 10, text: '平台方' },
+            { value: 30, zh: '门店',en: 'Store' },
+            { value: 20, zh: '零售商',en: 'Retailer' },
+            { value: 15, zh: '分销商',en: 'Distributor' },
+            { value: 10, zh: '平台方',en: 'Admin' },
         ],
         TYPE_MAP: {
             10: 'ADMIN',

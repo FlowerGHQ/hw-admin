@@ -1,29 +1,34 @@
 <template>
 <div id="Login">
     <div class="login-header">
-        <span class="text">浩万后台管理系统</span>
+        <span class="text">{{ $t('n.system') }}</span>
+        <div class="header-right">
+            <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
+                <i class="icon" :class="lang =='zh' ? 'i_zh-en' : 'i_en-zh'"/>
+            </a-button>
+        </div>
     </div>
     <div class="login-container">
-        <div class="form-title">账号登录</div>
+        <div class="form-title">{{ $t('n.account_login') }}</div>
         <div class="form-content">
             <div class="login-type" :class="TYPE_MAP[loginForm.user_type]">
                 <div class="type-item" v-for="item of loginTypeList" :key="item.value"
                     :class="loginForm.user_type === item.value ? 'active' : ''"
                     @click="loginForm.user_type = item.value">
-                    {{item.text}}
+                    {{item[$i18n.locale]}}
                 </div>
             </div>
-            <a-input class="form-item" placeholder='请输入用户名' v-model:value="loginForm.username" @keydown.enter="handleFocusPwd">
+            <a-input class="form-item" :placeholder="$t('n.username')" v-model:value="loginForm.username" @keydown.enter="handleFocusPwd">
                 <template #prefix>
                     <i class="icon i_user placeholder"/>
                 </template>
             </a-input>
-            <a-input class="form-item" placeholder='请输入密码' v-model:value="loginForm.password" @keydown.enter="handleLogin" type="password" ref="password-input">
+            <a-input class="form-item" :placeholder="$t('n.password')" v-model:value="loginForm.password" @keydown.enter="handleLogin" type="password" ref="password-input">
                 <template #prefix>
                     <i class="icon i_lock placeholder"/>
                 </template>
             </a-input>
-            <a-button class="form-button" type="primary" @click="handleLogin">登 录</a-button>
+            <a-button class="form-button" type="primary" @click="handleLogin">{{ $t('n.login') }}</a-button>
         </div>
     </div>
     <div class="login-footer">Copyright © 2021 杭州重构科技有限公司 浙ICP备17006717号</div>
@@ -32,6 +37,8 @@
 
 <script>
 import Core from '../core';
+import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
+import enUS from 'ant-design-vue/lib/locale-provider/en_US';
 const TYPE = Core.Const.LOGIN.TYPE
 const TYPE_MAP = Core.Const.LOGIN.TYPE_MAP
 export default {
@@ -40,6 +47,8 @@ export default {
     props: {},
     data() {
         return {
+            zhCN,
+            enUS,
             TYPE,
             TYPE_MAP,
             loginTypeList: Core.Const.LOGIN.TYPE_LIST,
@@ -54,7 +63,11 @@ export default {
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        lang() {
+            return this.$store.state.lang
+        }
+    },
     created() {
         if (Core.Data.getLoginType()) {
             this.loginForm.user_type = Core.Data.getLoginType();
@@ -123,7 +136,13 @@ export default {
             })
 
 
-        }
+        },
+        handleLangSwitch() {
+            console.log('handleLangSwitch')
+            this.$store.commit('switchLang')
+            this.$i18n.locale = this.$store.state.lang
+            console.log('this.$i18n.locale',this.$i18n.locale)
+        },
     }
 };
 </script>
@@ -145,6 +164,15 @@ export default {
         .fsb();
         .text {
             padding-left: 40px;
+        }
+        .header-right {
+            .fcc();
+            margin-right: 100px;
+            .lang-switch {
+                .icon {
+                    font-size: 20px;
+                }
+            }
         }
     }
     .login-container {
