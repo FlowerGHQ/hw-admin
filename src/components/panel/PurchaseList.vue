@@ -1,7 +1,7 @@
 <template>
 <div class="PurchaseList  gray-panel no-margin">
     <div class="panel-title">
-        <div class="title">采购订单</div>
+        <div class="title">{{ $t('p.purchase_order') }}</div>
     </div>
     <div class="panel-content">
         <div class="table-container">
@@ -117,18 +117,14 @@ export default {
             },
 
             tableColumns: [
-              /*  { title: '订单编号', dataIndex: 'sn', },
-                { title: '价格', dataIndex: 'price'  },
-                { title: '订单状态', dataIndex: 'status' },
-                { title: '下单时间', dataIndex: 'create_time', key: 'time' },*/
-                { title: '订单编号', dataIndex: 'sn', },
-                { title: '订单总价', dataIndex: 'price' },
-                { title: '订单状态', dataIndex: 'status' },
-                { title: '下单时间', dataIndex: 'create_time', key: 'time' },
-                { title: '支付状态', dataIndex: 'payment_status' },
-                { title: '支付时间', dataIndex: 'pay_time', key: 'time' },
-                { title: '完成时间', dataIndex: 'close_time', key: 'time' },
-                { title: '操作', key: 'operation', fixed: 'right'}
+                { title: this.$t('p.order_number'), dataIndex: 'sn', },
+                { title: this.$t('p.price'), dataIndex: 'price' },
+                { title: this.$t('n.state'), dataIndex: 'status' },
+                { title: this.$t('p.order_time'), dataIndex: 'create_time', key: 'time' },
+                { title: this.$t('p.payment_status'), dataIndex: 'payment_status' },
+                { title: this.$t('p.payment_time'), dataIndex: 'pay_time', key: 'time' },
+                { title: this.$t('p.complete_time'), dataIndex: 'close_time', key: 'time' },
+                { title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
             ],
             tableData: [],
         };

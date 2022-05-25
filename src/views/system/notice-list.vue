@@ -5,7 +5,7 @@
                 <div class="title-area">消息列表
                 </div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('ADMIN' && 'message.save')"><i class="icon i_add"/>新建消息</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('ADMIN') && $auth('message.save')"><i class="icon i_add"/>新建消息</a-button>
                 </div>
             </div>
             <div class="search-container" v-if="$auth('ADMIN')">

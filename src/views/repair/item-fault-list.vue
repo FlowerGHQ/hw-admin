@@ -2,9 +2,9 @@
     <div id="FaultList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">{{ $t('n.list_of_faults') }}</div>
+                <div class="title-area">{{ $t('r.list_of_faults') }}</div>
                 <div class="btns-area">
-                    <FaultEdit :id="id" btnType="primary" :ghost="false" ref="FaultList" @saveFault="getTableData" v-if="$auth('fault.save')"><i class="icon i_add"/>{{ $t('n.new_fault') }}</FaultEdit>
+                    <FaultEdit :id="id" btnType="primary" :ghost="false" ref="FaultList" @saveFault="getTableData" v-if="$auth('fault.save')"><i class="icon i_add"/>{{ $t('r.new_fault') }}</FaultEdit>
                 </div>
             </div>
             <div class="table-container">

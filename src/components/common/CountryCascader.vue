@@ -1,7 +1,7 @@
 <template>
 <a-cascader
     class="CountryCascader"
-    placeholder="请选择大洲/国家"
+    :placeholder="$t('n.choose')"
     v-model:value="selectCode"
     :options="countryOptions"
     @change="handleChange"
@@ -74,11 +74,6 @@ export default {
                 name_en: item.name_en
             })))
             this.$emit('search', {continent: value[0], country: value[1]})
-            console.log("handleChange>>>", selectedOptions.map(item => ({
-                code: item.code,
-                name: item.name,
-                name_en: item.name_en
-            })))
         },
         handleReset() {
             this.selectCode = []
@@ -87,3 +82,8 @@ export default {
     },
 }
 </script>
+<style lang="less">
+.ant-cascader-input.ant-input {
+    width: 100%;
+}
+</style>

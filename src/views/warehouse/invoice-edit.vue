@@ -35,7 +35,7 @@
             <div class="form-item required">
                 <div class="key">来源：</div>
                 <div class="value">
-                    <a-select v-model:value="form.source_type" placeholder="请选择来源">
+                    <a-select v-model:value="form.source_type" placeholder="请选择来源" @change="handleSelectChange">
                         <a-select-option v-for="(val, key) of sourceTypeMap" :key='key' :value='key'>{{ val }}</a-select-option>
                     </a-select>
                 </div>
@@ -157,7 +157,7 @@ export default {
             }
         },
         getWarehouseList() {
-            Core.Api.Warehouse.listAll().then(res => {
+            Core.Api.Warehouse.listAll({is_authority_warehouse: Core.Const.WAREHOUSE.IS_AUTHORITY_WAREHOUSE.YES}).then(res => {
                 this.warehouseList = res.list
             })
         },
@@ -262,6 +262,11 @@ export default {
             if (this.form.source_type === SOURCE_TYPE.PRODUCTION) {
                 this.isProd = true
             }
+        },
+        handleSelectChange(val) {
+            console.log('handleSelectChange',val)
+            this.sourceUid = ''
+            this.isExist = ''
         }
     }
 };

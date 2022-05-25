@@ -28,6 +28,7 @@
                 </div>
                 <div class="form-item required">
                     <div class="key">客户地址:</div>
+<!--                    <CountryCascader v-model:value="areaList" :def-area='defArea' @search="getCountry"/>-->
                     <div class="value">
                         <CountryCascader v-model:value="areaList" :def-area='defArea' @search="getCountry"/>
                     </div>
@@ -136,7 +137,6 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             let area = Core.Util.deepCopy(this.area)
             if (this.areaList.length) {
-                console.log('this.areaList:', this.areaList)
                 area = {
                     continent: this.areaList[0].name,
                     country: this.areaList[1].name,
@@ -156,7 +156,10 @@ export default {
             if (!form.province || !form.city || !form.county || !form.address) {
                 // return this.$message.warning('请完善客户地址')
             }
-            Core.Api.Customer.save(form).then(() => {
+            Core.Api.Customer.save({
+                ...form,
+                ...area
+            }).then(() => {
                 this.$message.success('保存成功')
                 this.routerChange('back')
             }).catch(err => {
@@ -184,6 +187,11 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-// #DistributorEdit {}
+<style lang="less">
+.CustomerEdit {
+
+    .icon {
+        font-size: 12px;
+    }
+}
 </style>

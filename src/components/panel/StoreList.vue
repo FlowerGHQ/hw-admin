@@ -1,11 +1,11 @@
 <template>
 <div class="StoreList gray-panel no-margin">
     <div class="panel-title">
-        <div class="title">门店列表</div>
+        <div class="title">{{ $t('s.store_list') }}</div>
     </div>
     <div class="panel-content">
         <div class="table-container">
-            <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('store.save')" class="panel-btn"><i class="icon i_add"/>新增门店</a-button>
+            <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('store.save')" class="panel-btn"><i class="icon i_add"/>{{ $t('s.new_store') }}</a-button>
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false'>
                 <template #bodyCell="{ column, text , record }">
@@ -26,11 +26,11 @@
                         </div>
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('store.detail')"><i class="icon i_detail"/> 详情</a-button>
-                        <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('store.save')"><i class="icon i_edit"/> 编辑</a-button>
+                        <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('store.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
+                        <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('store.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
                         <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
-                            <template v-if="record.status && $auth('store.delete')"><i class="icon i_forbidden"/>禁用</template>
-                            <template v-if="!record.status && $auth('store.enable')"><i class="icon i_enable"/>启用</template>
+                            <template v-if="record.status && $auth('store.delete')"><i class="icon i_forbidden"/>{{ $t('def.disable') }}</template>
+                            <template v-if="!record.status && $auth('store.enable')"><i class="icon i_enable"/>{{ $t('def.enable') }}</template>
                         </a-button>
                     </template>
                 </template>
@@ -91,19 +91,19 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: '门店名称', dataIndex: 'name', key: 'detail'},
-                {title: '联系人姓名', dataIndex: 'contact_name', key:'item'},
-                {title: '联系人电话', dataIndex: 'contact_phone',key:'item'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '状态', dataIndex: 'status', key: 'status' },
-                {title: '操作', key: 'operation', fixed: 'right'},
+                {title: this.$t('e.name'), dataIndex: 'name', key: 'detail'},
+                {title: this.$t('n.contact'), dataIndex: 'contact_name', key:'item'},
+                {title: this.$t('n.phone'), dataIndex: 'contact_phone',key:'item'},
+                {title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time'},
+                {title: this.$t('n.state'), dataIndex: 'status', key: 'status' },
+                {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
-            if (this.$auth('ADMIN')) {
+          /*  if (this.$auth('ADMIN')) {
                 tableColumns.splice(1, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'name'})
             }
             if (this.$auth('ADMIN')) {
                 tableColumns.splice(2, 0, {title: '所属零售商', dataIndex: 'agent_name', key: 'name'})
-            }
+            }*/
             return tableColumns
         },
     },

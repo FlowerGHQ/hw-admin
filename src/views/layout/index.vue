@@ -5,7 +5,7 @@
             <div class="header-left" @click="collapsed = !collapsed" :class="{'collapsed': collapsed}">
                 <img src="@images/header-logo.png" class="logo" alt="浩万"/>
                 <a-divider type="vertical"/>
-                <a-tag color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType] }}端</a-tag>
+                <a-tag color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType][$i18n.locale] }}</a-tag>
             </div>
             <div class="header-right">
                 <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
@@ -76,12 +76,12 @@
                         <a-sub-menu :key="item.path" v-else-if="$auth(...item.auth)">
                             <template #title>
                                 <i class='icon' :class="item.meta.icon"/>
-                                <span v-show="!collapsed">{{ item.meta.title }}</span>
+                                <span v-show="!collapsed">{{ lang =='zh' ? item.meta.title : item.meta.title_en }}</span>
                             </template>
                             <template v-for="i of item.children">
                                 <template v-if="$auth(...i.auth)">
                                     <a-menu-item :key="item.path + '/' + i.path" @click="handleLink(item.path + '/' + i.path)">
-                                        <span>{{ i.meta.title }}</span>
+                                        <span>{{ lang =='zh' ? i.meta.title : i.meta.title_en }}</span>
                                     </a-menu-item>
                                 </template>
                             </template>
@@ -116,7 +116,6 @@ export default {
         return {
             zhCN,
             enUS,
-
             breadcrumbList: [],
 
             loginType: Core.Data.getLoginType(),
@@ -299,6 +298,7 @@ export default {
             console.log('handleLangSwitch')
             this.$store.commit('switchLang')
             this.$i18n.locale = this.$store.state.lang
+            console.log('this.$i18n.locale',this.$i18n.locale)
         },
     }
 };

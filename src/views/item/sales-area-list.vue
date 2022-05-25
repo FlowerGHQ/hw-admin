@@ -2,17 +2,17 @@
     <div id="SalesAreaList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">销售区域列表</div>
+                <div class="title-area">{{ $t('ar.list')}}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('sales-area.save')"><i class="icon i_add"/>新建销售区域</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('sales-area.save')"><i class="icon i_add"/>{{ $t('ar.save')}}</a-button>
                 </div>
             </div>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">区域名称:</div>
+                        <div class="key">{{ $t('n.name')}}:</div>
                         <div class="value">
-                            <a-input placeholder="请输入区域名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -23,8 +23,8 @@
                     </a-col>
                 </a-row>
                 <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">查询</a-button>
-                    <a-button @click="handleSearchReset">重置</a-button>
+                    <a-button @click="handleSearch" type="primary">{{ $t('def.search')}}</a-button>
+                    <a-button @click="handleSearchReset">{{ $t('def.reset')}}</a-button>
                 </div>
 
             </div>
@@ -37,9 +37,12 @@
                                 <a-button type="link" @click="routerChange('detail', record)">{{ text }}</a-button>
                             </a-tooltip>
                         </template>
+                        <template v-if="column.key === 'country'">
+                            {{ text || '-' }}
+                        </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('sales-area.save')"><i class="icon i_edit"/>编辑</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('sales-area.delete')"><i class="icon i_delete"/>删除</a-button>
+                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('sales-area.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('sales-area.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -86,17 +89,27 @@ export default {
                 country: '',
             },
             // 表格
-            tableColumns: [
-                {title: '名称', dataIndex: 'name'},
-                {title: '大洲', dataIndex: 'continent'},
-                {title: '国家', dataIndex: 'country'},
-                {title: '操作', key: 'operation', fixed: 'right'},
-            ],
             tableData: [],
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        tableColumns() {
+            let columns = [
+                {title: this.$t('n.name'), dataIndex: 'name'},
+                {title: this.$t('n.continent'), dataIndex: 'continent',key: ''},
+                {title: this.$t('n.country'),dataIndex: 'country',key: 'country'},
+                {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
+            ]
+            if (this.$i18n.locale === 'en' ) {
+                columns.splice(1, 1, {title: this.$t('n.continent'), dataIndex: 'continent_en', key: 'country'})
+            }
+            if (this.$i18n.locale === 'en' ) {
+                columns.splice(2, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
+            }
+            return columns
+        },
+    },
     mounted() {
         this.getTableData();
     },

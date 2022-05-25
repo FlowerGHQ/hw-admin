@@ -341,7 +341,17 @@ const Util = {
             }
         }
     },
+    tableFilterFormat(list, lang) {
+        let arr = list.map(i => {
+            return {
+                value: i.value,
+                text: i[lang]
+            }
+        })
+        console.log('tableFilterFormat', arr)
+        return arr
 
+    },
     tableFieldsFilter(columns = [], role) {
         if (!columns.length) {
             return []
@@ -350,6 +360,7 @@ const Util = {
             return item.role === undefined || item.role.includes(role)
         })
     },
+
     /* =============== 通用过滤器 ================ */
 
     /* =============== 分销商管理 ================ */
@@ -360,9 +371,10 @@ const Util = {
     /* =============== 分销商管理 ================ */
 
     /* =============== 商品 ================ */
-    itemTypeFilter(val) {
+    itemTypeFilter(val, to='zh') {
         const MAP = Const.ITEM.TYPE_MAP
-        return MAP[val] || '未知'
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
     },
     itemSpecFilter(attr_list) {
         if (!(attr_list instanceof Array) || !attr_list.length) {
@@ -422,13 +434,9 @@ const Util = {
     /* =============== 采购单 && 售后管理 && 退款管理 ================ */
     purchaseStatusFilter(val, to = 'text') {
         const MAP = Const.PURCHASE.STATUS_MAP
-        const COLOR_MAP = Const.PURCHASE.STATUS_COLOR_MAP
-        switch (to) {
-            case 'text':
-                return MAP[val + ''] || '未知'
-            case 'color':
-                return COLOR_MAP[val + ''] || 'grey'
-        }
+        // const COLOR_MAP = Const.PURCHASE.STATUS_COLOR_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
     },
     purchasePayMethodFilter(val) {
         const MAP = Const.PURCHASE.PAY_METHOD
@@ -438,17 +446,35 @@ const Util = {
         const MAP = Const.PURCHASE.FLAG_REVIEW_MAP
         return MAP[val] || '-'
     },
-    paymentStatusFilter(val, to = 'text') {
+    paymentStatusFilter(val, to = 'zh') {
         const MAP = Const.PURCHASE.PAYMENT_STATUS_MAP
-        const COLOR_MAP = Const.PURCHASE.PAYMENT_COLOR_MAP
-        switch (to) {
-            case 'text':
-                return MAP[val + ''] || '未知'
-            case 'color':
-                return COLOR_MAP[val + ''] || 'grey'
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    purchaseTransferFilter(val, to='zh') {
+        const MAP = Const.PURCHASE.FLAG_TRANSFER_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    purchaseExpressFilter(val, to='zh') {
+        if ( val === 0) {
+            return '-'
+        } else {
+            const MAP = Const.PURCHASE.COURIER_MAP
+            let item = MAP[val + ''] || {}
+            return item[to] || ''
         }
     },
-
+    purchaseWaybillFilter(val, to='zh') {
+        console.log('val',val)
+        if ( val === 0) {
+            return '-'
+        } else {
+            const MAP = Const.PURCHASE.RECEIPT_MAP
+            let item = MAP[val + ''] || {}
+            return item[to] || ''
+        }
+    },
     aftersalesTypeFilter(val) {
         const MAP = Const.AFTERSALES.TYPE_MAP
         return MAP[val + ''] || '未知'
@@ -477,9 +503,10 @@ const Util = {
     /* =============== 采购单 && 售后管理 && 退款管理  ================ */
 
     /* =============== 员工/账号/用户 ================ */
-    userTypeFilter(val) {
+    userTypeFilter(val, to='zh') {
         const MAP = Const.USER.TYPE_MAP
-        return MAP[val] || '未知'
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
     },
     /* =============== 员工/账号/用户 ================ */
 
@@ -507,6 +534,11 @@ const Util = {
     fileTargetTypeFilter(val) {
         const MAP = Const.SYSTEM.FILE.TARGET_TYPE_MAP
         return MAP[val] || '未知'
+    },
+    authUserTypeFilter(val, to='text') {
+        const MAP = Const.NOTICE.RESOURCE_TYPE_MAP
+        const item = MAP[val] || {}
+        return item[to] || '未知'
     },
     /* =============== 系统管理 ================ */
 
@@ -578,11 +610,16 @@ const Util = {
 
     /* =============== 账户 ================ */
     walletTypeFilter(val) {
-        const MAP = Const.WALLET.OPERATE_TYPE_MAP
+        const MAP = Const.WALLET.TYPE_MAP
         return MAP[val] || '未知'
     },
-    operateTypeFilter(val) {
+    operateTypeFilter(val, to= 'zh') {
         const MAP = Const.WALLET.OPERATE_TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    subjectTypeFilter(val) {
+        const MAP = Const.WALLET.SUBJECT_MAP
         return MAP[val] || '未知'
     },
     /* =============== 账户 ================ */
@@ -661,6 +698,15 @@ const Util = {
         return MAP[val] || '未知'
     },
     /* =============== 调货单 ================ */
+
+    /* =============== 权限 ================ */
+    userAuthFilter(val, to = 'text') {
+        const MAP = Const.NOTICE.RESOURCE_TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== 权限 ================ */
+
 
 }
 

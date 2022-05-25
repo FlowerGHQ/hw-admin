@@ -10,7 +10,7 @@
                 <template v-else>{{i+1}}</template>
             </span>
             <div class="text">
-                <p class="title">{{item.title}}</p>
+                <p class="title"> {{item[$i18n.locale]}}</p>
                 <span class="time" v-if="item.time">{{ $Util.timeFilter(item.time) }}</span>
             </div>
         </div>

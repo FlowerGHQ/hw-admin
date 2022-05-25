@@ -22,11 +22,22 @@
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">所属仓库:</div>
+                        <div class="key">发货仓库:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.warehouse_id" placeholder="请选择仓库"
+                            <a-select v-model:value="searchForm.from_warehouse_id" placeholder="请选择发货仓库"
                                       @change="handleSearch">
-                                <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id"
+                                <a-select-option v-for="warehouse of fromWarehouseList" :key="warehouse.id"
+                                                 :value="warehouse.id">{{ warehouse.name }}
+                                </a-select-option>
+                            </a-select>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">收货仓库:</div>
+                        <div class="value">
+                            <a-select v-model:value="searchForm.to_warehouse_id" placeholder="请选择收货仓库"
+                                      @change="handleSearch">
+                                <a-select-option v-for="warehouse of toWarehouseList" :key="warehouse.id"
                                                  :value="warehouse.id">{{ warehouse.name }}
                                 </a-select-option>
                             </a-select>
@@ -147,7 +158,7 @@
                         <div class="key">发货仓库:</div>
                         <div class="value">
                             <a-select v-model:value="editForm.from_warehouse_id" placeholder="请选择发货仓库" show-search option-filter-prop="children">
-                                <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">
+                                <a-select-option v-for="item of fromWarehouseList" :key="item.id" :value="item.id">
                                     {{ item.name }}
                                 </a-select-option>
                             </a-select>
@@ -157,7 +168,7 @@
                         <div class="key">收货仓库:</div>
                         <div class="value">
                             <a-select v-model:value="editForm.to_warehouse_id" placeholder="请选择收货仓库" show-search option-filter-prop="children">
-                                <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">
+                                <a-select-option v-for="item of toWarehouseList" :key="item.id" :value="item.id">
                                     {{ item.name }}
                                 </a-select-option>
                             </a-select>
@@ -200,14 +211,16 @@ export default {
             total: 0,
             // 搜索
             targetMap: Core.Const.WAREHOUSE_TRANSFER.COMMODITY_TYPE_MAP, //类目
-            warehouseList: [],
+            fromWarehouseList: [],
+            toWarehouseList: [],
             // statusList: Core.Const.WAREHOUSE_TRANSFER.STATUS_MAP,
             statusList: {
                 '0': { key: 0, color: 'yellow', text: '全部',value: '0'},
                 ...Core.Const.WAREHOUSE_TRANSFER.STATUS_MAP,
             },
             searchForm: {
-                warehouse_id: undefined,
+                from_warehouse_id: undefined,
+                to_warehouse_id: undefined,
                 uid: '',
                 status: 0,
                 type: undefined,
@@ -239,7 +252,8 @@ export default {
     computed: {},
     mounted() {
         this.getTableData();
-        this.getWarehouseList();
+        this.getToWarehouseList();
+        this.getFromWarehouseList();
         this.getStatusList();
     },
     methods: {
@@ -326,9 +340,14 @@ export default {
                 this.loading = false;
             });
         },
-        getWarehouseList() {
+        getToWarehouseList() {
+            Core.Api.Warehouse.listAll({is_authority_warehouse: Core.Const.WAREHOUSE.IS_AUTHORITY_WAREHOUSE.YES}).then(res => {
+                this.toWarehouseList = res.list
+            })
+        },
+        getFromWarehouseList() {
             Core.Api.Warehouse.listAll().then(res => {
-                this.warehouseList = res.list
+                this.fromWarehouseList = res.list
             })
         },
 
