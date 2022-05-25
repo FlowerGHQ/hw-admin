@@ -7,7 +7,7 @@
                 <a-button type="primary" @click="handleSubmit()" v-if="$auth('invoice.save')"><i class="icon i_confirm"/>提交</a-button>
                 <a-button type="danger" ghost @click="handleCancel()" v-if="$auth('invoice.delete')"> <i class="icon i_close_c"/>取消</a-button>
             </template>
-            <template v-if="detail.status === STATUS.CLOSE && detail.type === TYPE.IN && detail.target_type === 30 && $auth('ADMIN' && 'invoice.import-export')">
+            <template v-if="detail.status === STATUS.CLOSE && detail.type === TYPE.IN && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')">
                 <a-button type="primary" @click="handleExportIn"><i class="icon i_download"/>导出</a-button>
             </template>
             <AuditMaterialPurchase v-if="detail.status === STATUS.WAIT_AUDIT && $auth('invoice.warehouse-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :invoiceId="id"
@@ -17,7 +17,7 @@
                 <AuditMaterialPurchase v-if="detail.status === STATUS.AUDIT_PASS && $auth('invoice.finance-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :invoiceId="id"
                                        :status="STATUS.AUDIT_PASS" @submit="getInvoiceDetail" ><i class="icon i_audit"/>财务审核</AuditMaterialPurchase>
                 <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.FINANCE_PASS && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}完成</a-button>
-                <a-button type="primary" @click="handleExportOut" v-if="detail.status === STATUS.CLOSE && detail.target_type === 30 && $auth('ADMIN' && 'invoice.import-export')"><i class="icon i_download"/>导出</a-button>
+                <a-button type="primary" @click="handleExportOut" v-if="detail.status === STATUS.CLOSE && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')"><i class="icon i_download"/>导出</a-button>
             </template>
         </div>
     </div>

@@ -31,6 +31,7 @@ const apiList = {
     User: { // 员工
         save: ['PostJson', 'user/save'],
         list: ['PostJson', 'user/list'],
+        listAll: ['PostJson', 'user/list-name'],
         detail: ['PostJson', 'user/detail'],
         delete: ['PostJson', 'user/delete'],
         setAdmin: ['PostJson', 'user/set-admin'],
@@ -60,9 +61,15 @@ const apiList = {
         allotRole: ['PostJson', 'authority/save-user-role'], // 向员工账号分配角色
 
     },
-    AuthUser: {
-        list:  ['PostJson', 'authority/role-list'], // 用户权限列表
-        authUserList: ['PostJson', 'authority/save-user_authority_scope'],
+    AuthorityUser: {
+        list: ['PostJson', 'authority/list-user-authority-scope'], // 用户权限范围列表
+        save: ['PostJson', 'authority/save-user-authority-scope'],//新增/编辑用户权限范围
+        detail: ['PostJson', 'authority/detail-user-authority-scope'],//用户权限范围详情
+        delete: ['PostJson', 'authority//delete-user-authority-scope'],//删除用户权限范围
+        authority: ['PostJson', 'authority//list-by-resource-authorized'], //获得某个资源授权的用户ID列表
+        user: ['PostJson', 'authority//user-has-authority'],//判断用户是否拥有对某个资源的权限
+
+
     },
     Agent: { // 零售商
         list: ['PostJson', 'agent/list'], // 列表
@@ -250,6 +257,7 @@ const apiList = {
         review: ['PostJson', 'purchase-order/review'], // 评论
         statusList: ['PostJson', 'purchase-order/status-list'], // 保存
         recreate: ['PostJson', 'purchase-order/recreate'], // 再来一单
+        transfer: ['PostJson', 'purchase-order/transfer'], // 转单
     },
     Aftersales: { // 售后单
         list: ['PostJson', 'after-sales-order/list'],

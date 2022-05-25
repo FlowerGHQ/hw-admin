@@ -87,7 +87,7 @@ export default {
                 {title: '商品编码', dataIndex: ['item','code'], key: 'item'},
                 {title: '故障原因', dataIndex: 'item_fault_name', key: 'item'},
                 // {title: '故障件实例', dataIndex: 'entity_uid', key: 'item'},
-                {title: '审核人', dataIndex: 'audit_user_name', key: 'item'},
+                {title: '入库人', dataIndex: 'operator_name', key: 'item'},
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', dataIndex: 'operation'},
             ],

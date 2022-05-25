@@ -126,6 +126,13 @@ class StorageHandler {
         return this.getItem(Const.DATA.KEY_AUTHORITY_LIST)
     }
 
+    setLang(value) {
+        this.setItem(Const.DATA.KEY_LANGUAGE, value);
+    }
+    getLang() {
+        return this.getItem(Const.DATA.KEY_LANGUAGE)
+    }
+
     setFieldDisplay(key, value) {
         let field = this.getItem(Const.DATA.KEY_FIELD_DISPLAY) || {}
         field[key] = value

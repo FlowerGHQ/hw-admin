@@ -1,7 +1,7 @@
 <template>
     <div class="ReceiverAddress gray-panel no-margin">
         <div class="panel-title">
-            <div class="title">收货地址管理</div>
+            <div class="title">{{ $t('ad.address') }}</div>
         </div>
         <div class="panel-content">
             <div class="table-container">
@@ -17,10 +17,10 @@
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
-                        <template v-if="column.key === 'operation'">
-                            <AddressEdit :detail="record" :orgId="orgId" :orgType="orgType" btnType="link" @submit='getTableData'><i class="icon i_edit"/>编辑</AddressEdit>
-                            <a-button type='link' class="danger" @click="handleDelete(record.id)"><i class="icon i_delete"/> 删除</a-button>
-                        </template>
+<!--                        <template v-if="column.key === 'operation'">
+                            <AddressEdit :detail="record" :orgId="orgId" :orgType="orgType" btnType="link" @submit='getTableData'><i class="icon i_edit"/>{{ $t('def.edit') }}</AddressEdit>
+                            <a-button type='link' class="danger" @click="handleDelete(record.id)"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>
+                        </template>-->
                     </template>
                 </a-table>
             </div>
@@ -84,12 +84,12 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: '姓名', dataIndex: 'name', key: 'item'},
-                {title: '联系电话', dataIndex: 'phone',key: 'item'},
-                {title: '国家', dataIndex: 'country',key: 'item'},
-                {title: '地址', dataIndex: 'address', key: 'address'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '操作', key: 'operation', fixed: 'right'},
+                {title: this.$t('e.name'), dataIndex: 'name', key: 'item'},
+                {title: this.$t('n.phone'), dataIndex: 'phone',key: 'item'},
+                {title: this.$t('n.country'), dataIndex: 'country',key: 'item'},
+                {title: this.$t('ad.specific_address'), dataIndex: 'address', key: 'address'},
+                {title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time'},
+                // {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             return columns
         },

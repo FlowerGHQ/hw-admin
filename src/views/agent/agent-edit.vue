@@ -1,43 +1,49 @@
 <template>
 <div id="AgentEdit" class="edit-container">
-    <div class="title-container"><div class="title-area">{{form.id ? '编辑零售商' : '新建零售商'}}</div></div>
+    <div class="title-container"><div class="title-area">{{ form.id ? $t('a.edit') : $t('a.new_retailer') }}</div></div>
     <div class="form-block">
-        <div class="form-title"><div class="title">基本信息</div></div>
+        <div class="form-title"><div class="title">{{ $t('n.information') }}</div></div>
         <div class="form-content">
             <div class="form-item required" v-if="$auth('ADMIN') && !form.id">
-                <div class="key">所属分销商</div>
+                <div class="key">{{ $t('n.distributor') }}</div>
                 <div class="value">
-                    <a-select v-model:value="form.distributor_id" placeholder="请选择所属分销商">
+                    <a-select v-model:value="form.distributor_id" :placeholder="$t('search.select_distributor')">
                         <a-select-option v-for="distributor of distributorList" :key="distributor.id" :value="distributor.id">{{ distributor.name }}</a-select-option>
                     </a-select>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">零售商名:</div>
+                <div class="key">{{ $t('n.name') }}:</div>
                 <div class="value">
-                    <a-input v-model:value="form.name" placeholder="请输入零售商"/>
+                    <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">简称:</div>
+                <div class="key">{{ $t('d.short_name') }}:</div>
                 <div class="value">
-                    <a-input v-model:value="form.short_name" placeholder="请输入简称"/>
+                    <a-input v-model:value="form.short_name" :placeholder="$t('def.input')"/>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">手机号:</div>
+                <div class="key">{{ $t('n.contact') }}:</div>
                 <div class="value">
-                    <a-input v-model:value="form.phone" placeholder="请输入零售商手机号"/>
+                    <a-input v-model:value="form.contact_name" :placeholder="$t('def.input')"/>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">邮箱:</div>
+                <div class="key">{{ $t('n.phone') }}:</div>
                 <div class="value">
-                    <a-input v-model:value="form.email" placeholder="请输入零售商邮箱"/>
+                    <a-input v-model:value="form.phone" :placeholder="$t('def.input')"/>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">国家:</div>
+                <div class="key">{{ $t('n.email') }}:</div>
+                <div class="value">
+                    <a-input v-model:value="form.email" :placeholder="$t('def.input')"/>
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('n.country') }}:</div>
                 <div class="value">
                     <CountryCascader v-model:value="areaList" :def-area='defArea'/>
                 </div>
@@ -45,8 +51,8 @@
         </div>
     </div>
     <div class="form-btns">
-        <a-button @click="handleSubmit" type="primary" v-if="$auth('agent.save')">确定</a-button>
-        <a-button @click="routerChange('back')" type="primary" ghost="">取消</a-button>
+        <a-button @click="handleSubmit" type="primary" v-if="$auth('agent.save')">{{ $t('def.sure') }}</a-button>
+        <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
     </div>
 </div>
 </template>
@@ -69,6 +75,7 @@ export default {
                 id: '',
                 name: '',
                 short_name: '',
+                contact_name: '',
                 phone: '',
                 email: '',
                 country: undefined,

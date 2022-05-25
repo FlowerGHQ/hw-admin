@@ -2,8 +2,9 @@
     <div id="ItemDisplay" class="list-container">
         <div class="info-content">
             <div class="name">{{ detail.name }}</div>
-            <p class="code">商品编号：{{ detail.code }}</p>
-            <p class="spec" v-if="detail.attr_str"><span>规格：</span>{{ detail.attr_str }}</p>
+            <p class="code">{{ $t('i.code') }}：{{ detail.code }}</p>
+            <p class="spec" v-if="detail.attr_str"><span>{{ $t('i.color') }}：</span>{{ detail.attr_str }}</p>
+            <p class="spec" v-if="detail.attr_str"><span>{{ $t('i.spec') }}：</span>{{ detail.attr_str }}</p>
             <p class="price">€{{$Util.countFilter(detail[priceKey + 'eur'])}} | ${{$Util.countFilter(detail[priceKey + 'usd'])}}</p>
             <p class="category">{{ category.name }}</p>
             <div class="desc" v-if="config && config.length">
@@ -27,7 +28,7 @@
             </a-carousel>
         </div>
         <div class="spec-content" v-if='specList.length'>
-            <div class="title">规格({{ specList.length }})</div>
+            <div class="title">{{ $t('i.spec') }}({{ specList.length }})</div>
             <div class="spec-list">
                 <div class="spec-item" v-for="item of specList" :key="item.id"
                     :class="this.id === item.id ? 'active' : ''" @click="handleSpecChange(item)">
@@ -38,11 +39,11 @@
         </div>
         <ExploredContent ref="ExploredContent" :id="id"/>
         <div class="btn-content">
-            <a-button type="primary" class="disabled" v-if="detail.in_shopping_cart">已在购物车中</a-button>
-            <a-button type="primary" @click="hanldeAddToShopCart" v-else>添加到购物车</a-button>
+            <a-button type="primary" class="disabled" v-if="detail.in_shopping_cart">{{ $t('i.added') }}</a-button>
+            <a-button type="primary" @click="hanldeAddToShopCart" v-else>{{ $t('i.favorited') }}</a-button>
 
-            <a-button type="primary" class="disabled" ghost v-if="detail.in_favorite">已收藏</a-button>
-            <a-button type="primary" ghost @click="hanldeAddToFavorite" v-else>收藏商品</a-button>
+            <a-button type="primary" class="disabled" ghost v-if="detail.in_favorite">{{ $t('i.cart') }}</a-button>
+            <a-button type="primary" ghost @click="hanldeAddToFavorite" v-else>{{ $t('i.add_to_favorites') }}</a-button>
         </div>
     </div>
 </template>

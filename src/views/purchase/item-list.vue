@@ -2,14 +2,14 @@
 <div id="PurchaseItemList">
     <div class="item-header-container">
         <a-tabs v-model:activeKey="firstLevelId" @change="handleCategoryChange">
-            <a-tab-pane :key="0" tab="全部"></a-tab-pane>
+            <a-tab-pane :key="0" :tab="$t('n.all')"></a-tab-pane>
             <a-tab-pane v-for="item of categoryList" :key="item.id" :tab="item.name"></a-tab-pane>
             <template #rightExtra>
-                <a-input class="search" v-model:value="searchForm.name" placeholder="商品名称" @pressEnter="handleSearch" >
+                <a-input class="search" v-model:value="searchForm.name" :placeholder="$t('def.input')" @pressEnter="handleSearch" >
                     <template #prefix><i class="icon i_search" @click="handleSearch"/></template>
                     <template #suffix><i class="icon i_close_b" @click="handleNameReset" v-if="searchForm.name"/></template>
                 </a-input>
-                <a-tooltip title="查看收藏夹" class="popover">
+                <a-tooltip :title="$t('i.favorites')" class="popover">
                     <a-button type="link" @click="routerChange('favorite')"><i class="icon i_collect"/></a-button>
                 </a-tooltip>
                 <a-popover v-model:visible="briefVisible" arrow-point-at-center placement="bottomRight" trigger='click' overlayClassName='shop-cart-brief-content'>
@@ -17,7 +17,7 @@
                         <div class="shop-cart-brief" :class="briefVisible ? 'show' : 'hidden'">
                             <div class="icon i_close" @click="briefVisible = false"></div>
                             <div class="tip">
-                                <i class="icon i_check_b"/>已加入购物车
+                                <i class="icon i_check_b"/>{{ $t('i.added') }}
                             </div>
                             <div class="item" v-for="item of briefList" :key="item.id">
                                 <img class="cover" :src="$Util.imageFilter(item.logo, 2)" />
@@ -28,12 +28,12 @@
                                 </div>
                             </div>
                             <div class="btns">
-                                <a-button class='btn ghost' @click="routerChange('shop_cart')">查看购物车({{briefCount}})</a-button>
+                                <a-button class='btn ghost' @click="routerChange('shop_cart')">{{ $t('i.look') }}({{briefCount}})</a-button>
                                 <a-button class='btn black' @click="routerChange('settle')">结算</a-button>
                             </div>
                         </div>
                     </template>
-                    <a-tooltip :title="`查看购物车${briefCount ? '('+briefCount+')' : ''}`" class="popover">
+                    <a-tooltip :title="$t('i.look') + `${briefCount ? '('+briefCount+')' : ''}`" class="popover">
                         <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>
                     </a-tooltip>
                 </a-popover>
@@ -63,7 +63,7 @@
                     <p class="name">{{item.name}}</p>
                     <p class="desc">&nbsp;</p>
                     <p class="price">€{{$Util.countFilter(item[priceKey + 'eur'])}} | ${{$Util.countFilter(item[priceKey + 'usd'])}}</p>
-                    <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">添加到购物车</a-button>
+                    <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">{{ $t('i.cart') }}</a-button>
                 </div>
             </div>
             <div class="paging-container">

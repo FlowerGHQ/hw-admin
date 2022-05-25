@@ -2,36 +2,36 @@
 <div id="ItemEdit" class="edit-container">
     <a-spin :spinning="loading" class='loading-incontent' v-if="loading"></a-spin>
     <div class="title-container">
-        <div class="title-area">编辑爆炸图</div>
+        <div class="title-area">{{ $t('i.edit_view') }}</div>
     </div>
 
     <ItemHeader :detail='detail' :showSpec='indep_flag ? true : false'/>
 
-    <a-collapse ghost expand-icon-position="right">
+    <a-collapse ghost expand-icon-position="right" v-model:activeKey="activeKey">
         <template #expandIcon ><i class="icon i_expan_l"/> </template>
-        <a-collapse-panel key="itemInfo" header="详情信息" class="gray-collapse-panel" >
+        <a-collapse-panel key="item" :header="$t('i.product_information')" class="gray-collapse-panel" >
             <a-row class="panel-content info-container">
                 <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                     <div class="info-item">
-                        <div class="key">商品编码</div>
+                        <div class="key">{{ $t('i.code') }}</div>
                         <div class="value">{{detail.code || '-'}}</div>
                     </div>
                     <div class="info-item">
-                        <div class="key">商品类型</div>
-                        <div class="value"> {{ $Util.itemTypeFilter(detail.type) }}</div>
+                        <div class="key">{{ $t('n.type') }}</div>
+                        <div class="value"> {{ $Util.itemTypeFilter(detail.type, $i18n.locale) }}</div>
                     </div>
                     <div class="info-item">
-                        <div class="key">商品分类</div>
+                        <div class="key">{{ $t('i.categories') }}</div>
                         <div class="value">{{detail.category ? detail.category.name : '-'}}</div>
                     </div>
                     <div class="info-item">
-                        <div class="key">销售区域</div>
+                        <div class="key">{{ $t('d.sales_area') }}</div>
                         <div class="value">{{ detail.sales_area_name || '-'}}</div>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" v-if="indep_flag">
                     <div class="info-item">
-                        <div class="key">成本价格</div>
+                        <div class="key">{{ $t('i.cost_price') }}</div>
                         <div class="value">{{$Util.priceUnitFilter(detail.original_price_currency)}} {{$Util.countFilter(detail.original_price)}}</div>
                     </div>
                     <div class="info-item">
@@ -64,11 +64,11 @@
             </a-tabs>
         </div>
         <div class="btn-area">
-            <a-button class="panel-btn" v-if="tabsArray.length > 0" @click="clickDeleteExplore">
-                删除爆炸图
+            <a-button class="panel-btn" type="danger" ghost v-if="tabsArray.length > 0" @click="clickDeleteExplore">
+                <i class="icon i_delete"/>{{ $t('def.delete') }}
             </a-button>
             <a-button type="primary" class="panel-btn" @click="clickShowAdd(true)">
-                新增爆炸图
+                <i class="icon i_add"/>{{ $t('i.save_view') }}
             </a-button>
         </div>
         <div class="panel-content">
@@ -82,8 +82,8 @@
                         {{ (record.item || {}).model }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="showEdit(index)"> <i class="icon i_edit_l"/>修改</a-button>
-                        <a-button type='link' @click="clickDeletePoint(index)"> <i class="icon i_delete"/>删除</a-button>
+                        <a-button type='link' @click="showEdit(index)"> <i class="icon i_edit_l"/>{{ $t('def.edit') }}</a-button>
+                        <a-button type='link' class="danger" @click="clickDeletePoint(index)"> <i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                     </template>
                 </template>
             </a-table>
@@ -91,10 +91,10 @@
     </div>
     <!-- 编辑爆炸图 -->
     <div class="gray-panel" v-show="detailImageUrl">
-        <div class="panel-title">点位详情</div>
+        <div class="panel-title"> {{ $t('i.point_location') }}</div>
         <div class="btn-area">
-            <a-button class="panel-btn" @click="clickDeletePoint(-1)">清空点位</a-button>
-            <a-button class="panel-btn" @click="clickAdd" type="primary">新增点位</a-button>
+            <a-button class="panel-btn" @click="clickDeletePoint(-1)" type="danger" ghost> <i class="icon i_delete"/>{{ $t('i.clear') }}</a-button>
+            <a-button class="panel-btn" @click="clickAdd" type="primary"><i class="icon i_add"/>{{ $t('i.save_a') }} </a-button>
         </div>
         <div class="panel-content text-c">
             <div class="image-contain" @mouseup="mouseupHandler" @mousemove="mousemoveHandler">
@@ -114,20 +114,20 @@
                             <div class="contain-header"><i class="icon i_close" style="color: #fff" @click.stop="clickDeletePoint(index)"/></div>
                             <div class="contain-name">
                                 <i class="icon i_skew-bg" />
-                                <span class="icon-name">产品名称</span>
+                                <span class="icon-name">{{ $t('n.name') }}</span>
                                 {{ (item.item || {}).name }}
                             </div>
                             <div class="contain-type">
                                 <div class="type-left">型号:&nbsp;{{ (item.item || {}).model}}</div>
-                                <div class="edit-btn" @click="showEdit(index)">编辑</div>
+                                <div class="edit-btn" @click="showEdit(index)">{{ $t('def.edit') }}</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="foot-btn" v-if="isChangedPoint">
-                <a-button type="primary" @click="clickSave">保存</a-button>
-                <a-button @click="clickCancel">取消</a-button>
+                <a-button type="primary" @click="clickSave">{{ $t('def.sure') }}</a-button>
+                <a-button @click="clickCancel">{{ $t('def.cancel') }}</a-button>
             </div>
         </div>
     </div>
@@ -174,7 +174,7 @@ export default {
             // 载入
             loading: false,
 
-            activeKey: [],
+            activeKey: ['item'],
 
             // 商品
             id: null,
@@ -239,11 +239,12 @@ export default {
             }))
             column = column.filter(item => item.title && item.dataIndex)
             column.unshift(
-                {title: '商品名称', key: 'name', dataIndex: 'name'},
-                {title: '商品型号', key: 'model', dataIndex: 'model'},
+                {title: this.$t('n.name'), key: 'name', dataIndex: 'name'},
+                {title: this.$t('i.number'), key: 'model', dataIndex: 'model'},
+                {title: this.$t('i.code'), key: 'code', dataIndex: 'name'},
             )
             column.push(
-                {title: '操作', key: 'operation'},
+                {title: this.$t('def.operate'), key: 'operation'},
             )
             return column
         },
@@ -277,10 +278,10 @@ export default {
         changeTabConfirm (key) {
             const ths = this;
             ths.$confirm({
-                title: `${ths.tabsArray[ths.currentTab].name} 此图点位已经修改变更，是否保存？`,
-                okText: '确定',
+                title: `${ths.tabsArray[ths.currentTab].name},` + ths.$t('i.point'),
+                okText: ths.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: ths.$t('def.cancel'),
                 onOk() {
                     ths.parsePoint(false);
                     const param = {
@@ -337,7 +338,7 @@ export default {
                 id: this.id
             }).then(res => {
                 let detail = res.detail || {}
-                detail.sales_area_name = detail.sales_area_list ? detail.sales_area_list.map(i => i.name).join(',') : ''
+                detail.sales_area_name = detail.sales_area_list ? detail.sales_area_list.map(i => i.name).join(' , ') : ''
                 this.detail = detail;
             }).catch(err => {
                 console.log('getItemDetail err', err)

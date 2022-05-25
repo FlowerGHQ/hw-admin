@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">系统附件列表</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('ADMIN' && 'file.save')"><i class="icon i_add"/>新建文件</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('ADMIN') && $auth('file.save')"><i class="icon i_add"/>新建文件</a-button>
             </div>
         </div>
         <div class="search-container">

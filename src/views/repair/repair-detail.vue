@@ -2,7 +2,7 @@
 <div id="RepairDetail">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">{{ $t('n.repair_detail') }}</div>
+            <div class="title-area">{{ $t('r.repair_detail') }}</div>
             <div class="btns-area">
                 <template v-if="sameOrg && $auth('repair-order.save')">
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION">
@@ -24,10 +24,10 @@
                 <a-button type="primary" @click="routerChange('invoice')" v-if="haveSettle && $auth('repair-order.settlement')">
                     <i class="icon i_detail_l"/>查看结算单
                 </a-button>
-                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT && $auth('DISTRIBUTOR' && 'repair-order.audit')">
+                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT && $auth('DISTRIBUTOR') && $auth('repair-order.audit')">
                     <i class="icon i_audit"/>审核
                 </a-button>
-                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS && $auth('ADMIN' && 'repair-order.audit')">
+                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS && $auth('ADMIN') && $auth('repair-order.audit')">
                     <i class="icon i_audit"/>审核
                 </a-button>
             </div>
@@ -335,6 +335,7 @@ export default {
         handleAuditShow() { // 显示弹框
             this.repairAuditShow = true
         },
+
         handleAuditClose() { // 关闭弹框
             this.repairAuditShow = false;
             Object.assign(this.auditForm, this.$options.data().auditForm)

@@ -1,6 +1,6 @@
 <template>
     <div class="explored-content" v-if="tabsArray.length > 0">
-        <div class="title">爆炸图</div>
+        <div class="title">{{ $t('i.view') }}</div>
         <div class="explore-content">
             <a-carousel autoplay class="carousel-list">
                 <div class="carousel-item" v-for="(item,i) of tabsArray" :key="i">
