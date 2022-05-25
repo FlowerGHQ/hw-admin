@@ -6,7 +6,7 @@ import defult_file from '@images/defult_file.png'
 
 
 // let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' // 正式
-let OSS_POINT = 'https://rebuild-mel-erp.oss-cn-hangzhou.aliyuncs.com' // 
+let OSS_POINT = 'https://rebuild-mel-erp.oss-cn-hangzhou.aliyuncs.com' //
 let URL_POINT = 'https://eos-api.hw.innotick.com'
 
 switch (window.location.hostname) {
@@ -33,7 +33,7 @@ switch (window.location.hostname) {
     default:
         // URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.7:8083' // 但
-        URL_POINT = 'http://10.0.0.184:8889'
+        URL_POINT = 'http://10.0.0.234:8883'
         // URL_POINT = 'http://10.0.0.171:8883' // 姚志宇
 
 
@@ -662,6 +662,10 @@ let Const = {
             2: '残次仓',
             3: '物料仓',
             4: '广宣品仓',
+        },
+        IS_AUTHORITY_WAREHOUSE: {
+            YES: 1,
+            NO: 0,
         },
     },
     STOCK_RECORD: { // 出入库明细
