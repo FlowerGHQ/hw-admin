@@ -32,8 +32,10 @@
                 <template v-for="item of authItems" :key="item.key">
                     <div class="form-item afs" v-if="item.list.length">
                         <div class="key">{{ item.name }}:</div>
+                        {{item.list}}
+                        {{$Util.tableFilterFormat(item.list, $i18n.locale)}}
                         <div class="value">
-                            <a-checkbox-group :options="item.list" v-model:value="item.select"/>
+                            <a-checkbox-group :options="1" v-model:value="item.select"/>
                         </div>
                     </div>
                 </template>
@@ -96,6 +98,7 @@ export default {
                 id: this.form.id,
             }).then(res => {
                 console.log('getAuthRoleDetail res', res)
+                console.log('authItems',this.authItems)
                 this.detail = res.role
                 for (const key in this.form) {
                     this.form[key] = res.role[key]
@@ -117,8 +120,9 @@ export default {
                     let key = auth.key.split('.')[0];
                     let item = this.authItems.find(i => key === i.key);
                     if (item) {
-                        item.list.push({value: auth.id, label: auth.name});
+                        item.list.push({value: auth.id, zh: auth.name, en: auth.key});
                     }
+                    console.log('item.list',item.list)
                 })
                 if (this.form.id) {
                     this.getRoleSelectedAuth();

@@ -658,10 +658,10 @@ let Const = {
             CUSTOMIZE: 4, // 广宣品仓
         },
         TYPE_MAP: {
-            1: '成品仓',
-            2: '残次仓',
-            3: '物料仓',
-            4: '广宣品仓',
+            '1': { key: 1, zh: '成品仓', en: 'Good'},
+            '2': { key: 2, zh: '残次仓', en: 'Imperfect' },
+            '3': { key: 3, zh: '物料仓'},
+            '4': { key: 4, zh: '广宣品仓'},
         },
     },
     STOCK_RECORD: { // 出入库明细
@@ -672,18 +672,18 @@ let Const = {
             CUSTOMIZE: 40,
         },
         COMMODITY_TYPE_MAP: {
-            10: '无实例商品',
-            20: '有实例商品',
-            30: '物料',
-            40: '广宣品',
+            '10': { key: 10, zh: '无实例商品', en: 'No instance'},
+            '20': { key: 20, zh: '有实例商品', en: 'Instance' },
+            '30': { key: 30, zh: '物料', en: 'Materiel'},
+            '40': { key: 40, zh: '广宣品', en: 'Other' },
         },
         TYPE: {
             IN: 1, //入库
             OUT: 2, //出库
         },
         TYPE_MAP: {
-            1: '入库',
-            2: '出库'
+            '1': {key: 1, zh: '入库', en: 'Inbound'},
+            '2': {key: 2, zh: '出库', en: 'Outbound'},
         },
         STATUS: { //出入库单状态
             INIT: 0, //初始化
@@ -695,22 +695,13 @@ let Const = {
             CANCEL: -20, // 取消
         },
         STATUS_MAP: {
-            '0': '待提交',
-            '10': '待审核',
-            '20': '仓库审核通过',
-            '30': '财务审核通过',
-            '40': '已完成',
-            '-10': '审核未通过',
-            '-20': '已取消'
-        },
-        STATUS_COLOR_MAP: {
-            '0': 'orange',
-            '10': 'yellow',
-            '20': 'blue',
-            '30': 'purple',
-            '40': 'green',
-            '-10': 'red',
-            '-20': 'grey'
+            '0': {key: 0, zh: '待提交', en: 'Awaiting commit',color: 'orange'},
+            '10': {key: 10, zh: '待审核', en: 'Awaiting review', color: 'yellow'},
+            '20': {key: 20, zh: '仓库审核通过', en: 'Admin review passed', color: 'blue'},
+            '30': {key: 30, zh: '财务审核通过', en: 'Financial review passed', color: 'purple'},
+            '40': {key: 40, zh: '已完成', en: 'In the warehouse', color: 'green'},
+            '-10': {key: -10, zh: '审核失败', en: 'Review failed', color: 'red'},
+            '-20': {key: -20, zh: '已取消', en: 'Cancelled', color: 'grey'},
         },
         STATUS_LIST: [
             { text: '待提交', value: 0 },
@@ -727,15 +718,20 @@ let Const = {
             MATERIAL_PURCHASE: 60, //物料采购单
             WAREHOUSE_TRANSFER: 70, //仓库调货单
         },
+        SOURCE_TYPE_ADMIN_MAP: {
+            '10': {key: 10, text: '管理员操作', color: 'yellow'},
+            '15': {key: 15, text: '生产单', color: 'blue'},
+            '30': {key: 30, text: '售后单', color: 'yellow'},
+            '40': {key: 40, text: '调货单', color: 'blue'},
+            '50': {key: 50, text: '维修单', color: 'orange'},
+            '60': {key: 60, text: '物料采购单', color: 'yellow'},
+            '70': {key: 70, text: '仓库调货单', color: 'blue'},
+        },
         SOURCE_TYPE_MAP: {
-            10: '管理员创建',
-            15: '生产单',
-            20: '采购单',
-            30: '售后单',
-            40: '调货单',
-            50: '维修单',
-            60: '物料采购单',
-            70: '仓库调货单'
+            '10': {key: 10, zh: '管理员操作', en: 'Admin action', color: 'yellow'},
+            '20': {key: 20, zh: '采购单', en: 'Purchase order',color: 'orange'},
+            '30': {key: 30, zh: '售后单', en: 'After-sale order', color: 'yellow'},
+            '50': {key: 50, zh: '维修单', en: 'Repair order',color: 'orange'},
         },
         SOURCE_FORM: { //出入库单变更来源
             UNKNOWN: 0,
@@ -744,10 +740,10 @@ let Const = {
             INVOICE: 31,
         },
         SOURCE_FORM_MAP: {
-            0: '未知操作',
-            1: '操作员操作',
-            21: '维修单',
-            31: '出入库单',
+            '0': {key: 0, zh: '未知操作', en: 'Unknown operation'},
+            '1': {key: 1, zh: '管理员操作', en: 'Admin action'},
+            '21': {key: 21, zh: '维修单', en: 'Repair Order'},
+            '31': {key: 31, zh: '出入库单', en: 'Inbound and outbound order'},
         },
         AUDIT_TYPE: {
             STOREKEEPER: 1, //仓库管理员

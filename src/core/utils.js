@@ -544,39 +544,44 @@ const Util = {
 
 
     /* =============== 出入库 ================ */
-    stockRecordFilter(val) {
+    stockRecordFilter(val, to='zh') {
         const MAP = Const.STOCK_RECORD.TYPE_MAP
-        return MAP[val] || '未知'
+        const item = MAP[val] || {}
+        return item[to] || '未知'
     },
     stockRecordSourceFilter(val) {
         const MAP = Const.STOCK_RECORD.SOURCE_TYPE_MAP
         return MAP[val] || '未知'
     },
-    warehouseTypeFilter(val) {
+    warehouseTypeFilter(val, to='zh') {
         const MAP = Const.WAREHOUSE.TYPE_MAP
-        return MAP[val] || '未知'
+        const item = MAP[val] || {}
+        return item[to] || '未知'
     },
-    invoiceStatusFilter(val, to = 'text') {
+    invoiceStatusFilter(val, to = 'zh') {
         const MAP = Const.STOCK_RECORD.STATUS_MAP
-        const COLOR_MAP = Const.STOCK_RECORD.STATUS_COLOR_MAP
-        switch (to) {
-            case 'text':
-                return MAP[val + ''] || '未知'
-            case 'color':
-                return COLOR_MAP[val + ''] || 'grey'
-        }
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
     },
-    targetTypeFilter(val) {
+    targetTypeFilter(val, to='zh') {
         const MAP = Const.STOCK_RECORD.COMMODITY_TYPE_MAP
-        return MAP[val] || '未知'
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
     },
-    sourceTypeFilter(val) {
+    sourceTypeAdminFilter(val, to='text') {
+        const MAP = Const.STOCK_RECORD.SOURCE_TYPE_ADMIN_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    sourceTypeFilter(val, to='zh') {
         const MAP = Const.STOCK_RECORD.SOURCE_TYPE_MAP
-        return MAP[val] || '未知'
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
     },
-    sourceFormFilter(val) {
+    sourceFormFilter(val, to='zh') {
         const MAP = Const.STOCK_RECORD.SOURCE_FORM_MAP
-        return MAP[val] || '未知'
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
     },
 
     /* =============== 出入库 ================ */

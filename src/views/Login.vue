@@ -23,7 +23,7 @@
                     <i class="icon i_user placeholder"/>
                 </template>
             </a-input>
-            <a-input class="form-item" :placeholder="$t('n.password')" v-model:value="loginForm.password" @keydown.enter="handleLogin" type="password" ref="password-input">
+            <a-input class="form-item" :placeholder="$t('n.enter_password')" v-model:value="loginForm.password" @keydown.enter="handleLogin" type="password" ref="password-input">
                 <template #prefix>
                     <i class="icon i_lock placeholder"/>
                 </template>
@@ -84,10 +84,10 @@ export default {
             let form = Core.Util.deepCopy(this.loginForm)
             console.log('handleLogin form:', form)
             if (!form.username) {
-                return this.$message.warning('请输入用户名')
+                return this.$message.warning(this.$t('n.username'))
             }
             if (!form.password) {
-                return this.$message.warning('请输入密码')
+                return this.$message.warning(this.$t('n.enter_password'))
             }
             Core.Api.Common.login(form).then(res => {
                 console.log('handleLogin apiName res', res)

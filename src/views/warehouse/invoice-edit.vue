@@ -1,49 +1,64 @@
 <template>
 <div id="InvoiceEdit" class="edit-container">
     <div class="title-container">
-        <div class="title-area">{{ form.id ? '编辑出入库单' : '新建出入库单' }}</div>
+        <div class="title-area">{{ form.id ? $t('in.edit') : $t('in.save') }}</div>
     </div>
     <div class="form-block">
         <div class="form-title">
-            <div class="title-colorful">基本信息</div>
+            <div class="title-colorful">{{ $t('n.information') }}</div>
         </div>
         <div class="form-content">
             <div class="form-item required">
-                <div class="key">仓库：</div>
+                <div class="key">{{ $t('wa.warehouse') }}：</div>
                 <div class="value">
-                    <a-select v-model:value="form.warehouse_id" placeholder="请选择仓库" :disabled="!!isProd">
+                    <a-select v-model:value="form.warehouse_id" :placeholder="$t('def.select')" :disabled="!!isProd">
                         <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                     </a-select>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">类型：</div>
+                <div class="key">{{ $t('n.type') }}：</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.type">
-                        <a-radio v-for="(val, key) in typeMap" :key='key' :value='key'>{{ val }}</a-radio>
+                        <a-radio v-for="item in typeMap" :key='item.key' :value='item.key'>{{ item[$i18n.locale] }}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">类目：</div>
+                <div class="key">{{ $t('in.category') }}：</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.target_type">
-                        <a-radio v-for="(val, key) in targetMap" :key='key' :value='key'>{{ val }}</a-radio>
+                        <a-radio v-for="item in targetMap" :key='item.key' :value='item.key'>{{ item[$i18n.locale] }}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
-            <div class="form-item required">
-                <div class="key">来源：</div>
+            <div class="form-item required" v-if="$auth('ADMIN')">
+                <div class="key">{{ $t('n.source') }}：</div>
                 <div class="value">
-                    <a-select v-model:value="form.source_type" placeholder="请选择来源" @change="handleSelectChange">
-                        <a-select-option v-for="(val, key) of sourceTypeMap" :key='key' :value='key'>{{ val }}</a-select-option>
+                    <a-select v-model:value="form.source_type" :placeholder="$t('def.select')" @change="handleSelectChange">
+                        <a-select-option v-for="item of sourceTypeAdminMap" :key='item.key' :value='item.key'>{{ item.text }}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
+            <div class="form-item required" v-if="!$auth('ADMIN')">
+                <div class="key">{{ $t('n.source') }}：</div>
+                <div class="value">
+                    <a-select v-model:value="form.source_type" :placeholder="$t('def.select')" @change="handleSelectChange">
+                        <a-select-option v-for="item of sourceTypeMap" :key='item.key' :value='item.key'>{{ item[$i18n.locale] }}</a-select-option>
                     </a-select>
                 </div>
             </div>
             <div class="form-item required" v-if="needUid">
-                <div class="key">{{sourceTypeMap[form.source_type]}}号：</div>
+                <div class="key" v-if="$auth('ADMIN')">{{sourceTypeAdminMap[form.source_type].text}}号：</div>
+                <div class="key" v-if="!$auth('ADMIN')">{{ $t('in.order_number') }}：</div>
                 <div class="value">
-                    <a-input v-model:value="sourceUid" :placeholder="`请输入相关的${sourceTypeMap[form.source_type]}号`" @blur="handleSelectBlur()">
+                    <a-input v-if="$auth('ADMIN')" v-model:value="sourceUid" :placeholder="`请输入相关的${sourceTypeAdminMap[form.source_type].text}号`" @blur="handleSelectBlur()">
+                        <template #suffix>
+                            <span v-if="isExist == 1"><i class="icon suffix i_confirm"/></span>
+                            <span v-else-if="isExist == 2"><i class="icon suffix i_close_c"/></span>
+                        </template>
+                    </a-input>
+                    <a-input v-if="!$auth('ADMIN')" v-model:value="sourceUid" :placeholder="$t('def.input')" @blur="handleSelectBlur()">
                         <template #suffix>
                             <span v-if="isExist == 1"><i class="icon suffix i_confirm"/></span>
                             <span v-else-if="isExist == 2"><i class="icon suffix i_close_c"/></span>
@@ -62,8 +77,8 @@
         </div>
     </div>
     <div class="form-btns">
-        <a-button @click="handleSubmit" type="primary" v-if="$auth('invoice.save')">确定</a-button>
-        <a-button @click="routerChange('list')" type="primary" ghost>取消</a-button>
+        <a-button @click="handleSubmit" type="primary" v-if="$auth('invoice.save')">{{ $t('def.sure') }}</a-button>
+        <a-button @click="routerChange('list')" type="primary" ghost>{{ $t('def.cancel') }}</a-button>
     </div>
 </div>
 </template>
@@ -88,7 +103,8 @@ export default {
             warehouseList: [],
             typeMap: Core.Const.STOCK_RECORD.TYPE_MAP, // 类型
             targetMap: Core.Const.STOCK_RECORD.COMMODITY_TYPE_MAP, //类目
-            sourceTypeMap: Core.Const.STOCK_RECORD.SOURCE_TYPE_MAP, //来源
+            sourceTypeAdminMap: Core.Const.STOCK_RECORD.SOURCE_TYPE_ADMIN_MAP, //平台方的来源
+            sourceTypeMap: Core.Const.STOCK_RECORD.SOURCE_TYPE_MAP, //经销商的来源
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
             form: {
                 id: '',
@@ -177,29 +193,48 @@ export default {
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
             form.arrival_time = form.arrival_time ? dayjs(form.arrival_time).unix() : 0 // 日期转时间戳
-            if (!form.warehouse_id) {
-                return this.$message.warning('请选择仓库')
+            if (this.$auth('ADMIN')) {
+                if (!form.warehouse_id) {
+                    return this.$message.warning('请选择仓库')
+                }
+                if (!form.type) {
+                    return this.$message.warning('请选择出入库类型')
+                }
+                if (!form.target_type) {
+                    return this.$message.warning('请选择类目')
+                }
+                if (!form.source_type) {
+                    return this.$message.warning('请选择来源')
+                }
+                if (this.needUid && !this.sourceUid) {
+                    return this.$message.warning(`请输入相关的${this.sourceTypeAdminMap[form.source_type].text}单号`)
+                }
+                if (this.needUid && !form.source_id) {
+                    return this.$message.warning(`请输入正确的${this.sourceTypeAdminMap[form.source_type].text}单号`)
+                }
             }
-            if (!form.type) {
-                return this.$message.warning('请选择出入库类型')
-            }
-            if (!form.target_type) {
-                return this.$message.warning('请选择类目')
-            }
-            if (!form.source_type) {
-                return this.$message.warning('请选择来源')
-            }
-            if (this.needUid && !this.sourceUid) {
-                return this.$message.warning(`请输入相关的${this.sourceTypeMap[form.source_type]}单号`)
-            }
-            if (this.needUid && !form.source_id) {
-                return this.$message.warning(`请输入正确的${this.sourceTypeMap[form.source_type]}单号`)
-            }
-           /* if (!form.arrival_time && form.source_type == SOURCE_TYPE.PURCHASE) {
-                return this.$message.warning('请选择到港时间')
-            }*/
+           if (!this.$auth('ADMIN')) {
+               if (!form.warehouse_id) {
+                   return this.$message.warning(this.$t('def.enter'))
+               }
+               if (!form.type) {
+                   return this.$message.warning(this.$t('def.enter'))
+               }
+               if (!form.target_type) {
+                   return this.$message.warning(this.$t('def.enter'))
+               }
+               if (!form.source_type) {
+                   return this.$message.warning(this.$t('def.enter'))
+               }
+               if (this.needUid && !this.sourceUid) {
+                   return this.$message.warning(this.$t('in.order_a'))
+               }
+               if (this.needUid && !form.source_id) {
+                   return this.$message.warning(this.$t('in.order'))
+               }
+           }
             Core.Api.Invoice.save(form).then(res => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('detail', res.detail)
             }).catch(err => {
                 console.log('handleSubmit err:', err)

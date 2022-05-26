@@ -165,9 +165,14 @@ export default {
             if (!this.$auth('ADMIN') && !(Object.values(area).filter(i => i).length)) {
                 return this.$message.warning(this.$t('def.enter'))
             }
+            if (!this.$auth('ADMIN')) {
+                form.province = ''
+                form.city = ''
+                form.county = ''
+            }
             Core.Api.Warehouse.save({
                 ...form,
-                ...area
+                ...area,
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')

@@ -1,11 +1,11 @@
 <template>
 <div id="InvoiceDetail" class="list-container">
     <div class="title-container">
-        <div class="title-area">{{type_ch}}单详情</div>
+        <div class="title-area">{{type_ch}}{{ $t('in.detail') }}</div>
         <div class="btn-area">
             <template v-if="detail.status === STATUS.INIT">
-                <a-button type="primary" @click="handleSubmit()" v-if="$auth('invoice.save')"><i class="icon i_confirm"/>提交</a-button>
-                <a-button type="danger" ghost @click="handleCancel()" v-if="$auth('invoice.delete')"> <i class="icon i_close_c"/>取消</a-button>
+                <a-button type="primary" @click="handleSubmit()" v-if="$auth('invoice.save')"><i class="icon i_confirm"/>{{ $t('def.submit') }}</a-button>
+                <a-button type="danger" ghost @click="handleCancel()" v-if="$auth('invoice.delete')"> <i class="icon i_close_c"/>{{ $t('def.cancel') }}</a-button>
             </template>
             <template v-if="detail.status === STATUS.CLOSE && detail.type === TYPE.IN && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')">
                 <a-button type="primary" @click="handleExportIn"><i class="icon i_download"/>导出</a-button>
@@ -23,59 +23,60 @@
     </div>
     <div class="gray-panel info">
         <div class="panel-title">
-            <div class="left"><span>{{type_ch}}单编号</span> {{ detail.uid }}</div>
+            <div class="left"><span>{{type_ch}}{{ $t('in.number') }}:</span> {{ detail.uid }}</div>
             <div class="right">
                 <div class="status">
                     <i class="icon i_point" :class="$Util.invoiceStatusFilter(detail.status,'color')"/>
-                    {{ $Util.invoiceStatusFilter(detail.status) }}
+                    {{ $Util.invoiceStatusFilter(detail.status, $i18n.locale) }}
                 </div>
             </div>
         </div>
         <div class="panel-content">
             <div class="info-item">
-                <div class="key">所属仓库</div>
+                <div class="key">{{ $t('in.related') }}</div>
                 <div class="value">
                     <a-button type="link" @click="routerChange('warehouse')">{{ warehouse.name || '-' }}</a-button>
                 </div>
             </div>
             <div class="info-item">
-                <div class="key">仓库类型</div>
-                <div class="value">{{ $Util.warehouseTypeFilter(warehouse.type || '-') }}</div>
+                <div class="key">{{ $t('n.type') }}</div>
+                <div class="value">{{ $Util.warehouseTypeFilter(warehouse.type, $i18n.locale) || '-'}}</div>
             </div>
             <div class="info-item">
-                <div class="key">类目</div>
-                <div class="value">{{ $Util.targetTypeFilter(detail.target_type || '-')}}</div>
+                <div class="key">{{ $t('in.category') }}</div>
+                <div class="value">{{ $Util.targetTypeFilter(detail.target_type, $i18n.locale) || '-'}}</div>
             </div>
             <div class="info-item">
-                <div class="key">来源</div>
-                <div class="value">{{ $Util.sourceTypeFilter(detail.source_type || '-')}}</div>
+                <div class="key">{{ $t('n.source') }}</div>
+                <div class="value" v-if="$auth('ADMIN')">{{ $Util.sourceTypeAdminFilter(detail.source_type) || '-'}}</div>
+                <div class="value" v-if="!$auth('ADMIN')">{{ $Util.sourceTypeFilter(detail.source_type, $i18n.locale) || '-'}}</div>
             </div>
             <div class="info-item" v-if="detail.source_type !== SOURCE_TYPE.ADMIN">
-                <div class="key">来源单号</div>
+                <div class="key">{{ $t('n.source_number') }}</div>
                 <div class="value">
                     <a-button type="link" v-if="detail.source_uid" @click="routerChange('source')">{{ detail.source_uid }}</a-button>
                 </div>
             </div>
             <div class="info-item">
-                <div class="key">创建人</div>
+                <div class="key">{{ $t('n.operator') }}</div>
                 <div class="value">
                     <template v-if="detail.apply_user && detail.apply_user.account">{{ detail.apply_user.account.name }}</template>
                     <template v-else>-</template>
                 </div>
             </div>
             <div class="info-item">
-                <div class="key">创建时间</div>
+                <div class="key">{{ $t('d.create_time') }}</div>
                 <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
             </div>
             <div class="info-item">
-                <div class="key">仓库审核</div>
+                <div class="key">{{ $t('in.reviewer') }}</div>
                 <div class="value">
                     <template v-if="detail.audit_user && detail.apply_user.account">{{ detail.audit_user.account.name }}</template>
                     <template v-else>-</template>
                 </div>
             </div>
             <div class="info-item">
-                <div class="key">审核时间</div>
+                <div class="key">{{ $t('in.time') }}</div>
                 <div class="value">{{ $Util.timeFilter(detail.audit_time) || '-' }}</div>
             </div>
             <div class="info-item" v-if="detail.type === TYPE.OUT">
@@ -86,10 +87,10 @@
     </div>
     <a-collapse v-model:activeKey="activeKey" ghost>
         <!-- 无实例 -->
-        <a-collapse-panel key="ItemList" header="商品信息" class="gray-collapse-panel" collapsible="disabled" v-if="detail.target_type === COMMODITY_TYPE.ITEM">
+        <a-collapse-panel key="ItemList" :header="$t('i.product_information')" class="gray-collapse-panel" collapsible="disabled" v-if="detail.target_type === COMMODITY_TYPE.ITEM">
             <template #extra>
                 <template  v-if="detail.status === STATUS.INIT && !addMode && $auth('invoice.save')">
-                    <ItemSelect btnType='link' btnText="添加商品" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION" :sourceId="detail.type == TYPE.IN ? detail.source_id : 0"
+                    <ItemSelect btnType='link' :btnText="$t('i.add')" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION" :sourceId="detail.type == TYPE.IN ? detail.source_id : 0"
                                 :sourceType="detail.type == TYPE.IN ? detail.source_type : 0"  :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
                         @select="handleAddItemChange"/>
                     <a-popover v-model:visible="production.addVisible" trigger="click" placement="left" v-else-if="production.maxCount"
@@ -99,15 +100,15 @@
                                 <a-input-number v-model:value="production.addCount" placeholder="添加数量"
                                     @keydown.enter="handleProdAddChange(index)" :autofocus="true" :max="production.maxCount" :min='1' :precision="0"/>
                                 <div class="btns">
-                                    <a-button type="primary" @click="handleProdAddCancel()" ghost >取消</a-button>
-                                    <a-button type="primary" @click="handleProdAddChange()" >确定</a-button>
+                                    <a-button type="primary" @click="handleProdAddCancel()" ghost >{{ $t('def.cancel') }}</a-button>
+                                    <a-button type="primary" @click="handleProdAddChange()" >{{ $t('def.sure') }}</a-button>
                                 </div>
                             </div>
                         </template>
                         <a-button type="link" class="extra-btn" @click.stop>添加商品</a-button>
                     </a-popover>
                 </template>
-                <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('item')">确认添加</a-button>
+                <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('item')">{{ $t('in.add') }}</a-button>
             </template>
             <div class="panel-content">
                 <div class="table-container">
@@ -132,19 +133,19 @@
                                 {{ text || '-' }}
                             </template>
                             <template v-if="column.key === 'count'">
-                                {{ text ? text + '件' : '-' }}
+                                {{ text ? text + $t('in.item') : '-' }}
                             </template>
                             <template v-if="column.key === 'amount'">
                                 <template v-if="addMode || record.editMode">
-                                    <a-input-number v-model:value="record.amount" placeholder="请输入"
-                                        :min="1" :max="detail.type === TYPE.IN ? 99999: record.item.stock" :precision="0"/> 件
+                                    <a-input-number v-model:value="record.amount" :placeholder="$t('def.input')"
+                                        :min="1" :max="detail.type === TYPE.IN ? 99999: record.item.stock" :precision="0"/> {{ $t('in.item') }}
                                 </template>
-                                <template v-else>{{ text ? text + '件' : '-' }}</template>
+                                <template v-else>{{ text ? text +$t('in.item') : '-' }}</template>
                             </template>
                             <template v-if="column.key === 'operation' && $auth('invoice.save')" >
-                                <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改数量</a-button>
-                                <a-button type="link" @click="handleRowSubmit(record, 'item')" v-else><i class="icon i_confirm"/>确认更改</a-button>
-                                <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
+                                <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>{{ $t('in.change') }}</a-button>
+                                <a-button type="link" @click="handleRowSubmit(record, 'item')" v-else><i class="icon i_confirm"/>{{ $t('in.changes') }}</a-button>
+                                <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>{{ $t('def.remove') }}</a-button>
                             </template>
                         </template>
                     </a-table>
@@ -157,7 +158,7 @@
                         show-quick-jumper
                         show-size-changer
                         show-less-items
-                        :show-total="total => `共${total}条`"
+                        :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                         :hide-on-single-page='false'
                         :pageSizeOptions="['10', '20', '30', '40']"
                         @change="pageChange"
@@ -167,11 +168,11 @@
             </div>
         </a-collapse-panel>
         <!-- 有实例 -->
-        <a-collapse-panel key="ItemList" header="商品信息" class="gray-collapse-panel" collapsible="disabled" v-if="detail.target_type === COMMODITY_TYPE.ENTITY">
+        <a-collapse-panel key="ItemList" :header="$t('i.product_information')" class="gray-collapse-panel" collapsible="disabled" v-if="detail.target_type === COMMODITY_TYPE.ENTITY">
             <template #extra v-if="detail.type == TYPE.IN && $auth('invoice.save')">
                 <!-- 有实例入库 选择商品并输入数量、实例号 -->
                 <template v-if="detail.status === STATUS.INIT && !addMode">
-                    <ItemSelect btnType='link' btnText="添加商品" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION" @select="handleAddItemChange"/>
+                    <ItemSelect btnType='link' :btnText="$t('in.add')" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION" @select="handleAddItemChange"/>
 
                     <a-popover v-model:visible="production.addVisible" trigger="click" placement="left" v-else-if="production.maxCount"
                         @visibleChange='(visible) => {!visible && handleProdAddCancel()}' title="请输入添加数量">
@@ -188,7 +189,7 @@
                         <a-button type="link" class="extra-btn" @click.stop >添加商品</a-button>
                     </a-popover>
                 </template>
-                <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('entity')">确认添加</a-button>
+                <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('entity')">{{ $t('in.add') }}</a-button>
             </template>
             <template #extra v-else-if="detail.type == TYPE.OUT">
                 <!-- 有实例出库 选择实例 -->
@@ -244,9 +245,9 @@
                                 <template v-if="!this.addMode">
                                     <!-- <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改实例号</a-button> -->
                                     <!-- <a-button type="link" @click="handleRowSubmit(record, 'entity')" v-else><i class="icon i_confirm"/>确认更改</a-button> -->
-                                    <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
+                                    <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>{{ $t('def.remove') }}</a-button>
                                 </template>
-                                <a-button type="link" v-if="this.addMode" @click="handleCopyEntity(index, record)"><i class="icon i_copy"/>复制</a-button>
+                                <a-button type="link" v-if="this.addMode" @click="handleCopyEntity(index, record)"><i class="icon i_copy"/>{{ $t('in.copy') }}</a-button>
                             </template>
                         </template>
                     </a-table>
@@ -259,7 +260,7 @@
                         show-quick-jumper
                         show-size-changer
                         show-less-items
-                        :show-total="total => `共${total}条`"
+                        :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                         :hide-on-single-page='false'
                         :pageSizeOptions="['10', '20', '30', '40']"
                         @change="pageChange"
@@ -274,7 +275,7 @@
                 <MaterialSelect btnType='link' btnText="添加物料" v-if="detail.status === STATUS.INIT && !addMode" :sourceId="detail.type == TYPE.IN ? detail.source_id : 0"
                                 :sourceType="detail.type == TYPE.IN ? detail.source_type : 0" :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
                     @select="handleAddChange"/>
-                <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('material')">确认添加</a-button>
+                <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('material')">{{ $t('in.add') }}</a-button>
             </template>
             <div class="panel-content">
                 <div class="table-container no-mg">
@@ -336,7 +337,7 @@
                             <template v-if="column.key === 'operation' && $auth('invoice.save')" >
                                 <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改数量</a-button>
                                 <a-button type="link" @click="handleRowSubmit(record, 'material')" v-else><i class="icon i_confirm"/>确认更改</a-button>
-                                <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
+                                <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>{{ $t('def.remove') }}</a-button>
                             </template>
                         </template>
 
@@ -350,7 +351,7 @@
                         show-quick-jumper
                         show-size-changer
                         show-less-items
-                        :show-total="total => `共${total}条`"
+                        :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                         :hide-on-single-page='false'
                         :pageSizeOptions="['10', '20', '30', '40']"
                         @change="pageChange"
@@ -433,7 +434,7 @@ export default {
     watch: {},
     computed: {
         type_ch() {
-            return this.detail.type == TYPE.IN ? '入库' : '出库'
+            return this.detail.type == TYPE.IN ? this.$t('in.inbound') :  this.$t('in.outbound')
         },
         disabledChecked() {
             let list = []
@@ -451,12 +452,12 @@ export default {
         itemTableColumns() {
             // 无实例商品的 出入库
             let columns = [
-                {title: '商品名称', dataIndex: ['item', 'name'],  key: 'tip_item'},
-                {title: this.type_ch + '数量', dataIndex: 'amount' , key: 'amount'},
-                {title: '商品品号', dataIndex: ['item', 'model'], key: 'item'},
-                {title: '商品编码', dataIndex: ['item', 'code'],  key: 'item'},
-                {title: '商品规格', dataIndex: ['item', 'attr_list'], key: 'attr_list'},
-                {title: '操作', key: 'operation'},
+                {title: this.$t('n.name'), dataIndex: ['item', 'name'],  key: 'tip_item'},
+                {title: this.type_ch + this.$t('i.amount'), dataIndex: 'amount' , key: 'amount'},
+                {title: this.$t('i.number'), dataIndex: ['item', 'model'], key: 'item'},
+                {title: this.$t('i.code'), dataIndex: ['item', 'code'],  key: 'item'},
+                {title: this.$t('i.spec'), dataIndex: ['item', 'attr_list'], key: 'attr_list'},
+                {title: this.$t('def.operate'), key: 'operation'},
             ]
             if (this.detail.status !== STATUS.INIT || this.addMode) {
                 columns.pop()
@@ -468,13 +469,13 @@ export default {
         },
         entityTableColumns() {
             let columns = [
-                {title: '商品名称', dataIndex: ['item', 'name'],  key: 'tip_item'},
+                {title: this.$t('n.name'), dataIndex: ['item', 'name'],  key: 'tip_item'},
                 // {title: this.type_ch + '数量', dataIndex: 'amount'},
-                {title: '商品实例号', dataIndex: 'entity_uid', key: 'entity_uid'},
-                {title: '商品品号', dataIndex: ['item', 'model'], key: 'item'},
-                {title: '商品编码', dataIndex: ['item', 'code'],  key: 'item'},
-                {title: '商品规格', dataIndex: ['item', 'attr_list'], key: 'attr_list'},
-                {title: '操作', key: 'operation'},
+                {title: this.$t('i.instance'), dataIndex: 'entity_uid', key: 'entity_uid'},
+                {title: this.$t('i.number'), dataIndex: ['item', 'model'], key: 'item'},
+                {title: this.$t('i.code'), dataIndex: ['item', 'code'],  key: 'item'},
+                {title: this.$t('i.spec'), dataIndex: ['item', 'attr_list'], key: 'attr_list'},
+                {title: this.$t('def.operate'), key: 'operation'},
             ]
             if (this.detail.status !== STATUS.INIT || this.isProd) { // 入库不显示库存数量
                 columns.pop()
@@ -482,7 +483,7 @@ export default {
             return columns
         },
         materialTableColumns() {
-            // 无实例商品的 出入库
+            //物料 出入库
             let columns = [
                 { title: '供应商',dataIndex: 'supplier'},
                 {title: '物料名称', dataIndex: ['material', 'name'],  key: 'tip_item'},
@@ -742,7 +743,7 @@ export default {
             });
         },
 
-        // 移除 商品
+        // {{ $t('def.remove') }} 商品
         handleRemoveRow(record) {
             Core.Api.InvoiceItem.delete({id: record.id}).then(() => {
                 this.$message.success('移除成功')

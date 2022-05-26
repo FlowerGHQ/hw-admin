@@ -51,7 +51,7 @@
                         <StockRecord :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail" v-if="activeKey === 'StockRecord'"/>
                     </a-tab-pane>
                 </template>-->
-                <a-tab-pane key="ItemStockList" tab="库存产品" v-if="detail.type == WAREHOUSE_TYPE.QUALITY">
+                <a-tab-pane key="ItemStockList" :tab="$t('wa.goods')" v-if="detail.type == WAREHOUSE_TYPE.QUALITY">
                     <StockList type='item' :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
                                v-if="activeKey === 'ItemStockList'"/>
                 </a-tab-pane>
@@ -67,12 +67,12 @@
                                v-if="activeKey === 'CustomizeStockList'"/>
                 </a-tab-pane>
 
-                <a-tab-pane key="ImperfectList" tab="故障件列表" v-if="detail.type == WAREHOUSE_TYPE.DEFECTIVE">
+                <a-tab-pane key="ImperfectList" :tab="$t('wa.faulty_part')" v-if="detail.type == WAREHOUSE_TYPE.DEFECTIVE">
                     <ImperfectList :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
                                    v-if="activeKey === 'ImperfectList'"/>
                 </a-tab-pane>
 
-                <a-tab-pane key="StockRecord" tab="出入库记录" v-if="detail.type !== WAREHOUSE_TYPE.DEFECTIVE">
+                <a-tab-pane key="StockRecord" :tab="$t('wa.records')" v-if="detail.type !== WAREHOUSE_TYPE.DEFECTIVE">
                     <StockRecord :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
                                  v-if="activeKey === 'StockRecord'"/>
                 </a-tab-pane>

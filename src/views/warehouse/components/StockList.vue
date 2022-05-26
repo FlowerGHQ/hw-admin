@@ -36,7 +36,7 @@
                         {{ text || 0 }} 件
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' v-if="type === 'item' && $auth('item.detail')" @click="routerChange('item', record.item)"><i class="icon i_detail"/>详情</a-button>
+                        <a-button type='link' v-if="type === 'item' && $auth('item.detail')" @click="routerChange('item', record.item)"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
                         <a-button type='link' v-if="type === 'material' && $auth('material.detail')" @click="routerChange('material', record.material)"><i class="icon i_detail"/>详情</a-button>
                     </template>
                 </template>
@@ -50,7 +50,7 @@
                 show-quick-jumper
                 show-size-changer
                 show-less-items
-                :show-total="total => `共${total}条`"
+                :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                 :hide-on-single-page='false'
                 :pageSizeOptions="['10', '20', '30', '40']"
                 @change="pageChange"
@@ -150,12 +150,12 @@ export default {
         tableColumns() {
             let type = this.type
             let tableColumns = [
-                {title: '商品名称', dataIndex: [type, 'name'], key: 'item_detail'},
-                {title: '商品品号', dataIndex: [type, 'model'], key: 'item'},
-                {title: '商品规格', dataIndex: [type, 'attr_list'], key: 'spec'},
-                {title: '商品编码', dataIndex: [type, 'code'], key: 'item'},
-                {title: '库存数量', dataIndex: 'stock', key: 'count'},
-                {title: '操作', key: 'operation', fixed: 'right'}
+                {title: this.$t('n.name'), dataIndex: [type, 'name'], key: 'item_detail'},
+                {title: this.$t('i.number'), dataIndex: [type, 'model'], key: 'item'},
+                {title: this.$t('i.spec'), dataIndex: [type, 'attr_list'], key: 'spec'},
+                {title: this.$t('i.code'), dataIndex: [type, 'code'], key: 'item'},
+                {title: this.$t('wa.quantity'), dataIndex: 'stock', key: 'count'},
+                {title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
             ]
             if (type === 'material' || type === 'customize') {
                 tableColumns = [

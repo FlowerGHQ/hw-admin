@@ -2,10 +2,10 @@
     <div id="InvoiceList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">出入库单列表</div>
+                <div class="title-area">{{ $t('in.list') }}</div>
                 <div class="btns-area">
                     <a-button type="primary" @click="routerChange('edit')" v-if="$auth('invoice.save')"><i
-                        class="icon i_add"/>新建出入库单
+                        class="icon i_add"/>{{ $t('in.save') }}
                     </a-button>
                 </div>
             </div>
@@ -13,7 +13,7 @@
                 <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
                     <a-tab-pane :key="item.key" v-for="item of statusList">
                         <template #tab>
-                            <div class="tabs-title">{{ item.text }}<span :class="item.color">{{ item.value }}</span>
+                            <div class="tabs-title">{{ item[$i18n.locale] }}<span :class="item.color">{{ item.value }}</span>
                             </div>
                         </template>
                     </a-tab-pane>
@@ -22,9 +22,9 @@
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">所属仓库:</div>
+                        <div class="key">{{ $t('wa.warehouse') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.warehouse_id" placeholder="请选择仓库"
+                            <a-select v-model:value="searchForm.warehouse_id" :placeholder="$t('def.select')"
                                       @change="handleSearch">
                                 <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id"
                                                  :value="warehouse.id">{{ warehouse.name }}
@@ -33,33 +33,33 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">出入库单编号:</div>
+                        <div class="key">{{ $t('in.sn') }}:</div>
                         <div class="value">
-                            <a-input placeholder="请输入出入库单编号" v-model:value="searchForm.uid"
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.uid"
                                      @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">出入库类型:</div>
+                        <div class="key">{{ $t('n.type') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择出入库类型">
-                                <a-select-option v-for="(val, key) in typeMap" :key='key' :value='key'>{{
-                                        val
+                            <a-select v-model:value="searchForm.type" @change="handleSearch" :placeholder="$t('def.select')">
+                                <a-select-option v-for="item of typeMap" :key='item.key' :value='item.key'>{{
+                                        item[$i18n.locale]
                                     }}
                                 </a-select-option>
                             </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
-                        <div class="key">创建时间:</div>
+                        <div class="key">{{ $t('d.create_time') }}:</div>
                         <div class="value">
                             <TimeSearch @search="handleOtherSearch" ref='TimeSearch'/>
                         </div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">查询</a-button>
-                    <a-button @click="handleSearchReset">重置</a-button>
+                    <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
+                    <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
             <div class="operate-container">
@@ -79,7 +79,7 @@
                         <template v-if="column.dataIndex === 'status'">
                             <div class="status status-bg status-tag" :class="$Util.invoiceStatusFilter(text,'color')">
                                 <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>
-                                    {{ $Util.invoiceStatusFilter(text) }}
+                                    {{ $Util.invoiceStatusFilter(text, $i18n.locale) }}
                                     <template v-if="[STATUS.AUDIT_REFUSE].includes(record.status)">
                                         <i class="icon i_hint" style="font-size: 12px;padding-left: 6px;"/>
                                     </template>
@@ -87,33 +87,33 @@
                             </div>
                         </template>
                         <template v-if="column.dataIndex === 'type'">
-                            {{ $Util.stockRecordFilter(text) }}
+                            {{ $Util.stockRecordFilter(text, $i18n.locale) || '-' }}
                         </template>
                         <template v-if="column.dataIndex === 'target_type'">
-                            {{ $Util.targetTypeFilter(text) }}
+                            {{ $Util.targetTypeFilter(text, $i18n.locale) || '-' }}
                         </template>
                         <template v-if="column.key === 'warehouse_type'">
-                            {{ $Util.warehouseTypeFilter(text) }}
+                            {{ $Util.warehouseTypeFilter(text, $i18n.locale) || '-'}}
                         </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'time'">
-                            {{ $Util.timeFilter(text) }}
+                            {{ $Util.timeFilter(text) || '-'}}
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('invoice.detail')"><i
-                                class="icon i_detail"/>详情
+                                class="icon i_detail"/>{{ $t('def.detail') }}
                             </a-button>
                             <template v-if="record.status === STATUS.INIT">
                                 <!-- <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button> -->
                                 <a-button type="link" @click="handleCancel(record.id)" class="danger"
-                                          v-if="$auth('invoice.delete')"><i class="icon i_close_c"/>取消
+                                          v-if="$auth('invoice.delete')"><i class="icon i_close_c"/>{{ $t('def.cancel') }}
                                 </a-button>
                             </template>
                             <AuditMaterialPurchase v-if="record.status === STATUS.WAIT_AUDIT && $auth('invoice.warehouse-audit')" btnType="link" :status="STATUS.WAIT_AUDIT"
-                                                   :api-list="['Invoice', 'audit']" :invoiceId="record.id" @submit="getTableData"><i class="icon i_audit"/>仓库审核</AuditMaterialPurchase>
-                            <AuditMaterialPurchase v-if="record.status === STATUS.AUDIT_PASS && record.type === TYPE.OUT && $auth('invoice.finance-audit')" btnType="link" :api-list="['Invoice', 'audit']" :invoiceId="record.id"
+                                                   :api-list="['Invoice', 'audit']" :invoiceId="record.id" @submit="getTableData"><i class="icon i_audit"/>{{ $t('in.admin') }}</AuditMaterialPurchase>
+                            <AuditMaterialPurchase v-if="record.status === STATUS.AUDIT_PASS && record.type === TYPE.OUT && $auth('invoice.finance-audit') && $auth('ADMIN')" btnType="link" :api-list="['Invoice', 'audit']" :invoiceId="record.id"
                                                    :status="STATUS.AUDIT_PASS" @submit="getTableData" ><i class="icon i_audit"/>财务审核</AuditMaterialPurchase>
                         </template>
                     </template>
@@ -127,7 +127,7 @@
                     show-quick-jumper
                     show-size-changer
                     show-less-items
-                    :show-total="total => `共${total}条`"
+                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                     :hide-on-single-page='false'
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="pageChange"
@@ -166,16 +166,6 @@ export default {
             // 搜索
             typeMap: Core.Const.STOCK_RECORD.TYPE_MAP, //出入库
             warehouseList: [],
-             statusList: [
-                 {text: '全  部', value: '0', color: 'primary', key: -1},
-                 {text: '待提交', value: '0', color: 'yellow', key: STATUS.INIT},
-                 {text: '仓库审核', value: '0', color: 'yellow', key: STATUS.WAIT_AUDIT},
-                 {text: '审核通过', value: '0', color: 'blue', key: STATUS.AUDIT_PASS},
-                 {text: '财务审核', value: '0', color: 'yellow', key: STATUS.FINANCE_PASS},
-                 {text: '审核失败', value: '0', color: 'red', key: STATUS.AUDIT_REFUSE},
-                 {text: '入库完成', value: '0', color: 'green', key: STATUS.CLOSE},
-                 {text: '已取消', value: '0', color: 'grey', key: STATUS.CANCEL},
-             ],
             searchForm: {
                 warehouse_id: undefined,
                 uid: '',
@@ -188,21 +178,40 @@ export default {
 
             // 表格
             tableData: [],
-            tableColumns: [
-                {title: '出入库单编号', dataIndex: 'uid', key: 'detail'},
-                {title: '状态', dataIndex: 'status'},
-                {title: '类型', dataIndex: 'type'},
-                {title: '类目', dataIndex: 'target_type',},
-                {title: '所属仓库', dataIndex: ['warehouse', 'name'], key: 'item',},
-                {title: '仓库类型', dataIndex: ['warehouse', 'type'], key: 'warehouse_type',},
-                {title: '创建人', dataIndex: ['apply_user', "account", "name"], key: 'item'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '操作', key: 'operation', fixed: 'right'},
-            ],
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        tableColumns() {
+            let columns = [
+                {title: this.$t('in.sn'), dataIndex: 'uid', key: 'detail'},
+                {title: this.$t('n.state'), dataIndex: 'status'},
+                {title: this.$t('n.type'), dataIndex: 'type'},
+                {title: this.$t('in.category'), dataIndex: 'target_type',},
+                {title: this.$t('in.related'), dataIndex: ['warehouse', 'name'], key: 'item',},
+                {title: this.$t('wa.type'), dataIndex: ['warehouse', 'type'], key: 'warehouse_type',},
+                {title: this.$t('n.operator'), dataIndex: ['apply_user', "account", "name"], key: 'item'},
+                {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
+                {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
+            ]
+            return columns
+        },
+        statusList() {
+            let columns = [
+                {zh: '全  部', en: 'All', value: '0', color: 'primary', key: -1},
+                {zh: '待提交', en: 'Awaiting commit', value: '0', color: 'yellow', key: STATUS.INIT},
+                {zh: '仓库审核', en: 'Awaiting admin review', value: '0', color: 'yellow', key: STATUS.WAIT_AUDIT},
+                {zh: '审核通过', en: 'Review passed', value: '0', color: 'blue', key: STATUS.AUDIT_PASS},
+                {zh: '审核失败', en: 'Review failed', value: '0', color: 'red', key: STATUS.AUDIT_REFUSE},
+                {zh: '入库完成', en: 'In the warehouse', value: '0', color: 'green', key: STATUS.CLOSE},
+                {zh: '已取消', en: 'Cancelled', value: '0', color: 'grey', key: STATUS.CANCEL},
+            ]
+            if (this.$auth('ADMIN')) {
+                columns.splice(4, 0, {zh: '财务审核', en: 'Waiting for financial approval', value: '0', color: 'yellow', key: STATUS.FINANCE_PASS})
+            }
+            return columns
+        },
+    },
     mounted() {
         this.getTableData();
         this.getWarehouseList();
@@ -303,13 +312,13 @@ export default {
         handleCancel(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要取消该出入库单吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure') + _this.$t('pop_up.cancel'),
+                okText: _this.$t('pop_up.yes'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('pop_up.no'),
                 onOk() {
                     Core.Api.Invoice.cancel({id}).then(() => {
-                        _this.$message.success('取消成功');
+                        _this.$message.success(_this.$t('pop_up.canceled'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

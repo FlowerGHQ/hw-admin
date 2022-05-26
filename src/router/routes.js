@@ -28,8 +28,9 @@ const routes = [
         component: Layout,
         meta: {
             title: '数据看板',
+            title_en: 'Data Display',
             icon: 'i_s_dashboard',
-            not_sub_menu: true,
+            // not_sub_menu: true,
         },
         children: [{
             path: '',
@@ -37,6 +38,7 @@ const routes = [
             component: () => import('@/views/dashboard/Dashboard.vue'),
             meta: {
                 title: '时效看板',
+                title_en: 'RTDB',
             }
         }]
     },
@@ -1133,6 +1135,7 @@ const routes = [
                 component: () => import('@/views/wallet/wallet-list.vue'),
                 meta: {
                     title: '账户列表',
+                    title_en: 'Account list',
                 }
             },
             {
@@ -1164,6 +1167,7 @@ const routes = [
                 component: () => import('@/views/customer/customer-list.vue'),
                 meta: {
                     title: '客户列表',
+                    title_en: 'Customer list',
                 }
             },
             {
