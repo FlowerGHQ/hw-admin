@@ -643,6 +643,10 @@ let Const = {
         { list: [], select: [], key: 'role', name: '角色' },
         { list: [], select: [], key: 'file', name: '文件' },
     ],
+    AUTHORITY_SCOPED: {
+        YES: 1,
+        NO: 0,
+    },
 
     ATTACHMENT: {
         TARGET_TYPE: { // 来源类型

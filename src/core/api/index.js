@@ -54,10 +54,13 @@ const apiList = {
         allOptions: ['PostJson', 'authority/list-all'],  // 所有权限项
         authOptions: ['PostJson', 'authority/list-by-org-type'], // 某个身份下 可选的权限项
         authSelected: ['PostJson', 'authority/list-by-role'],    // 某个角色 已选的权限
+        authRoleUser: ['PostJson', 'authority/list-role-by-user'],    // 某个用户对应角色 已选的权限
+        authUser: ['PostJson', 'authority/list-by-user'],    // 某个用户对应角色 已选的权限
 
         allotOrgAuth: ['PostJson', 'authority/save-org-type-authority'], // 向组织分配 可分配权限
         allotAuth: ['PostJson', 'authority/save-role-authority'], // 向角色分配权限
         allotRole: ['PostJson', 'authority/save-user-role'], // 向员工账号分配角色
+        allotUser: ['PostJson', 'authority/save-user-authority'], // 向员工账户分配权限
         deleteUserRole: ['PostJson', 'authority/delete-user-role'], // 向员工账号分配角色
 
         listUserRole: ['PostJson', 'authority/list-user-role'], // 查看所有对应用户的所有角色
