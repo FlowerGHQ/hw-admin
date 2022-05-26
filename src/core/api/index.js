@@ -44,7 +44,6 @@ const apiList = {
         delete: ['PostJson', 'account/delete' ], // 账户删除
         resetPwd: ['PostJson', 'account/resetPwd' ], // 重置密码
         statusUpdate: ['PostJson', 'account/status-update'], // 更新账户状态1=启用2=禁用
-        roleAssign: ['PostJson','account/role-assign'],
     },
     Authority: { // 角色 & 权限
         roleList: ['PostJson', 'auth/role-list'], // 角色列表
@@ -59,6 +58,9 @@ const apiList = {
         allotOrgAuth: ['PostJson', 'authority/save-org-type-authority'], // 向组织分配 可分配权限
         allotAuth: ['PostJson', 'authority/save-role-authority'], // 向角色分配权限
         allotRole: ['PostJson', 'authority/save-user-role'], // 向员工账号分配角色
+        deleteUserRole: ['PostJson', 'authority/delete-user-role'], // 向员工账号分配角色
+
+        listUserRole: ['PostJson', 'authority/list-user-role'], // 查看所有对应用户的所有角色
 
     },
     AuthorityUser: {
