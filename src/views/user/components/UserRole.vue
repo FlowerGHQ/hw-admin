@@ -2,7 +2,7 @@
     <div class="UserRole gray-panel no-margin">
         <div class="panel-content">
             <div class="table-container">
-                <a-button type="primary" ghost @click="handleRoleShow" v-if="$auth('user.save')" class="panel-btn">
+                <a-button type="primary" ghost @click="handleRoleShow" v-if="$auth('account.save', 'MANAGER')" class="panel-btn">
                     <i class="icon i_add"/>新增角色
                 </a-button>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -15,7 +15,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="handleDelete(record)" class="danger"><i class="icon i_delete"/>删除</a-button>
+                            <a-button type='link' @click="handleDelete(record)" v-if="$auth('account.save', 'MANAGER')" class="danger"><i class="icon i_delete"/>删除</a-button>
                         </template>
                     </template>
                 </a-table>

@@ -3,7 +3,7 @@
         <div class="panel-content">
             <div class="table-container">
 
-                <a-button type="primary" ghost @click="handleAuthShow" v-if="$auth('user.save')" class="panel-btn">
+                <a-button type="primary" ghost @click="handleAuthShow" v-if="$auth('account.save','MANAGER')" class="panel-btn">
                     <i class="icon i_add"/>新增权限
                 </a-button>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"

@@ -31,8 +31,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('user.save')"><i class="icon i_edit"/> 编辑</a-button>
-                        <a-button type='link' class="danger" @click="handleDelete(record.id)" v-if="$auth('user.delete')"><i class="icon i_delete"/> 删除</a-button>
+                        <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('account.save')"><i class="icon i_edit"/> 编辑</a-button>
+                        <a-button type='link' class="danger" @click="handleDelete(record.id)" v-if="$auth('account.delete')"><i class="icon i_delete"/> 删除</a-button>
                     </template>
                 </template>
             </a-table>

@@ -5,14 +5,14 @@
                 <template #expandIcon></template>
                 <a-collapse-panel v-for="(org,key) of orgType" :key="key" :header="name" class="gray-collapse-panel">
                     <template #extra>
-                        <a-button @click.stop="handleEditShow(key)" type="link" v-if="!edit && $auth('authority.save')"><i class="icon i_edit"/>设置</a-button>
+                        <a-button @click.stop="handleEditShow(key)" type="link" v-if="!edit && $auth('authority.save', 'MANAGER')"><i class="icon i_edit"/>设置</a-button>
                         <template v-else>
-                            <a-button @click.stop="handleEditSubmit(key)" type="link" v-if="$auth('authority.save')"><i class="icon i_confirm"/>保存</a-button>
-                            <a-button @click.stop="handleEditClose(key)" type="link" class="cancel" v-if="$auth('authority.save')"><i class="icon i_close_c"/>取消</a-button>
+                            <a-button @click.stop="handleEditSubmit(key)" type="link" v-if="$auth('authority.save', 'MANAGER')"><i class="icon i_confirm"/>保存</a-button>
+                            <a-button @click.stop="handleEditClose(key)" type="link" class="cancel" v-if="$auth('authority.save', 'MANAGER')"><i class="icon i_close_c"/>取消</a-button>
                         </template>
                     </template>
                     <div class="panel-content" v-if="!edit">
-                        <SimpleImageEmpty v-if="$Util.isEmptyObj(selected)" desc='该类型的组织尚未分配可管理权限'/>
+                        <SimpleImageEmpty v-if="$Util.isEmptyObj(selected)" desc='该用户尚未分配可管理权限'/>
                         <template v-for="item of options" :key="item.key">
                             <div class="form-item afs" v-if="item.select.length">
                                 <div class="key">{{item.name}}:</div>
@@ -110,7 +110,16 @@ export default {
     },
     methods: {
         getAllAuthItem() { // 获取所权限项
-            Core.Api.Authority.allOptions().then(res => {
+            let url = "authOptions"
+            switch (this.detail.org_type){
+                case Core.Const.USER.TYPE.ADMIN:
+                    url = "allOptions";
+                    break;
+            }
+            console.log("url", url)
+            Core.Api.Authority[url]({
+                org_type: this.detail.org_type
+            }).then(res => {
                 console.log('getAllAuthItem res:', res)
                 let list = res.list
                 list.map(auth => {
@@ -174,7 +183,10 @@ export default {
                     let key = auth.key.split('.')[0];
                     let item = this.options.find(i => key === i.key);
                     if (item) {
-                        item.select.push(auth.id);
+                        if(item.select.indexOf(auth.id) == -1){
+                            item.select.push(auth.id);
+                        }
+
                         selected[auth.id].scoped_type = auth.scoped_type;
                     }
                 })
