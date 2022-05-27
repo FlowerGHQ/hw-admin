@@ -69,7 +69,7 @@
 <script>
 import Core from '../../../core';
 export default {
-    name: 'UserAuth',
+    name: 'UserScoped',
     components: {},
     props: {
         userId: {

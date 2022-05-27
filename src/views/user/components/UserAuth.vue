@@ -106,7 +106,7 @@ export default {
         this.getAllAuthItem();
     },
     mounted() {
-        this.activeKey = ['distributor', 'agent', 'store']
+        this.activeKey = ['distributor']
     },
     methods: {
         getAllAuthItem() { // 获取所权限项

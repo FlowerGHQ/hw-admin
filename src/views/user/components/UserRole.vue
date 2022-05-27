@@ -37,7 +37,6 @@
             </div>
         </div>
         <a-modal v-model:visible="roleShow" title="增加角色" class="stock-change-modal" :after-close="handleRoleClose">
-            <UserScoped type='item' :userId="id" :detail="detail"/>
             <div class="form-item required">
                 <div class="key">角色</div>
                 <div class="value">
