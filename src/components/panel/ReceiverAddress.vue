@@ -12,7 +12,7 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'address'">
-                            {{$Util.addressFilter(record)}}
+                            {{$Util.addressFilter(record, $i18n.locale)}}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -91,6 +91,12 @@ export default {
                 {title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time'},
                 // {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
+            if (this.$i18n.locale === 'en' ) {
+                columns.splice(2, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
+            }
+           /* if (this.$i18n.locale === 'en' ) {
+                columns.splice(2, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
+            }*/
             return columns
         },
     },

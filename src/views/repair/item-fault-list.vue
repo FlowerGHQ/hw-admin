@@ -72,7 +72,7 @@ export default {
             },
             id: 0,
             tableColumns: [
-                {title: 'table.name', dataIndex: 'name'},
+                {title: 'n.name', dataIndex: 'name'},
                 {title: 'def.create_time', dataIndex: 'create_time', key: 'time'},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ],

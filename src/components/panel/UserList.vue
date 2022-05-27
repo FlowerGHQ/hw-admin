@@ -11,13 +11,13 @@
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.dataIndex === 'type'">
-                        {{ $Util.userTypeFilter(text) }}
+                        {{ $Util.userTypeFilter(text, $i18n.locale) }}
                     </template>
                     <template v-if="column.dataIndex === 'flag_admin' && $auth('user.set-admin')">
                         <template v-if="loginType < type">
-                            <a-switch :checked="!!record.flag_admin" checked-children="是" un-checked-children="否" @click="handleManagerChange(record)"/>
+                            <a-switch :checked="!!record.flag_admin" :checked-children="$t('i.yes')" :un-checked-children="$t('i.no')" @click="handleManagerChange(record)"/>
                         </template>
-                        <template v-else>{{ text ? "是" : "否" }}</template>
+                        <template v-else> {{ text ? $t('i.yes') : $t('i.no') }}</template>
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}
@@ -31,8 +31,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('user.save')"><i class="icon i_edit"/> 编辑</a-button>
-                        <a-button type='link' class="danger" @click="handleDelete(record.id)" v-if="$auth('user.delete')"><i class="icon i_delete"/> 删除</a-button>
+                        <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('user.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                        <a-button type='link' class="danger" @click="handleDelete(record.id)" v-if="$auth('user.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                     </template>
                 </template>
             </a-table>

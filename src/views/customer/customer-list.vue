@@ -61,7 +61,7 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.dataIndex === 'address'">
-                            {{ $Util.addressFilter(record) }}
+                            {{ $Util.addressFilter(record, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}

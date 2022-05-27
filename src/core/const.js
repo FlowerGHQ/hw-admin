@@ -187,12 +187,12 @@ let Const = {
             EXPORT: 2, //出口
         },
         TYPE_LIST: [
-            { zh: '国内', en: 'internal', value: 1 },
-            { zh: '出口', en: 'export', value: 2 },
+            { zh: '国内', en: 'Internal', value: 1 },
+            { zh: '出口', en: 'Export', value: 2 },
         ],
         TYPE_MAP: {
-            1: '国内',
-            2: '出口',
+            '1': { key: 1, zh: '国内', en: 'Internal' },
+            '2': { key: 2, zh: '出口', en: 'Export' },
         },
         PAY_TIME_LIST: [
             { text: 'TT(30%定金,70%尾款)', value: 1 },
@@ -481,19 +481,19 @@ let Const = {
             ALL: 3, //所有子级采购单
         },
         // 分批发货
-        FLAG_PART_SHIPMENT_LIST: [
-            { name: '同意', value: 1 },
-            { name: '不同意', value: 2 },
-        ],
+        FLAG_PART_SHIPMENT_LIST: {
+            '1': {key: 1, zh: '同意', en: 'Agree' },
+            '2': {key: 2, zh: '不同意', en: 'Disagree'},
+        },
         FLAG_PART_SHIPMENT_MAP: {
             1: '同意',
             2: '不同意',
         },
         // 转运
-        FLAG_TRANSFER_LIST: [
-            { name: '同意', value: 1 },
-            { name: '不同意', value: 2 },
-        ],
+        FLAG_TRANSFER_LIST: {
+            '1': {key: 1, zh: '同意', en: 'Agree' },
+            '2': {key: 2, zh: '不同意', en: 'Disagree'},
+        },
         FLAG_TRANSFER_MAP: {
             '1': { key: 1, zh: '同意', en: 'Allowed'},
             '2': { key: 2, zh: '不同意', en: 'Disagreed'},

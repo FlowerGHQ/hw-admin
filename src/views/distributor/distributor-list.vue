@@ -36,7 +36,7 @@
                     :row-key="record => record.id" :pagination='false' @change="handleTableChange">
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.dataIndex === 'type'">
-                            {{ $Util.distributorTypeFilter(text) }}
+                            {{ $Util.distributorTypeFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.dataIndex === 'name' && $auth('distributor.detail')">
                             <a-tooltip placement="top" :title='text'>

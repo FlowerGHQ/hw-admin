@@ -172,7 +172,7 @@
             <template #extra v-if="detail.type == TYPE.IN && $auth('invoice.save')">
                 <!-- 有实例入库 选择商品并输入数量、实例号 -->
                 <template v-if="detail.status === STATUS.INIT && !addMode">
-                    <ItemSelect btnType='link' :btnText="$t('in.add')" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION" @select="handleAddItemChange"/>
+                    <ItemSelect btnType='link' :btnText="$t('i.add')" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION" @select="handleAddItemChange"/>
 
                     <a-popover v-model:visible="production.addVisible" trigger="click" placement="left" v-else-if="production.maxCount"
                         @visibleChange='(visible) => {!visible && handleProdAddCancel()}' title="请输入添加数量">
@@ -218,7 +218,7 @@
                             </template>
                             <template v-if="column.key === 'entity_uid'">
                                 <template v-if="addMode || record.editMode">
-                                    <a-input v-model:value="record.entity_uid" style="width: 200px;" placeholder="请输入车架号" @blur="handleVehicleBlur(record)">
+                                    <a-input v-model:value="record.entity_uid" style="width: 200px;" :placeholder="$t('def.input')" @blur="handleVehicleBlur(record)">
                                         <template #suffix v-if="!$auth('ADMIN')">
                                             <span v-if="record.entity_id"><i class="icon suffix i_confirm"/></span>
                                             <span v-else-if="record.entity_no_exist"><i class="icon suffix i_close_c"/></span>
@@ -746,7 +746,7 @@ export default {
         // {{ $t('def.remove') }} 商品
         handleRemoveRow(record) {
             Core.Api.InvoiceItem.delete({id: record.id}).then(() => {
-                this.$message.success('移除成功')
+                this.$message.success(this.$t('pop_up.remove_a'))
                 this.getInvoiceList()
             })
         },
@@ -804,12 +804,12 @@ export default {
                         if (item.item && item.item.id) {
                             target_id = item.item.id
                         } else {
-                            return this.$message.warning("该商品不存在");
+                            return this.$message.warning(this.$t('in.warn_a'));
                         }
                         break;
                     case 'entity':
                         if (!item.entity_uid) {
-                            return this.$message.warning("请输入商品实例号");
+                            return this.$message.warning(this.$t('def.enter'));
                         } else {
                             target_id = item.entity_id
                             target_uid = item.entity_uid
@@ -851,7 +851,7 @@ export default {
             }
             console.log('handleAddSubmit list:', list)
             Core.Api.InvoiceItem.saveList(list).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.getInvoiceDetail()
                 this.addMode = false
             }).catch(err => {
@@ -888,10 +888,10 @@ export default {
                 price,
             }
             if (!target.target_id) {
-                return this.$message.warning(`该${type === 'item' ? '商品' : '商品实例'}不存在`);
+                return this.$message.warning(`${type === 'item' ? this.$t('i.item') : '商品实例'}` + this.$t('in.no'));
             }
             Core.Api.InvoiceItem.save(target).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.getInvoiceDetail()
             })
         },
@@ -909,7 +909,7 @@ export default {
                 console.log('handleVehicleBlur res:', res)
                 if (Core.Util.isEmptyObj(res.detail)) {
                     if (!this.$auth('ADMIN')) {
-                        this.$message.warning('该商品实例号未在系统中录入！')
+                        this.$message.warning(this.$t('in.warn'))
                     }
                     record.entity_id = 0
                     record.entity_no_exist = 1
@@ -946,7 +946,7 @@ export default {
                 }
             })
             Core.Api.InvoiceItem.saveList(list).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.getInvoiceDetail()
                 this.addMode = false
             }).catch(err => {

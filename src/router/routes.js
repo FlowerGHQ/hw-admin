@@ -475,6 +475,7 @@ const routes = [
                 component: () => import('@/views/repair/item-fault-list.vue'),
                 meta: {
                     title: '故障管理',
+                    title_en: 'Faults',
                     roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
                     // auth: ['repair-order.save'],
                 }
@@ -1126,7 +1127,7 @@ const routes = [
             title: '账户管理',
             title_en: 'Accounts',
             icon: 'i_s_user',
-            roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN],
+            roles: [LOGIN_TYPE.DISTRIBUTOR],
         },
         children: [
             {

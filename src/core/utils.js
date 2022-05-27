@@ -304,7 +304,7 @@ const Util = {
         }
     },
 
-    addressFilter(obj, type = 1) {
+    addressFilter(obj,lang, type = 1) {
         if (typeof obj !== 'object' || !obj) {
             return '-'
         }
@@ -312,11 +312,27 @@ const Util = {
         if (!province && !city && !county && !address) {
             return '-'
         }
-        switch (type) {
+       /* switch (type) {
             case 1:
                 return `${province} ${city} ${county} ${address}`;
             case 2:
                 return `${province} ${city} ${county}`;
+        }*/
+        if (lang === 'en') {
+            let { province, city_en, county, address } = obj
+            switch (type) {
+                case 1:
+                    return `${province} ${city_en} ${county} ${address}`;
+            }
+        }
+        if (lang === 'zh') {
+            let { province, city, county, address } = obj
+            switch (type) {
+                case 1:
+                    return `${province} ${city} ${county} ${address}`;
+                case 2:
+                    return `${province} ${city} ${county}`;
+            }
         }
     },
 
@@ -364,9 +380,10 @@ const Util = {
     /* =============== 通用过滤器 ================ */
 
     /* =============== 分销商管理 ================ */
-    distributorTypeFilter(val) {
+    distributorTypeFilter(val, to='zh') {
         const MAP = Const.DISTRIBUTOR.TYPE_MAP
-        return MAP[val] || '未知'
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
     },
     /* =============== 分销商管理 ================ */
 

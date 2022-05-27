@@ -18,7 +18,7 @@
                     </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
-                            {{ text ? '启用中' : '已禁用' }}
+                            {{ text ? $t('def.enable_ing') : $t('def.disable_ing') }}
                         </div>
                     </template>
                     <template v-if="column.key === 'operation'">
@@ -67,12 +67,15 @@ export default {
         tableColumns() {
             let tableColumns = [
                 { title: this.$t('d.name'), dataIndex: 'name', key:'detail'},
-                { title: this.$t('n.country'), dataIndex: 'country' },
+                { title: this.$t('n.country'), dataIndex: 'country',key: 'country' },
                 { title: this.$t('n.phone'), dataIndex: 'phone' },
                 { title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('n.state'), dataIndex: 'status', key: 'status' },
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
+            if (this.$i18n.locale === 'en') {
+                tableColumns.splice(1, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
+            }
             /*if (this.$auth('ADMIN')) {
                 tableColumns.splice(1, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'name'})
             }*/

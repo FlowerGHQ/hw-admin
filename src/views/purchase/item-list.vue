@@ -29,7 +29,7 @@
                             </div>
                             <div class="btns">
                                 <a-button class='btn ghost' @click="routerChange('shop_cart')">{{ $t('i.look') }}({{briefCount}})</a-button>
-                                <a-button class='btn black' @click="routerChange('settle')">结算</a-button>
+                                <a-button class='btn black' @click="routerChange('settle')">{{ $t('i.settle') }}</a-button>
                             </div>
                         </div>
                     </template>

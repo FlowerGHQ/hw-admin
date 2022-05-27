@@ -44,10 +44,10 @@
                         </a-tooltip>
                     </template>
                     <template v-if="column.key === 'type'">
-                        {{ $Util.warehouseTypeFilter(text) }}
+                        {{ $Util.warehouseTypeFilter(text, $i18n.locale) }}
                     </template>
                     <template v-if="column.key === 'address'">
-                        {{ $Util.addressFilter(record) }}
+                        {{ $Util.addressFilter(record, $i18n.locale) }}
                     </template>
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
