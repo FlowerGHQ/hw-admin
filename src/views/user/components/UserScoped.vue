@@ -1,7 +1,11 @@
 <template>
     <div class="UserAuth gray-panel no-margin">
+        <div class="title-container">
+            <div class="title-area">{{resourceMap[resourceType].text}}资源权限管理</div>
+        </div>
         <div class="panel-content">
             <div class="table-container">
+
                 <a-button type="primary" ghost @click="handleAuthShow" v-if="$auth('user.save')" class="panel-btn">
                     <i class="icon i_add"/>新增权限
                 </a-button>
@@ -44,12 +48,12 @@
             <div class="form-item required">
                 <div class="key">类型</div>
                 <div class="value">
-                    <a-select v-model:value="form.resource_type" placeholder="请选择权限对象">
-                        <a-select-option v-for="(val,key) in resourceMap" :key="key" :value="key">{{ val.text }}</a-select-option>
+                    <a-select v-model:value="form.resource_type" placeholder="请选择权限对象" disabled>
+                        <a-select-option v-for="resource in resourceList" :key="resource.value" :value="resource.value">{{ resource.text }}</a-select-option>
                     </a-select>
                 </div>
             </div>
-            <div class="form-item required" >
+            <div class="form-item required" v-if="resourceType == RESOURCE_TYPE.WAREHOUSE">
                 <div class="key">对象</div>
                 <div class="value">
                     <a-select v-model:value="form.resource_id" placeholder="请选择权限对象">
@@ -79,13 +83,16 @@ export default {
             pageSize: 20,
             userId: 0,
             userType: 0,
+            resourceType: 0,
             total: 0,
             // 表格
             tableData: [],
             // 弹框
             authShow: false,
             warehouseList: [],
+            resourceList: Core.Const.NOTICE.RESOURCE_TYPE_LIST,
             resourceMap: Core.Const.NOTICE.RESOURCE_TYPE_MAP,
+            RESOURCE_TYPE: Core.Const.NOTICE.RESOURCE_TYPE,
             form: {
                 id: "",
                 resource_type: undefined,
@@ -109,7 +116,11 @@ export default {
     },
     mounted() {
         this.userId = Number(this.$route.query.user_id) || 0
+        this.userType = Number(this.$route.query.user_type) || 0
+        this.resourceType = Number(this.$route.query.resource_type) || 0
+        this.form.resource_type = this.resourceType
         this.getTableData();
+
 
     },
     methods: {
@@ -126,6 +137,7 @@ export default {
         getTableData() {  // 获取 表格 数据
             Core.Api.AuthorityUser.list({
                 user_id: this.userId,
+                resource_type: this.resourceType,
                 page: this.currPage,
                 page_size: this.pageSize,
             }).then(res => {
@@ -145,7 +157,13 @@ export default {
         },
         handleAuthShow() {
             this.authShow = true;
-            this.getWarehouseList()
+            switch (this.resourceType ){
+                case this.RESOURCE_TYPE.WAREHOUSE: {
+                    this.getWarehouseList();
+                    break;
+                }
+            }
+
             /*if (item) {
                 this.form.resource_type = item.resource_type
                 this.form.resource_id = item.resource_id
@@ -154,6 +172,7 @@ export default {
         handleAuthClose() {
             this.authShow = false;
             Object.assign(this.form, this.$options.data().form)
+            this.form.resource_type = this.resourceType
         },
         handleAuthSubmit() {
             let form = Core.Util.deepCopy(this.form)
@@ -176,8 +195,8 @@ export default {
         handleDelete(item) {
 
             let form = {
-                user_id: this.detail.id,
-                user_type: this.detail.type,
+                user_id: this.userId,
+                user_type: this.userType,
                 resource_id: item.resource_id,
                 resource_type: item.resource_type
             }

@@ -595,8 +595,12 @@ let Const = {
             WAREHOUSE: 10,
         },
         RESOURCE_TYPE_MAP: {
-            '10': {text: '仓库'}
-        }
+            "0": {text: '未知'},
+            "10": {text: '仓库'}
+        },
+        RESOURCE_TYPE_LIST: [
+            {value: 10, text: '仓库'}
+        ]
     },
     SYSTEM: { //系统
         FILE: {

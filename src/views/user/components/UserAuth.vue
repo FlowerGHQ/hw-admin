@@ -18,7 +18,7 @@
                                 <div class="key">{{item.name}}:</div>
                                 <div class="value">
                                     <span class="authority-item" v-for="i of item.select" :key="i">
-                                        <a @click="routerChange" v-if = "selected[i].scoped === AUTHORITY_SCOPED.YES">
+                                        <a @click="routerChange(selected[i].scoped_type)" v-if = "selected[i].scoped_type > 0">
                                             {{selected[i].name}}
                                         </a>
                                         <span v-else>
@@ -111,7 +111,7 @@ export default {
                     let key = auth.key.split('.')[0];
                     let item = this.authItems.find(i => key === i.key);
                     if (item) {
-                        item.list.push({ value: auth.id, label: auth.name, scoped: auth.scoped });
+                        item.list.push({ value: auth.id, label: auth.name, scoped_type: auth.scoped_type });
                     }
                 })
                 console.log("getAllAuthItem authItems", this.authItems)
@@ -131,14 +131,14 @@ export default {
                 res.list.forEach(auth => {
                     let selectedInfo ={
                         name: auth.name,
-                        scoped: 0
+                        scoped_type: 0
                     }
                     selected[auth.id] = selectedInfo;
                     let key = auth.key.split('.')[0];
                     let item = this.options.find(i => key === i.key);
                     if (item) {
                         item.select.push(auth.id);
-                        selected[auth.id].scoped = auth.scoped;
+                        selected[auth.id].scoped_type = auth.scoped_type;
                         item.list.forEach(it => {
                                 if (it.value == auth.id) {
                                     it.disabled = true
@@ -162,14 +162,14 @@ export default {
                 res.list.forEach(auth => {
                     let selectedInfo = {
                         name: auth.name,
-                        scoped: 0
+                        scoped_type: 0
                     }
                     selected[auth.id] = selectedInfo;
                     let key = auth.key.split('.')[0];
                     let item = this.options.find(i => key === i.key);
                     if (item) {
                         item.select.push(auth.id);
-                        selected[auth.id].scoped = auth.scoped;
+                        selected[auth.id].scoped_type = auth.scoped_type;
                     }
                 })
                 this.selected = selected
@@ -203,12 +203,13 @@ export default {
 
             this.getUserRoleAuth()
         },
-        routerChange() {
+        routerChange(scoped_type) {
             let routeUrl = this.$router.resolve({
                 path: "/system/user-scoped",
                 query: {
                     user_id: this.userId,
-                    user_type: this.detail.type
+                    user_type: this.detail.type,
+                    resource_type: scoped_type,
                 }
             })
             window.open(routeUrl.href, '_self')
