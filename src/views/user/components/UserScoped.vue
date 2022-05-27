@@ -1,8 +1,5 @@
 <template>
-    <div class="UserAuth gray-panel no-margin">
-        <div class="title-container">
-            <div class="title-area">{{resourceMap[resourceType].text}}资源权限管理</div>
-        </div>
+    <div class="UserScoped gray-panel no-margin">
         <div class="panel-content">
             <div class="table-container">
 
@@ -241,4 +238,11 @@ export default {
 };
 </script>
 <style lang="less">
+.gray-panel {
+    background: #fff;
+    box-shadow: 0px 1px 2px rgb(23 32 48 / 6%);
+    border-radius: 4px;
+    margin: 0 20px 20px;
+    padding: 14px;
+}
 </style>

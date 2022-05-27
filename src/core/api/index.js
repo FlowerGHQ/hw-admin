@@ -72,9 +72,9 @@ const apiList = {
         list: ['PostJson', 'authority/list-user-authority-scope'], // 用户权限范围列表
         save: ['PostJson', 'authority/save-user-authority-scope'],//新增/编辑用户权限范围
         detail: ['PostJson', 'authority/detail-user-authority-scope'],//用户权限范围详情
-        delete: ['PostJson', 'authority//delete-user-authority-scope'],//删除用户权限范围
-        authority: ['PostJson', 'authority//list-by-resource-authorized'], //获得某个资源授权的用户ID列表
-        user: ['PostJson', 'authority//user-has-authority'],//判断用户是否拥有对某个资源的权限
+        delete: ['PostJson', 'authority/delete-user-authority-scope'],//删除用户权限范围
+        authority: ['PostJson', 'authority/list-by-resource-authorized'], //获得某个资源授权的用户ID列表
+        user: ['PostJson', 'authority/user-has-authority'],//判断用户是否拥有对某个资源的权限
 
 
     },
