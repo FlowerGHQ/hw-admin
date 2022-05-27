@@ -54,8 +54,10 @@ const apiList = {
         allOptions: ['PostJson', 'authority/list-all'],  // 所有权限项
         authOptions: ['PostJson', 'authority/list-by-org-type'], // 某个身份下 可选的权限项
         authSelected: ['PostJson', 'authority/list-by-role'],    // 某个角色 已选的权限
-        authRoleUser: ['PostJson', 'authority/list-role-by-user'],    // 某个用户对应角色 已选的权限
+        authRoleUser: ['PostJson', 'authority/list-role-by-user'],    // 获取该用户对应角色下的全部权限
         authUser: ['PostJson', 'authority/list-by-user'],    // 某个用户对应角色 已选的权限
+        authUserAll: ['PostJson', 'authority/list-all-by-user'],    // 获取某个用户所有权限
+
 
         allotOrgAuth: ['PostJson', 'authority/save-org-type-authority'], // 向组织分配 可分配权限
         allotAuth: ['PostJson', 'authority/save-role-authority'], // 向角色分配权限
