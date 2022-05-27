@@ -37,11 +37,12 @@
             </div>
         </div>
         <a-modal v-model:visible="roleShow" title="增加角色" class="stock-change-modal" :after-close="handleRoleClose">
+            <UserScoped type='item' :userId="id" :detail="detail"/>
             <div class="form-item required">
                 <div class="key">角色</div>
                 <div class="value">
                     <a-select v-model:value="form.role_id" placeholder="请选择角色">
-                        <a-select-option v-for="role in roleList" :key="role.id" :value="role.id">{{ role.name }}</a-select-option>
+                        <a-select-option v-for="role in roleList" :key="role.id" :value="role.id" :disabled="role.disabled">{{ role.name }}</a-select-option>
                     </a-select>
                 </div>
             </div>
@@ -133,7 +134,15 @@ export default {
         },
         getRoleList() {
             Core.Api.Authority.roleList().then(res => {
+                res.list.forEach(role => {
+                    this.tableData.forEach(it =>{
+                        if (role.id == it.role_id){
+                            role.disabled = true
+                        }
+                    });
+                });
                 this.roleList = res.list
+
             })
         },
         handleRoleShow() {

@@ -81,7 +81,7 @@ export default {
             },
             id: '',
             //标签页
-            activeKey: 'UserAuth'
+            activeKey: 'UserRole'
         }
     },
     watch: {},

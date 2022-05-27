@@ -57,7 +57,7 @@
                 <div class="key">对象</div>
                 <div class="value">
                     <a-select v-model:value="form.resource_id" placeholder="请选择权限对象">
-                        <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+                        <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id" :disabled="item.disabled">{{ item.name }}</a-select-option>
                     </a-select>
                 </div>
             </div>
@@ -74,6 +74,17 @@ import Core from '../../../core';
 export default {
     name: 'UserAuth',
     components: {},
+    props: {
+        userId: {
+            type: Number,
+        },
+        userType: {
+            type: Number,
+        },
+        resourceType: {
+            type: Number,
+        },
+    },
     data() {
         return {
             // 加载
@@ -81,9 +92,9 @@ export default {
             // 分页
             currPage: 1,
             pageSize: 20,
-            userId: 0,
-            userType: 0,
-            resourceType: 0,
+            // userId: 0,
+            // userType: 0,
+            // resourceType: 0,
             total: 0,
             // 表格
             tableData: [],
@@ -115,9 +126,9 @@ export default {
         },
     },
     mounted() {
-        this.userId = Number(this.$route.query.user_id) || 0
-        this.userType = Number(this.$route.query.user_type) || 0
-        this.resourceType = Number(this.$route.query.resource_type) || 0
+        // this.userId = Number(this.$route.query.user_id) || 0
+        // this.userType = Number(this.$route.query.user_type) || 0
+        // this.resourceType = Number(this.$route.query.resource_type) || 0
         this.form.resource_type = this.resourceType
         this.getTableData();
 
@@ -152,6 +163,15 @@ export default {
         },
         getWarehouseList() {
             Core.Api.Warehouse.listAll().then(res => {
+                res.list.forEach(warehouse => {
+                    this.tableData.forEach(it =>{
+                        console.log(warehouse.id)
+                        console.log(it)
+                        if (warehouse.id == it.resource_id){
+                            warehouse.disabled = true
+                        }
+                    });
+                });
                 this.warehouseList = res.list
             })
         },

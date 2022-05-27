@@ -18,7 +18,7 @@
                                 <div class="key">{{item.name}}:</div>
                                 <div class="value">
                                     <span class="authority-item" v-for="i of item.select" :key="i">
-                                        <a @click="routerChange(selected[i].scoped_type)" v-if = "selected[i].scoped_type > 0">
+                                        <a @click="handleScopedTypeShow(selected[i].scoped_type)" v-if = "selected[i].scoped_type > 0">
                                             {{selected[i].name}}
                                         </a>
                                         <span v-else>
@@ -44,13 +44,16 @@
                 </a-collapse-panel>
             </a-collapse>
         </div>
-
+        <a-modal v-model:visible="scopedShow" :title="resourceMap[scopedType].text + '资源权限管理'" class="stock-change-modal" :width="800" :after-close="handleScopedTypeClose">
+            <UserScoped :userId="userId" :userType="detail.type" :resourceType="scopedType" />
+        </a-modal>
     </div>
 </template>
 
 <script>
 import Core from '../../../core';
 import SimpleImageEmpty from '../../../components/common/SimpleImageEmpty.vue'
+import UserScoped from "./UserScoped.vue";
 
 const AUTH_LIST_TEMP = Core.Const.AUTH_LIST_TEMP
 const USER_TYPE = Core.Const.USER.TYPE
@@ -58,7 +61,7 @@ const AUTHORITY_SCOPED = Core.Const.AUTHORITY_SCOPED
 
 export default {
     name: 'UserAuth',
-    components: { SimpleImageEmpty },
+    components: { SimpleImageEmpty, UserScoped },
     props: {
         userId: {
             type: Number,
@@ -80,6 +83,9 @@ export default {
             authItems: Core.Util.deepCopy(AUTH_LIST_TEMP), // 所有权限
             name: '权限查看',
             edit: false,
+            scopedShow: false,
+            resourceMap: Core.Const.NOTICE.RESOURCE_TYPE_MAP,
+            scopedType: 0,
             options: [],
             selected: {},
             disabled: {},
@@ -203,17 +209,22 @@ export default {
 
             this.getUserRoleAuth()
         },
-        routerChange(scoped_type) {
-            let routeUrl = this.$router.resolve({
-                path: "/system/user-scoped",
-                query: {
-                    user_id: this.userId,
-                    user_type: this.detail.type,
-                    resource_type: scoped_type,
-                }
-            })
-            window.open(routeUrl.href, '_self')
+        handleScopedTypeShow(scoped_type) {
+            this.scopedType = scoped_type;
+            this.scopedShow = true;
+            // let routeUrl = this.$router.resolve({
+            //     path: "/system/user-scoped",
+            //     query: {
+            //         user_id: this.userId,
+            //         user_type: this.detail.type,
+            //         resource_type: scoped_type,
+            //     }
+            // })
+            // window.open(routeUrl.href, '_self')
 
+        },
+        handleScopedTypeClose() { // 取消编辑
+            this.scopedShow = false
         },
 
     }
