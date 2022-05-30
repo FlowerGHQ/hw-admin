@@ -1224,6 +1224,16 @@ const routes = [
                     parent: '/user/user-list',
                 }
             },
+            {
+                path: 'user-scoped',
+                name: 'UserScoped',
+                component: () => import('@/views/user/components/UserScoped.vue'),
+                meta: {
+                    hidden: true,
+                    title: '员工详情',
+                    parent: '/user/user-list',
+                }
+            },
            /* {
                 path: 'auth-user-list',
                 name: 'AuthUserList',

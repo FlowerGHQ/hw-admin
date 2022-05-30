@@ -6,7 +6,7 @@ import defult_file from '@images/defult_file.png'
 
 
 // let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' // 正式
-let OSS_POINT = 'https://rebuild-mel-erp.oss-cn-hangzhou.aliyuncs.com' // 
+let OSS_POINT = 'https://rebuild-mel-erp.oss-cn-hangzhou.aliyuncs.com' //
 let URL_POINT = 'https://eos-api.hw.innotick.com'
 
 switch (window.location.hostname) {
@@ -595,8 +595,12 @@ let Const = {
             WAREHOUSE: 10,
         },
         RESOURCE_TYPE_MAP: {
-            '10': {text: '仓库'}
-        }
+            "0": {text: '未知'},
+            "10": {text: '仓库'}
+        },
+        RESOURCE_TYPE_LIST: [
+            {value: 10, text: '仓库'}
+        ]
     },
     SYSTEM: { //系统
         FILE: {
@@ -643,6 +647,10 @@ let Const = {
         { list: [], select: [], key: 'role', name: '角色' },
         { list: [], select: [], key: 'file', name: '文件' },
     ],
+    AUTHORITY_SCOPED: {
+        YES: 1,
+        NO: 0,
+    },
 
     ATTACHMENT: {
         TARGET_TYPE: { // 来源类型
@@ -662,6 +670,10 @@ let Const = {
             '2': { key: 2, zh: '残次仓', en: 'Imperfect' },
             '3': { key: 3, zh: '物料仓'},
             '4': { key: 4, zh: '广宣品仓'},
+        },
+        IS_AUTHORITY_WAREHOUSE: {
+            YES: 1,
+            NO: 0,
         },
     },
     STOCK_RECORD: { // 出入库明细

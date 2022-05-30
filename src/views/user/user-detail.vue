@@ -44,9 +44,13 @@
         </div>
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
-                <a-tab-pane key="UserAuth" tab="组织权限">
+                <a-tab-pane key="UserRole" tab="角色分配">
+                    <UserRole type='item' :userId="id" :detail="detail" @submit="getUserDetail"
+                               v-if="activeKey === 'UserRole'"/>
+                </a-tab-pane>
+                <a-tab-pane key="UserAuth" tab="权限管理">
                     <UserAuth type='item' :userId="id" :detail="detail" @submit="getUserDetail"
-                               v-if="activeKey === 'UserAuth'"/>
+                              v-if="activeKey === 'UserAuth'"/>
                 </a-tab-pane>
 
             </a-tabs>
@@ -57,12 +61,13 @@
 <script>
 import Core from "../../core";
 import UserAuth from "./components/UserAuth.vue";
+import UserRole from "./components/UserRole.vue";
 
 const WAREHOUSE_TYPE = Core.Const.WAREHOUSE.TYPE
 
 export default {
     name: "UserDetail",
-    components: { UserAuth },
+    components: { UserAuth ,UserRole },
     props: {},
     data() {
         return {
@@ -76,7 +81,7 @@ export default {
             },
             id: '',
             //标签页
-            activeKey: 'UserAuth'
+            activeKey: 'UserRole'
         }
     },
     watch: {},
