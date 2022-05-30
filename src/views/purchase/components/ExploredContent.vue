@@ -307,7 +307,7 @@ export default {
                 font-weight: bold;
                 color: @TC_LP;
                 transform-origin: 50% 50%;
-                transform: scale(0.9, 0.9);
+                transform: scale(90%, 90%);
             }
         }
         .contain-type {
