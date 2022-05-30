@@ -88,6 +88,8 @@ const apiList = {
         updateStatus: ['PostJson', 'agent/update-status'], // 禁用
 
         detailByStore: ['PostJson', 'agent/detail-by-store'], // 通过门店找上属零售商
+        listPath: ['PostJson', 'agent/list-path'], // 详情
+
     },
     Customer: { // 客户管理
         list: ['PostJson', 'customer/list'],

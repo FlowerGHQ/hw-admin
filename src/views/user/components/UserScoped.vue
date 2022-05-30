@@ -4,7 +4,7 @@
             <div class="table-container">
 
                 <a-button type="primary" ghost @click="handleAuthShow" v-if="$auth('account.save','MANAGER')" class="panel-btn">
-                    <i class="icon i_add"/>新增权限
+                    <i class="icon i_add"/>新增资源
                 </a-button>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false'>
@@ -41,19 +41,19 @@
                 />
             </div>
         </div>
-        <a-modal v-model:visible="authShow" title="增加权限" class="stock-change-modal" :after-close="handleAuthClose">
+        <a-modal v-model:visible="authShow" title="增加资源" class="stock-change-modal" :after-close="handleAuthClose">
             <div class="form-item required">
-                <div class="key">类型</div>
+                <div class="key">资源类型</div>
                 <div class="value">
-                    <a-select v-model:value="form.resource_type" placeholder="请选择权限对象" disabled>
+                    <a-select v-model:value="form.resource_type" placeholder="请选择资源类型" disabled>
                         <a-select-option v-for="resource in resourceList" :key="resource.value" :value="resource.value">{{ resource.text }}</a-select-option>
                     </a-select>
                 </div>
             </div>
             <div class="form-item required" v-if="resourceType == RESOURCE_TYPE.WAREHOUSE">
-                <div class="key">对象</div>
+                <div class="key">资源对象</div>
                 <div class="value">
-                    <a-select v-model:value="form.resource_id" placeholder="请选择权限对象">
+                    <a-select v-model:value="form.resource_id" placeholder="请选择资源对象">
                         <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id" :disabled="item.disabled">{{ item.name }}</a-select-option>
                     </a-select>
                 </div>

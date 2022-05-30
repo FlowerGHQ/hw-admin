@@ -4,12 +4,29 @@
     <div class="form-block">
         <div class="form-title"><div class="title">{{ $t('n.information') }}</div></div>
         <div class="form-content">
-            <div class="form-item required" v-if="$auth('ADMIN') && !form.id">
+            <div class="form-item" v-if="$auth('ADMIN') && !form.id">
                 <div class="key">{{ $t('n.distributor') }}</div>
                 <div class="value">
-                    <a-select v-model:value="form.distributor_id" :placeholder="$t('search.select_distributor')">
-                        <a-select-option v-for="distributor of distributorList" :key="distributor.id" :value="distributor.id">{{ distributor.name }}</a-select-option>
-                    </a-select>
+<!--                    <a-select v-model:value="form.distributor_id" :placeholder="$t('search.select_distributor')">-->
+<!--                        <a-select-option v-for="distributor of distributorList" :key="distributor.id" :value="distributor.id">{{ distributor.name }}</a-select-option>-->
+<!--                    </a-select>-->
+                    <a-tree-select
+                        v-model:value="value"
+                        show-search
+                        style="width: 100%"
+                        :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                        placeholder="Please select"
+                        allow-clear
+                        treeDefaultExpandAll
+                        @select='handleSelect'
+                        :tree-data="treeData"
+                        :placeholder="$t('def.select')"
+                    >
+                        <template #title="{ value: value, id, name }">
+                            <b v-if="id === form.parent_id" style="color: #08c" >{{ name}} </b>
+                            <template v-else>{{name }}</template>
+                        </template>
+                    </a-tree-select>
                 </div>
             </div>
             <div class="form-item required">
@@ -73,6 +90,7 @@ export default {
             detail: {},
             form: {
                 id: '',
+                parent_id: '',
                 name: '',
                 short_name: '',
                 contact_name: '',
@@ -82,8 +100,10 @@ export default {
                 continent: undefined,
                 distributor_id: undefined,
             },
+            treeData: [],
             areaList: [],
             defArea: [],
+            value: '',
             area: {
                 continent: '',
                 country: '',
@@ -106,6 +126,7 @@ export default {
         } else if (this.$auth('DISTRIBUTOR')) {
             this.form.distributor_id = Core.Data.getOrgId()
         }
+        this.getAgentListPath()
     },
     methods: {
         routerChange(type, item) {
@@ -178,6 +199,19 @@ export default {
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
+        },
+        getAgentListPath() {
+            Core.Api.Agent.listPath({
+
+            }).then((res) => {
+                this.treeData = res.list
+            }).catch(err => {
+                console.log('handleSubmit err:', err)
+            })
+        },
+        handleSelect(value, node, extra) {
+            this.form.parent_id = node.id
+            console.log('handleSelect value, node, extra:',  this.form.parent_id)
         }
     }
 };

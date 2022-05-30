@@ -12,9 +12,26 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
                     <div class="key">{{ $t('a.superior') }}:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.distributor_id" :placeholder="$t('def.select')" @change="handleSearch">
-                            <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
-                        </a-select>
+<!--                        <a-select v-model:value="searchForm.distributor_id" :placeholder="$t('def.select')" @change="handleSearch">-->
+<!--                            <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>-->
+<!--                        </a-select>-->
+                        <a-tree-select
+                            v-model:value="value"
+                            show-search
+                            style="width: 100%"
+                            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                            placeholder="Please select"
+                            allow-clear
+                            treeDefaultExpandAll
+                            @select='handleSelect'
+                            :tree-data="treeData"
+                            :placeholder="$t('def.select')"
+                        >
+                            <template #title="{ value: value, id, name }">
+                                <b v-if="id === searchForm.parent_id" style="color: #08c" >{{ name}} </b>
+                                <template v-else>{{name }}</template>
+                            </template>
+                        </a-tree-select>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -120,7 +137,10 @@ export default {
             // 搜索
             distributorList: [], // 分销商下拉框数据
             filteredInfo: {status: [1]},
+            value: '',
+            treeData: [],
             searchForm: {
+                parent_id: '',
                 name: '',
                 status: 1,
                 distributor_id: undefined,
@@ -140,6 +160,7 @@ export default {
             filteredInfo = filteredInfo || {};
             let tableColumns = [
                 { title: this.$t('n.name'), dataIndex: 'name' },
+                { title: this.$t('n.parent_name'), dataIndex: 'parent_name' },
                 { title: this.$t('d.short_name'), dataIndex: 'short_name' },
                 { title: this.$t('n.country'), dataIndex: 'country', key: 'country' },
                 { title: this.$t('n.contact'), dataIndex: 'contact', key: 'item'},
@@ -149,9 +170,9 @@ export default {
                     filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [1] },
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
-            if (this.$auth('ADMIN')) {
-                tableColumns.splice(2, 0, {title: this.$t('a.superior'), dataIndex: 'distributor_name', key: 'item'})
-            }
+            // if (this.$auth('ADMIN')) {
+            //     tableColumns.splice(2, 0, {title: this.$t('a.superior'), dataIndex: 'distributor_name', key: 'item'})
+            // }
             if (this.$i18n.locale === 'en' ) {
                 tableColumns.splice(3, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
             }
@@ -163,6 +184,7 @@ export default {
         if (this.$auth('ADMIN')) {
             this.getDistributorListAll();
         }
+        this.getAgentListPath()
     },
     methods: {
         routerChange(type, item = {}) {
@@ -205,6 +227,7 @@ export default {
         },
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
+            this.value = ''
             this.$refs.TimeSearch.handleReset()
             this.$refs.CountryCascader.handleReset()
             this.pageChange(1);
@@ -274,6 +297,19 @@ export default {
                     })
                 },
             });
+        },
+        getAgentListPath() {
+            Core.Api.Agent.listPath({
+
+            }).then((res) => {
+                this.treeData = res.list
+            }).catch(err => {
+                console.log('handleSubmit err:', err)
+            })
+        },
+        handleSelect(value, node, extra) {
+            this.searchForm.parent_id = node.id
+
         }
     }
 };
