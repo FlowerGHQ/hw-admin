@@ -174,25 +174,25 @@ export default {
                 }
             }
             if (!form.name) {
-                return this.$message.warning('请输入零售商名')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.short_name) {
-                return this.$message.warning('请输入简称')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.phone) {
-                return this.$message.warning('请输入零售商手机号')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.email) {
-                return this.$message.warning('请输入零售商邮箱')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!area.country) {
-                return this.$message.warning('请选择零售商国家')
+                return this.$message.warning(this.$t('def.enter'))
             }
             Core.Api.Agent.save({
                 ...form,
                 ...area
             }).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)

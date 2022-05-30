@@ -68,7 +68,7 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'address'">
-                            {{$Util.addressFilter(record.receive_info)}}
+                            {{$Util.addressFilter(record.receive_info, $i18n.locale)}}
                         </template>
                         <template v-if="column.key === 'tip_time'">
                             <a-tooltip :title="text" destroyTooltipOnHide>
@@ -117,7 +117,7 @@
                     show-quick-jumper
                     show-size-changer
                     show-less-items
-                    :show-total="total => `共${total}条`"
+                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                     :hide-on-single-page='false'
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="pageChange"
@@ -163,7 +163,7 @@
                     <div class="key">收货地址:</div>
                     <div class="value">
                         <a-select v-model:value="form.receive_info_id" placeholder="请选择收货地址" show-search option-filter-prop="children">
-                            <a-select-option v-for="item of receiveList" :key='item.id' :value="item.id">{{$Util.addressFilter(item)}}</a-select-option>
+                            <a-select-option v-for="item of receiveList" :key='item.id' :value="item.id">{{$Util.addressFilter(item, $i18n.locale)}}</a-select-option>
                         </a-select>
                     </div>
                 </div>

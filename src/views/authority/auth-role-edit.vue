@@ -1,23 +1,23 @@
 <template>
     <div id="AuthRoleEdit" class="edit-container">
         <div class="title-container">
-            <div class="title-area">{{ form.id ? '编辑角色' : '新建角色' }}</div>
+            <div class="title-area">{{ form.id ? $t('role.edit') : $t('role.save') }}</div>
         </div>
         <div class="form-block">
             <div class="form-title">
-                <div class="title-colorful">基本信息</div>
+                <div class="title-colorful">{{ $t('n.information') }}</div>
             </div>
             <div class="form-content">
                 <div class="form-item required">
-                    <div class="key">角色名称</div>
+                    <div class="key">{{  $t('n.name') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" placeholder="请输入角色名称"/>
+                        <a-input v-model:value="form.name" :placeholder=" $t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item textarea">
-                    <div class="key">角色描述:</div>
+                    <div class="key">{{ $t('role.description') }}:</div>
                     <div class="value">
-                        <a-textarea v-model:value="form.remark" placeholder="请输入角色描述"
+                        <a-textarea v-model:value="form.remark" :placeholder=" $t('def.input')"
                                     :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                         <span class="content-length">{{ form.remark.length }}/99</span>
                     </div>
@@ -26,12 +26,12 @@
         </div>
         <div class="form-block">
             <div class="form-title">
-                <div class="title-colorful">权限分配</div>
+                <div class="title-colorful">{{ $t('role.assignment') }}</div>
             </div>
             <div class="form-content long-key">
                 <template v-for="item of authItems" :key="item.key">
                     <div class="form-item afs" v-if="item.list.length">
-                        <div class="key">{{ item.name }}:</div>
+                        <div class="key">{{item.name}}:</div>
                         <div class="value">
                             <a-checkbox-group :options="item.list" v-model:value="item.select"/>
                         </div>
@@ -40,8 +40,8 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary">确定</a-button>
-            <a-button @click="routerChange('back')" type="primary" ghost>取消</a-button>
+            <a-button @click="handleSubmit" type="primary">{{ $t('def.sure') }}</a-button>
+            <a-button @click="routerChange('back')" type="primary" ghost>{{ $t('def.cancel') }}</a-button>
         </div>
     </div>
 </template>
@@ -96,6 +96,7 @@ export default {
                 id: this.form.id,
             }).then(res => {
                 console.log('getAuthRoleDetail res', res)
+                console.log('authItems',this.authItems)
                 this.detail = res.role
                 for (const key in this.form) {
                     this.form[key] = res.role[key]
@@ -117,7 +118,7 @@ export default {
                     let key = auth.key.split('.')[0];
                     let item = this.authItems.find(i => key === i.key);
                     if (item) {
-                        item.list.push({value: auth.id, label: auth.name});
+                        item.list.push({ value: auth.id, label: auth.name });
                     }
                 })
                 if (this.form.id) {

@@ -47,7 +47,7 @@
                     <a-button type="link" @click="handleAddSelectItem(index)"><i class="icon i_add"/>{{ $t('i.add_options') }}</a-button>
                     <div class="select-input" v-for="(inner, i) of item.select" :key="i">
                         <a-input v-model:value="item.select[i]" :placeholder="$t('def.input')" @change="(e) => handleSelectItemChange(e, index, i)"/>
-                        <a-button type="link" class="danger" @click="handleRemoveSelectItem(index, i)"><i class="icon i_delete"/>{{ $t('i.remove') }}</a-button>
+                        <a-button type="link" class="danger" @click="handleRemoveSelectItem(index, i)"><i class="icon i_delete"/>{{ $t('def.remove') }}</a-button>
                     </div>
                 </div>
             </div>

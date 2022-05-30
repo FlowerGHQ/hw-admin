@@ -3,10 +3,10 @@
     <a-select v-model:value="unit" class="monetary-select" @change="handleUnitChange">
         <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>
     </a-select>
-    <div class="title-area">结算</div>
+    <div class="title-area">{{ $t('i.settle') }}</div>
     <div class="config-list">
         <div class="config-item receive">
-            <div class="config-title">1.配送选项</div>
+            <div class="config-title">1.{{ $t('i.shipping_options') }}</div>
             <div class="config-content select-mode">
                 <div class="select-item" :class="selectIndex === item.id ? 'active' : ''"
                     v-for="item of receiveList" :key='item.id' @click="handleConfigSelect(item)">
@@ -15,46 +15,47 @@
                         <div class="desc">
                             <p>{{item.name}} {{item.phone}}</p>
                             <p>{{item.email}}</p>
-                            <p>{{item.province}} {{item.city}} {{item.county}} {{item.address}}</p>
+                            <p v-if="$i18n.locale === 'zh'">{{item.country}} {{item.province}} {{item.city}} {{item.county}} {{item.address}}</p>
+                            <p v-if="$i18n.locale === 'en'">{{item.country_en}} {{item.province}} {{item.city_en}} {{item.county}} {{item.address}}</p>
                         </div>
                     </div>
                     <div class="btn">
-                        <ReceiverAddressEdit btnType="link" :detail='item' :orgId='orgId' :orgType='orgType' btnClass='edit-btn' @click.stop @submit='getReceiveList'>编辑</ReceiverAddressEdit>
-                        <a-button type="link" @click.stop="handleConfigDelete(item)">删除</a-button>
+                        <ReceiverAddressEdit btnType="link" :detail='item' :orgId='orgId' :orgType='orgType' btnClass='edit-btn' @click.stop @submit='getReceiveList'>{{ $t('def.edit') }}</ReceiverAddressEdit>
+                        <a-button type="link" @click.stop="handleConfigDelete(item)">{{ $t('def.delete') }}</a-button>
                     </div>
                 </div>
                 <div class="add">
-                    <ReceiverAddressEdit btnType="link" :orgId='orgId' :orgType='orgType' btnClass='edit-btn' @submit='getReceiveList'>添加新地址</ReceiverAddressEdit>
+                    <ReceiverAddressEdit btnType="link" :orgId='orgId' :orgType='orgType' btnClass='edit-btn' @submit='getReceiveList'>{{ $t('i.new_address') }}</ReceiverAddressEdit>
                 </div>
             </div>
         </div>
         <div class="config-item pay" v-if="$auth('DISTRIBUTOR')">
-            <div class="config-title">2.配送设置</div>
+            <div class="config-title">2.{{ $t('i.shipping_settings') }}</div>
             <div class="config-content">
                 <div class="radio-item">
-                    <div class="desc">是否分批发货：</div>
+                    <div class="desc">{{ $t('p.partial_shipments') }}：</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.flag_part_shipment">
-                            <a-radio v-for="(item, index) in flagPartShipmentList" :key="index" :value="item.value">{{item.name}}</a-radio>
+                            <a-radio v-for="item of flagPartShipmentList" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>
                         </a-radio-group>
                     </div>
                 </div>
                 <div class="radio-item">
-                    <div class="desc">是否转运：</div>
+                    <div class="desc">{{ $t('p.transshipment') }}：</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.flag_transfer">
-                            <a-radio v-for="(item, index) in flagTransferList" :key="index" :value="item.value">{{item.name}}</a-radio>
+                            <a-radio v-for="item of flagTransferList" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>
                         </a-radio-group>
                     </div>
                 </div>
             </div>
         </div>
-        <a-button type="primary" class="orange" @click="handleCreateOrder()">下单</a-button>
+        <a-button type="primary" class="orange" @click="handleCreateOrder()">{{ $t('p.confirm_order') }}</a-button>
     </div>
     <div class="settel-item">
         <div class="item-title">
-            <span>在您的购物车中</span>
-            <a-button type="link" @click="routerChange('back')">编辑</a-button>
+            <span>{{ $t('p.cart') }}</span>
+            <a-button type="link" @click="routerChange('back')">{{ $t('def.edit') }}</a-button>
         </div>
         <div class="item-content">
             <div class="price-item" v-for="item of shopCartList" :key="item.id">
@@ -63,18 +64,18 @@
                 </span>
             </div>
             <div class="price-item sum">
-                <p class="name">总计</p>
+                <p class="name">{{ $t('p.total') }}</p>
                 <span class="price">{{unit}} {{sum_price}}</span>
             </div>
-            <div class="sub-title">预计送达</div>
+            <div class="sub-title">{{ $t('p.preview') }}</div>
             <div class="item-item" v-for="item of shopCartList" :key="item.id">
                 <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
                 <div class="info">
                     <p>{{item.item ? item.item.name : '-'}}</p>
-                    <span>编号：{{item.item ? item.item.code : '-'}}</span>
-                    <span v-if="item.item && item.item.attr_str">规格：{{item.item ? item.item.attr_str : '-'}}</span>
-                    <span>数量：{{item.amount}}</span>
-                    <span>单价：{{unit}} {{$Util.countFilter(item.item[priceKey])}}</span>
+                    <span>{{ $t('p.code') }}：{{item.item ? item.item.code : '-'}}</span>
+                    <span v-if="item.item && item.item.attr_str">{{ $t('i.spec') }}：{{item.item ? item.item.attr_str : '-'}}</span>
+                    <span>{{ $t('i.amount') }}：{{item.amount}}</span>
+                    <span>{{ $t('p.unit_price') }}：{{unit}} {{$Util.countFilter(item.item[priceKey])}}</span>
                 </div>
             </div>
         </div>
@@ -221,13 +222,13 @@ export default {
         handleConfigDelete(item) {
             let _this = this
             this.$confirm({
-                title: '确定要删除该配送选项吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Receive.delete({id: item.id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getReceiveList();
                     }).catch(err => {
                         console.log("handleConfigDelete err", err);
@@ -264,13 +265,13 @@ export default {
         // 创建订单
         handleCreateOrder() {
             if (!this.selectIndex) {
-                return this.$message.warning('请选择本次下单的配送选项')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if(this.$auth('DISTRIBUTOR') && !this.form.flag_part_shipment) {
-                return this.$message.warning('请选择是否同意分批发货')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if(this.$auth('DISTRIBUTOR') && !this.form.flag_transfer) {
-                return this.$message.warning('请选择是否同意转运')
+                return this.$message.warning(this.$t('def.enter'))
             }
             const parms = {
                 price: Math.round(this.sum_price * 100),
@@ -449,7 +450,7 @@ export default {
                         font-weight: 400;
                         color: #181818;
                         line-height: 20px;
-                        width: 100px;
+                        //width: 100px;
                         // &:after {
                         //     content: ':';
                         //     position: absolute;

@@ -3,7 +3,6 @@
         <div class="info-content">
             <div class="name">{{ detail.name }}</div>
             <p class="code">{{ $t('i.code') }}：{{ detail.code }}</p>
-            <p class="spec" v-if="detail.attr_str"><span>{{ $t('i.color') }}：</span>{{ detail.attr_str }}</p>
             <p class="spec" v-if="detail.attr_str"><span>{{ $t('i.spec') }}：</span>{{ detail.attr_str }}</p>
             <p class="price">€{{$Util.countFilter(detail[priceKey + 'eur'])}} | ${{$Util.countFilter(detail[priceKey + 'usd'])}}</p>
             <p class="category">{{ category.name }}</p>
@@ -97,7 +96,10 @@ export default {
                 console.log('getItemDetail res', res)
                 let detail = res.detail
                 detail.attr_str = detail.attr_list ? detail.attr_list.map(item => item.value).join(' ') : ''
+                detail.attr_def_name = detail.attr_list ? detail.attr_list.map(item => item.attr_def_name).join(','): ''
+                console.log('detail.attr_list.attr_def_name',detail.attr_def_name)
                 this.detail = detail
+                console.log('detail',detail)
                 this.category = detail.category
                 try {
                     this.config = JSON.parse(detail.config)

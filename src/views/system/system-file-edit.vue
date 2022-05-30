@@ -1,27 +1,27 @@
 <template>
 <div id="SystemFileEdit" class="edit-container">
     <div class="title-container">
-        <div class="title-area">{{ form.id ? '编辑附件' : '新增附件' }}</div>
+        <div class="title-area">{{ form.id ? $t('f.edit') : $t('f.save') }}</div>
     </div>
     <div class="form-block">
         <div class="form-title"><div class="title">附件信息</div></div>
         <div class="form-content">
             <div class="form-item required">
-                <div class="key">附件名称</div>
+                <div class="key">{{  $t('n.name') }}:</div>
                 <div class="value">
-                    <a-input v-model:value="form.name" placeholder="请输入附件名称"/>
+                    <a-input v-model:value="form.name" :placeholder=" $t('def.input')"/>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">附件类型</div>
+                <div class="key">{{  $t('n.type') }}:</div>
                 <div class="value">
-                    <a-select placeholder="请选择附件类型" v-model:value="form.target_type">
-                        <a-select-option v-for="(val,key) of typeMap" :key="key" :value="key">{{ val }}</a-select-option>
+                    <a-select :placeholder="$t('def.select')" v-model:value="form.target_type">
+                        <a-select-option v-for="item of typeMap" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-select-option>
                     </a-select>
                 </div>
             </div>
             <div class="form-item required file-upload">
-                <div class="key">文件上传</div>
+                <div class="key">{{  $t('f.file') }}:</div>
                 <div class="value">
                     <a-upload name="file"
                         :file-list="upload.fileList" :action="upload.action"
@@ -29,7 +29,7 @@
                         :before-upload="handleImgCheck"
                         @change="handleFileChange">
                         <a-button class="file-upload-btn" type="primary" ghost v-if="upload.fileList.length < 1">
-                            <i class="icon i_upload"/> 上传文件
+                            <i class="icon i_upload"/> {{  $t('f.upload') }}
                         </a-button>
                     </a-upload>
                 </div>
@@ -37,8 +37,8 @@
         </div>
     </div>
     <div class="form-btns">
-        <a-button type="primary" @click="handleSubmit" v-if="$auth('ADMIN') && $auth('file.save')">确定</a-button>
-        <a-button type="primary" ghost @click="routerChange('back')">取消</a-button>
+        <a-button type="primary" @click="handleSubmit" v-if="$auth('ADMIN') && $auth('file.save')">{{  $t('def.sure') }}</a-button>
+        <a-button type="primary" ghost @click="routerChange('back')">{{  $t('def.cancel') }}</a-button>
     </div>
 </div>
 </template>
@@ -128,20 +128,20 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             console.log('form:', form)
             if (!form.name) {
-                return this.$massage.warning('请输入附件名称')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.target_type) {
-                return this.$massage.warning('请选择附件类型')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!this.upload.fileList.length) {
-                return this.$massage.warning('请上传文件')
+                return this.$message.warning(this.$t('def.enter'))
             }
             let fileList = this.upload.fileList.map(item => {
                 return item.short_path || item.response.data.filename
             })
             form.path = fileList[0]
             Core.Api.System.fileSave(form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)

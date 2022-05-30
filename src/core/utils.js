@@ -304,7 +304,7 @@ const Util = {
         }
     },
 
-    addressFilter(obj, type = 1) {
+    addressFilter(obj,lang, type = 1) {
         if (typeof obj !== 'object' || !obj) {
             return '-'
         }
@@ -312,11 +312,27 @@ const Util = {
         if (!province && !city && !county && !address) {
             return '-'
         }
-        switch (type) {
+       /* switch (type) {
             case 1:
                 return `${province} ${city} ${county} ${address}`;
             case 2:
                 return `${province} ${city} ${county}`;
+        }*/
+        if (lang === 'en') {
+            let { province_en, city_en, county, address } = obj
+            switch (type) {
+                case 1:
+                    return `${province_en} ${city_en} ${county} ${address}`;
+            }
+        }
+        if (lang === 'zh') {
+            let { province, city, county, address } = obj
+            switch (type) {
+                case 1:
+                    return `${province} ${city} ${county} ${address}`;
+                case 2:
+                    return `${province} ${city} ${county}`;
+            }
         }
     },
 
@@ -364,9 +380,10 @@ const Util = {
     /* =============== 通用过滤器 ================ */
 
     /* =============== 分销商管理 ================ */
-    distributorTypeFilter(val) {
+    distributorTypeFilter(val, to='zh') {
         const MAP = Const.DISTRIBUTOR.TYPE_MAP
-        return MAP[val] || '未知'
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
     },
     /* =============== 分销商管理 ================ */
 
@@ -475,9 +492,10 @@ const Util = {
             return item[to] || ''
         }
     },
-    aftersalesTypeFilter(val) {
+    aftersalesTypeFilter(val, to='zh') {
         const MAP = Const.AFTERSALES.TYPE_MAP
-        return MAP[val + ''] || '未知'
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
     },
     aftersalesStatusFilter(val, to = 'key') {
         console.log('aftersalesStatusFilter to', to)
@@ -486,19 +504,15 @@ const Util = {
         return value[to] || '-'
     },
 
-    refundTypeFilter(val) {
+    refundTypeFilter(val, to='zh') {
         const MAP = Const.REFUND.TYPE_MAP
-        return MAP[val] || '未知'
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
     },
-    refundStatusFilter(val, to = 'text') {
+    refundStatusFilter(val, to = 'zh') {
         const MAP = Const.REFUND.STATUS_MAP
-        const COLOR_MAP = Const.REFUND.STATUS_COLOR_MAP
-        switch (to) {
-            case 'text':
-                return MAP[val + ''] || '未知'
-            case 'color':
-                return COLOR_MAP[val + ''] || 'grey'
-        }
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
     },
     /* =============== 采购单 && 售后管理 && 退款管理  ================ */
 
@@ -524,16 +538,17 @@ const Util = {
 
 
     /* =============== 系统管理 ================ */
-    noticeTypeFilter(val, to='text') {
+    noticeTypeFilter(val, to='zh') {
         const MASTER_MAP = Const.NOTICE.MASTER_TYPE_MAP
         const ORG_MAP = Const.NOTICE.ORG_TYPE_MAP
         const MAP = { ...MASTER_MAP, ...ORG_MAP }
         const item = MAP[val] || {}
-        return item[to] || '未知'
+        return item[to] || 'Unknown'
     },
-    fileTargetTypeFilter(val) {
+    fileTargetTypeFilter(val, to='zh') {
         const MAP = Const.SYSTEM.FILE.TARGET_TYPE_MAP
-        return MAP[val] || '未知'
+        const item = MAP[val] || {}
+        return item[to] || 'Unknown'
     },
     authUserTypeFilter(val, to='text') {
         const MAP = Const.NOTICE.RESOURCE_TYPE_MAP
@@ -544,39 +559,44 @@ const Util = {
 
 
     /* =============== 出入库 ================ */
-    stockRecordFilter(val) {
+    stockRecordFilter(val, to='zh') {
         const MAP = Const.STOCK_RECORD.TYPE_MAP
-        return MAP[val] || '未知'
+        const item = MAP[val] || {}
+        return item[to] || '未知'
     },
     stockRecordSourceFilter(val) {
         const MAP = Const.STOCK_RECORD.SOURCE_TYPE_MAP
         return MAP[val] || '未知'
     },
-    warehouseTypeFilter(val) {
+    warehouseTypeFilter(val, to='zh') {
         const MAP = Const.WAREHOUSE.TYPE_MAP
-        return MAP[val] || '未知'
+        const item = MAP[val] || {}
+        return item[to] || '未知'
     },
-    invoiceStatusFilter(val, to = 'text') {
+    invoiceStatusFilter(val, to = 'zh') {
         const MAP = Const.STOCK_RECORD.STATUS_MAP
-        const COLOR_MAP = Const.STOCK_RECORD.STATUS_COLOR_MAP
-        switch (to) {
-            case 'text':
-                return MAP[val + ''] || '未知'
-            case 'color':
-                return COLOR_MAP[val + ''] || 'grey'
-        }
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
     },
-    targetTypeFilter(val) {
+    targetTypeFilter(val, to='zh') {
         const MAP = Const.STOCK_RECORD.COMMODITY_TYPE_MAP
-        return MAP[val] || '未知'
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
     },
-    sourceTypeFilter(val) {
+    sourceTypeAdminFilter(val, to='text') {
+        const MAP = Const.STOCK_RECORD.SOURCE_TYPE_ADMIN_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    sourceTypeFilter(val, to='zh') {
         const MAP = Const.STOCK_RECORD.SOURCE_TYPE_MAP
-        return MAP[val] || '未知'
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
     },
-    sourceFormFilter(val) {
+    sourceFormFilter(val, to='zh') {
         const MAP = Const.STOCK_RECORD.SOURCE_FORM_MAP
-        return MAP[val] || '未知'
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
     },
 
     /* =============== 出入库 ================ */

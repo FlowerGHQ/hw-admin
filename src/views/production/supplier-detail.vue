@@ -45,7 +45,7 @@
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">供应商地址：</span>
-                        <span class="value">{{ $Util.addressFilter(detail) }}</span>
+                        <span class="value">{{ $Util.addressFilter(detail, $i18n.locale) }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">创建时间：</span>

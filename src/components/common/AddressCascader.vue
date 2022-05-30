@@ -1,7 +1,7 @@
 <template>
 <a-cascader
     class="AddressCascader"
-    placeholder="请选择大致区域"
+    :placeholder="$t('def.select')"
     v-model:value="selectCode"
     :options="countryOptions"
     @change="handleChange"

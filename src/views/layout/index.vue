@@ -28,36 +28,36 @@
                     <template #overlay>
                         <a-menu style="text-align: center;">
                             <a-menu-item>
-                                <a-button type="link" @click="handleEditShow" class="menu-item-btn">修改密码</a-button>
-                                <a-modal v-model:visible="passShow" title="修改密码" class="password-edit-modal" :after-close="handleEditClose">
+                                <a-button type="link" @click="handleEditShow" class="menu-item-btn">{{ $t('n.password') }}</a-button>
+                                <a-modal v-model:visible="passShow" :title="$t('n.password')" class="password-edit-modal" :after-close="handleEditClose">
                                     <div class="form-title">
                                         <div class="form-item required">
-                                            <div class="key">旧密码:</div>
+                                            <div class="key">{{ $t('n.old') }}:</div>
                                             <div class="value">
-                                                <a-input-password placeholder='请输入旧密码' v-model:value="form.old_password" />
+                                                <a-input-password :placeholder="$t('def.input')" v-model:value="form.old_password" />
                                             </div>
                                         </div>
                                         <div class="form-item required">
-                                            <div class="key">新密码:</div>
+                                            <div class="key">{{ $t('n.new') }}:</div>
                                             <div class="value">
-                                                <a-input-password v-model:value="form.password" placeholder="请输入新密码" />
+                                                <a-input-password v-model:value="form.password" :placeholder="$t('def.input')" />
                                             </div>
                                         </div>
                                         <div class="form-item required">
-                                            <div class="key">再次确认:</div>
+                                            <div class="key">{{ $t('n.double') }}:</div>
                                             <div class="value">
-                                                <a-input-password v-model:value="form.new_password" placeholder="请再次确认密码" />
+                                                <a-input-password v-model:value="form.new_password" :placeholder="$t('n.double')" />
                                             </div>
                                         </div>
                                     </div>
                                     <template #footer>
-                                        <a-button key="back" @click="handleEditSubmit" type="primary">确定</a-button>
-                                        <a-button @click="passShow=false">取消</a-button>
+                                        <a-button key="back" @click="handleEditSubmit" type="primary">{{ $t('def.sure') }}</a-button>
+                                        <a-button @click="passShow=false">{{ $t('def.cancel') }}</a-button>
                                     </template>
                                 </a-modal>
                             </a-menu-item>
                             <a-menu-item>
-                                <a-button type="link" @click="handleLogout" class="menu-item-btn">退 出</a-button>
+                                <a-button type="link" @click="handleLogout" class="menu-item-btn">{{ $t('n.exit') }}</a-button>
                             </a-menu-item>
                         </a-menu>
                     </template>

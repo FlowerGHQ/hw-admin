@@ -1,41 +1,41 @@
 <template>
 <div id="UserEdit" class="edit-container">
-    <div class="title-container"><div class="title-area">{{form.id ? '编辑员工' : '新建员工'}}</div></div>
+    <div class="title-container"><div class="title-area">{{form.id ? $t('u.edit') : $t('u.save')}}</div></div>
     <div class="form-block">
         <div class="form-title">
-            <div class="title-colorful">基本信息</div>
+            <div class="title-colorful">{{ $t('n.information') }}</div>
         </div>
         <div class="form-content">
             <div class="form-item required">
-                <div class="key">员工名:</div>
+                <div class="key">{{ $t('n.name') }}:</div>
                 <div class="value">
-                    <a-input v-model:value="form.name" placeholder="请输入员工名"/>
+                    <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
                 </div>
             </div>
             <template v-if="!form.id">
             <div class="form-item required" >
-                <div class="key">账号:</div>
+                <div class="key">{{ $t('u.account') }}:</div>
                 <div class="value">
-                    <a-input v-model:value="form.username" placeholder="请输入账号" autocomplete="off"/>
+                    <a-input v-model:value="form.username" :placeholder="$t('def.input')" autocomplete="off"/>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">密码:</div>
+                <div class="key">{{ $t('u.password') }}:</div>
                 <div class="value">
-                    <a-input-password v-model:value="form.password" placeholder="请输入密码" autocomplete="off"/>
+                    <a-input-password v-model:value="form.password" :placeholder="$t('def.input')" autocomplete="off"/>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">手机号:</div>
+                <div class="key">{{ $t('n.phone') }}:</div>
                 <div class="value">
-                    <a-input v-model:value="form.phone" placeholder="请输入员工手机号"/>
+                    <a-input v-model:value="form.phone" :placeholder="$t('def.input')"/>
                 </div>
             </div>
             </template>
             <div class="form-item required">
-                <div class="key">邮箱:</div>
+                <div class="key">{{ $t('n.email') }}:</div>
                 <div class="value">
-                    <a-input v-model:value="form.email" placeholder="请输入员工邮箱"/>
+                    <a-input v-model:value="form.email" :placeholder="$t('def.input')"/>
                 </div>
             </div>
 <!--            <div class="form-item" v-if="$auth('MANAGER') && loginType == org_type">-->
@@ -49,8 +49,8 @@
         </div>
     </div>
     <div class="form-btns">
-        <a-button @click="handleSubmit" type="primary" v-if="$auth('account.save','MANAGER')">确定</a-button>
-        <a-button @click="routerChange('back')" type="primary" ghost>取消</a-button>
+        <a-button @click="handleSubmit" type="primary" v-if="$auth('user.save','MANAGER')">{{ $t('def.sure') }}</a-button>
+        <a-button @click="routerChange('back')" type="primary" ghost>{{ $t('def.cancel') }}</a-button>
     </div>
 </div>
 </template>

@@ -7,30 +7,33 @@
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!purchaseId">
-                        <div class="key"><span>商品分类:</span></div>
+                        <div class="key"><span>{{ $t('n.name') }}:</span></div>
+                        <div class="value">
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!purchaseId">
+                        <div class="key"><span>{{ $t('i.categories') }}:</span></div>
                         <div class="value">
                             <CategoryTreeSelect @change="handleCategorySelect" :category_id='searchForm.category_id' />
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
-                        <div class="key"><span>商品编码:</span></div>
+                        <div class="key"><span>{{ $t('i.code') }}:</span></div>
                         <div class="value">
-                            <a-input placeholder="请输入商品编码" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!purchaseId">
-                        <div class="key"><span>商品名称:</span></div>
-                        <div class="value">
-                            <a-input placeholder="请输入商品名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">查询</a-button>
-                    <a-button @click="handleSearchReset">重置</a-button>
+                    <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
+                    <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
             <div class="table-container">
+                <div class="hint-count">
+                    <a-button type="primary">{{ $t('in.selected') + ` ${this.selectItemIds.length} ` + $t('in.total')}}</a-button>
+                </div>
                 <ItemTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :showStock='!!warehouseId'
                     :check-mode='true' :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode'/>
             </div>
@@ -48,8 +51,8 @@
                     />
                 </div>
                 <div class="btn-area">
-                    <a-button @click="handleModalClose">取消</a-button>
-                    <a-button @click="handleConfirm" type="primary">确定</a-button>
+                    <a-button @click="handleModalClose">{{ $t('def.cancel') }}</a-button>
+                    <a-button @click="handleConfirm" type="primary">{{ $t('def.sure') }}</a-button>
                 </div>
             </div>
         </template>
@@ -131,17 +134,17 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: '商品名称', dataIndex: 'name', key: 'detail'},
-                {title: '商品分类', dataIndex: ['category','name']},
-                {title: '商品品号', dataIndex: 'model', key: 'item'},
-                {title: '商品编码', dataIndex: 'code', key: 'item'},
-                {title: '商品规格', dataIndex: 'attr_list', key: 'spec'},
+                {title: this.$t('n.name'), dataIndex: 'name', key: 'detail'},
+                {title: this.$t('i.categories'), dataIndex: ['category','name']},
+                {title: this.$t('i.number'), dataIndex: 'model', key: 'item'},
+                {title: this.$t('i.code'), dataIndex: 'code', key: 'item'},
+                {title: this.$t('i.spec'), dataIndex: 'attr_list', key: 'spec'},
             ]
             if (this.warehouseId !== 0) {
-                tableColumns.splice(3, 0, {title: '仓库库存', dataIndex: 'stock', key: 'count'})
+                tableColumns.splice(3, 0, {title: this.$t('wa.quantity'), dataIndex: 'stock', key: 'count'})
             }
             if (this.purchaseId !== 0) {
-                tableColumns.splice(3, 0, {title: '下单数量', dataIndex: 'count', key: 'count'})
+                tableColumns.splice(3, 0, {title: this.$t('in.order_quantity'), dataIndex: 'count', key: 'count'})
             }
             return tableColumns
         },
@@ -232,6 +235,13 @@ export default {
     &.ant-btn-link {
         line-height: 1;
         height: 1em;
+    }
+    .ant-modal-content {
+        .ant-modal-body {
+            .hint-count {
+                margin-bottom: 5px;
+            }
+        }
     }
 }
 </style>

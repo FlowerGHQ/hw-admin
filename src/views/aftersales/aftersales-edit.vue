@@ -1,6 +1,6 @@
 <template>
 <div id="AftersalesEdit" class="edit-container">
-    <div class="title-container"><div class="title-area">{{form.id ? '编辑售后单' : '新建售后单'}}</div></div>
+    <div class="title-container"><div class="title-area">{{form.id ? $t('af.edit') : $t('af.save')}}</div></div>
     <div class="gray-panel" v-if="form.type !== TYPE.ONLY_REFUND">
         <div class="panel-content">
             <MySteps :stepsList='stepsList' :current='currStep'></MySteps>
@@ -9,39 +9,40 @@
     <!-- 基本信息 -->
     <div class="form-block" v-if="currStep === 0">
         <div class="form-title">
-            <div class="title-colorful">基本信息</div>
+            <div class="title-colorful">{{ $t('n.information') }}</div>
         </div>
         <div class="form-content">
             <div class="form-item required">
-                <div class="key">采购单单号:</div>
+                <div class="key">{{ $t('af.sn') }}:</div>
                 <div class="value">
-                    <a-input v-model:value="form.order_sn" placeholder="请输入采购单单号" @blur="getPurchaseDetail"/>
+                    <a-input v-model:value="form.order_sn" :placeholder="$t('def.input')" @blur="getPurchaseDetail"/>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">售后类型:</div>
+                <div class="key">{{ $t('n.type') }}:</div>
                 <div class="value">
-                    <a-select placeholder="请选择售后类型" v-model:value="form.type">
-                        <a-select-option v-for="(val,key) in typeMap" :key="key" :value="Number(key)">{{ val }}</a-select-option>
+                    <a-select :placeholder="$t('def.select')" v-model:value="form.type">
+                        <a-select-option v-for="item of typeMap" :key="item.key" :value="Number(item.key)">{{ item[$i18n.locale] }}</a-select-option>
                     </a-select>
                 </div>
             </div>
             <div class="form-item" :class="needRefund ? 'required' : ''">
-                <div class="key">申请{{needRefund ? '退款' : '补偿'}}金额:</div>
+                <div class="key">{{ $t('af.money') }}:</div>
+<!--                <div class="key">{{needRefund ? $t('af.reimburse') : $t('af.compensate')}}{{$t('af.money')}}:</div>-->
                 <div class="value input-number">
-                    <a-input-number v-model:value="form.refund_money" :placeholder="`申请${needRefund ? '退款' : '补偿'}金额`"/>
+                    <a-input-number v-model:value="form.refund_money" :placeholder="$t('def.input')" :min="0.01" :precision="2" placeholder="0.00"/>
                     <span>{{$Util.priceUnitFilter(form.refund_money_currency)}}</span>
                 </div>
             </div>
             <div class="form-item textarea">
-                <div class="key">备注:</div>
+                <div class="key">{{$t('r.remark')}}:</div>
                 <div class="value">
-                    <a-input v-model:value="form.remark" placeholder="请输入备注" type="textarea" :auto-size='{ minRows: 2, maxRows: 10 }' :max-length='99'/>
+                    <a-input v-model:value="form.remark" :placeholder="$t('def.input')" type="textarea" :auto-size='{ minRows: 2, maxRows: 10 }' :max-length='99'/>
                     <span class="content-length">{{form.remark.length}}/99</span>
                 </div>
             </div>
             <div class="form-item img-upload">
-                <div class="key">图片凭证:</div>
+                <div class="key">{{$t('af.upload')}}:</div>
                 <div class="value">
                     <a-upload name="file" class="image-uploader"
                         list-type="picture-card" accept='image/*'
@@ -60,15 +61,18 @@
     <!-- 售后商品 -->
     <div class="form-block" v-if="currStep === 1">
         <div class="form-title">
-            <div class="title-colorful">选择售后商品</div>
+            <div class="title-colorful">{{ $t('af.choose') }}</div>
         </div>
         <div class="form-content">
             <ItemSelect @select="handleSelectInItem" :disabled-checked='itemInList.map(i => i.item_id)'
-                btn-type='primary' btnText="选择售后商品" btn-class="select-item-btn" :purchaseId='detail.order_id'
+                btn-type='primary' :btnText="$t('af.choose')" btn-class="select-item-btn" :purchaseId='detail.order_id'
                 @option='getAllInItemList'/>
             <div class="table-container">
                 <a-table :columns="itemInColumns" :data-source="itemInList" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'>
+                    <template #headerCell="{title}">
+                        {{ $t(title) }}
+                    </template>
                     <template #bodyCell="{ column, text, record, index }">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
@@ -77,7 +81,7 @@
                             </a-tooltip>
                         </template>
                         <template v-if="column.dataIndex === 'amount'">
-                            <a-input-number v-model:value="record.amount" style="width: 120px;" :min="1" :precision="0" placeholder="请输入"/> 件
+                            <a-input-number v-model:value="record.amount" style="width: 120px;" :min="1" :precision="0" :placeholder="$t('def.input')"/> {{ $t('in.item') }}
                         </template>
                         <template v-if="column.dataIndex === 'type'">
                             {{$Util.itemTypeFilter(text)}}
@@ -86,10 +90,10 @@
                             {{ text || '-'}}
                         </template>
                         <template v-if="column.dataIndex  === 'count'">
-                            {{ text || '-'}} 件
+                            {{ text || '-'}} {{ $t('in.item') }}
                         </template>
                         <template v-if="column.key  === 'operation'">
-                            <a-button type="link" class="danger" @click="handleRemove('In',index)"><i class="icon i_delete"/> 移除</a-button>
+                            <a-button type="link" class="danger" @click="handleRemove('In',index)"><i class="icon i_delete"/> {{ $t('def.remove') }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -107,6 +111,9 @@
             <div class="table-container">
                 <a-table :columns="itemOutColumns" :data-source="itemOutList" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'>
+                    <template #headerCell="{title}">
+                        {{ $t(title) }}
+                    </template>
                     <template #bodyCell="{ column, text, record, index }">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
@@ -115,7 +122,7 @@
                             </a-tooltip>
                         </template>
                         <template v-if="column.dataIndex === 'amount'">
-                            <a-input-number v-model:value="record.amount" style="width: 120px;" :min="1" :max='record.count' :precision="0" placeholder="请输入"/> 件
+                            <a-input-number v-model:value="record.amount" style="width: 120px;" :min="1" :max='record.count' :precision="0" :placeholder="$t('def.input')"/> {{ $t('in.item') }}
                         </template>
                         <template v-if="column.dataIndex === 'type'">
                             {{$Util.itemTypeFilter(text)}}
@@ -124,7 +131,7 @@
                             {{ text || '-'}}
                         </template>
                         <template v-if="column.key  === 'operation'">
-                            <a-button type="link" class="danger" @click="handleRemove('Out',index)"><i class="icon i_delete"/> 移除</a-button>
+                            <a-button type="link" class="danger" @click="handleRemove('Out',index)"><i class="icon i_delete"/> {{ $t('def.remove') }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -133,12 +140,12 @@
     </div>
     <!-- 按钮 -->
     <div class="form-btns" v-if="currStep === 0">
-        <a-button type="primary" @click="handleSubmitInfo">下一步</a-button>
-        <a-button type="primary" @click="routerChange('list')" ghost>取消</a-button>
+        <a-button type="primary" @click="handleSubmitInfo">{{ $t('af.step') }}</a-button>
+        <a-button type="primary" @click="routerChange('list')" ghost>{{ $t('def.cancel') }}</a-button>
     </div>
     <div class="form-btns" v-if="currStep === 1">
-        <a-button type="primary" @click="handleSubmitItem">确认</a-button>
-        <a-button type="primary" @click="currStep = 0" ghost>上一步</a-button>
+        <a-button type="primary" @click="handleSubmitItem">{{ $t('def.sure') }}</a-button>
+        <a-button type="primary" @click="currStep = 0" ghost>{{ $t('af.last') }}</a-button>
     </div>
 </div>
 </template>
@@ -168,8 +175,8 @@ export default {
             loading: false,
             currStep: 0,
             stepsList: [
-                {status: 1, title: '填写基本信息'},
-                {status: 2, title: '选择售后商品'},
+                {status: 1, zh: '填写基本信息', en: 'Fill in the basic information'},
+                {status: 2, zh: '选择售后商品', en: 'Choose aftermarket products'},
             ],
 
             id: '',       // 售后单ID
@@ -191,28 +198,28 @@ export default {
             },
             // 需售后商品
             itemInColumns: [
-                { title: '商品名称', dataIndex: 'name', key: 'detail' },
-                { title: '售后数量', dataIndex: 'amount' },
-                { title: '下单数量', dataIndex: 'count' },
+                { title: 'n.name', dataIndex: 'name', key: 'detail' },
+                { title: 'i.quantity', dataIndex: 'amount' },
+                { title: 'af.quantity', dataIndex: 'count' },
                 // { title: '类型', dataIndex: 'type'},
-                { title: '商品分类', dataIndex: ['category','name'], key: 'item' },
-                { title: '商品品号', dataIndex: 'model', key: 'item' },
-                { title: '商品编码', dataIndex: 'code', key: 'item' },
+                { title: 'i.categories', dataIndex: ['category','name'], key: 'item' },
+                { title: 'i.number', dataIndex: 'model', key: 'item' },
+                { title: 'i.code', dataIndex: 'code', key: 'item' },
                 // { title: '成本价格', dataIndex: 'original_price' ,key: 'money'},
                 // { title: 'FOB价', dataIndex: 'fob', key: 'money' },
                 // { title: '建议零售价', dataIndex: 'price', key: 'money' },
-                { title: '操作', key: 'operation' },
+                { title: 'def.operate', key: 'operation' },
             ],
             itemInListAll: [], // 采购单下单时的商品
             itemInList: [],
             // 需寄出商品
             itemOutColumns: [
-                { title: '商品名称', dataIndex: 'name', key: 'detail' },
-                { title: '寄出数量', dataIndex: 'amount' },
-                { title: '商品分类', dataIndex: ['category','name'], key: 'item' },
-                { title: '商品品号', dataIndex: 'model', key: 'item' },
-                { title: '商品编码', dataIndex: 'code', key: 'item' },
-                { title: '操作', key: 'operation' },
+                { title: 'n.name', dataIndex: 'name', key: 'detail' },
+                { title: 'af.send_number', dataIndex: 'amount' },
+                { title: 'i.categories', dataIndex: ['category','name'], key: 'item' },
+                { title: 'i.number', dataIndex: 'model', key: 'item' },
+                { title: 'i.code', dataIndex: 'code', key: 'item' },
+                { title: 'def.operate', key: 'operation' },
             ],
             itemOutList: [], // 需要补发、换货的商品
             upload: { // 上传图片
@@ -346,20 +353,21 @@ export default {
 
             let form = Core.Util.deepCopy(this.form)
             if (!form.order_sn) {
-                return this.$message.warning('请输入采购单单号')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (Core.Util.isEmptyObj(this.purchase)) {
-                return this.$message.warning('未找到采购单单号对应的采购单')
+                return this.$message.warning(this.$t('af.not_found'))
             }
             if (!form.type) {
-                return this.$message.warning('请选择售后类型')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (this.needRefund && !form.refund_money) {
-                return this.$message.warning('请输入申请退款金额')
+                return this.$message.warning(this.$t('def.enter'))
             }
             form.refund_money = Math.round(form.refund_money * 100)
             if (form.refund_money > this.purchase.charge) {
-                return this.$message.warning((this.needRefund ? '退款' : '补偿') + '金额不可大采购单实际支付金额')
+                // return this.$message.warning((this.needRefund ? '退款' : '补偿') + '金额不可大采购单实际支付金额')
+                return this.$message.warning(this.$t('af.amount'))
             }
             console.log('handleSubmitInfo this.upload.fileList', this.upload.fileList)
             if (this.upload.fileList.length) {
@@ -372,7 +380,7 @@ export default {
 
             Core.Api.Aftersales.save(form).then(res => {
                 console.log('handleSubmitInfo res:', res)
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.form.id = res.detail.id
                 this.detail = res.detail
                 this.currStep = 1
@@ -387,11 +395,11 @@ export default {
         handleSubmitItem() {
             let inItem = [], outItem = []
             if (!this.itemInList.length) {
-                return this.$message.warning('请选择售后商品')
+                return this.$message.warning(this.$t('af.choose_item'))
             }
             for (const item of this.itemInList) {
                 if (!item.amount) {
-                    return this.$message.warning('请输入商品['+ item.name +']需售后的数量')
+                    return this.$message.warning(this.$t('def.enter'))
                 }
                 inItem.push({
                     id: item.id,
@@ -402,11 +410,11 @@ export default {
                 })
             }
             if (this.needItemOut && !this.itemOutList.length) {
-                return this.$message.warning(`请选择${this.typeMap[this.form.type]}商品`)
+                return this.$message.warning(this.$t('def.enter'))
             }
             for (const item of this.itemOutList) {
                 if (!item.amount) {
-                    return this.$message.warning(`请输入商品[${item.name}]需${this.typeMap[this.form.type]}的数量`)
+                    return this.$message.warning(this.$t('def.enter'))
                 }
                 outItem.push({
                     id: item.id,
@@ -420,7 +428,7 @@ export default {
                 after_sales_order_id: this.detail.id,
                 after_sales_order_items_list: [...inItem, ...outItem]
             }).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('detail')
             }).catch(err => {
                 console.log('handleSubmit err:', err)

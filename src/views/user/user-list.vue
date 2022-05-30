@@ -2,18 +2,18 @@
 <div id="UserList">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">员工列表</div>
+            <div class="title-area">{{ $t('u.list') }}</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('account.save', 'MANAGER')"><i class="icon i_add"/>新增员工</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('user.save', 'MANAGER')"><i class="icon i_add"/>{{ $t('u.save') }}</a-button>
             </div>
         </div>
         <div class="search-container">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
-                    <div class="key">员工名称:</div>
+                    <div class="key">{{ $t('n.name') }}:</div>
                     <div class="value">
                         <div class="value">
-                            <a-input placeholder="请输入员工名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </div>
                 </a-col>
@@ -27,20 +27,23 @@
                     </div>
                 </a-col>-->
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
-                    <div class="key">创建时间:</div>
+                    <div class="key">{{ $t('d.create_time') }}:</div>
                     <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                 </a-col>
             </a-row>
             <div class="btn-area">
-                <a-button @click="handleSearch" type="primary">查询</a-button>
-                <a-button @click="handleSearchReset">重置</a-button>
+                <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
+                <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
             </div>
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
+                <template #headerCell="{title}">
+                    {{ $t(title) }}
+                </template>
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.dataIndex === 'flag_admin'">
-                        {{ text ? '是' : '否' }}
+                        {{ text ? $t('i.yes') : $t('i.no') }}
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}
@@ -61,10 +64,10 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>详情</a-button>
-                        <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('account.save','MANAGER')"><i class="icon i_edit"/>编辑</a-button>
-                        <a-button type="link" @click="handleEditShow(record)" v-if="$auth('account.save','MANAGER')"><i class="icon i_lock"/>重置密码</a-button>
-                        <a-button type='link' @click="handleDelete(record.id)" class="danger" v-if="$auth('account.delete','MANAGER')"><i class="icon i_delete"/>删除</a-button>
+                        <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
+                        <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('user.save','MANAGER')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                        <a-button type="link" @click="handleEditShow(record)" v-if="$auth('user.save','MANAGER')"><i class="icon i_lock"/>{{ $t('u.reset') }}</a-button>
+                        <a-button type='link' @click="handleDelete(record.id)" class="danger" v-if="$auth('user.delete','MANAGER')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                     </template>
                 </template>
             </a-table>
@@ -77,7 +80,7 @@
                 show-quick-jumper
                 show-size-changer
                 show-less-items
-                :show-total="total => `共${total}条`"
+                :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                 :hide-on-single-page='false'
                 :pageSizeOptions="['10', '20', '30', '40']"
                 @change="pageChange"
@@ -85,24 +88,24 @@
             />
         </div>
     </div>
-    <a-modal v-model:visible="passShow" title="重置密码" class="password-edit-modal" :after-close="handleEditClose">
+    <a-modal v-model:visible="passShow" :title="$t('u.reset')" class="password-edit-modal" :after-close="handleEditClose">
         <div class="form-title">
             <div class="form-item required">
-                <div class="key">新密码:</div>
+                <div class="key">{{ $t('n.new') }}:</div>
                 <div class="value">
-                    <a-input-password v-model:value="form.password" placeholder="请输入新密码" />
+                    <a-input-password v-model:value="form.password" :placeholder="$t('def.input')" />
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">确认密码:</div>
+                <div class="key">{{ $t('n.double') }}:</div>
                 <div class="value">
-                    <a-input-password v-model:value="form.new_password" placeholder="请再次输入密码" />
+                    <a-input-password v-model:value="form.new_password" :placeholder="$t('def.input')"/>
                 </div>
             </div>
         </div>
         <template #footer>
-            <a-button @click="handleEditSubmit" type="primary">确定</a-button>
-            <a-button @click="passShow=false">取消</a-button>
+            <a-button @click="handleEditSubmit" type="primary">{{ $t('def.sure') }}</a-button>
+            <a-button @click="passShow=false">{{ $t('def.cancel') }}</a-button>
         </template>
     </a-modal>
 </div>
@@ -142,15 +145,15 @@ export default {
             // 表格
             tableData: [],
             tableColumns: [
-                {title: '员工姓名', dataIndex: ['account', 'name'], key: 'user'},
-                {title: '账号', dataIndex: ['account', 'username'], key: 'item'},
-                {title: '手机号', dataIndex: ['account', 'phone'], key: 'item'},
-                {title: '邮箱', dataIndex: ['account', 'email'], key: 'item'},
-                {title: '员工角色', dataIndex: 'role_name', key: 'item'},
-                {title: '是否为管理员', dataIndex: 'flag_admin', align: 'center'},
-                {title: '最近登录', dataIndex: ['account', 'last_login_time'], key: 'time'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '操作', key: 'operation', fixed: 'right', width: 100,},
+                {title: 'n.name', dataIndex: ['account', 'name'], key: 'user'},
+                {title: 'u.account', dataIndex: ['account', 'username'], key: 'item'},
+                {title: 'n.phone', dataIndex: ['account', 'phone'], key: 'item'},
+                {title: 'n.email', dataIndex: ['account', 'email'], key: 'item'},
+                {title: 'u.role', dataIndex: 'role_name', key: 'item'},
+                {title: 'e.administrator', dataIndex: 'flag_admin', align: 'center'},
+                {title: 'u.login', dataIndex: ['account', 'last_login_time'], key: 'time'},
+                {title: 'd.create_time', dataIndex: 'create_time', key: 'time'},
+                {title: 'def.operate', key: 'operation', fixed: 'right', width: 100,},
             ],
 
             // 弹框
@@ -235,13 +238,13 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该员工吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.User.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete -> err", err);
@@ -268,18 +271,18 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             console.log('handleLogin form:', form)
             if (!form.password) {
-                return this.$message.warning('请输入新密码')
+                return this.$message.warning(this.$t('u.new_password'))
             }
             if (!form.new_password) {
-                return this.$message.warning('请再次确认密码')
+                return this.$message.warning(this.$t('u.again'))
             }
             if (form.new_password !== form.password) {
-                return this.$message.warning('两次密码输入不一致')
+                return this.$message.warning(this.$t('u.not'))
             }
 
             this.loading = true;
             Core.Api.Account.resetPwd(form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.handleEditClose();
             }).catch(err => {
                 console.log('handleSubmit err:', err)
