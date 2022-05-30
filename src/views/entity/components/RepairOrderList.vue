@@ -37,7 +37,7 @@
                             </div>
                         </template>
                         <template v-if="column.dataIndex === 'operation'" >
-                            <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>详情</a-button>
+                            <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
                         </template>
                     </template>
                 </a-table>

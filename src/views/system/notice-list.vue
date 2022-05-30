@@ -2,39 +2,42 @@
     <div id="NoticeList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">消息列表
+                <div class="title-area">{{ $t('no.list') }}
                 </div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('ADMIN') && $auth('message.save')"><i class="icon i_add"/>新建消息</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('ADMIN') && $auth('message.save')"><i class="icon i_add"/>{{ $t('no.save') }}</a-button>
                 </div>
             </div>
             <div class="search-container" v-if="$auth('ADMIN')">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
-                        <div class="key">消息分类:</div>
+                        <div class="key">{{ $t('n.type') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.category" @change="handleSearch" placeholder="请选择消息分类">
-                                <a-select-option v-for="(val, key) in categoryMap" :key="key" :value="key">{{val.text}}</a-select-option>
+                            <a-select v-model:value="searchForm.category" @change="handleSearch" :placeholder="$t('def.select')">
+                                <a-select-option v-for="item of categoryMap" :key="item.key" :value="item.key">{{item[$i18n.locale]}}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
+<!--                    <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
                         <div class="key">消息类型:</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择消息类型">
                                 <a-select-option v-for="(val, key) in typeMap" :key="key" :value="key">{{val.text}}</a-select-option>
                             </a-select>
                         </div>
-                    </a-col>
+                    </a-col>-->
                 </a-row>
                 <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">查询</a-button>
-                    <a-button @click="handleSearchReset">重置</a-button>
+                    <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
+                    <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'>
+                    <template #headerCell="{title}">
+                        {{ $t(title) }}
+                    </template>
                     <template #bodyCell="{ column, text , record}">
                         <template v-if="column.key === 'detail' && $auth('message.detail')">
                             <a-tooltip placement="top" :title='text'>
@@ -43,20 +46,20 @@
                         </template>
                         <template v-if="column.dataIndex === 'has_read'" >
                             <div class="status status-bg status-tag smell" :class="text ? 'blue' : 'red'">
-                                {{ text ? '已读' : '未读' }}
+                                {{ text ? $t('no.read') : $t('no.unread') }}
                             </div>
                         </template>
                         <template v-if="column.dataIndex === 'type'" >
-                            {{ $Util.noticeTypeFilter(text) }}
+                            {{ $Util.noticeTypeFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('message.detail')"><i class="icon i_detail"/>详情</a-button>
+                            <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('message.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
                             <template v-if="$auth('ADMIN')">
-                                <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('message.save')"><i class="icon i_edit"/>编辑</a-button>
-                                <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('message.delete')"><i class="icon i_delete"/>删除</a-button>
+                                <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('message.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                                <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('message.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                             </template>
                         </template>
                     </template>
@@ -105,7 +108,7 @@ export default {
             typeMap: NOTICE.MASTER_TYPE_MAP,
             searchForm: {
                 type: undefined,
-                category: NOTICE.CATEGORY.MASTER + ''
+                category: NOTICE.CATEGORY.MASTER
             },
             // 表格
             tableData: [],
@@ -124,11 +127,11 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                { title: '消息标题', dataIndex: 'title', key: 'detail'},
-                { title: '消息类型', dataIndex: 'type'},
-                { title: '消息状态', dataIndex: 'has_read'},
-                { title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                { title: '操作', key: 'operation', fixed: 'right' },
+                { title: 'no.headers', dataIndex: 'title', key: 'detail'},
+                { title: 'n.type', dataIndex: 'type'},
+                { title: 'n.state', dataIndex: 'has_read'},
+                { title: 'd.create_time', dataIndex: 'create_time', key: 'time'},
+                { title: 'def.operate', key: 'operation', fixed: 'right' },
             ]
             if (!this.$auth('ADMIN')) {
                 columns.splice(1,1)
@@ -195,13 +198,13 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该消息吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Notice.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

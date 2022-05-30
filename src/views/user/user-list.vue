@@ -88,24 +88,24 @@
             />
         </div>
     </div>
-    <a-modal v-model:visible="passShow" title="重置密码" class="password-edit-modal" :after-close="handleEditClose">
+    <a-modal v-model:visible="passShow" :title="$t('u.reset')" class="password-edit-modal" :after-close="handleEditClose">
         <div class="form-title">
             <div class="form-item required">
-                <div class="key">新密码:</div>
+                <div class="key">{{ $t('n.new') }}:</div>
                 <div class="value">
-                    <a-input-password v-model:value="form.password" placeholder="请输入新密码" />
+                    <a-input-password v-model:value="form.password" :placeholder="$t('def.input')" />
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">确认密码:</div>
+                <div class="key">{{ $t('n.double') }}:</div>
                 <div class="value">
-                    <a-input-password v-model:value="form.new_password" placeholder="请再次输入密码" />
+                    <a-input-password v-model:value="form.new_password" :placeholder="$t('def.input')"/>
                 </div>
             </div>
         </div>
         <template #footer>
-            <a-button @click="handleEditSubmit" type="primary">确定</a-button>
-            <a-button @click="passShow=false">取消</a-button>
+            <a-button @click="handleEditSubmit" type="primary">{{ $t('def.sure') }}</a-button>
+            <a-button @click="passShow=false">{{ $t('def.cancel') }}</a-button>
         </template>
     </a-modal>
 </div>
@@ -238,13 +238,13 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该员工吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.User.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete -> err", err);
@@ -271,18 +271,18 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             console.log('handleLogin form:', form)
             if (!form.password) {
-                return this.$message.warning('请输入新密码')
+                return this.$message.warning(this.$t('u.new_password'))
             }
             if (!form.new_password) {
-                return this.$message.warning('请再次确认密码')
+                return this.$message.warning(this.$t('u.again'))
             }
             if (form.new_password !== form.password) {
-                return this.$message.warning('两次密码输入不一致')
+                return this.$message.warning(this.$t('u.not'))
             }
 
             this.loading = true;
             Core.Api.Account.resetPwd(form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.handleEditClose();
             }).catch(err => {
                 console.log('handleSubmit err:', err)

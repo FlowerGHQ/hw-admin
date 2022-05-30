@@ -319,10 +319,10 @@ const Util = {
                 return `${province} ${city} ${county}`;
         }*/
         if (lang === 'en') {
-            let { province, city_en, county, address } = obj
+            let { province_en, city_en, county, address } = obj
             switch (type) {
                 case 1:
-                    return `${province} ${city_en} ${county} ${address}`;
+                    return `${province_en} ${city_en} ${county} ${address}`;
             }
         }
         if (lang === 'zh') {
@@ -492,9 +492,10 @@ const Util = {
             return item[to] || ''
         }
     },
-    aftersalesTypeFilter(val) {
+    aftersalesTypeFilter(val, to='zh') {
         const MAP = Const.AFTERSALES.TYPE_MAP
-        return MAP[val + ''] || '未知'
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
     },
     aftersalesStatusFilter(val, to = 'key') {
         console.log('aftersalesStatusFilter to', to)
@@ -503,19 +504,15 @@ const Util = {
         return value[to] || '-'
     },
 
-    refundTypeFilter(val) {
+    refundTypeFilter(val, to='zh') {
         const MAP = Const.REFUND.TYPE_MAP
-        return MAP[val] || '未知'
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
     },
-    refundStatusFilter(val, to = 'text') {
+    refundStatusFilter(val, to = 'zh') {
         const MAP = Const.REFUND.STATUS_MAP
-        const COLOR_MAP = Const.REFUND.STATUS_COLOR_MAP
-        switch (to) {
-            case 'text':
-                return MAP[val + ''] || '未知'
-            case 'color':
-                return COLOR_MAP[val + ''] || 'grey'
-        }
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
     },
     /* =============== 采购单 && 售后管理 && 退款管理  ================ */
 
@@ -541,16 +538,17 @@ const Util = {
 
 
     /* =============== 系统管理 ================ */
-    noticeTypeFilter(val, to='text') {
+    noticeTypeFilter(val, to='zh') {
         const MASTER_MAP = Const.NOTICE.MASTER_TYPE_MAP
         const ORG_MAP = Const.NOTICE.ORG_TYPE_MAP
         const MAP = { ...MASTER_MAP, ...ORG_MAP }
         const item = MAP[val] || {}
-        return item[to] || '未知'
+        return item[to] || 'Unknown'
     },
-    fileTargetTypeFilter(val) {
+    fileTargetTypeFilter(val, to='zh') {
         const MAP = Const.SYSTEM.FILE.TARGET_TYPE_MAP
-        return MAP[val] || '未知'
+        const item = MAP[val] || {}
+        return item[to] || 'Unknown'
     },
     authUserTypeFilter(val, to='text') {
         const MAP = Const.NOTICE.RESOURCE_TYPE_MAP

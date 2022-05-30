@@ -33,7 +33,7 @@ switch (window.location.hostname) {
     default:
         // URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.7:8083' // 但
-        URL_POINT = 'http://10.0.0.184:8889'
+        URL_POINT = 'http://10.0.0.175:8889'
         // URL_POINT = 'http://10.0.0.171:8883' // 姚志宇
 
 
@@ -575,8 +575,8 @@ let Const = {
             ORG: 20,    //机构消息
         },
         CATEGORY_MAP: {
-            '10': { text: '平台消息'},
-            '20': { text: '机构消息'},
+            '10': {key: 10, zh: '平台消息', en: 'System messages'},
+            '20': {key: 20, zh: '机构消息', en: 'Other messages',},
         },
         TYPE: {
             ADMIN: 10,        // 系统消息，所有人都可以看到
@@ -585,11 +585,11 @@ let Const = {
             STOCK_ALARM: 100, // 库存告警消息，可配置权限
         },
         MASTER_TYPE_MAP: {
-            '10': { text: '系统消息' },
-            '20': { text: '分销商消息' },
+            '10': {key: 10, zh: '平台消息', en: 'System messages'},
+            '20': {key: 20, zh: '分销商消息', en: 'Other messages',},
         },
         ORG_TYPE_MAP: {
-            '100': { text: '库存预警' },
+            '100': { key: 100, zh: '库存预警',en: 'Inventory alert' },
         },
         RESOURCE_TYPE: {
             WAREHOUSE: 10,
@@ -608,10 +608,10 @@ let Const = {
                 // REPAIR_ORDER: '5',
             },
             TARGET_TYPE_MAP: {
-                1: '系统',
-                2: '分销商',
-                3: '零售商',
-                4: '门店',
+                '1': {key: 1, zh: '系统', en: 'System'},
+                '2': {key: 2, zh: '分销商', en: 'Distributor',},
+                '3': {key: 3, zh: '零售商', en: 'Retailer'},
+                '4': {key: 4, zh: '门店', en: 'Store',},
             },
         },
     },
@@ -627,7 +627,7 @@ let Const = {
         { list: [], select: [], key: 'user', name: '员工管理' },
         { list: [], select: [], key: 'item', name: '商品管理' },
         { list: [], select: [], key: 'purchase-order', name: '采购订单' },
-        { list: [], select: [], key: 'refund', name: '退款' },
+        { list: [], select: [], key: 'after-sales-order', name: '售后订单' },
         { list: [], select: [], key: 'sales-area', name: '销售区域' },
         { list: [], select: [], key: 'warehouse', name: '仓库' },
         { list: [], select: [], key: 'invoice', name: '出入库单' },
@@ -859,12 +859,12 @@ let Const = {
             AUDIT_FAIL: -200,// 审核失败
         },
         STATUS_MAP: {
-            '0'   : { color: 'purple', zh: '待提交', en: 'Wait Submit'},
-            '100' : { color: 'orange', text: '待审核', text_en: 'Wait Submit'},
-            '200' : { color: 'blue',   text: '处理中', text_en: 'Wait Submit'},
-            '600' : { color: 'green',  text: '已完成', text_en: 'Wait Submit'},
-            '-100': { color: 'gray',   text: '已取消', text_en: 'Wait Submit'},
-            '-200': { color: 'red',    text: '审核失败', text_en: 'Wait Submit'},
+            '0'   : { key: 0, color: 'purple', zh: '待提交', en: 'Wait submit'},
+            '100' : { key: 100, color: 'orange', zh: '待审核', en: 'Wait review'},
+            '200' : { key: 200, color: 'blue', zh: '处理中', en: 'In process'},
+            '600' : { key: 600, color: 'green', zh: '已完成', en: 'Completed'},
+            '-100': { key: -100, color: 'gray', zh: '已取消', en: 'Canceled'},
+            '-200': { key: -200, color: 'red', zh: '审核失败', en: 'Review failed'},
         },
         TYPE: {
             ONLY_REFUND: 1,       // 仅退款
@@ -873,10 +873,10 @@ let Const = {
             REISSUE: 4,           // 补发
         },
         TYPE_MAP: {
-            '1': '仅退款',
-            '2': '退款且退货',
-            '3': '换货',
-            '4': '补发',
+            '1' : { key: 1, zh: '仅退款', en: 'Refund only'},
+            '2' : { key: 2, zh: '退款且退货', en: 'Refund and return'},
+            '3' : { key: 3, zh: '换货', en: 'Exchange goods'},
+            '4' : { key: 4, zh: '补发', en: 'Reissue'},
         },
         QUERY_TYPE: {
             APPLY: 1,
@@ -902,10 +902,10 @@ let Const = {
             { text: '后台主动退款', value: 200 },
         ],
         TYPE_MAP: {
-            100: '零售商申请退款',
-            110: '分销商申请退款',
-            120: '门店申请退款',
-            200: '后台主动退款'
+            '100': { key: 100, zh: '零售商申请退款',en: 'Retailer applies for refund', value: 100 },
+            '110': { key: 110, zh: '分销商申请退款',en: 'Distributor applies for refund', value: 110 },
+            '120': { key: 120, zh: '门店申请退款',en: 'Store application for refund', value: 120 },
+            '200': { key: 200, zh: '后台主动退款',en: 'Backstage active refund', value: 200 },
         },
         STATUS: {
             WAIT_AUDIT: 10, // 待审核
@@ -915,19 +915,19 @@ let Const = {
             CANCEL: -20, // 已取消
         },
         STATUS_MAP: {
-            '10': '待审核',
-            '20': '审核通过',
-            '40': '退款成功',
-            '-10': '审核失败',
-            '-20': '已取消',
+            '10': { key: 10, zh: '待审核',en: 'Awaiting review',color: 'yellow'},
+            '20': { key: 20, zh: '审核通过',en: 'Approved', color: 'blue'},
+            '40': { key: 40, zh: '退款成功',en: 'Refund completed', color: 'green'},
+            '-10': { key: -10, zh: '审核失败',en: 'Review failed', color: 'red'},
+            '-20': { key: -10, zh: '已取消',en: 'Canceled', color: 'grey'},
         },
-        STATUS_COLOR_MAP: {
+       /* STATUS_COLOR_MAP: {
             '10': 'yellow',
             '20': 'blue',
             '40': 'green',
             '-10': 'red',
             '-20': 'grey'
-        },
+        },*/
         SEARCH_TYPE: {
             SELF: 1, //本账户申请的退款单
             CHILDREN: 2, //待审核的退款单

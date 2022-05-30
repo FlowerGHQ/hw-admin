@@ -2,13 +2,13 @@
     <div id="RefundList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">退款列表</div>
+                <div class="title-area">{{ $t('af.refund_list') }}</div>
             </div>
             <div class="tabs-container colorful">
                 <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
                     <a-tab-pane :key="item.key" v-for="item of statusList">
                         <template #tab>
-                            <div class="tabs-title">{{ item.text }}<span :class="item.color">{{ item.value }}</span>
+                            <div class="tabs-title">{{ item[$i18n.locale] }}<span :class="item.color">{{ item.value }}</span>
                             </div>
                         </template>
                     </a-tab-pane>
@@ -17,9 +17,9 @@
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">订单编号:</div>
+                        <div class="key">{{ $t('af.refund_order_number') }}:</div>
                         <div class="value">
-                            <a-input placeholder="请输入退款订单编号" v-model:value="searchForm.sn" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.sn" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
@@ -30,20 +30,23 @@
                             </a-select>
                         </div>
                     </a-col> -->
-                    <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
-                        <div class="key">创建时间:</div>
+                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
+                        <div class="key">{{ $t('d.create_time') }}:</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">查询</a-button>
-                    <a-button @click="handleSearchReset">重置</a-button>
+                    <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
+                    <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
 
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'>
+                    <template #headerCell="{title}">
+                        {{ $t(title) }}
+                    </template>
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
@@ -63,15 +66,15 @@
                             </a-tooltip>
                         </template>
                         <template v-if="column.dataIndex === 'type'">
-                            {{ $Util.refundTypeFilter(text) }}
+                            {{ $Util.refundTypeFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.dataIndex === 'org_name'">
-                            {{ $Util.userTypeFilter(record.org_type) }} {{text}}
+                            {{ $Util.userTypeFilter(record.org_type, $i18n.locale) }} {{text}}
                         </template>
                         <template v-if="column.dataIndex === 'status'">
                             <div class="status status-bg status-tag" :class="$Util.refundStatusFilter(text,'color')">
                                 <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>
-                                    {{ $Util.refundStatusFilter(text) }}
+                                    {{ $Util.refundStatusFilter(text, $i18n.locale) }}
                                     <template v-if="record.status === STATUS.AUDIT_REFUSE">
                                         <i class="icon i_hint" style="font-size: 12px;padding-left: 6px;"/>
                                     </template>
@@ -83,18 +86,18 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="routerChange('detail', record)">
-                                <i class="icon i_detail"/>详情
+                                <i class="icon i_detail"/>{{ $t('def.detail') }}
                             </a-button>
                             <a-button type="link" @click="handleCancel(record.id)"
                                 v-if="record.status === STATUS.WAIT_AUDIT && sameOrg(record.org_id, record.org_type)">
-                                <i class="icon i_close_c"/>取消
+                                <i class="icon i_close_c"/>{{ $t('def.cancel') }}
                             </a-button>
                             <template v-if="sameOrg(record.supply_org_id, record.supply_org_type)">
                                 <a-button type="link" @click="handleAuditShow(record.id)" v-if="record.status === STATUS.WAIT_AUDIT">
-                                    <i class="icon i_audit"/>审核
+                                    <i class="icon i_audit"/>{{ $t('n.audit') }}
                                 </a-button>
                                 <a-button type="link" @click="handleRefundConfirm(record.id)" v-if="record.status === STATUS.AUDIT_PASS">
-                                    <i class="icon i_confirm"/>确认退款
+                                    <i class="icon i_confirm"/>{{ $t('af.refund') }}
                                 </a-button>
                             </template>
                         </template>
@@ -118,26 +121,26 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="auditShow" title="审核" class="refund-edit-modal" :after-close='handleAuditClose'>
+            <a-modal v-model:visible="auditShow" :title="$t('n.audit')" class="refund-edit-modal" :after-close='handleAuditClose'>
                 <div class="modal-content">
                     <div class="form-item required">
-                        <div class="key">审核结果:</div>
+                        <div class="key">{{ $t('n.result_a') }}:</div>
                         <a-radio-group v-model:value="auditForm.status">
-                            <a-radio :value="STATUS.AUDIT_PASS">通过</a-radio>
+                            <a-radio :value="STATUS.AUDIT_PASS">{{ $t('n.pass') }}</a-radio>
                             <!-- <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio> -->
                         </a-radio-group>
                     </div>
                     <div class="form-item textarea required" v-if="auditForm.status === STATUS.AUDIT_REFUSE">
-                        <div class="key">原因:</div>
+                        <div class="key">{{ $t('n.reason') }}:</div>
                         <div class="value">
-                            <a-textarea v-model:value="auditForm.audit_message" placeholder="请输入不通过原因"
+                            <a-textarea v-model:value="auditForm.audit_message" :placeholder="$t('def.input')"
                                 :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                         </div>
                     </div>
                 </div>
                 <template #footer>
-                    <a-button @click="auditShow = false">取消</a-button>
-                    <a-button @click="handleAuditSubmit" type="primary">确定</a-button>
+                    <a-button @click="auditShow = false">{{ $t('def.cancel') }}</a-button>
+                    <a-button @click="handleAuditSubmit" type="primary">{{ $t('def.sure') }}</a-button>
                 </template>
             </a-modal>
         </template>
@@ -180,25 +183,25 @@ export default {
                 end_time: '',
             },
             statusList: [
-                {text: '全  部', value: '0', color: 'primary', key: '0'},
-                {text: '待审核', value: '0', color: 'yellow', key: STATUS.WAIT_AUDIT},
-                {text: '审核通过', value: '0', color: 'blue', key: STATUS.AUDIT_PASS},
-                {text: '审核失败', value: '0', color: 'red', key: STATUS.AUDIT_REFUSE},
-                {text: '退款完成', value: '0', color: 'green', key: STATUS.SUCCESS},
-                {text: '取消退款', value: '0', color: 'grey', key: STATUS.CANCEL},
+                {zh: '全  部',en: 'All', value: '0', color: 'primary', key: '0'},
+                {zh: '待审核', en: 'Awaiting review',value: '0', color: 'yellow', key: STATUS.WAIT_AUDIT},
+                {zh: '审核通过',en: 'Approved', value: '0', color: 'blue', key: STATUS.AUDIT_PASS},
+                {zh: '审核失败',en: 'Review failed',value: '0', color: 'red', key: STATUS.AUDIT_REFUSE},
+                {zh: '退款完成',en: 'Refund completed',value: '0', color: 'green', key: STATUS.SUCCESS},
+                {zh: '取消退款',en: 'Canceled',value: '0', color: 'grey', key: STATUS.CANCEL},
             ],
             // 表格
             tableData: [],
             tableColumns: [
-                {title: '采购单单号', dataIndex: 'order_sn', key: 'detail'},
-                {title: '退款金额', dataIndex: 'money', key: 'money'},
-                {title: '退款状态', dataIndex: 'status'},
+                {title: 'af.sn', dataIndex: 'order_sn', key: 'detail'},
+                {title: 'af.price', dataIndex: 'money', key: 'money'},
+                {title: 'n.state', dataIndex: 'status'},
                 // {title: '退款原因', dataIndex: 'apply_message', key: 'tip_time'},
-                {title: '收款组织', dataIndex: 'org_name'},
-                {title: '申请人', dataIndex: ['apply_user','account','name'],key: 'item'},
-                {title: '处理人', dataIndex: ['audit_user','account','name'],key: 'item'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '操作', key: 'operation', fixed: 'right', width: 100,},
+                {title: 'af.receiving', dataIndex: 'org_name'},
+                {title: 'af.applicant', dataIndex: ['apply_user','account','name'],key: 'item'},
+                {title: 'af.auditor', dataIndex: ['audit_user','account','name'],key: 'item'},
+                {title: 'd.create_time', dataIndex: 'create_time', key: 'time'},
+                {title: 'def.operate', key: 'operation', fixed: 'right', width: 100,},
             ],
             // 审核
             auditShow: false,
@@ -346,13 +349,13 @@ export default {
         handleCancel(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要取消该退款单吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_cancel'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Refund.cancel({id}).then(() => {
-                        _this.$message.success('取消成功');
+                        _this.$message.success(_this.$t('pop_up.canceled'));
                         _this.getStatusList();
                         _this.getTableData();
                     }).catch(err => {
@@ -388,12 +391,13 @@ export default {
         handleRefundConfirm(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要该退款单已退款吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('pop_up.sure_audit'),
+                okText: _this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Refund.handle({id}).then(() => {
-                        _this.$message.success('操作成功');
+                        _this.$message.success( _this.$t('pop_up.operate'))
                         _this.getStatusList();
                         _this.getTableData();
                     }).catch(err => {

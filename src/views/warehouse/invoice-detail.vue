@@ -687,13 +687,13 @@ export default {
         handleCancel() {
             let _this = this;
             this.$confirm({
-                title: `确定要取消该${_this.type_ch}单吗？`,
-                okText: '确定',
+                title: _this.$t('pop_up.sure_cancel'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Invoice.cancel({id: _this.detail.id}).then(() => {
-                        _this.$message.success('取消成功');
+                        _this.$message.success(_this.$t('pop_up.canceled'))
                         _this.routerChange('list');
                     }).catch(err => {
                         console.log("handleCancel err", err);
@@ -704,16 +704,16 @@ export default {
         // 提交出入库单
         handleSubmit() {
             if (!this.tableData.length) {
-                return this.$message.warning(`请先选择需要${this.type_ch}的商品`)
+                return this.$message.warning(this.$t('def.enter'))
             }
             let _this = this;
             this.$confirm({
-                title: `确定提交该${_this.type_ch}吗？`,
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('pop_up.sure_audit'),
+                okText: _this.$t('def.sure'),
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Invoice.submit({id: _this.detail.id}).then(() => {
-                        _this.$message.success('操作成功');
+                        _this.$message.success(_this.$t('pop_up.operate'))
                         _this.getInvoiceDetail();
                     }).catch(err => {
                         console.log("handleComplete err", err);
@@ -725,16 +725,16 @@ export default {
         // 处理完成 出入库单
         handleComplete() {
             if (!this.tableData.length) {
-                return this.$message.warning(`请先选择需要${this.type_ch}的商品`)
+                return this.$message.warning(this.$t('def.enter'))
             }
             let _this = this;
             this.$confirm({
-                title: `确定该${_this.type_ch}单商品已${_this.type_ch}吗？`,
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('pop_up.sure_audit'),
+                okText: _this.$t('def.sure'),
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Invoice.handle({id: _this.detail.id}).then(() => {
-                        _this.$message.success('操作成功');
+                        _this.$message.success(_this.$t('pop_up.operate'))
                         _this.getInvoiceDetail();
                     }).catch(err => {
                         console.log("handleComplete err", err);

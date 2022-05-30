@@ -201,16 +201,16 @@ export default {
             let name = `[${item.name}]`
             // console.log('item',item)
             this.$confirm({
-                title: '确定要删除' + name + '吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.SalesAreaItem.delete({
                         id: item.shop_id,
                         // sales_area_id: _this.salesAreaId
                     }).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete -> err", err);

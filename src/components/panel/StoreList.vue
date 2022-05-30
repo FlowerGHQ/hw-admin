@@ -170,7 +170,7 @@ export default {
                 cancelText: '取消',
                 onOk() {
                     Core.Api.Store.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

@@ -2,26 +2,26 @@
     <a-button class="AuditHandleBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
         <slot>{{ btnText }}</slot>
     </a-button>
-    <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose'>
+    <a-modal :title="$t('n.audit')" v-model:visible="modalShow" :after-close='handleModalClose'>
         <div class="modal-content">
             <div class="form-item required">
-                <div class="key">审核结果:</div>
+                <div class="key">{{ $t('n.result_a') }}:</div>
                 <a-radio-group v-model:value="form.status">
-                    <a-radio :value="sPass">通过</a-radio>
-                    <a-radio :value="sRefuse">不通过</a-radio>
+                    <a-radio :value="sPass">{{ $t('n.pass') }}</a-radio>
+                    <a-radio :value="sRefuse">{{ $t('n.fail') }}</a-radio>
                 </a-radio-group>
             </div>
             <div class="form-item textarea required" v-if="form.status === sRefuse">
-                <div class="key">原因:</div>
+                <div class="key">{{ $t('n.reason') }}:</div>
                 <div class="value">
-                    <a-textarea v-model:value="form.audit_message" placeholder="请输入不通过原因"
+                    <a-textarea v-model:value="form.audit_message" :placeholder="$t('def.input')"
                                 :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                 </div>
             </div>
         </div>
         <template #footer>
-            <a-button @click="handleModalClose">取消</a-button>
-            <a-button @click="handleConfirm" type="primary">确定</a-button>
+            <a-button @click="handleModalClose">{{ $t('def.cancel') }}</a-button>
+            <a-button @click="handleConfirm" type="primary">{{ $t('def.sure') }}</a-button>
         </template>
     </a-modal>
 </template>

@@ -339,7 +339,7 @@ const routes = [
                 meta: {
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
                     title: '采购订单',
-                    title_en: 'Purchase orders',
+                    title_en: 'Purchase NO.',
                     search_type: PURCHASE_SEARCH_TYPE.SELF
                 }
             },
@@ -1288,7 +1288,7 @@ const routes = [
                 component: () => import('@/views/system/notice-list.vue'),
                 meta: {
                     title: '消息列表',
-                    title_en: 'News ',
+                    title_en: 'Messages ',
                 }
             },
             {

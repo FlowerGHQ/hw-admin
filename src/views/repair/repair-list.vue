@@ -154,7 +154,7 @@
         <a-modal v-model:visible="modalShow" :title="$t('audit')" :after-close='handleModalClose'>
             <div class="modal-content">
                 <div class="form-item required">
-                    <div class="key">{{ $t('n.result') }}:</div>
+                    <div class="key">{{ $t('n.result_a') }}:</div>
                     <div class="value">
                     <a-radio-group v-model:value="editForm.audit_result">
                         <a-radio :value="1">{{ $t('n.pass') }}</a-radio>

@@ -2,9 +2,9 @@
 <div id="AuthRoleList">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">角色管理</div>
+            <div class="title-area">{{ $t('role.list') }}</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange()" class="menu-item-btn"><i class="icon i_add"/>新建角色</a-button>
+                <a-button type="primary" @click="routerChange()" class="menu-item-btn"><i class="icon i_add"/>{{ $t('role.save') }}</a-button>
             </div>
         </div>
         <!-- <div class="search-container">
@@ -24,6 +24,9 @@
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :pagination='false'>
+                <template #headerCell="{title}">
+                    {{ $t(title) }}
+                </template>
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.dataIndex === 'name'">
                         {{ text || '-' }}
@@ -37,8 +40,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange(record)"><i class="icon i_edit"/>编辑</a-button>
-                        <a-button type='link' danger @click="handleDelete(record.id)"><i class="icon i_delete"/>删除</a-button>
+                        <a-button type='link' @click="routerChange(record)"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                        <a-button type='link' danger @click="handleDelete(record.id)"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                     </template>
                 </template>
             </a-table>
@@ -86,10 +89,10 @@ export default {
             // 表格数据
             tableData: [],
             tableColumns: [
-                {title: '角色名称', dataIndex: 'name'},
-                {title: '角色描述', dataIndex: 'remark', key: 'tip_item' },
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '操作', key: 'operation', fixed: 'right', width: 100,},
+                {title: 'n.name', dataIndex: 'name'},
+                {title: 'role.description', dataIndex: 'remark', key: 'tip_item' },
+                {title: 'd.create_time', dataIndex: 'create_time', key: 'time'},
+                {title: 'def.operate', key: 'operation', fixed: 'right', width: 100,},
             ],
             // 弹框
             roleShow: false,
@@ -170,12 +173,12 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             console.log('handleRoleSubmit form:', form)
             if (!form.name) {
-                return this.$message.warning('请输入角色名称')
+                return this.$message.warning(this.$t('def.enter'))
             }
 
             this.loading = true;
             Core.Api.Authority.roleEdit(this.form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.handleRoleClose();
                 this.getTableData();
             }).catch(err => {
@@ -187,13 +190,13 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该角色吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Authority.roleDelete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

@@ -2,55 +2,52 @@
     <div id="CustomerList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">客户列表</div>
+                <div class="title-area">{{ $t('c.list') }}</div>
                 <div class="btns-area" v-if="$auth('customer.save')">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('STORE','AGENT', 'ADMIN')"><i class="icon i_add"/>新建客户</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('STORE','AGENT', 'ADMIN')"><i class="icon i_add"/>{{ $t('c.save') }}</a-button>
                 </div>
             </div>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">客户名称：</div>
+                        <div class="key">{{ $t('n.name') }}：</div>
                         <div class="value">
-                            <a-input placeholder="请输入客户名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">客户名称：</div>
+                        <div class="key">{{ $t('n.phone') }}：</div>
                         <div class="value">
-                            <a-input placeholder="请输入客户名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">客户电话：</div>
+                        <div class="key">{{ $t('n.continent') }}：</div>
                         <div class="value">
-                            <a-input placeholder="请输入客户电话" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.continent" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">大洲：</div>
+                        <div class="key">{{ $t('n.country') }}：</div>
                         <div class="value">
-                            <a-input placeholder="请输入大洲" v-model:value="searchForm.continent" @keydown.enter='handleSearch'/>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">国家：</div>
-                        <div class="value">
-                            <a-input placeholder="请输入国家" v-model:value="searchForm.country" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.country" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
-                        <div class="key">创建时间：</div>
+                        <div class="key">{{ $t('d.create_time') }}：</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">查询</a-button>
-                    <a-button @click="handleSearchReset">重置</a-button>
+                    <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
+                    <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
+                    <template #headerCell="{title}">
+                        {{ $t(title) }}
+                    </template>
                     <template #bodyCell="{ column, text , record }">
 <!--                        <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
@@ -67,8 +64,8 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('customer.save')"><i class="icon i_edit"/>编辑</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('customer.delete')"><i class="icon i_delete"/> 删除</a-button>
+                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('customer.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('customer.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -121,21 +118,28 @@ export default {
                 country: '',
             },
             // 表格
-            tableColumns: [
-                {title: '名称', dataIndex: 'name', key:'detail'},
-                {title: '电话', dataIndex: 'phone', key:'item'},
-                {title: '邮箱', dataIndex: 'email', key:'item'},
-                {title: '大洲', dataIndex: 'continent', key:'item'},
-                {title: '国家', dataIndex: 'country', key:'item'},
-                {title: '详细地址', dataIndex: 'address'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '操作', key: 'operation', fixed: 'right'},
-            ],
             tableData: [],
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        tableColumns() {
+            let columns = [
+                {title: 'n.name', dataIndex: 'name', key:'detail'},
+                {title: 'n.phone', dataIndex: 'phone', key:'item'},
+                {title: 'n.email', dataIndex: 'email', key:'item'},
+                // {title: 'n.continent', dataIndex: 'continent', key:'item'},
+                {title: 'n.country', dataIndex: 'country', key:'item'},
+                {title: 'ad.specific_address', dataIndex: 'address'},
+                {title: 'd.create_time', dataIndex: 'create_time', key: 'time'},
+                {title: 'def.operate', key: 'operation', fixed: 'right'},
+            ]
+            if (this.$i18n.locale === 'en') {
+                columns.splice(3, 1,{title: 'n.country', dataIndex: 'country_en', key:'item'})
+            }
+            return columns
+        },
+    },
     mounted() {
         this.getTableData();
     },
@@ -195,13 +199,13 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该客户吗？',
-                okText: '确定',
+                title: this.$t('pop_up.sure_delete'),
+                okText: this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Customer.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success')),
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

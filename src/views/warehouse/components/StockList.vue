@@ -252,20 +252,20 @@ export default {
         handleStockAddSubmit() {
             let form = Core.Util.deepCopy(this.form)
             if (!form.type) {
-                return this.$message.warning('请选择操作类型')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.target_code) {
-                return this.$message.warning('请输入商品编码')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (this.isExist === false) {
-                return this.$message.warning('请输入正确的商品编码')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.number) {
-                return this.$message.warning('请输入商品数量')
+                return this.$message.warning(this.$t('def.enter'))
             }
             let apiName = form.type === TYPE.IN ? 'add' : 'reduce'
             Core.Api.Stock[apiName](form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.handleStockAddClose();
                 this.getTableData();
             }).catch(err => {
