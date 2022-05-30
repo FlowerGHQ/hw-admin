@@ -38,18 +38,18 @@
                     <a-input v-model:value="form.email" placeholder="请输入员工邮箱"/>
                 </div>
             </div>
-            <div class="form-item" v-if="$auth('MANAGER') && loginType == org_type">
-                <div class="key">员工角色:</div>
-                <div class="value">
-                    <a-select v-model:value="form.role_id" placeholder="请选择员工角色">
-                        <a-select-option v-for="(item,index) of roleList" :key="index" :value="item.id">{{item.name}}</a-select-option>
-                    </a-select>
-                </div>
-            </div>
+<!--            <div class="form-item" v-if="$auth('MANAGER') && loginType == org_type">-->
+<!--                <div class="key">员工角色:</div>-->
+<!--                <div class="value">-->
+<!--                    <a-select v-model:value="form.role_id" placeholder="请选择员工角色">-->
+<!--                        <a-select-option v-for="(item,index) of roleList" :key="index" :value="item.id">{{item.name}}</a-select-option>-->
+<!--                    </a-select>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
     </div>
     <div class="form-btns">
-        <a-button @click="handleSubmit" type="primary" v-if="$auth('user.save','MANAGER')">确定</a-button>
+        <a-button @click="handleSubmit" type="primary" v-if="$auth('account.save','MANAGER')">确定</a-button>
         <a-button @click="routerChange('back')" type="primary" ghost>取消</a-button>
     </div>
 </div>
@@ -83,7 +83,7 @@ export default {
                 org_id: '', // 组织ID
                 org_type: '', // 组织类型 平台、代理、经销、门店
                 type: '', // 账号类型 维修工、普通员工（和org_type保持一致）
-                role_id: undefined,
+                // role_id: undefined,
 
                 name: '',
                 username: '',
@@ -135,7 +135,7 @@ export default {
                     id: d.account_id,
                     user_id: d.id,
 
-                    role_id: d.role_id || undefined,
+                    // role_id: d.role_id || undefined,
                     org_id: d.org_id,
                     org_type: d.org_type,
                     type: d.type,

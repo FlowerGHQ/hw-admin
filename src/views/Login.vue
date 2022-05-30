@@ -85,7 +85,7 @@ export default {
                 Core.Data.setOrgId(res.user.org_id);
                 Core.Data.setOrgType(res.user.org_type);
 
-                let userType = TYPE_MAP[this.loginForm.user_type]
+                let loginType = TYPE_MAP[this.loginForm.user_type]
                 /* switch (this.loginForm.user_type) {
                     case TYPE.ADMIN:
                         break;
@@ -94,20 +94,21 @@ export default {
                     case TYPE.STORE:
                         break;
                 } */
-                Core.Data.setUserType(userType);
-                this.getAuthority(userType, res.user.role_id, res.user.flag_admin);
+                Core.Data.setUserType(loginType);
+                this.getAuthority(res.user.id, res.user.type, loginType, res.user.role_id, res.user.flag_admin);
             });
         },
 
-        async getAuthority(userType, roleId, flag_admin) {
+        async getAuthority(userId, userType, loginType, roleId, flag_admin) {
             Core.Data.setAuthority('')
             let authorityMap = {}
-            authorityMap[userType] = true
+            authorityMap[loginType] = true
             if (flag_admin) {
                 authorityMap['MANAGER'] = true
             }
-            Core.Api.Authority.authSelected({
-                role_id: roleId,
+            Core.Api.Authority.authUserAll({
+                user_id: userId,
+                user_type: userType
             }).then(res => {
                 console.log('res', res )
                 let list = res.list

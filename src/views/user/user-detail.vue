@@ -3,8 +3,8 @@
         <div class="title-container">
             <div class="title-area">员工详情</div>
             <div class="btns-area">
-                <a-button type="primary" ghost @click="routerChange('edit', record)" v-if="$auth('warehouse.save')"><i class="icon i_edit"/>编辑</a-button>
-                <a-button type="danger" ghost @click="handleDelete(id)" v-if="$auth('warehouse.delete')"><i class="icon i_delete"/>删除</a-button>
+                <a-button type="primary" ghost @click="routerChange('edit', record)" v-if="$auth('account.save', 'MANAGER')"><i class="icon i_edit"/>编辑</a-button>
+                <a-button type="danger" ghost @click="handleDelete(id)" v-if="$auth('account.delete', 'MANAGER')"><i class="icon i_delete"/>删除</a-button>
             </div>
         </div>
         <div class="gray-panel">
@@ -44,9 +44,13 @@
         </div>
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
-                <a-tab-pane key="UserAuth" tab="组织权限">
+                <a-tab-pane key="UserRole" tab="角色分配">
+                    <UserRole type='item' :userId="id" :detail="detail" @submit="getUserDetail"
+                               v-if="activeKey === 'UserRole'"/>
+                </a-tab-pane>
+                <a-tab-pane key="UserAuth" tab="权限管理">
                     <UserAuth type='item' :userId="id" :detail="detail" @submit="getUserDetail"
-                               v-if="activeKey === 'UserAuth'"/>
+                              v-if="activeKey === 'UserAuth'"/>
                 </a-tab-pane>
 
             </a-tabs>
@@ -57,12 +61,13 @@
 <script>
 import Core from "../../core";
 import UserAuth from "./components/UserAuth.vue";
+import UserRole from "./components/UserRole.vue";
 
 const WAREHOUSE_TYPE = Core.Const.WAREHOUSE.TYPE
 
 export default {
     name: "UserDetail",
-    components: { UserAuth },
+    components: { UserAuth ,UserRole },
     props: {},
     data() {
         return {
@@ -76,7 +81,7 @@ export default {
             },
             id: '',
             //标签页
-            activeKey: 'UserAuth'
+            activeKey: 'UserRole'
         }
     },
     watch: {},
