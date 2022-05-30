@@ -22,7 +22,7 @@
                     </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
-                            {{ text ? '启用中' : '已禁用' }}
+                            {{ text ? $t('def.enable_ing') : $t('def.disable_ing') }}
                         </div>
                     </template>
                     <template v-if="column.key === 'operation'">
@@ -44,7 +44,7 @@
                 show-quick-jumper
                 show-size-changer
                 show-less-items
-                :show-total="total => `共${total}条`"
+                :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                 :hide-on-single-page='false'
                 :pageSizeOptions="['10', '20', '30', '40']"
                 @change="pageChange"
@@ -170,7 +170,7 @@ export default {
                 cancelText: '取消',
                 onOk() {
                     Core.Api.Store.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

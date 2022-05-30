@@ -1,10 +1,10 @@
 <template>
     <div id="UserDetail" class="list-container">
         <div class="title-container">
-            <div class="title-area">员工详情</div>
+            <div class="title-area">{{ $t('u.detail') }}</div>
             <div class="btns-area">
-                <a-button type="primary" ghost @click="routerChange('edit', record)" v-if="$auth('account.save', 'MANAGER')"><i class="icon i_edit"/>编辑</a-button>
-                <a-button type="danger" ghost @click="handleDelete(id)" v-if="$auth('account.delete', 'MANAGER')"><i class="icon i_delete"/>删除</a-button>
+                <a-button type="primary" ghost @click="routerChange('edit', record)" v-if="$auth('user.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                <a-button type="danger" ghost @click="handleDelete(id)" v-if="$auth('user.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
             </div>
         </div>
         <div class="gray-panel">
@@ -16,27 +16,27 @@
                 </div>
                 <a-row class="desc-detail">
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">账号：</span>
+                        <span class="key">{{ $t('u.account') }}：</span>
                         <span class="value">{{ detail.account.username }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">管理员：</span>
-                        <span class="value">{{ detail.flag_admin ? '是' : '否' }}</span>
+                        <span class="key">{{ $t('e.administrator') }}：</span>
+                        <span class="value">&nbsp; {{ detail.flag_admin ? $t('i.yes') : $t('i.no') }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">手机号：</span>
+                        <span class="key">{{ $t('n.phone') }}：</span>
                         <span class="value">{{ detail.account.phone }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">邮箱：</span>
+                        <span class="key">{{ $t('n.email') }}：</span>
                         <span class="value">{{ detail.account.email }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">员工角色：</span>
+                        <span class="key">{{ $t('u.role') }}：</span>
                         <span class="value">{{ detail.role_name }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">创建时间：</span>
+                        <span class="key">{{ $t('n.time') }}：</span>
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
                 </a-row>
@@ -129,13 +129,13 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: "确定要删除该员工吗？",
-                okText: "确定",
-                okType: "danger",
-                cancelText: "取消",
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.User.delete({id}).then(() => {
-                        _this.$message.success("删除成功");
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.routerChange('list');
                     }).catch((err) => {
                         console.log("handleDelete err", err);

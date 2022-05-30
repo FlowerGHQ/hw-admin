@@ -55,7 +55,7 @@
                     show-quick-jumper
                     show-size-changer
                     show-less-items
-                    :show-total="total => `共${total}条`"
+                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                     :hide-on-single-page='false'
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="pageChange"
@@ -177,13 +177,13 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该区域吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.SalesArea.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

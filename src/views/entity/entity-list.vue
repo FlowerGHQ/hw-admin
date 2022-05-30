@@ -2,9 +2,9 @@
     <div id="EntityList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">{{title + '列表'}}</div>
+                <div class="title-area">{{ viewType === 'part' ? $t('v.parts') : $t('v.vehicle')}}{{ $t('v.list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleVehicleShow"><i class="icon i_add"/>{{'新增' + title}}</a-button>
+                    <a-button type="primary" @click="handleVehicleShow"><i class="icon i_add"/>{{ $t('v.save')}}{{ viewType === 'part' ? $t('v.parts') : $t('v.vehicle')}}</a-button>
                     <a-upload name="file" class="file-uploader"
                         :file-list="upload.fileList" :action="upload.action"
                         :show-upload-list='false'
@@ -20,61 +20,64 @@
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{title + '名称' + ':'}}</div>
+                        <div class="key">{{ $t('n.name') }}:</div>
                         <div class="value">
-                            <a-input :placeholder="'请输入' +  title  + '名称'" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{title + '编号' + ':'}}</div>
+                        <div class="key">{{ $t('v.number') }}:</div>
                         <div class="value">
-                            <a-input :placeholder="'请输入' +  title  + '编号'" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
-                        <div class="key">所属分销商:</div>
+                        <div class="key">{{ $t('n.distributor') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.distributor_id" placeholder="请选择所属分销商" @change="handleSearch">
+                            <a-select v-model:value="searchForm.distributor_id" :placeholder="$t('def.select')" @change="handleSearch">
                                 <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
-                        <div class="key">所属零售商:</div>
+                        <div class="key">{{ $t('n.agent') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.agent_id" placeholder="请选择所属零售商" @change='handleSearch'>
+                            <a-select v-model:value="searchForm.agent_id" :placeholder="$t('def.select')" @change='handleSearch'>
                                 <a-select-option v-for="item of agentList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="!$auth('STORE')">
-                        <div class="key">所属门店:</div>
+                        <div class="key">{{ $t('n.store') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.store_id" placeholder="请选择所属门店" @change='handleSearch'>
+                            <a-select v-model:value="searchForm.store_id" :placeholder="$t('def.select')" @change='handleSearch'>
                                 <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
-                        <div class="key">创建时间:</div>
+                        <div class="key">{{ $t('d.create_time') }}:</div>
                         <div class="value">
                             <TimeSearch @search="handleOtherSearch" ref='TimeSearch'/>
                         </div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">查询</a-button>
-                    <a-button @click="handleSearchReset">重置</a-button>
+                    <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
+                    <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
             <div class="operate-container" v-if="viewType === 'vehicle'">
-                <a-button type="primary" @click="handleSetShow" :disabled="!selectedRowKeys.length">批量设置到港时间</a-button>
+                <a-button type="primary" @click="handleSetShow" :disabled="!selectedRowKeys.length">{{ $t('v.set') }}</a-button>
             </div>
             <div class="table-container">
                 <a-table :check-mode='true' :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false' :row-selection="rowSelection"
                     :expandedRowKeys="expandedRowKeys" :indentSize='0'
                     :expandIconColumnIndex="expandIconColumnIndex">
+                    <template #headerCell="{title}">
+                        {{ $t(title) }}
+                    </template>
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail'">
                             <a-button type="link" @click="routerChange('detail', record)">
@@ -97,7 +100,7 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.dataIndex === 'org_type'">
-                            {{ $Util.userTypeFilter(text) }}
+                            {{ $Util.userTypeFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -105,10 +108,10 @@
                         <template v-if="column.key === 'operation'">
                             <template v-if="!record.default_item_id">
 <!--                                <a-button type='link' @click="handleVehicleShow(record)"><i class="icon i_edit"/>编辑</a-button>-->
-                                <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>详情</a-button>
+                                <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
                             </template>
                             <a-button type='link' @click="handleDelete(record.id)" class="danger"><i
-                                class="icon i_delete"/>删除
+                                class="icon i_delete"/>{{ $t('def.delete') }}
                             </a-button>
                         </template>
                     </template>
@@ -122,7 +125,7 @@
                     show-quick-jumper
                     show-size-changer
                     show-less-items
-                    :show-total="total => `共${total}条`"
+                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                     :hide-on-single-page='false'
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="pageChange"
@@ -240,7 +243,7 @@ export default {
                 ids: '',
                 arrival_time: '',
             },
-            viewType: 'vehicle',
+            viewType: '',
             title: '整车'
         };
     },
@@ -252,9 +255,9 @@ export default {
                 let type = newRoute.meta ? newRoute.meta.type : 'vehicle'
                 this.viewType = type
                 if (type === "part")  {
-                    this.title = "零部件"
+                    this.title = this.$t('v.parts')
                 } else {
-                    this.title = "整车"
+                    this.title = this.$t('v.vehicle')
                 }
                 Object.assign(this.searchForm, this.$options.data().searchForm)
                 this.pageChange(1)
@@ -264,14 +267,14 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: this.title + '名称', dataIndex: ['item', 'name'], key: 'detail'},
-                {title: this.title + '编号', dataIndex: 'uid', key: 'item'},
-                {title: '规格', dataIndex: 'attr', key: 'attr'},
-                {title: '单位类型', dataIndex: 'org_type'},
-                {title: '所属单位', dataIndex: 'org_name'},
-                {title: '到港日期', dataIndex: 'arrival_time', key: 'time'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '操作', key: 'operation', fixed: 'right', width: 180}
+                {title: 'n.name', dataIndex: ['item', 'name'], key: 'detail'},
+                {title: 'v.number', dataIndex: 'uid', key: 'item'},
+                {title: 'i.spec', dataIndex: 'attr', key: 'attr'},
+                {title: 'v.type', dataIndex: 'org_type'},
+                {title: 'r.unit', dataIndex: 'org_name'},
+                {title: 'v.date', dataIndex: 'arrival_time', key: 'time'},
+                {title: 'd.create_time', dataIndex: 'create_time', key: 'time'},
+                {title: 'def.operate', key: 'operation', fixed: 'right', width: 180}
             ]
             return columns
         },
@@ -380,13 +383,13 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该整车吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Entity.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);
@@ -416,13 +419,13 @@ export default {
         handleVehicleSubmit() { // 审核提交
             let form = Core.Util.deepCopy(this.editForm)
             if (!form.uid) {
-                return this.$message.warning('请输入车架号')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.item_code) {
-                return this.$message.warning('请输入对应的商品编码')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (this.isExist == 2) {
-                return this.$message.warning('请输入正确的商品编码')
+                return this.$message.warning(this.$t('def.enter'))
             }
 
             let type = this.viewType == 'part' ? ITEM_TYPE.COMPONENT : ITEM_TYPE.PRODUCT;

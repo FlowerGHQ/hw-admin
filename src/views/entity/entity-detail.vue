@@ -1,9 +1,9 @@
 <template>
     <div id='EntityDetail' class='list-container'>
         <div class='title-container'>
-            <div class='title-area'>整车详情</div>
+            <div class='title-area'>{{ $t('v.detail') }}</div>
             <div class="btns-area">
-                <a-button type="danger" ghost @click="handleDelete(id)"><i class="icon i_close_c"/>删除</a-button>
+                <a-button type="danger" ghost @click="handleDelete(id)"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
             </div>
         </div>
         <div class="gray-panel">
@@ -19,27 +19,27 @@
                         <span class="value">{{ detail.item ? detail.item.name : '-' }}</span>
                     </a-col>-->
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">整车编号：</span>
+                        <span class="key">{{ $t('v.number_a') }}：</span>
                         <span class="value">{{ detail.uid }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">维修次数：</span>
-                        <span class="value">{{ detail.repair_count }}次</span>
+                        <span class="key">{{ $t('v.repair') }}：</span>
+                        <span class="value">{{ detail.repair_count }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">客户名称：</span>
+                        <span class="key">{{ $t('v.name') }}：</span>
                         <span class="value">{{ detail.customer_detail ? detail.customer_detail.name : '-' }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">客户手机：</span>
+                        <span class="key">{{ $t('n.phone') }}：</span>
                         <span class="value">{{ detail.customer_detail ? detail.customer_detail.phone : '-' }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">客户地址：</span>
+                        <span class="key">{{ $t('v.address') }}：</span>
                         <span class="value">{{ detail.customer_detail ? detail.customer_detail.address : '-' }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">到港日期：</span>
+                        <span class="key">{{ $t('v.date_a') }}：</span>
                         <span class="value">{{ $Util.timeFilter(detail.arrival_time) }}</span>
                     </a-col>
 <!--                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
@@ -51,7 +51,7 @@
         </div>
         <div class="tabs-container">
             <a-tabs>
-                 <a-tab-pane key="RepairOrderList" tab="维修单列表">
+                 <a-tab-pane key="RepairOrderList" :tab="$t('r.repair_list')">
                     <RepairOrderList :itemId="id"></RepairOrderList>
                 </a-tab-pane>
             </a-tabs>
@@ -114,14 +114,14 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该整车吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Entity.delete({id})
                         .then(() => {
-                            _this.$message.success('删除成功');
+                            _this.$message.success(_this.$t('pop_up.delete_success'));
                             _this.routerChange('list');
                         }).catch((err) => {
                             console.log('handleDelete err', err);

@@ -13,7 +13,7 @@
             <div class="form-item required">
                 <div class="key">{{ $t('n.name') }}</div>
                 <div class="value">
-                    <a-input v-model:value="form.name" placeholder="请输入商品名称(最多输入50字符)" :maxlength='50'/>
+                    <a-input v-model:value="form.name" :placeholder="$t('def.input')" :maxlength='50'/>
                 </div>
             </div>
             <div class="form-item required" v-if="!indep_flag">
@@ -108,14 +108,14 @@
                 <div class="key">{{item.name}}</div>
                 <div class="value">
                     <template v-if="item.type == 'input'">
-                        <a-input :placeholder="`请输入${item.name}`" v-model:value="form.config[index].value"/>
+                        <a-input :placeholder="$t('def.input') + ` ${item.name}`" v-model:value="form.config[index].value"/>
                     </template>
                     <template v-if="item.type == 'textarea'">
-                        <a-textarea :placeholder="`请输入${item.name}`" v-model:value="form.config[index].value" :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500'/>
+                        <a-textarea :placeholder="$t('def.input') + ` ${item.name}`" v-model:value="form.config[index].value" :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500'/>
                         <span class="content-length">{{form.config[index].value.length}}/500</span>
                     </template>
                     <template v-if="item.type == 'select'">
-                        <a-select :placeholder="`请选择${item.name}`" v-model:value="form.config[index].value" show-search option-filter-prop="children">
+                        <a-select :placeholder="$t('def.select') + ` ${item.name}`" v-model:value="form.config[index].value" show-search option-filter-prop="children">
                             <a-select-option v-for="(val,i) of item.select" :key="i" :value="val" >{{val}}</a-select-option>
                         </a-select>
                     </template>

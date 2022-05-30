@@ -16,7 +16,7 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'address'">
-                            {{ $Util.addressFilter(record.warehouse) }}
+                            {{ $Util.addressFilter(record.warehouse, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -32,7 +32,7 @@
                     show-quick-jumper
                     show-size-changer
                     show-less-items
-                    :show-total="total => `共${total}条`"
+                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                     :hide-on-single-page='false'
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="pageChange"

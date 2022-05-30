@@ -1,29 +1,29 @@
 <template>
 <div id="NoticeEdit" class="edit-container">
     <div class="title-container">
-        <div class="title-area">{{ form.id ? '编辑消息' : '新建消息' }}</div>
+        <div class="title-area">{{ form.id ? $t('no.save') : $t('no.edit') }}</div>
     </div>
     <div class="form-block">
-        <div class="form-title"><div class="title-colorful">基本信息</div></div>
+        <div class="form-title"><div class="title-colorful">{{ $t('n.information') }}</div></div>
         <div class="form-content">
             <div class="form-item required">
-                <div class="key">消息标题：</div>
+                <div class="key">{{ $t('no.head') }}：</div>
                 <div class="value">
-                    <a-input v-model:value="form.title" placeholder="请输入消息标题"/>
+                    <a-input v-model:value="form.title" :placeholder="$t('def.input')"/>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">消息类型：</div>
+                <div class="key">{{ $t('n.name') }}：</div>
                 <div class="value">
-                    <a-select v-model:value="form.type" placeholder="请选择消息类型">
-                        <a-select-option v-for="(val, key) in typeMap" :key="key" :value="Number(key)">{{val}}</a-select-option>
+                    <a-select v-model:value="form.type" :placeholder="$t('def.select')">
+                        <a-select-option v-for="item of typeMap" :key="item.key" :value="Number(item.key)">{{item[$i18n.locale]}}</a-select-option>
                     </a-select>
                 </div>
             </div>
         </div>
     </div>
     <div class="form-block">
-        <div class="form-title"><div class="title-colorful">消息内容</div></div>
+        <div class="form-title"><div class="title-colorful">{{ $t('no.content') }}</div></div>
         <div class="form-content">
             <div class="form-item required afs rich_text">
                 <div class="value">
@@ -33,8 +33,8 @@
         </div>
     </div>
     <div class="form-btns">
-        <a-button @click="handleSubmit" type="primary" v-if="$auth('message.save')">确定</a-button>
-        <a-button @click="routerChange('back')" type="primary" ghost="">取消</a-button>
+        <a-button @click="handleSubmit" type="primary" v-if="$auth('message.save')">{{ $t('def.sure') }}</a-button>
+        <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
     </div>
 </div>
 </template>

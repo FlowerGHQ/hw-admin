@@ -36,7 +36,7 @@
                     :row-key="record => record.id" :pagination='false' @change="handleTableChange">
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.dataIndex === 'type'">
-                            {{ $Util.distributorTypeFilter(text) }}
+                            {{ $Util.distributorTypeFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.dataIndex === 'name' && $auth('distributor.detail')">
                             <a-tooltip placement="top" :title='text'>
@@ -83,7 +83,7 @@
                     show-quick-jumper
                     show-size-changer
                     show-less-items
-                    :show-total="total => `共${total}条`"
+                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                     :hide-on-single-page='false'
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="pageChange"

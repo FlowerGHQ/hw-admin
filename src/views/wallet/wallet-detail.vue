@@ -3,7 +3,7 @@
         <div class="title-container">
             <div class="title-area">{{ $t('w.detail') }}</div>
             <div class="btns-area">
-                <a-button type="primary" ghost @click="routerChange('edit', record)"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+<!--                <a-button type="primary" ghost @click="routerChange('edit', record)"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>-->
 <!--                <a-button type="primary" ghost @click="handleDelete(wallet_id)"><i class="icon i_delete"/>删除</a-button>-->
             </div>
         </div>
@@ -104,7 +104,7 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该仓库吗？',
+                title: '确定要删除该账户吗？',
                 okText: '确定',
                 okType: 'danger',
                 cancelText: '取消',

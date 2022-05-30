@@ -2,28 +2,28 @@
 <div id="AftersalesDetail">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">售后单详情</div>
+            <div class="title-area">{{ $t('af.detail') }}</div>
             <div class="btns-area">
                 <template v-if="sameOrg(detail.supply_org_id, detail.supply_org_type)">
                     <AuditHandle v-if="detail.status === STATUS.APPLY"
                         btnType='primary' :api-list="['Aftersales', 'audit']" :id="detail.id" @submit="getOrderDetail"
-                        :s-pass="STATUS.AUDIT_PASS" :s-refuse="STATUS.AUDIT_REFUSE"><i class="icon i_audit"/>审核
+                        :s-pass="STATUS.AUDIT_PASS" :s-refuse="STATUS.AUDIT_REFUSE"><i class="icon i_audit"/>{{ $t('n.audit') }}
                     </AuditHandle>
                     <template v-if="detail.status === STATUS.AUDIT_PASS">
-                        <a-button type="primary" @click="handleApplyRefund()" ghost v-if="detail.refund_status === 0 && detail.refund_money"><i class="icon i_settle"/>确认退款</a-button>
-                        <a-button type="primary" @click="handleReceived()" ghost v-if="needItemIn && detail.sales_return_status === 100"><i class="icon i_goods"/>确认收货</a-button>
-                        <a-button type="primary" @click="handleDeliverShow()" v-if="needItemOut && detail.deliver_status === 0"><i class="icon i_deliver"/>商品寄出</a-button>
+                        <a-button type="primary" @click="handleApplyRefund()" ghost v-if="detail.refund_status === 0 && detail.refund_money"><i class="icon i_settle"/>{{ $t('af.refund') }}</a-button>
+                        <a-button type="primary" @click="handleReceived()" ghost v-if="needItemIn && detail.sales_return_status === 100"><i class="icon i_goods"/>{{ $t('af.confirm') }}</a-button>
+                        <a-button type="primary" @click="handleDeliverShow()" v-if="needItemOut && detail.deliver_status === 0"><i class="icon i_deliver"/>{{ $t('af.send') }}</a-button>
                     </template>
                 </template>
                 <template v-if="sameOrg(detail.org_id, detail.org_type)">
                     <template v-if="canEdit">
-                        <a-button type="primary" @click="handleSubmit()" ghost><i class="icon i_detail_l"/>提交审核</a-button>
-                        <a-button type="primary" @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
-                        <a-button type="danger"  @click="handleCancel()"><i class="icon i_close_c"/>取消</a-button>
+                        <a-button type="primary" @click="handleSubmit()" ghost><i class="icon i_detail_l"/>{{ $t('def.submit') }}</a-button>
+                        <a-button type="primary" @click="routerChange('edit')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                        <a-button type="danger"  @click="handleCancel()"><i class="icon i_close_c"/>{{ $t('def.cancel') }}</a-button>
                     </template>
                     <template v-if="detail.status === STATUS.AUDIT_PASS">
-                        <a-button type="primary" @click="handleReceived()" ghost v-if="needItemOut && detail.deliver_status === 100"><i class="icon i_goods"/>确认收货</a-button>
-                        <a-button type="primary" @click="handleDeliverShow()" v-if="needItemIn && detail.sales_return_status === 0"><i class="icon i_deliver"/>商品寄回</a-button>
+                        <a-button type="primary" @click="handleReceived()" ghost v-if="needItemOut && detail.deliver_status === 100"><i class="icon i_goods"/>{{ $t('af.confirm') }}</a-button>
+                        <a-button type="primary" @click="handleDeliverShow()" v-if="needItemIn && detail.sales_return_status === 0"><i class="icon i_deliver"/>{{ $t('af.back') }}</a-button>
                     </template>
                 </template>
             </div>
@@ -36,29 +36,29 @@
         <div class="form-container">
             <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
                 <template #expandIcon ><i class="icon i_expan_l"/> </template>
-                <a-collapse-panel key="AftersalesInfo" header="售后单信息" class="gray-collapse-panel">
+                <a-collapse-panel key="AftersalesInfo" :header="$t('n.information')" class="gray-collapse-panel">
                     <a-row class="panel-content info-container">
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                             <div class="info-item">
-                                <div class="key">售后单编号</div>
+                                <div class="key">{{ $t('af.number_a') }}</div>
                                 <div class="value">
                                     {{detail.sn || '-'}}
                                 </div>
                             </div>
                             <div class="info-item">
-                                <div class="key">售后类型</div>
+                                <div class="key">{{ $t('n.type') }}</div>
                                 <div class="value">
-                                    {{ $Util.aftersalesTypeFilter(detail.type) }}
+                                    {{ $Util.aftersalesTypeFilter(detail.type, $i18n.locale) }}
                                 </div>
                             </div>
                             <div class="info-item">
-                                <div class="key">售后单状态</div>
+                                <div class="key">{{ $t('n.state') }}</div>
                                 <div class="value">
-                                    {{ $Util.aftersalesStatusFilter(detail.status) }}
+                                    {{ $Util.aftersalesStatusFilter(detail.status, $i18n.locale) }}
                                 </div>
                             </div>
                             <div class="info-item">
-                                <div class="key">采购单编号</div>
+                                <div class="key">{{ $t('af.sn_a') }}</div>
                                 <div class="value">
                                     <a-button type="link" @click="routerChange('purchase')"
                                         style="font-size: 12px;line-height: 17px;height: 17px;">{{detail.order_sn || '-'}}</a-button>
@@ -67,19 +67,19 @@
                         </a-col>
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                             <div class="info-item">
-                                <div class="key">创建时间</div>
+                                <div class="key">{{ $t('d.create_time') }}</div>
                                 <div class="value">{{$Util.timeFilter(detail.create_time) || '-'}}</div>
                             </div>
                             <div class="info-item">
-                                <div class="key">申请退款金额</div>
+                                <div class="key">{{ $t('af.apply_price') }}</div>
                                 <div class="value">{{$Util.priceUnitFilter(detail.refund_money_currency)}} {{$Util.countFilter(detail.refund_money)}}</div>
                             </div>
                             <div class="info-item">
-                                <div class="key">申请组织</div>
-                                <div class="value">{{$Util.userTypeFilter(detail.org_type)}} {{detail.org_name}}</div>
+                                <div class="key">{{ $t('af.apply') }}</div>
+                                <div class="value">{{$Util.userTypeFilter(detail.org_type, $i18n.locale)}} {{detail.org_name}}</div>
                             </div>
                             <div class="info-item">
-                                <div class="key">备注</div>
+                                <div class="key">{{ $t('r.remark') }}</div>
                                 <div class="value">{{detail.remark || '-'}}</div>
                             </div>
                         </a-col>
@@ -105,10 +105,13 @@
                     </a-row>
                 </a-collapse-panel>
                 <template v-if="detail.type !== TYPE.ONLY_REFUND">
-                    <a-collapse-panel key="ItemInInfo" header="售后商品信息" class="gray-collapse-panel">
+                    <a-collapse-panel key="ItemInInfo" :header="$t('af.information')" class="gray-collapse-panel">
                         <div class="panel-content">
                             <a-table :columns="itemColumns" :data-source="itemInList" :scroll="{ x: true }"
                                 :row-key="record => record.id" :pagination='false'>
+                                <template #headerCell="{title}">
+                                    {{ $t(title) }}
+                                </template>
                                 <template #bodyCell="{ column, text , record}">
                                     <template v-if="column.dataIndex === 'item'">
                                         <div class="table-img">
@@ -121,7 +124,7 @@
                                         </div>
                                     </template>
                                     <template v-if="column.dataIndex === 'amount'">
-                                        {{record.amount}} 件
+                                        {{record.amount}} {{ $t('in.item') }}
                                     </template>
                                     <template v-if="column.key === 'money'">
                                         {{$Util.priceUnitFilter(record.currency)}} {{$Util.countFilter(text)}}
@@ -133,23 +136,23 @@
                             </a-table>
                         </div>
                     </a-collapse-panel>
-                    <a-collapse-panel key="WaybillInInfo" header="售后商品物流信息" class="gray-collapse-panel" v-if="needItemIn">
+                    <a-collapse-panel key="WaybillInInfo" :header="$t('af.logistics')" class="gray-collapse-panel" v-if="needItemIn">
                         <a-row class="panel-content info-container">
                             <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                                 <div class="info-item">
-                                    <div class="key">收货人</div>
+                                    <div class="key">{{ $t('n.consignee') }}</div>
                                     <div class="value">{{waybillIn.receiver || '-'}}</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="key">收货地址</div>
+                                    <div class="key">{{ $t('d.address') }}</div>
                                     <div class="value">{{waybillIn.receiver_address || '-'}}</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="key">联系方式</div>
+                                    <div class="key">{{ $t('n.phone') }}</div>
                                     <div class="value">{{waybillIn.receiver_phone || '-'}}</div>
                                 </div>
                             </a-col>
-                            <a-col :xs='24' :sm='24' :lg='12' :xl='16' :xxl='12' class="info-block">
+<!--                            <a-col :xs='24' :sm='24' :lg='12' :xl='16' :xxl='12' class="info-block">
                                 <div class="info-item">
                                     <div class="key">物流状态</div>
                                     <div class="value">{{AFTERSALES.WAYBILL_STATUS_MAP[detail.sales_return_status] || '-'}}</div>
@@ -161,15 +164,18 @@
                                         <template v-else>暂无物流信息</template>
                                     </div>
                                 </div>
-                            </a-col>
+                            </a-col>-->
                         </a-row>
                     </a-collapse-panel>
                 </template>
                 <template v-if="needItemOut">
-                    <a-collapse-panel key="ItemOutInfo" :header="$Util.aftersalesTypeFilter(detail.type) + '商品信息'" class="gray-collapse-panel">
+                    <a-collapse-panel key="ItemOutInfo" :header="$Util.aftersalesTypeFilter(detail.type, $i18n.locale) + $t('af.commodity')" class="gray-collapse-panel">
                         <div class="panel-content">
                             <a-table :columns="itemColumns.slice(0,5)" :data-source="itemOutList" :scroll="{ x: true }"
                                 :row-key="record => record.id" :pagination='false'>
+                                <template #headerCell="{title}">
+                                    {{ $t(title) }}
+                                </template>
                                 <template #bodyCell="{ column, text , record}">
                                     <template v-if="column.dataIndex === 'item'">
                                         <div class="table-img">
@@ -182,7 +188,7 @@
                                         </div>
                                     </template>
                                     <template v-if="column.dataIndex === 'amount'">
-                                        {{record.amount}} 件
+                                        {{record.amount}} {{ $t('in.item') }}
                                     </template>
                                     <template v-if="column.key === 'money'">
                                         {{$Util.priceUnitFilter(record.currency)}} {{$Util.countFilter(text)}}
@@ -198,19 +204,19 @@
                         <a-row class="panel-content info-container">
                             <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                                 <div class="info-item">
-                                    <div class="key">收货人</div>
+                                    <div class="key">{{ $t('n.consignee') }}</div>
                                     <div class="value">{{waybillOut.receiver || '-'}}</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="key">收货地址</div>
+                                    <div class="key">{{ $t('d.address') }}</div>
                                     <div class="value">{{waybillOut.receiver_address || '-'}}</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="key">联系方式</div>
+                                    <div class="key">{{ $t('n.phone') }}</div>
                                     <div class="value">{{waybillOut.receiver_phone || '-'}}</div>
                                 </div>
                             </a-col>
-                            <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
+<!--                            <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                                 <div class="info-item">
                                     <div class="key">物流状态</div>
                                     <div class="value">{{AFTERSALES.WAYBILL_STATUS_MAP[detail.deliver_status] || '-'}}</div>
@@ -222,7 +228,7 @@
                                         <template v-else>暂无物流信息</template>
                                     </div>
                                 </div>
-                            </a-col>
+                            </a-col>-->
                         </a-row>
                     </a-collapse-panel>
                 </template>
@@ -263,16 +269,6 @@ import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 const STATUS = Core.Const.AFTERSALES.STATUS;
 const TYPE = Core.Const.AFTERSALES.TYPE;
 
-const itemColumns = [
-    { title: '商品', dataIndex: 'item' },
-    { title: '数量', dataIndex: 'amount'},
-    { title: '品号', dataIndex: ['item', "model"] },
-    { title: '编号', dataIndex: ['item', "code"] },
-    { title: '规格', dataIndex: ['item', 'attr_list'], key: 'spec' },
-    { title: '单价', dataIndex: 'unit_price', key: 'money'},
-    { title: '售价', dataIndex: 'price', key: 'money'},
-    { title: '实际金额（元）', dataIndex: 'charge', key: 'money'},
-]
 
 export default {
     name: 'AftersalesDetail',
@@ -296,17 +292,26 @@ export default {
             activeKey: ['AftersalesInfo'],
             // activeKey: ['AftersalesInfo', 'ItemInInfo', 'WaybillInInfo', 'ItemOutInfo', 'WaybillOutInfo'],
             stepsList: [
-                {status: '0', title: '提交售后单'},
-                {status: '100', title: '上级审核'},
-                {status: '200', title: '处理中'},
-                {status: '600', title: '售后完成'},
+                {status: '0', zh: '提交售后单',en: 'Submit after-sale documents'},
+                {status: '100', zh: '上级审核', en: 'Superior review',},
+                {status: '200', zh: '处理中', en: 'In process'},
+                {status: '600', zh: '售后完成', en: 'After-sale completion'},
             ],
             // 售后单详情
             id: '',
             detail: {},
             refund: {},
             // 商品信息
-            itemColumns: itemColumns,
+            itemColumns: [
+                { title: 'n.name', dataIndex: 'item' },
+                { title: 'i.amount', dataIndex: 'amount'},
+                { title: 'i.number', dataIndex: ['item', "model"] },
+                { title: 'i.code', dataIndex: ['item', "code"] },
+                { title: 'i.spec', dataIndex: ['item', 'attr_list'], key: 'spec' },
+                { title: 'p.unit_price', dataIndex: 'unit_price', key: 'money'},
+                { title: 'p.total', dataIndex: 'price', key: 'money'},
+                { title: 'af.actual', dataIndex: 'charge', key: 'money'},
+            ],
             itemInList: [],
             itemOutList: [],
             // 物流信息
@@ -340,8 +345,8 @@ export default {
                 case STATUS.AUDIT_FAIL: return 0
                 case STATUS.CANCEL:
                     this.stepsList = [
-                        {status: '0', title: '售后单创建'},
-                        {status: '100', title: '取消'},
+                        {status: '0', zh: '售后单创建', en: 'Creation'},
+                        {status: '100', zh: '取消', en: 'Cancel'},
                     ]; return 1
                 default: return 0
 
@@ -516,14 +521,15 @@ export default {
         handleSubmit() {
             let _this = this
             this.$confirm({
-                title: '确认要提交审核吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('pop_up.sure_audit'),
+                okText: _this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Aftersales.submit({
                         id: _this.id
                     }).then(res => {
-                        _this.$message.success('提交成功')
+                        _this.$message.success(_this.$t('pop_up.save_success'))
                         _this.getOrderDetail()
                     }).catch(err => {
                         console.log('handleCancel err', err)

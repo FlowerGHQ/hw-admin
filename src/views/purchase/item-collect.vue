@@ -5,7 +5,7 @@
     </a-select>
     <div class="list-container shop-cart-container">
         <div class="title-area">
-            <div class="shop-area">购物车</div>
+            <div class="shop-area">{{ $t('i.shopping') }}</div>
         </div>
         <div class="list-content">
             <div class="list-item" v-for="item of shopCartList" :key="item.id">
@@ -14,16 +14,16 @@
                     <div class="name" @click="routerChange('detail', item.item)">{{item.item ? item.item.name : '-'}}</div>
                     <div class="sub">{{item.item ? item.item.code : '-'}}</div>
                     <div class="spec" v-if='item.item && item.item.attr_list'>
-                        <span>规格：</span>{{$Util.itemSpecFilter(item.item.attr_list)}}
+                        <span>{{ $t('i.spec') }}：</span>{{$Util.itemSpecFilter(item.item.attr_list)}}
                     </div>
                     <span class="count" v-if="!item.editMode" @click="handleCountEditShow(item)">x{{item.amount}}</span>
                     <div class="count-edit" v-else>
                         <a-input-number v-model:value="editCount" :min="1" :precision="0" autofocus @blur="handleCountEditBlur(item)"/>
                     </div>
                     <div class="btns">
-                        <a-button type="link" class="disabled" v-if="item.item && item.item.in_favorite">已收藏</a-button>
-                        <a-button type="link" @click="handleMoveToFavorite(item)" v-else>移至收藏</a-button>
-                        <a-button type="link" @click="handleShopCartRemove(item)">删除</a-button>
+                        <a-button type="link" class="disabled" v-if="item.item && item.item.in_favorite">{{ $t('i.favorited') }}</a-button>
+                        <a-button type="link" @click="handleMoveToFavorite(item)" v-else>{{ $t('i.move') }}</a-button>
+                        <a-button type="link" @click="handleShopCartRemove(item)">{{ $t('def.delete') }}</a-button>
                     </div>
                 </div>
                 <div class="price">
@@ -33,7 +33,7 @@
             <SimpleImageEmpty v-if="!shopCartList.length" desc='您的购物车中暂无商品'/>
         </div>
         <div class="settle-content" v-if="shopCartList.length">
-            <div class="title-area">摘要</div>
+            <div class="title-area">{{ $t('i.summary') }}</div>
             <div class="settle-item" v-for="item of shopCartList" :key="item.id">
                 <p class="name">
                     {{item.item ? item.item.name : '-'}}
@@ -44,14 +44,14 @@
                 <span class="price">{{currency}} {{$Util.countFilter(item.item[priceKey + unitMap[currency].key] * item.amount)}}</span>
             </div>
             <div class="settle-item sum">
-                <p class="name">总计</p>
+                <p class="name">{{ $t('p.total') }}</p>
                 <span class="price">{{currency}} {{sum_price}}</span>
             </div>
-            <a-button type="primary" ghost @click="routerChange('settle')">结算</a-button>
+            <a-button type="primary" ghost @click="routerChange('settle')">{{ $t('i.settle') }}</a-button>
         </div>
     </div>
     <div class="list-container favorite-container">
-        <div class="title-area">收藏夹</div>
+        <div class="title-area">{{ $t('i.favorite') }}</div>
         <div class="list-content">
             <div class="list-item" v-for="item of favoriteList" :key="item.id">
                 <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
@@ -59,13 +59,13 @@
                     <div class="name" @click="routerChange('detail', item.item)">{{item.item ? item.item.name : '-'}}</div>
                     <div class="sub">{{item.item ? item.item.code : '-'}}</div>
                     <div class="spec" v-if='item.item && item.item.attr_list'>
-                        <span>规格：</span>{{$Util.itemSpecFilter(item.item.attr_list)}}
+                        <span>{{ $t('i.spec') }}：</span>{{$Util.itemSpecFilter(item.item.attr_list)}}
                     </div>
                     <div></div><!-- 调整结构用 不要删 --><div></div>
                     <div class="btns">
-                        <a-button type="link" @click="handleFavoriteRemove(item)">删除收藏</a-button>
-                        <a-button type="link" class="disabled" v-if="item.item.in_shopping_cart">已在购物车中</a-button>
-                        <a-button type="primary" ghost @click="handleMoveToShopCart(item)" v-else>添加到购物车</a-button>
+                        <a-button type="link" @click="handleFavoriteRemove(item)">{{ $t('def.delete') }}</a-button>
+                        <a-button type="link" class="disabled" v-if="item.item.in_shopping_cart">{{ $t('i.already') }}</a-button>
+                        <a-button type="primary" ghost @click="handleMoveToShopCart(item)" v-else>{{ $t('i.cart') }}</a-button>
                     </div>
                 </div>
                 <div class="price">
@@ -186,14 +186,14 @@ export default {
             console.log("handleMoveToFavorite item", item)
             let _this = this
             this.$confirm({
-                title: `确定要将商品${item.item ? '['+item.item.name+']' : ''}移动至收藏夹吗？`,
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('pop_up.move_favorites'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
                 async onOk() {
                     try {
                         await Core.Api.Favorite.add({item_id: item.item_id,price: item.price})
                         await Core.Api.ShopCart.remove({id: item.id})
-                        _this.$message.success('操作成功')
+                        _this.$message.success(this.$t('pop_up.operate'))
                     } catch(err) {
                         console.log('handleMoveToFavorite err:', err)
                     } finally {
@@ -209,7 +209,7 @@ export default {
                 amount: 1,
                 price: item.price
             }).then(res => {
-                this.$message.success('添加成功')
+                this.$message.success(this.$t('pop_up.add'))
                 this.getList()
             })
         },
@@ -217,13 +217,13 @@ export default {
         handleFavoriteRemove(item) {
             let _this = this
             this.$confirm({
-                title: `确定要将商品${item.item ? '['+item.item.name+']' : ''}移出收藏夹吗？`,
-                okText: '确定',
+                title: _this.$t('pop_up.item_favorites'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Favorite.remove({id:item.id}).then(() => {
-                        _this.$message.success('移出成功')
+                        _this.$message.success(_this.$t('pop_up.move'))
                         _this.getList()
                     })
                 },
@@ -233,13 +233,13 @@ export default {
         handleShopCartRemove(item) {
             let _this = this
             this.$confirm({
-                title: `确定要将商品${item.item ? '['+item.item.name+']' : ''}移出购物车吗？`,
-                okText: '确定',
+                title: _this.$t('pop_up.item'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.ShopCart.remove({id:item.id}).then(() => {
-                        _this.$message.success('移出成功')
+                        _this.$message.success(_this.$t('pop_up.move'))
                         _this.getList()
                     })
                 },
