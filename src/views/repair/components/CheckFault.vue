@@ -164,7 +164,7 @@ export default {
                 {title: 'n.name', dataIndex: 'name', key: 'item'},
                 {title: 'i.code', dataIndex: 'code', key: 'item'},
                 {title: 'i.amount', key: 'amount'},
-                {title: 'i.price', dataIndex: 'price'},
+                {title: 'i.unit_price', dataIndex: 'price'},
                 {title: 'i.total_price', key: 'total_price'},
                 {title: 'n.type', key: 'type'},
                 {title: 'r.warehouse', dataIndex: 'new'},

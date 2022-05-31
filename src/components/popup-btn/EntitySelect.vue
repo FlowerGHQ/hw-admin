@@ -7,15 +7,15 @@
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
-                        <div class="key"><span>实例号:</span></div>
+                        <div class="key"><span>{{ $t('v.number') }}:</span></div>
                         <div class="value">
-                            <a-input placeholder="请输入商品编码" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">查询</a-button>
-                    <a-button @click="handleSearchReset">重置</a-button>
+                    <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
+                    <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
             <div class="table-container">
@@ -36,8 +36,8 @@
                     />
                 </div>
                 <div class="btn-area">
-                    <a-button @click="handleModalClose">取消</a-button>
-                    <a-button @click="handleConfirm" type="primary">确定</a-button>
+                    <a-button @click="handleModalClose">{{ $t('def.cancel') }}</a-button>
+                    <a-button @click="handleConfirm" type="primary">{{ $t('def.sure') }}</a-button>
                 </div>
             </div>
         </template>
@@ -111,13 +111,13 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: '商品名称', dataIndex: ['item','name'], key: 'item'},
-                {title: '商品实例号', dataIndex: 'uid', key: 'item'},
-                {title: '商品分类', dataIndex: ['item','category','name'], key: 'item'},
-                {title: '商品品号', dataIndex: ['item','model'], key: 'item'},
-                {title: '商品编码', dataIndex: ['item','code'], key: 'item'},
-                {title: '商品规格', dataIndex: ['item','attr_list'], key: 'spec'},
-                {title: '到港时间', dataIndex: 'arrival_time', key: 'time'},
+                {title: this.$t('n.name'), dataIndex: ['item','name'], key: 'item'},
+                {title: this.$t('v.number'), dataIndex: 'uid', key: 'item'},
+                {title: this.$t('i.categories'), dataIndex: ['item','category','name'], key: 'item'},
+                {title: this.$t('i.number'), dataIndex: ['item','model'], key: 'item'},
+                {title: this.$t('i.code'), dataIndex: ['item','code'], key: 'item'},
+                {title: this.$t('i.spec'), dataIndex: ['item','attr_list'], key: 'spec'},
+                {title: this.$t('r.arrival_time'), dataIndex: 'arrival_time', key: 'time'},
             ]
             return tableColumns
         },
