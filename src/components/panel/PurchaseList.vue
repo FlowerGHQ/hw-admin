@@ -7,6 +7,9 @@
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :pagination='false'>
+                <template #headerCell="{title}">
+                    {{ $t(title) }}
+                </template>
                 <template #bodyCell="{ column, text , record}">
                     <template v-if="column.dataIndex === 'sn'">
                         <a-tooltip placement="top" :title='text'>
@@ -18,12 +21,12 @@
                     </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text,'color')">
-                            {{$Util.purchaseStatusFilter(text)}}
+                            {{$Util.purchaseStatusFilter(text, $i18n.locale)}}
                         </div>
                     </template>
                     <template v-if="column.dataIndex === 'payment_status'">
                         <div class="status status-bg status-tag" :class="$Util.paymentStatusFilter(text,'color')">
-                            {{$Util.paymentStatusFilter(text)}}
+                            {{$Util.paymentStatusFilter(text, $i18n.locale)}}
                         </div>
                     </template>
                     <template v-if="column.dataIndex === 'flag_review'">
@@ -47,8 +50,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="handleRecreate(record)"> <i class="icon i_cart"/> 再次购买</a-button>
-                        <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_detail"/> 详情</a-button>
+                        <a-button type='link' @click="handleRecreate(record)"> <i class="icon i_cart"/>{{ $t('p.buy_again') }}</a-button>
+                        <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_detail"/> {{ $t('def.detail') }}</a-button>
                     </template>
                 </template>
             </a-table>
@@ -117,14 +120,14 @@ export default {
             },
 
             tableColumns: [
-                { title: this.$t('p.order_number'), dataIndex: 'sn', },
-                { title: this.$t('p.price'), dataIndex: 'price' },
-                { title: this.$t('n.state'), dataIndex: 'status' },
-                { title: this.$t('p.order_time'), dataIndex: 'create_time', key: 'time' },
-                { title: this.$t('p.payment_status'), dataIndex: 'payment_status' },
-                { title: this.$t('p.payment_time'), dataIndex: 'pay_time', key: 'time' },
-                { title: this.$t('p.complete_time'), dataIndex: 'close_time', key: 'time' },
-                { title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
+                { title: 'p.order_number', dataIndex: 'sn', },
+                { title: 'p.price', dataIndex: 'price' },
+                { title: 'n.state', dataIndex: 'status' },
+                { title: 'p.order_time', dataIndex: 'create_time', key: 'time' },
+                { title: 'p.payment_status', dataIndex: 'payment_status' },
+                { title: 'p.payment_time', dataIndex: 'pay_time', key: 'time' },
+                { title: 'p.complete_time', dataIndex: 'close_time', key: 'time' },
+                { title: 'def.operate', key: 'operation', fixed: 'right'}
             ],
             tableData: [],
         };

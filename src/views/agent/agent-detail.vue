@@ -158,35 +158,16 @@ export default {
                 this.loading = false;
             });
         },
-        // 删除 零售商
-        handleDelete(id) {
-            let _this = this;
-            this.$confirm({
-                title: '确定要删除该零售商吗？',
-                okText: '确定',
-                okType: 'danger',
-                cancelText: '取消',
-                onOk() {
-                    // console.log(this.agent_id);
-                    Core.Api.Agent.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
-                        _this.routerChange('list');
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
-                },
-            });
-        },
         handleStatusChange() {
             let _this = this;
             this.$confirm({
-                title: `确定要${_this.detail.status ? '禁用' : '启用'}该零售商吗？`,
-                okText: '确定',
+                title: _this.$t('pop_up.sure') + `${_this.detail.status ? _this.$t('pop_up.disable') : _this.$t('pop_up.enable')}` + _this.$t('pop_up.agent'),
+                okText: this.$t('pop_up.yes'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Agent.updateStatus({id:_this.detail.id}).then(() => {
-                        _this.$message.success(`${_this.detail.status ? '禁用' : '启用'}成功`);
+                        _this.$message.success(`${_this.detail.status ? _this.$t('pop_up.success_disable') : _this.$t('pop_up.success_enable')}` + _this.$t('pop_up.success'));
                         _this.getAgentDetail();
                     }).catch(err => {
                         console.log("handleStatusChange err", err);

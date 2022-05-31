@@ -158,14 +158,14 @@ export default {
             filteredInfo = filteredInfo || {};
             let tableColumns = [
                 { title: this.$t('n.name'), dataIndex: 'name' },
-                { title: this.$t('n.parent_name'), dataIndex: 'parent_name' },
+                { title: this.$t('n.distributor'), dataIndex: 'parent_name' },
                 { title: this.$t('d.short_name'), dataIndex: 'short_name' },
                 { title: this.$t('n.country'), dataIndex: 'country', key: 'country' },
                 { title: this.$t('n.contact'), dataIndex: 'contact', key: 'item'},
                 { title: this.$t('n.phone'), dataIndex: 'phone', key: 'item'},
                 { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('n.state'), dataIndex: 'status', key: 'status',
-                    filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [1] },
+                    filters: this.$Util.tableFilterFormat( Core.Const.ORG_STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [1] },
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             // if (this.$auth('ADMIN')) {
@@ -282,13 +282,13 @@ export default {
         handleStatusChange(record) {
             let _this = this;
             this.$confirm({
-                title: `确定要${record.status ? '禁用' : '启用'}该零售商吗？`,
-                okText: '确定',
+                title: _this.$t('pop_up.sure') + `${record.status ? _this.$t('pop_up.disable') : _this.$t('pop_up.enable')}` + _this.$t('pop_up.agent'),
+                okText: this.$t('pop_up.yes'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Agent.updateStatus({id:record.id}).then(() => {
-                        _this.$message.success(`${record.status ? '禁用' : '启用'}成功`);
+                        _this.$message.success(`${record.status ?  _this.$t('pop_up.success_disable') : _this.$t('pop_up.success_enable')}` + _this.$t('pop_up.success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleStatusChange err", err);
