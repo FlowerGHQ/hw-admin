@@ -808,7 +808,7 @@ const routes = [
 			title: '生产管理',
 			title_en: 'Inventories',
 			icon: 'i_s_warehouse',
-			roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+			roles: [LOGIN_TYPE.ADMIN],
 		},
 		children: [
 			{
