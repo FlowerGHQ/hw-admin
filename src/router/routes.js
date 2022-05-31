@@ -860,6 +860,16 @@ const routes = [
                     auth: ['manufacture.list'],
                 }
             },
+            {
+                path: 'calculate-production-amount',
+                name: 'CalculateProductionAmount',
+                component: () =>
+                    import ('@/views/production/calculate-production-amount.vue'),
+                meta: {
+                    title: '成套计算',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
         ]
     },
     { // 仓库管理

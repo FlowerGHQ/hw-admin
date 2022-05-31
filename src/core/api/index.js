@@ -379,6 +379,7 @@ const apiList = {
         detail: ['PostJson', 'production-order/detail'],
         detailByUid: ['PostJson', 'production-order/detail-by-uid'],
         cancel: ['PostJson', 'production-order/cancel'],
+        calculateAmount: ['PostJson', 'production-order/calculate-production-amount'], //根据bom和仓库计算生产数量
     },
     Material: { // 物料
         save: ['PostJson', 'material/save'],
@@ -409,6 +410,9 @@ const apiList = {
         delete: ['PostJson', 'bom/delete'],
         detailByItemId: ['PostJson', 'bom/detail-by-item-id'],
         invoiceBom: ['PostJson', 'bom/create-invoice-of-bom'], //根据bom生成领料单
+
+
+
     },
     BomItem: {  // bom明细
         save: ['PostJson', 'bom-item/save'],
