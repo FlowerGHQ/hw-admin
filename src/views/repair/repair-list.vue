@@ -555,7 +555,7 @@ export default {
         handleModalSubmit() { // 审核提交
             this.loading = true;
             Core.Api.Repair[this.modalType](this.editForm).then(() => {
-                this.$message.success('操作成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.handleModalClose()
                 this.getTableData()
             }).finally(() => {

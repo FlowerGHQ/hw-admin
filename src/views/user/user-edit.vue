@@ -156,23 +156,23 @@ export default {
             let apiName = form.id ? "update" : "save"
             if (!form.id) {
                 if (!form.name) {
-                    return this.$message.warning('请输入员工名')
+                    return this.$message.warning(this.$t('def.enter'))
                 }
                 if (!form.username) {
-                    return this.$message.warning('请输入账号')
+                    return this.$message.warning(this.$t('def.enter'))
                 }
                 if (!form.password) {
-                    return this.$message.warning('请输入密码')
+                    return this.$message.warning(this.$t('def.enter'))
                 }
             }
             if (!form.phone) {
-                return this.$message.warning('请输入员工手机号')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.email) {
-                return this.$message.warning('请输入员工邮箱')
+                return this.$message.warning(this.$t('def.enter'))
             }
             Core.Api.Account[apiName](form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)

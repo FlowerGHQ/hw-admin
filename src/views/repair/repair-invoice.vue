@@ -2,12 +2,12 @@
 <div id="RepairInvoice" class='list-container'>
     <div class="content">
         <div class="title-content">
-            <div class="title">结算清单 Invoice</div>
-            <p>维修帐类</p>
+            <div class="title">{{ $t('r.settlement_list') }}</div>
+            <p>{{ $t('r.warranty') }}</p>
             <span>{{ $Util.repairServiceFilter(detail.service_type,  $i18n.locale) }}</span>
-            <p>结算编号</p>
+            <p>{{ $t('r.serial_number') }}</p>
             <span>{{detail.uid || '-'}}</span>
-            <p>交易日期</p>
+            <p>{{ $t('r.date') }}</p>
             <span>{{$Util.timeFormat(detail.create_time, 'YYYY/MM/DD') || '-'}}</span>
         </div>
         <div class="info-content">

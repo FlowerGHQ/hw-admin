@@ -44,8 +44,8 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('wa.address') }}：</div>
                     <div class="value">
-                        <ChinaAddressCascader @select='handleAddressSelect' :default-address='defAddr' v-if="$auth('ADMIN')"/>
-                        <AddressCascader v-model:value="areaMap" :def-area='area' v-else/>
+<!--                        <ChinaAddressCascader @select='handleAddressSelect' :default-address='defAddr' v-if="$auth('ADMIN')"/>-->
+                        <AddressCascader v-model:value="areaMap" :def-area='area' :default-address='defAddr'/>
                     </div>
                 </div>
                 <div class="form-item">
@@ -85,9 +85,6 @@ export default {
             form: {
                 id: '',
                 name: '',
-                province: '',
-                city: '',
-                county: '',
                 address: '',
                 type: '',
                 contact_phone: '',
@@ -97,8 +94,11 @@ export default {
             areaMap: {},
             area: {
                 country: '',
+                country_en: '',
                 province: '',
+                province_en: '',
                 city: '',
+                city_en: '',
                 county: '',
             }
         };
@@ -156,20 +156,24 @@ export default {
             if (!form.address) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!this.$auth('ADMIN') && !Core.Util.isEmptyObj(this.areaMap)) {
-                area = {}
-                for (const key in this.areaMap) {
-                    area[key] = this.areaMap[key].name
+            if (!Core.Util.isEmptyObj(this.areaMap)) {
+                console.log('areaMap2222',this.areaMap)
+                area.country = this.areaMap.country.name
+                area.country_en = this.areaMap.country.name_en
+                area.city = this.areaMap.city.name
+                area.city_en = this.areaMap.city.name_en
+                if (this.areaMap.province) {
+                    area.province = this.areaMap.province.name
+                    area.province_en = this.areaMap.province.name_en
+                }
+                if (this.areaMap.county) {
+                    area.county = this.areaMap.county.name
                 }
             }
             if (!this.$auth('ADMIN') && !(Object.values(area).filter(i => i).length)) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!this.$auth('ADMIN')) {
-                form.province = ''
-                form.city = ''
-                form.county = ''
-            }
+            console.log('area12333333', area)
             Core.Api.Warehouse.save({
                 ...form,
                 ...area,

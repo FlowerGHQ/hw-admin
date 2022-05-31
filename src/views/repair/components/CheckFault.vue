@@ -2,9 +2,9 @@
 <div class="CheckFault">
     <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
         <template #expandIcon><i class="icon i_expan_l"/></template>
-        <a-collapse-panel key="affirm" header="故障确认" class="gray-collapse-panel">
+        <a-collapse-panel key="affirm" :header="$t('r.problem')" class="gray-collapse-panel">
             <div class="panel-content affirm">
-                <div class="title"><i class="icon i_warning"/>共{{ faultSelect.length }}个故障</div>
+                <div class="title"><i class="icon i_warning"/>{{ $t('n.all_total') }}&nbsp;{{ faultSelect.length }}&nbsp;{{ $t('r.faults') }}</div>
                 <a-checkbox-group class="fault_select" v-model:value="faultSelect" @change="handleFaultSelect">
                     <a-checkbox v-for="(value,key) of faultMap" :key='key' :value='key'>{{ value }}</a-checkbox>
                 </a-checkbox-group>
@@ -17,13 +17,16 @@
             <div class="panel-content change">
                 <div class="fault-item" v-for="fault of faultSelect" :key="fault">
                     <div class="fault-title">
-                        <span class="fault-name">故障：{{ faultMap[fault] }}</span>
+                        <span class="fault-name">{{ $t('r.fault') }}：{{ faultMap[fault] }}</span>
                         <ItemSelect @select="handleAddFailItem" :fault-name="fault"
                             :disabled-checked='failData[fault].map(i => i.id)'
-                            btn-type='primary' btn-text="添加商品" btn-class="fault-btn" v-if="$auth('repair-order.save')"/>
+                            btn-type='primary' :btn-text="$t('i.add')" btn-class="fault-btn" v-if="$auth('repair-order.save')"/>
                     </div>
                     <a-table :columns="tableColumns" :data-source="failData[fault]" :scroll="{ x: true }"
                         :row-key="record => record.id" :pagination='false' size="small">
+                        <template #headerCell="{title}">
+                            {{ $t(title) }}
+                        </template>
                         <template #bodyCell="{ column , record ,index, text}">
                             <template v-if="column.key === 'item'">
                                 {{ text || '-' }}
@@ -35,7 +38,7 @@
 
                             <template v-if="column.key === 'amount'">
                                 <a-input-number v-model:value="record.amount" style="width: 66px;"
-                                    :min="1" :precision="0" placeholder="请输入" @change="handleItemAmountChange(fault, index)"/> 件
+                                    :min="1" :precision="0" placeholder="请输入" @change="handleItemAmountChange(fault, index)"/> {{ $t('in.item') }}
                             </template>
 
                             <template v-if="column.key === 'total_price'">
@@ -44,7 +47,7 @@
 
                             <template v-if="column.key === 'type'">
                                 <a-select v-model:value="record.type" placeholder="维修类型" @change="handleRepairTypeChange(record)" style="width: 100px;">
-                                    <a-select-option v-for="(val,key) in repairTypeMap" :key="key" :value="Number(key)">{{ val }}
+                                    <a-select-option v-for="item of repairTypeMap" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}
                                     </a-select-option>
                                 </a-select>
                             </template>
@@ -52,12 +55,12 @@
                             <template v-if="column.dataIndex === 'bad'">
                                 <template v-if="record.type === REPAIR_TYPE.REPLACE && detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME">
                                     <template v-if="warehouseFailList.length">
-                                        <a-select v-model:value="record.recycle_warehouse_id" placeholder="请选择故障仓" style="width: 120px;">
+                                        <a-select v-model:value="record.recycle_warehouse_id" :placeholder="$t('def.select')" style="width: 120px;">
                                             <a-select-option v-for="item of warehouseFailList" :key="item.id" :value="item.id">{{ item.name }}
                                             </a-select-option>
                                         </a-select>
                                     </template>
-                                    <a-button v-else type='link' @click="routerChange('warehouse')"><i class="icon i_add"/>新建仓库</a-button>
+                                    <a-button v-else type='link' @click="routerChange('warehouse')"><i class="icon i_add"/>{{ $t('wa.add') }}</a-button>
                                 </template>
                                 <template v-else>-</template>
                             </template>
@@ -65,19 +68,19 @@
                             <template v-if="column.dataIndex === 'new'">
                                 <template v-if="record.type !== REPAIR_TYPE.TRANSFER">
                                     <template v-if="record.warehouse_out_list.length">
-                                        <a-select v-model:value="record.warehouse_id" placeholder="请选择换新仓" style="width: 120px;margin-right: 10px;">
+                                        <a-select v-model:value="record.warehouse_id" :placeholder="$t('def.select')" style="width: 120px;margin-right: 10px;">
                                             <a-select-option v-for="item of record.warehouse_out_list" :key="item.id" :value="item.id">
                                                 <span>{{ item.name }}(<span :style="item.disabled ? 'color: red;' : ''">{{item.stock }}</span>)</span>
                                             </a-select-option>
                                         </a-select>
                                         <template v-if="needPurchase(record)">
-                                            <a-button type='link' v-if="detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME"
-                                                @click="routerChange('transfer')"><i class="icon i_s_warehouse"/>调货</a-button>
+<!--                                            <a-button type='link' v-if="detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME"
+                                                @click="routerChange('transfer')"><i class="icon i_s_warehouse"/>调货</a-button>-->
                                             <a-button type='link' v-if="detail.service_type === SERVICE_TYPE.OUT_REPAIR_TIME"
-                                                @click="routerChange('purchase')"><i class="icon i_goods"/>采购</a-button>
+                                                @click="routerChange('purchase')"><i class="icon i_goods"/>{{ $t('r.purchase') }}</a-button>
                                         </template>
                                     </template>
-                                    <a-button v-else type='link' @click="routerChange('warehouse')">新建仓库</a-button>
+                                    <a-button v-else type='link' @click="routerChange('warehouse')">{{ $t('wa.add') }}</a-button>
                                 </template>
                                 <template v-else>-</template>
                             </template>
@@ -94,12 +97,12 @@
                             </template>
 
                             <template v-if="column.dataIndex === 'operation'">
-                                <a-button type="link" class="danger" @click="handleFailItemDelete(index, fault)"><i class="icon i_delete"/>移除</a-button>
+                                <a-button type="link" class="danger" @click="handleFailItemDelete(index, fault)"><i class="icon i_delete"/>{{ $t('def.remove') }}</a-button>
                             </template>
                         </template>
                     </a-table>
                 </div>
-                <SimpleImageEmpty desc='请先选择故障类型' v-if='!faultSelect.length'/>
+                <SimpleImageEmpty :desc="$t('r.type')" v-if='!faultSelect.length'/>
             </div>
         </a-collapse-panel>
     </a-collapse>
@@ -158,17 +161,17 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: '商品名称', dataIndex: 'name', key: 'item'},
-                {title: '商品编号', dataIndex: 'code', key: 'item'},
-                {title: '数量', key: 'amount'},
-                {title: '单价', dataIndex: 'price'},
-                {title: '总价', key: 'total_price'},
-                {title: '维修类型', key: 'type'},
-                {title: '良品仓', dataIndex: 'new'},
-                {title: '操作', dataIndex: 'operation'},
+                {title: 'n.name', dataIndex: 'name', key: 'item'},
+                {title: 'i.code', dataIndex: 'code', key: 'item'},
+                {title: 'i.amount', key: 'amount'},
+                {title: 'i.price', dataIndex: 'price'},
+                {title: 'i.total_price', key: 'total_price'},
+                {title: 'n.type', key: 'type'},
+                {title: 'r.warehouse', dataIndex: 'new'},
+                {title: 'def.operate', dataIndex: 'operation'},
             ]
             if (this.detail.service_type == SERVICE_TYPE.IN_REPAIR_TIME) {
-                columns.splice(6, 0, {title: '回收仓', dataIndex: 'bad'})
+                columns.splice(6, 0, {title: 'r.defective', dataIndex: 'bad'})
                 columns.splice(3, 2)
             }
             return columns
@@ -348,15 +351,15 @@ export default {
             console.log('this.faultSelect: ', this.faultSelect);
             let itemList = []
             if (!this.faultSelect.length) {
-                return this.$message.warning('请选择故障')
+                return this.$message.warning(this.$t('def.enter'))
             }
             for (const fault of this.faultSelect) {
                 if (this.failData[fault].length == 0) {
-                    return this.$message.warning('请添加商品')
+                    return this.$message.warning(this.$t('def.enter'))
                 }
                 for (const item of this.failData[fault]) {
                     if (!item) {
-                        return this.$message.warning('请添加商品')
+                        return this.$message.warning(this.$t('def.enter'))
                     }
                     item.item_fault_id = Number(fault)
 
@@ -374,7 +377,7 @@ export default {
                     }
                     console.log('item.is_stock: ', item.is_stock);
                     if (!item.is_stock && !item.change_to_transfer) { // 仓库货量不足
-                        this.$message.warning('仓库库存不足,请及时调仓或采购')
+                        this.$message.warning(this.$t('r.warn'))
                     }
                     item.price = Math.round(item.price * 100)
                     item.charge = item.price
@@ -387,7 +390,7 @@ export default {
                 item_list: itemList,
                 store_id: this.transferStoreId,
             }).then(() => {
-                this.$message.success('操作成功');
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.$emit('submit')
             })
         },

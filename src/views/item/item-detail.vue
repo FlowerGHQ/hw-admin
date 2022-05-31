@@ -311,7 +311,7 @@ export default {
                 cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Item.setIndep({id: record.id}).then(() => {
-                        _this.$message.success('操作成功');
+                        _this.$message.success(_this.$t('pop_up.save_success'))
                         _this.getSpecList();
                     }).catch(err => {
                         console.log("handleIndepChange err", err);
