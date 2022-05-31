@@ -548,7 +548,7 @@ export default {
                     Core.Api.Aftersales.applyRefund({
                         id: _this.id
                     }).then(res => {
-                        _this.$message.success('操作成功')
+                        _this.$message.success(_this.$t('pop_up.save_success'))
                         _this.getOrderDetail('refund')
                     }).catch(err => {
                         console.log('handleCancel err', err)

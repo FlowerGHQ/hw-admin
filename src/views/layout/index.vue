@@ -271,22 +271,22 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             console.log('handleLogin form:', form)
             if (!form.old_password) {
-                return this.$message.warning('请输入旧密码')
+                return this.$message.warning(this.$t('u.old_password'))
             }
             if (!form.password) {
-                return this.$message.warning('请输入新密码')
+                return this.$message.warning(this.$t('u.new_password'))
             }
             if (!form.new_password) {
-                return this.$message.warning('请再次确认密码')
+                return this.$message.warning(this.$t('u.again'))
             }
             if (this.form.new_password !== this.form.password) {
-                this.$message.warning('两次密码输入不一致')
+                this.$message.warning(this.$t('u.not'))
                 return
             }
 
             this.loading = true;
             Core.Api.Common.updatePwd(this.form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.handleEditClose();
             }).catch(err => {
                 console.log('handleSubmit err:', err)

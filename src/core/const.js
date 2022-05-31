@@ -344,9 +344,10 @@ let Const = {
             TRANSFER: 3,
         },
         TYPE_MAP: {
-            1: '新增零件',
-            2: '更换零件',
-            3: '维修转单',
+            '1':  { key: 1, zh: '新增零件', en: 'New parts' },
+            '2':  { key: 2, zh: '更换零件', en: 'Replace' },
+            // '3':  { key: 3, zh: '维修转单', en: '1' },
+
         },
     },
     ACTION_LOG: { // 操作记录
@@ -356,7 +357,18 @@ let Const = {
             AFTER_SALES_ORDER: 40,
         },
         TYPE_MAP: {
-            201: '维修单创建',
+            '201': {key: 201, zh: '维修单创建', en: 'Create repair order'},
+            '202': {key: 202, zh: '维修单信息完善/修改', en: 'Information improvement/modification'},
+            '204': {key: 204, zh: '维修单删除', en: 'Deleted'},
+            '205': {key: 205, zh: '维修单取消', en: 'Canceled'},
+            '212': {key: 212, zh: '维修单审核', en: 'Review'},
+            '301': {key: 301, zh: '维修检测', en: 'Detection'},
+            '213': {key: 213, zh: '增加故障零件', en: 'Add faulty parts'},
+            '215': {key: 215, zh: '删除故障零件', en: 'Deleted faulty parts'},
+            '216': {key: 216, zh: '维修完成', en: 'Repair is complete'},
+            '217': {key: 217, zh: '结算完成', en: 'Settlement completed'},
+            // '218': {key: 218, zh: '订单转移', en: 'Parts'},
+           /* 201: '维修单创建',
             202: '维修单信息完善/修改',
             204: '维修单删除',
             205: '维修单取消',
@@ -366,7 +378,7 @@ let Const = {
             215: '删除故障零件',
             216: '维修完成',
             217: '结算完成',
-            218: '订单转移',
+            218: '订单转移',*/
         },
     },
 

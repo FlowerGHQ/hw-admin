@@ -16,7 +16,7 @@
                 <div class="key">{{ $t('n.name') }}：</div>
                 <div class="value">
                     <a-select v-model:value="form.type" :placeholder="$t('def.select')">
-                        <a-select-option v-for="item of typeMap" :key="item.key" :value="Number(item.key)">{{item[$i18n.locale]}}</a-select-option>
+                        <a-select-option v-for="item of typeMap" :key="item.key" :value="item.key">{{item[$i18n.locale]}}</a-select-option>
                     </a-select>
                 </div>
             </div>
@@ -120,16 +120,16 @@ export default {
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
             if (!form.title) {
-                return this.$message.warning('请输入消息标题')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.type) {
-                return this.$message.warning('请选择消息类型')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.content) {
-                return this.$message.warning('请输入消息内容')
+                return this.$message.warning(this.$t('def.enter'))
             }
             Core.Api.Notice.save(form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)

@@ -441,9 +441,10 @@ const Util = {
         const MAP = Const.REPAIR.FAULT_OPTIONS_MAP
         return MAP[val] || '未知'
     }, */
-    actionLogTypeFilter(val) {
+    actionLogTypeFilter(val, to= 'zh') {
         const MAP = Const.ACTION_LOG.TYPE_MAP
-        return MAP[val] || '未知'
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
     },
     /* =============== 维修单 ================ */
 

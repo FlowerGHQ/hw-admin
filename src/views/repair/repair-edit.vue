@@ -135,7 +135,8 @@
             <div class="form-item required">
                 <div class="key">{{ $t('r.address') }}</div>
                 <div class="value">
-                    <ChinaAddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
+<!--                    <ChinaAddressCascader @select='handleAddressSelect' :default-address='defAddr'/>-->
+                    <AddressCascader v-model:value="areaMap" :def-area='area' :default-address='defAddr'/>
                 </div>
             </div>
             <div class="form-item" :class="form.channel == 1 ? 'required' : ''">
@@ -214,9 +215,6 @@ export default {
                 customer_name: "",  // 相关客户-名称
                 customer_phone: "", // 客户电话
                 customer_email: "", // 客户邮箱
-                customer_province: "", // 维修地址
-                customer_city: "", // 维修地址
-                customer_county: "", // 维修地址
                 customer_address: "", // 维修地址
                 remark: "", // 工单备注
 
@@ -228,6 +226,16 @@ export default {
             },
             defAddr: [],
             arrival_time: '',
+            areaMap: {},
+            area: {
+                country: '',
+                country_en: '',
+                province: '',
+                province_en: '',
+                city: '',
+                city_en: '',
+                county: '',
+            }
         };
     },
     watch: {},
@@ -271,7 +279,7 @@ export default {
             ).then(res => {
                 this.customerList = res.list
                 if (val == 'refresh') {
-                    this.$message.success('刷新成功')
+                    this.$message.success(this.$t('r.refreshed'))
                 }
             })
         },
@@ -301,21 +309,23 @@ export default {
         // 表单提交
         async handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
-
+            let area = Core.Util.deepCopy(this.area)
             form.plan_time = form.plan_time ? dayjs(form.plan_time).unix() : 0
             // form.finish_time = form.finish_time ? dayjs(form.finish_time).unix() : 0
             console.log('handleSubmit form:', form)
+
             let checkRes = this.checkFormInput(form);
             if (!checkRes) {
                 return
             }
             let apiName = form.id ? 'update' : 'create'
-
+            console.log('area27249534',area)
             await Core.Api.Repair[apiName]({
                 ...form,
+                ...area,
                 arrival_time: this.arrival_time
             }).then(res => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('detail', res.detail)
             }).catch(err => {
                 console.log('handleSubmit err:', err)
@@ -339,16 +349,17 @@ export default {
         },
         // 检查表单输入
         checkFormInput(form) {
+
             if (!form.type) {
-                this.$message.warning('请选择工单分类')
+                return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
             if (!form.priority) {
-                this.$message.warning('请选择工单紧急程度')
+                return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
             if (!form.service_type) {
-                this.$message.warning('请选择工单帐类')
+                return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
             /* if (!form.travel_distance) {
@@ -356,35 +367,35 @@ export default {
                 return 0
             }*/
             if (!form.name) {
-                this.$message.warning('请输入工单名称')
+                return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
             if (!form.desc) {
-                this.$message.warning('请输入工单描述')
+                return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
             if (!form.channel) {
-                this.$message.warning('请选择维修方式')
+                return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
             if (!form.repair_method) {
-                this.$message.warning('请选择维修类别')
+                return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
             if (!form.vehicle_no) {
-                this.$message.warning('请输入车架号')
+                return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
             if (this.isExist === false) {
-                return this.$message.warning('请输入正确的车架号')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (form.id) {
                 if (!form.customer_id) {
-                    this.$message.warning('请选择相关客户')
+                    return this.$message.warning(this.$t('def.enter'))
                     return 0
                 }
                 if (form.channel == 1 && !form.customer_address) {
-                    this.$message.warning('请输入详细地址')
+                    return this.$message.warning(this.$t('def.enter'))
                     return 0
                 }
                 // if (!form.repair_user_id) {
@@ -392,22 +403,21 @@ export default {
                 //     return 0
                 // }
                 if (!form.customer_name) {
-                    this.$message.warning('请选择客户名称')
+                    return this.$message.warning(this.$t('def.enter'))
                     return 0
                 }
                 if (!form.customer_phone) {
-                    this.$message.warning('请选择客户电话')
+                    return this.$message.warning(this.$t('def.enter'))
                     return 0
                 }
                 if (!form.customer_email) {
-                    this.$message.warning('请输入客户邮箱')
+                    return this.$message.warning(this.$t('def.enter'))
                     return 0
                 }
-                if (!form.customer_province && !form.customer_county && !form.customer_county) {
-                    this.$message.warning('请选择客户地址')
+                if (!this.area.province && !this.area.county && !this.area.county) {
+                    return this.$message.warning(this.$t('def.enter'))
                     return 0
                 }
-
             }
             return 1
         },
@@ -415,21 +425,28 @@ export default {
         // 选择客户
         handleCustomerSelect(id) {
             let item = this.customerList.find(i => i.id === id)
+            console.log('customerList',this.customerList)
             this.form.customer_name = item.name
             this.form.customer_phone = item.phone
             this.form.customer_email = item.email
-            this.form.customer_province = item.province
-            this.form.customer_city = item.city
-            this.form.customer_county = item.county
+            this.area.country = item.country
+            this.area.country_en = item.country_en
+            this.area.province = item.province
+            this.area.province_en = item.province_en
+            this.area.city = item.city
+            this.area.city_en = item.city_en
+            this.area.county = item.county
             this.form.customer_address = item.address
-            this.defAddr = [item.province, item.city, item.county]
+            // this.defAddr = [item.country,item.province, item.city, item.county]
+            console.log('this.addr', this.defAddr)
+
         },
 
-        handleAddressSelect(address) {
-            this.form.customer_province = address[0]
-            this.form.customer_city = address[1]
-            this.form.customer_county = address[2]
-        }
+       /* handleAddressSelect(address) {
+            this.form.province = address[0]
+            this.form.city = address[1]
+            this.form.county = address[2]
+        }*/
     }
 };
 </script>

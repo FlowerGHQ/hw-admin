@@ -2,10 +2,10 @@
 <div class="CheckResult">
     <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
         <template #expandIcon><i class="icon i_expan_l"/></template>
-        <a-collapse-panel key="affirm" header="故障确认" class="gray-collapse-panel" v-if="!$auth('ADMIN')">
+        <a-collapse-panel key="affirm" :header="$t('r.problem')" class="gray-collapse-panel" v-if="!$auth('ADMIN')">
             <div class="panel-content affirm">
                 <div class="title">
-                    <i class="icon i_warning"/>共{{ faultList.length }}个故障
+                    <i class="icon i_warning"/>{{ $t('n.all_total') }}&nbsp;{{ faultList.length }}&nbsp;{{ $t('r.faults') }}
                 </div>
                 <div class="fault_select">
                     <div class="item" v-for="(value,index) of faultList" :key="index">
@@ -14,10 +14,13 @@
                 </div>
             </div>
         </a-collapse-panel>
-        <a-collapse-panel key="change" header="零部件更换" class="gray-collapse-panel">
+        <a-collapse-panel key="change" :header="$t('r.replacement_items')" class="gray-collapse-panel">
             <div class="panel-content change">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => {return JSON.stringify(record)}" :pagination='false' size="small">
+                    <template #headerCell="{title}">
+                        {{ $t(title) }}
+                    </template>
                     <template #bodyCell="{ column, record, text }">
 <!--                        <template v-if="column.dataIndex === 'item_fault_id'">
                             {{ faultMap[text] || '-' }}
@@ -29,16 +32,16 @@
                             € {{ $Util.countFilter(text) }}
                         </template>
                         <template v-if="column.dataIndex === 'amount'">
-                            {{ text }}件
+                            {{ text }} {{ $t('in.item') }}
                         </template>
                         <template v-if="column.key === 'total_price'">
                             € {{ $Util.countFilter(record.price * record.amount) }}
                         </template>
                         <template v-if="column.dataIndex === 'type'">
-                            {{repairTypeMap[text]}}
+                            {{repairTypeMap[text][$i18n.locale]}}
                         </template>
                         <template v-if="column.dataIndex === 'man_hour'">
-                            {{ $Util.countFilter(text) }}工时
+                            {{ $Util.countFilter(text) }}
                         </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
@@ -47,10 +50,10 @@
                     <template #summary v-if="detail.service_type === SERVICE_TYPE.OUT_REPAIR_TIME">
                         <a-table-summary>
                             <a-table-summary-row>
-                                <a-table-summary-cell :index="0" :col-span="4">合计</a-table-summary-cell>
-                                <a-table-summary-cell :index="1" :col-span="2">{{ total.amount }}件</a-table-summary-cell>
+                                <a-table-summary-cell :index="0" :col-span="4">{{ $t('p.total') }}</a-table-summary-cell>
+                                <a-table-summary-cell :index="1" :col-span="2">{{ total.amount }}{{ $t('in.item') }}</a-table-summary-cell>
                                 <a-table-summary-cell :index="2" :col-span="3">€ {{ $Util.countFilter(total.price) }}</a-table-summary-cell>
-                                <a-table-summary-cell :index="3" :col-span="1">{{ $Util.countFilter(total.man_hour) }}工时</a-table-summary-cell>
+                                <a-table-summary-cell :index="3" :col-span="1">{{ $Util.countFilter(total.man_hour) }}{{ $t('i.hours') }}</a-table-summary-cell>
                             </a-table-summary-row>
                         </a-table-summary>
                     </template>
@@ -105,22 +108,22 @@ export default {
         },
         tableColumns() {
             let tableColumns = [
-                {title: '维修帐类', key: 'service_type'},
-                {title: '故障原因', dataIndex: 'item_fault_name'},
-                {title: '商品名称', dataIndex: ['item','name'], key: 'item'},
-                {title: '商品编号', dataIndex: ['item','code'], key: 'item'},
-                {title: '数量', dataIndex: 'amount'},
-                {title: '单价', dataIndex: 'price'},
-                {title: '总价', key: 'total_price'},
-                {title: '维修类型', dataIndex: 'type'},
+                {title: 'r.warranty', key: 'service_type'},
+                {title: 'r.fault_cause', dataIndex: 'item_fault_name'},
+                {title: 'r.item_name', dataIndex: ['item','name'], key: 'item'},
+                {title: 'i.code', dataIndex: ['item','code'], key: 'item'},
+                {title: 'i.amount', dataIndex: 'amount'},
+                {title: 'i.price', dataIndex: 'price'},
+                {title: 'i.total_price', key: 'total_price'},
+                {title: 'n.type', dataIndex: 'type'},
                 // {title: '回收仓', dataIndex: 'recycle_warehouse_name', key: 'item'},
-                {title: '良品仓', dataIndex: 'warehouse_name', key: 'item'},
+                {title: 'r.warehouse', dataIndex: 'warehouse_name', key: 'item'},
             ]
             if (this.detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME) {
-                tableColumns.splice(8, 0, {title: '回收仓', dataIndex: 'recycle_warehouse_name', key: 'item'})
+                tableColumns.splice(8, 0, {title: 'r.defective', dataIndex: 'recycle_warehouse_name', key: 'item'})
                 tableColumns.splice(5, 2)
             } else {
-                tableColumns.push({title: '工时', dataIndex: 'man_hour'})
+                tableColumns.push({title: 'i.hours', dataIndex: 'man_hour'})
             }
             return tableColumns
         }

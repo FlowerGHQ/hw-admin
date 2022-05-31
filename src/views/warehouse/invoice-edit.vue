@@ -173,7 +173,7 @@ export default {
             }
         },
         getWarehouseList() {
-            Core.Api.Warehouse.listAll({is_authority_warehouse: Core.Const.WAREHOUSE.IS_AUTHORITY_WAREHOUSE.YES}).then(res => {
+            Core.Api.Warehouse.listAll().then(res => {
                 this.warehouseList = res.list
             })
         },
