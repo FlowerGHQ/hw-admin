@@ -28,13 +28,13 @@ switch (window.location.hostname) {
         URL_POINT = 'http://10.0.0.109:8083'
         break;
     case "10.0.0.228":
-        URL_POINT = 'http://10.0.0.228:8083'
+        URL_POINT = 'http://10.0.0.228:8889'
         break;
     default:
         // URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.7:8083' // 但
 
-        URL_POINT = 'http://10.0.0.234:8889'
+        URL_POINT = 'http://10.0.0.228:8889'
 
         // URL_POINT = 'http://10.0.0.171:8883' // 姚志宇
 
@@ -664,6 +664,10 @@ let Const = {
             '3': { key: 3, zh: '物料仓', en: 'Material'},
             '4': { key: 4, zh: '广宣品仓',en: 'Other'},
         },
+	    IS_AUTHORITY_WAREHOUSE: {
+		    YES: 1,
+		    NO: 0,
+	    },
     },
     STOCK_RECORD: { // 出入库明细
         COMMODITY_TYPE: {

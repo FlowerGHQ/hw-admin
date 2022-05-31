@@ -148,7 +148,7 @@ export default {
             switch(type) {
                 case 'detail':
                     routeUrl = this.$router.resolve({
-                        path: "/production/bom-detail",
+                        path: "/manufacture/bom-detail",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')

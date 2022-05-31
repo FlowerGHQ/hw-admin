@@ -151,14 +151,14 @@ export default {
             switch(type) {
                 case 'edit':
                     routeUrl = this.$router.resolve({
-                        path: '/production/manufacture-order-edit',
+                        path: '/manufacture/manufacture-order-edit',
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':
                     routeUrl = this.$router.resolve({
-                        path: '/production/manufacture-order-detail',
+                        path: '/manufacture/manufacture-order-detail',
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href,'_self')

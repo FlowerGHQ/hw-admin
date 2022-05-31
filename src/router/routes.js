@@ -682,7 +682,7 @@ const routes = [
         redirect: '/production/stock-list',
         name: 'ProductionManagement',
         meta: {
-            title: '生产管理',
+            title: '供应管理',
             icon: 'i_s_item',
             roles: [LOGIN_TYPE.ADMIN],
         },
@@ -752,15 +752,7 @@ const routes = [
                     parent: '/production/material-purchase-list',
                 }
             },
-            {
-                path: 'stock-list',
-                name: 'StockList',
-                component: () => import ('@/views/production/stock-list.vue'),
-                meta: {
-                    title: '库存总览',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
+
             {
                 path: 'material-list',
                 name: 'MaterialList',
@@ -804,74 +796,90 @@ const routes = [
                     roles: [LOGIN_TYPE.ADMIN],
                 }
             },
-            {
-                path: 'bom-list',
-                name: 'BomList',
-                component: () =>
-                    import ('@/views/production/bom-list.vue'),
-                meta: {
-                    title: 'BOM列表',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-            {
-                path: 'bom-detail',
-                name: 'BomDetail',
-                component: () => import ('@/views/production/bom-detail.vue'),
-                meta: {
-                    hidden: true,
-                    title: 'BOM详情',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/production/bom-list',
-                    auth: ['bom.list'],
-                }
-            },
-            {
-                path: 'manufacture-order-list',
-                name: 'ManufactureOrderList',
-                component: () =>
-                    import ('@/views/production/manufacture-order-list.vue'),
-                meta: {
-                    title: '生产单列表',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-            {
-                path: 'manufacture-order-edit',
-                name: 'ManufactureOrderEdit',
-                component: () => import ('@/views/production/manufacture-order-edit.vue'),
-                meta: {
-                    hidden: true,
-                    title: '生产单编辑',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/production/manufacture-order-list',
-                    auth: ['manufacture.save'],
-                }
-            },
-            {
-                path: 'manufacture-order-detail',
-                name: 'ManufactureOrderDetail',
-                component: () => import ('@/views/production/manufacture-order-detail.vue'),
-                meta: {
-                    hidden: true,
-                    title: '生产单详情',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    parent: '/item/item-list',
-                    auth: ['manufacture.list'],
-                }
-            },
-            {
-                path: 'calculate-production-amount',
-                name: 'CalculateProductionAmount',
-                component: () =>
-                    import ('@/views/production/calculate-production-amount.vue'),
-                meta: {
-                    title: '成套计算',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
+
         ]
     },
+	{ // 仓库管理
+		path: '/manufacture',
+		component: Layout,
+		redirect: '/manufacture/manufacture-list',
+		name: 'ManufactureManagement',
+		meta: {
+			title: '生产管理',
+			title_en: 'Inventories',
+			icon: 'i_s_warehouse',
+			roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+		},
+		children: [
+			{
+				path: 'bom-list',
+				name: 'BomList',
+				component: () =>
+					import ('@/views/manufacture/bom-list.vue'),
+				meta: {
+					title: 'BOM列表',
+					roles: [LOGIN_TYPE.ADMIN],
+				}
+			},
+			{
+				path: 'bom-detail',
+				name: 'BomDetail',
+				component: () => import ('@/views/manufacture/bom-detail.vue'),
+				meta: {
+					hidden: true,
+					title: 'BOM详情',
+					roles: [LOGIN_TYPE.ADMIN],
+					parent: '/manufacture/bom-list',
+					auth: ['bom.list'],
+				}
+			},
+			{
+				path: 'manufacture-order-list',
+				name: 'ManufactureOrderList',
+				component: () =>
+					import ('@/views/manufacture/manufacture-order-list.vue'),
+				meta: {
+					title: '生产单列表',
+					roles: [LOGIN_TYPE.ADMIN],
+				}
+			},
+			{
+				path: 'manufacture-order-edit',
+				name: 'ManufactureOrderEdit',
+				component: () => import ('@/views/manufacture/manufacture-order-edit.vue'),
+				meta: {
+					hidden: true,
+					title: '生产单编辑',
+					roles: [LOGIN_TYPE.ADMIN],
+					parent: '/manufacture/manufacture-order-list',
+					auth: ['manufacture.save'],
+				}
+			},
+			{
+				path: 'manufacture-order-detail',
+				name: 'ManufactureOrderDetail',
+				component: () => import ('@/views/manufacture/manufacture-order-detail.vue'),
+				meta: {
+					hidden: true,
+					title: '生产单详情',
+					roles: [LOGIN_TYPE.ADMIN],
+					parent: '/item/item-list',
+					auth: ['manufacture.list'],
+				}
+			},
+			{
+				path: 'calculate-production-amount',
+				name: 'CalculateProductionAmount',
+				component: () =>
+					import ('@/views/manufacture/calculate-production-amount.vue'),
+				meta: {
+					title: '成套计算',
+					roles: [LOGIN_TYPE.ADMIN],
+				}
+			},
+		]
+	},
+
     { // 仓库管理
         path: '/warehouse',
         component: Layout,
@@ -916,6 +924,15 @@ const routes = [
 
                 }
             },
+	        {
+		        path: 'stock-list',
+		        name: 'StockList',
+		        component: () => import ('@/views/warehouse/stock-list.vue'),
+		        meta: {
+			        title: '库存总览',
+			        roles: [LOGIN_TYPE.ADMIN],
+		        }
+	        },
             {
                 path: 'invoice-list',
                 name: 'InvoiceList',
