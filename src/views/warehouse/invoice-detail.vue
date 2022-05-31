@@ -48,6 +48,7 @@
             </div>
             <div class="info-item">
                 <div class="key">{{ $t('n.source') }}</div>
+<!--                admin端设置了不翻译来源-->
                 <div class="value" v-if="$auth('ADMIN')">{{ $Util.sourceTypeAdminFilter(detail.source_type) || '-'}}</div>
                 <div class="value" v-if="!$auth('ADMIN')">{{ $Util.sourceTypeFilter(detail.source_type, $i18n.locale) || '-'}}</div>
             </div>
@@ -193,7 +194,7 @@
             </template>
             <template #extra v-else-if="detail.type == TYPE.OUT">
                 <!-- 有实例出库 选择实例 -->
-                <EntitySelect btnType='link' btnText="添加实例商品" v-if="detail.status === STATUS.INIT && !addMode" :sourceId="detail.type == TYPE.IN ? detail.source_id : 0"
+                <EntitySelect btnType='link' :btnText="$t('v.add')" v-if="detail.status === STATUS.INIT && !addMode" :sourceId="detail.type == TYPE.IN ? detail.source_id : 0"
                               :sourceType="detail.type == TYPE.IN ? detail.source_type : 0"  :warehouseId="detail.warehouse_id" :disabledChecked="disabledChecked"
                     @select="handleAddEntityChange"/>
             </template>
