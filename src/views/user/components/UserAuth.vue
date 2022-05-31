@@ -47,7 +47,7 @@
                 </a-collapse-panel>
             </a-collapse>
         </div>
-        <a-modal v-model:visible="scopedShow" :title="resourceMap[scopedType].text + '资源管理'" class="stock-change-modal" :width="800" :after-close="handleScopedTypeClose">
+        <a-modal v-model:visible="scopedShow" :title=" '仓库资源管理'" class="stock-change-modal" :width="800" :after-close="handleScopedTypeClose">
             <UserScoped :userId="userId" :userType="detail.type" :resourceType="scopedType" />
             <template #footer>
                 <a-button @click="scopedShow=false">关闭</a-button>
