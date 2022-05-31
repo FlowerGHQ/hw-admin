@@ -19,10 +19,10 @@
                                 <div class="value">
                                     <span class="authority-item" v-for="i of item.select" :key="i">
                                         <a @click="handleScopedTypeShow(selected[i].scoped_type)" v-if = "selected[i].scoped_type > 0">
+<!--                                            {{selected[i].key}}-->
+<!--                                            {{$t('authority.'+ selected[i].key)}}-->
+<!--                                            {{$t("authority.\'distributor.save\'")}}-->
                                             {{selected[i].key}}
-                                            {{$t('authority.'+ selected[i].key)}}
-                                            {{$t("authority.\'distributor.save\'")}}
-
                                         </a>
                                         <span v-else>
                                             {{selected[i].key}}
@@ -151,7 +151,7 @@ export default {
                 let selected = {}
                 res.list.forEach(auth => {
                     let selectedInfo ={
-                        key: auth.key,
+                        key: auth.name,
                         scoped_type: 0
                     }
                     selected[auth.id] = selectedInfo;
@@ -182,7 +182,7 @@ export default {
                 let selected = this.selected;
                 res.list.forEach(auth => {
                     let selectedInfo = {
-                        key: auth.key,
+                        key: auth.name,
                         scoped_type: 0
                     }
                     selected[auth.id] = selectedInfo;
