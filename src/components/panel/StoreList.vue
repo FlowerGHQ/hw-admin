@@ -161,34 +161,16 @@ export default {
             });
         },
 
-        handleDelete(id) {
-            let _this = this;
-            this.$confirm({
-                title: '确定要删除该门店吗？',
-                okText: '确定',
-                okType: 'danger',
-                cancelText: '取消',
-                onOk() {
-                    Core.Api.Store.delete({id}).then(() => {
-                        _this.$message.success(_this.$t('pop_up.delete_success'));
-                        _this.getTableData();
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
-                },
-            });
-        },
-
         handleStatusChange(record) {
             let _this = this;
             this.$confirm({
-                title: `确定要${record.status ? '禁用' : '启用'}该门店吗？`,
-                okText: '确定',
+                title: _this.$t('pop_up.sure') + `${record.status ? _this.$t('pop_up.disable') : _this.$t('pop_up.enable')}` + _this.$t('pop_up.store'),
+                okText: this.$t('pop_up.yes'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Store.updateStatus({id:record.id}).then(() => {
-                        _this.$message.success(`${record.status ? '禁用' : '启用'}成功`);
+                        _this.$message.success(`${record.status ?  _this.$t('pop_up.success_disable') : _this.$t('pop_up.success_enable')}` + _this.$t('pop_up.success'));
                         _this.getTableData();
                         _this.$emit('change')// 刷新父组件
                     }).catch(err => {

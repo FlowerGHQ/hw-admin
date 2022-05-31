@@ -21,7 +21,7 @@
             <a-row class="desc-detail has-logo">
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                     <span class="key">{{ $t('d.abbreviation') }}：</span>
-                    <span class="value">{{detail.short_name}}</span>
+                    <span class="value">&nbsp;{{detail.short_name}}</span>
                 </a-col>
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item' v-if="$auth('ADMIN')">
                     <span class="key">{{ $t('n.distributor') }}：</span>
@@ -31,19 +31,19 @@
                     <span class="key">{{ $t('n.agent') }}：</span>
                     <a-button type="link" @click="routerChange('agent')">{{detail.agent_name}}</a-button>
                 </a-col>
-                <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+<!--                <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                     <span class="key">转单接受：</span>
                     <a-switch v-if="$auth('ADMIN')" :checked="!!detail.flag_receive_transfer"
                         checked-children="接受" un-checked-children="不接受" @click="handleTransferChange(detail)"/>
                     <span v-else >{{ text ? '接受' : '不接受' }}</span>
-                </a-col>
+                </a-col>-->
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                     <span class="key">{{ $t('n.contact') }}：</span>
                     <span class="value">{{detail.contact_name}}</span>
                 </a-col>
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                    <span class="key">{{ $t('n.contact') }}：</span>
-                    <span class="value">{{detail.phone}}</span>
+                    <span class="key">{{ $t('n.phone') }}：</span>
+                    <span class="value">{{detail.contact_phone}}</span>
                 </a-col>
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                     <span class="key">{{ $t('n.time') }}：</span>
@@ -166,13 +166,13 @@ export default {
         handleStatusChange() {
             let _this = this;
             this.$confirm({
-                title: `确定要${_this.detail.status ? '禁用' : '启用'}该门店吗？`,
-                okText: '确定',
+                title: this.$t('pop_up.sure') + `${_this.detail.status ? this.$t('pop_up.disable') : this.$t('pop_up.enable')}` + this.$t('pop_up.store'),
+                okText: this.$t('pop_up.yes'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Store.updateStatus({id:_this.detail.id}).then(() => {
-                        _this.$message.success(`${_this.detail.status ? '禁用' : '启用'}成功`);
+                        _this.$message.success(`${_this.status ?  _this.$t('pop_up.success_disable') : _this.$t('pop_up.success_enable')}` + _this.$t('pop_up.success'));
                         _this.getStoreDetail();
                     }).catch(err => {
                         console.log("handleStatusChange err", err);

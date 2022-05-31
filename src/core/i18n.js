@@ -586,7 +586,9 @@ const messages = {
             move_favorites: '确定要将该商品移动至收藏夹吗',
             sure_delete: '确定要删除吗？',
             sure_cancel: '确定要取消吗？',
-            sure_audit: '确定要提交吗'
+            sure_audit: '确定要提交吗',
+            agent: '该零售商吗？',
+            store: '该门店吗？',
         }
     },
     en: {
@@ -1132,10 +1134,10 @@ const messages = {
             enter_fault: 'Please enter a fault name',
             disable: 'disable ',
             sure: 'Do you want to ',
-            enable: 'enable',
+            enable: 'enable ',
             distributor: 'this distributor ?',
             success_disable: 'Disabled',
-            success_enable: 'Enable',
+            success_enable: 'Enabled',
             success: ' successfully !',
             yes: 'Yes',
             open: 'open',
@@ -1157,6 +1159,8 @@ const messages = {
             sure_delete: 'Are you sure you want to delete ?',
             sure_cancel: 'Are you sure you want to cancel ?',
             sure_audit: 'Are you sure you want to submit ?',
+            agent: 'the retailer ?',
+            store: 'the store ?',
         }
     },
 }

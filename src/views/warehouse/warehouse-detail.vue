@@ -17,7 +17,7 @@
                 <a-row class="desc-detail">
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">{{ $t('n.type') }}：</span>
-                        <span class="value">{{ $Util.warehouseTypeFilter(detail.type) }}</span>
+                        <span class="value">{{ $Util.warehouseTypeFilter(detail.type, $i18n.locale) }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">{{ $t('n.contact') }}：</span>
@@ -165,10 +165,10 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: "确定要删除该仓库吗？",
-                okText: "确定",
-                okType: "danger",
-                cancelText: "取消",
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Warehouse.delete({id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));

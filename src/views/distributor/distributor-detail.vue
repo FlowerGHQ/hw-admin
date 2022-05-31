@@ -218,7 +218,7 @@ export default {
                 cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Distributor.updateStatus({id: _this.detail.id}).then(() => {
-                        _this.$message.success(`${_this.detail.status ? _this.$t('pop_up.success_disable') : _this.$t('pop_up.success_enable')}` + _this.$t('pop_up.succeed'));
+                        _this.$message.success(`${_this.detail.status ? _this.$t('pop_up.success_disable') : _this.$t('pop_up.success_enable')}` + _this.$t('pop_up.success'));
                         _this.getDistributorDetail();
                     }).catch(err => {
                         console.log("handleStatusChange err", err);
