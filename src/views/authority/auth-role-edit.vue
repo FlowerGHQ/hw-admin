@@ -149,7 +149,7 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             console.log('handleSubmit form:', form)
             if (!form.name) {
-                return this.$message.warning('请输入角色名称')
+                return this.$message.warning(this.$t('def.enter'))
             }
             let list = []
             for (const item of this.authItems) {
@@ -159,7 +159,7 @@ export default {
                 ...form,
                 authority_ids: list.join(','),
             }).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)

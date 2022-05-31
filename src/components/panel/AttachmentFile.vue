@@ -37,16 +37,16 @@
             </div>
         </a-collapse-panel>
     </a-collapse>
-    <a-modal v-model:visible="modalShow" title="上传附件" class="attachment-file-upload-modal" :after-close="handleModalClose">
+    <a-modal v-model:visible="modalShow" :title="$t('n.upload_attachment')" class="attachment-file-upload-modal" :after-close="handleModalClose">
         <div class="form-title">
             <div class="form-item required">
-                <div class="key">附件名称:</div>
+                <div class="key">{{ $t('n.name') }}:</div>
                 <div class="value">
-                    <a-input v-model:value="form.name" placeholder="请输入附件名称"/>
+                    <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
                 </div>
             </div>
             <div class="form-item required file-upload">
-                <div class="key">上传文件:</div>
+                <div class="key">{{ $t('f.upload') }}:</div>
                 <div class="value">
                     <a-upload name="file" class="file-uploader"
                         :file-list="upload.fileList" :action="upload.action"
@@ -54,15 +54,15 @@
                         :before-upload="handleFileCheck"
                         @change="handleFileChange">
                         <a-button type="primary" ghost class="file-upload-btn" v-if="upload.fileList.length < 1">
-                            <i class="icon i_upload"/> 选择文件
+                            <i class="icon i_upload"/> {{ $t('f.choose') }}
                         </a-button>
                     </a-upload>
                 </div>
             </div>
         </div>
         <template #footer>
-            <a-button @click="modalShow = false">取消</a-button>
-            <a-button @click="handleModalSubmit" type="primary">确定</a-button>
+            <a-button @click="modalShow = false">{{ $t('def.cancel') }}</a-button>
+            <a-button @click="handleModalSubmit" type="primary">{{ $t('def.sure') }}</a-button>
         </template>
     </a-modal>
 </div>
@@ -162,7 +162,7 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             console.log('handleLogin form:', form)
             if (!form.name) {
-                return this.$message.warning('请输入附件名称')
+                return this.$message.warning(this.$t('def.enter'))
             }
             this.loading = true;
             Core.Api.Attachment.save({
@@ -170,7 +170,7 @@ export default {
                 target_type: this.target_type,
                 target_id: this.target_id,
             }).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.$emit('Submit')
                 this.handleModalClose();
                 this.getTableData();

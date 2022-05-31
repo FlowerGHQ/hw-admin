@@ -16,7 +16,7 @@
                             <p>{{item.name}} {{item.phone}}</p>
                             <p>{{item.email}}</p>
                             <p v-if="$i18n.locale === 'zh'">{{item.country}} {{item.province}} {{item.city}} {{item.county}} {{item.address}}</p>
-                            <p v-if="$i18n.locale === 'en'">{{item.country_en}} {{item.province}} {{item.city_en}} {{item.county}} {{item.address}}</p>
+                            <p v-if="$i18n.locale === 'en'">{{item.country_en}} {{item.province_en}} {{item.city_en}} {{item.county}} {{item.address}}</p>
                         </div>
                     </div>
                     <div class="btn">
@@ -240,17 +240,17 @@ export default {
         handleConfigSave() {
             let form = Core.Util.deepCopy(this.form)
             if (!form.name) {
-                return this.$message.warning('请输入收货人姓名')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.phone) {
-                return this.$message.warning('请输入收货人联系方式')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.province || !form.city || !form.county || !form.address) {
-                return this.$message.warning('请输入收货地址')
+                return this.$message.warning(this.$t('def.enter'))
             }
             this.loading = true
             Core.Api.Receive.save(form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.getReceiveList();
             }).finally(() => {
                 this.loading = false

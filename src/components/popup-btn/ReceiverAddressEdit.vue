@@ -89,6 +89,7 @@ export default {
                 country: '',
                 country_en: '',
                 province: '',
+                province_en: '',
                 city: '',
                 city_en: '',
                 county: '',
@@ -137,6 +138,7 @@ export default {
                 area.city_en = this.areaMap.city.name_en
                 if (this.areaMap.province) {
                     area.province = this.areaMap.province.name
+                    area.province_en = this.areaMap.province.name_en
                 }
                 if (this.areaMap.county) {
                     area.county = this.areaMap.county.name

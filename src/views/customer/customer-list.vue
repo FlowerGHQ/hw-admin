@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('c.list') }}</div>
                 <div class="btns-area" v-if="$auth('customer.save')">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('STORE','AGENT', 'ADMIN')"><i class="icon i_add"/>{{ $t('c.save') }}</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="!$auth('ADMIN')"><i class="icon i_add"/>{{ $t('c.save') }}</a-button>
                 </div>
             </div>
             <div class="search-container">

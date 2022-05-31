@@ -22,7 +22,7 @@
                 <div class="key">{{ $t('n.type') }}:</div>
                 <div class="value">
                     <a-select :placeholder="$t('def.select')" v-model:value="form.type">
-                        <a-select-option v-for="item of typeMap" :key="item.key" :value="Number(item.key)">{{ item[$i18n.locale] }}</a-select-option>
+                        <a-select-option v-for="item of typeMap" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-select-option>
                     </a-select>
                 </div>
             </div>

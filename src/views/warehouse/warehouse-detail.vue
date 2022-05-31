@@ -33,7 +33,7 @@
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">{{ $t('wa.address') }}：</span>
-                        <span class="value">      {{ $Util.addressFilter(record, $i18n.locale) }}</span>
+                        <span class="value">{{ $Util.addressFilter(detail, $i18n.locale) }}</span>
                     </a-col>
                 </a-row>
             </div>

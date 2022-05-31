@@ -154,7 +154,7 @@ export default {
                 org_type: this[type].type,
                 authority_ids: list.join(','),
             }).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.handleEditClose(type)
             })
         },

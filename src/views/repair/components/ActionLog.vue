@@ -1,16 +1,19 @@
 <template>
 <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
     <template #expandIcon ><i class="icon i_expan_l"/> </template>
-    <a-collapse-panel key="ActionLog" header="操作记录" class="gray-collapse-panel">
+    <a-collapse-panel key="ActionLog" :header="$t('n.record')" class="gray-collapse-panel">
         <div class="panel-content">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :loading='loading' :pagination='false'>
+                <template #headerCell="{title}">
+                    {{ $t(title) }}
+                </template>
                 <template #bodyCell="{ column, text }">
                     <template v-if="column.dataIndex === 'type'">
-                        {{ $Util.actionLogTypeFilter(text) }}
+                        {{ $Util.actionLogTypeFilter(text, $i18n.locale) }}
                     </template>
                     <template v-if="column.key === 'org'">
-                        {{ $Util.userTypeFilter(text.org_type) + (text.org_name === "" ? "" : "·") + text.org_name }}
+                        {{ $Util.userTypeFilter(text.org_type, $i18n.locale) + (text.org_name === "" ? "" : "·") + text.org_name }}
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
@@ -71,11 +74,11 @@ export default {
 
             tableData: [],
             tableColumns: [
-                { title: '操作类型', dataIndex: 'type' },
-                { title: '操作人', dataIndex: ['user', 'account','name'], key: 'item' },
-                { title: '操作组织', dataIndex: 'user', key: 'org' },
-                { title: '操作时间', dataIndex: 'create_time', key: 'time' },
-                { title: '备注', dataIndex: 'remark', key: 'tip_item' },
+                { title: 'n.operation', dataIndex: 'type' },
+                { title: 'n.operator', dataIndex: ['user', 'account','name'], key: 'item' },
+                { title: 'n.organization', dataIndex: 'user', key: 'org' },
+                { title: 'd.create_time', dataIndex: 'create_time', key: 'time' },
+                { title: 'r.remark', dataIndex: 'remark', key: 'tip_item' },
             ],
         };
     },

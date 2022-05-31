@@ -199,25 +199,25 @@ export default {
             }
             console.log('form:', form)
             if (!form.distributor_id && this.$auth('ADMIN')) {
-                return this.$message.warning('请选择所属分销商')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.agent_id && this.$auth('ADMIN','DISTRIBUTOR') ) {
-                return this.$message.warning('请选择所属零售商')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.name) {
-                return this.$message.warning('请输入门店名称')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.short_name) {
-                return this.$message.warning('请输入简称')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.contact_name) {
-                return this.$message.warning('请输入联系人')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.contact_phone) {
-                return this.$message.warning('请输入联系人电话')
+                return this.$message.warning(this.$t('def.enter'))
             }
             Core.Api.Store.save(form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)
