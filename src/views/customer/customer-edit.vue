@@ -1,54 +1,48 @@
 <template>
     <div id="CustomerEdit" class="edit-container">
         <div class="title-container">
-            <div class="title-area">{{ form.id ? '客户编辑' : '新建客户' }}</div>
+            <div class="title-area">{{ form.id ? $t('c.edit') : $t('c.save') }}</div>
         </div>
         <div class="form-block">
             <div class="form-title">
-                <div class="title-colorful">基本信息</div>
+                <div class="title-colorful">{{ $t('n.information') }}</div>
             </div>
             <div class="form-content">
                 <div class="form-item required">
-                    <div class="key">客户名称：</div>
+                    <div class="key">{{ $t('n.name') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" placeholder="请输入客户名称"/>
+                        <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">客户电话：</div>
+                    <div class="key">{{ $t('n.phone') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.phone" placeholder="请输入客户电话"/>
+                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">客户邮箱：</div>
+                    <div class="key">{{ $t('n.email') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.email" placeholder="请输入客户邮箱"/>
+                        <a-input v-model:value="form.email" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">客户地址:</div>
+                    <div class="key">{{ $t('ad.addresses') }}:</div>
                     <div class="value">
-                        <CountryCascader v-model:value="areaList" :def-area='defArea' @search="getCountry"/>
-                    </div>
-                </div>
-                <div class="form-item" v-if="countryShow == true">
-                    <div class="key"></div>
-                    <div class="value">
-                        <ChinaAddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
+                        <AddressCascader v-model:value="areaMap" :def-area='area'/>
                     </div>
                 </div>
                 <div class="form-item ">
                     <div class="key"></div>
                     <div class="value">
-                        <a-input v-model:value="form.address" placeholder="请输入详细地址"/>
+                        <a-input v-model:value="form.address" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary" v-if="$auth('customer.save')">确定</a-button>
-            <a-button @click="routerChange('back')" type="primary" ghost="">取消</a-button>
+            <a-button @click="handleSubmit" type="primary" v-if="$auth('customer.save')">{{ $t('def.sure') }}</a-button>
+            <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
         </div>
     </div>
 </template>
@@ -57,10 +51,11 @@
 import Core from '../../core';
 import ChinaAddressCascader from '@/components/common/ChinaAddressCascader.vue'
 import CountryCascader from '@/components/common/CountryCascader.vue'
+import AddressCascader from '@/components/common/AddressCascader.vue';
 
 export default {
     name: 'CustomerEdit',
-    components: { ChinaAddressCascader, CountryCascader},
+    components: { ChinaAddressCascader, CountryCascader, AddressCascader},
     props: {},
     data() {
         return {
@@ -73,20 +68,23 @@ export default {
                 name: '',
                 phone: '',
                 email: '',
-                province: '',
-                city: '',
-                county: '',
                 address: '',
             },
             defAddr: [],
             areaList: [],
             defArea: [],
             area: {
-                continent: '',
                 country: '',
                 country_en: '',
-                country_code: '',
+                province: '',
+                province_en: '',
+                city: '',
+                city_en: '',
+                county: '',
+                county_en: '',
+
             },
+            areaMap: {},
             countryShow: false,
         };
     },
@@ -135,29 +133,46 @@ export default {
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
             let area = Core.Util.deepCopy(this.area)
-            if (this.areaList.length) {
-                console.log('this.areaList:', this.areaList)
-                area = {
-                    continent: this.areaList[0].name,
-                    country: this.areaList[1].name,
-                    country_en: this.areaList[1].name_en,
-                    country_code: this.areaList[1].code,
-                }
-            }
             if (!form.name) {
-                return this.$message.warning('请输入客户名称')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.phone) {
-                return this.$message.warning('请输入客户电话')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.email) {
-                return this.$message.warning('请输入客户邮箱')
+                return this.$message.warning(this.$t('def.enter'))
             }
-            if (!form.province || !form.city || !form.county || !form.address) {
+           /* if (!form.province || !form.city || !form.county || !form.address) {
                 // return this.$message.warning('请完善客户地址')
+            }*/
+            console.log('area',this.area)
+            if (!Core.Util.isEmptyObj(this.areaMap)) {
+                console.log('areaMap2222',this.areaMap)
+                area.country = this.areaMap.country.name
+                area.country_en = this.areaMap.country.name_en
+                area.city = this.areaMap.city.name
+                area.city_en = this.areaMap.city.name_en
+                if (this.areaMap.province) {
+                    area.province = this.areaMap.province.name
+                    area.province_en = this.areaMap.province.name_en
+                }
+                if (this.areaMap.county) {
+                    area.county = this.areaMap.county.name
+                    area.county_en = this.areaMap.county.name_en
+                }
+                console.log('area1234556',area)
             }
-            Core.Api.Customer.save(form).then(() => {
-                this.$message.success('保存成功')
+            if (!(Object.values(area).filter(i => i).length)) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.address) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            Core.Api.Customer.save({
+                ...form,
+                ...area
+            }).then(() => {
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)
@@ -184,6 +199,11 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-// #DistributorEdit {}
+<style lang="less">
+.CustomerEdit {
+
+    .icon {
+        font-size: 12px;
+    }
+}
 </style>

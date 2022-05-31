@@ -1,13 +1,13 @@
 <template>
 <div id="AgentDetail" class='list-container'>
     <div class="title-container">
-        <div class="title-area">零售商详情 <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>{{detail.status ? '启用中' : '已禁用'}}</a-tag></div>
+        <div class="title-area">{{ $t('a.detail') }} <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'> {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}</a-tag></div>
         <div class="btns-area" v-if="$auth('ADMIN')">
-            <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('agent.save')"><i class="icon i_edit"/>编辑</a-button>
+            <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('agent.save')"><i class="icon i_edit"/>{{$t('def.edit')}}</a-button>
             <!-- <a-button type="primary" ghost @click="handleDelete(agent_id)"><i class="icon i_delete"/>删除</a-button> -->
             <a-button :type="detail.status ? 'default' : 'primary'" :danger="detail.status ? true : false" ghost @click="handleStatusChange()">
-                <template v-if="detail.status && $auth('agent.delete')"><i class="icon i_forbidden"/>禁用</template>
-                <template v-if="!detail.status && $auth('agent.enable')"><i class="icon i_enable"/>启用</template>
+                <template v-if="detail.status && $auth('agent.delete')"><i class="icon i_forbidden"/>{{$t('def.disable')}}</template>
+                <template v-if="!detail.status && $auth('agent.enable')"><i class="icon i_enable"/>{{$t('def.enable')}}</template>
             </a-button>
         </div>
     </div>
@@ -21,59 +21,64 @@
             </div>
             <a-row class="desc-detail has-logo">
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                    <span class="key">简称：</span>
-                    <span class="value">{{detail.short_name}}</span>
+                    <span class="key">{{ $t('d.abbreviation') }}:</span>
+                    <span class="value">&nbsp{{detail.short_name}}</span>
                 </a-col>
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                    <span class="key">手机号：</span>
+                    <span class="key">{{ $t('n.contact') }}：</span>
+                    <span class="value">{{ detail.contact }}</span>
+                </a-col>
+                <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                    <span class="key">{{ $t('n.phone') }}：</span>
                     <span class="value">{{detail.phone}}</span>
                 </a-col>
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                    <span class="key">邮箱：</span>
+                    <span class="key">{{ $t('n.email') }}：</span>
                     <span class="value">{{detail.email}}</span>
                 </a-col>
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                    <span class="key">国家：</span>
-                    <span class="value">{{detail.country}}</span>
+                    <span class="key">{{ $t('n.country') }}：</span>
+                    <span class="value" v-if="this.$i18n.locale === 'zh'">{{ detail.country }}</span>
+                    <span class="value" v-else>{{ detail.country_en }}</span>
                 </a-col>
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                    <span class="key">创建时间：</span>
+                    <span class="key">{{ $t('n.time') }}：</span>
                     <span class="value">{{$Util.timeFilter(detail.create_time)}}</span>
                 </a-col>
             </a-row>
             <div class='desc-stat'>
-                <a-statistic title="门店数" :value="detail.store_count" />
+                <a-statistic :title="$t('d.store')" :value="detail.store_count" />
                 <a-divider type="vertical" />
-                <a-statistic title="员工数" :value="detail.user_count"/>
+                <a-statistic :title="$t('d.user')" :value="detail.user_count"/>
                 <a-divider type="vertical" />
-                <a-statistic title="累计营收" :value="0" :precision="2" prefix='€'/>
+                <a-statistic :title="$t('d.revenue')" :value="0" :precision="2" prefix='€'/>
                 <a-divider type="vertical" />
-                <a-statistic title="总订单数" :value="detail.order_count" />
+                <a-statistic :title="$t('d.orders')" :value="detail.order_count" />
             </div>
         </div>
     </div>
     <div class="tabs-container">
         <a-tabs v-model:activeKey="activeKey">
-            <a-tab-pane key="UserList" tab="员工管理">
+            <a-tab-pane key="UserList" :tab="$t('d.manage_employees')">
                 <UserList :orgId="agent_id" :orgType="ORG_TYPE.AGENT" :type="USER_TYPE.AGENT" v-if="activeKey === 'UserList'"/>
             </a-tab-pane>
             <!-- <a-tab-pane key="WorkerList" tab="维修工管理">
                 <UserList :orgId="agent_id" :orgType="ORG_TYPE.AGENT" :type="USER_TYPE.WORKER" v-if="activeKey === 'WorkerList'"/>
             </a-tab-pane>-->
-            <a-tab-pane key="PurchaseList" tab="订单列表">
+            <a-tab-pane key="PurchaseList" :tab="$t('d.order')">
                 <PurchaseList :orgId="agent_id" :orgType="ORG_TYPE.AGENT"  v-if="activeKey === 'PurchaseList'"/>
             </a-tab-pane>
             <template v-if="$auth('ADMIN', 'DISTRIBUTOR')">
-                <a-tab-pane key="StoreList" tab="门店管理">
+                <a-tab-pane key="StoreList" :tab="$t('d.manage_store')">
                     <StoreList :agentId="agent_id" :type="USER_TYPE.AGENT" v-if="activeKey === 'StoreList'" @change="getAgentDetail"/>
                 </a-tab-pane>
             </template>
             <template v-if="$auth('DISTRIBUTOR')">
-                <a-tab-pane key="PricingStructure" tab="商品价格">
+                <a-tab-pane key="PricingStructure" :tab="$t('d.item')">
                     <PricingStructure :orgId="agent_id" :orgType="USER_TYPE.AGENT" v-if="activeKey === 'PricingStructure'" :can-edit="$auth('DISTRIBUTOR')"/>
                 </a-tab-pane>
             </template>
-            <a-tab-pane key="ReceiverAddress" tab="收货地址">
+            <a-tab-pane key="ReceiverAddress" :tab="$t('d.address')">
                 <ReceiverAddress :orgId="agent_id" :orgType="USER_TYPE.AGENT" v-if="activeKey === 'ReceiverAddress'"/>
             </a-tab-pane>
         </a-tabs>
@@ -153,35 +158,16 @@ export default {
                 this.loading = false;
             });
         },
-        // 删除 零售商
-        handleDelete(id) {
-            let _this = this;
-            this.$confirm({
-                title: '确定要删除该零售商吗？',
-                okText: '确定',
-                okType: 'danger',
-                cancelText: '取消',
-                onOk() {
-                    // console.log(this.agent_id);
-                    Core.Api.Agent.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
-                        _this.routerChange('list');
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
-                },
-            });
-        },
         handleStatusChange() {
             let _this = this;
             this.$confirm({
-                title: `确定要${_this.detail.status ? '禁用' : '启用'}该零售商吗？`,
-                okText: '确定',
+                title: _this.$t('pop_up.sure') + `${_this.detail.status ? _this.$t('pop_up.disable') : _this.$t('pop_up.enable')}` + _this.$t('pop_up.agent'),
+                okText: this.$t('pop_up.yes'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Agent.updateStatus({id:_this.detail.id}).then(() => {
-                        _this.$message.success(`${_this.detail.status ? '禁用' : '启用'}成功`);
+                        _this.$message.success(`${_this.detail.status ? _this.$t('pop_up.success_disable') : _this.$t('pop_up.success_enable')}` + _this.$t('pop_up.success'));
                         _this.getAgentDetail();
                     }).catch(err => {
                         console.log("handleStatusChange err", err);

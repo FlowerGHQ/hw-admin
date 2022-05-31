@@ -2,41 +2,56 @@
 <div id="AgentList">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">零售商列表</div>
+            <div class="title-area">{{ $t('a.list_of_retailers') }}</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('agent.save')"><i class="icon i_add"/>新建零售商</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('agent.save')"><i class="icon i_add"/>{{ $t('a.new_retailer') }}</a-button>
             </div>
         </div>
         <div class="search-container">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
-                    <div class="key">所属分销商:</div>
+                    <div class="key">{{ $t('a.superior') }}:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.distributor_id" placeholder="请选择分销商" @change="handleSearch">
-                            <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>
-                        </a-select>
+<!--                        <a-select v-model:value="searchForm.distributor_id" :placeholder="$t('def.select')" @change="handleSearch">-->
+<!--                            <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>-->
+<!--                        </a-select>-->
+                        <a-tree-select
+                            v-model:value="searchForm.parent_id"
+                            show-search
+                            style="width: 100%"
+                            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                            placeholder="Please select"
+                            allow-clear
+                            treeDefaultExpandAll
+                            :tree-data="treeData"
+                            :placeholder="$t('def.select')"
+                        >
+                            <template #title="{ value: value, name }">
+                                {{name }}
+                            </template>
+                        </a-tree-select>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">零售商名称:</div>
+                    <div class="key">{{ $t('n.name') }}:</div>
                     <div class="value">
-                        <a-input placeholder="请输入零售商名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                        <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">地区:</div>
+                    <div class="key">{{ $t('n.area') }}:</div>
                     <div class="value">
                         <CountryCascader @search="handleOtherSearch" ref='CountryCascader'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
-                    <div class="key">创建时间:</div>
+                    <div class="key">{{ $t('d.create_time') }}:</div>
                     <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                 </a-col>
             </a-row>
             <div class="btn-area">
-                <a-button @click="handleSearch" type="primary">查询</a-button>
-                <a-button @click="handleSearchReset">重置</a-button>
+                <a-button @click="handleSearch" type="primary">{{ $t('def.search')}}</a-button>
+                <a-button @click="handleSearchReset">{{ $t('def.reset')}}</a-button>
             </div>
         </div>
         <div class="table-container">
@@ -58,18 +73,21 @@
                     </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
-                            {{ text ? '启用中' : '已禁用' }}
+                            {{ text ? $t('def.enable_ing') : $t('def.disable_ing') }}
                         </div>
+                    </template>
+                    <template v-if="column.key === 'country'">
+                        {{ text || '-' }}
                     </template>
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('agent.detail')"> <i class="icon i_detail"/> 详情</a-button>
-                        <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('agent.save')"> <i class="icon i_edit"/> 编辑</a-button>
+                        <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('agent.detail')"> <i class="icon i_detail"/> {{ $t('def.detail') }}</a-button>
+                        <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('agent.save')"> <i class="icon i_edit"/> {{ $t('def.edit') }}</a-button>
                         <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
-                            <template v-if="record.status && $auth('agent.delete')"><i class="icon i_forbidden"/>禁用</template>
-                            <template v-if="!record.status && $auth('agent.enable')"><i class="icon i_enable"/>启用</template>
+                            <template v-if="record.status && $auth('agent.delete')"><i class="icon i_forbidden"/>{{ $t('def.disable') }}</template>
+                            <template v-if="!record.status && $auth('agent.enable')"><i class="icon i_enable"/>{{ $t('def.enable') }}</template>
                         </a-button>
                     </template>
                 </template>
@@ -83,7 +101,7 @@
                 show-quick-jumper
                 show-size-changer
                 show-less-items
-                :show-total="total => `共${total}条`"
+                :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                 :hide-on-single-page='false'
                 :pageSizeOptions="['10', '20', '30', '40']"
                 @change="pageChange"
@@ -117,7 +135,10 @@ export default {
             // 搜索
             distributorList: [], // 分销商下拉框数据
             filteredInfo: {status: [1]},
+            value: '',
+            treeData: [],
             searchForm: {
+                parent_id: '',
                 name: '',
                 status: 1,
                 distributor_id: undefined,
@@ -136,17 +157,22 @@ export default {
             let { filteredInfo } = this;
             filteredInfo = filteredInfo || {};
             let tableColumns = [
-                { title: '零售商', dataIndex: 'name' },
-                { title: '简称', dataIndex: 'short_name' },
-                { title: '国家', dataIndex: 'country', key: 'item' },
-                { title: '手机号', dataIndex: 'phone', key: 'item'},
-                { title: '创建时间', dataIndex: 'create_time', key: 'time' },
-                { title: '状态', dataIndex: 'status', key: 'status',
-                    filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [1] },
-                { title: '操作', key: 'operation', fixed: 'right'},
+                { title: this.$t('n.name'), dataIndex: 'name' },
+                { title: this.$t('n.distributor'), dataIndex: 'parent_name' },
+                { title: this.$t('d.short_name'), dataIndex: 'short_name' },
+                { title: this.$t('n.country'), dataIndex: 'country', key: 'country' },
+                { title: this.$t('n.contact'), dataIndex: 'contact', key: 'item'},
+                { title: this.$t('n.phone'), dataIndex: 'phone', key: 'item'},
+                { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time' },
+                { title: this.$t('n.state'), dataIndex: 'status', key: 'status',
+                    filters: this.$Util.tableFilterFormat( Core.Const.ORG_STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [1] },
+                { title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
-            if (this.$auth('ADMIN')) {
-                tableColumns.splice(2, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'item'})
+            // if (this.$auth('ADMIN')) {
+            //     tableColumns.splice(2, 0, {title: this.$t('a.superior'), dataIndex: 'distributor_name', key: 'item'})
+            // }
+            if (this.$i18n.locale === 'en' ) {
+                tableColumns.splice(3, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
             }
             return tableColumns
         },
@@ -156,6 +182,7 @@ export default {
         if (this.$auth('ADMIN')) {
             this.getDistributorListAll();
         }
+        this.getAgentListPath()
     },
     methods: {
         routerChange(type, item = {}) {
@@ -198,6 +225,7 @@ export default {
         },
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
+            this.value = ''
             this.$refs.TimeSearch.handleReset()
             this.$refs.CountryCascader.handleReset()
             this.pageChange(1);
@@ -254,20 +282,29 @@ export default {
         handleStatusChange(record) {
             let _this = this;
             this.$confirm({
-                title: `确定要${record.status ? '禁用' : '启用'}该零售商吗？`,
-                okText: '确定',
+                title: _this.$t('pop_up.sure') + `${record.status ? _this.$t('pop_up.disable') : _this.$t('pop_up.enable')}` + _this.$t('pop_up.agent'),
+                okText: this.$t('pop_up.yes'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Agent.updateStatus({id:record.id}).then(() => {
-                        _this.$message.success(`${record.status ? '禁用' : '启用'}成功`);
+                        _this.$message.success(`${record.status ?  _this.$t('pop_up.success_disable') : _this.$t('pop_up.success_enable')}` + _this.$t('pop_up.success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleStatusChange err", err);
                     })
                 },
             });
-        }
+        },
+        getAgentListPath() {
+            Core.Api.Agent.listPath({
+
+            }).then((res) => {
+                this.treeData = res.list
+            }).catch(err => {
+                console.log('handleSubmit err:', err)
+            })
+        },
     }
 };
 </script>

@@ -2,7 +2,7 @@
 <div id="ItemList">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">商品列表</div>
+            <div class="title-area">{{ $t('i.item_list') }} </div>
             <div class="btns-area">
                 <a-upload name="file" class="file-uploader"
                     :file-list="upload.fileList" :action="upload.action"
@@ -11,48 +11,48 @@
                     accept=".xlsx,.xls"
                     @change="handleMatterChange">
                     <a-button type="primary" ghost class="file-upload-btn">
-                        <i class="icon i_add"/> 批量导入
+                        <i class="icon i_add"/>{{ $t('i.import') }}
                     </a-button>
                 </a-upload>
-                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新增商品</a-button>
+                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>{{ $t('i.new') }}</a-button>
             </div>
         </div>
         <div class="search-container">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">商品名称:</div>
+                    <div class="key">{{ $t('n.name') }}:</div>
                     <div class="value">
-                        <a-input placeholder="请输入商品名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                        <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">商品类型:</div>
+                    <div class="key">{{ $t('n.type') }}:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.type" placeholder="请选择商品类型">
+                        <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')">
                             <a-select-option v-for="(val, key) in itemTypeMap" :key="key" :value="key">{{ val }}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">商品编码:</div>
+                    <div class="key">{{ $t('i.code') }}:</div>
                     <div class="value">
-                        <a-input placeholder="请输入商品编码" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
+                        <a-input :placeholder="$t('def.input')" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">商品分类:</div>
+                    <div class="key">{{ $t('i.categories') }}:</div>
                     <div class="value">
                         <CategoryTreeSelect @change="handleCategorySelect" :category-id='searchForm.category_id' />
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
-                    <div class="key">创建时间:</div>
+                    <div class="key">{{ $t('d.create_time') }}:</div>
                     <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                 </a-col>
             </a-row>
             <div class="btn-area">
-                <a-button @click="handleSearch" type="primary">查询</a-button>
-                <a-button @click="handleSearchReset">重置</a-button>
+                <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
+                <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
             </div>
         </div>
         <div class="table-container">
@@ -74,7 +74,7 @@
                         </div>
                     </template>
                     <template v-if="column.key === 'type'">
-                        {{ $Util.itemTypeFilter(text) }}
+                        {{ $Util.itemTypeFilter(text, $i18n.locale) }}
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
@@ -90,7 +90,7 @@
                     </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="text === 0 ? 'green' : 'red'">
-                            {{text === 0 ? '已上架' : '已下架'}}
+                            {{text === 0 ? $t('i.active') : $t('i.inactive') }}
                         </div>
                     </template>
 
@@ -104,13 +104,12 @@
                     </template>
                     <template v-if="column.key === 'operation'">
                         <template v-if="!record.default_item_id">
-                            <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/> 编辑</a-button>
-                            <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> 详情</a-button>
+                            <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/> {{ $t('def.detail') }}</a-button>
                         </template>
-                        <!-- <a-button type='link' @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button> -->
                         <a-button type='link' @click="handleStatusChange(record)" :class="record.status === 0 ? 'danger' : ''">
-                            <template v-if="record.status === -1"><i class="icon i_putaway"/> 上架</template>
-                            <template v-if="record.status === 0"><i class="icon i_downaway"/> 下架</template>
+                            <template v-if="record.status === -1"><i class="icon i_putaway"/>{{ $t('i.active_a') }}</template>
+                            <template v-if="record.status === 0"><i class="icon i_downaway"/> {{ $t('i.inactive_a') }}</template>
                         </a-button>
                     </template>
                 </template>
@@ -124,7 +123,7 @@
                 show-quick-jumper
                 show-size-changer
                 show-less-items
-                :show-total="total => `共${total}条`"
+                :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                 :hide-on-single-page='false'
                 :pageSizeOptions="['10', '20', '30', '40']"
                 @change="pageChange"
@@ -191,19 +190,19 @@ export default {
             let { filteredInfo } = this;
             filteredInfo = filteredInfo || {};
             let tableColumns = [
-                { title: '商品名称', dataIndex: 'name', key: 'detail' },
-                { title: '商品状态', dataIndex: 'status',
-                    filters: ITEM.STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [0] },
-                { title: '类型', dataIndex: ['type'], key: 'type' },
-                { title: '商品分类', dataIndex: ['category','name'], key: 'item' },
-                { title: '商品品号', dataIndex: 'model', key: 'item' },
-                { title: '商品编码', dataIndex: 'code', key: 'item' },
-                { title: '成本价格', dataIndex: 'original_price' ,key: 'money'},
+                { title: this.$t('n.name'), dataIndex: 'name', key: 'detail' },
+                { title: this.$t('i.status'), dataIndex: 'status',
+                    filters: this.$Util.tableFilterFormat(ITEM.STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [0] },
+                { title: this.$t('n.type'), dataIndex: ['type'], key: 'type' },
+                { title: this.$t('i.categories'), dataIndex: ['category','name'], key: 'item' },
+                { title: this.$t('i.number'), dataIndex: 'model', key: 'item' },
+                { title: this.$t('i.code'), dataIndex: 'code', key: 'item' },
+                { title: this.$t('i.cost_price'), dataIndex: 'original_price' ,key: 'money'},
                 { title: 'FOB(EUR)', dataIndex: 'fob_eur', key: 'fob_money', unit: '€'},
                 { title: 'FOB(USD)', dataIndex: 'fob_usd', key: 'fob_money', unit: '$'},
-                { title: '工时', dataIndex: 'man_hour', key: 'man_hour' },
-                { title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                { title: '操作', key: 'operation', fixed: 'right', width: 180 }
+                { title: this.$t('i.hours'), dataIndex: 'man_hour', key: 'man_hour' },
+                { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
+                { title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 180 }
             ]
             return tableColumns
         }
@@ -294,13 +293,13 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该商品吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Item.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

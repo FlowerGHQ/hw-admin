@@ -1,9 +1,9 @@
 <template>
     <div id="DistributorDetail" class='list-container'>
         <div class="title-container">
-            <div class="title-area">{{$t('n.distributor_detail')}}
+            <div class="title-area">{{$t('d.distributor_detail')}}
                 <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>
-                    {{ detail.status ? '启用中' : '已禁用' }}
+                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}
                 </a-tag>
             </div>
             <div class="btns-area" v-if="$auth('ADMIN')">
@@ -24,36 +24,37 @@
                 </div>
                 <a-row class="desc-detail has-logo">
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">简称：</span>
-                        <span class="value">{{detail.short_name}}</span>
+                        <span class="key">{{ $t('d.abbreviation') }}：</span>
+                        <span class="value">&nbsp{{detail.short_name}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">公司名称：</span>
+                        <span class="key">{{ $t('d.company') }}：</span>
                         <span class="value">{{detail.company_name}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">税号：</span>
+                        <span class="key">{{ $t('d.id') }}：</span>
                         <span class="value">{{detail.tax_no}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">收货港口：</span>
+                        <span class="key">{{ $t('d.port') }}：</span>
                         <span class="value">{{detail.receive_port}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('d.contact') }}：</span>
+                        <span class="key">{{ $t('n.contact') }}：</span>
                         <span class="value">{{ detail.contact }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('d.phone') }}：</span>
+                        <span class="key">{{ $t('n.phone') }}：</span>
                         <span class="value">{{ detail.phone }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('d.email') }}：</span>
+                        <span class="key">{{ $t('n.email') }}：</span>
                         <span class="value">{{ detail.email }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('d.country') }}：</span>
-                        <span class="value">{{ detail.country }}</span>
+                        <span class="key">{{ $t('n.country') }}：</span>
+                        <span class="value" v-if="this.$i18n.locale === 'zh'">{{ detail.country }}</span>
+                        <span class="value" v-else>{{ detail.country_en }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('d.sales_area') }}：</span>
@@ -63,7 +64,7 @@
                         <span class="value" v-else>-</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('d.create_time') }}：</span>
+                        <span class="key">{{ $t('n.time') }}：</span>
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
                 </a-row>
@@ -217,7 +218,7 @@ export default {
                 cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Distributor.updateStatus({id: _this.detail.id}).then(() => {
-                        _this.$message.success(`${_this.detail.status ? _this.$t('pop_up.success_disable') : _this.$t('pop_up.success_enable')}` + _this.$t('pop_up.succeed'));
+                        _this.$message.success(`${_this.detail.status ? _this.$t('pop_up.success_disable') : _this.$t('pop_up.success_enable')}` + _this.$t('pop_up.success'));
                         _this.getDistributorDetail();
                     }).catch(err => {
                         console.log("handleStatusChange err", err);

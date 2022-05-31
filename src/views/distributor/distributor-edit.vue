@@ -1,80 +1,80 @@
 <template>
     <div id="DistributorEdit" class="edit-container">
         <div class="title-container">
-            <div class="title-area">{{ form.id ? '编辑分销商' : '新建分销商' }}</div>
+            <div class="title-area">{{ form.id ? $t('d.edit') : $t('d.new_distributor') }}</div>
         </div>
         <div class="form-block">
             <div class="form-title">
-                <div class="title">基本信息</div>
+                <div class="title">{{ $t('n.information') }}</div>
             </div>
             <div class="form-content">
                 <div class="form-item required">
-                    <div class="key">分销商名:</div>
+                    <div class="key">{{ $t('d.name') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" placeholder="请输入分销商名字"/>
+                        <a-input v-model:value="form.name" :placeholder="$t('n.enter')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">简称:</div>
+                    <div class="key">{{ $t('d.short_name') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.short_name" placeholder="请输入简称"/>
+                        <a-input v-model:value="form.short_name" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">分销商类型:</div>
+                    <div class="key">{{ $t('n.type') }}:</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.type">
-                            <a-radio :value="TYPE.INTERNAL">国内</a-radio>
-                            <a-radio :value="TYPE.EXPORT">出口</a-radio>
+                            <a-radio :value="TYPE.INTERNAL">{{ $t('d.internal') }}</a-radio>
+                            <a-radio :value="TYPE.EXPORT">{{ $t('d.export') }}</a-radio>
                         </a-radio-group>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">公司名称:</div>
+                    <div class="key">{{ $t('d.company') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.company_name" placeholder="请输入分销商公司名称"/>
+                        <a-input v-model:value="form.company_name" :placeholder="$t('d.company_name')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">税号:</div>
+                    <div class="key">{{ $t('d.id') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.tax_no" placeholder="请输入税号"/>
+                        <a-input v-model:value="form.tax_no" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">收货港口:</div>
+                    <div class="key">{{ $t('d.port') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.receive_port" placeholder="请输入收货港口"/>
+                        <a-input v-model:value="form.receive_port" :placeholder="$t('d.receipt')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">联系人:</div>
+                    <div class="key">{{ $t('n.contact') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.contact" placeholder="请输入分销商联系人"/>
+                        <a-input v-model:value="form.contact" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">手机号:</div>
+                    <div class="key">{{ $t('n.phone') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.phone" placeholder="请输入分销商手机号"/>
+                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">邮箱:</div>
+                    <div class="key">{{ $t('n.email') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.email" placeholder="请输入分销商邮箱"/>
+                        <a-input v-model:value="form.email" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">国家:</div>
+                    <div class="key">{{ $t('n.country') }}:</div>
                     <div class="value">
                         <CountryCascader v-model:value="areaList" :def-area='defArea'/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">销售区域</div>
+                    <div class="key">{{ $t('d.sales_area') }}:</div>
                     <div class="value">
-                        <a-select v-model:value="form.sales_area_ids" mode="tags" placeholder="请选择销售区域">
+                        <a-select v-model:value="form.sales_area_ids" mode="tags" :placeholder=" $t('def.select')">
                             <a-select-option v-for="(item,index) of salesList" :key="index" :value="item.id">{{ item.name }}</a-select-option>
                         </a-select>
                     </div>
@@ -82,8 +82,8 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary" v-if="$auth('distributor.save')">确定</a-button>
-            <a-button @click="routerChange('back')" type="primary" ghost="">取消</a-button>
+            <a-button @click="handleSubmit" type="primary" v-if="$auth('distributor.save')">{{ $t('def.sure') }}</a-button>
+            <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
         </div>
     </div>
 </template>
@@ -190,53 +190,32 @@ export default {
                 }
             }
             const requireList = [
-                { key: 'name', msg: '请输入分销商名' },
-                { key: 'short_name', msg: '请输入简称' },
-                { key: 'type', msg: '请选择分销商类型' },
-                { key: 'company_name', msg: '请输入分销公司名称' },
-                { key: 'tax_no', msg: '请输入税号' },
-                { key: 'receive_port', msg: '请输入收货港口' },
-                { key: 'contact', msg: '请输入联系人' },
-                { key: 'phone', msg: '请输入联系人手机号' },
-                { key: 'email', msg: '请输入分销商邮箱' },
-                // { key: 'country', msg: '请选择分销商国家' },
-                { key: 'sales_area_ids', msg: '请选择销售区域' },
+                { key: 'name', msg: this.$t('def.enter') },
+                { key: 'short_name', msg: this.$t('def.enter') },
+                { key: 'type', msg: this.$t('def.enter') },
+                { key: 'company_name', msg: this.$t('def.enter') },
+                { key: 'tax_no', msg: this.$t('def.enter') },
+                { key: 'receive_port', msg: this.$t('def.enter') },
+                { key: 'contact', msg: this.$t('def.enter') },
+                { key: 'phone', msg: this.$t('def.enter') },
+                { key: 'email', msg: this.$t('def.enter') },
+                // { key: 'country', msg: this.$t('def.enter') },
+                { key: 'sales_area_ids', msg: this.$t('def.enter') },
             ]
             for( let index in requireList) {
                 if(!form[requireList[index].key]) {
                     return this.$message.warning(requireList[index].msg);
                 }
             }
-            // if (!form.name) {
-            //     return this.$message.warning('请输入分销商名')
-            // }
-            // if (!form.short_name) {
-            //     return this.$message.warning('请输入简称')
-            // }
-            // if (!form.short_name) {
-            //     return this.$message.warning('请输入简称')
-            // }
-            // if (!form.contact) {
-            //     return this.$message.warning('请输入联系人')
-            // }
-            // if (!form.phone) {
-            //     return this.$message.warning('请输入联系人手机号')
-            // }
-            // if (!form.email) {
-            //     return this.$message.warning('请输入分销商邮箱')
-            // }
             if (!area.country) {
-                return this.$message.warning('请选择分销商国家')
+                return this.$message.warning(this.$t('def.enter'))
             }
-            // if (!form.sales_area_ids) {
-            //     return this.$message.warning('请选择销售区域')
-            // }
             form.sales_area_ids = form.sales_area_ids.join(',')
             Core.Api.Distributor.save({
                 ...form,
                 ...area
             }).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)

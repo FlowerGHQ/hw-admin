@@ -2,58 +2,58 @@
 <div id="ItemEdit" class="edit-container">
     <a-spin :spinning="loading" class='loading-incontent' v-if="loading"></a-spin>
     <div class="title-container">
-        <div class="title-area">{{ form.id ? '编辑商品' : '新增商品' }}</div>
+        <div class="title-area">{{ form.id ? $t('i.edit') : $t('i.save') }}</div>
     </div>
     <ItemHeader :detail='detail' v-if="indep_flag" :show-spec='true'/>
     <div class="form-block"> <!-- 基本信息 -->
         <div class="form-title">
-            <div class="title">基本信息</div>
+            <div class="title">{{ $t('n.information') }}</div>
         </div>
         <div class="form-content">
             <div class="form-item required">
-                <div class="key">商品名称</div>
+                <div class="key">{{ $t('n.name') }}</div>
                 <div class="value">
-                    <a-input v-model:value="form.name" placeholder="请输入商品名称(最多输入50字符)" :maxlength='50'/>
+                    <a-input v-model:value="form.name" :placeholder="$t('def.input')" :maxlength='50'/>
                 </div>
             </div>
             <div class="form-item required" v-if="!indep_flag">
-                <div class="key">商品类型</div>
+                <div class="key">{{ $t('n.type') }}</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.type">
-                        <a-radio class="type-item" v-for="(val, key) in itemTypeMap" :key="key" :value="key">{{ val }}</a-radio>
+                        <a-radio class="type-item" v-for="item of itemTypeMap" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
             <div class="form-item required" v-if="!indep_flag">
-                <div class="key">商品品号</div>
+                <div class="key">{{ $t('i.number') }}</div>
                 <div class="value">
-                    <a-input v-model:value="form.model" placeholder="请输入商品品号"/>
+                    <a-input v-model:value="form.model" :placeholder="$t('def.input')"/>
                 </div>
             </div>
             <div class="form-item required" v-if="specific.mode === 1 || indep_flag">
-                <div class="key">商品编码</div>
+                <div class="key">{{ $t('i.code') }}</div>
                 <div class="value">
-                    <a-input v-model:value="form.code" placeholder="请输入商品编码"/>
+                    <a-input v-model:value="form.code" :placeholder="$t('def.input')"/>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">商品分类</div>
+                <div class="key">{{ $t('i.categories') }}</div>
                 <div class="value">
                     <CategoryTreeSelect @change="handleCategorySelect"
                         :category='item_category' :category-id='form.category_id' v-if="form.id !== ''"/>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">工时</div>
+                <div class="key">{{ $t('i.hours') }}</div>
                 <div class="value input-number">
                     <a-input-number v-model:value="form.man_hour" :min="0" :precision="2" placeholder="0.00"/>
-                    <span>小时</span>
+                    <span>hour</span>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">销售区域</div>
+                <div class="key">{{ $t('d.sales_area') }}</div>
                 <div class="value">
-                    <a-select v-model:value="form.sales_area_ids" mode="tags" placeholder="请选择销售区域">
+                    <a-select v-model:value="form.sales_area_ids" mode="tags" :placeholder="$t('def.select')">
                         <a-select-option v-for="(val,key) in salesList" :key="key" :value="val.id">{{ val.name }}</a-select-option>
                     </a-select>
                 </div>
@@ -62,11 +62,11 @@
     </div>
     <div class="form-block"> <!-- 图片信息 -->
         <div class="form-title">
-            <div class="title">图片信息</div>
+            <div class="title">{{ $t('i.image') }}</div>
         </div>
         <div class="form-content">
             <div class="form-item img-upload">
-                <div class="key">商品封面</div>
+                <div class="key">{{ $t('i.cover') }}</div>
                 <div class="value">
                     <a-upload name="file" class="image-uploader"
                         list-type="picture-card" accept='image/*'
@@ -78,11 +78,11 @@
                             <i class="icon i_upload"/>
                         </div>
                     </a-upload>
-                    <div class="tip">建议尺寸：800*800像素</div>
+                    <div class="tip">{{ $t('n.size') }}：800*800px</div>
                 </div>
             </div>
             <div class="form-item img-upload">
-                <div class="key">商品详情图</div>
+                <div class="key">{{ $t('i.picture') }}</div>
                 <div class="value">
                     <a-upload name="file" class="image-uploader"
                         list-type="picture-card" accept='image/*'
@@ -94,28 +94,28 @@
                             <i class="icon i_upload"/>
                         </div>
                     </a-upload>
-                    <div class="tip">建议尺寸：800*800像素</div>
+                    <div class="tip">{{ $t('n.size') }}：800*800px</div>
                 </div>
             </div>
         </div>
     </div>
     <div class="form-block" v-if="form.category_id && configTemp.length"> <!-- 分类配置 -->
         <div class="form-title">
-            <div class="title">分类配置</div>
+            <div class="title">{{ $t('i.configuration') }}</div>
         </div>
         <div class="form-content">
             <div v-for="(item, index) of configTemp" :key="index" :class="{'form-item':true, required: item.required, textarea: item.type === 'textarea', rich_text: item.type === 'rich_text'}">
                 <div class="key">{{item.name}}</div>
                 <div class="value">
                     <template v-if="item.type == 'input'">
-                        <a-input :placeholder="`请输入${item.name}`" v-model:value="form.config[index].value"/>
+                        <a-input :placeholder="$t('def.input') + ` ${item.name}`" v-model:value="form.config[index].value"/>
                     </template>
                     <template v-if="item.type == 'textarea'">
-                        <a-textarea :placeholder="`请输入${item.name}`" v-model:value="form.config[index].value" :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500'/>
+                        <a-textarea :placeholder="$t('def.input') + ` ${item.name}`" v-model:value="form.config[index].value" :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500'/>
                         <span class="content-length">{{form.config[index].value.length}}/500</span>
                     </template>
                     <template v-if="item.type == 'select'">
-                        <a-select :placeholder="`请选择${item.name}`" v-model:value="form.config[index].value" show-search option-filter-prop="children">
+                        <a-select :placeholder="$t('def.select') + ` ${item.name}`" v-model:value="form.config[index].value" show-search option-filter-prop="children">
                             <a-select-option v-for="(val,i) of item.select" :key="i" :value="val" >{{val}}</a-select-option>
                         </a-select>
                     </template>
@@ -133,68 +133,68 @@
     </div>
     <div class="form-block" v-if="!indep_flag"> <!-- 规格信息 -->
         <div class="form-title">
-            <div class="title">规格信息</div>
+            <div class="title">{{ $t('i.information') }}</div>
         </div>
         <div class="form-content">
             <div class="form-item">
-                <div class="key">规格模式</div>
+                <div class="key">{{ $t('i.mode') }}</div>
                 <div class="value">
                     <a-radio-group v-model:value="specific.mode" @change="handleSpecificModeChange">
-                        <a-radio :value="1">单规格</a-radio>
-                        <a-radio :value="2">多规格</a-radio>
+                        <a-radio :value="1">{{ $t('i.single') }}</a-radio>
+                        <a-radio :value="2">{{ $t('i.multiple') }}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
             <template v-if="specific.mode === 2">
             <div class="form-item specific-config">
-                <div class="key">规格定义
-                    <a-tooltip title="关键字：用于区分规格,应由小写英文字母组成且不可重复">
+                <div class="key">{{ $t('i.define') }}
+                    <a-tooltip :title="$t('i.keyword')">
                         <i class="icon i_hint" style="font-size: 12px;"></i>
                     </a-tooltip>
                 </div>
                 <div class="value">
                     <div class="spec-item" v-for="(item,index) of specific.list" :key="index">
                         <div class="name">
-                            <p>规格名</p>
-                            <a-input v-model:value="item.name" placeholder="规格名" @blur="handleSpecEditBlur(index, 'name')"/>
-                            <p>关键字</p>
-                            <a-input v-model:value="item.key"  placeholder="关键字" @blur="handleSpecEditBlur(index, 'key')"/>
-                            <a-button type="link" v-if="!form.id" @click="handleRemoveSpec(index)">删除</a-button>
+                            <p>{{ $t('i.name') }}</p>
+                            <a-input v-model:value="item.name" :placeholder="$t('def.input')" @blur="handleSpecEditBlur(index, 'name')"/>
+                            <p>{{ $t('i.words') }}</p>
+                            <a-input v-model:value="item.key" :placeholder="$t('def.input')" @blur="handleSpecEditBlur(index, 'key')"/>
+                            <a-button type="link" v-if="!form.id" @click="handleRemoveSpec(index)">{{ $t('def.delete') }}</a-button>
                         </div>
                         <div class="option">
-                            <p>规格值</p>
+                            <p>{{ $t('i.value') }}</p>
                             <div class="option-list">
                                 <div class="option-item" v-for="(option, i) of item.option" :key="i">
-                                    <a-input :value="option" placeholder="规格值"/>
+                                    <a-input :value="option" :placeholder="$t('def.input')"/>
                                     <i class="close icon i_close_b" @click="handleRemoveSpecOption(index, i)"/>
                                 </div>
                                 <a-popover v-model:visible="item.addVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseSpecOption(index)}'>
                                     <template #content>
                                         <div class="specific-option-edit-popover">
-                                            <a-input v-model:value="item.addValue" placeholder="规格值" :max-length='50' @keydown.enter="handleAddSpecOption(index)" :autofocus='true'/>
+                                            <a-input v-model:value="item.addValue" :placeholder="$t('def.input')" :max-length='50' @keydown.enter="handleAddSpecOption(index)" :autofocus='true'/>
                                             <div class="content-length">{{item.addValue.length}}/50</div>
                                             <div class="btns">
-                                                <a-button type="primary" ghost @click="handleCloseSpecOption(index)">取消</a-button>
-                                                <a-button type="primary" @click="handleAddSpecOption(index)">确定</a-button>
+                                                <a-button type="primary" ghost @click="handleCloseSpecOption(index)">{{ $t('def.cancel') }}</a-button>
+                                                <a-button type="primary" @click="handleAddSpecOption(index)">{{ $t('def.sure') }}</a-button>
                                             </div>
                                         </div>
                                     </template>
-                                    <a-button type="link"><i class="icon i_add"></i> 添加</a-button>
+                                    <a-button type="link"><i class="icon i_add"></i> {{ $t('i.addition') }}</a-button>
                                 </a-popover>
                             </div>
                         </div>
                     </div>
-                    <a-button class="spec-add" type="primary" ghost @click="handleAddSpec">添加规格定义</a-button>
+                    <a-button class="spec-add" type="primary" ghost @click="handleAddSpec">{{ $t('i.definition') }}</a-button>
                 </div>
             </div>
             <div class="form-item specific-items">
-                <div class="key">规格信息</div>
+                <div class="key">{{ $t('i.message') }}</div>
                 <div class="value table-container no-mg">
                     <a-table :columns="specificColumns" :data-source="specific.data" :scroll="{ x: true }"
                         :row-key="record => record.title"  :pagination='false' class="specific-table">
                         <template #bodyCell="{ column, record }">
                             <template v-if="column.dataIndex === 'code'">
-                                <a-input class="code" v-model:value="record.code" placeholder="请输入商品编码"/>
+                                <a-input class="code" v-model:value="record.code" :placeholder="$t('def.input')"/>
                             </template>
                             <template v-if="column.dataIndex === 'price'">
                                 <a-input-number v-model:value="record.price" :min="0.01" :precision="2"
@@ -223,26 +223,26 @@
                         </template>
                     </a-table>
                     <div class="batch-set">
-                        批量设置：
+                       {{ $t('i.settings') }}：
                         <a-popover v-model:visible="batchSet.originalVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseBatchSet()}'>
                             <template #content>
                                 <div class="batch-set-edit-popover">
-                                    <a-input-number v-model:value="batchSet.original_price" placeholder="请输入成本价格" @keydown.enter="handleBatchSpec('original_price')" :min='0' :autofocus='true' :precision="2"/>
+                                    <a-input-number v-model:value="batchSet.original_price" :placeholder="$t('def.input')" @keydown.enter="handleBatchSpec('original_price')" :min='0' :autofocus='true' :precision="2"/>
                                     <div class="btns">
-                                        <a-button type="primary" ghost @click="handleCloseBatchSet">取消</a-button>
-                                        <a-button type="primary" @click="handleBatchSpec('original_price')">确定</a-button>
+                                        <a-button type="primary" ghost @click="handleCloseBatchSet">{{ $t('def.cancel') }}</a-button>
+                                        <a-button type="primary" @click="handleBatchSpec('original_price')">{{ $t('def.sure') }}</a-button>
                                     </div>
                                 </div>
                             </template>
-                            <a-button type="link">成本价格</a-button>
+                            <a-button type="link">{{ $t('i.cost_price') }}</a-button>
                         </a-popover>
                         <a-popover v-model:visible="batchSet.fobEurVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseBatchSet()}'>
                             <template #content>
                                 <div class="batch-set-edit-popover">
-                                    <a-input-number v-model:value="batchSet.fob_eur" placeholder="请输入FOB(EUR)价" @keydown.enter="handleBatchSpec('fob_eur')" :min='0' :autofocus='true' :precision="2"/>
+                                    <a-input-number v-model:value="batchSet.fob_eur" :placeholder="$t('def.input')" @keydown.enter="handleBatchSpec('fob_eur')" :min='0' :autofocus='true' :precision="2"/>
                                     <div class="btns">
-                                        <a-button type="primary" ghost @click="handleCloseBatchSet">取消</a-button>
-                                        <a-button type="primary" @click="handleBatchSpec('fob_eur')">确定</a-button>
+                                        <a-button type="primary" ghost @click="handleCloseBatchSet">{{ $t('def.cancel') }}</a-button>
+                                        <a-button type="primary" @click="handleBatchSpec('fob_eur')">{{ $t('def.sure') }}</a-button>
                                     </div>
                                 </div>
                             </template>
@@ -251,10 +251,10 @@
                         <a-popover v-model:visible="batchSet.fobUsdVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseBatchSet()}'>
                             <template #content>
                                 <div class="batch-set-edit-popover">
-                                    <a-input-number v-model:value="batchSet.fob_usd" placeholder="请输入FOB(USD)价" @keydown.enter="handleBatchSpec('fob_usd')" :min='0' :autofocus='true' :precision="2"/>
+                                    <a-input-number v-model:value="batchSet.fob_usd" :placeholder="$t('def.input')" @keydown.enter="handleBatchSpec('fob_usd')" :min='0' :autofocus='true' :precision="2"/>
                                     <div class="btns">
-                                        <a-button type="primary" ghost @click="handleCloseBatchSet">取消</a-button>
-                                        <a-button type="primary" @click="handleBatchSpec('fob_usd')">确定</a-button>
+                                        <a-button type="primary" ghost @click="handleCloseBatchSet">{{ $t('def.cancel') }}</a-button>
+                                        <a-button type="primary" @click="handleBatchSpec('fob_usd')">{{ $t('def.sure') }}</a-button>
                                     </div>
                                 </div>
                             </template>
@@ -273,7 +273,7 @@
                             <a-button type="link">建议零售价</a-button>
                         </a-popover> -->
                     </div>
-                    <a-button class="spec-add" type="primary" ghost @click="handleAddSpecItem"><i class="icon i_add"/>添加规格</a-button>
+                    <a-button class="spec-add" type="primary" ghost @click="handleAddSpecItem"><i class="icon i_add"/>{{ $t('i.add_specs') }}</a-button>
                 </div>
             </div>
             </template>
@@ -281,11 +281,11 @@
     </div>
     <div class="form-block" v-if="specific.mode === 1 || indep_flag"> <!-- 单规格时的 价格信息 -->
         <div class="form-title">
-            <div class="title">价格信息</div>
+            <div class="title">{{ $t('i.price_information') }}</div>
         </div>
         <div class="form-content">
             <div class="form-item">
-                <div class="key">成本价格</div>
+                <div class="key">{{ $t('i.cost_price') }}</div>
                 <div class="value input-number-unit">
                     <a-input-number v-model:value="form.original_price" :min="0" :precision="2" placeholder="0.00"/>
                     <a-select v-model:value="form.original_price_currency">
@@ -317,8 +317,8 @@
         </div>
     </div>
     <div class="form-btns">
-        <a-button type="primary" @click="handleSubmit">确定</a-button>
-        <a-button type="primary" ghost @click="routerChange('back')">取消</a-button>
+        <a-button type="primary" @click="handleSubmit">{{ $t('def.sure') }}</a-button>
+        <a-button type="primary" ghost @click="routerChange('back')">{{ $t('def.cancel') }}</a-button>
     </div>
 </div>
 </template>
@@ -438,10 +438,10 @@ export default {
             }))
             column = column.filter(item => item.title && item.dataIndex)
             column.unshift(
-                {title: '商品编码', key: 'input', dataIndex: 'code', fixed: 'left'},
+                {title: this.$t('i.code'), key: 'input', dataIndex: 'code', fixed: 'left'},
             )
             column.push(
-                {title: '成本价格', key: 'money', dataIndex: 'original_price', fixed: 'right'},
+                {title: this.$t('i.cost_price'), key: 'money', dataIndex: 'original_price', fixed: 'right'},
                 {title: 'FOB(EUR)', key: 'money', dataIndex: 'fob_eur', fixed: 'right', unit: '€'},
                 {title: 'FOB(USD)', key: 'money', dataIndex: 'fob_usd', fixed: 'right', unit: '$'},
                 // {title: '建议零售价', key: 'money', dataIndex: 'price', fixed: 'right'},
@@ -670,7 +670,7 @@ export default {
             }
             console.log('handleSubmit form:', form)
             Core.Api.Item[apiName](form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)
@@ -679,26 +679,26 @@ export default {
         // 保存时检查表单输入
         checkFormInput(form, specData, attrDef) {
             if (!form.name) {
-                return this.$message.warning('请输入商品名称')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.type) {
-                return this.$message.warning('请选择商品类型')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.model) {
-                return this.$message.warning('请输入商品品号')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.category_id) {
-                return this.$message.warning('请选择商品分类')
+                return this.$message.warning(this.$t('def.enter'))
             }
            /* if (!form.man_hour) {
                 return this.$message.warning('请输入工时')
             }*/
             if (!form.sales_area_ids) {
-                return this.$message.warning('请选择销售区域')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (this.specific.mode === 1 || this.indep_flag) { // 单规格
                 if (!form.code) {
-                    return this.$message.warning('请输入商品编码')
+                    return this.$message.warning(this.$t('def.enter'))
                 }
                 /* if (!form.price) {
                     return this.$message.warning('请输入商品建议零售价')
@@ -710,23 +710,23 @@ export default {
                     return this.$message.warning('商品成本价格应小于商品建议零售价')
                 } */
                 if (!form.fob_eur) {
-                    return this.$message.warning('请输入FOB(EUR)价格')
+                    return this.$message.warning(this.$t('def.enter'))
                 }
                 if (!form.fob_usd) {
-                    return this.$message.warning('请输入FOB(USD)价格')
+                    return this.$message.warning(this.$t('def.enter'))
                 }
             } else { // 多规格
                 // 规格定义 检查
                 for (let i = 0; i < attrDef.length; i++) {
                     const item = attrDef[i];
                     if (!item.name) {
-                        return this.$message.warning('请输入规格名')
+                        return this.$message.warning(this.$t('def.enter'))
                     }
                     if (!item.key) {
-                        return this.$message.warning('请输入规格关键字')
+                        return this.$message.warning(this.$t('def.enter'))
                     }
                     if (!item.option.length) {
-                        return this.$message.warning('请至少配置一项规格值')
+                        return this.$message.warning(this.$t('def.enter'))
                     }
                 }
                 // 规格信息 检查
@@ -734,7 +734,7 @@ export default {
                 for (let i = 0; i < specData.length; i++) {
                     const item = specData[i];
                     if (!item.code) {
-                        return this.$message.warning('请输入商品编码')
+                        return this.$message.warning(this.$t('def.enter'))
                     }
                     /* if (!item.price) {
                         return this.$message.warning('请输入商品建议零售价')
@@ -746,25 +746,25 @@ export default {
                         return this.$message.warning('商品成本价格应小于商品建议零售价')
                     } */
                     if (!item.fob_eur) {
-                        return this.$message.warning('请输入FOB(EUR)价格')
+                        return this.$message.warning(this.$t('def.enter'))
                     }
                     if (!item.fob_usd) {
-                        return this.$message.warning('请输入FOB(USD)价格')
+                        return this.$message.warning(this.$t('def.enter'))
                     }
                     let str = ''
                     for (let j = 0; j < this.specific.list.length; j++) {
                         const {name, key} = this.specific.list[j];
                         if (!item[key]) {
-                            return this.$message.warning('请输入商品' + name)
+                            return this.$message.warning(this.$t('def.enter'))
                         }
                         str += item[key]
                     }
                 }
                 if (Core.Util.hasSameItem(specData.map(i => i.code))) {
-                    return this.$message.warning('商品编码不可重复')
+                    return this.$message.warning(this.$t('i.code_a'))
                 }
                 if (Core.Util.hasSameItem(attrs)) {
-                    return this.$message.warning('请不要设置规格完全一致的商品')
+                    return this.$message.warning(this.$t('i.spec_a'))
                 }
                 console.log('attrs:', attrs)
             }

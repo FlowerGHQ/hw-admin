@@ -1,28 +1,28 @@
 <template>
     <div id="WarehouseEdit" class="edit-container">
         <div class="title-container">
-            <div class="title-area">{{ form.id ? '编辑仓库' : '新建仓库' }}</div>
+            <div class="title-area">{{ form.id ? $t('wa.edit') :  $t('wa.add') }}</div>
         </div>
         <div class="form-block">
             <div class="form-title">
-                <div class="title-colorful">基本信息</div>
+                <div class="title-colorful">{{ $t('n.information') }}</div>
             </div>
             <div class="form-content">
                 <div class="form-item required">
-                    <div class="key">仓库名称：</div>
+                    <div class="key">{{ $t('n.name') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" placeholder="请输入仓库名称"/>
+                        <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">仓库类型：</div>
+                    <div class="key">{{ $t('n.type') }}：</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.type">
 <!--                            <a-radio class="type-item" v-for="(val, key) in warehouseType" :key="key" :value="key">{{ val }}
                             </a-radio>-->
                             <a-radio-group v-model:value="form.type">
-                                <a-radio :value="warehouseType.QUALITY">成品仓</a-radio>
-                                <a-radio :value="warehouseType.DEFECTIVE">残次仓</a-radio>
+                                <a-radio :value="warehouseType.QUALITY">{{ $t('wa.good') }}</a-radio>
+                                <a-radio :value="warehouseType.DEFECTIVE">{{ $t('wa.imperfect') }}</a-radio>
                                 <a-radio :value="warehouseType.MATERIAL" v-if="$auth('ADMIN')">物料仓</a-radio>
                                 <a-radio :value="warehouseType.CUSTOMIZE" v-if="$auth('ADMIN')">广宣品仓</a-radio>
                             </a-radio-group>
@@ -30,34 +30,35 @@
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">联系人：</div>
+                    <div class="key">{{ $t('n.contact') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.contact_name" placeholder="请输入联系人"/>
+                        <a-input v-model:value="form.contact_name" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">联系电话：</div>
+                    <div class="key">{{ $t('n.phone') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.contact_phone" placeholder="请输入联系人电话"/>
+                        <a-input v-model:value="form.contact_phone" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">仓库地址：</div>
+                    <div class="key">{{ $t('wa.address') }}：</div>
                     <div class="value">
-                        <ChinaAddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
+<!--                        <ChinaAddressCascader @select='handleAddressSelect' :default-address='defAddr' v-if="$auth('ADMIN')"/>-->
+                        <AddressCascader v-model:value="areaMap" :def-area='area' :default-address='defAddr'/>
                     </div>
                 </div>
-                <div class="form-item ">
+                <div class="form-item">
                     <div class="key"></div>
                     <div class="value">
-                        <a-input v-model:value="form.address" placeholder="请输入详细地址"/>
+                        <a-input v-model:value="form.address" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary" v-if="$auth('warehouse.save')">确定</a-button>
-            <a-button @click="routerChange('back')" type="primary" ghost="">取消</a-button>
+            <a-button @click="handleSubmit" type="primary" v-if="$auth('warehouse.save')">{{ $t('def.sure') }}</a-button>
+            <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
         </div>
     </div>
 </template>
@@ -65,10 +66,12 @@
 <script>
 import Core from '../../core';
 import ChinaAddressCascader from '../../components/common/ChinaAddressCascader.vue'
+import AddressCascader from '@/components/common/AddressCascader.vue';
+
 
 export default {
     name: 'WarehouseEdit',
-    components: { ChinaAddressCascader },
+    components: { ChinaAddressCascader, AddressCascader },
     props: {},
     data() {
         return {
@@ -82,15 +85,22 @@ export default {
             form: {
                 id: '',
                 name: '',
-                province: '',
-                city: '',
-                county: '',
                 address: '',
                 type: '',
                 contact_phone: '',
                 contact_name: '',
             },
-            defAddr: []
+            defAddr: [],
+            areaMap: {},
+            area: {
+                country: '',
+                country_en: '',
+                province: '',
+                province_en: '',
+                city: '',
+                city_en: '',
+                county: '',
+            }
         };
     },
     watch: {},
@@ -129,23 +139,46 @@ export default {
         },
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
+            console.log('form',form)
+            let area = Core.Util.deepCopy(this.area)
             if (!form.name) {
-                return this.$message.warning('请输入仓库名称')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.type) {
-                return this.$message.warning('请选择仓库类型')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.contact_name) {
-                return this.$message.warning('请输入联系人')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.contact_phone) {
-                return this.$message.warning('请输入联系人电话')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.address) {
-                return this.$message.warning('请输入仓库地址')
+                return this.$message.warning(this.$t('def.enter'))
             }
-            Core.Api.Warehouse.save(form).then(() => {
-                this.$message.success('保存成功')
+            if (!Core.Util.isEmptyObj(this.areaMap)) {
+                console.log('areaMap2222',this.areaMap)
+                area.country = this.areaMap.country.name
+                area.country_en = this.areaMap.country.name_en
+                area.city = this.areaMap.city.name
+                area.city_en = this.areaMap.city.name_en
+                if (this.areaMap.province) {
+                    area.province = this.areaMap.province.name
+                    area.province_en = this.areaMap.province.name_en
+                }
+                if (this.areaMap.county) {
+                    area.county = this.areaMap.county.name
+                }
+            }
+            if (!this.$auth('ADMIN') && !(Object.values(area).filter(i => i).length)) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            console.log('area12333333', area)
+            Core.Api.Warehouse.save({
+                ...form,
+                ...area,
+            }).then(() => {
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)

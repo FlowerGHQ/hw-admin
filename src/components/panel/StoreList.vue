@@ -1,11 +1,11 @@
 <template>
 <div class="StoreList gray-panel no-margin">
     <div class="panel-title">
-        <div class="title">门店列表</div>
+        <div class="title">{{ $t('s.store_list') }}</div>
     </div>
     <div class="panel-content">
         <div class="table-container">
-            <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('store.save')" class="panel-btn"><i class="icon i_add"/>新增门店</a-button>
+            <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('store.save')" class="panel-btn"><i class="icon i_add"/>{{ $t('s.new_store') }}</a-button>
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false'>
                 <template #bodyCell="{ column, text , record }">
@@ -22,15 +22,15 @@
                     </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
-                            {{ text ? '启用中' : '已禁用' }}
+                            {{ text ? $t('def.enable_ing') : $t('def.disable_ing') }}
                         </div>
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('store.detail')"><i class="icon i_detail"/> 详情</a-button>
-                        <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('store.save')"><i class="icon i_edit"/> 编辑</a-button>
+                        <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('store.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
+                        <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('store.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
                         <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
-                            <template v-if="record.status && $auth('store.delete')"><i class="icon i_forbidden"/>禁用</template>
-                            <template v-if="!record.status && $auth('store.enable')"><i class="icon i_enable"/>启用</template>
+                            <template v-if="record.status && $auth('store.delete')"><i class="icon i_forbidden"/>{{ $t('def.disable') }}</template>
+                            <template v-if="!record.status && $auth('store.enable')"><i class="icon i_enable"/>{{ $t('def.enable') }}</template>
                         </a-button>
                     </template>
                 </template>
@@ -44,7 +44,7 @@
                 show-quick-jumper
                 show-size-changer
                 show-less-items
-                :show-total="total => `共${total}条`"
+                :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                 :hide-on-single-page='false'
                 :pageSizeOptions="['10', '20', '30', '40']"
                 @change="pageChange"
@@ -91,19 +91,19 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: '门店名称', dataIndex: 'name', key: 'detail'},
-                {title: '联系人姓名', dataIndex: 'contact_name', key:'item'},
-                {title: '联系人电话', dataIndex: 'contact_phone',key:'item'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '状态', dataIndex: 'status', key: 'status' },
-                {title: '操作', key: 'operation', fixed: 'right'},
+                {title: this.$t('e.name'), dataIndex: 'name', key: 'detail'},
+                {title: this.$t('n.contact'), dataIndex: 'contact_name', key:'item'},
+                {title: this.$t('n.phone'), dataIndex: 'contact_phone',key:'item'},
+                {title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time'},
+                {title: this.$t('n.state'), dataIndex: 'status', key: 'status' },
+                {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
-            if (this.$auth('ADMIN')) {
+          /*  if (this.$auth('ADMIN')) {
                 tableColumns.splice(1, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'name'})
             }
             if (this.$auth('ADMIN')) {
                 tableColumns.splice(2, 0, {title: '所属零售商', dataIndex: 'agent_name', key: 'name'})
-            }
+            }*/
             return tableColumns
         },
     },
@@ -161,34 +161,16 @@ export default {
             });
         },
 
-        handleDelete(id) {
-            let _this = this;
-            this.$confirm({
-                title: '确定要删除该门店吗？',
-                okText: '确定',
-                okType: 'danger',
-                cancelText: '取消',
-                onOk() {
-                    Core.Api.Store.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
-                        _this.getTableData();
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
-                },
-            });
-        },
-
         handleStatusChange(record) {
             let _this = this;
             this.$confirm({
-                title: `确定要${record.status ? '禁用' : '启用'}该门店吗？`,
-                okText: '确定',
+                title: _this.$t('pop_up.sure') + `${record.status ? _this.$t('pop_up.disable') : _this.$t('pop_up.enable')}` + _this.$t('pop_up.store'),
+                okText: this.$t('pop_up.yes'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Store.updateStatus({id:record.id}).then(() => {
-                        _this.$message.success(`${record.status ? '禁用' : '启用'}成功`);
+                        _this.$message.success(`${record.status ?  _this.$t('pop_up.success_disable') : _this.$t('pop_up.success_enable')}` + _this.$t('pop_up.success'));
                         _this.getTableData();
                         _this.$emit('change')// 刷新父组件
                     }).catch(err => {

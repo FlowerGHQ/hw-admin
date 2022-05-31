@@ -1,23 +1,23 @@
 <template>
 <div class="UserList gray-panel no-margin">
     <div class="panel-title">
-        <div class="title">员工列表</div>
+        <div class="title">{{ $t('e.employee_list') }}</div>
     </div>
     <div class="panel-content">
         <div class="table-container">
             <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('user.save')" class="panel-btn">
-                <i class="icon i_add"/>新增员工
+                <i class="icon i_add"/>{{ $t('e.new_employee') }}
             </a-button>
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.dataIndex === 'type'">
-                        {{ $Util.userTypeFilter(text) }}
+                        {{ $Util.userTypeFilter(text, $i18n.locale) }}
                     </template>
-                    <template v-if="column.dataIndex === 'flag_admin'">
+                    <template v-if="column.dataIndex === 'flag_admin' && $auth('user.set-admin')">
                         <template v-if="loginType < type">
-                            <a-switch :checked="!!record.flag_admin" checked-children="是" un-checked-children="否" @click="handleManagerChange(record)"/>
+                            <a-switch :checked="!!record.flag_admin" :checked-children="$t('i.yes')" :un-checked-children="$t('i.no')" @click="handleManagerChange(record)"/>
                         </template>
-                        <template v-else>{{ text ? "是" : "否" }}</template>
+                        <template v-else> {{ text ? $t('i.yes') : $t('i.no') }}</template>
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}
@@ -31,8 +31,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('user.save')"><i class="icon i_edit"/> 编辑</a-button>
-                        <a-button type='link' class="danger" @click="handleDelete(record.id)" v-if="$auth('user.delete')"><i class="icon i_delete"/> 删除</a-button>
+                        <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('user.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                        <a-button type='link' class="danger" @click="handleDelete(record.id)" v-if="$auth('user.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                     </template>
                 </template>
             </a-table>
@@ -45,7 +45,7 @@
                 show-quick-jumper
                 show-size-changer
                 show-less-items
-                :show-total="total => `共${total}条`"
+                :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                 :hide-on-single-page='false'
                 :pageSizeOptions="['10', '20', '30', '40']"
                 @change="pageChange"
@@ -95,17 +95,17 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: '姓名', dataIndex: ['account', 'name'], key: 'item'},
-                {title: '账号', dataIndex: ['account', 'username'], key: 'item'},
-                {title: '手机号', dataIndex: ['account', 'phone']},
-                {title: '邮箱', dataIndex: ['account', 'email']},
-                {title: '类型', dataIndex: 'type'},
-                {title: '最近登录', dataIndex: ['account', 'last_login_time'], key: 'time'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '操作', key: 'operation', fixed: 'right'},
+                {title: this.$t('e.name'), dataIndex: ['account', 'name'], key: 'item'},
+                {title: this.$t('e.account'), dataIndex: ['account', 'username'], key: 'item'},
+                {title: this.$t('n.phone'), dataIndex: ['account', 'phone']},
+                {title: this.$t('n.email'), dataIndex: ['account', 'email']},
+                {title: this.$t('n.type'), dataIndex: 'type'},
+                {title: this.$t('e.login_time'), dataIndex: ['account', 'last_login_time'], key: 'time'},
+                {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
+                {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             if (this.$auth('user.set-admin')) { // 维修工不显示管理员
-                columns.splice(5, 0,{title: '是否为管理员', dataIndex: 'flag_admin'},)
+                columns.splice(5, 0,{title: this.$t('e.administrator'), dataIndex: 'flag_admin'},)
             }
             return columns
         },
@@ -182,13 +182,13 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该员工吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.User.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete -> err", err);

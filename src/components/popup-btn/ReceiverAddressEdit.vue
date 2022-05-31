@@ -2,22 +2,22 @@
 <a-button class="ReceiverAddressEdit" @click.stop="handleAddressShow()" :ghost='ghost' :type="btnType" :class="btnClass">
     <slot>{{ btnText }}</slot>
 </a-button>
-<a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleAddressClose' class="receiver-address-edit-modal">
+<a-modal :title="$t('ad.add')" v-model:visible="modalShow" :after-close='handleAddressClose' class="receiver-address-edit-modal">
     <div class="modal-content">
         <div class="form-item required">
-            <div class="key">姓名:</div>
+            <div class="key">{{ $t('n.name') }}:</div>
             <div class="value">
-                <a-input v-model:value="form.name" placeholder="请输入收货人姓名"/>
+                <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
             </div>
         </div>
         <div class="form-item required">
-            <div class="key">手机号:</div>
+            <div class="key">{{ $t('n.phone') }}:</div>
             <div class="value">
-                <a-input v-model:value="form.phone" placeholder="请输入收货人联系电话"/>
+                <a-input v-model:value="form.phone" :placeholder="$t('def.input')"/>
             </div>
         </div>
         <div class="form-item required">
-            <div class="key">收货地址:</div>
+            <div class="key">{{ $t('ad.addresses') }}:</div>
             <div class="value">
                 <AddressCascader v-model:value="areaMap" :def-area='area'/>
             </div>
@@ -25,13 +25,13 @@
         <div class="form-item">
             <div class="key"></div>
             <div class="value">
-                <a-input v-model:value="form.address" placeholder="请输入详细地址"/>
+                <a-input v-model:value="form.address" :placeholder="$t('def.input')"/>
             </div>
         </div>
     </div>
     <template #footer>
-        <a-button @click="handleAddressClose">取消</a-button>
-        <a-button @click="handleConfirm" type="primary">确定</a-button>
+        <a-button @click="handleAddressClose">{{ $t('def.cancel') }}</a-button>
+        <a-button @click="handleConfirm" type="primary">{{ $t('def.sure') }}</a-button>
     </template>
 </a-modal>
 </template>
@@ -87,8 +87,11 @@ export default {
             areaMap: {},
             area: {
                 country: '',
+                country_en: '',
                 province: '',
+                province_en: '',
                 city: '',
+                city_en: '',
                 county: '',
             }
         }
@@ -120,23 +123,32 @@ export default {
         handleConfirm() {
             let form = Core.Util.deepCopy(this.form)
             let area = Core.Util.deepCopy(this.area)
+
             if (!form.name) {
-                return this.$message.warning('请输入收货人姓名')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.phone) {
-                return this.$message.warning('请输入收货人联系电话')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!Core.Util.isEmptyObj(this.areaMap)) {
-                area = {}
-                for (const key in this.areaMap) {
-                    area[key] = this.areaMap[key].name
+                console.log('areaMap2222',this.areaMap)
+                area.country = this.areaMap.country.name
+                area.country_en = this.areaMap.country.name_en
+                area.city = this.areaMap.city.name
+                area.city_en = this.areaMap.city.name_en
+                if (this.areaMap.province) {
+                    area.province = this.areaMap.province.name
+                    area.province_en = this.areaMap.province.name_en
+                }
+                if (this.areaMap.county) {
+                    area.county = this.areaMap.county.name
                 }
             }
             if (!(Object.values(area).filter(i => i).length)) {
-                return this.$message.warning('请选择大致区域')
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.address) {
-                return this.$message.warning('请完善收货地址')
+                return this.$message.warning(this.$t('def.enter'))
             }
             Core.Api.ReceiveAddress.save({
                 ...form,

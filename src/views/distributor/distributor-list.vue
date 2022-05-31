@@ -2,29 +2,33 @@
     <div id="DistributorList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">分销商列表</div>
+                <div class="title-area">{{ $t('d.distributor_list')}}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('distributor.save')"><i class="icon i_add"/>新建分销商</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('distributor.save')"><i class="icon i_add"/>{{ $t('d.new_distributor')}}</a-button>
                 </div>
             </div>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">分销商名称:</div>
+                        <div class="key">{{ $t('n.name')}}:</div>
                         <div class="value">
-                            <a-input placeholder="请输入分销商名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('n.enter')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">地区:</div>
+                        <div class="key">{{ $t('n.area')}}:</div>
                         <div class="value">
                             <CountryCascader @search="handleOtherSearch" ref='CountryCascader'/>
                         </div>
                     </a-col>
+                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
+                        <div class="key">{{ $t('d.create_time') }}:</div>
+                        <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
+                    </a-col>
                 </a-row>
                 <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">查询</a-button>
-                    <a-button @click="handleSearchReset">重置</a-button>
+                    <a-button @click="handleSearch" type="primary">{{ $t('def.search')}}</a-button>
+                    <a-button @click="handleSearchReset">{{ $t('def.reset')}}</a-button>
                 </div>
             </div>
             <div class="table-container">
@@ -32,7 +36,7 @@
                     :row-key="record => record.id" :pagination='false' @change="handleTableChange">
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.dataIndex === 'type'">
-                            {{ $Util.distributorTypeFilter(text) }}
+                            {{ $Util.distributorTypeFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.dataIndex === 'name' && $auth('distributor.detail')">
                             <a-tooltip placement="top" :title='text'>
@@ -41,7 +45,7 @@
                         </template>
                         <template v-if="column.dataIndex === 'status'">
                             <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
-                                {{ text ? '启用中' : '已禁用' }}
+                                {{ text ? $t('def.enable_ing') : $t('def.disable_ing') }}
                             </div>
                         </template>
                         <template v-if="column.dataIndex === 'sales_area_list'">
@@ -55,14 +59,17 @@
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
+                        <template v-if="column.key === 'country'">
+                            {{ text || '-' }}
+                        </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('distributor.detail')"><i class="icon i_detail"/> 详情
+                            <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('distributor.detail')"><i class="icon i_detail"/> {{ $t('def.detail') }}
                             </a-button>
-                            <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('distributor.save')"><i class="icon i_edit"/> 编辑
+                            <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('distributor.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}
                             </a-button>
                             <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
-                                <template v-if="record.status && $auth('distributor.delete')"><i class="icon i_forbidden"/>禁用</template>
-                                <template v-if="$auth('distributor.enable') && !record.status"><i class="icon i_enable"/>启用</template>
+                                <template v-if="record.status && $auth('distributor.delete')"><i class="icon i_forbidden"/>{{ $t('def.disable') }}</template>
+                                <template v-if="$auth('distributor.enable') && !record.status"><i class="icon i_enable"/>{{ $t('def.enable') }}</template>
                             </a-button>
                         </template>
                     </template>
@@ -76,7 +83,7 @@
                     show-quick-jumper
                     show-size-changer
                     show-less-items
-                    :show-total="total => `共${total}条`"
+                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                     :hide-on-single-page='false'
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="pageChange"
@@ -118,28 +125,33 @@ export default {
             },
             // 表格
             tableData: [],
+            lang: '',
         };
     },
-    watch: {},
+    watch: {
+    },
     computed: {
         tableColumns() {
             let { filteredInfo } = this;
             filteredInfo = filteredInfo || {};
             let columns = [
-                {title: '分销商', dataIndex: 'name'},
-                {title: '简称', dataIndex: 'short_name'},
-                {title: '类型', dataIndex: 'type',
-                    filters: Core.Const.DISTRIBUTOR.TYPE_LIST, filterMultiple: false, filteredValue: filteredInfo.type || null },
-                {title: '国家', dataIndex: 'country'},
-                {title: '港口', dataIndex: 'receive_port'},
-                {title: '联系人', dataIndex: 'contact'},
-                {title: '手机号', dataIndex: 'phone'},
-                {title: '销售区域', dataIndex: 'sales_area_list'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '状态', dataIndex: 'status', key: 'status',
-                    filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [1] },
-                {title: '操作', key: 'operation', fixed: 'right'},
+                {title: this.$t('d.distributor_name'), dataIndex: 'name'},
+                {title: this.$t('d.short_name'), dataIndex: 'short_name'},
+                {title: this.$t('n.type'), dataIndex: 'type',
+                    filters: this.$Util.tableFilterFormat(Core.Const.DISTRIBUTOR.TYPE_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.type || null },
+                {title: this.$t('n.country'),dataIndex: 'country', key: 'country'},
+                {title: this.$t('d.port'), dataIndex: 'receive_port'},
+                {title: this.$t('n.contact'), dataIndex: 'contact'},
+                {title: this.$t('n.phone'), dataIndex: 'phone'},
+                {title: this.$t('d.sales_area'), dataIndex: 'sales_area_list'},
+                {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
+                {title: this.$t('n.state'), dataIndex: 'status', key: 'status',
+                    filters: this.$Util.tableFilterFormat(Core.Const.ORG_STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [1] },
+                {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
+            if (this.$i18n.locale === 'en' ) {
+                columns.splice(3, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
+            }
             return columns
         },
     },
@@ -237,13 +249,13 @@ export default {
         handleStatusChange(record) {
             let _this = this;
             this.$confirm({
-                title: `确定要${record.status ? '禁用' : '启用'}该分销商吗？`,
-                okText: '确定',
+                title: _this.$t('pop_up.sure') + `${record.status ? _this.$t('pop_up.disable') : _this.$t('pop_up.enable')}` + _this.$t('pop_up.distributor'),
+                okText: this.$t('pop_up.yes'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Distributor.updateStatus({id: record.id}).then(() => {
-                        _this.$message.success(`${record.status ? '禁用' : '启用'}成功`);
+                        _this.$message.success(`${record.status ?  _this.$t('pop_up.success_disable') : _this.$t('pop_up.success_enable')}` + _this.$t('pop_up.success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleStatusChange err", err);

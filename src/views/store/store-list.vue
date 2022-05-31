@@ -2,43 +2,43 @@
     <div id="StoreList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">门店列表</div>
+                <div class="title-area">{{ $t('s.store_list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('store.save')"><i class="icon i_add"/>新建门店</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('store.save')"><i class="icon i_add"/>{{ $t('s.new_store') }}</a-button>
                 </div>
             </div>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">门店名称:</div>
+                        <div class="key">{{ $t('n.name') }}:</div>
                         <div class="value">
-                            <a-input placeholder="请输入门店名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
-                        <div class="key">所属分销商:</div>
+                        <div class="key">{{ $t('n.distributor') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.distributor_id" placeholder="请选择所属分销商" @change="handleSearch">
+                            <a-select v-model:value="searchForm.distributor_id" :placeholder="$t('def.select')" @change="handleSearch">
                                 <a-select-option v-for="distributor of distributorList" :key="distributor.id" :value="distributor.id">{{ distributor.name }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
-                        <div class="key">所属零售商:</div>
+                        <div class="key">{{ $t('n.agent') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.agent_id" placeholder="请选择所属零售商" @change='handleSearch'>
+                            <a-select v-model:value="searchForm.agent_id" :placeholder="$t('def.select')" @change='handleSearch'>
                                 <a-select-option v-for="agent of agentList" :key="agent.id" :value="agent.id">{{ agent.name }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
-                        <div class="key">创建时间:</div>
+                        <div class="key">{{ $t('def.create_time') }}:</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">查询</a-button>
-                    <a-button @click="handleSearchReset">重置</a-button>
+                    <a-button @click="handleSearch" type="primary">{{ $t('def.search')}}</a-button>
+                    <a-button @click="handleSearchReset">{{ $t('def.reset')}}</a-button>
                 </div>
 
             </div>
@@ -62,24 +62,24 @@
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
-                        <template v-if="column.key === 'flag_receive_transfer'">
+<!--                        <template v-if="column.key === 'flag_receive_transfer'">
                             <a-switch v-if="$auth('ADMIN')" :checked="!!record.flag_receive_transfer"
                                 checked-children="是" un-checked-children="否" @click="handleTransferChange(record)"/>
                             <div v-else class="status status-bg status-tag" :class="text ? 'green' : 'red'">
                                 {{ text ? '接受' : '不接受' }}
                             </div>
-                        </template>
+                        </template>-->
                         <template v-if="column.dataIndex === 'status'">
                             <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
-                                {{ text ? '启用中' : '已禁用' }}
+                                {{ text ? $t('def.enable_ing') : $t('def.disable_ing') }}
                             </div>
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('store.detail')"><i class="icon i_detail"/>详情</a-button>
-                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('store.save')"><i class="icon i_edit"/>编辑</a-button>
+                            <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('store.detail')"><i class="icon i_detail"/> {{ $t('def.detail') }}</a-button>
+                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('store.save')"><i class="icon i_edit"/> {{ $t('def.edit') }}</a-button>
                             <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
-                                <template v-if="record.status && $auth('store.delete')"><i class="icon i_forbidden"/>禁用</template>
-                                <template v-if="!record.status && $auth('store.enable')"><i class="icon i_enable"/>启用</template>
+                                <template v-if="record.status && $auth('store.delete')"><i class="icon i_forbidden"/> {{ $t('def.disable') }}</template>
+                                <template v-if="!record.status && $auth('store.enable')"><i class="icon i_enable"/>{{ $t('def.enable') }}</template>
                             </a-button>
                         </template>
                     </template>
@@ -93,7 +93,7 @@
                     show-quick-jumper
                     show-size-changer
                     show-less-items
-                    :show-total="total => `共${total}条`"
+                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                     :hide-on-single-page='false'
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="pageChange"
@@ -152,21 +152,21 @@ export default {
             let { filteredInfo } = this;
             filteredInfo = filteredInfo || {};
             let tableColumns = [
-                {title: '门店名称', dataIndex: 'name', key: 'detail'},
-                {title: '简称', dataIndex: 'short_name'},
-                {title: '联系人姓名', dataIndex: 'contact_name', key:'item'},
-                {title: '联系人电话', dataIndex: 'contact_phone',key:'item'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '状态', dataIndex: 'status', key: 'status',
-                    filters: Core.Const.ORG_STATUS_LIST, filterMultiple: false, filteredValue: filteredInfo.status || [1] },
-                {title: '操作', key: 'operation', fixed: 'right'},
+                {title: this.$t('n.name'), dataIndex: 'name', key: 'detail'},
+                {title: this.$t('d.short_name'), dataIndex: 'short_name'},
+                {title: this.$t('n.contact'), dataIndex: 'contact_name', key:'item'},
+                {title: this.$t('n.phone'), dataIndex: 'contact_phone',key:'item'},
+                {title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time'},
+                {title: this.$t('n.state'), dataIndex: 'status', key: 'status',
+                    filters: this.$Util.tableFilterFormat(Core.Const.ORG_STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [1] },
+                {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             if (this.$auth('ADMIN')) {
-                tableColumns.splice(2, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'item'})
-                tableColumns.splice(6, 0, {title: '是否接受转单', dataIndex: 'flag_receive_transfer', key: 'flag_receive_transfer'})
+                tableColumns.splice(2, 0, {title: this.$t('n.distributor'), dataIndex: 'distributor_name', key: 'item'})
+                // tableColumns.splice(6, 0, {title: '是否接受转单', dataIndex: 'flag_receive_transfer', key: 'flag_receive_transfer'})
             }
             if (this.$auth('ADMIN', 'DISTRIBUTOR')) {
-                tableColumns.splice(3, 0, {title: '所属零售商', dataIndex: 'agent_name', key: 'item'})
+                tableColumns.splice(3, 0, {title: this.$t('n.agent'), dataIndex: 'agent_name', key: 'item'})
             }
             return tableColumns
         },
@@ -289,13 +289,13 @@ export default {
         handleStatusChange(record) {
             let _this = this;
             this.$confirm({
-                title: `确定要${record.status ? '禁用' : '启用'}该门店吗？`,
-                okText: '确定',
+                title: _this.$t('pop_up.sure') + `${record.status ? _this.$t('pop_up.disable') : _this.$t('pop_up.enable')}` + _this.$t('pop_up.store'),
+                okText: this.$t('pop_up.yes'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Store.updateStatus({id:record.id}).then(() => {
-                        _this.$message.success(`${record.status ? '禁用' : '启用'}成功`);
+                        _this.$message.success(`${record.status ?  _this.$t('pop_up.success_disable') : _this.$t('pop_up.success_enable')}` + _this.$t('pop_up.success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleStatusChange err", err);

@@ -1,10 +1,10 @@
 <template>
     <div id='SupplierDetail' class='list-container'>
         <div class='title-container'>
-            <div class='title-area'>销售区域详情</div>
+            <div class='title-area'>{{ $t('ar.detail') }}</div>
             <div class="btns-area">
-                <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('sales-area.save')"><i class="icon i_edit"/>编辑</a-button>
-                <a-button type="danger" ghost @click="handleDelete(id)" v-if="$auth('sales-area.delete')"><i class="icon i_close_c"/>删除</a-button>
+                <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('sales-area.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                <a-button type="danger" ghost @click="handleDelete(id)" v-if="$auth('sales-area.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
             </div>
         </div>
         <div class="gray-panel">
@@ -16,15 +16,15 @@
                 </div>
                 <a-row class="desc-detail">
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">大洲：</span>
+                        <span class="key">{{ $t('n.continent') }}：</span>
                         <span class="value">{{ detail.continent }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">国家：</span>
+                        <span class="key">{{ $t('n.country') }}：</span>
                         <span class="value">{{ detail.country }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">创建时间：</span>
+                        <span class="key">{{ $t('n.time') }}：</span>
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
                 </a-row>
@@ -32,7 +32,7 @@
         </div>
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
-                 <a-tab-pane key="SalesAreaItemList" tab="销售区域商品列表">
+                 <a-tab-pane key="SalesAreaItemList" :tab="$t('i.item_list')">
                     <SalesAreaItemList :salesAreaId="id" :materialId="material_id" v-if="activeKey === 'SalesAreaItemList'"/>
                 </a-tab-pane>
             </a-tabs>
@@ -103,14 +103,14 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该销售区域吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.SalesArea.delete({id})
                         .then(() => {
-                            _this.$message.success('删除成功');
+                            _this.$message.success(_this.$t('pop_up.delete_success'));
                             _this.routerChange('list');
                         }).catch((err) => {
                             console.log('handleDelete err', err);

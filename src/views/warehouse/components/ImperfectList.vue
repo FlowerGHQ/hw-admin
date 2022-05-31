@@ -36,7 +36,7 @@
                     show-quick-jumper
                     show-size-changer
                     show-less-items
-                    :show-total="total => `共${total}条`"
+                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                     :hide-on-single-page='false'
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="pageChange"
@@ -77,24 +77,28 @@ export default {
             pageSize: 20,
             total: 0,
             tableData: [],
-            tableColumns: [
-                {title: '故障件编号', dataIndex: 'uid'},
-                {title: '车架号', dataIndex: 'vehicle_no', key: 'item'},
-                {title: '维修单号', dataIndex: 'source_uid', key: 'detail'},
-                {title: '工单帐类', dataIndex: 'service_type'},
-                {title: '所属单位', dataIndex: 'source_org_name'},
-                {title: '更换商品', dataIndex: ['item','name'], key: 'item'},
-                {title: '商品编码', dataIndex: ['item','code'], key: 'item'},
-                {title: '故障原因', dataIndex: 'item_fault_name', key: 'item'},
-                // {title: '故障件实例', dataIndex: 'entity_uid', key: 'item'},
-                {title: '审核人', dataIndex: 'audit_user_name', key: 'item'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '操作', dataIndex: 'operation'},
-            ],
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        tableColumns() {
+            let columns = [
+                {title: this.$t('n.fault'), dataIndex: 'uid'},
+                {title: this.$t('search.vehicle_no'), dataIndex: 'vehicle_no', key: 'item'},
+                {title: this.$t('r.sn'), dataIndex: 'source_uid', key: 'detail'},
+                {title: this.$t('r.warranty'), dataIndex: 'service_type'},
+                {title: this.$t('r.unit'), dataIndex: 'source_org_name'},
+                {title: this.$t('r.item'), dataIndex: ['item','name'], key: 'item'},
+                {title: this.$t('i.code'), dataIndex: ['item','code'], key: 'item'},
+                {title: this.$t('r.fault_cause'), dataIndex: 'item_fault_name', key: 'item'},
+                // {title: '故障件实例', dataIndex: 'entity_uid', key: 'item'},
+                {title: this.$t('n.operator'), dataIndex: 'operator_name', key: 'item'},
+                {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
+                {title: this.$t('def.operate'), dataIndex: 'operation'},
+            ]
+            return columns
+        },
+    },
     mounted() {
         this.getTableData();
     },
@@ -139,13 +143,13 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该故障件吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.FaultEntity.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

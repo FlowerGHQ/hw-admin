@@ -2,9 +2,9 @@
     <div id="FaultList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">{{ $t('n.list_of_faults') }}</div>
+                <div class="title-area">{{ $t('r.list_of_faults') }}</div>
                 <div class="btns-area">
-                    <FaultEdit :id="id" btnType="primary" :ghost="false" ref="FaultList" @saveFault="getTableData" v-if="$auth('fault.save')"><i class="icon i_add"/>{{ $t('n.new_fault') }}</FaultEdit>
+                    <FaultEdit :id="id" btnType="primary" :ghost="false" ref="FaultList" @saveFault="getTableData" v-if="$auth('fault.save')"><i class="icon i_add"/>{{ $t('r.new_fault') }}</FaultEdit>
                 </div>
             </div>
             <div class="table-container">
@@ -35,7 +35,7 @@
                     show-quick-jumper
                     show-size-changer
                     show-less-items
-                    :show-total="total => `共${total}条`"
+                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                     :hide-on-single-page='false'
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="pageChange"
@@ -72,7 +72,7 @@ export default {
             },
             id: 0,
             tableColumns: [
-                {title: 'table.name', dataIndex: 'name'},
+                {title: 'n.name', dataIndex: 'name'},
                 {title: 'def.create_time', dataIndex: 'create_time', key: 'time'},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ],
@@ -135,13 +135,13 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该故障吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Fault.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

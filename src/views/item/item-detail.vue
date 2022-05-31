@@ -3,43 +3,43 @@
     <div class="list-container">
         <a-spin :spinning="loading" class='loading-incontent' v-if="loading"></a-spin>
         <div class="title-container">
-            <div class="title-area">商品详情</div>
+            <div class="title-area">{{ $t('i.detail') }}</div>
             <div class="btns-area">
-                <a-button @click="routerChange('edit-explored')"><i class="icon i_relevance"/>爆炸图</a-button>
-                <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>编辑</a-button>
+                <a-button @click="routerChange('edit-explored')"><i class="icon i_relevance"/>{{ $t('i.view') }}</a-button>
+                <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
                 <!-- <a-button danger @click="handleDelete()"><i class="icon i_delete"/>删除</a-button> -->
                 <a-button :type="detail.status === 0 ? 'danger' : 'primary'" ghost @click="handleStatusChange()">
-                    <template v-if="detail.status === -1"><i class="icon i_putaway"/>上架</template>
-                    <template v-if="detail.status === 0"><i class="icon i_downaway"/>下架</template>
+                    <template v-if="detail.status === -1"><i class="icon i_putaway"/>{{ $t('i.active_a') }}</template>
+                    <template v-if="detail.status === 0"><i class="icon i_downaway"/>{{ $t('i.inactive_a') }}</template>
                 </a-button>
             </div>
         </div>
         <ItemHeader :detail='detail' :showSpec='indep_flag ? true : false'/>
         <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
             <template #expandIcon ><i class="icon i_expan_l"/> </template>
-            <a-collapse-panel key="itemInfo" header="详情信息" class="gray-collapse-panel">
+            <a-collapse-panel key="itemInfo" :header="$t('i.product_information')" class="gray-collapse-panel">
                 <a-row class="panel-content info-container">
                     <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                         <div class="info-item">
-                            <div class="key">商品编码</div>
+                            <div class="key">{{ $t('i.code') }}</div>
                             <div class="value">{{detail.code || '-'}}</div>
                         </div>
                         <div class="info-item">
-                            <div class="key">商品类型</div>
-                            <div class="value"> {{ $Util.itemTypeFilter(detail.type) }}</div>
+                            <div class="key">{{ $t('n.type') }}</div>
+                            <div class="value"> {{ $Util.itemTypeFilter(detail.type, $i18n.locale) }}</div>
                         </div>
                         <div class="info-item">
-                            <div class="key">商品分类</div>
+                            <div class="key">{{ $t('i.categories') }}</div>
                             <div class="value">{{detail.category ? detail.category.name : '-'}}</div>
                         </div>
                         <div class="info-item">
-                            <div class="key">销售区域</div>
-                            <div class="value">{{ detail.sales_area_name || '-'}}</div>
+                            <div class="key">{{ $t('d.sales_area') }}</div>
+                            <div class="value">{{ detail.sales_area_name }}</div>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" v-if="indep_flag">
                         <div class="info-item">
-                            <div class="key">成本价格</div>
+                            <div class="key">{{ $t('i.cost_price') }}</div>
                             <div class="value">{{$Util.priceUnitFilter(detail.original_price_currency)}} {{$Util.countFilter(detail.original_price)}}</div>
                         </div>
                         <div class="info-item">
@@ -63,7 +63,7 @@
                     </a-col>
                 </a-row>
             </a-collapse-panel>
-            <a-collapse-panel key="itemSpec" header="规格列表" class="gray-collapse-panel" v-if="detail.set_id && !this.indep_flag">
+            <a-collapse-panel key="itemSpec" :header="$t('i.information')" class="gray-collapse-panel" v-if="detail.set_id && !this.indep_flag">
                 <div class="panel-content table-container no-mg">
                     <a-table :columns="specificColumns" :data-source="specific.data" :scroll="{ x: true }"
                         :row-key="record => record.id" :pagination='false'>
@@ -79,8 +79,8 @@
                             </template>
                             <template v-if="column.dataIndex === 'flag_independent_info'">
                                 <template v-if="index === 0">
-                                    <a-tooltip title="在商品展示时为默认商品">
-                                        默认 <i class="icon i_hint" style="font-size: 12px;"/>
+                                    <a-tooltip :title="$t('i.default_a')">
+                                        {{ $t('i.default') }} <i class="icon i_hint" style="font-size: 12px;"/>
                                     </a-tooltip>
                                 </template>
                                 <template v-else>
@@ -90,9 +90,9 @@
 
                             <template v-if="column.key === 'operation'">
                                 <template v-if="record.flag_independent_info">
-                                    <a-button type="link" @click="routerChange('edit-explored-indep', record)"><i class="icon i_relevance"/>爆炸图</a-button>
-                                    <a-button type="link" @click="routerChange('edit-indep', record)"><i class="icon i_edit"/>编辑</a-button>
-                                    <a-button type="link" @click="routerChange('detail-indep', record)"><i class="icon i_detail"/>详情</a-button>
+                                    <a-button type="link" @click="routerChange('edit-explored-indep', record)"><i class="icon i_relevance"/> {{ $t('i.view') }}</a-button>
+                                    <a-button type="link" @click="routerChange('edit-indep', record)"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                                    <a-button type="link" @click="routerChange('detail-indep', record)"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
                                 </template>
                                 <!-- <template v-if="index > 0">
                                     <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
@@ -148,15 +148,15 @@ export default {
             }))
             column = column.filter(item => item.title && item.dataIndex)
             column.unshift(
-                {title: '商品编码', key: 'input', dataIndex: 'code', fixed: 'left'},
+                {title: this.$t('i.code'), key: 'input', dataIndex: 'code', fixed: 'left'},
             )
             column.push(
-                {title: '成本价格', key: 'money', dataIndex: 'original_price'},
+                {title: this.$t('i.cost_price'), key: 'money', dataIndex: 'original_price'},
                 {title: 'FOB(EUR)', key: 'fob', dataIndex: 'fob_eur', unit: '€'},
                 {title: 'FOB(USD)', key: 'fob', dataIndex: 'fob_usd', unit: '$'},
                 // {title: '建议零售价', key: 'money', dataIndex: 'price'},
-                {title: '是否自定义详情', dataIndex: 'flag_independent_info'},
-                {title: '操作', key: 'operation'},
+                {title: this.$t('i.custom'), dataIndex: 'flag_independent_info'},
+                {title: this.$t('def.operate'), key: 'operation'},
             )
             return column
         }
@@ -216,7 +216,7 @@ export default {
             }).then(res => {
                 console.log("getItemDetail res", res)
                 let detail = res.detail || {}
-                detail.sales_area_name = detail.sales_area_list ? detail.sales_area_list.map(i => i.name).join(',') : ''
+                detail.sales_area_name = detail.sales_area_list ? detail.sales_area_list.map(i => i.name).join(' , ') : ''
                 this.detail = detail;
                 try { this.config = JSON.parse(detail.config) } catch (err) { this.config = [] }
                 if (detail.set_id && !this.indep_flag) {
@@ -306,12 +306,12 @@ export default {
             console.log('handleIndepChange record:', record)
             let _this = this;
             this.$confirm({
-                title: `确定要${record.flag_independent_info ? '开启' : '关闭'}商品[${record.code}]的信息个性化吗？`,
-                okText: '确定',
-                cancelText: '取消',
+                title: this.$t('pop_up.sure') + `${record.flag_independent_info ? this.$t('pop_up.open') : this.$t('pop_up.close')} [${record.code}] ` + this.$t('pop_up.information'),
+                okText: this.$t('def.sure'),
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Item.setIndep({id: record.id}).then(() => {
-                        _this.$message.success('操作成功');
+                        _this.$message.success(_this.$t('pop_up.save_success'))
                         _this.getSpecList();
                     }).catch(err => {
                         console.log("handleIndepChange err", err);
@@ -325,16 +325,16 @@ export default {
 
         handleStatusChange() {
             let _this = this;
-            let name = this.detail.status === -1 ? '上架' : '下架'
+            let name = _this.detail.status === -1 ? _this.$t('i.active_a') : _this.$t('i.inactive_a')
             this.$confirm({
-                title: `确定要${name}该商品吗？`,
-                okText: '确定',
+                title: _this.$t('pop_up.sure') + `${name}？`,
+                okText: _this.$t('def.sure'),
                 okType: _this.detail.status === -1 ?  '' : 'danger',
-                content: '商品下架后，向分销商分配的商品价格将作废；若商品需重新上架，需要重新向分销商分配商品并设置价格。',
-                cancelText: '取消',
+                content:  _this.detail.status === -1 ? '' : _this.$t('i.after'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Item.updateStatus({id: _this.detail.id}).then(() => {
-                        _this.$message.success(name + '成功');
+                        _this.$message.success(name + _this.$t('pop_up.success'));
                         _this.getItemDetail();
                     }).catch(err => {
                         console.log("handleStatusChange err", err);

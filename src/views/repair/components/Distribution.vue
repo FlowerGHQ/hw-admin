@@ -132,7 +132,7 @@ export default {
                 return this.$message.warning('请选择工单负责人')
             }
             Core.Api.Repair.hand(form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.$emit('submit')
             }).catch(err => {
                 console.log('handleSubmit err:', err)

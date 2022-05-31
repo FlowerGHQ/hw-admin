@@ -1,12 +1,15 @@
 <template>
 <div class="PurchaseList  gray-panel no-margin">
     <div class="panel-title">
-        <div class="title">采购订单</div>
+        <div class="title">{{ $t('p.purchase_order') }}</div>
     </div>
     <div class="panel-content">
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :pagination='false'>
+                <template #headerCell="{title}">
+                    {{ $t(title) }}
+                </template>
                 <template #bodyCell="{ column, text , record}">
                     <template v-if="column.dataIndex === 'sn'">
                         <a-tooltip placement="top" :title='text'>
@@ -18,12 +21,12 @@
                     </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text,'color')">
-                            {{$Util.purchaseStatusFilter(text)}}
+                            {{$Util.purchaseStatusFilter(text, $i18n.locale)}}
                         </div>
                     </template>
                     <template v-if="column.dataIndex === 'payment_status'">
                         <div class="status status-bg status-tag" :class="$Util.paymentStatusFilter(text,'color')">
-                            {{$Util.paymentStatusFilter(text)}}
+                            {{$Util.paymentStatusFilter(text, $i18n.locale)}}
                         </div>
                     </template>
                     <template v-if="column.dataIndex === 'flag_review'">
@@ -47,8 +50,8 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' @click="handleRecreate(record)"> <i class="icon i_cart"/> 再次购买</a-button>
-                        <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_detail"/> 详情</a-button>
+                        <a-button type='link' @click="handleRecreate(record)"> <i class="icon i_cart"/>{{ $t('p.buy_again') }}</a-button>
+                        <a-button type='link' @click="routerChange('detail', record)"> <i class="icon i_detail"/> {{ $t('def.detail') }}</a-button>
                     </template>
                 </template>
             </a-table>
@@ -61,7 +64,7 @@
                 show-quick-jumper
                 show-size-changer
                 show-less-items
-                :show-total="total => `共${total}条`"
+                :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                 :hide-on-single-page='false'
                 :pageSizeOptions="['10', '20', '30', '40']"
                 @change="pageChange"
@@ -117,18 +120,14 @@ export default {
             },
 
             tableColumns: [
-              /*  { title: '订单编号', dataIndex: 'sn', },
-                { title: '价格', dataIndex: 'price'  },
-                { title: '订单状态', dataIndex: 'status' },
-                { title: '下单时间', dataIndex: 'create_time', key: 'time' },*/
-                { title: '订单编号', dataIndex: 'sn', },
-                { title: '订单总价', dataIndex: 'price' },
-                { title: '订单状态', dataIndex: 'status' },
-                { title: '下单时间', dataIndex: 'create_time', key: 'time' },
-                { title: '支付状态', dataIndex: 'payment_status' },
-                { title: '支付时间', dataIndex: 'pay_time', key: 'time' },
-                { title: '完成时间', dataIndex: 'close_time', key: 'time' },
-                { title: '操作', key: 'operation', fixed: 'right'}
+                { title: 'p.order_number', dataIndex: 'sn', },
+                { title: 'p.price', dataIndex: 'price' },
+                { title: 'n.state', dataIndex: 'status' },
+                { title: 'p.order_time', dataIndex: 'create_time', key: 'time' },
+                { title: 'p.payment_status', dataIndex: 'payment_status' },
+                { title: 'p.payment_time', dataIndex: 'pay_time', key: 'time' },
+                { title: 'p.complete_time', dataIndex: 'close_time', key: 'time' },
+                { title: 'def.operate', key: 'operation', fixed: 'right'}
             ],
             tableData: [],
         };

@@ -156,14 +156,14 @@ export default {
             switch (type) {
                 case 'edit': // 编辑
                     routeUrl = this.$router.resolve({
-                        path: '/production/manufacture-order-edit',
+                        path: '/manufacture/manufacture-order-edit',
                         query: {id: this.id},
                     });
                     window.open(routeUrl.href, '_self');
                     break;
                 case 'list': // 列表
                     routeUrl = this.$router.resolve({
-                        path: '/production/manufacture-order-list',
+                        path: '/manufacture/manufacture-order-list',
                         query: {id: this.id},
                     });
                     window.open(routeUrl.href, '_self');
@@ -177,7 +177,7 @@ export default {
                     break;
                 case 'bom': // BOM表详情
                     routeUrl = this.$router.resolve({
-                        path: '/production/bom-detail',
+                        path: '/manufacture/bom-detail',
                         query: {id: this.detail.bom_id},
                     });
                     window.open(routeUrl.href, '_self');

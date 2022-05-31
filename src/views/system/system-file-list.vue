@@ -2,50 +2,53 @@
 <div id="SystemFileList">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">系统附件列表</div>
+            <div class="title-area">{{ $t('f.list') }}</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('ADMIN' && 'file.save')"><i class="icon i_add"/>新建文件</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('ADMIN') && $auth('file.save')"><i class="icon i_add"/>{{ $t('f.save') }}</a-button>
             </div>
         </div>
         <div class="search-container">
             <a-row class="search-area">
                 <a-col v-if="$auth('ADMIN')" :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
-                    <div class="key">附件类型:</div>
+                    <div class="key">{{ $t('n.type') }}:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.target_type" placeholder="请选择附件类型">
-                            <a-select-option v-for="(val, key) in typeMap" :key="key" :value="key">{{ val }}</a-select-option>
+                        <a-select v-model:value="searchForm.target_type" :placeholder="$t('def.select')">
+                            <a-select-option v-for="item of typeMap" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='16' class="search-item">
-                    <div class="key">创建时间:</div>
+                    <div class="key">{{ $t('d.create_time') }}:</div>
                     <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                 </a-col>
             </a-row>
             <div class="btn-area">
-                <a-button @click="handleSearch" type="primary">查询</a-button>
-                <a-button @click="handleSearchReset">重置</a-button>
+                <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
+                <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
             </div>
 
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :pagination='false'>
+                <template #headerCell="{title}">
+                    {{ $t(title) }}
+                </template>
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.key === 'text'">
                         {{ text || '-' }}
                     </template>
                     <template v-if="column.dataIndex === 'target_type'">
-                        {{ $Util.fileTargetTypeFilter(text) }}
+                        {{ $Util.fileTargetTypeFilter(text, $i18n.locale) }}
                     </template>
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'" >
-                        <a-button type="link" @click="handleDownload(record)"><i class="icon i_download"/>下载</a-button>
+                        <a-button type="link" @click="handleDownload(record)"><i class="icon i_download"/>{{ $t('n.download') }}</a-button>
                         <template v-if="$auth('ADMIN')">
-                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('file.save')"><i class="icon i_edit"/>编辑</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('file.delete')"><i class="icon i_delete"/>删除</a-button>
+                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('file.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('file.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </template>
@@ -59,7 +62,7 @@
                 show-quick-jumper
                 show-size-changer
                 show-less-items
-                :show-total="total => `共${total}条`"
+                :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                 :hide-on-single-page='false'
                 :pageSizeOptions="['10', '20', '30', '40']"
                 @change="pageChange"
@@ -107,12 +110,12 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: '附件名', dataIndex: 'name', key: 'item'},
-                {title: '附件类型', dataIndex: 'target_type'},
-                {title: '文件类型', dataIndex: 'type', key: 'item'},
+                {title: 'n.name', dataIndex: 'name', key: 'item'},
+                {title: 'n.type', dataIndex: 'target_type'},
+                {title: 'f.type', dataIndex: 'type', key: 'item'},
                 // {title: '文件地址', dataIndex: 'path', key: 'item'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '操作', key: 'operation', fixed: 'right'},
+                {title: 'd.create_time', dataIndex: 'create_time', key: 'time'},
+                {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
             if (!this.$auth('ADMIN')) {
                 columns.splice(1,1)
@@ -180,13 +183,13 @@ export default {
         handleDelete(id) { // 删除该文件
             let _this = this;
             this.$confirm({
-                title: '确定要删除该文件吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.System.fileDelete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

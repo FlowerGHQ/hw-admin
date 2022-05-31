@@ -1,6 +1,6 @@
 <template>
     <div class="explored-content" v-if="tabsArray.length > 0">
-        <div class="title">爆炸图</div>
+        <div class="title">{{ $t('i.view') }}</div>
         <div class="explore-content">
             <a-carousel autoplay class="carousel-list">
                 <div class="carousel-item" v-for="(item,i) of tabsArray" :key="i">
@@ -123,9 +123,15 @@ export default {
             img.src = this.$Util.imageFilter(url);
         },
         imageLoadCallback(width, height, index) {
-            let cvs = this.$refs[`exploreCanvas${index}`] || [];
-            if(cvs.length > 0) this.canvasGroup[index] = cvs;
-            else return;
+            let cvs = this.$refs[`exploreCanvas${index}`];
+            if(!cvs) return;
+            if(cvs.length > 0) return;
+            if(Array.isArray(cvs) !== true) {
+                cvs = [cvs]
+            }
+            this.canvasGroup[index] = cvs
+            // if(cvs.length > 0) this.canvasGroup[index] = cvs;
+            // else return;
             let rate = width > 800 ? 1 : 800 / width;
             cvs.forEach(canvas=>{
                 canvas.width = 800;

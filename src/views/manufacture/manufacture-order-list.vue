@@ -88,7 +88,7 @@
             show-quick-jumper
             show-size-changer
             show-less-items
-            :show-total="total => `共${total}条`"
+            :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
             :hide-on-single-page='false'
             :pageSizeOptions="['10', '20', '30', '40']"
             @change="pageChange"
@@ -151,14 +151,14 @@ export default {
             switch(type) {
                 case 'edit':
                     routeUrl = this.$router.resolve({
-                        path: '/production/manufacture-order-edit',
+                        path: '/manufacture/manufacture-order-edit',
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail':
                     routeUrl = this.$router.resolve({
-                        path: '/production/manufacture-order-detail',
+                        path: '/manufacture/manufacture-order-detail',
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href,'_self')

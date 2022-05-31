@@ -2,11 +2,11 @@
 <div class="AttachmentFile">
     <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
         <template #expandIcon><i class="icon i_expan_l"/></template>
-        <a-collapse-panel key="attachmentFile" header="上传附件" class="gray-collapse-panel">
+        <a-collapse-panel key="attachmentFile" :header="$t('n.upload_attachment')" class="gray-collapse-panel">
             <div class="panel-content table-container no-mg">
                 <div class="panel-header">
-                    <span class="name">附件列表</span>
-                    <a-button type="primary" @click="handleModalShow" v-if="can_upload">上传附件</a-button>
+                    <span class="name">{{ $t('n.attachment_list') }}</span>
+                    <a-button type="primary" @click="handleModalShow" v-if="can_upload">{{$t('n.upload_attachment')}}</a-button>
                 </div>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'>
@@ -20,7 +20,7 @@
                             </div>
                         </template>
                         <template v-if="column.key === 'org'">
-                            {{ $Util.userTypeFilter(text.org_type) }}·{{ text.org_name }}
+                            {{ $Util.userTypeFilter(text.org_type, $i18n.locale) }}·{{ text.org_name }}
                         </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-'}}
@@ -29,24 +29,24 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="handleDownload(record)"><i class="icon i_download"/>下载</a-button>
-                            <a-button type='link' @click="handleDelete(record.id)" class="danger" v-if="can_delete"><i class="icon i_delete"/>删除</a-button>
+                            <a-button type='link' @click="handleDownload(record)"><i class="icon i_download"/>{{ $t('n.download') }}</a-button>
+                            <a-button type='link' @click="handleDelete(record.id)" class="danger" v-if="can_delete"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>
             </div>
         </a-collapse-panel>
     </a-collapse>
-    <a-modal v-model:visible="modalShow" title="上传附件" class="attachment-file-upload-modal" :after-close="handleModalClose">
+    <a-modal v-model:visible="modalShow" :title="$t('n.upload_attachment')" class="attachment-file-upload-modal" :after-close="handleModalClose">
         <div class="form-title">
             <div class="form-item required">
-                <div class="key">附件名称:</div>
+                <div class="key">{{ $t('n.name') }}:</div>
                 <div class="value">
-                    <a-input v-model:value="form.name" placeholder="请输入附件名称"/>
+                    <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
                 </div>
             </div>
             <div class="form-item required file-upload">
-                <div class="key">上传文件:</div>
+                <div class="key">{{ $t('f.upload') }}:</div>
                 <div class="value">
                     <a-upload name="file" class="file-uploader"
                         :file-list="upload.fileList" :action="upload.action"
@@ -54,15 +54,15 @@
                         :before-upload="handleFileCheck"
                         @change="handleFileChange">
                         <a-button type="primary" ghost class="file-upload-btn" v-if="upload.fileList.length < 1">
-                            <i class="icon i_upload"/> 选择文件
+                            <i class="icon i_upload"/> {{ $t('f.choose') }}
                         </a-button>
                     </a-upload>
                 </div>
             </div>
         </div>
         <template #footer>
-            <a-button @click="modalShow = false">取消</a-button>
-            <a-button @click="handleModalSubmit" type="primary">确定</a-button>
+            <a-button @click="modalShow = false">{{ $t('def.cancel') }}</a-button>
+            <a-button @click="handleModalSubmit" type="primary">{{ $t('def.sure') }}</a-button>
         </template>
     </a-modal>
 </div>
@@ -89,14 +89,6 @@ export default {
             activeKey: ['attachmentFile'],
 
             tableData: [],
-            tableColumns: [
-                { title: '附件名称', dataIndex: 'name', key: 'detail' },
-                { title: '文件类型', dataIndex: 'type', key: 'item' },
-                { title: '上传人', dataIndex: ['user', 'account', 'name'], key: 'item' },
-                { title: '上传组织', dataIndex: 'user', key: 'org' },
-                { title: '上传时间', dataIndex: 'create_time', key: 'time' },
-                { title: '操作', key: 'operation', fixed: 'right'},
-            ],
 
             modalShow: false,
             form: {
@@ -119,6 +111,17 @@ export default {
         };
     },
     computed: {
+        tableColumns() {
+            let columns = [
+                { title: this.$t('n.name'), dataIndex: 'name', key: 'detail' },
+                { title: this.$t('n.type'), dataIndex: 'type', key: 'item' },
+                { title: this.$t('n.uploader'), dataIndex: ['user', 'account', 'name'], key: 'item' },
+                { title: this.$t('n.uploading_agency'), dataIndex: 'user', key: 'org' },
+                { title: this.$t('n.upload_time'), dataIndex: 'create_time', key: 'time' },
+                { title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
+            ]
+            return columns
+        },
         can_upload() {
             return true
         },
@@ -159,7 +162,7 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             console.log('handleLogin form:', form)
             if (!form.name) {
-                return this.$message.warning('请输入附件名称')
+                return this.$message.warning(this.$t('def.enter'))
             }
             this.loading = true;
             Core.Api.Attachment.save({
@@ -167,7 +170,7 @@ export default {
                 target_type: this.target_type,
                 target_id: this.target_id,
             }).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.$emit('Submit')
                 this.handleModalClose();
                 this.getTableData();
@@ -206,13 +209,13 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该附件吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Attachment.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

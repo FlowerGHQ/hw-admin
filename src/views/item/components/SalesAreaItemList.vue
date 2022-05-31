@@ -1,10 +1,10 @@
 <template>
     <div class="MaterialList gray-panel no-margin">
         <div class="panel-title">
-            <div class="title">商品列表</div>
+            <div class="title">{{ $t('i.item_list') }}</div>
             <div class="btn-area">
                 <ItemSelect @select="(ids,items) => handleAddShow(TARGET_TYPE.ITEM,ids,items)" btn-class="panel-btn" :disabledChecked='checkedIds' v-if="$auth('sales-area.save')">
-                    添加商品
+                    {{ $t('i.add') }}
                 </ItemSelect>
             </div>
         </div>
@@ -27,7 +27,12 @@
                             {{ $Util.itemTypeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'attr_list'">
-                            <p class="sub-info" v-if="record.attr_list && record.attr_list.length">{{$Util.itemSpecFilter(record.item.attr_list)}}</p>
+<!--                            <p class="sub-info" v-if="record.attr_list && record.attr_list.length">{{$Util.itemSpecFilter(record.item.attr_list)}}</p>-->
+                            <a-tooltip placement="top" :title='$Util.itemSpecFilter(record.item.attr_list)'>
+                                <div class="ell" style="max-width: 120px" v-if="record.attr_list && record.attr_list.length">
+                                    {{$Util.itemSpecFilter(record.item.attr_list)}}
+                                </div>
+                            </a-tooltip>
                         </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-'}}
@@ -43,7 +48,7 @@
                         </template>
                         <template v-if="column.dataIndex === 'status'">
                             <div class="status status-bg status-tag" :class="text === 0 ? 'green' : 'red'">
-                                {{text === 0 ? '已上架' : '已下架'}}
+                                {{text === 0 ? $t('i.active') : $t('i.inactive') }}
                             </div>
                         </template>
 
@@ -56,8 +61,8 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('item.detail')"><i class="icon i_detail"/> 详情</a-button>
-                            <a-button type='link' @click="handleDelete(record)" class="danger" v-if="$auth('sales-area.delete')"><i class="icon i_delete"/> 删除</a-button>
+                            <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('item.detail')"><i class="icon i_detail"/> {{ $t('def.detail') }}</a-button>
+                            <a-button type='link' @click="handleDelete(record)" class="danger" v-if="$auth('sales-area.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -70,7 +75,7 @@
                     show-quick-jumper
                     show-size-changer
                     show-less-items
-                    :show-total="total => `共${total}条`"
+                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                     :hide-on-single-page='false'
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="pageChange"
@@ -124,17 +129,15 @@ export default {
     watch: {},
     computed: {
         tableColumns() {
-            let { filteredInfo } = this;
-            filteredInfo = filteredInfo || {};
             let columns = [
-                { title: '商品名称', dataIndex: ['item','name'], key: 'detail' },
-                { title: '商品状态', dataIndex: 'status' },
-                { title: '规格', dataIndex: 'attr_list', key: 'attr_list' },
-                { title: '类型', dataIndex: ['type'], key: 'type' },
-                { title: '商品分类', dataIndex: ['category','name'], key: 'item' },
-                { title: '商品品号', dataIndex: 'model', key: 'item' },
-                { title: '商品编码', dataIndex: 'code', key: 'item' },
-                { title: '操作', key: 'operation', fixed: 'right', width: 180 }
+                { title: this.$t('n.name'), dataIndex: ['item','name'], key: 'detail' },
+                { title: this.$t('i.status'), dataIndex: 'status' },
+                { title: this.$t('i.spec'), dataIndex: 'attr_list', key: 'attr_list' },
+                { title: this.$t('n.type'), dataIndex: ['type'], key: 'type' },
+                { title: this.$t('i.categories'), dataIndex: ['category','name'], key: 'item' },
+                { title: this.$t('i.number'), dataIndex: 'model', key: 'item' },
+                { title: this.$t('i.code'), dataIndex: 'code', key: 'item' },
+                { title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 180 }
             ]
             return columns
         },
@@ -198,16 +201,16 @@ export default {
             let name = `[${item.name}]`
             // console.log('item',item)
             this.$confirm({
-                title: '确定要删除' + name + '吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.SalesAreaItem.delete({
                         id: item.shop_id,
                         // sales_area_id: _this.salesAreaId
                     }).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete -> err", err);

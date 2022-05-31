@@ -2,36 +2,36 @@
 <div id="WarehouseList">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">仓库列表</div>
+            <div class="title-area">{{ $t('wa.list') }}</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('warehouse.save')"><i class="icon i_add"/>新建仓库</a-button>
+                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('warehouse.save')"><i class="icon i_add"/>{{ $t('wa.add') }}</a-button>
             </div>
         </div>
         <div class="search-container">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">仓库名称:</div>
+                    <div class="key">{{ $t('n.name') }}:</div>
                     <div class="value">
-                        <a-input placeholder="请输入仓库名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                        <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">仓库类型:</div>
+                    <div class="key">{{ $t('n.type') }}:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.type" placeholder="请选择仓库类型" @change="handleSearch">
+                        <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" @change="handleSearch">
                             <a-select-option v-for="(val,key) of typeList" :key="val" :value="key">{{ val }}
                             </a-select-option>
                         </a-select>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
-                    <div class="key">创建时间:</div>
+                    <div class="key">{{ $t('d.create_time') }}:</div>
                     <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                 </a-col>
             </a-row>
             <div class="btn-area">
-                <a-button @click="handleSearch" type="primary">查询</a-button>
-                <a-button @click="handleSearchReset">重置</a-button>
+                <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
+                <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
             </div>
 
         </div>
@@ -44,21 +44,18 @@
                         </a-tooltip>
                     </template>
                     <template v-if="column.key === 'type'">
-                        {{ $Util.warehouseTypeFilter(text) }}
+                        {{ $Util.warehouseTypeFilter(text, $i18n.locale) }}
                     </template>
                     <template v-if="column.key === 'address'">
-                        {{ $Util.addressFilter(record) }}
+                        {{ $Util.addressFilter(record, $i18n.locale) }}
                     </template>
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
-                    <template v-if="column.key === 'time'">
-                        {{ text || '-'}}
-                    </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('warehouse.detail')"><i class="icon i_detail"/>详情</a-button>
-                        <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('warehouse.save')"><i class="icon i_edit"/>编辑</a-button>
-                        <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('warehouse.delete')"><i class="icon i_delete"/>删除</a-button>
+                        <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('warehouse.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
+                        <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('warehouse.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                        <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('warehouse.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                     </template>
                 </template>
             </a-table>
@@ -71,7 +68,7 @@
                 show-quick-jumper
                 show-size-changer
                 show-less-items
-                :show-total="total => `共${total}条`"
+                :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                 :hide-on-single-page='false'
                 :pageSizeOptions="['10', '20', '30', '40']"
                 @change="pageChange"
@@ -108,21 +105,25 @@ export default {
                 end_time: '',
                 type: undefined,
             },
-            tableColumns: [
-                {title: '仓库名称', dataIndex: 'name',key: 'detail',},
-                {title: '仓库类型', dataIndex: 'type',key: 'type',},
-                {title: '联系人', dataIndex: 'contact_name',key: 'text',},
-                {title: '联系人电话', dataIndex: 'contact_phone',key: 'text',},
-                {title: '仓库地址', key:'address', dataIndex: 'address'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '操作', key: 'operation', fixed: 'right' },
-            ],
             tableData: [],
             typeList: Core.Const.WAREHOUSE.TYPE_MAP,
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        tableColumns() {
+            let columns = [
+                {title: this.$t('n.name'), dataIndex: 'name',key: 'detail',},
+                {title: this.$t('n.type'), dataIndex: 'type',key: 'type',},
+                {title: this.$t('n.contact'), dataIndex: 'contact_name',key: 'text',},
+                {title: this.$t('n.phone'), dataIndex: 'contact_phone',key: 'text',},
+                {title: this.$t('wa.address'), key:'address', dataIndex: 'address'},
+                {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
+                {title: this.$t('def.operate'), key: 'operation', fixed: 'right' },
+            ]
+            return columns
+        },
+    },
     mounted() {
         this.getTableData();
     },
@@ -192,13 +193,13 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该仓库吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Warehouse.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

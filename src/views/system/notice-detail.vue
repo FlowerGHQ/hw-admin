@@ -1,10 +1,10 @@
 <template>
     <div id="NoticeDetail" class="list-container">
         <div class="title-container">
-            <div class="title-area">消息详情</div>
+            <div class="title-area">{{ $t('no.detail') }}</div>
             <div class="btns-area" v-if="$auth('ADMIN')">
-                <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('message.save')"><i class="icon i_edit"/>编辑</a-button>
-                <a-button danger @click="handleDelete()"><i class="icon i_delete" v-if="$auth('message.delete')"/>删除</a-button>
+                <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('message.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                <a-button type="danger" ghost @click="handleDelete()"><i class="icon i_delete" v-if="$auth('message.delete')"/>{{ $t('def.delete') }}</a-button>
             </div>
         </div>
         <div class="gray-panel">
@@ -82,13 +82,13 @@ export default {
         handleDelete() {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该消息吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Notice.delete({id:_this.notice_id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.routerChange('list');
                     }).catch(err => {
                         console.log("handleDelete err", err);

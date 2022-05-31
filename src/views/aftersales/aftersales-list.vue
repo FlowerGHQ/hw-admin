@@ -1,46 +1,49 @@
 <template>
 <div id="AftersalesList" class="list-container">
     <div class="title-container">
-        <div class="title-area">售后单列表</div>
+        <div class="title-area">{{ $t('af.list') }}</div>
         <div class="btns-area">
-            <a-button type="primary" @click="routerChange('edit')" v-if="!$auth('ADMIN')"><i class="icon i_add" />申请售后</a-button>
+            <a-button type="primary" @click="routerChange('edit')" v-if="!$auth('ADMIN')"><i class="icon i_add" />{{ $t('af.sales') }}</a-button>
         </div>
     </div>
     <div class="search-container">
         <a-row class="search-area">
             <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                <div class="key">售后单编号:</div>
+                <div class="key">{{ $t('af.number') }}:</div>
                 <div class="value">
-                    <a-input placeholder="请输入售后单编号" v-model:value="searchForm.sn" @keydown.enter='handleSearch'/>
+                    <a-input :placeholder="$t('def.input')" v-model:value="searchForm.sn" @keydown.enter='handleSearch'/>
                 </div>
             </a-col>
             <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                <div class="key">采购单编号:</div>
+                <div class="key">{{ $t('af.sn') }}:</div>
                 <div class="value">
-                    <a-input placeholder="请输入采购单编号" v-model:value="searchForm.order_sn" @keydown.enter='handleSearch'/>
+                    <a-input :placeholder="$t('def.input')" v-model:value="searchForm.order_sn" @keydown.enter='handleSearch'/>
                 </div>
             </a-col>
             <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                <div class="key">售后类型:</div>
+                <div class="key">{{ $t('n.type') }}:</div>
                 <div class="value">
-                    <a-select placeholder="请选择售后类型" v-model:value="searchForm.type" @change='handleSearch'>
-                        <a-select-option v-for="val,key of typeMap" :key="key" :value="key">{{ val }}</a-select-option>
+                    <a-select :placeholder="$t('def.select')" v-model:value="searchForm.type" @change='handleSearch'>
+                        <a-select-option v-for="item of typeMap" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-select-option>
                     </a-select>
                 </div>
             </a-col>
             <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
-                <div class="key">创建时间:</div>
+                <div class="key">{{ $t('d.create_time') }}:</div>
                 <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
             </a-col>
         </a-row>
         <div class="btn-area">
-            <a-button @click="handleSearch" type="primary">查询</a-button>
-            <a-button @click="handleSearchReset">重置</a-button>
+            <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
+            <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
         </div>
     </div>
     <div class="table-container">
         <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
             :row-key="record => record.id" :pagination='false'>
+            <template #headerCell="{title}">
+                {{ $t(title) }}
+            </template>
             <template #bodyCell="{ column, text , record}">
                 <template v-if="column.dataIndex === 'sn'">
                     <a-tooltip placement="top" :title='text'>
@@ -53,7 +56,7 @@
                     </a-tooltip>
                 </template>
                 <template v-if="column.dataIndex === 'type'">
-                    {{ $Util.aftersalesTypeFilter(text) }}
+                    {{ $Util.aftersalesTypeFilter(text, $i18n.locale) }}
                 </template>
                 <template v-if="column.dataIndex === 'status'">
                     <div class="status status-bg status-tag" :class="$Util.aftersalesStatusFilter(text,'color')">
@@ -80,13 +83,13 @@
                     {{ $Util.timeFilter(text) }}
                 </template>
                 <template v-if="column.key === 'operation'">
-                    <AuditHandle v-if="record.status === STATUS.APPLY && sameOrg(record.supply_org_id, record.supply_org_type)"
+                    <AuditHandle v-if="record.status === STATUS.APPLY && $auth('after-sales-order.audit') && sameOrg(record.supply_org_id, record.supply_org_type)"
                         btnType='link' :api-list="['Aftersales', 'audit']" :id="record.id" @submit="getTableData"
-                        :s-pass="STATUS.AUDIT_PASS" :s-refuse="STATUS.AUDIT_REFUSE"><i class="icon i_audit"/>审核
+                        :s-pass="STATUS.AUDIT_PASS" :s-refuse="STATUS.AUDIT_REFUSE"><i class="icon i_audit"/>{{ $t('n.audit') }}
                     </AuditHandle>
                     <template v-if="canEdit(record) && sameOrg(record.org_id, record.org_type)">
-                        <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button>
-                        <a-button type="link" @click="handleCancel(record.id)" class="danger"><i class="icon i_m_error"/>取消</a-button>
+                        <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('after-sales-order.edit')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                        <a-button type="link" @click="handleCancel(record.id)" class="danger" v-if="$auth('after-sales-order.cancel')"><i class="icon i_m_error"/>{{ $t('def.cancel') }}</a-button>
                     </template>
                 </template>
             </template>
@@ -100,7 +103,7 @@
             show-quick-jumper
             show-size-changer
             show-less-items
-            :show-total="total => `共${total}条`"
+            :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
             :hide-on-single-page='false'
             :pageSizeOptions="['10', '20', '30', '40']"
             @change="pageChange"
@@ -142,7 +145,6 @@ export default {
             query_type: '',
             searchForm: {
                 type: undefined,
-                status: undefined,
                 sn: '',
                 order_sn: '',
                 begin_time: '',
@@ -169,14 +171,14 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: '售后单号', dataIndex: 'sn', key: 'detail'},
-                {title: '售后单状态', dataIndex: 'status',key: 'status', align: 'center'},
-                {title: '售后类型', dataIndex: 'type'},
-                {title: '退款金额', dataIndex: 'refund_money', key: 'money'},
-                {title: '申请组织', dataIndex: 'org_name' ,key: 'org'},
-                {title: '采购单号', dataIndex: 'order_sn'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '操作', key: 'operation', fixed: 'right', width: 100,},
+                {title: 'af.number', dataIndex: 'sn', key: 'detail'},
+                {title: 'n.state', dataIndex: 'status',key: 'status', align: 'center'},
+                {title: 'n.type', dataIndex: 'type'},
+                {title: 'af.price', dataIndex: 'refund_money', key: 'money'},
+                {title: 'af.apply', dataIndex: 'org_name' ,key: 'org'},
+                {title: 'af.sn', dataIndex: 'order_sn'},
+                {title: 'd.create_time', dataIndex: 'create_time', key: 'time'},
+                {title: 'def.operate', key: 'operation', fixed: 'right', width: 100,},
             ]
             if (this.query_type === Core.Const.AFTERSALES.QUERY_TYPE.APPLY) {
                 tableColumns.splice(4, 1)
@@ -275,13 +277,13 @@ export default {
         handleCancel(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要取消该售后单吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_cancel'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Aftersales.cancel({id}).then(() => {
-                        _this.$message.success('取消成功');
+                        _this.$message.success(_this.$t('pop_up.canceled'));
                         _this.getStatusList();
                         _this.getTableData();
                     }).catch(err => {

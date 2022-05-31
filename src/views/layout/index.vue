@@ -5,7 +5,7 @@
             <div class="header-left" @click="collapsed = !collapsed" :class="{'collapsed': collapsed}">
                 <img src="@images/header-logo.png" class="logo" alt="浩万"/>
                 <a-divider type="vertical"/>
-                <a-tag color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType] }}端</a-tag>
+                <a-tag color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType][$i18n.locale] }}</a-tag>
             </div>
             <div class="header-right">
                 <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
@@ -28,36 +28,36 @@
                     <template #overlay>
                         <a-menu style="text-align: center;">
                             <a-menu-item>
-                                <a-button type="link" @click="handleEditShow" class="menu-item-btn">修改密码</a-button>
-                                <a-modal v-model:visible="passShow" title="修改密码" class="password-edit-modal" :after-close="handleEditClose">
+                                <a-button type="link" @click="handleEditShow" class="menu-item-btn">{{ $t('n.password') }}</a-button>
+                                <a-modal v-model:visible="passShow" :title="$t('n.password')" class="password-edit-modal" :after-close="handleEditClose">
                                     <div class="form-title">
                                         <div class="form-item required">
-                                            <div class="key">旧密码:</div>
+                                            <div class="key">{{ $t('n.old') }}:</div>
                                             <div class="value">
-                                                <a-input-password placeholder='请输入旧密码' v-model:value="form.old_password" />
+                                                <a-input-password :placeholder="$t('def.input')" v-model:value="form.old_password" />
                                             </div>
                                         </div>
                                         <div class="form-item required">
-                                            <div class="key">新密码:</div>
+                                            <div class="key">{{ $t('n.new') }}:</div>
                                             <div class="value">
-                                                <a-input-password v-model:value="form.password" placeholder="请输入新密码" />
+                                                <a-input-password v-model:value="form.password" :placeholder="$t('def.input')" />
                                             </div>
                                         </div>
                                         <div class="form-item required">
-                                            <div class="key">再次确认:</div>
+                                            <div class="key">{{ $t('n.double') }}:</div>
                                             <div class="value">
-                                                <a-input-password v-model:value="form.new_password" placeholder="请再次确认密码" />
+                                                <a-input-password v-model:value="form.new_password" :placeholder="$t('n.double')" />
                                             </div>
                                         </div>
                                     </div>
                                     <template #footer>
-                                        <a-button key="back" @click="handleEditSubmit" type="primary">确定</a-button>
-                                        <a-button @click="passShow=false">取消</a-button>
+                                        <a-button key="back" @click="handleEditSubmit" type="primary">{{ $t('def.sure') }}</a-button>
+                                        <a-button @click="passShow=false">{{ $t('def.cancel') }}</a-button>
                                     </template>
                                 </a-modal>
                             </a-menu-item>
                             <a-menu-item>
-                                <a-button type="link" @click="handleLogout" class="menu-item-btn">退 出</a-button>
+                                <a-button type="link" @click="handleLogout" class="menu-item-btn">{{ $t('n.exit') }}</a-button>
                             </a-menu-item>
                         </a-menu>
                     </template>
@@ -76,12 +76,12 @@
                         <a-sub-menu :key="item.path" v-else-if="$auth(...item.auth)">
                             <template #title>
                                 <i class='icon' :class="item.meta.icon"/>
-                                <span v-show="!collapsed">{{ item.meta.title }}</span>
+                                <span v-show="!collapsed">{{ lang =='zh' ? item.meta.title : item.meta.title_en }}</span>
                             </template>
                             <template v-for="i of item.children">
                                 <template v-if="$auth(...i.auth)">
                                     <a-menu-item :key="item.path + '/' + i.path" @click="handleLink(item.path + '/' + i.path)">
-                                        <span>{{ i.meta.title }}</span>
+                                        <span>{{ lang =='zh' ? i.meta.title : i.meta.title_en }}</span>
                                     </a-menu-item>
                                 </template>
                             </template>
@@ -116,7 +116,6 @@ export default {
         return {
             zhCN,
             enUS,
-
             breadcrumbList: [],
 
             loginType: Core.Data.getLoginType(),
@@ -272,22 +271,22 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             console.log('handleLogin form:', form)
             if (!form.old_password) {
-                return this.$message.warning('请输入旧密码')
+                return this.$message.warning(this.$t('u.old_password'))
             }
             if (!form.password) {
-                return this.$message.warning('请输入新密码')
+                return this.$message.warning(this.$t('u.new_password'))
             }
             if (!form.new_password) {
-                return this.$message.warning('请再次确认密码')
+                return this.$message.warning(this.$t('u.again'))
             }
             if (this.form.new_password !== this.form.password) {
-                this.$message.warning('两次密码输入不一致')
+                this.$message.warning(this.$t('u.not'))
                 return
             }
 
             this.loading = true;
             Core.Api.Common.updatePwd(this.form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.handleEditClose();
             }).catch(err => {
                 console.log('handleSubmit err:', err)
@@ -299,6 +298,7 @@ export default {
             console.log('handleLangSwitch')
             this.$store.commit('switchLang')
             this.$i18n.locale = this.$store.state.lang
+            console.log('this.$i18n.locale',this.$i18n.locale)
         },
     }
 };

@@ -1,53 +1,53 @@
 <template>
 <div id="ItemCategoryConfig" class="edit-container">
     <div class="title-container">
-        <div class="title-area">编辑商品配置</div>
+        <div class="title-area">{{ $t('i.edit_b') }}</div>
     </div>
     <div class="form-block" v-for="(item, index) of config" :key="index">
         <div class="form-title">
-            <div class="title">配置项{{index + 1}}</div>
+            <div class="title">{{ $t('i.configuration_item') }}{{index + 1}}</div>
         </div>
         <div class="form-content">
             <div class="form-item required">
-                <div class="key">配置项名称</div>
+                <div class="key">{{ $t('n.name') }}</div>
                 <div class="value">
-                    <a-input v-model:value="item.name" placeholder="请输入配置项名称" />
+                    <a-input v-model:value="item.name" :placeholder="$t('def.input')" />
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">配置项键值</div>
+                <div class="key">{{ $t('i.key') }}</div>
                 <div class="value">
-                    <a-input v-model:value="item.key" placeholder="请输入配置项键值(请使用英文)"/>
+                    <a-input v-model:value="item.key" :placeholder="$t('i.english')"/>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">是否必填</div>
+                <div class="key">{{ $t('i.required') }}</div>
                 <div class="value">
                     <a-radio-group v-model:value="item.required">
-                        <a-radio :value="0">不必填</a-radio>
-                        <a-radio :value="1">必填</a-radio>
+                        <a-radio :value="1">{{ $t('i.yes') }}</a-radio>
+                        <a-radio :value="0">{{ $t('i.no') }}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">内容类型</div>
+                <div class="key">{{ $t('n.type') }}</div>
                 <div class="value">
                     <a-radio-group v-model:value="item.type">
-                        <a-radio value="input">输入框</a-radio>
-                        <a-radio value="textarea">文本域</a-radio>
-                        <a-radio value="rich_text">富文本</a-radio>
-                        <a-radio value="select">选择框</a-radio>
-                        <a-radio value="radio">单选框</a-radio>
+                        <a-radio value="input">{{ $t('i.input_box') }}</a-radio>
+                        <a-radio value="textarea">{{ $t('i.text_area') }}</a-radio>
+                        <a-radio value="rich_text">{{ $t('i.rich_text') }}</a-radio>
+                        <a-radio value="select">{{ $t('i.selection_box') }}</a-radio>
+                        <a-radio value="radio">{{ $t('i.radio_button') }}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
             <div class="form-item required afs" v-if="['select', 'radio'].includes(item.type)">
-                <div class="key">内容选项</div>
+                <div class="key">{{ $t('i.options') }}</div>
                 <div class="value">
-                    <a-button type="link" @click="handleAddSelectItem(index)"><i class="icon i_add"/>添加选项</a-button>
+                    <a-button type="link" @click="handleAddSelectItem(index)"><i class="icon i_add"/>{{ $t('i.add_options') }}</a-button>
                     <div class="select-input" v-for="(inner, i) of item.select" :key="i">
-                        <a-input v-model:value="item.select[i]" placeholder="请输入选项内容" @change="(e) => handleSelectItemChange(e, index, i)"/>
-                        <a-button type="link" class="danger" @click="handleRemoveSelectItem(index, i)"><i class="icon i_delete"/>移除</a-button>
+                        <a-input v-model:value="item.select[i]" :placeholder="$t('def.input')" @change="(e) => handleSelectItemChange(e, index, i)"/>
+                        <a-button type="link" class="danger" @click="handleRemoveSelectItem(index, i)"><i class="icon i_delete"/>{{ $t('def.remove') }}</a-button>
                     </div>
                 </div>
             </div>
@@ -59,12 +59,12 @@
         <div class="form-title">
         </div>
         <div class="form-content">
-            <a-button type="primary" @click="handleAddConfig"><i class="icon i_add"/>添加配置项</a-button>
+            <a-button type="primary" @click="handleAddConfig"><i class="icon i_add"/>{{ $t('i.add_configuration') }}</a-button>
         </div>
     </div>
     <div class="form-btns">
-        <a-button type="primary" @click="handleSubmit">确定</a-button>
-        <a-button type="primary" ghost @click="routerChange('back')">取消</a-button>
+        <a-button type="primary" @click="handleSubmit">{{ $t('def.sure') }}</a-button>
+        <a-button type="primary" ghost @click="routerChange('back')">{{ $t('def.cancel') }}</a-button>
     </div>
 </div>
 </template>

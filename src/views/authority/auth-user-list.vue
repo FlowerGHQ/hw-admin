@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">用户权限管理</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange()" class="menu-item-btn" v-if="$auth('role.save')"><i class="icon i_add"/>新建用户权限</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" class="menu-item-btn" v-if="$auth('role.save')"><i class="icon i_add"/>新建用户权限</a-button>
                 </div>
             </div>
             <!-- <div class="search-container">
@@ -25,8 +25,11 @@
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record }">
-                        <template v-if="column.dataIndex === 'name'">
+<!--                        <template v-if="column.dataIndex === 'name'">
                             {{ text || '-' }}
+                        </template>-->
+                        <template v-if="column.key === 'type'">
+                            {{ $Util.authUserTypeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'tip_item'">
                             <a-tooltip placement="top" :title='text'>
@@ -37,7 +40,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="routerChange(record)" v-if="$auth('role.save')"><i class="icon i_edit"/>编辑</a-button>
+                            <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('role.save')"><i class="icon i_edit"/>编辑</a-button>
                             <a-button type='link' danger @click="handleDelete(record.id)" v-if="$auth('role.delete')"><i class="icon i_delete"/>删除</a-button>
                         </template>
                     </template>
@@ -51,7 +54,7 @@
                     show-quick-jumper
                     show-size-changer
                     show-less-items
-                    :show-total="total => `共${total}条`"
+                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                     :hide-on-single-page='false'
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="pageChange"
@@ -82,22 +85,15 @@ export default {
             searchForm: {
                 name: '',
             },
-
             // 表格数据
             tableData: [],
             tableColumns: [
-                {title: '角色名称', dataIndex: 'name'},
-                {title: '角色描述', dataIndex: 'remark', key: 'tip_item' },
+                // {title: '权限名称', dataIndex: 'name'},
+                {title: '权限类型', dataIndex: 'resource_type', key: 'type' },
+                {title: '权限对象', dataIndex: ['resource', 'name'], key: 'tip_item' },
                 {title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 {title: '操作', key: 'operation', fixed: 'right', width: 100,},
             ],
-            // 弹框
-            roleShow: false,
-            form: {
-                id: '',
-                name: '',
-                remark: '',
-            },
         };
     },
     watch: {},
@@ -106,12 +102,17 @@ export default {
         this.getTableData();
     },
     methods: {
-        routerChange(item = {}) {
-            let routeUrl = this.$router.resolve({
-                path: "/system/auth-role-edit",
-                query: {id: item.id}
-            })
-            window.open(routeUrl.href, '_self')
+        routerChange(type, item = {}) {
+            let routeUrl = ''
+            switch (type) {
+                case 'edit':  // 编辑
+                    routeUrl = this.$router.resolve({
+                        path: "/system/auth-user-edit",
+                        query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+            }
         },
         pageChange(curr) {    // 页码改变
             this.currPage = curr
@@ -122,78 +123,39 @@ export default {
             this.pageSize = size
             this.getTableData()
         },
-        handleSearch() {  // 搜索
-            this.pageChange(1);
-        },
-        handleSearchReset() {  // 重置搜索
-            Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.pageChange(1);
-        },
-
+        // handleSearch() {  // 搜索
+        //     this.pageChange(1);
+        // },
+        // handleSearchReset() {  // 重置搜索
+        //     Object.assign(this.searchForm, this.$options.data().searchForm)
+        //     this.pageChange(1);
+        // },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
-            Core.Api.Authority.roleList({
-                ...this.searchForm,
+            Core.Api.AuthorityUser.list({
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
-                console.log("AuthRole.list res", res)
+                console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
             }).catch(err => {
-                console.log('AuthRole.list err', err)
+                console.log('getTableData err:', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
-
-
-        // 新建角色
-        handleRoleShow(item) {
-            if (item) {
-                console.log('handleRoleShow item:', item)
-                this.form.id = item.id
-                this.form.name = item.name
-                this.form.remark = item.remark
-            }
-            this.roleShow = true;
-        },
-        handleRoleClose() {
-            this.roleShow = false;
-            this.form = {
-                id: '',
-                name: '',
-                remark: '',
-            }
-        },
-        handleRoleSubmit() {
-            let form = Core.Util.deepCopy(this.form)
-            console.log('handleRoleSubmit form:', form)
-            if (!form.name) {
-                return this.$message.warning('请输入角色名称')
-            }
-
-            this.loading = true;
-            Core.Api.Authority.roleEdit(this.form).then(() => {
-                this.$message.success('保存成功')
-                this.handleRoleClose();
-                this.getTableData();
-            }).catch(err => {
-                console.log('handleRoleSubmit err:', err)
-            })
-        },
-
-        // 删除角色
+        // 删除用户权限
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该角色吗？',
-                okText: '确定',
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.Authority.roleDelete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                    Core.Api.AuthorityUser.delete({id}).then(() => {
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

@@ -41,10 +41,10 @@
                             </template>
                         </template>
                         <template v-if="column.dataIndex === 'type'">
-                            {{ $Util.stockRecordFilter(text) }}
+                            {{ $Util.stockRecordFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.dataIndex === 'source_type'">
-                            {{ $Util.sourceFormFilter(text) }}
+                            {{ $Util.sourceFormFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'uid'">
                             {{ text || '-' }}
@@ -63,7 +63,7 @@
                     show-quick-jumper
                     show-size-changer
                     show-less-items
-                    :show-total="(total) => `共${total}条`"
+                    :show-total="(total) => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                     :hide-on-single-page="false"
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="pageChange"
@@ -109,14 +109,14 @@ export default {
             let tableColumns = [
                 /*          { title: "变更对象", dataIndex: ['material','name'], key: "detail" },
                           { title: "变更对象编码", dataIndex: ['material','code'], key: "text" },*/
-                {title: "变更对象", type: "item", key: "name"},
-                {title: "变更对象编码", type: "item", key: "code"},
-                {title: "操作类型", dataIndex: "type", key: "type"},
-                {title: "数量", dataIndex: "amount", key: "count"},
-                {title: "变更后库存数量", dataIndex: "balance", key: "count"},
-                {title: "变更来源", dataIndex: "source_type", key: "source_type"},
-                { title: "来源单号", dataIndex: "sn", key: "detail" },
-                {title: "创建时间", dataIndex: "create_time", key: "time"},
+                {title: this.$t('wa.object'), type: "item", key: "name"},
+                {title: this.$t('i.code'), type: "item", key: "code"},
+                {title: this.$t('n.operation'), dataIndex: "type", key: "type"},
+                {title: this.$t('i.quantity'), dataIndex: "amount", key: "count"},
+                {title: this.$t('wa.amount'), dataIndex: "balance", key: "count"},
+                {title: this.$t('n.source'), dataIndex: "source_type", key: "source_type"},
+                {title: this.$t('n.source_number'), dataIndex: "sn", key: "detail" },
+                {title: this.$t('d.create_time'), dataIndex: "create_time", key: "time"},
             ];
             return tableColumns;
         },

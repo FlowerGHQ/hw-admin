@@ -2,7 +2,7 @@
 <div id="RepairDetail">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">{{ $t('n.repair_detail') }}</div>
+            <div class="title-area">{{ $t('r.repair_detail') }}</div>
             <div class="btns-area">
                 <template v-if="sameOrg && $auth('repair-order.save')">
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION">
@@ -21,15 +21,15 @@
                         <i class="icon i_settle"/>{{ $t('r.settle_accounts') }}
                     </a-button>
                 </template>
-                <a-button type="primary" @click="routerChange('invoice')" v-if="haveSettle && $auth('repair-order.settlement')">
-                    <i class="icon i_detail_l"/>查看结算单
+                <a-button type="primary" @click="routerChange('invoice')" v-if="!haveSettle && $auth('repair-order.settlement')">
+                    <i class="icon i_detail_l"/>{{ $t('r.bill') }}
                 </a-button>
-                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT && $auth('DISTRIBUTOR' && 'repair-order.audit')">
-                    <i class="icon i_audit"/>审核
+<!--                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT && $auth('DISTRIBUTOR') && $auth('repair-order.audit')">
+                    <i class="icon i_audit"/>{{ $t('n.audit') }}
                 </a-button>
-                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS && $auth('ADMIN' && 'repair-order.audit')">
-                    <i class="icon i_audit"/>审核
-                </a-button>
+                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS && $auth('ADMIN') && $auth('repair-order.audit')">
+                    <i class="icon i_audit"/>{{ $t('n.audit') }}
+                </a-button>-->
             </div>
         </div>
         <div class="gray-panel info">
@@ -186,9 +186,9 @@ export default {
             stepsList: [
                 // {title: '分配工单'},
                 // {title: '后台审核'},
-                {title: '检测'},
-                {title: '维修'},
-                {title: '结算'},
+                {zh: '检测', en: 'Check'},
+                {zh: '维修', en: 'Service'},
+                {zh: '结算', en: 'Settle accounts'},
             ],
             currStep: 0,
 
@@ -235,9 +235,9 @@ export default {
         },
         haveSettle() {
             switch (this.detail.status) {
-                case STATUS.SETTLEMENT:
-                case STATUS.FINISH:
-                case STATUS.AUDIT_SUCCESS:
+                case STATUS.WAIT_DETECTION:
+                case STATUS.WAIT_REPAIR:
+                case STATUS.CLOSE:
                     return true
                 default: return false
             }
@@ -321,12 +321,13 @@ export default {
         handleSettlement() {
             let _this = this;
             this.$confirm({
-                title: '确定要结算该工单吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('r.sure_bill'),
+                okText: _this.$t('pop_up.yes'),
+                okType: 'danger',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Repair.settlement({id: _this.id}).then(() => {
-                        _this.$message.success('操作成功')
+                        _this.$message.success(_this.$t('pop_up.save_success'))
                         _this.getRepairDetail()
                     })
                 },
@@ -335,6 +336,7 @@ export default {
         handleAuditShow() { // 显示弹框
             this.repairAuditShow = true
         },
+
         handleAuditClose() { // 关闭弹框
             this.repairAuditShow = false;
             Object.assign(this.auditForm, this.$options.data().auditForm)
