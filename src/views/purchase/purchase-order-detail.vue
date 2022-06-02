@@ -128,10 +128,42 @@
                     </a-row>
                 </a-collapse-panel>
 
+                <!-- 明细列表 -->
+                <a-collapse-panel key="ItemInfo" header="明细列表" class="gray-collapse-panel">
+                    <div class="panel-content">
+                        <a-table :columns="payColumns" :data-source="payList" :scroll="{ x: true }"
+                            :row-key="record => record.id" :pagination='false'>
+                            <template #bodyCell="{ column, text, record }">
+                                <template v-if="column.key === 'item'">
+                                    {{ text || '-' }}
+                                </template>
+                                <template v-if="column.dataIndex === 'attachment'">
+                                    <div class="table-img">
+                                        <a-image-preview-group class="image-group">
+                                            <a-image v-for="path,index in record.paths" :key="index" class="image" :width="55" :height="55" :src="$Util.imageFilter(path)" fallback='无'/>
+                                        </a-image-preview-group>
+                                    </div>
+                                </template>
+                                <template v-if="column.dataIndex === 'type'">
+                                    {{$Util.purchasePayMethodFilter(text)}}
+                                </template>
+                                <template v-if="column.key === 'money'">
+                                    {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(text)}}
+                                </template>
+                                <template v-if="column.key === 'time'">
+                                    {{ $Util.timeFilter(text) }}
+                                </template>
+                            </template>
+                        </a-table>
+                    </div>
+                </a-collapse-panel>
+
+                <!-- 上传附件 -->
                 <AttachmentFile :target_id='id' :target_type='Core.Const.ATTACHMENT.TARGET_TYPE.PURCHASE_ORDER' :detail='detail' @submit="getPurchaseInfo" ref="AttachmentFile"/>
 
                 <!-- 发货记录 -->
                 <DeliveryLogs :order-id='id' :detail='detail'/>
+
 
                 <!-- 物流信息 -->
                 <a-collapse-panel key="WaybillInfo" :header="$t('n.delivery_information')" class="gray-collapse-panel">
@@ -184,14 +216,15 @@
         <a-modal v-model:visible="paymentShow" :title="$t('p.confirm_payment')" @ok="handlePayment">
             <div class="modal-content">
                 <!-- 国外暂无支付宝微信银行卡支付方式，先隐藏 -->
-                <!-- <div class="form-item required">
+                <!-- 支付方式 -->
+                <div class="form-item required">
                     <div class="key">收款方式</div>
                     <div class="value">
                         <a-select v-model:value="form.pay_method" placeholder="请选择收款方式">
                             <a-select-option v-for="pay of payMethodList" :key="pay.value" :value="pay.value">{{pay.name}}</a-select-option>
                         </a-select>
                     </div>
-                </div> -->
+                </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('ac.money') }}：</div>
                     <div class="value">
@@ -207,8 +240,31 @@
                         <!-- <span>{{$Util.priceUnitFilter(detail.currency)}}</span> -->
                     </div>
                 </div>
-            </div>
+                <div class="form-item img-upload">
+                    <div class="key">{{ $t('i.picture') }}</div>
+                    <div class="value">
+                        <a-upload name="file" class="image-uploader"
+                            list-type="picture-card" accept='image/*'
+                            :file-list="upload.detailList" :action="upload.action"
+                            :headers="upload.headers" :data='upload.data'
+                            :before-upload="handleImgCheck"
+                            @change="handleDetailChange">
+                            <div class="image-inner" v-if="upload.detailList.length < 10">
+                                <i class="icon i_upload"/>
+                            </div>
+                        </a-upload>
+                        <div class="tip">{{ $t('n.size') }}：800*800px</div>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('p.remark') }}：</div>
+                    <div class="value">
+                        <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
+          </div>
         </a-modal>
+        <!-- 转单 -->
         <a-modal v-model:visible="transferShow" :title="$t('p.confirm_transfer')" :after-close="handleTransferClose">
             <div class="modal-content">
                 <div class="form-item required">
@@ -276,7 +332,6 @@
                             :min="0.00"
                             :precision="2"
                             :prefix="`${$Util.priceUnitFilter(detail.currency)}`" />
-                        &nbsp<span>{{$Util.priceUnitFilter(detail.currency)}}</span>
                     </div>
                 </div>
                 <template v-if="$auth('ADMIN')">
@@ -358,12 +413,26 @@ export default {
                 {status: '400', zh: '交易完成',en: 'Transaction completed'},
             ],
 
-            itemList: [],
+            itemList: [], // 商品列表
+            payList: [], // 收款明细列表
             total: {
                 amount: 0,
                 price: 0,
                 charge: 0,
                 freight: 0, // 运费
+            },
+
+            upload: { // 上传图片
+                action: Core.Const.NET.FILE_UPLOAD_END_POINT,
+                coverList: [],
+                detailList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'img',
+                },
             },
 
             waybill: {},
@@ -420,6 +489,16 @@ export default {
             ]
             return columns
 
+        },
+        payColumns() {
+            let columns = [
+                { title: "附件", dataIndex: 'attachment' },
+                { title: "支付方式", dataIndex: 'type' },
+                { title: "支付金额", dataIndex: 'price', key: 'money'},
+                { title: "备注", dataIndex: 'remark', key: 'item' },
+                { title: "创建时间", dataIndex: 'create_time', key: 'time' },
+            ]
+            return columns
         },
         currStep() {
             for (let i = 0; i < this.stepsList.length; i++) {
@@ -483,6 +562,7 @@ export default {
     },
     mounted() {
         this.getPurchaseItemList();
+        this.getPurchasePayList();
         this.getPurchaseInfo()
         // this.getWaybillDetail()
     },
@@ -490,6 +570,40 @@ export default {
         this.id = Number(this.$route.query.id) || 0
     },
     methods: {
+        // 上传图片 start---
+        // 校验图片
+        handleImgCheck(file) {
+            const isCanUpType = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'].includes(file.type)
+            if (!isCanUpType) {
+                this.$message.warning('文件格式不正确');
+            }
+            const isLt10M = (file.size / 1024 / 1024) < 10;
+            if (!isLt10M) {
+                this.$message.warning('请上传小于10MB的图片');
+            }
+            return isCanUpType && isLt10M;
+        },
+        // 上传图片
+        handleCoverChange({ file, fileList }) {
+            console.log("handleCoverChange status:", file.status, "file:", file, "fileList: ", fileList)
+            if (file.status == 'done') {
+                if (file.response && file.response.code < 0) {
+                    return this.$message.error(file.response.message)
+                }
+            }
+            this.upload.coverList = fileList
+        },
+        handleDetailChange({ file, fileList }) {
+            console.log("handleDetailChange status:", file.status, "file:", file, "fileList: ", fileList)
+            if (file.status == 'done') {
+                if (file.response && file.response.code < 0) {
+                    return this.$message.error(file.response.message)
+                }
+            }
+            this.upload.detailList = fileList
+        },
+        // 上传图片 end---
+
         authOrg(orgId, orgType) {
             console.log('org',this.loginOrgId === orgId && this.loginOrgType === orgType)
             if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
@@ -565,6 +679,23 @@ export default {
                 this.total.amount = total_amount
                 this.total.charge = total_charge
                 this.total.price  = total_price
+            }).catch(err => {
+                console.log('getPurchaseInfo err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        // 获取 采购单 payList列表
+        getPurchasePayList() {
+            Core.Api.Purchase.payList({
+                target_id: this.id
+            }).then(res => {
+                 res.list.forEach(it =>{
+                     it.paths = it.attachment.path.split(",")
+
+                 })
+                this.payList = res.list
+                console.log("this.payList", this.payList)
             }).catch(err => {
                 console.log('getPurchaseInfo err', err)
             }).finally(() => {
@@ -651,16 +782,24 @@ export default {
         // 确认收款
         handlePayment() {
             let form = Core.Util.deepCopy(this.form)
-            // if (!form.pay_method) {
-            //     return this.$message.warning('请选择收款方式')
-            // }
+            if (this.upload.detailList.length) {
+                let detailList = this.upload.detailList.map(item => {
+                    return item.short_path || item.response.data.filename
+                })
+                form.imgs = detailList.join(',')
+            }
+            if (!form.pay_method) {
+                return this.$message.warning('请选择收款方式')
+            }
             if (!form.payment) {
                 return this.$message.warning('请输入收款金额')
             }
             Core.Api.Purchase.payment({
                 id: this.id,
                 pay_method: form.pay_method,
-                payment: form.payment * 100
+                payment: form.payment * 100,
+                imgs: form.imgs,
+                remark: form.remark
             }).then(res => {
                 this.$message.success('支付成功')
                 this.getPurchaseInfo()

@@ -39,9 +39,9 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
         // URL_POINT = 'http://10.0.0.7:8083' // 但
 
-        URL_POINT = 'http://10.0.0.228:8889'
+        // URL_POINT = 'http://10.0.0.228:8889'
 
-        // URL_POINT = 'http://10.0.0.171:8883' // 姚志宇
+        URL_POINT = 'http://10.0.0.171:8889' // 姚志宇
 
 
         // URL_POINT = 'http://10.0.0.134:8083' // 谭洋波
@@ -460,14 +460,18 @@ let Const = {
          },*/
         // 支付方式
         PAY_METHOD: {
-            1: "支付宝",
-            2: "微信",
-            3: "银行转账",
+            // 1: "支付宝",
+            // 2: "微信",
+            // 3: "银行转账",
+            10: "汇票",
+            20: "银行转账",
         },
         PAY_METHOD_LIST: [
-            { name: '支付宝', value: '1' },
-            { name: '微信', value: '2' },
-            { name: '银行转账', value: '3' },
+            // { name: '支付宝', value: '1' },
+            // { name: '微信', value: '2' },
+            // { name: '银行转账', value: '3' },
+            { name: '汇票', value: '10' },
+            { name: '银行转账', value: '20' },
         ],
         PAYMENT_STATUS: {
             WAIT_PAY: 100, //待支付
