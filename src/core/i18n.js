@@ -438,6 +438,7 @@ const messages = {
             details: '采购订单详情',
             total: '合计',
             order_information: '订单信息',
+	        delivery_list: '发货列表',
             person: '下单人',
             payment_terms: '支付条款',
             remark: '备注信息',
