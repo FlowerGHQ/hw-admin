@@ -91,6 +91,20 @@ class StorageHandler {
         return this.getItem(Const.DATA.KEY_USER)
     }
 
+    setOrgId(value) {
+        this.setItem(Const.DATA.KEY_ORG_ID, value);
+    }
+    getOrgId() {
+        return this.getItem(Const.DATA.KEY_ORG_ID)
+    }
+
+    setOrgType(value) {
+        this.setItem(Const.DATA.KEY_ORG_TYPE, value);
+    }
+    getOrgType() {
+        return this.getItem(Const.DATA.KEY_ORG_TYPE)
+    }
+
     setUserType(value) {
         this.setItem(Const.DATA.KEY_USER_TYPE, value);
     }
@@ -110,6 +124,13 @@ class StorageHandler {
     }
     getAuthority() {
         return this.getItem(Const.DATA.KEY_AUTHORITY_LIST)
+    }
+
+    setLang(value) {
+        this.setItem(Const.DATA.KEY_LANGUAGE, value);
+    }
+    getLang() {
+        return this.getItem(Const.DATA.KEY_LANGUAGE)
     }
 
     setFieldDisplay(key, value) {

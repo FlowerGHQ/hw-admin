@@ -6,9 +6,8 @@ import * as path from 'path';
 
 export default defineConfig({
   server: {
-    port: 8889,
-    proxy: {
-    }
+    host: '0.0.0.0',
+    port: 8088
   },
   plugins: [
     vue(),

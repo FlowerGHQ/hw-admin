@@ -1,9 +1,6 @@
 <template>
 <div class="PageHeader">
-    <a class="first-level" @click="handleLink(firstLevel)">
-        {{firstLevel.meta.title}}
-    </a>
-    <a-breadcrumb separator="/" class="breadcrumb" v-if="levelList.length >= 2">
+    <a-breadcrumb separator="/" class="breadcrumb" v-if="levelList.length">
         <a-breadcrumb-item v-for="(item,index) in levelList" :key="item.path" class="breadcrumb-item">
             <span v-if="index == levelList.length - 1">{{item.meta.title}}</span>
             <a v-else @click.prevent="handleLink(item)">{{item.meta.title}}</a>
@@ -24,6 +21,7 @@ export default {
     },
     watch: {
         $route(route) {
+            console.log('route', route)
             this.getBreadcrumb();
         }
     },
@@ -56,7 +54,7 @@ export default {
                         auth: '',
                     }
                 }
-                levelList.splice(levelList.length - 1, 0, list)
+                // levelList.splice(levelList.length - 1, 0, list)å
             }
 
             this.levelList = levelList
@@ -73,14 +71,8 @@ export default {
 <style lang="less">
 .PageHeader {
     .fac();
-    height: 100%;
-    .first-level {
-        .fac();
-        width: 130px;
-        font-size: 18px;
-        font-weight: 500;
-        color: @TC_I;
-    }
+    height: 38px;
+    background: #F6F8FA;
     .breadcrumb {
         .fac();
         height: 100%;

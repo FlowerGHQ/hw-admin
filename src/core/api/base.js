@@ -9,14 +9,20 @@ class ApiBase {
 
     static getMark() {
         const LOGIN_TYPE = Const.LOGIN.TYPE
-        const loginType = Data.getUserType();
+        const loginType = Data.getLoginType();
         let mark = 'admin/1'
         switch (loginType) {
             case LOGIN_TYPE.ADMIN:
                 mark = 'admin/1'
                 break;
-            case LOGIN_TYPE.DEALER:
-                mark = 'dealer/1'
+            case LOGIN_TYPE.DISTRIBUTOR:
+                mark = 'distributor/1'
+                break;
+            case LOGIN_TYPE.AGENT:
+                mark = 'agent/1'
+                break;
+            case LOGIN_TYPE.STORE:
+                mark = 'store/1'
                 break;
         }
         return mark
@@ -33,13 +39,13 @@ class ApiBase {
     }
 
     http(config, moduleName, args = {}) {
+        console.log('config', config)
+
         let mark = ApiBase.getMark()
         const token = Data.getToken()
 
         const commonModule = ['Common']
-        const openModule = ['Open']
         if (commonModule.includes(moduleName)) { mark = 'core/1' }
-        if (openModule.includes(moduleName)) { mark = 'open/1' }
 
         let fullUrl = `${this.baseUrl}/${mark}/${config[1]}`;
         if (moduleName == 'Export') {
@@ -62,6 +68,7 @@ class ApiBase {
                     params: {token, ...args},
                 })
             case 'Post':
+                console.log('config', config)
                 return ajax({
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     method: 'post',

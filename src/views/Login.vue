@@ -1,29 +1,34 @@
 <template>
 <div id="Login">
     <div class="login-header">
-        <span class="text">融界后台管理系统</span>
+        <span class="text">{{ $t('n.system') }}</span>
+        <div class="header-right">
+            <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
+                <i class="icon" :class="lang =='zh' ? 'i_zh-en' : 'i_en-zh'"/>
+            </a-button>
+        </div>
     </div>
     <div class="login-container">
-        <div class="form-title">账号登录</div>
+        <div class="form-title">{{ $t('n.account_login') }}</div>
         <div class="form-content">
             <div class="login-type" :class="TYPE_MAP[loginForm.user_type]">
                 <div class="type-item" v-for="item of loginTypeList" :key="item.value"
                     :class="loginForm.user_type === item.value ? 'active' : ''"
                     @click="loginForm.user_type = item.value">
-                    {{item.text}}
+                    {{item[$i18n.locale]}}
                 </div>
             </div>
-            <a-input class="form-item" placeholder='请输入用户名' v-model:value="loginForm.username" @keydown.enter="handleFocusPwd">
+            <a-input class="form-item" :placeholder="$t('n.username')" v-model:value="loginForm.username" @keydown.enter="handleFocusPwd">
                 <template #prefix>
                     <i class="icon i_user placeholder"/>
                 </template>
             </a-input>
-            <a-input class="form-item" placeholder='请输入密码' v-model:value="loginForm.password" @keydown.enter="handleLogin" type="password" ref="password-input">
+            <a-input class="form-item" :placeholder="$t('n.enter_password')" v-model:value="loginForm.password" @keydown.enter="handleLogin" type="password" ref="password-input">
                 <template #prefix>
                     <i class="icon i_lock placeholder"/>
                 </template>
             </a-input>
-            <a-button class="form-button" type="primary" @click="handleLogin">登 录</a-button>
+            <a-button class="form-button" type="primary" @click="handleLogin">{{ $t('n.login') }}</a-button>
         </div>
     </div>
     <div class="login-footer">Copyright © 2021 杭州重构科技有限公司 浙ICP备17006717号</div>
@@ -32,19 +37,20 @@
 
 <script>
 import Core from '../core';
-const LOGIN_TYPE = Core.Const.LOGIN.TYPE
+import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
+import enUS from 'ant-design-vue/lib/locale-provider/en_US';
+const TYPE = Core.Const.LOGIN.TYPE
+const TYPE_MAP = Core.Const.LOGIN.TYPE_MAP
 export default {
     name: 'Login',
     components: {},
     props: {},
     data() {
         return {
-            LOGIN_TYPE,
-            TYPE_MAP: {
-                10: 'admin',
-                20: 'agent',
-                30: 'dealer',
-            },
+            zhCN,
+            enUS,
+            TYPE,
+            TYPE_MAP,
             loginTypeList: Core.Const.LOGIN.TYPE_LIST,
 
             loginForm: {
@@ -57,13 +63,16 @@ export default {
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        lang() {
+            return this.$store.state.lang
+        }
+    },
     created() {
-        console.log('Core.Data.getLoginType():', Core.Data.getLoginType())
         if (Core.Data.getLoginType()) {
             this.loginForm.user_type = Core.Data.getLoginType();
         } else {
-            this.loginForm.user_type = LOGIN_TYPE.DEALER;
+            this.loginForm.user_type = TYPE.AGENT;
         }
     },
     mounted() {},
@@ -75,52 +84,66 @@ export default {
             let form = Core.Util.deepCopy(this.loginForm)
             console.log('handleLogin form:', form)
             if (!form.username) {
-                return this.$message.warning('请输入用户名')
+                return this.$message.warning(this.$t('n.username'))
             }
             if (!form.password) {
-                return this.$message.warning('请输入密码')
+                return this.$message.warning(this.$t('n.enter_password'))
             }
             Core.Api.Common.login(form).then(res => {
                 console.log('handleLogin apiName res', res)
                 Core.Data.setToken(res.token);
                 Core.Data.setLoginType(this.loginForm.user_type);
-                Core.Data.setUser(res.account);
+                Core.Data.setToken(res.token);
+                Core.Data.setUser(res.user.account);
+                Core.Data.setOrgId(res.user.org_id);
+                Core.Data.setOrgType(res.user.org_type);
 
-                Core.Data.setAuthority('')
-                let userType = ''
-                let role = ''
-                switch (this.loginForm.user_type) {
-                    case LOGIN_TYPE.ADMIN:
-                        userType = 'ADMIN'
-                        role = res.account.role
+                let loginType = TYPE_MAP[this.loginForm.user_type]
+                /* switch (this.loginForm.user_type) {
+                    case TYPE.ADMIN:
                         break;
-                    case LOGIN_TYPE.AGENT:
-                        userType = 'AGENT'
+                    case TYPE.AGENT:
                         break;
-                    case LOGIN_TYPE.DEALER:
-                        userType = 'DEALER'
+                    case TYPE.STORE:
                         break;
-                }
-                Core.Data.setUserType(userType);
-                console.log(res.account)
-                this.getAuthority(userType, role, res.user.id);
+                } */
+                Core.Data.setUserType(loginType);
+                this.getAuthority(res.user.id, res.user.type, loginType, res.user.role_id, res.user.flag_admin);
             });
         },
 
-        async getAuthority(userType, role, userId) {
+        async getAuthority(userId, userType, loginType, roleId, flag_admin) {
+            Core.Data.setAuthority('')
             let authorityMap = {}
-            Core.Api.AuthRole.userMenu({id: userId}).then(res =>{
-                console.log('getAuthority res', res)
-                res.list.forEach(it => {
-                    authorityMap[it] = true
-                })
-                console.log('getAuthority authorityMap', authorityMap)
+            authorityMap[loginType] = true
+            if (flag_admin) {
+                authorityMap['MANAGER'] = true
+            }
+            Core.Api.Authority.authUserAll({
+                user_id: userId,
+                user_type: userType
+            }).then(res => {
+                console.log('res', res )
+                let list = res.list
+                // let list = []
+                for (const item of list) {
+                    authorityMap[item.key] = true
+                }
+            }).finally(() => {
                 Core.Data.setAuthority(authorityMap)
-                this.$router.replace({ path: '/dashboard' })
+                setTimeout(() => {
+                    this.$router.replace({ path: '/dashboard', query: {from: 'login'} })
+                }, 1000)
             })
 
-            authorityMap[userType] = true
-        }
+
+        },
+        handleLangSwitch() {
+            console.log('handleLangSwitch')
+            this.$store.commit('switchLang')
+            this.$i18n.locale = this.$store.state.lang
+            console.log('this.$i18n.locale',this.$i18n.locale)
+        },
     }
 };
 </script>
@@ -142,6 +165,15 @@ export default {
         .fsb();
         .text {
             padding-left: 40px;
+        }
+        .header-right {
+            .fcc();
+            margin-right: 100px;
+            .lang-switch {
+                .icon {
+                    font-size: 20px;
+                }
+            }
         }
     }
     .login-container {
@@ -176,6 +208,7 @@ export default {
                 line-height: 24px;
                 padding: 10px;
                 transition: color 0.3s ease;
+                flex: 1;
                 &.active {
                     color: @TC_P;
                 }
@@ -192,11 +225,18 @@ export default {
                 transform: translateX(-50%);
                 transition: left .3s ease;
             }
-            &.dealer::after {
-                left: 25%;
+
+            &.STORE::after {
+                left: calc(~'100% / 8');
             }
-            &.admin::after {
-                left: 75%;
+            &.AGENT::after {
+                left: calc(~'100% / 8 * 3');
+            }
+            &.DISTRIBUTOR::after {
+                left: calc(~'100% / 8 * 5');
+            }
+            &.ADMIN::after {
+                left: calc(~'100% / 8 * 7');
             }
         }
         .form-item {

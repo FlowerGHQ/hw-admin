@@ -1,0 +1,115 @@
+[
+    {
+        "id": 32,
+        "item_id": 533,
+        "img": "img/700ad6f5592c78946f85a22c19551a1c6bc7c3a1dc77b19edab6012d2e2d0b33.png",
+        "name": "111",
+        "weight": 0,
+        "create_time": 1652270401,
+        "update_time": 1652270401,
+        "set_list": null,
+        "item_component_list": [
+            {
+                "id": null,
+                "start_point": {
+                    "x": 50,
+                    "y": 50
+                },
+                "end_point": {
+                    "x": 50,
+                    "y": 150
+                },
+                "set_id": 32,
+                "target_id": 530,
+                "target_type": 1,
+                "target_detail": {
+                    "id": 530,
+                    "type": 1,
+                    "name": "EK1 LIGHT",
+                    "name_en": "EK1 LIGHT",
+                    "model": "HW1000T-1C 01",
+                    "unit": "件",
+                    "code": "HW1000T-1C 01N3",
+                    "category_id": 1,
+                    "set_id": 633,
+                    "flag_independent_info": 1,
+                    "flag_default": 0,
+                    "logo": "",
+                    "imgs": "",
+                    "fob_eur": 142000,
+                    "fob_usd": 160000,
+                    "price": 0,
+                    "price_eur": 0,
+                    "price_usd": 0,
+                    "price_gbp": 0,
+                    "original_price": 0,
+                    "original_price_currency": "",
+                    "man_hour": 0,
+                    "config": "[{\"name\":\"介绍\",\"key\":\"ab\",\"value\":\"\",\"type\":\"textarea\"},{\"name\":\"介绍2\",\"key\":\"abc\",\"value\":\"\",\"type\":\"radio\"}]",
+                    "status": 0,
+                    "weight": 0,
+                    "create_time": 1650948848,
+                    "update_time": 1651803095,
+                    "category": {
+                        "id": 1,
+                        "icon": "",
+                        "name": "车辆",
+                        "code": "",
+                        "parent_id": 0,
+                        "path": "/1/",
+                        "config": "[{\"required\":0,\"name\":\"介绍\",\"key\":\"ab\",\"type\":\"textarea\",\"select\":[]},{\"required\":0,\"name\":\"介绍2\",\"key\":\"abc\",\"type\":\"radio\",\"select\":[\"1123\"]}]",
+                        "weight": 0,
+                        "create_time": 1647504307,
+                        "has_children": true
+                    },
+                    "attr_ids": "638",
+                    "attr_list": [
+                        {
+                            "id": 797,
+                            "target_id": 530,
+                            "target_type": 2,
+                            "attr_def_id": 638,
+                            "attr_def_name": "颜色",
+                            "attr_def_key": "Color",
+                            "value": "磨砂黑",
+                            "value_en": "Matte Black",
+                            "weight": 0,
+                            "create_time": 1650948848,
+                            "update_time": 1651038677
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "id": 33,
+        "item_id": 533,
+        "img": "img/700ad6f5592c78946f85a22c19551a1c6bc7c3a1dc77b19edab6012d2e2d0b33.png",
+        "name": "123",
+        "weight": 0,
+        "create_time": 1652270401,
+        "update_time": 1652270401,
+        "set_list": null
+    },
+    {
+        "id": 34,
+        "item_id": 533,
+        "img": "img/700ad6f5592c78946f85a22c19551a1c6bc7c3a1dc77b19edab6012d2e2d0b33.png",
+        "name": "213",
+        "weight": 0,
+        "create_time": 1652270401,
+        "update_time": 1652270401,
+        "set_list": null
+    },
+    {
+        "id": 35,
+        "item_id": 533,
+        "img": "img/700ad6f5592c78946f85a22c19551a1c6bc7c3a1dc77b19edab6012d2e2d0b33.png",
+        "name": "213",
+        "weight": 0,
+        "create_time": 1652270401,
+        "update_time": 1652270401,
+        "set_list": null
+    }
+]
