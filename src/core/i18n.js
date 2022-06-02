@@ -105,7 +105,7 @@ const messages = {
             detailed_information: '详细信息',
             record: '操作记录',
             organization: '操作组织',
-
+            customer_name: '车主姓名',
         },
         a: {
             new_retailer: '新建零售商',
@@ -191,6 +191,17 @@ const messages = {
             purchase: '采购',
             settlement_list: '结算清单',
             date: '交易日期',
+            client: '托修方',
+            repair_date: '送修日期',
+            shop: '维修门店',
+            man: '维修方',
+            fault_name: '故障名称',
+            material: '维修材料',
+            parts_cost: '零件费',
+            hour: '工时费',
+            amount_paid: '实付金额',
+            download: '保存并下载',
+            details: '返回详情',
         },
         d: {
             distributor_detail: '分销商详情',
@@ -246,8 +257,10 @@ const messages = {
             amount: '数量',
             quantity: '数量',
             unit_price: '单价',
+	        deliver_amount: '发货数量',
             total_price: '总价',
             total_quantity: '总数量',
+	        residue_quantity: '剩余数量',
             item_list: '商品列表',
             add: '添加商品',
             status: '商品状态',
@@ -357,6 +370,7 @@ const messages = {
             name: '客户名称',
             address: '客户地址',
             date_a: '到港日期',
+            add: '添加实例商品',
 
         },
         wa: { //仓库
@@ -493,6 +507,9 @@ const messages = {
             auditor: '处理人',
             details: '退款单详情',
             time: '处理时间',
+            confirm_shipment: '确认发货',
+            courier: '快递公司',
+            courier_number: '快递单号',
         },
         u: { //员工
             list: '员工列表',
@@ -698,6 +715,7 @@ const messages = {
             detailed_information: 'Detailed information',
             record: 'Operation record',
             organization: 'Organization',
+            customer_name: 'Name',
         },
         a: {
             new_retailer: 'Add a retailer',
@@ -783,6 +801,17 @@ const messages = {
             purchase: 'Purchase',
             settlement_list: 'Settlement list',
             date: 'Trade date',
+            client: 'Customer',
+            repair_date: 'Repair date',
+            shop: 'Repair shop',
+            man: 'Maintenance man',
+            fault_name: 'Fault name',
+            material: 'Repair material',
+            parts_cost: 'Parts cost',
+            hour: 'Labor-hour rate',
+            amount_paid: 'Amount paid',
+            download: 'Save and download',
+            details: 'Back to details',
         },
         d: {
             distributor_detail: 'Distributor details',
@@ -950,6 +979,7 @@ const messages = {
             name: 'Customer',
             address: 'Address',
             date_a: 'Date',
+            add: 'Add products with instances',
         },
         wa: { //仓库
             list: 'Warehouse list',
@@ -1085,6 +1115,9 @@ const messages = {
             auditor: 'Auditor',
             details: 'Refund order details',
             time: 'Processing time',
+            confirm_shipment: 'confirm shipment',
+            courier: 'Courier',
+            courier_number: 'Number'
         },
         u: { //员工
             list: 'Employee list',

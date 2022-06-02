@@ -113,7 +113,7 @@ export default {
                 {title: 'r.item_name', dataIndex: ['item','name'], key: 'item'},
                 {title: 'i.code', dataIndex: ['item','code'], key: 'item'},
                 {title: 'i.amount', dataIndex: 'amount'},
-                {title: 'i.price', dataIndex: 'price'},
+                {title: 'i.unit_price', dataIndex: 'price'},
                 {title: 'i.total_price', key: 'total_price'},
                 {title: 'n.type', dataIndex: 'type'},
                 // {title: '回收仓', dataIndex: 'recycle_warehouse_name', key: 'item'},

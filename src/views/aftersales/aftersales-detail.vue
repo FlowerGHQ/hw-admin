@@ -87,7 +87,7 @@
                             <div class="info-item" v-if="sameOrg(detail.supply_org_id, detail.supply_org_type)">
                                 <div class="key">退款单</div>
                                 <div class="value"><a-button type="link" @click="routerChange('refund')"
-                                    style="font-size: 12px;line-height: 17px;height: 17px;">查看详情</a-button></div>
+                                    style="font-size: 12px;line-height: 17px;height: 17px;">{{ $t('def.detail') }}</a-button></div>
                             </div>
                             <div class="info-item">
                                 <div class="key">退款状态</div>
@@ -237,20 +237,20 @@
         </div>
     </div>
     <template class="modal-container">
-        <a-modal v-model:visible="deliverShow" title="确认发货" @ok="handleDeliver">
+        <a-modal v-model:visible="deliverShow" :title="$t('af.confirm_shipment')" @ok="handleDeliver">
             <div class="modal-content">
                 <div class="form-item required">
-                    <div class="key">快递公司</div>
+                    <div class="key">{{ $t('af.courier') }}</div>
                     <div class="value">
-                        <a-select v-model:value="form.company_uid" placeholder="请选择快递公司">
+                        <a-select v-model:value="form.company_uid" :placeholder="$t('def.select')">
                             <a-select-option v-for="company of companyUidList" :key="company.value" :value="company.value">{{company.name}}</a-select-option>
                         </a-select>
                     </div>
                 </div>
                 <div class="form-item required" >
-                    <div class="key">快递单号</div>
+                    <div class="key">{{ $t('af.courier_number') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.waybill_uid" placeholder="请输入快递单号"/>
+                        <a-input v-model:value="form.waybill_uid" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
             </div>

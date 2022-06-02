@@ -19,10 +19,10 @@
                                 <div class="value">
                                     <span class="authority-item" v-for="i of item.select" :key="i">
                                         <a @click="handleScopedTypeShow(selected[i].scoped_type)" v-if = "selected[i].scoped_type > 0">
+<!--                                            {{selected[i].key}}-->
+<!--                                            {{$t('authority.'+ selected[i].key)}}-->
+<!--                                            {{$t("authority.\'distributor.save\'")}}-->
                                             {{selected[i].key}}
-                                            {{$t('authority.'+ selected[i].key)}}
-                                            {{$t("authority.\'distributor.save\'")}}
-
                                         </a>
                                         <span v-else>
                                             {{selected[i].key}}
@@ -47,7 +47,7 @@
                 </a-collapse-panel>
             </a-collapse>
         </div>
-        <a-modal v-model:visible="scopedShow" :title="resourceMap[scopedType].text + '资源管理'" class="stock-change-modal" :width="800" :after-close="handleScopedTypeClose">
+        <a-modal v-model:visible="scopedShow" :title=" '仓库资源管理'" class="stock-change-modal" :width="800" :after-close="handleScopedTypeClose">
             <UserScoped :userId="userId" :userType="detail.type" :resourceType="scopedType" />
             <template #footer>
                 <a-button @click="scopedShow=false">关闭</a-button>
@@ -151,7 +151,7 @@ export default {
                 let selected = {}
                 res.list.forEach(auth => {
                     let selectedInfo ={
-                        key: auth.key,
+                        key: auth.name,
                         scoped_type: 0
                     }
                     selected[auth.id] = selectedInfo;
@@ -182,7 +182,7 @@ export default {
                 let selected = this.selected;
                 res.list.forEach(auth => {
                     let selectedInfo = {
-                        key: auth.key,
+                        key: auth.name,
                         scoped_type: 0
                     }
                     selected[auth.id] = selectedInfo;

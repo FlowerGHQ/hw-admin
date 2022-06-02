@@ -12,30 +12,33 @@
         </div>
         <div class="info-content">
             <div class="info-block">
-                <div class="title">托修方</div>
-                <p>车主姓名：{{detail.customer_name}}</p>
-                <p>车架号：{{detail.vehicle_no}}</p>
-                <p>送修日期：{{$Util.timeFormat(detail.create_time)}}</p>
-                <div class="title">联系电话</div>
+                <div class="title">{{ $t('r.client') }}</div>
+                <p>{{ $t('n.customer_name') }}：{{detail.customer_name}}</p>
+                <p>{{ $t('search.vehicle_no') }}：{{detail.vehicle_no}}</p>
+                <p>{{ $t('r.repair_date') }}：{{$Util.timeFormat(detail.create_time)}}</p>
+                <div class="title">{{ $t('n.phone') }}</div>
                 <p>{{detail.customer_phone}}</p>
             </div>
             <div class="info-block">
-                <div class="title">维修门店</div>
+                <div class="title">{{ $t('r.shop') }}</div>
                 <p>{{detail.repair_name}}</p>
-                <div class="title">联系电话</div>
+                <div class="title">{{ $t('n.phone') }}</div>
                 <p>{{detail.repair_phone}}</p>
             </div>
             <div class="info-block">
-                <div class="title">维修方</div>
-                <p>维修人：{{detail.repair_user_name}}</p>
-                <p>维修方式：{{$Util.repairChannelFilter(detail.channel, $i18n.locale)}}</p>
-                <div class="title">联系电话</div>
+                <div class="title">{{ $t('r.man') }}</div>
+                <p>{{ $t('e.name') }}：{{detail.repair_user_name}}</p>
+                <p>{{ $t('r.repair_way') }}：{{$Util.repairChannelFilter(detail.channel, $i18n.locale)}}</p>
+                <div class="title">{{ $t('n.phone') }}</div>
                 <p>{{detail.repair_user_phone}}</p>
             </div>
         </div>
         <div class="item-content">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false'>
+                <template #headerCell="{title}">
+                    {{ $t(title) }}
+                </template>
                 <template #bodyCell="{ column, text, record }">
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
@@ -44,7 +47,7 @@
                         {{ faultMap[text] }}
                     </template>
                     <template v-if="column.dataIndex === 'amount'">
-                        {{ text }} 件
+                        {{ text }} {{ $t('in.item') }}
                     </template>
                     <template v-if="column.dataIndex === 'price'">
                         € {{ $Util.countFilter(text) }}
@@ -62,13 +65,13 @@
                             <a-table-summary-cell :index="0" :col-span="2"></a-table-summary-cell>
                             <a-table-summary-cell :index="1" :col-span="3">
                                 <div class="sum-price" v-if="detail.service_type === SERVICE_TYPE.OUT_REPAIR_TIME">
-                                    <div class="row"><p>零件费</p> <span>€{{$Util.countFilter(sum_price)}}</span></div>
-                                    <div class="row"><p>工时费</p> <span>€{{$Util.countFilter(settle.man_hour_money)}}</span></div>
-                                    <div class="row"><p>总金额</p> <span>€{{$Util.countFilter(sum_price + settle.man_hour_money)}}</span></div>
+                                    <div class="row"><p>{{ $t('r.parts_cost') }}</p> <span>€{{$Util.countFilter(sum_price)}}</span></div>
+                                    <div class="row"><p>{{ $t('r.hour') }}</p> <span>€{{$Util.countFilter(settle.man_hour_money)}}</span></div>
+                                    <div class="row"><p>{{ $t('i.total_price') }}</p> <span>€{{$Util.countFilter(sum_price + settle.man_hour_money)}}</span></div>
                                 </div>
                                 <div class="sum-price" v-else>
-                                    <div class="row"><p>总金额</p> <span>€{{$Util.countFilter(sum_price)}}</span></div>
-                                    <div class="row"><p>实付金额</p><span>€0</span></div>
+                                    <div class="row"><p>{{ $t('i.total_price') }}</p> <span>€{{$Util.countFilter(sum_price)}}</span></div>
+                                    <div class="row"><p>{{ $t('r.amount_paid') }}</p><span>€0</span></div>
                                 </div>
                             </a-table-summary-cell>
                         </a-table-summary-row>
@@ -76,10 +79,10 @@
                 </template>
             </a-table>
         </div>
-    </div>
+    </div>F
     <div class="btn-area">
-        <a-button type="primary" @click="routerChange('export')">保存并下载</a-button>
-        <a-button type="primary" @click="routerChange('back')" ghost>返回详情</a-button>
+        <a-button type="primary" @click="routerChange('export')">{{ $t('r.download') }}</a-button>
+        <a-button type="primary" @click="routerChange('back')" ghost>{{ $t('r.details') }}</a-button>
     </div>
 </div>
 </template>
@@ -109,12 +112,12 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: '故障类型', dataIndex: 'item_fault_id'},
-                {title: '维修材料', dataIndex: ['item', 'name'], key: 'item'},
-                {title: '数量', dataIndex: 'amount'},
-                {title: '单价', dataIndex: 'price'},
-                {title: '金额', dataIndex: 'sum_price'},
-                {title: '工时', dataIndex: 'man_hour'}
+                {title: 'r.fault_name', dataIndex: 'item_fault_id'},
+                {title: 'r.material', dataIndex: ['item', 'name'], key: 'item'},
+                {title: 'i.amount', dataIndex: 'amount'},
+                {title: 'i.unit_price', dataIndex: 'price'},
+                {title: 'i.total_price', dataIndex: 'sum_price'},
+                {title: 'i.hours', dataIndex: 'man_hour'}
             ]
             if (this.detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME) {
                 tableColumns.pop()

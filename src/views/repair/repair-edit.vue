@@ -168,10 +168,11 @@ import dayjs from 'dayjs';
 
 const REPAIR = Core.Const.REPAIR
 import ChinaAddressCascader from '@/components/common/ChinaAddressCascader.vue'
+import AddressCascader from '@/components/common/AddressCascader.vue'
 
 export default {
     name: 'RepairEdit',
-    components: {ChinaAddressCascader},
+    components: {ChinaAddressCascader, AddressCascader},
     props: {},
     data() {
         return {
@@ -310,6 +311,26 @@ export default {
         async handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
             let area = Core.Util.deepCopy(this.area)
+
+
+          if (this.areaMap.city) {
+            area.city = this.areaMap.city.name
+            area.city_en = this.areaMap.city.name_en
+          }
+            if (this.areaMap.country) {
+                area.country = this.areaMap.country.name
+                area.country_en = this.areaMap.country.name_en
+            }
+            if (this.areaMap.province) {
+                area.province = this.areaMap.province.name
+                area.province_en = this.areaMap.province.name_en
+            }
+            if (this.areaMap.county) {
+                area.county = this.areaMap.county.name
+                area.county_en = this.areaMap.county.name_en
+            }
+            console.log('handleSubmit area:', area)
+            console.log('handleSubmit areaMap:', this.areaMap)
             form.plan_time = form.plan_time ? dayjs(form.plan_time).unix() : 0
             // form.finish_time = form.finish_time ? dayjs(form.finish_time).unix() : 0
             console.log('handleSubmit form:', form)

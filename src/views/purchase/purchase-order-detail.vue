@@ -31,7 +31,10 @@
                 <!-- 商品信息 -->
                 <a-collapse-panel key="ItemInfo" :header="$t('i.product_information')" class="gray-collapse-panel">
                     <div class="panel-content">
-                        <a-table :columns="itemColumns" :data-source="itemList" :scroll="{ x: true }"
+                            <a-table
+                                :columns="itemColumns" :data-source="itemList" :scroll="{ x: true }"
+                                :row-key="record => record.id" :loading='loading' :pagination='false'
+                                :row-selection="rowSelection">
                             :row-key="record => record.id" :pagination='false'>
                             <template #bodyCell="{ column, text, record}">
                                 <template v-if="column.dataIndex === 'item'">
@@ -46,6 +49,9 @@
                                 </template>
                                 <template v-if="column.dataIndex === 'amount'">
                                     {{record.amount}}
+                                </template>
+                                <template v-if="column.dataIndex === 'deliver_amount'">
+                                    <a-input-number v-model:value="record.deliver_amount" style="width: 120px;" :min="0" :precision="0" :disabled="record.disabled"/>
                                 </template>
                                 <template v-if="column.key === 'money'">
                                     {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(text)}}
@@ -122,7 +128,48 @@
                     </a-row>
                 </a-collapse-panel>
 
+                <!-- 明细列表 -->
+                <a-collapse-panel key="ItemInfo" header="明细列表" class="gray-collapse-panel">
+                    <div class="panel-content">
+                        <a-table :columns="payColumns" :data-source="payList" :scroll="{ x: true }"
+                            :row-key="record => record.id" :pagination='false'>
+                            <template #bodyCell="{ column, text, record}">
+                                <template v-if="column.dataIndex === 'attachment'">
+                                    <div class="table-img">
+                                        <a-image-preview-group class="image-group">
+                                            <a-image v-for="path,index in record.paths" :key="index" class="image" :width="55" :height="55" :src="$Util.imageFilter(path)" fallback='无'/>
+                                        </a-image-preview-group>
+                                    </div>
+                                </template>
+                                <template v-if="column.dataIndex === 'amount'">
+                                    {{record.amount}}
+                                   
+                                </template>
+                                <template v-if="column.key === 'money'">
+                                    {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(text)}}
+                                </template>
+                                <template v-if="column.key === 'spec'">
+                                    {{$Util.itemSpecFilter(text)}}
+                                </template>
+                            </template>
+                            <!-- <template #summary>
+                                <a-table-summary>
+                                    <a-table-summary-row>
+                                        <a-table-summary-cell :index="0" :col-span="4">{{ $t('p.total')}}</a-table-summary-cell>
+                                        <a-table-summary-cell :index="1" :col-span="1">{{ $t('p.freight')}}:{{$Util.priceUnitFilter(detail.currency)}}{{$Util.countFilter(total.freight) || '0'}}</a-table-summary-cell>
+                                        <a-table-summary-cell :index="1" :col-span="1">{{ $t('i.total_quantity') }}:{{total.amount}}</a-table-summary-cell>
+                                        <a-table-summary-cell :index="4" :col-span="1">{{ $t('i.total_price')}}:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price + (total.freight || 0))}}</a-table-summary-cell>
+                                        <a-table-summary-cell :index="5" :col-span="1">总金额:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.charge)}}</a-table-summary-cell>
+                                    </a-table-summary-row>
+                                </a-table-summary>
+                            </template> -->
+                        </a-table>
+                    </div>
+                </a-collapse-panel>
+
+                <!-- 上传附件 -->
                 <AttachmentFile :target_id='id' :target_type='Core.Const.ATTACHMENT.TARGET_TYPE.PURCHASE_ORDER' :detail='detail' @submit="getPurchaseInfo" ref="AttachmentFile"/>
+                
                 <!-- 物流信息 -->
                 <a-collapse-panel key="WaybillInfo" :header="$t('n.delivery_information')" class="gray-collapse-panel">
                     <a-row class="panel-content info-container">
@@ -174,31 +221,49 @@
         <a-modal v-model:visible="paymentShow" :title="$t('p.confirm_payment')" @ok="handlePayment">
             <div class="modal-content">
                 <!-- 国外暂无支付宝微信银行卡支付方式，先隐藏 -->
-                <!-- <div class="form-item required">
+                <!-- 支付方式 -->
+                <div class="form-item required">
                     <div class="key">收款方式</div>
                     <div class="value">
                         <a-select v-model:value="form.pay_method" placeholder="请选择收款方式">
                             <a-select-option v-for="pay of payMethodList" :key="pay.value" :value="pay.value">{{pay.name}}</a-select-option>
                         </a-select>
                     </div>
-                </div> -->
+                </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('ac.money') }}：</div>
                     <div class="value">
-                        <a-input-number 
-                            v-model:value="form.payment" 
+                        <a-input-number
+                            v-model:value="form.payment"
                             style="width: 120px"
-                            :min="0" 
-                            :max="((detail.freight_price||0)+detail.charge-detail.payment)/100" 
-                            :precision="2" 
+                            :min="0"
+                            :max="((detail.freight_price||0)+detail.charge-detail.payment)/100"
+                            :precision="2"
                             :prefix="`${$Util.priceUnitFilter(detail.currency)}`"
                             placeholder="0.00"
                         />
                         <!-- <span>{{$Util.priceUnitFilter(detail.currency)}}</span> -->
                     </div>
                 </div>
-            </div>
+                <div class="form-item img-upload">
+                    <div class="key">{{ $t('i.picture') }}</div>
+                    <div class="value">
+                        <a-upload name="file" class="image-uploader"
+                            list-type="picture-card" accept='image/*'
+                            :file-list="upload.detailList" :action="upload.action"
+                            :headers="upload.headers" :data='upload.data'
+                            :before-upload="handleImgCheck"
+                            @change="handleDetailChange">
+                            <div class="image-inner" v-if="upload.detailList.length < 10">
+                                <i class="icon i_upload"/>
+                            </div>
+                        </a-upload>
+                        <div class="tip">{{ $t('n.size') }}：800*800px</div>
+                    </div>
+                </div>
+          </div>
         </a-modal>
+        <!-- 转单 -->
         <a-modal v-model:visible="transferShow" :title="$t('p.confirm_transfer')" :after-close="handleTransferClose">
             <div class="modal-content">
                 <div class="form-item required">
@@ -266,7 +331,6 @@
                             :min="0.00"
                             :precision="2"
                             :prefix="`${$Util.priceUnitFilter(detail.currency)}`" />
-                        &nbsp<span>{{$Util.priceUnitFilter(detail.currency)}}</span>
                     </div>
                 </div>
                 <template v-if="$auth('ADMIN')">
@@ -314,7 +378,7 @@ export default {
         AttachmentFile,
         PurchaseInfo,
         WaybillShow,
-        MySteps
+        MySteps,
     },
     props: {},
     data() {
@@ -346,12 +410,26 @@ export default {
                 {status: '400', zh: '交易完成',en: 'Transaction completed'},
             ],
 
-            itemList: [],
+            itemList: [], // 商品列表
+            payList: [], // 收款明细列表
             total: {
                 amount: 0,
                 price: 0,
                 charge: 0,
                 freight: 0, // 运费
+            },
+
+            upload: { // 上传图片
+                action: Core.Const.NET.FILE_UPLOAD_END_POINT,
+                coverList: [],
+                detailList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'img',
+                },
             },
 
             waybill: {},
@@ -384,6 +462,12 @@ export default {
             },
             distributorList: [],
             exportDisabled: false, // 导出按钮禁用
+
+            expandedRowKeys: [],
+            expandIconColumnIndex: 0,
+            selectedRowItemsAll: [],
+            selectedRowKeys: [],
+            selectedRowItems: [],
         };
     },
     watch: {},
@@ -394,9 +478,21 @@ export default {
                 { title: this.$t('i.number'),dataIndex: ['item', "model"] },
                 { title: this.$t('i.code'), dataIndex: ['item', "code"] },
                 { title: this.$t('i.spec'), dataIndex: ['item', 'attr_list'], key: 'spec' },
-                { title: this.$t('i.quantity'), dataIndex: 'amount'},
+                { title: this.$t('i.total_quantity'), dataIndex: 'amount'},
+                { title: this.$t('i.residue_quantity'), dataIndex: 'amount'},
+                { title: this.$t('i.deliver_amount'), dataIndex: 'deliver_amount', key: 'deliver_amount'},
                 { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'money'},
                 { title: this.$t('i.total_price'),dataIndex: 'price', key: 'money'},
+            ]
+            return columns
+
+        },
+        payColumns() {
+            let columns = [
+                { title: "附件", dataIndex: 'attachment', key: 'detail' },
+                { title: "支付方式", dataIndex: 'type', key: 'type' },
+                { title: "支付金额", dataIndex: 'price', key: 'money'},
+                { title: "备注", dataIndex: 'remark'},
             ]
             return columns
         },
@@ -424,17 +520,79 @@ export default {
                     return false
             }
             return true
-        }
+        },
+        rowSelection() {
+            return {
+                type: this.radioMode ? 'radio' : 'checkbox',
+                selectedRowKeys: this.selectedRowKeys,
+                preserveSelectedRowKeys: true,
+                onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
+                    this.selectedRowKeys = selectedRowKeys
+                    // selectedRows.disabled = !selectedRows.disabled
+                    this.selectedRowItemsAll.push(...selectedRows)
+                    let selectedRowItems = []
+                    selectedRowKeys.forEach(id => {
+                        let element = this.selectedRowItemsAll.find(i => i.id == id)
+                        selectedRowItems.push(element)
+                    });
+                    this.selectedRowItems = selectedRowItems
+                    console.log('rowSelection this.selectedRowKeys:', this.selectedRowKeys,'selectedRowItems:', selectedRowItems)
+                    this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
+                },
+                onSelect:(record, selected, selectedRows) => {
+                    record.disabled = !record.disabled
+                    record.deliver_amount = 0
+                },
+                // getCheckboxProps: record => ({
+                //     disabled: (this.showStock && record.stock === 0) || this.disabledChecked.includes(record.id)
+                // }),
+            };
+        },
     },
     mounted() {
         this.getPurchaseItemList();
+        this.getPurchasePayList();
         this.getPurchaseInfo()
         // this.getWaybillDetail()
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
     },
-    methods: {
+    methods: {   
+        // 上传图片 start
+        // 校验图片
+        handleImgCheck(file) {
+            const isCanUpType = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'].includes(file.type)
+            if (!isCanUpType) {
+                this.$message.warning('文件格式不正确');
+            }
+            const isLt10M = (file.size / 1024 / 1024) < 10;
+            if (!isLt10M) {
+                this.$message.warning('请上传小于10MB的图片');
+            }
+            return isCanUpType && isLt10M;
+        },
+        // 上传图片
+        handleCoverChange({ file, fileList }) {
+            console.log("handleCoverChange status:", file.status, "file:", file, "fileList: ", fileList)
+            if (file.status == 'done') {
+                if (file.response && file.response.code < 0) {
+                    return this.$message.error(file.response.message)
+                }
+            }
+            this.upload.coverList = fileList
+        },
+        handleDetailChange({ file, fileList }) {
+            console.log("handleDetailChange status:", file.status, "file:", file, "fileList: ", fileList)
+            if (file.status == 'done') {
+                if (file.response && file.response.code < 0) {
+                    return this.$message.error(file.response.message)
+                }
+            }
+            this.upload.detailList = fileList
+        },
+        // 上传图片 end
+     
         authOrg(orgId, orgType) {
             console.log('org',this.loginOrgId === orgId && this.loginOrgType === orgType)
             if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
@@ -495,6 +653,8 @@ export default {
             }).then(res => {
                 let total_amount = 0,total_charge = 0,total_price = 0;
                 res.list.forEach(it =>{
+                    it.disabled = true
+                    it.deliver_amount = 0
                     total_amount += it.amount
                     total_charge += it.charge
                     total_price += it.price
@@ -508,6 +668,23 @@ export default {
                 this.total.amount = total_amount
                 this.total.charge = total_charge
                 this.total.price  = total_price
+            }).catch(err => {
+                console.log('getPurchaseInfo err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        // 获取 采购单 payList列表
+        getPurchasePayList() {
+            Core.Api.Purchase.payList({
+                target_id: this.id
+            }).then(res => {
+                 res.list.forEach(it =>{
+                     it.paths = it.attachment.path.split(",")
+
+                 })
+                this.payList = res.list
+                console.log("this.payList", this.payList)
             }).catch(err => {
                 console.log('getPurchaseInfo err', err)
             }).finally(() => {
@@ -594,16 +771,23 @@ export default {
         // 确认收款
         handlePayment() {
             let form = Core.Util.deepCopy(this.form)
-            // if (!form.pay_method) {
-            //     return this.$message.warning('请选择收款方式')
-            // }
+            if (this.upload.detailList.length) {
+                let detailList = this.upload.detailList.map(item => {
+                    return item.short_path || item.response.data.filename
+                })
+                form.imgs = detailList.join(',')
+            }
+            if (!form.pay_method) {
+                return this.$message.warning('请选择收款方式')
+            }
             if (!form.payment) {
                 return this.$message.warning('请输入收款金额')
             }
             Core.Api.Purchase.payment({
                 id: this.id,
                 pay_method: form.pay_method,
-                payment: form.payment * 100
+                payment: form.payment * 100,
+                imgs: form.imgs
             }).then(res => {
                 this.$message.success('支付成功')
                 this.getPurchaseInfo()
@@ -616,6 +800,7 @@ export default {
         },
         // 确认发货
         handleDeliver() {
+            console.log("rowSelection",this.selectedRowItems)
             let form = Core.Util.deepCopy(this.form);
             const param = {
                 id: this.id,
@@ -646,6 +831,7 @@ export default {
                 }
             }
             param['freight_price'] = Math.round(param['freight_price'] * 100)
+            param['item_list'] = this.selectedRowItems
             Core.Api.Purchase.deliver(param).then(res => {
                 this.$message.success('发货成功')
                 this.deliverShow = false
@@ -707,7 +893,7 @@ export default {
                 }
             })
         },
-        // 导出订单 
+        // 导出订单
         handleExportIn() {
             const params = {
                 id: this.id, // 订单id
@@ -719,7 +905,17 @@ export default {
             console.log("handlePurchaseExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
-        }
+        },
+        rowSelection() {
+            return {
+                selectedRowKeys: this.selectedRowKeys,
+                onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
+                    this.selectedRowKeys = selectedRowKeys
+                    this.selectedRowItems = selectedRows
+                    console.log('rowSelection onChange this.selectedRowKeys', this.selectedRowKeys);
+                },
+            };
+        },
     }
 };
 </script>
