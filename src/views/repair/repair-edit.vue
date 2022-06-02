@@ -316,7 +316,6 @@ export default {
           if (this.areaMap.city) {
             area.city = this.areaMap.city.name
             area.city_en = this.areaMap.city.name_en
-          }
             if (this.areaMap.country) {
                 area.country = this.areaMap.country.name
                 area.country_en = this.areaMap.country.name_en
