@@ -127,7 +127,6 @@ const apiList = {
         status: ['PostJson', 'invoice/status-list'], // 状态
         handle: ['PostJson', 'invoice/handle'], // 处理完成
         cancel: ['PostJson', 'invoice/cancel'], // 取消出入库单
-
     },
     InvoiceItem: {
         list: ['PostJson', 'invoice-item/list'], // 出入库单明细列表

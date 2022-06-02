@@ -28,6 +28,8 @@ switch (window.location.hostname) {
         URL_POINT = 'http://10.0.0.109:8083'
         break;
     case "10.0.0.251":
+    case "10.0.0.188":
+    case "localhost":
         URL_POINT = 'http://10.0.0.251:8889'
         break;
 	case "10.0.0.175":
@@ -737,6 +739,7 @@ let Const = {
             REPAIR: 50,      // 维修单
             MATERIAL_PURCHASE: 60, //物料采购单
             WAREHOUSE_TRANSFER: 70, //仓库调货单
+            ITEM_PURCHASE: 80, // 商品采购单 todo:零时加的不一定是这个值
         },
         SOURCE_TYPE_ADMIN_MAP: {
             '10': {key: 10, text: '管理员操作', color: 'yellow'},
