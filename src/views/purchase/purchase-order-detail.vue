@@ -127,10 +127,12 @@
                         </a-col>
                     </a-row>
                 </a-collapse-panel>
-                <!-- 发货列表 -->
 
                 <AttachmentFile :target_id='id' :target_type='Core.Const.ATTACHMENT.TARGET_TYPE.PURCHASE_ORDER' :detail='detail' @submit="getPurchaseInfo" ref="AttachmentFile"/>
-                <DeliveryInfo :target_id='id' :target_type='Core.Const.ATTACHMENT.TARGET_TYPE.PURCHASE_ORDER' :detail='detail' @submit="getPurchaseInfo" ref="DeliveryInfo"/>
+
+                <!-- 发货记录 -->
+                <DeliveryLogs :order-id='id' :detail='detail'/>
+
                 <!-- 物流信息 -->
                 <a-collapse-panel key="WaybillInfo" :header="$t('n.delivery_information')" class="gray-collapse-panel">
                     <a-row class="panel-content info-container">
@@ -305,7 +307,7 @@ import PurchaseInfo from "./components/PurchaseInfo.vue"
 import WaybillShow from "@/components/popup-btn/WaybillShow.vue"
 import MySteps from "@/components/common/MySteps.vue"
 import AttachmentFile from '@/components/panel/AttachmentFile.vue';
-import DeliveryInfo from './components/DeliveryInfo.vue';
+import DeliveryLogs from './components/DeliveryLogs.vue';
 
 
 const PURCHASE = Core.Const.PURCHASE;
@@ -322,8 +324,9 @@ export default {
     name: 'PurchaseOrderDetail',
     components: {
         AttachmentFile,
+        DeliveryLogs,
         WaybillShow,
-        MySteps
+        MySteps,
     },
     props: {},
     data() {
