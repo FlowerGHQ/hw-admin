@@ -609,10 +609,16 @@ let Const = {
         },
         RESOURCE_TYPE: {
             WAREHOUSE: 10,
+	        PURCHASE: 20,
         },
         RESOURCE_TYPE_MAP: {
-            '10': {text: '仓库'}
-        }
+            '10': {text: '仓库'},
+	        '20': {text: '采购'}
+        },
+	    RESOURCE_TYPE_LIST: [
+		    {value: 10, text:'仓库'},
+		    {value: 20, text:'采购'}
+	    ]
     },
     SYSTEM: { //系统
         FILE: {

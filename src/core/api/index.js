@@ -203,6 +203,7 @@ const apiList = {
     },
     ItemCategory: { // 商品分类
         list: ['PostJson', 'item-category/list'],
+	    listAll: ['PostJson', 'item-category/list-all'],
         save: ['PostJson', 'item-category/save'],
         update: ['PostJson', 'item-category/update'],
         tree: ['PostJson', 'item-category/tree'],

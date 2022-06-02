@@ -58,6 +58,14 @@
                     </a-select>
                 </div>
             </div>
+            <div class="form-item required" v-if="resourceType == RESOURCE_TYPE.PURCHASE">
+                <div class="key">资源对象</div>
+                <div class="value">
+                    <a-select v-model:value="form.resource_id" placeholder="请选择资源对象">
+                        <a-select-option v-for="item of categoryList" :key="item.id" :value="item.id" :disabled="item.disabled">{{ item.name }}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
             <template #footer>
                 <a-button @click="handleAuthSubmit" type="primary">确定</a-button>
                 <a-button @click="authShow=false">取消</a-button>
@@ -98,6 +106,7 @@ export default {
             // 弹框
             authShow: false,
             warehouseList: [],
+            categoryList: [],
             resourceList: Core.Const.NOTICE.RESOURCE_TYPE_LIST,
             resourceMap: Core.Const.NOTICE.RESOURCE_TYPE_MAP,
             RESOURCE_TYPE: Core.Const.NOTICE.RESOURCE_TYPE,
@@ -128,8 +137,6 @@ export default {
         // this.resourceType = Number(this.$route.query.resource_type) || 0
         this.form.resource_type = this.resourceType
         this.getTableData();
-
-
     },
     methods: {
 
@@ -146,8 +153,6 @@ export default {
             Core.Api.AuthorityUser.list({
                 user_id: this.userId,
                 resource_type: this.resourceType,
-                page: this.currPage,
-                page_size: this.pageSize,
             }).then(res => {
                 console.log("getTableData res", res)
                 this.total = res.count;
@@ -172,11 +177,27 @@ export default {
                 this.warehouseList = res.list
             })
         },
+        getCategoryList() {
+            Core.Api.ItemCategory.listAll().then(res => {
+                res.list.forEach(itemCategory => {
+                    this.tableData.forEach(it =>{
+                        if (itemCategory.id === it.resource_id){
+                            itemCategory.disabled = true
+                        }
+                    });
+                });
+                this.categoryList = res.list
+            })
+        },
         handleAuthShow() {
             this.authShow = true;
             switch (this.resourceType ){
                 case this.RESOURCE_TYPE.WAREHOUSE: {
                     this.getWarehouseList();
+                    break;
+                }
+                case this.RESOURCE_TYPE.PURCHASE: {
+                    this.getCategoryList();
                     break;
                 }
             }
