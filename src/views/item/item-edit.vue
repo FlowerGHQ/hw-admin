@@ -538,13 +538,13 @@ export default {
             }
             console.log('setFormData config:', config)
             this.form.config = config
-            // this.form.type = res.type
-            console.log('type')
+            this.form.type = res.type
+            console.log('type',res.type)
             this.form.price = Core.Util.countFilter(res.price)
             this.form.fob_eur = Core.Util.countFilter(res.fob_eur)
             this.form.fob_usd = Core.Util.countFilter(res.fob_usd)
             this.form.man_hour = Core.Util.countFilter(res.man_hour)
-            this.form.type = JSON.stringify(res.type)
+            // this.form.type = JSON.stringify(res.type)
             this.form.original_price = Core.Util.countFilter(res.original_price)
             this.form.sales_area_ids = this.detail.sales_area_list ? this.detail.sales_area_list.map(i => i.id): []
             if (this.form.logo) {
