@@ -133,7 +133,10 @@
                     <div class="panel-content">
                         <a-table :columns="payColumns" :data-source="payList" :scroll="{ x: true }"
                             :row-key="record => record.id" :pagination='false'>
-                            <template #bodyCell="{ column, text, record}">
+                            <template #bodyCell="{ column, text, record }">
+                                <template v-if="column.key === 'item'">
+                                    {{ text || '-' }}
+                                </template>
                                 <template v-if="column.dataIndex === 'attachment'">
                                     <div class="table-img">
                                         <a-image-preview-group class="image-group">
@@ -141,28 +144,16 @@
                                         </a-image-preview-group>
                                     </div>
                                 </template>
-                                <template v-if="column.dataIndex === 'amount'">
-                                    {{record.amount}}
-                                   
+                                <template v-if="column.dataIndex === 'type'">
+                                    {{$Util.purchasePayMethodFilter(text)}}
                                 </template>
                                 <template v-if="column.key === 'money'">
                                     {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(text)}}
                                 </template>
-                                <template v-if="column.key === 'spec'">
-                                    {{$Util.itemSpecFilter(text)}}
+                                <template v-if="column.key === 'time'">
+                                    {{ $Util.timeFilter(text) }}
                                 </template>
                             </template>
-                            <!-- <template #summary>
-                                <a-table-summary>
-                                    <a-table-summary-row>
-                                        <a-table-summary-cell :index="0" :col-span="4">{{ $t('p.total')}}</a-table-summary-cell>
-                                        <a-table-summary-cell :index="1" :col-span="1">{{ $t('p.freight')}}:{{$Util.priceUnitFilter(detail.currency)}}{{$Util.countFilter(total.freight) || '0'}}</a-table-summary-cell>
-                                        <a-table-summary-cell :index="1" :col-span="1">{{ $t('i.total_quantity') }}:{{total.amount}}</a-table-summary-cell>
-                                        <a-table-summary-cell :index="4" :col-span="1">{{ $t('i.total_price')}}:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price + (total.freight || 0))}}</a-table-summary-cell>
-                                        <a-table-summary-cell :index="5" :col-span="1">总金额:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.charge)}}</a-table-summary-cell>
-                                    </a-table-summary-row>
-                                </a-table-summary>
-                            </template> -->
                         </a-table>
                     </div>
                 </a-collapse-panel>
@@ -259,6 +250,12 @@
                             </div>
                         </a-upload>
                         <div class="tip">{{ $t('n.size') }}：800*800px</div>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('p.remark') }}：</div>
+                    <div class="value">
+                        <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
           </div>
@@ -489,10 +486,11 @@ export default {
         },
         payColumns() {
             let columns = [
-                { title: "附件", dataIndex: 'attachment', key: 'detail' },
-                { title: "支付方式", dataIndex: 'type', key: 'type' },
+                { title: "附件", dataIndex: 'attachment' },
+                { title: "支付方式", dataIndex: 'type' },
                 { title: "支付金额", dataIndex: 'price', key: 'money'},
-                { title: "备注", dataIndex: 'remark'},
+                { title: "备注", dataIndex: 'remark', key: 'item' },
+                { title: "创建时间", dataIndex: 'create_time', key: 'time' },
             ]
             return columns
         },
@@ -559,7 +557,7 @@ export default {
         this.id = Number(this.$route.query.id) || 0
     },
     methods: {   
-        // 上传图片 start
+        // 上传图片 start---
         // 校验图片
         handleImgCheck(file) {
             const isCanUpType = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'].includes(file.type)
@@ -591,7 +589,7 @@ export default {
             }
             this.upload.detailList = fileList
         },
-        // 上传图片 end
+        // 上传图片 end---
      
         authOrg(orgId, orgType) {
             console.log('org',this.loginOrgId === orgId && this.loginOrgType === orgType)
@@ -787,7 +785,8 @@ export default {
                 id: this.id,
                 pay_method: form.pay_method,
                 payment: form.payment * 100,
-                imgs: form.imgs
+                imgs: form.imgs,
+                remark: form.remark
             }).then(res => {
                 this.$message.success('支付成功')
                 this.getPurchaseInfo()
