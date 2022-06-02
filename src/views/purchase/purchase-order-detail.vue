@@ -31,7 +31,10 @@
                 <!-- 商品信息 -->
                 <a-collapse-panel key="ItemInfo" :header="$t('i.product_information')" class="gray-collapse-panel">
                     <div class="panel-content">
-                        <a-table :columns="itemColumns" :data-source="itemList" :scroll="{ x: true }"
+                            <a-table
+                                :columns="itemColumns" :data-source="itemList" :scroll="{ x: true }"
+                                :row-key="record => record.id" :loading='loading' :pagination='false'
+                                :row-selection="rowSelection">
                             :row-key="record => record.id" :pagination='false'>
                             <template #bodyCell="{ column, text, record}">
                                 <template v-if="column.dataIndex === 'item'">
@@ -46,6 +49,9 @@
                                 </template>
                                 <template v-if="column.dataIndex === 'amount'">
                                     {{record.amount}}
+                                </template>
+                                <template v-if="column.dataIndex === 'deliver_amount'">
+                                    <a-input-number v-model:value="record.deliver_amount" style="width: 120px;" :min="0" :precision="0" :disabled="record.disabled"/>
                                 </template>
                                 <template v-if="column.key === 'money'">
                                     {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(text)}}
@@ -227,12 +233,12 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('ac.money') }}：</div>
                     <div class="value">
-                        <a-input-number 
-                            v-model:value="form.payment" 
+                        <a-input-number
+                            v-model:value="form.payment"
                             style="width: 120px"
-                            :min="0" 
-                            :max="((detail.freight_price||0)+detail.charge-detail.payment)/100" 
-                            :precision="2" 
+                            :min="0"
+                            :max="((detail.freight_price||0)+detail.charge-detail.payment)/100"
+                            :precision="2"
                             :prefix="`${$Util.priceUnitFilter(detail.currency)}`"
                             placeholder="0.00"
                         />
@@ -456,6 +462,12 @@ export default {
             },
             distributorList: [],
             exportDisabled: false, // 导出按钮禁用
+
+            expandedRowKeys: [],
+            expandIconColumnIndex: 0,
+            selectedRowItemsAll: [],
+            selectedRowKeys: [],
+            selectedRowItems: [],
         };
     },
     watch: {},
@@ -466,11 +478,14 @@ export default {
                 { title: this.$t('i.number'),dataIndex: ['item', "model"] },
                 { title: this.$t('i.code'), dataIndex: ['item', "code"] },
                 { title: this.$t('i.spec'), dataIndex: ['item', 'attr_list'], key: 'spec' },
-                { title: this.$t('i.quantity'), dataIndex: 'amount'},
+                { title: this.$t('i.total_quantity'), dataIndex: 'amount'},
+                { title: this.$t('i.residue_quantity'), dataIndex: 'amount'},
+                { title: this.$t('i.deliver_amount'), dataIndex: 'deliver_amount', key: 'deliver_amount'},
                 { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'money'},
                 { title: this.$t('i.total_price'),dataIndex: 'price', key: 'money'},
             ]
             return columns
+
         },
         payColumns() {
             let columns = [
@@ -505,7 +520,34 @@ export default {
                     return false
             }
             return true
-        }
+        },
+        rowSelection() {
+            return {
+                type: this.radioMode ? 'radio' : 'checkbox',
+                selectedRowKeys: this.selectedRowKeys,
+                preserveSelectedRowKeys: true,
+                onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
+                    this.selectedRowKeys = selectedRowKeys
+                    // selectedRows.disabled = !selectedRows.disabled
+                    this.selectedRowItemsAll.push(...selectedRows)
+                    let selectedRowItems = []
+                    selectedRowKeys.forEach(id => {
+                        let element = this.selectedRowItemsAll.find(i => i.id == id)
+                        selectedRowItems.push(element)
+                    });
+                    this.selectedRowItems = selectedRowItems
+                    console.log('rowSelection this.selectedRowKeys:', this.selectedRowKeys,'selectedRowItems:', selectedRowItems)
+                    this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
+                },
+                onSelect:(record, selected, selectedRows) => {
+                    record.disabled = !record.disabled
+                    record.deliver_amount = 0
+                },
+                // getCheckboxProps: record => ({
+                //     disabled: (this.showStock && record.stock === 0) || this.disabledChecked.includes(record.id)
+                // }),
+            };
+        },
     },
     mounted() {
         this.getPurchaseItemList();
@@ -611,6 +653,8 @@ export default {
             }).then(res => {
                 let total_amount = 0,total_charge = 0,total_price = 0;
                 res.list.forEach(it =>{
+                    it.disabled = true
+                    it.deliver_amount = 0
                     total_amount += it.amount
                     total_charge += it.charge
                     total_price += it.price
@@ -756,6 +800,7 @@ export default {
         },
         // 确认发货
         handleDeliver() {
+            console.log("rowSelection",this.selectedRowItems)
             let form = Core.Util.deepCopy(this.form);
             const param = {
                 id: this.id,
@@ -786,6 +831,7 @@ export default {
                 }
             }
             param['freight_price'] = Math.round(param['freight_price'] * 100)
+            param['item_list'] = this.selectedRowItems
             Core.Api.Purchase.deliver(param).then(res => {
                 this.$message.success('发货成功')
                 this.deliverShow = false
@@ -847,7 +893,7 @@ export default {
                 }
             })
         },
-        // 导出订单 
+        // 导出订单
         handleExportIn() {
             const params = {
                 id: this.id, // 订单id
@@ -859,7 +905,17 @@ export default {
             console.log("handlePurchaseExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
-        }
+        },
+        rowSelection() {
+            return {
+                selectedRowKeys: this.selectedRowKeys,
+                onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
+                    this.selectedRowKeys = selectedRowKeys
+                    this.selectedRowItems = selectedRows
+                    console.log('rowSelection onChange this.selectedRowKeys', this.selectedRowKeys);
+                },
+            };
+        },
     }
 };
 </script>
