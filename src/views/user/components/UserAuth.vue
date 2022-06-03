@@ -18,7 +18,7 @@
                                 <div class="key">{{item.name}}:</div>
                                 <div class="value">
                                     <span class="authority-item" v-for="i of item.select" :key="i">
-                                        <a @click="handlescopeTypeShow(selected[i].scope_type)" v-if = "selected[i].scope_type > 0">
+                                        <a @click="handleScopeTypeShow(selected[i].scope_type)" v-if = "selected[i].scope_type > 0">
 <!--                                            {{selected[i].key}}-->
 <!--                                            {{$t('authority.'+ selected[i].key)}}-->
 <!--                                            {{$t("authority.\'distributor.save\'")}}-->
