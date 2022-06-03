@@ -68,7 +68,7 @@ export default {
         return {
             // 加载
             loading: false,
-            activeKey: [],
+            activeKey: ["DeliveryLogs"],
 
             invoiceList: [],
 
@@ -87,10 +87,6 @@ export default {
             let columns = [
                 {title: this.$t('in.sn'), dataIndex: 'uid', key: 'item'},
                 {title: this.$t('n.state'), dataIndex: 'status'},
-                {title: this.$t('n.type'), dataIndex: 'type'},
-                {title: this.$t('in.category'), dataIndex: 'target_type',},
-                {title: this.$t('in.related'), dataIndex: ['warehouse', 'name'], key: 'item',},
-                {title: this.$t('wa.type'), dataIndex: ['warehouse', 'type'], key: 'warehouse_type',},
                 {title: this.$t('n.operator'), dataIndex: ['apply_user', "account", "name"], key: 'item'},
                 {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
@@ -99,11 +95,11 @@ export default {
         },
         tableColumns() {
             let columns = [
-                {title: this.$t('n.name'), dataIndex: 'name', key: 'detail'},
-                {title: this.$t('i.categories'), dataIndex: ['category','name']},
-                {title: this.$t('i.number'), dataIndex: 'model', key: 'item'},
-                {title: this.$t('i.code'), dataIndex: 'code', key: 'item'},
-                {title: this.$t('i.spec'), dataIndex: 'attr_list', key: 'spec'},
+                {title: this.$t('n.name'), dataIndex: ['item','name'], key: 'detail'},
+                {title: this.$t('i.categories'), dataIndex: ['item','name']},
+                {title: this.$t('i.number'), dataIndex: ['item','category','name'], key: 'item'},
+                {title: this.$t('i.code'), dataIndex: ['item','code'], key: 'item'},
+
                 {title: this.$t('i.deliver_amount'), dataIndex: 'amount', key: 'count'},
             ]
             return columns
@@ -115,10 +111,11 @@ export default {
     methods: {
         getInvoiceList() {  // 获取 发货记录
             this.loading = true;
-            Core.Api.Invoice.list({
+            Core.Api.Invoice.listByPurchase({
                 source_id: this.orderId,
+                source_type: Core.Const.STOCK_RECORD.SOURCE_TYPE.PURCHASE,
+                status: -1,
                 // source_type: Core.Const.STOCK_RECORD.SOURCE_TYPE.ITEM_PURCHASE,
-                page: 0
             }).then(res => {
                 console.log("getInvoiceList res", res)
                 this.invoiceList = res.list
@@ -142,10 +139,10 @@ export default {
             this.currPage = curr
             this.getTableData()
         },
-        getTableData(id) {
+        getTableData() {
             this.modalLoading = true;
             Core.Api.InvoiceItem.list({
-                invoice_id: id,
+                invoice_id: this.invoiceId,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {

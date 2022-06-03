@@ -129,7 +129,7 @@
                 </a-collapse-panel>
 
                 <!-- 明细列表 -->
-                <a-collapse-panel key="ItemInfo" header="明细列表" class="gray-collapse-panel">
+                <a-collapse-panel key="ItemInfo" header="付款明细列表" class="gray-collapse-panel">
                     <div class="panel-content">
                         <a-table :columns="payColumns" :data-source="payList" :scroll="{ x: true }"
                             :row-key="record => record.id" :pagination='false'>
