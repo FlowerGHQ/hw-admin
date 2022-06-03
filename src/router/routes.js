@@ -1252,9 +1252,9 @@ const routes = [
                 }
             },
             {
-                path: 'user-scoped',
-                name: 'UserScoped',
-                component: () => import('@/views/user/components/UserScoped.vue'),
+                path: 'user-scope',
+                name: 'UserScope',
+                component: () => import('@/views/user/components/UserScope.vue'),
                 meta: {
                     hidden: true,
                     title: '员工详情',

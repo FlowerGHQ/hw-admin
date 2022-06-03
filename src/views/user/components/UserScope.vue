@@ -1,5 +1,5 @@
 <template>
-    <div class="UserScoped gray-panel no-margin">
+    <div class="UserScope gray-panel no-margin">
         <div class="panel-content">
             <div class="table-container">
 
@@ -77,7 +77,7 @@
 <script>
 import Core from '../../../core';
 export default {
-    name: 'UserScoped',
+    name: 'UserScope',
     components: {},
     props: {
         userId: {

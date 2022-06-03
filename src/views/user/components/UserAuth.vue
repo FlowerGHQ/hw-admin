@@ -18,7 +18,7 @@
                                 <div class="key">{{item.name}}:</div>
                                 <div class="value">
                                     <span class="authority-item" v-for="i of item.select" :key="i">
-                                        <a @click="handleScopedTypeShow(selected[i].scoped_type)" v-if = "selected[i].scoped_type > 0">
+                                        <a @click="handlescopeTypeShow(selected[i].scope_type)" v-if = "selected[i].scope_type > 0">
 <!--                                            {{selected[i].key}}-->
 <!--                                            {{$t('authority.'+ selected[i].key)}}-->
 <!--                                            {{$t("authority.\'distributor.save\'")}}-->
@@ -47,10 +47,10 @@
                 </a-collapse-panel>
             </a-collapse>
         </div>
-        <a-modal v-model:visible="scopedShow" :title=" '资源管理'" class="stock-change-modal" :width="800" :after-close="handleScopedTypeClose">
-            <UserScoped :userId="userId" :userType="detail.type" :resourceType="scopedType" v-if="scopedShow" />
+        <a-modal v-model:visible="scopeShow" :title=" '资源管理'" class="stock-change-modal" :width="800" :after-close="handleScopeTypeClose">
+            <UserScope :userId="userId" :userType="detail.type" :resourceType="scopeType" v-if="scopeShow" />
             <template #footer>
-                <a-button @click="scopedShow=false">关闭</a-button>
+                <a-button @click="scopeShow=false">关闭</a-button>
             </template>
         </a-modal>
     </div>
@@ -59,15 +59,14 @@
 <script>
 import Core from '../../../core';
 import SimpleImageEmpty from '../../../components/common/SimpleImageEmpty.vue'
-import UserScoped from "./UserScoped.vue";
+import UserScope from "./UserScope.vue";
 
 const AUTH_LIST_TEMP = Core.Const.AUTH_LIST_TEMP
 const USER_TYPE = Core.Const.USER.TYPE
-const AUTHORITY_SCOPED = Core.Const.AUTHORITY_SCOPED
 
 export default {
     name: 'UserAuth',
-    components: { SimpleImageEmpty, UserScoped },
+    components: { SimpleImageEmpty, UserScope },
     props: {
         userId: {
             type: Number,
@@ -84,14 +83,13 @@ export default {
     },
     data() {
         return {
-            AUTHORITY_SCOPED,
             activeKey: [],
             authItems: Core.Util.deepCopy(AUTH_LIST_TEMP), // 所有权限
             name: '权限查看',
             edit: false,
-            scopedShow: false,
+            scopeShow: false,
             resourceMap: Core.Const.NOTICE.RESOURCE_TYPE_MAP,
-            scopedType: 0,
+            scopeType: 0,
             options: [],
             selected: {},
             disabled: {},
@@ -132,7 +130,7 @@ export default {
                     let key = auth.key.split('.')[0];
                     let item = this.authItems.find(i => key === i.key);
                     if (item) {
-                        item.list.push({ value: auth.id, label: auth.name, scoped_type: auth.scoped_type });
+                        item.list.push({ value: auth.id, label: auth.name, scope_type: auth.scope_type });
                     }
                 })
                 console.log("getAllAuthItem authItems", this.authItems)
@@ -152,14 +150,14 @@ export default {
                 res.list.forEach(auth => {
                     let selectedInfo ={
                         key: auth.name,
-                        scoped_type: 0
+                        scope_type: 0
                     }
                     selected[auth.id] = selectedInfo;
                     let key = auth.key.split('.')[0];
                     let item = this.options.find(i => key === i.key);
                     if (item) {
                         item.select.push(auth.id);
-                        selected[auth.id].scoped_type = auth.scoped_type;
+                        selected[auth.id].scope_type = auth.scope_type;
                         item.list.forEach(it => {
                                 if (it.value == auth.id) {
                                     it.disabled = true
@@ -183,7 +181,7 @@ export default {
                 res.list.forEach(auth => {
                     let selectedInfo = {
                         key: auth.name,
-                        scoped_type: 0
+                        scope_type: 0
                     }
                     selected[auth.id] = selectedInfo;
                     let key = auth.key.split('.')[0];
@@ -193,7 +191,7 @@ export default {
                             item.select.push(auth.id);
                         }
 
-                        selected[auth.id].scoped_type = auth.scoped_type;
+                        selected[auth.id].scope_type = auth.scope_type;
                     }
                 })
                 this.selected = selected
@@ -227,22 +225,22 @@ export default {
 
             this.getUserRoleAuth()
         },
-        handleScopedTypeShow(scoped_type) {
-            this.scopedType = scoped_type;
-            this.scopedShow = true;
+        handleScopeTypeShow(scope_type) {
+            this.scopeType = scope_type;
+            this.scopeShow = true;
             // let routeUrl = this.$router.resolve({
-            //     path: "/system/user-scoped",
+            //     path: "/system/user-scope",
             //     query: {
             //         user_id: this.userId,
             //         user_type: this.detail.type,
-            //         resource_type: scoped_type,
+            //         resource_type: scope_type,
             //     }
             // })
             // window.open(routeUrl.href, '_self')
 
         },
-        handleScopedTypeClose() { // 取消编辑
-            this.scopedShow = false
+        handleScopeTypeClose() { // 取消编辑
+            this.scopeShow = false
         },
 
     }
