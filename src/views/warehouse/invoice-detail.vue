@@ -91,7 +91,7 @@
         <a-collapse-panel key="ItemList" :header="$t('i.product_information')" class="gray-collapse-panel" collapsible="disabled" v-if="detail.target_type === COMMODITY_TYPE.ITEM">
             <template #extra>
                 <template  v-if="detail.status === STATUS.INIT && !addMode && $auth('invoice.save')">
-                    <ItemSelect btnType='link' :btnText="$t('i.add')" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION" :sourceId="detail.type == TYPE.IN ? detail.source_id : 0"
+                    <ItemSelect btnType='link' :btnText="$t('i.add')" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION" :purchaseId="detail.type == TYPE.IN ? detail.source_id : 0"
                                 :sourceType="detail.type == TYPE.IN ? detail.source_type : 0"  :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
                         @select="handleAddItemChange"/>
                     <a-popover v-model:visible="production.addVisible" trigger="click" placement="left" v-else-if="production.maxCount"

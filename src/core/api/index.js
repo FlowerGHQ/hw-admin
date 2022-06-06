@@ -234,6 +234,7 @@ const apiList = {
         list: ['PostJson', 'item-sales-area/list'],
         bind: ['PostJson', 'item-sales-area/sales-ares-bind'],
         delete: ['PostJson', 'item-sales-area/delete'],
+	    batchSave: ['PostJson', 'item-sales-area/batch-save'],
     },
     ShopCart: { // 购物车
         save: ['PostJson', 'shopping-cart/save'],

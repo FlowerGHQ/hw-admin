@@ -14,6 +14,7 @@
                         <i class="icon i_add"/>{{ $t('i.import') }}
                     </a-button>
                 </a-upload>
+                <a-button type="primary" @click="handleSalesAreaByIdsShow()"><i class="icon i_edit"/> 批量设置销售区域 </a-button>
                 <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>{{ $t('i.new') }}</a-button>
             </div>
         </div>
@@ -57,8 +58,8 @@
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :pagination='false'
-                :row-key="record => record.id" @expand='handleTableExpand' @change="handleTableChange"
-                :expandedRowKeys="expandedRowKeys" :indentSize='0' :expandIconColumnIndex="expandIconColumnIndex">
+                :row-key="record => record.id" @expand='handleTableExpand' @change="handleTableChange" :row-selection="rowSelection"
+                     :expandedRowKeys="expandedRowKeys" :indentSize='0' :expandIconColumnIndex="expandIconColumnIndex">
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.key === 'detail'">
                         <div class="table-img afs">
@@ -131,6 +132,22 @@
             />
         </div>
     </div>
+    <a-modal v-model:visible="salesAreaVisible" title="设置销售区域" class="field-select-modal" :width="630" :after-close='handleSalesAreaByIdsClose'>
+        <div class="modal-content">
+            <div class="form-item required">
+                <div class="key">{{ $t('d.sales_area') }}</div>
+                <div class="value">
+                    <a-select v-model:value="salesAreaIds" mode="tags" :placeholder="$t('def.select')">
+                        <a-select-option v-for="(val,key) in salesList" :key="key" :value="val.id">{{ val.name }}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
+        </div>
+        <template #footer>
+            <a-button type="primary" @click="handleSalesAreaByIdsConfirm">确定</a-button>
+            <a-button @click="handleSalesAreaByIdsClose">取消</a-button>
+        </template>
+    </a-modal>
 </div>
 </template>
 
@@ -170,6 +187,10 @@ export default {
             tableData: [],
             expandedRowKeys: [],
             expandIconColumnIndex: 0,
+            selectedRowKeys: [],
+            salesAreaVisible: false,
+            salesList: [],
+            salesAreaIds: [],
             // 上传
             upload: {
                 action: Core.Const.NET.URL_POINT + "/admin/1/item/import",
@@ -205,10 +226,21 @@ export default {
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 180 }
             ]
             return tableColumns
-        }
+        },
+        rowSelection() {
+            return {
+                selectedRowKeys: this.selectedRowKeys,
+                onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
+                    this.selectedRowKeys = selectedRowKeys
+                    this.selectedRowItems = selectedRows
+                    console.log('rowSelection onChange this.selectedRowKeys', this.selectedRowKeys);
+                },
+            };
+        },
     },
     mounted() {
         this.getTableData();
+        this.getSalesAreaList();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -358,6 +390,36 @@ export default {
                 }
             }
             this.upload.fileList = fileList
+        },
+        getSalesAreaList() {
+            Core.Api.SalesArea.list().then(res => {
+                this.salesList = res.list;
+            });
+        },
+        handleSalesAreaByIdsConfirm() {
+            if (this.salesAreaIds.length <= 0){
+                return this.$message.error('请选择销售区域');
+            }
+            Core.Api.SalesAreaItem.batchSave({
+                item_id_list: this.selectedRowKeys,
+                sales_area_id_list: this.salesAreaIds,
+            }).then(res =>{
+                this.getTableData();
+                this.handleSalesAreaByIdsClose();
+            })
+
+        },
+        handleSalesAreaByIdsShow() {
+            if (this.selectedRowKeys.length <= 0){
+                return this.$message.error('请选择商品');
+            }
+            this.getSalesAreaList();
+            this.salesAreaVisible = true;
+        },
+        handleSalesAreaByIdsClose() {
+            this.salesAreaVisible = false;
+            this.salesList = [];
+            this.salesAreaIds = [];
         },
     }
 };
