@@ -60,7 +60,7 @@
                                 <!-- <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/> 编辑</a-button> -->
                                 <a-button type='link' @click="handleModalShow(record)"><i class="icon i_detail"/> 详情</a-button>
                             </template>
-                            <a-button type='link' @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button> 
+                            <a-button type='link' @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -149,6 +149,15 @@ export default {
     computed: {},
     mounted() {
         this.getTableData();
+        this.timer = window.setInterval(() => {
+            setTimeout(() => {
+                this.getTableData();
+            }, 0);
+        }, 5*1000);
+
+    },
+    beforeUnmount(){
+        clearInterval(this.timer)
     },
     methods: {
         routerChange(type, item = {}) {
@@ -221,7 +230,7 @@ export default {
                 console.log('getTableData err', err)
             }).finally(() => {
                 this.loading = false;
-            });     
+            });
         },
 
         //模态弹窗
@@ -262,7 +271,7 @@ export default {
                 },
             });
         },
-        
+
     }
 };
 </script>

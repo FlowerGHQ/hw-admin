@@ -356,9 +356,18 @@ export default {
 
     },
     mounted() {
+        this.getTableData();
         this.getWarehouseList();
-    },
+        this.timer = window.setInterval(() => {
+            setTimeout(() => {
+                this.getTableData();
+            }, 0);
+        }, 5*1000);
 
+    },
+    beforeUnmount(){
+        clearInterval(this.timer)
+    },
     methods: {
         routerChange(type, item = {}) {
             console.log('routerChange item:', item)

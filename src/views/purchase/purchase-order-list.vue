@@ -253,6 +253,17 @@ export default {
         this.getDistributorListAll();
         this.getAgentListAll();
         this.getStoreListAll();
+        this.timer = window.setInterval(() => {
+            setTimeout(() => {
+                this.getDistributorListAll();
+                this.getAgentListAll();
+                this.getStoreListAll();
+            }, 0);
+        }, 5*1000);
+
+    },
+    beforeUnmount(){
+        clearInterval(this.timer)
     },
     methods: {
         async routerChange(type, item = {}) {

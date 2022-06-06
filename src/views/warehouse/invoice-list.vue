@@ -216,6 +216,15 @@ export default {
         this.getTableData();
         this.getWarehouseList();
         this.getStatusList();
+        this.timer = window.setInterval(() => {
+            setTimeout(() => {
+                this.getTableData();
+            }, 0);
+        }, 5*1000);
+
+    },
+    beforeUnmount(){
+        clearInterval(this.timer)
     },
     methods: {
         routerChange(type, item = {}) {
