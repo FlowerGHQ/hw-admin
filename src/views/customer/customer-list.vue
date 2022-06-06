@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
+                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' @change="getTableDataSorter">
                     <template #headerCell="{title}">
                         {{ $t(title) }}
                     </template>
@@ -55,6 +55,15 @@
                             </a-tooltip>
                         </template>-->
                         <template v-if="column.key === 'item'">
+                            {{ text || '-' }}
+                        </template>
+                        <template v-if="column.key === 'phone'">
+                            {{ text || '-' }}
+                        </template>
+                        <template v-if="column.key === 'email'">
+                            {{ text || '-' }}
+                        </template>
+                        <template v-if="column.key === 'country'">
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.dataIndex === 'address'">
@@ -108,6 +117,7 @@ export default {
             currPage: 1,
             pageSize: 20,
             total: 0,
+            orderByFields: {},
             // 搜索
             searchForm: {
                 name: '',
@@ -125,17 +135,17 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: 'n.name', dataIndex: 'name', key:'detail'},
-                {title: 'n.phone', dataIndex: 'phone', key:'item'},
-                {title: 'n.email', dataIndex: 'email', key:'item'},
+                {title: 'n.name', dataIndex: 'name', key:'detail', sorter: true},
+                {title: 'n.phone', dataIndex: 'phone', key:'phone', sorter: true},
+                {title: 'n.email', dataIndex: 'email', key:'email', sorter: true},
                 // {title: 'n.continent', dataIndex: 'continent', key:'item'},
-                {title: 'n.country', dataIndex: 'country', key:'item'},
-                {title: 'ad.specific_address', dataIndex: 'address'},
-                {title: 'd.create_time', dataIndex: 'create_time', key: 'time'},
+                {title: 'n.country', dataIndex: 'country', key:'country', sorter: true},
+                {title: 'ad.specific_address', dataIndex: 'address', sorter: true},
+                {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
             if (this.$i18n.locale === 'en') {
-                columns.splice(3, 1,{title: 'n.country', dataIndex: 'country_en', key:'item'})
+                columns.splice(3, 1,{title: 'n.country', dataIndex: 'country_en', key:'item', sorter: true})
             }
             return columns
         },
@@ -177,12 +187,14 @@ export default {
         handleSearchReset() {    // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
             this.$refs.TimeSearch.handleReset()
+            this.orderByFields = {}
             this.pageChange(1);
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
             Core.Api.Customer.list({
                 ...this.searchForm,
+                order_by_fields: this.orderByFields,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -195,7 +207,18 @@ export default {
                 this.loading = false;
             });
         },
-
+        getTableDataSorter( paginate, sort, filter){
+            this.orderByFields = {}
+            switch (filter.order){
+                case "ascend":
+                    this.orderByFields[filter.field] =  0
+            }
+            switch (filter.order){
+                case "descend":
+                    this.orderByFields[filter.field] =  1
+            }
+            this.getTableData()
+        },
         handleDelete(id) {
             let _this = this;
             this.$confirm({
