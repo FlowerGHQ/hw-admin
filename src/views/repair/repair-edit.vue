@@ -9,7 +9,7 @@
             <div class="form-item required">
                 <div class="key">{{ $t('r.repair_classify') }}</div>
                 <div class="value">
-                    <a-radio-group v-model:value="form.type" :disabled="!!form.id">
+                    <a-radio-group v-model:value="form.type" :disabled="!!form.id" @change="handleTypeChange">
                         <a-radio v-for="item of typeList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
                     </a-radio-group>
                 </div>
@@ -33,7 +33,7 @@
             <div class="form-item required">
                 <div class="key">{{ $t('r.warranty') }}</div>
                 <div class="value">
-                    <a-radio-group v-model:value="form.service_type" :disabled="!!form.id">
+                    <a-radio-group v-model:value="form.service_type" :disabled="!!form.id || form.type === REPAIR.TYPE.TYPE_SPECIAL">
                         <a-radio v-for="item of serviceList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
                     </a-radio-group>
                 </div>
@@ -461,6 +461,18 @@ export default {
             // this.defAddr = [item.country,item.province, item.city, item.county]
             console.log('this.addr', this.defAddr)
 
+        },
+        handleTypeChange(){
+            switch (this.form.type){
+                case REPAIR.TYPE.TYPE_COMMON: {
+                    this.form.service_type = '';
+                    break;
+                }
+                case REPAIR.TYPE.TYPE_SPECIAL: {
+                    this.form.service_type = REPAIR.SERVICE_TYPE.IN_REPAIR_TIME;
+                    break;
+                }
+            }
         },
 
        /* handleAddressSelect(address) {

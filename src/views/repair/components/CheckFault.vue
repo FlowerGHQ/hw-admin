@@ -106,6 +106,20 @@
             </div>
         </a-collapse-panel>
     </a-collapse>
+    <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
+        <template #expandIcon ><i class="icon i_expan_l"/> </template>
+        <a-collapse-panel key="Remark" header="备注" class="gray-collapse-panel">
+            <div class="panel-content">
+                <div class="form-item required textarea">
+                    <div class="value">
+                        <a-textarea v-model:value="detail.remark" :placeholder="$t('r.fault_description')"
+                                    :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500'/>
+                        <span class="content-length">{{ detail.remark.length }}/500</span>
+                    </div>
+                </div>
+            </div>
+        </a-collapse-panel>
+    </a-collapse>
 </div>
 </template>
 
@@ -146,7 +160,7 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            activeKey: ['affirm'],
+            activeKey: ['affirm', 'Remark'],
             faultMap: {}, // 存放所有可能的故障
             faultSelect: [], // 存放 被选中的故障
             failData: {}, // 存放 零部件更换 商品信息
@@ -155,6 +169,7 @@ export default {
             warehouseFailList: [], // 故障仓列表
             storeList: [], // 门店列表
             transferStoreId: undefined,
+            remark: "",
         };
     },
     watch: {},
@@ -181,6 +196,7 @@ export default {
         this.getFaultData();
         this.getWarehouseList();
         this.getStoreList();
+        this.remark = Core.Util.deepCopy(this.detail.remark)
     },
     methods: {
         routerChange(type, item = {}) {
@@ -392,7 +408,13 @@ export default {
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.$emit('submit')
+                Core.Api.Repair.remark({
+                    remark: this.detail.remark
+                }).then(() => {
+                    this.$emit('submit')
+                })
             })
+
         },
     }
 };

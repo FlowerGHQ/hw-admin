@@ -70,6 +70,15 @@
                     <div class="key">{{ $t('r.create_time') }}</div>
                     <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
                 </div>
+                <div class="info-item">
+                    <div class="key">{{ $t('r.description') }}</div>
+                    <div class="value">{{ detail.desc }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">备注</div>
+                    <div class="value">{{ detail.remark }}</div>
+                </div>
+
                 <!-- <div class="info-item">
                     <div class="key">计划时间</div>
                     <div class="value">{{ $Util.timeFilter(detail.plan_time) || '-' }}</div>
@@ -88,6 +97,7 @@
         <div class="form-container">
             <CheckFault  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DETECTION && sameOrg" ref="CheckFault"/>
             <CheckResult :id='id' :detail='detail' @hasTransfer='hasTransfer = true' v-if="showCheckResult"/>
+<!--            <Remark :id='id' :detail='detail' :remarkUpate="detail.status == STATUS.WAIT_DETECTION && sameOrg" @hasTransfer='hasTransfer = true'  />-->
             <RepairInfo  :id='id' :detail='detail'/>
             <AttachmentFile :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER'/>
             <WaybillInfo :id='id' :detail='detail' v-if="hasTransfer" @needDelivery='needDelivery = true' ref="WaybillInfo"/>
