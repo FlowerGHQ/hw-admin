@@ -312,6 +312,9 @@ export default {
                 case STATUS.REPAIR_END:
                     this.currStep = 2;
                     break;
+                case STATUS.SETTLEMENT_STORE:
+                    this.currStep = 3;
+                    break;
                 case STATUS.SETTLEMENT:
                     this.currStep = 3;
                     break;

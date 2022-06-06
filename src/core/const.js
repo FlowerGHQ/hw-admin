@@ -234,6 +234,10 @@ let Const = {
             1: '维修工单',
             2: '特批订单',
         },
+	    TYPE: {
+		    TYPE_COMMON: 1,
+		    TYPE_SPECIAL: 2,
+	    },
         // 维修单类别
         CATEGORY_LIST: [
             { zh: '维修', en: 'repair', value: 1 },
@@ -293,6 +297,7 @@ let Const = {
         STATUS: {
             WAIT_DETECTION: 30,
             WAIT_REPAIR: 40,
+	        REPAIR_END: 45,
             SETTLEMENT: 60,
             SETTLEMENT_DISTRIBUTOR: 70,
             DISTRIBUTOR_AUDIT_SUCCESS: 80,
@@ -308,6 +313,7 @@ let Const = {
         STATUS_MAP: {
             '30': { key: 30, color: 'yellow', zh: '待检测', en: 'Waiting detect'},
             '40': { key: 40, color: 'blue', zh: '维修中', en: 'Under repair'},
+	        '45': { key: 40, color: 'blue', zh: '维修结束', en: 'Under repair'},
             '60': { key: 60, color: 'orange', zh: '已结算待审核', en: 'Settled accounts and awaiting audit'},
             '70': { key: 70, color: 'orange', zh: '已结算待审核',en: 'Settled accounts and awaiting audit'},
             '80': { key: 80, color: 'purple', zh: '分销商审核通过', en: 'Passed audit'},

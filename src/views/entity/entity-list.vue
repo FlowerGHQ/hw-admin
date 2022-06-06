@@ -364,13 +364,13 @@ export default {
                 page_size: this.pageSize
             }).then(res => {
                 console.log("getTableData res:", res)
-                let list = res.list.map(entity => {
-                    entity.attr_desc = entity.item.attr_list ? entity.item.attr_list.map(i => i.value).join(',') : ''
-                    return entity
-                })
+                // let list = res.list.map(entity => {
+                //     entity.attr_desc = entity.item.attr_list ? entity.item.attr_list.map(i => i.value).join(',') : ''
+                //     return entity
+                // })
                 console.log("res.list", res.list)
                 this.total = res.count;
-                this.tableData = list;
+                this.tableData = res.list;
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {

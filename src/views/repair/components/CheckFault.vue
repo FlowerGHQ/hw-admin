@@ -112,7 +112,7 @@
             <div class="panel-content">
                 <div class="form-item required textarea">
                     <div class="value">
-                        <a-textarea v-model:value="detail.remark" :placeholder="$t('r.fault_description')"
+                        <a-textarea v-model:value="remark" :placeholder="$t('r.fault_description')"
                                     :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500'/>
                         <span class="content-length">{{ detail.remark.length }}/500</span>
                     </div>
@@ -409,7 +409,8 @@ export default {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.$emit('submit')
                 Core.Api.Repair.remark({
-                    remark: this.detail.remark
+                    id: this.id,
+                    remark: this.remark
                 }).then(() => {
                     this.$emit('submit')
                 })

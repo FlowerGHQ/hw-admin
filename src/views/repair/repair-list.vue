@@ -361,6 +361,7 @@ export default {
         this.timer = window.setInterval(() => {
             setTimeout(() => {
                 this.getTableData();
+                this.getWarehouseList();
             }, 0);
         }, 5*1000);
 
