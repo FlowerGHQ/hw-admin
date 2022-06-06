@@ -4,9 +4,8 @@
                    :placeholder="$t('def.select')"
                    :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
                    :tree-data="treeData"
-                   :load-data='onLoadData'
                    @select='handleSelect'
-                   treeDefaultExpandAll
+                   tree-default-expand-all
     />
 </template>
 
@@ -71,45 +70,47 @@ export default {
                 case 'material': key = 'MaterialCategory'; break
             }
             Core.Api[key].tree({parent_id: this.parentId}).then(res => {
-                let list = res.list.map(item => ({
-                    id: item.id,
-                    parent_id: this.parentId,
-                    key: item.id,
-                    value: item.id,
-                    title: item.name,
-                    config: item.config,
-                    isLeaf: !item.has_children,
-                }))
-                this.treeData = list
+                // let list = res.list.map(item => (
+                //     // id: item.id,
+                //     // parent_id: this.parentId,
+                //     // key: item.id,
+                //     // value: item.id,
+                //     // title: item.name,
+                //     // config: item.config,
+                //     // children: item.children,
+                //     this.getItemCategoryChildren(item)
+                // ))
+                this.treeData = res.list
+                console.log("treeData", this.treeData)
             })
         },
-        async getItemCategory(parent_id, treeNode, resolve) {
-            let key = ''
-            switch (this.type) {
-                case 'item': key = 'ItemCategory'; break
-                case 'material': key = 'MaterialCategory'; break
-            }
-            let {list} = await Core.Api[key].tree({parent_id})
-            console.log('list:', list)
-            list = list.map(item => ({
-                id: item.id,
-                parent_id: parent_id,
-                key: item.id,
-                value: item.id,
-                title: item.name,
-                isLeaf: !item.has_children,
-            }))
-            treeNode.dataRef.children = list
-            resolve(list)
-            return list
-        },
-        onLoadData(treeNode) {
-            console.log('treeNode:', treeNode)
-            let parent_id = treeNode.dataRef.id
-            return new Promise(resolve => {
-                this.getItemCategory(parent_id, treeNode, resolve)
-            });
-        },
+        // async getItemCategory(parent_id, treeNode, resolve) {
+        //     let key = ''
+        //     switch (this.type) {
+        //         case 'item': key = 'ItemCategory'; break
+        //         case 'material': key = 'MaterialCategory'; break
+        //     }
+        //     let {list} = await Core.Api[key].tree({parent_id})
+        //     console.log('list:', list)
+        //     list = list.map(item => ({
+        //         id: item.id,
+        //         parent_id: parent_id,
+        //         key: item.id,
+        //         value: item.id,
+        //         title: item.name,
+        //         isLeaf: !item.has_children,
+        //     }))
+        //     treeNode.dataRef.children = list
+        //     resolve(list)
+        //     return list
+        // },
+        // onLoadData(treeNode) {
+        //     console.log('treeNode:', treeNode)
+        //     let parent_id = treeNode.dataRef.id
+        //     return new Promise(resolve => {
+        //         this.getItemCategory(parent_id, treeNode, resolve)
+        //     });
+        // },
 
         handleSelect(value, node, extra) {
             console.log('handleSelect value, node, extra:', value, node, extra)
