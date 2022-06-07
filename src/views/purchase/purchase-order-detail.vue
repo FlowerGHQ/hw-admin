@@ -545,12 +545,21 @@ export default {
                 },
                 onSelect:(record, selected, selectedRows) => {
                     record.disabled = !record.disabled
-                    record.deliver_amount = 0
+                    if (record.disabled === false){
+                        record.deliver_amount = record.residue_quantity
+                    } else {
+                        record.deliver_amount = 0
+                    }
                 },
                 onSelectAll:(selected, selectedRows, changeRows) =>{
                     changeRows.forEach(it => {
                         it.disabled = !it.disabled
-                        it.deliver_amount = 0
+                        if (it.disabled === false){
+                            it.deliver_amount = it.residue_quantity
+                        } else {
+                            it.deliver_amount = 0
+                        }
+
                     })
 
                 },
