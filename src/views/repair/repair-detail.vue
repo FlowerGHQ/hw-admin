@@ -17,7 +17,10 @@
                     <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION">
                         <i class="icon i_submit"/>{{ $t('def.submit') }}
                     </a-button>
-                    <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.WAIT_REPAIR">
+                    <a-button type="primary" @click="handleRepairEndShow()" v-if="detail.status == STATUS.WAIT_REPAIR">
+                        <i class="icon"/>维修
+                    </a-button>
+                    <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END">
                         <i class="icon i_settle"/>{{ $t('r.settle_accounts') }}
                     </a-button>
                 </template>
@@ -97,7 +100,6 @@
         <div class="form-container">
             <CheckFault  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DETECTION && sameOrg" ref="CheckFault"/>
             <CheckResult :id='id' :detail='detail' @hasTransfer='hasTransfer = true' v-if="showCheckResult"/>
-<!--            <Remark :id='id' :detail='detail' :remarkUpate="detail.status == STATUS.WAIT_DETECTION && sameOrg" @hasTransfer='hasTransfer = true'  />-->
             <RepairInfo  :id='id' :detail='detail'/>
             <AttachmentFile :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER'/>
             <WaybillInfo :id='id' :detail='detail' v-if="hasTransfer" @needDelivery='needDelivery = true' ref="WaybillInfo"/>
@@ -121,6 +123,28 @@
                     <a-input v-model:value="deliveryForm.waybill_uid" placeholder="请输入物流单号"/>
                 </div>
             </div>
+        </a-modal>
+        <a-modal v-model:visible="repairEndShow" title="维修" class="repair-audit-modal" :after-close='handleRepairEndClose'>
+            <div class="modal-content">
+                <div class="form-item required">
+                    <div class="key">维修结果:</div>
+                    <a-radio-group v-model:value="repairForm.results">
+                        <a-radio :value="1">通过</a-radio>
+                        <a-radio :value="0">不通过</a-radio>
+                    </a-radio-group>
+                </div>
+                <div class="form-item textarea">
+                    <div class="key">备注:</div>
+                    <div class="value">
+                        <a-textarea v-model:value="repairForm.repair_message" placeholder="请输入备注"
+                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="repairEndShow = false">取消</a-button>
+                <a-button @click="handleRepairEnd()" type="primary">确定</a-button>
+            </template>
         </a-modal>
         <a-modal v-model:visible="repairAuditShow" title="审核" class="repair-audit-modal" :after-close='handleAuditClose'>
             <div class="modal-content">
@@ -210,6 +234,13 @@ export default {
                 audit_result: '',
                 audit_message: '',
             },
+
+            repairEndShow: false,
+            repairForm: {
+                results: '',
+                repair_message: '',
+            },
+
 
             // 二次维修
             secondShow: false,
@@ -312,9 +343,6 @@ export default {
                 case STATUS.REPAIR_END:
                     this.currStep = 2;
                     break;
-                case STATUS.SETTLEMENT_STORE:
-                    this.currStep = 3;
-                    break;
                 case STATUS.SETTLEMENT:
                     this.currStep = 3;
                     break;
@@ -330,6 +358,28 @@ export default {
         handleFaultSubmit() {
             this.$refs.CheckFault.handleFaultSubmit();
         },
+
+        // 工单 结算
+        handleRepairEndShow() {
+            this.repairEndShow = true
+        },
+        handleRepairEnd() {
+            let form = Core.Util.deepCopy(this.repairForm)
+            if (!form.results) {
+                return this.$message.warning('请选择维修结果')
+            }
+            let _this = this;
+            Core.Api.Repair.repair({id: this.id, ...form}).then(() => {
+                _this.$message.success(_this.$t('pop_up.save_success'))
+                _this.handleRepairEndClose()
+                _this.getRepairDetail()
+            })
+        },
+        handleRepairEndClose() {
+            this.repairEndShow = false;
+            Object.assign(this.repairForm, this.$options.data().repairForm)
+        },
+
         // 工单 结算
         handleSettlement() {
             let _this = this;
