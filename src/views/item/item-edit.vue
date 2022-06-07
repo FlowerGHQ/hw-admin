@@ -125,7 +125,7 @@
                         </a-radio-group>
                     </template>
                     <template v-if="item.type == 'rich_text'">
-                        <VueTinymce v-model="form.config[index].value" :setting="tinymce_setting"/>
+                        <a-textarea v-model="form.config[index].value"/>
                     </template>
                 </div>
             </div>
@@ -327,14 +327,14 @@
 import Core from '../../core';
 import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue'
 import ItemHeader from './components/ItemHeader.vue'
-import VueTinymce from '@jsdawn/vue3-tinymce';
+// import VueTinymce from '@jsdawn/vue3-tinymce';
 
 export default {
     name: 'ItemEdit',
     components: {
         CategoryTreeSelect,
         ItemHeader,
-        VueTinymce,
+        // VueTinymce,
     },
     props: {},
     data() {
