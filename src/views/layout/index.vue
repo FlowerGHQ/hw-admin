@@ -27,8 +27,8 @@
                     </a-button>
                     <template #overlay>
                         <a-menu style="text-align: center;">
-                            <a-menu-item>
-                                <a-button type="link" @click="handleEditShow" class="menu-item-btn">{{ $t('n.password') }}</a-button>
+                            <a-menu-item @click="handleEditShow">
+                                <a-button type="link"  class="menu-item-btn">{{ $t('n.password') }}</a-button>
                                 <a-modal v-model:visible="passShow" :title="$t('n.password')" class="password-edit-modal" :after-close="handleEditClose">
                                     <div class="form-title">
                                         <div class="form-item required">
@@ -56,8 +56,8 @@
                                     </template>
                                 </a-modal>
                             </a-menu-item>
-                            <a-menu-item>
-                                <a-button type="link" @click="handleLogout" class="menu-item-btn">{{ $t('n.exit') }}</a-button>
+                            <a-menu-item  @click="handleLogout">
+                                <a-button type="link" class="menu-item-btn">{{ $t('n.exit') }}</a-button>
                             </a-menu-item>
                         </a-menu>
                     </template>
