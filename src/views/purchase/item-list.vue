@@ -207,6 +207,7 @@ export default {
                 category_id: this.searchForm.category_id,
                 name: this.searchForm.name,
                 page: this.currPage,
+                is_authority: 1,
                 page_size: this.pageSize
             }).then(res => {
                 console.log("getTableData res:", res)
@@ -250,6 +251,7 @@ export default {
         getCategoryList() {
             Core.Api.ItemCategory.tree({
                 id: 0,
+                is_authority: 1,
             }).then(res => {
                 this.categoryList = res.list
             })

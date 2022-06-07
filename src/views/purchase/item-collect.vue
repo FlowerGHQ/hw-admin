@@ -64,7 +64,7 @@
                     <div></div><!-- 调整结构用 不要删 --><div></div>
                     <div class="btns">
                         <a-button type="link" @click="handleFavoriteRemove(item)">{{ $t('def.delete') }}</a-button>
-                        <a-button type="link" class="disabled" v-if="item.item.in_shopping_cart">{{ $t('i.already') }}</a-button>
+                        <a-button type="link" class="disabled" v-if="item.in_shopping_cart">{{ $t('i.already') }}</a-button>
                         <a-button type="primary" ghost @click="handleMoveToShopCart(item)" v-else>{{ $t('i.cart') }}</a-button>
                     </div>
                 </div>
@@ -278,7 +278,7 @@ export default {
             color: #111111;
             line-height: 28px;
             margin-bottom: 8px;
-            
+
         }
         .list-content {
             width: 72%;
