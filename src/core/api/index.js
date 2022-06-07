@@ -27,7 +27,7 @@ const apiList = {
         invoiceOutExport: ['PostJson', 'invoice/export-out-invoice'],//导出
         invoiceInExport: ['PostJson', 'invoice/export-in-invoice'],//导出
         materialPurchaseExport: ['PostJson', '/material-purchase-order/export'],//导出
-	    ItemCollectExport: ['PostJson', '/material-purchase-order/export'],//导出
+	    ItemCollectExport: ['PostJson', '/shopping-cart/download-import-template'],//导出
     },
     User: { // 员工
         save: ['PostJson', 'user/save'],

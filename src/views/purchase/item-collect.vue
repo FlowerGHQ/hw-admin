@@ -1,6 +1,6 @@
 <template>
 <div id="ItemCollect" class="list-container">
-<!--    <a-button type="primary" class="monetary-export" @click="handleExport"><i class="icon i_download"/>导入模版下载</a-button>-->
+    <a-button type="primary" class="monetary-export" @click="handleExport"><i class="icon i_download"/>导入模版下载</a-button>
     <a-upload name="file" class="monetary-upload"
               :file-list="upload.fileList" :action="upload.action"
               :show-upload-list='false'
@@ -121,7 +121,7 @@ export default {
             mark: '',
             // 上传
             upload: {
-                action: Core.Const.NET.URL_POINT + this.mark + "/shopping-cart/import",
+                action: Core.Const.NET.URL_POINT + "/store/1/shopping-cart/import",
                 fileList: [],
                 headers: {
                     ContentType: false
@@ -152,24 +152,7 @@ export default {
     },
     mounted() {
         this.getList()
-        const LOGIN_TYPE = Const.LOGIN.TYPE
-        const loginType = Data.getLoginType();
-        let mark = 'admin/1'
-        switch (loginType) {
-            case LOGIN_TYPE.ADMIN:
-                mark = 'admin/1'
-                break;
-            case LOGIN_TYPE.DISTRIBUTOR:
-                mark = 'distributor/1'
-                break;
-            case LOGIN_TYPE.AGENT:
-                mark = 'agent/1'
-                break;
-            case LOGIN_TYPE.STORE:
-                mark = 'store/1'
-                break;
-        }
-        this.mark = mark;
+
     },
     methods: {
 
@@ -293,12 +276,16 @@ export default {
         },
         // 上传文件
         handlePurchaseChange({file, fileList}) {
+            let _this = this
             console.log("handleMatterChange status:", file.status, "file:", file)
             if (file.status == 'done') {
                 if (file.response && file.response.code < 0) {
+                    _this.getList()
                     return this.$message.error(file.response.message)
                 } else {
+                    _this.getList()
                     return this.$message.success('上传成功');
+
                 }
             }
             this.upload.fileList = fileList
