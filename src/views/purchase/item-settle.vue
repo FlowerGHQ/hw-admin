@@ -29,27 +29,27 @@
                 </div>
             </div>
         </div>
-        <div class="config-item pay" v-if="$auth('DISTRIBUTOR')">
-            <div class="config-title">2.{{ $t('i.shipping_settings') }}</div>
-            <div class="config-content">
-                <div class="radio-item">
-                    <div class="desc">{{ $t('p.partial_shipments') }}：</div>
-                    <div class="value">
-                        <a-radio-group v-model:value="form.flag_part_shipment">
-                            <a-radio v-for="item of flagPartShipmentList" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>
-                        </a-radio-group>
-                    </div>
-                </div>
-                <div class="radio-item">
-                    <div class="desc">{{ $t('p.transshipment') }}：</div>
-                    <div class="value">
-                        <a-radio-group v-model:value="form.flag_transfer">
-                            <a-radio v-for="item of flagTransferList" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>
-                        </a-radio-group>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!--        <div class="config-item pay" v-if="$auth('DISTRIBUTOR')">-->
+<!--            <div class="config-title">2.{{ $t('i.shipping_settings') }}</div>-->
+<!--            <div class="config-content">-->
+<!--                <div class="radio-item">-->
+<!--                    <div class="desc">{{ $t('p.partial_shipments') }}：</div>-->
+<!--                    <div class="value">-->
+<!--                        <a-radio-group v-model:value="form.flag_part_shipment">-->
+<!--                            <a-radio v-for="item of flagPartShipmentList" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>-->
+<!--                        </a-radio-group>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="radio-item">-->
+<!--                    <div class="desc">{{ $t('p.transshipment') }}：</div>-->
+<!--                    <div class="value">-->
+<!--                        <a-radio-group v-model:value="form.flag_transfer">-->
+<!--                            <a-radio v-for="item of flagTransferList" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>-->
+<!--                        </a-radio-group>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
         <a-button type="primary" class="orange" @click="handleCreateOrder()">{{ $t('p.confirm_order') }}</a-button>
     </div>
     <div class="settel-item">
@@ -267,12 +267,12 @@ export default {
             if (!this.selectIndex) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if(this.$auth('DISTRIBUTOR') && !this.form.flag_part_shipment) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if(this.$auth('DISTRIBUTOR') && !this.form.flag_transfer) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
+            // if(this.$auth('DISTRIBUTOR') && !this.form.flag_part_shipment) {
+            //     return this.$message.warning(this.$t('def.enter'))
+            // }
+            // if(this.$auth('DISTRIBUTOR') && !this.form.flag_transfer) {
+            //     return this.$message.warning(this.$t('def.enter'))
+            // }
             const parms = {
                 price: Math.round(this.sum_price * 100),
                 charge: Math.round(this.sum_price * 100),

@@ -27,12 +27,15 @@
                 <a-button type="primary" @click="routerChange('invoice')" v-if="!haveSettle && $auth('repair-order.settlement')">
                     <i class="icon i_detail_l"/>{{ $t('r.bill') }}
                 </a-button>
-<!--                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT && $auth('DISTRIBUTOR') && $auth('repair-order.audit')">
+               <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT && $auth('DISTRIBUTOR') && $auth('repair-order.audit')">
                     <i class="icon i_audit"/>{{ $t('n.audit') }}
                 </a-button>
                 <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS && $auth('ADMIN') && $auth('repair-order.audit')">
                     <i class="icon i_audit"/>{{ $t('n.audit') }}
-                </a-button>-->
+                </a-button>
+                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT_DISTRIBUTOR && $auth('ADMIN') && $auth('repair-order.audit')">
+                    <i class="icon i_audit"/>{{ $t('n.audit') }}
+                </a-button>
             </div>
         </div>
         <div class="gray-panel info">

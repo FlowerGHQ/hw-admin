@@ -1,8 +1,20 @@
 <template>
 <div id="ItemCollect" class="list-container">
+<!--    <a-button type="primary" class="monetary-export" @click="handleExport"><i class="icon i_download"/>导入模版下载</a-button>-->
+    <a-upload name="file" class="monetary-upload"
+              :file-list="upload.fileList" :action="upload.action"
+              :show-upload-list='false'
+              :headers="upload.headers" :data='upload.data'
+              accept=".xlsx,.xls"
+              @change="handlePurchaseChange">
+        <a-button type="primary" ghost class="file-upload-btn">
+            <i class="icon i_add"/>批量导入采购商品
+        </a-button>
+    </a-upload>
     <a-select v-model:value="currency" class="monetary-select">
         <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>
     </a-select>
+
     <div class="list-container shop-cart-container">
         <div class="title-area">
             <div class="shop-area">{{ $t('i.shopping') }}</div>
@@ -81,6 +93,8 @@
 <script>
 import SimpleImageEmpty from '../../components/common/SimpleImageEmpty.vue'
 import Core from '../../core';
+import Const from "../../core/const";
+import Data from "../../core/data";
 export default {
     name: 'ItemCollect',
     components: {SimpleImageEmpty},
@@ -104,6 +118,19 @@ export default {
                 // "£": { key: '_gbp', text: '£ (GBP)'},
             },
             currency: Core.Const.ITEM.MONETARY_TYPE_MAP.EUR,
+            mark: '',
+            // 上传
+            upload: {
+                action: Core.Const.NET.URL_POINT + this.mark + "/shopping-cart/import",
+                fileList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'xlsx',
+                },
+            },
         };
     },
     watch: {},
@@ -125,8 +152,27 @@ export default {
     },
     mounted() {
         this.getList()
+        const LOGIN_TYPE = Const.LOGIN.TYPE
+        const loginType = Data.getLoginType();
+        let mark = 'admin/1'
+        switch (loginType) {
+            case LOGIN_TYPE.ADMIN:
+                mark = 'admin/1'
+                break;
+            case LOGIN_TYPE.DISTRIBUTOR:
+                mark = 'distributor/1'
+                break;
+            case LOGIN_TYPE.AGENT:
+                mark = 'agent/1'
+                break;
+            case LOGIN_TYPE.STORE:
+                mark = 'store/1'
+                break;
+        }
+        this.mark = mark;
     },
     methods: {
+
         routerChange(type, item) {
             let routeUrl
             switch (type) {
@@ -245,6 +291,37 @@ export default {
                 },
             });
         },
+        // 上传文件
+        handlePurchaseChange({file, fileList}) {
+            console.log("handleMatterChange status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                if (file.response && file.response.code < 0) {
+                    return this.$message.error(file.response.message)
+                } else {
+                    return this.$message.success('上传成功');
+                }
+            }
+            this.upload.fileList = fileList
+        },
+        handleExport() { // 确认库单是否导出
+            let _this = this;
+            this.$confirm({
+                title: '确认要导出吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    _this.handleCollectExport();
+                }
+            })
+        },
+        handleCollectExport() { // 订单导出
+            this.exportDisabled = true;
+            let exportUrl = Core.Api.Export.ItemCollectExport({
+            })
+            console.log("handlePurchaseExport _exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
+        },
     }
 };
 </script>
@@ -257,6 +334,30 @@ export default {
         position: absolute;
         top: 28px;
         right: 28px;
+        min-width: 126px;
+        .ant-select-selector {
+            border-color: #006EF9;
+        }
+        .ant-select-selection-item {
+            color: #006EF9;
+        }
+    }
+    .monetary-upload {
+        position: absolute;
+        top: 28px;
+        right: 160px;
+        min-width: 126px;
+        .ant-select-selector {
+            border-color: #006EF9;
+        }
+        .ant-select-selection-item {
+            color: #006EF9;
+        }
+    }
+    .monetary-export {
+        position: absolute;
+        top: 28px;
+        right: 330px;
         min-width: 126px;
         .ant-select-selector {
             border-color: #006EF9;
