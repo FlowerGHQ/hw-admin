@@ -212,6 +212,7 @@ export default {
         tableColumns() {
             let columns = [
                 { title: this.$t('p.number'), dataIndex: 'sn', },
+                // { title: this.$t('n.institution'), dataIndex: 'type', key: 'type' },
                 { title: this.$t('n.institution'), dataIndex: ['create_org', 'name'], key: 'item' },
                 { title: this.$t('p.total_price'), dataIndex: 'price', key: 'money' },
                 { title: this.$t('p.freight'), dataIndex: 'freight_price', key: 'money' },

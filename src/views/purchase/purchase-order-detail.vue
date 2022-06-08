@@ -8,10 +8,17 @@
                     <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
                     <a-button @click="handleExportIn"><i class="icon i_download"/>导出订单</a-button>
                 </template>
+                <template v-if="!$auth('ADMIN') && $auth('purchase-order.export')">
+                    <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
+                    <a-button @click="handleExportInfo"><i class="icon i_download"/>导出采购商品信息</a-button>
+                </template>
                 <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
-                    <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.confirm_payment')}}</a-button>
-                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver')" @click="handleModalShow('deliver')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.ship')}}</a-button>
-                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && $auth('ADMIN')" @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>
+                    <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.confirm_payment')}}</a-button>
+<!--                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && (detail.type !== TYPE. || PAYMENT_STATUS.PAY_ALL)" @click="handleModalShow('deliver')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.ship')}}</a-button>-->
+<!--                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && detail.type !== TYPE. && $auth('ADMIN')" @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>-->
+                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') " @click="handleModalShow('deliver')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.ship')}}</a-button>
+                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') " @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>
+
                 </template>
                 <template v-if="authOrg(detail.org_id, detail.org_type)">
                     <a-button type="primary" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER" @click="handleReceived()"><i class="icon i_goods"/>确认收货</a-button>
@@ -42,7 +49,7 @@
                                         <a-image :width="30" :height="30" :src="$Util.imageFilter(text ? text.logo : '', 2)"/>
                                         <a-tooltip placement="top" :title='text'>
                                             <a-button type="link" @click="routerChange('detail', text)" style="margin-left: 6px;">
-                                                {{text ? text.name : '-'}}
+                                                {{ text ? lang =='zh' ? text.name : text.name_en : '-' }}
                                             </a-button>
                                         </a-tooltip>
                                     </div>
@@ -140,7 +147,7 @@
                                 <template v-if="column.dataIndex === 'attachment'">
                                     <div class="table-img">
                                         <a-image-preview-group class="image-group">
-                                            <a-image v-for="path,index in record.paths" :key="index" class="image" :width="55" :height="55" :src="$Util.imageFilter(path)" fallback='无'/>
+                                            <a-image v-for="(path, index) in record.paths" :key="index" class="image" :width="55" :height="55" :src="$Util.imageFilter(path)" fallback='无'/>
                                         </a-image-preview-group>
                                     </div>
                                 </template>
@@ -568,6 +575,9 @@ export default {
                 // }),
             };
         },
+        lang() {
+            return this.$store.state.lang
+        }
     },
     mounted() {
         this.getPurchaseItemList();
@@ -923,6 +933,18 @@ export default {
 
             this.exportDisabled = true;
             let exportUrl = Core.Api.Export.purchaseTemplateExport(params);
+            console.log("handlePurchaseExport _exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
+        },
+        handleExportInfo() {
+            const params = {
+                id: this.id, // 订单id
+                currency: this.detail.currency, // 货币类型
+            };
+
+            this.exportDisabled = true;
+            let exportUrl = Core.Api.Export.purchaseOrderExport(params);
             console.log("handlePurchaseExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;

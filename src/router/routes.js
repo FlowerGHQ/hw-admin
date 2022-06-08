@@ -683,6 +683,7 @@ const routes = [
         name: 'ProductionManagement',
         meta: {
             title: '供应管理',
+	        title_en: 'Suppliers',
             icon: 'i_s_item',
             roles: [LOGIN_TYPE.ADMIN],
         },
@@ -693,6 +694,7 @@ const routes = [
                 component: () => import ('@/views/production/supplier-list.vue'),
                 meta: {
                     title: '供应商列表',
+	                title_en: 'Supplier list',
                     roles: [LOGIN_TYPE.ADMIN],
                 }
             },
@@ -726,6 +728,7 @@ const routes = [
                 component: () => import ('@/views/production/material-purchase-list.vue'),
                 meta: {
                     title: '采购单列表',
+	                title_en: 'Procurement list',
                     roles: [LOGIN_TYPE.ADMIN],
                     is_sub_menu: true
                 }
@@ -759,6 +762,7 @@ const routes = [
                 component: () => import ('@/views/production/material-list.vue'),
                 meta: {
                     title: '物料列表',
+	                title_en: 'Material list',
                     roles: [LOGIN_TYPE.ADMIN],
                 }
             },
@@ -793,6 +797,7 @@ const routes = [
                     import ('@/views/production/material-category.vue'),
                 meta: {
                     title: '物料分类',
+	                title_en: 'Material classification',
                     roles: [LOGIN_TYPE.ADMIN],
                 }
             },
@@ -818,6 +823,7 @@ const routes = [
 					import ('@/views/manufacture/bom-list.vue'),
 				meta: {
 					title: 'BOM列表',
+					title_en: 'BOM list',
 					roles: [LOGIN_TYPE.ADMIN],
 				}
 			},
@@ -840,6 +846,7 @@ const routes = [
 					import ('@/views/manufacture/manufacture-order-list.vue'),
 				meta: {
 					title: '生产单列表',
+					title_en: 'Manufacture order list',
 					roles: [LOGIN_TYPE.ADMIN],
 				}
 			},
@@ -873,6 +880,7 @@ const routes = [
 				component: () =>
 					import ('@/views/manufacture/calculate-production-amount.vue'),
 				meta: {
+					hidden: true,
 					title: '成套计算',
 					roles: [LOGIN_TYPE.ADMIN],
 				}
@@ -930,6 +938,7 @@ const routes = [
 		        component: () => import ('@/views/warehouse/stock-list.vue'),
 		        meta: {
 			        title: '库存总览',
+			        title_en: 'Total inventory',
 			        roles: [LOGIN_TYPE.ADMIN],
 		        }
 	        },
@@ -970,6 +979,7 @@ const routes = [
                 component: () => import('@/views/warehouse/warehouse-transfer-list.vue'),
                 meta: {
                     title: '调货单管理',
+	                title_en: 'Transfer cargo',
                     roles: [LOGIN_TYPE.ADMIN],
                 }
             },
@@ -1050,7 +1060,7 @@ const routes = [
         name: 'AftersalesSupplyManagement',
         meta: {
             title: '售后管理',
-            title_en: 'After-sales',
+            title_en: 'After sales',
             roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
             icon: 'i_s_temp',
             hidden: false,

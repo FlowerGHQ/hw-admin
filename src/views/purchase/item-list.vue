@@ -22,7 +22,7 @@
                             <div class="item" v-for="item of briefList" :key="item.id">
                                 <img class="cover" :src="$Util.imageFilter(item.logo, 2)" />
                                 <div class="desc">
-                                    <p>{{item.name || '-'}}</p>
+                                    <p>{{ item.name ? lang =='zh' ? item.name : item.name_en : '-' }}</p>
                                     <span>{{item.code || '-'}}</span>
                                     <p class="price">€{{$Util.countFilter(item[priceKey + 'eur'])}} | ${{$Util.countFilter(item[priceKey + 'usd'])}}</p>
                                 </div>
@@ -60,7 +60,7 @@
                         <img :src="$Util.imageFilter(item.logo, 2)" />
                     </div>
                     <p class="sub">{{item.code}}</p>
-                    <p class="name">{{item.name}}</p>
+                    <p class="name">{{ item.name ? lang =='zh' ? item.name : item.name_en : '-' }}</p>
                     <p class="desc">&nbsp;</p>
                     <p class="price">€{{$Util.countFilter(item[priceKey + 'eur'])}} | ${{$Util.countFilter(item[priceKey + 'usd'])}}</p>
                     <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">{{ $t('i.cart') }}</a-button>
@@ -130,6 +130,9 @@ export default {
     computed: {
         priceKey() {
             return this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
+        },
+        lang() {
+            return this.$store.state.lang
         }
     },
     mounted() {

@@ -1,6 +1,6 @@
 <template>
 <div id="ItemCollect" class="list-container">
-    <a-button type="primary" class="monetary-export" @click="handleExport"><i class="icon i_download"/>导入模版下载</a-button>
+    <a-button type="primary" class="monetary-export" @click="handleExport"><i class="icon i_download"/>{{$t('i.download_the_template')}}</a-button>
     <a-upload name="file" class="monetary-upload"
               :file-list="upload.fileList" :action="upload.action"
               :show-upload-list='false'
@@ -8,7 +8,7 @@
               accept=".xlsx,.xls"
               @change="handlePurchaseChange">
         <a-button type="primary" ghost class="file-upload-btn">
-            <i class="icon i_add"/>批量导入采购商品
+            <i class="icon i_add"/> {{$t('i.bulk_import')}}
         </a-button>
     </a-upload>
     <a-select v-model:value="currency" class="monetary-select">
@@ -23,7 +23,7 @@
             <div class="list-item" v-for="item of shopCartList" :key="item.id">
                 <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
                 <div class="info">
-                    <div class="name" @click="routerChange('detail', item.item)">{{item.item ? item.item.name : '-'}}</div>
+                    <div class="name" @click="routerChange('detail', item.item)">{{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}</div>
                     <div class="sub">{{item.item ? item.item.code : '-'}}</div>
                     <div class="spec" v-if='item.item && item.item.attr_list'>
                         <span>{{ $t('i.spec') }}：</span>{{$Util.itemSpecFilter(item.item.attr_list)}}
@@ -42,13 +42,13 @@
                     {{currency}} {{$Util.countFilter(item.item ? item.item[priceKey + unitMap[currency].key] : item.price)}}
                 </div>
             </div>
-            <SimpleImageEmpty v-if="!shopCartList.length" desc='您的购物车中暂无商品'/>
+            <SimpleImageEmpty v-if="!shopCartList.length" :desc="$t('i.no_item_cart')"/>
         </div>
         <div class="settle-content" v-if="shopCartList.length">
             <div class="title-area">{{ $t('i.summary') }}</div>
             <div class="settle-item" v-for="item of shopCartList" :key="item.id">
                 <p class="name">
-                    {{item.item ? item.item.name : '-'}}
+                    {{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}
                     <span class="spec" v-if='item.item && item.item.attr_list'>
                         {{$Util.itemSpecFilter(item.item.attr_list)}}
                     </span>
@@ -68,7 +68,7 @@
             <div class="list-item" v-for="item of favoriteList" :key="item.id">
                 <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
                 <div class="info">
-                    <div class="name" @click="routerChange('detail', item.item)">{{item.item ? item.item.name : '-'}}</div>
+                    <div class="name" @click="routerChange('detail', item.item)">{{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}</div>
                     <div class="sub">{{item.item ? item.item.code : '-'}}</div>
                     <div class="spec" v-if='item.item && item.item.attr_list'>
                         <span>{{ $t('i.spec') }}：</span>{{$Util.itemSpecFilter(item.item.attr_list)}}
@@ -84,7 +84,7 @@
                     {{currency}} {{$Util.countFilter(item.item ? item.item[priceKey + unitMap[currency].key] : item.price)}}
                 </div>
             </div>
-            <SimpleImageEmpty v-if="!favoriteList.length" desc='您的收藏夹中暂无商品'/>
+            <SimpleImageEmpty v-if="!favoriteList.length" :desc="$t('i.no_item_favorites')" />
         </div>
     </div>
 </div>
@@ -148,6 +148,9 @@ export default {
                 sum += item.item[key] * item.amount
             }
             return Core.Util.countFilter(sum)
+        },
+        lang() {
+            return this.$store.state.lang
         }
     },
     mounted() {

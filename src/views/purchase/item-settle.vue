@@ -29,27 +29,35 @@
                 </div>
             </div>
         </div>
-<!--        <div class="config-item pay" v-if="$auth('DISTRIBUTOR')">-->
-<!--            <div class="config-title">2.{{ $t('i.shipping_settings') }}</div>-->
-<!--            <div class="config-content">-->
-<!--                <div class="radio-item">-->
-<!--                    <div class="desc">{{ $t('p.partial_shipments') }}：</div>-->
-<!--                    <div class="value">-->
-<!--                        <a-radio-group v-model:value="form.flag_part_shipment">-->
-<!--                            <a-radio v-for="item of flagPartShipmentList" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>-->
-<!--                        </a-radio-group>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="radio-item">-->
-<!--                    <div class="desc">{{ $t('p.transshipment') }}：</div>-->
-<!--                    <div class="value">-->
-<!--                        <a-radio-group v-model:value="form.flag_transfer">-->
-<!--                            <a-radio v-for="item of flagTransferList" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>-->
-<!--                        </a-radio-group>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
+        <div class="config-item pay" v-if="$auth('DISTRIBUTOR')">
+            <div class="config-title">2.{{ $t('i.shipping_settings') }}</div>
+            <div class="config-content">
+                <div class="radio-item">
+                    <div class="desc">{{ $t('p.order_type') }}：</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.flag_order_type">
+                            <a-radio v-for="item of flagOrderTypeList" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="radio-item" v-if="form.flag_order_type === PURCHASE.FLAG_ORDER_TYPE.PRE_SALES">
+                    <div class="desc">{{ $t('p.partial_shipments') }}：</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.flag_part_shipment">
+                            <a-radio v-for="item of flagPartShipmentList" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="radio-item" v-if="form.flag_order_type === PURCHASE.FLAG_ORDER_TYPE.PRE_SALES">
+                    <div class="desc">{{ $t('p.transshipment') }}：</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.flag_transfer">
+                            <a-radio v-for="item of flagTransferList" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+            </div>
+        </div>
         <a-button type="primary" class="orange" @click="handleCreateOrder()">{{ $t('p.confirm_order') }}</a-button>
     </div>
     <div class="settel-item">
@@ -59,7 +67,7 @@
         </div>
         <div class="item-content">
             <div class="price-item" v-for="item of shopCartList" :key="item.id">
-                <p class="name">{{item.item ? item.item.name : '-'}}</p>
+                <p class="name">{{ item.name ? lang =='zh' ? item.name : item.name_en : '-' }}</p>
                 <span class="price">{{unit}} {{$Util.countFilter(item.item[priceKey] * item.amount)}}
                 </span>
             </div>
@@ -71,7 +79,7 @@
             <div class="item-item" v-for="item of shopCartList" :key="item.id">
                 <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
                 <div class="info">
-                    <p>{{item.item ? item.item.name : '-'}}</p>
+                    <p>{{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}</p>
                     <span>{{ $t('p.code') }}：{{item.item ? item.item.code : '-'}}</span>
                     <span v-if="item.item && item.item.attr_str">{{ $t('i.spec') }}：{{item.item ? item.item.attr_str : '-'}}</span>
                     <span>{{ $t('i.amount') }}：{{item.amount}}</span>
@@ -98,10 +106,11 @@ export default {
             orgId: Core.Data.getOrgId(),
             orgType: Core.Data.getOrgType(),
             loading: false,
-
+            PURCHASE,
             receiveList: [],
             flagPartShipmentList: PURCHASE.FLAG_PART_SHIPMENT_LIST, // 分批发货
             flagTransferList: PURCHASE.FLAG_TRANSFER_LIST, // 转运
+            flagOrderTypeList: PURCHASE.FLAG_ORDER_TYPE_LIST, // 转运
             selectIndex: '',
 
             countryList: Core.Const.COUNTRY_LIST,
@@ -115,6 +124,7 @@ export default {
                 county: '',
                 address: '',
                 email: '',
+                flag_order_type: undefined,
                 flag_part_shipment: undefined,
                 flag_transfer: undefined,
             },
@@ -139,6 +149,9 @@ export default {
                 sum += item.item[this.priceKey] * item.amount
             }
             return Core.Util.countFilter(sum)
+        },
+        lang() {
+            return this.$store.state.lang
         }
     },
     mounted() {
