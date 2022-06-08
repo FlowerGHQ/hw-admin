@@ -202,16 +202,16 @@ let Const = {
             '2': { key: 2, zh: '出口', en: 'Export' },
         },
         PAY_TIME_LIST: [
-            { text: 'TT(30%定金,70%尾款)', value: 1 },
-            { text: 'OA 30天', value: 2 },
-            { text: 'OA 60天', value: 3 },
-            { text: 'OA 90天', value: 4 },
+            { text: 'TT(30%定金,70%尾款)', value: 10 },
+            { text: 'OA 30天', value: 20 },
+            { text: 'OA 60天', value: 30 },
+            { text: 'OA 90天', value: 40 },
         ],
         PAY_TIME_MAP: {
-            1: 'TT(30%定金,70%尾款)',
-            2: 'OA 30天',
-            3: 'OA 60天',
-            4: 'OA 90天',
+            10: 'TT(30%定金,70%尾款)',
+            20: 'OA 30天',
+            30: 'OA 60天',
+            40: 'OA 90天',
         },
     },
 
@@ -450,6 +450,7 @@ let Const = {
         },
         STATUS_MAP: {
             '0': { key: 0, color: 'red', zh: '未知', en: 'Unknown', value: '0'},
+	        '100': { key: 200, color: 'orange', zh: '待支付', en: 'Wait to pay', value: '0'},
             '200': { key: 200, color: 'orange', zh: '待发货', en: 'Wait for delivery', value: '0'},
             '250': { key: 400, color: 'blue', zh: '已转单',en: 'Order transferred', value: '0'},
             '300': { key: 300, color: 'blue', zh: '已发货',en: 'Shipped', value: '0'},
@@ -1024,6 +1025,13 @@ let Const = {
             '40': '见票45天',
             '50': '见票60天'
         },
+	    PAYMENT_TYPE_LIST: [
+		    {value: 10 , name: '款到发货'},
+		    {value: 20 , name: '见票15天'},
+		    {value: 30 , name: '见票30天'},
+		    {value: 40 , name: '见票45天'},
+		    {value: 50 , name: '见票60天'},
+	    ],
         SUPPLIER_TYPE: {
             QUALIFIED: 10,
             DISPOSABLE: 20,

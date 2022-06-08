@@ -62,6 +62,9 @@
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
+                        <template v-if="column.key === 'pay_type'">
+                            {{$Util.payTypeFilter(text) || '-' }}
+                        </template>
 <!--                        <template v-if="column.key === 'flag_receive_transfer'">
                             <a-switch v-if="$auth('ADMIN')" :checked="!!record.flag_receive_transfer"
                                 checked-children="是" un-checked-children="否" @click="handleTransferChange(record)"/>
@@ -154,6 +157,7 @@ export default {
             let tableColumns = [
                 {title: this.$t('n.name'), dataIndex: 'name', key: 'detail'},
                 {title: this.$t('d.short_name'), dataIndex: 'short_name'},
+                { title: this.$t('d.pay_type'), dataIndex: 'pay_type', key:'pay_type' },
                 {title: this.$t('n.contact'), dataIndex: 'contact_name', key:'item'},
                 {title: this.$t('n.phone'), dataIndex: 'contact_phone',key:'item'},
                 {title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time'},

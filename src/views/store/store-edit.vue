@@ -30,10 +30,19 @@
                         <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
+
                 <div class="form-item required">
                     <div class="key">{{ $t('d.short_name') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.short_name" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('d.pay_type') }}:</div>
+                    <div class="value">
+                        <a-select v-model:value="form.pay_type" placeholder="请选择整车付款期限及方式">
+                            <a-select-option  v-for="item in PAYMENT_TYPE_LIST" :key="item.value" :value="item.value">{{ item.text }}</a-select-option>
+                        </a-select>
                     </div>
                 </div>
                 <div class="form-item required">
@@ -83,6 +92,7 @@ export default {
     props: {},
     data() {
         return {
+            PAY_TIME_LIST: Core.Const.DISTRIBUTOR.PAY_TIME_LIST,
             loginType: Core.Data.getLoginType(),
             LOGIN_TYPE,
             // 加载

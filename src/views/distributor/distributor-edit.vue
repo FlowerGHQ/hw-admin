@@ -21,6 +21,14 @@
                     </div>
                 </div>
                 <div class="form-item required">
+                    <div class="key">{{ $t('d.pay_type') }}:</div>
+                    <div class="value">
+                        <a-select v-model:value="form.pay_type" placeholder="请选择整车付款期限及方式">
+                            <a-select-option  v-for="item in PAY_TIME_LIST" :key="item.value" :value="item.value">{{ item.text }}</a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">{{ $t('n.type') }}:</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.type">
@@ -41,6 +49,7 @@
                         <a-input v-model:value="form.tax_no" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
+
                 <div class="form-item required">
                     <div class="key">{{ $t('d.port') }}:</div>
                     <div class="value">
@@ -91,6 +100,7 @@
 <script>
 import Core from '../../core';
 import CountryCascader from '@/components/common/CountryCascader.vue';
+import Const from "../../core/const";
 
 export default {
     name: 'DistributorEdit',
@@ -101,6 +111,7 @@ export default {
     data() {
         return {
             TYPE: Core.Const.DISTRIBUTOR.TYPE,
+            PAY_TIME_LIST: Const.DISTRIBUTOR.PAY_TIME_LIST,
             // 加载
             loading: false,
             detail: {},

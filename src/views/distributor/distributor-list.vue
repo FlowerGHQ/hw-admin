@@ -59,6 +59,9 @@
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
+                        <template v-if="column.key === 'pay_type'">
+                            {{$Util.payTypeFilter(text) || '-' }}
+                        </template>
                         <template v-if="column.key === 'country'">
                             {{ text || '-' }}
                         </template>
@@ -137,6 +140,7 @@ export default {
             let columns = [
                 {title: this.$t('d.distributor_name'), dataIndex: 'name'},
                 {title: this.$t('d.short_name'), dataIndex: 'short_name'},
+                { title: this.$t('d.pay_type'), dataIndex: 'pay_type', key:'pay_type' },
                 {title: this.$t('n.type'), dataIndex: 'type',
                     filters: this.$Util.tableFilterFormat(Core.Const.DISTRIBUTOR.TYPE_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.type || null },
                 {title: this.$t('n.country'),dataIndex: 'country', key: 'country'},

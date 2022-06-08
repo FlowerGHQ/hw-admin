@@ -66,6 +66,9 @@
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
                     </template>
+                    <template v-if="column.key === 'pay_type'">
+                        {{$Util.payTypeFilter(text) || '-' }}
+                    </template>
                     <template v-if="column.key === 'tip_item'">
                         <a-tooltip placement="top" :title='text'>
                             <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
@@ -160,6 +163,7 @@ export default {
                 { title: this.$t('n.name'), dataIndex: 'name' },
                 { title: this.$t('n.distributor'), dataIndex: 'parent_name' },
                 { title: this.$t('d.short_name'), dataIndex: 'short_name' },
+                { title: this.$t('d.pay_type'), dataIndex: 'pay_type', key:'pay_type' },
                 { title: this.$t('n.country'), dataIndex: 'country', key: 'country' },
                 { title: this.$t('n.contact'), dataIndex: 'contact', key: 'item'},
                 { title: this.$t('n.phone'), dataIndex: 'phone', key: 'item'},

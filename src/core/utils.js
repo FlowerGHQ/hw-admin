@@ -385,6 +385,12 @@ const Util = {
         let value = MAP[val + ''] || {}
         return value[to] || '-'
     },
+	payTypeFilter(val, to='zh') {
+
+		const MAP = Const.DISTRIBUTOR.PAY_TIME_MAP
+		return MAP[val] || '-'
+	},
+
     /* =============== 分销商管理 ================ */
 
     /* =============== 商品 ================ */
