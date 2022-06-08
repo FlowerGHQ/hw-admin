@@ -525,7 +525,19 @@ let Const = {
         FLAG_TRANSFER_MAP: {
             '1': { key: 1, zh: '同意', en: 'Allowed'},
             '2': { key: 2, zh: '不同意', en: 'Disagreed'},
-        }
+        },
+	    FLAG_ORDER_TYPE_LIST: {
+		    '1': { key: 1, zh: '售前订单', en: 'Pre-sale orders'},
+		    '2': { key: 2, zh: '售后订单', en: 'After sales order'},
+	    },
+	    FLAG_ORDER_TYPE_MAP: {
+		    1: '售前订单',
+		    2: '售后订单',
+	    },
+	    FLAG_ORDER_TYPE: {
+		    PRE_SALES: 1,
+			AFTER_SALES: 2,
+	    },
     },
 
     WAYBILL: { // 物流
