@@ -67,7 +67,7 @@
         </div>
         <div class="item-content">
             <div class="price-item" v-for="item of shopCartList" :key="item.id">
-                <p class="name">{{ item.name ? lang =='zh' ? item.name : item.name_en : '-' }}</p>
+                <p class="name">{{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}</p>
                 <span class="price">{{unit}} {{$Util.countFilter(item.item[priceKey] * item.amount)}}
                 </span>
             </div>
@@ -280,16 +280,17 @@ export default {
             if (!this.selectIndex) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            // if(this.$auth('DISTRIBUTOR') && !this.form.flag_part_shipment) {
-            //     return this.$message.warning(this.$t('def.enter'))
-            // }
-            // if(this.$auth('DISTRIBUTOR') && !this.form.flag_transfer) {
-            //     return this.$message.warning(this.$t('def.enter'))
-            // }
+            if(this.$auth('DISTRIBUTOR') && !this.form.flag_part_shipment && this.form.flag_order_type === PURCHASE.FLAG_ORDER_TYPE.PRE_SALES) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if(this.$auth('DISTRIBUTOR') && !this.form.flag_transfer  && this.form.flag_order_type === PURCHASE.FLAG_ORDER_TYPE.PRE_SALES) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
             const parms = {
                 price: Math.round(this.sum_price * 100),
                 charge: Math.round(this.sum_price * 100),
                 remark: '',
+                type: this.form.flag_order_type,
                 receive_info_id: this.selectIndex,
                 currency: this.currency,
                 flag_part_shipment: this.form.flag_part_shipment,
@@ -305,6 +306,7 @@ export default {
             if(this.$auth('DISTRIBUTOR')) {
                 parms['flag_part_shipment'] = this.form.flag_part_shipment;
                 parms['flag_transfer'] = this.form.flag_transfer;
+
             }
             Core.Api.Purchase.create(parms).then(res => {
                 this.$message.success('下单成功');

@@ -30,7 +30,7 @@
                     <div class="key">{{ $t('n.type') }}:</div>
                     <div class="value">
                         <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')">
-                            <a-select-option v-for="(val, key) in itemTypeMap" :key="key" :value="key">{{ val }}</a-select-option>
+                            <a-select-option v-for="(val, key) in itemTypeMap" :key="key" :value="key">{{ val[$i18n.locale]  }}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>

@@ -84,6 +84,12 @@
                             {{$Util.paymentStatusFilter(text, $i18n.locale)}}
                         </div>
                     </template>
+                    <template v-if="column.dataIndex === 'type'">
+                        {{$Util.purchaseTypeFilter(text, $i18n.locale)}}
+                    </template>
+                    <template v-if="column.dataIndex === 'pay_type'">
+                        {{$Util.purchasePayTypeFilter(text, $i18n.locale)}}
+                    </template>
                     <template v-if="column.dataIndex === 'flag_review'">
                         {{$Util.purchaseFlagReviewFilter(text)}}
                     </template>
@@ -212,7 +218,8 @@ export default {
         tableColumns() {
             let columns = [
                 { title: this.$t('p.number'), dataIndex: 'sn', },
-                // { title: this.$t('n.institution'), dataIndex: 'type', key: 'type' },
+                { title: this.$t('p.order_type'), dataIndex: 'type', key: 'type' },
+                { title: this.$t('p.payment_terms'), dataIndex: 'pay_type', key: 'pay_type' },
                 { title: this.$t('n.institution'), dataIndex: ['create_org', 'name'], key: 'item' },
                 { title: this.$t('p.total_price'), dataIndex: 'price', key: 'money' },
                 { title: this.$t('p.freight'), dataIndex: 'freight_price', key: 'money' },

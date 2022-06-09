@@ -12,17 +12,20 @@
                     <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
                     <a-button @click="handleExportInfo"><i class="icon i_download"/>导出采购商品信息</a-button>
                 </template>
+
                 <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
-                    <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.confirm_payment')}}</a-button>
+<!--                    <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.confirm_payment')}}</a-button>-->
 <!--                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && (detail.type !== TYPE. || PAYMENT_STATUS.PAY_ALL)" @click="handleModalShow('deliver')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.ship')}}</a-button>-->
 <!--                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && detail.type !== TYPE. && $auth('ADMIN')" @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>-->
                     <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') " @click="handleModalShow('deliver')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.ship')}}</a-button>
-                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') " @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>
-
+                    <template v-if="detail.type === FLAG_ORDER_TYPE.PRE_SALES">
+                        <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') " @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>
+                    </template>
                 </template>
                 <template v-if="authOrg(detail.org_id, detail.org_type)">
-                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER" @click="handleReceived()"><i class="icon i_goods"/>确认收货</a-button>
-                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_PAY" @click="handleCancel()"><i class="icon i_close_c"/>取消</a-button>
+                    <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.payment')}}</a-button>
+<!--                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER" @click="handleReceived()"><i class="icon i_goods"/>确认收货</a-button>-->
+                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_PAY || (detail.payment_status !== PAYMENT_STATUS.WAIT_PAY && detail.WAIT_DELIVER)" @click="handleCancel()"><i class="icon i_close_c"/>取消</a-button>
                     <a-button type="primary" v-if="detail.status === STATUS.DEAL_SUCCESS" @click="routerChange('aftersales')" ghost><i class="icon i_edit"/>申请售后</a-button>
                 </template>
             </div>
@@ -154,23 +157,33 @@
                                 <template v-if="column.dataIndex === 'type'">
                                     {{$Util.purchasePayMethodFilter(text)}}
                                 </template>
+                                <template v-if="column.dataIndex === 'status'">
+                                    {{$Util.purchasePayStatusFilter(text, $i18n.locale)}}
+                                </template>
                                 <template v-if="column.key === 'money'">
                                     {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(text)}}
                                 </template>
                                 <template v-if="column.key === 'time'">
                                     {{ $Util.timeFilter(text) }}
                                 </template>
+                                <template v-if="column.key === 'operation'">
+                                    <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
+                                        <a-button type='link' v-if="record.status = PAY_STATUS.WAIT_TO_AUDIT" @click="handlePayAuditShow(record.id)">审核</a-button>
+                                    </template>
+                                    <template v-if="authOrg(detail.org_id, detail.org_type)">
+                                        <a-button type='link' v-if="record.status = PAY_STATUS.WAIT_TO_AUDIT" @click="handlePayCancel(record.id)">取消</a-button>
+                                    </template>
+                                </template>
                             </template>
                         </a-table>
                     </div>
                 </a-collapse-panel>
 
-                <!-- 上传附件 -->
-                <AttachmentFile :target_id='id' :target_type='Core.Const.ATTACHMENT.TARGET_TYPE.PURCHASE_ORDER' :detail='detail' @submit="getPurchaseInfo" ref="AttachmentFile"/>
-
                 <!-- 发货记录 -->
                 <DeliveryLogs :order-id='id' :detail='detail'/>
 
+                <!-- 上传附件 -->
+                <AttachmentFile :target_id='id' :target_type='Core.Const.ATTACHMENT.TARGET_TYPE.PURCHASE_ORDER' :detail='detail' @submit="getPurchaseInfo" ref="AttachmentFile"/>
 
                 <!-- 物流信息 -->
                 <a-collapse-panel key="WaybillInfo" :header="$t('n.delivery_information')" class="gray-collapse-panel">
@@ -341,16 +354,16 @@
                             :prefix="`${$Util.priceUnitFilter(detail.currency)}`" />
                     </div>
                 </div>
-                <template v-if="$auth('ADMIN')">
-                    <div class="form-item required">
-                        <div class="key">{{$t('p.payment_terms')}}:</div>
-                        <div class="value">
-                            <a-select v-model:value="form.pay_clause" :placeholder="$t('def.select')">
-                                <a-select-option v-for="(item,index) of paymentTimeList" :key="index" :value="item.value">{{ item.text }}</a-select-option>
-                            </a-select>
-                        </div>
-                    </div>
-                </template>
+<!--                <template v-if="$auth('ADMIN')">-->
+<!--                    <div class="form-item required">-->
+<!--                        <div class="key">{{$t('p.payment_terms')}}:</div>-->
+<!--                        <div class="value">-->
+<!--                            <a-select v-model:value="form.pay_clause" :placeholder="$t('def.select')">-->
+<!--                                <a-select-option v-for="(item,index) of paymentTimeList" :key="index" :value="item.value">{{ item.text }}</a-select-option>-->
+<!--                            </a-select>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </template>-->
                 <div class="form-item" >
                     <div class="key">{{$t('p.remark')}}:</div>
                     <div class="value">
@@ -359,6 +372,56 @@
                 </div>
             </div>
         </a-modal>
+
+        <!-- 支付审核 -->
+        <a-modal v-model:visible="payAuditShow" :title="$t('p.confirm_transfer')" :after-close="handlePayAuditClose">
+            <div class="modal-content">
+                <div class="form-item required">
+                    <div class="key">是否通过：</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="payAuditForm.audit_result">
+                            <a-radio :value="1">通过</a-radio>
+                            <a-radio :value="2">不通过</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">备注：</div>
+                    <div class="value">
+                        <a-textarea v-model:value="payAuditForm.audit_remark" placeholder="填写备注" :auto-size="{ minRows: 3, maxRows: 6 }" :maxlength='200'/>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handlePayAudit" type="primary">{{ $t('def.sure') }}</a-button>
+                <a-button @click="handlePayAuditClose">{{ $t('def.cancel') }}</a-button>
+            </template>
+        </a-modal>
+<!--        &lt;!&ndash; 收货审核 &ndash;&gt;-->
+<!--        <a-modal v-model:visible="payAuditShow" :title="$t('p.confirm_transfer')" :after-close="handleTransferClose">-->
+<!--            <div class="modal-content">-->
+<!--                <div class="form-item required">-->
+<!--                    <div class="key">是否通过：</div>-->
+<!--                    <div class="value">-->
+<!--                        <a-radio-group v-model:value="payAuditForm.audit_result">-->
+<!--                            <a-radio :value="AUDIT_STATUS.FINANCE_PASS">通过</a-radio>-->
+<!--                            <a-radio :value="AUDIT_STATUS.AUDIT_REFUSE">不通过</a-radio>-->
+<!--                        </a-radio-group>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="form-item required">-->
+<!--                    <div class="key">备注：</div>-->
+<!--                    <div class="value">-->
+<!--                        <a-textarea v-model:value="payAuditForm.audit_remark" placeholder="填写备注" :auto-size="{ minRows: 3, maxRows: 6 }" :maxlength='200'/>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <template #footer>-->
+<!--                <a-button @click="handleTransferSubmit" type="primary">{{ $t('def.sure') }}</a-button>-->
+<!--                <a-button @click="transferShow = false">{{ $t('def.cancel') }}</a-button>-->
+<!--            </template>-->
+<!--        </a-modal>-->
+
     </template>
 </div>
 </template>
@@ -377,6 +440,10 @@ const DISTRIBUTOR = Core.Const.DISTRIBUTOR;
 const WAYBILL = Core.Const.WAYBILL;
 
 const STATUS = Core.Const.PURCHASE.STATUS;
+const PAY_TIME = Core.Const.DISTRIBUTOR.PAY_TIME;
+const PAY_STATUS = Core.Const.PURCHASE.PAY_STATUS;
+const FLAG_ORDER_TYPE = Core.Const.PURCHASE.FLAG_ORDER_TYPE;
+
 const PAYMENT_STATUS = Core.Const.PURCHASE.PAYMENT_STATUS;
 const FLAG_PART_SHIPMENT_MAP = Core.Const.PURCHASE.FLAG_PART_SHIPMENT_MAP;
 const FLAG_TRANSFER_MAP = Core.Const.PURCHASE.FLAG_TRANSFER_MAP;
@@ -394,6 +461,10 @@ export default {
     data() {
         return {
             Core,
+            FLAG_ORDER_TYPE,
+            PAY_TIME,
+            PAY_STATUS,
+            AUDIT_STATUS: Core.Const.TRANSFER_ORDER.STATUS,
             loginType: Core.Data.getLoginType(),
             loginOrgId: Core.Data.getOrgId(),
             loginOrgType: Core.Data.getOrgType(),
@@ -461,7 +532,7 @@ export default {
                 receive_type: undefined, // 收货方式
                 freight_price: '', // 运费
                 pay_method: undefined, // 收款方式
-                pay_clause: undefined, // 支付条款
+                // pay_clause: undefined, // 支付条款
                 remark: '', // 备注
                 company_uid: undefined,
                 waybill_uid: '', // 快递单号
@@ -470,6 +541,13 @@ export default {
             editForm: {
                 distributor_id: undefined,
             },
+            payAuditShow: false,
+            payAuditForm: {
+                id: '',
+                audit_result: '',
+                audit_remark: '',
+            },
+
             distributorList: [],
             exportDisabled: false, // 导出按钮禁用
 
@@ -501,9 +579,11 @@ export default {
             let columns = [
                 { title: "附件", dataIndex: 'attachment' },
                 { title: "支付方式", dataIndex: 'type' },
+                { title: "状态", dataIndex: 'status' },
                 { title: "支付金额", dataIndex: 'price', key: 'money'},
                 { title: "备注", dataIndex: 'remark', key: 'item' },
                 { title: "创建时间", dataIndex: 'create_time', key: 'time' },
+                { title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
             ]
             return columns
         },
@@ -582,7 +662,7 @@ export default {
     mounted() {
         this.getPurchaseItemList();
         this.getPurchasePayList();
-        this.getPurchaseInfo()
+        this.getPurchaseInfo();
         // this.getWaybillDetail()
     },
     created() {
@@ -843,7 +923,7 @@ export default {
                     { key: 'express_type', msg: '请选择快递方式' },
                     { key: 'harbour', msg: '请填写发货港口' },
                     { key: 'freight_price', msg: '请填写运费' },
-                    { key: 'pay_clause', msg: '请选择支付条款' },
+                    // { key: 'pay_clause', msg: '请选择支付条款' },
                 ]
                 param['waybill'] = form['waybill'];
             } else if (this.$auth('DISTRIBUTOR')) {
@@ -959,6 +1039,60 @@ export default {
                 },
             };
         },
+        step(){
+            if (this.detail.pay_type == PAY_TIME.PAYMENT_TYPE_ALL_PAYMENT ||  this.detail.pay_type == PAY_TIME.PAYMENT_TYPE_DOWN_PAYMENT){
+                this.stepsList = [
+                    {status: '100', zh: '支付', en: 'Payment'},
+                    {status: '200', zh: '发货', en: 'Deliver'},
+                    {status: '300', zh: '收货',en: 'Receipt'},
+                    {status: '400', zh: '交易完成',en: 'Transaction completed'},
+                ]
+            } else {
+                this.stepsList = [
+                    {status: '200', zh: '发货', en: 'Deliver'},
+                    {status: '300', zh: '收货',en: 'Receipt'},
+                    {status: '350', zh: '支付', en: 'Payment'},
+                    {status: '400', zh: '交易完成',en: 'Transaction completed'},
+                ]
+            }
+        },
+        handlePayAuditShow(id){
+            this.payAuditForm.id = id
+            this.payAuditShow = true
+        },
+        handlePayAudit(){
+            if(!this.payAuditForm.audit_result) {
+                this.$message.warning('请选择审核结果')
+                return
+            }
+            Core.Api.Purchase.payAudit(this.payAuditForm).then(res => {
+                this.$message.success('审核成功')
+                this.payAuditShow = false
+            })
+        },
+        handlePayAuditClose() {
+            this.payAuditShow = false
+            Object.assign(this.payAuditForm, this.$options.data().payAuditForm)
+        },
+        handlePayCancel(id){
+            let _this = this
+            this.$confirm({
+                title: '确认取消吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.Purchase.delete({
+                            id: id
+                        }).then((res)=>{
+                        _this.$message.success('取消成功')
+                        _this.getPurchaseInfo()
+                    }).catch(err => {
+                        console.log('handleReceived err', err)
+                    })
+                },
+            });
+        },
+
     }
 };
 </script>

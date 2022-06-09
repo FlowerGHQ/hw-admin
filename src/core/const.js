@@ -201,12 +201,27 @@ let Const = {
             '1': { key: 1, zh: '国内', en: 'Internal' },
             '2': { key: 2, zh: '出口', en: 'Export' },
         },
-        PAY_TIME_LIST: [
-            { text: 'TT(30%定金,70%尾款)', value: 10 },
-            { text: 'OA 30天', value: 20 },
-            { text: 'OA 60天', value: 30 },
-            { text: 'OA 90天', value: 40 },
-        ],
+        // PAY_TIME_LIST: [
+        //     { text: 'TT(30%定金,70%尾款)', value: 10 },
+        //     { text: 'OA 30天', value: 20 },
+        //     { text: 'OA 60天', value: 30 },
+        //     { text: 'OA 90天', value: 40 },
+        // ],
+	    PAY_TIME: {
+		    PAYMENT_TYPE_ALL_PAYMENT: 10,
+		    PAYMENT_TYPE_DOWN_PAYMENT: 20,
+		    PAYMENT_TYPE_PAYMENT_DAYS_30: 30,
+		    PAYMENT_TYPE_PAYMENT_DAYS_60: 40,
+		    PAYMENT_TYPE_PAYMENT_DAYS_90: 50,
+
+	    },
+	    PAY_TIME_LIST: {
+		    '10': { key: 10, zh: '全款发货', en: 'Full payment delivery'},
+		    '20': { key: 20, zh: 'TT(30%定金,70%尾款)', en: 'TT'},
+		    '30': { key: 30, zh: 'OA 30天', en: 'OA 30 days'},
+		    '40': { key: 40, zh: 'OA 60天', en: 'OA 60 days'},
+		    '50': { key: 50, zh: 'OA 90天', en: 'OA 90 days'},
+	    },
         PAY_TIME_MAP: {
             10: 'TT(30%定金,70%尾款)',
             20: 'OA 30天',
@@ -482,12 +497,14 @@ let Const = {
         ],
         PAYMENT_STATUS: {
             WAIT_PAY: 100, //待支付
-            PAYING: 200, //部分付款
+	        WAIT_AUDIT: 200, //部分付款
+            PAYING: 300, //部分付款
             PAY_ALL: 400,//全部付款
         },
         PAYMENT_STATUS_MAP: {
             '100': { key: 100, color: 'yellow', zh: '待支付', en: 'Wait to pay', value: '0'},
-            '200': { key: 200, color: 'blue', zh: '预付款', en: 'Partial payment', value: '0'},
+            '200': { key: 200, color: 'orange', zh: '待审核', en: 'Wait to audit', value: '0'},
+	        '300': { key: 300, color: 'blue', zh: '预付款', en: 'Partial payment', value: '0'},
             '400': { key: 400, color: 'green', zh: '全额付款',en: 'Full payment', value: '0'},
         },
         /* PAYMENT_COLOR_MAP: {
@@ -528,17 +545,32 @@ let Const = {
             '2': { key: 2, zh: '不同意', en: 'Disagreed'},
         },
 	    FLAG_ORDER_TYPE_LIST: {
-		    '1': { key: 1, zh: '售前订单', en: 'Pre-sale orders'},
-		    '2': { key: 2, zh: '售后订单', en: 'After sales order'},
+		    '10': { key: 10, zh: '售前订单', en: 'Pre-sale orders'},
+		    '20': { key: 20, zh: '售后订单', en: 'After sales order'},
 	    },
 	    FLAG_ORDER_TYPE_MAP: {
-		    1: '售前订单',
-		    2: '售后订单',
+		    10: '售前订单',
+		    20: '售后订单',
 	    },
 	    FLAG_ORDER_TYPE: {
-		    PRE_SALES: 1,
-			AFTER_SALES: 2,
+		    PRE_SALES: 10,
+			AFTER_SALES: 20,
 	    },
+	    PAY_STATUS_LIST: {
+		    '0': { key: 10, zh: '初始', en: 'Init'},
+		    '10': { key: 10, zh: '等待审核', en: 'Wait to audit'},
+		    '20': { key: 20, zh: '审核通过', en: 'Approved'},
+		    '-10': { key: -10, zh: '取消', en: 'Cancel'},
+		    '-20': { key: -20, zh: '审核未通过', en: 'Audit failed'},
+	    },
+	    PAY_STATUS:{
+			INIT: 0,
+		    WAIT_TO_AUDIT: 10,
+		    APPROVED: 20,
+		    CANCEL: -10,
+		    AUDIT_FAILED: -20,
+	    },
+
     },
 
     WAYBILL: { // 物流

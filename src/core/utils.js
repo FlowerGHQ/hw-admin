@@ -466,6 +466,11 @@ const Util = {
         const MAP = Const.PURCHASE.PAY_METHOD
         return MAP[val] || '-'
     },
+	purchasePayStatusFilter(val, to = 'zh') {
+		const MAP = Const.PURCHASE.PAY_STATUS_LIST
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
     purchaseFlagReviewFilter(val) {
         const MAP = Const.PURCHASE.FLAG_REVIEW_MAP
         return MAP[val] || '-'
@@ -521,6 +526,16 @@ const Util = {
         let value = MAP[val + ''] || {}
         return value[to] || '-'
     },
+	purchaseTypeFilter(val, to = 'zh') {
+		const MAP = Const.PURCHASE.FLAG_ORDER_TYPE_LIST
+		let value = MAP[val + ''] || {}
+		return value[to] || '-'
+	},
+	purchasePayTypeFilter(val, to = 'zh') {
+		const MAP = Const.DISTRIBUTOR.PAY_TIME_LIST
+		let value = MAP[val + ''] || {}
+		return value[to] || '-'
+	},
     /* =============== 采购单 && 售后管理 && 退款管理  ================ */
 
     /* =============== 员工/账号/用户 ================ */
