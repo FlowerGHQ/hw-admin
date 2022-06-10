@@ -44,7 +44,7 @@
                 <div class="key">{{ $t('d.pay_type') }}:</div>
                 <div class="value">
                     <a-select v-model:value="form.pay_type" placeholder="请选择整车付款期限及方式">
-                        <a-select-option  v-for="item in PAY_TIME_LIST" :key="item.value" :value="item.value">{{ item.text }}</a-select-option>
+                        <a-select-option v-for="(val, key) in PAY_TIME_LIST" :key="val['key']" :value="val['key']">{{ val[$i18n.locale]  }}</a-select-option>
                     </a-select>
                 </div>
             </div>

@@ -364,6 +364,23 @@
 <!--                        </div>-->
 <!--                    </div>-->
 <!--                </template>-->
+                <div class="form-item required">
+                    <div class="key">{{ $t('wa.warehouse') }}：</div>
+                    <div class="value">
+                        <a-select v-model:value="form.warehouse_id" :placeholder="$t('def.select')" :disabled="!!isProd">
+                            <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('in.category') }}：</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.target_type">
+                            <a-radio v-for="item in targetMap" :key='item.key' :value='item.key'>{{ item[$i18n.locale] }}</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+
                 <div class="form-item" >
                     <div class="key">{{$t('p.remark')}}:</div>
                     <div class="value">
@@ -462,6 +479,7 @@ export default {
         return {
             Core,
             FLAG_ORDER_TYPE,
+            targetMap: Core.Const.STOCK_RECORD.COMMODITY_TYPE_MAP, //类目
             PAY_TIME,
             PAY_STATUS,
             AUDIT_STATUS: Core.Const.TRANSFER_ORDER.STATUS,
@@ -478,6 +496,7 @@ export default {
             WAYBILL,
             USER_TYPE,
 
+            warehouseList: [],
             // 加载
             loading: false,
             id: '',
@@ -536,6 +555,8 @@ export default {
                 remark: '', // 备注
                 company_uid: undefined,
                 waybill_uid: '', // 快递单号
+                warehouse_id: '',
+                target_type: '',
                 payment: '', // 收款金额
             },
             editForm: {
@@ -660,7 +681,9 @@ export default {
         }
     },
     mounted() {
-       this.getList();
+        this.getList();
+        this.step();
+        this.getWarehouseList();
         // this.getWaybillDetail()
     },
     created() {
@@ -671,6 +694,11 @@ export default {
             this.getPurchaseItemList();
             this.getPurchasePayList();
             this.getPurchaseInfo();
+        },
+        getWarehouseList() {
+            Core.Api.Warehouse.listAll().then(res => {
+                this.warehouseList = res.list
+            })
         },
         // 上传图片 start---
         // 校验图片
@@ -920,7 +948,11 @@ export default {
                 id: this.id,
                 remark: form.remark,
             }
-            let adminRequire = [];
+            let adminRequire = [
+                { key: 'warehouse_id', msg: '请选择仓库' },
+                { key: 'target_type', msg: '请选择类型' },
+            ];
+
             if(this.$auth('ADMIN')) {
                 adminRequire = [
                     { key: 'express_type', msg: '请选择快递方式' },

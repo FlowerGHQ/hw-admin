@@ -140,16 +140,8 @@ export default {
         this.getCategoryList()
         this.getShopCartData();
 
-        this.timer = window.setInterval(() => {
-            setTimeout(() => {
-                this.getTableData();
-                this.getCategoryList()
-            }, 0);
-        }, 5*1000);
     },
-    beforeUnmount(){
-        clearInterval(this.timer)
-    },
+
     methods: {
         routerChange(type, item = {}) {
             let routeUrl = ''

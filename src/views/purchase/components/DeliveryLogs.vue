@@ -17,7 +17,14 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="handleModalShow(record.id)">发货明细</a-button>
+                            <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
+                                <a-button type='link' @click="handleModalShow(record.id)">发货明细</a-button>
+                            </template>
+                            <template v-if="authOrg(detail.org_id, detail.org_type)">
+                                <a-button type='link' @click="handleTakeDeliverShow(record.id)">确认收货</a-button>
+                                <a-button type='link' @click="handleModalShow(record.id)">收货明细</a-button>
+                            </template>
+
                         </template>
                     </template>
                 </a-table>
@@ -48,6 +55,33 @@
             </div>
         </template>
     </a-modal>
+    <a-modal v-model:visible="deliverShow" :title="$t('p.shipping_confirmation')" @ok="handleDeliver">
+        <div class="modal-content">
+            <div class="form-item required">
+                <div class="key">{{ $t('wa.warehouse') }}：</div>
+                <div class="value">
+                    <a-select v-model:value="form.warehouse_id" :placeholder="$t('def.select')" :disabled="!!isProd">
+                        <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
+<!--            <div class="form-item required">-->
+<!--                <div class="key">{{ $t('in.category') }}：</div>-->
+<!--                <div class="value">-->
+<!--                    <a-radio-group v-model:value="form.target_type">-->
+<!--                        <a-radio v-for="item in targetMap" :key='item.key' :value='item.key'>{{ item[$i18n.locale] }}</a-radio>-->
+<!--                    </a-radio-group>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="form-item" >-->
+<!--                <div class="key">{{$t('p.remark')}}:</div>-->
+<!--                <div class="value">-->
+<!--                    <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>-->
+<!--                </div>-->
+<!--            </div>-->
+        </div>
+    </a-modal>
 </div>
 </template>
 
@@ -63,6 +97,9 @@ export default {
     },
     props: {
         orderId: { type: Number },
+        detail: {
+            type: Object,
+        }
     },
     data() {
         return {
@@ -71,7 +108,15 @@ export default {
             activeKey: ["DeliveryLogs"],
 
             invoiceList: [],
+            loginType: Core.Data.getLoginType(),
+            loginOrgId: Core.Data.getOrgId(),
+            loginOrgType: Core.Data.getOrgType(),
+            form: {
+                warehouse_id: ''
+            },
 
+
+            deliverShow: false,
             modalShow: false,
             modalLoading: false,
             invoiceId: '',
@@ -80,6 +125,7 @@ export default {
             pageSize: 20,
             total: 0,
             tableData: [],
+            warehouseList: [],
         };
     },
     computed: {
@@ -107,8 +153,21 @@ export default {
     },
     mounted() {
         this.getInvoiceList();
+        this.getWarehouseList();
     },
     methods: {
+
+        authOrg(orgId, orgType) {
+            console.log('org',this.loginOrgId === orgId && this.loginOrgType === orgType)
+            if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
+                return true
+            } else{ return false }
+        },
+        getWarehouseList() {
+            Core.Api.Warehouse.listAll().then(res => {
+                this.warehouseList = res.list
+            })
+        },
         getInvoiceList() {  // 获取 发货记录
             this.loading = true;
             Core.Api.Invoice.listByPurchase({
@@ -129,12 +188,18 @@ export default {
             });
         },
 
-        // 添加附件
+        //
         handleModalShow(id) {
             this.modalShow = true;
             this.invoiceId = id
             this.pageChange(1)
         },
+        handleTakeDeliverShow(id) {
+            this.deliverShow = true;
+            this.invoiceId = id
+            this.pageChange(1)
+        },
+
         pageChange(curr) {  // 页码改变
             this.currPage = curr
             this.getTableData()
@@ -154,7 +219,38 @@ export default {
             }).finally(() => {
                 this.modalLoading = false;
             });
-        }
+        },
+        // 确认收货
+        handleDeliver() {
+            console.log("rowSelection",this.selectedRowItems)
+            let form = Core.Util.deepCopy(this.form);
+            const param = {
+                id: this.id,
+                remark: form.remark,
+            }
+            let adminRequire = [
+                { key: 'warehouse_id', msg: '请选择仓库' },
+                // { key: 'target_type', msg: '请选择类型' },
+            ];
+            for(let index in adminRequire) {
+                let key = adminRequire[index].key
+                if(!this.form[key]) {
+                    return this.$message.warning(adminRequire[index].msg)
+                } else {
+                    param[key] = form[key];
+                }
+            }
+            Core.Api.Purchase.takeDeliver(param).then(res => {
+                this.$message.success('收货成功')
+                this.deliverShow = false
+                this.getWaybillDetail();
+                this.getList()
+            }).catch(err => {
+                console.log('handleDeliver err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
     },
 }
 </script>

@@ -387,8 +387,9 @@ const Util = {
     },
 	payTypeFilter(val, to='zh') {
 
-		const MAP = Const.DISTRIBUTOR.PAY_TIME_MAP
-		return MAP[val] || '-'
+		const MAP = Const.DISTRIBUTOR.PAY_TIME_LIST
+		let value = MAP[val + ''] || {}
+		return value[to] || '-'
 	},
 
     /* =============== 分销商管理 ================ */
