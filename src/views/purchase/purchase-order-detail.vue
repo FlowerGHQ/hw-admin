@@ -157,7 +157,7 @@
                                 <template v-if="column.dataIndex === 'type'">
                                     {{$Util.purchasePayMethodFilter(text)}}
                                 </template>
-                                <template v-if="column.dataIndex === 'status'">
+                                <template v-if="column.key === 'status'">
                                     {{$Util.purchasePayStatusFilter(text, $i18n.locale)}}
                                 </template>
                                 <template v-if="column.key === 'money'">
@@ -168,10 +168,10 @@
                                 </template>
                                 <template v-if="column.key === 'operation'">
                                     <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
-                                        <a-button type='link' v-if="record.status = PAY_STATUS.WAIT_TO_AUDIT" @click="handlePayAuditShow(record.id)">审核</a-button>
+                                        <a-button type='link' v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT" @click="handlePayAuditShow(record.id)">审核</a-button>
                                     </template>
                                     <template v-if="authOrg(detail.org_id, detail.org_type)">
-                                        <a-button type='link' v-if="record.status = PAY_STATUS.WAIT_TO_AUDIT" @click="handlePayCancel(record.id)">取消</a-button>
+                                        <a-button type='link' v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT" @click="handlePayCancel(record.id)">取消</a-button>
                                     </template>
                                 </template>
                             </template>
@@ -579,7 +579,7 @@ export default {
             let columns = [
                 { title: "附件", dataIndex: 'attachment' },
                 { title: "支付方式", dataIndex: 'type' },
-                { title: "状态", dataIndex: 'status' },
+                { title: "状态", dataIndex: 'status' ,key: 'status'},
                 { title: "支付金额", dataIndex: 'price', key: 'money'},
                 { title: "备注", dataIndex: 'remark', key: 'item' },
                 { title: "创建时间", dataIndex: 'create_time', key: 'time' },
@@ -660,15 +660,18 @@ export default {
         }
     },
     mounted() {
-        this.getPurchaseItemList();
-        this.getPurchasePayList();
-        this.getPurchaseInfo();
+       this.getList();
         // this.getWaybillDetail()
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
     },
     methods: {
+        getList(){
+            this.getPurchaseItemList();
+            this.getPurchasePayList();
+            this.getPurchaseInfo();
+        },
         // 上传图片 start---
         // 校验图片
         handleImgCheck(file) {
@@ -901,7 +904,7 @@ export default {
                 remark: form.remark
             }).then(res => {
                 this.$message.success('支付成功')
-                this.getPurchaseInfo()
+                this.getList()
                 this.paymentShow = false
             }).catch(err => {
                 console.log('getPurchaseInfo err', err)
@@ -946,8 +949,8 @@ export default {
             Core.Api.Purchase.deliver(param).then(res => {
                 this.$message.success('发货成功')
                 this.deliverShow = false
-                this.getPurchaseInfo()
                 this.getWaybillDetail();
+                this.getList()
             }).catch(err => {
                 console.log('handleDeliver err', err)
             }).finally(() => {
@@ -968,6 +971,7 @@ export default {
                     }).then(res => {
                         _this.$message.success('收货成功')
                         _this.getPurchaseInfo()
+                        _this.getList()
                     }).catch(err => {
                         console.log('handleReceived err', err)
                     })
@@ -1068,6 +1072,7 @@ export default {
             Core.Api.Purchase.payAudit(this.payAuditForm).then(res => {
                 this.$message.success('审核成功')
                 this.payAuditShow = false
+                this.getList()
             })
         },
         handlePayAuditClose() {
@@ -1084,8 +1089,8 @@ export default {
                     Core.Api.Purchase.delete({
                             id: id
                         }).then((res)=>{
-                        _this.$message.success('取消成功')
-                        _this.getPurchaseInfo()
+                        _this.$message.success('取消成功');
+                        _this.getList();
                     }).catch(err => {
                         console.log('handleReceived err', err)
                     })
