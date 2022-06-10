@@ -197,6 +197,7 @@ export default {
         handleTakeDeliverShow(id) {
             this.deliverShow = true;
             this.invoiceId = id
+            console.log(this.invoiceId)
             this.pageChange(1)
         },
 
@@ -225,9 +226,11 @@ export default {
             console.log("rowSelection",this.selectedRowItems)
             let form = Core.Util.deepCopy(this.form);
             const param = {
-                id: this.id,
+                id: this.orderId,
+                invoice_id: this.invoiceId,
                 remark: form.remark,
             }
+            console.log(this.id)
             let adminRequire = [
                 { key: 'warehouse_id', msg: '请选择仓库' },
                 // { key: 'target_type', msg: '请选择类型' },
