@@ -88,7 +88,7 @@
     </div>
     <a-collapse v-model:activeKey="activeKey" ghost>
         <!-- 无实例 -->
-        <a-collapse-panel key="ItemList" :header="$t('i.product_information')" class="gray-collapse-panel" collapsible="disabled" v-if="detail.target_type === COMMODITY_TYPE.ITEM">
+        <a-collapse-panel key="ItemList" :header="$t('i.product_information')" class="gray-collapse-panel" collapsible="disabled" >
             <template #extra>
                 <template  v-if="detail.status === STATUS.INIT && !addMode && $auth('invoice.save')">
                     <ItemSelect btnType='link' :btnText="$t('i.add')" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION" :purchaseId="detail.type == TYPE.IN ? detail.source_id : 0"
@@ -136,6 +136,10 @@
                             <template v-if="column.key === 'count'">
                                 {{ text ? text + $t('in.item') : '-' }}
                             </template>
+                            <template v-if="column.key === 'child_size'">
+                                {{ text  }} / {{record.amount}}
+                            </template>
+
                             <template v-if="column.key === 'amount'">
                                 <template v-if="addMode || record.editMode">
                                     <a-input-number v-model:value="record.amount" :placeholder="$t('def.input')"
@@ -170,29 +174,51 @@
             </div>
         </a-collapse-panel>
     </a-collapse>
-    <a-modal v-model:visible="entityShow" :title="$t('n.upload_attachment')" class="attachment-file-upload-modal">
+    <a-modal v-model:visible="childShow" title="填写实例号" class="attachment-file-upload-modal">
         <div class="form-title">
             <div class="form-item">
                 <div class="key">{{ $t('n.name') }}:</div>
                 <div class="value">
-                    <a-input v-model:value="itemName" :placeholder="$t('def.input')"/>
+                    <a-input v-model:value="form.target_uid" style="width: 200px;" :placeholder="$t('def.input')" @blur="handleVehicleBlur()"/>
+                        <template v-if="!$auth('ADMIN')">
+                            <span v-if="form.target_id"><i class="icon suffix i_confirm"/></span>
+                            <span v-else-if="entity_no_exist"><i class="icon suffix i_close_c"/></span>
+                        </template>
+
                 </div>
                 <div class="key">
-                    <a-button @click="entityShow = false">添加</a-button>
+                    <a-button @click="addInvoiceItemChild">添加</a-button>
                 </div>
             </div>
-            <a-table :columns="entityColumns" :data-source="entityDate" :scroll="{ x: true }"
+            <a-table :columns="childColumns" :data-source="childDate" :scroll="{ x: true }"
                      :row-key="record => record.id" :pagination='false'>
-                <template v-if="column.key === 'item'">
-                    {{ text || '-' }}
-                </template>
-                <template v-if="column.key === 'count'">
-                    {{ text ? text + $t('in.item') : '-' }}
+                <template #bodyCell="{ column, text, record }">
+                    <template v-if="column.key === 'item'">
+                        {{ text || '-' }}
+                    </template>
+                    <template v-if="column.key === 'operation' && $auth('invoice.save')" >
+                        <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>{{ $t('def.remove') }}</a-button>
+                    </template>
                 </template>
             </a-table>
+            <div class="paging-container">
+                <a-pagination
+                    v-model:current="childCurrPage"
+                    :page-size='childPageSize'
+                    :total="childTotal"
+                    show-quick-jumper
+                    show-size-changer
+                    show-less-items
+                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
+                    :hide-on-single-page='false'
+                    :pageSizeOptions="['10', '20', '30', '40']"
+                    @change="childPageChange"
+                    @showSizeChange="childPageSizeChange"
+                />
+            </div>
         </div>
         <template #footer>
-            <a-button @click="entityShow = false">{{ $t('def.cancel') }}</a-button>
+            <a-button @click="childShow = false">{{ $t('def.cancel') }}</a-button>
 <!--            <a-button @click="handleModalSubmit" type="primary">{{ $t('def.sure') }}</a-button>-->
         </template>
     </a-modal>
@@ -251,15 +277,26 @@ export default {
                 maxCount: '',
                 addItem: {},
             },
-            itemName: '',
             exportDisabled: false,
 
-            uidShow: false,
-            entityDate: [],
-            entityColumns: [
-                {title: 'n.name', dataIndex: 'name'},
-                {title: 'uid', dataIndex: 'uid', key: 'uid' },
-                {title: 'def.operate', key: 'operation', fixed: 'right', width: 100,},
+            form: {
+                target_id: 0,
+                target_uid: 0,
+                parent_id: 0,
+            },
+            entity_no_exist: 0,
+
+            // 分页
+            childCurrPage: 1,
+            childPageSize: 20,
+            childTotal: 0,
+
+            childShow: false,
+            childDate: [],
+            childColumns: [
+                {title: this.$t('n.name'), dataIndex: 'name'},
+                {title: this.$t('uid'), dataIndex: 'uid', key: 'uid' },
+                {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100,},
             ],
             // 上传
 
@@ -280,6 +317,7 @@ export default {
                     list.push(item.material.id)
                 }
             })
+            console.log('tableData.list',this.tableData)
             return list
 
         },
@@ -291,6 +329,8 @@ export default {
                 {title: this.$t('i.number'), dataIndex: ['item', 'model'], key: 'item'},
                 {title: this.$t('i.code'), dataIndex: ['item', 'code'],  key: 'item'},
                 {title: this.$t('i.spec'), dataIndex: ['item', 'attr_list'], key: 'attr_list'},
+                {title: "是否有实例号", dataIndex: ['item', 'flag_entity'], key: 'item'},
+                {title: "实例号数量", dataIndex: ['item', 'child_size'], key: 'child_size'},
                 {title: this.$t('def.operate'), key: 'operation'},
             ]
             if (this.detail.status !== STATUS.INIT || this.addMode) {
@@ -298,21 +338,6 @@ export default {
             }
             if (this.detail.type == TYPE.OUT) {
                 columns.splice(2, 0, {title: '库存数量', dataIndex: ['item', 'stock'], key: 'count'})
-            }
-            return columns
-        },
-        entityTableColumns() {
-            let columns = [
-                {title: this.$t('n.name'), dataIndex: ['item', 'name'],  key: 'tip_item'},
-                // {title: this.type_ch + '数量', dataIndex: 'amount'},
-                {title: this.$t('i.instance'), dataIndex: 'entity_uid', key: 'entity_uid'},
-                {title: this.$t('i.number'), dataIndex: ['item', 'model'], key: 'item'},
-                {title: this.$t('i.code'), dataIndex: ['item', 'code'],  key: 'item'},
-                {title: this.$t('i.spec'), dataIndex: ['item', 'attr_list'], key: 'attr_list'},
-                {title: this.$t('def.operate'), key: 'operation'},
-            ]
-            if (this.detail.status !== STATUS.INIT || this.isProd) { // 入库不显示库存数量
-                columns.pop()
             }
             return columns
         },
@@ -426,11 +451,14 @@ export default {
                     break;
             }
         },
-        handleRowUidShow() {
-            this.entityShow = true;
+        handleRowUidShow(item) {
+            this.childShow = true;
+            this.form.parent_id = item.id
+            this.itemId = item.item.id
+            this.getInvoiceItemChildList()
         },
         handleRowUid(item) {
-            this.entityShow = true;
+            this.childShow = true;
         },
         // 获取出入库单详情
         getInvoiceDetail() {
@@ -449,6 +477,47 @@ export default {
                 this.loading = false;
             });
         },
+        addInvoiceItemChild() {
+            let form = Core.Util.deepCopy(this.form)
+            Core.Api.InvoiceItem.saveChild({
+                ...form
+            }).then(res => {
+                console.log('getInvoiceList res', res)
+                this.getInvoiceItemChildList();
+            })
+
+        },
+        getInvoiceItemChildList() {
+            this.loading = true;
+            Core.Api.InvoiceItem.list({
+                invoice_id: this.id,
+                parent_id: this.form.parent_id,
+                page: this.childCurrPage,
+                page_size: this.childPageSize
+            }).then(res => {
+                console.log('getInvoiceList res', res)
+                let list = res.list
+                if (this.detail.target_type === COMMODITY_TYPE.ENTITY) {
+                    list.forEach(item => {
+                        item.entity_id = item.target_id
+                        item.entity_uid = item.entity ? item.entity.uid : ''
+                    })
+                }
+                this.childtotal = res.count
+                this.childDate = list
+                console.log('this.tableData',this.tableData)
+                if (this.isProd) {
+                    this.getProductionItem()
+                }
+                if (this.detail.target_type === 30) {
+                    this.getSupplierName();
+                }
+            }).catch(err => {
+                console.log('getInvoiceList err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
         // 获取出入库单商品列表
         getInvoiceList() {
             this.loading = true;
@@ -459,13 +528,13 @@ export default {
             }).then(res => {
                 console.log('getInvoiceList res', res)
                 let list = res.list
-                if (this.detail.target_type === COMMODITY_TYPE.ENTITY) {
-                    list.forEach(item => {
-                        item.item = item.entity ? item.entity.item || {} : {}
-                        item.entity_id = item.target_id
-                        item.entity_uid = item.entity ? item.entity.uid : ''
-                    })
-                }
+                // if (this.detail.target_type === COMMODITY_TYPE.ENTITY) {
+                //     list.forEach(item => {
+                //         item.item = item.entity ? item.entity.item || {} : {}
+                //         item.entity_id = item.target_id
+                //         item.entity_uid = item.entity ? item.entity.uid : ''
+                //     })
+                // }
                 this.total = res.count
                 this.tableData = list
                 console.log('this.tableData',this.tableData)
@@ -503,6 +572,14 @@ export default {
         pageSizeChange(current, size) {    // 页码尺寸改变
             this.pageSize = size
             this.getInvoiceList()
+        },
+        childPageChange(curr) {    // 页码改变
+            this.childCurrPage = curr
+            this.getInvoiceItemChildList()
+        },
+        childPageSizeChange(current, size) {    // 页码尺寸改变
+            this.childPageSize = size
+            this.getInvoiceItemChildList()
         },
 
         // 获取生产单对应商品
@@ -736,26 +813,26 @@ export default {
             })
         },
 
-        handleVehicleBlur(record) { // 获取 车架号ID
+        handleVehicleBlur() { // 获取 车架号ID
             // HW1000T-1B00B30001
             console.log('handleVehicleBlur:', record)
-            if (!record.entity_uid) {
+            if (!this.form.target_uid) {
                 return
             }
             Core.Api.Entity.detailByUid({
-                item_id: record.item.id,
-                uid: record.entity_uid
+                item_id: this.itemId,
+                uid: this.form.target_uid
             }).then(res => {
                 console.log('handleVehicleBlur res:', res)
                 if (Core.Util.isEmptyObj(res.detail)) {
                     if (!this.$auth('ADMIN')) {
                         this.$message.warning(this.$t('in.warn'))
                     }
-                    record.entity_id = 0
-                    record.entity_no_exist = 1
+                    this.form.target_id = 0
+                    this.entity_no_exist = 1
                 } else {
-                    record.entity_id = res.detail.id
-                    record.entity_no_exist = 0
+                    this.form.target_id = res.detail.id
+                    this.entity_no_exist = 0
                 }
             }).catch(err => {
                 console.log('handleVehicleBlur err', err)

@@ -135,6 +135,7 @@ const apiList = {
         list: ['PostJson', 'invoice-item/list'], // 出入库单明细列表
         save: ['PostJson', 'invoice-item/save'], //出入库单明细 单个修改
         saveList: ['PostJson', 'invoice-item/save-list'], //出入库单明细 批量提交
+        saveChild: ['PostJson', 'invoice-item/save-child'], //出入库单明细 批量提交
         delete: ['PostJson', 'invoice-item/delete'], //出入库单明细 单个移除
     },
     Transfer: { // 调货申请单
