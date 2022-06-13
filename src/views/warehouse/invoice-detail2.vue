@@ -177,13 +177,13 @@
     <a-modal v-model:visible="childShow" title="填写实例号" class="attachment-file-upload-modal">
         <div class="form-title">
             <div class="form-item">
-                <div class="key">{{ $t('n.name') }}:</div>
+                <div class="key">实例号:</div>
                 <div class="value">
                     <a-input v-model:value="form.target_uid" style="width: 200px;" :placeholder="$t('def.input')" @blur="handleVehicleBlur()"/>
-                        <template v-if="!$auth('ADMIN')">
-                            <span v-if="form.target_id"><i class="icon suffix i_confirm"/></span>
-                            <span v-else-if="entity_no_exist"><i class="icon suffix i_close_c"/></span>
-                        </template>
+<!--                        <template v-if="!$auth('ADMIN')">-->
+                        <span v-if="form.target_id"><i class="icon suffix i_confirm"/></span>
+                        <span v-else-if="entity_no_exist"><i class="icon suffix i_close_c"/></span>
+<!--                        </template>-->
 
                 </div>
                 <div class="key">
@@ -281,7 +281,7 @@ export default {
 
             form: {
                 target_id: 0,
-                target_uid: 0,
+                target_uid: "",
                 parent_id: 0,
             },
             entity_no_exist: 0,
@@ -294,8 +294,8 @@ export default {
             childShow: false,
             childDate: [],
             childColumns: [
-                {title: this.$t('n.name'), dataIndex: 'name'},
-                {title: this.$t('uid'), dataIndex: 'uid', key: 'uid' },
+                {title: this.$t('n.name'), dataIndex: ['item', 'name']},
+                {title: this.$t('uid'), dataIndex: ['entity', 'uid'], key: 'uid' },
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100,},
             ],
             // 上传
@@ -325,12 +325,13 @@ export default {
             // 无实例商品的 出入库
             let columns = [
                 {title: this.$t('n.name'), dataIndex: ['item', 'name'],  key: 'tip_item'},
-                {title: this.type_ch + this.$t('i.amount'), dataIndex: 'amount' , key: 'amount'},
+
                 {title: this.$t('i.number'), dataIndex: ['item', 'model'], key: 'item'},
                 {title: this.$t('i.code'), dataIndex: ['item', 'code'],  key: 'item'},
                 {title: this.$t('i.spec'), dataIndex: ['item', 'attr_list'], key: 'attr_list'},
                 {title: "是否有实例号", dataIndex: ['item', 'flag_entity'], key: 'item'},
                 {title: "实例号数量", dataIndex: ['item', 'child_size'], key: 'child_size'},
+                {title: this.type_ch + this.$t('i.amount'), dataIndex: 'amount' , key: 'amount'},
                 {title: this.$t('def.operate'), key: 'operation'},
             ]
             if (this.detail.status !== STATUS.INIT || this.addMode) {
@@ -478,6 +479,9 @@ export default {
             });
         },
         addInvoiceItemChild() {
+            if (!this.form.target_id){
+                return this.$message.warning('请输入正确的实例号')
+            }
             let form = Core.Util.deepCopy(this.form)
             Core.Api.InvoiceItem.saveChild({
                 ...form
@@ -664,7 +668,7 @@ export default {
         handleRemoveRow(record) {
             Core.Api.InvoiceItem.delete({id: record.id}).then(() => {
                 this.$message.success(this.$t('pop_up.remove_a'))
-                this.getInvoiceList()
+                this.getInvoiceItemChildList()
             })
         },
         // 批量添加 商品
@@ -788,7 +792,7 @@ export default {
             let price = ''
             switch (type) {
                 case 'item': target_id = item.item.id; break;
-                case 'entity': target_id = item.entity_id; break;
+                case 'entity': target_id = item.item.id; break;
                 case 'material': {
                     target_id = item.material.id;
                     supplier_id = item.supplier_id;
@@ -807,6 +811,12 @@ export default {
             if (!target.target_id) {
                 return this.$message.warning(`${type === 'item' ? this.$t('i.item') : '商品实例'}` + this.$t('in.no'));
             }
+            console.log("amount", item.amount)
+            console.log("child_size", item.item.child_size)
+            if (item.amount < item.item.child_size) {
+                return this.$message.warning("商品实例数量不能大于总数量");
+            }
+
             Core.Api.InvoiceItem.save(target).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.getInvoiceDetail()
@@ -815,7 +825,6 @@ export default {
 
         handleVehicleBlur() { // 获取 车架号ID
             // HW1000T-1B00B30001
-            console.log('handleVehicleBlur:', record)
             if (!this.form.target_uid) {
                 return
             }

@@ -965,7 +965,7 @@ const routes = [
             {
                 path: 'invoice-detail',
                 name: 'InvoiceDetail',
-                component: () => import('@/views/warehouse/invoice-detail.vue'),
+                component: () => import('@/views/warehouse/invoice-detail2.vue'),
                 meta: {
                     hidden: true,
                     title: '出入库详情',
