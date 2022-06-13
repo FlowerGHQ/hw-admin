@@ -438,6 +438,14 @@ let Const = {
             { zh: '上架中',en: 'Active', value: '0' },
             { zh: '已下架', en: 'Inactive', value: '-1' },
         ],
+	    FLAG_ENTITY: {
+		    YES:1,
+		    NO:0,
+	    },
+	    FLAG_ENTITY_MAP: {
+		    '1': {key: 1, zh: '是', en: 'Yes'},
+		    '0': {key: 0, zh: '否', en: 'No'}
+	    },
         TARGET_TYPE_MAP: {
             ITEM: 1, // 商品
             MATERIAL: 2, // 物料
@@ -755,11 +763,14 @@ let Const = {
             CUSTOMIZE: 40,
         },
         COMMODITY_TYPE_MAP: {
-            '10': { key: 10, zh: '无实例商品', en: 'No instance'},
-            '20': { key: 20, zh: '有实例商品', en: 'Instance' },
+            '10': { key: 10, zh: '商品', en: 'No instance'},
             '30': { key: 30, zh: '物料', en: 'Materiel'},
             '40': { key: 40, zh: '广宣品', en: 'Other' },
         },
+	    COMMODITY_TYPE_OLD_MAP: {
+		    '10': { key: 10, zh: '无实例商品', en: 'No instance'},
+		    '20': { key: 10, zh: '有实例商品', en: 'No instance'},
+	    },
         TYPE: {
             IN: 1, //入库
             OUT: 2, //出库

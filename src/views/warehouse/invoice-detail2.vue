@@ -133,11 +133,16 @@
                             <template v-if="column.key === 'item'">
                                 {{ text || '-' }}
                             </template>
+                            <template v-if="column.key === 'flag_entity'">
+                                {{ $Util.itemFlagEntityFilter(text) }}
+                            </template>
+
                             <template v-if="column.key === 'count'">
                                 {{ text ? text + $t('in.item') : '-' }}
                             </template>
                             <template v-if="column.key === 'child_size'">
-                                {{ text  }} / {{record.amount}}
+                                <a-button type="link" @click="handleRowUidInfoShow(record)" v-if="record.flag_entity === Core.Const.ITEM.FLAG_ENTITY.YES"> {{ text  }} / {{record.amount}} </a-button>
+
                             </template>
 
                             <template v-if="column.key === 'amount'">
@@ -148,7 +153,7 @@
                                 <template v-else>{{ text ? text +$t('in.item') : '-' }}</template>
                             </template>
                             <template v-if="column.key === 'operation' && $auth('invoice.save')" >
-                                <a-button type="link" @click="handleRowUidShow(record)" ><i class="icon i_edit"/>填写实例号 </a-button>
+                                <a-button type="link" @click="handleRowUidShow(record)" v-if="record.flag_entity === Core.Const.ITEM.FLAG_ENTITY.YES"><i class="icon i_edit"/>填写实例号 </a-button>
                                 <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>{{ $t('in.change') }}</a-button>
                                 <a-button type="link" @click="handleRowSubmit(record, 'item')" v-else><i class="icon i_confirm"/>{{ $t('in.changes') }}</a-button>
                                 <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>{{ $t('def.remove') }}</a-button>
@@ -222,6 +227,37 @@
 <!--            <a-button @click="handleModalSubmit" type="primary">{{ $t('def.sure') }}</a-button>-->
         </template>
     </a-modal>
+    <a-modal v-model:visible="childInfoShow" title="填写实例号" class="attachment-file-upload-modal">
+        <div class="form-title">
+            <a-table :columns="childColumns" :data-source="childDate" :scroll="{ x: true }"
+                     :row-key="record => record.id" :pagination='false'>
+                <template #bodyCell="{ column, text, record }">
+                    <template v-if="column.key === 'item'">
+                        {{ text || '-' }}
+                    </template>
+                </template>
+            </a-table>
+            <div class="paging-container">
+                <a-pagination
+                    v-model:current="childCurrPage"
+                    :page-size='childPageSize'
+                    :total="childTotal"
+                    show-quick-jumper
+                    show-size-changer
+                    show-less-items
+                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
+                    :hide-on-single-page='false'
+                    :pageSizeOptions="['10', '20', '30', '40']"
+                    @change="childPageChange"
+                    @showSizeChange="childPageSizeChange"
+                />
+            </div>
+        </div>
+        <template #footer>
+            <a-button @click="childInfoShow = false">{{ $t('def.cancel') }}</a-button>
+            <!--            <a-button @click="handleModalSubmit" type="primary">{{ $t('def.sure') }}</a-button>-->
+        </template>
+    </a-modal>
 </div>
 </template>
 
@@ -251,6 +287,7 @@ export default {
     props: {},
     data() {
         return {
+            Core,
             COMMODITY_TYPE,
             SOURCE_TYPE,
             STATUS,
@@ -299,6 +336,7 @@ export default {
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100,},
             ],
             // 上传
+            childInfoShow: false,
 
         };
     },
@@ -329,7 +367,7 @@ export default {
                 {title: this.$t('i.number'), dataIndex: ['item', 'model'], key: 'item'},
                 {title: this.$t('i.code'), dataIndex: ['item', 'code'],  key: 'item'},
                 {title: this.$t('i.spec'), dataIndex: ['item', 'attr_list'], key: 'attr_list'},
-                {title: "是否有实例号", dataIndex: ['item', 'flag_entity'], key: 'item'},
+                {title: "是否有实例号", dataIndex: "flag_entity", key: 'flag_entity'},
                 {title: "实例号数量", dataIndex: ['item', 'child_size'], key: 'child_size'},
                 {title: this.type_ch + this.$t('i.amount'), dataIndex: 'amount' , key: 'amount'},
                 {title: this.$t('def.operate'), key: 'operation'},
@@ -454,6 +492,12 @@ export default {
         },
         handleRowUidShow(item) {
             this.childShow = true;
+            this.form.parent_id = item.id
+            this.itemId = item.item.id
+            this.getInvoiceItemChildList()
+        },
+        handleRowUidInfoShow(item) {
+            this.childInfoShow = true;
             this.form.parent_id = item.id
             this.itemId = item.item.id
             this.getInvoiceItemChildList()
@@ -708,6 +752,7 @@ export default {
                 id: 0,
                 item: item,
                 amount: 1,
+                flag_entity: item.flag_entity,
                 entity_uid: '',
             }))
             this.addData = list
@@ -719,21 +764,14 @@ export default {
             console.log('data',data)
             let list = []
             for (const item of data) {
-                let target_id,target_uid,supplier_id,price
+                let target_id,target_uid,supplier_id,price,flag_entity
                 switch (type) {
                     case 'item':
                         if (item.item && item.item.id) {
-                            target_id = item.item.id
+                            target_id = item.item.id;
+                            flag_entity = item.item.flag_entity;
                         } else {
                             return this.$message.warning(this.$t('in.warn_a'));
-                        }
-                        break;
-                    case 'entity':
-                        if (!item.entity_uid) {
-                            return this.$message.warning(this.$t('def.enter'));
-                        } else {
-                            target_id = item.entity_id
-                            target_uid = item.entity_uid
                         }
                         break;
                     case 'material':
@@ -765,6 +803,7 @@ export default {
                     amount: item.amount,
                     invoice_id: this.id,
                     target_id,
+                    flag_entity,
                     target_uid,
                     supplier_id,
                     price,

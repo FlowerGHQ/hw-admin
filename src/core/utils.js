@@ -407,6 +407,11 @@ const Util = {
         let attr = attr_list.map(i => i.value)
         return attr.join(' ')
     },
+	itemFlagEntityFilter(val, to= 'zh') {
+		const MAP = Const.ITEM.FLAG_ENTITY_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
     /* =============== 商品 ================ */
 
 
@@ -490,7 +495,9 @@ const Util = {
         if ( val === 0) {
             return '-'
         } else {
-            const MAP = Const.PURCHASE.COURIER_MAP
+        	console.log("val",val)
+	        console.log("to",to)
+            const MAP = Const.WAYBILL.COURIER_MAP
             let item = MAP[val + ''] || {}
             return item[to] || ''
         }
@@ -500,7 +507,7 @@ const Util = {
         if ( val === 0) {
             return '-'
         } else {
-            const MAP = Const.PURCHASE.RECEIPT_MAP
+            const MAP = Const.WAYBILL.RECEIPT_MAP
             let item = MAP[val + ''] || {}
             return item[to] || ''
         }
@@ -606,6 +613,11 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
+	targetTypeOldFilter(val, to='zh') {
+		const MAP = Const.STOCK_RECORD.COMMODITY_TYPE_OLD_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
     sourceTypeAdminFilter(val, to='text') {
         const MAP = Const.STOCK_RECORD.SOURCE_TYPE_ADMIN_MAP
         let item = MAP[val + ''] || {}

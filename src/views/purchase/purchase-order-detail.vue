@@ -682,7 +682,7 @@ export default {
     },
     mounted() {
         this.getList();
-        this.step();
+
         this.getWarehouseList();
         // this.getWaybillDetail()
     },
@@ -782,6 +782,7 @@ export default {
                 this.detail = res.detail;
                 this.total.freight = res.detail.freight_price || 0;
                 console.log('getPurchaseInfo res', res)
+                this.step();
             }).catch(err => {
                 console.log('getPurchaseInfo err', err)
             }).finally(() => {
@@ -1078,6 +1079,7 @@ export default {
             };
         },
         step(){
+            console.log("detail", this.detail)
             if (this.detail.pay_type == PAY_TIME.PAYMENT_TYPE_ALL_PAYMENT ||  this.detail.pay_type == PAY_TIME.PAYMENT_TYPE_DOWN_PAYMENT){
                 this.stepsList = [
                     {status: '100', zh: '支付', en: 'Payment'},
