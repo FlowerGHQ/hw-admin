@@ -2,7 +2,7 @@
     <div class="DeliveryLogs">
         <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
             <template #expandIcon><i class="icon i_expan_l"/></template>
-            <a-collapse-panel key="DeliveryLogs" :header="$t('n.delivery_logs')" class="gray-collapse-panel">
+            <a-collapse-panel key="DeliveryLogs" :header="type == Core.Const.STOCK_RECORD.TYPE.OUT ? $t('n.delivery_logs'): $t('n.receiving_record')" class="gray-collapse-panel">
                 <div class="panel-content table-container no-mg">
                     <a-table :columns="invoicColumns" :data-source="invoiceList" :scroll="{ x: true }"
                              :row-key="record => record.id" :pagination='false'>
@@ -30,8 +30,8 @@
                                     <a-button type='link' @click="handleWaybillShow(record.id)">物流信息</a-button>
                                 </template>
                                 <template v-if="authOrg(detail.org_id, detail.org_type)">
-                                    <a-button type='link' @click="handleTakeDeliverShow(record.id)">确认收货</a-button>
-                                    <a-button type='link' @click="handleModalShow(record.id)">收货明细</a-button>
+                                    <a-button type='link' v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT && record.status === Core.Const.STOCK_RECORD.STATUS.CLOSE"  @click="handleTakeDeliverShow(record.id)">确认收货</a-button>
+                                    <a-button type='link' v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT" @click="handleModalShow(record.id)">收货明细</a-button>
                                 </template>
 
                             </template>
@@ -145,10 +145,14 @@ export default {
         orderId: {type: Number},
         detail: {
             type: Object,
+        },
+        type: {
+            type: Number,
         }
     },
     data() {
         return {
+            Core,
             USER_TYPE,
             // 加载
             loading: false,
@@ -235,6 +239,7 @@ export default {
             Core.Api.Invoice.listByPurchase({
                 source_id: this.orderId,
                 source_type: Core.Const.STOCK_RECORD.SOURCE_TYPE.PURCHASE,
+                type: this.type,
                 status: -1,
                 // source_type: Core.Const.STOCK_RECORD.SOURCE_TYPE.ITEM_PURCHASE,
             }).then(res => {

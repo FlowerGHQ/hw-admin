@@ -180,7 +180,9 @@
                 </a-collapse-panel>
 
                 <!-- 发货记录 -->
-                <DeliveryLogs :order-id='id' :detail='detail'/>
+                <DeliveryLogs :order-id='id' :detail='detail' :type="Core.Const.STOCK_RECORD.TYPE.OUT"/>
+                <!-- 收货记录 -->
+                <DeliveryLogs :order-id='id' :detail='detail' :type="Core.Const.STOCK_RECORD.TYPE.IN"/>
 
                 <!-- 上传附件 -->
                 <AttachmentFile :target_id='id' :target_type='Core.Const.ATTACHMENT.TARGET_TYPE.PURCHASE_ORDER' :detail='detail' @submit="getPurchaseInfo" ref="AttachmentFile"/>
@@ -1091,7 +1093,7 @@ export default {
                 this.stepsList = [
                     {status: '200', zh: '发货', en: 'Deliver'},
                     {status: '300', zh: '收货',en: 'Receipt'},
-                    {status: '350', zh: '支付', en: 'Payment'},
+                    {status: '360', zh: '支付', en: 'Payment'},
                     {status: '400', zh: '交易完成',en: 'Transaction completed'},
                 ]
             }
