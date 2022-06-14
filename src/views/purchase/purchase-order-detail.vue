@@ -25,6 +25,8 @@
                 <template v-if="authOrg(detail.org_id, detail.org_type)">
                     <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.payment')}}</a-button>
 <!--                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER" @click="handleReceived()"><i class="icon i_goods"/>确认收货</a-button>-->
+
+<!--                    {{detail.status}}-->
                     <a-button type="primary" v-if="detail.status === STATUS.WAIT_PAY || (detail.payment_status !== PAYMENT_STATUS.WAIT_PAY && detail.WAIT_DELIVER)" @click="handleCancel()"><i class="icon i_close_c"/>取消</a-button>
                     <a-button type="primary" v-if="detail.status === STATUS.DEAL_SUCCESS" @click="routerChange('aftersales')" ghost><i class="icon i_edit"/>申请售后</a-button>
                 </template>
@@ -782,6 +784,9 @@ export default {
                 id: this.id
             }).then(res => {
                 this.detail = res.detail;
+                if (this.detail.status === Core.Const.PURCHASE.STATUS.TAKE_DELIVER){
+                    this.detail.status = Core.Const.PURCHASE.STATUS.WAIT_DELIVER
+                }
                 this.total.freight = res.detail.freight_price || 0;
                 console.log('getPurchaseInfo res', res)
                 this.step();

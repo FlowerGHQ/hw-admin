@@ -459,15 +459,25 @@ let Const = {
                 text: '物料',
                 value: 2
             },
-        ]
+        ],
+	    SEARCH_TYPE:{
+		    NAME: "1",
+		    CODE: "2",
+	    },
+	    SEARCH_TYPE_MAP:{
+		    '1': {key: 1, zh: '名称', en: 'name'},
+		    '2': {key: 2, zh: '编码', en: 'code'}
+	    },
     },
     PURCHASE: { // 采购订单
         // 状态
         STATUS: {
             INIT: 0,
+	        WAIT_PAY: 100,
             WAIT_DELIVER: 200,
             WAIT_TAKE_DELIVER: 300,
-            TAKE_DELIVER: 350,
+	        TAKE_DELIVER: 330,
+	        ALL_TAKE_DELIVER: 360,
             DEAL_SUCCESS: 400,
             CANCEL: -100,
         },

@@ -5,10 +5,16 @@
             <a-tab-pane :key="0" :tab="$t('n.all')"></a-tab-pane>
             <a-tab-pane v-for="item of categoryList" :key="item.id" :tab="item.name"></a-tab-pane>
             <template #rightExtra>
-                <a-input class="search" v-model:value="searchForm.name" :placeholder="$t('def.input')" @pressEnter="handleSearch" >
+                <a-input-group  compact>
+                    <a-select v-model:value="searchType" class="search_select">
+                        <a-select-option v-for="(val, key) in SEARCH_TYPE_MAP" :key="key" :value="key">{{ val[$i18n.locale]  }}</a-select-option>
+
+                    </a-select>
+                <a-input class="search_input" v-model:value="searchForm.name" :placeholder="$t('def.input')" @pressEnter="handleSearch" style="width: 50%" >
                     <template #prefix><i class="icon i_search" @click="handleSearch"/></template>
                     <template #suffix><i class="icon i_close_b" @click="handleNameReset" v-if="searchForm.name"/></template>
                 </a-input>
+                </a-input-group>
                 <a-tooltip :title="$t('i.favorites')" class="popover">
                     <a-button type="link" @click="routerChange('favorite')"><i class="icon i_collect"/></a-button>
                 </a-tooltip>
@@ -89,9 +95,10 @@
 
 <script>
 import Core from '../../core';
+
 import CategoryTree from './components/CategoryTree.vue'
 import SimpleImageEmpty from '../../components/common/SimpleImageEmpty.vue'
-
+const SEARCH_TYPE_MAP = Core.Const.ITEM.SEARCH_TYPE_MAP
 export default {
     name: 'PurchaseItemList',
     components: {
@@ -103,8 +110,10 @@ export default {
         return {
             loginType: Core.Data.getLoginType(),
             pageType: 'list',
+            SEARCH_TYPE_MAP,
             // 加载
             loading: false,
+            searchType: Core.Const.ITEM.SEARCH_TYPE.NAME,
             // 分页
             currPage: 1,
             pageSize: 20,
@@ -196,11 +205,18 @@ export default {
             this.pageChange(1)
         },
         getTableData() { // 获取 商品 数据
+            let searchForm = Core.Util.deepCopy(this.searchForm);
+            if (this.searchType == Core.Const.ITEM.SEARCH_TYPE.CODE){
+                searchForm.code = searchForm.name;
+                searchForm.name = "";
+
+            }
             this.loading = true;
             Core.Api.Item.list({
                 flag_spread: 1,
-                category_id: this.searchForm.category_id,
-                name: this.searchForm.name,
+                category_id: searchForm.category_id,
+                name: searchForm.name,
+                code: searchForm.code,
                 page: this.currPage,
                 is_authority: 1,
                 page_size: this.pageSize
@@ -283,7 +299,7 @@ export default {
                     .fcc();
                     padding-right: 44px;
                     .search {
-                        width: 180px;
+
                         height: 36px;
                         background: #F5F5F5;
                         border-radius: 20px;
@@ -302,6 +318,31 @@ export default {
                         .ant-input {
                             background-color: transparent;
                             font-size: 14px;
+                        }
+                    }
+                    .search_select{
+                        .ant-select-selector{
+                            background: #F5F5F5;
+                            padding-top: 2px;
+                            height: 36px;
+                            width: 80px;
+                            border-radius: 20px 0px 0px 20px ;
+                        }
+                    }
+                    .search_input{
+                        background: #F5F5F5;
+                        height: 36px;
+
+                        border-radius: 0px 20px 20px 0px ;
+                        .ant-input-affix-wrapper{
+                            background: #F5F5F5;
+                            height: 36px;
+                            width: 300px;
+                            border-radius: 0px 20px 20px 0px ;
+                        }
+                        .ant-input{
+                            width: 300px;
+                            background: #F5F5F5;
                         }
                     }
                     .popover {
