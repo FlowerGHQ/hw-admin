@@ -25,6 +25,14 @@
                 </div>
             </div>
             <div class="form-item required" v-if="!indep_flag">
+                <div class="key">{{ $t('n.flag_entity') }}</div>
+                <div class="value">
+                    <a-radio-group v-model:value="form.flag_entity">
+                        <a-radio class="type-item" v-for="item of flagEntityMap" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>
+                    </a-radio-group>
+                </div>
+            </div>
+            <div class="form-item required" v-if="!indep_flag">
                 <div class="key">{{ $t('i.number') }}</div>
                 <div class="value">
                     <a-input v-model:value="form.model" :placeholder="$t('def.input')"/>
@@ -343,6 +351,7 @@ export default {
             // 加载
             loading: false,
             itemTypeMap: Core.Const.ITEM.TYPE_MAP,
+            flagEntityMap: Core.Const.ITEM.FLAG_ENTITY_MAP,
             indep_flag: 0,
             monetaryList: Core.Const.ITEM.MONETARY_TYPE_MAP,
             set_id: '',
@@ -355,6 +364,7 @@ export default {
                 model: '',
                 logo: '',
                 imgs: '',
+                flag_entity: undefined,
                 category_id: undefined,
                 price: undefined,
                 original_price_currency: undefined,

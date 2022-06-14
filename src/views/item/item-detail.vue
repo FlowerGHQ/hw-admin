@@ -29,6 +29,10 @@
                             <div class="value"> {{ $Util.itemTypeFilter(detail.type, $i18n.locale) }}</div>
                         </div>
                         <div class="info-item">
+                            <div class="key">{{ $t('n.flag_entity') }}</div>
+                            <div class="value"> {{ $Util.itemFlagEntityFilter(detail.flag_entity, $i18n.locale) }}</div>
+                        </div>
+                        <div class="info-item">
                             <div class="key">{{ $t('i.categories') }}</div>
                             <div class="value">{{detail.category ? detail.category.name : '-'}}</div>
                         </div>

@@ -120,6 +120,7 @@ export default {
             let tableColumns = [
                 { title: "操作类型", dataIndex: "type", key: "type" },
                 { title: "数量", dataIndex: "amount", key: "count" },
+                { title: "出入库", dataIndex: "uid", key: "uid" },
                 { title: "仓库", dataIndex: ['warehouse','name'], key: "warehouse_name" },
                 { title: "变更后库存数量", dataIndex: "balance", key: "count" },
                 { title: "变更来源", dataIndex: "source_type", key: "source_type" },

@@ -83,6 +83,9 @@
                     <template v-if="column.key === 'money'">
                         ￥{{$Util.countFilter(text)}}
                     </template>
+                    <template v-if="column.key === 'flag_entity'">
+                        {{$Util.itemFlagEntityFilter(text, $i18n.locale)}}
+                    </template>
                     <template v-if="column.key === 'fob_money'">
                         {{column.unit}} {{$Util.countFilter(text)}}
                     </template>
@@ -215,6 +218,7 @@ export default {
                 { title: this.$t('i.status'), dataIndex: 'status',
                     filters: this.$Util.tableFilterFormat(ITEM.STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [0] },
                 { title: this.$t('n.type'), dataIndex: ['type'], key: 'type' },
+                { title: this.$t('n.flag_entity'), dataIndex: 'flag_entity', key: 'flag_entity' },
                 { title: this.$t('i.categories'), dataIndex: ['category','name'], key: 'item' },
                 { title: this.$t('i.number'), dataIndex: 'model', key: 'item' },
                 { title: this.$t('i.code'), dataIndex: 'code', key: 'item' },
