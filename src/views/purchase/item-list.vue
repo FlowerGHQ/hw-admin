@@ -48,7 +48,9 @@
     </div>
     <div class="item-content-container" :class="firstLevelId ? '' : 'full-content'">
         <div class="category-container" v-if="firstLevelId">
-            <div class="category-title">{{firstLevelName}}</div>
+            <a-button type="link" @click="handleCategoryChange(firstLevelId)" >
+                <div class="category-title">{{firstLevelName}}</div>
+            </a-button>
             <div class="category-content">
                 <CategoryTree :parentId='firstLevelId' @change='handleCategoryChange' ref="CategoryTree"/>
             </div>
@@ -372,7 +374,10 @@ export default {
                 font-weight: 500;
                 color: #111111;
                 line-height: 28px;
-                padding: 44px 0 33px;
+                padding: 100px 0 33px;
+                &:hover {
+                    color: @primary !important;
+                }
             }
             .category-content {
                 .ant-menu.ant-menu-root {
