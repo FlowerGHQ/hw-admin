@@ -118,6 +118,9 @@ const apiList = {
         listByTargetId: ['PostJson', 'stock/list-by-target-id'],
         stockRecordList: ['PostJson', 'stock-record/list'],
         stockRecordDetail: ['PostJson', 'stock-record/detail'],
+	    detailCodeWarehouse: ['PostJson', 'stock-record/detail-code-warehouse'],
+	    detailWarehouse: ['PostJson', 'stock-record/detail-warehouse'],
+
     },
     Invoice: { // 出入库货单
         save: ['PostJson', 'invoice/save'],

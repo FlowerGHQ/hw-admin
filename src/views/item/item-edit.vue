@@ -47,8 +47,8 @@
             <div class="form-item required">
                 <div class="key">{{ $t('i.categories') }}</div>
                 <div class="value">
-                    <CategoryTreeSelect @change="handleCategorySelect"
-                        :category='item_category' :category-id='form.category_id' v-if="form.id !== ''"/>
+                    <CategoryTreeSelectMultiple @change="handleCategorySelect"
+                        :category='item_category' :category-id='form.category_ids' v-if="form.id !== ''"/>
                 </div>
             </div>
             <div class="form-item required">
@@ -107,7 +107,7 @@
             </div>
         </div>
     </div>
-    <div class="form-block" v-if="form.category_id && configTemp.length"> <!-- 分类配置 -->
+    <div class="form-block" v-if="form.category_ids && configTemp.length"> <!-- 分类配置 -->
         <div class="form-title">
             <div class="title">{{ $t('i.configuration') }}</div>
         </div>
@@ -333,14 +333,14 @@
 
 <script>
 import Core from '../../core';
-import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue'
+import CategoryTreeSelectMultiple from '@/components/popup-btn/CategoryTreeSelectMultiple.vue'
 import ItemHeader from './components/ItemHeader.vue'
 // import VueTinymce from '@jsdawn/vue3-tinymce';
 
 export default {
     name: 'ItemEdit',
     components: {
-        CategoryTreeSelect,
+        CategoryTreeSelectMultiple,
         ItemHeader,
         // VueTinymce,
     },
@@ -365,7 +365,7 @@ export default {
                 logo: '',
                 imgs: '',
                 flag_entity: undefined,
-                category_id: undefined,
+                category_ids: [],
                 price: undefined,
                 original_price_currency: undefined,
                 original_price: undefined,
@@ -554,6 +554,7 @@ export default {
             this.form.fob_eur = Core.Util.countFilter(res.fob_eur)
             this.form.fob_usd = Core.Util.countFilter(res.fob_usd)
             this.form.man_hour = Core.Util.countFilter(res.man_hour)
+            this.form.category_ids = this.detail.category_list ? this.detail.category_list.map(i => i.category_id): []
             // this.form.type = JSON.stringify(res.type)
             this.form.original_price = Core.Util.countFilter(res.original_price)
             this.form.sales_area_ids = this.detail.sales_area_list ? this.detail.sales_area_list.map(i => i.id): []
@@ -697,7 +698,7 @@ export default {
             if (!form.model) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!form.category_id) {
+            if (!form.category_ids) {
                 return this.$message.warning(this.$t('def.enter'))
             }
            /* if (!form.man_hour) {
@@ -823,7 +824,7 @@ export default {
 
         // 商品分类选择
         handleCategorySelect(val, node) {
-            this.form.category_id = val
+            this.form.category_ids = val
             this.item_category = node
             try {
                 this.configTemp = JSON.parse(node.config)

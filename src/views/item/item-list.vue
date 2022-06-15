@@ -80,6 +80,12 @@
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
                     </template>
+                    <template v-if="column.key === 'category_list'">
+                        <span v-for="(category, index) in text">
+                            <span v-if="index !== 0">,</span>
+                            {{category.category_name}}
+                        </span>
+                    </template>
                     <template v-if="column.key === 'money'">
                         ￥{{$Util.countFilter(text)}}
                     </template>
@@ -219,7 +225,7 @@ export default {
                     filters: this.$Util.tableFilterFormat(ITEM.STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [0] },
                 { title: this.$t('n.type'), dataIndex: ['type'], key: 'type' },
                 { title: this.$t('n.flag_entity'), dataIndex: 'flag_entity', key: 'flag_entity' },
-                { title: this.$t('i.categories'), dataIndex: ['category','name'], key: 'item' },
+                { title: this.$t('i.categories'), dataIndex: 'category_list', key: 'category_list' },
                 { title: this.$t('i.number'), dataIndex: 'model', key: 'item' },
                 { title: this.$t('i.code'), dataIndex: 'code', key: 'item' },
                 { title: this.$t('i.cost_price'), dataIndex: 'original_price' ,key: 'money'},

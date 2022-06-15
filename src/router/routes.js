@@ -790,6 +790,27 @@ const routes = [
                     auth: ['material.list'],
                 }
             },
+
+	        {
+		        path: 'material-put-stock',
+		        name: 'MaterialPutStock',
+		        component: () => import('@/views/production/material-put-stock.vue'),
+		        meta: {
+			        roles: [LOGIN_TYPE.ADMIN],
+			        title: '物料入库',
+		        }
+	        },
+	        {
+		        path: 'material-out-stock',
+		        name: 'MaterialOutStock',
+		        component: () => import('@/views/production/material-out-stock.vue'),
+		        meta: {
+			        roles: [LOGIN_TYPE.ADMIN],
+			        title: '物料出库',
+		        }
+	        },
+
+
             {
                 path: 'material-category',
                 name: 'MaterialCategory',
