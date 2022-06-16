@@ -374,7 +374,7 @@ export default {
                 font-weight: 500;
                 color: #111111;
                 line-height: 28px;
-                padding: 100px 0 33px;
+                margin: 100px 0 33px;
                 &:hover {
                     color: @primary !important;
                 }
