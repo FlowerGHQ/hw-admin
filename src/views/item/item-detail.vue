@@ -86,7 +86,15 @@
                     <div class="panel-content table-container no-mg">
                         <a-table :columns="specificColumns" :data-source="specific.data" :scroll="{ x: true }"
                                  :row-key="record => record.id" :pagination='false'>
+                            <template #headerCell="{ column}">
+                                <template v-if="column.key === 'select'">
+                                    {{ lang =='zh' ? column.title: column.dataIndex }}
+                                </template>
+                            </template>
                             <template #bodyCell="{ column, text, record, index }">
+                                <template v-if="column.key === 'select'">
+                                    {{ lang =='zh' ? text.value:text.value_en }}
+                                </template>
                                 <template v-if="column.key === 'item'">
                                     {{ text || '' }}
                                 </template>
@@ -161,8 +169,13 @@ export default {
             indep_flag: 0,
         };
     },
-    watch: {},
+    watch: {
+
+    },
     computed: {
+        lang() {
+            return this.$store.state.lang
+        },
         specificColumns() {
             let column = []
             column = this.specific.list.map((item, index) => ({
@@ -272,6 +285,7 @@ export default {
                     id: item.id,
                     key: item.key,
                     name: item.name,
+                    name_en: item.key
                 }))
                 this.specific.list = list
                 console.log('getAttrDef this.specific.list:', list)
@@ -288,7 +302,10 @@ export default {
                     let params = {}
                     for (const attr of this.specific.list) {
                         let element = item.attr_list.find(i => i.attr_def_id === attr.id)
-                        params[attr.key] = element.value
+                        params[attr.key] = {
+                            value: element.value,
+                            value_en: element.value_en
+                        }
                     }
                     return {
                         ...params,
