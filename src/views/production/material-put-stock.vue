@@ -113,6 +113,12 @@
                         <a-input type="number" v-model:value="form.amount" placeholder="请输入数量"/>
                     </div>
                 </div>
+                <div class="form-item">
+                    <div class="key">入库uid</div>
+                    <div class="value">
+                        <a-input v-model:value="uid"/>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-btns">
@@ -140,6 +146,7 @@ export default {
             // 加载
             loading: false,
             warehouse_id: '',
+            uid:'',
             form: {
                 id: '',
                 name: '',
@@ -232,8 +239,15 @@ export default {
                 material_code: this.form.code,
                 warehouse_id: this.warehouse_id
             }).then(res => {
-                this.form.stock = res.material.stock.stock
-                this.form.stock_update_time = this.$Util.timeFormat(res.material.stock.update_time)
+                if (res.material !== null){
+                    this.form.stock = res.material.stock.stock
+                    this.form.stock_update_time = this.$Util.timeFormat(res.material.stock.update_time)
+                } else {
+                    this.form.stock = 0
+                    this.form.stock_update_time = ""
+                }
+
+                this.uid = ""
             })
         },
         handleSubmit() {
@@ -253,7 +267,8 @@ export default {
                         type: STOCK_RECORD.TYPE.IN,
                         count: _this.form.amount
 
-                    }).then(() => {
+                    }).then((res) => {
+                        _this.uid = res.uid
                         _this.$message.success(_this.$t('pop_up.operate'))
                         _this.handleWarehouseByMaterialChange();
                         _this.form.amount = undefined
