@@ -4,8 +4,12 @@
             <div class="name">{{ detail.name }}</div>
             <p class="code">{{ $t('i.code') }}：{{ detail.code }}</p>
             <p class="spec" v-if="detail.attr_str"><span>{{ $t('i.spec') }}：</span>{{ detail.attr_str }}</p>
-            <p class="price">€{{$Util.countFilter(detail[priceKey + 'eur'])}} | ${{$Util.countFilter(detail[priceKey + 'usd'])}}</p>
-            <p class="category">{{ category.name }}</p>
+            <p class="price">€{{ $Util.countFilter(detail[priceKey + 'eur']) }} |
+                ${{ $Util.countFilter(detail[priceKey + 'usd']) }}</p>
+            <p class="category"><span v-for="(category, index) in detail.category_list">
+                            <span v-if="index !== 0">,</span>
+                            {{ category.category_name }}
+                        </span></p>
             <div class="desc" v-if="config && config.length">
                 <template v-for="(item, index) of config" :key="index">
                     <p v-if="item.value">
@@ -30,7 +34,7 @@
             <div class="title">{{ $t('i.spec') }}({{ specList.length }})</div>
             <div class="spec-list">
                 <div class="spec-item" v-for="item of specList" :key="item.id"
-                    :class="this.id === item.id ? 'active' : ''" @click="handleSpecChange(item)">
+                     :class="this.id === item.id ? 'active' : ''" @click="handleSpecChange(item)">
                     <img :src="$Util.imageFilter(item.logo, 2)"/>
                     <p>{{ item.name }}</p>
                 </div>
@@ -48,7 +52,7 @@
 </template>
 
 <script>
-import { get } from 'lodash';
+import {get} from 'lodash';
 import Core from '../../core';
 import ExploredContent from './components/ExploredContent.vue';
 
@@ -96,10 +100,10 @@ export default {
                 console.log('getItemDetail res', res)
                 let detail = res.detail
                 detail.attr_str = detail.attr_list ? detail.attr_list.map(item => item.value).join(' ') : ''
-                detail.attr_def_name = detail.attr_list ? detail.attr_list.map(item => item.attr_def_name).join(','): ''
-                console.log('detail.attr_list.attr_def_name',detail.attr_def_name)
+                detail.attr_def_name = detail.attr_list ? detail.attr_list.map(item => item.attr_def_name).join(',') : ''
+                console.log('detail.attr_list.attr_def_name', detail.attr_def_name)
                 this.detail = detail
-                console.log('detail',detail)
+                console.log('detail', detail)
                 this.category = detail.category
                 try {
                     this.config = JSON.parse(detail.config)
@@ -141,7 +145,7 @@ export default {
             this.getItemDetail()
         },
         // 根据id获取爆炸图
-        getExploreDetail (id) {
+        getExploreDetail(id) {
             this.$refs.ExploredContent.getItemExploreList(id);
         },
         // 添加到购物车
@@ -203,6 +207,7 @@ export default {
             line-height: 39px;
             margin-right: 40px;
         }
+
         .code {
             margin-top: 6px;
         }
@@ -274,6 +279,7 @@ export default {
                 width: 46px;
                 height: 46px;
                 text-indent: 0;
+
                 a, img {
                     width: 46px;
                     height: 46px;
