@@ -25,6 +25,12 @@
             <template v-if="column.key === 'item'">
                 {{text || '-'}}
             </template>
+            <template v-if="column.key === 'category_list'">
+                          <span v-for="(category, index) in text">
+                              <span v-if="index !== 0">,</span>
+                              {{category.category_name}}
+                          </span>
+            </template>
             <template v-if="column.key === 'count'">
                 {{text ? text + '件' : '-'}}
             </template>

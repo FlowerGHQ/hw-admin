@@ -135,7 +135,7 @@ export default {
         tableColumns() {
             let tableColumns = [
                 {title: this.$t('n.name'), dataIndex: 'name', key: 'detail'},
-                {title: this.$t('i.categories'), dataIndex: ['category','name']},
+                {title: this.$t('i.categories'), dataIndex: 'category_list', key: 'category_list' },
                 {title: this.$t('i.number'), dataIndex: 'model', key: 'item'},
                 {title: this.$t('i.code'), dataIndex: 'code', key: 'item'},
                 {title: this.$t('i.spec'), dataIndex: 'attr_list', key: 'spec'},

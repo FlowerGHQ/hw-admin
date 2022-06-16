@@ -1,114 +1,137 @@
 <template>
-<div id="ItemDetail">
-    <div class="list-container">
-        <a-spin :spinning="loading" class='loading-incontent' v-if="loading"></a-spin>
-        <div class="title-container">
-            <div class="title-area">{{ $t('i.detail') }}</div>
-            <div class="btns-area">
-                <a-button @click="routerChange('edit-explored')"><i class="icon i_relevance"/>{{ $t('i.view') }}</a-button>
-                <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                <!-- <a-button danger @click="handleDelete()"><i class="icon i_delete"/>删除</a-button> -->
-                <a-button :type="detail.status === 0 ? 'danger' : 'primary'" ghost @click="handleStatusChange()">
-                    <template v-if="detail.status === -1"><i class="icon i_putaway"/>{{ $t('i.active_a') }}</template>
-                    <template v-if="detail.status === 0"><i class="icon i_downaway"/>{{ $t('i.inactive_a') }}</template>
-                </a-button>
-            </div>
-        </div>
-        <ItemHeader :detail='detail' :showSpec='indep_flag ? true : false'/>
-        <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
-            <template #expandIcon ><i class="icon i_expan_l"/> </template>
-            <a-collapse-panel key="itemInfo" :header="$t('i.product_information')" class="gray-collapse-panel">
-                <a-row class="panel-content info-container">
-                    <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
-                        <div class="info-item">
-                            <div class="key">{{ $t('i.code') }}</div>
-                            <div class="value">{{detail.code || '-'}}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="key">{{ $t('n.type') }}</div>
-                            <div class="value"> {{ $Util.itemTypeFilter(detail.type, $i18n.locale) }}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="key">{{ $t('n.flag_entity') }}</div>
-                            <div class="value"> {{ $Util.itemFlagEntityFilter(detail.flag_entity, $i18n.locale) }}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="key">{{ $t('i.categories') }}</div>
-                            <div class="value">{{detail.category ? detail.category.name : '-'}}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="key">{{ $t('d.sales_area') }}</div>
-                            <div class="value">{{ detail.sales_area_name }}</div>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" v-if="indep_flag">
-                        <div class="info-item">
-                            <div class="key">{{ $t('i.cost_price') }}</div>
-                            <div class="value">{{$Util.priceUnitFilter(detail.original_price_currency)}} {{$Util.countFilter(detail.original_price)}}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="key">FOB(EUR)</div>
-                            <div class="value">€{{$Util.countFilter(detail.fob_eur)}}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="key">FOB(USD)</div>
-                            <div class="value">${{$Util.countFilter(detail.fob_usd)}}</div>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='12' class="info-block">
-                        <template v-for="(item, index) of config" :key="index">
-                            <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='8' class="info-item"
-                                :class="item.type" v-if="item.value">
-                                <div class="key">{{item.name}}</div>
-                                <div class="value" v-if="item.type == 'rich_text'" v-html='item.value'></div>
-                                <div class="value" v-else>{{item.value || '-'}}</div>
-                            </a-col>
+    <div id="ItemDetail">
+        <div class="list-container">
+            <a-spin :spinning="loading" class='loading-incontent' v-if="loading"></a-spin>
+            <div class="title-container">
+                <div class="title-area">{{ $t('i.detail') }}</div>
+                <div class="btns-area">
+                    <a-button @click="routerChange('edit-explored')"><i class="icon i_relevance"/>{{ $t('i.view') }}
+                    </a-button>
+                    <a-button type="primary" ghost @click="routerChange('edit')"><i
+                        class="icon i_edit"/>{{ $t('def.edit') }}
+                    </a-button>
+                    <!-- <a-button danger @click="handleDelete()"><i class="icon i_delete"/>删除</a-button> -->
+                    <a-button :type="detail.status === 0 ? 'danger' : 'primary'" ghost @click="handleStatusChange()">
+                        <template v-if="detail.status === -1"><i class="icon i_putaway"/>{{ $t('i.active_a') }}
                         </template>
-                    </a-col>
-                </a-row>
-            </a-collapse-panel>
-            <a-collapse-panel key="itemSpec" :header="$t('i.information')" class="gray-collapse-panel" v-if="detail.set_id && !this.indep_flag">
-                <div class="panel-content table-container no-mg">
-                    <a-table :columns="specificColumns" :data-source="specific.data" :scroll="{ x: true }"
-                        :row-key="record => record.id" :pagination='false'>
-                        <template #bodyCell="{ column, text, record, index }">
-                            <template v-if="column.key === 'item'">
-                                {{text || ''}}
-                            </template>
-                            <template v-if="column.key === 'money'">
-                                {{$Util.priceUnitFilter(record.original_price_currency)}} {{$Util.countFilter(text)}}
-                            </template>
-                            <template v-if="column.key === 'fob'">
-                                {{column.unit}} {{$Util.countFilter(text)}}
-                            </template>
-                            <template v-if="column.dataIndex === 'flag_independent_info'">
-                                <template v-if="index === 0">
-                                    <a-tooltip :title="$t('i.default_a')">
-                                        {{ $t('i.default') }} <i class="icon i_hint" style="font-size: 12px;"/>
-                                    </a-tooltip>
-                                </template>
-                                <template v-else>
-                                    <a-switch v-model:checked="record.flag_independent_info" @change='handleIndepChange(record)'/>
-                                </template>
-                            </template>
-
-                            <template v-if="column.key === 'operation'">
-                                <template v-if="record.flag_independent_info">
-                                    <a-button type="link" @click="routerChange('edit-explored-indep', record)"><i class="icon i_relevance"/> {{ $t('i.view') }}</a-button>
-                                    <a-button type="link" @click="routerChange('edit-indep', record)"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                                    <a-button type="link" @click="routerChange('detail-indep', record)"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
-                                </template>
-                                <!-- <template v-if="index > 0">
-                                    <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
-                                </template>-->
-                            </template>
+                        <template v-if="detail.status === 0"><i class="icon i_downaway"/>{{ $t('i.inactive_a') }}
                         </template>
-                    </a-table>
+                    </a-button>
                 </div>
-            </a-collapse-panel>
-        </a-collapse>
+            </div>
+            <ItemHeader :detail='detail' :showSpec='indep_flag ? true : false'/>
+            <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
+                <template #expandIcon><i class="icon i_expan_l"/></template>
+                <a-collapse-panel key="itemInfo" :header="$t('i.product_information')" class="gray-collapse-panel">
+                    <a-row class="panel-content info-container">
+                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
+                            <div class="info-item">
+                                <div class="key">{{ $t('i.code') }}</div>
+                                <div class="value">{{ detail.code || '-' }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="key">{{ $t('n.type') }}</div>
+                                <div class="value"> {{ $Util.itemTypeFilter(detail.type, $i18n.locale) }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="key">{{ $t('n.flag_entity') }}</div>
+                                <div class="value"> {{
+                                        $Util.itemFlagEntityFilter(detail.flag_entity, $i18n.locale)
+                                    }}
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="key">{{ $t('i.categories') }}</div>
+                                <div class="value">
+                                <span v-for="(category, index) in detail.category_list">
+                                    <span v-if="index !== 0">,</span>{{ category.category_name }}
+                                </span>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="key">{{ $t('d.sales_area') }}</div>
+                                <div class="value">{{ detail.sales_area_name }}</div>
+                            </div>
+                        </a-col>
+                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" v-if="indep_flag">
+                            <div class="info-item">
+                                <div class="key">{{ $t('i.cost_price') }}</div>
+                                <div class="value">{{ $Util.priceUnitFilter(detail.original_price_currency) }}
+                                    {{ $Util.countFilter(detail.original_price) }}
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="key">FOB(EUR)</div>
+                                <div class="value">€{{ $Util.countFilter(detail.fob_eur) }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="key">FOB(USD)</div>
+                                <div class="value">${{ $Util.countFilter(detail.fob_usd) }}</div>
+                            </div>
+                        </a-col>
+                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='12' class="info-block">
+                            <template v-for="(item, index) of config" :key="index">
+                                <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='8' class="info-item"
+                                       :class="item.type" v-if="item.value">
+                                    <div class="key">{{ item.name }}</div>
+                                    <div class="value" v-if="item.type == 'rich_text'" v-html='item.value'></div>
+                                    <div class="value" v-else>{{ item.value || '-' }}</div>
+                                </a-col>
+                            </template>
+                        </a-col>
+                    </a-row>
+                </a-collapse-panel>
+                <a-collapse-panel key="itemSpec" :header="$t('i.information')" class="gray-collapse-panel"
+                                  v-if="detail.set_id && !this.indep_flag">
+                    <div class="panel-content table-container no-mg">
+                        <a-table :columns="specificColumns" :data-source="specific.data" :scroll="{ x: true }"
+                                 :row-key="record => record.id" :pagination='false'>
+                            <template #bodyCell="{ column, text, record, index }">
+                                <template v-if="column.key === 'item'">
+                                    {{ text || '' }}
+                                </template>
+                                <template v-if="column.key === 'money'">
+                                    {{ $Util.priceUnitFilter(record.original_price_currency) }}
+                                    {{ $Util.countFilter(text) }}
+                                </template>
+                                <template v-if="column.key === 'fob'">
+                                    {{ column.unit }} {{ $Util.countFilter(text) }}
+                                </template>
+                                <template v-if="column.dataIndex === 'flag_independent_info'">
+                                    <template v-if="index === 0">
+                                        <a-tooltip :title="$t('i.default_a')">
+                                            {{ $t('i.default') }} <i class="icon i_hint" style="font-size: 12px;"/>
+                                        </a-tooltip>
+                                    </template>
+                                    <template v-else>
+                                        <a-switch v-model:checked="record.flag_independent_info"
+                                                  @change='handleIndepChange(record)'/>
+                                    </template>
+                                </template>
+
+                                <template v-if="column.key === 'operation'">
+                                    <template v-if="record.flag_independent_info">
+                                        <a-button type="link" @click="routerChange('edit-explored-indep', record)"><i
+                                            class="icon i_relevance"/> {{ $t('i.view') }}
+                                        </a-button>
+                                        <a-button type="link" @click="routerChange('edit-indep', record)"><i
+                                            class="icon i_edit"/>{{ $t('def.edit') }}
+                                        </a-button>
+                                        <a-button type="link" @click="routerChange('detail-indep', record)"><i
+                                            class="icon i_detail"/>{{ $t('def.detail') }}
+                                        </a-button>
+                                    </template>
+                                    <!-- <template v-if="index > 0">
+                                        <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
+                                    </template>-->
+                                </template>
+                            </template>
+                        </a-table>
+                    </div>
+                </a-collapse-panel>
+            </a-collapse>
+        </div>
     </div>
-</div>
 </template>
 
 <script>
@@ -117,7 +140,7 @@ import ItemHeader from './components/ItemHeader.vue'
 
 export default {
     name: 'RepairDetail',
-    components: { ItemHeader },
+    components: {ItemHeader},
     props: {},
     data() {
         return {
@@ -178,35 +201,35 @@ export default {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/item/item-edit",
-                        query: { id: this.id, set_id: this.detail.set_id, indep_flag: this.indep_flag }
+                        query: {id: this.id, set_id: this.detail.set_id, indep_flag: this.indep_flag}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'edit-indep':  // 商品个性化编辑
                     routeUrl = this.$router.resolve({
                         path: "/item/item-edit",
-                        query: { id: item.id, indep_flag: 1 }
+                        query: {id: item.id, indep_flag: 1}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail-indep':  // 商品个性化详情
                     routeUrl = this.$router.resolve({
                         path: "/item/item-detail",
-                        query: { id: item.id, indep_flag: 1 }
+                        query: {id: item.id, indep_flag: 1}
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
                 case 'edit-explored':
                     routeUrl = this.$router.resolve({
                         path: "/item/item-explored-edit",
-                        query: { id: this.id, indep_flag: this.indep_flag }
+                        query: {id: this.id, indep_flag: this.indep_flag}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'edit-explored-indep':
                     routeUrl = this.$router.resolve({
                         path: "/item/item-explored-edit",
-                        query: { id: item.id, indep_flag: 1 }
+                        query: {id: item.id, indep_flag: 1}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -222,7 +245,11 @@ export default {
                 let detail = res.detail || {}
                 detail.sales_area_name = detail.sales_area_list ? detail.sales_area_list.map(i => i.name).join(' , ') : ''
                 this.detail = detail;
-                try { this.config = JSON.parse(detail.config) } catch (err) { this.config = [] }
+                try {
+                    this.config = JSON.parse(detail.config)
+                } catch (err) {
+                    this.config = []
+                }
                 if (detail.set_id && !this.indep_flag) {
                     if (!this.activeKey.includes('itemSpec')) {
                         this.activeKey.push('itemSpec')
@@ -333,8 +360,8 @@ export default {
             this.$confirm({
                 title: _this.$t('pop_up.sure') + `${name}？`,
                 okText: _this.$t('def.sure'),
-                okType: _this.detail.status === -1 ?  '' : 'danger',
-                content:  _this.detail.status === -1 ? '' : _this.$t('i.after'),
+                okType: _this.detail.status === -1 ? '' : 'danger',
+                content: _this.detail.status === -1 ? '' : _this.$t('i.after'),
                 cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Item.updateStatus({id: _this.detail.id}).then(() => {

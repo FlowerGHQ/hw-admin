@@ -12,7 +12,7 @@
                     <div class="key">仓库</div>
                     <div class="value">
                         <a-select
-                            v-model:value="form.warehouse_id"
+                            v-model:value="warehouse_id"
                             show-search
                             placeholder="请输入仓库"
                             :default-active-first-option="false"
@@ -116,7 +116,7 @@
                 <div class="form-item">
                     <div class="key">入库数量</div>
                     <div class="value">
-                        <a-input v-model:value="form.remark" placeholder="请输入备注"/>
+                        <a-input v-model:value="form.amount" placeholder="请输入数量"/>
                     </div>
                 </div>
             </div>
@@ -142,9 +142,9 @@ export default {
         return {
             // 加载
             loading: false,
+            warehouse_id: '',
             form: {
                 id: '',
-                warehouse_id: '',
                 name: '',
                 code: '',
                 category_id: undefined,
@@ -195,16 +195,11 @@ export default {
             }).then(res => {
                 console.log('Material.detail res', res)
                 this.form = res
+                this.form.code = res.code
+                this.handleWarehouseByMaterialChange()
+                console.log('Material.detail res.code', res.code)
                 this.gross_weight = Core.Util.countFilter(res.gross_weight)
-                if (this.form.image) {
-                    this.upload.coverList = [{
-                        uid: 1,
-                        name: this.form.name,
-                        url: Core.Const.NET.FILE_URL_PREFIX + this.form.image,
-                        short_path: this.form.image,
-                        status: 'done',
-                    }]
-                }
+
             }).finally(() => {
                 this.loading = false
             })
@@ -217,7 +212,7 @@ export default {
         handleChange() {
             this.id = this.form.id
             this.getMaterialDetail();
-            this.handleWarehouseByMaterialChange()
+
 
         },
         handleWarehouseSearch(name) {
@@ -226,13 +221,16 @@ export default {
             })
         },
         handleWarehouseByMaterialChange() {
-            if (!this.id) {
+            if (!this.form.id) {
                 return
             }
             if (!this.warehouse_id) {
                 return
             }
-            Core.Api.Stock.detailCodeWarehouse({target_id: this.id, warehouse_id: this.warehouse_id}).then(res => {
+            Core.Api.Stock.detailCodeWarehouse({
+                material_code: this.form.code,
+                warehouse_id: this.warehouse_id
+            }).then(res => {
 
             })
         },

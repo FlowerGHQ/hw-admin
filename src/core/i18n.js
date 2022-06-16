@@ -469,6 +469,7 @@ const messages = {
             preview: '收货预览',
             code: '编码',
             unit_price: '单价',
+	        export_product_information: '导出商品信息',
         },
         s: {
             store_list: '门店列表',
@@ -1087,6 +1088,7 @@ const messages = {
             preview: 'Delivery preview',
             code: 'code',
             unit_price: 'unit price',
+	        export_product_information: 'Export product information'
         },
         s: {
             store_list: 'Store list',

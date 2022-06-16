@@ -10,7 +10,7 @@
                 </template>
                 <template v-if="!$auth('ADMIN') && $auth('purchase-order.export')">
                     <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
-                    <a-button @click="handleExportInfo"><i class="icon i_download"/>导出采购商品信息</a-button>
+                    <a-button @click="handleExportInfo"><i class="icon i_download"/>{{ $t('p.export_product_information')}}</a-button>
                 </template>
 
                 <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
