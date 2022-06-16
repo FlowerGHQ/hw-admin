@@ -351,6 +351,8 @@ const messages = {
             shipping_options: '配送选项',
             new_address: '添加新地址',
             shipping_settings: '配送设置',
+	        material_put_stock: '物料入库',
+			material_out_stock: '物料出库',
         },
         w: {
             list: '账户列表',
@@ -973,6 +975,8 @@ const messages = {
             shipping_options: 'Shipping options',
             new_address: 'Add new address',
             shipping_settings: 'Shipping settings',
+	        material_put_stock: 'Material put stock',
+	        material_out_stock: 'Material out stock',
         },
         w: {
             list: 'Account List',

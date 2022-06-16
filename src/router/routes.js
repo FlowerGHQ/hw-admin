@@ -809,6 +809,15 @@ const routes = [
 			        title: '物料出库',
 		        }
 	        },
+	        {
+		        path: 'material-adjust-stock',
+		        name: 'MaterialAdjustStock',
+		        component: () => import('@/views/production/material-adjust-stock.vue'),
+		        meta: {
+			        roles: [LOGIN_TYPE.ADMIN],
+			        title: '物料调库',
+		        }
+	        },
 
 
             {

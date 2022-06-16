@@ -9,7 +9,28 @@
             </div>
             <div class="form-content">
                 <div class="form-item required">
-                    <div class="key">仓库</div>
+                    <div class="key">发货仓库</div>
+                    <div class="value">
+                        <a-select
+                            v-model:value="out_warehouse_id"
+                            show-search
+                            placeholder="请输入仓库"
+                            :default-active-first-option="false"
+                            :show-arrow="false"
+                            :filter-option="false"
+                            :not-found-content="null"
+                            @search="handleOutWarehouseSearch"
+                            @change="handleWarehouseByUidChange"
+                        >
+                            <a-select-option v-for=" item in outWarehouseOptions" :key="item.id" :value="item.id">
+                                {{ item.name }}
+                            </a-select-option>
+                        </a-select>
+
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">收货仓库</div>
                     <div class="value">
                         <a-select
                             v-model:value="warehouse_id"
@@ -20,7 +41,6 @@
                             :filter-option="false"
                             :not-found-content="null"
                             @search="handleWarehouseSearch"
-                            @change="handleWarehouseByUidChange"
                         >
                             <a-select-option v-for=" item in warehouseOptions" :key="item.id" :value="item.id">
                                 {{ item.name }}
@@ -29,7 +49,7 @@
 
                     </div>
                 </div>
-                <div class="form-item">
+                <div class="form-item required">
                     <div class="key">uid</div>
                     <div class="value">
                         <a-input v-model:value="uid" @change="handleWarehouseByUidChange"/>
@@ -135,6 +155,7 @@ export default {
             // 加载
             loading: false,
             warehouse_id: '',
+            out_warehouse_id: '',
             uid: "",
             form: {
                 id: '',
@@ -157,6 +178,7 @@ export default {
             configTemp: [],
             options: [],
             warehouseOptions: [],
+            outWarehouseOptions: [],
 
         };
     },
@@ -215,17 +237,22 @@ export default {
                 this.warehouseOptions = res.list
             })
         },
+        handleOutWarehouseSearch(name) {
+            Core.Api.Warehouse.list({name: name}).then(res => {
+                this.outWarehouseOptions = res.list
+            })
+        },
         handleWarehouseByUidChange() {
             if (!this.uid) {
                 return
             }
-            if (!this.warehouse_id) {
+            if (!this.out_warehouse_id) {
                 console.log(2)
                 return
             }
             Core.Api.StockRecord.detailWarehouse({
                 uid: this.uid,
-                warehouse_id: this.warehouse_id
+                warehouse_id: this.out_warehouse_id
             }).then(res => {
                 this.form = {}
                 if (res.material !== undefined){
@@ -249,9 +276,10 @@ export default {
                 okText: _this.$t('def.sure'),
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.StockRecord.add({
+                    Core.Api.StockRecord.adjust({
                         uid: _this.uid,
-                        warehouse_id: _this.warehouse_id,
+                        target_warehouse_id: _this.warehouse_id,
+                        warehouse_id: _this.out_warehouse_id,
                         target_id: _this.form.id,
                         target_type: TARGET_TYPE_MAP.MATERIAL,
                         type: STOCK_RECORD.TYPE.OUT,

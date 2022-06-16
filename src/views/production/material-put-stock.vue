@@ -1,7 +1,7 @@
 <template>
-    <div id="MaterialEdit" class="edit-container">
+    <div id="MaterialPutStock" class="edit-container">
         <div class="title-container">
-            <div class="title-area">{{ form.id ? '编辑物料' : '新增物料' }}</div>
+            <div class="title-area">{{$t('i.material_put_stock')}}</div>
         </div>
         <div class="form-block"> <!-- 基本信息 -->
             <div class="form-title">
@@ -53,76 +53,70 @@
                     </div>
                 </div>
 
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">物料名称</div>
                     <div class="value">
-                        {{ form.name }}
+                        <a-input v-model:value="form.name" disabled/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">物料规格</div>
                     <div class="value">
-                        {{ form.spec }}
+                        <a-input v-model:value="form.spec" disabled/>
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">物料包装</div>
                     <div class="value">
-                        {{ form.encapsulation }}
+                        <a-input v-model:value="form.encapsulation" disabled/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">单位</div>
                     <div class="value">
-                        {{ form.unit }}
+                        <a-input v-model:value="form.unit" disabled/>
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">包装尺寸</div>
                     <div class="value">
-                        {{ form.encapsulation_size }}
+                        <a-input v-model:value="form.encapsulation_size" disabled/>
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">毛重</div>
                     <div class="value">
-                        {{ form.gross_weight }}
+                        <a-input v-model:value="form.gross_weight" disabled/>
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">备注</div>
                     <div class="value">
-                        {{ form.remark }}
+                        <a-input v-model:value="form.remark" disabled/>
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">当前库存</div>
                     <div class="value">
-                        {{ form.gross_weight }}
+                        <a-input v-model:value="form.stock" disabled/>
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">当前库存</div>
+                    <div class="key">库存变动时间</div>
                     <div class="value">
-                        {{ form.gross_weight }}
-                    </div>
-                </div>
-                <div class="form-item">
-                    <div class="key">最新库存变动时间</div>
-                    <div class="value">
-                        {{ form.gross_weight }}
+                        <a-input v-model:value="form.stock_update_time" disabled/>
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">入库数量</div>
                     <div class="value">
-                        <a-input v-model:value="form.amount" placeholder="请输入数量"/>
+                        <a-input type="number" v-model:value="form.amount" placeholder="请输入数量"/>
                     </div>
                 </div>
             </div>
         </div>
         <div class="form-btns">
-            <!--            <a-button type="primary" @click="handleSubmit" v-if="$auth('material.save')">确定</a-button>-->
+            <a-button type="primary" @click="handleSubmit" v-if="$auth('material.save')">确定</a-button>
             <a-button type="primary" ghost @click="routerChange('back')">取消</a-button>
         </div>
     </div>
@@ -131,6 +125,9 @@
 <script>
 import Core from '../../core';
 import CategoryTreeSelect from '../../components/popup-btn/CategoryTreeSelect.vue'
+
+const TARGET_TYPE_MAP = Core.Const.ITEM.TARGET_TYPE_MAP
+const STOCK_RECORD = Core.Const.STOCK_RECORD
 
 export default {
     name: 'MaterialPutStock',
@@ -153,6 +150,8 @@ export default {
                 supplier_ids: undefined, // 供应商
                 unit: '',
                 encapsulation_size: '',
+                stock_balance: '',
+                stock_update_time: '',
                 remark: '',
                 image: '',
             },
@@ -198,7 +197,7 @@ export default {
                 this.form.code = res.code
                 this.handleWarehouseByMaterialChange()
                 console.log('Material.detail res.code', res.code)
-                this.gross_weight = Core.Util.countFilter(res.gross_weight)
+                this.form.gross_weight = Core.Util.countFilter(res.gross_weight)
 
             }).finally(() => {
                 this.loading = false
@@ -222,17 +221,47 @@ export default {
         },
         handleWarehouseByMaterialChange() {
             if (!this.form.id) {
+                console.log(1)
                 return
             }
             if (!this.warehouse_id) {
+                console.log(2)
                 return
             }
             Core.Api.Stock.detailCodeWarehouse({
                 material_code: this.form.code,
                 warehouse_id: this.warehouse_id
             }).then(res => {
-
+                this.form.stock = res.material.stock.stock
+                this.form.stock_update_time = this.$Util.timeFormat(res.material.stock.update_time)
             })
+        },
+        handleSubmit() {
+            if (!this.form.amount) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('pop_up.sure_audit'),
+                okText: _this.$t('def.sure'),
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.StockRecord.add({
+                        warehouse_id: _this.warehouse_id,
+                        target_id: _this.form.id,
+                        target_type: TARGET_TYPE_MAP.MATERIAL,
+                        type: STOCK_RECORD.TYPE.IN,
+                        count: _this.form.amount
+
+                    }).then(() => {
+                        _this.$message.success(_this.$t('pop_up.operate'))
+                        _this.handleWarehouseByMaterialChange();
+                        _this.form.amount = undefined
+                    }).catch(err => {
+                        console.log("handleComplete err", err);
+                    })
+                },
+            });
         },
     }
 };

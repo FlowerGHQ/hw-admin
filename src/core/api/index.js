@@ -122,6 +122,13 @@ const apiList = {
 	    detailWarehouse: ['PostJson', 'stock-record/detail-warehouse'],
 
     },
+	StockRecord: { //仓库库存管理
+		add: ['PostJson', 'stock-record/add'],
+		adjust: ['PostJson', 'stock-record/adjust'],
+		detail: ['PostJson', 'stock-record/detail'],
+		detailWarehouse: ['PostJson', 'stock-record/detail-warehouse'],
+
+	},
     Invoice: { // 出入库货单
         save: ['PostJson', 'invoice/save'],
         detail: ['PostJson', 'invoice/detail'],
