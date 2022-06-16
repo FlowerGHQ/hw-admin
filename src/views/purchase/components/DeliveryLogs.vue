@@ -26,8 +26,9 @@
                                 {{ $Util.timeFilter(text) }}
                             </template>
                             <template v-if="column.key === 'operation'">
+                                <a-button type='link' @click="handleWaybillShow(record.id)">物流信息</a-button>
                                 <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
-                                    <a-button type='link' @click="handleWaybillShow(record.id)">物流信息</a-button>
+                                    <a-button type='link' v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT && record.status === Core.Const.STOCK_RECORD.STATUS.CLOSE"  @click="handleDeliverShow(record.id)">确认发货</a-button>
                                 </template>
                                 <template v-if="authOrg(detail.org_id, detail.org_type)">
                                     <a-button type='link' v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT && record.status === Core.Const.STOCK_RECORD.STATUS.CLOSE"  @click="handleTakeDeliverShow(record.id)">确认收货</a-button>
@@ -96,7 +97,7 @@
                 </div>
             </template>
         </a-modal>
-        <a-modal v-model:visible="deliverShow" :title="$t('p.shipping_confirmation')" @ok="handleDeliver">
+        <a-modal v-model:visible="takeDeliverShow" :title="$t('p.shipping_confirmation')" @ok="handleTakeDeliver">
             <div class="modal-content">
                 <div class="form-item required">
                     <div class="key">{{ $t('wa.warehouse') }}：</div>
@@ -110,21 +111,66 @@
                         </a-select>
                     </div>
                 </div>
-                <!--            <div class="form-item required">-->
-                <!--                <div class="key">{{ $t('in.category') }}：</div>-->
-                <!--                <div class="value">-->
-                <!--                    <a-radio-group v-model:value="form.target_type">-->
-                <!--                        <a-radio v-for="item in targetMap" :key='item.key' :value='item.key'>{{ item[$i18n.locale] }}</a-radio>-->
-                <!--                    </a-radio-group>-->
-                <!--                </div>-->
-                <!--            </div>-->
-
-                <!--            <div class="form-item" >-->
-                <!--                <div class="key">{{$t('p.remark')}}:</div>-->
-                <!--                <div class="value">-->
-                <!--                    <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>-->
-                <!--                </div>-->
-                <!--            </div>-->
+            </div>
+        </a-modal>
+        <a-modal v-model:visible="deliverShow" :title="$t('p.shipping_confirmation')" @ok="handleDeliver">
+            <div class="modal-content">
+                <template v-if="$auth('ADMIN')">
+                    <div class="form-item required">
+                        <div class="key">{{ $t('p.delivery_method') }}</div>
+                        <div class="value">
+                            <a-select v-model:value="form.express_type" :placeholder="$t('def.select')">
+                                <a-select-option v-for="courier of courierTypeList" :key="courier.value" :value="courier.value">{{courier.name}}</a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="key">{{ $t('p.sn_number') }}:</div>
+                        <div class="value">
+                            <a-input v-model:value="form.waybill" :placeholder="$t('def.input')"/>
+                        </div>
+                    </div>
+                    <div class="form-item required">
+                        <div class="key">{{ $t('p.shipping_port') }}:</div>
+                        <div class="value">
+                            <a-input v-model:value="form.harbour" :placeholder="$t('def.input')"/>
+                        </div>
+                    </div>
+                </template>
+                <template v-if="$auth('DISTRIBUTOR')">
+                    <div class="form-item required">
+                        <div class="key">{{ $t('p.ship') }}</div>
+                        <div class="value">
+                            <a-select v-model:value="form.receive_type" :placeholder="$t('def.select')">
+                                <a-select-option v-for="receive of receiveTypeList" :key="receive.value" :value="receive.value">{{receive.name}}</a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="key">{{ $t('p.sn_number') }}:</div>
+                        <div class="value">
+                            <a-input v-model:value="form.waybill_uid" :placeholder="$t('def.input')"/>
+                        </div>
+                    </div>
+                </template>
+                <div class="form-item required">
+                    <div class="key">{{$t('p.freight')}}:</div>
+                    <div class="value">
+                        <a-input-number
+                            v-model:value="form.freight_price"
+                            placeholder="0.00"
+                            style="width: 120px"
+                            :min="0.00"
+                            :precision="2"
+                            :prefix="`${$Util.priceUnitFilter(detail.currency)}`" />
+                    </div>
+                </div>
+                <div class="form-item" >
+                    <div class="key">{{$t('p.remark')}}:</div>
+                    <div class="value">
+                        <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
             </div>
         </a-modal>
     </div>
@@ -133,6 +179,7 @@
 <script>
 import Core from '../../../core';
 const USER_TYPE = Core.Const.USER.TYPE;
+const WAYBILL = Core.Const.WAYBILL;
 
 import ItemTable from '@/components/table/ItemTable.vue';
 
@@ -162,12 +209,26 @@ export default {
             loginType: Core.Data.getLoginType(),
             loginOrgId: Core.Data.getOrgId(),
             loginOrgType: Core.Data.getOrgType(),
-            form: {
-                warehouse_id: ''
-            },
-
-            waybillDetail:{},
+            courierTypeList: WAYBILL.COURIER_LIST,
+            receiveTypeList: WAYBILL.RECEIPT_LIST,
             deliverShow: false,
+            form: {
+                express_type: undefined, // 快递方式
+                waybill: '', // 物流单号
+                harbour: '', // 发货港口
+                receive_type: undefined, // 收货方式
+                freight_price: '', // 运费
+                pay_method: undefined, // 收款方式
+                // pay_clause: undefined, // 支付条款
+                remark: '', // 备注
+                company_uid: undefined,
+                waybill_uid: '', // 快递单号
+                warehouse_id: '',
+                target_type: '',
+                payment: '', // 收款金额
+            },
+            waybillDetail:{},
+            takeDeliverShow: false,
             waybillShow: false,
             modalShow: false,
             modalLoading: false,
@@ -261,8 +322,14 @@ export default {
             this.invoiceId = id
             this.pageChange(1)
         },
-        handleTakeDeliverShow(id) {
+        handleDeliverShow(id) {
             this.deliverShow = true;
+            this.invoiceId = id
+            console.log(this.invoiceId)
+            this.pageChange(1)
+        },
+        handleTakeDeliverShow(id) {
+            this.takeDeliverShow = true;
             this.invoiceId = id
             console.log(this.invoiceId)
             this.pageChange(1)
@@ -289,7 +356,7 @@ export default {
             });
         },
         // 确认收货
-        handleDeliver() {
+        handleTakeDeliver() {
             console.log("rowSelection", this.selectedRowItems)
             let form = Core.Util.deepCopy(this.form);
             const param = {
@@ -312,7 +379,7 @@ export default {
             }
             Core.Api.Purchase.takeDeliver(param).then(res => {
                 this.$message.success('收货成功')
-                this.deliverShow = false
+                this.takeDeliverShow = false
                 this.getWaybillDetail();
                 this.getList()
             }).catch(err => {
@@ -325,6 +392,53 @@ export default {
             this.target_id = id
             this.getWaybillInfo()
             this.waybillShow = true;
+        },
+        // 确认发货
+        handleDeliver() {
+            console.log("rowSelection",this.selectedRowItems)
+            let form = Core.Util.deepCopy(this.form);
+            const param = {
+                id: this.orderId,
+                invoice_id: this.invoiceId,
+                remark: form.remark,
+            }
+            let adminRequire = [];
+
+            if(this.$auth('ADMIN')) {
+                adminRequire = [
+                    { key: 'express_type', msg: '请选择快递方式' },
+                    { key: 'harbour', msg: '请填写发货港口' },
+                    { key: 'freight_price', msg: '请填写运费' },
+                    // { key: 'pay_clause', msg: '请选择支付条款' },
+                ]
+                param['waybill'] = form['waybill'];
+            } else if (this.$auth('DISTRIBUTOR')) {
+                adminRequire = [
+                    { key: 'receive_type', msg: '请选择收货方式' },
+                    { key: 'freight_price', msg: '请填写运费' },
+                ]
+                param['waybill_uid'] = form['waybill_uid'];
+            }
+            for(let index in adminRequire) {
+                let key = adminRequire[index].key
+                if(!this.form[key]) {
+                    return this.$message.warning(adminRequire[index].msg)
+                } else {
+                    param[key] = form[key];
+                }
+            }
+            param['freight_price'] = Math.round(param['freight_price'] * 100)
+            param['item_list'] = this.selectedRowItems
+            Core.Api.Purchase.deliver(param).then(res => {
+                this.$message.success('发货成功')
+                this.deliverShow = false
+                this.getWaybillDetail();
+                this.getList()
+            }).catch(err => {
+                console.log('handleDeliver err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
         },
         getWaybillInfo() {  // 获取 发货记录
             this.loading = true;

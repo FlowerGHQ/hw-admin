@@ -46,6 +46,12 @@
         </div>
         <div class="settle-content" v-if="shopCartList.length">
             <div class="title-area">{{ $t('i.summary') }}</div>
+            <div class="settle-item top">
+                <p class="name">{{ $t('n.name') }}</p>
+                <span class="price">{{ $t('i.amount') }}</span>
+                <span class="price">{{ $t('i.unit_price') }}</span>
+                <span class="price">{{ $t('i.total_price') }}</span>
+            </div>
             <div class="settle-item" v-for="item of shopCartList" :key="item.id">
                 <p class="name">
                     {{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}
@@ -53,10 +59,14 @@
                         {{$Util.itemSpecFilter(item.item.attr_list)}}
                     </span>
                 </p>
+                <span class="price">{{item.amount}}个</span>
+                <span class="price">{{currency}} {{$Util.countFilter(item.item[priceKey + unitMap[currency].key])}}</span>
                 <span class="price">{{currency}} {{$Util.countFilter(item.item[priceKey + unitMap[currency].key] * item.amount)}}</span>
             </div>
+
             <div class="settle-item sum">
                 <p class="name">{{ $t('p.total') }}</p>
+
                 <span class="price">{{currency}} {{sum_price}}</span>
             </div>
             <a-button type="primary" ghost @click="routerChange('settle')">{{ $t('i.settle') }}</a-button>
@@ -508,7 +518,14 @@ export default {
                 }
                 .price {
                     width: 100px;
-                    text-align: right;
+                    text-align: left;
+                }
+                &.top {
+                    font-weight: 500;
+                    padding: 16px 0;
+                    border-top: 1px solid #E6EAEE;
+                    border-bottom: 1px solid #E6EAEE;
+                    margin: 14px 0 0px;
                 }
                 &.sum {
                     font-weight: 500;

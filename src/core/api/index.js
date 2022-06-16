@@ -272,6 +272,7 @@ const apiList = {
 	    delete: ['PostJson', 'purchase-order-pay/delete'], // 采购订单收款明细列表
         itemByIdList: ['PostJson', 'purchase-order-item/list-by-item-id'], // 采购订单明细列表
         payment: ['PostJson', 'purchase-order/payment'], // 支付订单
+	    outStock: ['PostJson', 'purchase-order/out-stock'], // 订单发货
         deliver: ['PostJson', 'purchase-order/deliver'], // 订单发货
 	    // takeDelivery: ['PostJson', 'purchase-order/take-delivery'], // 订单发货
         takeDeliver: ['PostJson', 'purchase-order/take-deliver'], // 确认收货

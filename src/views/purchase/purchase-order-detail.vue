@@ -17,7 +17,7 @@
 <!--                    <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.confirm_payment')}}</a-button>-->
 <!--                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && (detail.type !== TYPE. || PAYMENT_STATUS.PAY_ALL)" @click="handleModalShow('deliver')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.ship')}}</a-button>-->
 <!--                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && detail.type !== TYPE. && $auth('ADMIN')" @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>-->
-                    <a-button type="primary" v-if="(detail.status === STATUS.WAIT_DELIVER  || detail.status === STATUS.WAIT_TAKE_DELIVER) && $auth('purchase-order.deliver') " @click="handleModalShow('deliver')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.ship')}}</a-button>
+                    <a-button type="primary" v-if="(detail.status === STATUS.WAIT_DELIVER  || detail.status === STATUS.WAIT_TAKE_DELIVER) && $auth('purchase-order.deliver') " @click="handleModalShow('out_stock')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.out_stock')}}</a-button>
                     <template v-if="detail.type === FLAG_ORDER_TYPE.PRE_SALES">
                         <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') " @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>
                     </template>
@@ -306,58 +306,8 @@
             </template>
         </a-modal>
         <!-- 确认发货 -->
-        <a-modal v-model:visible="deliverShow" :title="$t('p.shipping_confirmation')" @ok="handleDeliver">
+        <a-modal v-model:visible="outStockShow" :title="$t('p.shipping_confirmation')" @ok="handleOutStock">
             <div class="modal-content">
-                <template v-if="$auth('ADMIN')">
-                    <div class="form-item required">
-                        <div class="key">{{ $t('p.delivery_method') }}</div>
-                        <div class="value">
-                            <a-select v-model:value="form.express_type" :placeholder="$t('def.select')">
-                                <a-select-option v-for="courier of courierTypeList" :key="courier.value" :value="courier.value">{{courier.name}}</a-select-option>
-                            </a-select>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="key">{{ $t('p.sn_number') }}:</div>
-                        <div class="value">
-                            <a-input v-model:value="form.waybill" :placeholder="$t('def.input')"/>
-                        </div>
-                    </div>
-                    <div class="form-item required">
-                        <div class="key">{{ $t('p.shipping_port') }}:</div>
-                        <div class="value">
-                            <a-input v-model:value="form.harbour" :placeholder="$t('def.input')"/>
-                        </div>
-                    </div>
-                </template>
-                <template v-if="$auth('DISTRIBUTOR')">
-                    <div class="form-item required">
-                        <div class="key">{{ $t('p.ship') }}</div>
-                        <div class="value">
-                            <a-select v-model:value="form.receive_type" :placeholder="$t('def.select')">
-                                <a-select-option v-for="receive of receiveTypeList" :key="receive.value" :value="receive.value">{{receive.name}}</a-select-option>
-                            </a-select>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="key">{{ $t('p.sn_number') }}:</div>
-                        <div class="value">
-                            <a-input v-model:value="form.waybill_uid" :placeholder="$t('def.input')"/>
-                        </div>
-                    </div>
-                </template>
-                <div class="form-item required">
-                    <div class="key">{{$t('p.freight')}}:</div>
-                    <div class="value">
-                        <a-input-number
-                            v-model:value="form.freight_price"
-                            placeholder="0.00"
-                            style="width: 120px"
-                            :min="0.00"
-                            :precision="2"
-                            :prefix="`${$Util.priceUnitFilter(detail.currency)}`" />
-                    </div>
-                </div>
 <!--                <template v-if="$auth('ADMIN')">-->
 <!--                    <div class="form-item required">-->
 <!--                        <div class="key">{{$t('p.payment_terms')}}:</div>-->
@@ -543,7 +493,7 @@ export default {
             payMethodList: PURCHASE.PAY_METHOD_LIST,
             paymentTimeList: DISTRIBUTOR.PAY_TIME_LIST,
 
-            deliverShow: false,
+            outStockShow: false,
             companyUidList: WAYBILL.COMPANY_LIST,
             courierTypeList: WAYBILL.COURIER_LIST,
             receiveTypeList: WAYBILL.RECEIPT_LIST,
@@ -878,8 +828,8 @@ export default {
                 case "payment":
                     this.paymentShow = true
                     break;
-                case "deliver":
-                    this.deliverShow = true
+                case "out_stock":
+                    this.outStockShow = true
                     break;
                 case "transfer":
                     this.transferShow = true
@@ -948,6 +898,42 @@ export default {
                 this.loading = false;
             });
         },
+        // 确认出库
+        handleOutStock() {
+            console.log("rowSelection",this.selectedRowItems)
+            let form = Core.Util.deepCopy(this.form);
+            const param = {
+                id: this.id,
+                warehouse_id: form.warehouse_id,
+                target_type: form.target_type,
+                remark: form.remark,
+            }
+            let adminRequire = [
+                { key: 'warehouse_id', msg: '请选择仓库' },
+                { key: 'target_type', msg: '请选择类型' },
+            ];
+
+            for(let index in adminRequire) {
+                let key = adminRequire[index].key
+                if(!this.form[key]) {
+                    return this.$message.warning(adminRequire[index].msg)
+                } else {
+                    param[key] = form[key];
+                }
+            }
+            param['freight_price'] = Math.round(param['freight_price'] * 100)
+            param['item_list'] = this.selectedRowItems
+            Core.Api.Purchase.outStock(param).then(res => {
+                this.$message.success('发货成功')
+                this.outStockShow = false
+                this.getWaybillDetail();
+                this.getList()
+            }).catch(err => {
+                console.log('handleDeliver err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
         // 确认发货
         handleDeliver() {
             console.log("rowSelection",this.selectedRowItems)
@@ -990,7 +976,7 @@ export default {
             param['item_list'] = this.selectedRowItems
             Core.Api.Purchase.deliver(param).then(res => {
                 this.$message.success('发货成功')
-                this.deliverShow = false
+                this.outStockShow = false
                 this.getWaybillDetail();
                 this.getList()
             }).catch(err => {
