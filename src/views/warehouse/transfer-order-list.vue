@@ -528,7 +528,7 @@ export default {
                 },
             });
         },
-        
+
         // 调货单审核
         handleTransferAuditShow(id) { // 显示弹框
             this.auditShow = true
@@ -564,7 +564,7 @@ export default {
                 cancelText: '取消',
                 onOk() {
                     Core.Api.Transfer.cancel({id}).then(() => {
-                        _this.$message.success('取消成功');
+                        _this.$message.success(_this.$('pop_up.canceled'));
                         _this.getStatusList();
                         _this.getTableData();
                     }).catch(err => {
@@ -593,7 +593,7 @@ export default {
                 Core.Api.Store.listAll().then(res => {
                     console.log('getStoreList res', res);
                     this.storeList = res.list
-                    
+
                 })
             }  else if (this.orgType < ORG_TYPE.STORE) {
                 Core.Api.Store.listAll().then(res => {

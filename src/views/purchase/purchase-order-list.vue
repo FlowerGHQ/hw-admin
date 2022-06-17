@@ -249,7 +249,7 @@ export default {
                 {zh: '待发货', en: 'Wait for delivery', value: '0', color: 'orange',  key: '200'},
                 {zh: '已发货', en: 'Shipped',value: '0', color: 'primary',  key: '300'},
                 {zh: '部分收货', en: 'Received',value: '0', color: 'primary',  key: '330'},
-                {zh: '已收货', en: 'Received',value: '0', color: 'primary',  key: '360'},
+                {zh: '全部收货', en: 'All Received',value: '0', color: 'primary',  key: '360'},
                 {zh: '交易完成', en: 'Transaction completed', value: '0', color: 'green',  key: '400'},
                 {zh: '交易取消', en: 'Canceled', value: '0', color: 'grey',  key: '-100'},
             ]

@@ -400,12 +400,19 @@ const Util = {
         let value = MAP[val + ''] || {}
         return value[to] || '-'
     },
-    itemSpecFilter(attr_list) {
+    itemSpecFilter(attr_list, to='zh') {
         if (!(attr_list instanceof Array) || !attr_list.length) {
             return '-'
         }
-        let attr = attr_list.map(i => i.value)
-        return attr.join(' ')
+        if (to === 'zh'){
+	        let attr = attr_list.map(i => i.value)
+	        return attr.join(' ')
+        } else {
+	        let attr = attr_list.map(i => i.value_en)
+	        return attr.join(' ')
+        }
+
+
     },
 	itemFlagEntityFilter(val, to= 'zh') {
 		const MAP = Const.ITEM.FLAG_ENTITY_MAP

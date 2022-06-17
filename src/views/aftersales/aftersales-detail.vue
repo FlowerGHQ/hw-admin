@@ -616,7 +616,7 @@ export default {
                     Core.Api.Aftersales.cancel({
                         id: _this.id
                     }).then(res => {
-                        _this.$message.success('取消成功')
+                        _this.$message.success(_this.$('pop_up.canceled'))
                         _this.routerChange('list')
                     }).catch(err => {
                         console.log('handleCancel err', err)

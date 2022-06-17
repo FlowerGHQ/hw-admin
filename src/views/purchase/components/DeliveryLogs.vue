@@ -26,13 +26,13 @@
                                 {{ $Util.timeFilter(text) }}
                             </template>
                             <template v-if="column.key === 'operation'">
-                                <a-button type='link' @click="handleWaybillShow(record.id)">物流信息</a-button>
+                                <a-button type='link' @click="handleWaybillShow(record.id)">{{ $t('p.logistics') }}</a-button>
                                 <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
-                                    <a-button type='link' v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT && record.status === Core.Const.STOCK_RECORD.STATUS.CLOSE"  @click="handleDeliverShow(record.id)">确认发货</a-button>
+                                    <a-button type='link' v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT && record.status === Core.Const.STOCK_RECORD.STATUS.CLOSE"  @click="handleDeliverShow(record.id)">{{ $t('p.confirm_delivery') }}</a-button>
                                 </template>
                                 <template v-if="authOrg(detail.org_id, detail.org_type)">
-                                    <a-button type='link' v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT && record.status === Core.Const.STOCK_RECORD.STATUS.CLOSE"  @click="handleTakeDeliverShow(record.id)">确认收货</a-button>
-                                    <a-button type='link' v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT" @click="handleModalShow(record.id)">收货明细</a-button>
+                                    <a-button type='link' v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT && record.status === Core.Const.STOCK_RECORD.STATUS.CLOSE"  @click="handleTakeDeliverShow(record.id)">{{ $t('p.confirm_the_take_delivery') }}</a-button>
+                                    <a-button type='link' v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT" @click="handleModalShow(record.id)">{{ $t('p.take_delivery_detail') }}</a-button>
                                 </template>
 
                             </template>

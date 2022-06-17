@@ -6,7 +6,7 @@
             <div class="btns-area">
                 <template v-if="detail.status >= STATUS.WAIT_TAKE_DELIVER && $auth('ADMIN') && $auth('purchase-order.export')">
                     <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
-                    <a-button @click="handleExportIn"><i class="icon i_download"/>导出订单</a-button>
+                    <a-button @click="handleExportIn"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>
                 </template>
                 <template v-if="!$auth('ADMIN') && $auth('purchase-order.export')">
                     <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
@@ -27,8 +27,8 @@
 <!--                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER" @click="handleReceived()"><i class="icon i_goods"/>确认收货</a-button>-->
 
 <!--                    {{detail.status}}-->
-                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_PAY || (detail.payment_status !== PAYMENT_STATUS.WAIT_PAY && detail.WAIT_DELIVER)" @click="handleCancel()"><i class="icon i_close_c"/>取消</a-button>
-                    <a-button type="primary" v-if="detail.status === STATUS.DEAL_SUCCESS" @click="routerChange('aftersales')" ghost><i class="icon i_edit"/>申请售后</a-button>
+                    <a-button type="primary" v-if="detail.status === STATUS.WAIT_PAY || (detail.payment_status !== PAYMENT_STATUS.WAIT_PAY && detail.WAIT_DELIVER)" @click="handleCancel()"><i class="icon i_close_c"/>{{ $t('def.cancel')}}</a-button>
+                    <a-button type="primary" v-if="detail.status === STATUS.DEAL_SUCCESS" @click="routerChange('aftersales')" ghost><i class="icon i_edit"/>{{ $t('tapply_for_after_sales')}}</a-button>
                 </template>
             </div>
         </div>
@@ -69,7 +69,7 @@
                                     {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(text)}}
                                 </template>
                                 <template v-if="column.key === 'spec'">
-                                    {{$Util.itemSpecFilter(text)}}
+                                    {{$Util.itemSpecFilter(text, $i18n.locale )}}
                                 </template>
                             </template>
                             <template #summary>
@@ -141,7 +141,7 @@
                 </a-collapse-panel>
 
                 <!-- 明细列表 -->
-                <a-collapse-panel key="ItemInfo" header="付款明细列表" class="gray-collapse-panel">
+                <a-collapse-panel key="ItemInfo" :header="$t('payment_detail')" class="gray-collapse-panel">
                     <div class="panel-content">
                         <a-table :columns="payColumns" :data-source="payList" :scroll="{ x: true }"
                             :row-key="record => record.id" :pagination='false'>
@@ -170,10 +170,10 @@
                                 </template>
                                 <template v-if="column.key === 'operation'">
                                     <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
-                                        <a-button type='link' v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT" @click="handlePayAuditShow(record.id)">审核</a-button>
+                                        <a-button type='link' v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT" @click="handlePayAuditShow(record.id)">{{$t('p.audit')}}</a-button>
                                     </template>
                                     <template v-if="authOrg(detail.org_id, detail.org_type)">
-                                        <a-button type='link' v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT" @click="handlePayCancel(record.id)">取消</a-button>
+                                        <a-button type='link' v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT" @click="handlePayCancel(record.id)">{{$t('def.cancel')}}</a-button>
                                     </template>
                                 </template>
                             </template>
@@ -242,9 +242,9 @@
                 <!-- 国外暂无支付宝微信银行卡支付方式，先隐藏 -->
                 <!-- 支付方式 -->
                 <div class="form-item required">
-                    <div class="key">收款方式</div>
+                    <div class="key">{{$t('p.payment_method')}}</div>
                     <div class="value">
-                        <a-select v-model:value="form.pay_method" placeholder="请选择收款方式">
+                        <a-select v-model:value="form.pay_method" :placeholder="$t('p.please_select_payment_method')">
                             <a-select-option v-for="pay of payMethodList" :key="pay.value" :value="pay.value">{{pay.name}}</a-select-option>
                         </a-select>
                     </div>
@@ -552,12 +552,12 @@ export default {
         },
         payColumns() {
             let columns = [
-                { title: "附件", dataIndex: 'attachment' },
-                { title: "支付方式", dataIndex: 'type' },
-                { title: "状态", dataIndex: 'status' ,key: 'status'},
-                { title: "支付金额", dataIndex: 'price', key: 'money'},
-                { title: "备注", dataIndex: 'remark', key: 'item' },
-                { title: "创建时间", dataIndex: 'create_time', key: 'time' },
+                { title: this.$t('p.attachment'), dataIndex: 'attachment' },
+                { title: this.$t('p.payment_method'), dataIndex: 'type' },
+                { title: this.$t('p.status'), dataIndex: 'status' ,key: 'status'},
+                { title: this.$t('p.pay_amount'), dataIndex: 'price', key: 'money'},
+                { title: this.$t('p.remark'), dataIndex: 'remark', key: 'item' },
+                { title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
             ]
             return columns
@@ -1017,7 +1017,7 @@ export default {
                     Core.Api.Purchase.cancel({
                         id: _this.id
                     }).then(res => {
-                        _this.$message.success('取消成功')
+                        _this.$message.success(_this.$('pop_up.canceled'))
                         _this.routerChange('orderList')
                     }).catch(err => {
                         console.log('handleCancel err', err)
@@ -1118,7 +1118,7 @@ export default {
                     Core.Api.Purchase.delete({
                             id: id
                         }).then((res)=>{
-                        _this.$message.success('取消成功');
+                        _this.$message.success(_this.$('pop_up.canceled'));
                         _this.getList();
                     }).catch(err => {
                         console.log('handleReceived err', err)

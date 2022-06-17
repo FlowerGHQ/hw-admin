@@ -180,7 +180,7 @@ export default {
                 case 'aftersales': // 退款单 详情
                     routeUrl = this.$router.resolve({
                         path: '/aftersales/aftersales-detail',
-                        query: {id: this.detail.source_uid}
+                        query: {id: this.detail.source_id}
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
@@ -209,7 +209,7 @@ export default {
                     Core.Api.Refund.cancel({
                         id: _this.id
                     }).then(res => {
-                        _this.$message.success('取消成功')
+                        _this.$message.success(_this.$('pop_up.canceled'))
                         _this.routerChange('list')
                     }).catch(err => {
                         console.log('handleCancel err', err)

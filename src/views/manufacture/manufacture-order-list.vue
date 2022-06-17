@@ -233,7 +233,7 @@ export default {
                 cancelText: '取消',
                 onOk() {
                     Core.Api.ProductionOrder.cancel({id}).then(() => {
-                        _this.$message.success('取消成功');
+                        _this.$message.success(_this.$('pop_up.canceled'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleCancel err", err);
