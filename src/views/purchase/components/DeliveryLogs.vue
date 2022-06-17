@@ -380,8 +380,8 @@ export default {
             Core.Api.Purchase.takeDeliver(param).then(res => {
                 this.$message.success('收货成功')
                 this.takeDeliverShow = false
-                this.getWaybillDetail();
-                this.getList()
+                this.getInvoiceList();
+                this.$emit('Submit')
             }).catch(err => {
                 console.log('handleDeliver err', err)
             }).finally(() => {
@@ -390,7 +390,7 @@ export default {
         },
         handleWaybillShow(id){
             this.target_id = id
-            this.getWaybillInfo()
+            this.getInvoiceList()
             this.waybillShow = true;
         },
         // 确认发货
@@ -432,8 +432,8 @@ export default {
             Core.Api.Purchase.deliver(param).then(res => {
                 this.$message.success('发货成功')
                 this.deliverShow = false
-                this.getWaybillDetail();
-                this.getList()
+                this.getInvoiceList();
+                this.$emit('Submit')
             }).catch(err => {
                 console.log('handleDeliver err', err)
             }).finally(() => {

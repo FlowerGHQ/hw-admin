@@ -182,12 +182,12 @@
                 </a-collapse-panel>
 
                 <!-- 发货记录 -->
-                <DeliveryLogs :order-id='id' :detail='detail' :type="Core.Const.STOCK_RECORD.TYPE.OUT"/>
+                <DeliveryLogs :order-id='id' :detail='detail' :type="Core.Const.STOCK_RECORD.TYPE.OUT" @submit="getList"/>
                 <!-- 收货记录 -->
-                <DeliveryLogs :order-id='id' :detail='detail' :type="Core.Const.STOCK_RECORD.TYPE.IN"/>
+                <DeliveryLogs :order-id='id' :detail='detail' :type="Core.Const.STOCK_RECORD.TYPE.IN" @submit="getList"/>
 
                 <!-- 上传附件 -->
-                <AttachmentFile :target_id='id' :target_type='Core.Const.ATTACHMENT.TARGET_TYPE.PURCHASE_ORDER' :detail='detail' @submit="getPurchaseInfo" ref="AttachmentFile"/>
+                <AttachmentFile :target_id='id' :target_type='Core.Const.ATTACHMENT.TARGET_TYPE.PURCHASE_ORDER' :detail='detail' @submit="getList" ref="AttachmentFile"/>
 
                 <!-- 物流信息 -->
                 <a-collapse-panel key="WaybillInfo" :header="$t('n.delivery_information')" class="gray-collapse-panel">
