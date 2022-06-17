@@ -474,7 +474,7 @@ const messages = {
             unit_price: '单价',
 	        export_product_information: '导出商品信息',
 	        attachment: '附件',
-	        payment_method: 'Payment method',
+	        payment_method: '付款方式',
 	        export_purchase: '导出订单',
 	        payment_term: '收款方式',
 	        please_select_payment_method: '请选择收款方式',

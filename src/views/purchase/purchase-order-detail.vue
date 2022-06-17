@@ -28,7 +28,7 @@
 
 <!--                    {{detail.status}}-->
                     <a-button type="primary" v-if="detail.status === STATUS.WAIT_PAY || (detail.payment_status !== PAYMENT_STATUS.WAIT_PAY && detail.WAIT_DELIVER)" @click="handleCancel()"><i class="icon i_close_c"/>{{ $t('def.cancel')}}</a-button>
-                    <a-button type="primary" v-if="detail.status === STATUS.DEAL_SUCCESS" @click="routerChange('aftersales')" ghost><i class="icon i_edit"/>{{ $t('tapply_for_after_sales')}}</a-button>
+                    <a-button type="primary" v-if="detail.status === STATUS.DEAL_SUCCESS" @click="routerChange('aftersales')" ghost><i class="icon i_edit"/>{{ $t('p.apply_for_after_sales')}}</a-button>
                 </template>
             </div>
         </div>
@@ -141,7 +141,7 @@
                 </a-collapse-panel>
 
                 <!-- 明细列表 -->
-                <a-collapse-panel key="ItemInfo" :header="$t('payment_detail')" class="gray-collapse-panel">
+                <a-collapse-panel key="ItemInfo" :header="$t('p.payment_detail')" class="gray-collapse-panel">
                     <div class="panel-content">
                         <a-table :columns="payColumns" :data-source="payList" :scroll="{ x: true }"
                             :row-key="record => record.id" :pagination='false'>
