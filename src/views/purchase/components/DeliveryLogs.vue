@@ -124,7 +124,7 @@
                             </a-select>
                         </div>
                     </div>
-                    <div class="form-item">
+                    <div class="form-item required">
                         <div class="key">{{ $t('p.sn_number') }}:</div>
                         <div class="value">
                             <a-input v-model:value="form.waybill" :placeholder="$t('def.input')"/>
@@ -146,7 +146,7 @@
                             </a-select>
                         </div>
                     </div>
-                    <div class="form-item">
+                    <div class="form-item required">
                         <div class="key">{{ $t('p.sn_number') }}:</div>
                         <div class="value">
                             <a-input v-model:value="form.waybill_uid" :placeholder="$t('def.input')"/>
@@ -409,7 +409,7 @@ export default {
                     { key: 'express_type', msg: '请选择快递方式' },
                     { key: 'harbour', msg: '请填写发货港口' },
                     { key: 'freight_price', msg: '请填写运费' },
-                    // { key: 'pay_clause', msg: '请选择支付条款' },
+                    { key: 'waybill', msg: '物流单号' },
                 ]
                 param['waybill'] = form['waybill'];
             } else if (this.$auth('DISTRIBUTOR')) {

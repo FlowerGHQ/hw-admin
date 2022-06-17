@@ -226,6 +226,7 @@ export default {
                 {zh: '检测', en: 'Check'},
                 {zh: '维修', en: 'Service'},
                 {zh: '结算', en: 'Settle accounts'},
+
             ],
             currStep: 0,
 
@@ -347,6 +348,9 @@ export default {
                     this.currStep = 2;
                     break;
                 case STATUS.SETTLEMENT:
+                    this.currStep = 3;
+                    break;
+                case STATUS.SETTLEMENT_DISTRIBUTOR:
                     this.currStep = 3;
                     break;
                 case STATUS.AUDIT_SUCCESS:
