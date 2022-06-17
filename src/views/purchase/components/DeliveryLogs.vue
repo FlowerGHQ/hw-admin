@@ -389,9 +389,14 @@ export default {
             });
         },
         handleWaybillShow(id){
+            this.handleWaybillClear()
             this.target_id = id
             this.getInvoiceList()
             this.waybillShow = true;
+        },
+        handleWaybillClear(){
+            this.form = Core.Util.deepCopy(this.$options.data().form)
+            this.waybillShow = false;
         },
         // 确认发货
         handleDeliver() {
@@ -434,6 +439,7 @@ export default {
                 this.deliverShow = false
                 this.getInvoiceList();
                 this.$emit('Submit')
+                this.handleWaybillClear()
             }).catch(err => {
                 console.log('handleDeliver err', err)
             }).finally(() => {
