@@ -818,6 +818,16 @@ const routes = [
 			        title: '物料调库',
 		        }
 	        },
+	        {
+		        path: 'material-stock-record',
+		        name: 'MaterialStockRecord',
+		        component: () => import('@/views/production/components/MaterialStockRecord.vue'),
+		        meta: {
+			        roles: [LOGIN_TYPE.ADMIN],
+			        title: '物料调库',
+		        }
+	        },
+
 
 
             {

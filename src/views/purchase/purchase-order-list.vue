@@ -49,6 +49,14 @@
                         </a-select>
                     </div>
                 </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">{{ $t('p.payment_status')}}:</div>
+                    <div class="value">
+                        <a-select v-model:value="searchForm.payment_status" @change="handleSearch" :placeholder="$t('def.select')">
+                            <a-select-option v-for="(item,index) of PAYMENT_STATUS_MAP" :key="index" :value="item.key">{{ item[$i18n.locale] }}</a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">{{ $t('n.order_time') }}:</div>
                     <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
@@ -140,6 +148,8 @@
 import Core from '../../core';
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 const SEARCH_TYPE = Core.Const.PURCHASE.SEARCH_TYPE
+const PAYMENT_STATUS_MAP = Core.Const.PURCHASE.PAYMENT_STATUS_MAP
+
 
 import TimeSearch from '@/components/common/TimeSearch.vue'
 
@@ -153,6 +163,7 @@ export default {
         return {
             LOGIN_TYPE,
             SEARCH_TYPE,
+            PAYMENT_STATUS_MAP,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -179,6 +190,7 @@ export default {
             searchForm: {
                 sn: '',
                 status: undefined,
+                payment_status: undefined,
                 item_type: 0,
                 distributor_id: undefined,
                 agent_id: undefined,

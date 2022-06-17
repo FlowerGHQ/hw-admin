@@ -7,7 +7,7 @@
                 <template v-if="sameOrg(detail.supply_org_id, detail.supply_org_type)">
                     <AuditHandle v-if="detail.status === STATUS.APPLY"
                         btnType='primary' :api-list="['Aftersales', 'audit']" :id="detail.id" @submit="getOrderDetail"
-                        :s-pass="STATUS.AUDIT_PASS" :s-refuse="STATUS.AUDIT_REFUSE"><i class="icon i_audit"/>{{ $t('n.audit') }}
+                        :s-pass="STATUS.AUDIT_PASS" :s-refuse="STATUS.AUDIT_FAIL"><i class="icon i_audit"/>{{ $t('n.audit') }}
                     </AuditHandle>
                     <template v-if="detail.status === STATUS.AUDIT_PASS">
                         <a-button type="primary" @click="handleApplyRefund()" ghost v-if="detail.refund_status === 0 && detail.refund_money"><i class="icon i_settle"/>{{ $t('af.refund') }}</a-button>

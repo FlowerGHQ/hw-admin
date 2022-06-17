@@ -103,11 +103,11 @@
     <!-- 寄出商品 -->
     <div class="form-block" v-if="currStep === 1 && needItemOut">
         <div class="form-title">
-            <div class="title-colorful">选择{{typeMap[form.type]}}商品</div>
+            <div class="title-colorful">选择{{typeMap[form.type][$i18n.locale]}}商品</div>
         </div>
         <div class="form-content">
             <ItemSelect @select="handleSelectOutItem" :disabled-checked='itemOutList.map(i => i.item_id)'
-                btn-type='primary' :btnText="`选择${typeMap[form.type]}商品`" btn-class="select-item-btn"/>
+                btn-type='primary' :btnText="`选择${typeMap[form.type][$i18n.locale]}商品`" btn-class="select-item-btn"/>
             <div class="table-container">
                 <a-table :columns="itemOutColumns" :data-source="itemOutList" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'>

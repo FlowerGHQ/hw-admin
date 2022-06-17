@@ -85,7 +85,7 @@
                 <template v-if="column.key === 'operation'">
                     <AuditHandle v-if="record.status === STATUS.APPLY && $auth('after-sales-order.audit') && sameOrg(record.supply_org_id, record.supply_org_type)"
                         btnType='link' :api-list="['Aftersales', 'audit']" :id="record.id" @submit="getTableData"
-                        :s-pass="STATUS.AUDIT_PASS" :s-refuse="STATUS.AUDIT_REFUSE"><i class="icon i_audit"/>{{ $t('n.audit') }}
+                        :s-pass="STATUS.AUDIT_PASS" :s-refuse="STATUS.AUDIT_FAIL"><i class="icon i_audit"/>{{ $t('n.audit') }}
                     </AuditHandle>
                     <template v-if="canEdit(record) && sameOrg(record.org_id, record.org_type)">
                         <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('after-sales-order.edit')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
