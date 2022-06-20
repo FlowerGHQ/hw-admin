@@ -72,27 +72,9 @@
         <a-modal v-model:visible="modalShow" :title="$t('n.upload_attachment')" class="attachment-file-upload-modal" :after-close="handleModalClose">
             <div class="form-title">
                 <div class="form-item required">
-                    <div class="key">{{ $t('wa.area') }}:</div>
+                    <div class="key">uid:</div>
                     <div class="value">
-                        <a-input v-model:value="form.area" :placeholder="$t('def.input')"/>
-                    </div>
-                </div>
-                <div class="form-item required">
-                    <div class="key">{{ $t('wa.row') }}:</div>
-                    <div class="value">
-                        <a-input v-model:value="form.row" :placeholder="$t('def.input')"/>
-                    </div>
-                </div>
-                <div class="form-item required">
-                    <div class="key">{{ $t('wa.layer') }}:</div>
-                    <div class="value">
-                        <a-input v-model:value="form.layer" :placeholder="$t('def.input')"/>
-                    </div>
-                </div>
-                <div class="form-item required">
-                    <div class="key">{{ $t('wa.number') }}:</div>
-                    <div class="value">
-                        <a-input v-model:value="form.number" :placeholder="$t('def.input')"/>
+                        <a-input v-model:value="form.uid" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
             </div>
@@ -166,10 +148,7 @@ export default {
             },
             form: {
                 warehouse_id: '',
-                area: '',
-                row: '',
-                layer: '',
-                number: '',
+                uid: '',
             },
             materialForm: {
                 ids: [],
@@ -188,10 +167,6 @@ export default {
         tableColumns() {
             let tableColumns = [
                 {title: "uid", key: "uid"},
-                {title: this.$t('wa.area'), dataIndex: "area", key: "area"},
-                {title: this.$t('wa.row'), dataIndex: "row", key: "row"},
-                {title: this.$t('wa.layer'), dataIndex: "layer", key: "layer"},
-                {title: this.$t('wa.number'), dataIndex: "number", key: "number"},
                 {title: this.$t('wa.name'), dataIndex: "target_name", key: "name"},
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ];
@@ -302,21 +277,10 @@ export default {
         handleModalSubmit() {
             let form = Core.Util.deepCopy(this.form)
             form.warehouse_id = this.warehouseId
-            if (!form.area) {
-                return this.$message.warning('请输入所在区')
-            }
-            if (!form.row) {
-                return this.$message.warning('请输入所在排')
-            }
-            if (!form.layer) {
-                return this.$message.warning('请输入所在行')
-            }
-            if (!form.number) {
-                return this.$message.warning('请输入所在列')
-            }
             Core.Api.WarehouseLocation.save(form).then(() => {
                 this.$message.success('保存成功')
                 this.handleModalClose()
+                this.getTableData();
                 // this.$emit('submit')
             }).catch(err => {
                 console.log('handleModalSubmit err', err)
