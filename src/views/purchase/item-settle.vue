@@ -280,7 +280,7 @@ export default {
             if (!this.selectIndex) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if(!this.form.flag_order_type) {
+            if(this.$auth('DISTRIBUTOR') && !this.form.flag_order_type) {
                 return this.$message.warning(this.$t('def.enter'))
             }
             if(this.$auth('DISTRIBUTOR') && !this.form.flag_part_shipment && this.form.flag_order_type === PURCHASE.FLAG_ORDER_TYPE.PRE_SALES) {

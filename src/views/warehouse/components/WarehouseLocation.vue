@@ -1,0 +1,360 @@
+<template id="WarehouseLocation">
+    <div class="WarehouseLocation gray-panel no-margin">
+        <div class="panel-content">
+            <div class="table-container">
+                <div class="title-container">
+                    <div class="search-container">
+                        <a-row class="search-area">
+                            <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                                <div class="key">uid：</div>
+                                <div class="value">
+                                    <a-input placeholder="uid" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                                </div>
+                            </a-col>
+                        </a-row>
+                        <div class="btn-area">
+                            <a-button @click="handleSearch" type="primary">{{$t('def.search')}}</a-button>
+                            <a-button @click="handleSearchReset" >{{$t('def.reset')}}</a-button>
+                        </div>
+                    </div>
+                    <div class="btns-area">
+                        <a-button type="primary" ghost @click="handleLocation()" v-if="$auth('warehouse.save')" class="panel-btn">
+                            <i class="icon i_add"/>{{ $t('wa.add_location') }}
+                        </a-button>
+                        <a-button type="primary" ghost @click="handleMaterial()" v-if="$auth('warehouse.save')" class="panel-btn">
+                            <i class="icon i_add"/>{{ $t('wa.allocated_material') }}
+                        </a-button>
+                    </div>
+                </div>
+                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                         :row-key="(record) => record.id" :pagination="false" :row-selection="rowSelection">
+                    <template #bodyCell="{ column, text, record }">
+
+                        <template v-if="column.key === 'count'">
+                            {{ text || 0 }} 件
+                        </template>
+
+                        <template v-if="column.dataIndex === 'type'">
+                            {{ $Util.stockRecordFilter(text, $i18n.locale) }}
+                        </template>
+                        <template v-if="column.dataIndex === 'source_type'">
+                            {{ $Util.sourceFormFilter(text, $i18n.locale) }}
+                        </template>
+                        <template v-if="column.key === 'uid'">
+                            {{ record.uid || '-' }}
+                        </template>
+                        <template v-if="column.key === 'time'">
+                            {{ $Util.timeFilter(text) }}
+                        </template>
+                        <template v-if="column.key === 'operation'">
+                            <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('agent.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
+                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('agent.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                        </template>
+                    </template>
+                </a-table>
+            </div>
+            <div class="paging-container">
+                <a-pagination
+                    v-model:current="currPage"
+                    :page-size="pageSize"
+                    :total="total"
+                    show-quick-jumper
+                    show-size-changer
+                    show-less-items
+                    :show-total="(total) => $t('n.all_total') + ` ${total} ` + $t('in.total')"
+                    :hide-on-single-page="false"
+                    :pageSizeOptions="['10', '20', '30', '40']"
+                    @change="pageChange"
+                    @showSizeChange="pageSizeChange"
+                />
+            </div>
+        </div>
+        <a-modal v-model:visible="modalShow" :title="$t('n.upload_attachment')" class="attachment-file-upload-modal" :after-close="handleModalClose">
+            <div class="form-title">
+                <div class="form-item required">
+                    <div class="key">{{ $t('wa.area') }}:</div>
+                    <div class="value">
+                        <a-input v-model:value="form.area" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('wa.row') }}:</div>
+                    <div class="value">
+                        <a-input v-model:value="form.row" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('wa.layer') }}:</div>
+                    <div class="value">
+                        <a-input v-model:value="form.layer" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('wa.number') }}:</div>
+                    <div class="value">
+                        <a-input v-model:value="form.number" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handleModalClose">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleModalSubmit" type="primary">{{ $t('def.sure') }}</a-button>
+            </template>
+        </a-modal>
+        <a-modal v-model:visible="materialShow" :title="$t('n.upload_attachment')" class="attachment-file-upload-modal" :after-close="handleMaterialClose">
+            <div class="form-title">
+                <div class="form-item required">
+                    <div class="key">{{ $t('wa.material') }}:</div>
+                    <div class="value">
+                        <a-select
+                            v-model:value="materialForm.material_id"
+                            show-search
+                            :placeholder="$t('def.input')"
+                            :default-active-first-option="false"
+                            :show-arrow="false"
+                            :filter-option="false"
+                            :not-found-content="null"
+                            @search="handleMaterialSearch"
+                        >
+                            <a-select-option v-for=" item in materialOptions" :key="item.id" :value="item.id">
+                                {{ item.name }}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handleMaterialClose">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleMaterialSubmit" type="primary">{{ $t('def.sure') }}</a-button>
+            </template>
+        </a-modal>
+    </div>
+</template>
+
+<script>
+import Core from "../../../core";
+
+export default {
+    name: "WarehouseLocation",
+    components: {
+
+    },
+    props: {
+        warehouseId: {
+            type: Number,
+        },
+        detail: {
+            type: Object,
+            default: () => {
+                return {};
+            },
+        },
+    },
+    data() {
+        return {
+            Core,
+            // 加载
+            loading: false,
+            // 分页
+            currPage: 1,
+            pageSize: 10,
+            total: 0,
+            modalShow: false,
+            materialShow: false,
+            searchForm: {
+                uid: '',
+            },
+            form: {
+                warehouse_id: '',
+                area: '',
+                row: '',
+                layer: '',
+                number: '',
+            },
+            materialForm: {
+                ids: [],
+                material_id: '',
+            },
+            selectedRowKeys: [],
+            selectedRowItems: [],
+            selectedRowItemsAll: [],
+
+            tableData: [],
+            materialOptions: [],
+        };
+    },
+    watch: {},
+    computed: {
+        tableColumns() {
+            let tableColumns = [
+                {title: "uid", key: "uid"},
+                {title: this.$t('wa.area'), dataIndex: "area", key: "area"},
+                {title: this.$t('wa.row'), dataIndex: "row", key: "row"},
+                {title: this.$t('wa.layer'), dataIndex: "layer", key: "layer"},
+                {title: this.$t('wa.number'), dataIndex: "number", key: "number"},
+                {title: this.$t('wa.name'), dataIndex: "target_name", key: "name"},
+                { title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
+            ];
+            return tableColumns;
+        },
+        rowSelection() {
+            return {
+                type: 'checkbox',
+                selectedRowKeys: this.selectedRowKeys,
+                preserveSelectedRowKeys: true,
+                onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
+                    this.selectedRowKeys = selectedRowKeys
+                    this.selectedRowItemsAll.push(...selectedRows)
+                    let selectedRowItems = []
+                    selectedRowKeys.forEach(id => {
+                        let element = this.selectedRowItemsAll.find(i => i.id == id)
+                        selectedRowItems.push(element)
+                    });
+                    this.selectedRowItems = selectedRowItems
+                    console.log('rowSelection this.selectedRowKeys:', this.selectedRowKeys,'selectedRowItems:', selectedRowItems)
+                    // this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
+                },
+            };
+        },
+    },
+    mounted() {
+        this.getTableData();
+    },
+    methods: {
+        routerChange(type, item = {}) {
+            let routeUrl = ''
+            switch (type) {
+                case 'detail':
+                    routeUrl = this.$router.resolve({
+                        path: "/warehouse/invoice-detail",
+                        query: {id: item.source_id}
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+                case 'material':
+                    routeUrl = this.$router.resolve({
+                        path: "/production/material-detail",
+                        query: {id: item.target_id}
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+                case 'item':
+                    routeUrl = this.$router.resolve({
+                        path: "/item/item-detail",
+                        query: {id: item.target_id}
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+            }
+        },
+        handleSearch() {
+            this.pageChange(1)
+        },
+        handleSearchReset() {
+            Object.assign(this.searchForm, this.$options.data().searchForm)
+            this.pageChange(1)
+        },
+        pageChange(curr) {
+            // 页码改变
+            this.currPage = curr;
+            this.getTableData();
+        },
+        pageSizeChange(current, size) {
+            // 页码尺寸改变
+            this.pageSize = size;
+            this.getTableData();
+        },
+        getTableData() {
+            // 获取 表格 数据
+            this.loading = true;
+            Core.Api.WarehouseLocation.list({
+                warehouse_id: this.warehouseId,
+                uid: this.searchForm.uid,
+                page: this.currPage,
+                page_size: this.pageSize,
+            }).then(res => {
+                console.log("getTableData res", res);
+                this.total = res.count;
+                this.tableData = res.list;
+            }).catch(err => {
+                console.log("getTableData err", err);
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        handleLocation(id) {
+            this.modalShow = true;
+        },
+        handleModalClose() {
+            this.modalShow = false;
+            Object.assign(this.form, this.$options.data().form)
+            // this.selectItem = {}
+        },
+        handleMaterial(id) {
+            this.materialShow = true;
+        },
+        handleMaterialClose() {
+            this.materialShow = false;
+            Object.assign(this.materialForm, this.$options.data().materialForm)
+            // this.selectItem = {}
+        },
+
+        handleModalSubmit() {
+            let form = Core.Util.deepCopy(this.form)
+            form.warehouse_id = this.warehouseId
+            if (!form.area) {
+                return this.$message.warning('请输入所在区')
+            }
+            if (!form.row) {
+                return this.$message.warning('请输入所在排')
+            }
+            if (!form.layer) {
+                return this.$message.warning('请输入所在行')
+            }
+            if (!form.number) {
+                return this.$message.warning('请输入所在列')
+            }
+            Core.Api.WarehouseLocation.save(form).then(() => {
+                this.$message.success('保存成功')
+                this.handleModalClose()
+                // this.$emit('submit')
+            }).catch(err => {
+                console.log('handleModalSubmit err', err)
+            })
+        },
+        handleMaterialSearch(name) {
+            Core.Api.Material.list({name: name}).then(res => {
+                this.materialOptions = res.list
+            })
+        },
+        handleMaterialSubmit() {
+            this.materialForm.ids = this.selectedRowKeys;
+            if (this.materialForm.ids === []) {
+                return
+            }
+            if (!this.materialForm.material_id) {
+                return
+            }
+
+            Core.Api.MaterialWarehouseLocation.saveList({
+                ids: this.materialForm.ids,
+                target_id: this.materialForm.material_id,
+                target_type: this.Core.Const.ITEM.TARGET_TYPE_MAP.MATERIAL
+            }).then(res => {
+                this.getTableData();
+                this.handleMaterialClose();
+
+            })
+        },
+
+    },
+};
+</script>
+
+<style lang="less" scoped>
+.WarehouseLocation {
+    .search-container{
+        background-color: #ffffff;
+    }
+}
+</style>

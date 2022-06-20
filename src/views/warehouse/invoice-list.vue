@@ -204,6 +204,7 @@ export default {
                 {zh: '审核通过', en: 'Review passed', value: '0', color: 'blue', key: STATUS.AUDIT_PASS},
                 {zh: '审核失败', en: 'Review failed', value: '0', color: 'red', key: STATUS.AUDIT_REFUSE},
                 {zh: '入库完成', en: 'In the warehouse', value: '0', color: 'green', key: STATUS.CLOSE},
+                {zh: '已发货', en: 'Delivery', value: '0', color: 'green', key: STATUS.DELIVERY},
                 {zh: '已取消', en: 'Cancelled', value: '0', color: 'grey', key: STATUS.CANCEL},
             ]
             if (this.$auth('ADMIN')) {

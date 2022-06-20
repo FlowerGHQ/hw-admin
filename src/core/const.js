@@ -796,6 +796,7 @@ let Const = {
             AUDIT_PASS: 20, //审核通过
             FINANCE_PASS: 30, //财务审核
             CLOSE: 40, //已完成
+	        DELIVERY: 50, //已完成
             AUDIT_REFUSE: -10,//审核失败
             CANCEL: -20, // 取消
         },

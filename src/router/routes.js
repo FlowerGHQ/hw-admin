@@ -844,7 +844,7 @@ const routes = [
 
         ]
     },
-	{ // 仓库管理
+	{ // 生产管理
 		path: '/manufacture',
 		component: Layout,
 		redirect: '/manufacture/manufacture-list',
