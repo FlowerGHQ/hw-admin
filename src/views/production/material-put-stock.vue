@@ -1,7 +1,7 @@
 <template>
     <div id="MaterialPutStock" class="edit-container">
         <div class="title-container">
-            <div class="title-area">{{$t('i.material_put_stock')}}</div>
+            <div class="title-area">{{ $t('i.material_put_stock') }}</div>
         </div>
         <div class="form-block"> <!-- 基本信息 -->
             <div class="form-title">
@@ -57,6 +57,27 @@
                     <div class="key">物料名称</div>
                     <div class="value">
                         <a-input v-model:value="form.name" disabled/>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <div class="key">库位号</div>
+                    <div class="value">
+                        <a-select
+                            v-model:value="form.warehouse_location_id"
+                            show-search
+                            placeholder="请输入物料编码"
+                            :default-active-first-option="false"
+                            :show-arrow="false"
+                            :filter-option="false"
+                            :not-found-content="null"
+                            @search="handleWarehouseLocationSearch"
+
+                        >
+                            <a-select-option v-for=" item in warehouseLocationopTions" :key="item.warehouse_location_id" :value="item.warehouse_location_id">
+                                {{item.warehouse_location_uid}}
+                            </a-select-option>
+
+                        </a-select>
                     </div>
                 </div>
                 <div class="form-item">
@@ -146,7 +167,7 @@ export default {
             // 加载
             loading: false,
             warehouse_id: '',
-            uid:'',
+            uid: '',
             form: {
                 id: '',
                 name: '',
@@ -161,6 +182,7 @@ export default {
                 stock_update_time: '',
                 remark: '',
                 image: '',
+                warehouse_location_id: '',
             },
             gross_weight: '',
             supplierList: [],
@@ -168,6 +190,7 @@ export default {
             configTemp: [],
             options: [],
             warehouseOptions: [],
+            warehouseLocationopTions: [],
 
         };
     },
@@ -218,15 +241,29 @@ export default {
         handleChange() {
             this.id = this.form.id
             this.getMaterialDetail();
-
-
         },
+        handleWarehouseLocationSearch(uid) {
+            Core.Api.MaterialWarehouseLocation.list({
+                warehouse_id: this.warehouse_id,
+                target_id: this.form.id,
+                target_type: TARGET_TYPE_MAP.MATERIAL,
+                warehouse_location_uid: uid,
+            }).then(res => {
+                this.warehouseLocationopTions = res.list
+            })
+        },
+        handleWarehouseLocationChange() {
+            // this.id = this.form.id
+            this.getMaterialDetail();
+        },
+
         handleWarehouseSearch(name) {
-            Core.Api.Warehouse.list({name: name}).then(res => {
+            Core.Api.Warehouse.list({name: name, type: Core.Const.WAREHOUSE.TYPE.MATERIAL}).then(res => {
                 this.warehouseOptions = res.list
             })
         },
         handleWarehouseByMaterialChange() {
+            this.uid = ""
             if (!this.form.id) {
                 console.log(1)
                 return
@@ -239,7 +276,7 @@ export default {
                 material_code: this.form.code,
                 warehouse_id: this.warehouse_id
             }).then(res => {
-                if (res.material !== null){
+                if (res.material !== null) {
                     this.form.stock = res.material.stock.stock
                     this.form.stock_update_time = this.$Util.timeFormat(res.material.stock.update_time)
                 } else {
@@ -247,7 +284,7 @@ export default {
                     this.form.stock_update_time = ""
                 }
 
-                this.uid = ""
+
             })
         },
         handleSubmit() {
@@ -265,12 +302,14 @@ export default {
                         target_id: _this.form.id,
                         target_type: TARGET_TYPE_MAP.MATERIAL,
                         type: STOCK_RECORD.TYPE.IN,
+                        warehouse_location_id: _this.form.warehouse_location_id,
                         count: _this.form.amount
 
                     }).then((res) => {
-                        _this.uid = res.uid
+
                         _this.$message.success(_this.$t('pop_up.operate'))
                         _this.handleWarehouseByMaterialChange();
+                        _this.uid = res.uid
                         _this.form.amount = undefined
                     }).catch(err => {
                         console.log("handleComplete err", err);

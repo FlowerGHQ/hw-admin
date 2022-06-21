@@ -43,9 +43,15 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">物料名称</div>
+                    <div class="key">物料编码</div>
                     <div class="value">
                         <a-input v-model:value="form.code" disabled/>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <div class="key">库位</div>
+                    <div class="value">
+                        <a-input v-model:value="form.warehouse_location_uid" disabled/>
                     </div>
                 </div>
                 <div class="form-item">
@@ -148,6 +154,7 @@ export default {
                 encapsulation_size: '',
                 stock_balance: '',
                 stock_update_time: '',
+                warehouse_location_uid: '',
                 remark: '',
                 image: '',
             },
@@ -232,6 +239,7 @@ export default {
                     this.form = res.material
                     this.form.stock_update_time = this.$Util.timeFormat(res.material.stock.update_time != undefined ? res.material.stock.update_time: res.material.stock.create_time)
                     this.form.stock = res.material.stock.stock
+                    this.form.warehouse_location_uid = res.warehouse_location_uid
                     this.form.record_balance = res.record_balance
                 }
 
