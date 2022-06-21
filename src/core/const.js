@@ -6,7 +6,7 @@ import defult_file from '@images/defult_file.png'
 
 
 // let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' // 正式
-let OSS_POINT = 'https://rebuild-mel-erp.oss-cn-hangzhou.aliyuncs.com' //
+let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' //
 let URL_POINT = 'https://eos-api.hw.innotick.com'
 
 switch (window.location.hostname) {
