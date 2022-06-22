@@ -125,8 +125,8 @@ export default {
         imageLoadCallback(width, height, index) {
             let cvs = this.$refs[`exploreCanvas${index}`];
             if(!cvs) return;
-            if(cvs.length > 0) return;
-            if(Array.isArray(cvs) !== true) {
+            // if(cvs.length > 0) return;
+            if(Array.isArray(cvs) === false) {
                 cvs = [cvs]
             }
             this.canvasGroup[index] = cvs
@@ -211,6 +211,7 @@ export default {
         width: 800px;
         .carousel-item {
             position: relative;
+            padding-bottom: 150px;
             >img {
                 width: 800px;
             }
