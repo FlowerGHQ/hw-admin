@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">{{ $t('p.details')}}</div>
             <div class="btns-area">
-                <template v-if="detail.status >= STATUS.WAIT_TAKE_DELIVER && $auth('ADMIN') && $auth('purchase-order.export')">
+                <template v-if="$auth('ADMIN') && $auth('purchase-order.export')">
                     <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
                     <a-button @click="handleExportIn"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>
                 </template>
