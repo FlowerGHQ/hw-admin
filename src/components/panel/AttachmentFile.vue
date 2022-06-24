@@ -62,7 +62,7 @@
         </div>
         <template #footer>
             <a-button @click="modalShow = false">{{ $t('def.cancel') }}</a-button>
-            <a-button @click="handleModalSubmit" type="primary">{{ $t('def.sure') }}</a-button>
+            <a-button @click="handleModalSubmit" type="primary" :disabled="submitDisabled">{{ $t('def.sure') }}</a-button>
         </template>
     </a-modal>
 </div>
@@ -96,6 +96,7 @@ export default {
                 path: '',
                 type: ''
             },
+            submitDisabled: true,
 
             upload: {
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
@@ -152,6 +153,7 @@ export default {
         // 添加附件
         handleModalShow() {
             this.modalShow = true;
+            this.submitDisabled = true;
         },
         handleModalClose() {
             this.modalShow = false;
@@ -201,6 +203,9 @@ export default {
                 }
                 this.form.path = file.response.data.filename
                 this.form.type = this.form.path.split('.').pop()
+                if (this.form.path){
+                    this.submitDisabled = false
+                }
             }
             this.upload.fileList = fileList
         },
