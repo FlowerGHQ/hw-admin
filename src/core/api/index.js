@@ -155,6 +155,7 @@ const apiList = {
         handle: ['PostJson', 'invoice/handle'], // 处理完成
         cancel: ['PostJson', 'invoice/cancel'], // 取消出入库单
         listByPurchase: ['PostJson', 'invoice/list-by-purchase'],
+        updatePI: ['PostJson', 'invoice/update-pi'], // 修改pi
     },
     InvoiceItem: {
         list: ['PostJson', 'invoice-item/list'], // 出入库单明细列表
@@ -296,6 +297,7 @@ const apiList = {
         payment: ['PostJson', 'purchase-order/payment'], // 支付订单
 	    outStock: ['PostJson', 'purchase-order/out-stock'], // 订单发货
         deliver: ['PostJson', 'purchase-order/deliver'], // 订单发货
+
 	    // takeDelivery: ['PostJson', 'purchase-order/take-delivery'], // 订单发货
         takeDeliver: ['PostJson', 'purchase-order/take-deliver'], // 确认收货
         review: ['PostJson', 'purchase-order/review'], // 评论

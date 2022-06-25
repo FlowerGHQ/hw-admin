@@ -496,6 +496,9 @@ const messages = {
 	        confirm_delivery: '确认发货',
 	        confirm_the_take_delivery: '确认收货',
 	        take_delivery_detail: '收货明细',
+            update_PI: '修改PI',
+            delivery_address: '发货地址',
+
 
         },
         s: {
@@ -1142,7 +1145,9 @@ const messages = {
 	        logistics: 'logistics',
 	        confirm_delivery: 'Confirm the delivery',
 	        confirm_the_take_delivery: 'Confirm the take delivery',
-	        take_delivery_detail: 'take delivery detail',
+	        take_delivery_detail: 'Take delivery detail',
+            update_PI: 'Update PI',
+            delivery_address: 'Delivery address',
         },
         s: {
             store_list: 'Store list',
