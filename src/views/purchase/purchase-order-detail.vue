@@ -6,7 +6,7 @@
             <div class="btns-area">
                 <template v-if="$auth('ADMIN') && $auth('purchase-order.export')">
                     <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
-                    <a-button @click="handleExportIn"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>
+<!--                    <a-button @click="handleExportIn"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>-->
                 </template>
                 <template v-if="!$auth('ADMIN') && $auth('purchase-order.export')">
                     <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
@@ -182,9 +182,9 @@
                 </a-collapse-panel>
 
                 <!-- 发货记录 -->
-                <DeliveryLogs :order-id='id' :detail='detail' :type="Core.Const.STOCK_RECORD.TYPE.OUT" @submit="getList"/>
+                <DeliveryLogs :order-id='id' :detail='detail' :type="Core.Const.STOCK_RECORD.TYPE.OUT" @submit="getList" ref="out_delivery"/>
                 <!-- 收货记录 -->
-                <DeliveryLogs :order-id='id' :detail='detail' :type="Core.Const.STOCK_RECORD.TYPE.IN" @submit="getList"/>
+                <DeliveryLogs :order-id='id' :detail='detail' :type="Core.Const.STOCK_RECORD.TYPE.IN" @submit="getList" ref="in_delivery"/>
 
                 <!-- 上传附件 -->
                 <AttachmentFile :target_id='id' :target_type='Core.Const.ATTACHMENT.TARGET_TYPE.PURCHASE_ORDER' :detail='detail' @submit="getList" ref="AttachmentFile"/>
@@ -648,6 +648,8 @@ export default {
             this.getPurchaseItemList();
             this.getPurchasePayList();
             this.getPurchaseInfo();
+            this.$refs.in_delivery.getTableData();
+            this.$refs.out_delivery.getTableData();
         },
         getWarehouseList() {
             Core.Api.Warehouse.listAll().then(res => {

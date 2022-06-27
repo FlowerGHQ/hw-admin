@@ -497,7 +497,11 @@ const messages = {
 	        confirm_the_take_delivery: '确认收货',
 	        take_delivery_detail: '收货明细',
 	        parent_sn: '上级订单编号',
-	        update: '修改订单'
+	        update: '修改订单',
+            update_PI: '修改PI',
+            delivery_address: '发货地址',
+
+
         },
         s: {
             store_list: '门店列表',
@@ -1145,7 +1149,9 @@ const messages = {
 	        confirm_the_take_delivery: 'Confirm the take delivery',
 	        take_delivery_detail: 'take delivery detail',
 	        parent_sn: 'Parent order number',
-	        update: 'Order update'
+	        update: 'Order update',
+            update_PI: 'Update PI',
+            delivery_address: 'Delivery address',
         },
         s: {
             store_list: 'Store list',
