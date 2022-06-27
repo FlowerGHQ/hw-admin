@@ -41,7 +41,6 @@ switch (window.location.hostname) {
 
         // URL_POINT = 'http://10.0.0.228:8889'
 
-        URL_POINT = 'http://10.0.0.171:8889' // 姚志宇
 
 
         // URL_POINT = 'http://10.0.0.134:8083' // 谭洋波
@@ -417,7 +416,9 @@ let Const = {
         },
         TYPE_MAP: {
             '1': {key: 1, zh: '整车', en: 'Vehicle'},
-            '2': {key: 2, zh: '零部件', en: 'Parts'}
+            '2': {key: 2, zh: '零部件', en: 'Parts'},
+	        '3': {key: 3, zh: '周边', en: 'Parts'},
+	        '4': {key: 4, zh: '广宣品', en: 'Parts'},
         },
         MONETARY_TYPE: {
             '￥': 'CNY',
@@ -806,6 +807,8 @@ let Const = {
             '20': {key: 20, zh: '仓库审核通过', en: 'Admin review passed', color: 'blue'},
             '30': {key: 30, zh: '财务审核通过', en: 'Financial review passed', color: 'purple'},
             '40': {key: 40, zh: '已完成', en: 'In the warehouse', color: 'green'},
+	        '50': {key: 40, zh: '已发货', en: 'Delivery', color: 'green'},
+	        '60': {key: 40, zh: '已收货', en: 'Take delivery', color: 'green'},
             '-10': {key: -10, zh: '审核失败', en: 'Review failed', color: 'red'},
             '-20': {key: -20, zh: '已取消', en: 'Cancelled', color: 'grey'},
         },
