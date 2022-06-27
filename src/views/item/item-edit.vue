@@ -61,7 +61,7 @@
             <div class="form-item required">
                 <div class="key">{{ $t('d.sales_area') }}</div>
                 <div class="value">
-                    <a-select v-model:value="form.sales_area_ids" mode="tags" :placeholder="$t('def.select')">
+                    <a-select v-model:value="form.sales_area_ids" mode="multiple" :placeholder="$t('def.select')">
                         <a-select-option v-for="(val,key) in salesList" :key="key" :value="val.id">{{ val.name }}</a-select-option>
                     </a-select>
                 </div>
