@@ -99,7 +99,7 @@ export default {
             }).then(res => {
                 console.log('getItemDetail res', res)
                 let detail = res.detail
-                detail.attr_str = detail.attr_list ? detail.attr_list.map(item => item.value).join(' ') : ''
+                detail.attr_str = detail.attr_list ? detail.attr_list.map(item => item.value).join(',') : ''
                 detail.attr_def_name = detail.attr_list ? detail.attr_list.map(item => item.attr_def_name).join(',') : ''
                 console.log('detail.attr_list.attr_def_name', detail.attr_def_name)
                 this.detail = detail
@@ -217,7 +217,7 @@ export default {
             color: #757575;
             margin-top: 6px;
             line-height: 28px;
-            height: 28px;
+            height: auto;
             background: #F9F9F9;
             border-radius: 2px;
             padding: 0 10px;

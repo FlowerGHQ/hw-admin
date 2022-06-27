@@ -5,8 +5,8 @@
         <a-collapse-panel key="affirm" :header="$t('r.problem')" class="gray-collapse-panel">
             <div class="panel-content affirm">
                 <div class="title"><i class="icon i_warning"/>{{ $t('n.all_total') }}&nbsp;{{ faultSelect.length }}&nbsp;{{ $t('r.faults') }}</div>
-                <a-checkbox-group class="fault_select" v-model:value="faultSelect" @change="handleFaultSelect">
-                    <a-checkbox v-for="(value,key) of faultMap" :key='key' :value='key'>{{ value }}</a-checkbox>
+                <a-checkbox-group class="fault_select" :value="faultSelect">
+                    <a-checkbox v-for="(value,key) of faultMap" :key='key' :value='key' @change="handleFaultSelect">{{ value }}</a-checkbox>
                 </a-checkbox-group>
                 <div class="title-fault">
                     <FaultEdit :id="id" ref="FaultEdit" @saveFault="getFaultData" btn-type="primary" />
@@ -267,9 +267,15 @@ export default {
         },
 
         // 故障选择
-        handleFaultSelect(val) {
-            console.log('handleFaultSelect val:', val)
-            if (val.length) {
+        handleFaultSelect({target}) {
+            let faultSelect = []
+            if (target.checked) {
+                faultSelect.push(target.value)
+            }
+            this.faultSelect = faultSelect
+
+            console.log('handleFaultSelect faultSelect:', faultSelect)
+            if (faultSelect.length) {
                 if (!this.activeKey.includes('change')) {
                     this.activeKey.push('change')
                 }
