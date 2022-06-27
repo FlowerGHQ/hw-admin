@@ -43,7 +43,7 @@
                                 <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
                                     <a-button type='link'
                                               v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT && record.status === Core.Const.STOCK_RECORD.STATUS.CLOSE"
-                                              @click="handleDeliverShow(record.id)">{{ $t('p.confirm_delivery') }}
+                                              @click="handleDeliverShow(record)">{{ $t('p.confirm_delivery') }}
                                     </a-button>
                                 </template>
                                 <template v-if="authOrg(detail.org_id, detail.org_type)">
@@ -158,6 +158,12 @@
                         <div class="key">{{ $t('p.shipping_port') }}:</div>
                         <div class="value">
                             <a-input v-model:value="form.port" :placeholder="$t('def.input')"/>
+                        </div>
+                    </div>
+                    <div class="form-item required">
+                        <div class="key">{{ $t('p.delivery_address') }}:</div>
+                        <div class="value">
+                            <a-input v-model:value="form.delivery_address" :placeholder="$t('def.input')"/>
                         </div>
                     </div>
                 </template>
@@ -311,10 +317,23 @@ export default {
             let columns = [
                 {title: this.$t('in.sn'), dataIndex: 'uid', key: 'uid'},
                 {title: this.$t('n.state'), dataIndex: 'status'},
-                {title: this.$t('n.operator'), dataIndex: ['apply_user', "account", "name"], key: 'item'},
-                {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
-                {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
+            if (this.type == Core.Const.STOCK_RECORD.TYPE.OUT){
+                columns.push(
+                    {title: this.$t('d.port'), dataIndex: 'port'},
+                    {title: this.$t('p.delivery_address'), dataIndex: 'delivery_address'},
+                    {title: this.$t('n.operator'), dataIndex: ['apply_user', "account", "name"], key: 'item'},
+                    {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
+                    {title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
+                )
+            } else{
+                columns.push(
+                    {title: this.$t('n.operator'), dataIndex: ['apply_user', "account", "name"], key: 'item'},
+                    {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
+                    {title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
+                )
+            }
+
             return columns
         },
         tableColumns() {
@@ -387,9 +406,10 @@ export default {
             this.invoiceId = id
             this.pageChange(1)
         },
-        handleDeliverShow(id) {
+        handleDeliverShow(item) {
             this.deliverShow = true;
-            this.invoiceId = id
+            this.form = Core.Util.deepCopy(item);
+            this.invoiceId = item.id
             console.log(this.invoiceId)
             this.pageChange(1)
         },
@@ -478,6 +498,7 @@ export default {
                 adminRequire = [
                     {key: 'express_type', msg: '请选择快递方式'},
                     {key: 'port', msg: '请填写发货港口'},
+                    {key: 'delivery_address', msg: '请填写发货地址'},
                     {key: 'freight', msg: '请填写运费'},
                     {key: 'waybill', msg: '物流单号'},
                 ]
@@ -516,8 +537,7 @@ export default {
             console.log("rowSelection", this.selectedRowItems)
             let form = Core.Util.deepCopy(this.form);
             const param = {
-                id: this.orderId,
-                invoice_id: this.invoiceId,
+                id: form.id,
                 remark: form.remark,
             }
             let adminRequire = [];
@@ -538,10 +558,11 @@ export default {
             }
             Core.Api.Invoice.updatePI(param).then(res => {
                 this.$message.success('修改成功')
-                this.deliverShow = false
+                this.PIShow = false
                 this.getInvoiceList();
                 this.$emit('Submit')
                 this.handleWaybillClear()
+
             }).catch(err => {
                 console.log('handleDeliver err', err)
             }).finally(() => {
