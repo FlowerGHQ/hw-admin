@@ -453,6 +453,7 @@ let Const = {
             TAKE_DELIVER: 330,
             ALL_TAKE_DELIVER: 360,
             DEAL_SUCCESS: 400,
+            REVISE_AUDIT: 630,
             CANCEL: -100,
         },
         STATUS_MAP: {
@@ -563,6 +564,10 @@ let Const = {
 		    CANCEL: -10,
 		    AUDIT_FAILED: -20,
 	    },
+        FLAG: {
+            YES:1,
+            NO:0,
+        },
 
     },
 

@@ -14,6 +14,10 @@
                 </template>
 
                 <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
+                        <AuditHandle v-if="detail.status === STATUS.REVISE_AUDIT"
+                                 btnType='primary' :api-list="['Purchase', 'reviseAudit']" :id="detail.id" @submit="getList"
+                                 :s-pass="FLAG.YES" :s-refuse="FLAG.NO" no-refuse><i class="icon i_audit"/>{{ $t('n.audit') }}
+                    </AuditHandle>
                     <!-- <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.confirm_payment')}}</a-button>-->
                     <!-- <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && (detail.type !== TYPE. || PAYMENT_STATUS.PAY_ALL)" @click="handleModalShow('deliver')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.ship')}}</a-button>-->
                     <!-- <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && detail.type !== TYPE. && $auth('ADMIN')" @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>-->
@@ -413,6 +417,8 @@ const PURCHASE = Core.Const.PURCHASE;
 const DISTRIBUTOR = Core.Const.DISTRIBUTOR;
 const WAYBILL = Core.Const.WAYBILL;
 
+const FLAG = Core.Const.PURCHASE.FLAG;
+
 const STATUS = Core.Const.PURCHASE.STATUS;
 const PAY_TIME = Core.Const.DISTRIBUTOR.PAY_TIME;
 const PAY_STATUS = Core.Const.PURCHASE.PAY_STATUS;
@@ -435,6 +441,7 @@ export default {
     props: {},
     data() {
         return {
+            FLAG,
             FLAG_ORDER_TYPE,
             STOCK_TYPE: Core.Const.STOCK_RECORD.TYPE,
             COMMODITY_MAP: Core.Const.STOCK_RECORD.COMMODITY_TYPE_MAP,
@@ -647,9 +654,10 @@ export default {
                 case STATUS.INIT:
                 case STATUS.WAIT_PAY:
                 case STATUS.WAIT_DELIVER:
+                case STATUS.ALL_TAKE_DELIVER:
                     return true;
                 default:
-                    return false;
+                    return true;
             }
         },
     },

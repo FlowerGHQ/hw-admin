@@ -307,6 +307,7 @@ const apiList = {
         transfer: ['PostJson', 'purchase-order/transfer'], // 转单
 
         revise: ['PostJson', 'purchase-order/revise'], // 已下单的订单-编辑商品
+        reviseAudit: ['PostJson', 'purchase-order/revise-audit'], // 已下单的订单-编辑商品-审核
     },
     Aftersales: { // 售后单
         list: ['PostJson', 'after-sales-order/list'],
