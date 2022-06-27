@@ -597,7 +597,18 @@ export default {
                     let params = {}
                     for (const attr of list) {
                         let element = item.attr_list.find(i => i.attr_def_id === attr.id)
-                        params[attr.key] = element.value
+                        console.log(item)
+                        // console.log(element.value)
+                        // params[attr.key] = element.value
+                        if (element != undefined){
+                            params[attr.key] = {
+                                value: element.value,
+                            }
+                        } else {
+                            params[attr.key] = {
+                                value: "",
+                            }
+                        }
                     }
                     return {
                         ...params,
@@ -670,8 +681,8 @@ export default {
                                 attr_def_id: attr.id,
                                 attr_def_name: attr.name,
                                 id,
-                                name: data[attr.key],
-                                value: data[attr.key],
+                                name: data[attr.key].value ? data[attr.key].value: data[attr.key],
+                                value: data[attr.key].value ? data[attr.key].value: data[attr.key],
                                 target_id: data.target_id || '',
                                 target_type: 1,
                             }

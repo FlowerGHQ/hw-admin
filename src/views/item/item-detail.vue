@@ -302,10 +302,18 @@ export default {
                     let params = {}
                     for (const attr of this.specific.list) {
                         let element = item.attr_list.find(i => i.attr_def_id === attr.id)
-                        params[attr.key] = {
-                            value: element.value,
-                            value_en: element.value_en
+                        if (element != undefined){
+                            params[attr.key] = {
+                                value: element.value,
+                                value_en: element.value_en
+                            }
+                        } else {
+                            params[attr.key] = {
+                                value: "",
+                                value_en: ""
+                            }
                         }
+
                     }
                     return {
                         ...params,

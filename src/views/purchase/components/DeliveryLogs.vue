@@ -32,7 +32,7 @@
                                         $t('p.logistics')
                                     }}
                                 </a-button>
-                                <template v-if="$auth('ADMIN') && $auth('purchase-order.export')">
+                                <template v-if="$auth('ADMIN') && $auth('purchase-order.export') && type == Core.Const.STOCK_RECORD.TYPE.OUT">
                                     <a-button type='link' @click="handleExportIn(record.id)"><i
                                         class="icon i_download"/>{{ $t('p.export_purchase') }}
                                     </a-button>
@@ -578,6 +578,7 @@ export default {
             this.exportDisabled = false;
         },
         handleUpdatePI(item){
+            this.form = Core.Util.deepCopy(item)
             this.PIShow = true;
         },
 
