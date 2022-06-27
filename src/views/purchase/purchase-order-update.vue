@@ -98,7 +98,7 @@
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                             <div class="info-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
                                 <div class="key">{{ $t('p.shipping_port')}}</div>
-                                <div class="value" >{{detail.harbour || '-'}}</div>
+                                <div class="value" >{{detail.port || '-'}}</div>
                             </div>
                             <div class="info-item" >
                                 <div class="key">{{ $t('p.partial_shipments')}}</div>
@@ -228,7 +228,7 @@
                             v-model:value="form.payment"
                             style="width: 120px"
                             :min="0"
-                            :max="((detail.freight_price||0)+detail.charge-detail.payment)/100"
+                            :max="((detail.freight||0)+detail.charge-detail.payment)/100"
                             :precision="2"
                             :prefix="`${$Util.priceUnitFilter(detail.currency)}`"
                             placeholder="0.00"
@@ -473,9 +473,9 @@ export default {
             form: {
                 express_type: undefined, // 快递方式
                 waybill: '', // 物流单号
-                harbour: '', // 发货港口
+                port: '', // 发货港口
                 receive_type: undefined, // 收货方式
-                freight_price: '', // 运费
+                freight: '', // 运费
                 pay_method: undefined, // 收款方式
                 // pay_clause: undefined, // 支付条款
                 remark: '', // 备注
@@ -709,7 +709,7 @@ export default {
                 if (this.detail.status === Core.Const.PURCHASE.STATUS.TAKE_DELIVER){
                     this.detail.status = Core.Const.PURCHASE.STATUS.WAIT_DELIVER
                 }
-                this.total.freight = res.detail.freight_price || 0;
+                this.total.freight = res.detail.freight || 0;
                 console.log('getPurchaseInfo res', res)
                 this.step();
             }).catch(err => {
@@ -893,7 +893,7 @@ export default {
                     param[key] = form[key];
                 }
             }
-            param['freight_price'] = Math.round(param['freight_price'] * 100)
+            param['freight'] = Math.round(param['freight'] * 100)
             param['item_list'] = this.selectedRowItems
             Core.Api.Purchase.outStock(param).then(res => {
                 this.$message.success('发货成功')
@@ -924,15 +924,15 @@ export default {
             if(this.$auth('ADMIN')) {
                 adminRequire = [
                     { key: 'express_type', msg: '请选择快递方式' },
-                    { key: 'harbour', msg: '请填写发货港口' },
-                    { key: 'freight_price', msg: '请填写运费' },
+                    { key: 'port', msg: '请填写发货港口' },
+                    { key: 'freight', msg: '请填写运费' },
                     // { key: 'pay_clause', msg: '请选择支付条款' },
                 ]
                 param['waybill'] = form['waybill'];
             } else if (this.$auth('DISTRIBUTOR')) {
                 adminRequire = [
                     { key: 'receive_type', msg: '请选择收货方式' },
-                    { key: 'freight_price', msg: '请填写运费' },
+                    { key: 'freight', msg: '请填写运费' },
                 ]
                 param['waybill_uid'] = form['waybill_uid'];
             }
@@ -944,7 +944,7 @@ export default {
                     param[key] = form[key];
                 }
             }
-            param['freight_price'] = Math.round(param['freight_price'] * 100)
+            param['freight'] = Math.round(param['freight'] * 100)
             param['item_list'] = this.selectedRowItems
             Core.Api.Purchase.deliver(param).then(res => {
                 this.$message.success('发货成功')

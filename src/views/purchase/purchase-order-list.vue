@@ -242,7 +242,7 @@ export default {
                 { title: this.$t('p.payment_terms'), dataIndex: 'pay_type', key: 'pay_type' },
                 { title: this.$t('n.institution'), dataIndex: ['create_org', 'name'], key: 'item' },
                 { title: this.$t('p.total_price'), dataIndex: 'price', key: 'money' },
-                { title: this.$t('p.freight'), dataIndex: 'freight_price', key: 'money' },
+                { title: this.$t('p.freight'), dataIndex: 'freight', key: 'money' },
                 { title: this.$t('p.order_status'), dataIndex: 'status' },
                 { title: this.$t('n.order_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('p.payment_status'), dataIndex: 'payment_status' },
@@ -374,7 +374,7 @@ export default {
                 this.total = res.count;
                 this.tableData = res.list;
                 // this.tableData.forEach(item=>{
-                //     item['total_price'] = (item['price'] || 0) + (item['freight_price'] || 0);
+                //     item['total_price'] = (item['price'] || 0) + (item['freight'] || 0);
                 // })
             }).catch(err => {
                 console.log('getTableData err:', err)

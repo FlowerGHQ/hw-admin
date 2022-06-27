@@ -157,7 +157,7 @@
                     <div class="form-item required">
                         <div class="key">{{ $t('p.shipping_port') }}:</div>
                         <div class="value">
-                            <a-input v-model:value="form.harbour" :placeholder="$t('def.input')"/>
+                            <a-input v-model:value="form.port" :placeholder="$t('def.input')"/>
                         </div>
                     </div>
                 </template>
@@ -183,7 +183,7 @@
                     <div class="key">{{ $t('p.freight') }}:</div>
                     <div class="value">
                         <a-input-number
-                            v-model:value="form.freight_price"
+                            v-model:value="form.freight"
                             placeholder="0.00"
                             style="width: 120px"
                             :min="0.00"
@@ -216,7 +216,7 @@
                     <div class="form-item required">
                         <div class="key">{{ $t('p.shipping_port') }}:</div>
                         <div class="value">
-                            <a-input v-model:value="form.harbour" :placeholder="$t('def.input')"/>
+                            <a-input v-model:value="form.port" :placeholder="$t('def.input')"/>
                         </div>
                     </div>
                     <div class="form-item required">
@@ -277,10 +277,10 @@ export default {
             form: {
                 express_type: undefined, // 快递方式
                 waybill: '', // 物流单号
-                harbour: '', // 发货港口
+                port: '', // 发货港口
                 delivery_address: '', //发货地址
                 receive_type: undefined, // 收货方式
-                freight_price: '', // 运费
+                freight: '', // 运费
                 pay_method: undefined, // 收款方式
                 // pay_clause: undefined, // 支付条款
                 remark: '', // 备注
@@ -477,15 +477,15 @@ export default {
             if (this.$auth('ADMIN')) {
                 adminRequire = [
                     {key: 'express_type', msg: '请选择快递方式'},
-                    {key: 'harbour', msg: '请填写发货港口'},
-                    {key: 'freight_price', msg: '请填写运费'},
+                    {key: 'port', msg: '请填写发货港口'},
+                    {key: 'freight', msg: '请填写运费'},
                     {key: 'waybill', msg: '物流单号'},
                 ]
                 param['waybill'] = form['waybill'];
             } else if (this.$auth('DISTRIBUTOR')) {
                 adminRequire = [
                     {key: 'receive_type', msg: '请选择收货方式'},
-                    {key: 'freight_price', msg: '请填写运费'},
+                    {key: 'freight', msg: '请填写运费'},
                 ]
                 param['waybill_uid'] = form['waybill_uid'];
             }
@@ -497,7 +497,7 @@ export default {
                     param[key] = form[key];
                 }
             }
-            param['freight_price'] = Math.round(param['freight_price'] * 100)
+            param['freight'] = Math.round(param['freight'] * 100)
             param['item_list'] = this.selectedRowItems
             Core.Api.Purchase.deliver(param).then(res => {
                 this.$message.success('发货成功')
@@ -525,7 +525,7 @@ export default {
             if (this.$auth('ADMIN')) {
                 adminRequire = [
                     {key: 'delivery_address', msg: '请填写发货地址'},
-                    {key: 'harbour', msg: '请填写发货港口'},
+                    {key: 'port', msg: '请填写发货港口'},
                 ]
             }
             for (let index in adminRequire) {
