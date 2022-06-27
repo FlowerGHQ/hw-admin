@@ -32,15 +32,8 @@
         <div class="config-item pay" v-if="$auth('DISTRIBUTOR')">
             <div class="config-title">2.{{ $t('i.shipping_settings') }}</div>
             <div class="config-content">
+
                 <div class="radio-item">
-                    <div class="desc">{{ $t('p.order_type') }}：</div>
-                    <div class="value">
-                        <a-radio-group v-model:value="form.flag_order_type">
-                            <a-radio v-for="item of flagOrderTypeList" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>
-                        </a-radio-group>
-                    </div>
-                </div>
-                <div class="radio-item" v-if="form.flag_order_type === PURCHASE.FLAG_ORDER_TYPE.PRE_SALES">
                     <div class="desc">{{ $t('p.partial_shipments') }}：</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.flag_part_shipment">
@@ -48,7 +41,7 @@
                         </a-radio-group>
                     </div>
                 </div>
-                <div class="radio-item" v-if="form.flag_order_type === PURCHASE.FLAG_ORDER_TYPE.PRE_SALES">
+                <div class="radio-item">
                     <div class="desc">{{ $t('p.transshipment') }}：</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.flag_transfer">
@@ -280,13 +273,11 @@ export default {
             if (!this.selectIndex) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if(this.$auth('DISTRIBUTOR') && !this.form.flag_order_type) {
+
+            if(this.$auth('DISTRIBUTOR') && !this.form.flag_part_shipment) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if(this.$auth('DISTRIBUTOR') && !this.form.flag_part_shipment && this.form.flag_order_type === PURCHASE.FLAG_ORDER_TYPE.PRE_SALES) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if(this.$auth('DISTRIBUTOR') && !this.form.flag_transfer  && this.form.flag_order_type === PURCHASE.FLAG_ORDER_TYPE.PRE_SALES) {
+            if(this.$auth('DISTRIBUTOR') && !this.form.flag_transfer) {
                 return this.$message.warning(this.$t('def.enter'))
             }
             const parms = {
@@ -299,6 +290,7 @@ export default {
                 flag_part_shipment: this.form.flag_part_shipment,
                 item_list: this.shopCartList.map(item => ({
                     item_code: item.item.item_code,
+                    type: item.item.type,
                     amount: item.amount,
                     item_id: item.item_id,
                     charge: item.amount * item.item[this.priceKey],

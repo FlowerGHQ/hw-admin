@@ -287,6 +287,7 @@ const apiList = {
         cancel: ['PostJson', 'purchase-order/cancel'], // 取消采购订单
         create: ['PostJson', 'purchase-order/create'], // 创建采购订单
         detail: ['PostJson', 'purchase-order/detail'], // 采购订单详情
+	    update: ['PostJson', 'purchase-order/update'], // 采购订单修改
         detailBySn: ['PostJson', 'purchase-order/detail-sn'],
         itemList: ['PostJson', 'purchase-order-item/list'], // 采购订单明细列表
         payList: ['PostJson', 'purchase-order-pay/list'], // 采购订单收款明细列表

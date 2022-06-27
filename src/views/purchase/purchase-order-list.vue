@@ -76,7 +76,14 @@
                 <template #bodyCell="{ column, text , record}">
                     <template v-if="column.dataIndex === 'sn' && $auth('purchase-order.detail')">
                         <a-tooltip placement="top" :title='text'>
-                            <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
+                            <a-button type="link" @click="routerChange('detail', record)" v-if="text !== ''">{{text }}</a-button>
+                            <a-button type="link" disabled v-else>-</a-button>
+                        </a-tooltip>
+                    </template>
+                    <template v-if="column.dataIndex === 'parent_sn' && $auth('purchase-order.detail')">
+                        <a-tooltip placement="top" :title='text'>
+                            <a-button type="link" @click="routerChange('parent_detail', record)" v-if="text !== ''">{{text }}</a-button>
+                            <a-button type="link" disabled v-else>-</a-button>
                         </a-tooltip>
                     </template>
                     <template v-if="column.key === 'money'">
@@ -230,6 +237,7 @@ export default {
         tableColumns() {
             let columns = [
                 { title: this.$t('p.number'), dataIndex: 'sn', },
+                { title: this.$t('p.parent_sn'), dataIndex: 'parent_sn', },
                 { title: this.$t('p.order_type'), dataIndex: 'type', key: 'type' },
                 { title: this.$t('p.payment_terms'), dataIndex: 'pay_type', key: 'pay_type' },
                 { title: this.$t('n.institution'), dataIndex: ['create_org', 'name'], key: 'item' },
@@ -297,6 +305,15 @@ export default {
                         path: "/purchase/purchase-order-detail",
                         query: {
                             id: item.id
+                        }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'parent_detail':  // 详情
+                    routeUrl = this.$router.resolve({
+                        path: "/purchase/purchase-order-detail",
+                        query: {
+                            id: item.parent_id
                         }
                     })
                     window.open(routeUrl.href, '_self')
