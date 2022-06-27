@@ -305,6 +305,8 @@ const apiList = {
         statusList: ['PostJson', 'purchase-order/status-list'], // 保存
         recreate: ['PostJson', 'purchase-order/recreate'], // 再来一单
         transfer: ['PostJson', 'purchase-order/transfer'], // 转单
+
+        revise: ['PostJson', 'purchase-order/revise'], // 已下单的订单-编辑商品
     },
     Aftersales: { // 售后单
         list: ['PostJson', 'after-sales-order/list'],

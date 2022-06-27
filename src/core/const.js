@@ -17,39 +17,11 @@ switch (window.location.hostname) {
         URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
         break;
     case "10.0.0.205":
-        URL_POINT = 'http://10.0.0.205:8083'
+    case "10.0.0.219":
+        URL_POINT = 'http://10.0.0.213:8889'
         break;
-    case "10.0.0.197":
-    case "10.0.0.107":
-        URL_POINT = 'https://eos-api.hw.innotick.com'
-        break;
-    case "10.0.0.158":
-    case "10.0.0.159":
-        URL_POINT = 'http://10.0.0.109:8083'
-        break;
-    case "10.0.0.251":
-    case "10.0.0.188":
-    case "localhost":
-        URL_POINT = 'http://10.0.0.251:8889'
-        break;
-	case "10.0.0.175":
-		URL_POINT = 'http://10.0.0.175:8889'
-		break;
     default:
-        // URL_POINT = 'http://10.0.0.132:8083' // 谢耀圣
-        // URL_POINT = 'http://10.0.0.7:8083' // 但
-
-        // URL_POINT = 'http://10.0.0.228:8889'
-
-        URL_POINT = 'http://10.0.0.171:8889' // 姚志宇
-
-
-        // URL_POINT = 'http://10.0.0.134:8083' // 谭洋波
-        // URL_POINT = 'http://10.0.0.205:8083' // 徐伟
-        // URL_POINT = 'http://10.0.0.149:8083' // 徐伟
-        // URL_POINT = 'http://10.0.0.39:8083'  // 姚志宇
-        // URL_POINT = 'http://10.0.0.171:8083' // 姚志宇
-        // URL_POINT = 'http://10.0.0.238:8083' // 戚哲康
+        URL_POINT = 'http://10.0.0.213:8889'
         break;
 }
 
@@ -460,45 +432,45 @@ let Const = {
                 value: 2
             },
         ],
-	    SEARCH_TYPE:{
-		    NAME: "1",
-		    CODE: "2",
-	    },
-	    SEARCH_TYPE_MAP:{
-		    '1': {key: 1, zh: '名称', en: 'name'},
-		    '2': {key: 2, zh: '编码', en: 'code'}
-	    },
+        SEARCH_TYPE:{
+            NAME: "1",
+            CODE: "2",
+        },
+        SEARCH_TYPE_MAP:{
+            '1': {key: 1, zh: '名称', en: 'name'},
+            '2': {key: 2, zh: '编码', en: 'code'}
+        },
     },
     PURCHASE: { // 采购订单
         // 状态
         STATUS: {
             INIT: 0,
-	        WAIT_PAY: 100,
+            WAIT_PAY: 100,
             WAIT_DELIVER: 200,
             WAIT_TAKE_DELIVER: 300,
-	        TAKE_DELIVER: 330,
-	        ALL_TAKE_DELIVER: 360,
+            TAKE_DELIVER: 330,
+            ALL_TAKE_DELIVER: 360,
             DEAL_SUCCESS: 400,
             CANCEL: -100,
         },
         STATUS_MAP: {
-            '0': { key: 0, color: 'red', zh: '未知', en: 'Unknown', value: '0'},
-	        '100': { key: 100, color: 'orange', zh: '待支付', en: 'Wait to pay', value: '0'},
-            '200': { key: 200, color: 'orange', zh: '待发货', en: 'Wait for delivery', value: '0'},
-            '250': { key: 400, color: 'blue', zh: '已转单',en: 'Order transferred', value: '0'},
-            '300': { key: 300, color: 'blue', zh: '已发货',en: 'Shipped', value: '0'},
-	        '330': { key: 330, color: 'yellow', zh: '部分收货', en: 'Received', value: '0'},
-            '360': { key: 360, color: 'yellow', zh: '已收货', en: 'Received', value: '0'},
-            '400': { key: 400, color: 'green', zh: '交易完成',en: 'Order completed', value: '0'},
-            '-100': { key: -100, color: 'gray', zh: '交易关闭',en: 'Canceled', value: '0'},
+            '0':   { value: '0', key: 0,    color: 'red',    zh: '未知', en: 'Unknown'},
+            '100': { value: '0', key: 100,  color: 'orange', zh: '待支付', en: 'Wait to pay'},
+            '200': { value: '0', key: 200,  color: 'orange', zh: '待发货', en: 'Wait for delivery'},
+            '250': { value: '0', key: 400,  color: 'blue',   zh: '已转单', en: 'Order transferred'},
+            '300': { value: '0', key: 300,  color: 'blue',   zh: '已发货', en: 'Shipped'},
+            '330': { value: '0', key: 330,  color: 'yellow', zh: '部分收货', en: 'Received'},
+            '360': { value: '0', key: 360,  color: 'yellow', zh: '已收货', en: 'Received'},
+            '400': { value: '0', key: 400,  color: 'green',  zh: '交易完成', en: 'Order completed'},
+            '-100':{ value: '0', key: -100, color: 'gray',   zh: '交易关闭', en: 'Canceled'},
         },
         /* STATUS_COLOR_MAP: {
-             '0': 'red',
-             '200': 'orange',
-             '300': 'blue',
-             '350': 'yellow',
-             '400': 'green',
-         },*/
+            '0': 'red',
+            '200': 'orange',
+            '300': 'blue',
+            '350': 'yellow',
+            '400': 'green',
+        },*/
         // 支付方式
         PAY_METHOD: {
             // 1: "支付宝",

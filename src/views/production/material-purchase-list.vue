@@ -36,8 +36,7 @@
             </div>
         </div>
         <div class="table-container">
-            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                     :row-key="record => record.id" :pagination='false' :loading="loading">
+            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' :loading="loading">
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.key === 'detail' && $auth('material-purchase-order.detail')">
                         <a-tooltip placement="top" :title='text'>
@@ -99,8 +98,6 @@
             />
         </div>
     </div>
-
-
 </template>
 
 <script>

@@ -2,7 +2,8 @@
     <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
         <slot>{{ btnText }}</slot>
     </a-button>
-    <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'>
+    <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'
+        class="ItemSelectModal">
         <div class="modal-content">
             <div class="search-container">
                 <a-row class="search-area">
@@ -31,9 +32,9 @@
                 </div>
             </div>
             <div class="table-container">
-                <div class="hint-count">
-                    <a-button type="primary">{{ $t('in.selected') + ` ${this.selectItemIds.length} ` + $t('in.total')}}</a-button>
-                </div>
+                <!-- <div class="hint-count">
+                    <a-button type="primary"></a-button>
+                </div> -->
                 <ItemTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :showStock='!!warehouseId'
                     :check-mode='true' :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode'/>
             </div>
@@ -49,6 +50,9 @@
                         :default-page-size='pageSize'
                         @change="pageChange"
                     />
+                    <div class="tip">
+                        {{ $t('in.selected') + ` ${this.selectItemIds.length} ` + $t('in.total')}}
+                    </div>
                 </div>
                 <div class="btn-area">
                     <a-button @click="handleModalClose">{{ $t('def.cancel') }}</a-button>
@@ -242,6 +246,14 @@ export default {
                 margin-bottom: 5px;
             }
         }
+    }
+}
+.ItemSelectModal {
+    .tip {
+        height: 30px;
+        line-height: 30px;
+        margin-left: 10px;
+        font-size: 12px;
     }
 }
 </style>

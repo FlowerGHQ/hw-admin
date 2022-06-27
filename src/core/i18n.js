@@ -261,10 +261,10 @@ const messages = {
             amount: '数量',
             quantity: '数量',
             unit_price: '单价',
-	        deliver_amount: '发货数量',
+            deliver_amount: '发货数量',
             total_price: '总价',
             total_quantity: '总数量',
-	        residue_quantity: '剩余数量',
+            residue_quantity: '剩余数量',
             item_list: '商品列表',
             add: '添加商品',
             status: '商品状态',
@@ -624,7 +624,8 @@ const messages = {
             delete: '删除',
             enter: '请完善表单信息',
             remove: '移除',
-
+            changes: '确认更改',
+            cancel_changes: '取消更改',
         },
         search: {
             repair_sn: '工单编号',
@@ -1275,7 +1276,8 @@ const messages = {
             delete: 'Delete',
             enter: 'Please complete the form information!',
             remove: 'Remove',
-
+            changes: 'Confirm changes',
+            cancel_changes: 'Cancel changes',
         },
         search: {
             repair_sn: 'Inquire Sn',
