@@ -501,6 +501,7 @@ const messages = {
             update_PI: '修改PI',
             delivery_address: '发货地址',
 	        give_order: '赠送订单',
+	        item_error: '该商品在该货币结算下不销售',
 
         },
         s: {
@@ -671,6 +672,7 @@ const messages = {
             sure_audit: '确定要提交吗',
             agent: '该零售商吗？',
             store: '该门店吗？',
+
         }
     },
     en: {
@@ -1154,6 +1156,7 @@ const messages = {
             update_PI: 'Update PI',
             delivery_address: 'Delivery address',
 	        give_order: 'Give order',
+	        item_error: 'The goods are not sold in this currency',
         },
         s: {
             store_list: 'Store list',

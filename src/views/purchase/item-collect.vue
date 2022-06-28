@@ -69,7 +69,7 @@
 
                 <span class="price">{{currency}} {{sum_price}}</span>
             </div>
-            <a-button type="primary" ghost @click="routerChange('settle')">{{ $t('i.settle') }}</a-button>
+            <a-button type="primary" ghost @click="settle('settle')">{{ $t('i.settle') }}</a-button>
         </div>
     </div>
     <div class="list-container favorite-container">
@@ -191,6 +191,31 @@ export default {
                     break;
             }
         },
+        settle(){
+            console.log(11111)
+            for(var i = 0 ; i< this.shopCartList.length ; i ++){}
+            this.shopCartList.forEach(it => {
+
+            });
+            for (const it of this.shopCartList) {
+                console.log(it.item[this.priceKey + this.unitMap[this.currency].key])
+                if (it.item[this.priceKey + this.unitMap[this.currency].key] === 0){
+                    console.log(2222)
+                    this.$message.error(this.$t('p.item_error'))
+                    return ;
+                }
+            }
+            var routeUrl = this.$router.resolve({
+                path: "/purchase/item-settle",
+                query: {
+                    unit: this.currency,
+                    currency: this.unitMap[this.currency].key
+                }
+            })
+            window.open(routeUrl.href, '_self')
+
+        },
+
         getList() {
             this.getShopCartList();
             this.getFavoriteList();

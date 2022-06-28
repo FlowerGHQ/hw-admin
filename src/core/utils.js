@@ -241,8 +241,8 @@ const Util = {
      * @param {Number} type 乘法/除法 false=除法 true=乘法
      */
     countFilter(val = 0, divisor = 100, dp = 2, type = false) {
-        if (val == 0) {
-            return 0
+        if (val === 0) {
+            return "N/A"
         }
         if (type) {
             return parseFloat((val * divisor).toFixed(dp))
