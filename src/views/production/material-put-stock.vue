@@ -187,6 +187,8 @@ export default {
                 encapsulation_size: '',
                 stock_balance: '',
                 stock_update_time: '',
+                amount: '',
+                confirm_amount: '',
                 remark: '',
                 image: '',
                 warehouse_location_id: '',
@@ -228,15 +230,13 @@ export default {
         // 获取物料详情
         getMaterialDetail() {
             this.loading = true;
-            Core.Api.Material.detail({
+            Core.Api.Item.detail({
                 id: this.form.id,
             }).then(res => {
                 console.log('Material.detail res', res)
                 this.form = res
                 this.form.code = res.code
                 this.handleWarehouseByMaterialChange()
-                console.log('Material.detail res.code', res.code)
-                this.form.gross_weight = Core.Util.countFilter(res.gross_weight)
 
             }).finally(() => {
                 this.loading = false
@@ -290,18 +290,13 @@ export default {
                 console.log(2)
                 return
             }
-            Core.Api.Stock.detailCodeWarehouse({
+            Core.Api.Invoice.detailByItemUid({
                 invoice_uid: this.form.invoice_uid,
                 material_code: this.form.code,
                 warehouse_id: this.warehouse_id
             }).then(res => {
-                if (res.material !== null) {
-                    this.form.stock = res.material.stock.stock
-                    this.form.stock_update_time = this.$Util.timeFormat(res.material.stock.update_time)
-                } else {
-                    this.form.stock = 0
-                    this.form.stock_update_time = ""
-                }
+                this.form.amount = res.amount
+                this.form.confirm_amount = res.confirm_amount
 
 
             })

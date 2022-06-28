@@ -156,6 +156,8 @@ const apiList = {
         cancel: ['PostJson', 'invoice/cancel'], // 取消出入库单
         listByPurchase: ['PostJson', 'invoice/list-by-purchase'],
         updatePI: ['PostJson', 'invoice/update-pi'], // 修改pi
+        detailByItemUid: ['PostJson', 'invoice/detail-by-item-uid'], // 修改pi
+
     },
     InvoiceItem: {
         list: ['PostJson', 'invoice-item/list'], // 出入库单明细列表

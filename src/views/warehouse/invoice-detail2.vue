@@ -144,7 +144,9 @@
                                 <a-button type="link" @click="handleRowUidInfoShow(record)" v-if="record.flag_entity === Core.Const.ITEM.FLAG_ENTITY.YES"> {{ text  }} / {{record.amount}} </a-button>
 
                             </template>
-
+                            <template v-if="column.key === 'confirm_amount'">
+                               {{ text ? text +$t('in.item') : '-' }}
+                            </template>
                             <template v-if="column.key === 'amount'">
                                 <template v-if="addMode || record.editMode">
                                     <a-input-number v-model:value="record.amount" :placeholder="$t('def.input')"
@@ -460,6 +462,7 @@ export default {
                 {title: this.$t('i.spec'), dataIndex: ['item', 'attr_list'], key: 'attr_list'},
                 {title: "是否有实例号", dataIndex: "flag_entity", key: 'flag_entity'},
                 {title: "实例号数量", dataIndex: ['item', 'child_size'], key: 'child_size'},
+                {title: "实际" + this.type_ch + this.$t('i.amount'), dataIndex: 'confirm_amount' , key: 'confirm_amount'},
                 {title: this.type_ch + this.$t('i.amount'), dataIndex: 'amount' , key: 'amount'},
                 {title: this.$t('def.operate'), key: 'operation'},
             ]
