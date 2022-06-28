@@ -9,6 +9,12 @@
             </div>
             <div class="form-content">
                 <div class="form-item required">
+                    <div class="key">出库单</div>
+                    <div class="value">
+                        <a-input v-model:value="form.invoice_uid" @change="handleWarehouseByMaterialChange"/>
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">仓库</div>
                     <div class="value">
                         <a-select
@@ -30,7 +36,7 @@
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">物料编码</div>
+                    <div class="key">编码</div>
                     <div class="value">
                         <a-select
                             v-model:value="form.id"
@@ -167,6 +173,7 @@ export default {
             // 加载
             loading: false,
             warehouse_id: '',
+            invoice_id: '',
             uid: '',
             form: {
                 id: '',
@@ -183,6 +190,7 @@ export default {
                 remark: '',
                 image: '',
                 warehouse_location_id: '',
+                invoice_uid: '',
             },
             gross_weight: '',
             supplierList: [],
@@ -191,6 +199,7 @@ export default {
             options: [],
             warehouseOptions: [],
             warehouseLocationopTions: [],
+            invoiceOptions: [],
 
         };
     },
@@ -234,7 +243,7 @@ export default {
             })
         },
         handleSearch(code) {
-            Core.Api.Material.list({code: code}).then(res => {
+            Core.Api.Item.list({code: code}).then(res => {
                 this.options = res.list
             })
         },
@@ -258,12 +267,21 @@ export default {
         },
 
         handleWarehouseSearch(name) {
-            Core.Api.Warehouse.list({name: name, type: Core.Const.WAREHOUSE.TYPE.MATERIAL}).then(res => {
+            Core.Api.Warehouse.list({name: name}).then(res => {
                 this.warehouseOptions = res.list
+            })
+        },
+        handleInvoiceSearch(name) {
+            Core.Api.Invoice.list({uid: name}).then(res => {
+                this.invoiceOptions = res.list
             })
         },
         handleWarehouseByMaterialChange() {
             this.uid = ""
+            if (!this.form.invoice_uid) {
+                console.log(1)
+                return
+            }
             if (!this.form.id) {
                 console.log(1)
                 return
@@ -273,6 +291,7 @@ export default {
                 return
             }
             Core.Api.Stock.detailCodeWarehouse({
+                invoice_uid: this.form.invoice_uid,
                 material_code: this.form.code,
                 warehouse_id: this.warehouse_id
             }).then(res => {
