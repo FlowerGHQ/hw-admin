@@ -354,17 +354,6 @@ const routes = [
                     search_type: PURCHASE_SEARCH_TYPE.CHILDREN
                 }
             },
-	        {
-		        path: 'purchase-order-update',
-		        name: 'PurchaseOrderListUpdate',
-		        component: () => import('@/views/purchase/purchase-order-update.vue'),
-		        meta: {
-			        roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-			        title: '供货订单',
-			        title_en: 'Supply orders',
-			        search_type: PURCHASE_SEARCH_TYPE.CHILDREN
-		        }
-	        },
             {
                 path: 'purchase-order-detail',
                 name: 'PurchaseOrderDetail',

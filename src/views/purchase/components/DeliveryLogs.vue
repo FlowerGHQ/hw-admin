@@ -235,7 +235,13 @@
                 <div class="form-item">
                     <div class="key">费用</div>
                     <div class="value">
-                        <a-input v-model:value="form.freight" :placeholder="$t('def.input')"/>
+                        <a-input-number
+                            v-model:value="form.freight"
+                            placeholder="0.00"
+                            style="width: 120px"
+                            :min="0.00"
+                            :precision="2"
+                            :prefix="`${$Util.priceUnitFilter(detail.currency)}`"/>
                     </div>
                 </div>
                 <div class="form-item">
@@ -416,6 +422,7 @@ export default {
         handleDeliverShow(item) {
             this.deliverShow = true;
             this.form = Core.Util.deepCopy(item);
+            this.form.freight = Core.Util.countFilter(this.form.freight)
 
             this.invoiceId = item.id
             console.log(this.invoiceId)
@@ -495,6 +502,7 @@ export default {
         handleDeliver() {
             console.log("rowSelection", this.selectedRowItems)
             let form = Core.Util.deepCopy(this.form);
+
             const param = {
                 id: this.orderId,
                 invoice_id: this.invoiceId,
@@ -565,6 +573,7 @@ export default {
                     param[key] = form[key];
                 }
             }
+            param['freight'] = Math.round(param['freight'] * 100)
             Core.Api.Invoice.updatePI(param).then(res => {
                 this.$message.success('修改成功')
                 this.PIShow = false
@@ -609,6 +618,7 @@ export default {
         },
         handleUpdatePI(item){
             this.form = Core.Util.deepCopy(item)
+            this.form.freight = Core.Util.countFilter(this.form.freight)
             this.PIShow = true;
         },
 
