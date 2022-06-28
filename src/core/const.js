@@ -568,6 +568,12 @@ let Const = {
             YES:1,
             NO:0,
         },
+	    TYPE: {
+		    PRE_SALES: 10,
+		    AFTER_SALES: 20,
+		    MIX: 30,
+		    GIVEAWAY: 40,
+	    },
 
     },
 

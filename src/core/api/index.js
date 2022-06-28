@@ -308,6 +308,10 @@ const apiList = {
 
         revise: ['PostJson', 'purchase-order/revise'], // 已下单的订单-编辑商品
         reviseAudit: ['PostJson', 'purchase-order/revise-audit'], // 已下单的订单-编辑商品-审核
+
+	    createGiveaway: ['PostJson', 'purchase-order/create-giveaway'], // 已下单的订单-编辑商品-审核
+
+
     },
     Aftersales: { // 售后单
         list: ['PostJson', 'after-sales-order/list'],

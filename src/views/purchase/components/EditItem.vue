@@ -10,7 +10,7 @@
                 <i class="icon i_expan_l"/>
             </div>
         </template>
-        <a-collapse-panel key="EditPurchaseItem" :header="$t('i.product_information')" class="gray-collapse-panel">
+        <a-collapse-panel key="EditPurchaseItem" :header="title" class="gray-collapse-panel">
             <div class="panel-content table-container no-mg">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'>
@@ -49,6 +49,7 @@
 import Core from '../../../core';
 
 const USER_TYPE = Core.Const.USER.TYPE;
+const PURCHASE_TYPE = Core.Const.PURCHASE.TYPE;
 
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 
@@ -68,6 +69,7 @@ export default {
     },
     data() {
         return {
+            title: '',
             loading: false,
 
             activeKey: ['EditPurchaseItem'],
@@ -94,9 +96,31 @@ export default {
         }
     },
     mounted() {
-        this.getPurchaseItemList()
+
+        console.log(this.type)
+        switch (this.type) {
+            case 'PURCHASE_ORDER':        // 详情
+                this.getPurchaseItemList()
+                this.title = this.$t('i.product_information')
+                break;
+            case 'GIVE_ORDER':        // 详情
+                this.title = this.$t('p.give_order')
+                break;
+        }
     },
     methods: {
+        routerChange(type, item = {}) {
+            let routeUrl = ''
+            switch (type) {
+                case 'detail':        // 详情
+                    routeUrl = this.$router.resolve({
+                        path: this.$auth('ADMIN') ? "/item/item-detail" : '/purchase/item-display',
+                        query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+            }
+        },
         // 获取 采购单 商品列表
         getPurchaseItemList() {
             this.loading = true;
@@ -149,15 +173,36 @@ export default {
                 unit_price: item.unit_price,
             }))
             console.log('handleSave item_list:', item_list)
-            Core.Api.Purchase.revise({
-                id: this.orderId,
-                item_list,
-            }).then(() => {
-                this.$message.success(this.$t('pop_up.save_success'))
-                this.$emit('submit')
-            }).catch(err => {
-                console.log('handleSave err:', err)
-            })
+
+            switch (this.type) {
+                case 'PURCHASE_ORDER':        // 详情
+                    Core.Api.Purchase.revise({
+                        id: this.orderId,
+                        item_list,
+                    }).then(() => {
+                        this.$message.success(this.$t('pop_up.save_success'))
+                        this.$emit('submit')
+                    }).catch(err => {
+                        console.log('handleSave err:', err)
+                    })
+                    break;
+                case 'GIVE_ORDER':        // 详情
+                    Core.Api.Purchase.createGiveaway({
+                        id: this.orderId,
+                        item_list,
+                        type: PURCHASE_TYPE.GIVEAWAY,
+                        org_id: this.detail.org_id,
+                        org_type: this.detail.org_type
+
+                    }).then(() => {
+                        this.$message.success(this.$t('pop_up.save_success'))
+                        this.$emit('submit')
+                    }).catch(err => {
+                        console.log('handleSave err:', err)
+                    })
+                    break;
+            }
+
         },
         handleCancel() {
             console.log('handleCancel:')

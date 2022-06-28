@@ -500,7 +500,7 @@ const messages = {
 	        update: '修改订单',
             update_PI: '修改PI',
             delivery_address: '发货地址',
-
+	        give_order: '赠送订单',
 
         },
         s: {
@@ -1153,6 +1153,7 @@ const messages = {
 	        update: 'Order update',
             update_PI: 'Update PI',
             delivery_address: 'Delivery address',
+	        give_order: 'Give order',
         },
         s: {
             store_list: 'Store list',

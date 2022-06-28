@@ -14,9 +14,9 @@
                 </template>
 
                 <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
-                        <AuditHandle v-if="detail.status === STATUS.REVISE_AUDIT"
-                                 btnType='primary' :api-list="['Purchase', 'reviseAudit']" :id="detail.id" @submit="getList"
-                                 :s-pass="FLAG.YES" :s-refuse="FLAG.NO" no-refuse><i class="icon i_audit"/>{{ $t('n.audit') }}
+                    <AuditHandle v-if="detail.status === STATUS.REVISE_AUDIT"
+                         btnType='primary' :api-list="['Purchase', 'reviseAudit']" :id="detail.id" @submit="getList"
+                        :s-pass="FLAG.YES" :s-refuse="FLAG.NO" no-refuse><i class="icon i_audit"/>{{ $t('n.audit') }}
                     </AuditHandle>
                     <!-- <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.confirm_payment')}}</a-button>-->
                     <!-- <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && (detail.type !== TYPE. || PAYMENT_STATUS.PAY_ALL)" @click="handleModalShow('deliver')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.ship')}}</a-button>-->
@@ -25,6 +25,7 @@
                     <template v-if="detail.type === FLAG_ORDER_TYPE.PRE_SALES">
                         <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') " @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>
                     </template>
+                    <a-button type="primary" ghost v-if="detail.type !== TYPE.GIVEAWAY && !giveOrderShow" @click="giveOrderShow = true">赠送订单</a-button>
                 </template>
                 <template v-if="authOrg(detail.org_id, detail.org_type)">
                     <a-button type="primary" ghost v-if="beforeDeliver && !itemEditShow" @click="itemEditShow = true">更换商品</a-button>
@@ -43,6 +44,8 @@
             </div>
         </div>
         <div class="form-container">
+            <EditItem v-if="giveOrderShow" :order-id='id' :detail='detail' type='GIVE_ORDER' @submit="getList" @cancel='giveOrderShow = false'></EditItem>
+
             <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
                 <template #expandIcon ><i class="icon i_expan_l"/> </template>
                 <!-- 商品信息 -->
@@ -92,6 +95,7 @@
                 </a-collapse-panel>
 
                 <EditItem v-if="itemEditShow" :order-id='id' :detail='detail' type='PURCHASE_ORDER' @submit="getList" @cancel='itemEditShow = false'></EditItem>
+
 
                 <!-- 订单信息 -->
                 <a-collapse-panel key="PurchaseInfo" :header="$t('p.order_information')" class="gray-collapse-panel">
@@ -423,6 +427,7 @@ const STATUS = Core.Const.PURCHASE.STATUS;
 const PAY_TIME = Core.Const.DISTRIBUTOR.PAY_TIME;
 const PAY_STATUS = Core.Const.PURCHASE.PAY_STATUS;
 const FLAG_ORDER_TYPE = Core.Const.PURCHASE.FLAG_ORDER_TYPE;
+const TYPE = Core.Const.PURCHASE.TYPE;
 
 const PAYMENT_STATUS = Core.Const.PURCHASE.PAYMENT_STATUS;
 const FLAG_PART_SHIPMENT_MAP = Core.Const.PURCHASE.FLAG_PART_SHIPMENT_MAP;
@@ -442,6 +447,7 @@ export default {
     data() {
         return {
             FLAG,
+            TYPE,
             FLAG_ORDER_TYPE,
             STOCK_TYPE: Core.Const.STOCK_RECORD.TYPE,
             COMMODITY_MAP: Core.Const.STOCK_RECORD.COMMODITY_TYPE_MAP,
@@ -503,6 +509,7 @@ export default {
             waybillInfo: {},
             transferShow: false,
             paymentShow: false,
+
             payMethodList: PURCHASE.PAY_METHOD_LIST,
             paymentTimeList: DISTRIBUTOR.PAY_TIME_LIST,
 
@@ -546,6 +553,7 @@ export default {
             selectedRowItems: [],
 
             itemEditShow: true, // 是否开启商品编辑
+            giveOrderShow: false,
         };
     },
     watch: {},
@@ -673,6 +681,7 @@ export default {
     methods: {
         getList(){
             this.itemEditShow = false
+            this.giveOrderShow = false
             this.getPurchaseItemList();
             this.getPurchasePayList();
             this.getPurchaseInfo();
