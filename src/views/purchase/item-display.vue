@@ -43,9 +43,9 @@
         <ExploredContent ref="ExploredContent" :id="id"/>
         <div class="btn-content">
             <a-button type="primary" class="disabled" v-if="detail.in_shopping_cart">{{ $t('i.added') }}</a-button>
-            <a-button type="primary" @click="hanldeAddToShopCart" v-else>{{ $t('i.favorited') }}</a-button>
+            <a-button type="primary" @click="hanldeAddToShopCart" v-else>{{ $t('i.cart') }}</a-button>
 
-            <a-button type="primary" class="disabled" ghost v-if="detail.in_favorite">{{ $t('i.cart') }}</a-button>
+            <a-button type="primary" class="disabled" ghost v-if="detail.in_favorite">{{ $t('i.favorited') }}</a-button>
             <a-button type="primary" ghost @click="hanldeAddToFavorite" v-else>{{ $t('i.add_to_favorites') }}</a-button>
         </div>
     </div>

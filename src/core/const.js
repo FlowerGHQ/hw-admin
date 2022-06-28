@@ -777,9 +777,11 @@ let Const = {
         },
         STATUS: { //出入库单状态
             INIT: 0, //初始化
-            WAIT_AUDIT: 10, //待审核
-            AUDIT_PASS: 20, //审核通过
-            FINANCE_PASS: 30, //财务审核
+	        WAIT_AUDIT: 10, //待审核
+	        FINANCE_PASS: 20, //财务审核
+            AUDIT_PASS: 30, //审核通过
+
+
             CLOSE: 40, //已完成
 	        DELIVERY: 50, //已完成
             AUDIT_REFUSE: -10,//审核失败
@@ -788,8 +790,8 @@ let Const = {
         STATUS_MAP: {
             '0': {key: 0, zh: '待提交', en: 'Awaiting commit',color: 'orange'},
             '10': {key: 10, zh: '待审核', en: 'Awaiting review', color: 'yellow'},
-            '20': {key: 20, zh: '仓库审核通过', en: 'Admin review passed', color: 'blue'},
-            '30': {key: 30, zh: '财务审核通过', en: 'Financial review passed', color: 'purple'},
+	        '20': {key: 30, zh: '财务审核通过', en: 'Financial review passed', color: 'purple'},
+            '30': {key: 20, zh: '仓库审核通过', en: 'Admin review passed', color: 'blue'},
             '40': {key: 40, zh: '已完成', en: 'In the warehouse', color: 'green'},
 	        '50': {key: 40, zh: '已发货', en: 'Delivery', color: 'green'},
 	        '60': {key: 40, zh: '已收货', en: 'Take delivery', color: 'green'},

@@ -233,11 +233,18 @@
                     </div>
                 </template>
                 <div class="form-item">
+                    <div class="key">费用</div>
+                    <div class="value">
+                        <a-input v-model:value="form.freight" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
+                <div class="form-item">
                     <div class="key">{{ $t('p.remark') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
+
             </div>
         </a-modal>
     </div>
@@ -409,6 +416,7 @@ export default {
         handleDeliverShow(item) {
             this.deliverShow = true;
             this.form = Core.Util.deepCopy(item);
+
             this.invoiceId = item.id
             console.log(this.invoiceId)
             this.pageChange(1)
@@ -546,6 +554,7 @@ export default {
                 adminRequire = [
                     {key: 'delivery_address', msg: '请填写发货地址'},
                     {key: 'port', msg: '请填写发货港口'},
+                    {key: 'freight', msg: '请填写运费'},
                 ]
             }
             for (let index in adminRequire) {

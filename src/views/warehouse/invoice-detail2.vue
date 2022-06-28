@@ -10,13 +10,13 @@
             <template v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) && detail.type === TYPE.IN && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')">
                 <a-button type="primary" @click="handleExportIn"><i class="icon i_download"/>导出</a-button>
             </template>
-            <AuditMaterialPurchase v-if="detail.status === STATUS.WAIT_AUDIT && $auth('invoice.warehouse-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :invoiceId="id"
-                                   :status="STATUS.WAIT_AUDIT" @submit="getInvoiceDetail" ><i class="icon i_audit"/>仓库审核</AuditMaterialPurchase>
+            <AuditHandle v-if="detail.status === STATUS.FINANCE_PASS && $auth('invoice.warehouse-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"
+                                   :sPass="STATUS.AUDIT_PASS" :fail="STATUS.AUDIT_REFUSE" @submit="getInvoiceDetail" ><i class="icon i_audit"/>仓库审核</AuditHandle>
             <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && detail.type === TYPE.IN && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}完成</a-button>
             <template v-if="detail.type === TYPE.OUT">
-                <AuditMaterialPurchase v-if="detail.status === STATUS.AUDIT_PASS && $auth('invoice.finance-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :invoiceId="id"
-                                       :status="STATUS.AUDIT_PASS" @submit="getInvoiceDetail" ><i class="icon i_audit"/>财务审核</AuditMaterialPurchase>
-                <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.FINANCE_PASS && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}完成</a-button>
+                <AuditHandle v-if="detail.status === STATUS.WAIT_AUDIT && $auth('invoice.finance-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"
+                                       :sPass="STATUS.FINANCE_PASS" :fail="STATUS.AUDIT_REFUSE" @submit="getInvoiceDetail" ><i class="icon i_audit"/>财务审核</AuditHandle>
+                <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}完成</a-button>
                 <a-button type="primary" @click="handleExportOut" v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')"><i class="icon i_download"/>导出</a-button>
             </template>
         </div>
@@ -357,7 +357,7 @@ import Core from '../../core';
 import ItemSelect from '../../components/popup-btn/ItemSelect.vue'
 import EntitySelect from '../../components/popup-btn/EntitySelect.vue'
 import MaterialSelect from '../../components/popup-btn/MaterialSelect.vue'
-import AuditMaterialPurchase from '../../components/popup-btn/AuditHandle.vue'
+import AuditHandle from '../../components/popup-btn/AuditHandle.vue'
 import data from "../../core/data";
 
 const STOCK_RECORD = Core.Const.STOCK_RECORD
@@ -373,7 +373,7 @@ export default {
         ItemSelect,
         EntitySelect,
         MaterialSelect,
-        AuditMaterialPurchase
+        AuditHandle
     },
     props: {},
     data() {
