@@ -413,6 +413,7 @@ import WaybillShow from "@/components/popup-btn/WaybillShow.vue"
 import MySteps from "@/components/common/MySteps.vue"
 import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 import DeliveryLogs from './components/DeliveryLogs.vue';
+import AuditHandle from '@/components/popup-btn/AuditHandle.vue';
 
 import EditItem from './components/EditItem.vue';
 
@@ -442,6 +443,7 @@ export default {
         DeliveryLogs,
         WaybillShow,
         MySteps,
+        AuditHandle,
     },
     props: {},
     data() {

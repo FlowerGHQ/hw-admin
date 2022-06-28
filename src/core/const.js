@@ -453,8 +453,10 @@ let Const = {
             TAKE_DELIVER: 330,
             ALL_TAKE_DELIVER: 360,
             DEAL_SUCCESS: 400,
+	        REVISE: 600,
             REVISE_AUDIT: 630,
             CANCEL: -100,
+	        RE_REVISE: -200,
         },
         STATUS_MAP: {
             '0':   { value: '0', key: 0,    color: 'red',    zh: '未知', en: 'Unknown'},
@@ -465,7 +467,10 @@ let Const = {
             '330': { value: '0', key: 330,  color: 'yellow', zh: '部分收货', en: 'Received'},
             '360': { value: '0', key: 360,  color: 'yellow', zh: '已收货', en: 'Received'},
             '400': { value: '0', key: 400,  color: 'green',  zh: '交易完成', en: 'Order completed'},
+	        '600': { value: '0', key: 600,  color: 'blue',  zh: '已修改', en: 'The modified'},
+	        '630': { value: '0', key: 630,  color: 'yellow',  zh: '待审核', en: 'To audit'},
             '-100':{ value: '0', key: -100, color: 'gray',   zh: '交易关闭', en: 'Canceled'},
+	        '-200':{ value: '0', key: -200, color: 'gray',   zh: '已修改关闭', en: 'Modified closed'},
         },
         /* STATUS_COLOR_MAP: {
             '0': 'red',
@@ -541,10 +546,14 @@ let Const = {
 	    FLAG_ORDER_TYPE_LIST: {
 		    '10': { key: 10, zh: '售前订单', en: 'Pre-sale orders'},
 		    '20': { key: 20, zh: '售后订单', en: 'After sales order'},
+		    '30': { key: 30, zh: '混合订单', en: 'Mix order'},
+		    '40': { key: 40, zh: '赠品单', en: 'Giveaway order'},
 	    },
 	    FLAG_ORDER_TYPE_MAP: {
 		    10: '售前订单',
 		    20: '售后订单',
+		    30: '混合订单',
+		    40: '赠品单',
 	    },
 	    FLAG_ORDER_TYPE: {
 		    PRE_SALES: 10,
