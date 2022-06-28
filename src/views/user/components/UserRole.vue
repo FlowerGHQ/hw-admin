@@ -92,7 +92,8 @@ export default {
             },
         };
     },
-    watch: {},
+    watch: {
+    },
     computed: {
         tableColumns() {
             let tableColumns = [
@@ -132,7 +133,11 @@ export default {
             });
         },
         getRoleList() {
-            Core.Api.Authority.roleList().then(res => {
+            console.log(this.detail)
+            Core.Api.Authority.roleList({
+                org_id: this.detail.org_id,
+                org_type: this.detail.org_type,
+            }).then(res => {
                 res.list.forEach(role => {
                     this.tableData.forEach(it =>{
                         if (role.id == it.role_id){
