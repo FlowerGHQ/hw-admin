@@ -26,7 +26,7 @@
                     <div class="name" @click="routerChange('detail', item.item)">{{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}</div>
                     <div class="sub">{{item.item ? item.item.code : '-'}}</div>
                     <div class="spec" v-if='item.item && item.item.attr_list'>
-                        <span>{{ $t('i.spec') }}：</span>{{$Util.itemSpecFilter(item.item.attr_list)}}
+                        <span>{{ $t('i.spec') }}：</span>{{$Util.itemSpecFilter(item.item.attr_list, lang)}}
                     </div>
                     <span class="count" v-if="!item.editMode" @click="handleCountEditShow(item)">x{{item.amount}}</span>
                     <div class="count-edit" v-else>
@@ -53,12 +53,12 @@
                 <span class="price">{{ $t('i.total_price') }}</span>
             </div>
             <div class="settle-item" v-for="item of shopCartList" :key="item.id">
-                <p class="name">
+                <div class="name">
                     {{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}
-                    <span class="spec" v-if='item.item && item.item.attr_list'>
-                        {{$Util.itemSpecFilter(item.item.attr_list)}}
-                    </span>
-                </p>
+<!--                    <div class="spec" v-if='item.item && item.item.attr_list'>-->
+<!--                        {{$Util.itemSpecFilter(item.item.attr_list)}}-->
+<!--                    </div>-->
+                </div>
                 <span class="price">{{item.amount}}个</span>
                 <span class="price">{{currency}} {{$Util.countFilter(item.item[priceKey + unitMap[currency].key])}}</span>
                 <span class="price">{{currency}} {{$Util.countFilter(item.item[priceKey + unitMap[currency].key] * item.amount)}}</span>
@@ -81,7 +81,7 @@
                     <div class="name" @click="routerChange('detail', item.item)">{{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}</div>
                     <div class="sub">{{item.item ? item.item.code : '-'}}</div>
                     <div class="spec" v-if='item.item && item.item.attr_list'>
-                        <span>{{ $t('i.spec') }}：</span>{{$Util.itemSpecFilter(item.item.attr_list)}}
+                        <span>{{ $t('i.spec') }}：</span>{{$Util.itemSpecFilter(item.item.attr_list, lang)}}
                     </div>
                     <div></div><!-- 调整结构用 不要删 --><div></div>
                     <div class="btns">
@@ -456,7 +456,7 @@ export default {
                         color: #757575;
                         margin: 4px 0;
                         line-height: 26px;
-                        height: 26px;
+                        height: auto;
                         font-size: 14px;
                         background: #F9F9F9;
                         border-radius: 2px;
@@ -534,7 +534,7 @@ export default {
                         display: inline-block;
                         color: #757575;
                         line-height: 24px;
-                        height: 24px;
+                        height: auto;
                         font-size: 12px;
                         background: #F9F9F9;
                         border-radius: 2px;

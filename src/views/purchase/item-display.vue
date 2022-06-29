@@ -3,12 +3,12 @@
         <div class="info-content">
             <div class="name">{{ detail.name }}</div>
             <p class="code">{{ $t('i.code') }}：{{ detail.code }}</p>
-            <p class="spec" v-if="detail.attr_str"><span>{{ $t('i.spec') }}：</span>{{ detail.attr_str }}</p>
+            <p class="spec" v-if="detail.attr_str"><span>{{ $t('i.spec') }}：</span>{{  $i18n.locale =='zh' ? detail.attr_str : detail.attr_str_en }}</p>
             <p class="price">€{{ $Util.countFilter(detail[priceKey + 'eur']) }} |
                 ${{ $Util.countFilter(detail[priceKey + 'usd']) }}</p>
             <p class="category"><span v-for="(category, index) in detail.category_list">
                             <span v-if="index !== 0">,</span>
-                            {{ category.category_name }}
+                            {{ $i18n.locale =='zh' ? category.category_name  : category.category_name_en}}
                         </span></p>
             <div class="desc" v-if="config && config.length">
                 <template v-for="(item, index) of config" :key="index">
@@ -100,7 +100,9 @@ export default {
                 console.log('getItemDetail res', res)
                 let detail = res.detail
                 detail.attr_str = detail.attr_list ? detail.attr_list.map(item => item.value).join(',') : ''
+                detail.attr_str_en = detail.attr_list ? detail.attr_list.map(item => item.value_en).join(',') : ''
                 detail.attr_def_name = detail.attr_list ? detail.attr_list.map(item => item.attr_def_name).join(',') : ''
+                detail.attr_def_name_en = detail.attr_list ? detail.attr_list.map(item => item.attr_def_name_en).join(',') : ''
                 console.log('detail.attr_list.attr_def_name', detail.attr_def_name)
                 this.detail = detail
                 console.log('detail', detail)

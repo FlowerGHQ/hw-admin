@@ -74,7 +74,7 @@
                 <div class="info">
                     <p>{{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}</p>
                     <span>{{ $t('p.code') }}：{{item.item ? item.item.code : '-'}}</span>
-                    <span v-if="item.item && item.item.attr_str">{{ $t('i.spec') }}：{{item.item ? item.item.attr_str : '-'}}</span>
+                    <span v-if="item.item && item.item.attr_str">{{ $t('i.spec') }}：{{item.item ? lang =='zh' ? item.item.attr_str:item.item.attr_str_en : '-'}}</span>
                     <span>{{ $t('i.amount') }}：{{item.amount}}</span>
                     <span>{{ $t('p.unit_price') }}：{{unit}} {{$Util.countFilter(item.item[priceKey])}}</span>
                 </div>
@@ -188,6 +188,8 @@ export default {
                     if (element.attr_list && element.attr_list.length) {
                         let str = element.attr_list.map(i => i.value).join(' ')
                         element.attr_str = str
+                        let str_en = element.attr_list.map(i => i.value_en).join(' ')
+                        element.attr_str_en = str_en
                     }
                 })
                 this.shopCartList = res.list

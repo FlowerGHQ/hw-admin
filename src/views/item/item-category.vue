@@ -46,6 +46,12 @@
                             <a-input v-model:value="editForm.name" :placeholder="$t('def.input')"/>
                         </div>
                     </div>
+                    <div class="form-item">
+                        <div class="key">{{ $t('n.name_en') }}</div>
+                        <div class="value">
+                            <a-input v-model:value="editForm.name_en" :placeholder="$t('def.input')"/>
+                        </div>
+                    </div>
                 </div>
             </a-modal>
         </template>
@@ -76,6 +82,7 @@ export default {
                 id: '',
                 parent_id: '',
                 name: '',
+                name_en: '',
             },
         };
     },
@@ -84,6 +91,7 @@ export default {
         tableColumns() {
             let columns = [
                 {title: this.$t('n.name'), dataIndex: 'name'},
+                {title: this.$t('n.name_en'), dataIndex: 'name_en'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100,},
             ]
             return columns
@@ -170,10 +178,11 @@ export default {
         },
 
         // 编辑与新增子类
-        handleModalShow({parent_id = 0, id, name}, node = null, parent = null) {
+        handleModalShow({parent_id = 0, id, name, name_en}, node = null, parent = null) {
             this.editForm = {
                 id: id,
                 name: name,
+                name_en: name_en,
                 parent_id: parent_id,
             }
             console.log('this.editForm:', this.editForm)
@@ -184,6 +193,9 @@ export default {
         handleModalSubmit() {
             let form = Core.Util.deepCopy(this.editForm)
             if (!form.name) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.name_en) {
                 return this.$message.warning(this.$t('def.enter'))
             }
             this.loading = true

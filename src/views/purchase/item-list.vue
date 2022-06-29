@@ -3,7 +3,7 @@
     <div class="item-header-container">
         <a-tabs v-model:activeKey="firstLevelId" @change="handleCategoryChange">
             <a-tab-pane :key="0" :tab="$t('n.all')"></a-tab-pane>
-            <a-tab-pane v-for="item of categoryList" :key="item.id" :tab="item.name"></a-tab-pane>
+            <a-tab-pane v-for="item of categoryList" :key="item.id" :tab="$i18n.locale =='zh' ? item.name : item.name_en"></a-tab-pane>
             <template #rightExtra>
                 <a-input-group  compact>
                     <a-select v-model:value="searchType" class="search_select">
@@ -49,7 +49,7 @@
     <div class="item-content-container" :class="firstLevelId ? '' : 'full-content'">
         <div class="category-container" v-if="firstLevelId">
             <a-button type="link" @click="handleCategoryChange(firstLevelId)" >
-                <div class="category-title">{{firstLevelName}}</div>
+                <div class="category-title">{{ $i18n.locale =='zh' ? firstLevelName.name : firstLevelName.name_en}}</div>
             </a-button>
             <div class="category-content">
                 <CategoryTree :parentId='firstLevelId' @change='handleCategoryChange' ref="CategoryTree"/>
@@ -199,7 +199,7 @@ export default {
             console.log('handleCategoryChange category:', category)
             this.searchForm.category_id = category
             if ( this.firstLevelId && category === this.firstLevelId) {
-                this.firstLevelName = this.categoryList.find(i => i.id === category).name
+                this.firstLevelName = this.categoryList.find(i => i.id === category)
                 this.$nextTick(() => {
                     this.$refs.CategoryTree.handleReset();
                 })

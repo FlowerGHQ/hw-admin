@@ -109,6 +109,7 @@ const messages = {
             record: '操作记录',
             organization: '操作组织',
             customer_name: '车主姓名',
+	        name_en: '英文名',
         },
         a: {
             new_retailer: '新建零售商',
@@ -766,6 +767,7 @@ const messages = {
             record: 'Operation record',
             organization: 'Organization',
             customer_name: 'Name',
+	        name_en: 'English name ',
         },
         a: {
             new_retailer: 'Add a retailer',
