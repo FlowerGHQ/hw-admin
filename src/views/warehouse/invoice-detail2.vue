@@ -10,7 +10,8 @@
             <template v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) && detail.type === TYPE.IN && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')">
                 <a-button type="primary" @click="handleExportIn"><i class="icon i_download"/>导出</a-button>
             </template>
-            <AuditHandle v-if="detail.status === STATUS.FINANCE_PASS && $auth('invoice.warehouse-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"
+
+            <AuditHandle v-if="(detail.status === STATUS.FINANCE_PASS || (detail.status === STATUS.WAIT_AUDIT && detail.type === TYPE.IN)) && $auth('invoice.warehouse-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"
                                    :sPass="STATUS.AUDIT_PASS" :fail="STATUS.AUDIT_REFUSE" @submit="getInvoiceDetail" ><i class="icon i_audit"/>仓库审核</AuditHandle>
             <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && detail.type === TYPE.IN && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}完成</a-button>
             <template v-if="detail.type === TYPE.OUT">

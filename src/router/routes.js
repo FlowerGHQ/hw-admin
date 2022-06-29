@@ -791,42 +791,25 @@ const routes = [
                 }
             },
 
-	        {
-		        path: 'material-put-stock',
-		        name: 'MaterialPutStock',
-		        component: () => import('@/views/production/material-put-stock.vue'),
-		        meta: {
-			        roles: [LOGIN_TYPE.ADMIN],
-			        title: '物料入库',
-		        }
-	        },
-	        {
-		        path: 'material-out-stock',
-		        name: 'MaterialOutStock',
-		        component: () => import('@/views/production/material-out-stock.vue'),
-		        meta: {
-			        roles: [LOGIN_TYPE.ADMIN],
-			        title: '物料出库',
-		        }
-	        },
-	        {
-		        path: 'material-adjust-stock',
-		        name: 'MaterialAdjustStock',
-		        component: () => import('@/views/production/material-adjust-stock.vue'),
-		        meta: {
-			        roles: [LOGIN_TYPE.ADMIN],
-			        title: '物料调库',
-		        }
-	        },
-	        {
-		        path: 'material-stock-record',
-		        name: 'MaterialStockRecord',
-		        component: () => import('@/views/production/components/MaterialStockRecord.vue'),
-		        meta: {
-			        roles: [LOGIN_TYPE.ADMIN],
-			        title: '物料调库',
-		        }
-	        },
+
+	        // {
+		    //     path: 'material-adjust-stock',
+		    //     name: 'MaterialAdjustStock',
+		    //     component: () => import('@/views/production/material-adjust-stock.vue'),
+		    //     meta: {
+			//         roles: [LOGIN_TYPE.ADMIN],
+			//         title: '物料调库',
+		    //     }
+	        // },
+	        // {
+		    //     path: 'material-stock-record',
+		    //     name: 'MaterialStockRecord',
+		    //     component: () => import('@/views/production/components/MaterialStockRecord.vue'),
+		    //     meta: {
+			//         roles: [LOGIN_TYPE.ADMIN],
+			//         title: '物料调库',
+		    //     }
+	        // },
 
 
 
@@ -1034,6 +1017,24 @@ const routes = [
                     roles: [LOGIN_TYPE.ADMIN],
                 }
             },
+	        {
+		        path: 'material-put-stock',
+		        name: 'MaterialPutStock',
+		        component: () => import('@/views/production/material-put-stock.vue'),
+		        meta: {
+			        roles: [LOGIN_TYPE.ADMIN],
+			        title: '入库',
+		        }
+	        },
+	        {
+		        path: 'material-out-stock',
+		        name: 'MaterialOutStock',
+		        component: () => import('@/views/production/material-out-stock.vue'),
+		        meta: {
+			        roles: [LOGIN_TYPE.ADMIN],
+			        title: '出库',
+		        }
+	        },
           /*  {
                 path: 'transfer-order-list-in',
                 name: 'TransferOrderListIn',

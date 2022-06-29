@@ -1,7 +1,7 @@
 <template>
     <div id="MaterialOutStock" class="edit-container">
         <div class="title-container">
-            <div class="title-area">{{$t('i.material_out_stock')}}</div>
+            <div class="title-area">{{ $t('i.material_out_stock') }}</div>
         </div>
         <div class="form-block"> <!-- 基本信息 -->
             <div class="form-title">
@@ -20,7 +20,7 @@
                             :filter-option="false"
                             :not-found-content="null"
                             @search="handleWarehouseSearch"
-                            @change="handleWarehouseByUidChange"
+                            @change="handleWarehouseChange"
                         >
                             <a-select-option v-for=" item in warehouseOptions" :key="item.id" :value="item.id">
                                 {{ item.name }}
@@ -29,61 +29,49 @@
 
                     </div>
                 </div>
-                <div class="form-item">
-                    <div class="key">uid</div>
+                <div class="form-item required">
+                    <div class="key">出库单</div>
                     <div class="value">
-                        <a-input v-model:value="uid" @change="handleWarehouseByUidChange"/>
+                        <a-input v-model:value="invoice_uid" @blur="handleWarehouseByMaterialChange"/>
                     </div>
                 </div>
 
-                <div class="form-item">
-                    <div class="key">物料名称</div>
+                <!--                <div class="form-item required">
+                                    <div class="key">编码</div>
+                                    <div class="value">
+                                        <a-select
+                                            v-model:value="form.id"
+                                            show-search
+                                            placeholder="请输入物料编码"
+                                            :default-active-first-option="false"
+                                            :show-arrow="false"
+                                            :filter-option="false"
+                                            :not-found-content="null"
+                                            @search="handleSearch"
+                                            @change="handleChange"
+                                        >
+                                            <a-select-option v-for=" item in options" :key="item.id" :value="item.id">{{
+                                                    item.code
+                                                }}-{{ item.name }}
+                                            </a-select-option>
+
+                                        </a-select>
+
+                                    </div>
+                                </div>-->
+                <div class="form-item required">
+                    <div class="key">编码</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" disabled/>
+                        <a-input v-model:value="form.code"  @blur="handleSearch"/>
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">物料编码</div>
+                    <div class="key">库位号</div>
                     <div class="value">
-                        <a-input v-model:value="form.code" disabled/>
+                        <a-input v-model:value="warehouseLocationopTions" disabled/>
                     </div>
                 </div>
-                <div class="form-item">
-                    <div class="key">库位</div>
-                    <div class="value">
-                        <a-input v-model:value="form.warehouse_location_uid" disabled/>
-                    </div>
-                </div>
-                <div class="form-item">
-                    <div class="key">物料规格</div>
-                    <div class="value">
-                        <a-input v-model:value="form.spec" disabled/>
-                    </div>
-                </div>
-                <div class="form-item">
-                    <div class="key">物料包装</div>
-                    <div class="value">
-                        <a-input v-model:value="form.encapsulation" disabled/>
-                    </div>
-                </div>
-                <div class="form-item">
-                    <div class="key">单位</div>
-                    <div class="value">
-                        <a-input v-model:value="form.unit" disabled/>
-                    </div>
-                </div>
-                <div class="form-item">
-                    <div class="key">包装尺寸</div>
-                    <div class="value">
-                        <a-input v-model:value="form.encapsulation_size" disabled/>
-                    </div>
-                </div>
-                <div class="form-item">
-                    <div class="key">毛重</div>
-                    <div class="value">
-                        <a-input v-model:value="form.gross_weight" disabled/>
-                    </div>
-                </div>
+
                 <div class="form-item">
                     <div class="key">备注</div>
                     <div class="value">
@@ -91,27 +79,47 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">该批次剩余库存</div>
-                    <div class="value">
-                        <a-input v-model:value="form.record_balance" disabled/>
-                    </div>
-                </div>
-                <div class="form-item">
                     <div class="key">当前库存</div>
                     <div class="value">
-                        <a-input v-model:value="form.stock" disabled/>
+                        <a-input v-model:value="form.stock.stock" disabled/>
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">库存变动时间</div>
                     <div class="value">
-                        <a-input v-model:value="form.stock_update_time" disabled/>
+                        <a-input v-model:value="form.stock.updateTime" disabled/>
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">出库数量</div>
+                    <div class="key">共需入库数量</div>
                     <div class="value">
-                        <a-input type="number" v-model:value="form.amount" placeholder="请输入数量"/>
+                        <a-input type="number" v-model:value="form.amount" disabled/>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <div class="key">已入库数量</div>
+                    <div class="value">
+                        <a-input type="number" v-model:value="form.confirm_amount" disabled/>
+                    </div>
+                </div>
+                <div>
+                    <div class="form-item">
+                        <div class="key">入库最小包装</div>
+                        <div class="value">
+                            <a-input type="number" v-model:value="form.smallest_packaging" disabled/>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="key">入库包装数</div>
+                        <div class="value">
+                            <a-input type="number" v-model:value="form.packaging_amount" @blur="handlePackagingAmount" placeholder="请输入入库包装数"/>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="key">入库数量</div>
+                        <div class="value">
+                            <a-input type="number" v-model:value="form.inventory_amount" disabled/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -131,7 +139,7 @@ const TARGET_TYPE_MAP = Core.Const.ITEM.TARGET_TYPE_MAP
 const STOCK_RECORD = Core.Const.STOCK_RECORD
 
 export default {
-    name: 'MaterialOutStock',
+    name: 'MaterialPutStock',
     components: {
         CategoryTreeSelect,
     },
@@ -141,22 +149,30 @@ export default {
             // 加载
             loading: false,
             warehouse_id: '',
-            uid: "",
+            invoice_id: '',
+            invoice_uid: '',
+            uid: '',
             form: {
                 id: '',
                 name: '',
                 code: '',
                 category_id: undefined,
-                encapsulation: '', // 物料包装
-                spec: '', // 规格
-                supplier_ids: undefined, // 供应商
-                unit: '',
-                encapsulation_size: '',
-                stock_balance: '',
-                stock_update_time: '',
-                warehouse_location_uid: '',
+                amount: '',
+                confirm_amount: '',
                 remark: '',
                 image: '',
+                warehouse_location_id: '',
+                flag_entity: '',
+
+                smallest_packaging: '',
+                packaging_amount: '',
+                inventory_amount: '',
+                invoice_id: '',
+                uid:'',
+                stock: {
+                    stock: '',
+                    updateTime: '',
+                },
             },
             gross_weight: '',
             supplierList: [],
@@ -164,6 +180,8 @@ export default {
             configTemp: [],
             options: [],
             warehouseOptions: [],
+            warehouseLocationopTions: [],
+            invoiceOptions: [],
 
         };
     },
@@ -189,64 +207,136 @@ export default {
                     break;
             }
         },
-        // 获取物料详情
-        getMaterialDetail() {
-            this.loading = true;
-            Core.Api.Material.detail({
-                id: this.form.id,
+        handleSearch() {
+            if (!this.form.code){
+                return ;
+            }
+            let codeName = this.form.code;
+            let smallest_packaging = 1;
+            if(this.form.code.indexOf("*") > 0){
+                let codes = this.form.code.split('*')
+                codeName = codes[0];
+                smallest_packaging = codes[1];
+            }
+
+
+            this.form.smallest_packaging = smallest_packaging
+            Core.Api.Item.detailByCode({code: codeName}).then(res => {
+                this.form.id = res.detail.id;
+                this.form.flag_entity = res.detail.flag_entity;
+                this.handleWarehouseChange()
+            })
+        },
+        handleWarehouseLocationSearch() {
+            if (!this.warehouse_id) {
+                console.log(1)
+                return
+            }
+            if (!this.form.id) {
+                console.log(1)
+                return
+            }
+            Core.Api.MaterialWarehouseLocation.list({
+                warehouse_id: this.warehouse_id,
+                target_id: this.form.id,
+                target_type: TARGET_TYPE_MAP.ITEM,
             }).then(res => {
-                console.log('Material.detail res', res)
-                this.form = res
-                this.form.code = res.code
-                this.handleWarehouseByMaterialChange()
-                console.log('Material.detail res.code', res.code)
-                this.form.gross_weight = Core.Util.countFilter(res.gross_weight)
+                this.warehouseLocationopTions = ''
+                res.list.forEach(res => {
 
-            }).finally(() => {
-                this.loading = false
+                    this.warehouseLocationopTions += res.warehouse_location_uid +","
+                })
             })
-        },
-        handleSearch(code) {
-            Core.Api.Material.list({code: code}).then(res => {
-                this.options = res.list
+            Core.Api.Stock.detail({
+                warehouse_id: this.warehouse_id,
+                target_id: this.form.id,
+                target_type: TARGET_TYPE_MAP.ITEM,
+            }).then(res => {
+                this.form.stock = res.stock
+                this.form.stock.updateTime = this.$Util.timeFormat(res.stock.updateTime != undefined ? res.stock.updateTime: res.stock.createTime)
+
             })
-        },
-        handleChange() {
-            this.id = this.form.id
-            this.getMaterialDetail();
-
-
         },
         handleWarehouseSearch(name) {
             Core.Api.Warehouse.list({name: name}).then(res => {
                 this.warehouseOptions = res.list
             })
         },
-        handleWarehouseByUidChange() {
-            if (!this.uid) {
+        handleWarehouseChange(){
+            this.handleWarehouseByMaterialChange();
+            this.handleWarehouseLocationSearch();
+        },
+        handleWarehouseByMaterialChange() {
+            this.uid = ""
+
+            if (!this.form.id) {
+                console.log(1)
                 return
             }
             if (!this.warehouse_id) {
                 console.log(2)
                 return
             }
-            Core.Api.StockRecord.detailWarehouse({
-                uid: this.uid,
+
+            if (!this.invoice_uid) {
+                console.log(1)
+                return
+            }
+            Core.Api.Invoice.detailByItemUid({
+                uid: this.invoice_uid,
+                item_id: this.form.id,
                 warehouse_id: this.warehouse_id
             }).then(res => {
-                this.form = {}
-                if (res.material !== undefined){
-                    this.form = res.material
-                    this.form.stock_update_time = this.$Util.timeFormat(res.material.stock.update_time != undefined ? res.material.stock.update_time: res.material.stock.create_time)
-                    this.form.stock = res.material.stock.stock
-                    this.form.warehouse_location_uid = res.warehouse_location_uid
-                    this.form.record_balance = res.record_balance
-                }
-
-                console.log(this.form.stock.stock)
-
+                this.form.amount = res.amount
+                this.form.confirm_amount = res.confirm_amount
+                this.invoice_id = res.invoice_id
             })
         },
+        handlePackagingAmount(){
+            if (!this.form.smallest_packaging) {
+                return
+            }
+            this.form.inventory_amount = this.form.smallest_packaging * this.form.packaging_amount
+        },
+        // handleInvoiceSearch(name) {
+        //     Core.Api.Invoice.list({uid: name}).then(res => {
+        //         this.invoiceOptions = res.list
+        //     })
+        // },
+        // 获取物料详情
+        // getItemDetail() {
+        //     this.loading = true;
+        //     Core.Api.Item.detail({
+        //         id: this.form.id,
+        //     }).then(res => {
+        //         console.log('Material.detail res', res)
+        //         // this.form = res
+        //         this.form.code = res.code
+        //         this.form.name = res.name
+        //         // this.handleWarehouseLocationSearch()
+        //         // this.handleWarehouseByMaterialChange()
+        //
+        //     }).finally(() => {
+        //         this.loading = false
+        //     })
+        // },
+        /*  handleSearch(code) {
+              let codes = code.split('*')
+              console.log(codes[1])
+              this.form.smallest_packaging = codes[1]
+              Core.Api.Item.list({code: codes[0]}).then(res => {
+                  this.options = res.list
+              })
+          },*/
+
+        // handleChange() {
+        //     this.id = this.form.id
+        //     this.getItemDetail();
+        // },
+
+
+
+
         handleSubmit() {
             if (!this.form.amount) {
                 return this.$message.warning(this.$t('def.enter'))
@@ -258,17 +348,18 @@ export default {
                 cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.StockRecord.add({
-                        uid: _this.uid,
                         warehouse_id: _this.warehouse_id,
                         target_id: _this.form.id,
-                        target_type: TARGET_TYPE_MAP.MATERIAL,
+                        target_type: TARGET_TYPE_MAP.ITEM,
                         type: STOCK_RECORD.TYPE.OUT,
-                        count: _this.form.amount
+                        count: _this.form.inventory_amount,
+                        source_type: STOCK_RECORD.SOURCE_FORM.INVOICE,
+                        invoice_id: _this.invoice_id
+                    }).then((res) => {
 
-                    }).then(() => {
                         _this.$message.success(_this.$t('pop_up.operate'))
-                        _this.handleWarehouseByUidChange();
-
+                        _this.clear();
+                        _this.handleWarehouseChange();
                     }).catch(err => {
                         console.log("handleComplete err", err);
                     })

@@ -126,6 +126,7 @@ const apiList = {
 	},
     Stock: { //仓库库存管理
         add: ['PostJson', 'stock/add'],
+	    detail: ['PostJson', 'stock/detail'],
         reduce: ['PostJson', 'stock/reduce'],
         list: ['PostJson', 'stock/list'],
         transfer: ['PostJson', 'stock/transfer'],
