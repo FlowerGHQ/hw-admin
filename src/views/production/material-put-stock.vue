@@ -367,6 +367,9 @@ export default {
                 },
             });
         },
+        clear() {
+            Object.assign(this.form, this.$options.data().form)
+        },
     }
 };
 </script>
