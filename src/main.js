@@ -4,6 +4,7 @@ import router from './router';
 import store from './store';
 import Util from './core/utils'
 import i18n from './core/i18n'
+import Antd from 'ant-design-vue'
 
 console.log('i18n', i18n)
 import {message,notification} from 'ant-design-vue';
@@ -24,4 +25,4 @@ app.config.globalProperties.$message = message
 app.config.globalProperties.$notification = notification
 app.config.globalProperties.$confirm = Util.confirm
 
-app.use(router).use(store).use(i18n).mount('#app')
+app.use(router).use(Antd).use(store).use(i18n).mount('#app')

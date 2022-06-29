@@ -491,8 +491,7 @@ let Const = {
             // { name: '支付宝', value: '1' },
             // { name: '微信', value: '2' },
             // { name: '银行转账', value: '3' },
-            { name: '汇票', value: '10' },
-            { name: '银行转账', value: '20' },
+            { zh: '汇票', en: 'Draft', value: '10' },
             { zh: '银行转账', en: 'Bank transfer', value: '20' },
         ],
         PAYMENT_STATUS: {
