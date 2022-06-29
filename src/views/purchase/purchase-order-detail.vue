@@ -171,6 +171,16 @@
                                         </a-image-preview-group>
                                     </div>
                                 </template>
+
+                                <template v-if="column.key === 'detail'">
+                                    <div class="table-img">
+                                        <a-image :width="24" :height="24" :src="$Util.imageFilter(record.path.includes('img') ? record.path : '', 4)" fallback='无'/>
+                                        <a-tooltip placement="top" :title='text'>
+                                            <p class="ell" style="max-width:120px;margin-left:12px;">{{text || '-'}}</p>
+                                        </a-tooltip>
+                                    </div>
+                                </template>
+
                                 <template v-if="column.dataIndex === 'type'">
                                     {{$Util.purchasePayMethodFilter(text)}}
                                 </template>
@@ -184,6 +194,7 @@
                                     {{ $Util.timeFilter(text) }}
                                 </template>
                                 <template v-if="column.key === 'operation'">
+                                    <a-button type='link' @click="handleDownload(record)"><i class="icon i_download"/>{{ $t('n.download') }}</a-button>
                                     <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
                                         <a-button type='link' v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT" @click="handlePayAuditShow(record.id)">{{$t('p.audit')}}</a-button>
                                     </template>
@@ -280,19 +291,28 @@
                     </div>
                 </div>
                 <div class="form-item img-upload">
-                    <div class="key">{{ $t('i.picture') }}</div>
+                    <div class="key">{{ $t('p.attachment') }}</div>
                     <div class="value">
-                        <a-upload name="file" class="image-uploader"
-                            list-type="picture-card" accept='image/*'
-                            :file-list="upload.detailList" :action="upload.action"
-                            :headers="upload.headers" :data='upload.data'
-                            :before-upload="handleImgCheck"
-                            @change="handleDetailChange">
-                            <div class="image-inner" v-if="upload.detailList.length < 10">
-                                <i class="icon i_upload"/>
-                            </div>
+<!--                        <a-upload name="file" class="image-uploader"-->
+<!--                            list-type="picture-card" accept='image/*'-->
+<!--                            :file-list="upload.detailList" :action="upload.action"-->
+<!--                            :headers="upload.headers" :data='upload.data'-->
+<!--                            :before-upload="handleImgCheck"-->
+<!--                            @change="handleDetailChange">-->
+<!--                            <div class="image-inner" v-if="upload.detailList.length < 10">-->
+<!--                                <i class="icon i_upload"/>-->
+<!--                            </div>-->
+<!--                        </a-upload>-->
+                        <a-upload name="file" class="file-uploader"
+                                  :file-list="upload.fileList" :action="upload.action"
+                                  :headers="upload.headers" :data='upload.data'
+                                  :before-upload="handleFileCheck"
+                                  @change="handleFileChange">
+                            <a-button type="primary" ghost class="file-upload-btn" v-if="upload.fileList.length < 1">
+                                <i class="icon i_upload"/> {{ $t('f.choose') }}
+                            </a-button>
                         </a-upload>
-                        <div class="tip">{{ $t('n.size') }}：800*800px</div>
+<!--                        <div class="tip">{{ $t('n.size') }}：800*800px</div>-->
                     </div>
                 </div>
                 <div class="form-item required">
@@ -503,6 +523,7 @@ export default {
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
                 coverList: [],
                 detailList: [],
+                fileList: [],
                 headers: {
                     ContentType: false
                 },
@@ -733,6 +754,41 @@ export default {
             this.upload.detailList = fileList
         },
         // 上传图片 end---
+        // 上传前检查文件
+        handleFileCheck(file) {
+            console.log('handleFileCheck file.type', file.type)
+            if (file.type.includes('image/')) {
+                this.upload.data.type = 'img'
+            } else if (file.type.includes('video/')) {
+                this.upload.data.type = 'video'
+            } else if (file.type.includes('audio/')) {
+                this.upload.data.type = 'audio'
+            } else {
+                this.upload.data.type = 'file'
+            }
+            return true
+        },
+        // 上传文件
+        handleFileChange({file, fileList}) {
+            console.log("handleCoverChange status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                if (file.response && file.response.code < 0) {
+                    return this.$message.error(file.response.message)
+                }
+                this.form.path = file.response.data.filename
+                this.form.type = this.form.path.split('.').pop()
+                if (this.form.path){
+                    this.submitDisabled = false
+                }
+            }
+            this.upload.fileList = fileList
+        },
+        // 下载附件
+        handleDownload(record) {
+            console.log('handleDownload record:', record)
+            let url = Core.Const.NET.FILE_URL_PREFIX + record.path
+            window.open(url, '_self')
+        },
 
         authOrg(orgId, orgType) {
             console.log('org',this.loginOrgId === orgId && this.loginOrgType === orgType)
@@ -825,7 +881,7 @@ export default {
                 target_id: this.id
             }).then(res => {
                 res.list.forEach(it =>{
-                    it.paths = it.attachment.path.split(",")
+                    it.path = it.attachment.path.split(",")
                 })
                 this.payList = res.list
                 console.log("this.payList", this.payList)
@@ -915,12 +971,12 @@ export default {
         // 确认收款
         handlePayment() {
             let form = Core.Util.deepCopy(this.form)
-            if (this.upload.detailList.length) {
-                let detailList = this.upload.detailList.map(item => {
-                    return item.short_path || item.response.data.filename
-                })
-                form.imgs = detailList.join(',')
-            }
+            // if (this.upload.detailList.length) {
+            //     let detailList = this.upload.detailList.map(item => {
+            //         return item.short_path || item.response.data.filename
+            //     })
+            //     form.imgs = detailList.join(',')
+            // }
             if (!form.pay_method) {
                 return this.$message.warning('请选择收款方式')
             }
@@ -931,7 +987,8 @@ export default {
                 id: this.id,
                 pay_method: form.pay_method,
                 payment: form.payment * 100,
-                imgs: form.imgs,
+                imgs: form.path,
+                img_type: form.type,
                 remark: form.remark
             }).then(res => {
                 this.$message.success('支付成功')
