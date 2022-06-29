@@ -493,6 +493,7 @@ let Const = {
             // { name: '银行转账', value: '3' },
             { name: '汇票', value: '10' },
             { name: '银行转账', value: '20' },
+            { zh: '银行转账', en: 'Bank transfer', value: '20' },
         ],
         PAYMENT_STATUS: {
             WAIT_PAY: 100, //待支付

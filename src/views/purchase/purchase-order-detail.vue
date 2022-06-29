@@ -33,7 +33,7 @@
                     <a-button type="primary" v-if="detail.status === STATUS.WAIT_PAY || (detail.payment_status !== PAYMENT_STATUS.WAIT_PAY && detail.WAIT_DELIVER)" @click="handleCancel()"><i class="icon i_close_c"/>{{ $t('def.cancel')}}</a-button>
                     <a-button type="primary" v-if="detail.status === STATUS.DEAL_SUCCESS" @click="routerChange('aftersales')" ghost><i class="icon i_edit"/>{{ $t('p.apply_for_after_sales')}}</a-button>
                 </template>
-                <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status === STATUS.REVISE_AUDIT ">
+                <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status === STATUS.REVISE_AUDIT && $auth('purchase-order.audit')">
                     <AuditHandle
                                  btnType='primary' :api-list="['Purchase', 'reviseAudit']" :id="detail.id" @submit="getList"
                                  :s-pass="FLAG.YES" :s-refuse="FLAG.NO" no-refuse><i class="icon i_audit"/>{{ $t('n.audit') }}
@@ -260,7 +260,7 @@
                     <div class="key">{{$t('p.payment_method')}}</div>
                     <div class="value">
                         <a-select v-model:value="form.pay_method" :placeholder="$t('p.please_select_payment_method')">
-                            <a-select-option v-for="pay of payMethodList" :key="pay.value" :value="pay.value">{{pay.name}}</a-select-option>
+                            <a-select-option v-for="pay of payMethodList" :key="pay.value" :value="pay.value">{{pay[$i18n.locale]}}</a-select-option>
                         </a-select>
                     </div>
                 </div>
