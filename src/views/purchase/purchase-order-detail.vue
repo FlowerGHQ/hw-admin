@@ -452,6 +452,8 @@ const PAY_TIME = Core.Const.DISTRIBUTOR.PAY_TIME;
 const PAY_STATUS = Core.Const.PURCHASE.PAY_STATUS;
 const FLAG_ORDER_TYPE = Core.Const.PURCHASE.FLAG_ORDER_TYPE;
 const TYPE = Core.Const.PURCHASE.TYPE;
+const PARENT_TYPE = Core.Const.PURCHASE.PARENT_TYPE;
+
 
 const PAYMENT_STATUS = Core.Const.PURCHASE.PAYMENT_STATUS;
 const FLAG_PART_SHIPMENT_MAP = Core.Const.PURCHASE.FLAG_PART_SHIPMENT_MAP;
@@ -473,6 +475,7 @@ export default {
         return {
             FLAG,
             TYPE,
+            PARENT_TYPE,
             FLAG_ORDER_TYPE,
             STOCK_TYPE: Core.Const.STOCK_RECORD.TYPE,
             COMMODITY_MAP: Core.Const.STOCK_RECORD.COMMODITY_TYPE_MAP,
@@ -684,6 +687,15 @@ export default {
         },
 
         beforeDeliver() {
+            switch (this.detail.type) {
+                case TYPE.GIVEAWAY:
+                    return false;
+                case TYPE.PRE_SALES:
+                case TYPE.AFTER_SALES:
+                    if (this.detail.parent_type === PARENT_TYPE.BREAK)
+                        return false;
+            }
+            console.log(this.detail)
             switch (this.detail.status) {
                 case STATUS.INIT:
                 case STATUS.WAIT_PAY:
@@ -691,7 +703,7 @@ export default {
                 case STATUS.ALL_TAKE_DELIVER:
                     return true;
                 default:
-                    return true;
+                    return false;
             }
         },
     },

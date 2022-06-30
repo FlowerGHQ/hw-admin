@@ -586,6 +586,12 @@ let Const = {
 		    MIX: 30,
 		    GIVEAWAY: 40,
 	    },
+	    PARENT_TYPE: {
+		    BREAK : 10  ,     // 拆分订单
+		    TRANSFER : 20,     // 转单
+		    UPDATE: 30,     // 修改
+		    TYPE_GIVE: 40 ,    // 修改
+	    },
 
     },
 
