@@ -424,7 +424,7 @@ export default {
                 }
                 .info {
                     width: calc(~'100% - 180px');
-                    height: 150px;
+                    height: 175px;
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
