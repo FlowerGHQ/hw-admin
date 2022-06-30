@@ -40,7 +40,7 @@
 import Core from '@/core';
 
 import CountryCascader from '../common/CountryCascader.vue'
-import AddressCascader from '../common/ChinaAddressCascader.vue'
+import AddressCascader from '../common/AddressCascader.vue'
 
 export default {
     components: {AddressCascader, CountryCascader},
