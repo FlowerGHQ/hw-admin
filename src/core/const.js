@@ -450,6 +450,7 @@ let Const = {
 	        SPLIT: 50,
             WAIT_PAY: 100,
             WAIT_DELIVER: 200,
+	        ORDER_TRANSFERRED: 250,
             WAIT_TAKE_DELIVER: 300,
             TAKE_DELIVER: 330,
             ALL_TAKE_DELIVER: 360,

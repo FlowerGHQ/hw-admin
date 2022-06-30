@@ -3,7 +3,7 @@
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">{{ $t('p.details')}}</div>
-            <div class="btns-area" v-if="detail.status != STATUS.CANCEL && detail.status != STATUS.RE_REVISE && detail.status != STATUS.REVISE">
+            <div class="btns-area" v-if="detail.status != STATUS.CANCEL && detail.status != STATUS.RE_REVISE && detail.status != STATUS.REVISE && detail.status != STATUS.ORDER_TRANSFERRED">
                 <template v-if="$auth('ADMIN') && $auth('purchase-order.export')">
                     <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
                     <!-- <a-button @click="handleExportInfo"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>-->
@@ -39,8 +39,6 @@
                         :s-pass="FLAG.YES" :s-refuse="FLAG.NO" no-refuse><i class="icon i_audit"/>{{ $t('n.audit') }}
                     </AuditHandle>
                 </template>
-
-
             </div>
         </div>
         <div class="gray-panel">
