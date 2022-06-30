@@ -22,7 +22,7 @@
         <div class="statistic-content">
             <div class="title-container">订单分析</div>
             <div class="chart-container">
-                <div id="PurchaseOrderChart" class="chart"></div>
+                <div id="PurchaseOrderChart" class="chart" ref="PurchaseOrderChart"></div>
             </div>
             <div class="table-container" v-if="org_type">
                 <a-table :columns="tableColumns" :data-source="purchaseRank" :scroll="{ x: true }"
@@ -51,7 +51,7 @@
         <div class="statistic-content">
             <div class="title-container">维修单量分析</div>
             <div class="chart-container">
-                <div id="RepairOrderChart" class="chart"></div>
+                <div id="RepairOrderChart" class="chart" ref='RepairOrderChart'></div>
             </div>
         </div>
         <div class="statistic-content">
@@ -148,6 +148,10 @@ export default {
                 window.location.href = href
             }, 500)
         }
+    },
+    beforeUnmount() {
+        this.$refs.RepairOrderChart.innerHTML = ''
+        this.$refs.PurchaseOrderChart.innerHTML = ''
     },
     methods: {
         routerChange(type, item = {}) {
