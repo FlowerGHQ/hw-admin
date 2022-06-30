@@ -19,10 +19,17 @@
                                 {{ $Util.invoiceStatusFilter(text, $i18n.locale) }}
                             </template>
                             <template v-if="column.key === 'uid'">
-                                <a-button type="link" @click="routerChange('detail', record)">{{
-                                        text || '-'
-                                    }}
-                                </a-button>
+                                <template v-if="(authOrg(detail.supply_org_id, detail.supply_org_type) && type == Core.Const.STOCK_RECORD.TYPE.OUT) ||type == Core.Const.STOCK_RECORD.TYPE.IN">
+                                    <a-button type="link" @click="routerChange('detail', record)">{{
+                                            text || '-'
+                                        }}
+                                    </a-button>
+                                </template>
+                                <template v-else>
+                                    {{text || '-' }}
+
+                                </template>
+
                             </template>
                             <template v-if="column.key === 'time'">
                                 {{ $Util.timeFilter(text) }}
@@ -119,7 +126,7 @@
                 </div>
             </template>
         </a-modal>
-        <a-modal v-model:visible="takeDeliverShow" :title="$t('p.shipping_confirmation')" @ok="handleTakeDeliver">
+        <a-modal v-model:visible="takeDeliverShow" :title="$t('p.confirm_the_goods')" @ok="handleTakeDeliver">
             <div class="modal-content">
                 <div class="form-item required">
                     <div class="key">{{ $t('wa.warehouse') }}：</div>
