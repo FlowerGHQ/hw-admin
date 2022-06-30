@@ -32,9 +32,6 @@
                 </div>
             </div>
             <div class="table-container">
-                <!-- <div class="hint-count">
-                    <a-button type="primary"></a-button>
-                </div> -->
                 <ItemTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :showStock='!!warehouseId'
                     :check-mode='true' :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode'/>
             </div>
@@ -66,11 +63,13 @@
 <script>
 import Core from '@/core';
 
+import ItemTable from '@/components/table/ItemTable.vue'
+import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue'
+
 export default {
     components: {
-        ItemTable: () => import('@/components/table/ItemTable.vue'),
-        CategoryTreeSelect: () => import("@/components/popup-btn/CategoryTreeSelect.vue")
-
+        ItemTable,
+        CategoryTreeSelect,
     },
     emits: ['select', 'option'],
     props: {

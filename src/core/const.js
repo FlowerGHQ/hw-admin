@@ -447,6 +447,7 @@ let Const = {
         // 状态
         STATUS: {
             INIT: 0,
+	        SPLIT: 50,
             WAIT_PAY: 100,
             WAIT_DELIVER: 200,
             WAIT_TAKE_DELIVER: 300,
@@ -460,6 +461,7 @@ let Const = {
         },
         STATUS_MAP: {
             '0':   { value: '0', key: 0,    color: 'red',    zh: '未知', en: 'Unknown'},
+	        '50': { value: '0', key: 50,  color: 'green', zh: '已拆单', en: 'Separate bill'},
             '100': { value: '0', key: 100,  color: 'orange', zh: '待支付', en: 'Wait to pay'},
             '200': { value: '0', key: 200,  color: 'orange', zh: '待发货', en: 'Wait for delivery'},
             '250': { value: '0', key: 400,  color: 'blue',   zh: '已转单', en: 'Order transferred'},

@@ -27,7 +27,7 @@
                 <template v-if="authOrg(detail.org_id, detail.org_type) && detail.status !== STATUS.REVISE_AUDIT">
                     <a-button type="primary" ghost v-if="beforeDeliver && !itemEditShow && $auth('purchase-order.save')" @click="itemEditShow = true">更换商品</a-button>
 
-                    <a-button type="primary" v-if="detail.status !== STATUS.CANCEL && detail.status !== STATUS.DEAL_SUCCESS && detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.payment')}}</a-button>
+                    <a-button type="primary" v-if="detail.status !== STATUS.CANCEL && detail.status !== STATUS.DEAL_SUCCESS && detail.status !== STATUS.SPLIT && detail.status !== STATUS.REVISE && detail.status !== STATUS.REVISE_AUDIT && detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.payment')}}</a-button>
                     <!-- <a-button type="primary" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER" @click="handleReceived()"><i class="icon i_goods"/>确认收货</a-button>-->
                     <!-- {{detail.status}}-->
                     <a-button type="primary" v-if="detail.status === STATUS.WAIT_PAY || (detail.payment_status !== PAYMENT_STATUS.WAIT_PAY && detail.WAIT_DELIVER)" @click="handleCancel()"><i class="icon i_close_c"/>{{ $t('def.cancel')}}</a-button>
@@ -35,8 +35,8 @@
                 </template>
                 <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status === STATUS.REVISE_AUDIT && $auth('purchase-order.audit')">
                     <AuditHandle
-                                 btnType='primary' :api-list="['Purchase', 'reviseAudit']" :id="detail.id" @submit="getList"
-                                 :s-pass="FLAG.YES" :s-refuse="FLAG.NO" no-refuse><i class="icon i_audit"/>{{ $t('n.audit') }}
+                        btnType='primary' :api-list="['Purchase', 'reviseAudit']" :id="detail.id" @submit="getList"
+                        :s-pass="FLAG.YES" :s-refuse="FLAG.NO" no-refuse><i class="icon i_audit"/>{{ $t('n.audit') }}
                     </AuditHandle>
                 </template>
 
@@ -282,7 +282,7 @@
                             v-model:value="form.payment"
                             style="width: 120px"
                             :min="0"
-                            :max="((detail.freight||0)+detail.charge-detail.payment)/100"
+                            :max="((detail.freight||0) + detail.price-detail.payment)/100"
                             :precision="2"
                             :prefix="`${$Util.priceUnitFilter(detail.currency)}`"
                             placeholder="0.00"
