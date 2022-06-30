@@ -712,7 +712,6 @@ export default {
                 case STATUS.INIT:
                 case STATUS.WAIT_PAY:
                 case STATUS.WAIT_DELIVER:
-                case STATUS.ALL_TAKE_DELIVER:
                 case STATUS.SPLIT:
                     return true;
                 default:
