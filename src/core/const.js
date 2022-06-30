@@ -683,14 +683,17 @@ let Const = {
         RESOURCE_TYPE: {
             WAREHOUSE: 10,
 	        PURCHASE: 20,
+	        DISTRIBUTOR: 30,
         },
         RESOURCE_TYPE_MAP: {
             '10': {text: '仓库'},
-	        '20': {text: '采购'}
+	        '20': {text: '采购'},
+	        '30': {text: '分销商'},
         },
 	    RESOURCE_TYPE_LIST: [
 		    {value: 10, text:'仓库'},
-		    {value: 20, text:'采购'}
+		    {value: 20, text:'采购'},
+		    {value: 30, text:'分销商'}
 	    ]
     },
     SYSTEM: { //系统

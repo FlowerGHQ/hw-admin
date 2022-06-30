@@ -66,6 +66,14 @@
                     </a-select>
                 </div>
             </div>
+            <div class="form-item required" v-if="resourceType == RESOURCE_TYPE.DISTRIBUTOR">
+                <div class="key">资源对象</div>
+                <div class="value">
+                    <a-select v-model:value="form.resource_id" placeholder="请选择资源对象">
+                        <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id" :disabled="item.disabled">{{ item.name }}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
             <template #footer>
                 <a-button @click="handleAuthSubmit" type="primary">确定</a-button>
                 <a-button @click="authShow=false">取消</a-button>
@@ -107,6 +115,7 @@ export default {
             authShow: false,
             warehouseList: [],
             categoryList: [],
+            distributorList: [],
             resourceList: Core.Const.NOTICE.RESOURCE_TYPE_LIST,
             resourceMap: Core.Const.NOTICE.RESOURCE_TYPE_MAP,
             RESOURCE_TYPE: Core.Const.NOTICE.RESOURCE_TYPE,
@@ -163,7 +172,7 @@ export default {
                 this.loading = false;
             });
         },
-        getWarehouseList() {
+        async getWarehouseList() {
             Core.Api.Warehouse.listAll().then(res => {
                 res.list.forEach(warehouse => {
                     this.tableData.forEach(it =>{
@@ -177,7 +186,7 @@ export default {
                 this.warehouseList = res.list
             })
         },
-        getCategoryList() {
+        async getCategoryList() {
             Core.Api.ItemCategory.listAll().then(res => {
                 res.list.forEach(itemCategory => {
                     this.tableData.forEach(it =>{
@@ -187,6 +196,18 @@ export default {
                     });
                 });
                 this.categoryList = res.list
+            })
+        },
+        async getDistributorList() {
+            Core.Api.Distributor.listAll().then(res => {
+                res.list.forEach(distributor => {
+                    this.tableData.forEach(it =>{
+                        if (distributor.id === it.resource_id){
+                            distributor.disabled = true
+                        }
+                    });
+                });
+                this.distributorList = res.list
             })
         },
         handleAuthShow() {
@@ -200,6 +221,11 @@ export default {
                     this.getCategoryList();
                     break;
                 }
+                case this.RESOURCE_TYPE.DISTRIBUTOR: {
+                    this.getDistributorList();
+                    break;
+                }
+
             }
 
             /*if (item) {
