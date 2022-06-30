@@ -149,7 +149,7 @@ export default {
             console.log('currency:', currency)
             items = items.map(item => {
                 item.amount = 1
-                item.unit_price = item['price' + currency]
+                item.unit_price = item['fob' + currency]
                 item.total_price = item.unit_price
                 return item
             })

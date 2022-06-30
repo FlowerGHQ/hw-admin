@@ -617,9 +617,19 @@ export default {
         currStep() {
             for (let i = 0; i < this.stepsList.length; i++) {
                 const item = this.stepsList[i];
+                switch (this.detail.status){
+                    case STATUS.CANCEL:
+                        this.stepsList= [{status: '100', zh: '取消', en: 'Canceled'},]
+                        break;
+                    case STATUS.RE_REVISE:
+                        this.stepsList= [{status: '100', zh: '已修改关闭', en: 'Modified closed'},]
+                        break;
+                    case STATUS.CANCEL:
+                }
+                console.log(this.stepsList[0])
                 if (this.detail.status == STATUS.CANCEL) {
                     this.stepsList= [
-                        {status: '100', title: '取消'},
+                        {status: '100', zh: '取消'},
                     ]
                     return i
                 }
@@ -692,15 +702,18 @@ export default {
                     return false;
                 case TYPE.PRE_SALES:
                 case TYPE.AFTER_SALES:
-                    if (this.detail.parent_type === PARENT_TYPE.BREAK)
+                    if (this.detail.parent_type === PARENT_TYPE.BREAK){
                         return false;
+                    }
+
             }
-            console.log(this.detail)
+            console.log("detail", this.detail)
             switch (this.detail.status) {
                 case STATUS.INIT:
                 case STATUS.WAIT_PAY:
                 case STATUS.WAIT_DELIVER:
                 case STATUS.ALL_TAKE_DELIVER:
+                case STATUS.SPLIT:
                     return true;
                 default:
                     return false;
@@ -891,7 +904,12 @@ export default {
                 target_id: this.id
             }).then(res => {
                 res.list.forEach(it =>{
-                    it.path = it.attachment.path.split(",")
+                    if (it.attachment !== null){
+                        it.path = it.attachment.path.split(",")
+                    } else {
+                        it.path = ""
+                    }
+
                 })
                 this.payList = res.list
                 console.log("this.payList", this.payList)
