@@ -506,7 +506,7 @@ let Const = {
         PAYMENT_STATUS_MAP: {
             '100': { key: 100, color: 'yellow', zh: '待支付', en: 'Wait to pay', value: '0'},
             '200': { key: 200, color: 'orange', zh: '待审核', en: 'Wait to audit', value: '0'},
-	        '300': { key: 300, color: 'blue', zh: '预付款', en: 'Partial payment', value: '0'},
+	        '300': { key: 300, color: 'blue', zh: '部分付款', en: 'Part of the payment', value: '0'},
             '400': { key: 400, color: 'green', zh: '全额付款',en: 'Full payment', value: '0'},
         },
         /* PAYMENT_COLOR_MAP: {
