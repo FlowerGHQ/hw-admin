@@ -1,13 +1,12 @@
 <template>
     <div class="DeliveryLogs">
-        <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
+        <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right" @change="handleCollapseChange">
             <template #expandIcon><i class="icon i_expan_l"/></template>
             <a-collapse-panel key="DeliveryLogs"
-                              :header="type == Core.Const.STOCK_RECORD.TYPE.OUT ? $t('n.delivery_logs'): $t('n.receiving_record')"
-                              class="gray-collapse-panel">
+                :header="type == Core.Const.STOCK_RECORD.TYPE.OUT ? $t('n.delivery_logs'): $t('n.receiving_record')"
+                class="gray-collapse-panel">
                 <div class="panel-content table-container no-mg">
-                    <a-table :columns="invoicColumns" :data-source="invoiceList" :scroll="{ x: true }"
-                             :row-key="record => record.id" :pagination='false'>
+                    <a-table :columns="invoicColumns" :data-source="invoiceList" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                         <template #bodyCell="{ column, text , record }">
                             <template v-if="column.key === 'org'">
                                 {{ $Util.userTypeFilter(text.org_type, $i18n.locale) }}·{{ text.org_name }}
@@ -19,17 +18,10 @@
                                 {{ $Util.invoiceStatusFilter(text, $i18n.locale) }}
                             </template>
                             <template v-if="column.key === 'uid'">
-                                <template v-if="(authOrg(detail.supply_org_id, detail.supply_org_type) && type == Core.Const.STOCK_RECORD.TYPE.OUT) ||type == Core.Const.STOCK_RECORD.TYPE.IN">
-                                    <a-button type="link" @click="routerChange('detail', record)">{{
-                                            text || '-'
-                                        }}
-                                    </a-button>
-                                </template>
-                                <template v-else>
-                                    {{text || '-' }}
-
-                                </template>
-
+                                <a-button type="link" @click="routerChange('detail', record)">{{
+                                        text || '-'
+                                    }}
+                                </a-button>
                             </template>
                             <template v-if="column.key === 'time'">
                                 {{ $Util.timeFilter(text) }}
@@ -73,20 +65,19 @@
         <a-modal v-model:visible="modalShow" :title="$t('n.delivery_logs')" width='860px'>
             <div class="modal-content">
                 <div class="table-container">
-                    <ItemTable :columns="tableColumns" :data-source="tableData" :loading='modalLoading'
-                               v-if="modalShow"/>
+                    <ItemTable :columns="tableColumns" :data-source="tableData" :loading='modalLoading' v-if="modalShow"/>
                 </div>
             </div>
             <template #footer>
                 <div class="modal-footer">
                     <div class="paging-area">
                         <a-pagination v-if="!purchaseId"
-                                      show-less-items
-                                      :hide-on-single-page='false'
-                                      :total="total"
-                                      :current="currPage"
-                                      :default-page-size='pageSize'
-                                      @change="pageChange"
+                            show-less-items
+                            :hide-on-single-page='false'
+                            :total="total"
+                            :current="currPage"
+                            :default-page-size='pageSize'
+                            @change="pageChange"
                         />
                     </div>
                     <div class="btn-area">
@@ -97,8 +88,7 @@
         </a-modal>
         <a-modal v-model:visible="waybillShow" :title="$t('n.delivery_logs')" width='860px'>
             <div class="modal-content">
-                <div class="info-item"
-                     v-if="detail.org_type === USER_TYPE.AGENT || detail.org_type === USER_TYPE.STORE">
+                <div class="info-item" v-if="detail.org_type === USER_TYPE.AGENT || detail.org_type === USER_TYPE.STORE">
                     <div class="key">{{ $t('p.delivery_method') }}</div>
                     {{ waybillDetail.express_type }}
                     <!--                    <div class="value">{{ $Util.purchaseWaybillFilter(waybillDetail.express_type, $i18n.locale || '-') }}</div>-->
@@ -126,13 +116,12 @@
                 </div>
             </template>
         </a-modal>
-        <a-modal v-model:visible="takeDeliverShow" :title="$t('p.confirm_the_goods')" @ok="handleTakeDeliver">
+        <a-modal v-model:visible="takeDeliverShow" :title="$t('p.shipping_confirmation')" @ok="handleTakeDeliver">
             <div class="modal-content">
                 <div class="form-item required">
                     <div class="key">{{ $t('wa.warehouse') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.warehouse_id" :placeholder="$t('def.select')"
-                                  :disabled="!!isProd">
+                        <a-select v-model:value="form.warehouse_id" :placeholder="$t('def.select')" :disabled="!!isProd">
                             <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{
                                     item.name
                                 }}
@@ -215,16 +204,16 @@
         <a-modal v-model:visible="PIShow" :title="$t('p.update_PI')" @ok="UpdatePI">
             <div class="modal-content">
                 <template v-if="$auth('ADMIN')">
-<!--                    <div class="form-item required">-->
-<!--                        <div class="key">{{ $t('p.delivery_method') }}</div>-->
-<!--                        <div class="value">-->
-<!--                            <a-select v-model:value="form.express_type" :placeholder="$t('def.select')">-->
-<!--                                <a-select-option v-for="courier of courierTypeList" :key="courier.value"-->
-<!--                                                 :value="courier.value">{{ courier.name }}-->
-<!--                                </a-select-option>-->
-<!--                            </a-select>-->
-<!--                        </div>-->
-<!--                    </div>-->
+                    <!-- <div class="form-item required">-->
+                    <!--     <div class="key">{{ $t('p.delivery_method') }}</div>-->
+                    <!--     <div class="value">-->
+                    <!--         <a-select v-model:value="form.express_type" :placeholder="$t('def.select')">-->
+                    <!--             <a-select-option v-for="courier of courierTypeList" :key="courier.value"-->
+                    <!--                              :value="courier.value">{{ courier.name }}-->
+                    <!--             </a-select-option>-->
+                    <!--         </a-select>-->
+                    <!--     </div>-->
+                    <!-- </div>-->
 
                     <div class="form-item required">
                         <div class="key">{{ $t('p.shipping_port') }}:</div>
@@ -291,7 +280,8 @@ export default {
             USER_TYPE,
             // 加载
             loading: false,
-            activeKey: ["DeliveryLogs"],
+            activeKey: [],
+            flagOpened: false,
 
             invoiceList: [],
             loginType: Core.Data.getLoginType(),
@@ -369,10 +359,17 @@ export default {
         },
     },
     mounted() {
-        this.getInvoiceList();
+        // this.getInvoiceList();
         this.getWarehouseList();
     },
     methods: {
+        handleCollapseChange(key) {
+            console.log('handleCollapseChangekey:', key)
+            if (key[0] && !this.flagOpened) {
+                this.flagOpened = true
+                this.getInvoiceList();
+            }
+        },
         routerChange(type, item = {}) {
             console.log(item)
             let routeUrl = ''
@@ -401,6 +398,7 @@ export default {
         },
         getInvoiceList() {  // 获取 发货记录
             this.loading = true;
+            console.log("getInvoiceList type", this.type)
             Core.Api.Invoice.listByPurchase({
                 source_id: this.orderId,
                 source_type: Core.Const.STOCK_RECORD.SOURCE_TYPE.PURCHASE,
@@ -408,7 +406,7 @@ export default {
                 status: -1,
                 // source_type: Core.Const.STOCK_RECORD.SOURCE_TYPE.ITEM_PURCHASE,
             }).then(res => {
-                console.log("getInvoiceList res", res)
+                console.log("getInvoiceList res", this.type, res)
                 this.invoiceList = res.list
                 if (this.invoiceList.length) {
                     this.activeKey = ['DeliveryLogs']
