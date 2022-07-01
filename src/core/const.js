@@ -18,10 +18,10 @@ switch (window.location.hostname) {
         break;
     case "10.0.0.205":
     case "10.0.0.219":
-        URL_POINT = 'http://10.0.0.213:8889'
+        // URL_POINT = 'http://10.0.0.213:8889'
         break;
     default:
-        URL_POINT = 'http://10.0.0.213:8889'
+        URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
         break;
 }
 

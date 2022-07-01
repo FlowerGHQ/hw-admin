@@ -380,7 +380,7 @@ export default {
             }
         },
         authOrg(orgId, orgType) {
-            console.log('org', this.loginOrgId === orgId && this.loginOrgType === orgType)
+            // console.log('org', this.loginOrgId === orgId && this.loginOrgType === orgType)
             if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
                 return true
             } else {
@@ -440,6 +440,7 @@ export default {
             this.getTableData()
         },
         getTableData() {
+            console.log('getTableData: type', this.type)
             this.modalLoading = true;
             Core.Api.InvoiceItem.list({
                 invoice_id: this.invoiceId,

@@ -293,26 +293,26 @@
                 <div class="form-item img-upload">
                     <div class="key">{{ $t('p.attachment') }}</div>
                     <div class="value">
-<!--                        <a-upload name="file" class="image-uploader"-->
-<!--                            list-type="picture-card" accept='image/*'-->
-<!--                            :file-list="upload.detailList" :action="upload.action"-->
-<!--                            :headers="upload.headers" :data='upload.data'-->
-<!--                            :before-upload="handleImgCheck"-->
-<!--                            @change="handleDetailChange">-->
-<!--                            <div class="image-inner" v-if="upload.detailList.length < 10">-->
-<!--                                <i class="icon i_upload"/>-->
-<!--                            </div>-->
-<!--                        </a-upload>-->
+                        <!-- <a-upload name="file" class="image-uploader"-->
+                        <!--     list-type="picture-card" accept='image/*'-->
+                        <!--     :file-list="upload.detailList" :action="upload.action"-->
+                        <!--     :headers="upload.headers" :data='upload.data'-->
+                        <!--     :before-upload="handleImgCheck"-->
+                        <!--     @change="handleDetailChange">-->
+                        <!--     <div class="image-inner" v-if="upload.detailList.length < 10">-->
+                        <!--         <i class="icon i_upload"/>-->
+                        <!--     </div>-->
+                        <!-- </a-upload>-->
                         <a-upload name="file" class="file-uploader"
-                                  :file-list="upload.fileList" :action="upload.action"
-                                  :headers="upload.headers" :data='upload.data'
-                                  :before-upload="handleFileCheck"
-                                  @change="handleFileChange">
+                                :file-list="upload.fileList" :action="upload.action"
+                                :headers="upload.headers" :data='upload.data'
+                                :before-upload="handleFileCheck"
+                                @change="handleFileChange">
                             <a-button type="primary" ghost class="file-upload-btn" v-if="upload.fileList.length < 1">
                                 <i class="icon i_upload"/> {{ $t('f.choose') }}
                             </a-button>
                         </a-upload>
-<!--                        <div class="tip">{{ $t('n.size') }}：800*800px</div>-->
+                        <!-- <div class="tip">{{ $t('n.size') }}：800*800px</div>-->
                     </div>
                 </div>
                 <div class="form-item required">
@@ -321,7 +321,7 @@
                         <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-          </div>
+            </div>
         </a-modal>
         <!-- 转单 -->
         <a-modal v-model:visible="transferShow" :title="$t('p.confirm_transfer')" :after-close="handleTransferClose">
@@ -403,30 +403,30 @@
                 <a-button @click="handlePayAuditClose">{{ $t('def.cancel') }}</a-button>
             </template>
         </a-modal>
-        <!-- &lt;!&ndash; 收货审核 &ndash;&gt;-->
-        <!-- <a-modal v-model:visible="payAuditShow" :title="$t('p.confirm_transfer')" :after-close="handleTransferClose">-->
-        <!--     <div class="modal-content">-->
-        <!--         <div class="form-item required">-->
-        <!--             <div class="key">是否通过：</div>-->
-        <!--             <div class="value">-->
-        <!--                 <a-radio-group v-model:value="payAuditForm.audit_result">-->
-        <!--                     <a-radio :value="AUDIT_STATUS.FINANCE_PASS">通过</a-radio>-->
-        <!--                     <a-radio :value="AUDIT_STATUS.AUDIT_REFUSE">不通过</a-radio>-->
-        <!--                 </a-radio-group>-->
-        <!--             </div>-->
-        <!--         </div>-->
-        <!--         <div class="form-item required">-->
-        <!--             <div class="key">备注：</div>-->
-        <!--             <div class="value">-->
-        <!--                 <a-textarea v-model:value="payAuditForm.audit_remark" placeholder="填写备注" :auto-size="{ minRows: 3, maxRows: 6 }" :maxlength='200'/>-->
-        <!--             </div>-->
-        <!--         </div>-->
-        <!--     </div>-->
-        <!--     <template #footer>-->
-        <!--         <a-button @click="handleTransferSubmit" type="primary">{{ $t('def.sure') }}</a-button>-->
-        <!--         <a-button @click="transferShow = false">{{ $t('def.cancel') }}</a-button>-->
-        <!--     </template>-->
-        <!-- </a-modal>-->
+        <!-- 收货审核 -->
+        <!-- <a-modal v-model:visible="payAuditShow" :title="$t('p.confirm_transfer')" :after-close="handleTransferClose">
+            <div class="modal-content">
+                <div class="form-item required">
+                    <div class="key">是否通过：</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="payAuditForm.audit_result">
+                            <a-radio :value="AUDIT_STATUS.FINANCE_PASS">通过</a-radio>
+                            <a-radio :value="AUDIT_STATUS.AUDIT_REFUSE">不通过</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">备注：</div>
+                    <div class="value">
+                        <a-textarea v-model:value="payAuditForm.audit_remark" placeholder="填写备注" :auto-size="{ minRows: 3, maxRows: 6 }" :maxlength='200'/>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handleTransferSubmit" type="primary">{{ $t('def.sure') }}</a-button>
+                <a-button @click="transferShow = false">{{ $t('def.cancel') }}</a-button>
+            </template>
+        </a-modal>-->
     </template>
 </div>
 </template>
