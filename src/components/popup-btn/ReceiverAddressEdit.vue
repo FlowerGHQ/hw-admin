@@ -2,7 +2,7 @@
 <a-button class="ReceiverAddressEdit" @click.stop="handleAddressShow()" :ghost='ghost' :type="btnType" :class="btnClass">
     <slot>{{ btnText }}</slot>
 </a-button>
-<a-modal :title="$t('ad.add')" v-model:visible="modalShow" :after-close='handleAddressClose' class="receiver-address-edit-modal">
+<a-modal :title="$t('ad.add')" v-model:visible="modalShow" :after-close='handleAddressClose' :maskClosable="false" class="receiver-address-edit-modal">
     <div class="modal-content">
         <div class="form-item required">
             <div class="key">{{ $t('n.name') }}:</div>
@@ -40,7 +40,7 @@
 import Core from '@/core';
 
 import CountryCascader from '../common/CountryCascader.vue'
-import AddressCascader from '../common/ChinaAddressCascader.vue'
+import AddressCascader from '../common/AddressCascader.vue'
 
 export default {
     components: {AddressCascader, CountryCascader},

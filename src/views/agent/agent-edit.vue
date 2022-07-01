@@ -4,13 +4,13 @@
     <div class="form-block">
         <div class="form-title"><div class="title">{{ $t('n.information') }}</div></div>
         <div class="form-content">
-            <div class="form-item" v-if="$auth('ADMIN') && !form.id">
+            <div class="form-item required" v-if="$auth('ADMIN') && !form.id">
                 <div class="key">{{ $t('n.distributor') }}</div>
                 <div class="value">
-<!--                    <a-select v-model:value="form.distributor_id" :placeholder="$t('search.select_distributor')">-->
-<!--                        <a-select-option v-for="distributor of distributorList" :key="distributor.id" :value="distributor.id">{{ distributor.name }}</a-select-option>-->
-<!--                    </a-select>-->
-                    <a-tree-select
+                    <a-select v-model:value="form.distributor_id" :placeholder="$t('search.select_distributor')">
+                        <a-select-option v-for="distributor of distributorList" :key="distributor.id" :value="distributor.id">{{ distributor.name }}</a-select-option>
+                    </a-select>
+<!--                    <a-tree-select
                         v-model:value="form.parent_id"
                         show-search
                         style="width: 100%"
@@ -24,7 +24,7 @@
                         <template #title="{ value: value, id, name }">
                             {{name }}
                         </template>
-                    </a-tree-select>
+                    </a-tree-select>-->
                 </div>
             </div>
             <div class="form-item required">
@@ -134,7 +134,7 @@ export default {
         } else if (this.$auth('DISTRIBUTOR')) {
             this.form.distributor_id = Core.Data.getOrgId()
         }
-        this.getAgentListPath()
+        this.getDistributorList()
     },
     methods: {
         routerChange(type, item) {
@@ -183,6 +183,9 @@ export default {
                     country_code: this.areaList[1].code,
                 }
             }
+            if (!form.distributor_id) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'))
             }
@@ -208,15 +211,18 @@ export default {
                 console.log('handleSubmit err:', err)
             })
         },
-        getAgentListPath() {
-            Core.Api.Agent.listPath({
+        // getAgentListPath() {
+        //     Core.Api.Agent.listPath({
+        //
+        //     }).then((res) => {
+        //         this.treeData = res.list
+        //     }).catch(err => {
+        //         console.log('handleSubmit err:', err)
+        //     })
+        // },
 
-            }).then((res) => {
-                this.treeData = res.list
-            }).catch(err => {
-                console.log('handleSubmit err:', err)
-            })
-        },
+
+
     }
 };
 </script>

@@ -3,7 +3,7 @@
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">{{ $t('p.details')}}</div>
-            <div class="btns-area" v-if="detail.status != STATUS.CANCEL && detail.status != STATUS.RE_REVISE && detail.status != STATUS.REVISE">
+            <div class="btns-area" v-if="detail.status != STATUS.CANCEL && detail.status != STATUS.RE_REVISE && detail.status != STATUS.REVISE && detail.status != STATUS.ORDER_TRANSFERRED">
                 <template v-if="$auth('ADMIN') && $auth('purchase-order.export')">
                     <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
                     <!-- <a-button @click="handleExportInfo"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>-->
@@ -27,20 +27,18 @@
                 <template v-if="authOrg(detail.org_id, detail.org_type) && detail.status !== STATUS.REVISE_AUDIT">
                     <a-button type="primary" ghost v-if="beforeDeliver && !itemEditShow && $auth('purchase-order.save')" @click="itemEditShow = true">更换商品</a-button>
 
-                    <a-button type="primary" v-if="detail.status !== STATUS.CANCEL && detail.status !== STATUS.DEAL_SUCCESS && detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.payment')}}</a-button>
+                    <a-button type="primary" v-if="detail.status !== STATUS.CANCEL && detail.status !== STATUS.DEAL_SUCCESS && detail.status !== STATUS.SPLIT && detail.status !== STATUS.REVISE && detail.status !== STATUS.REVISE_AUDIT && detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.payment')}}</a-button>
                     <!-- <a-button type="primary" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER" @click="handleReceived()"><i class="icon i_goods"/>确认收货</a-button>-->
                     <!-- {{detail.status}}-->
                     <a-button type="primary" v-if="detail.status === STATUS.WAIT_PAY || (detail.payment_status !== PAYMENT_STATUS.WAIT_PAY && detail.WAIT_DELIVER)" @click="handleCancel()"><i class="icon i_close_c"/>{{ $t('def.cancel')}}</a-button>
                     <a-button type="primary" v-if="detail.status === STATUS.DEAL_SUCCESS" @click="routerChange('aftersales')" ghost><i class="icon i_edit"/>{{ $t('p.apply_for_after_sales')}}</a-button>
                 </template>
-                <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status === STATUS.REVISE_AUDIT && $auth('purchase-order.audit')">
+                <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status === STATUS.REVISE_AUDIT && detail.parent_type !== PARENT_TYPE.BREAK && $auth('purchase-order.audit')">
                     <AuditHandle
-                                 btnType='primary' :api-list="['Purchase', 'reviseAudit']" :id="detail.id" @submit="getList"
-                                 :s-pass="FLAG.YES" :s-refuse="FLAG.NO" no-refuse><i class="icon i_audit"/>{{ $t('n.audit') }}
+                        btnType='primary' :api-list="['Purchase', 'reviseAudit']" :id="detail.id" @submit="getList"
+                        :s-pass="FLAG.YES" :s-refuse="FLAG.NO" no-refuse><i class="icon i_audit"/>{{ $t('n.audit') }}
                     </AuditHandle>
                 </template>
-
-
             </div>
         </div>
         <div class="gray-panel">
@@ -282,7 +280,7 @@
                             v-model:value="form.payment"
                             style="width: 120px"
                             :min="0"
-                            :max="((detail.freight||0)+detail.charge-detail.payment)/100"
+                            :max="((detail.freight||0) + detail.price-detail.payment)/100"
                             :precision="2"
                             :prefix="`${$Util.priceUnitFilter(detail.currency)}`"
                             placeholder="0.00"
@@ -454,6 +452,8 @@ const PAY_TIME = Core.Const.DISTRIBUTOR.PAY_TIME;
 const PAY_STATUS = Core.Const.PURCHASE.PAY_STATUS;
 const FLAG_ORDER_TYPE = Core.Const.PURCHASE.FLAG_ORDER_TYPE;
 const TYPE = Core.Const.PURCHASE.TYPE;
+const PARENT_TYPE = Core.Const.PURCHASE.PARENT_TYPE;
+
 
 const PAYMENT_STATUS = Core.Const.PURCHASE.PAYMENT_STATUS;
 const FLAG_PART_SHIPMENT_MAP = Core.Const.PURCHASE.FLAG_PART_SHIPMENT_MAP;
@@ -475,6 +475,7 @@ export default {
         return {
             FLAG,
             TYPE,
+            PARENT_TYPE,
             FLAG_ORDER_TYPE,
             STOCK_TYPE: Core.Const.STOCK_RECORD.TYPE,
             COMMODITY_MAP: Core.Const.STOCK_RECORD.COMMODITY_TYPE_MAP,
@@ -616,9 +617,19 @@ export default {
         currStep() {
             for (let i = 0; i < this.stepsList.length; i++) {
                 const item = this.stepsList[i];
+                switch (this.detail.status){
+                    case STATUS.CANCEL:
+                        this.stepsList= [{status: '100', zh: '取消', en: 'Canceled'},]
+                        break;
+                    case STATUS.RE_REVISE:
+                        this.stepsList= [{status: '100', zh: '已修改关闭', en: 'Modified closed'},]
+                        break;
+                    case STATUS.CANCEL:
+                }
+                console.log(this.stepsList[0])
                 if (this.detail.status == STATUS.CANCEL) {
                     this.stepsList= [
-                        {status: '100', title: '取消'},
+                        {status: '100', zh: '取消'},
                     ]
                     return i
                 }
@@ -686,14 +697,25 @@ export default {
         },
 
         beforeDeliver() {
+            switch (this.detail.type) {
+                case TYPE.GIVEAWAY:
+                    return false;
+                case TYPE.PRE_SALES:
+                case TYPE.AFTER_SALES:
+                    if (this.detail.parent_type === PARENT_TYPE.BREAK){
+                        return false;
+                    }
+
+            }
+            console.log("detail", this.detail)
             switch (this.detail.status) {
                 case STATUS.INIT:
                 case STATUS.WAIT_PAY:
                 case STATUS.WAIT_DELIVER:
-                case STATUS.ALL_TAKE_DELIVER:
+                case STATUS.SPLIT:
                     return true;
                 default:
-                    return true;
+                    return false;
             }
         },
     },
@@ -881,7 +903,12 @@ export default {
                 target_id: this.id
             }).then(res => {
                 res.list.forEach(it =>{
-                    it.path = it.attachment.path.split(",")
+                    if (it.attachment !== null){
+                        it.path = it.attachment.path.split(",")
+                    } else {
+                        it.path = ""
+                    }
+
                 })
                 this.payList = res.list
                 console.log("this.payList", this.payList)

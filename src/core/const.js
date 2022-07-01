@@ -447,8 +447,10 @@ let Const = {
         // 状态
         STATUS: {
             INIT: 0,
+	        SPLIT: 50,
             WAIT_PAY: 100,
             WAIT_DELIVER: 200,
+	        ORDER_TRANSFERRED: 250,
             WAIT_TAKE_DELIVER: 300,
             TAKE_DELIVER: 330,
             ALL_TAKE_DELIVER: 360,
@@ -460,6 +462,7 @@ let Const = {
         },
         STATUS_MAP: {
             '0':   { value: '0', key: 0,    color: 'red',    zh: '未知', en: 'Unknown'},
+	        '50': { value: '0', key: 50,  color: 'green', zh: '已拆单', en: 'Separate bill'},
             '100': { value: '0', key: 100,  color: 'orange', zh: '待支付', en: 'Wait to pay'},
             '200': { value: '0', key: 200,  color: 'orange', zh: '待发货', en: 'Wait for delivery'},
             '250': { value: '0', key: 400,  color: 'blue',   zh: '已转单', en: 'Order transferred'},
@@ -503,7 +506,7 @@ let Const = {
         PAYMENT_STATUS_MAP: {
             '100': { key: 100, color: 'yellow', zh: '待支付', en: 'Wait to pay', value: '0'},
             '200': { key: 200, color: 'orange', zh: '待审核', en: 'Wait to audit', value: '0'},
-	        '300': { key: 300, color: 'blue', zh: '预付款', en: 'Partial payment', value: '0'},
+	        '300': { key: 300, color: 'blue', zh: '部分付款', en: 'Part of the payment', value: '0'},
             '400': { key: 400, color: 'green', zh: '全额付款',en: 'Full payment', value: '0'},
         },
         /* PAYMENT_COLOR_MAP: {
@@ -582,6 +585,12 @@ let Const = {
 		    AFTER_SALES: 20,
 		    MIX: 30,
 		    GIVEAWAY: 40,
+	    },
+	    PARENT_TYPE: {
+		    BREAK : 10  ,     // 拆分订单
+		    TRANSFER : 20,     // 转单
+		    UPDATE: 30,     // 修改
+		    TYPE_GIVE: 40 ,    // 修改
 	    },
 
     },
@@ -680,14 +689,17 @@ let Const = {
         RESOURCE_TYPE: {
             WAREHOUSE: 10,
 	        PURCHASE: 20,
+	        DISTRIBUTOR: 30,
         },
         RESOURCE_TYPE_MAP: {
             '10': {text: '仓库'},
-	        '20': {text: '采购'}
+	        '20': {text: '采购'},
+	        '30': {text: '分销商'},
         },
 	    RESOURCE_TYPE_LIST: [
 		    {value: 10, text:'仓库'},
-		    {value: 20, text:'采购'}
+		    {value: 20, text:'采购'},
+		    {value: 30, text:'分销商'}
 	    ]
     },
     SYSTEM: { //系统

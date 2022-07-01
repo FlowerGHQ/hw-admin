@@ -64,7 +64,7 @@
                     <template v-if="column.key === 'detail'">
                         <div class="table-img afs">
                             <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" fallback='无'/>
-                            <a-tooltip placement="top" :title='text' destroy-tooltip-on-hide>
+                            <a-tooltip placement="top" :title='$Util.itemSpecFilter(record.attr_list)' destroy-tooltip-on-hide>
                                 <div class="info">
                                     <a-button type="link" @click="routerChange('detail', record)">
                                         <div class="ell" style="max-width: 150px">{{ text || '-' }}</div>
@@ -445,6 +445,18 @@ export default {
                 .file-upload-btn {
                     margin-right: 15px;
                 }
+            }
+        }
+    }
+    .table-container{
+        .info{
+            .sub-info{
+                width: 20em;
+                overflow: hidden; /*超出长度的文字隐藏*/
+
+                text-overflow:ellipsis;/*文字隐藏以后添加省略号*/
+
+                white-space: nowrap; /*强制不换行*/
             }
         }
     }
