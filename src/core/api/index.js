@@ -364,6 +364,7 @@ const apiList = {
     },
     ActionLog: { // 维修单 操作记录
         list: ['PostJson', 'action-log/list'],
+	    content: ['PostJson', 'action-log/content'],
     },
     Waybill: { // 物流
         delete: ['PostJson', 'waybill/delete'],

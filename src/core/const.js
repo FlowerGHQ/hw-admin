@@ -367,6 +367,11 @@ let Const = {
             '215': {key: 215, zh: '删除故障零件', en: 'Deleted faulty parts'},
             '216': {key: 216, zh: '维修完成', en: 'Repair is complete'},
             '217': {key: 217, zh: '结算完成', en: 'Settlement completed'},
+
+	        '510': {key: 217, zh: '采购单修改', en: 'Purchase order modification'},
+
+
+
             // '218': {key: 218, zh: '订单转移', en: 'Parts'},
            /* 201: '维修单创建',
             202: '维修单信息完善/修改',

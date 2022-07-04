@@ -110,6 +110,7 @@ const messages = {
             organization: '操作组织',
             customer_name: '车主姓名',
 	        name_en: '英文名',
+	        content: '内容',
         },
         a: {
             new_retailer: '新建零售商',
@@ -771,6 +772,7 @@ const messages = {
             organization: 'Organization',
             customer_name: 'Name',
 	        name_en: 'English name ',
+	        content: 'content',
         },
         a: {
             new_retailer: 'Add a retailer',

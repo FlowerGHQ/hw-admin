@@ -33,7 +33,7 @@
                     <a-button type="primary" v-if="detail.status === STATUS.WAIT_PAY || (detail.payment_status !== PAYMENT_STATUS.WAIT_PAY && detail.WAIT_DELIVER)" @click="handleCancel()"><i class="icon i_close_c"/>{{ $t('def.cancel')}}</a-button>
                     <a-button type="primary" v-if="detail.status === STATUS.DEAL_SUCCESS" @click="routerChange('aftersales')" ghost><i class="icon i_edit"/>{{ $t('p.apply_for_after_sales')}}</a-button>
                 </template>
-                <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status === STATUS.REVISE_AUDIT && detail.parent_type !== PARENT_TYPE.BREAK && $auth('purchase-order.audit')">
+                <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status === STATUS.REVISE_AUDIT && detail.type !== TYPE.MIX && $auth('purchase-order.audit')">
                     <AuditHandle
                         btnType='primary' :api-list="['Purchase', 'reviseAudit']" :id="detail.id" @submit="getList"
                         :s-pass="FLAG.YES" :s-refuse="FLAG.NO" no-refuse><i class="icon i_audit"/>{{ $t('n.audit') }}
@@ -256,6 +256,7 @@
                         </a-col>
                     </a-row>
                 </a-collapse-panel>
+                <ActionLog   :id='id' :detail='detail' :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.PURCHASE_ORDER"/>
             </a-collapse>
         </div>
     </div>
@@ -437,6 +438,7 @@ import MySteps from "@/components/common/MySteps.vue"
 import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 import DeliveryLogs from './components/DeliveryLogs.vue';
 import AuditHandle from '@/components/popup-btn/AuditHandle.vue';
+import ActionLog from '../repair/components/ActionLog.vue';
 
 import EditItem from './components/EditItem.vue';
 
@@ -469,10 +471,13 @@ export default {
         WaybillShow,
         MySteps,
         AuditHandle,
+        ActionLog,
+
     },
     props: {},
     data() {
         return {
+            Core,
             FLAG,
             TYPE,
             PARENT_TYPE,
@@ -699,10 +704,9 @@ export default {
         beforeDeliver() {
             switch (this.detail.type) {
                 case TYPE.GIVEAWAY:
-                    return false;
                 case TYPE.PRE_SALES:
                 case TYPE.AFTER_SALES:
-                    if (this.detail.parent_type === PARENT_TYPE.BREAK){
+                    if (this.detail.type === PARENT_TYPE.MIX){
                         return false;
                     }
 

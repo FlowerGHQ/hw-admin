@@ -8,7 +8,7 @@
                 <template #headerCell="{title}">
                     {{ $t(title) }}
                 </template>
-                <template #bodyCell="{ column, text }">
+                <template #bodyCell="{record, column, text }">
                     <template v-if="column.dataIndex === 'type'">
                         {{ $Util.actionLogTypeFilter(text, $i18n.locale) }}
                     </template>
@@ -17,6 +17,16 @@
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
+                    </template>
+                    <template v-if="column.key === 'content'">
+                        <template v-if="record.source_type === Core.Const.ACTION_LOG.SOURCE_TYPE.PURCHASE_ORDER">
+                            <a-button type="link" @click="getContent(record.id)" >
+                                查看详情
+                            </a-button>
+                        </template>
+                        <template v-else>
+                            {{ text || '-'}}
+                        </template>
                     </template>
                     <template v-if="column.key === 'tip_item'">
                         <a-tooltip placement="top" :title='text'>
@@ -44,6 +54,19 @@
                 />
             </div>
         </div>
+        <a-modal v-model:visible="visible" title="详情" class="field-select-modal" :width="630" :after-close="handleClose">
+            <a-table :columns="contentColumns" :data-source="contentList" :scroll="{ x: true }"
+                     :row-key="record => record.id" :pagination='false'>
+                <template #bodyCell="{ column, text, record }">
+                    <template v-if="column.key === 'item'">
+                        {{ text || '-' }}
+                    </template>
+                </template>
+            </a-table>
+            <template #footer>
+                <a-button @click="handleClose">{{ $t('def.cancel') }}</a-button>
+            </template>
+        </a-modal>
     </a-collapse-panel>
 </a-collapse>
 </template>
@@ -59,10 +82,14 @@ export default {
         },
         detail: {
             type: Object,
+        },
+        sourceType:{
+            type: Number,
         }
     },
     data() {
         return {
+            Core,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -71,14 +98,22 @@ export default {
             currPage: 1,
             pageSize: 20,
             total: 0,
+            visible: false,
+            contentList:[],
 
             tableData: [],
             tableColumns: [
                 { title: 'n.operation', dataIndex: 'type' },
                 { title: 'n.operator', dataIndex: ['user', 'account','name'], key: 'item' },
                 { title: 'n.organization', dataIndex: 'user', key: 'org' },
+                { title: 'n.content', dataIndex: 'content', key: 'content' },
                 { title: 'd.create_time', dataIndex: 'create_time', key: 'time' },
                 { title: 'r.remark', dataIndex: 'remark', key: 'tip_item' },
+            ],
+            contentColumns: [
+                {title: '商品名称', dataIndex: ['item','name'], key: 'detail'},
+                {title: '商品编码', dataIndex: ['item','code'], key: 'detail'},
+                {title: '数量', dataIndex: 'amount'},
             ],
         };
     },
@@ -101,7 +136,7 @@ export default {
             this.loading = true;
             Core.Api.ActionLog.list({
                 source_id: this.id,
-                source_type: Core.Const.ACTION_LOG.SOURCE_TYPE.REPAIR_ORDER,
+                source_type: this.sourceType,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -113,6 +148,18 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
+        },
+        getContent(id) {
+            Core.Api.ActionLog.content({
+                id: id
+            }).then(res => {
+                this.contentList = res.list;
+            });
+            this.visible = true;
+        },
+        handleClose(){
+            this.contentList = [];
+            this.visible = false;
         },
     }
 };
