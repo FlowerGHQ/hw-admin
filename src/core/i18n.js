@@ -354,6 +354,8 @@ const messages = {
             shipping_settings: '配送设置',
 	        material_put_stock: '物料入库',
 			material_out_stock: '物料出库',
+	        actual_quantity_shortage: '实际数量不足',
+	        the_frame_number_is_inconsistent_with_the_actual_quantity: '车架号与实际数量不一致',
         },
         w: {
             list: '账户列表',
@@ -671,7 +673,7 @@ const messages = {
             move_favorites: '确定要将该商品移动至收藏夹吗',
             sure_delete: '确定要删除吗？',
             sure_cancel: '确定要取消吗？',
-            sure_audit: '确定要提交吗',
+            sure_audit: '确定要提交吗?',
             agent: '该零售商吗？',
             store: '该门店吗？',
 
@@ -1014,6 +1016,8 @@ const messages = {
             shipping_settings: 'Shipping settings',
 	        material_put_stock: 'Material put stock',
 	        material_out_stock: 'Material out stock',
+	        actual_quantity_shortage: 'Actual quantity shortage',
+	        the_frame_number_is_inconsistent_with_the_actual_quantity: 'The frame number is inconsistent with the actual quantity',
         },
         w: {
             list: 'Account List',

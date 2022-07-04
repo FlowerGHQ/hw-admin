@@ -791,8 +791,26 @@ export default {
                 return this.$message.warning(this.$t('def.enter'))
             }
             let _this = this;
+            let flag_entity = false;
+            let flag_amount = false;
+            this.tableData.forEach(it =>{
+                if (it.amount != it.confirm_amount){
+                    flag_amount = true;
+                }
+                if (it.flag_entity === Core.Const.ITEM.FLAG_ENTITY.YES &&it.confirm_amount != it.item.child_size){
+                    flag_entity = true;
+                }
+            })
+            let title = this.$t('pop_up.sure_audit');
+            if (flag_amount){
+                title = this.$t('i.actual_quantity_shortage') +","+ title
+            }
+            if (flag_entity){
+                title = this.$t('i.the_frame_number_is_inconsistent_with_the_actual_quantity') +","+ title
+            }
+
             this.$confirm({
-                title: _this.$t('pop_up.sure_audit'),
+                title: title,
                 okText: _this.$t('def.sure'),
                 cancelText: this.$t('def.cancel'),
                 onOk() {
@@ -804,6 +822,10 @@ export default {
                     })
                 },
             });
+
+
+
+
         },
 
         // {{ $t('def.remove') }} 商品
