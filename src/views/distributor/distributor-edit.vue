@@ -81,6 +81,17 @@
                     </div>
                 </div>
                 <div class="form-item required">
+                    <div class="key">{{ $t('n.pda') }}:</div>
+                    <div class="value">
+                        <div class="value">
+                            <a-radio-group v-model:value="form.flag_stock_change_use_pda">
+                                <a-radio :value="Core.Const.FLAG.YES">{{ $t('i.yes') }}</a-radio>
+                                <a-radio :value="Core.Const.FLAG.NO">{{ $t('i.no') }}</a-radio>
+                            </a-radio-group>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">{{ $t('d.sales_area') }}:</div>
                     <div class="value">
                         <a-select v-model:value="form.sales_area_ids" mode="multiple" :placeholder=" $t('def.select')">
@@ -110,6 +121,7 @@ export default {
     props: {},
     data() {
         return {
+            Core,
             TYPE: Core.Const.DISTRIBUTOR.TYPE,
             PAY_TIME_LIST: Const.DISTRIBUTOR.PAY_TIME_LIST,
             // 加载
@@ -130,6 +142,7 @@ export default {
                 type: undefined,
                 sales_area_ids: undefined,
                 pay_type: undefined,
+                flag_stock_change_use_pda: Const.FLAG.YES,
             },
 
             areaList: [],

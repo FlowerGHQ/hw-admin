@@ -72,6 +72,17 @@
                     <CountryCascader v-model:value="areaList" :def-area='defArea'/>
                 </div>
             </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('n.pda') }}:</div>
+                <div class="value">
+                    <div class="value">
+                        <a-radio-group v-model:value="form.flag_stock_change_use_pda">
+                            <a-radio :value="Core.Const.FLAG.YES">{{ $t('i.yes') }}</a-radio>
+                            <a-radio :value="Core.Const.FLAG.NO">{{ $t('i.no') }}</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="form-btns">
@@ -91,6 +102,7 @@ export default {
     props: {},
     data() {
         return {
+            Core,
             PAY_TIME_LIST: Core.Const.DISTRIBUTOR.PAY_TIME_LIST,
             // 加载
             loading: false,

@@ -57,6 +57,17 @@
                         <a-input v-model:value="form.contact_phone" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('n.pda') }}:</div>
+                    <div class="value">
+                        <div class="value">
+                            <a-radio-group v-model:value="form.flag_stock_change_use_pda">
+                                <a-radio :value="Core.Const.FLAG.YES">{{ $t('i.yes') }}</a-radio>
+                                <a-radio :value="Core.Const.FLAG.NO">{{ $t('i.no') }}</a-radio>
+                            </a-radio-group>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-item img-upload">
                     <div class="key">Logo:</div>
                     <div class="value">
@@ -92,6 +103,7 @@ export default {
     props: {},
     data() {
         return {
+            Core,
             PAY_TIME_LIST: Core.Const.DISTRIBUTOR.PAY_TIME_LIST,
             loginType: Core.Data.getLoginType(),
             LOGIN_TYPE,

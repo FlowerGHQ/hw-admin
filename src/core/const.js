@@ -159,6 +159,10 @@ let Const = {
             STORE: 30,
         },
     },
+	FLAG: {
+		YES:1,
+		NO:0,
+	},
 
     DISTRIBUTOR: { // 代理商
         TYPE: {

@@ -111,6 +111,7 @@ const messages = {
             customer_name: '车主姓名',
 	        name_en: '英文名',
 	        content: '内容',
+	        pda: '启用PDA进行出入库',
         },
         a: {
             new_retailer: '新建零售商',
@@ -774,6 +775,7 @@ const messages = {
             customer_name: 'Name',
 	        name_en: 'English name ',
 	        content: 'content',
+	        pda: 'Enable PDA for stock in and stock out',
         },
         a: {
             new_retailer: 'Add a retailer',
