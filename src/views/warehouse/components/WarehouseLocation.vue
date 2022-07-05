@@ -301,7 +301,7 @@ export default {
                 return
             }
 
-            Core.Api.MaterialWarehouseLocation.saveList({
+            Core.Api.WarehouseLocationStock.saveList({
                 ids: this.itemForm.ids,
                 target_id: this.itemForm.item_id,
                 target_type: this.Core.Const.ITEM.TARGET_TYPE_MAP.ITEM

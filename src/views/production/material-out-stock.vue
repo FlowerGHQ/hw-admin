@@ -243,7 +243,7 @@ export default {
                 console.log(1)
                 return
             }
-            Core.Api.MaterialWarehouseLocation.list({
+            Core.Api.WarehouseLocationStock.list({
                 warehouse_id: this.warehouse_id,
                 target_id: this.form.id,
                 target_type: TARGET_TYPE_MAP.ITEM,
@@ -268,7 +268,7 @@ export default {
                 console.log(1)
                 return
             }
-            Core.Api.MaterialWarehouseLocation.detailByWarehouseId({
+            Core.Api.WarehouseLocationStock.detailByWarehouseId({
                 warehouse_location_id: this.form.warehouse_location_id,
                 target_id: this.form.id,
                 target_type: TARGET_TYPE_MAP.ITEM,

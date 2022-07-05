@@ -116,14 +116,14 @@ const apiList = {
 		listAll: ['PostJson', 'warehouse-location/list-name'],
 		delete: ['PostJson', 'warehouse-location/delete'],
 	},
-	MaterialWarehouseLocation: {
-		save: ['PostJson', 'material-warehouse-location-bind/save'],
-		saveList: ['PostJson', 'material-warehouse-location-bind/save-list'],
-		detail: ['PostJson', 'material-warehouse-location-bind/detail'],
-		list: ['PostJson', 'material-warehouse-location-bind/list'],
-		listAll: ['PostJson', 'material-warehouse-location-bind/list-name'],
-		delete: ['PostJson', 'material-warehouse-location-bind/delete'],
-		detailByWarehouseId: ['PostJson', 'material-warehouse-location-bind/detail-by-warehouse-id'],
+	WarehouseLocationStock: {
+		save: ['PostJson', 'warehouse-location-stock/save'],
+		saveList: ['PostJson', 'warehouse-location-stock/save-list'],
+		detail: ['PostJson', 'warehouse-location-stock/detail'],
+		list: ['PostJson', 'warehouse-location-stock/list'],
+		listAll: ['PostJson', 'warehouse-location-stock/list-name'],
+		delete: ['PostJson', 'warehouse-location-stock/delete'],
+		detailByWarehouseId: ['PostJson', 'warehouse-location-stock/detail-by-warehouse-id'],
 
 
 	},
