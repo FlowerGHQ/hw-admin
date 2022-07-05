@@ -42,10 +42,17 @@
                     </div>
                 </div>
                 <div class="form-item required">
+                    <div class="key">{{ $t('wa.location_uid_regex') }}：</div>
+                    <div class="value">
+                        <a-input v-model:value="form.location_uid_regex" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">{{ $t('wa.address') }}：</div>
                     <div class="value">
 <!--                        <ChinaAddressCascader @select='handleAddressSelect' :default-address='defAddr' v-if="$auth('ADMIN')"/>-->
                         <AddressCascader v-model:value="areaMap" :def-area='area' :default-address='defAddr'/>
+<!--                        <ReceiverAddressEdit btnType="link" :detail='item' :orgId='orgId' :orgType='orgType' btnClass='edit-btn' @click.stop @submit='getReceiveList'>{{ $t('def.edit') }}</ReceiverAddressEdit>-->
                     </div>
                 </div>
                 <div class="form-item">
@@ -69,6 +76,7 @@ import ChinaAddressCascader from '../../components/common/ChinaAddressCascader.v
 import AddressCascader from '@/components/common/AddressCascader.vue';
 
 
+
 export default {
     name: 'WarehouseEdit',
     components: { ChinaAddressCascader, AddressCascader },
@@ -89,6 +97,15 @@ export default {
                 type: '',
                 contact_phone: '',
                 contact_name: '',
+                location_uid_regex: '[a-zA-Z]{0,6}\\d+-\\d+-\\d+-\\d+-\\d+-\\d',
+                country: '',
+                country_en: '',
+                province: '',
+                province_en: '',
+                city: '',
+                city_en: '',
+                county: '',
+
             },
             defAddr: [],
             areaMap: {},
@@ -130,7 +147,15 @@ export default {
                 for (const key in this.form) {
                     this.form[key] = res.detail[key]
                 }
-                this.defAddr = [this.detail.province, this.detail.city, this.detail.county]
+                // this.area = [ this.form.province, this.form.city, this.form.county]
+                this.area.country = this.form.country
+                this.area.country_en = this.form.country
+                this.area.city = this.form.city
+                this.area.city_en = this.form.city
+                this.area.province = this.form.province
+                this.area.province_en = this.form.province
+                this.area.county = this.form.county
+                console.log('defAddr err', this.defAddr)
             }).catch(err => {
                 console.log('getWarehouseDetail err', err)
             }).finally(() => {
@@ -156,18 +181,27 @@ export default {
             if (!form.address) {
                 return this.$message.warning(this.$t('def.enter'))
             }
+            if (!form.location_uid_regex) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
             if (!Core.Util.isEmptyObj(this.areaMap)) {
                 console.log('areaMap2222',this.areaMap)
-                area.country = this.areaMap.country.name
-                area.country_en = this.areaMap.country.name_en
-                area.city = this.areaMap.city.name
-                area.city_en = this.areaMap.city.name_en
+                form.country = this.areaMap.country.name
+                form.country_en = this.areaMap.country.name_en
+                form.city = this.areaMap.city.name
+                form.city_en = this.areaMap.city.name_en
                 if (this.areaMap.province) {
-                    area.province = this.areaMap.province.name
-                    area.province_en = this.areaMap.province.name_en
+                    form.province = this.areaMap.province.name
+                    form.province_en = this.areaMap.province.name_en
+                } else {
+                    form.province = ""
+                    form.province_en = ""
+
                 }
                 if (this.areaMap.county) {
-                    area.county = this.areaMap.county.name
+                    form.county = this.areaMap.county.name
+                }else {
+                    form.county = ""
                 }
             }
             if (!this.$auth('ADMIN') && !(Object.values(area).filter(i => i).length)) {
@@ -176,7 +210,6 @@ export default {
             console.log('area12333333', area)
             Core.Api.Warehouse.save({
                 ...form,
-                ...area,
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')

@@ -413,6 +413,7 @@ const messages = {
 	        add_location: '新增库位',
 	        allocated_material: '分配商品',
 	        material: '物料名称',
+	        location_uid_regex: '库位正则表达式',
         },
         in: {
             list: '出入库单列表',
@@ -1075,6 +1076,7 @@ const messages = {
 	        add_location: 'Ddd location',
 	        allocated_material: 'Allocated material',
 	        material: 'Material name',
+	        location_uid_regex: 'location regex',
         },
         in: {
             list: 'Inbound and outbound order list',
