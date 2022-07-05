@@ -86,20 +86,20 @@
         <a-modal v-model:visible="materialShow" :title="$t('n.upload_attachment')" class="attachment-file-upload-modal" :after-close="handleMaterialClose">
             <div class="form-title">
                 <div class="form-item required">
-                    <div class="key">{{ $t('wa.material') }}:</div>
+                    <div class="key">{{ $t('wa.item_code') }}:</div>
                     <div class="value">
                         <a-select
-                            v-model:value="materialForm.material_id"
+                            v-model:value="itemForm.item_id"
                             show-search
                             :placeholder="$t('def.input')"
                             :default-active-first-option="false"
                             :show-arrow="false"
                             :filter-option="false"
                             :not-found-content="null"
-                            @search="handleMaterialSearch"
+                            @search="handleItemSearch"
                         >
-                            <a-select-option v-for=" item in materialOptions" :key="item.id" :value="item.id">
-                                {{ item.name }}
+                            <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
+                                Code:{{ item.code }}  Name:{{ item.name }}
                             </a-select-option>
                         </a-select>
                     </div>
@@ -150,16 +150,16 @@ export default {
                 warehouse_id: '',
                 uid: '',
             },
-            materialForm: {
+            itemForm: {
                 ids: [],
-                material_id: '',
+                item_id: '',
             },
             selectedRowKeys: [],
             selectedRowItems: [],
             selectedRowItemsAll: [],
 
             tableData: [],
-            materialOptions: [],
+            itemOptions: [],
         };
     },
     watch: {},
@@ -167,6 +167,7 @@ export default {
         tableColumns() {
             let tableColumns = [
                 {title: "uid", key: "uid"},
+                {title: this.$t('wa.code'), dataIndex: "target_code", key: "name"},
                 {title: this.$t('wa.name'), dataIndex: "target_name", key: "name"},
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ];
@@ -270,7 +271,7 @@ export default {
         },
         handleMaterialClose() {
             this.materialShow = false;
-            Object.assign(this.materialForm, this.$options.data().materialForm)
+            Object.assign(this.itemForm, this.$options.data().itemForm)
             // this.selectItem = {}
         },
 
@@ -286,24 +287,24 @@ export default {
                 console.log('handleModalSubmit err', err)
             })
         },
-        handleMaterialSearch(name) {
-            Core.Api.Material.list({name: name}).then(res => {
-                this.materialOptions = res.list
+        handleItemSearch(code) {
+            Core.Api.Item.list({code: code}).then(res => {
+                this.itemOptions = res.list
             })
         },
         handleMaterialSubmit() {
-            this.materialForm.ids = this.selectedRowKeys;
-            if (this.materialForm.ids === []) {
+            this.itemForm.ids = this.selectedRowKeys;
+            if (this.itemForm.ids === []) {
                 return
             }
-            if (!this.materialForm.material_id) {
+            if (!this.itemForm.item_id) {
                 return
             }
 
             Core.Api.MaterialWarehouseLocation.saveList({
-                ids: this.materialForm.ids,
-                target_id: this.materialForm.material_id,
-                target_type: this.Core.Const.ITEM.TARGET_TYPE_MAP.MATERIAL
+                ids: this.itemForm.ids,
+                target_id: this.itemForm.item_id,
+                target_type: this.Core.Const.ITEM.TARGET_TYPE_MAP.ITEM
             }).then(res => {
                 this.getTableData();
                 this.handleMaterialClose();

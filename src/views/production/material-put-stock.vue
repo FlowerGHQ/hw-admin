@@ -36,29 +36,29 @@
                     </div>
                 </div>
 
-<!--                <div class="form-item required">
-                    <div class="key">编码</div>
-                    <div class="value">
-                        <a-select
-                            v-model:value="form.id"
-                            show-search
-                            placeholder="请输入物料编码"
-                            :default-active-first-option="false"
-                            :show-arrow="false"
-                            :filter-option="false"
-                            :not-found-content="null"
-                            @search="handleSearch"
-                            @change="handleChange"
-                        >
-                            <a-select-option v-for=" item in options" :key="item.id" :value="item.id">{{
-                                    item.code
-                                }}-{{ item.name }}
-                            </a-select-option>
+                <!--                <div class="form-item required">
+                                    <div class="key">编码</div>
+                                    <div class="value">
+                                        <a-select
+                                            v-model:value="form.id"
+                                            show-search
+                                            placeholder="请输入物料编码"
+                                            :default-active-first-option="false"
+                                            :show-arrow="false"
+                                            :filter-option="false"
+                                            :not-found-content="null"
+                                            @search="handleSearch"
+                                            @change="handleChange"
+                                        >
+                                            <a-select-option v-for=" item in options" :key="item.id" :value="item.id">{{
+                                                    item.code
+                                                }}-{{ item.name }}
+                                            </a-select-option>
 
-                        </a-select>
+                                        </a-select>
 
-                    </div>
-                </div>-->
+                                    </div>
+                                </div>-->
                 <div class="form-item required">
                     <div class="key">编码</div>
                     <div class="value">
@@ -68,7 +68,11 @@
                 <div class="form-item">
                     <div class="key">库位号</div>
                     <div class="value">
-                        <a-input v-model:value="warehouseLocationopTions" disabled/>
+                        <a-select v-model:value="form.warehouse_location_id" :placeholder="$t('def.select')" @change="handleWarehouseChange">
+                            <a-select-option v-for=" item in warehouseLocationOptions" :key="item.warehouse_location_id" :value="item.warehouse_location_id">
+                                {{ item.warehouse_location_uid }}
+                            </a-select-option>
+                        </a-select>
                     </div>
                 </div>
 
@@ -102,7 +106,7 @@
                         <a-input type="number" v-model:value="form.confirm_amount" disabled/>
                     </div>
                 </div>
-                <div >
+                <div>
                     <div class="form-item">
                         <div class="key">入库最小包装</div>
                         <div class="value">
@@ -122,7 +126,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
         <div class="form-btns">
@@ -181,7 +184,7 @@ export default {
             configTemp: [],
             options: [],
             warehouseOptions: [],
-            warehouseLocationopTions: [],
+            warehouseLocationOptions: [],
             invoiceOptions: [],
 
         };
@@ -210,6 +213,8 @@ export default {
         },
         handleSearch() {
             if (!this.form.code){
+                this.form.id = '';
+                this.warehouseLocationOptions = [];
                 return ;
             }
             let codeName = this.form.code;
@@ -229,6 +234,7 @@ export default {
             })
         },
         handleWarehouseLocationSearch() {
+            console.log("handleWarehouseLocationSearch")
             if (!this.warehouse_id) {
                 console.log(1)
                 return
@@ -242,22 +248,36 @@ export default {
                 target_id: this.form.id,
                 target_type: TARGET_TYPE_MAP.ITEM,
             }).then(res => {
-                this.warehouseLocationopTions = ''
-                res.list.forEach(res => {
-
-                    this.warehouseLocationopTions += res.warehouse_location_uid +","
-                })
+                this.warehouseLocationOptions = res.list
             })
             Core.Api.Stock.detail({
                 warehouse_id: this.warehouse_id,
                 target_id: this.form.id,
                 target_type: TARGET_TYPE_MAP.ITEM,
             }).then(res => {
-               this.form.stock = res.stock
+                // this.form.stock = res.stock
                 this.form.stock.updateTime = this.$Util.timeFormat(res.stock.updateTime != undefined ? res.stock.updateTime: res.stock.createTime)
-
             })
         },
+        handleWarehouseLocationStockSearch() {
+            if (!this.form.warehouse_location_id) {
+                console.log(1)
+                return
+            }
+            if (!this.form.id) {
+                console.log(1)
+                return
+            }
+            Core.Api.MaterialWarehouseLocation.detailByWarehouseId({
+                warehouse_location_id: this.form.warehouse_location_id,
+                target_id: this.form.id,
+                target_type: TARGET_TYPE_MAP.ITEM,
+            }).then(res => {
+                this.form.stock.stock = res.amount
+                // this.form.stock.updateTime = this.$Util.timeFormat(res.stock.updateTime != undefined ? res.stock.updateTime: res.stock.createTime)
+            })
+        },
+
         handleWarehouseSearch(name) {
             Core.Api.Warehouse.list({name: name}).then(res => {
                 this.warehouseOptions = res.list
@@ -266,6 +286,7 @@ export default {
         handleWarehouseChange(){
             this.handleWarehouseByMaterialChange();
             this.handleWarehouseLocationSearch();
+            this.handleWarehouseLocationStockSearch()
         },
         handleWarehouseByMaterialChange() {
             this.uid = ""
@@ -321,14 +342,14 @@ export default {
         //         this.loading = false
         //     })
         // },
-      /*  handleSearch(code) {
-            let codes = code.split('*')
-            console.log(codes[1])
-            this.form.smallest_packaging = codes[1]
-            Core.Api.Item.list({code: codes[0]}).then(res => {
-                this.options = res.list
-            })
-        },*/
+        /*  handleSearch(code) {
+              let codes = code.split('*')
+              console.log(codes[1])
+              this.form.smallest_packaging = codes[1]
+              Core.Api.Item.list({code: codes[0]}).then(res => {
+                  this.options = res.list
+              })
+          },*/
 
         // handleChange() {
         //     this.id = this.form.id
@@ -350,6 +371,7 @@ export default {
                 onOk() {
                     Core.Api.StockRecord.add({
                         warehouse_id: _this.warehouse_id,
+                        warehouse_location_id: _this.form.warehouse_location_id,
                         target_id: _this.form.id,
                         target_type: TARGET_TYPE_MAP.ITEM,
                         type: STOCK_RECORD.TYPE.IN,

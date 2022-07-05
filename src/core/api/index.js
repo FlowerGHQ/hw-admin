@@ -123,6 +123,9 @@ const apiList = {
 		list: ['PostJson', 'material-warehouse-location-bind/list'],
 		listAll: ['PostJson', 'material-warehouse-location-bind/list-name'],
 		delete: ['PostJson', 'material-warehouse-location-bind/delete'],
+		detailByWarehouseId: ['PostJson', 'material-warehouse-location-bind/detail-by-warehouse-id'],
+
+
 	},
     Stock: { //仓库库存管理
         add: ['PostJson', 'stock/add'],

@@ -105,6 +105,7 @@ export default {
                 city: '',
                 city_en: '',
                 county: '',
+                county_en: '',
 
             },
             defAddr: [],
@@ -200,8 +201,10 @@ export default {
                 }
                 if (this.areaMap.county) {
                     form.county = this.areaMap.county.name
+                    form.county_en = this.areaMap.county.county_en
                 }else {
                     form.county = ""
+                    form.county_en = ""
                 }
             }
             if (!this.$auth('ADMIN') && !(Object.values(area).filter(i => i).length)) {

@@ -411,9 +411,11 @@ const messages = {
 	        layer: '所在行',
 	        number: '所在列',
 	        name: '所存商品',
+	        code: '所存商品编码',
 	        add_location: '新增库位',
 	        allocated_material: '分配商品',
 	        material: '物料名称',
+	        item_code: '商品编码',
 	        location_uid_regex: '库位正则表达式',
         },
         in: {
@@ -1075,9 +1077,11 @@ const messages = {
 	        layer: 'layer',
 	        number: 'number',
 	        name: 'Stored goods',
+	        code: 'Stored goods code',
 	        add_location: 'Ddd location',
 	        allocated_material: 'Allocated material',
 	        material: 'Material name',
+	        item_code: 'Item code',
 	        location_uid_regex: 'location regex',
         },
         in: {
