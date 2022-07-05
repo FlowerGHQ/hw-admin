@@ -101,7 +101,7 @@ export default {
         // 上传图片
         handleCoverChange({ file, fileList }) {
             if (file.status == 'done') {
-                if (file.response && file.response.code < 0) {
+                if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
                 }
                 this.shortPath = get(fileList,'[0].response.data.filename', null);

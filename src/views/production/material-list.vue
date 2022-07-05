@@ -247,7 +247,7 @@ export default {
         handleMatterChange({file, fileList}) {
             console.log("handleMatterChange status:", file.status, "file:", file)
             if (file.status == 'done') {
-                if (file.response && file.response.code < 0) {
+                if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
                     this.getTableData();
                 } else {

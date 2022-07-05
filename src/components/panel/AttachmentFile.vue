@@ -198,7 +198,7 @@ export default {
         handleFileChange({file, fileList}) {
             console.log("handleCoverChange status:", file.status, "file:", file)
             if (file.status == 'done') {
-                if (file.response && file.response.code < 0) {
+                if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
                 }
                 this.form.path = file.response.data.filename
