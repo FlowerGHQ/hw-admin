@@ -18,6 +18,17 @@
                         </div>
                     </div>
                     <div class="btns-area">
+                        <a-upload name="file" class="file-uploader"
+                                  :file-list="upload.fileList" :action="upload.action"
+                                  :show-upload-list='false'
+                                  :headers="upload.headers" :data='upload.data'
+                                  accept=".xlsx,.xls"
+                                  @change="handleFileUpload">
+                            <a-button type="primary" ghost class="panel-btn">
+                                <i class="icon i_add"/> 批量导入
+                            </a-button>
+                        </a-upload>
+
                         <a-button type="primary" ghost @click="handleLocation()" v-if="$auth('warehouse.save')" class="panel-btn">
                             <i class="icon i_add"/>{{ $t('wa.add_location') }}
                         </a-button>
@@ -47,8 +58,8 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('agent.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
-                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('agent.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type="link" @click="handleUpdateShow(record)" v-if="$auth('agent.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" v-if="$auth('agent.save')">{{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -69,10 +80,10 @@
                 />
             </div>
         </div>
-        <a-modal v-model:visible="modalShow" :title="$t('n.upload_attachment')" class="attachment-file-upload-modal" :after-close="handleModalClose">
+        <a-modal v-model:visible="modalShow" :title="form.id > 0 ? $t('wa.update_location'):$t('wa.add_location')" class="attachment-file-upload-modal" :after-close="handleModalClose">
             <div class="form-title">
                 <div class="form-item required">
-                    <div class="key">uid:</div>
+                    <div class="key">{{$t('wa.uid')}}:</div>
                     <div class="value">
                         <a-input v-model:value="form.uid" :placeholder="$t('def.input')"/>
                     </div>
@@ -160,15 +171,28 @@ export default {
 
             tableData: [],
             itemOptions: [],
+            upload: {
+                action: Core.Const.NET.URL_POINT + "/admin/1/warehouse-location/import",
+                fileList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'xlsx',
+                    warehouse_id: '',
+                },
+            },
         };
     },
     watch: {},
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: "uid", key: "uid"},
+                {title:  this.$t('wa.uid'), key: "uid"},
                 {title: this.$t('wa.code'), dataIndex: "target_code", key: "name"},
                 {title: this.$t('wa.name'), dataIndex: "target_name", key: "name"},
+                {title: this.$t('i.amount'), dataIndex: "amount", key: "amount"},
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ];
             return tableColumns;
@@ -195,6 +219,7 @@ export default {
     },
     mounted() {
         this.getTableData();
+        this.upload.data.warehouse_id = this.warehouseId;
     },
     methods: {
         routerChange(type, item = {}) {
@@ -292,6 +317,11 @@ export default {
                 this.itemOptions = res.list
             })
         },
+        handleUpdateShow(item) {
+            this.form = Core.Util.deepCopy(item)
+
+            this.modalShow = true
+        },
         handleMaterialSubmit() {
             this.itemForm.ids = this.selectedRowKeys;
             if (this.itemForm.ids === []) {
@@ -310,6 +340,36 @@ export default {
                 this.handleMaterialClose();
 
             })
+        },
+        handleDelete(id) {
+            let _this = this;
+            this.$confirm({
+                title: '确定要删除库位吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.WarehouseLocation.delete({id}).then(() => {
+                        _this.$message.success('删除成功');
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
+        // 上传文件
+        handleFileUpload({file, fileList}) {
+            console.log("handleFileUpload status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                let res = file.response
+                if (res && res.code === 0) {
+                    return this.$message.success('上传成功');
+                } else {
+                    return this.$message.error('上传失败:' + res.message)
+                }
+            }
+            this.upload.fileList = fileList
         },
 
     },
