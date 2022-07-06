@@ -11,9 +11,9 @@
                         :headers="upload.headers" :data='upload.data'
                         accept=".xlsx,.xls"
                         @change="handleMatterChange">
-                        <!-- <a-button type="primary" class="file-upload-btn">
+                        <a-button type="primary" class="file-upload-btn">
                             <i class="icon i_add"/> 批量导入
-                        </a-button>-->
+                        </a-button>
                     </a-upload>
                 </div>
             </div>

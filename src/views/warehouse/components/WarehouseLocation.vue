@@ -18,6 +18,13 @@
                         </div>
                     </div>
                     <div class="btns-area">
+                        <a-button type="primary" ghost @click="handleLocation()" v-if="$auth('warehouse.save')" class="panel-btn">
+                            <i class="icon i_add"/>{{ $t('wa.add_location') }}
+                        </a-button>
+                        <a-button type="primary" ghost @click="handleMaterial()" v-if="$auth('warehouse.save')" class="panel-btn">
+                            <i class="icon i_add"/>{{ $t('wa.allocated_material') }}
+                        </a-button>
+
                         <a-upload name="file" class="file-uploader"
                                   :file-list="upload.fileList" :action="upload.action"
                                   :show-upload-list='false'
@@ -28,13 +35,6 @@
                                 <i class="icon i_add"/> 批量导入
                             </a-button>
                         </a-upload>
-
-                        <a-button type="primary" ghost @click="handleLocation()" v-if="$auth('warehouse.save')" class="panel-btn">
-                            <i class="icon i_add"/>{{ $t('wa.add_location') }}
-                        </a-button>
-                        <a-button type="primary" ghost @click="handleMaterial()" v-if="$auth('warehouse.save')" class="panel-btn">
-                            <i class="icon i_add"/>{{ $t('wa.allocated_material') }}
-                        </a-button>
                     </div>
                 </div>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
