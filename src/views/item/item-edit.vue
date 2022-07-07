@@ -170,17 +170,19 @@
                             <a-button type="link" v-if="!form.id" @click="handleRemoveSpec(index)">{{ $t('def.delete') }}</a-button>
                         </div>
                         <div class="option">
-                            <p>{{ $t('i.value') }}</p>
+                            <p>{{ $t('i.value_zh') }}</p>
                             <div class="option-list">
                                 <div class="option-item" v-for="(option, i) of item.option" :key="i">
-                                    <a-input :value="option" :placeholder="$t('def.input')"/>
+                                    <a-input :value="option.zh" :placeholder="$t('def.input')"/>
                                     <i class="close icon i_close_b" @click="handleRemoveSpecOption(index, i)"/>
                                 </div>
                                 <a-popover v-model:visible="item.addVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseSpecOption(index)}'>
                                     <template #content>
                                         <div class="specific-option-edit-popover">
-                                            <a-input v-model:value="item.addValue" :placeholder="$t('def.input')" :max-length='50' @keydown.enter="handleAddSpecOption(index)" :autofocus='true'/>
-                                            <div class="content-length">{{item.addValue.length}}/50</div>
+                                            <a-input v-model:value="item.addValue.zh" :placeholder="$t('def.input')+$t('i.value_zh')" :max-length='50'/>
+                                            <div class="content-length">{{item.addValue.zh.length}}/50</div>
+                                            <a-input v-model:value="item.addValue.en" :placeholder="$t('def.input')+$t('i.value_en')" :max-length='50'/>
+                                            <div class="content-length">{{item.addValue.en.length}}/50</div>
                                             <div class="btns">
                                                 <a-button type="primary" ghost @click="handleCloseSpecOption(index)">{{ $t('def.cancel') }}</a-button>
                                                 <a-button type="primary" @click="handleAddSpecOption(index)">{{ $t('def.sure') }}</a-button>
@@ -189,6 +191,15 @@
                                     </template>
                                     <a-button type="link"><i class="icon i_add"></i> {{ $t('i.addition') }}</a-button>
                                 </a-popover>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <p>{{ $t('i.value_en') }}</p>
+                            <div class="option-list">
+                                <div class="option-item" v-for="(option, i) of item.option" :key="i">
+                                    <a-input :value="option.en" :placeholder="$t('def.input')"/>
+                                    <i class="close icon i_close_b" @click="handleRemoveSpecOption(index, i)"/>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -224,8 +235,8 @@
                                     :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/\$\s?|(,*)/g, '')"/>
                             </template>
                             <template v-if="column.key === 'select'">
-                                <a-select v-model:value="record[column.dataIndex]" placeholder="请选择">
-                                    <a-select-option v-for="(val,index) of column.option" :key="index" :value="val">{{ val }}</a-select-option>
+                                <a-select v-model:value="record[column.dataIndex]['value']" placeholder="请选择" >
+                                    <a-select-option v-for="(val,index) of column.option" :key="index" :value="val.key">{{ val[$i18n.locale] }}</a-select-option>
                                 </a-select>
                             </template>
                         </template>
@@ -440,7 +451,7 @@ export default {
             let column = []
             column = this.specific.list.map((item, index) => ({
                 id: item.id,
-                title: item.name,
+                title: this.$i18n.locale === 'zh'? item.name: item.key ,
                 dataIndex: item.key,
                 key: 'select',
                 option: item.option,
@@ -588,8 +599,16 @@ export default {
                     id: item.id,
                     key: item.key,
                     name: item.name,
-                    option: item.value.split(','),
-                    addValue: '',
+                    option: item.value_en.split(',').map((it, index) =>({
+                            key: it,
+                            zh: item.value.split(',')[index],
+                            en: it,
+                        })),
+                    addValue:{
+                        key: '',
+                        zh: '',
+                        en: '',
+                    },
                     addVisible: false,
                 }))
                 console.log('setSpecificData list:', list)
@@ -602,11 +621,11 @@ export default {
                         // params[attr.key] = element.value
                         if (element != undefined){
                             params[attr.key] = {
-                                value: element.value,
+                                value:element.value_en
                             }
                         } else {
                             params[attr.key] = {
-                                value: "",
+                                value:'',
                             }
                         }
                     }
@@ -682,7 +701,7 @@ export default {
                                 attr_def_name: attr.name,
                                 id,
                                 name: data[attr.key].value ? data[attr.key].value: data[attr.key],
-                                value: data[attr.key].value ? data[attr.key].value: data[attr.key],
+                                value_en: data[attr.key].value ? data[attr.key].value: data[attr.key],
                                 target_id: data.target_id || '',
                                 target_type: 1,
                             }
@@ -888,7 +907,7 @@ export default {
         // 规格定义
         // 规格名
         handleAddSpec() { // 添加规格定义
-            this.specific.list.push({id: '', name: '', key: '', option: [], addVisible: false, addValue: ''})
+            this.specific.list.push({id: '', name: '', key: '', option: [], addVisible: false,addValue: {key:'', zh:'', en:''}})
         },
         handleRemoveSpec(index) { // 删除规格定义
             let item = this.specific.list[index]
@@ -924,7 +943,7 @@ export default {
                 }
             }
             if (item.key.trim() && item.name.trim()) {
-                let _item = { id: item.id, key: item.key, name: item.name, value: item.option.join(',') }
+                let _item = { id: item.id, key: item.key, name: item.name, value: item.option }
                 Core.Api.AttrDef.save(_item).then(res => {
                     console.log('handleSpecEditBlur res:', res)
                     this.specific.list[index].id = res.detail.id
@@ -933,31 +952,63 @@ export default {
         },
         // 规格值
         handleAddSpecOption(index) {
-            let item = this.specific.list[index]
-            if (!item.addValue) {
+            let target = this.specific.list[index]
+            let item = Core.Util.deepCopy(this.specific.list[index].addValue)
+
+            if (!item.zh) {
                 return this.$message.warning('请输入规格值')
             }
-            if (item.option.includes(item.addValue)) {
-                return this.$message.warning('同以规格下，规格值不可重复')
+            if (!item.en) {
+                return this.$message.warning('请输入规格值英文')
             }
 
-            item.option.push(this.specific.list[index].addValue)
+            if (target.option.includes(item.zh)) {
+                return this.$message.warning('同以规格下，规格值不可重复')
+            }
+            if (target.option.includes(item.en)) {
+                return this.$message.warning('同以规格下，规格值英文不可重复')
+            }
+            item.key = item.en;
+
+            console.log("addValue", item)
+            target.option.push(item)
+            console.log("this.specific.list[index]", target)
             this.handleCloseSpecOption(index)
-            if (item.id && item.key.trim() && item.name.trim()) {
-                let _item = { id: item.id, key: item.key, name: item.name, value: item.option.join(',') }
+            if (target.id && target.key.trim() && target.name.trim()) {
+                let value = ""
+                let value_en = ""
+                target.option.forEach(it => {
+                    value += it.zh + ","
+                    value_en += it.en + ","
+                });
+                var reg =/,$/gi;
+                value = value.replace(reg, "")
+                value_en = value_en.replace(reg, "")
+                let _item = { id: target.id, key: target.key, name: target.name, value: value, value_en:value_en }
                 Core.Api.AttrDef.save(_item)
             }
         },
         handleCloseSpecOption(index) {
-            this.specific.list[index].addValue = ''
+            this.specific.list[index].addValue.zh = ''
+            this.specific.list[index].addValue.en = ''
+            this.specific.list[index].addValue.key = ''
             this.specific.list[index].addVisible = false
         },
         handleRemoveSpecOption(index, i) {
             let item = this.specific.list[index]
             let _do = function() {
                 item.option.splice(i, 1)
+                let value = ""
+                let value_en = ""
+                item.option.forEach(it => {
+                    value += it.zh + ","
+                    value_en += it.en + ","
+                });
+                var reg =/,$/gi;
+                value = value.replace(reg, "")
+                value_en = value_en.replace(reg, "")
                 if (item.id && item.key.trim() && item.name.trim()) {
-                    let _item = { id: item.id, key: item.key, name: item.name, value: item.option.join(',') }
+                    let _item = { id: item.id, key: item.key, name: item.name, value: value, value_en:value_en}
                     Core.Api.AttrDef.save(_item)
                 }
             }
@@ -992,9 +1043,9 @@ export default {
                 const len = this.specific.list[i].option.length || 1;
                 maxLen = maxLen*len
             }
-            if (this.specific.data.length >= maxLen) {
-                return this.$message.warning('当前商品规格已达最大规格组合数，请添加规格定义')
-            }
+            // if (this.specific.data.length >= maxLen) {
+            //     return this.$message.warning('当前商品规格已达最大规格组合数，请添加规格定义')
+            // }
             this.specific.data.push({
                 code: '',
                 price: '',
@@ -1113,7 +1164,8 @@ export default {
             display: flex;
             margin-bottom: 20px;
             > p {
-                padding-left: 64px;
+                padding-left: 34px;
+                padding-right: 50px;
                 height: 32px;
                 line-height: 32px;
                 margin-top: 8px;
@@ -1208,7 +1260,7 @@ export default {
     display: flex;
     .flex(flex-start,flex-end);
     .ant-input, .ant-input-number {
-        width: 134px;
+        width: 180px;
         margin-bottom: 8px;
     }
     .content-length {
