@@ -173,13 +173,13 @@
                             <p>{{ $t('i.value_zh') }}</p>
                             <div class="option-list">
                                 <div class="option-item" v-for="(option, i) of item.option" :key="i">
-                                    <a-input :value="option.zh" :placeholder="$t('def.input')"/>
+                                    <a-input :value="option.zh" class="option-input" :placeholder="$t('def.input')" disabled/>
                                     <i class="close icon i_close_b" @click="handleRemoveSpecOption(index, i)"/>
                                 </div>
                                 <a-popover v-model:visible="item.addVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseSpecOption(index)}'>
                                     <template #content>
                                         <div class="specific-option-edit-popover">
-                                            <a-input v-model:value="item.addValue.zh" :placeholder="$t('def.input')+$t('i.value_zh')" :max-length='50'/>
+                                            <a-input v-model:value="item.addValue.zh" :placeholder="$t('def.input')+$t('i.value_zh')" :max-length='50' />
                                             <div class="content-length">{{item.addValue.zh.length}}/50</div>
                                             <a-input v-model:value="item.addValue.en" :placeholder="$t('def.input')+$t('i.value_en')" :max-length='50'/>
                                             <div class="content-length">{{item.addValue.en.length}}/50</div>
@@ -197,7 +197,7 @@
                             <p>{{ $t('i.value_en') }}</p>
                             <div class="option-list">
                                 <div class="option-item" v-for="(option, i) of item.option" :key="i">
-                                    <a-input :value="option.en" :placeholder="$t('def.input')"/>
+                                    <a-input :value="option.en" class="option-input" :placeholder="$t('def.input')" disabled/>
                                     <i class="close icon i_close_b" @click="handleRemoveSpecOption(index, i)"/>
                                 </div>
                             </div>
@@ -1178,6 +1178,10 @@ export default {
             .option-item {
                 position: relative;
                 margin-top: 8px;
+                .option-input {
+                    background-color: #fff;
+                    color: #000;
+                }
                 .ant-input {
                     width: 90px;
                     margin-right: 14px;
