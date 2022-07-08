@@ -28,7 +28,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal-content" v-if="status === STATUS.AUDIT_PASS">
+        <div class="modal-content" v-if="status === STATUS.FINANCE_PASS">
             <div class="form-item required">
                 <div class="key">审核结果:</div>
                 <a-radio-group v-model:value="form.status">

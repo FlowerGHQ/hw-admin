@@ -111,10 +111,16 @@
                                           v-if="$auth('invoice.delete')"><i class="icon i_close_c"/>{{ $t('def.cancel') }}
                                 </a-button>
                             </template>
-                            <AuditMaterialPurchase v-if="record.status === STATUS.WAIT_AUDIT && $auth('invoice.warehouse-audit')" btnType="link" :status="STATUS.WAIT_AUDIT"
+                            <AuditMaterialPurchase v-if="(record.status === STATUS.FINANCE_PASS || (record.status === STATUS.WAIT_AUDIT && record.type === TYPE.IN)) && $auth('invoice.warehouse-audit')" btnType="link" :status="STATUS.WAIT_AUDIT"
                                                    :api-list="['Invoice', 'audit']" :invoiceId="record.id" @submit="getTableData"><i class="icon i_audit"/>{{ $t('in.admin') }}</AuditMaterialPurchase>
-                            <AuditMaterialPurchase v-if="record.status === STATUS.AUDIT_PASS && record.type === TYPE.OUT && $auth('invoice.finance-audit') && $auth('ADMIN')" btnType="link" :api-list="['Invoice', 'audit']" :invoiceId="record.id"
-                                                   :status="STATUS.AUDIT_PASS" @submit="getTableData" ><i class="icon i_audit"/>财务审核</AuditMaterialPurchase>
+                            <AuditMaterialPurchase v-if="record.status === STATUS.WAIT_AUDIT && record.type === TYPE.OUT && $auth('invoice.finance-audit') && $auth('ADMIN')" btnType="link" :api-list="['Invoice', 'audit']" :invoiceId="record.id"
+                                                   :status="STATUS.FINANCE_PASS" @submit="getTableData" ><i class="icon i_audit"/>财务审核</AuditMaterialPurchase>
+<!--                            <AuditHandle v-if="(detail.status === STATUS.FINANCE_PASS || (detail.status === STATUS.WAIT_AUDIT && detail.type === TYPE.IN)) && $auth('invoice.warehouse-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"-->
+<!--                                         :sPass="STATUS.AUDIT_PASS" :sRefuse="STATUS.AUDIT_REFUSE" @submit="getTableData" ><i class="icon i_audit"/>仓库审核</AuditHandle>-->
+
+<!--                            <AuditHandle v-if="detail.status === STATUS.WAIT_AUDIT && $auth('invoice.finance-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"-->
+<!--                                         :sPass="STATUS.FINANCE_PASS" :sRefuse="STATUS.AUDIT_REFUSE" @submit="getTableData" ><i class="icon i_audit"/>财务审核</AuditHandle>-->
+
                         </template>
                     </template>
                 </a-table>
