@@ -235,8 +235,8 @@
                                     :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/\$\s?|(,*)/g, '')"/>
                             </template>
                             <template v-if="column.key === 'select'">
-                                <a-select v-model:value="record[column.dataIndex]['value']" placeholder="请选择" >
-                                    <a-select-option v-for="(val,index) of column.option" :key="index" :value="val.key">{{ val[$i18n.locale] }}</a-select-option>
+                                <a-select v-model:value="record[column.dataIndex]['value_en']" placeholder="请选择">
+                                    <a-select-option v-for="(val,index) of column.option" :key="index" :value="val.key"  @click="specChange(record[column.dataIndex], val)">{{ val[$i18n.locale] }}</a-select-option>
                                 </a-select>
                             </template>
                         </template>
@@ -621,7 +621,8 @@ export default {
                         // params[attr.key] = element.value
                         if (element != undefined){
                             params[attr.key] = {
-                                value:element.value_en
+                                value:element.value,
+                                value_en:element.value_en
                             }
                         } else {
                             params[attr.key] = {
@@ -701,7 +702,8 @@ export default {
                                 attr_def_name: attr.name,
                                 id,
                                 name: data[attr.key].value ? data[attr.key].value: data[attr.key],
-                                value_en: data[attr.key].value ? data[attr.key].value: data[attr.key],
+                                value: data[attr.key].value ? data[attr.key].value: data[attr.key],
+                                value_en: data[attr.key].value_en ? data[attr.key].value_en: data[attr.key],
                                 target_id: data.target_id || '',
                                 target_type: 1,
                             }
@@ -1077,7 +1079,11 @@ export default {
                 return item
             })
             this.handleCloseBatchSet()
-        }
+        },
+        specChange(value, item){
+            value.value = item.zh
+            console.log("value",value)
+        },
     }
 };
 </script>
