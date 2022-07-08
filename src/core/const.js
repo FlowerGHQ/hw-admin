@@ -736,6 +736,7 @@ let Const = {
         { list: [], select: [], key: 'store', name: '门店管理' },
         { list: [], select: [], key: 'account', name: '账户管理' },
         { list: [], select: [], key: 'repair-order', name: '维修单' },
+	    { list: [], select: [], key: 'item-category', name: '商品分类' },
         { list: [], select: [], key: 'customer', name: '客户管理' },
         { list: [], select: [], key: 'user', name: '员工管理' },
         { list: [], select: [], key: 'item', name: '商品管理' },
