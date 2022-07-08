@@ -52,6 +52,10 @@
                     <UserAuth type='item' :userId="id" :detail="detail" @submit="getUserDetail"
                               v-if="activeKey === 'UserAuth'"/>
                 </a-tab-pane>
+                <a-tab-pane key="UserScope" tab="资源管理">
+                    <UserScopeList type='item' :userId="id" :detail="detail" @submit="getUserDetail"
+                              v-if="activeKey === 'UserScope'"/>
+                </a-tab-pane>
 
             </a-tabs>
         </div>
@@ -62,12 +66,14 @@
 import Core from "../../core";
 import UserAuth from "./components/UserAuth.vue";
 import UserRole from "./components/UserRole.vue";
+import UserScopeList from "./components/UserScopeList.vue";
+
 
 const WAREHOUSE_TYPE = Core.Const.WAREHOUSE.TYPE
 
 export default {
     name: "UserDetail",
-    components: { UserAuth ,UserRole },
+    components: { UserAuth ,UserRole, UserScopeList },
     props: {},
     data() {
         return {
