@@ -17,14 +17,14 @@ switch (window.location.hostname) {
         URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
         break;
     case "10.0.0.205":
-    case "10.0.0.219":
-        // URL_POINT = 'http://10.0.0.213:8889'
+    case "10.0.0.176":
+        URL_POINT = 'http://10.0.0.176:8889'
         break;
     default:
         URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
         break;
 }
-
+// URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
 let Const = {
     NET: {
         URL_POINT: URL_POINT,
@@ -354,6 +354,37 @@ let Const = {
 
         },
     },
+
+	FEEDBACK: {
+		// 状态
+		STATUS: {
+			INIT:0,
+			WAIT_AFTER_SALES_AUDIT: 100,
+			AFTER_SALES_AUDIT_FAIL: 110,
+			WAIT_QUALITY_AUDIT: 200,
+			QUALITY_AUDIT_FAIL: 210,
+			WAIT_FEEDBACK: 300,
+			WAIT_FEEDBACK_AUDIT: 400,
+			FEEDBACK_AUDIT_FAIL: 410,
+			CLOSE: 500,
+			AUDIT_FAIL: -10,
+			CANCEL: -1,
+		},
+		STATUS_MAP: {
+			'0': { key: 0, color: 'yellow', zh: '初始', en: 'Init'},
+			'100': { key: 100, color: 'blue', zh: '等待平台售后审核', en: 'Under repair'},
+			'110': { key: 110, color: 'blue', zh: '待修改', en: 'Under repair'},
+			'200': { key: 200, color: 'orange', zh: '等待平台质量审核', en: 'Settled accounts and awaiting audit'},
+			'210': { key: 210, color: 'orange', zh: '待修改',en: 'Settled accounts and awaiting audit'},
+			'300': { key: 300, color: 'purple', zh: '等待反馈', en: 'Passed audit'},
+			'400': { key: 400, color: 'purple', zh: '等待反馈审核', en: 'Passed audit'},
+			'410': { key: 410, color: 'purple', zh: '反馈待修改',},
+			'500': { key: 500, color: 'blue', zh: '已完成', en: 'Finished settle accounts'},
+			'-10': { key: 510, color: 'blue', zh: '审核失败',en: ''},
+			'-1': { key: -1, color: 'gray', zh: '已取消', en: 'Cancelled'},
+		},
+	},
+
     ACTION_LOG: { // 操作记录
         SOURCE_TYPE: {
             PURCHASE_ORDER: 10,

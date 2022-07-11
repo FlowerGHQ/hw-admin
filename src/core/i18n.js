@@ -361,6 +361,10 @@ const messages = {
 	        actual_quantity_shortage: '实际数量不足',
 	        the_frame_number_is_inconsistent_with_the_actual_quantity: '车架号与实际数量不一致',
         },
+	    fe:{
+		    feedback_list: '质量反馈列表',
+		    feedback_create: '新建反馈单'
+	    },
         w: {
             list: '账户列表',
             type: '账户类型',

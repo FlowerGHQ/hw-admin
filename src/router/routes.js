@@ -482,6 +482,76 @@ const routes = [
             },
         ]
     },
+	{ // 维修单
+		path: '/feedback',
+		component: Layout,
+		name: 'FeedbackManagement',
+		redirect: '/feedback/feedback-list',
+		meta: {
+			title: '反馈管理',
+			title_en: 'Feedback',
+			icon: 'i_s_repair',
+			// auth: ['repair-order.list'],
+		},
+		children: [
+			{
+				path: 'feedback-list',
+				name: 'FeedbackList',
+				component: () => import('@/views/feedback/feedback-list.vue'),
+				meta: {
+					title: '反馈单列表',
+					title_en: 'Feedback orders',
+				}
+			},
+			{
+				path: 'feedback-audit-list',
+				name: 'FeedbackAuditList',
+				component: () => import('@/views/feedback/feedback-list.vue'),
+				meta: {
+					title: '待审工单',
+					title_en: 'Awaiting audit',
+					roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+					type: 'audit',
+					// auth: ['repair-order.audit'],
+				}
+			},
+			{
+				path: 'feedback-redit-list',
+				name: 'FeedbackReditList',
+				component: () => import('@/views/feedback/feedback-list.vue'),
+				meta: {
+					title: '待改工单',
+					title_en: 'Awaiting revise',
+					roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
+					type: 'redit',
+					// auth: ['repair-order.save'],
+				}
+			},
+			{
+				path: 'feedback-edit',
+				name: 'FeedbackEdit',
+				component: () => import('@/views/feedback/feedback-edit.vue'),
+				meta: {
+					hidden: true,
+					title: '维修单编辑',
+					parent: '/feedback/feedback-list',
+					roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
+					// auth: ['repair-order.save'],
+				}
+			},
+			{
+				path: 'feedback-detail',
+				name: 'FeedbackDetail',
+				component: () => import('@/views/feedback/feedback-detail.vue'),
+				meta: {
+					hidden: true,
+					title: '维修单详情',
+					parent: '/feedback/feedback-list',
+					// auth: ['repair-order.detail'],
+				}
+			},
+		]
+	},
 
     /*{ // 零售商管理 - 零售商端
         path: '/agent/agent-detail-sp',
