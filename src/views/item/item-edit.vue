@@ -235,8 +235,8 @@
                                     :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/\$\s?|(,*)/g, '')"/>
                             </template>
                             <template v-if="column.key === 'select'">
-                                <a-select v-model:value="record[column.dataIndex]['value_en']" placeholder="请选择">
-                                    <a-select-option v-for="(val,index) of column.option" :key="index" :value="val.key"  @click="specChange(record[column.dataIndex], val)">{{ val[$i18n.locale] }}</a-select-option>
+                                <a-select v-model:value="record[column.dataIndex]" placeholder="请选择">
+                                    <a-select-option v-for="(val,index) of column.option" :key="index" :value="val.key"  @click="specChange(record, column.dataIndex, val)">{{ val[$i18n.locale] }}</a-select-option>
                                 </a-select>
                             </template>
                         </template>
@@ -945,10 +945,21 @@ export default {
                 }
             }
             if (item.key.trim() && item.name.trim()) {
-                let _item = { id: item.id, key: item.key, name: item.name, value: item.option }
+                let value = ""
+                let value_en = ""
+                item.option.forEach(it => {
+                    value += it.zh + ","
+                    value_en += it.en + ","
+                });
+                var reg =/,$/gi;
+                value = value.replace(reg, "")
+                value_en = value_en.replace(reg, "")
+                let _item = { id: item.id, key: item.key, name: item.name, value: value, value_en: value_en }
                 Core.Api.AttrDef.save(_item).then(res => {
                     console.log('handleSpecEditBlur res:', res)
                     this.specific.list[index].id = res.detail.id
+                    console.log(" this.specific", this.specific)
+                    // this.getItemDetail();
                 })
             }
         },
@@ -1080,9 +1091,13 @@ export default {
             })
             this.handleCloseBatchSet()
         },
-        specChange(value, item){
-            value.value = item.zh
-            console.log("value",value)
+        specChange(record, key, item){
+            record[key] = {
+                value : item.zh,
+                value_en : item.en
+            }
+            // value.value = item.zh
+            console.log("record",record)
         },
     }
 };
