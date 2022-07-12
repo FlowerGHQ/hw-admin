@@ -540,6 +540,11 @@ const apiList = {
 		audit: ['PostJson', 'feedback/audit'],//审核
 		submit: ['PostJson', 'feedback/submit'],//提交
 	},
+    FeedbackItem: { // 维修单
+        saveList: ['PostJson', 'feedback-item/save-list'], // 列表
+        list: ['PostJson', 'feedback-item/list'], // 列表
+        faultList: ['PostJson', 'feedback-item/fault-list'], // 列表
+    },
 	AuditRecord: {//审核流程单
 		list: ['PostJson', 'audit-record/list'],//
 	},

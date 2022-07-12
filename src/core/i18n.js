@@ -362,6 +362,7 @@ const messages = {
 	        the_frame_number_is_inconsistent_with_the_actual_quantity: '车架号与实际数量不一致',
         },
 	    fe:{
+            feedback_detail: '反馈单详情',
 		    feedback_uid: '反馈单编号',
 		    feedback_list: '质量反馈列表',
 		    feedback_create: '新建反馈单',

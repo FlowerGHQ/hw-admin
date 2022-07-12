@@ -108,13 +108,13 @@
     </a-collapse>
     <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
         <template #expandIcon ><i class="icon i_expan_l"/> </template>
-        <a-collapse-panel key="Remark" header="备注" class="gray-collapse-panel">
+        <a-collapse-panel key="Remark" header="详细描述" class="gray-collapse-panel">
             <div class="panel-content">
                 <div class="form-item required textarea">
                     <div class="value">
-                        <a-textarea v-model:value="remark" :placeholder="$t('r.fault_description')"
+                        <a-textarea v-model:value="desc" :placeholder="$t('r.fault_description')"
                                     :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500'/>
-                        <span class="content-length">{{ detail.remark.length }}/500</span>
+                        <span class="content-length">{{ desc.length }}/500</span>
                     </div>
                 </div>
             </div>
@@ -169,7 +169,7 @@ export default {
             warehouseFailList: [], // 故障仓列表
             storeList: [], // 门店列表
             transferStoreId: undefined,
-            remark: "",
+            desc: "",
         };
     },
     watch: {},
@@ -196,7 +196,7 @@ export default {
         this.getFaultData();
         this.getWarehouseList();
         this.getStoreList();
-        this.remark = Core.Util.deepCopy(this.detail.remark)
+        this.desc = Core.Util.deepCopy(this.detail.desc)
     },
     methods: {
         routerChange(type, item = {}) {

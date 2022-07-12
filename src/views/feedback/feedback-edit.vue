@@ -203,7 +203,7 @@ export default {
                     break;
                 case 'detail':  // 维修单详情
                     routeUrl = this.$router.resolve({
-                        path: "/repair/repair-detail",
+                        path: "/feedback/feedback-detail",
                         query: {
                             id: item.id
                         }

@@ -390,6 +390,7 @@ let Const = {
             PURCHASE_ORDER: 10,
             REPAIR_ORDER: 20,
             AFTER_SALES_ORDER: 40,
+            QUALITY_FEEDBACK: 50,
         },
         TYPE_MAP: {
             '201': {key: 201, zh: '维修单创建', en: 'Create repair order'},
@@ -795,7 +796,8 @@ let Const = {
     ATTACHMENT: {
         TARGET_TYPE: { // 来源类型
             REPAIR_ORDER: 1, // 维修单附件
-            PURCHASE_ORDER: 2 // 采购单附件
+            PURCHASE_ORDER: 2,// 采购单附件
+            QUALITY_FEEDBACK: 5 // 质量反馈单
         }
     },
     WAREHOUSE: {

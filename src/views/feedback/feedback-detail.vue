@@ -2,18 +2,18 @@
 <div id="FeedbackDetail">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">{{ $t('r.repair_detail') }}</div>
+            <div class="title-area">{{ $t('fe.feedback_detail') }}</div>
             <div class="btns-area">
-                <template v-if="sameOrg && $auth('repair-order.save')">
+<!--                <template v-if="sameOrg && $auth('repair-order.save')">
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION">
                         <i class="icon i_edit"/>{{ $t('def.edit') }}
                     </a-button>
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.AUDIT_FAIL">
                         {{ $t('def.re_edit') }}
                     </a-button>
-<!--                    <a-button type="primary" ghost @click="handleDeliveryShow()" v-if="needDelivery">
+&lt;!&ndash;                    <a-button type="primary" ghost @click="handleDeliveryShow()" v-if="needDelivery">
                         <i class="icon i_deliver"/>转单物流
-                    </a-button>-->
+                    </a-button>&ndash;&gt;
                     <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION">
                         <i class="icon i_submit"/>{{ $t('def.submit') }}
                     </a-button>
@@ -23,8 +23,8 @@
                     <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END">
                         <i class="icon i_settle"/>{{ $t('r.settle_accounts') }}
                     </a-button>
-                </template>
-                <a-button type="primary" @click="routerChange('invoice')" v-if="!haveSettle && $auth('repair-order.settlement')">
+                </template>-->
+<!--                <a-button type="primary" @click="routerChange('invoice')" v-if="!haveSettle && $auth('repair-order.settlement')">
                     <i class="icon i_detail_l"/>{{ $t('r.bill') }}
                 </a-button>
                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT && $auth('DISTRIBUTOR') && $auth('repair-order.audit')">
@@ -35,17 +35,17 @@
                 </a-button>
                 <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT_DISTRIBUTOR && $auth('ADMIN') && $auth('repair-order.audit')">
                     <i class="icon i_audit"/>{{ $t('n.audit') }}
-                </a-button>
+                </a-button>-->
             </div>
         </div>
         <div class="gray-panel info">
             <div class="panel-title">
-                <div class="left"><span>{{ $t('r.serial_number') }}:</span> {{ detail.uid }}</div>
+                <div class="left"><span>{{ $t('fe.feedback_uid') }}:</span> {{ detail.uid }}</div>
                 <div class="right">
                     <a-tooltip :title='detail.audit_message'>
                         <div class="status">
-                            <i class="icon i_point" :class="$Util.repairStatusFilter(detail.status,'color')"/>
-                            {{ $Util.repairStatusFilter(detail.status, $i18n.locale) }}
+                            <i class="icon i_point" :class="$Util.feedbackStatusFilter(detail.status,'color')"/>
+                            {{ $Util.feedbackStatusFilter(detail.status, $i18n.locale) }}
                             <i class="icon i_hint" style="font-size: 12px; padding-left: 6px;"  v-if="detail.status == STATUS.AUDIT_FAIL"/>
                         </div>
                     </a-tooltip>
@@ -53,37 +53,30 @@
             </div>
             <div class="panel-content">
                 <div class="info-item">
-                    <div class="key">{{ $t('r.warranty') }}</div>
-                    <div class="value">{{ $Util.repairServiceFilter(detail.service_type, $i18n.locale) }}</div>
-                </div>
-                <div class="info-item">
                     <div class="key">{{ $t('search.vehicle_no') }}</div>
-                    <div class="value">{{ detail.vehicle_no || '-' }}</div>
+                    <div class="value">{{ detail.entity_uid  || '-' }}</div>
                 </div>
                 <div class="info-item">
-                    <div class="key">{{ $t('r.creator_name') }}</div>
-                    <div class="value">{{ detail.user_name || '-' }}</div>
+                    <div class="key">{{ $t('fe.feedback_company') }}</div>
+                    <div class="value">{{ detail.feedback_name || '-' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">{{ $t('fe.feedback_user') }}</div>
+                    <div class="value">{{ detail.feedback_user_name || '-' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">{{ $t('fe.feedback_phone') }}</div>
+                    <div class="value">{{ detail.feedback_user_phone || '-' }}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">{{ $t('r.associated_customer') }}</div>
-                    <div class="value">{{ detail.customer_name || '-' }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">{{ $t('r.urgency') }}</div>
-                    <div class="value">{{ $Util.repairPriorityFilter(detail.priority, $i18n.locale) }}</div>
+                    <div class="value">{{detail.customer_name || '-'  }}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">{{ $t('r.create_time') }}</div>
                     <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
                 </div>
-                <div class="info-item">
-                    <div class="key">{{ $t('r.description') }}</div>
-                    <div class="value">{{ detail.desc }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">备注</div>
-                    <div class="value">{{ detail.remark }}</div>
-                </div>
+
 
                 <!-- <div class="info-item">
                     <div class="key">计划时间</div>
@@ -101,12 +94,11 @@
         </div>
         <MySteps :stepsList='stepsList' :current='currStep' v-if="detail.status != STATUS.CLOSE"/>
         <div class="form-container">
-            <CheckFault  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.WAIT_DETECTION && sameOrg" ref="CheckFault"/>
+            <CheckFault  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail"  ref="CheckFault"/>
             <CheckResult :id='id' :detail='detail' @hasTransfer='hasTransfer = true' v-if="showCheckResult"/>
-            <RepairInfo  :id='id' :detail='detail'/>
-            <AttachmentFile :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER'/>
-            <WaybillInfo :id='id' :detail='detail' v-if="hasTransfer" @needDelivery='needDelivery = true' ref="WaybillInfo"/>
-            <ActionLog   :id='id' :detail='detail' :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.REPAIR_ORDER"/>
+            <FeedbackInfo  :id='id' :detail='detail'/>
+            <AttachmentFile :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.QUALITY_FEEDBACK'/>
+            <ActionLog   :id='id' :detail='detail' :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.QUALITY_FEEDBACK"/>
         </div>
     </div>
     <template class="modal-container">
@@ -181,10 +173,8 @@ import dayjs from "dayjs";
 
 import CheckFault from './components/CheckFault.vue';
 import CheckResult from './components/CheckResult.vue';
-import RepairInfo from './components/RepairInfo.vue';
-import WaybillInfo from './components/WaybillInfo.vue';
-import Distribution from './components/Distribution.vue';
-import ActionLog from './components/ActionLog.vue';
+import FeedbackInfo from './components/FeedbackInfo.vue';
+import ActionLog from '../repair/components/ActionLog.vue';
 import MySteps from '@/components/common/MySteps.vue';
 import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 
@@ -199,11 +189,9 @@ export default {
         AttachmentFile,
         CheckFault,
         CheckResult,
-        RepairInfo,
+        FeedbackInfo,
         ActionLog,
         MySteps,
-        Distribution,
-        WaybillInfo,
     },
     props: {},
     data() {

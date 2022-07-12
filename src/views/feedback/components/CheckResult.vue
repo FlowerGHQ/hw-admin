@@ -131,7 +131,7 @@ export default {
     mounted() {
         console.log('mounted this.faultMap:', this.faultMap)
         this.getFaultData();
-        this.getRepairFaultList();
+        this.getFeedbackFaultList();
     },
     methods: {
         // 获取 所有故障类型
@@ -156,18 +156,18 @@ export default {
             });
         },
 
-        getRepairFaultList() {
-            Core.Api.RepairItem.faultList({
+        getFeedbackFaultList() {
+            Core.Api.FeedbackItem.faultList({
                 repair_order_id: this.id
             }).then(res => {
                 console.log('getRepairFaultList res', res)
                 this.faultList = res.fault_list.map(i => i.item_fault_id)
                 console.log('getRepairFaultList this.faultList', this.faultList)
-                this.getRepairItemList();
+                this.getFeedbackItemList();
             })
         },
-        getRepairItemList() {
-            Core.Api.RepairItem.list({
+        getFeedbackItemList() {
+            Core.Api.FeedbackItem.list({
                 repair_order_id: this.id
             }).then(res => {
                 console.log('getRepairItemList res', res)
