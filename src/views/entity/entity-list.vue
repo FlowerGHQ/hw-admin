@@ -19,16 +19,11 @@
             </div>
             <div class="search-container">
                 <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('n.name') }}:</div>
-                        <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
-                        </div>
-                    </a-col>
+
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('v.number') }}:</div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
@@ -42,7 +37,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
                         <div class="key">{{ $t('n.agent') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.agent_id" :placeholder="$t('def.select')" @change='handleSearch'>
+                            <a-select v-model:value="searchForm.agent_id" :placeholder="$t('def.select')" @change='handleSearch' :disabled="!searchForm.distributor_id">
                                 <a-select-option v-for="item of agentList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                             </a-select>
                         </div>
@@ -50,7 +45,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="!$auth('STORE')">
                         <div class="key">{{ $t('n.store') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.store_id" :placeholder="$t('def.select')" @change='handleSearch'>
+                            <a-select v-model:value="searchForm.store_id" :placeholder="$t('def.select')" @change='handleSearch' :disabled="!searchForm.agent_id">
                                 <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                             </a-select>
                         </div>
@@ -177,13 +172,14 @@
 import Core from '../../core';
 import dayjs from "dayjs";
 import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue';
+import TimeSearch from '@/components/common/TimeSearch.vue'
 
 const ITEM_TYPE = Core.Const.ITEM.TYPE
 
 export default {
     name: 'EntityList',
     components: {
-        CategoryTreeSelect,
+        CategoryTreeSelect,TimeSearch
     },
     props: {},
     data() {
@@ -202,7 +198,7 @@ export default {
             storeList: [],
             searchForm: {
                 name: '',
-                code: '',
+                uid: '',
                 category_id: undefined,
                 begin_time: '',
                 end_time: '',
@@ -263,11 +259,21 @@ export default {
                 this.pageChange(1)
             }
         },
+        'searchForm.distributor_id': function () {
+            this.getAgentListAll();
+            this.searchForm.agent_id = undefined
+            this.searchForm.store_id = undefined
+        },
+        'searchForm.agent_id': function () {
+            this.getStoreListAll()
+            this.searchForm.store_id = undefined
+        },
     },
     computed: {
         tableColumns() {
             let columns = [
                 {title: 'n.name', dataIndex: ['item', 'name'], key: 'detail'},
+                {title: 'p.code', dataIndex: ['item', 'code'], key: 'item'},
                 {title: 'v.number', dataIndex: 'uid', key: 'item'},
                 {title: 'i.spec', dataIndex: 'attr', key: 'attr'},
                 {title: 'v.type', dataIndex: 'org_type'},
@@ -336,8 +342,8 @@ export default {
         },
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.$refs.TimeSearch.handleReset()
             this.pageChange(1);
+            this.$refs.TimeSearch.handleReset()
         },
         getDistributorListAll() {
             Core.Api.Distributor.listAll().then(res => {
@@ -345,14 +351,22 @@ export default {
             });
         },
         getAgentListAll() {
-            Core.Api.Agent.listAll().then(res => {
-                this.agentList = res.list
-            });
+            if (this.searchForm.distributor_id) {
+                Core.Api.Agent.listAll({distributor_id: this.searchForm.distributor_id}).then(res => {
+                    this.agentList = res.list
+                });
+            } else {
+                this.agentList = []
+            }
         },
         getStoreListAll() {
-            Core.Api.Store.listAll().then(res => {
-                this.storeList = res.list
-            });
+            if (this.searchForm.agent_id) {
+                Core.Api.Store.listAll({agent_id: this.searchForm.agent_id}).then(res => {
+                    this.storeList = res.list
+                });
+            } else {
+                this.storeList = []
+            }
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;

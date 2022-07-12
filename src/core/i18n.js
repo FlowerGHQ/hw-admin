@@ -362,8 +362,21 @@ const messages = {
 	        the_frame_number_is_inconsistent_with_the_actual_quantity: '车架号与实际数量不一致',
         },
 	    fe:{
+		    feedback_uid: '反馈单编号',
 		    feedback_list: '质量反馈列表',
-		    feedback_create: '新建反馈单'
+		    feedback_create: '新建反馈单',
+		    feedback_update: '修改反馈单',
+		    feedback_content: '反馈单内容',
+		    feedback_title: '反馈单标题',
+		    enter_name: '请输入反馈单标题',
+		    feedback_desc: '反馈单描述',
+		    fault_description: '请输入反馈单标题',
+		    vehicle_model: '车辆型号',
+		    feedback_company: '反馈单位',
+		    feedback_user: '反馈人',
+		    feedback_phone: '反馈人电话',
+		    status: '状态',
+
 	    },
         w: {
             list: '账户列表',

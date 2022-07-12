@@ -77,8 +77,6 @@ const apiList = {
         delete: ['PostJson', 'authority/delete-user-authority-scope'],//删除用户权限范围
         authority: ['PostJson', 'authority/list-by-resource-authorized'], //获得某个资源授权的用户ID列表
         user: ['PostJson', 'authority/user-has-authority'],//判断用户是否拥有对某个资源的权限
-
-
     },
     Agent: { // 零售商
         list: ['PostJson', 'agent/list'], // 列表
@@ -530,7 +528,22 @@ const apiList = {
         detailByUid: ['PostJson', 'warehouse-transfer-order/detail-by-sn'],//入库
 
 
-    }
+    },
+	Feedback: {//质量反馈单
+		list: ['PostJson', 'feedback/list'],//
+		statusList: ['PostJson', 'feedback/status-list'],//
+		create: ['PostJson', 'feedback/create'],//
+		update: ['PostJson', 'feedback/update'],//
+		detail: ['PostJson', 'feedback/detail'],//
+		detailByUid: ['PostJson', 'feedback/detail-by-uid'],//
+		delete: ['PostJson', 'feedback/delete'],//删除
+		audit: ['PostJson', 'feedback/audit'],//审核
+		submit: ['PostJson', 'feedback/submit'],//提交
+	},
+	AuditRecord: {//审核流程单
+		list: ['PostJson', 'audit-record/list'],//
+	},
+
 };
 
 export default new Api(baseUrl, apiList);

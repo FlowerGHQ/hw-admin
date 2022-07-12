@@ -752,6 +752,15 @@ const Util = {
     },
 
     /* =============== 物料采购 ================ */
+
+	/* =============== 质量反馈单 ================ */
+	feedbackStatusFilter(val, to = 'key') {
+		const MAP = Const.FEEDBACK.STATUS_MAP
+		let value = MAP[val + ''] || {}
+		return value[to] || '-'
+	},
+	/* =============== 质量反馈单 ================ */
+
     /* =============== 调货单 ================ */
     warehouseTransferStatusFilter(val, to = 'text') {
         const MAP = Const.WAREHOUSE_TRANSFER.STATUS_MAP

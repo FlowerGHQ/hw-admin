@@ -4,7 +4,8 @@
         <div class="title-container">
             <div class="title-area">{{$t('fe.feedback_list')}}</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')" v-if="!$auth('ADMIN') && $auth('feedback.save')"><i class="icon i_add" />{{$t('fe.feedback_create')}}</a-button>
+<!--                <a-button type="primary" @click="routerChange('edit')" v-if=" $auth('feedback.save')"><i class="icon i_add" />{{$t('fe.feedback_create')}}</a-button>-->
+                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>{{ $t('fe.feedback_create') }}</a-button>
             </div>
         </div>
         <div class="tabs-container colorful" v-if="!operMode">
@@ -66,9 +67,9 @@
                 <a-button @click="handleSearchReset">{{$t('def.reset')}}</a-button>
             </div>
         </div>
-        <div class="operate-container">
-            <a-button type="primary" @click="handleExportConfirm" v-if="$auth('repair-order.export')"><i class="icon i_download"/>{{$t('def.export')}}</a-button>
-        </div>
+<!--        <div class="operate-container">-->
+<!--            <a-button type="primary" @click="handleExportConfirm" v-if="$auth('repair-order.export')"><i class="icon i_download"/>{{$t('def.export')}}</a-button>-->
+<!--        </div>-->
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
@@ -81,10 +82,11 @@
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="$Util.repairStatusFilter(text,'color')">
                             <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>
-                                {{ $Util.repairStatusFilter(text, $i18n.locale) }}
-                                <template v-if="[STATUS.AUDIT_FAIL].includes(record.status)">
-                                    <i class="icon i_hint" style="font-size: 12px;padding-left: 6px;"/>
-                                </template>
+                                {{ $Util.feedbackStatusFilter(text, $i18n.locale) }}
+
+<!--                                <template v-if="[STATUS.AUDIT_FAIL].includes(record.status)">-->
+<!--                                    <i class="icon i_hint" style="font-size: 12px;padding-left: 6px;"/>-->
+<!--                                </template>-->
                             </a-tooltip>
                         </div>
                     </template>
@@ -217,7 +219,7 @@ export default {
                 store_id: undefined,
                 agent_id: undefined,
                 distributor_id: undefined,
-                status: '-1',
+                status: '-20',
                 channel: '',
                 repair_method: '',
                 repair_user_org_type:'',
@@ -270,21 +272,14 @@ export default {
             let { filteredInfo } = this;
             filteredInfo = filteredInfo || {};
             let columns = [
-                { title: this.$t('r.repair_sn'), dataIndex: 'uid', key: 'detail' },
-                { title: this.$t('search.vehicle_no'), dataIndex: 'vehicle_no',key: 'item'},
-                { title: this.$t('r.repair_name'), dataIndex: 'name', key: 'tip_item' },
-                { title: this.$t('r.urgency'), dataIndex: 'priority' },
-                { title: this.$t('r.repair_status'), dataIndex: 'status'},
-                { title: this.$t('r.warranty'), dataIndex: 'service_type',
-                    filters: this.$Util.tableFilterFormat(REPAIR.SERVICE_TYPE_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.service_type || null },
-                { title: this.$t('r.repair_way'), dataIndex: 'channel',
-                    filters: this.$Util.tableFilterFormat(REPAIR.CHANNEL_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.channel || null },
-                { title: this.$t('r.repair_category'), dataIndex: 'repair_method',
-                    filters: this.$Util.tableFilterFormat(REPAIR.METHOD_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.repair_method || null },
-                { title: this.$t('r.repair_unit'), dataIndex: 'repair_name', key: 'item' },
-                { title: this.$t('r.repair_phone'), dataIndex: 'repair_phone', key: 'item' },
-                { title: this.$t('r.creator_name'),   dataIndex: 'user_name', key: 'item' },
-                { title: this.$t('r.associated_customers'), dataIndex: 'customer_name', key: 'item' },
+                { title: this.$t('fe.feedback_uid'), dataIndex: 'uid', key: 'detail' },
+                { title: this.$t('search.vehicle_no'), dataIndex: 'entity_uid',key: 'item'},
+                { title: this.$t('fe.feedback_title'), dataIndex: 'title', key: 'tip_item' },
+                { title: this.$t('fe.status'), dataIndex: 'status'},
+                { title: this.$t('fe.feedback_company'), dataIndex: 'feedback_name'},
+                { title: this.$t('fe.feedback_user'), dataIndex: 'feedback_user_name', key: 'item' },
+                { title: this.$t('fe.feedback_phone'), dataIndex: 'feedback_user_phone', key: 'item' },
+                { title: this.$t('r.associated_customer'), dataIndex: 'customer_name', key: 'item' },
                 { title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time' },
                 // { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
             ]
@@ -307,12 +302,6 @@ export default {
                 {zh: '审核不通过',en: 'Cancelled', value: '0', color: 'gray',  key: STATUS.CLOSE },
                 {zh: '已取消',en: 'Cancelled', value: '0', color: 'gray',  key: STATUS.CLOSE },
             ]
-           /* if (this.$auth('ADMIN')) {
-                columns.splice(7, 0, {zh: '已入库', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },)
-            }
-            if (this.$auth('DISTRIBUTOR')) {
-                columns.splice(7, 0, {zh: '已入库', value: '0', color: 'green',  key: STATUS.DISTRIBUTOR_WAREHOUSE },)
-            }*/
             return columns
         }
 
@@ -336,7 +325,7 @@ export default {
             switch (type) {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/repair/repair-edit",
+                        path: "/feedback/feedback-edit",
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_self')
@@ -442,7 +431,7 @@ export default {
             /*if(this.operMode == 'audit' && this.loginType == 10) {
                 this.searchForm.org_type = 15
             }*/
-            Core.Api.Repair.list({
+            Core.Api.Feedback.list({
                 ...this.searchForm,
                 page: this.currPage,
                 page_size: this.pageSize
@@ -459,7 +448,7 @@ export default {
         },
         getStatusStat() {  // 获取 状态数量
             this.loading = true;
-            Core.Api.Repair.statusList({
+            Core.Api.Feedback.statusList({
                 ...this.searchForm,
                 page: this.currPage,
                 page_size: this.pageSize
@@ -486,29 +475,29 @@ export default {
             });
         },
 
-        handleExportConfirm() { // 确认订单是否导出
-            let _this = this;
-            this.$confirm({
-                title: _this.$t('pop_up.sure') + _this.$t('n.export') + '?',
-                okText: _this.$t('def.sure'),
-                cancelText: _this.$t('def.cancel'),
-                onOk() {
-                    _this.handleRepairExport();
-                }
-            })
-        },
-        handleRepairExport() { // 订单导出
-            this.exportDisabled = true;
-
-            let form = Core.Util.deepCopy(this.searchForm);
-            for (const key in form) {
-                form[key] = form[key] || ''
-            }
-            let exportUrl = Core.Api.Export.repairExport(form)
-            console.log("handleRepairExport exportUrl", exportUrl)
-            window.open(exportUrl, '_blank')
-            this.exportDisabled = false;
-        },
+        // handleExportConfirm() { // 确认订单是否导出
+        //     let _this = this;
+        //     this.$confirm({
+        //         title: _this.$t('pop_up.sure') + _this.$t('n.export') + '?',
+        //         okText: _this.$t('def.sure'),
+        //         cancelText: _this.$t('def.cancel'),
+        //         onOk() {
+        //             _this.handleRepairExport();
+        //         }
+        //     })
+        // },
+        // handleRepairExport() { // 订单导出
+        //     this.exportDisabled = true;
+        //
+        //     let form = Core.Util.deepCopy(this.searchForm);
+        //     for (const key in form) {
+        //         form[key] = form[key] || ''
+        //     }
+        //     let exportUrl = Core.Api.Export.repairExport(form)
+        //     console.log("handleRepairExport exportUrl", exportUrl)
+        //     window.open(exportUrl, '_blank')
+        //     this.exportDisabled = false;
+        // },
 
 
         handleModalShow(id, type) { // 显示弹框

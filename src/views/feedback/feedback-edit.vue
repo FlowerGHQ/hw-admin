@@ -1,55 +1,22 @@
 <template>
-<div id="RepairEdit" class="edit-container">
+<div id="FeedbackEdit" class="edit-container">
     <div class="title-container">
-        <div class="title-area">{{ form.id ? $t('r.repair.edit') : $t('r.repair_create') }}</div>
+        <div class="title-area">{{ form.id ? $t('fe.feedback_update') : $t('fe.feedback_create') }}</div>
     </div>
     <div class="form-block"> <!-- 工单内容 -->
-        <div class="form-title"><div class="title">{{ $t('r.repair_content') }}</div></div>
+        <div class="form-title"><div class="title">{{ $t('fe.feedback_content') }}</div></div>
         <div class="form-content">
             <div class="form-item required">
-                <div class="key">{{ $t('r.repair_classify') }}</div>
+                <div class="key">{{ $t('fe.feedback_title') }}</div>
                 <div class="value">
-                    <a-radio-group v-model:value="form.type" :disabled="!!form.id" @change="handleTypeChange">
-                        <a-radio v-for="item of typeList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
-                    </a-radio-group>
-                </div>
-            </div>
-            <div class="form-item required" v-if="form.type == 1">
-                <div class="key">{{ $t('r.category') }}</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.category">
-                        <a-radio v-for="item of categoryList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
-                    </a-radio-group>
-                </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">{{ $t('r.urgency') }}</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.priority">
-                        <a-radio v-for="item of priorityList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
-                    </a-radio-group>
-                </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">{{ $t('r.warranty') }}</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.service_type" :disabled="!!form.id || form.type === REPAIR.TYPE.TYPE_SPECIAL">
-                        <a-radio v-for="item of serviceList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
-                    </a-radio-group>
-                </div>
-            </div>
-            <!-- <a-date-picker v-model:value="form.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/> -->
-            <div class="form-item required">
-                <div class="key">{{ $t('r.repair_name') }}</div>
-                <div class="value">
-                    <a-input v-model:value="form.name" :placeholder="$t('r.enter_name')" :maxlength='50'/>
+                    <a-input v-model:value="form.title" :placeholder="$t('fe.enter_name')" :maxlength='50'/>
                 </div>
             </div>
 
             <div class="form-item required textarea">
-                <div class="key">{{ $t('r.description') }}</div>
+                <div class="key">{{ $t('fe.feedback_desc') }}</div>
                 <div class="value">
-                    <a-textarea v-model:value="form.desc" :placeholder="$t('r.fault_description')"
+                    <a-textarea v-model:value="form.desc" :placeholder="$t('fe.fault_description')"
                         :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500'/>
                     <span class="content-length">{{ form.desc.length }}/500</span>
                 </div>
@@ -62,33 +29,23 @@
         </div>
         <div class="form-content">
             <div class="form-item required">
-                <div class="key">{{ $t('r.repair_way') }}</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.channel">
-                        <a-radio v-for="item of channelList" :key="item.value" :value="item.value">{{ item[$i18n.locale] }}</a-radio>
-                    </a-radio-group>
-                </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">{{ $t('r.repair_category') }}</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.repair_method">
-                        <a-radio v-for="item of methodList" :key="item.value" :value="item.value">{{ item[$i18n.locale] }}</a-radio>
-                    </a-radio-group>
-                </div>
-            </div>
-            <div class="form-item required">
                 <div class="key">{{ $t('search.vehicle_no') }}</div>
                 <div class="value">
-                    <a-input v-model:value="form.vehicle_no" :placeholder="$t('search.enter_vehicle_no')" @blur="handleVehicleBlur"/>
+                    <a-input v-model:value="form.entity_uid" :placeholder="$t('search.enter_vehicle_no')" @blur="handleVehicleBlur"/>
                     <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
                     <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                 </div>
             </div>
-            <div class="form-item" v-if="form.vehicle_no && isExist == 1">
+            <div class="form-item" v-if="form.entity_uid && isExist == 1">
                 <div class="key">{{ $t('r.arrival_time') }}</div>
                 <div class="value" >
                     {{ $Util.timeFilter(arrival_time) }}
+                </div>
+            </div>
+            <div class="form-item" v-if="form.entity_uid && isExist == 1">
+                <div class="key">{{ $t('fe.vehicle_model') }}</div>
+                <div class="value" >
+                    {{ item_name }}
                 </div>
             </div>
             <div class="form-item">
@@ -96,6 +53,14 @@
                 <div class="value">
                     <a-input-number v-model:value="form.travel_distance" :min="0" :precision="3"/>
                     <span class="unit">{{ $t('r.km') }}</span>
+                </div>
+            </div>
+            <div class="form-item">
+                <div class="key">购买时间</div>
+                <div class="value">
+                    <a-date-picker v-model:value="form.sale_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" placeholder="请选择到港时间">
+                        <template #suffixIcon><i class="icon i_calendar"/></template>
+                    </a-date-picker>
                 </div>
             </div>
         </div>
@@ -121,12 +86,6 @@
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">{{ $t('r.customer_phone') }}</div>
-                <div class="value">
-                    <a-input v-model:value="form.customer_phone" :placeholder="$t('r.enter_phone')"/>
-                </div>
-            </div>
-            <div class="form-item required">
                 <div class="key">{{ $t('r.email') }}</div>
                 <div class="value">
                     <a-input v-model:value="form.customer_email" :placeholder="$t('r.enter_email')"/>
@@ -143,14 +102,6 @@
                 <div class="key">{{ $t('r.specific_address') }}</div>
                 <div class="value">
                     <a-input v-model:value="form.customer_address" :placeholder="$t('r.enter_specific')"/>
-                </div>
-            </div>
-            <div class="form-item textarea">
-                <div class="key">{{ $t('r.remark') }}</div>
-                <div class="value">
-                    <a-textarea v-model:value="form.remark" :placeholder="$t('r.enter_remark')"
-                        :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
-                    <span class="content-length">{{ form.remark.length }}/500</span>
                 </div>
             </div>
         </div>
@@ -182,20 +133,10 @@ export default {
             loading: false,
             detail: {
                 status: 0,
-                repair_user_id: undefined, // 工单负责人
-                plan_time: undefined, // 计划时间
-                repair_message: "", // 处理信息、工单备注
-                priority: 0, // 紧急程度
             }, // 工单详情
             create_time: [],
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
 
-            typeList: REPAIR.TYPE_LIST, // 工单分类
-            categoryList: REPAIR.CATEGORY_LIST, // 维修工单类别
-            methodList: REPAIR.METHOD_LIST, // 维修类别
-            serviceList: REPAIR.SERVICE_TYPE_LIST,//工单帐类
-            channelList: REPAIR.CHANNEL_LIST, // 维修方式
-            priorityList: REPAIR.PRIORITY_LIST, // 紧急程度
             customerList: [], // 车主列表
             isExist: '', // 车辆编号输入框提示
             form: {
@@ -203,15 +144,13 @@ export default {
 
                 type: 1,  // 工单分类
                 category: 1, // 维修工单类别
-                name: '', // 工单名称
+                title: '', // 工单名称
                 desc: '', // 问题描述
                 service_type: '',//保内维修、保外维修
                 travel_distance: '',//行程公里数
 
-                channel: 1, // 维修方式、维修途径
-                repair_method: 1, // 维修类别
-                vehicle_no: '', // 车架号
-
+                entity_uid: '', // 车架号
+                sale_time: '',
                 customer_id: undefined,  // 相关客户-id
                 customer_name: "",  // 相关客户-名称
                 customer_phone: "", // 客户电话
@@ -223,10 +162,10 @@ export default {
                 plan_time: undefined, // 计划时间
                 // finish_time: undefined, // 完成时间
                 repair_message: "", // 处理信息、工单备注
-                priority: 0, // 紧急程度
             },
             defAddr: [],
             arrival_time: '',
+            item_name:'',
             areaMap: {},
             area: {
                 country: '',
@@ -287,7 +226,7 @@ export default {
         // 获取工单详情
         getRepairDetail() {
             this.loading = true;
-            Core.Api.Repair.detail({
+            Core.Api.Feedback.detail({
                 id: this.form.id,
             }).then(res => {
                 console.log('getRepairDetail res', res)
@@ -331,8 +270,6 @@ export default {
             }
             console.log('handleSubmit area:', area)
             console.log('handleSubmit areaMap:', this.areaMap)
-            form.plan_time = form.plan_time ? dayjs(form.plan_time).unix() : 0
-            // form.finish_time = form.finish_time ? dayjs(form.finish_time).unix() : 0
             console.log('handleSubmit form:', form)
 
             let checkRes = this.checkFormInput(form);
@@ -340,8 +277,9 @@ export default {
                 return
             }
             let apiName = form.id ? 'update' : 'create'
+            form.sale_time = form.sale_time ? dayjs(form.sale_time).unix() : 0 // 日期转时间戳
             console.log('area27249534',area)
-            await Core.Api.Repair[apiName]({
+            await Core.Api.Feedback[apiName]({
                 ...form,
                 ...area,
                 arrival_time: this.arrival_time
@@ -353,14 +291,17 @@ export default {
             })
         },
         handleVehicleBlur() {  // 获取 车架号
-            if (!this.form.vehicle_no) {
+            if (!this.form.entity_uid) {
                 return this.isExist = ''
             }
             Core.Api.Entity.detailByUid({
-                uid: this.form.vehicle_no,
+                uid: this.form.entity_uid,
             }).then(res => {
                 this.isExist = res.detail == null ? 2 : 1
                 this.arrival_time = res.detail.arrival_time
+                this.item_name = res.detail.item? res.detail.item.name: ''
+                this.form.sale_time = res.detail.sale_time ? dayjs.unix(res.detail.sale_time).format('YYYY-MM-DD HH:mm:ss') : undefined
+
                 console.log('arrival_time')
                 console.log("handleVehicleBlur res", res)
             }).catch(err => {
@@ -371,23 +312,11 @@ export default {
         // 检查表单输入
         checkFormInput(form) {
 
-            if (!form.type) {
-                return this.$message.warning(this.$t('def.enter'))
-                return 0
-            }
-            if (!form.priority) {
-                return this.$message.warning(this.$t('def.enter'))
-                return 0
-            }
-            if (!form.service_type) {
-                return this.$message.warning(this.$t('def.enter'))
-                return 0
-            }
             /* if (!form.travel_distance) {
                 this.$message.warning('请输入行程公里数')
                 return 0
             }*/
-            if (!form.name) {
+            if (!form.title) {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
@@ -395,15 +324,7 @@ export default {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
-            if (!form.channel) {
-                return this.$message.warning(this.$t('def.enter'))
-                return 0
-            }
-            if (!form.repair_method) {
-                return this.$message.warning(this.$t('def.enter'))
-                return 0
-            }
-            if (!form.vehicle_no) {
+            if (!form.entity_uid) {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
@@ -412,10 +333,6 @@ export default {
             }
             if (form.id) {
                 if (!form.customer_id) {
-                    return this.$message.warning(this.$t('def.enter'))
-                    return 0
-                }
-                if (form.channel == 1 && !form.customer_address) {
                     return this.$message.warning(this.$t('def.enter'))
                     return 0
                 }
