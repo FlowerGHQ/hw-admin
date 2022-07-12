@@ -371,7 +371,7 @@ let Const = {
 			CANCEL: -1,
 		},
 		STATUS_MAP: {
-			'0': { key: 0, color: 'yellow', zh: '初始', en: 'Init'},
+			'0': { key: 0, color: 'yellow', zh: '待提交', en: 'Init'},
 			'100': { key: 100, color: 'blue', zh: '等待平台售后审核', en: 'Under repair'},
 			'110': { key: 110, color: 'blue', zh: '待修改', en: 'Under repair'},
 			'200': { key: 200, color: 'orange', zh: '等待平台质量审核', en: 'Settled accounts and awaiting audit'},

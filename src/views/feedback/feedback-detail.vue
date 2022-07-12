@@ -1,5 +1,5 @@
 <template>
-<div id="RepairDetail">
+<div id="FeedbackDetail">
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">{{ $t('r.repair_detail') }}</div>
@@ -101,7 +101,7 @@
         </div>
         <MySteps :stepsList='stepsList' :current='currStep' v-if="detail.status != STATUS.CLOSE"/>
         <div class="form-container">
-            <CheckFault  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DETECTION && sameOrg" ref="CheckFault"/>
+            <CheckFault  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.WAIT_DETECTION && sameOrg" ref="CheckFault"/>
             <CheckResult :id='id' :detail='detail' @hasTransfer='hasTransfer = true' v-if="showCheckResult"/>
             <RepairInfo  :id='id' :detail='detail'/>
             <AttachmentFile :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER'/>
@@ -291,7 +291,7 @@ export default {
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
-        this.getRepairDetail();
+        this.getFeedbackDetail();
     },
     methods: {
         // 页面跳转
@@ -322,16 +322,16 @@ export default {
             window.open(routeUrl.href, '_self')
         },
         // 获取工单详情
-        getRepairDetail() {
+        getFeedbackDetail() {
             this.loading = true;
-            Core.Api.Repair.detail({
+            Core.Api.Feedback.detail({
                 id: this.id,
             }).then(res => {
-                console.log('getRepairDetail res', res)
+                console.log('getFeedbackDetail res', res)
                 this.detail = res
                 this.getCurrStep(this.detail.status)
             }).catch(err => {
-                console.log('getRepairDetail err', err)
+                console.log('getFeedbackDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
@@ -380,7 +380,7 @@ export default {
             Core.Api.Repair.repair({id: this.id, ...form}).then(() => {
                 _this.$message.success(_this.$t('pop_up.save_success'))
                 _this.handleRepairEndClose()
-                _this.getRepairDetail()
+                _this.getFeedbackDetail()
             })
         },
         handleRepairEndClose() {
@@ -399,7 +399,7 @@ export default {
                 onOk() {
                     Core.Api.Repair.settlement({id: _this.id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.save_success'))
-                        _this.getRepairDetail()
+                        _this.getFeedbackDetail()
                     })
                 },
             });
@@ -451,9 +451,9 @@ export default {
                 ...form
             }).then(() => {
                 this.$message.success('操作成功')
-                this.getRepairDetail()
+                this.getFeedbackDetail()
             }).catch(err => {
-                console.log('getRepairDetail err', err)
+                console.log('getFeedbackDetail err', err)
             }).finally(() => {
                 this.loading = false;
                 this.secondShow = false
@@ -479,10 +479,10 @@ export default {
                 ...form
             }).then(() => {
                 this.$message.success('操作成功')
-                this.getRepairDetail()
+                this.getFeedbackDetail()
                 this.$refs.WaybillInfo.getWaybillDetail();
             }).catch(err => {
-                console.log('getRepairDetail err', err)
+                console.log('getFeedbackDetail err', err)
             }).finally(() => {
                 this.loading = false;
                 this.deliveryShow = false

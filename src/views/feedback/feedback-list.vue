@@ -1,5 +1,5 @@
 <template>
-<div id="RepairList">
+<div id="FeedbackList">
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">{{$t('fe.feedback_list')}}</div>
@@ -20,7 +20,7 @@
         <div class="search-container">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">{{$t('search.repair_sn')}}:</div>
+                    <div class="key">{{$t('fe.feedback_uid')}}:</div>
                     <div class="value">
                         <a-input :placeholder="$t('search.enter_repair_sn')" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
                     </div>
@@ -28,7 +28,7 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">{{$t('search.vehicle_no')}}:</div>
                     <div class="value">
-                        <a-input :placeholder="$t('search.enter_vehicle_no')" v-model:value="searchForm.vehicle_no" @keydown.enter='handleSearch'/>
+                        <a-input :placeholder="$t('search.enter_vehicle_no')" v-model:value="searchForm.entity_uid" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
@@ -74,13 +74,14 @@
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id"  :pagination='false' @change="handleTableChange">
                 <template #bodyCell="{ column, text , record }">
-                    <template v-if="column.key === 'detail' && $auth('repair-order.detail')">
+                    <template v-if="column.key === 'detail'">
+<!--                    <template v-if="column.key === 'detail' && $auth('feedback-order.detail')">-->
                         <a-tooltip placement="top" :title='text' >
                             <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                         </a-tooltip>
                     </template>
                     <template v-if="column.dataIndex === 'status'">
-                        <div class="status status-bg status-tag" :class="$Util.repairStatusFilter(text,'color')">
+                        <div class="status status-bg status-tag" :class="$Util.feedbackStatusFilter(text,'color')">
                             <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>
                                 {{ $Util.feedbackStatusFilter(text, $i18n.locale) }}
 
@@ -89,23 +90,6 @@
 <!--                                </template>-->
                             </a-tooltip>
                         </div>
-                    </template>
-                    <template v-if="column.dataIndex === 'type'">
-                        {{$Util.repairTypeFilter(text)}}
-                    </template>
-                    <template v-if="column.dataIndex === 'priority'">
-                        <div class="status status-bg status-tag smell" :class="$Util.repairPriorityFilter(text,'color')">
-                            {{$Util.repairPriorityFilter(text, $i18n.locale)}}
-                        </div>
-                    </template>
-                    <template v-if="column.dataIndex === 'channel'">
-                        {{$Util.repairChannelFilter(text, $i18n.locale)}}
-                    </template>
-                    <template v-if="column.dataIndex === 'repair_method'">
-                        {{$Util.repairMethodFilter(text, $i18n.locale)}}
-                    </template>
-                    <template v-if="column.dataIndex === 'service_type'">
-                        {{$Util.repairServiceFilter(text, $i18n.locale)}}
                     </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
@@ -182,8 +166,7 @@
 
 <script>
 import Core from '../../core';
-const REPAIR = Core.Const.REPAIR
-const STATUS = Core.Const.REPAIR.STATUS
+const STATUS = Core.Const.FEEDBACK.STATUS
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 const USER_TYPE = Core.Const.USER.TYPE
 // const STATUS_MAP = STATUS.STATUS_MAP
@@ -220,11 +203,7 @@ export default {
                 agent_id: undefined,
                 distributor_id: undefined,
                 status: '-20',
-                channel: '',
-                repair_method: '',
-                repair_user_org_type:'',
-                service_type: '',
-                vehicle_no: '',
+                entity_uid: '',
                 begin_time: '',
                 end_time: '',
             },
@@ -287,20 +266,18 @@ export default {
         },
         statusList() {
             let columns = [
-                {zh: '全  部',en: 'All', value: '0', color: 'primary', key: '-1'},
-                {zh: '待提交',en: 'Waiting detect', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
-                {zh: '等待平台审核', en: 'Under repair',value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
-                {zh: '平台审核不通过',en: 'Settled accounts and awaiting audit', value: '0', color: 'orange',  key: 65 },
-                {zh: '等待质量审核',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.DISTRIBUTOR_AUDIT_SUCCESS },
-                {zh: '平台质量不通过',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
-                {zh: '等待反馈', value: '0', color: 'green',  key: STATUS.DISTRIBUTOR_WAREHOUSE},
-                {zh: '等待质量审核反馈信息', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE},
-                {zh: '平台质量审核反馈审核不通过', en: 'Failed audit',value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
-                {zh: '故障件审核未通过', value: '0', color: 'red',  key: STATUS.FAULT_ENTITY_AUDIT_FAIL },
-                // {zh: '入库完成', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },
-                {zh: '已完成',en: 'Finished settle accounts', value: '0', color: 'blue',  key: STATUS.FINISH },
-                {zh: '审核不通过',en: 'Cancelled', value: '0', color: 'gray',  key: STATUS.CLOSE },
-                {zh: '已取消',en: 'Cancelled', value: '0', color: 'gray',  key: STATUS.CLOSE },
+                {zh: '全  部',en: 'All', value: '0', color: 'primary', key: '-20'},
+                {zh: '待提交',en: 'Waiting detect', value: '0', color: 'yellow',  key: STATUS.INIT },
+                {zh: '等待平台审核', en: 'Under repair',value: '0', color: 'blue',    key: STATUS.WAIT_AFTER_SALES_AUDIT },
+                {zh: '平台审核不通过',en: 'Settled accounts and awaiting audit', value: '0', color: 'orange',  key: STATUS.AFTER_SALES_AUDIT_FAIL },
+                {zh: '等待质量审核',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.WAIT_QUALITY_AUDIT },
+                {zh: '平台质量不通过',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.QUALITY_AUDIT_FAIL },
+                {zh: '等待反馈', value: '0', color: 'green',  key: STATUS.WAIT_FEEDBACK},
+                {zh: '等待质量审核反馈信息', value: '0', color: 'green',  key: STATUS.WAIT_FEEDBACK_AUDIT},
+                {zh: '平台质量审核反馈审核不通过', en: 'Failed audit',value: '0', color: 'red',  key: STATUS.FEEDBACK_AUDIT_FAIL },
+                {zh: '已完成',en: 'Finished settle accounts', value: '0', color: 'blue',  key: STATUS.CLOSE },
+                {zh: '审核不通过',en: 'Cancelled', value: '0', color: 'gray',  key: STATUS.AUDIT_FAIL },
+                {zh: '已取消',en: 'Cancelled', value: '0', color: 'gray',  key: STATUS.CANCEL },
             ]
             return columns
         }
@@ -308,16 +285,16 @@ export default {
     },
     mounted() {
         this.getTableData();
-        this.timer = window.setInterval(() => {
-            setTimeout(() => {
-                this.getTableData();
-            }, 0);
-        }, 5*1000);
+        // this.timer = window.setInterval(() => {
+        //     setTimeout(() => {
+        //         this.getTableData();
+        //     }, 0);
+        // }, 5*1000);
 
     },
-    beforeUnmount(){
-        clearInterval(this.timer)
-    },
+    // beforeUnmount(){
+    //     clearInterval(this.timer)
+    // },
     methods: {
         routerChange(type, item = {}) {
             console.log('routerChange item:', item)
@@ -332,7 +309,7 @@ export default {
                     break;
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/repair/repair-detail",
+                        path: "/feedback/feedback-detail",
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_self')
@@ -455,7 +432,6 @@ export default {
             }).then(res => {
                 console.log("getStatusStat res:", res)
                 let total = 0
-
                 this.statusList.forEach(statusItem => {
                     res.status_list.forEach(item => {
                         if ( statusItem.key == item.status) {
@@ -463,7 +439,6 @@ export default {
                         }
                     })
                 })
-
                 res.status_list.forEach(item => {
                     total += item.amount
                 })
@@ -513,7 +488,7 @@ export default {
         },
         handleModalSubmit() { // 审核提交
             this.loading = true;
-            Core.Api.Repair[this.modalType](this.editForm).then(() => {
+            Core.Api.Feedback[this.modalType](this.editForm).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.handleModalClose()
                 this.getTableData()
@@ -526,5 +501,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #RepairList {}
+// #FeedbackList {}
 </style>
