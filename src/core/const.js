@@ -383,6 +383,9 @@ let Const = {
 			'-10': { key: 510, color: 'blue', zh: '审核失败',en: ''},
 			'-1': { key: -1, color: 'gray', zh: '已取消', en: 'Cancelled'},
 		},
+        SOURCE_TYPE: {
+            REPAIR_ORDER:1
+        }
 	},
 
     ACTION_LOG: { // 操作记录

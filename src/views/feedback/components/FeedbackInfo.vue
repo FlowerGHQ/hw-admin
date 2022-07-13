@@ -4,7 +4,17 @@
     <a-collapse-panel key="RepairInfo" :header="$t('n.detailed_information')" class="gray-collapse-panel">
         <a-row class="panel-content info-container">
             <a-col :xs='24' :sm='24' :lg='12' :xl='6' :xxl='6' class="info-block">
-
+                <div class="info-item">
+                    <div class="key">{{ $t('fe.source_uid') }}</div>
+                    <div class="value">
+                    <template v-if="detail.source_type === Core.Const.FEEDBACK.SOURCE_TYPE.REPAIR_ORDER ">
+                        <a-button @click="routerChange('repair_order')" type="link"> {{detail.source_uid || '-'}}</a-button>
+                    </template>
+                    <template v-else>
+                        {{ '-'}}
+                    </template>
+                    </div>
+                </div>
                 <div class="info-item">
                     <div class="key">{{ $t('fe.feedback_title') }}</div>
                     <div class="value">{{detail.title || '-'}}</div>
@@ -88,7 +98,7 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-
+            Core,
             activeKey: 'RepairInfo',
 
             itemDetail: {},
@@ -107,12 +117,17 @@ export default {
     mounted() {
     },
     methods: {
-        routerChange() {
-            let routeUrl = routeUrl = this.$router.resolve({
-                path: this.$auth('ADMIN') ? "/item/item-detail" : '/purchase/item-display',
-                query: { id: this.itemDetail.id }
-            })
-            window.open(routeUrl.href, '_blank')
+        routerChange(type) {
+            let routeUrl = ''
+            switch (type) {
+                case 'repair_order':  // 编辑
+                    routeUrl = this.$router.resolve({
+                        path: "/repair/repair-detail",
+                        query: {id: this.detail.source_id}
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+            }
         },
         getItemDetail(code) {
             Core.Api.Item.detailByCodeForRepair({code}).then(res => {
