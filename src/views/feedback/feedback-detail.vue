@@ -4,6 +4,21 @@
         <div class="title-container">
             <div class="title-area">{{ $t('fe.feedback_detail') }}</div>
             <div class="btns-area">
+                <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.INIT">
+                    <i class="icon i_submit"/>{{ $t('def.submit') }}
+                </a-button>
+                <a-button type="primary" @click="handleSubmit()" v-if="detail.status != STATUS.INIT">
+                    <i class="icon i_submit"/>{{ $t('def.submit') }}
+                </a-button>
+                <a-button type="primary" @click="handleAuditShow()" v-if="$auth('ADMIN') && $auth('repair-order.audit')">
+                    <i class="icon i_audit"/>{{ $t('n.audit') }}
+                </a-button>
+                <a-button type="primary" @click="handleFeedbackShow()" v-if="$auth('ADMIN') && $auth('repair-order.audit')">
+                    <i class="icon i_audit"/>反馈
+                </a-button>
+                <a-button type="primary" @click="updateFeedback()" v-if="$auth('ADMIN') && $auth('repair-order.audit')">
+                    <i class="icon i_audit"/>修改
+                </a-button>
 <!--                <template v-if="sameOrg && $auth('repair-order.save')">
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION">
                         <i class="icon i_edit"/>{{ $t('def.edit') }}
@@ -76,25 +91,11 @@
                     <div class="key">{{ $t('r.create_time') }}</div>
                     <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
                 </div>
-
-
-                <!-- <div class="info-item">
-                    <div class="key">计划时间</div>
-                    <div class="value">{{ $Util.timeFilter(detail.plan_time) || '-' }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">实施时间</div>
-                    <div class="value">{{ $Util.timeFilter(detail.finish_time) || '-' }}</div>
-                </div>
-                <div class="info-item" v-if="detail.audit_message != ''">
-                    <div class="key">未通过原因</div>
-                    <div class="value">{{ detail.audit_message || '-' }}</div>
-                </div>-->
             </div>
         </div>
         <MySteps :stepsList='stepsList' :current='currStep' v-if="detail.status != STATUS.CLOSE"/>
         <div class="form-container">
-            <CheckFault  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail"  ref="CheckFault"/>
+            <CheckFault  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.INIT && sameOrg" ref="CheckFault"/>
             <CheckResult :id='id' :detail='detail' @hasTransfer='hasTransfer = true' v-if="showCheckResult"/>
             <FeedbackInfo  :id='id' :detail='detail'/>
             <AttachmentFile :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.QUALITY_FEEDBACK'/>
@@ -102,65 +103,63 @@
         </div>
     </div>
     <template class="modal-container">
-        <!-- 转单物流 -->
-        <a-modal v-model:visible="deliveryShow" title="转单物流" @ok="handleDeliverySubmit">
-            <div class="form-item required">
-                <div class="key">物流公司:</div>
-                <div class="value">
-                    <a-select v-model:value="deliveryForm.company_uid" placeholder="请选择物流公司">
-                        <a-select-option v-for="(val,key) in companyMap" :key="key" :value="key">{{ val }}</a-select-option>
-                    </a-select>
-                </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">物流单号:</div>
-                <div class="value">
-                    <a-input v-model:value="deliveryForm.waybill_uid" placeholder="请输入物流单号"/>
-                </div>
-            </div>
-        </a-modal>
-        <a-modal v-model:visible="repairEndShow" title="维修" class="repair-audit-modal" :after-close='handleRepairEndClose'>
-            <div class="modal-content">
-                <div class="form-item required">
-                    <div class="key">维修结果:</div>
-                    <a-radio-group v-model:value="repairForm.results">
-                        <a-radio :value="1">通过</a-radio>
-                        <a-radio :value="0">不通过</a-radio>
-                    </a-radio-group>
-                </div>
-                <div class="form-item textarea">
-                    <div class="key">备注:</div>
-                    <div class="value">
-                        <a-textarea v-model:value="repairForm.repair_message" placeholder="请输入备注"
-                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
-                    </div>
-                </div>
-            </div>
-            <template #footer>
-                <a-button @click="repairEndShow = false">取消</a-button>
-                <a-button @click="handleRepairEnd()" type="primary">确定</a-button>
-            </template>
-        </a-modal>
-        <a-modal v-model:visible="repairAuditShow" title="审核" class="repair-audit-modal" :after-close='handleAuditClose'>
+        <a-modal v-model:visible="feedbackAuditShow" title="审核" class="repair-audit-modal" :after-close='handleAuditClose'>
             <div class="modal-content">
                 <div class="form-item required">
                     <div class="key">审核结果:</div>
                     <a-radio-group v-model:value="auditForm.audit_result">
                         <a-radio :value="1">通过</a-radio>
-                        <a-radio :value="0">不通过</a-radio>
+                        <a-radio :value="2">不通过</a-radio>
+                        <a-radio :value="3">拒绝</a-radio>
                     </a-radio-group>
                 </div>
-                <div class="form-item textarea required" v-if="auditForm.audit_result === 0">
+                <div class="form-item textarea required">
                     <div class="key">原因:</div>
                     <div class="value">
-                        <a-textarea v-model:value="auditForm.audit_message" placeholder="请输入不通过原因"
+                        <a-textarea v-model:value="auditForm.audit_message" placeholder="请输入原因"
                             :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                     </div>
                 </div>
             </div>
             <template #footer>
-                <a-button @click="repairAuditShow = false">取消</a-button>
+                <a-button @click="feedbackAuditShow = false">取消</a-button>
                 <a-button @click="handleAuditSubmit()" type="primary">确定</a-button>
+            </template>
+        </a-modal>
+        <a-modal v-model:visible="feedbackShow" title="审核" class="repair-audit-modal" :after-close='handleFeedbackClose'>
+            <div class="modal-content">
+                <div class="form-item textarea required">
+                    <div class="key">故障分析:</div>
+                    <div class="value">
+                        <a-textarea v-model:value="feedbackForm.fault" placeholder="请输入故障分析"
+                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                    </div>
+                </div>
+                <div class="form-item textarea required">
+                    <div class="key">维修措施:</div>
+                    <div class="value">
+                        <a-textarea v-model:value="feedbackForm.treatment" placeholder="请输入维修措施"
+                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                    </div>
+                </div>
+                <div class="form-item textarea required">
+                    <div class="key">解决方案:</div>
+                    <div class="value">
+                        <a-textarea v-model:value="feedbackForm.solution" placeholder="请输入解决方案"
+                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                    </div>
+                </div>
+                <div class="form-item textarea required">
+                    <div class="key">需求:</div>
+                    <div class="value">
+                        <a-textarea v-model:value="feedbackForm.requirement" placeholder="请输入需求"
+                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="feedbackShow = false">取消</a-button>
+                <a-button @click="handleFeedbackSubmit()" type="primary">确定</a-button>
             </template>
         </a-modal>
     </template>
@@ -169,7 +168,6 @@
 
 <script>
 import Core from '../../core';
-import dayjs from "dayjs";
 
 import CheckFault from './components/CheckFault.vue';
 import CheckResult from './components/CheckResult.vue';
@@ -178,10 +176,10 @@ import ActionLog from '../repair/components/ActionLog.vue';
 import MySteps from '@/components/common/MySteps.vue';
 import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 
-const REPAIR = Core.Const.REPAIR
-const STATUS = Core.Const.REPAIR.STATUS
+const FEEDBACK = Core.Const.FEEDBACK
+const STATUS = Core.Const.FEEDBACK.STATUS
 const REPAIR_ITEM = Core.Const.REPAIR_ITEM
-const AUDIT = Core.Const.REPAIR.AUDIT
+const AUDIT = Core.Const.FEEDBACK.AUDIT
 
 export default {
     name: 'RepairDetail',
@@ -201,7 +199,6 @@ export default {
             orgId: Core.Data.getOrgId(),
             STATUS,
             AUDIT,
-            REPAIR_RESULTS: REPAIR.RESULTS,
             ATTACHMENT_TARGET_TYPE: Core.Const.ATTACHMENT.TARGET_TYPE,
 
             // 加载
@@ -212,20 +209,28 @@ export default {
             stepsList: [
                 // {title: '分配工单'},
                 // {title: '后台审核'},
-                {zh: '检测', en: 'Check'},
-                {zh: '维修', en: 'Service'},
-                {zh: '结算', en: 'Settle accounts'},
+                {zh: '填写', en: 'Check'},
+                {zh: '审核', en: 'Service'},
+                {zh: '反馈', en: 'Settle accounts'},
 
             ],
             currStep: 0,
 
             faultMap: {}, // 所有故障类型
 
-            repairAuditShow: false, //审核
+            feedbackAuditShow: false, //审核
+            feedbackShow: false,
             // auditType: '',
             auditForm: {
                 audit_result: '',
                 audit_message: '',
+                status: '',
+            },
+            feedbackForm: {
+                fault: '',
+                treatment: '',
+                solution: '',
+                requirement: '',
             },
 
             repairEndShow: false,
@@ -255,7 +260,7 @@ export default {
     computed: {
         showCheckResult() {
             switch (this.detail.status) {
-                case STATUS.WAIT_DETECTION:
+                case STATUS.INIT:
                     return false
                 default:
                     return true
@@ -354,50 +359,29 @@ export default {
         handleFaultSubmit() {
             this.$refs.CheckFault.handleFaultSubmit();
         },
-
-        // 工单 结算
-        handleRepairEndShow() {
-            this.repairEndShow = true
-        },
-        handleRepairEnd() {
-            let form = Core.Util.deepCopy(this.repairForm)
-            if (!form.results) {
-                return this.$message.warning('请选择维修结果')
-            }
-            let _this = this;
-            Core.Api.Repair.repair({id: this.id, ...form}).then(() => {
-                _this.$message.success(_this.$t('pop_up.save_success'))
-                _this.handleRepairEndClose()
-                _this.getFeedbackDetail()
-            })
-        },
-        handleRepairEndClose() {
-            this.repairEndShow = false;
-            Object.assign(this.repairForm, this.$options.data().repairForm)
-        },
-
-        // 工单 结算
-        handleSettlement() {
-            let _this = this;
-            this.$confirm({
-                title: _this.$t('r.sure_bill'),
-                okText: _this.$t('pop_up.yes'),
-                okType: 'danger',
-                cancelText: _this.$t('def.cancel'),
-                onOk() {
-                    Core.Api.Repair.settlement({id: _this.id}).then(() => {
-                        _this.$message.success(_this.$t('pop_up.save_success'))
-                        _this.getFeedbackDetail()
-                    })
-                },
+        // 提交检测结果
+        handleSubmit() {
+            Core.Api.Feedback.submit({
+                id: this.id
+            }).then(res => {
+                console.log('handleAuditSubmit res', res)
+                this.handleAuditClose();
+                this.getFeedbackDetail();
+                // this.routerChange('back')
+            }).catch(err => {
+                console.log('handleAuditSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
             });
         },
+
         handleAuditShow() { // 显示弹框
-            this.repairAuditShow = true
+            this.feedbackAuditShow = true;
+            this.auditForm.status = this.detail.status;
         },
 
         handleAuditClose() { // 关闭弹框
-            this.repairAuditShow = false;
+            this.feedbackAuditShow = false;
             Object.assign(this.auditForm, this.$options.data().auditForm)
         },
         handleAuditSubmit() { // 审核提交
@@ -405,17 +389,46 @@ export default {
             if (!form.audit_result) {
                 return this.$message.warning('请选择审核结果')
             }
-            /*if (form.audit_result === 0 && !form.audit_message) {
+            if ((form.audit_result === 2 ||form.audit_result === 3) && !form.audit_message) {
                 return this.$message.warning('请输入审核未通过的原因')
-            }*/
+            }
             this.loading = true;
-            Core.Api.Repair.audit({
+            Core.Api.Feedback.audit({
                 ...form,
                 id: this.id
             }).then(res => {
                 console.log('handleAuditSubmit res', res)
-                this.handleAuditClose()
-                this.routerChange('back')
+                this.handleAuditClose();
+                this.getFeedbackDetail();
+                // this.routerChange('back')
+            }).catch(err => {
+                console.log('handleAuditSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        handleFeedbackShow() { // 显示弹框
+            this.feedbackShow = true;
+        },
+
+        handleFeedbackClose() { // 关闭弹框
+            this.feedbackShow = false;
+            Object.assign(this.feedbackForm, this.$options.data().feedbackForm)
+        },
+        handleFeedbackSubmit() { // 审核提交
+            let form = Core.Util.deepCopy(this.feedbackForm)
+            // if ((form.audit_result === 2 ||form.audit_result === 3) && !form.audit_message) {
+            //     return this.$message.warning('请输入审核未通过的原因')
+            // }
+            this.loading = true;
+            Core.Api.Feedback.feedback({
+                ...form,
+                id: this.id
+            }).then(res => {
+                console.log('handleAuditSubmit res', res)
+                this.handleFeedbackClose();
+                this.getFeedbackDetail();
+                // this.routerChange('back')
             }).catch(err => {
                 console.log('handleAuditSubmit err', err)
             }).finally(() => {
@@ -476,12 +489,19 @@ export default {
                 this.deliveryShow = false
             });
         },
+        updateFeedback(){
+            var routeUrl = this.$router.resolve({
+                path: "/feedback/feedback-edit",
+                query: {id: this.detail.id}
+            })
+            window.open(routeUrl.href, '_self')
+        }
     }
 };
 </script>
 
 <style lang="less">
-#RepairDetail {
+#FeedbackDetail {
     .gray-panel.info {
         .right {
             .fcc();

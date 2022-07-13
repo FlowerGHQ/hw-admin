@@ -37,9 +37,6 @@
                         <template v-if="column.key === 'total_price'">
                             € {{ $Util.countFilter(record.price * record.amount) }}
                         </template>
-                        <template v-if="column.dataIndex === 'type'">
-                            {{repairTypeMap[text][$i18n.locale]}}
-                        </template>
                         <template v-if="column.dataIndex === 'man_hour'">
                             {{ $Util.countFilter(text) }}
                         </template>
@@ -108,23 +105,19 @@ export default {
         },
         tableColumns() {
             let tableColumns = [
-                {title: 'r.warranty', key: 'service_type'},
                 {title: 'r.fault_cause', dataIndex: 'item_fault_name'},
                 {title: 'r.item_name', dataIndex: ['item','name'], key: 'item'},
                 {title: 'i.code', dataIndex: ['item','code'], key: 'item'},
                 {title: 'i.amount', dataIndex: 'amount'},
                 {title: 'i.unit_price', dataIndex: 'price'},
                 {title: 'i.total_price', key: 'total_price'},
-                {title: 'n.type', dataIndex: 'type'},
-                // {title: '回收仓', dataIndex: 'recycle_warehouse_name', key: 'item'},
-                {title: 'r.warehouse', dataIndex: 'warehouse_name', key: 'item'},
             ]
-            if (this.detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME) {
-                tableColumns.splice(8, 0, {title: 'r.defective', dataIndex: 'recycle_warehouse_name', key: 'item'})
-                tableColumns.splice(5, 2)
-            } else {
-                tableColumns.push({title: 'i.hours', dataIndex: 'man_hour'})
-            }
+            // if (this.detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME) {
+            //     tableColumns.splice(8, 0, {title: 'r.defective', dataIndex: 'recycle_warehouse_name', key: 'item'})
+            //     tableColumns.splice(5, 2)
+            // } else {
+            //     tableColumns.push({title: 'i.hours', dataIndex: 'man_hour'})
+            // }
             return tableColumns
         }
     },
@@ -158,7 +151,7 @@ export default {
 
         getFeedbackFaultList() {
             Core.Api.FeedbackItem.faultList({
-                repair_order_id: this.id
+                quality_feedback_id: this.id
             }).then(res => {
                 console.log('getRepairFaultList res', res)
                 this.faultList = res.fault_list.map(i => i.item_fault_id)
@@ -168,7 +161,7 @@ export default {
         },
         getFeedbackItemList() {
             Core.Api.FeedbackItem.list({
-                repair_order_id: this.id
+                quality_feedback_id: this.id
             }).then(res => {
                 console.log('getRepairItemList res', res)
                 this.tableData = res.list

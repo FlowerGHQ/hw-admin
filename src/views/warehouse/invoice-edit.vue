@@ -24,14 +24,14 @@
                     </a-radio-group>
                 </div>
             </div>
-            <div class="form-item required">
-                <div class="key">{{ $t('in.category') }}：</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.target_type">
-                        <a-radio v-for="item in targetMap" :key='item.key' :value='item.key'>{{ item[$i18n.locale] }}</a-radio>
-                    </a-radio-group>
-                </div>
-            </div>
+<!--            <div class="form-item required">-->
+<!--                <div class="key">{{ $t('in.category') }}：</div>-->
+<!--                <div class="value">-->
+<!--                    <a-radio-group v-model:value="form.target_type">-->
+<!--                        <a-radio v-for="item in targetMap" :key='item.key' :value='item.key'>{{ item[$i18n.locale] }}</a-radio>-->
+<!--                    </a-radio-group>-->
+<!--                </div>-->
+<!--            </div>-->
             <div class="form-item required" v-if="$auth('ADMIN')">
                 <div class="key">{{ $t('n.source') }}：</div>
                 <div class="value">
@@ -102,6 +102,7 @@ export default {
 
             warehouseList: [],
             typeMap: Core.Const.STOCK_RECORD.TYPE_MAP, // 类型
+            COMMODITY_TYPE: Core.Const.STOCK_RECORD.COMMODITY_TYPE, //类目
             targetMap: Core.Const.STOCK_RECORD.COMMODITY_TYPE_MAP, //类目
             sourceTypeAdminMap: Core.Const.STOCK_RECORD.SOURCE_TYPE_ADMIN_MAP, //平台方的来源
             sourceTypeMap: Core.Const.STOCK_RECORD.SOURCE_TYPE_MAP, //经销商的来源
@@ -109,7 +110,7 @@ export default {
             form: {
                 id: '',
                 type: '',
-                target_type: '',
+                target_type: COMMODITY_TYPE.ITEM,
                 warehouse_id: undefined,
                 source_type: undefined,
                 source_id: '',
@@ -200,9 +201,9 @@ export default {
                 if (!form.type) {
                     return this.$message.warning('请选择出入库类型')
                 }
-                if (!form.target_type) {
-                    return this.$message.warning('请选择类目')
-                }
+                // if (!form.target_type) {
+                //     return this.$message.warning('请选择类目')
+                // }
                 if (!form.source_type) {
                     return this.$message.warning('请选择来源')
                 }
@@ -220,9 +221,9 @@ export default {
                if (!form.type) {
                    return this.$message.warning(this.$t('def.enter'))
                }
-               if (!form.target_type) {
-                   return this.$message.warning(this.$t('def.enter'))
-               }
+               // if (!form.target_type) {
+               //     return this.$message.warning(this.$t('def.enter'))
+               // }
                if (!form.source_type) {
                    return this.$message.warning(this.$t('def.enter'))
                }

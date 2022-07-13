@@ -313,21 +313,27 @@ export default {
             let area = Core.Util.deepCopy(this.area)
 
 
-          if (this.areaMap.city) {
-            area.city = this.areaMap.city.name
-            area.city_en = this.areaMap.city.name_en
-          }
-            if (this.areaMap.country) {
+            if (!Core.Util.isEmptyObj(this.areaMap)) {
+                console.log('areaMap2222',this.areaMap)
                 area.country = this.areaMap.country.name
                 area.country_en = this.areaMap.country.name_en
-            }
-            if (this.areaMap.province) {
-                area.province = this.areaMap.province.name
-                area.province_en = this.areaMap.province.name_en
-            }
-            if (this.areaMap.county) {
-                area.county = this.areaMap.county.name
-                area.county_en = this.areaMap.county.name_en
+                area.city = this.areaMap.city.name
+                area.city_en = this.areaMap.city.name_en
+                if (this.areaMap.province) {
+                    area.province = this.areaMap.province.name
+                    area.province_en = this.areaMap.province.name_en
+                } else {
+                    area.province = ""
+                    area.province_en = ""
+
+                }
+                if (this.areaMap.county) {
+                    area.county = this.areaMap.county.name
+                    area.county_en = this.areaMap.county.county_en
+                }else {
+                    area.county = ""
+                    area.county_en = ""
+                }
             }
             console.log('handleSubmit area:', area)
             console.log('handleSubmit areaMap:', this.areaMap)

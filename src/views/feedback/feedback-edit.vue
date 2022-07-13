@@ -31,7 +31,7 @@
             <div class="form-item required">
                 <div class="key">{{ $t('search.vehicle_no') }}</div>
                 <div class="value">
-                    <a-input v-model:value="form.entity_uid" :placeholder="$t('search.enter_vehicle_no')" @blur="handleVehicleBlur"/>
+                    <a-input v-model:value="form.entity_uid" :placeholder="$t('search.enter_vehicle_no')" @blur="handleVehicleBlur" :disabled="form.id!==0 "/>
                     <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
                     <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                 </div>
@@ -182,10 +182,11 @@ export default {
     computed: {},
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0
-        if (this.form.id) {
-            this.getRepairDetail();
-        }
         this.getCustomerList();
+        if (this.form.id) {
+            this.getFeedbackDetail();
+        }
+
     },
     methods: {
         // 页面跳转
@@ -224,7 +225,7 @@ export default {
             })
         },
         // 获取工单详情
-        getRepairDetail() {
+        getFeedbackDetail() {
             this.loading = true;
             Core.Api.Feedback.detail({
                 id: this.form.id,
@@ -233,11 +234,21 @@ export default {
                 this.detail = res
                 this.form.id = res.id
                 for (const key in this.form) {
-                    this.form[key] = res[key]
+                    if (key !== "sale_time"){
+                        this.form[key] = res[key]
+                    }
+
                 }
                 this.form.customer_id = this.form.customer_id || undefined
                 this.form.repair_user_id = this.form.repair_user_id || undefined
-                this.form.plan_time = this.form.plan_time ? dayjs.unix(this.form.plan_time).format('YYYY-MM-DD HH:mm:ss') : undefined
+                this.handleVehicleBlur()
+                Core.Api.Customer.list(
+                ).then(res => {
+                    this.customerList = res.list
+                    this.handleCustomerSelect(this.form.customer_id)
+                })
+
+                // this.form.sale_time = this.form.sale_time ? dayjs.unix(this.form.sale_time).format('YYYY-MM-DD HH:mm:ss') : undefined
                 // this.form.finish_time = this.form.finish_time ? dayjs.unix(this.form.finish_time).format('YYYY-MM-DD HH:mm:ss') : undefined
             }).catch(err => {
                 console.log('getRepairDetail err', err)
@@ -251,22 +262,27 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             let area = Core.Util.deepCopy(this.area)
 
-
-          if (this.areaMap.city) {
-            area.city = this.areaMap.city.name
-            area.city_en = this.areaMap.city.name_en
-          }
-            if (this.areaMap.country) {
+            if (!Core.Util.isEmptyObj(this.areaMap)) {
+                console.log('areaMap2222',this.areaMap)
                 area.country = this.areaMap.country.name
                 area.country_en = this.areaMap.country.name_en
-            }
-            if (this.areaMap.province) {
-                area.province = this.areaMap.province.name
-                area.province_en = this.areaMap.province.name_en
-            }
-            if (this.areaMap.county) {
-                area.county = this.areaMap.county.name
-                area.county_en = this.areaMap.county.name_en
+                area.city = this.areaMap.city.name
+                area.city_en = this.areaMap.city.name_en
+                if (this.areaMap.province) {
+                    area.province = this.areaMap.province.name
+                    area.province_en = this.areaMap.province.name_en
+                } else {
+                    area.province = ""
+                    area.province_en = ""
+
+                }
+                if (this.areaMap.county) {
+                    area.county = this.areaMap.county.name
+                    area.county_en = this.areaMap.county.county_en
+                }else {
+                    area.county = ""
+                    area.county_en = ""
+                }
             }
             console.log('handleSubmit area:', area)
             console.log('handleSubmit areaMap:', this.areaMap)
@@ -282,7 +298,6 @@ export default {
             await Core.Api.Feedback[apiName]({
                 ...form,
                 ...area,
-                arrival_time: this.arrival_time
             }).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('detail', res.detail)
@@ -290,6 +305,7 @@ export default {
                 console.log('handleSubmit err:', err)
             })
         },
+
         handleVehicleBlur() {  // 获取 车架号
             if (!this.form.entity_uid) {
                 return this.isExist = ''
@@ -402,7 +418,7 @@ export default {
 </script>
 
 <style lang="less">
-#RepairEdit {
+#FeedbackEdit {
     .form-item {
         .value {
             .fac();

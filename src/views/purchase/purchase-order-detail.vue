@@ -360,14 +360,14 @@
                         </a-select>
                     </div>
                 </div>
-                <div class="form-item required">
-                    <div class="key">{{ $t('in.category') }}：</div>
-                    <div class="value">
-                        <a-radio-group v-model:value="form.target_type">
-                            <a-radio v-for="item in COMMODITY_MAP" :key='item.key' :value='item.key'>{{ item[$i18n.locale] }}</a-radio>
-                        </a-radio-group>
-                    </div>
-                </div>
+<!--                <div class="form-item required">-->
+<!--                    <div class="key">{{ $t('in.category') }}：</div>-->
+<!--                    <div class="value">-->
+<!--                        <a-radio-group v-model:value="form.target_type">-->
+<!--                            <a-radio v-for="item in COMMODITY_MAP" :key='item.key' :value='item.key'>{{ item[$i18n.locale] }}</a-radio>-->
+<!--                        </a-radio-group>-->
+<!--                    </div>-->
+<!--                </div>-->
 
                 <div class="form-item" >
                     <div class="key">{{$t('p.remark')}}:</div>
@@ -483,6 +483,7 @@ export default {
             PARENT_TYPE,
             FLAG_ORDER_TYPE,
             STOCK_TYPE: Core.Const.STOCK_RECORD.TYPE,
+            COMMODITY: Core.Const.STOCK_RECORD.COMMODITY_TYPE,
             COMMODITY_MAP: Core.Const.STOCK_RECORD.COMMODITY_TYPE_MAP,
             ATTACHMENT_TYPE: Core.Const.ATTACHMENT.TARGET_TYPE,
             PAY_TIME,
@@ -1038,7 +1039,7 @@ export default {
             const param = {
                 id: this.id,
                 warehouse_id: form.warehouse_id,
-                target_type: form.target_type,
+                target_type: this.COMMODITY.ITEM,
                 remark: form.remark,
             }
             let adminRequire = [

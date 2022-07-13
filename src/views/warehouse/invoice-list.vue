@@ -206,7 +206,7 @@ export default {
             let columns = [
                 {zh: '全  部', en: 'All', value: '0', color: 'primary', key: -1},
                 {zh: '待提交', en: 'Awaiting commit', value: '0', color: 'yellow', key: STATUS.INIT},
-                {zh: '仓库审核', en: 'Awaiting admin review', value: '0', color: 'yellow', key: STATUS.WAIT_AUDIT},
+                {zh: '仓库审核', en: 'Awaiting admin review', value: '0', color: 'yellow', key: STATUS.FINANCE_PASS},
                 {zh: '审核通过', en: 'Review passed', value: '0', color: 'blue', key: STATUS.AUDIT_PASS},
                 {zh: '审核失败', en: 'Review failed', value: '0', color: 'red', key: STATUS.AUDIT_REFUSE},
                 {zh: '入库完成', en: 'In the warehouse', value: '0', color: 'green', key: STATUS.CLOSE},
@@ -214,7 +214,7 @@ export default {
                 {zh: '已取消', en: 'Cancelled', value: '0', color: 'grey', key: STATUS.CANCEL},
             ]
             if (this.$auth('ADMIN')) {
-                columns.splice(4, 0, {zh: '财务审核', en: 'Waiting for financial approval', value: '0', color: 'yellow', key: STATUS.FINANCE_PASS})
+                columns.splice(4, 0, {zh: '财务审核', en: 'Waiting for financial approval', value: '0', color: 'yellow', key: STATUS.WAIT_AUDIT})
             }
             return columns
         },
