@@ -99,7 +99,9 @@
             <CheckResult :id='id' :detail='detail' @hasTransfer='hasTransfer = true' v-if="showCheckResult"/>
             <FeedbackInfo  :id='id' :detail='detail'/>
             <AttachmentFile :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.QUALITY_FEEDBACK'/>
-            <ActionLog   :id='id' :detail='detail' :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.QUALITY_FEEDBACK"/>
+            <ActionLog :id='id' :detail='detail' :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.QUALITY_FEEDBACK"/>
+            <AuditRecord :id='id' :detail='detail' :sourceType="Core.Const.AUDIT_RECORD.TARGET_TYPE.QUALITY_FEEDBACK"/>
+
         </div>
     </div>
     <template class="modal-container">
@@ -175,6 +177,7 @@ import FeedbackInfo from './components/FeedbackInfo.vue';
 import ActionLog from '../repair/components/ActionLog.vue';
 import MySteps from '@/components/common/MySteps.vue';
 import AttachmentFile from '@/components/panel/AttachmentFile.vue';
+import AuditRecord from '@/components/common/AuditRecord.vue';
 
 const FEEDBACK = Core.Const.FEEDBACK
 const STATUS = Core.Const.FEEDBACK.STATUS
@@ -190,6 +193,7 @@ export default {
         FeedbackInfo,
         ActionLog,
         MySteps,
+        AuditRecord,
     },
     props: {},
     data() {

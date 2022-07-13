@@ -704,7 +704,12 @@ const messages = {
             agent: '该零售商吗？',
             store: '该门店吗？',
 
-        }
+        },
+	    audit: {
+		    old_status: '审核前状态',
+		    new_status: '审核后状态',
+		    remark: '审核信息',
+	    }
     },
     en: {
         ac: { //账户

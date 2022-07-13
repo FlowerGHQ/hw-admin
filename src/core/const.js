@@ -404,7 +404,25 @@ let Const = {
             '216': {key: 216, zh: '维修完成', en: 'Repair is complete'},
             '217': {key: 217, zh: '结算完成', en: 'Settlement completed'},
 
-	        '510': {key: 217, zh: '采购单修改', en: 'Purchase order modification'},
+	        '510': {key: 510, zh: '采购单修改', en: 'Purchase order modification'},
+
+	        '601': {key: 601, zh: '反馈单创建', en: 'Feedback ticket creation'},
+	        '602': {key: 601, zh: '反馈单提交', en: 'Feedback submission'},
+	        '603': {key: 601, zh: '反馈单修改', en: 'Feedback form modification'},
+	        '611': {key: 601, zh: '反馈单平台审核通过', en: 'Feedback single platform approved'},
+	        '612': {key: 601, zh: '反馈单平台审核不通过', en: 'Feedback single platform review failed'},
+	        '613': {key: 601, zh: '反馈单平台审核后关闭', en: 'Feedback single platform will be closed after review'},
+	        '614': {key: 601, zh: '反馈单平台审核后修改', en: 'Modification after the feedback form is reviewed by the platform'},
+	        '621': {key: 601, zh: '反馈单平台质量审核通过', en: 'Feedback single platform quality review passed'},
+	        '622': {key: 601, zh: '反馈单平台质量审核不通过', en: 'Feedback single platform quality review failed'},
+	        '623': {key: 601, zh: '反馈单平台质量审核后关闭', en: 'Feedback single platform closed after quality review'},
+	        '624': {key: 601, zh: '反馈单平台质量审核后修改', en: 'Modification after feedback single platform quality review'},
+	        '631': {key: 601, zh: '反馈单平台反馈', en: 'Feedback Single Platform Feedback'},
+	        '632': {key: 601, zh: '反馈单平台反馈审核通过', en: 'Feedback single platform feedback review passed'},
+	        '633': {key: 601, zh: '反馈单平台质量审核不通过', en: 'Feedback single platform quality review failed'},
+	        '634': {key: 601, zh: '反馈单平台反馈修改', en: 'Feedback Single Platform Feedback Modification'},
+	        '650': {key: 601, zh: '反馈单平台反馈关闭', en: 'Feedback Single Platform Feedback Close'},
+
 
 
 
@@ -1257,7 +1275,12 @@ let Const = {
             10: '商品',
             30: '物料',
         },
-    }
+    },
+	AUDIT_RECORD: {
+		TARGET_TYPE:{
+			QUALITY_FEEDBACK: 10
+		}
+	}
 };
 
 export default Const;
