@@ -551,6 +551,11 @@ const apiList = {
 	AuditRecord: {//审核流程单
 		list: ['PostJson', 'audit-record/list'],//
 	},
+	PrintCustomLabel: {//审核流程单
+		list: ['PostJson', 'print-custom-label/list'],//
+		save: ['PostJson', 'print-custom-label/save'],//
+		delete: ['PostJson', 'print-custom-label/delete'],//
+	},
 
 };
 

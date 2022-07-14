@@ -1479,6 +1479,15 @@ const routes = [
                     title_en: 'Files ',
                 }
             },
+	        {
+		        path: 'print_custom_label_list',
+		        name: 'PrintCustomLabelList',
+		        component: () => import('@/views/system/print-custom-label-list.vue'),
+		        meta: {
+			        title: '标签规则',
+			        title_en: 'Label rules ',
+		        }
+	        },
 
 
         ]
