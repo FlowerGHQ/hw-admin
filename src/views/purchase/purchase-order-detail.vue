@@ -565,7 +565,7 @@ export default {
                 company_uid: undefined,
                 waybill_uid: '', // 快递单号
                 warehouse_id: '',
-                target_type: this.COMMODITY.ITEM,
+                target_type: COMMODITY.ITEM,
                 payment: '', // 收款金额
             },
             editForm: {
