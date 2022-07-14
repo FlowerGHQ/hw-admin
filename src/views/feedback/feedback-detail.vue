@@ -4,56 +4,30 @@
         <div class="title-container">
             <div class="title-area">{{ $t('fe.feedback_detail') }}</div>
             <div class="btns-area">
-                <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.INIT">
+                <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.INIT && detail.source_id === 0 && !$auth('ADMIN')">
                     <i class="icon i_submit"/>{{ $t('def.submit') }}
                 </a-button>
-                <a-button type="primary" @click="handleSubmit()" v-if="detail.status != STATUS.INIT">
+                <a-button type="primary" @click="handleSubmit()" v-if="detail.status == STATUS.INIT && detail.source_id > 0 && !$auth('ADMIN')">
                     <i class="icon i_submit"/>{{ $t('def.submit') }}
                 </a-button>
-                <a-button type="primary" @click="handleAuditShow()" v-if="$auth('ADMIN') && $auth('repair-order.audit')">
+                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status === STATUS.WAIT_AFTER_SALES_AUDIT && $auth('ADMIN') && $auth('quality-feedback.after-audit')">
                     <i class="icon i_audit"/>{{ $t('n.audit') }}
                 </a-button>
-                <a-button type="primary" @click="handleFeedbackShow()" v-if="$auth('ADMIN') && $auth('repair-order.audit')">
+                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status === STATUS.WAIT_QUALITY_AUDIT && $auth('ADMIN') && $auth('quality-feedback.quality-audit')">
+                    <i class="icon i_audit"/>{{ $t('n.audit') }}
+                </a-button>
+                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status === STATUS.WAIT_FEEDBACK_AUDIT && $auth('ADMIN') && $auth('quality-feedback.feedback-audit')">
+                    <i class="icon i_audit"/>{{ $t('n.audit') }}
+                </a-button>
+                <a-button type="primary" @click="handleFeedbackShow()" v-if="detail.status === STATUS.WAIT_FEEDBACK && detail.status === STATUS.FEEDBACK_AUDIT_FAIL && $auth('ADMIN') && $auth('quality-feedback.feedback')">
                     <i class="icon i_audit"/>反馈
                 </a-button>
-                <a-button type="primary" @click="updateFeedback()" v-if="$auth('ADMIN') && $auth('repair-order.audit')">
+                <a-button type="primary" @click="updateFeedback()" v-if="haveUpdate && detail.status === STATUS.INIT && !$auth('ADMIN') && $auth('quality-feedback.save')">
                     <i class="icon i_audit"/>修改
                 </a-button>
-              <a-button type="primary" @click="handleExportConfirm()" v-if="$auth('ADMIN') && $auth('repair-order.audit')">
+              <a-button type="primary" @click="handleExportConfirm()" v-if="detail.status === STATUS.CLOSE && $auth('ADMIN')">
                 <i class="icon i_audit"/>导出
               </a-button>
-<!--                <template v-if="sameOrg && $auth('repair-order.save')">
-                    <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION">
-                        <i class="icon i_edit"/>{{ $t('def.edit') }}
-                    </a-button>
-                    <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.AUDIT_FAIL">
-                        {{ $t('def.re_edit') }}
-                    </a-button>
-&lt;!&ndash;                    <a-button type="primary" ghost @click="handleDeliveryShow()" v-if="needDelivery">
-                        <i class="icon i_deliver"/>转单物流
-                    </a-button>&ndash;&gt;
-                    <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION">
-                        <i class="icon i_submit"/>{{ $t('def.submit') }}
-                    </a-button>
-                    <a-button type="primary" @click="handleRepairEndShow()" v-if="detail.status == STATUS.WAIT_REPAIR">
-                        <i class="icon"/>维修
-                    </a-button>
-                    <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END">
-                        <i class="icon i_settle"/>{{ $t('r.settle_accounts') }}
-                    </a-button>
-                </template>-->
-<!--                <a-button type="primary" @click="routerChange('invoice')" v-if="!haveSettle && $auth('repair-order.settlement')">
-                    <i class="icon i_detail_l"/>{{ $t('r.bill') }}
-                </a-button>
-               <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT && $auth('DISTRIBUTOR') && $auth('repair-order.audit')">
-                    <i class="icon i_audit"/>{{ $t('n.audit') }}
-                </a-button>
-                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS && $auth('ADMIN') && $auth('repair-order.audit')">
-                    <i class="icon i_audit"/>{{ $t('n.audit') }}
-                </a-button>
-                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT_DISTRIBUTOR && $auth('ADMIN') && $auth('repair-order.audit')">
-                    <i class="icon i_audit"/>{{ $t('n.audit') }}
-                </a-button>-->
             </div>
         </div>
         <div class="gray-panel info">
@@ -279,11 +253,11 @@ export default {
             }
             return false
         },
-        haveSettle() {
+        haveUpdate() {
             switch (this.detail.status) {
-                case STATUS.WAIT_DETECTION:
-                case STATUS.WAIT_REPAIR:
-                case STATUS.CLOSE:
+                case STATUS.INIT:
+                case STATUS.QUALITY_AUDIT_FAIL:
+                case STATUS.AFTER_SALES_AUDIT_FAIL:
                     return true
                 default: return false
             }
