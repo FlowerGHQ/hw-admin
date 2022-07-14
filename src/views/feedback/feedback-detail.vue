@@ -19,6 +19,9 @@
                 <a-button type="primary" @click="updateFeedback()" v-if="$auth('ADMIN') && $auth('repair-order.audit')">
                     <i class="icon i_audit"/>修改
                 </a-button>
+              <a-button type="primary" @click="handleExportConfirm()" v-if="$auth('ADMIN') && $auth('repair-order.audit')">
+                <i class="icon i_audit"/>导出
+              </a-button>
 <!--                <template v-if="sameOrg && $auth('repair-order.save')">
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION">
                         <i class="icon i_edit"/>{{ $t('def.edit') }}
@@ -499,7 +502,30 @@ export default {
                 query: {id: this.detail.id}
             })
             window.open(routeUrl.href, '_self')
-        }
+        },
+        handleExportConfirm() { // 确认订单是否导出
+            let _this = this;
+            this.$confirm({
+                title: '确认要导出吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    _this.handleExportIn();
+                }
+            })
+        },
+        // 导出订单
+        handleExportIn() {
+            const params = {
+                id: this.detail.id, // 订单i
+            };
+
+            this.exportDisabled = true;
+            let exportUrl = Core.Api.Export.feedbackTemplateExport(params);
+            console.log("handlePurchaseExport _exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
+        },
     }
 };
 </script>
