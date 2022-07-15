@@ -124,16 +124,59 @@
                                     </div>
                                 </a-tooltip>
                             </template>
-                            <template v-if="column.key === 'attr_list'">
-                                <a-tooltip placement="top" :title='$Util.itemSpecFilter(text)'>
-                                    <div class="ell" style="max-width: 120px">
-                                        {{ $Util.itemSpecFilter(text) }}
+<!--                            <template v-if="column.key === 'attr_list'">-->
+<!--                                <a-tooltip placement="top" :title='$Util.itemSpecFilter(text)'>-->
+<!--                                    <div class="ell" style="max-width: 120px">-->
+<!--                                        {{ $Util.itemSpecFilter(text) }}-->
+<!--                                    </div>-->
+<!--                                </a-tooltip>-->
+<!--                            </template>-->
+<!--                            <template v-if="column.key === 'item'">-->
+<!--                                {{ text || '-' }}-->
+<!--                                {{ record.target_type || '-' }}-->
+<!--                            </template>-->
+
+                            <template v-if="column.key === 'target_type'">
+                                {{ $Util.targetTypeFilter(record.target_type) }}
+                            </template>
+                            <template v-if="record.target_type === COMMODITY_TYPE.MATERIALS">
+                                <template v-if="column.key === 'name'">
+                                    <div class="ell" style="max-width: 160px">
+                                        <a-button type="link" @click="routerChange('material', record )">{{ record.material.name || '-' }}</a-button>
                                     </div>
-                                </a-tooltip>
+                                </template>
+                                <template v-if="column.key === 'code'">
+                                    {{ record.material.code || '-' }}
+                                </template>
+                                <template v-if="column.key === 'spec'">
+                                    {{ record.material.spec || '-' }}
+                                </template>
+                                <template v-if="column.key === 'count'">
+                                    {{ record.material.stock ? record.material.stock + $t('in.item') : '-' }}
+                                </template>
                             </template>
-                            <template v-if="column.key === 'item'">
-                                {{ text || '-' }}
+                            <template v-if="record.target_type === COMMODITY_TYPE.ITEM">
+                                <template v-if="column.key === 'name'">
+                                    <div class="ell" style="max-width: 160px">
+                                        <a-button type="link" @click="routerChange('item', record )">{{ record.item.name || '-' }}</a-button>
+                                    </div>
+                                </template>
+                                <template v-if="column.key === 'code'">
+                                    {{ record.item.code || '-' }}
+                                </template>
+                                <template v-if="column.key === 'spec'">
+                                    <a-tooltip placement="top" :title='$Util.itemSpecFilter(text)'>
+                                        <div class="ell" style="max-width: 120px">
+                                            {{ $Util.itemSpecFilter(text) }}
+                                        </div>
+                                    </a-tooltip>
+                                </template>
+                                <template v-if="column.key === 'count'">
+                                    {{ record.item.stock ? record.item.stock + $t('in.item') : '-' }}
+                                </template>
                             </template>
+
+
                             <template v-if="column.key === 'flag_entity'">
                                 {{ $Util.itemFlagEntityFilter(text) }}
                             </template>
@@ -458,13 +501,14 @@ export default {
         itemTableColumns() {
             // 无实例商品的 出入库
             let columns = [
-                {title: this.$t('n.name'), dataIndex: ['item', 'name'],  key: 'tip_item'},
+                {title: this.$t('n.name'), dataIndex: "name",  key: 'name'},
 
-                {title: this.$t('i.number'), dataIndex: ['item', 'model'], key: 'item'},
-                {title: this.$t('i.code'), dataIndex: ['item', 'code'],  key: 'item'},
-                {title: this.$t('i.spec'), dataIndex: ['item', 'attr_list'], key: 'attr_list'},
+                // {title: this.$t('i.number'), dataIndex: ['item', 'model'], key: 'item'},
+                {title: this.$t('i.code'), dataIndex: 'code',  key: 'code'},
+                {title: this.$t('i.type'), dataIndex: 'target_type',  key: 'target_type'},
+                {title: this.$t('i.spec'), dataIndex: 'spec', key: 'spec'},
                 {title: "是否有实例号", dataIndex: "flag_entity", key: 'flag_entity'},
-                {title: "实例号数量", dataIndex: ['item', 'child_size'], key: 'child_size'},
+                {title: "实例号数量", dataIndex: "child_size", key: 'child_size'},
                 {title: "实际" + this.type_ch + this.$t('i.amount'), dataIndex: 'confirm_amount' , key: 'confirm_amount'},
                 {title: this.type_ch + this.$t('i.amount'), dataIndex: 'amount' , key: 'amount'},
                 {title: this.$t('def.operate'), key: 'operation'},
@@ -473,7 +517,7 @@ export default {
                 columns.pop()
             }
             if (this.detail.type == TYPE.OUT) {
-                columns.splice(2, 0, {title: '库存数量', dataIndex: ['item', 'stock'], key: 'count'})
+                columns.splice(2, 0, {title: '库存数量', dataIndex: 'stock', key: 'stock'})
             }
             return columns
         },
@@ -848,7 +892,8 @@ export default {
                 return {
                     id: item.id,
                     item: item,
-                    material: item,
+                    material: item.material !== undefined ? item.material : item,
+                    target_type: item.type === Core.Const.ITEM.TYPE.COMPONENT? COMMODITY_TYPE.MATERIALS: COMMODITY_TYPE.ITEM,
                     amount: 1,
                     entity_uid: '',
                     category: item.category,
@@ -872,6 +917,8 @@ export default {
             let list = items.map(item => ({
                 id: 0,
                 item: item,
+                material: item.material !== undefined ? item.material : item,
+                target_type: item.type === Core.Const.ITEM.TYPE.COMPONENT? COMMODITY_TYPE.MATERIALS:COMMODITY_TYPE.ITEM,
                 amount: 1,
                 flag_entity: item.flag_entity,
                 entity_uid: '',
@@ -885,9 +932,10 @@ export default {
             console.log('data',data)
             let list = []
             for (const item of data) {
-                let target_id,target_uid,supplier_id,price,flag_entity
-                switch (type) {
-                    case 'item':
+                let target_id,target_uid,supplier_id,price,flag_entity,target_type
+                target_type = item.target_type
+                switch (item.target_type) {
+                    case COMMODITY_TYPE.ITEM:
                         if (item.item && item.item.id) {
                             target_id = item.item.id;
                             flag_entity = item.item.flag_entity;
@@ -895,7 +943,7 @@ export default {
                             return this.$message.warning(this.$t('in.warn_a'));
                         }
                         break;
-                    case 'material':
+                    case COMMODITY_TYPE.MATERIALS:
                         console.log('item.material', item.material)
                         console.log('item.material', item.material)
                         console.log('item.material.id:', item.material.id)
@@ -926,6 +974,7 @@ export default {
                     target_id,
                     flag_entity,
                     target_uid,
+                    target_type,
                     supplier_id,
                     price,
                 })
