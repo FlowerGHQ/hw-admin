@@ -110,7 +110,7 @@ export default {
             form: {
                 id: '',
                 type: '',
-                target_type: COMMODITY_TYPE.ITEM,
+                target_type: Core.Const.STOCK_RECORD.COMMODITY_TYPE.ITEM,
                 warehouse_id: undefined,
                 source_type: undefined,
                 source_id: '',
