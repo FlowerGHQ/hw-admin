@@ -201,7 +201,7 @@ const apiList = {
         detailByUid: ['PostJson', 'repair/detail-by-uid'],
         pay: ['PostJson', 'repair/pay'],
         stock: ['PostJson', 'repair/save-to-invoice'], //入库
-
+	    remark: ['PostJson', 'repair/remark'], //入库
         settleDetail: ['PostJson', 'clearing-order/detail-by-source'], //结算单
     },
     RepairItem: { // 维修单

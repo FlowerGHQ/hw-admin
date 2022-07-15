@@ -49,6 +49,14 @@
                 </div>
             </div>
             <div class="form-item required">
+                <div class="key">{{ $t('p.currency') }}:</div>
+                <div class="value">
+                    <a-select v-model:value="form.currency" :placeholder="$t('def.input')">
+                        <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">{{ key }}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
+            <div class="form-item required">
                 <div class="key">{{ $t('n.contact') }}:</div>
                 <div class="value">
                     <a-input v-model:value="form.contact_name" :placeholder="$t('def.input')"/>
@@ -114,6 +122,7 @@ export default {
                 name: '',
                 short_name: '',
                 contact_name: '',
+                currency: undefined,
                 phone: '',
                 email: '',
                 country: undefined,
@@ -123,6 +132,7 @@ export default {
             treeData: [],
             areaList: [],
             defArea: [],
+            monetaryList: Core.Const.ITEM.MONETARY_TYPE_MAP,
             value: '',
             area: {
                 continent: '',
@@ -208,6 +218,9 @@ export default {
                 return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.email) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.currency) {
                 return this.$message.warning(this.$t('def.enter'))
             }
             if (!area.country) {

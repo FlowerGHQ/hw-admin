@@ -456,16 +456,16 @@ let Const = {
 	        '4': {key: 4, zh: '广宣品', en: 'Parts'},
         },
         MONETARY_TYPE: {
-            '￥': 'CNY',
+            // '￥': 'CNY',
             '€': 'EUR',
             '$': 'USD',
-            '£': 'GBP',
+            // '£': 'GBP',
         },
         MONETARY_TYPE_MAP: {
-            'CNY': '￥',
+            // 'CNY': '￥',
             'EUR': '€',
             'USD': '$',
-            'GBP': '£',
+            // 'GBP': '£',
         },
         STATUS: {
         },
@@ -905,11 +905,11 @@ let Const = {
         },
         SOURCE_TYPE_ADMIN_MAP: {
             '10': {key: 10, text: '管理员操作', color: 'yellow'},
-            '15': {key: 15, text: '生产单', color: 'blue'},
+            // '15': {key: 15, text: '生产单', color: 'blue'},
             '30': {key: 30, text: '售后单', color: 'yellow'},
             '40': {key: 40, text: '调货单', color: 'blue'},
             '50': {key: 50, text: '维修单', color: 'orange'},
-            '60': {key: 60, text: '物料采购单', color: 'yellow'},
+            // '60': {key: 60, text: '物料采购单', color: 'yellow'},
             '70': {key: 70, text: '仓库调货单', color: 'blue'},
         },
         SOURCE_TYPE_MAP: {

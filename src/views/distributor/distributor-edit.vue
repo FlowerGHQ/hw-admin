@@ -29,6 +29,14 @@
                     </div>
                 </div>
                 <div class="form-item required">
+                    <div class="key">{{ $t('p.currency') }}:</div>
+                    <div class="value">
+                        <a-select v-model:value="form.currency" :placeholder="$t('def.input')">
+                            <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">{{ key }}</a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">{{ $t('n.type') }}:</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.type">
@@ -142,11 +150,13 @@ export default {
                 type: undefined,
                 sales_area_ids: undefined,
                 pay_type: undefined,
+                currency: undefined,
                 flag_stock_change_use_pda: Const.FLAG.YES,
             },
 
             areaList: [],
             defArea: [],
+            monetaryList: Core.Const.ITEM.MONETARY_TYPE_MAP,
             area: {
                 continent: '',
                 country: '',
@@ -232,6 +242,9 @@ export default {
                 }
             }
             if (!area.country) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.currency) {
                 return this.$message.warning(this.$t('def.enter'))
             }
             form.sales_area_ids = form.sales_area_ids.join(',')

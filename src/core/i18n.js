@@ -534,6 +534,7 @@ const messages = {
             delivery_address: '发货地址',
 	        give_order: '赠送订单',
 	        item_error: '该商品在该货币结算下不销售',
+	        currency: '货币'
 
         },
         s: {
@@ -1207,6 +1208,7 @@ const messages = {
             delivery_address: 'Delivery address',
 	        give_order: 'Give order',
 	        item_error: 'The goods are not sold in this currency',
+	        currency: 'currency',
         },
         s: {
             store_list: 'Store list',

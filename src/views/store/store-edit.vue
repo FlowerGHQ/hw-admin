@@ -58,6 +58,14 @@
                     </div>
                 </div>
                 <div class="form-item required">
+                    <div class="key">{{ $t('p.currency') }}:</div>
+                    <div class="value">
+                        <a-select v-model:value="form.currency" :placeholder="$t('def.input')">
+                            <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">{{ key }}</a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">{{ $t('n.pda') }}:</div>
                     <div class="value">
                         <div class="value">
@@ -117,6 +125,7 @@ export default {
                 distributor_id: undefined,
                 agent_id: undefined,
                 name: '',
+                currency: undefined,
                 short_name: '',
                 contact_name: '',
                 contact_phone: '',
@@ -126,6 +135,7 @@ export default {
             agentSearchFrom: {
                 distributor_id: ''
             },
+            monetaryList: Core.Const.ITEM.MONETARY_TYPE_MAP,
             upload: {
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
                 fileList: [],
@@ -227,6 +237,9 @@ export default {
                 return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.name) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.currency) {
                 return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.short_name) {
