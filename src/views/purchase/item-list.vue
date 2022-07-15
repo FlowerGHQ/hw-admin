@@ -215,7 +215,7 @@ export default {
             }
             this.loading = true;
             Core.Api.Item.list({
-                flag_spread: 1,
+                flag_spread: 0,
                 category_id: searchForm.category_id,
                 name: searchForm.name,
                 code: searchForm.code,

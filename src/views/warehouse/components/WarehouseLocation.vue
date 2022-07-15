@@ -313,7 +313,7 @@ export default {
             })
         },
         handleItemSearch(code) {
-            Core.Api.Item.list({code: code}).then(res => {
+            Core.Api.Item.list({code: code,flag_spread: 1}).then(res => {
                 this.itemOptions = res.list
             })
         },
