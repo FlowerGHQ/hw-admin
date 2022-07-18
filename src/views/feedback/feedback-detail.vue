@@ -4,12 +4,17 @@
         <div class="title-container">
             <div class="title-area">{{ $t('fe.feedback_detail') }}</div>
             <div class="btns-area">
-                <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.INIT && detail.source_id === 0 && !$auth('ADMIN')">
-                    <i class="icon i_submit"/>{{ $t('def.submit') }}
-                </a-button>
-                <a-button type="primary" @click="handleSubmit()" v-if="detail.status == STATUS.INIT && detail.source_id > 0 && !$auth('ADMIN')">
-                    <i class="icon i_submit"/>{{ $t('def.submit') }}
-                </a-button>
+                <template v-if="authOrg(detail.org_id, detail.org_type)">
+                    <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.INIT && detail.source_id === 0 && !$auth('ADMIN')">
+                        <i class="icon i_submit"/>{{ $t('def.submit') }}
+                    </a-button>
+                    <a-button type="primary" @click="handleSubmit()" v-if="detail.status == STATUS.INIT && detail.source_id > 0 && !$auth('ADMIN')">
+                        <i class="icon i_submit"/>{{ $t('def.submit') }}
+                    </a-button>
+                    <a-button type="primary" @click="updateFeedback()" v-if="haveUpdate && detail.status === STATUS.INIT && !$auth('ADMIN') && $auth('quality-feedback.save')">
+                        <i class="icon i_audit"/>修改
+                    </a-button>
+                </template>
                 <a-button type="primary" @click="handleAuditShow()" v-if="detail.status === STATUS.WAIT_AFTER_SALES_AUDIT && $auth('ADMIN') && $auth('quality-feedback.after-audit')">
                     <i class="icon i_audit"/>{{ $t('n.audit') }}
                 </a-button>
@@ -19,12 +24,10 @@
                 <a-button type="primary" @click="handleAuditShow()" v-if="detail.status === STATUS.WAIT_FEEDBACK_AUDIT && $auth('ADMIN') && $auth('quality-feedback.feedback-audit')">
                     <i class="icon i_audit"/>{{ $t('n.audit') }}
                 </a-button>
-                <a-button type="primary" @click="handleFeedbackShow()" v-if="detail.status === STATUS.WAIT_FEEDBACK && detail.status === STATUS.FEEDBACK_AUDIT_FAIL && $auth('ADMIN') && $auth('quality-feedback.feedback')">
+                <a-button type="primary" @click="handleFeedbackShow()" v-if="(detail.status === STATUS.WAIT_FEEDBACK || detail.status === STATUS.FEEDBACK_AUDIT_FAIL) && $auth('ADMIN') && $auth('quality-feedback.feedback')">
                     <i class="icon i_audit"/>反馈
                 </a-button>
-                <a-button type="primary" @click="updateFeedback()" v-if="haveUpdate && detail.status === STATUS.INIT && !$auth('ADMIN') && $auth('quality-feedback.save')">
-                    <i class="icon i_audit"/>修改
-                </a-button>
+
               <a-button type="primary" @click="handleExportConfirm()" v-if="detail.status === STATUS.CLOSE && $auth('ADMIN')">
                 <i class="icon i_audit"/>导出
               </a-button>
@@ -235,6 +238,9 @@ export default {
                 waybill_uid: "",
                 company_uid: undefined,
             },
+            loginType: Core.Data.getLoginType(),
+            loginOrgId: Core.Data.getOrgId(),
+            loginOrgType: Core.Data.getOrgType(),
         };
     },
     watch: {},
@@ -499,6 +505,12 @@ export default {
             console.log("handlePurchaseExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
+        },
+        authOrg(orgId, orgType) {
+            console.log('org',this.loginOrgId === orgId && this.loginOrgType === orgType)
+            if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
+                return true
+            } else{ return false }
         },
     }
 };

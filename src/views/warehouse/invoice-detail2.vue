@@ -154,6 +154,14 @@
                                 <template v-if="column.key === 'count'">
                                     {{ record.material.stock ? record.material.stock + $t('in.item') : '-' }}
                                 </template>
+                                <template v-if="column.key === 'amount'">
+                                    <template v-if="addMode || record.editMode">
+                                        <a-input-number v-model:value="record.amount" :placeholder="$t('def.input')"
+                                                        :min="1" :max="detail.type === TYPE.IN ? 99999: record.material!= undefined ? record.material.stock: 0" :precision="0"/> {{ $t('in.item') }}
+                                    </template>
+                                    <template v-else>{{ text ? text +$t('in.item') : '-' }}</template>
+                                </template>
+
                             </template>
                             <template v-if="record.target_type === COMMODITY_TYPE.ITEM">
                                 <template v-if="column.key === 'name'">
@@ -174,6 +182,14 @@
                                 <template v-if="column.key === 'count'">
                                     {{ record.item.stock ? record.item.stock + $t('in.item') : '-' }}
                                 </template>
+                                <template v-if="column.key === 'amount'">
+                                    <template v-if="addMode || record.editMode">
+                                        <a-input-number v-model:value="record.amount" :placeholder="$t('def.input')"
+                                                        :min="1" :max="detail.type === TYPE.IN ? 99999: record.item!= undefined ? record.item.stock: 0" :precision="0"/> {{ $t('in.item') }}
+                                    </template>
+                                    <template v-else>{{ text ? text +$t('in.item') : '-' }}</template>
+                                </template>
+
                             </template>
 
 
@@ -191,19 +207,13 @@
                             <template v-if="column.key === 'confirm_amount'">
                                {{ text ? text +$t('in.item') : '-' }}
                             </template>
-                            <template v-if="column.key === 'amount'">
-                                <template v-if="addMode || record.editMode">
-                                    <a-input-number v-model:value="record.amount" :placeholder="$t('def.input')"
-                                        :min="1" :max="detail.type === TYPE.IN ? 99999: record.item.stock" :precision="0"/> {{ $t('in.item') }}
-                                </template>
-                                <template v-else>{{ text ? text +$t('in.item') : '-' }}</template>
-                            </template>
+
                             <template v-if="column.key === 'operation'" >
                                 <a-button type="link" @click="handleRowUidShow(record)" v-if="record.flag_entity === Core.Const.ITEM.FLAG_ENTITY.YES"><i class="icon i_edit"/>填写实例号 </a-button>
                             </template>
                             <template v-if="column.key === 'operation' && $auth('invoice.save')" >
                                 <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>{{ $t('in.change') }}</a-button>
-                                <a-button type="link" @click="handleRowSubmit(record, 'item')" v-else><i class="icon i_confirm"/>{{ $t('in.changes') }}</a-button>
+                                <a-button type="link" @click="handleRowSubmit(record, record.target_type)" v-else><i class="icon i_confirm"/>{{ $t('in.changes') }}</a-button>
                                 <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>{{ $t('def.remove') }}</a-button>
                             </template>
                         </template>
@@ -995,14 +1005,13 @@ export default {
             console.log('handleRowChange',item)
             item.editMode = true
         },
-        handleRowSubmit(item, type) {
+        handleRowSubmit(item, target_type) {
             let target_id = ''
             let supplier_id = ''
             let price = ''
-            switch (type) {
-                case 'item': target_id = item.item.id; break;
-                case 'entity': target_id = item.item.id; break;
-                case 'material': {
+            switch (target_type) {
+                case this.COMMODITY_TYPE.ITEM: target_id = item.item.id; break;
+                case this.COMMODITY_TYPE.MATERIALS: {
                     target_id = item.material.id;
                     supplier_id = item.supplier_id;
                     price = item.price
@@ -1011,6 +1020,7 @@ export default {
             }
             let target = {
                 id: item.id,
+                target_type,
                 amount: item.amount,
                 target_id,
                 supplier_id,
@@ -1021,8 +1031,8 @@ export default {
                 return this.$message.warning(`${type === 'item' ? this.$t('i.item') : '商品实例'}` + this.$t('in.no'));
             }
             console.log("amount", item.amount)
-            console.log("child_size", item.item.child_size)
-            if (item.amount < item.item.child_size) {
+
+            if (item.amount < item.child_size) {
                 return this.$message.warning("商品实例数量不能大于总数量");
             }
 
