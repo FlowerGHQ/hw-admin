@@ -1,7 +1,7 @@
 <template>
 <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
     <template #expandIcon ><i class="icon i_expan_l"/> </template>
-    <a-collapse-panel key="ActionLog" :header="$t('n.record')" class="gray-collapse-panel">
+    <a-collapse-panel key="ActionLog" :header="$t('n.audit_records')" class="gray-collapse-panel">
         <div class="panel-content">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :loading='loading' :pagination='false'>

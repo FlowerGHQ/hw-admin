@@ -559,7 +559,8 @@ const routes = [
 				component: () => import('@/views/feedback/feedback-edit.vue'),
 				meta: {
 					hidden: true,
-					title: '维修单编辑',
+					title: '反馈单编辑',
+                    title_en: 'feedback-edit',
 					parent: '/feedback/feedback-list',
 					roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
 					// auth: ['repair-order.save'],
@@ -568,10 +569,11 @@ const routes = [
 			{
 				path: 'feedback-detail',
 				name: 'FeedbackDetail',
+                title_en: 'feedback-detail',
 				component: () => import('@/views/feedback/feedback-detail.vue'),
 				meta: {
 					hidden: true,
-					title: '维修单详情',
+					title: '反馈单详情',
 					parent: '/feedback/feedback-list',
 					// auth: ['repair-order.detail'],
 				}
