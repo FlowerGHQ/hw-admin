@@ -3,7 +3,7 @@
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">{{ $t('p.details')}}</div>
-            <div class="btns-area" v-if="detail.status != STATUS.CANCEL && detail.status != STATUS.RE_REVISE && detail.status != STATUS.REVISE && detail.status != STATUS.ORDER_TRANSFERRED">
+            <div class="btns-area" v-if="detail.status != STATUS.CANCEL && detail.status != STATUS.RE_REVISE && detail.status != STATUS.REVISE && detail.status != STATUS.ORDER_TRANSFERRED && !$auth('purchase-order.supply-detail')">
                 <template v-if="$auth('ADMIN') && $auth('purchase-order.export')">
                     <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
                      <a-button @click="handleExportIn"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>
@@ -82,8 +82,8 @@
                                     {{$Util.itemSpecFilter(text, $i18n.locale )}}
                                 </template>
                             </template>
-                            <template #summary>
-                                <a-table-summary>
+                            <template #summary v-if="!$auth('purchase-order.supply-detail')">
+                                <a-table-summary  >
                                     <a-table-summary-row>
                                         <a-table-summary-cell :index="0" :col-span="4">{{ $t('p.total')}}</a-table-summary-cell>
                                         <a-table-summary-cell :index="1" :col-span="1">{{ $t('p.freight')}}:{{$Util.priceUnitFilter(detail.currency)}}{{$Util.countFilter(total.freight) || '0'}}</a-table-summary-cell>
@@ -152,7 +152,7 @@
                         </a-col>
                     </a-row>
                 </a-collapse-panel>
-
+                <template v-show="!$auth('purchase-order.supply-detail')">
                 <!-- 明细列表 -->
                 <a-collapse-panel key="ItemInfo" :header="$t('p.payment_detail')" class="gray-collapse-panel">
                     <div class="panel-content">
@@ -204,59 +204,60 @@
                         </a-table>
                     </div>
                 </a-collapse-panel>
+                    <!-- 发货记录 -->
+                    <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.OUT" @submit="getList" ref="out_delivery" />
+                    <!-- 收货记录 -->
+                    <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.IN"  @submit="getList" ref="in_delivery"/>
 
-                <!-- 发货记录 -->
-                <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.OUT" @submit="getList" ref="out_delivery"/>
-                <!-- 收货记录 -->
-                <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.IN"  @submit="getList" ref="in_delivery"/>
+                    <!-- 上传附件 -->
+                    <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.PURCHASE_ORDER' :detail='detail' @submit="getList" ref="AttachmentFile"/>
 
-                <!-- 上传附件 -->
-                <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.PURCHASE_ORDER' :detail='detail' @submit="getList" ref="AttachmentFile"/>
-
-                <!-- 物流信息 -->
-                <a-collapse-panel key="WaybillInfo" :header="$t('n.delivery_information')" class="gray-collapse-panel">
-                    <a-row class="panel-content info-container">
-                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
-                            <div class="info-item">
-                                <div class="key">{{ $t('n.consignee')}}</div>
-                                <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.name || '-'}}</div>
-                                <div class="value" v-else>-</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="key">{{ $t('n.phone')}}</div>
-                                <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.phone || '-'}}</div>
-                                <div class="value" v-else>-</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="key">{{ $t('ad.shipping_address')}}</div>
-                                <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.country + detail.receive_info.province + detail.receive_info.city + detail.receive_info.county + detail.receive_info.address || '-'}}</div>
-                                <div class="value" v-else>-</div>
-                            </div>
-                        </a-col>
-                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='12' class="info-block">
-                            <div class="info-item" v-if="detail.org_type === USER_TYPE.AGENT || detail.org_type === USER_TYPE.STORE">
-                                <div class="key">{{ $t('p.delivery_method')}}</div>
-                                <div class="value" >{{$Util.purchaseWaybillFilter(detail.receive_type, $i18n.locale || '-')}}</div>
-                            </div>
-                            <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
-                                <div class="key">{{ $t('p.delivery_method')}}</div>
-                                <div class="value" >{{$Util.purchaseExpressFilter(detail.express_type, $i18n.locale || '-')}}</div>
-                            </div>
-                            <div class="info-item" v-if="detail.waybill">
-                                <div class="key">{{ $t('p.shipment_number')}}</div>
-                                <div class="value" >{{detail.waybill || '-'}}</div>
-                            </div>
-                            <!-- <div class="info-item">
-                                <div class="key">物流信息</div>
-                                <div class="value">
-                                    <WaybillShow v-if="waybillInfo && showWaybill" @change="getWaybillDetail" :detail='waybill' :list='waybillInfo.list' :can-edit="$auth('ADMIN')" />
-                                    <template v-else>暂无物流信息</template>
+                    <!-- 物流信息 -->
+                    <a-collapse-panel key="WaybillInfo" :header="$t('n.delivery_information')" class="gray-collapse-panel">
+                        <a-row class="panel-content info-container">
+                            <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
+                                <div class="info-item">
+                                    <div class="key">{{ $t('n.consignee')}}</div>
+                                    <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.name || '-'}}</div>
+                                    <div class="value" v-else>-</div>
                                 </div>
-                            </div> -->
-                        </a-col>
-                    </a-row>
-                </a-collapse-panel>
+                                <div class="info-item">
+                                    <div class="key">{{ $t('n.phone')}}</div>
+                                    <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.phone || '-'}}</div>
+                                    <div class="value" v-else>-</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="key">{{ $t('ad.shipping_address')}}</div>
+                                    <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.country + detail.receive_info.province + detail.receive_info.city + detail.receive_info.county + detail.receive_info.address || '-'}}</div>
+                                    <div class="value" v-else>-</div>
+                                </div>
+                            </a-col>
+                            <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='12' class="info-block">
+                                <div class="info-item" v-if="detail.org_type === USER_TYPE.AGENT || detail.org_type === USER_TYPE.STORE">
+                                    <div class="key">{{ $t('p.delivery_method')}}</div>
+                                    <div class="value" >{{$Util.purchaseWaybillFilter(detail.receive_type, $i18n.locale || '-')}}</div>
+                                </div>
+                                <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
+                                    <div class="key">{{ $t('p.delivery_method')}}</div>
+                                    <div class="value" >{{$Util.purchaseExpressFilter(detail.express_type, $i18n.locale || '-')}}</div>
+                                </div>
+                                <div class="info-item" v-if="detail.waybill">
+                                    <div class="key">{{ $t('p.shipment_number')}}</div>
+                                    <div class="value" >{{detail.waybill || '-'}}</div>
+                                </div>
+                                <!-- <div class="info-item">
+                                    <div class="key">物流信息</div>
+                                    <div class="value">
+                                        <WaybillShow v-if="waybillInfo && showWaybill" @change="getWaybillDetail" :detail='waybill' :list='waybillInfo.list' :can-edit="$auth('ADMIN')" />
+                                        <template v-else>暂无物流信息</template>
+                                    </div>
+                                </div> -->
+                            </a-col>
+                        </a-row>
+                    </a-collapse-panel>
+
                 <ActionLog   :id='id' :detail='detail' :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.PURCHASE_ORDER"/>
+                </template>
             </a-collapse>
         </div>
     </div>
@@ -601,9 +602,14 @@ export default {
                 { title: this.$t('i.total_quantity'), dataIndex: 'amount'},
                 { title: this.$t('i.residue_quantity'), dataIndex: 'residue_quantity'},
                 { title: this.$t('i.deliver_amount'), dataIndex: 'deliver_amount', key: 'deliver_amount'},
-                { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'money'},
-                { title: this.$t('i.total_price'),dataIndex: 'price', key: 'money'},
+
             ]
+            if (!this.$auth('purchase-order.supply-detail')) {
+                columns.push(
+                    { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'money'},
+                    { title: this.$t('i.total_price'),dataIndex: 'price', key: 'money'},
+                )
+            }
             return columns
 
         },
