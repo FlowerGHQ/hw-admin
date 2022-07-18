@@ -241,16 +241,26 @@ export default {
                 { title: this.$t('p.order_type'), dataIndex: 'type', key: 'type' },
                 { title: this.$t('p.payment_terms'), dataIndex: 'pay_type', key: 'pay_type' },
                 { title: this.$t('n.institution'), dataIndex: ['create_org', 'name'], key: 'item' },
-                { title: this.$t('p.total_price'), dataIndex: 'price', key: 'money' },
-                { title: this.$t('p.freight'), dataIndex: 'freight', key: 'money' },
+                // { title: this.$t('p.total_price'), dataIndex: 'price', key: 'money' },
+                // { title: this.$t('p.freight'), dataIndex: 'freight', key: 'money' },
                 { title: this.$t('p.order_status'), dataIndex: 'status' },
                 { title: this.$t('n.order_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('p.payment_status'), dataIndex: 'payment_status' },
-                { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'money' },
+                // { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'money' },
                 { title: this.$t('p.payment_time'), dataIndex: 'pay_time', key: 'time' },
                 { title: this.$t('p.complete_time'), dataIndex: 'close_time', key: 'time' },
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
             ]
+            if (!this.$auth('purchase-order.supply-detail')) {
+                columns.splice(5, 0, { title: this.$t('p.total_price'), dataIndex: 'price', key: 'money' },)
+                columns.splice(6, 0, { title: this.$t('p.freight'), dataIndex: 'freight', key: 'money' },)
+                columns.splice(9, 0, { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'money' },)
+
+                columns.push(
+                    { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'money'},
+                    { title: this.$t('i.total_price'),dataIndex: 'price', key: 'money'},
+                )
+            }
      /*       if ((this.$auth('AGENT', 'DISTRIBUTOR') && this.search_type != SEARCH_TYPE.SELF) ||  (this.$auth('ADMIN') && this.search_type == SEARCH_TYPE.ALL)) {
                 columns.splice(2, 0, {title: '所属门店', dataIndex: 'store_name', key: 'item'})
             }
