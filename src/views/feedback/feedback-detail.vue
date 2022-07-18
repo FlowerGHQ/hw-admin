@@ -11,7 +11,7 @@
                     <a-button type="primary" @click="handleSubmit()" v-if="detail.status == STATUS.INIT && detail.source_id > 0 && !$auth('ADMIN')">
                         <i class="icon i_submit"/>{{ $t('def.submit') }}
                     </a-button>
-                    <a-button type="primary" @click="updateFeedback()" v-if="haveUpdate && detail.status === STATUS.INIT && !$auth('ADMIN') && $auth('quality-feedback.save')">
+                    <a-button type="primary" @click="updateFeedback()" v-if="haveUpdate && !$auth('ADMIN') && $auth('quality-feedback.save')">
                         <i class="icon i_audit"/>修改
                     </a-button>
                 </template>
