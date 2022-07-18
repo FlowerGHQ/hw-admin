@@ -288,7 +288,7 @@ export default {
             console.log('handleSubmit areaMap:', this.areaMap)
             console.log('handleSubmit form:', form)
 
-            let checkRes = this.checkFormInput(form);
+            let checkRes = this.checkFormInput(form,area);
             if (!checkRes) {
                 return
             }
@@ -326,30 +326,30 @@ export default {
             });
         },
         // 检查表单输入
-        checkFormInput(form) {
+        checkFormInput(form,area) {
 
             /* if (!form.travel_distance) {
                 this.$message.warning('请输入行程公里数')
                 return 0
             }*/
             if (!form.title) {
-                return this.$message.warning(this.$t('def.enter'))
+                this.$message.warning(this.$t('def.enter')+1)
                 return 0
             }
             if (!form.desc) {
-                return this.$message.warning(this.$t('def.enter'))
+                this.$message.warning(this.$t('def.enter'))
                 return 0
             }
             if (!form.entity_uid) {
-                return this.$message.warning(this.$t('def.enter'))
+                this.$message.warning(this.$t('def.enter'))
                 return 0
             }
             if (this.isExist === false) {
-                return this.$message.warning(this.$t('def.enter'))
+                this.$message.warning(this.$t('def.enter'))
             }
             if (form.id) {
                 if (!form.customer_id) {
-                    return this.$message.warning(this.$t('def.enter'))
+                    this.$message.warning(this.$t('def.enter'))
                     return 0
                 }
                 // if (!form.repair_user_id) {
@@ -357,19 +357,19 @@ export default {
                 //     return 0
                 // }
                 if (!form.customer_name) {
-                    return this.$message.warning(this.$t('def.enter'))
+                    this.$message.warning(this.$t('def.enter'))
                     return 0
                 }
                 if (!form.customer_phone) {
-                    return this.$message.warning(this.$t('def.enter'))
+                    this.$message.warning(this.$t('def.enter'))
                     return 0
                 }
                 if (!form.customer_email) {
-                    return this.$message.warning(this.$t('def.enter'))
+                    this.$message.warning(this.$t('def.enter'))
                     return 0
                 }
-                if (!this.area.province && !this.area.county && !this.area.county) {
-                    return this.$message.warning(this.$t('def.enter'))
+                if ( !area.county && !area.city) {
+                    this.$message.warning(this.$t('def.enter'))
                     return 0
                 }
             }
