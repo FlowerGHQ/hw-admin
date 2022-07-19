@@ -1231,7 +1231,7 @@ const routes = [
             roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
             icon: 'i_s_temp',
             hidden: false,
-            auth: ["aftersales-supply-list", "aftersales-apply-list", "refund-list"],
+            auth: ["after-sales-order.list", "aftersales-apply-list", "refund-list"],
         },
         children: [
             {
@@ -1279,9 +1279,9 @@ const routes = [
         meta: {
             title: '售后管理',
             icon: 'i_s_temp',
-            roles: [ LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
-            // auth: ['AGENT', 'STORE'],
-            auth: ["after-sales-order.list"],
+            roles: [  LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
+            auth: ['AGENT', 'STORE'],
+            // auth: ["after-sales-order.list"],
             not_sub_menu: true,
         },
         children: [
@@ -1291,7 +1291,6 @@ const routes = [
                 component: () => import('@/views/aftersales/aftersales-list.vue'),
                 meta: {
                     title: '售后单列表',
-                    roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
                     query_type: REFUND_QUERY_TYPE.APPLY,
                     auth: ["after-sales-order.list"],
                 }
