@@ -1232,11 +1232,7 @@ const routes = [
             roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
             icon: 'i_s_temp',
             hidden: false,
-<<<<<<< HEAD
-            auth: ["after-sales-order.list", "aftersales-apply-list", "refund-list"],
-=======
             auth: ["after-sales-order.list", "refund.list"],
->>>>>>> d2c4579e2f282c5425e52fecec73c0dd886c325e
         },
         children: [
             {
