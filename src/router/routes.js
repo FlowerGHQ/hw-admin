@@ -517,7 +517,7 @@ const routes = [
 			title: '反馈管理',
 			title_en: 'Feedback',
 			icon: 'i_s_repair',
-			// auth: ['repair-order.list'],
+			auth: ['repair-order.list'],
 		},
 		children: [
 			{
@@ -527,7 +527,7 @@ const routes = [
 				meta: {
 					title: '反馈单列表',
 					title_en: 'Feedback orders',
-				}
+					auth: ['repair-order.list'],				}
 			},
 			{
 				path: 'feedback-audit-list',
@@ -538,7 +538,7 @@ const routes = [
 					title_en: 'Awaiting audit',
 					roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
 					type: 'audit',
-					// auth: ['repair-order.audit'],
+					auth: ['repair-order.audit'],
 				}
 			},
 			{
@@ -550,7 +550,7 @@ const routes = [
 					title_en: 'Awaiting revise',
 					roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
 					type: 'redit',
-					// auth: ['repair-order.save'],
+					auth: ['repair-order.save'],
 				}
 			},
 			{
@@ -563,7 +563,7 @@ const routes = [
                     title_en: 'feedback-edit',
 					parent: '/feedback/feedback-list',
 					roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
-					// auth: ['repair-order.save'],
+					auth: ['repair-order.save'],
 				}
 			},
 			{
@@ -575,7 +575,7 @@ const routes = [
 					hidden: true,
 					title: '反馈单详情',
 					parent: '/feedback/feedback-list',
-					// auth: ['repair-order.detail'],
+					auth: ['repair-order.detail'],
 				}
 			},
 		]
@@ -1376,6 +1376,7 @@ const routes = [
             title: '客户管理',
             title_en: 'Customers',
             icon: 'i_s_customer',
+	        auth: ["user.list"],
 
         },
         children: [
@@ -1386,7 +1387,7 @@ const routes = [
                 meta: {
                     title: '客户列表',
                     title_en: 'Customer list',
-                    // auth: ["customer.list"],
+                    auth: ["customer.list"],
                 }
             },
             {

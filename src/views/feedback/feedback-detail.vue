@@ -5,12 +5,10 @@
             <div class="title-area">{{ $t('fe.feedback_detail') }}</div>
             <div class="btns-area">
                 <template v-if="authOrg(detail.org_id, detail.org_type)">
-                    <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.INIT && detail.source_id === 0 && !$auth('ADMIN')">
+                    <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.INIT  && !$auth('ADMIN')">
                         <i class="icon i_submit"/>{{ $t('def.submit') }}
                     </a-button>
-                    <a-button type="primary" @click="handleSubmit()" v-if="detail.status == STATUS.INIT && detail.source_id > 0 && !$auth('ADMIN')">
-                        <i class="icon i_submit"/>{{ $t('def.submit') }}
-                    </a-button>
+
                     <a-button type="primary" @click="updateFeedback()" v-if="haveUpdate && !$auth('ADMIN') && $auth('quality-feedback.save')">
                         <i class="icon i_audit"/>修改
                     </a-button>
@@ -246,6 +244,9 @@ export default {
     watch: {},
     computed: {
         showCheckResult() {
+            if (this.detail.source_id > 0){
+                return true
+            }
             switch (this.detail.status) {
                 case STATUS.INIT:
                     return false
@@ -344,7 +345,7 @@ export default {
         },
         // 提交检测结果
         handleFaultSubmit() {
-            this.$refs.CheckFault.handleFaultSubmit();
+            this.$refs.CheckFault.handleSubmit();
         },
         // 提交检测结果
         handleSubmit() {

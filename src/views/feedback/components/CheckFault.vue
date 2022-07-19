@@ -1,6 +1,6 @@
 <template>
 <div class="CheckFault">
-    <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
+    <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right" v-if="detail.source_id <= 0 ">
         <template #expandIcon><i class="icon i_expan_l"/></template>
         <a-collapse-panel key="affirm" :header="$t('r.problem')" class="gray-collapse-panel">
             <div class="panel-content affirm">
@@ -244,7 +244,14 @@ export default {
             this.failData[name].splice(index, 1)
             this.handleItemAmountChange(name)
         },
+        handleSubmit() {
+            this.handleSaveTitle()
+            if (this.detail.source_id <= 0){
+                this.handleFaultSubmit()
+            }
 
+
+        },
         // 提交故障
         handleFaultSubmit() {
             console.log('this.faultSelect: ', this.faultSelect);
@@ -282,7 +289,16 @@ export default {
                     this.$emit('submit')
                 })
             })
-
+        },
+        // 提交故障
+        handleSaveTitle() {
+            Core.Api.Feedback.saveTitle({
+                id: this.id,
+                title: this.title,
+                desc: this.desc
+            }).then(() => {
+                this.$emit('submit')
+            })
         },
     }
 };
