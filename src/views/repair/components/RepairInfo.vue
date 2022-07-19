@@ -55,7 +55,7 @@
                 </div>
                 <div class="info-item">
                     <div class="key">{{ $t('r.miles_driven') }}</div>
-                    <div class="value">{{detail.travel_distance ? detail.travel_distance + 'km' : '-'}}</div>
+                    <div class="value">{{detail.mileage ? detail.mileage + 'km' : '-'}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">{{ $t('r.arrival_time') }}</div>

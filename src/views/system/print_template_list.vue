@@ -1,5 +1,5 @@
 <template>
-<div id="PrintCustomLabelList">
+<div id="PrintTemplateList">
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">{{ $t('f.list') }}</div>
@@ -114,11 +114,9 @@ export default {
             typeMap: Core.Const.SYSTEM.FILE.TARGET_TYPE_MAP,
             modalShow: false,
             searchForm: {
-                type:'',
                 name: '',
             },
             dialogForm:{
-                type:'',
                 name: '',
                 data: '',
             },
@@ -180,7 +178,7 @@ export default {
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-            Core.Api.PrintCustomLabel.list({
+            Core.Api.PrintTemplate.list({
                 ...this.searchForm,
                 begin_time: this.create_time[0] || '',
                 end_time: this.create_time[1] || '',
@@ -233,7 +231,7 @@ export default {
             if (!this.dialogForm.data) {
                 return this.$message.warning('请输入打印脚本');
             }
-            Core.Api.PrintCustomLabel.save({
+            Core.Api.PrintTemplate.save({
                 ...this.dialogForm
             }
 
@@ -249,5 +247,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #PrintCustomLabelList {}
+// #PrintTemplateList {}
 </style>

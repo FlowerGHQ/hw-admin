@@ -51,7 +51,7 @@
             <div class="form-item">
                 <div class="key">{{ $t('r.miles_driven') }}</div>
                 <div class="value">
-                    <a-input-number v-model:value="form.travel_distance" :min="0" :precision="3"/>
+                    <a-input-number v-model:value="form.mileage" :min="0" :precision="3"/>
                     <span class="unit">{{ $t('r.km') }}</span>
                 </div>
             </div>
@@ -147,7 +147,7 @@ export default {
                 title: '', // 工单名称
                 desc: '', // 问题描述
                 service_type: '',//保内维修、保外维修
-                travel_distance: '',//行程公里数
+                mileage: '',//行程公里数
 
                 entity_uid: '', // 车架号
                 sale_time: '',
@@ -328,7 +328,7 @@ export default {
         // 检查表单输入
         checkFormInput(form,area) {
 
-            /* if (!form.travel_distance) {
+            /* if (!form.mileage) {
                 this.$message.warning('请输入行程公里数')
                 return 0
             }*/

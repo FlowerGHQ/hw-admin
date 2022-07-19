@@ -1552,9 +1552,9 @@ const routes = [
                 }
             },
 	        {
-		        path: 'print_custom_label_list',
-		        name: 'PrintCustomLabelList',
-		        component: () => import('@/views/system/print-custom-label-list.vue'),
+		        path: 'print_template_list',
+		        name: 'PrintTemplatelList',
+		        component: () => import('@/views/system/print_template_list.vue'),
 		        meta: {
 			        title: '标签规则',
 			        title_en: 'Label rules ',
