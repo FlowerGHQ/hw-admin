@@ -59,7 +59,7 @@
                             <div class="table-img">
                                 <a-image class="image" :width="30" :height="30" :src="$Util.imageFilter(record.image)" fallback='无'/>
                                 <a-tooltip placement="top" :title='text'>
-                                    <a-button type="link" @click="routerChange('detail', record)" style="margin-left: 6px;">{{ text || '-' }}</a-button>
+                                    <a-button type="link" @click="routerChange('detail', record)" style="margin-left: 6px;">{{ lang =='zh' ? record.name : record.name_en  }}</a-button>
                                 </a-tooltip>
                             </div>
                         </template>
@@ -141,6 +141,8 @@ export default {
                 { title: '物料包装', dataIndex: 'encapsulation', key: 'item' },
                 { title: '包装尺寸', dataIndex: 'encapsulation_size', key: 'item' },
                 { title: '毛重(kg)', dataIndex: 'gross_weight', key: 'gross_weight' },
+                { title: '装箱数', dataIndex: 'pack_count', key: 'pack_count' },
+                { title: '颜色', dataIndex: 'color', key: 'item' },
                 { title: '备注', dataIndex: 'remark', key: 'spec' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time'},
                 { title: '操作', key: 'operation', fixed: 'right', width: 180 }
@@ -161,7 +163,11 @@ export default {
         }
     },
     watch: {},
-    computed: {},
+    computed: {
+        lang() {
+            return this.$store.state.lang
+        },
+    },
     mounted() {
         this.getTableData()
     },

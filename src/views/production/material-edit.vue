@@ -15,6 +15,12 @@
                     </div>
                 </div>
                 <div class="form-item required">
+                    <div class="key">物料英文名</div>
+                    <div class="value">
+                        <a-input v-model:value="form.name_en" placeholder="请输入物料英文名(最多输入50字符)" :maxlength='50'/>
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">物料分类</div>
                     <div class="value">
                         <CategoryTreeSelect @change="handleCategorySelect"
@@ -55,7 +61,19 @@
                         </a-upload>
                     </div>
                 </div>
-                <div class="form-item">
+                <div class="form-item required">
+                    <div class="key">装箱数</div>
+                    <div class="value">
+                        <a-input-number v-model:value="form.pack_count" placeholder="请输入" />件
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">颜色</div>
+                    <div class="value">
+                        <a-input v-model:value="form.color" placeholder="请输入" />
+                    </div>
+                </div>
+                <div class="form-item ">
                     <div class="key">物料包装</div>
                     <div class="value">
                         <a-input v-model:value="form.encapsulation" placeholder="请输入物料包装"/>
@@ -105,6 +123,7 @@ export default {
             form: {
                 id: '',
                 name: '',
+                name_en: '',
                 code: '',
                 category_id: undefined,
                 encapsulation: '', // 物料包装
@@ -114,6 +133,8 @@ export default {
                 encapsulation_size: '',
                 remark: '',
                 image: '',
+                color: '',
+                pack_count: '',
             },
             gross_weight: '',
             supplierList: [],
@@ -216,6 +237,9 @@ export default {
             if (!form.name) {
                 return this.$message.warning('请输入物料名称')
             }
+            if (!form.name_en) {
+                return this.$message.warning('请输入物料英文名')
+            }
             if (!form.category_id) {
                 return this.$message.warning('请选择物料分类')
             }
@@ -227,6 +251,12 @@ export default {
             }
             if (!form.unit) {
                 return this.$message.warning('请输入单位')
+            }
+            if (!form.pack_count) {
+                return this.$message.warning('请输入最小装箱数')
+            }
+            if (!form.color) {
+                return this.$message.warning('请输入颜色')
             }
            /* if (!form.image) {
                 return this.$message.warning('请上传图片')

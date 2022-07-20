@@ -151,7 +151,7 @@
     </div>
     <!-- 审核 -->
     <template class="modal-container">
-        <a-modal v-model:visible="modalShow" :title="$t('audit')" :after-close='handleModalClose'>
+        <a-modal v-model:visible="modalShow" :title="$t('n.audit')" :after-close='handleModalClose'>
             <div class="modal-content">
                 <div class="form-item required">
                     <div class="key">{{ $t('n.result_a') }}:</div>
@@ -261,7 +261,7 @@ export default {
             modalType: '',
             editForm: {
                 id: '',
-                audit_result: 1,
+                audit_result: '',
                 audit_message: '',
             },
             warehouseList: [],
@@ -334,6 +334,7 @@ export default {
                 {zh: '全  部',en: 'All', value: '0', color: 'primary', key: '-1'},
                 {zh: '待检测',en: 'Waiting detect', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
                 {zh: '维修中', en: 'Under repair',value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
+                {zh: '待结算', en: 'Pending settlement',value: '0', color: 'blue',    key: STATUS.REPAIR_END },
                 {zh: '已结算待审核',en: 'Settled accounts and awaiting audit', value: '0', color: 'orange',  key: 65 },
                 {zh: '分销商审核通过',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.DISTRIBUTOR_AUDIT_SUCCESS },
                 {zh: '平台方审核通过',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
@@ -564,6 +565,9 @@ export default {
         },
         handleModalSubmit() { // 审核提交
             this.loading = true;
+            if (this.editForm.audit_result === '') {
+                return this.$message.warning('请选择审核结果')
+            }
             Core.Api.Repair[this.modalType](this.editForm).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.handleModalClose()

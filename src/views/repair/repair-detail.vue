@@ -151,7 +151,7 @@
                 <a-button @click="handleRepairEnd()" type="primary">确定</a-button>
             </template>
         </a-modal>
-        <a-modal v-model:visible="repairAuditShow" title="审核" class="repair-audit-modal" :after-close='handleAuditClose'>
+        <a-modal v-model:visible="repairAuditShow" :title="$t('n.audit')" class="repair-audit-modal" :after-close='handleAuditClose'>
             <div class="modal-content">
                 <div class="form-item required">
                     <div class="key">审核结果:</div>
@@ -419,7 +419,7 @@ export default {
         },
         handleAuditSubmit() { // 审核提交
             let form = Core.Util.deepCopy(this.auditForm)
-            if (!form.audit_result) {
+            if (form.audit_result === '') {
                 return this.$message.warning('请选择审核结果')
             }
             /*if (form.audit_result === 0 && !form.audit_message) {

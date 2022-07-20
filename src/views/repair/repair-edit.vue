@@ -1,7 +1,7 @@
 <template>
 <div id="RepairEdit" class="edit-container">
     <div class="title-container">
-        <div class="title-area">{{ form.id ? $t('r.repair.edit') : $t('r.repair_create') }}</div>
+        <div class="title-area">{{ form.id ? $t('r.repair_edit') : $t('r.repair_create') }}</div>
     </div>
     <div class="form-block"> <!-- 工单内容 -->
         <div class="form-title"><div class="title">{{ $t('r.repair_content') }}</div></div>
