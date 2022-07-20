@@ -22,7 +22,7 @@
                     <template v-if="detail.type === FLAG_ORDER_TYPE.PRE_SALES">
                         <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') " @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>
                     </template>
-                    <a-button type="primary" ghost v-if="detail.type !== TYPE.GIVEAWAY && !giveOrderShow && $auth('purchase-order.give')"  @click="giveOrderShow = true">赠送订单</a-button>
+                    <a-button type="primary" ghost v-if="detail.type !== TYPE.GIVEAWAY && detail.type !== TYPE.MIX && !giveOrderShow && $auth('purchase-order.give')"  @click="giveOrderShow = true">赠送订单</a-button>
                 </template>
                 <template v-if="authOrg(detail.org_id, detail.org_type) && detail.status !== STATUS.REVISE_AUDIT">
                     <a-button type="primary" ghost v-if="beforeDeliver && !itemEditShow && $auth('purchase-order.save')" @click="itemEditShow = true">更换商品</a-button>
@@ -156,7 +156,7 @@
             <div v-show="!$auth('purchase-order.supply-detail')">
                 <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
                     <!-- 明细列表 -->
-                    <a-collapse-panel key="ItemInfo" :header="$t('p.payment_detail')" class="gray-collapse-panel">
+                    <a-collapse-panel key="PayInfo" :header="$t('p.payment_detail')" class="gray-collapse-panel">
                         <div class="panel-content">
                             <a-table :columns="payColumns" :data-source="payList" :scroll="{ x: true }"
                                      :row-key="record => record.id" :pagination='false'>
@@ -410,7 +410,7 @@
         </a-modal>
 
         <!-- 支付审核 -->
-        <a-modal v-model:visible="payAuditShow" :title="$t('p.confirm_transfer')" :after-close="handlePayAuditClose">
+        <a-modal v-model:visible="payAuditShow" :title="$t('p.confirm_payment')" :after-close="handlePayAuditClose">
             <div class="modal-content">
                 <div class="form-item required">
                     <div class="key">是否通过：</div>
@@ -539,7 +539,7 @@ export default {
             loading: false,
             id: '',
             detail: {}, // 采购单详情
-            activeKey: ['ItemInfo', 'PurchaseInfo', 'WaybillInfo'],
+            activeKey: ['ItemInfo', 'PayInfo', 'PurchaseInfo', 'WaybillInfo'],
 
             stepsList: [
                 {status: '100', zh: '支付', en: 'Payment'},

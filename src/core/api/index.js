@@ -542,6 +542,7 @@ const apiList = {
 		submit: ['PostJson', 'feedback/submit'],//提交
 		feedback: ['PostJson', 'feedback/feedback'],//
 		saveTitle: ['PostJson', 'feedback/save-title'],//
+		content: ['PostJson', 'feedback/content'],//
 	},
     FeedbackItem: { // 维修单
         saveList: ['PostJson', 'quality-feedback-item/save-list'], // 列表

@@ -73,6 +73,8 @@
         </div>
         <MySteps :stepsList='stepsList' :current='currStep' v-if="detail.status != STATUS.CLOSE"/>
         <div class="form-container">
+            <Feedback  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.WAIT_FEEDBACK_AUDIT || detail.status == STATUS.FEEDBACK_AUDIT_FAIL || detail.status == STATUS.CLOSE" ref="CheckFault"/>
+
             <CheckFault  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.INIT && sameOrg" ref="CheckFault"/>
             <CheckResult :id='id' :detail='detail' @hasTransfer='hasTransfer = true' v-if="showCheckResult"/>
             <FeedbackInfo  :id='id' :detail='detail'/>
@@ -153,9 +155,11 @@ import CheckFault from './components/CheckFault.vue';
 import CheckResult from './components/CheckResult.vue';
 import FeedbackInfo from './components/FeedbackInfo.vue';
 import ActionLog from '../repair/components/ActionLog.vue';
+import Feedback from './components/Feedback.vue';
 import MySteps from '@/components/common/MySteps.vue';
 import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 import AuditRecord from '@/components/common/AuditRecord.vue';
+
 
 const FEEDBACK = Core.Const.FEEDBACK
 const STATUS = Core.Const.FEEDBACK.STATUS
@@ -172,6 +176,7 @@ export default {
         ActionLog,
         MySteps,
         AuditRecord,
+        Feedback,
     },
     props: {},
     data() {
