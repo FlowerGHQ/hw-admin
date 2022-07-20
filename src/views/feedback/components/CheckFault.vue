@@ -257,7 +257,8 @@ export default {
             console.log('this.faultSelect: ', this.faultSelect);
             let itemList = []
             if (!this.faultSelect.length) {
-                return this.$message.warning(this.$t('def.enter'))
+                this.$message.warning(this.$t('def.enter'))
+                return 0
             }
             for (const fault of this.faultSelect) {
                 if (this.failData[fault].length == 0) {
