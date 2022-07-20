@@ -276,6 +276,7 @@ export default {
             let columns = [
                 {zh: '全  部', en: 'All', value: '0', color: 'primary',  key: '0'},
                 {zh: '待支付', en: 'Wait to pay', value: '0', color: 'yellow',  key: '100'},
+                {zh: '待审核', en: 'Wait to pay', value: '0', color: 'yellow',  key: '630'},
                 {zh: '待发货', en: 'Wait for delivery', value: '0', color: 'orange',  key: '200'},
                 {zh: '已发货', en: 'Shipped',value: '0', color: 'primary',  key: '300'},
                 {zh: '部分收货', en: 'Received',value: '0', color: 'primary',  key: '330'},
