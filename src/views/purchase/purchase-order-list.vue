@@ -249,7 +249,7 @@ export default {
                 // { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'money' },
                 { title: this.$t('p.payment_time'), dataIndex: 'pay_time', key: 'time' },
                 { title: this.$t('p.complete_time'), dataIndex: 'close_time', key: 'time' },
-                { title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
+
             ]
             if (!this.$auth('purchase-order.supply-detail')) {
                 columns.splice(5, 0, { title: this.$t('p.total_price'), dataIndex: 'price', key: 'money' },)
@@ -261,6 +261,9 @@ export default {
                     { title: this.$t('i.total_price'),dataIndex: 'price', key: 'money'},
                 )
             }
+            columns.push(
+                { title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
+            )
      /*       if ((this.$auth('AGENT', 'DISTRIBUTOR') && this.search_type != SEARCH_TYPE.SELF) ||  (this.$auth('ADMIN') && this.search_type == SEARCH_TYPE.ALL)) {
                 columns.splice(2, 0, {title: '所属门店', dataIndex: 'store_name', key: 'item'})
             }
