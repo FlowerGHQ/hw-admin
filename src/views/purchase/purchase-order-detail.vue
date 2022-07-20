@@ -152,7 +152,7 @@
                         </a-col>
                     </a-row>
                 </a-collapse-panel>
-                <template v-show="!$auth('purchase-order.supply-detail')">
+                <div v-show="!$auth('purchase-order.supply-detail')">
                 <!-- 明细列表 -->
                 <a-collapse-panel key="ItemInfo" :header="$t('p.payment_detail')" class="gray-collapse-panel">
                     <div class="panel-content">
@@ -257,7 +257,7 @@
                     </a-collapse-panel>
 
                 <ActionLog   :id='id' :detail='detail' :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.PURCHASE_ORDER"/>
-                </template>
+                </div>
             </a-collapse>
         </div>
     </div>
