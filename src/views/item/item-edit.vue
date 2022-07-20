@@ -16,6 +16,12 @@
                     <a-input v-model:value="form.name" :placeholder="$t('def.input')" :maxlength='50'/>
                 </div>
             </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('n.name_en') }}</div>
+                <div class="value">
+                    <a-input v-model:value="form.name_en" :placeholder="$t('def.input')" :maxlength='50'/>
+                </div>
+            </div>
             <div class="form-item required" v-if="!indep_flag">
                 <div class="key">{{ $t('n.type') }}</div>
                 <div class="value">
@@ -370,6 +376,7 @@ export default {
             form: {
                 id: '',
                 name: '',
+                name_en: '',
                 type:'',
                 code: '',
                 model: '',
