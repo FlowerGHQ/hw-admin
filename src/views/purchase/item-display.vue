@@ -52,7 +52,6 @@
 </template>
 
 <script>
-import {get} from 'lodash';
 import Core from '../../core';
 import ExploredContent from './components/ExploredContent.vue';
 
