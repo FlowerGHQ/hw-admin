@@ -805,6 +805,7 @@ let Const = {
 	    { list: [], select: [], key: 'fault', name: '故障件' },
         { list: [], select: [], key: 'purchase-order', name: '采购订单' },
         { list: [], select: [], key: 'after-sales-order', name: '售后订单' },
+	    { list: [], select: [], key: 'refund', name: '退款' },
         { list: [], select: [], key: 'sales-area', name: '销售区域' },
         { list: [], select: [], key: 'warehouse', name: '仓库' },
         { list: [], select: [], key: 'invoice', name: '出入库单' },

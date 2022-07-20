@@ -1221,57 +1221,56 @@ const routes = [
             },*/
         ]
     },
-    { // 售后管理 - 平台 && 分销
-        path: '/aftersales-supply',
-        component: Layout,
-        redirect: '/aftersales-supply/aftersales-supply-list',
-        name: 'AftersalesSupplyManagement',
-        meta: {
-            title: '售后管理',
-            title_en: 'After sales',
-            roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-            icon: 'i_s_temp',
-            hidden: false,
-            auth: ["after-sales-order.list", "refund.list"],
-        },
-        children: [
-            {
-                path: 'aftersales-supply-list',
-                name: 'AftersalesSupplyList',
-                component: () => import('@/views/aftersales/aftersales-list.vue'),
-                meta: {
-                    title: '售后响应',
-                    title_en: 'Response',
-                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-                    query_type: REFUND_QUERY_TYPE.SUPPLY,
-                    auth: ["after-sales-order.list"],
-                }
-            },
-            {
-                path: 'aftersales-apply-list',
-                redirect: '/aftersales/aftersales-list',
-                meta: {
-                    title: '售后申请',
-                    title_en: 'Application',
-                    roles: [LOGIN_TYPE.DISTRIBUTOR],
-                    query_type: REFUND_QUERY_TYPE.APPLY,
-                    auth: ["after-sales-order.save"],
-                }
-            },
-            {
-                path: 'refund-list',
-                name: 'RefundList',
-                component: () => import('@/views/aftersales/refund-list.vue'),
-                meta: {
-                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-                    // auth: ['aftersales.refund', 'asjncsaij'],
-                    title: '退款审核',
-                    title_en: 'Audit',
-                    auth: ["refund-list"],
-                }
-            },
-        ]
-    },
+    // { // 售后管理 - 平台 && 分销
+    //     path: '/aftersales-supply',
+    //     component: Layout,
+    //     redirect: '/aftersales-supply/aftersales-supply-list',
+    //     name: 'AftersalesSupplyManagement',
+    //     meta: {
+    //         title: '售后管理',
+    //         title_en: 'After sales',
+    //         icon: 'i_s_temp',
+    //         hidden: false,
+    //         auth: ["after-sales-order.list", "refund.list"],
+    //     },
+    //     children: [
+    //         {
+    //             path: 'aftersales-supply-list',
+    //             name: 'AftersalesSupplyList',
+    //             component: () => import('@/views/aftersales/aftersales-list.vue'),
+    //             meta: {
+    //                 title: '售后响应',
+    //                 title_en: 'Response',
+    //                 roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+    //                 query_type: REFUND_QUERY_TYPE.SUPPLY,
+    //                 auth: ["after-sales-order.list"],
+    //             }
+    //         },
+    //         {
+    //             path: 'aftersales-apply-list',
+    //             redirect: '/aftersales/aftersales-list',
+    //             meta: {
+    //                 title: '售后申请',
+    //                 title_en: 'Application',
+    //                 roles: [LOGIN_TYPE.DISTRIBUTOR],
+    //                 query_type: REFUND_QUERY_TYPE.APPLY,
+    //                 auth: ["after-sales-order.save"],
+    //             }
+    //         },
+    //         {
+    //             path: 'refund-list',
+    //             name: 'RefundList',
+    //             component: () => import('@/views/aftersales/refund-list.vue'),
+    //             meta: {
+    //                 roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+    //                 // auth: ['aftersales.refund', 'asjncsaij'],
+    //                 title: '退款审核',
+    //                 title_en: 'Audit',
+    //                 auth: ["refund-list"],
+    //             }
+    //         },
+    //     ]
+    // },
     { // 售后管理 - 门店 && 零售
         path: '/aftersales',
         component: Layout,
@@ -1280,10 +1279,7 @@ const routes = [
         meta: {
             title: '售后管理',
             icon: 'i_s_temp',
-            auth: ['AGENT', 'STORE'],
-            // auth: ["after-sales-order.list"],
-            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
-            not_sub_menu: true,
+            auth: ["after-sales-order.list"],
         },
         children: [
             {
@@ -1293,6 +1289,7 @@ const routes = [
                 meta: {
                     title: '售后单列表',
                     query_type: REFUND_QUERY_TYPE.APPLY,
+	                roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
                     auth: ["after-sales-order.list"],
                 }
             },
@@ -1305,6 +1302,7 @@ const routes = [
                     title: '申请售后',
                     parent: '/aftersales/aftersales-list',
                     auth: ["after-sales-order.save"],
+	                roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
                 }
             },
             {
@@ -1314,7 +1312,8 @@ const routes = [
                 meta: {
                     hidden: true,
                     title: '售后单详情',
-                    parent: '/aftersales/aftersales-list'
+                    parent: '/aftersales/aftersales-list',
+	                auth: ["after-sales-order.detail"],
                 }
             },
             {
@@ -1327,7 +1326,42 @@ const routes = [
                     title: '退款单详情',
                     auth: ["refund.detail"],
                 }
-            }
+            },
+	        {
+		        path: 'aftersales-supply-list',
+		        name: 'AftersalesSupplyList',
+		        component: () => import('@/views/aftersales/aftersales-list.vue'),
+		        meta: {
+			        title: '售后响应',
+			        title_en: 'Response',
+			        roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+			        query_type: REFUND_QUERY_TYPE.SUPPLY,
+			        auth: ["after-sales-order.list"],
+		        }
+	        },
+	        // {
+		    //     path: 'aftersales-apply-list',
+		    //     redirect: '/aftersales/aftersales-list',
+		    //     meta: {
+			//         title: '售后申请',
+			//         title_en: 'Application',
+			//         roles: [LOGIN_TYPE.DISTRIBUTOR],
+			//         query_type: REFUND_QUERY_TYPE.APPLY,
+			//         auth: ["after-sales-order.save"],
+		    //     }
+	        // },
+	        {
+		        path: 'refund-list',
+		        name: 'RefundList',
+		        component: () => import('@/views/aftersales/refund-list.vue'),
+		        meta: {
+			        roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+			        // auth: ['aftersales.refund', 'asjncsaij'],
+			        title: '退款审核',
+			        title_en: 'Audit',
+			        auth: ["refund.list"],
+		        }
+	        },
         ]
     },
     { // 账户管理
