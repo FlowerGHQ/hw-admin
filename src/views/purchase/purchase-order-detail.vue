@@ -152,98 +152,126 @@
                         </a-col>
                     </a-row>
                 </a-collapse-panel>
-                <div v-show="!$auth('purchase-order.supply-detail')">
-                <!-- 明细列表 -->
-                <a-collapse-panel key="ItemInfo" :header="$t('p.payment_detail')" class="gray-collapse-panel">
-                    <div class="panel-content">
-                        <a-table :columns="payColumns" :data-source="payList" :scroll="{ x: true }"
-                            :row-key="record => record.id" :pagination='false'>
-                            <template #bodyCell="{ column, text, record }">
-                                <template v-if="column.key === 'item'">
-                                    {{ text || '-' }}
-                                </template>
-                                <template v-if="column.dataIndex === 'attachment'">
-                                    <div class="table-img">
-                                        <a-image-preview-group class="image-group">
-                                            <a-image v-for="(path, index) in record.paths" :key="index" class="image" :width="55" :height="55" :src="$Util.imageFilter(path)" fallback='无'/>
-                                        </a-image-preview-group>
-                                    </div>
-                                </template>
-
-                                <template v-if="column.key === 'detail'">
-                                    <div class="table-img">
-                                        <a-image :width="24" :height="24" :src="$Util.imageFilter(record.path.includes('img') ? record.path : '', 4)" fallback='无'/>
-                                        <a-tooltip placement="top" :title='text'>
-                                            <p class="ell" style="max-width:120px;margin-left:12px;">{{text || '-'}}</p>
-                                        </a-tooltip>
-                                    </div>
-                                </template>
-
-                                <template v-if="column.dataIndex === 'type'">
-                                    {{$Util.purchasePayMethodFilter(text)}}
-                                </template>
-                                <template v-if="column.key === 'status'">
-                                    {{$Util.purchasePayStatusFilter(text, $i18n.locale)}}
-                                </template>
-                                <template v-if="column.key === 'money'">
-                                    {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(text)}}
-                                </template>
-                                <template v-if="column.key === 'time'">
-                                    {{ $Util.timeFilter(text) }}
-                                </template>
-                                <template v-if="column.key === 'operation'">
-                                    <a-button type='link' @click="handleDownload(record)"><i class="icon i_download"/>{{ $t('n.download') }}</a-button>
-                                    <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
-                                        <a-button type='link' v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT" @click="handlePayAuditShow(record.id)">{{$t('p.audit')}}</a-button>
+            </a-collapse>
+            <div v-show="!$auth('purchase-order.supply-detail')">
+                <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
+                    <!-- 明细列表 -->
+                    <a-collapse-panel key="ItemInfo" :header="$t('p.payment_detail')" class="gray-collapse-panel">
+                        <div class="panel-content">
+                            <a-table :columns="payColumns" :data-source="payList" :scroll="{ x: true }"
+                                     :row-key="record => record.id" :pagination='false'>
+                                <template #bodyCell="{ column, text, record }">
+                                    <template v-if="column.key === 'item'">
+                                        {{ text || '-' }}
                                     </template>
-                                    <template v-if="authOrg(detail.org_id, detail.org_type)">
-                                        <a-button type='link' v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT" @click="handlePayCancel(record.id)">{{$t('def.cancel')}}</a-button>
+                                    <template v-if="column.dataIndex === 'attachment'">
+                                        <div class="table-img">
+                                            <a-image-preview-group class="image-group">
+                                                <a-image v-for="(path, index) in record.paths" :key="index"
+                                                         class="image" :width="55" :height="55"
+                                                         :src="$Util.imageFilter(path)" fallback='无'/>
+                                            </a-image-preview-group>
+                                        </div>
+                                    </template>
+
+                                    <template v-if="column.key === 'detail'">
+                                        <div class="table-img">
+                                            <a-image :width="24" :height="24"
+                                                     :src="$Util.imageFilter(record.path.includes('img') ? record.path : '', 4)"
+                                                     fallback='无'/>
+                                            <a-tooltip placement="top" :title='text'>
+                                                <p class="ell" style="max-width:120px;margin-left:12px;">
+                                                    {{ text || '-' }}</p>
+                                            </a-tooltip>
+                                        </div>
+                                    </template>
+
+                                    <template v-if="column.dataIndex === 'type'">
+                                        {{ $Util.purchasePayMethodFilter(text) }}
+                                    </template>
+                                    <template v-if="column.key === 'status'">
+                                        {{ $Util.purchasePayStatusFilter(text, $i18n.locale) }}
+                                    </template>
+                                    <template v-if="column.key === 'money'">
+                                        {{ $Util.priceUnitFilter(detail.currency) }} {{ $Util.countFilter(text) }}
+                                    </template>
+                                    <template v-if="column.key === 'time'">
+                                        {{ $Util.timeFilter(text) }}
+                                    </template>
+                                    <template v-if="column.key === 'operation'">
+                                        <a-button type='link' @click="handleDownload(record)"><i
+                                            class="icon i_download"/>{{ $t('n.download') }}
+                                        </a-button>
+                                        <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
+                                            <a-button type='link' v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT"
+                                                      @click="handlePayAuditShow(record.id)">{{ $t('p.audit') }}
+                                            </a-button>
+                                        </template>
+                                        <template v-if="authOrg(detail.org_id, detail.org_type)">
+                                            <a-button type='link' v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT"
+                                                      @click="handlePayCancel(record.id)">{{ $t('def.cancel') }}
+                                            </a-button>
+                                        </template>
                                     </template>
                                 </template>
-                            </template>
-                        </a-table>
-                    </div>
-                </a-collapse-panel>
+                            </a-table>
+                        </div>
+                    </a-collapse-panel>
                     <!-- 发货记录 -->
-                    <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.OUT" @submit="getList" ref="out_delivery" />
+                    <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.OUT" @submit="getList"
+                                  ref="out_delivery"/>
                     <!-- 收货记录 -->
-                    <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.IN"  @submit="getList" ref="in_delivery"/>
+                    <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.IN" @submit="getList"
+                                  ref="in_delivery"/>
 
                     <!-- 上传附件 -->
-                    <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.PURCHASE_ORDER' :detail='detail' @submit="getList" ref="AttachmentFile"/>
+                    <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.PURCHASE_ORDER' :detail='detail'
+                                    @submit="getList" ref="AttachmentFile"/>
 
                     <!-- 物流信息 -->
-                    <a-collapse-panel key="WaybillInfo" :header="$t('n.delivery_information')" class="gray-collapse-panel">
+                    <a-collapse-panel key="WaybillInfo" :header="$t('n.delivery_information')"
+                                      class="gray-collapse-panel">
                         <a-row class="panel-content info-container">
                             <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                                 <div class="info-item">
-                                    <div class="key">{{ $t('n.consignee')}}</div>
-                                    <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.name || '-'}}</div>
+                                    <div class="key">{{ $t('n.consignee') }}</div>
+                                    <div class="value" v-if="detail.receive_info !=null">
+                                        {{ detail.receive_info.name || '-' }}
+                                    </div>
                                     <div class="value" v-else>-</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="key">{{ $t('n.phone')}}</div>
-                                    <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.phone || '-'}}</div>
+                                    <div class="key">{{ $t('n.phone') }}</div>
+                                    <div class="value" v-if="detail.receive_info !=null">
+                                        {{ detail.receive_info.phone || '-' }}
+                                    </div>
                                     <div class="value" v-else>-</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="key">{{ $t('ad.shipping_address')}}</div>
-                                    <div class="value" v-if="detail.receive_info !=null">{{detail.receive_info.country + detail.receive_info.province + detail.receive_info.city + detail.receive_info.county + detail.receive_info.address || '-'}}</div>
+                                    <div class="key">{{ $t('ad.shipping_address') }}</div>
+                                    <div class="value" v-if="detail.receive_info !=null">
+                                        {{ detail.receive_info.country + detail.receive_info.province + detail.receive_info.city + detail.receive_info.county + detail.receive_info.address || '-' }}
+                                    </div>
                                     <div class="value" v-else>-</div>
                                 </div>
                             </a-col>
                             <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='12' class="info-block">
-                                <div class="info-item" v-if="detail.org_type === USER_TYPE.AGENT || detail.org_type === USER_TYPE.STORE">
-                                    <div class="key">{{ $t('p.delivery_method')}}</div>
-                                    <div class="value" >{{$Util.purchaseWaybillFilter(detail.receive_type, $i18n.locale || '-')}}</div>
+                                <div class="info-item"
+                                     v-if="detail.org_type === USER_TYPE.AGENT || detail.org_type === USER_TYPE.STORE">
+                                    <div class="key">{{ $t('p.delivery_method') }}</div>
+                                    <div class="value">
+                                        {{ $Util.purchaseWaybillFilter(detail.receive_type, $i18n.locale || '-') }}
+                                    </div>
                                 </div>
                                 <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
-                                    <div class="key">{{ $t('p.delivery_method')}}</div>
-                                    <div class="value" >{{$Util.purchaseExpressFilter(detail.express_type, $i18n.locale || '-')}}</div>
+                                    <div class="key">{{ $t('p.delivery_method') }}</div>
+                                    <div class="value">
+                                        {{ $Util.purchaseExpressFilter(detail.express_type, $i18n.locale || '-') }}
+                                    </div>
                                 </div>
                                 <div class="info-item" v-if="detail.waybill">
-                                    <div class="key">{{ $t('p.shipment_number')}}</div>
-                                    <div class="value" >{{detail.waybill || '-'}}</div>
+                                    <div class="key">{{ $t('p.shipment_number') }}</div>
+                                    <div class="value">{{ detail.waybill || '-' }}</div>
                                 </div>
                                 <!-- <div class="info-item">
                                     <div class="key">物流信息</div>
@@ -256,9 +284,11 @@
                         </a-row>
                     </a-collapse-panel>
 
-                <ActionLog   :id='id' :detail='detail' :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.PURCHASE_ORDER"/>
-                </div>
-            </a-collapse>
+                    <ActionLog :id='id' :detail='detail'
+                               :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.PURCHASE_ORDER"/>
+                </a-collapse>
+            </div>
+
         </div>
     </div>
     <template class="modal-container">
