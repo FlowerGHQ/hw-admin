@@ -61,13 +61,13 @@
         <a-collapse-panel key="Remark" header="详细描述" class="gray-collapse-panel">
             <div class="panel-content">
                 <div class="form-item">
-                    <div class="key">{{ $t('n.name') }}:</div>
+                    <div class="key">{{ $t('fe.feedback_title') }}:</div>
                     <div class="value">
                         <a-input v-model:value="title" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item textarea">
-                    <div class="key">{{ $t('n.name') }}:</div>
+                    <div class="key">{{ $t('fe.feedback_desc') }}:</div>
                     <div class="value">
                         <a-textarea v-model:value="desc" :placeholder="$t('r.fault_description')"
                                     :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500'/>
@@ -245,10 +245,15 @@ export default {
             this.handleItemAmountChange(name)
         },
         handleSubmit() {
-            this.handleSaveTitle()
-            if (this.detail.source_id <= 0){
-                this.handleFaultSubmit()
+          if (this.detail.source_id <= 0){
+            if (!this.faultSelect.length) {
+              this.$message.warning(this.$t('def.enter'))
+              return
             }
+            this.handleFaultSubmit()
+          }
+            this.handleSaveTitle()
+
 
 
         },
@@ -256,10 +261,7 @@ export default {
         handleFaultSubmit() {
             console.log('this.faultSelect: ', this.faultSelect);
             let itemList = []
-            if (!this.faultSelect.length) {
-                this.$message.warning(this.$t('def.enter'))
-                return 0
-            }
+
             for (const fault of this.faultSelect) {
                 if (this.failData[fault].length == 0) {
                     return this.$message.warning(this.$t('def.enter'))
