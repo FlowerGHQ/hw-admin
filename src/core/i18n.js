@@ -725,7 +725,10 @@ const messages = {
 		    old_status: '审核前状态',
 		    new_status: '审核后状态',
 		    remark: '审核信息',
-	    }
+	    },
+        pt: {
+          list:'标签规则',
+        }
     },
     en: {
         ac: { //账户
@@ -1406,6 +1409,9 @@ const messages = {
             sure_audit: 'Are you sure you want to submit ?',
             agent: 'the retailer ?',
             store: 'the store ?',
+        },
+        pt: {
+            list:'Labeling rules',
         }
     },
 }

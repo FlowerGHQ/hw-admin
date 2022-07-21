@@ -2,7 +2,7 @@
 <div id="PrintTemplateList">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">{{ $t('f.list') }}</div>
+            <div class="title-area">{{ $t('pt.list') }}</div>
             <div class="btns-area">
                 <a-button type="primary" @click="modalShow = true" v-if="$auth('ADMIN') && $auth('file.save')"><i class="icon i_add"/>打印规则</a-button>
             </div>
@@ -129,7 +129,7 @@ export default {
         tableColumns() {
             let columns = [
                 {title: 'n.name', dataIndex: 'name', key: 'item'},
-                {title: 'd.create_time', dataIndex: 'create_time', key: 'time'},
+                {title: 'd.create_time', dataIndex: 'createTime', key: 'time'},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
             if (!this.$auth('ADMIN')) {
@@ -203,7 +203,7 @@ export default {
                 okType: 'danger',
                 cancelText: _this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.System.fileDelete({id}).then(() => {
+                    Core.Api.PrintTemplate.delete({id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
