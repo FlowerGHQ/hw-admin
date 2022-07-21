@@ -1589,6 +1589,7 @@ const routes = [
 		        path: 'print_template_list',
 		        name: 'PrintTemplatelList',
 		        component: () => import('@/views/system/print_template_list.vue'),
+                roles: [LOGIN_TYPE.ADMIN],
 		        meta: {
 			        title: '标签规则',
 			        title_en: 'Label rules ',
