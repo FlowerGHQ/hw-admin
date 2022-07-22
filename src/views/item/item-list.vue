@@ -228,7 +228,7 @@ export default {
                 { title: this.$t('i.categories'), dataIndex: 'category_list', key: 'category_list' },
                 { title: this.$t('i.number'), dataIndex: 'model', key: 'item' },
                 { title: this.$t('i.code'), dataIndex: 'code', key: 'item' },
-                { title: this.$t('i.cost_price'), dataIndex: 'original_price' ,key: 'money'},
+                // { title: this.$t('i.cost_price'), dataIndex: 'original_price' ,key: 'money'},
                 { title: 'FOB(EUR)', dataIndex: 'fob_eur', key: 'fob_money', unit: '€'},
                 { title: 'FOB(USD)', dataIndex: 'fob_usd', key: 'fob_money', unit: '$'},
                 { title: this.$t('i.hours'), dataIndex: 'man_hour', key: 'man_hour' },
