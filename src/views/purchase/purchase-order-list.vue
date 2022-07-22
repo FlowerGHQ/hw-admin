@@ -240,7 +240,7 @@ export default {
                 { title: this.$t('p.parent_sn'), dataIndex: 'parent_sn', },
                 { title: this.$t('p.order_type'), dataIndex: 'type', key: 'type' },
                 { title: this.$t('p.payment_terms'), dataIndex: 'pay_type', key: 'pay_type' },
-                { title: this.$t('n.institution'), dataIndex: ['create_org', 'name'], key: 'item' },
+
                 // { title: this.$t('p.total_price'), dataIndex: 'price', key: 'money' },
                 // { title: this.$t('p.freight'), dataIndex: 'freight', key: 'money' },
                 { title: this.$t('p.order_status'), dataIndex: 'status' },
@@ -252,6 +252,8 @@ export default {
 
             ]
             if (!this.$auth('purchase-order.supply-detail')) {
+                columns.splice(4, 0, { title: this.$t('n.institution'), dataIndex: ['create_org', 'name'], key: 'item' },)
+
                 columns.splice(5, 0, { title: this.$t('p.total_price'), dataIndex: 'price', key: 'money' },)
                 columns.splice(6, 0, { title: this.$t('p.freight'), dataIndex: 'freight', key: 'money' },)
                 columns.splice(9, 0, { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'money' },)

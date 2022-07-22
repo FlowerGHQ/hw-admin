@@ -108,15 +108,18 @@
                                 <div class="key">{{ $t('p.order_number')}}</div>
                                 <div class="value">{{detail.sn || '-'}}</div>
                             </div>
+                            <div v-show="!$auth('purchase-order.supply-detail')">
                             <div class="info-item">
                                 <div class="key">{{ $t('p.person')}}</div>
                                 <div class="value">{{detail.user_name|| '-'}}</div>
+                            </div>
                             </div>
                             <div class="info-item">
                                 <div class="key">{{ $t('p.order_time')}}</div>
                                 <div class="value">{{$Util.timeFilter(detail.create_time) || '-'}}</div>
                             </div>
                         </a-col>
+                        <div v-show="!$auth('purchase-order.supply-detail')">
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                             <div class="info-item">
                                 <div class="key">{{ $t('n.contact')}}</div>
@@ -150,6 +153,7 @@
                                 <div class="value">{{$Util.purchaseTransferFilter(detail.flag_transfer, $i18n.locale)}}</div>
                             </div>
                         </a-col>
+                        </div>
                     </a-row>
                 </a-collapse-panel>
             </a-collapse>

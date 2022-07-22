@@ -128,6 +128,7 @@ export default {
             firstLevelName: '',
             searchForm: {
                 name: '',
+                name_en: '',
                 category_id: '',
             },
 
@@ -211,13 +212,17 @@ export default {
             if (this.searchType == Core.Const.ITEM.SEARCH_TYPE.CODE){
                 searchForm.code = searchForm.name;
                 searchForm.name = "";
-
+            }
+            if (this.$i18n.locale === 'en'){
+                searchForm.name_en = searchForm.name;
+                searchForm.name = "";
             }
             this.loading = true;
             Core.Api.Item.list({
                 flag_spread: 0,
                 category_id: searchForm.category_id,
                 name: searchForm.name,
+                name_en: searchForm.name_en,
                 code: searchForm.code,
                 page: this.currPage,
                 is_authority: 1,
