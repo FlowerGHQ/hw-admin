@@ -121,9 +121,12 @@ export default {
             ]
             if (this.detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME) {
                 tableColumns.splice(8, 0, {title: 'r.defective', dataIndex: 'recycle_warehouse_name', key: 'item'})
-                tableColumns.splice(5, 2)
+                // tableColumns.splice(5, 2)
             } else {
                 tableColumns.push({title: 'i.hours', dataIndex: 'man_hour'})
+            }
+            if (!this.$auth('ADMIN')) {
+                tableColumns.splice(5, 2)
             }
             return tableColumns
         }
