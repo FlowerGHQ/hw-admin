@@ -321,7 +321,7 @@ export default {
         /** 添加｜编辑弹窗确认回调 */
         handlerAdd(info) {
             // addItemComponent
-            Core.Api.Item.addItemComponent({...info, ...{ item_id: this.id }}).then(()=>{
+            Core.Api.Item.addItemComponent({...info, ...{ target_id: this.id ,target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM }}).then(()=>{
                 this.loadImage(info.img);
                 this.$message.success(info.id ? "修改成功" : "新增成功");
                 this.clickShowAdd(false);
@@ -350,7 +350,7 @@ export default {
             this.pointerList = [];
             this.tabsArray = [];
             Core.Api.Item.getItemComponent({
-                target_id: id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM
+                target_id: this.id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM
             }).then((res)=>{
                 this.tabsArray = get(res, "list.list" , []);
                 this.parsePoint(true);
