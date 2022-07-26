@@ -6,16 +6,16 @@
                 <div class="carousel-item" v-for="(item,i) of tabsArray" :key="i">
                     <img :src="$Util.imageFilter(item.img)"/>
                     <canvas :ref="`exploreCanvas${i}`"></canvas>
-                    <div 
+                    <div
                         class="point-start"
                         v-for="(point, j) in (item.item_component_list || [])"
-                        :key="j" 
+                        :key="j"
                         :style="{'left': `${(point.start.x * (point.rate || 1)) - 4}px`, 'top': `${(point.start.y * (point.rate || 1))- 4}px`}"></div>
-                    <div 
+                    <div
                         class="point-end"
                         :class="{'point-end-select': selectIndex===j}"
                         v-for="(point, j) in (item.item_component_list || [])"
-                        :key="j" 
+                        :key="j"
                         :style="{'left': `${(point.end.x * (point.rate || 1)) - 4* (point.rate || 1)}px`, 'top': `${(point.end.y * (point.rate || 1))- 4* (point.rate || 1)}px`}"
                         @mouseenter.stop="showDetail(i,j)" @mouseleave="showDetail(-1)"
                     >
@@ -24,7 +24,7 @@
                 </div>
             </a-carousel>
             <transition name="fade">
-                <div 
+                <div
                     class="component-contain"
                     v-if="selectIndex > -1"
                     :style="componentStyle"
@@ -63,8 +63,9 @@ export default {
     mounted () {},
     data() {
         return {
+            Core,
             id: undefined,
-            
+
             canvasGroup: [],
 
             pointerList: [],
@@ -84,13 +85,13 @@ export default {
         }
     },
     methods: {
-        /** 获取 商品爆炸图 */ 
+        /** 获取 商品爆炸图 */
         getItemExploreList(id) {
             if(!id) return;
             const ths = this;
             this.pointerList = [];
             this.tabsArray = [];
-            Core.Api.Item.getItemComponent({ id }).then((res)=>{
+            Core.Api.Item.getItemComponent({ target_id: id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM }).then((res)=>{
                 this.tabsArray = get(res, "list.list" , []);
                 this.parsePoint();
                 ths.$nextTick(()=>{
@@ -115,7 +116,7 @@ export default {
         loadImage(url, index){
             let img = new Image();
             const ths = this;
-            
+
             img.onload = ()=>{
                 ths.imageLoadCallback(img.naturalWidth, img.naturalHeight, index);
                 img.onload = null;
@@ -277,7 +278,7 @@ export default {
             border-color: transparent transparent @BG_LP  transparent;
             font-size: 0;
             line-height: 0;
-        } 
+        }
         &:after {
             top: -9px;
             left: 30px;
@@ -348,7 +349,7 @@ export default {
         //     border-color: transparent transparent @BG_LP  transparent;
         //     font-size: 0;
         //     line-height: 0;
-        // } 
+        // }
         // &:after {
         //     top: -23px;
         //     left: 22px;
