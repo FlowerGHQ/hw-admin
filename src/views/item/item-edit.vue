@@ -240,6 +240,9 @@
                                 <a-input-number v-model:value="record.fob_usd" :min="0.01" :precision="2"
                                     :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/\$\s?|(,*)/g, '')"/>
                             </template>
+                            <template v-if="column.dataIndex === 'operation'">
+                                <a-button type='link' danger @click="handleDelete(record.target_id)"><i class="icon i_delete"/>删除</a-button>
+                            </template>
                             <template v-if="column.key === 'select'">
                                 <a-select v-model:value="record[column.dataIndex]" placeholder="请选择">
                                     <a-select-option v-for="(val,index) of column.option" :key="index" :value="val.key"  @click="specChange(record, column.dataIndex, val)">{{ val[$i18n.locale] }}</a-select-option>
@@ -472,6 +475,7 @@ export default {
                 {title: this.$t('i.cost_price'), key: 'money', dataIndex: 'original_price', fixed: 'right'},
                 {title: 'FOB(EUR)', key: 'money', dataIndex: 'fob_eur', fixed: 'right', unit: '€'},
                 {title: 'FOB(USD)', key: 'money', dataIndex: 'fob_usd', fixed: 'right', unit: '$'},
+                {title: this.$t('n.operation'), key: 'operation', dataIndex: 'operation', fixed: 'right'},
                 // {title: '建议零售价', key: 'money', dataIndex: 'price', fixed: 'right'},
             )
             return column
@@ -654,7 +658,23 @@ export default {
                 this.specific.data = data
             })
         },
-
+        handleDelete(id){
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.Item.delete({id}).then(() => {
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
+                        _this.getItemDetail();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
         // 保存、新建 商品
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
