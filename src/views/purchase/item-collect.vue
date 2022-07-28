@@ -32,6 +32,11 @@
                     <div class="count-edit" v-else>
                         <a-input-number v-model:value="editCount" :min="1" :precision="0" autofocus @blur="handleCountEditBlur(item)"/>
                     </div>
+                    <a-form :model="formState" :label-col="labelCol" :wrapper-col="wrapperCol">
+                        <a-form-item label="备注">
+                        <a-input v-model:value="remark" />
+                        </a-form-item>
+                    </a-form>
                     <div class="btns">
                         <a-button type="link" class="disabled" v-if="item.item && item.item.in_favorite">{{ $t('i.favorited') }}</a-button>
                         <a-button type="link" @click="handleMoveToFavorite(item)" v-else>{{ $t('i.move') }}</a-button>
@@ -141,6 +146,11 @@ export default {
                     type: 'xlsx',
                 },
             },
+
+            //
+            remark: '',
+            labelCol: { style: { width: '40px' } },
+            wrapperCol: { span: 14 },
         };
     },
     watch: {},
@@ -352,6 +362,12 @@ export default {
 </script>
 
 <style lang="less">
+.ant-form {
+    width: 100%;
+}
+.ant-form-item {
+    margin: 0;
+}
 #ItemCollect {
     padding: 60px 56px 150px 48px;
     position: relative;

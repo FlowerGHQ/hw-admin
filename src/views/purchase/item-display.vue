@@ -1,117 +1,130 @@
 <template>
     <div id="ItemDisplay" class="list-container">
-        <div class="info-content">
-            <div class="name">{{ detail.name }}</div>
-            <p class="code">{{ $t('i.code') }}：{{ detail.code }}</p>
-            <p class="spec" v-if="detail.attr_str"><span>{{ $t('i.spec') }}：</span>{{  $i18n.locale =='zh' ? detail.attr_str : detail.attr_str_en }}</p>
-            <p class="price">€{{ $Util.countFilter(detail[priceKey + 'eur']) }} |
-                ${{ $Util.countFilter(detail[priceKey + 'usd']) }}</p>
-            <p class="category"><span v-for="(category, index) in detail.category_list">
-                            <span v-if="index !== 0">,</span>
-                            {{ $i18n.locale =='zh' ? category.category_name  : category.category_name_en}}
-                        </span></p>
-            <div class="desc" v-if="config && config.length">
-                <template v-for="(item, index) of config" :key="index">
-                    <p v-if="item.value">
-                        {{ item.name }}：
-                        <template v-if="item.type !== 'rich_text'">{{ item.value }}</template>
-                        <span v-else v-html='item.value'></span>
-                    </p>
-                </template>
-            </div>
-        </div>
         <div class="imgs-content">
-            <a-carousel autoplay class="carousel-list">
-                <div class="carousel-item" v-for="(item,index) of imgs" :key="index">
-                    <img :src="$Util.imageFilter(item, 2)"/>
+            <a-carousel arrows dots-class="slick-dots slick-thumb" >
+                <div v-for="item,index in imgs" :key="item">
+                    <img :src="getImgUrl(index)" />
                 </div>
                 <template #customPaging="props">
-                    <a><img :src="getImgUrl(props.i)"/></a>
+                    <a>
+                        <img :src="getImgUrl(props.i)" />
+                    </a>
+                </template> 
+                <template #prevArrow>
+                    <div class="custom-slick-arrow">
+                        <left-outlined />
+                    </div>
+                </template>
+                <template #nextArrow>
+                    <div class="custom-slick-arrow">
+                        <right-outlined />
+                    </div>
                 </template>
             </a-carousel>
         </div>
-        <div class="spec-content" v-if='specList.length'>
-            <div class="title">{{ $t('i.spec') }}({{ specList.length }})</div>
-            <div class="spec-list">
-                <div class="spec-item" v-for="item of specList" :key="item.id"
-                     :class="this.id === item.id ? 'active' : ''" @click="handleSpecChange(item)">
-                    <img :src="$Util.imageFilter(item.logo, 2)"/>
-                    <p>{{ item.name }}</p>
+        <div class="info-content">
+            <div class="title">{{ detail.name }}</div>
+            <ul>
+                <li v-for="attr in detail.attr_list">{{ attr.attr_def_name }}：{{ attr.value }}</li>
+            </ul>
+            <a-button type="primary" block class="btn">此商品{{ specList.length }}种规格</a-button>
+            <div class="price-list">
+                <div class="retail-price">
+                    <span class="price-left">建议零售价包括增值税</span>
+                    <span class="price-right">¥ {{ $Util.countFilter(detail.price) }}</span>
+                </div>
+                <div class="price">
+                    <span class="price-left">价格</span>
+                    <span class="price-right">¥ {{ $Util.countFilter(detail.price) }}</span>
                 </div>
             </div>
+            <div class="stars" @click="hanldeAddToFavorite" :class="{'active': detail.in_favorite}">
+                <star-outlined />
+                <span class="star-text" >{{ detail.in_favorite ? '已收藏' : '收藏商品' }}</span>
+            </div>
         </div>
-        <ExploredContent ref="ExploredContent" :id="id"/>
-        <div class="btn-content">
-            <a-button type="primary" class="disabled" v-if="detail.in_shopping_cart">{{ $t('i.added') }}</a-button>
-            <a-button type="primary" @click="hanldeAddToShopCart" v-else>{{ $t('i.cart') }}</a-button>
-
-            <a-button type="primary" class="disabled" ghost v-if="detail.in_favorite">{{ $t('i.favorited') }}</a-button>
-            <a-button type="primary" ghost @click="hanldeAddToFavorite" v-else>{{ $t('i.add_to_favorites') }}</a-button>
+        <div class="content">
+            <div class="title">商品规格</div>
+            <div class="content-list">
+                <SpecificationCard v-for="item in specList" :data="item" @AddToFavorite="ToFavorite" class="list"/>
+            </div>
+            <a-tabs v-model:activeKey="activeKey" class="tab-box">
+                <a-tab-pane key="mountings" tab="配件">
+                    <SpecificationCard v-for="item in specList" class="list" :data="item" @AddToFavorite="ToFavorite"/>
+                </a-tab-pane>
+                <a-tab-pane key="explosiveView" tab="爆炸图" force-render> 
+                    <ExploredContent ref="ExploredContent" :id="id" :show="false" class="explored"/>
+                </a-tab-pane>
+                <a-tab-pane key="download" tab="下载">
+                    <DownLoad />
+                </a-tab-pane>
+            </a-tabs>
         </div>
     </div>
 </template>
 
 <script>
 import Core from '../../core';
+// import ExploredContent from './components/ExploredContent.vue';
+import { LeftOutlined, RightOutlined, StarOutlined } from '@ant-design/icons-vue';
+import SpecificationCard from './components/SpecificationCard.vue'
+import DownLoad from './components/DownLoad.vue'
 import ExploredContent from './components/ExploredContent.vue';
 
 export default {
     name: 'ItemDisplay',
     components: {
-        ExploredContent
+        LeftOutlined, 
+        RightOutlined,
+        StarOutlined,
+        SpecificationCard,
+        DownLoad,
+        ExploredContent,
     },
     props: {},
     data() {
         return {
-            loginType: Core.Data.getLoginType(),
+            imgs: ['https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2Ftp09%2F210F2130512J47-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1661495042&t=b77c1037ad5171fd86341525a2b14e7e','https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1113%2F052420110515%2F200524110515-2-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1661495151&t=1660dab7f77bcb019bb65f50621ece75','https://img1.baidu.com/it/u=2003496092,3295249130&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=313','https://img1.baidu.com/it/u=3164998783,2199444470&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=333','https://img1.baidu.com/it/u=3384796346,381674655&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500','https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2Ftp09%2F210F2130512J47-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1661495042&t=b77c1037ad5171fd86341525a2b14e7e','https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2Ftp09%2F210F2130512J47-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1661495042&t=b77c1037ad5171fd86341525a2b14e7e','https://img1.baidu.com/it/u=3164998783,2199444470&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=333','https://img1.baidu.com/it/u=3384796346,381674655&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500','https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2Ftp09%2F210F2130512J47-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1661495042&t=b77c1037ad5171fd86341525a2b14e7e',],
+            activeKey: 'mountings',
+            // loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
 
             id: null,
             detail: {},
-            category: {},
-            config: [],
-            imgs: [],
-            activeKey: 0,
+            // category: {},
+            // config: [],
+            // imgs: [],
+            // activeKey: 0,
 
             specList: [],
         };
     },
     watch: {},
     computed: {
-        priceKey() {
-            let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
-            console.log('priceKey:', priceKey)
-            return priceKey
-        }
+        // priceKey() {
+        //     let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
+        //     console.log('priceKey:', priceKey)
+        //     return priceKey
+        // }
     },
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         this.getItemDetail();
     },
     methods: {
+        getImgUrl(i) {
+            return this.imgs[i]
+        },
         // 获取商品详情
         getItemDetail() {
             this.loading = true;
             Core.Api.Item.detail({
                 id: this.id,
             }).then(res => {
-                console.log('getItemDetail res', res)
+                console.log('getItemDetail1111 res', res)
                 let detail = res.detail
-                detail.attr_str = detail.attr_list ? detail.attr_list.map(item => item.value).join(',') : ''
-                detail.attr_str_en = detail.attr_list ? detail.attr_list.map(item => item.value_en).join(',') : ''
-                detail.attr_def_name = detail.attr_list ? detail.attr_list.map(item => item.attr_def_name).join(',') : ''
-                detail.attr_def_name_en = detail.attr_list ? detail.attr_list.map(item => item.attr_def_name_en).join(',') : ''
-                console.log('detail.attr_list.attr_def_name', detail.attr_def_name)
                 this.detail = detail
-                console.log('detail', detail)
-                this.category = detail.category
-                try {
-                    this.config = JSON.parse(detail.config)
-                } catch (err) {
-                    this.config = []
-                }
-                this.imgs = detail.imgs ? detail.imgs.split(',') : []
                 if (detail.set_id) {
                     this.getSpecList();
                 }
@@ -128,12 +141,8 @@ export default {
             Core.Api.Item.listBySet({
                 set_id: this.detail.set_id
             }).then(res => {
-                let data = res.list.map(item => ({
-                    ...item,
-                    attr_desc: item.attr_list.map(i => i.value).join(',')
-                }))
-                this.specList = data;
-                console.log('getSpecList this.specific.data:', data)
+                console.log('getSpecList this.specific.data:', res)
+                this.specList = res.list;
             }).catch(err => {
                 console.log('getSpecList err', err)
             }).finally(() => {
@@ -141,25 +150,13 @@ export default {
             });
         },
         // 查看不同 规格
-        handleSpecChange(item) {
-            this.id = item.id;
-            this.getItemDetail()
-        },
+        // handleSpecChange(item) {
+        //     this.id = item.id;
+        //     this.getItemDetail()
+        // },
         // 根据id获取爆炸图
         getExploreDetail(id) {
             this.$refs.ExploredContent.getItemExploreList(id);
-        },
-        // 添加到购物车
-        hanldeAddToShopCart() {
-            Core.Api.ShopCart.save({
-                item_id: this.detail.id,
-                amount: 1,
-                price: this.detail.purchase_price
-            }).then(res => {
-                console.log('hanldeAddToShopCart res:', res)
-                this.$message.success('添加成功')
-                this.getItemDetail();
-            })
         },
         // 收藏商品
         hanldeAddToFavorite() {
@@ -176,22 +173,28 @@ export default {
             })
         },
 
-        getImgUrl(i) {
-            return Core.Util.imageFilter(this.imgs[i])
-        }
+        // 商品规格收藏商品成功
+        ToFavorite(data) {
+            this.getItemDetail();
+        },
+
+        // getImgUrl(i) {
+        //     return Core.Util.imageFilter(this.imgs[i])
+        // },
     }
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #ItemDisplay {
     display: flex;
     flex-wrap: wrap;
     box-sizing: border-box;
     padding: 63px 70px 200px;
 
-    .info-content {
-        width: calc(~'100% - 450px');
+    .imgs-content {
+        // width: calc(~'100% - 620px');
+        width: 900px;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -201,189 +204,272 @@ export default {
         font-size: 16px;
         font-weight: 500;
         box-sizing: border-box;
-        padding-right: 32px;
-
-        .name {
-            font-size: 28px;
-            line-height: 39px;
-            margin-right: 40px;
-        }
-
-        .code {
-            margin-top: 6px;
-        }
-
-        .spec {
-            display: inline-block;
-            color: #757575;
-            margin-top: 6px;
-            line-height: 28px;
-            height: auto;
-            background: #F9F9F9;
-            border-radius: 2px;
-            padding: 0 10px;
-
-            span {
-                color: #111111;
-            }
-        }
-
-        .price {
-            margin: 20px 0 44px;
-        }
-
-        .sale-price {
-            color: #000000;
-            font-weight: 400;
-            margin-bottom: 20px;
-        }
-
-        .category {
-            color: #000000;
-            margin-bottom: 20px;
-        }
-
-        .desc {
-            font-size: 16px;
-            line-height: 22px;
-            font-weight: 400;
-            color: #515154;
-            white-space: pre-wrap;
-
-            p + p {
-                margin-top: 10px;
-            }
-        }
+        padding-left: 64px;
     }
 
-    .imgs-content {
-        width: 450px;
-
-        .carousel-list {
-            .carousel-item {
-                img {
-                    width: 450px;
-                    height: 450px;
-                    object-fit: cover;
-                }
-            }
-        }
-
-        .ant-carousel .slick-dots {
+    .info-content {
+        // width: 500px;
+        flex: 1;
+        // margin-right: 120px;
+        overflow: hidden;
+        min-width: 200px;
+        div, ul {
             width: 100%;
-            height: 46px;
-            position: relative;
-            bottom: 0;
+            overflow: hidden;
+        } 
+        ul {
+            // list-style: disc;
             margin-top: 20px;
-
-            > li {
-                width: 46px;
-                height: 46px;
-                text-indent: 0;
-
-                a, img {
-                    width: 46px;
-                    height: 46px;
-                    background: #F5F5F5;
+            color: @TC_car_info;
+            font-size: @fz_bs;
+            li {
+                margin-top: 10px;
+                position: relative;
+                padding-left: 14px;
+                &:nth-of-type(1) {
+                    margin-top: 0;
                 }
-
-                img {
-                    object-fit: cover;
+                .ell();
+                &:before {
+                    position: absolute;
+                    left: 0;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    content: "";
+                    width: 6px;
+                    height: 6px;
+                    display: inline-block;
+                    border-radius: 50%;
+                    background: #515154;
+                    vertical-align: middle;
+                    margin-right: 14px;
                 }
+            }
+        }
+        .title {
+            font-size: @fz_28;
+            color: @TC_car_title;
+            .ell();
+        }
+        .btn {
+            background-color: rgba(0, 110, 249, .5);
+            border: none;
+            color: @white;
+            height: 46px;
+            font-size: @fz_md;
+        }
+        .price-list {
+            div {
+                display: flex;
+                justify-content: space-between;
+                border-bottom: 1px solid @TC_car_bc;
+                padding: 10px 0;
+            }
+            .price-left {
+                color: @TC_D;
+                font-size: @fz_bs;
+            }
+            .price-right {
+                color: @TC_car_price;
+                font-size: @fz_md;
+            }
+        }
+        .stars {
+            padding: 10px 0;
+            .star-text {
+                margin-left: 7px;
+            }
+            &.active {
+                color: @TC_car_price;
             }
         }
     }
 
-    .spec-content {
-        margin-top: 30px;
+    .content {
         width: 100%;
-
-        > .title {
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 22px;
-            color: #000000;
-            margin-bottom: 22px;
+        .title {
+            margin-top: 51px;
+            color: @TC_D;
+            font-size: @fz_24;
         }
-
-        .spec-list {
-            display: flex;
-            flex-wrap: wrap;
-
-            .spec-item {
-                .flex();
-                width: 200px;
-                height: 188px;
-                border-radius: 12px;
-                border: 1px solid #D2D2D7;
-                overflow: hidden;
-                margin-right: 30px;
-                margin-bottom: 30px;
-                transition: border-color 0.3s ease;
-
-                &.active {
-                    border-color: #006EF9;
-                }
-
-                img {
-                    height: 152px;
-                }
-
-                p {
-                    padding: 0 8px;
-                    box-sizing: border-box;
-                    .ell();
-                    width: 100%;
-                    height: 34px;
-                    line-height: 34px;
-                    font-size: 17px;
-                    font-weight: 500;
-                    color: #1D1D1F;
-                    text-align: center;
-                }
+        .content-list {
+            margin-top: 10px;
+            .list {
+                margin-top: 30px;
+            }
+        }
+        .tab-box {
+            .list {
+                margin-top: 30px;
             }
         }
     }
+}
 
-    .btn-content {
-        display: flex;
-        flex-direction: column;
-        margin-top: 40px;
 
-        .ant-btn {
-            margin: 0;
-            width: 220px;
-            height: 40px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 500;
+.explored {
+    // padding: 42px;
+    width: 800px;
+    // height: auto;
+    border: 1px solid @TC_car_bc;
+    border-radius: 4px;
+}
 
-            &.ant-btn-primary.disabled {
-                background-color: #006EF9;
-                border-color: #006CFF;
-            }
 
-            &.ant-btn-background-ghost {
-                border: 1px solid #000000;
-                border-color: #000000;
-                color: #000000;
-                margin-top: 20px;
+/* tab */
+.content {
 
-                &:hover {
-                    opacity: 0.7;
-                }
-
-                &.disabled {
-                    border-color: #000000;
-                }
-            }
-
-            &.disabled {
-                opacity: 0.7;
-                cursor: no-drop;
-            }
-
-        }
+    .ant-tabs {
+        margin-top: 50px;
     }
+    .ant-tabs :deep(.ant-tabs-nav::before) {
+        display: none;
+    }
+    .ant-tabs :deep(.ant-tabs-tab-btn) {
+        color: #363D42;
+        font-size: @fz_20;
+    }
+    .ant-tabs :deep(.ant-tabs-tab) {
+        width: 120px;
+        height: 46px;
+        background: #FFFFFF;
+        border-radius: 0px 0px 0px 0px;
+        border: 1px solid #E6EAEE;
+        .fcc()
+    }
+    .ant-tabs :deep(.ant-tabs-tab + .ant-tabs-tab) {
+        margin: 0;
+    }
+    .ant-tabs :deep(.ant-tabs-ink-bar) {
+        display: none;
+    }
+    .ant-tabs :deep(.ant-tabs-tab:hover) {
+        color: #363D42;
+    }
+    .ant-tabs :deep(.ant-tabs-tab.ant-tabs-tab-active) {
+        background-color: #006EF9;
+        border-color: #006EF9;
+    }
+    .ant-tabs :deep(.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn) {
+        color: @white;
+    }
+}
+
+/* For demo */
+
+
+.ant-carousel {
+    width: 100%;
+    height: 540px;
+    // width: 110px;
+}
+.ant-carousel :deep(.slick-slider) {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.ant-carousel :deep(.slick-list) {
+    // display: none;
+    width: 522px;
+    height: 500px;
+    margin-left: 100px;
+    margin-top: 40px;
+}
+.ant-carousel :deep(.slick-slide) {
+    height: 100%;
+}
+// .ant-carousel :deep(.slick-slide div) {
+//     height: 100%;
+// }
+.ant-carousel :deep(.slick-track) {
+    height: 500px;
+}
+.ant-carousel :deep(.slick-dots) {
+  position: relative;
+  height: auto;
+}
+.ant-carousel :deep(.slick-slide img) {
+  border: 5px solid #fff;
+  display: block;
+  margin: auto;
+  max-width: 80%;
+}
+.ant-carousel :deep(.slick-arrow) {
+//   width: 40px;
+//   height: 40px;
+    background-color: #fff !important;
+    color: #333 !important;
+    transform: rotate(90deg);
+}
+.ant-carousel :deep(.slick-prev) {
+    top: 0;
+    left: 30px;
+}
+.ant-carousel :deep(.slick-next) {
+    top: 92%;
+    right: calc(100% - 72px) !important;
+}
+.ant-carousel :deep(.slick-thumb) {
+  top: 40px;
+  left: 20px;
+  width: 100px;
+  height: 430px;
+//   overflow-y: auto;
+//   max-height: 373px;
+//   overflow-y: scroll;
+overflow: hidden;
+  flex-wrap: wrap;
+  display: block !important;
+  margin: 0;
+  position: absolute;
+}
+.ant-carousel :deep(.slick-thumb li) {
+  width: 60px;
+  height: 45px;
+  margin-top: 10px;
+}
+.ant-carousel :deep(.slick-thumb li img) {
+  width: 100%;
+  height: 100%;
+  filter: grayscale(100%);
+  display: block;
+}
+.ant-carousel :deep .slick-thumb li.slick-active img {
+  filter: grayscale(0%);
+}
+.ant-carousel :deep(.slick-slide) {
+  text-align: center;
+  height: 100%;
+  line-height: 360px;
+  overflow: hidden;
+}
+
+.ant-carousel :deep(.slick-slide img) {
+  width: 522px;
+//   height: auto;
+}
+
+.ant-carousel :deep(.slick-arrow.custom-slick-arrow) {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 25px;
+  color: #fff;
+  background-color: rgba(31, 45, 61, 0.11);
+  opacity: 0.3;
+  z-index: 1;
+}
+.ant-carousel :deep(.custom-slick-arrow:before) {
+  display: none;
+}
+.ant-carousel :deep(.custom-slick-arrow:hover) {
+  opacity: 0.5;
+}
+
+.ant-carousel :deep(.slick-slide h3) {
+  color: #fff;
 }
 </style>

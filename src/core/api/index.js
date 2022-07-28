@@ -30,6 +30,9 @@ const apiList = {
         materialPurchaseExport: ['PostJson', '/material-purchase-order/export'],//导出
 	    ItemCollectExport: ['PostJson', '/shopping-cart/download-import-template'],//导出
 	    feedbackTemplateExport: ['PostJson', 'feedback/export-template'], // 采购单模版导出
+
+
+        exportItemPrice: ['GetJson', 'purchase-order/export-item-price'], // 采购数据导出
     },
     User: { // 员工
         save: ['PostJson', 'user/save'],

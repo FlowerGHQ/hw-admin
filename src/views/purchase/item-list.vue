@@ -15,6 +15,10 @@
                     <template #suffix><i class="icon i_close_b" @click="handleNameReset" v-if="searchForm.name"/></template>
                 </a-input>
                 </a-input-group>
+                <a-tooltip title="数据导出" class="popover">
+                <!--  @click="routerChange('favorite')"  {{$t('def.export')}}-->
+                    <a-button type="text" @click="handleExportConfirm"><i class="icon i_download"/></a-button>
+                </a-tooltip>
                 <a-tooltip :title="$t('i.favorites')" class="popover">
                     <a-button type="link" @click="routerChange('favorite')"><i class="icon i_collect"/></a-button>
                 </a-tooltip>
@@ -36,7 +40,7 @@
                             <div class="btns">
                                 <a-button class='btn ghost' @click="routerChange('shop_cart')">{{ $t('i.look') }}({{briefCount}})</a-button>
                                 <a-button class='btn black' @click="routerChange('settle')">{{ $t('i.settle') }}</a-button>
-                            </div>
+                            </div>s
                         </div>
                     </template>
                     <a-tooltip :title="$t('i.look') + `${briefCount ? '('+briefCount+')' : ''}`" class="popover">
@@ -100,12 +104,14 @@ import Core from '../../core';
 
 import CategoryTree from './components/CategoryTree.vue'
 import SimpleImageEmpty from '../../components/common/SimpleImageEmpty.vue'
+import { ExportOutlined } from '@ant-design/icons-vue';
 const SEARCH_TYPE_MAP = Core.Const.ITEM.SEARCH_TYPE_MAP
 export default {
     name: 'PurchaseItemList',
     components: {
         SimpleImageEmpty,
         CategoryTree,
+        ExportOutlined,
     },
     props: {},
     data() {
@@ -131,6 +137,20 @@ export default {
                 name_en: '',
                 category_id: '',
             },
+            // searchForm: {
+            //     uid: '',
+            //     store_id: undefined,
+            //     agent_id: undefined,
+            //     distributor_id: undefined,
+            //     status: '-1',
+            //     channel: '',
+            //     repair_method: '',
+            //     repair_user_org_type:'',
+            //     service_type: '',
+            //     vehicle_no: '',
+            //     begin_time: '',
+            //     end_time: '',
+            // },
 
             // 购物车简略面板
             briefVisible: false,
@@ -273,7 +293,31 @@ export default {
             }).then(res => {
                 this.categoryList = res.list
             })
-        }
+        },
+
+        handleExportConfirm() { // 确认订单是否导出
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('pop_up.sure') + _this.$t('n.export') + '?',
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
+                onOk() {
+                    _this.handleRepairExport();
+                }
+            })
+        },
+        handleRepairExport() { // 订单导出
+            this.exportDisabled = true;
+
+            let form = Core.Util.deepCopy(this.searchForm);
+            for (const key in form) {
+                form[key] = form[key] || ''
+            }
+            let exportUrl = Core.Api.Export.exportItemPrice(form)
+            console.log("handleRepairExport exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
+        },
     }
 };
 </script>

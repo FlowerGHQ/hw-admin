@@ -1,6 +1,6 @@
 <template>
     <div class="explored-content" v-if="tabsArray.length > 0">
-        <div class="title">{{ $t('i.view') }}</div>
+        <div class="title" v-if="show">{{ $t('i.view') }}</div>
         <div class="explore-content">
             <a-carousel autoplay class="carousel-list">
                 <div class="carousel-item" v-for="(item,i) of tabsArray" :key="i">
@@ -52,7 +52,12 @@
 import { get } from 'lodash';
 import Core from '../../../core';
 export default {
-    props: {},
+    props: {
+        show: {
+            type: Boolean,
+            default: true,
+        }
+    },
     computed: {
         priceKey() {
             let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
