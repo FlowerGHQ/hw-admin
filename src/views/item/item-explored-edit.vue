@@ -100,11 +100,11 @@
             <div class="image-contain" @mouseup="mouseupHandler" @mousemove="mousemoveHandler">
                 <img :src="detailImageUrl" ref="exploreImg" alt="">
                 <canvas ref="exploreCanvas"></canvas>
-                <div class="pointer-start" v-for="(item, index) in pointerList" :key="index" 
+                <div class="pointer-start" v-for="(item, index) in pointerList" :key="index"
                     :style="{'left': `${item.start.x}px`, 'top': `${item.start.y }px`}"
                     @mousedown="pointMousedown(index, 'start')" @mouseup="pointMouseup" @mousemove.stop=""></div>
 
-                <div class="pointer-end" v-for="(item, index) in pointerList" :key="index" 
+                <div class="pointer-end" v-for="(item, index) in pointerList" :key="index"
                     :style="{'left': `${item.end.x}px`, 'top': `${item.end.y}px`}"
                     @mousedown="pointMousedown(index, 'end')" @mouseup="pointMouseup"
                     @dblclick="showEdit(index)" @mousemove.stop="">
@@ -133,7 +133,7 @@
     </div>
     <!-- 绑定配件弹窗 -->
     <div class="form-block form-hide">
-        <ItemSelect 
+        <ItemSelect
             ref="itemSelect"
             btn-class="panel-btn"
             :radioMode="true"
@@ -161,15 +161,9 @@ export default {
         ItemSelect,
         AddExploreImage
     },
-    computed: {
-        priceKey() {
-            let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
-            console.log('priceKey:', priceKey)
-            return priceKey
-        }
-    },
     data(){
         return {
+            Core,
             TARGET_TYPE,
             // 载入
             loading: false,
@@ -227,6 +221,11 @@ export default {
         }
     },
     computed: {
+        priceKey() {
+            let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
+            console.log('priceKey:', priceKey)
+            return priceKey
+        },
         specificColumns() {
             let column = []
             column = this.specific.list.map((item, index) => ({
@@ -322,7 +321,7 @@ export default {
         /** 添加｜编辑弹窗确认回调 */
         handlerAdd(info) {
             // addItemComponent
-            Core.Api.Item.addItemComponent({...info, ...{ item_id: this.id }}).then(()=>{
+            Core.Api.Item.addItemComponent({...info, ...{ target_id: this.id ,target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM }}).then(()=>{
                 this.loadImage(info.img);
                 this.$message.success(info.id ? "修改成功" : "新增成功");
                 this.clickShowAdd(false);
@@ -331,7 +330,7 @@ export default {
                 console.log('handlerAdd err', err);
             });
         },
-        /** 获取 商品详情 */ 
+        /** 获取 商品详情 */
         getItemDetail() {
             this.loading = true;
             Core.Api.Item.detail({
@@ -346,12 +345,12 @@ export default {
                 this.getItemExploreList();
             });
         },
-        /** 获取 商品爆炸图 */ 
+        /** 获取 商品爆炸图 */
         getItemExploreList() {
             this.pointerList = [];
             this.tabsArray = [];
             Core.Api.Item.getItemComponent({
-                id: this.id
+                target_id: this.id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM
             }).then((res)=>{
                 this.tabsArray = get(res, "list.list" , []);
                 this.parsePoint(true);
@@ -665,7 +664,7 @@ export default {
                         border-color: transparent transparent @BG_LP  transparent;
                         font-size: 0;
                         line-height: 0;
-                    } 
+                    }
                     &:after {
                         top: -9px;
                         left: 30px;

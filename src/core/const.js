@@ -21,6 +21,9 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.0.0.194:8889'
         URL_POINT = 'http://10.0.0.117:8889/'
         break;
+    case "10.0.0.194":
+        URL_POINT = 'http://10.0.0.194:8889'
+        break;
     case "192.168.31.224":
         URL_POINT = 'http://192.168.31.224:8889'
         break;
@@ -1292,7 +1295,13 @@ let Const = {
 		TARGET_TYPE:{
 			QUALITY_FEEDBACK: 10
 		}
-	}
+	},
+	ITEM_COMPONENT_SET: {
+    	TARGET_TYPE:{
+			ITEM: 1,
+		    ITEM_CATEGORY: 2,
+	    }
+	},
 };
 
 export default Const;
