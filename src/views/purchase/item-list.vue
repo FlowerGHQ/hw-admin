@@ -35,12 +35,17 @@
                                     <p>{{ item.name ? lang =='zh' ? item.name : item.name_en : '-' }}</p>
                                     <span>{{item.code || '-'}}</span>
                                     <p class="price">€{{$Util.countFilter(item[priceKey + 'eur'])}} | ${{$Util.countFilter(item[priceKey + 'usd'])}}</p>
+                                    <a-form :model="formState" :label-col="labelCol" :wrapper-col="wrapperCol">
+                                        <a-form-item label="备注">
+                                        <a-input v-model:value="item.remark" />
+                                        </a-form-item>
+                                    </a-form>
                                 </div>
                             </div>
                             <div class="btns">
                                 <a-button class='btn ghost' @click="routerChange('shop_cart')">{{ $t('i.look') }}({{briefCount}})</a-button>
                                 <a-button class='btn black' @click="routerChange('settle')">{{ $t('i.settle') }}</a-button>
-                            </div>s
+                            </div>
                         </div>
                     </template>
                     <a-tooltip :title="$t('i.look') + `${briefCount ? '('+briefCount+')' : ''}`" class="popover">
@@ -323,6 +328,27 @@ export default {
 </script>
 
 <style lang="less">
+.ant-form {
+    width: 100%;
+}
+.ant-form-item {
+    margin: 0;
+}
+.ant-input {
+    border: none;
+    border-radius: 0px !important;
+    border-bottom: 1px solid #d9d9d9;
+}
+.ant-input:hover {
+    border-color: #fff;
+    border-bottom-color: #d9d9d9;
+}
+.ant-input:focus{
+    border-color: #fff;
+    border-bottom-color: #d9d9d9;
+    box-shadow: none;
+    outline: 0;
+}
 #PurchaseItemList {
     background-color: #fff;
     border-radius: 6px;
@@ -575,7 +601,8 @@ export default {
         }
     }
     .btns {
-        margin-top: 52px;
+        // margin-top: 52px;
+        margin-top: 30px;
         .btn {
             width: 172px;
             height: 55px;

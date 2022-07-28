@@ -536,7 +536,11 @@ const messages = {
             delivery_address: '发货地址',
 	        give_order: '赠送订单',
 	        item_error: '该商品在该货币结算下不销售',
-	        currency: '货币'
+	        currency: '货币',
+            no_item_spec: '暂无该商品规格',
+            no_item_fitt: '暂无该商品配件',
+            no_item_explode: '暂无爆炸图',
+            no_item_purchase_data: '暂无采购数据',
 
         },
         s: {

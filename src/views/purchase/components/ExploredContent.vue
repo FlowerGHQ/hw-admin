@@ -104,6 +104,11 @@ export default {
                         ths.loadImage(item.img, index);
                     })
                 })
+                // 无爆炸图数据
+                console.log('getItemExploreList res', res);
+                if(res.list.length) {
+                    this.$emit('noData',false)
+                }
             }).catch( err => {
                 console.log('getItemExploreList err', err);
             });

@@ -5,16 +5,19 @@
             <div class="card-info">
                 <div class="title">{{ data.name }}</div>
                 <div class="info">{{ data.code }}</div>
-                <div class="code">货号：{{ data.id }}</div>
+                <ul>
+                    <li v-for="attr in data.attr_list">{{ attr.attr_def_name }}：{{ attr.value }}</li>
+                </ul>
+                <!-- <div class="code">货号：{{ data.id }}</div> -->
             </div>
         </div>
         <div class="shop-card">
             <div class="shop-top">
                 <div class="spot-box">
-                    <div class="spot"></div>
-                    <span>库存：89</span>
+                    <!-- <div class="spot"></div>
+                    <span>库存：89</span> -->
                 </div>
-                <div class="shop-price">¥ {{ $Util.countFilter(data.price) * value }}</div>
+                <div class="shop-price">€{{$Util.countFilter(data[priceKey + 'eur'])}} | ${{$Util.countFilter(data[priceKey + 'usd'])}}</div>
             </div>
             <div class="shop-bottom">
                 <div class="cart-box">
@@ -68,7 +71,7 @@ export default {
     computed: {
     },
     mounted() {
-        // console.log(this.data,'data')
+        console.log(this.data,'data')
     },
     methods: {
         // 增加商品数量
@@ -216,6 +219,37 @@ export default {
                     margin-left: 6px;
                 }
             }
+        }
+    }
+}
+
+ ul {
+    // list-style: disc;
+    // margin-top: 20px;
+    width: 100%;
+    color: @TC_car_info;
+    font-size: @fz_sm;
+    li {
+        // margin-top: 10px;
+        position: relative;
+        padding-left: 14px;
+        &:nth-of-type(1) {
+            margin-top: 0;
+        }
+        .ell();
+        &:before {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            content: "";
+            width: 6px;
+            height: 6px;
+            display: inline-block;
+            border-radius: 50%;
+            background: #515154;
+            vertical-align: middle;
+            margin-right: 14px;
         }
     }
 }

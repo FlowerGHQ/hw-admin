@@ -1,7 +1,7 @@
 <template>
     <div id="ItemDisplay" class="list-container">
         <div class="imgs-content">
-            <a-carousel arrows dots-class="slick-dots slick-thumb" >
+            <!-- <a-carousel arrows dots-class="slick-dots slick-thumb" >
                 <div v-for="item,index in imgs" :key="item">
                     <img :src="getImgUrl(index)" />
                 </div>
@@ -20,10 +20,12 @@
                         <right-outlined />
                     </div>
                 </template>
-            </a-carousel>
+            </a-carousel> -->
+            <UpAndDownSwiper></UpAndDownSwiper>
         </div>
         <div class="info-content">
             <div class="title">{{ detail.name }}</div>
+            <SimpleImageEmpty v-if="!detail.attr_list.length" :desc="$t('p.no_item_purchase_data')"/>
             <ul>
                 <li v-for="attr in detail.attr_list">{{ attr.attr_def_name }}：{{ attr.value }}</li>
             </ul>
@@ -31,11 +33,11 @@
             <div class="price-list">
                 <div class="retail-price">
                     <span class="price-left">建议零售价包括增值税</span>
-                    <span class="price-right">¥ {{ $Util.countFilter(detail.price) }}</span>
+                    <span class="price-right">€{{$Util.countFilter(detail[priceKey + 'eur'])}} | ${{$Util.countFilter(detail[priceKey + 'usd'])}}</span>
                 </div>
                 <div class="price">
                     <span class="price-left">价格</span>
-                    <span class="price-right">¥ {{ $Util.countFilter(detail.price) }}</span>
+                    <span class="price-right">€{{$Util.countFilter(detail[priceKey + 'eur'])}} | ${{$Util.countFilter(detail[priceKey + 'usd'])}}</span>
                 </div>
             </div>
             <div class="stars" @click="hanldeAddToFavorite" :class="{'active': detail.in_favorite}">
@@ -47,13 +49,16 @@
             <div class="title">商品规格</div>
             <div class="content-list">
                 <SpecificationCard v-for="item in specList" :data="item" @AddToFavorite="ToFavorite" class="list"/>
+                <SimpleImageEmpty v-if="!specList.length" :desc="$t('p.no_item_spec')"/>
             </div>
             <a-tabs v-model:activeKey="activeKey" class="tab-box">
                 <a-tab-pane key="mountings" tab="配件">
                     <SpecificationCard v-for="item in specList" class="list" :data="item" @AddToFavorite="ToFavorite"/>
+                    <SimpleImageEmpty v-if="!specList.length" :desc="$t('p.no_item_fitt')"/>
                 </a-tab-pane>
                 <a-tab-pane key="explosiveView" tab="爆炸图" force-render> 
-                    <ExploredContent ref="ExploredContent" :id="id" :show="false" class="explored"/>
+                    <ExploredContent ref="ExploredContent" :id="id" :show="false" class="explored" @noData="noExplodeData"/>
+                    <SimpleImageEmpty v-if="explodeShow" :desc="$t('p.no_item_explode')"/>
                 </a-tab-pane>
                 <a-tab-pane key="download" tab="下载">
                     <DownLoad />
@@ -70,6 +75,8 @@ import { LeftOutlined, RightOutlined, StarOutlined } from '@ant-design/icons-vue
 import SpecificationCard from './components/SpecificationCard.vue'
 import DownLoad from './components/DownLoad.vue'
 import ExploredContent from './components/ExploredContent.vue';
+import SimpleImageEmpty from '../../components/common/SimpleImageEmpty.vue'
+import UpAndDownSwiper from './components/UpAndDownSwiper.vue'
 
 export default {
     name: 'ItemDisplay',
@@ -80,6 +87,8 @@ export default {
         SpecificationCard,
         DownLoad,
         ExploredContent,
+        SimpleImageEmpty,
+        UpAndDownSwiper,
     },
     props: {},
     data() {
@@ -91,13 +100,18 @@ export default {
             loading: false,
 
             id: null,
-            detail: {},
+            detail: {
+                attr_list: {}
+            },
             // category: {},
             // config: [],
             // imgs: [],
             // activeKey: 0,
 
             specList: [],
+
+            // 无爆炸图
+            explodeShow: true,
         };
     },
     watch: {},
@@ -122,7 +136,7 @@ export default {
             Core.Api.Item.detail({
                 id: this.id,
             }).then(res => {
-                console.log('getItemDetail1111 res', res)
+                console.log('getItemDetail res', res)
                 let detail = res.detail
                 this.detail = detail
                 if (detail.set_id) {
@@ -176,6 +190,11 @@ export default {
         // 商品规格收藏商品成功
         ToFavorite(data) {
             this.getItemDetail();
+        },
+
+        // 无爆炸图数据
+        noExplodeData(data) {
+            this.explodeShow = data
         },
 
         // getImgUrl(i) {

@@ -34,7 +34,7 @@
                     </div>
                     <a-form :model="formState" :label-col="labelCol" :wrapper-col="wrapperCol">
                         <a-form-item label="备注">
-                        <a-input v-model:value="remark" />
+                        <a-input v-model:value="item.remark" />
                         </a-form-item>
                     </a-form>
                     <div class="btns">
@@ -147,8 +147,7 @@ export default {
                 },
             },
 
-            //
-            remark: '',
+            //  备注
             labelCol: { style: { width: '40px' } },
             wrapperCol: { span: 14 },
         };
@@ -175,7 +174,6 @@ export default {
     },
     mounted() {
         this.getList()
-
     },
     methods: {
 
@@ -367,6 +365,21 @@ export default {
 }
 .ant-form-item {
     margin: 0;
+}
+.ant-input {
+    border: none;
+    border-radius: 0px !important;
+    border-bottom: 1px solid #d9d9d9;
+}
+.ant-input:hover {
+    border-color: #fff;
+    border-bottom-color: #d9d9d9;
+}
+.ant-input:focus{
+    border-color: #fff;
+    border-bottom-color: #d9d9d9;
+    box-shadow: none;
+    outline: 0;
 }
 #ItemCollect {
     padding: 60px 56px 150px 48px;

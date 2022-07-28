@@ -19,7 +19,7 @@ switch (window.location.hostname) {
     case "10.0.0.205":
     case "10.0.0.132":
         // URL_POINT = 'http://10.0.0.194:8889'
-        URL_POINT = 'http://10.0.0.117:8889/'
+        URL_POINT = 'http://10.0.0.144:8889'
         break;
     case "10.0.0.194":
         URL_POINT = 'http://10.0.0.194:8889'
