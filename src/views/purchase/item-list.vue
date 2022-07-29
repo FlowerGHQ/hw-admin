@@ -35,9 +35,10 @@
                                     <p>{{ item.name ? lang =='zh' ? item.name : item.name_en : '-' }}</p>
                                     <span>{{item.code || '-'}}</span>
                                     <p class="price">€{{$Util.countFilter(item[priceKey + 'eur'])}} | ${{$Util.countFilter(item[priceKey + 'usd'])}}</p>
+                                    <!-- <div v-if="!item.editRemark" @click="handleRemarkEditShow(item)" class="remark">{{$t('i.remark')}}：{{ item.remark }}</div> -->
                                     <a-form :model="formState" :label-col="labelCol" :wrapper-col="wrapperCol">
-                                        <a-form-item label="备注">
-                                        <a-input v-model:value="item.remark" />
+                                        <a-form-item :label="$t('i.remark')">
+                                            <a-input v-model:value="item.remark" @blur="handleRemarkEditBlur(item)" />
                                         </a-form-item>
                                     </a-form>
                                 </div>
@@ -64,42 +65,48 @@
                 <CategoryTree :parentId='firstLevelId' @change='handleCategoryChange' ref="CategoryTree"/>
             </div>
         </div>
-        <div class="item-content" v-if="tableData.length">
-            <!-- <div class="switch-btn">
-                <a-radio-group v-model:value="pageType">
-                    <a-radio-button value="agora"><i class="icon i_agora"/></a-radio-button>
-                    <a-radio-button value="list"><i class="icon i_list"/></a-radio-button>
-                </a-radio-group>
-            </div> -->
-            <div class="list-container">
-                <div class="list-item" v-for="item of tableData" :key="item.id" @click="routerChange('detail', item)">
-                    <div class="cover">
-                        <img :src="$Util.imageFilter(item.logo, 2)" />
+        <!-- <template v-if="!firstLevelId"> -->
+            <div class="item-content" v-if="tableData.length">
+                <!-- <div class="switch-btn">
+                    <a-radio-group v-model:value="pageType">
+                        <a-radio-button value="agora"><i class="icon i_agora"/></a-radio-button>
+                        <a-radio-button value="list"><i class="icon i_list"/></a-radio-button>
+                    </a-radio-group>
+                </div> -->
+                <div class="list-container">
+                    <div class="list-item" v-for="item of tableData" :key="item.id" @click="routerChange('detail', item)">
+                        <div class="cover">
+                            <img :src="$Util.imageFilter(item.logo, 2)" />
+                        </div>
+                        <p class="sub">{{item.code}}</p>
+                        <p class="name">{{ item.name ? lang =='zh' ? item.name : item.name_en : '-' }}</p>
+                        <p class="desc">&nbsp;</p>
+                        <p class="price">€{{$Util.countFilter(item[priceKey + 'eur'])}} | ${{$Util.countFilter(item[priceKey + 'usd'])}}</p>
+                        <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">{{ $t('i.cart') }}</a-button>
                     </div>
-                    <p class="sub">{{item.code}}</p>
-                    <p class="name">{{ item.name ? lang =='zh' ? item.name : item.name_en : '-' }}</p>
-                    <p class="desc">&nbsp;</p>
-                    <p class="price">€{{$Util.countFilter(item[priceKey + 'eur'])}} | ${{$Util.countFilter(item[priceKey + 'usd'])}}</p>
-                    <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">{{ $t('i.cart') }}</a-button>
+                </div>
+                <div class="paging-container">
+                    <a-pagination
+                        v-model:current="currPage"
+                        :page-size='pageSize'
+                        :total="total"
+                        show-quick-jumper
+                        show-size-changer
+                        show-less-items
+                        :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
+                        :hide-on-single-page='false'
+                        :pageSizeOptions="['10', '20', '30', '40']"
+                        @change="pageChange"
+                        @showSizeChange="pageSizeChange"
+                    />
                 </div>
             </div>
-            <div class="paging-container">
-                <a-pagination
-                    v-model:current="currPage"
-                    :page-size='pageSize'
-                    :total="total"
-                    show-quick-jumper
-                    show-size-changer
-                    show-less-items
-                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
-                    :hide-on-single-page='false'
-                    :pageSizeOptions="['10', '20', '30', '40']"
-                    @change="pageChange"
-                    @showSizeChange="pageSizeChange"
-                />
-            </div>
-        </div>
-        <SimpleImageEmpty class="item-content-empty" v-else desc="暂无满足搜索条件的商品"/>
+            <!-- <SimpleImageEmpty class="item-content-empty" v-else desc="暂无满足搜索条件的商品"/> -->
+        <!-- </template> -->
+        <!-- <div v-show="firstLevelId != 0" class="bom-content">
+            <ExploredContentPay ref="ExploredContentPay" :id="id" :show="false" class="explored" @noData="noExplodeData"/>
+            <SimpleImageEmpty v-if="explodeShow" :desc="$t('p.no_item_explode')"/>
+        </div> -->
     </div>
 </div>
 </template>
@@ -110,6 +117,7 @@ import Core from '../../core';
 import CategoryTree from './components/CategoryTree.vue'
 import SimpleImageEmpty from '../../components/common/SimpleImageEmpty.vue'
 import { ExportOutlined } from '@ant-design/icons-vue';
+import ExploredContentPay from './components/ExploredContentPay.vue';
 const SEARCH_TYPE_MAP = Core.Const.ITEM.SEARCH_TYPE_MAP
 export default {
     name: 'PurchaseItemList',
@@ -117,6 +125,7 @@ export default {
         SimpleImageEmpty,
         CategoryTree,
         ExportOutlined,
+        ExploredContentPay,
     },
     props: {},
     data() {
@@ -161,6 +170,15 @@ export default {
             briefVisible: false,
             briefList: [],
             briefCount: 0,
+
+
+            //  备注
+            labelCol: { style: { width: '40px' } },
+            wrapperCol: { span: 14 },
+            orderId:'',
+
+            // 无爆炸图
+            explodeShow: true,
         };
     },
     watch: {},
@@ -288,6 +306,7 @@ export default {
                 console.log('res:', res)
                 this.$message.success('添加成功')
                 this.getShopCartData(true);
+                this.orderId = res.id
             })
         },
 
@@ -297,6 +316,7 @@ export default {
                 is_authority: 1,
             }).then(res => {
                 this.categoryList = res.list
+                console.log(this.categoryList, '12345678')
             })
         },
 
@@ -329,6 +349,32 @@ export default {
             console.log("handleRepairExport exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
+        },
+
+        // 备注
+        handleRemarkEditBlur(item) {
+            let _item = Core.Util.deepCopy(item)
+            console.log('handleCountEditBlur _item:', _item)
+            Core.Api.ShopCart.remark({
+                id: this.orderId,
+                remark: _item.remark,
+            }).then(res => {
+                console.log('handleRemarkEditBlur: res', res)
+            }).catch(err => {
+                console.log('handleRemarkEditBlur: err', err)
+            })
+        },
+
+        // 根据id获取爆炸图
+        getExploreDetail(id) {
+            // this.$refs.ExploredContentPay.getItemExploreList(id);
+            this.$refs.ExploredContentPay.getItemExploreList(id);
+            // console.log(this,'12345678i')
+        },
+
+        // 无爆炸图数据
+        noExplodeData(data) {
+            this.explodeShow = data
         },
     }
 };
@@ -542,6 +588,11 @@ export default {
                 width: 100%;
             }
         }
+        .bom-content {
+            padding: 48px;
+            width: 100%;
+        }
+
     }
 }
 .shop-cart-brief-content {
@@ -643,4 +694,5 @@ export default {
         display: none;
     }
 }
+
 </style>

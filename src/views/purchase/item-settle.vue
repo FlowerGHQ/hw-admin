@@ -77,6 +77,7 @@
                     <span v-if="item.item && item.item.attr_str">{{ $t('i.spec') }}：{{item.item ? lang =='zh' ? item.item.attr_str:item.item.attr_str_en : '-'}}</span>
                     <span>{{ $t('i.amount') }}：{{item.amount}}</span>
                     <span>{{ $t('p.unit_price') }}：{{unit}} {{$Util.countFilter(item.item[priceKey])}}</span>
+                    <span>{{ $t('i.remark') }}：{{item.remark}}</span>
                 </div>
             </div>
         </div>
@@ -298,6 +299,7 @@ export default {
                     charge: item.amount * item.item[this.priceKey],
                     price: item.amount * item.item[this.priceKey],
                     unit_price: item.item[this.priceKey],
+                    remark: item.remark,
                 }))
             }
             if(this.$auth('DISTRIBUTOR')) {

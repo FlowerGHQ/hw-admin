@@ -34,6 +34,8 @@ const apiList = {
         exportOrderPrice: ['GetJson', 'purchase-order/export-item-price'], // 采购数据导出
 
         exportItemPrice: ['GetJson', 'item/export-item-price'], // 导出数据
+
+        exportSalesStatement: ['GetJson', 'purchase-order/export-sales-statement'], // 导出数据
     },
     User: { // 员工
         save: ['PostJson', 'user/save'],
@@ -250,6 +252,8 @@ const apiList = {
         tree: ['PostJson', 'item-category/tree'],
         delete: ['PostJson', 'item-category/delete'],
         detail: ['PostJson', 'item-category/detail'],
+        // 是否显示爆炸图
+        updateDisplay: ['PostJson', 'item-category/update-display'],
     },
     ItemPrice: { // 商品价格体系
         save: ['PostJson', 'item-price/save'],

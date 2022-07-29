@@ -69,6 +69,7 @@
         </div>
         <div class="operate-container">
             <a-button type="primary" @click="handleExportConfirm" v-if="$auth('purchase-order.export')"><i class="icon i_download"/>{{$t('def.export')}}</a-button>
+            <a-button type="primary" @click="handleExportSalesReport" v-if="$auth('ADMIN')"><i class="icon i_download"/>{{$t('def.sales_report_export')}}</a-button>
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -156,6 +157,7 @@ import Core from '../../core';
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 const SEARCH_TYPE = Core.Const.PURCHASE.SEARCH_TYPE
 const PAYMENT_STATUS_MAP = Core.Const.PURCHASE.PAYMENT_STATUS_MAP
+import { message } from 'ant-design-vue';
 
 
 import TimeSearch from '@/components/common/TimeSearch.vue'
@@ -473,6 +475,45 @@ export default {
                 form[key] = form[key] || ''
             }
             let exportUrl = Core.Api.Export.purchaseExport({
+                ...form,
+                search_type: this.search_type
+            })
+            console.log("handleRepairExport _exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
+        },
+
+        // 以销售报表导出
+        handleExportSalesReport() {
+            if(!this.searchForm.begin_time && !this.searchForm.end_time) {
+                // 没有选择时间
+                message.error({
+                    content: () => '请选择时间',
+                    class: 'custom-class',
+                    style: {
+                    marginTop: '20vh',
+                    },
+                });
+            } else {
+                let _this = this;
+                this.$confirm({
+                    title: '确认要导出吗？',
+                    okText: '确定',
+                    cancelText: '取消',
+                    onOk() {
+                        _this.handleRepairExportSalesReport();
+                        _this.handleSearchReset()
+                    }
+                })
+            }
+        },
+         handleRepairExportSalesReport() { // 订单导出
+            this.exportDisabled = true;
+            let form = Core.Util.deepCopy(this.searchForm);
+            for (const key in form) {
+                form[key] = form[key] || ''
+            }
+            let exportUrl = Core.Api.Export.exportSalesStatement({
                 ...form,
                 search_type: this.search_type
             })

@@ -23,6 +23,9 @@
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
+                        <template v-if="column.dataIndex === 'display_mode'">
+                            <a-switch :checked="!!(text-1)" @change="handleAlarmChange(record)"/>
+                        </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type='link' @click="handleModalShow(record, record)"><i class="icon i_edit"/>{{ $t('i.edit_name') }}
                             </a-button>
@@ -92,6 +95,7 @@ export default {
             let columns = [
                 {title: this.$t('n.name'), dataIndex: 'name'},
                 {title: this.$t('n.name_en'), dataIndex: 'name_en'},
+                {title: this.$t('i.view'), dataIndex: 'display_mode'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100,},
             ]
             return columns
@@ -252,6 +256,25 @@ export default {
                 },
             });
         },
+
+        // // 开关是否打开
+        handleAlarmChange(record) {
+            let _this = this
+            Core.Util.confirm({
+                title: `确定要${record.display_mode == 2 ? '隐藏' : '显示'}爆炸图吗？`,
+                okText: '确定',
+                okType: 'success',
+                cancelText: '取消',
+                onOk() {
+                    console.log('handleAlarmChange: ok',record)
+                    Core.Api.ItemCategory.updateDisplay({
+                        id: record.id,
+                    }).then(() => {
+                        _this.getDataByParent();
+                    })
+                }
+            })
+        }
     }
 };
 </script>

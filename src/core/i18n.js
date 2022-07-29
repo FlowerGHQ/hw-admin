@@ -685,6 +685,8 @@ const messages = {
             remove: '移除',
             changes: '确认更改',
             cancel_changes: '取消更改',
+            sales_report_export: '以销售报表方式导出',
+            Please_select_time: '请选择时间',
         },
         search: {
             repair_sn: '工单编号',
@@ -1387,6 +1389,8 @@ const messages = {
             remove: 'Remove',
             changes: 'Confirm changes',
             cancel_changes: 'Cancel changes',
+            sales_report_export: 'Export as a sales report',
+            Please_select_time: 'Please_select_a_time',
         },
         search: {
             repair_sn: 'Inquire Sn',

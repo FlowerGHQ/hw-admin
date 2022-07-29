@@ -5,6 +5,13 @@
             <div class="title-area">{{ $t('i.item_list') }} </div>
             <div class="btns-area">
                 <a-button class="download" type="primary" @click="handleExportConfirm"><i class="icon i_download"/>{{ $t('i.export') }}</a-button>
+                <!-- <a-button class="download" type="primary" @click="showModal"><i class="icon i_download"/>{{ $t('i.export') }}</a-button>
+                <a-modal v-model:visible="visible" title="Basic Modal" @ok="handleOk">
+                    <a-radio-group v-model:value="value">
+                        <a-radio-button value="1">Hangzhou</a-radio-button>
+                        <a-radio-button value="2">Shanghai</a-radio-button>
+                    </a-radio-group>
+                </a-modal> -->
                 <a-upload name="file" class="file-uploader"
                     :file-list="upload.fileList" :action="upload.action"
                     :show-upload-list='false'
@@ -213,6 +220,11 @@ export default {
                     type: 'xlsx',
                 },
             },
+
+            // // 对话框显示
+            // visible: false,
+            // // 导出方式
+            // value: '',
         };
     },
     watch: {},
@@ -460,6 +472,16 @@ export default {
             window.open(exportUrl, '_self')
             this.exportDisabled = false;
         },
+
+        // // 显示导出对话框
+        // showModal() {
+        //     this.visible = true;
+        // },
+        // // 导出确定
+        // handleOk(e) {
+        //     // console.log(e);
+        //     this.visible = false;
+        // },
     }
 };
 </script>
@@ -493,4 +515,9 @@ export default {
         }
     }
 }
+// .ant-modal {
+//     // top: 50% !important;
+//     // transform: translateY(-50%);
+//     color: red;
+// }
 </style>

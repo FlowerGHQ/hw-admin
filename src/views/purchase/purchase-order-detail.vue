@@ -637,7 +637,7 @@ export default {
                 { title: this.$t('i.total_quantity'), dataIndex: 'amount'},
                 { title: this.$t('i.residue_quantity'), dataIndex: 'residue_quantity'},
                 { title: this.$t('i.deliver_amount'), dataIndex: 'deliver_amount', key: 'deliver_amount'},
-
+                { title: this.$t('i.remark'),dataIndex: "remark" },
             ]
             if (!this.$auth('purchase-order.supply-detail')) {
                 columns.push(

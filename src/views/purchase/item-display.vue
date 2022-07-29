@@ -127,9 +127,9 @@ export default {
         this.getItemDetail();
     },
     methods: {
-        getImgUrl(i) {
-            return this.imgs[i]
-        },
+        // getImgUrl(i) {
+        //     return this.imgs[i]
+        // },
         // 获取商品详情
         getItemDetail() {
             this.loading = true;
