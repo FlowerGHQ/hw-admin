@@ -7,9 +7,10 @@
         </div>
       </div>
       <!-- <div class="swiper-pagination"></div> -->
-      <div class="swiper-button-prev"></div>
-      <div class="swiper-button-next"></div>
+      
     </div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
     <img :src="getImgUrl(imgIndex)" class="img-big" >
   </div>
 </template>
@@ -45,7 +46,7 @@
             slidesPerView: 3,
             centeredSlides: true,
             centeredSlidesBounds: true,
-            spaceBetween : -100,
+            spaceBetween : -140,
             // //分页箭头
             navigation: {
                 nextEl: '.swiper-button-next',
@@ -79,6 +80,7 @@
     top: 60px;
     display: flex;
     padding: 20px 100px 20px 0;
+    min-height: 372px;
     width: 100%;
     .swiper-slide{
       // height: 100px !important;
@@ -92,9 +94,12 @@
     .swiper-container{
         margin: 0;
         --swiper-pagination-color:#00937A;
-        width: 56px;
-        height: 360px;
+        width: 60px;
+        height: 300px;
         padding-bottom: 20px;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
      }
   }
   .swiper-slide{
@@ -106,9 +111,9 @@
     left: 0;
     width: 100%;
     }
-    .swiper-wrapper {
-      top: 30px;
-    }
+    // .swiper-wrapper {
+    //   top: 30px;
+    // }
   //左右上下页的样式
   :deep(.swiper-button-prev), :deep(.swiper-button-next){
     transform: translateX(-50%) rotate(90deg);
@@ -126,12 +131,12 @@
   }
   :deep(.swiper-button-prev) {
     top: 10px;
-    left: 50%;
+    left: 3.3%;
     transform: translateX(-50%) rotate(90deg);
   }
   :deep(.swiper-button-next) {
-    top: 96%;
-    right: 50%;
+    top: 98%;
+    right: 96.7%;
     transform: translateX(50%) rotate(90deg);
   }
   //修改上下页左右箭头的样式

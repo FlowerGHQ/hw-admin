@@ -279,6 +279,9 @@ const apiList = {
         clear: ['PostJson', 'shopping-cart/clear'],
         detail: ['GetJson', 'shopping-cart/detail'],
         remove: ['PostJson', 'shopping-cart/delete'],
+
+        // 备注
+        remark: ['PostJson', 'shopping-cart/remark'],
         
     },
     Favorite: { // 收藏夹

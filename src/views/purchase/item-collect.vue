@@ -32,9 +32,10 @@
                     <div class="count-edit" v-else>
                         <a-input-number v-model:value="editCount" :min="1" :precision="0" autofocus @blur="handleCountEditBlur(item)"/>
                     </div>
-                    <a-form :model="formState" :label-col="labelCol" :wrapper-col="wrapperCol">
+                    <div v-if="!item.editRemark" @click="handleRemarkEditShow(item)" class="remark">备注：{{ item.remark }}</div>
+                    <a-form v-else :model="formState" :label-col="labelCol" :wrapper-col="wrapperCol">
                         <a-form-item label="备注">
-                        <a-input v-model:value="item.remark" />
+                            <a-input v-model:value="editRemark" @blur="handleRemarkEditBlur(item)" />
                         </a-form-item>
                     </a-form>
                     <div class="btns">
@@ -121,6 +122,7 @@ export default {
             loading: false,
 
             editCount: '',
+            editRemark: '',
             // 商品详情
             detail: {},
             shopCartList: [],
@@ -253,6 +255,26 @@ export default {
                 this.getShopCartList();
             }).finally(() => {
                 this.editCount = ''
+            })
+        },
+
+        //修改备注
+        handleRemarkEditShow(item) {
+            item.editRemark = !item.editRemark 
+            this.editRemark = item.remark
+        },
+        handleRemarkEditBlur(item) {
+            // if (this.editRemark === item.remark) { return }
+            let _item = Core.Util.deepCopy(item)
+            _item.remark = this.editRemark
+            console.log('handleCountEditBlur _item:', _item)
+            Core.Api.ShopCart.remark({
+                id: _item.id,
+                remark: _item.remark,
+            }).then(res => {
+                this.getShopCartList();
+            }).finally(() => {
+                this.editRemark = ''
             })
         },
 
@@ -453,7 +475,7 @@ export default {
                 }
                 .info {
                     width: calc(~'100% - 180px');
-                    height: 175px;
+                    // height: 175px;
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
@@ -504,6 +526,11 @@ export default {
                         font-size: 14px;
                         font-weight: 400;
                         color: #111111;
+                    }
+                    .remark {
+                        font-size: @fz_bs;
+                        height: 31px;
+                        line-height: 31px;
                     }
                 }
                 .price {

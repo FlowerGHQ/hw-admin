@@ -214,6 +214,7 @@ export default {
     .imgs-content {
         // width: calc(~'100% - 620px');
         width: 900px;
+        height: 600px;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;

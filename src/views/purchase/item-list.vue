@@ -315,6 +315,13 @@ export default {
             this.exportDisabled = true;
 
             let form = Core.Util.deepCopy(this.searchForm);
+
+            // 编码
+            if (this.searchType == Core.Const.ITEM.SEARCH_TYPE.CODE){
+                form.code = form.name;
+                form.name = "";
+            }
+
             for (const key in form) {
                 form[key] = form[key] || ''
             }
