@@ -325,7 +325,7 @@ export default {
             for (const key in form) {
                 form[key] = form[key] || ''
             }
-            let exportUrl = Core.Api.Export.exportItemPrice(form)
+            let exportUrl = Core.Api.Export.exportOrderPrice(form)
             console.log("handleRepairExport exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;

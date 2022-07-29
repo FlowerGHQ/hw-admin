@@ -31,8 +31,9 @@ const apiList = {
 	    ItemCollectExport: ['PostJson', '/shopping-cart/download-import-template'],//导出
 	    feedbackTemplateExport: ['PostJson', 'feedback/export-template'], // 采购单模版导出
 
+        exportOrderPrice: ['GetJson', 'purchase-order/export-item-price'], // 采购数据导出
 
-        exportItemPrice: ['GetJson', 'purchase-order/export-item-price'], // 采购数据导出
+        exportItemPrice: ['GetJson', 'item/export-item-price'], // 导出数据
     },
     User: { // 员工
         save: ['PostJson', 'user/save'],
@@ -228,6 +229,9 @@ const apiList = {
         getItemComponent: ['PostJson', 'item/item-component-set-list'], // 查询爆炸图列表
         bindItemComponent: ['PostJson', 'item/bind-item-component'], // 绑定零部件
         deleteItemComponent: ['PostJson', 'item/delete-item-component'], // 解绑零部件
+
+
+
     },
     Entity: {// 车架
         list: ['PostJson', 'entity/list'],

@@ -32,9 +32,9 @@
                     <div class="count-edit" v-else>
                         <a-input-number v-model:value="editCount" :min="1" :precision="0" autofocus @blur="handleCountEditBlur(item)"/>
                     </div>
-                    <div v-if="!item.editRemark" @click="handleRemarkEditShow(item)" class="remark">备注：{{ item.remark }}</div>
+                    <div v-if="!item.editRemark" @click="handleRemarkEditShow(item)" class="remark">{{$t('i.remark')}}：{{ item.remark }}</div>
                     <a-form v-else :model="formState" :label-col="labelCol" :wrapper-col="wrapperCol">
-                        <a-form-item label="备注">
+                        <a-form-item :label="$t('i.remark')">
                             <a-input v-model:value="editRemark" @blur="handleRemarkEditBlur(item)" />
                         </a-form-item>
                     </a-form>

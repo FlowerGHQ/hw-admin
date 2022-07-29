@@ -3,10 +3,10 @@
         <div class="card-left">
             <img :src="$Util.imageFilter(data.logo)">
             <div class="card-info">
-                <div class="title">{{ data.name }}</div>
+                <div class="title">{{ $i18n.locale =='zh' ? data.name : data.name_en }}</div>
                 <div class="info">{{ data.code }}</div>
                 <ul>
-                    <li v-for="attr in data.attr_list">{{ attr.attr_def_name }}：{{ attr.value }}</li>
+                    <li v-for="attr in data.attr_list">{{ $i18n.locale =='zh' ? attr.attr_def_name : attr.attr_def_key }}：{{ $i18n.locale =='zh' ? attr.value : attr.value_en }}</li>
                 </ul>
                 <!-- <div class="code">货号：{{ data.id }}</div> -->
             </div>
@@ -36,7 +36,7 @@
                 </div>
                 <div class="stars" @click="hanldeAddToFavorite">
                     <star-outlined />
-                    <span class="star-text">收藏</span>
+                    <span class="star-text">{{ data.in_favorite ? $t('i.favorited') : $t('i.favorite_not') }}</span>
                 </div>
             </div>
         </div>

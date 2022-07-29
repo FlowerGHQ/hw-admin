@@ -4,6 +4,7 @@
         <div class="title-container">
             <div class="title-area">{{ $t('i.item_list') }} </div>
             <div class="btns-area">
+                <a-button class="download" type="primary" @click="handleExportConfirm"><i class="icon i_download"/>{{ $t('i.export') }}</a-button>
                 <a-upload name="file" class="file-uploader"
                     :file-list="upload.fileList" :action="upload.action"
                     :show-upload-list='false'
@@ -433,12 +434,43 @@ export default {
             this.salesList = [];
             this.salesAreaIds = [];
         },
+
+        handleExportConfirm() { // 确认订单是否导出
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('pop_up.sure') + _this.$t('n.export') + '?',
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
+                onOk() {
+                    _this.handleRepairExport();
+                }
+            })
+        },
+        handleRepairExport() { // 订单导出
+            this.exportDisabled = true;
+
+            let form = Core.Util.deepCopy(this.searchForm);
+
+            for (const key in form) {
+                form[key] = form[key] || ''
+            }
+            // console.log('form',form)
+            let exportUrl = Core.Api.Export.exportItemPrice(form)
+            console.log("handleRepairExport exportUrl", exportUrl)
+            window.open(exportUrl, '_self')
+            this.exportDisabled = false;
+        },
     }
 };
 </script>
 
 <style lang="less" scoped>
 #ItemList {
+    .download {
+        font-size: 14px;
+        text-align: center;
+        margin-right: 10px;
+    }
     .list-container {
         .title-container {
             .btns-area {

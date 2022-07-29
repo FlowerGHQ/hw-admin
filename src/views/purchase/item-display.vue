@@ -24,43 +24,43 @@
             <UpAndDownSwiper></UpAndDownSwiper>
         </div>
         <div class="info-content">
-            <div class="title">{{ detail.name }}</div>
+            <div class="title">{{ $i18n.locale =='zh' ? detail.name : detail.name_en }}</div>
             <SimpleImageEmpty v-if="!detail.attr_list.length" :desc="$t('p.no_item_purchase_data')"/>
             <ul>
-                <li v-for="attr in detail.attr_list">{{ attr.attr_def_name }}：{{ attr.value }}</li>
+                <li v-for="attr in detail.attr_list">{{ $i18n.locale =='zh' ? attr.attr_def_name : attr.attr_def_key }}：{{ $i18n.locale =='zh' ? attr.value : attr.value_en }}</li>
             </ul>
-            <a-button type="primary" block class="btn">此商品{{ specList.length }}种规格</a-button>
+            <a-button type="primary" block class="btn">{{ $i18n.locale =='zh' ? '此商品 ' : 'This commodity has ' }}{{ specList.length }}{{ $i18n.locale =='zh' ? ' 种规格' : ' kinds of specifications' }}</a-button>
             <div class="price-list">
                 <div class="retail-price">
-                    <span class="price-left">建议零售价包括增值税</span>
+                    <span class="price-left">{{ $t('i.price_suggest') }}</span>
                     <span class="price-right">€{{$Util.countFilter(detail[priceKey + 'eur'])}} | ${{$Util.countFilter(detail[priceKey + 'usd'])}}</span>
                 </div>
                 <div class="price">
-                    <span class="price-left">价格</span>
+                    <span class="price-left">{{ $t('i.price') }}</span>
                     <span class="price-right">€{{$Util.countFilter(detail[priceKey + 'eur'])}} | ${{$Util.countFilter(detail[priceKey + 'usd'])}}</span>
                 </div>
             </div>
             <div class="stars" @click="hanldeAddToFavorite" :class="{'active': detail.in_favorite}">
                 <star-outlined />
-                <span class="star-text" >{{ detail.in_favorite ? '已收藏' : '收藏商品' }}</span>
+                <span class="star-text" >{{ detail.in_favorite ? $t('i.favorited') : $t('i.favorite_not') + '商品' }}</span>
             </div>
         </div>
         <div class="content">
-            <div class="title">商品规格</div>
+            <div class="title">{{ $t('i.commercial_specification') }}</div>
             <div class="content-list">
                 <SpecificationCard v-for="item in specList" :data="item" @AddToFavorite="ToFavorite" class="list"/>
                 <SimpleImageEmpty v-if="!specList.length" :desc="$t('p.no_item_spec')"/>
             </div>
             <a-tabs v-model:activeKey="activeKey" class="tab-box">
-                <a-tab-pane key="mountings" tab="配件">
+                <a-tab-pane key="mountings" :tab="$t('i.fittings')">
                     <SpecificationCard v-for="item in specList" class="list" :data="item" @AddToFavorite="ToFavorite"/>
                     <SimpleImageEmpty v-if="!specList.length" :desc="$t('p.no_item_fitt')"/>
                 </a-tab-pane>
-                <a-tab-pane key="explosiveView" tab="爆炸图" force-render> 
+                <a-tab-pane key="explosiveView" :tab="$t('i.view')" force-render> 
                     <ExploredContent ref="ExploredContent" :id="id" :show="false" class="explored" @noData="noExplodeData"/>
                     <SimpleImageEmpty v-if="explodeShow" :desc="$t('p.no_item_explode')"/>
                 </a-tab-pane>
-                <a-tab-pane key="download" tab="下载">
+                <a-tab-pane key="download" :tab="$t('n.download')">
                     <DownLoad />
                 </a-tab-pane>
             </a-tabs>
@@ -101,7 +101,7 @@ export default {
 
             id: null,
             detail: {
-                attr_list: {}
+                attr_list: {},
             },
             // category: {},
             // config: [],
@@ -136,7 +136,7 @@ export default {
             Core.Api.Item.detail({
                 id: this.id,
             }).then(res => {
-                console.log('getItemDetail res', res)
+                console.log('getItemDetail111111111 res', res)
                 let detail = res.detail
                 this.detail = detail
                 if (detail.set_id) {
