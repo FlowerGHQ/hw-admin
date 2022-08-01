@@ -65,7 +65,7 @@
 <!--                        {{$Util.itemSpecFilter(item.item.attr_list)}}-->
 <!--                    </div>-->
                 </div>
-                <span class="price">{{item.amount}}个</span>
+                <span class="price">{{item.amount}}{{$t('i.pcs')}}</span>
                 <span class="price">{{currency}} {{$Util.countFilter(item.item[priceKey + unitMap[currency].key])}}</span>
                 <span class="price">{{currency}} {{$Util.countFilter(item.item[priceKey + unitMap[currency].key] * item.amount)}}</span>
             </div>
@@ -352,18 +352,18 @@ export default {
                     return this.$message.error(file.response.message)
                 } else {
                     _this.getList()
-                    return this.$message.success('上传成功');
+                    return this.$message.success($t('i.uploaded'));
 
                 }
             }
             this.upload.fileList = fileList
         },
-        handleExport() { // 确认库单是否导出
+        handleExport() { // 确认购物车模版是否导出
             let _this = this;
             this.$confirm({
-                title: '确认要导出吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('i.sure_export'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     _this.handleCollectExport();
                 }

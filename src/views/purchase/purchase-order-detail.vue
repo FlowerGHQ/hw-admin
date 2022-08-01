@@ -22,13 +22,13 @@
                     <template v-if="detail.type === FLAG_ORDER_TYPE.PRE_SALES">
                         <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') " @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>
                     </template>
-                    <a-button type="primary" ghost v-if="detail.type !== TYPE.GIVEAWAY && detail.type !== TYPE.MIX && !giveOrderShow && $auth('purchase-order.give')"  @click="giveOrderShow = true">赠送订单</a-button>
+                    <a-button type="primary" ghost v-if="detail.type !== TYPE.GIVEAWAY && detail.type !== TYPE.MIX && !giveOrderShow && $auth('purchase-order.give')"  @click="giveOrderShow = true">{{ $t('p.give_order')}}</a-button>
                 </template>
                 <template v-if="authOrg(detail.org_id, detail.org_type) && detail.status !== STATUS.REVISE_AUDIT">
-                    <a-button type="primary" ghost v-if="beforeDeliver && !itemEditShow && $auth('purchase-order.save')" @click="itemEditShow = true">更换商品</a-button>
+                    <a-button type="primary" ghost v-if="beforeDeliver && !itemEditShow && $auth('purchase-order.save')" @click="itemEditShow = true">{{$t('p.change_item')}}</a-button>
 
                     <a-button type="primary" v-if="detail.status !== STATUS.CANCEL && detail.status !== STATUS.DEAL_SUCCESS && detail.status !== STATUS.SPLIT && detail.status !== STATUS.REVISE && detail.status !== STATUS.REVISE_AUDIT && detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.payment')}}</a-button>
-                    <!-- <a-button type="primary" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER" @click="handleReceived()"><i class="icon i_goods"/>确认收货</a-button>-->
+                    <!-- <a-button type="primary" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER" @click="handleReceived()"><i class="icon i_goods"/>no_item_purchase_data: '更换商品',</a-button>-->
                     <!-- {{detail.status}}-->
                     <a-button type="primary" v-if="detail.status === STATUS.WAIT_PAY || (detail.payment_status !== PAYMENT_STATUS.WAIT_PAY && detail.WAIT_DELIVER)" @click="handleCancel()"><i class="icon i_close_c"/>{{ $t('def.cancel')}}</a-button>
                     <a-button type="primary" v-if="detail.status === STATUS.DEAL_SUCCESS" @click="routerChange('aftersales')" ghost><i class="icon i_edit"/>{{ $t('p.apply_for_after_sales')}}</a-button>
@@ -1023,9 +1023,9 @@ export default {
         handleTransferSubmit() {
             let _this = this
             this.$confirm({
-                title: '确认转单吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('p.sure_transfer'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Purchase.transfer({
                         distributor_id: _this.editForm.distributor_id,

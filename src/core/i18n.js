@@ -372,6 +372,16 @@ const messages = {
             fittings: '配件',
             no_search_list: '暂无满足搜索条件的商品',
             no_bom_list: '暂无爆炸图列表',
+            pcs: '个',
+            uploaded: '上传成功',
+            sure_export: '确认要导出吗？',
+            item_favorite: '该商品已在收藏夹中',
+            favorite_success: '收藏成功',
+            data_export: '数据导出',
+            no_item: '暂无满足搜索条件的商品',
+            add_success: '添加成功',
+            order_success: '下单成功',
+
         },
 	    fe:{
             feedback_detail: '反馈单详情',
@@ -551,6 +561,8 @@ const messages = {
             no_item_fitt: '暂无该商品配件',
             no_item_explode: '暂无爆炸图',
             no_item_purchase_data: '暂无采购数据',
+            change_item: '更换商品',
+            sure_transfer: 'Confirm the transfer order?',
 
         },
         s: {
@@ -1101,6 +1113,15 @@ const messages = {
             fittings: 'fittings',
             no_search_list: 'There are no items that meet the search criteria',
             no_bom_list: 'There is no explosion chart list',
+            pcs: 'PCS',
+            uploaded: 'Uploaded Successfully',
+            sure_export: 'Are you sure you want to export?',
+            item_favorite: 'This item is already in favorites',
+            favorite_success: 'Favorites success',
+            data_export: 'Data export',
+            no_item: 'There are no products matching the search criteria',
+            add_success: 'Added successfully',
+            order_success: 'Order successfully',
         },
         w: {
             list: 'Account List',
@@ -1258,6 +1279,8 @@ const messages = {
             no_item_fitt: 'There are no accessories for this product',
             no_item_explode: 'No explosion picture available',
             no_item_purchase_data: 'No purchase data available',
+            change_item: 'Exchange product',
+            sure_transfer: '确认转单吗？',
         },
         s: {
             store_list: 'Store list',

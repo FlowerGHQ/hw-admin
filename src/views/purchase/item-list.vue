@@ -15,7 +15,7 @@
                     <template #suffix><i class="icon i_close_b" @click="handleNameReset" v-if="searchForm.name"/></template>
                 </a-input>
                 </a-input-group>
-                <a-tooltip title="数据导出" class="popover">
+                <a-tooltip :title="$t('i.data_export')" class="popover">
                 <!--  @click="routerChange('favorite')"  {{$t('def.export')}}-->
                     <a-button type="text" @click="handleExportConfirm"><i class="icon i_download"/></a-button>
                 </a-tooltip>
@@ -274,6 +274,7 @@ export default {
         },
 
         handleCartAdd(item) { // 添加到购物车
+          let _this = this;
             console.log('handleCartAdd item:', item)
             if (item.set_id && item.attr_list.length > 1) {
                 this.routerChange('detail', item)
@@ -285,7 +286,7 @@ export default {
                 price: item.purchase_price
             }).then(res => {
                 console.log('res:', res)
-                this.$message.success('添加成功')
+                this.$message.success(_this.$t('i.add_success'))
                 this.getShopCartData(true);
                 this.orderId = res.id
             })

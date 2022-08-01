@@ -308,7 +308,8 @@ export default {
 
             }
             Core.Api.Purchase.create(parms).then(res => {
-                this.$message.success('下单成功');
+              let _this = this;
+                this.$message.success(_this.$t('i.order_success'));
                 this.routerChange('order');
                 this.handleClearShopCart()
             })
