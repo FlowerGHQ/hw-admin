@@ -34,7 +34,7 @@
                         <shopping-cart-outlined class="icon"/>
                     </div>
                 </div>
-                <div class="stars" @click="hanldeAddToFavorite">
+                <div class="stars" @click="hanldeAddToFavorite" :class="{'active': data.in_favorite}">
                     <star-outlined />
                     <span class="star-text">{{ data.in_favorite ? $t('i.favorited') : $t('i.favorite_not') }}</span>
                 </div>
@@ -57,9 +57,7 @@ export default {
     props: {
         data: {
             type: Object,
-            default: {
-                price: 0,
-            },
+            default: {},
         },
     },
     data() {
@@ -102,7 +100,7 @@ export default {
         hanldeAddToShopCart() {
             Core.Api.ShopCart.save({
                 item_id: this.data.id,
-                amount: 1,
+                amount: this.value,
                 price: this.data.purchase_price
             }).then(res => {
                 console.log('hanldeAddToShopCart res:', res)

@@ -65,7 +65,7 @@
                 <CategoryTree :parentId='firstLevelId' @change='handleCategoryChange' ref="CategoryTree"/>
             </div>
         </div>
-        <!-- <template v-if="!firstLevelId"> -->
+        <template v-if="!firstLevelId">
             <div class="item-content" v-if="tableData.length">
                 <!-- <div class="switch-btn">
                     <a-radio-group v-model:value="pageType">
@@ -101,12 +101,11 @@
                     />
                 </div>
             </div>
-            <!-- <SimpleImageEmpty class="item-content-empty" v-else desc="暂无满足搜索条件的商品"/> -->
-        <!-- </template> -->
-        <!-- <div v-show="firstLevelId != 0" class="bom-content">
-            <ExploredContentPay ref="ExploredContentPay" :id="id" :show="false" class="explored" @noData="noExplodeData"/>
-            <SimpleImageEmpty v-if="explodeShow" :desc="$t('p.no_item_explode')"/>
-        </div> -->
+            <SimpleImageEmpty class="item-content-empty" v-else desc="暂无满足搜索条件的商品"/>
+        </template>
+        <div class="bom-content" v-else>
+            <ExploredContentPay></ExploredContentPay>
+        </div>
     </div>
 </div>
 </template>
@@ -176,9 +175,6 @@ export default {
             labelCol: { style: { width: '40px' } },
             wrapperCol: { span: 14 },
             orderId:'',
-
-            // 无爆炸图
-            explodeShow: true,
         };
     },
     watch: {},
@@ -194,7 +190,6 @@ export default {
         this.getTableData();
         this.getCategoryList()
         this.getShopCartData();
-
     },
 
     methods: {
@@ -316,7 +311,6 @@ export default {
                 is_authority: 1,
             }).then(res => {
                 this.categoryList = res.list
-                console.log(this.categoryList, '12345678')
             })
         },
 
@@ -337,7 +331,7 @@ export default {
             let form = Core.Util.deepCopy(this.searchForm);
 
             // 编码
-            if (this.searchType == Core.Const.ITEM.SEARCH_TYPE.CODE){
+            if (this.searchType === Core.Const.ITEM.SEARCH_TYPE.CODE){
                 form.code = form.name;
                 form.name = "";
             }
@@ -363,18 +357,6 @@ export default {
             }).catch(err => {
                 console.log('handleRemarkEditBlur: err', err)
             })
-        },
-
-        // 根据id获取爆炸图
-        getExploreDetail(id) {
-            // this.$refs.ExploredContentPay.getItemExploreList(id);
-            this.$refs.ExploredContentPay.getItemExploreList(id);
-            // console.log(this,'12345678i')
-        },
-
-        // 无爆炸图数据
-        noExplodeData(data) {
-            this.explodeShow = data
         },
     }
 };

@@ -209,6 +209,7 @@ const messages = {
             amount_paid: '实付金额',
             download: '保存并下载',
             details: '返回详情',
+            device_classify: '工单类型',
         },
         d: {
             distributor_detail: '分销商详情',
@@ -934,6 +935,7 @@ const messages = {
             amount_paid: 'Amount paid',
             download: 'Save and download',
             details: 'Back to details',
+            device_classify: 'Work order type',
         },
         d: {
             distributor_detail: 'Distributor details',

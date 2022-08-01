@@ -7,6 +7,14 @@
         <div class="form-title"><div class="title">{{ $t('r.repair_content') }}</div></div>
         <div class="form-content">
             <div class="form-item required">
+                <div class="key">{{ $t('r.device_classify') }}</div>
+                <div class="value">
+                    <a-radio-group v-model:value="form.device_type" :disabled="!!form.id" @change="handleTypeChange">
+                        <a-radio v-for="item of deviceList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
+                    </a-radio-group>
+                </div>
+            </div>
+            <div class="form-item required">
                 <div class="key">{{ $t('r.repair_classify') }}</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.type" :disabled="!!form.id" @change="handleTypeChange">
@@ -56,7 +64,7 @@
             </div>
         </div>
     </div>
-    <div class="form-block"> <!-- 车辆信息 -->
+    <div class="form-block" v-if="form.device_type === REPAIR.DEVICE.FINISHED_AUTOMOBILE"> <!-- 车辆信息 -->
         <div class="form-title">
             <div class="title">{{ $t('r.vehicle_information') }}</div>
         </div>
@@ -100,7 +108,7 @@
             </div>
         </div>
     </div>
-    <div class="form-block"> <!-- 车主信息 -->
+    <div class="form-block" v-if="form.device_type === REPAIR.DEVICE.FINISHED_AUTOMOBILE"> <!-- 车主信息 -->
         <div class="form-title">
             <div class="title">{{ $t('r.customer') }}</div>
         </div>
@@ -190,6 +198,7 @@ export default {
             create_time: [],
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
 
+            deviceList: REPAIR.DEVICE_LIST, // 工单类型
             typeList: REPAIR.TYPE_LIST, // 工单分类
             categoryList: REPAIR.CATEGORY_LIST, // 维修工单类别
             methodList: REPAIR.METHOD_LIST, // 维修类别
@@ -201,6 +210,7 @@ export default {
             form: {
                 id: '',
 
+                device_type: 1,  // 工单类型
                 type: 1,  // 工单分类
                 category: 1, // 维修工单类别
                 name: '', // 工单名称

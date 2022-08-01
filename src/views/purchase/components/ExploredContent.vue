@@ -66,6 +66,11 @@ export default {
         }
     },
     mounted () {},
+    watch: {
+        selectIndex:function(newData, oldData) {
+            console.log(newData, oldData)
+        },
+    },
     data() {
         return {
             Core,
@@ -106,7 +111,7 @@ export default {
                 })
                 // 无爆炸图数据
                 console.log('getItemExploreList res', res);
-                if(res.list.length) {
+                if(res.list.count) {
                     this.$emit('noData',false)
                 }
             }).catch( err => {

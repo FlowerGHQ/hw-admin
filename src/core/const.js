@@ -19,7 +19,7 @@ switch (window.location.hostname) {
     case "10.0.0.205":
     case "10.0.0.132":
         // URL_POINT = 'http://10.0.0.194:8889'
-        URL_POINT = 'http://10.0.0.144:8889'
+        URL_POINT = 'http://10.0.0.188:8889'
         // URL_POINT = 'http://10.0.0.117:8889'
         break;
     case "10.0.0.194":
@@ -227,6 +227,19 @@ let Const = {
     ],
 
     REPAIR: { // 维修工单
+        // 工单类型
+        DEVICE_LIST: [
+            { zh: '整车', en: 'finished automobile', value: 1 }, 
+            { zh: '零部件', en: 'components and parts', value: 2 },
+        ],
+        DEVICE_MAP: {
+            1: '整车',
+            2: '零部件',
+        },
+	    DEVICE: {
+		    FINISHED_AUTOMOBILE: 1,
+		    COMPONENTS_AND_PARTS: 2,
+	    },
         // 工单分类
         TYPE_LIST: [
             { zh: '维修工单', en: 'repair order', value: 1 }, // 普通工单
