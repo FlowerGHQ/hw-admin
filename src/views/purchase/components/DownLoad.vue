@@ -1,9 +1,9 @@
 <template>
     <div id="DownLoad" class="list-container">
         <div class="download">
-            <div class="list" v-for="i in 2">
+            <div class="list" v-for="i in tableData">
                 <mac-command-outlined class="icon" />
-                <a @click="handleDownloadConfirm()">Datasheet</a>
+                <a @click="handleDownload(i)">{{ i.name }}</a>
             </div>
         </div>
     </div>
@@ -11,40 +11,52 @@
 
 <script>
 import { MacCommandOutlined } from '@ant-design/icons-vue';
-import Core from '../../../core';
+import Core from "../../../core";
 export default {
     name: 'DownLoad',
     components: {
         MacCommandOutlined,
     },
-    props: {},
+    props: {
+        target_id: {
+            type: Number
+        },
+        target_type: {
+            type: Number
+        },
+    },
     data() {
         return {
+            tableData: []
         };
     },
     watch: {},
     computed: {
     },
     mounted() {
+        this.getTableData()
     },
     methods: {
-        handleDownloadConfirm(item){ // 下载问询
-            let _this = this;
-            this.$confirm({
-                title: '确认要下载吗？',
-                okText: '确定',
-                cancelText: '取消',
-                onOk() {
-                    _this.handleDownload(item);
-                }
-            })
+        getTableData() {  // 获取 表格 数据
+            this.loading = true;
+            Core.Api.Attachment.list({
+                target_id: this.target_id,
+                target_type: this.target_type,
+                page: 0
+            }).then(res => {
+                console.log("AttachmentFile res", res)
+                this.tableData = res.list
+            }).catch(err => {
+                console.log('AttachmentFile err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
         },
-        handleDownload(item) { // 下载
-            this.downloadDisabled = true;
-            let path = item.path
-            let fileUrl = Core.Const.NET.FILE_URL_PREFIX + path + ''
-            window.open(fileUrl, '_blank')
-            this.downloadDisabled = false;
+        // 下载附件
+        handleDownload(record) {
+            console.log('handleDownload record:', record)
+            let url = Core.Const.NET.FILE_URL_PREFIX + record.path
+            window.open(url, '_self')
         },
     }
 };
