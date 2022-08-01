@@ -101,10 +101,10 @@
                     />
                 </div>
             </div>
-            <SimpleImageEmpty class="item-content-empty" v-else desc="暂无满足搜索条件的商品"/>
+            <SimpleImageEmpty class="item-content-empty" v-else :desc="$t('i.no_search_list')"/>
         </template>
         <div class="bom-content" v-else>
-            <ExploredContentPay></ExploredContentPay>
+            <ExploredContentPay :id="searchForm.category_id"></ExploredContentPay>
         </div>
     </div>
 </div>
@@ -150,20 +150,6 @@ export default {
                 name_en: '',
                 category_id: '',
             },
-            // searchForm: {
-            //     uid: '',
-            //     store_id: undefined,
-            //     agent_id: undefined,
-            //     distributor_id: undefined,
-            //     status: '-1',
-            //     channel: '',
-            //     repair_method: '',
-            //     repair_user_org_type:'',
-            //     service_type: '',
-            //     vehicle_no: '',
-            //     begin_time: '',
-            //     end_time: '',
-            // },
 
             // 购物车简略面板
             briefVisible: false,

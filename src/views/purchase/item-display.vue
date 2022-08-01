@@ -42,7 +42,7 @@
             </div>
             <div class="stars" @click="hanldeAddToFavorite" :class="{'active': detail.in_favorite}">
                 <star-outlined />
-                <span class="star-text" >{{ detail.in_favorite ? $t('i.favorited') : $t('i.favorite_not') + '商品' }}</span>
+                <span class="star-text" >{{ detail.in_favorite ? $t('i.favorited') : $t('i.favorite_not') }}</span>
             </div>
         </div>
         <div class="content">
@@ -372,6 +372,10 @@ export default {
     }
     .ant-tabs :deep(.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn) {
         color: @white;
+    }
+    .ant-tabs :deep(.ant-tabs-tab) {
+        width: auto !important;
+        padding: 0 10px;
     }
 }
 

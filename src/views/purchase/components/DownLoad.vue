@@ -3,7 +3,7 @@
         <div class="download">
             <div class="list" v-for="i in 2">
                 <mac-command-outlined class="icon" />
-                <a href="#">Datasheet</a>
+                <a @click="handleDownloadConfirm()">Datasheet</a>
             </div>
         </div>
     </div>
@@ -11,6 +11,7 @@
 
 <script>
 import { MacCommandOutlined } from '@ant-design/icons-vue';
+import Core from '../../../core';
 export default {
     name: 'DownLoad',
     components: {
@@ -27,6 +28,24 @@ export default {
     mounted() {
     },
     methods: {
+        handleDownloadConfirm(item){ // 下载问询
+            let _this = this;
+            this.$confirm({
+                title: '确认要下载吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    _this.handleDownload(item);
+                }
+            })
+        },
+        handleDownload(item) { // 下载
+            this.downloadDisabled = true;
+            let path = item.path
+            let fileUrl = Core.Const.NET.FILE_URL_PREFIX + path + ''
+            window.open(fileUrl, '_blank')
+            this.downloadDisabled = false;
+        },
     }
 };
 </script>

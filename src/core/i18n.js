@@ -370,6 +370,8 @@ const messages = {
             price_suggest: '建议零售价包括增值税',
             commercial_specification: '商品规格',
             fittings: '配件',
+            no_search_list: '暂无满足搜索条件的商品',
+            no_bom_list: '暂无爆炸图列表',
         },
 	    fe:{
             feedback_detail: '反馈单详情',
@@ -1097,6 +1099,8 @@ const messages = {
             price_suggest: 'The suggested retail price includes VAT',
             commercial_specification: 'commercial specification',
             fittings: 'fittings',
+            no_search_list: 'There are no items that meet the search criteria',
+            no_bom_list: 'There is no explosion chart list',
         },
         w: {
             list: 'Account List',

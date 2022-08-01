@@ -27,7 +27,7 @@
   export default {
     data(){
       return {
-         imgs:['@images/defult_item.png','@images/defult_item.png','@images/defult_item.png','@images/defult_item.png','@images/defult_item.png','@images/defult_item.png','@images/defult_item.png'],
+         imgs:['/src/assets/images/defult_item.png','/src/assets/images/defult_item.png','/src/assets/images/defult_item.png','/src/assets/images/defult_item.png','/src/assets/images/defult_item.png','/src/assets/images/defult_item.png'],
          imgIndex: 0,
       }
     },
@@ -91,7 +91,7 @@
         margin: 0;
         --swiper-pagination-color:#00937A;
         width: 60px;
-        height: 300px;
+        height: 80%;
         padding-bottom: 20px;
         position: absolute;
         top: 50%;
@@ -149,6 +149,6 @@
   }
   .img-big {
     width: 500px;
-    margin-left: 100px;
+    margin-left: 160px;
   }
 </style>

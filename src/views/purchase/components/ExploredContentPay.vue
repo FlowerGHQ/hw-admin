@@ -1,11 +1,58 @@
 <template>
     <!--  class="bom-content" -->
-    <div>
-        <ExploredContent ref="ExploredContent" :id="id" :show="false" class="explored" @noData="noExplodeData"/>
-        <SimpleImageEmpty v-if="explodeShow" :desc="$t('p.no_item_explode')"/>
+    <div class="explored-content" v-if="tabsArray.length > 0">
+        <!-- <div class="title">{{ $t('i.view') }}</div> -->
+        <div class="explore-content">
+            <div class="carousel-list">
+                <div class="carousel-item" v-for="(item,i) of tabsArray" :key="i">
+                    <img :src="$Util.imageFilter(item.img)"/>
+                    <canvas :ref="`exploreCanvas${i}`"></canvas>
+                    <div
+                        class="point-start"
+                        v-for="(point, j) in (item.item_component_list || [])"
+                        :key="j"
+                        :style="{'left': `${(point.start.x * (point.rate || 1)) - 4}px`, 'top': `${(point.start.y * (point.rate || 1))- 4}px`}"></div>
+                    <!-- :class="{'point-end-select': selectIndex===j}" -->
+                    <div
+                        class="point-end"
+                        :class="{'point-end-select': isActive(j + 1)}"
+                        v-for="(point, j) in (item.item_component_list || [])"
+                        :key="j"
+                        :style="{'left': `${(point.end.x * (point.rate || 1)) - 4* (point.rate || 1)}px`, 'top': `${(point.end.y * (point.rate || 1))- 4* (point.rate || 1)}px`}"
+                        @mouseenter.stop="showDetail(i,j)" @mouseleave="showDetail(-1)"
+                        @click="addPoint(j+1)"
+                    >
+                        {{j + 1}}
+                    </div>
+                </div>
+            </div>
+            <transition name="fade">
+                <div
+                    class="component-contain"
+                    v-if="selectIndex > -1"
+                    :style="componentStyle"
+                    @mouseenter.stop="showDetail(currentExplore.i, currentExplore.j)"
+                    @mouseleave="showDetail(-1)">
+                    <div class="contain-name">
+                        <i class="icon i_skew-bg" />
+                        <span class="icon-name">产品名称</span>
+                        {{ componentDetail.name }}
+                    </div>
+                    <div class="contain-type">
+                        <div class="type-left">型号:&nbsp;{{ componentDetail.model}}</div>
+                        <div class="type-left">€{{$Util.countFilter(componentDetail[priceKey + 'eur'])}} | ${{$Util.countFilter(componentDetail[priceKey + 'usd'])}}</div>
+                    </div>
+                    <div class="edit-btn">
+                        <a-button type="primary" class="disabled" v-if="componentDetail.in_shopping_cart">已在购物车中</a-button>
+                        <a-button type="primary" @click="hanldeAddToShopCart" v-else>添加到购物车</a-button> -->
+                    </div>
+                </div>
+            </transition>
+        </div>
     </div>
+    <SimpleImageEmpty v-else :desc="$t('p.no_item_explode')"/>
     <div class="explored-lists" v-if="exploredList.length">
-        <div class="expolred-list" v-for="list,index in exploredList[0].item_component_list">
+        <div class="expolred-list" v-for="list,index in exploredList[0].item_component_list" :class="{'active': isActive(index + 1)}">
             <div class="card-left">
                 <div class="serial—number">
                     <div class="serial">{{ index + 1 }}</div>
@@ -44,23 +91,31 @@
                     </div>
                     <div class="stars" @click="hanldeAddToFavorite(list.item)" :class="{'active': list.item.in_favorite}">
                         <star-outlined />
-                        <span class="star-text">{{ list.item.in_favorite ? $t('i.favorited') : $t('i.favorite_not')}}</span>
+                        <span class="star-text">{{ list.item.in_favorite ? $t('i.favorited') : $t('i.favorite_not') }}</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <SimpleImageEmpty v-else desc="无爆炸图列表"/>
+    <SimpleImageEmpty v-else :desc="$t('i.no_bom_list')" class="mt"/>
 </template>
 <script>
 import { CaretUpOutlined, CaretDownOutlined, ShoppingCartOutlined, StarOutlined } from '@ant-design/icons-vue';
 import ExploredContent from './ExploredContent.vue';
 import SimpleImageEmpty from '../../../components/common/SimpleImageEmpty.vue';
 import Core from '../../../core';
+import { get } from 'lodash';
+import { number } from '@intlify/core-base';
 export default {
-    props: {
-    },
-    computed: {
+     props: {
+        id: number,
+     },
+     computed: {
+        priceKey() {
+            let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
+            console.log('priceKey:', priceKey)
+            return priceKey
+        }
     },
     components: {
         CaretUpOutlined,
@@ -71,25 +126,147 @@ export default {
         SimpleImageEmpty
     },
     mounted () {
-        this.getExploreDetail(this.id)
+        this.getItemExploreList(this.id)
+        this.getExploreList(this.id)
+    },
+    watch: {
+        id: function(newVal,oldVal) {
+            this.getItemExploreList(newVal)
+            this.getExploreList(newVal)
+        }
     },
     data() {
         return {
             value: 1,
-            id: 248,
+            // id: 248,
 
 
             // 无爆炸图
             explodeShow: true,
             // 爆炸图列表
             exploredList: [],
+            // 选中的指示点
+            pointList: [],
+
+
+            Core,
+
+            canvasGroup: [],
+
+            pointerList: [],
+            tabsArray: [],
+
+            selectIndex: -1,
+            componentDetail: {},
+            componentStyle: {
+                'top': '0',
+                'left': '0'
+            },
+            timer: null,
+            currentExplore: {
+                i: null,
+                j: null
+            },
         }
     },
     methods: {
-        // 根据id获取爆炸图
-        getExploreDetail(id) {
-            this.$refs.ExploredContent.getItemExploreList(id);
-            this.getExploreList(id)
+        /** 获取 商品爆炸图 */
+        getItemExploreList(id) {
+            if(!id) return;
+            const ths = this;
+            this.pointerList = [];
+            this.tabsArray = [];
+            Core.Api.Item.getItemComponent({ target_id: id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM }).then((res)=>{
+                this.tabsArray = get(res, "list.list" , []);
+                this.parsePoint();
+                ths.$nextTick(()=>{
+                    ths.tabsArray.forEach((item, index) => {
+                        ths.loadImage(item.img, index);
+                    })
+                })
+                // 无爆炸图数据
+                console.log('getItemExploreList res', res);
+                if(res.list.count) {
+                    this.$emit('noData',false)
+                }
+            }).catch( err => {
+                console.log('getItemExploreList err', err);
+            });
+        },
+        parsePoint () {
+            this.tabsArray.forEach(item => {
+                let list = get(item, "item_component_list", []);
+                list.forEach(point => {
+                    point.start = point.start_point ? JSON.parse(point.start_point) : { x: 50, y: 50 };
+                    point.end = point.end_point ? JSON.parse(point.end_point) : { x: 50, y: 150 };
+                })
+            })
+        },
+        /** 加载图片，获取宽高 */
+        loadImage(url, index){
+            let img = new Image();
+            const ths = this;
+
+            img.onload = ()=>{
+                ths.imageLoadCallback(img.naturalWidth, img.naturalHeight, index);
+                img.onload = null;
+            };
+            img.src = this.$Util.imageFilter(url);
+        },
+        imageLoadCallback(width, height, index) {
+            let cvs = this.$refs[`exploreCanvas${index}`];
+            if(!cvs) return;
+            // if(cvs.length > 0) return;
+            if(Array.isArray(cvs) === false) {
+                cvs = [cvs]
+            }
+            this.canvasGroup[index] = cvs
+            // if(cvs.length > 0) this.canvasGroup[index] = cvs;
+            // else return;
+            let rate = width > 800 ? 1 : 800 / width;
+            cvs.forEach(canvas=>{
+                canvas.width = 800;
+                canvas.height = height / width * 800;
+                this.canvasUpdata(canvas, index, rate);
+            })
+        },
+        /** 刷新canvas画布 */
+        canvasUpdata(cv, index, rate){
+            let ctx = cv.getContext("2d");
+            let pointerList = get(this.tabsArray, `[${index}].item_component_list`, []);
+
+            ctx.clearRect(0, 0, cv.width, cv.height);
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = '#1890ff';
+            ctx.beginPath();
+            pointerList.forEach(item=>{
+                item.rate = rate;
+                ctx.moveTo(get(item,'start.x', 0) * rate , get(item,'start.y', 0) * rate);
+                ctx.lineTo(get(item,'end.x', 0) * rate, get(item,'end.y', 0) * rate);
+            })
+            ctx.stroke();
+        },
+        /** 显示点位详情 */
+        showDetail(i, j) {
+            let delay = 350;
+            if(i > -1) {
+                delay = 150;
+            }
+            if(this.timer) clearTimeout(this.timer);
+            const ths = this;
+            ths.timer = setTimeout(()=>{
+                j === null ? '' : ths.selectIndex = j;
+                ths.currentExplore = { i, j };
+                if(ths.selectIndex < 0) return;
+                let rate = get(ths.tabsArray, `[${i}].item_component_list[${ths.selectIndex }].rate`, 1);
+                let y = (get(ths.tabsArray, `[${i}].item_component_list[${ths.selectIndex }].end.y`, 0) + 10) * rate;
+                let x = (get(ths.tabsArray, `[${i}].item_component_list[${ths.selectIndex }].end.x`, 0) - 15) * rate;
+
+                ths.componentDetail = get(ths.tabsArray, `[${i}].item_component_list[${ths.selectIndex }].item`, {})
+                ths.componentStyle.top = `${y}px`;
+                ths.componentStyle.left = `${x}px`;
+                ths.timer = null;
+            }, delay)
         },
 
         // 无爆炸图数据
@@ -101,10 +278,10 @@ export default {
         getExploreList(id) {
             Core.Api.Item.getItemComponent({ target_id: id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM }).then((res)=>{
                 // 无爆炸图数据
-                console.log('getItemExploreList111 res', res);
+                console.log('getItemExploreList res', res);
                 this.exploredList = res.list.list
             }).catch( err => {
-                console.log('getItemExploreList111 err', err);
+                console.log('getItemExploreList err', err);
             });
         },
 
@@ -148,10 +325,203 @@ export default {
             if(this.value == 1) return
             this.value--;
         },
+
+        // 增加指示点
+        addPoint(j) {
+            if(this.pointList.indexOf(j) === -1) {
+                this.pointList.push(j)
+            }
+        },
+        // 判断是否选中
+        isActive(index) {
+            let t = false
+            this.pointList.forEach(item => {
+                if(item === index) t = true
+            })
+            return t
+        },
     },
 }
 </script>
 <style lang="less" scoped>
+.explored-content {
+    z-index: 10;
+    margin-top: 30px;
+    width: 100%;
+    * {
+        user-select: none;
+    }
+    > .title {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 22px;
+        color: #000000;
+        margin-bottom: 22px;
+    }
+    .carousel-list {
+        width: 800px;
+        max-height: 600px;
+        overflow: hidden;
+        .carousel-item {
+            position: relative;
+            padding-bottom: 150px;
+            >img {
+                width: 800px;
+            }
+            canvas {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+            }
+            .point-end, .point-start {
+                position: absolute;
+                border-radius: 50px;
+                user-select: none;
+                &:hover {
+                    background-color: @TC_LP;
+                    color: @TC_L;
+                }
+            }
+            .point-start {
+                width: 8px;
+                height: 8px;
+                background-color: @TC_LP;
+            }
+            .point-end {
+                width: 20px;
+                height: 20px;
+                line-height: 20px;
+                text-align: center;
+                font-size: 12px;
+                border: 1px solid @TC_LP;
+                background-color: white;
+                cursor: pointer;
+            }
+            .point-end-select {
+                background-color: @TC_LP;
+                color: @TC_L;
+            }
+        }
+    }
+    .explore-content {
+        position: relative;
+    }
+    .component-contain {
+        position: absolute;
+        display: flex;
+        flex-wrap: wrap;
+        z-index: 2;
+        padding: 12px 0;
+        width: 250px;
+        border-radius: 2px;
+        background-color: @BG_LP;
+        border: 1px solid @BG_LP;
+        font-size: 0;
+        &:before, &:after {
+            content: "";
+            display: block;
+            border-width: 5px;
+            position: absolute;
+            top: -10px;
+            left: 30px;
+            border-style: solid dashed dashed;
+            border-color: transparent transparent @BG_LP  transparent;
+            font-size: 0;
+            line-height: 0;
+        }
+        &:after {
+            top: -9px;
+            left: 30px;
+            border-color: transparent transparent @BG_LP transparent;
+        }
+        .contain-name {
+            position: relative;
+            padding: 0 16px;
+            width: 100%;
+            height: 20px;
+            line-height: 20px;
+            font-size: 16px;
+            color: @TC_L;
+            text-align: left;
+            overflow: hidden; //超出的文本隐藏
+            text-overflow: ellipsis; //溢出用省略号显示
+            white-space: nowrap;
+            .i_skew-bg {
+                font-size: 16px;
+                color: @TC_L;
+            }
+            .icon-name {
+                position: absolute;
+                top: 0;
+                left: 16px;
+                font-style: italic;
+                font-size: 12px;
+                font-weight: bold;
+                color: @TC_LP;
+                transform-origin: 50% 50%;
+                transform: scale(90%, 90%);
+            }
+        }
+        .contain-type {
+            display: flex;
+            margin-top: 12px;
+            padding: 0 16px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        .type-left {
+            width: 100%;
+            color: @TC_L;
+            font-size: 16px;
+            overflow: hidden; //超出的文本隐藏
+            text-overflow: ellipsis; //溢出用省略号显示
+            white-space: nowrap;
+        }
+        .edit-btn {
+            margin-top: 12px;
+            width: 100%;
+            text-align: center;
+        }
+        // position: absolute;
+        // padding: 12px 24px;
+        // width: 200px;
+        // border-radius: 5px;
+        // border: 1px solid @BG_LP;
+        // background-color: @BG_N;
+        // &:before, &:after {
+        //     content: "";
+        //     display: block;
+        //     border-width: 12px;
+        //     position: absolute;
+        //     top: -24px;
+        //     left: 22px;
+        //     border-style: solid dashed dashed;
+        //     border-color: transparent transparent @BG_LP  transparent;
+        //     font-size: 0;
+        //     line-height: 0;
+        // }
+        // &:after {
+        //     top: -23px;
+        //     left: 22px;
+        //     border-color: transparent transparent @BG_N transparent;
+        // }
+    }
+}
+.fade-enter-active {
+    transition: opacity 0.15s ease;
+}
+.fade-leave-active {
+    transition: opacity 0.3s ease;
+}
+.fade-enter-from, .fade-leave-to {
+    opacity: 0;
+}
+
+.mt {
+    margin-top: 40px !important;
+}
 .expolred-list {
     border: 1px solid @TC_car_bc;
     border-radius: 4px;
@@ -160,6 +530,9 @@ export default {
     margin-top: 20px;
     &:nth-of-type(1) {
         margin-top: 0;
+    }
+    &.active {
+        border-color: #006EF9;
     }
     .card-left {
         flex: 1;
