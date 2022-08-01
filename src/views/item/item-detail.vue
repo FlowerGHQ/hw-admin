@@ -137,6 +137,9 @@
                         </a-table>
                     </div>
                 </a-collapse-panel>
+                <!-- 上传附件 -->
+                <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
+                                @submit="getItemDetail" ref="AttachmentFile"/>
             </a-collapse>
         </div>
     </div>
@@ -145,13 +148,15 @@
 <script>
 import Core from '../../core';
 import ItemHeader from './components/ItemHeader.vue'
+import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 
 export default {
     name: 'RepairDetail',
-    components: {ItemHeader},
+    components: {ItemHeader, AttachmentFile},
     props: {},
     data() {
         return {
+            ATTACHMENT_TYPE: Core.Const.ATTACHMENT.TARGET_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,

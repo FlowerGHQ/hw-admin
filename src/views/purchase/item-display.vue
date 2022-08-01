@@ -61,7 +61,7 @@
                     <SimpleImageEmpty v-if="explodeShow" :desc="$t('p.no_item_explode')"/>
                 </a-tab-pane>
                 <a-tab-pane key="download" :tab="$t('n.download')">
-                    <DownLoad />
+                    <DownLoad :target_id='id' :target_type='ATTACHMENT_TYPE.ITEM' />
                 </a-tab-pane>
             </a-tabs>
         </div>
@@ -98,7 +98,7 @@ export default {
             // loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-
+            ATTACHMENT_TYPE: Core.Const.ATTACHMENT.TARGET_TYPE,
             id: null,
             detail: {
                 attr_list: {},
