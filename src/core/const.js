@@ -844,7 +844,8 @@ let Const = {
         TARGET_TYPE: { // 来源类型
             REPAIR_ORDER: 1, // 维修单附件
             PURCHASE_ORDER: 2,// 采购单附件
-            QUALITY_FEEDBACK: 5 // 质量反馈单
+            QUALITY_FEEDBACK: 5, // 质量反馈单
+            ITEM: 6 // 商品
         }
     },
     WAREHOUSE: {
