@@ -104,14 +104,14 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该账户吗？',
-                okText: '确定',
+                title: _this.$t('w.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Wallet.delete({id})
                         .then(() => {
-                            _this.$message.success('删除成功');
+                            _this.$message.success(this.$t('pop_up.delete_success'));
                             _this.routerChange('list');
                         }).catch((err) => {
                         console.log('handleDelete err', err);

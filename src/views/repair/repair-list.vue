@@ -566,7 +566,7 @@ export default {
         handleModalSubmit() { // 审核提交
             this.loading = true;
             if (this.editForm.audit_result === '') {
-                return this.$message.warning('请选择审核结果')
+                return this.$message.warning(this.$t('r.audit_result'))
             }
             Core.Api.Repair[this.modalType](this.editForm).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
@@ -579,14 +579,14 @@ export default {
       handleInvoice(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要结算吗？',
-                okText: '确定',
+                title: _this.$t('r.sure_settlement'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Repair.pay({id})
                         .then(() => {
-                            _this.$message.success('结算完成');
+                            _this.$message.success(this.$t('r.settlement'));
                             _this.getTableData();
                         }).catch((err) => {
                         console.log('handleInvoice err', err);
@@ -604,15 +604,15 @@ export default {
             console.log('id',id)
             let faultForm = Core.Util.deepCopy(this.faultForm)
             if (!faultForm.warehouse_id) {
-                return this.$message.warning('请选择仓库')
+                return this.$message.warning(this.$t('wa.choose_warehouse'))
             }
             if (!faultForm.fault_entity_uid) {
-                return this.$message.warning('请输入故障件编号')
+                return this.$message.warning(this.$t('r.input_fault_number'))
             }
             Core.Api.Repair.stock({
                 ...faultForm
             }).then(() => {
-                this.$message.success('入库完成');
+                this.$message.success(this.$t('n.stock_in_completed'));
                 this.handleModalClose()
                 this.getTableData();
             }).catch((err) => {

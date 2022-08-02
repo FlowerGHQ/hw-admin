@@ -56,12 +56,12 @@
                                v-if="activeKey === 'ItemStockList'"/>
                 </a-tab-pane>
 
-                <a-tab-pane key="MaterialStockList" tab="库存物料" v-if="detail.type == WAREHOUSE_TYPE.MATERIAL">
+                <a-tab-pane key="MaterialStockList" :tab="$t('wa.stock_material')" v-if="detail.type == WAREHOUSE_TYPE.MATERIAL">
                     <StockList type='material' :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
                                v-if="activeKey === 'MaterialStockList'"/>
                 </a-tab-pane>
 
-                <a-tab-pane key="CustomizeStockList" tab="库存广宣品"
+                <a-tab-pane key="CustomizeStockList" :tab="$t('wa.stock_customize')"
                             v-if="$auth('ADMIN') && detail.type == WAREHOUSE_TYPE.CUSTOMIZE">
                     <StockList type='customize' :warehouseId="warehouse_id" :detail="detail"
                                @submit="getWarehouseDetail"

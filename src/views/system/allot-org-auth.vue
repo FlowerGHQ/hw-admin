@@ -2,7 +2,7 @@
 <div id="AllotOrgAuth">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">组织权限管理</div>
+            <div class="title-area">{{ $t('n.org_auth') }}</div>
         </div>
         <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
             <template #expandIcon></template>
@@ -11,14 +11,14 @@
                        :indeterminate="indeterminate"
                        @change="onCheckAllChange">  Check all</div>-->
                 <template #extra>
-                    <a-button @click.stop="handleEditShow(key)" type="link" v-if="!org.edit && $auth('authority.save')"><i class="icon i_edit"/>设置</a-button>
+                    <a-button @click.stop="handleEditShow(key)" type="link" v-if="!org.edit && $auth('authority.save')"><i class="icon i_edit"/>{{ $t('def.set') }}</a-button>
                     <template v-else>
-                        <a-button @click.stop="handleEditSubmit(key)" type="link" v-if="$auth('authority.save')"><i class="icon i_confirm"/>保存</a-button>
-                        <a-button @click.stop="handleEditClose(key)" type="link" class="cancel" v-if="$auth('authority.save')"><i class="icon i_close_c"/>取消</a-button>
+                        <a-button @click.stop="handleEditSubmit(key)" type="link" v-if="$auth('authority.save')"><i class="icon i_confirm"/>{{ $t('def.save') }}</a-button>
+                        <a-button @click.stop="handleEditClose(key)" type="link" class="cancel" v-if="$auth('authority.save')"><i class="icon i_close_c"/>{{ $t('def.cancel') }}</a-button>
                     </template>
                 </template>
                 <div class="panel-content" v-if="!org.edit">
-                    <SimpleImageEmpty v-if="$Util.isEmptyObj(org.selected)" desc='该类型的组织尚未分配可管理权限'/>
+                    <SimpleImageEmpty v-if="$Util.isEmptyObj(org.selected)" :desc="$t('n.no_org_auth')"/>
                     <template v-for="item of org.options" :key="item.key">
                         <div class="form-item afs" v-if="item.select.length">
                             <div class="key">{{item.name}}:</div>

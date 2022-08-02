@@ -44,15 +44,15 @@
         </div>
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
-                <a-tab-pane key="UserRole" tab="角色分配">
+                <a-tab-pane key="UserRole" :tab="$t('u.role_assign')">
                     <UserRole type='item' :userId="id" :detail="detail" @submit="getUserDetail"
                                v-if="activeKey === 'UserRole'"/>
                 </a-tab-pane>
-                <a-tab-pane key="UserAuth" tab="权限管理">
+                <a-tab-pane key="UserAuth" :tab="$t('u.authority')">
                     <UserAuth type='item' :userId="id" :detail="detail" @submit="getUserDetail"
                               v-if="activeKey === 'UserAuth'"/>
                 </a-tab-pane>
-                <a-tab-pane key="UserScope" tab="资源管理">
+                <a-tab-pane key="UserScope" :tab="$t('u.resource')">
                     <UserScopeList type='item' :userId="id" :detail="detail" @submit="getUserDetail"
                               v-if="activeKey === 'UserScope'"/>
                 </a-tab-pane>

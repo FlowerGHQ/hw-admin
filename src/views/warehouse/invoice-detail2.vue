@@ -8,17 +8,17 @@
                 <a-button type="danger" ghost @click="handleCancel()" v-if="$auth('invoice.delete')"> <i class="icon i_close_c"/>{{ $t('def.cancel') }}</a-button>
             </template>
             <template v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) && detail.type === TYPE.IN && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')">
-                <a-button type="primary" @click="handleExportIn"><i class="icon i_download"/>导出</a-button>
+                <a-button type="primary" @click="handleExportIn"><i class="icon i_download"/>{{t('in.export')}}</a-button>
             </template>
 
             <AuditHandle v-if="(detail.status === STATUS.FINANCE_PASS || (detail.status === STATUS.WAIT_AUDIT && detail.type === TYPE.IN)) && $auth('invoice.warehouse-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"
-                                   :sPass="STATUS.AUDIT_PASS" :sRefuse="STATUS.AUDIT_REFUSE" @submit="getInvoiceDetail" ><i class="icon i_audit"/>仓库审核</AuditHandle>
-            <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && detail.type === TYPE.IN && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}完成</a-button>
+                                   :sPass="STATUS.AUDIT_PASS" :sRefuse="STATUS.AUDIT_REFUSE" @submit="getInvoiceDetail" ><i class="icon i_audit"/>{{$t('in.warehouse_audit')}}</AuditHandle>
+            <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && detail.type === TYPE.IN && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}{{$t('in.finish')}}</a-button>
             <template v-if="detail.type === TYPE.OUT">
                 <AuditHandle v-if="detail.status === STATUS.WAIT_AUDIT && $auth('invoice.finance-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"
-                                       :sPass="STATUS.FINANCE_PASS" :sRefuse="STATUS.AUDIT_REFUSE" @submit="getInvoiceDetail" ><i class="icon i_audit"/>财务审核</AuditHandle>
-                <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}完成</a-button>
-                <a-button type="primary" @click="handleExportOut" v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')"><i class="icon i_download"/>导出</a-button>
+                                       :sPass="STATUS.FINANCE_PASS" :sRefuse="STATUS.AUDIT_REFUSE" @submit="getInvoiceDetail" ><i class="icon i_audit"/>{{$t('in.finance_audit')}}</AuditHandle>
+                <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}{{$t('in.finish')}}</a-button>
+                <a-button type="primary" @click="handleExportOut" v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')"><i class="icon i_download"/>{{t('in.export')}}</a-button>
             </template>
         </div>
     </div>
@@ -82,7 +82,7 @@
                 <div class="value">{{ $Util.timeFilter(detail.audit_time) || '-' }}</div>
             </div>
             <div class="info-item" v-if="detail.type === TYPE.OUT">
-                <div class="key">财务审核时间</div>
+                <div class="key">{{ $t('in.finance_audit_time') }}</div>
                 <div class="value">{{ $Util.timeFilter(detail.finance_audit_time) || '-' }}</div>
             </div>
         </div>
@@ -96,10 +96,10 @@
                                 :sourceType="detail.type == TYPE.IN ? detail.source_type : 0"  :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
                         @select="handleAddItemChange"/>
                     <a-popover v-model:visible="production.addVisible" trigger="click" placement="left" v-else-if="production.maxCount"
-                        @visibleChange='(visible) => {!visible && handleProdAddCancel()}' title="请输入添加数量">
+                        @visibleChange='(visible) => {!visible && handleProdAddCancel()}' title="{{ $t('in.input_add_amount') }}">
                         <template #content>
                             <div class="prod-edit-popover">
-                                <a-input-number v-model:value="production.addCount" placeholder="添加数量"
+                                <a-input-number v-model:value="production.addCount" placeholder="{{ $t('in.add_amount') }}"
                                     @keydown.enter="handleProdAddChange(index)" :autofocus="true" :max="production.maxCount" :min='1' :precision="0"/>
                                 <div class="btns">
                                     <a-button type="primary" @click="handleProdAddCancel()" ghost >{{ $t('def.cancel') }}</a-button>
@@ -107,7 +107,7 @@
                                 </div>
                             </div>
                         </template>
-                        <a-button type="link" class="extra-btn" @click.stop>添加商品</a-button>
+                        <a-button type="link" class="extra-btn" @click.stop>{{ $t('in.add_item') }}</a-button>
                     </a-popover>
                 </template>
                 <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('item')">{{ $t('in.add') }}</a-button>
@@ -209,7 +209,7 @@
                             </template>
 
                             <template v-if="column.key === 'operation'" >
-                                <a-button type="link" @click="handleRowUidShow(record)" v-if="record.flag_entity === Core.Const.ITEM.FLAG_ENTITY.YES"><i class="icon i_edit"/>填写实例号 </a-button>
+                                <a-button type="link" @click="handleRowUidShow(record)" v-if="record.flag_entity === Core.Const.ITEM.FLAG_ENTITY.YES"><i class="icon i_edit"/>{{ $t('in.enter_instance_number') }}</a-button>
                             </template>
                             <template v-if="column.key === 'operation' && $auth('invoice.save')" >
                                 <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>{{ $t('in.change') }}</a-button>
@@ -328,10 +328,10 @@
 <!--            </div>-->
 <!--        </a-collapse-panel>-->
     </a-collapse>
-    <a-modal v-model:visible="childShow" title="填写实例号" class="attachment-file-upload-modal">
+    <a-modal v-model:visible="childShow" :title="$t('in.enter_instance_number')" class="attachment-file-upload-modal">
         <div class="form-title">
             <div class="form-item">
-                <div class="key">实例号:</div>
+                <div class="key">{{ $t('v.number') }}"</div>
                 <div class="value">
                     <a-input v-model:value="form.target_uid" style="width: 200px;" :placeholder="$t('def.input')" @blur="handleVehicleBlur()"/>
 <!--                        <template v-if="!$auth('ADMIN')">-->
@@ -341,7 +341,7 @@
 
                 </div>
                 <div class="key">
-                    <a-button @click="addInvoiceItemChild">添加</a-button>
+                    <a-button @click="addInvoiceItemChild">{{ $t('in.addition') }}</a-button>
                 </div>
             </div>
             <a-table :columns="childColumns" :data-source="childDate" :scroll="{ x: true }"
@@ -376,7 +376,7 @@
 <!--            <a-button @click="handleModalSubmit" type="primary">{{ $t('def.sure') }}</a-button>-->
         </template>
     </a-modal>
-    <a-modal v-model:visible="childInfoShow" title="填写实例号" class="attachment-file-upload-modal">
+    <a-modal v-model:visible="childInfoShow" :title="$t('in.enter_instance_number')" class="attachment-file-upload-modal">
         <div class="form-title">
             <a-table :columns="childColumns" :data-source="childDate" :scroll="{ x: true }"
                      :row-key="record => record.id" :pagination='false'>
@@ -517,9 +517,9 @@ export default {
                 {title: this.$t('i.code'), dataIndex: 'code',  key: 'code'},
                 {title: this.$t('i.type'), dataIndex: 'target_type',  key: 'target_type'},
                 {title: this.$t('i.spec'), dataIndex: 'spec', key: 'spec'},
-                {title: "是否有实例号", dataIndex: "flag_entity", key: 'flag_entity'},
-                {title: "实例号数量", dataIndex: "child_size", key: 'child_size'},
-                {title: "实际" + this.type_ch + this.$t('i.amount'), dataIndex: 'confirm_amount' , key: 'confirm_amount'},
+                {title: this.$t('in.has_number'), dataIndex: "flag_entity", key: 'flag_entity'},
+                {title: this.$t('in.instance_number_amount'), dataIndex: "child_size", key: 'child_size'},
+                {title: this.$t('in.realistic') + this.type_ch + this.$t('i.amount'), dataIndex: 'confirm_amount' , key: 'confirm_amount'},
                 {title: this.type_ch + this.$t('i.amount'), dataIndex: 'amount' , key: 'amount'},
                 {title: this.$t('def.operate'), key: 'operation'},
             ]
@@ -527,7 +527,7 @@ export default {
                 columns.pop()
             }
             if (this.detail.type == TYPE.OUT) {
-                columns.splice(2, 0, {title: '库存数量', dataIndex: 'stock', key: 'stock'})
+                columns.splice(2, 0, {title: this.$t('wa.quantity'), dataIndex: 'stock', key: 'stock'})
             }
             return columns
         },
@@ -973,7 +973,7 @@ export default {
                             }
 
                         } else {
-                            return this.$message.warning("该物料不存在");
+                            return this.$message.warning(this.$t('in.material_not_exist'));
                         }
                         break;
                 }
@@ -1028,12 +1028,12 @@ export default {
                 price,
             }
             if (!target.target_id) {
-                return this.$message.warning(`${type === 'item' ? this.$t('i.item') : '商品实例'}` + this.$t('in.no'));
+                return this.$message.warning(`${type === 'item' ? this.$t('i.item') : this.$t('i.item_instance')}` + this.$t('in.no'));
             }
             console.log("amount", item.amount)
 
             if (item.amount < item.child_size) {
-                return this.$message.warning("商品实例数量不能大于总数量");
+                return this.$message.warning(this.$t('in.instance_gt_total'));
             }
 
             Core.Api.InvoiceItem.save(target).then(() => {
@@ -1129,9 +1129,9 @@ export default {
         handleExportOut() { // 确认入库单是否导出
             let _this = this;
             this.$confirm({
-                title: '确认要导出吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('in.sure_export'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     _this.handleInvoiceExportOut();
                 }
@@ -1149,9 +1149,9 @@ export default {
         handleExportIn() { // 确认库单是否导出
             let _this = this;
             this.$confirm({
-                title: '确认要导出吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('in.sure_export'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     _this.handleInvoiceExportIn();
                 }

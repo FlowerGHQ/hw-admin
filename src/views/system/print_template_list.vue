@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">{{ $t('pt.list') }}</div>
             <div class="btns-area">
-                <a-button type="primary" @click="modalShow = true" v-if="$auth('ADMIN') && $auth('file.save')"><i class="icon i_add"/>打印规则</a-button>
+                <a-button type="primary" @click="modalShow = true" v-if="$auth('ADMIN') && $auth('file.save')"><i class="icon i_add"/>{{ $t('pt.rule') }}</a-button>
             </div>
         </div>
         <div class="search-container">
@@ -64,23 +64,23 @@
                 @showSizeChange="pageSizeChange"
             />
         </div>
-        <a-modal v-model:visible="modalShow" title="设置打印脚本" :after-close='closeVisible'>
+        <a-modal v-model:visible="modalShow" :title="$t('pt.set_script')" :after-close='closeVisible'>
             <div class="form-item">
-                <div class="key">名称：</div>
+                <div class="key">{{ $t('pt.name') }}：</div>
                 <div class="value" style="width: 100%">
-                    <a-input v-model:value="dialogForm.name" placeholder="请输入产品名称"></a-input>
+                    <a-input v-model:value="dialogForm.name" :placeholder="$t('pt.enter_product_name')"></a-input>
                 </div>
             </div>
             <div class="form-item textarea required" >
-                <div class="key">打印脚本:</div>
+                <div class="key">{{ $t('pt.script') }}:</div>
                 <div class="value">
                     <a-textarea v-model:value="dialogForm.data" :placeholder="$t('def.input')"
                                 :auto-size="{ minRows: 2 }" />
                 </div>
             </div>
             <template #footer>
-                <a-button @click="closeVisible">取消</a-button>
-                <a-button @click="handleSave()" type="primary">确定</a-button>
+                <a-button @click="closeVisible">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleSave()" type="primary">{{ $t('def.sure') }}</a-button>
             </template>
         </a-modal>
     </div>
@@ -226,17 +226,17 @@ export default {
         },
         handleSave() {
             if (!this.dialogForm.name) {
-                return this.$message.warning('请输入产品名称');
+                return this.$message.warning(this.$t('pt.enter_product_name'));
             }
             if (!this.dialogForm.data) {
-                return this.$message.warning('请输入打印脚本');
+                return this.$message.warning(this.$t('pt.enter_script'));
             }
             Core.Api.PrintTemplate.save({
                 ...this.dialogForm
             }
 
             ).then((res) => {
-                this.$message.success('保存成功');
+                this.$message.success(this.$t('pop_up.save_success'));
                 this.getTableData();
                 this.closeVisible();
             });

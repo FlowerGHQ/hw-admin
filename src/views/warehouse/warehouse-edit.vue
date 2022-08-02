@@ -23,8 +23,8 @@
                             <a-radio-group v-model:value="form.type">
                                 <a-radio :value="warehouseType.QUALITY">{{ $t('wa.good') }}</a-radio>
                                 <a-radio :value="warehouseType.DEFECTIVE">{{ $t('wa.imperfect') }}</a-radio>
-                                <a-radio :value="warehouseType.MATERIAL" v-if="$auth('ADMIN')">物料仓</a-radio>
-                                <a-radio :value="warehouseType.CUSTOMIZE" v-if="$auth('ADMIN')">广宣品仓</a-radio>
+                                <a-radio :value="warehouseType.MATERIAL" v-if="$auth('ADMIN')">{{ $t('wa.material_warehouse') }}</a-radio>
+                                <a-radio :value="warehouseType.CUSTOMIZE" v-if="$auth('ADMIN')">{{ $t('wa.customize_warehouse') }}</a-radio>
                             </a-radio-group>
                         </a-radio-group>
                     </div>

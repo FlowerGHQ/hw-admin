@@ -4,7 +4,7 @@
         <div class="title-area">{{ form.id ? $t('f.edit') : $t('f.save') }}</div>
     </div>
     <div class="form-block">
-        <div class="form-title"><div class="title">附件信息</div></div>
+        <div class="form-title"><div class="title">{{ $t('n.attachment') }}</div></div>
         <div class="form-content">
             <div class="form-item required">
                 <div class="key">{{  $t('n.name') }}:</div>

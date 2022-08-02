@@ -1,14 +1,14 @@
 <template>
     <div id="StockList" class="list-container">
         <div class="title-container">
-            <div class="title-area">库存总览</div>
+            <div class="title-area">{{ $t('wa.overview') }}</div>
         </div>
         <div class="search-container">
             <a-row class="search-area">
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">所属仓库:</div>
+                    <div class="key">{{ $t('wa.related') }}:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.warehouse_id" placeholder="请选择仓库" @change="handleSearch">
+                        <a-select v-model:value="searchForm.warehouse_id" :placeholder="$t('wa.choose_warehouse')" @change="handleSearch">
                             <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{
                                     item.name
                                 }}
@@ -17,11 +17,11 @@
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">产品类型:</div>
+                    <div class="key">{{ $t('wa.product_type') }}:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.target_type" placeholder="请选择产品类型" @change="handleSearch">
+                        <a-select v-model:value="searchForm.target_type" :placeholder="$t('wa.choose_product_type')" @change="handleSearch">
                             <a-select-option v-for="(val, key) of targetTypeMap" :key="key" :value="Number(key)">{{
-                                    val
+                                    val[$i18n.locale]
                                 }}
                             </a-select-option>
                         </a-select>
@@ -29,8 +29,8 @@
                 </a-col>
             </a-row>
             <div class="btn-area">
-                <a-button @click="handleSearch" type="primary">查询</a-button>
-                <a-button @click="handleSearchReset">重置</a-button>
+                <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
+                <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
             </div>
         </div>
         <div class="table-container">
@@ -43,7 +43,7 @@
                         </a-tooltip>
                     </template>
                     <template v-if="column.dataIndex === 'target_type'">
-                        {{ targetTypeMap[text] || '未知' }}
+                        {{ targetTypeMap[text][$i18n.locale] || $t('wa.unknown') }}
                     </template>
                     <template v-if="column.key === 'count'">
                         {{ text || 0 }}
@@ -95,8 +95,8 @@
                         </template>
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' v-if="record.target_type === 1" @click="routerChange('item', record.item)"><i class="icon i_detail"/>详情</a-button>
-                        <a-button type='link' v-else @click="routerChange('material', record.material)"><i class="icon i_detail"/>详情</a-button>
+                        <a-button type='link' v-if="record.target_type === 1" @click="routerChange('item', record.item)"><i class="icon i_detail"/>{{$t('def.detail')}}</a-button>
+                        <a-button type='link' v-else @click="routerChange('material', record.material)"><i class="icon i_detail"/>{{$t('def.detail')}}</a-button>
                     </template>
                 </template>
             </a-table>
@@ -136,8 +136,10 @@ export default {
 
             warehouseList: [],
             targetTypeMap: {
-                1: '商品',
-                2: '物料',
+              1: {zh: '商品', en: 'Commodity', value: '0', color: 'primary',  key: '0'},
+              2: {zh: '物料', en: 'Material', value: '0', color: 'primary',  key: '0'},
+                // 1: '商品',
+                // 2: '物料',
             },
             searchForm: {
                 target_type: undefined,
@@ -150,16 +152,16 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: '类型', dataIndex: 'target_type'},
-                {title: '名称', type: 'name'},
-                {title: '编号', type: 'target', key: 'code'},
-                {title: '所属仓库', dataIndex: ['warehouse', 'name'], key: 'warehouse'},
-                {title: '库存数量', dataIndex: 'stock', key: 'count'},
-                {title: '需求数量', dataIndex: 'request_count', key: 'count'},
-                {title: '生产中数量', dataIndex: 'production_count', key: 'count'},
-                {title: '分类', type: 'category'},
-                {title: '规格', type: 'spec'},
-                {title: '操作', key: 'operation', fixed: 'right'},
+                {title: this.$t('n.type'), dataIndex: 'target_type'},
+                {title: this.$t('n.name'), type: 'name'},
+                {title: this.$t('wa.codes'), type: 'target', key: 'code'},
+                {title: this.$t('wa.related'), dataIndex: ['warehouse', 'name'], key: 'warehouse'},
+                {title: this.$t('wa.quantity'), dataIndex: 'stock', key: 'count'},
+                {title: this.$t('wa.required'), dataIndex: 'request_count', key: 'count'},
+                {title: this.$t('wa.production_quantity'), dataIndex: 'production_count', key: 'count'},
+                {title: this.$t('wa.category'), type: 'category'},
+                {title: this.$t('wa.spec'), type: 'spec'},
+                {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             return columns
         },

@@ -18,7 +18,7 @@
                         <i class="icon i_submit"/>{{ $t('def.submit') }}
                     </a-button>
                     <a-button type="primary" @click="handleRepairEndShow()" v-if="detail.status == STATUS.WAIT_REPAIR">
-                        <i class="icon"/>维修
+                        <i class="icon"/>{{ $t('r.repair_a') }}
                     </a-button>
                     <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END">
                         <i class="icon i_settle"/>{{ $t('r.settle_accounts') }}
@@ -81,7 +81,7 @@
                     <div class="value">{{ detail.desc }}</div>
                 </div>
                 <div class="info-item">
-                    <div class="key">备注</div>
+                    <div class="key">{{ $t('r.remark_a') }}</div>
                     <div class="value">{{ detail.remark }}</div>
                 </div>
 
@@ -129,48 +129,48 @@
                 </div>
             </div>
         </a-modal>
-        <a-modal v-model:visible="repairEndShow" title="维修" class="repair-audit-modal" :after-close='handleRepairEndClose'>
+        <a-modal v-model:visible="repairEndShow" :title="$t('r.repair_a')" class="repair-audit-modal" :after-close='handleRepairEndClose'>
             <div class="modal-content">
                 <div class="form-item required">
-                    <div class="key">维修结果:</div>
+                    <div class="key">{{ $t('r.result') }}:</div>
                     <a-radio-group v-model:value="repairForm.results">
-                        <a-radio :value="1">通过</a-radio>
-                        <a-radio :value="0">不通过</a-radio>
+                        <a-radio :value="1">{{ $t('def.sure') }}</a-radio>
+                        <a-radio :value="0">{{ $t('def.cancel') }}</a-radio>
                     </a-radio-group>
                 </div>
                 <div class="form-item textarea">
-                    <div class="key">备注:</div>
+                    <div class="key">{{ $t('r.remark_a') }}:</div>
                     <div class="value">
-                        <a-textarea v-model:value="repairForm.repair_message" placeholder="请输入备注"
+                        <a-textarea v-model:value="repairForm.repair_message" :placeholder="$t('r.input_remark')"
                                     :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                     </div>
                 </div>
             </div>
             <template #footer>
-                <a-button @click="repairEndShow = false">取消</a-button>
-                <a-button @click="handleRepairEnd()" type="primary">确定</a-button>
+                <a-button @click="repairEndShow = false">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleRepairEnd()" type="primary">{{ $t('def.sure') }}</a-button>
             </template>
         </a-modal>
         <a-modal v-model:visible="repairAuditShow" :title="$t('n.audit')" class="repair-audit-modal" :after-close='handleAuditClose'>
             <div class="modal-content">
                 <div class="form-item required">
-                    <div class="key">审核结果:</div>
+                    <div class="key">{{ $t('n.result') }}:</div>
                     <a-radio-group v-model:value="auditForm.audit_result">
-                        <a-radio :value="1">通过</a-radio>
-                        <a-radio :value="0">不通过</a-radio>
+                        <a-radio :value="1">{{ $t('n.pass') }}</a-radio>
+                        <a-radio :value="0">{{ $t('n.fail') }}</a-radio>
                     </a-radio-group>
                 </div>
                 <div class="form-item textarea required" v-if="auditForm.audit_result === 0">
-                    <div class="key">原因:</div>
+                    <div class="key">{{ $t('n.reason') }}:</div>
                     <div class="value">
-                        <a-textarea v-model:value="auditForm.audit_message" placeholder="请输入不通过原因"
+                        <a-textarea v-model:value="auditForm.audit_message" :placeholder="$t('r.fail_result')"
                             :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                     </div>
                 </div>
             </div>
             <template #footer>
-                <a-button @click="repairAuditShow = false">取消</a-button>
-                <a-button @click="handleAuditSubmit()" type="primary">确定</a-button>
+                <a-button @click="repairAuditShow = false">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleAuditSubmit()" type="primary">{{ $t('def.sure') }}</a-button>
             </template>
         </a-modal>
     </template>
@@ -379,7 +379,7 @@ export default {
         handleRepairEnd() {
             let form = Core.Util.deepCopy(this.repairForm)
             if (!form.results) {
-                return this.$message.warning('请选择维修结果')
+                return this.$message.warning(_this.$t('r.repair_result'))
             }
             let _this = this;
             Core.Api.Repair.repair({id: this.id, ...form}).then(() => {
@@ -420,7 +420,7 @@ export default {
         handleAuditSubmit() { // 审核提交
             let form = Core.Util.deepCopy(this.auditForm)
             if (form.audit_result === '') {
-                return this.$message.warning('请选择审核结果')
+                return this.$message.warning(this.$t('r.audit_result'))
             }
             /*if (form.audit_result === 0 && !form.audit_message) {
                 return this.$message.warning('请输入审核未通过的原因')
@@ -474,16 +474,16 @@ export default {
             this.loading = true;
             let form = Core.Util.deepCopy(this.deliveryForm)
             if (!form.company_uid) {
-                return this.$message.warning('请选择物流公司')
+                return this.$message.warning(this.$t('r.logistics_company'))
             }
             if (!form.waybill_uid) {
-                return this.$message.warning('请输入物流单号')
+                return this.$message.warning(this.$t('r.logistics_number'))
             }
             Core.Api.Repair.post({
                 id: this.id,
                 ...form
             }).then(() => {
-                this.$message.success('操作成功')
+                this.$message.success(this.$t('pop_up.operate'))
                 this.getRepairDetail()
                 this.$refs.WaybillInfo.getWaybillDetail();
             }).catch(err => {

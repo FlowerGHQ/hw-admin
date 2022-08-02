@@ -949,7 +949,7 @@ const routes = [
 		name: 'ManufactureManagement',
 		meta: {
 			title: '生产管理',
-			title_en: 'Inventories',
+			title_en: 'Production',
 			icon: 'i_s_warehouse',
 			roles: [LOGIN_TYPE.ADMIN],
             auth: ['production-order.list', 'bom.list'],
@@ -1082,7 +1082,7 @@ const routes = [
 		        component: () => import ('@/views/warehouse/stock-list.vue'),
 		        meta: {
 			        title: '库存总览',
-			        title_en: 'Total inventory',
+			        title_en: 'Inventory overview',
 			        roles: [LOGIN_TYPE.ADMIN],
                     auth: ['stock.list'],
 		        }
@@ -1093,7 +1093,7 @@ const routes = [
                 component: () => import('@/views/warehouse/invoice-list.vue'),
                 meta: {
                     title: '出入库管理',
-                    title_en: 'Inventory',
+                    title_en: 'Inbound and outbound',
                     auth: ['invoice.list'],
                 }
             },
@@ -1278,6 +1278,7 @@ const routes = [
         name: 'AftersalesManagement',
         meta: {
             title: '售后管理',
+            title_en: 'After-sales',
             icon: 'i_s_temp',
             auth: ["after-sales-order.list"],
         },
