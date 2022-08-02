@@ -10,7 +10,7 @@
                     </a-button>
 
                     <a-button type="primary" @click="updateFeedback()" v-if="haveUpdate && !$auth('ADMIN') && $auth('quality-feedback.save')">
-                        <i class="icon i_audit"/>修改
+                        <i class="icon i_audit"/>{{ $t('n.amend') }}
                     </a-button>
                 </template>
                 <a-button type="primary" @click="handleAuditShow()" v-if="detail.status === STATUS.WAIT_AFTER_SALES_AUDIT && $auth('ADMIN') && $auth('quality-feedback.after-audit')">
@@ -23,11 +23,11 @@
                     <i class="icon i_audit"/>{{ $t('n.audit') }}
                 </a-button>
                 <a-button type="primary" @click="handleFeedbackShow()" v-if="(detail.status === STATUS.WAIT_FEEDBACK || detail.status === STATUS.FEEDBACK_AUDIT_FAIL) && $auth('ADMIN') && $auth('quality-feedback.feedback')">
-                    <i class="icon i_audit"/>反馈
+                    <i class="icon i_audit"/>{{ $t('fe.title') }}
                 </a-button>
 
               <a-button type="primary" @click="handleExportConfirm()" v-if="detail.status === STATUS.CLOSE && $auth('ADMIN')">
-                <i class="icon i_audit"/>导出
+                <i class="icon i_audit"/>{{ $t('n.export') }}
               </a-button>
             </div>
         </div>
@@ -85,63 +85,63 @@
         </div>
     </div>
     <template class="modal-container">
-        <a-modal v-model:visible="feedbackAuditShow" title="审核" class="repair-audit-modal" :after-close='handleAuditClose'>
+        <a-modal v-model:visible="feedbackAuditShow" :title="$t('n.audit')" class="repair-audit-modal" :after-close='handleAuditClose'>
             <div class="modal-content">
                 <div class="form-item required">
-                    <div class="key">审核结果:</div>
+                    <div class="key">{{ $t('n.result_a') }}:</div>
                     <a-radio-group v-model:value="auditForm.audit_result">
-                        <a-radio :value="1">通过</a-radio>
-                        <a-radio :value="2">不通过</a-radio>
-                        <a-radio :value="3">拒绝</a-radio>
+                        <a-radio :value="1">{{ $t('n.pass') }}</a-radio>
+                        <a-radio :value="2">{{ $t('n.fail') }}</a-radio>
+                        <a-radio :value="3">{{ $t('n.refuse') }}</a-radio>
                     </a-radio-group>
                 </div>
                 <div class="form-item textarea required">
-                    <div class="key">原因:</div>
+                    <div class="key">{{ $t('n.reason') }}:</div>
                     <div class="value">
-                        <a-textarea v-model:value="auditForm.audit_message" placeholder="请输入原因"
+                        <a-textarea v-model:value="auditForm.audit_message" :placeholder="$t('n.please_input')+ $t('n.reason')"
                             :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                     </div>
                 </div>
             </div>
             <template #footer>
-                <a-button @click="feedbackAuditShow = false">取消</a-button>
-                <a-button @click="handleAuditSubmit()" type="primary">确定</a-button>
+                <a-button @click="feedbackAuditShow = false">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleAuditSubmit()" type="primary">{{ $t('def.ok') }}</a-button>
             </template>
         </a-modal>
-        <a-modal v-model:visible="feedbackShow" title="审核" class="repair-audit-modal" :after-close='handleFeedbackClose'>
+        <a-modal v-model:visible="feedbackShow" :title="$t('n.audit')" class="repair-audit-modal" :after-close='handleFeedbackClose'>
             <div class="modal-content">
                 <div class="form-item textarea required">
-                    <div class="key">故障分析:</div>
+                    <div class="key">{{ $t('n.fault_analysis') }}:</div>
                     <div class="value">
-                        <a-textarea v-model:value="feedbackForm.fault" placeholder="请输入故障分析"
+                        <a-textarea v-model:value="feedbackForm.fault" :placeholder="$t('n.please_input')+ $t('n.fault_analysis')"
                                     :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                     </div>
                 </div>
                 <div class="form-item textarea required">
-                    <div class="key">维修措施:</div>
+                    <div class="key">{{ $t('fe.maintenance') }}:</div>
                     <div class="value">
-                        <a-textarea v-model:value="feedbackForm.treatment" placeholder="请输入维修措施"
+                        <a-textarea v-model:value="feedbackForm.treatment" :placeholder="$t('n.please_input')+ $t('fe.maintenance')"
                                     :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                     </div>
                 </div>
                 <div class="form-item textarea required">
-                    <div class="key">解决方案:</div>
+                    <div class="key">{{ $t('fe.solution') }}:</div>
                     <div class="value">
-                        <a-textarea v-model:value="feedbackForm.solution" placeholder="请输入解决方案"
+                        <a-textarea v-model:value="feedbackForm.solution" :placeholder="$t('n.please_input')+ $t('fe.solution')"
                                     :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                     </div>
                 </div>
                 <div class="form-item textarea required">
-                    <div class="key">需求:</div>
+                    <div class="key">{{ $t('fe.demand') }}:</div>
                     <div class="value">
-                        <a-textarea v-model:value="feedbackForm.requirement" placeholder="请输入需求"
+                        <a-textarea v-model:value="feedbackForm.requirement" :placeholder="$t('n.please_input')+ $t('fe.demand')"
                                     :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                     </div>
                 </div>
             </div>
             <template #footer>
-                <a-button @click="feedbackShow = false">取消</a-button>
-                <a-button @click="handleFeedbackSubmit()" type="primary">确定</a-button>
+                <a-button @click="feedbackShow = false">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleFeedbackSubmit()" type="primary">{{ $t('def.ok') }}</a-button>
             </template>
         </a-modal>
     </template>
@@ -380,10 +380,10 @@ export default {
         handleAuditSubmit() { // 审核提交
             let form = Core.Util.deepCopy(this.auditForm)
             if (!form.audit_result) {
-                return this.$message.warning('请选择审核结果')
+                return this.$message.warning(this.$t('def.select') + this.$t('n.result'))
             }
             if ((form.audit_result === 2 ||form.audit_result === 3) && !form.audit_message) {
-                return this.$message.warning('请输入审核未通过的原因')
+                return this.$message.warning(this.$t('audit.reason'))
             }
             this.loading = true;
             Core.Api.Feedback.audit({
@@ -463,16 +463,16 @@ export default {
             this.loading = true;
             let form = Core.Util.deepCopy(this.deliveryForm)
             if (!form.company_uid) {
-                return this.$message.warning('请选择物流公司')
+                return this.$message.warning(this.$t('n.choose') + this.$t('n.logistics_company'))
             }
             if (!form.waybill_uid) {
-                return this.$message.warning('请输入物流单号')
+                return this.$message.warning(this.$t('n.please_input') + this.$t('n.tracking_number'))
             }
             Core.Api.Repair.post({
                 id: this.id,
                 ...form
             }).then(() => {
-                this.$message.success('操作成功')
+                this.$message.success(this.$t('pop_up.operate'))
                 this.getFeedbackDetail()
                 this.$refs.WaybillInfo.getWaybillDetail();
             }).catch(err => {

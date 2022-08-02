@@ -12,7 +12,7 @@
                         accept=".xlsx,.xls"
                         @change="handleMatterChange">
                         <a-button type="primary" class="file-upload-btn">
-                            <i class="icon i_add"/> 批量导入
+                            <i class="icon i_add"/> {{ $t('v.bulk_import') }}
                         </a-button>
                     </a-upload>
                 </div>
@@ -129,39 +129,39 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="vehicleShow" :title="editForm.uid ? title + '编辑' : '新增' + title" class="vehicle-edit-modal"
+            <a-modal v-model:visible="vehicleShow" :title="editForm.uid ? title + $t('n.edit') : $t('v.save') + title" class="vehicle-edit-modal"
                 :after-close='handleVehicleClose'>
                 <div class="modal-content">
                     <div class="form-item required">
-                        <div class="key">商品编码:</div>
-                        <a-input v-model:value="editForm.item_code" placeholder="请输入对应的商品编码" @blur="handleItemCodeBlur"/>
+                        <div class="key">{{ $t('i.code') }}:</div>
+                        <a-input v-model:value="editForm.item_code" :placeholder="$t('i.commodity_code')" @blur="handleItemCodeBlur"/>
                         <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
                         <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                     </div>
                     <div class="form-item required">
-                        <div class="key">{{ title + '编号'}}</div>
-                        <a-input v-model:value="editForm.uid" :placeholder="'请输入' + title + '编号'"/>
+                        <div class="key">{{ title + $t('n.serial_number')}}</div>
+                        <a-input v-model:value="editForm.uid" :placeholder="$t('n.please_input') + title + $t('n.serial_number')"/>
                     </div>
                 </div>
                 <template #footer>
-                    <a-button @click="vehicleShow = false">取消</a-button>
-                    <a-button @click="handleVehicleSubmit" type="primary">确定</a-button>
+                    <a-button @click="vehicleShow = false">{{ $t('def.cancel') }}</a-button>
+                    <a-button @click="handleVehicleSubmit" type="primary">{{ $t('def.ok') }}</a-button>
                 </template>
             </a-modal>
-            <a-modal v-model:visible="entityShow" title="批量设置到港时间" class="arrival-time-modal" :after-close='handleEntityClose'>
+            <a-modal v-model:visible="entityShow" :title="$t('v.set')" class="arrival-time-modal" :after-close='handleEntityClose'>
                 <div class="modal-content">
                     <div class="form-item required">
-                        <div class="key">到港时间:</div>
+                        <div class="key">{{ $t('r.arrival_time') }}:</div>
                         <div class="value">
-                            <a-date-picker v-model:value="entityForm.arrival_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" placeholder="请选择到港时间">
+                            <a-date-picker v-model:value="entityForm.arrival_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" :placeholder="$t('r.select_arrival')">
                                 <template #suffixIcon><i class="icon i_calendar"/></template>
                             </a-date-picker>
                         </div>
                     </div>
                 </div>
                 <template #footer>
-                    <a-button @click="entityShow = false">取消</a-button>
-                    <a-button @click="handleEntitySubmit" type="primary">确定</a-button>
+                    <a-button @click="entityShow = false">{{ $t('def.cancel') }}</a-button>
+                    <a-button @click="handleEntitySubmit" type="primary">{{ $t('def.ok') }}</a-button>
                 </template>
             </a-modal>
         </template>
@@ -476,7 +476,7 @@ export default {
                 if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
                 } else {
-                    return this.$message.success('上传成功');
+                    return this.$message.success(this.$t('i.uploaded'));
                 }
             }
             this.upload.fileList = fileList
@@ -511,7 +511,7 @@ export default {
             form.ids = this.selectedRowKeys.join(',')
             Core.Api.Entity.batchSave(form).then(res => {
                 console.log('handleEntitySubmit res', res)
-                this.$message.success('批量设置成功')
+                this.$message.success(this.$t('i.settings') + this.$t('pop_up.success'))
                 this.handleEntityClose()
                 this.getTableData()
                 this.selectedRowKeys = []

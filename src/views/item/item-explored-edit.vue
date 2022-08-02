@@ -118,7 +118,7 @@
                                 {{ (item.item || {}).name }}
                             </div>
                             <div class="contain-type">
-                                <div class="type-left">型号:&nbsp;{{ (item.item || {}).model}}</div>
+                                <div class="type-left">{{ $t('def.model') }}:&nbsp;{{ (item.item || {}).model}}</div>
                                 <div class="edit-btn" @click="showEdit(index)">{{ $t('def.edit') }}</div>
                             </div>
                         </div>
@@ -140,7 +140,7 @@
             :disabled-checked='checkedIds'
             @select="(ids,items) => handleAddShow(TARGET_TYPE.ITEM, ids, items)"
         >
-            添加商品
+            {{ $t('i.add') }}
         </ItemSelect>
     </div>
     <AddExploreImage :modalShow="showAddModal" @addExplore="handlerAdd" @closeModal="clickShowAdd(false)"/>
@@ -305,16 +305,16 @@ export default {
         clickDeleteExplore() {
             const ths = this;
             this.$confirm({
-                title: `确定要删除 ${this.tabsArray[this.currentTab].name} 爆炸图？`,
-                okText: '确定',
+                title: ths.$t('pop_up.sure') + ths.$t('pop_up.delete') + `${this.tabsArray[this.currentTab].name}` + ths.$t('i.view') + '？ ' ,
+                okText: ths.$t('def.ok'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: ths.$t('def.cancel'),
                 onOk() {
                     const param = {
                         item_component_set_list: ths.tabsArray.filter((item,index) => index !== ths.currentTab),
                         item_id: ths.id,
                     }
-                    ths.requestSave(param,"删除",ths.getItemExploreList.bind(ths))
+                    ths.requestSave(param,ths.$t('pop_up.delete'),ths.getItemExploreList.bind(ths))
                 },
             });
         },
@@ -323,7 +323,7 @@ export default {
             // addItemComponent
             Core.Api.Item.addItemComponent({...info, ...{ target_id: this.id ,target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM }}).then(()=>{
                 this.loadImage(info.img);
-                this.$message.success(info.id ? "修改成功" : "新增成功");
+                this.$message.success(info.id ? ths.$t('n.amend') + ths.$t('pop_up.success') : ths.$t('v.save') + ths.$t('pop_up.success'));
                 this.clickShowAdd(false);
                 this.getItemExploreList();
             }).catch(err => {

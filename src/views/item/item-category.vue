@@ -261,10 +261,10 @@ export default {
         handleAlarmChange(record) {
             let _this = this
             Core.Util.confirm({
-                title: `确定要${record.display_mode == 2 ? '隐藏' : '显示'}爆炸图吗？`,
-                okText: '确定',
+                title: _this.$t('pop_up.sure') + `${record.display_mode == 2 ? _this.$t('pop_up.conceal') : _this.$t('pop_up.display')}` + _this.$t('i.diagram_w') + '？' ,
+                okText: _this.$t('def.ok'),
                 okType: 'success',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     console.log('handleAlarmChange: ok',record)
                     Core.Api.ItemCategory.updateDisplay({

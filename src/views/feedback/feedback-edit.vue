@@ -56,9 +56,9 @@
                 </div>
             </div>
             <div class="form-item">
-                <div class="key">购买时间</div>
+                <div class="key">{{ $t('r.time_buying') }}</div>
                 <div class="value">
-                    <a-date-picker v-model:value="form.sale_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" placeholder="请选择到港时间">
+                    <a-date-picker v-model:value="form.sale_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" :placeholder="$t('r.select_arrival')">
                         <template #suffixIcon><i class="icon i_calendar"/></template>
                     </a-date-picker>
                 </div>

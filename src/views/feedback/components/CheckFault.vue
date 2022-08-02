@@ -33,12 +33,12 @@
                             </template>
                             <template v-if="column.dataIndex === 'price'">
                                 € <a-input-number v-model:value="record.price" style="width: 82px;"
-                                    :min="0" :precision="2" placeholder="请输入"/>
+                                    :min="0" :precision="2" :placeholder="$t('n.please_input')"/>
                             </template>
 
                             <template v-if="column.key === 'amount'">
                                 <a-input-number v-model:value="record.amount" style="width: 66px;"
-                                    :min="1" :precision="0" placeholder="请输入" @change="handleItemAmountChange(fault, index)"/> {{ $t('in.item') }}
+                                    :min="1" :precision="0" :placeholder="$t('n.please_input')" @change="handleItemAmountChange(fault, index)"/> {{ $t('in.item') }}
                             </template>
 
                             <template v-if="column.key === 'total_price'">
@@ -58,7 +58,7 @@
     </a-collapse>
     <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
         <template #expandIcon ><i class="icon i_expan_l"/> </template>
-        <a-collapse-panel key="Remark" header="详细描述" class="gray-collapse-panel">
+        <a-collapse-panel key="Remark" :header="$t('n.elaborate')" class="gray-collapse-panel">
             <div class="panel-content">
                 <div class="form-item">
                     <div class="key">{{ $t('fe.feedback_title') }}:</div>

@@ -5,28 +5,28 @@
         <a-collapse-panel key="feedback" header="反馈" class="gray-collapse-panel">
             <div class="panel-content">
                 <div class="form-item textarea">
-                    <div class="key">故障分析:</div>
+                    <div class="key">{{ $t('fe.title') }}:</div>
                     <div class="value">
                         <a-textarea v-model:value="detail.fault"
                                     :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500' disabled/>
                     </div>
                 </div>
                 <div class="form-item textarea">
-                    <div class="key">维修措施:</div>
+                    <div class="key">{{ $t('fe.maintenance') }}:</div>
                     <div class="value">
                         <a-textarea v-model:value="detail.solution"
                                     :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500' disabled/>
                     </div>
                 </div>
                 <div class="form-item textarea">
-                    <div class="key">解决方案:</div>
+                    <div class="key">{{ $t('fe.solution') }}:</div>
                     <div class="value">
                         <a-textarea v-model:value="detail.solution"
                                     :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500' disabled/>
                     </div>
                 </div>
                 <div class="form-item textarea">
-                    <div class="key">需求:</div>
+                    <div class="key">{{ $t('fe.demand') }}:</div>
                     <div class="value">
                         <a-textarea v-model:value="detail.requirement"
                                     :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500' disabled/>

@@ -4,14 +4,14 @@
     <SearchRangePicker @search='handleTimeChange'/>
     <div class="statistic-container">
         <div class="statistic-item">
-            <div class="title"><i class="icon i_cart"/>采购订单总计</div>
+            <div class="title"><i class="icon i_cart"/>{{ $t('n.total_purchase') }}</div>
             <div class="count">
                 <span>{{stat.purchase}}</span>
                 <div class="more"><i class="icon i_more" @click="routerChange('purchase')"/></div>
             </div>
         </div>
         <div class="statistic-item">
-            <div class="title"><i class="icon i_order"/>维修工单总计</div>
+            <div class="title"><i class="icon i_order"/>{{ $t('n.total_maintenance') }}</div>
             <div class="count">
                 <span>{{stat.repair}}</span>
                 <div class="more"><i class="icon i_more" @click="routerChange('repair')"/></div>
@@ -20,7 +20,7 @@
     </div>
     <div class="statistic-container">
         <div class="statistic-content">
-            <div class="title-container">订单分析</div>
+            <div class="title-container">{{ $t('n.analysis_order') }}</div>
             <div class="chart-container">
                 <div id="PurchaseOrderChart" class="chart" ref="PurchaseOrderChart"></div>
             </div>
@@ -49,13 +49,13 @@
     </div>
     <div class="statistic-container seven-three">
         <div class="statistic-content">
-            <div class="title-container">维修单量分析</div>
+            <div class="title-container">{{ $t('n.volume_analysis') }}</div>
             <div class="chart-container">
                 <div id="RepairOrderChart" class="chart" ref='RepairOrderChart'></div>
             </div>
         </div>
         <div class="statistic-content">
-            <div class="title-container">故障排行</div>
+            <div class="title-container">{{ $t('n.fault_ranking') }}</div>
             <div class="rank-container">
                 <div class="rank-item" v-for="(item,index) of repairRank" :key="index">
                     <div class="number" :class="index < 3 ? 'color' : ''">{{index + 1}}</div>
@@ -69,12 +69,12 @@
         <div class="statistic-content">
         </div>
         <div class="statistic-content">
-            <div class="title-container">系统文件</div>
+            <div class="title-container">{{ $t('n.system_file') }}</div>
             <div class="rank-container">
                 <div class="rank-item" v-for="(item,index) of systeFmileData" :key="index">
                     <div class="number" :class="index < 3 ? 'color' : ''">{{index + 1}}</div>
                     <div class="name">{{item.name}}</div>
-                    <a-button class="count" style="height: 1em;font-size: 12px;" type="link" @click="handleDownloadConfirm(item)"><i class="icon i_download"/>下载</a-button>
+                    <a-button class="count" style="height: 1em;font-size: 12px;" type="link" @click="handleDownloadConfirm(item)"><i class="icon i_download"/>{{ $t('n.download') }}</a-button>
                 </div>
             </div>
         </div>

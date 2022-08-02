@@ -241,10 +241,10 @@
                                     :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/\$\s?|(,*)/g, '')"/>
                             </template>
                             <template v-if="column.dataIndex === 'operation'">
-                                <a-button type='link' danger @click="handleDelete(record.target_id)"><i class="icon i_delete"/>删除</a-button>
+                                <a-button type='link' danger @click="handleDelete(record.target_id)"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                             </template>
                             <template v-if="column.key === 'select'">
-                                <a-select v-model:value="record[column.dataIndex]" placeholder="请选择">
+                                <a-select v-model:value="record[column.dataIndex]" :placeholder="$t('def.select')">
                                     <a-select-option v-for="(val,index) of column.option" :key="index" :value="val.key"  @click="specChange(record, column.dataIndex, val)">{{ val[$i18n.locale] }}</a-select-option>
                                 </a-select>
                             </template>
@@ -842,7 +842,7 @@ export default {
                 for (let i = 0; i < this.configTemp.length; i++) {
                     let item = this.configTemp[i]
                     if (item.required && !form.config[i].value) {
-                        return this.$message.warning(`请${['select','radio'].includes(item.type) ? '选择' : '输入'}${item.name}`)
+                        return this.$message.warning(`${['select','radio'].includes(item.type) ? this.$t('def.select') : this.$t('def.input')}${item.name}`)
                     }
                 }
             }
@@ -853,11 +853,11 @@ export default {
         handleImgCheck(file) {
             const isCanUpType = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'].includes(file.type)
             if (!isCanUpType) {
-                this.$message.warning('文件格式不正确');
+                this.$message.warning(this.$t('n.file_incorrect'));
             }
             const isLt10M = (file.size / 1024 / 1024) < 10;
             if (!isLt10M) {
-                this.$message.warning('请上传小于10MB的图片');
+                this.$message.warning(this.$t('n.picture_smaller'));
             }
             return isCanUpType && isLt10M;
         },
@@ -949,26 +949,26 @@ export default {
             let item = this.specific.list[index]
             if (key === 'name') {
                 if (!item.name) {
-                    return this.$message.warning('请输入规格名')
+                    return this.$message.warning(this.$t('def.specification_name'))
                 }
                 let names = this.specific.list.map(i => i.name).filter((val,i) => val && i !== index)
                 if (names.includes(item.name)) {
                     this.specific.list[index].name = ''
-                    return this.$message.warning('规格名不可重复')
+                    return this.$message.warning(this.$t('def.specification_be_unique'))
                 }
             } else {
                 let reg = /^[a-z]+$/g
                 if (!item.key) {
-                    return this.$message.warning('请输入规格关键字')
+                    return this.$message.warning(this.$t('def.specification_keyword'))
                 }
                 if (!reg.test(item.key)) {
                     this.specific.list[index].key = ''
-                    return this.$message.warning('规格关键字应由小写英文字母组成')
+                    return this.$message.warning(this.$t('def.keyword_lowercase'))
                 }
                 let keys = this.specific.list.map(i => i.key).filter((val,i) => val && i !== index)
                 if (keys.includes(item.key)) {
                     this.specific.list[index].key = ''
-                    return this.$message.warning('规格关键字不可重复')
+                    return this.$message.warning(this.$t('def.keyword_unique'))
                 }
             }
             if (item.key.trim() && item.name.trim()) {
@@ -996,17 +996,17 @@ export default {
             let item = Core.Util.deepCopy(this.specific.list[index].addValue)
 
             if (!item.zh) {
-                return this.$message.warning('请输入规格值')
+                return this.$message.warning(this.$t('def.enter_specification_value'))
             }
             if (!item.en) {
-                return this.$message.warning('请输入规格值英文')
+                return this.$message.warning(this.$t('def.enter_specification_value_en'))
             }
 
             if (target.option.includes(item.zh)) {
-                return this.$message.warning('同以规格下，规格值不可重复')
+                return this.$message.warning(this.$t('def.specification_value_repeated'))
             }
             if (target.option.includes(item.en)) {
-                return this.$message.warning('同以规格下，规格值英文不可重复')
+                return this.$message.warning(this.$t('def.specification_value_repeated_en'))
             }
             item.key = item.en;
 
@@ -1054,10 +1054,10 @@ export default {
             }
             if (this.specific.data.map(i => i[item.key]).includes(item.option[i])) {
                 this.$confirm({
-                    title: `该规格值已被使用，确认要删除此规格值吗？`,
-                    okText: '确定',
+                    title: this.$t('def.specification_value_remove'),
+                    okText: this.$t('def.ok'),
                     okType: 'danger',
-                    cancelText: '取消',
+                    cancelText: this.$t('def.cancel'),
                     onOk: () => {
                         for (const element of this.specific.data) {
                             if (element[item.key] === item.option[i]) {
@@ -1110,7 +1110,7 @@ export default {
         },
         handleBatchSpec(key) {
             if (!this.batchSet[key] && this.batchSet[key] !== 0) {
-                return this.$message.warning('请输入您要设置的价格')
+                return this.$message.warning(this.$t('def.set_price'))
             }
             this.specific.data = this.specific.data.map(item => {
                 item[key] = this.batchSet[key]

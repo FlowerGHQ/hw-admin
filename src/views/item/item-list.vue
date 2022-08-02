@@ -22,7 +22,7 @@
                         <i class="icon i_add"/>{{ $t('i.import') }}
                     </a-button>
                 </a-upload>
-                <a-button type="primary" @click="handleSalesAreaByIdsShow()"><i class="icon i_edit"/> 批量设置销售区域 </a-button>
+                <a-button type="primary" @click="handleSalesAreaByIdsShow()"><i class="icon i_edit"/> {{ $t('ar.set_sales') }} </a-button>
                 <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>{{ $t('i.new') }}</a-button>
             </div>
         </div>
@@ -149,7 +149,7 @@
             />
         </div>
     </div>
-    <a-modal v-model:visible="salesAreaVisible" title="设置销售区域" class="field-select-modal" :width="630" :after-close='handleSalesAreaByIdsClose'>
+    <a-modal v-model:visible="salesAreaVisible" :title="$t('ar.set_sale')" class="field-select-modal" :width="630" :after-close='handleSalesAreaByIdsClose'>
         <div class="modal-content">
             <div class="form-item required">
                 <div class="key">{{ $t('d.sales_area') }}</div>
@@ -161,8 +161,8 @@
             </div>
         </div>
         <template #footer>
-            <a-button type="primary" @click="handleSalesAreaByIdsConfirm">确定</a-button>
-            <a-button @click="handleSalesAreaByIdsClose">取消</a-button>
+            <a-button type="primary" @click="handleSalesAreaByIdsConfirm">{{ $t('def.sure') }}</a-button>
+            <a-button @click="handleSalesAreaByIdsClose">{{ $t('def.cancel') }}</a-button>
         </template>
     </a-modal>
 </div>
@@ -367,15 +367,15 @@ export default {
 
         handleStatusChange(record) {
             let _this = this;
-            let name = record.status === -1 ? '上架' : '下架'
+            let name = record.status === -1 ? _this.$t('i.active_a') : _this.$t('i.inactive_a')
             this.$confirm({
-                title: `确定要${name}该商品吗？`,
-                okText: '确定',
+                title: _this.$t('pop_up.sure') + `${name}` + _this.$t('i.the_goods'),
+                okText: _this.$t('def.sure'),
                 okType: record.status === -1 ?  '' : 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Item.updateStatus({id: record.id}).then(() => {
-                        _this.$message.success(name + '成功');
+                        _this.$message.success(name + _this.$t('pop_up.success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleStatusChange err", err);
@@ -411,7 +411,7 @@ export default {
                 if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
                 } else {
-                    return this.$message.success('上传成功');
+                    return this.$message.success(this.$t('i.uploaded'));
                 }
             }
             this.upload.fileList = fileList
@@ -423,7 +423,7 @@ export default {
         },
         handleSalesAreaByIdsConfirm() {
             if (this.salesAreaIds.length <= 0){
-                return this.$message.error('请选择销售区域');
+                return this.$message.error(this.$t('n.choose') + this.$t('d.sales_area'));
             }
             Core.Api.SalesAreaItem.batchSave({
                 item_id_list: this.selectedRowKeys,
@@ -436,7 +436,7 @@ export default {
         },
         handleSalesAreaByIdsShow() {
             if (this.selectedRowKeys.length <= 0){
-                return this.$message.error('请选择商品');
+                return this.$message.error(this.$t('n.choose') + this.$t('i.item'));
             }
             this.getSalesAreaList();
             this.salesAreaVisible = true;

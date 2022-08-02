@@ -43,7 +43,7 @@
             <div class="form-item required">
                 <div class="key">{{ $t('d.pay_type') }}:</div>
                 <div class="value">
-                    <a-select v-model:value="form.pay_type" placeholder="请选择整车付款期限及方式">
+                    <a-select v-model:value="form.pay_type" :placeholder="$t('def.select_payment_term')">
                         <a-select-option v-for="(val, key) in PAY_TIME_LIST" :key="val['key']" :value="val['key']">{{ val[$i18n.locale]  }}</a-select-option>
                     </a-select>
                 </div>
