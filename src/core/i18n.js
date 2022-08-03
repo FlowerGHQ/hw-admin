@@ -1156,7 +1156,7 @@ const messages = {
             company: 'Company',
             company_name: 'Please enter company name',
             id: 'Tax ID',
-	        pay_type: 'pay type',
+	        pay_type: 'Pay type',
             sales_area: 'Sales area',
             create_time: 'Creation time',
             edit: 'Edit distribution',

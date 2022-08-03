@@ -60,7 +60,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'pay_type'">
-                            {{$Util.payTypeFilter(text) || '-' }}
+                            {{$Util.payTypeFilter(text, $i18n.locale) || '-' }}
                         </template>
                         <template v-if="column.key === 'country'">
                             {{ text || '-' }}
@@ -101,10 +101,12 @@
 import Core from '../../core';
 
 import CountryCascader from '@/components/common/CountryCascader.vue'
+import TimeSearch from '@/components/common/TimeSearch.vue'
 export default {
     name: 'DistributorList',
     components: {
         CountryCascader,
+        TimeSearch
     },
     props: {},
     data() {
@@ -154,7 +156,7 @@ export default {
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             if (this.$i18n.locale === 'en' ) {
-                columns.splice(3, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
+                columns.splice(4, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
             }
             return columns
         },
