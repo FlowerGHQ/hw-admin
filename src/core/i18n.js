@@ -473,6 +473,8 @@ const messages = {
             money: '变动金额',
             change: '变动后余额',
             sure_delete: '确定要删除该账户吗？',
+            new: '新建账户',
+            choose_type: '请选择类型',
         },
         v: {
             instance_management: '实例管理',
@@ -1357,6 +1359,8 @@ const messages = {
             money: 'Amount change',
             change: 'Balance after changed',
             sure_delete: 'Are you sure you want to delete this account?',
+            new: 'Create new account',
+            choose_type: 'Please choose the type',
         },
         v: {
             instance_management: 'instance management',
@@ -1698,7 +1702,7 @@ const messages = {
             changes: 'Confirm changes',
             cancel_changes: 'Cancel changes',
             sales_report_export: 'Export as a sales report',
-            Please_select_time: 'Please_select_a_time',
+            Please_select_time: 'Please select a time',
             select_payment_term: 'Please select the vehicle payment term and method',
             specification_name: 'Please enter the specification name',
             specification_be_unique: 'The specification name must be unique',

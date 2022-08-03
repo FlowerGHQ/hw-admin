@@ -25,7 +25,7 @@
                 </a-col>
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                     <span class="key">{{ $t('d.pay_type') }}：</span>
-                    <span class="value">{{ $Util.payTypeFilter(detail.pay_type) || '-'  }}</span>
+                    <span class="value">{{ $Util.payTypeFilter(detail.pay_type, $i18n.locale) || '-'  }}</span>
                 </a-col>
                 <a-col :xs='24' :sm='12' :lg='8' class='detail-item' v-if="$auth('ADMIN')">
                     <span class="key">{{ $t('n.distributor') }}：</span>

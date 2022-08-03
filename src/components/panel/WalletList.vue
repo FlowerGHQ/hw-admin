@@ -33,13 +33,13 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="addWalletShow" title="新建账户" class="repair-audit-modal"
+            <a-modal v-model:visible="addWalletShow" :title="$t('w.new')" class="repair-audit-modal"
                      :after-close='handleWalletClose'>
                 <div class="modal-content">
                     <div class="form-item required">
-                        <div class="key">类型:</div>
+                        <div class="key">{{ $t('n.type') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="editForm.type" placeholder="请选择类型">
+                            <a-select v-model:value="editForm.type" :placeholder="$t('w.choose_type')">
                                 <a-select-option v-for="(val, key) of typeMap" :key="key" :value="key">{{ val }}
                                 </a-select-option>
                             </a-select>
