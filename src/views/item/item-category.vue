@@ -23,10 +23,9 @@
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
-                        <template v-if="column.dataIndex === 'display_mode'">
-                            <a-switch :checked="!!(text-1)" @change="handleAlarmChange(record)"/>
-                        </template>
                         <template v-if="column.key === 'operation'">
+                            <a-button type='link'  @click="routerChange('explored', record)"><i class="icon i_edit"/>{{ $t('i.edit_view') }}
+                            </a-button>
                             <a-button type='link' @click="handleModalShow(record, record)"><i class="icon i_edit"/>{{ $t('i.edit_name') }}
                             </a-button>
                             <a-button type='link' @click="routerChange('config', record)"><i class="icon i_hint"/> {{ $t('i.product_configuration') }}
@@ -95,7 +94,6 @@ export default {
             let columns = [
                 {title: this.$t('n.name'), dataIndex: 'name'},
                 {title: this.$t('n.name_en'), dataIndex: 'name_en'},
-                {title: this.$t('i.view'), dataIndex: 'display_mode'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100,},
             ]
             return columns
@@ -111,6 +109,13 @@ export default {
                 case 'config':  // 详情
                     routeUrl = this.$router.resolve({
                         path: "/item/item-category-config",
+                        query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'explored':  // 详情
+                    routeUrl = this.$router.resolve({
+                        path: "/item/item-category-explored",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
@@ -256,25 +261,6 @@ export default {
                 },
             });
         },
-
-        // // 开关是否打开
-        handleAlarmChange(record) {
-            let _this = this
-            Core.Util.confirm({
-                title: _this.$t('pop_up.sure') + `${record.display_mode == 2 ? _this.$t('pop_up.conceal') : _this.$t('pop_up.display')}` + _this.$t('i.diagram_w') + '？' ,
-                okText: _this.$t('def.ok'),
-                okType: 'success',
-                cancelText: _this.$t('def.cancel'),
-                onOk() {
-                    console.log('handleAlarmChange: ok',record)
-                    Core.Api.ItemCategory.updateDisplay({
-                        id: record.id,
-                    }).then(() => {
-                        _this.getDataByParent();
-                    })
-                }
-            })
-        }
     }
 };
 </script>
