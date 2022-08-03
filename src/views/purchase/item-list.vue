@@ -104,7 +104,7 @@
             <SimpleImageEmpty class="item-content-empty" v-else :desc="$t('i.no_search_list')"/>
         </template>
         <div class="bom-content" v-else>
-            <ExploredContentPay :id="searchForm.category_id"></ExploredContentPay>
+            <ExploredContentPay v-if="bomShow" :key="menaKey" :id="searchForm.category_id" :data="tableData" @change="getData"></ExploredContentPay>
         </div>
     </div>
 </div>
@@ -161,6 +161,10 @@ export default {
             labelCol: { style: { width: '40px' } },
             wrapperCol: { span: 14 },
             orderId:'',
+
+            // 是否显示爆炸图
+            bomShow: false,
+            menaKey: 1,
         };
     },
     watch: {},
@@ -222,6 +226,9 @@ export default {
         },
         handleCategoryChange(category) {
             console.log('handleCategoryChange category:', category)
+            this.tableData = []
+            this.isBomShow(category)
+            this.bomShow = false
             this.searchForm.category_id = category
             if ( this.firstLevelId && category === this.firstLevelId) {
                 this.firstLevelName = this.categoryList.find(i => i.id === category)
@@ -230,6 +237,17 @@ export default {
                 })
             }
             this.pageChange(1)
+        },
+        // 是否显示爆炸图
+        isBomShow(id) {
+            this.bomShow = false
+            this.categoryList.forEach(element => {
+                if(element.id === id) {
+                    this.bomShow = element.display_mode === 2 ? true : false
+                    return 
+                }
+            });
+            this.bomShow = true
         },
         getTableData() { // 获取 商品 数据
             let searchForm = Core.Util.deepCopy(this.searchForm);
@@ -255,12 +273,23 @@ export default {
                 console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
+                if(!this.bomShow) {
+                    this.bomShow = true
+                } else {
+                    ++this.menaKey
+                }
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
+
+        //
+        getData() {
+            this.getTableData()
+        },
+
 
         getShopCartData(flag = false) { // 获取 购物车 数据
             Core.Api.ShopCart.list().then(res => {

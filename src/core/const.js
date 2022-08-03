@@ -21,6 +21,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.0.0.194:8889'
         URL_POINT = 'http://10.0.0.188:8889'
         // URL_POINT = 'http://10.0.0.117:8889'
+        URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
         break;
     case "10.0.0.194":
         URL_POINT = 'http://10.0.0.194:8889'
@@ -256,9 +257,14 @@ let Const = {
         // 维修单类别
         CATEGORY_LIST: [
             { zh: '维修', en: 'repair', value: 1 },
-            { zh: '换车', en: 'replace car', value: 2 },
+            // { zh: '换车', en: 'replace car', value: 2 },
             { zh: '开箱损', en: 'unpacking damage', value: 3 },
             { zh: '电池维修', en: 'battery', value: 4 },
+        ],
+        // 维修单类别
+        PARTS_LIST: [
+            { zh: '质保', en: 'quality guarantee', value: 5 },
+            { zh: '开箱损', en: 'dead on arrival', value: 3 },
         ],
         // 工单帐类
         SERVICE_TYPE: {
