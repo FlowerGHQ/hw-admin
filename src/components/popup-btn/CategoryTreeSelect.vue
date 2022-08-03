@@ -5,6 +5,7 @@
                    :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
                    :tree-data="treeData"
                    @select='handleSelect'
+                   :replace-fields="fieldNames"
                    tree-default-expand-all
     />
 </template>
@@ -37,6 +38,7 @@ export default {
     data() {
         return {
             treeData: [],
+            fieldNames:{},
             value: undefined,
         }
     },
@@ -51,7 +53,19 @@ export default {
             } else if (n && n !== this.value) {
                 this.value = this.categoryId
             }
-        }
+        },
+        '$i18n.locale': {
+            deep: true,
+            immediate: true,
+            handler(n) {
+                console.log('$i18n.locale', n)
+                let fieldNames = { label: 'title_en', value: 'id' , children: 'children', }
+                switch (n) {
+                    case 'zh': fieldNames.label = 'title'; break;
+                }
+                this.fieldNames = fieldNames
+            }
+        },
     },
     computed: {},
     created() {},
