@@ -173,7 +173,7 @@
                                             <a-image-preview-group class="image-group">
                                                 <a-image v-for="(path, index) in record.paths" :key="index"
                                                          class="image" :width="55" :height="55"
-                                                         :src="$Util.imageFilter(path)" fallback='无'/>
+                                                         :src="$Util.imageFilter(path)" :fallback="$t('def.none')"/>
                                             </a-image-preview-group>
                                         </div>
                                     </template>
@@ -182,7 +182,7 @@
                                         <div class="table-img">
                                             <a-image :width="24" :height="24"
                                                      :src="$Util.imageFilter(record.path.includes('img') ? record.path : '', 4)"
-                                                     fallback='无'/>
+                                                     :fallback="$t('def.none')"/>
                                             <a-tooltip placement="top" :title='text'>
                                                 <p class="ell" style="max-width:120px;margin-left:12px;">
                                                     {{ text || '-' }}</p>
@@ -417,18 +417,18 @@
         <a-modal v-model:visible="payAuditShow" :title="$t('p.confirm_payment')" :after-close="handlePayAuditClose">
             <div class="modal-content">
                 <div class="form-item required">
-                    <div class="key">是否通过：</div>
+                    <div class="key">{{ $t('p.whether_pass') }}：</div>
                     <div class="value">
                         <a-radio-group v-model:value="payAuditForm.audit_result">
-                            <a-radio :value="1">通过</a-radio>
-                            <a-radio :value="2">不通过</a-radio>
+                            <a-radio :value="1">{{ $t('n.pass') }}</a-radio>
+                            <a-radio :value="2">{{ $t('n.fail') }}</a-radio>
                         </a-radio-group>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">备注：</div>
+                    <div class="key">{{ $t('def.remark') }}：</div>
                     <div class="value">
-                        <a-textarea v-model:value="payAuditForm.audit_remark" placeholder="填写备注" :auto-size="{ minRows: 3, maxRows: 6 }" :maxlength='200'/>
+                        <a-textarea v-model:value="payAuditForm.audit_remark" :placeholder="$t('p.enter_remark')" :auto-size="{ minRows: 3, maxRows: 6 }" :maxlength='200'/>
                     </div>
                 </div>
             </div>
@@ -793,11 +793,11 @@ export default {
         handleImgCheck(file) {
             const isCanUpType = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'].includes(file.type)
             if (!isCanUpType) {
-                this.$message.warning('文件格式不正确');
+                this.$message.warning(this.$t('n.file_incorrect'));
             }
             const isLt10M = (file.size / 1024 / 1024) < 10;
             if (!isLt10M) {
-                this.$message.warning('请上传小于10MB的图片');
+                this.$message.warning(this.$t('n.picture_smaller'));
             }
             return isCanUpType && isLt10M;
         },
@@ -1031,7 +1031,7 @@ export default {
                         distributor_id: _this.editForm.distributor_id,
                         id: _this.id
                     }).then(res => {
-                        _this.$message.success('转单成功')
+                        _this.$message.success(this.$t('p.transfer_success'))
                         _this.handleTransferClose()
                         _this.getPurchaseInfo()
                     }).catch(err => {
@@ -1050,10 +1050,10 @@ export default {
             //     form.imgs = detailList.join(',')
             // }
             if (!form.pay_method) {
-                return this.$message.warning('请选择收款方式')
+                return this.$message.warning(this.$t('p.please_select_payment_method'))
             }
             if (!form.payment) {
-                return this.$message.warning('请输入收款金额')
+                return this.$message.warning(this.$t('p.enter_payment'))
             }
             Core.Api.Purchase.payment({
                 id: this.id,
@@ -1063,7 +1063,7 @@ export default {
                 img_type: form.type,
                 remark: form.remark
             }).then(res => {
-                this.$message.success('支付成功')
+                this.$message.success(this.$t('p.payment_success'))
                 this.getList()
                 this.paymentShow = false
             }).catch(err => {
@@ -1083,8 +1083,8 @@ export default {
                 remark: form.remark,
             }
             let adminRequire = [
-                { key: 'warehouse_id', msg: '请选择仓库' },
-                { key: 'target_type', msg: '请选择类型' },
+                { key: 'warehouse_id', msg: this.$t('e.select_warehouse') },
+                { key: 'target_type', msg: this.$t('p.choose_type') },
             ];
 
             for(let index in adminRequire) {
@@ -1098,7 +1098,7 @@ export default {
             param['freight'] = Math.round(param['freight'] * 100)
             param['item_list'] = this.selectedRowItems
             Core.Api.Purchase.outStock(param).then(res => {
-                this.$message.success('发货成功')
+                this.$message.success(this.$t('p.shipped'))
                 this.outStockShow = false
                 this.getWaybillDetail();
                 this.getList()
@@ -1119,22 +1119,22 @@ export default {
                 remark: form.remark,
             }
             let adminRequire = [
-                { key: 'warehouse_id', msg: '请选择仓库' },
-                { key: 'target_type', msg: '请选择类型' },
+                { key: 'warehouse_id', msg: this.$t('e.select_warehouse') },
+                { key: 'target_type', msg: this.$t('p.choose_type') },
             ];
 
             if(this.$auth('ADMIN')) {
                 adminRequire = [
-                    { key: 'express_type', msg: '请选择快递方式' },
-                    { key: 'port', msg: '请填写发货港口' },
-                    { key: 'freight', msg: '请填写运费' },
+                    { key: 'express_type', msg: this.$t('p.choose_express') },
+                    { key: 'port', msg: this.$t('p.enter_harbor') },
+                    { key: 'freight', msg: this.$t('p.enter_freight') },
                     // { key: 'pay_clause', msg: '请选择支付条款' },
                 ]
                 param['waybill'] = form['waybill'];
             } else if (this.$auth('DISTRIBUTOR')) {
                 adminRequire = [
-                    { key: 'receive_type', msg: '请选择收货方式' },
-                    { key: 'freight', msg: '请填写运费' },
+                    { key: 'receive_type', msg: this.$t('p.choose_receive') },
+                    { key: 'freight', msg: this.$t('p.enter_freight') },
                 ]
                 param['waybill_uid'] = form['waybill_uid'];
             }
@@ -1149,7 +1149,7 @@ export default {
             param['freight'] = Math.round(param['freight'] * 100)
             param['item_list'] = this.selectedRowItems
             Core.Api.Purchase.deliver(param).then(res => {
-                this.$message.success('发货成功')
+                this.$message.success(this.$t('p.shipped'))
                 this.outStockShow = false
                 this.getWaybillDetail();
                 this.getList()
@@ -1164,14 +1164,14 @@ export default {
         handleReceived() {
             let _this = this
             this.$confirm({
-                title: '确认已收到货物吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('p.confirm_receive'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Purchase.takeDeliver({
                         id: _this.id
                     }).then(res => {
-                        _this.$message.success('收货成功')
+                        _this.$message.success(this.$t('p.received'))
                         _this.getPurchaseInfo()
                         _this.getList()
                     }).catch(err => {
@@ -1184,9 +1184,9 @@ export default {
         handleCancel() {
             let _this = this
             this.$confirm({
-                title: '确认要取消本次采购吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('p.sure_cancel'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Purchase.cancel({
                         id: _this.id
@@ -1202,9 +1202,9 @@ export default {
         confirmExport() {
             let _this = this;
             this.$confirm({
-                title: '确认要导出吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('p.sure_export'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     _this.handleExportIn();
                 }
@@ -1270,11 +1270,11 @@ export default {
         },
         handlePayAudit(){
             if(!this.payAuditForm.audit_result) {
-                this.$message.warning('请选择审核结果')
+                this.$message.warning(this.$t('p.'))
                 return
             }
             Core.Api.Purchase.payAudit(this.payAuditForm).then(res => {
-                this.$message.success('审核成功')
+                this.$message.success('p.audit_result')
                 this.payAuditShow = false
                 this.getList()
             })
@@ -1286,9 +1286,9 @@ export default {
         handlePayCancel(id){
             let _this = this
             this.$confirm({
-                title: '确认取消吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('p.determine_cancel'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Purchase.delete({
                             id: id
