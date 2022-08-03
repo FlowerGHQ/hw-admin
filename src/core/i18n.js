@@ -438,6 +438,7 @@ const messages = {
             diagram_w: '爆炸图吗',
             the_goods: '该商品吗？',
             item_instance: '商品实例',
+            is_view: '是否显示爆炸图',
 
         },
 	    fe:{
@@ -1322,6 +1323,7 @@ const messages = {
             diagram_w: 'the explosion figure?',
             the_goods: 'the goods?',
             item_instance: 'Commodity instance',
+            is_view: 'Whether to display explosion diagram',
         },
         fe:{
             feedback_detail: 'Details of Feedback Sheet',

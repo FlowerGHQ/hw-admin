@@ -707,6 +707,17 @@ const routes = [
 
                 }
             },
+            {
+                path: 'Item-category-explored',
+                name: 'ItemCategoryConfig',
+                component: () => import('@/views/item/Item-category-explored.vue'),
+                meta: {
+                    hidden: true,
+                    roles: [LOGIN_TYPE.ADMIN],
+                    title: '商品爆炸图编辑',
+
+                }
+            },
         ]
     },
 

@@ -1,62 +1,15 @@
 <template>
-<div id="ItemEdit" class="edit-container">
+<div id="Explored" class="edit-container">
     <a-spin :spinning="loading" class='loading-incontent' v-if="loading"></a-spin>
     <div class="title-container">
-        <div class="title-area">{{ $t('i.edit_view') }}</div>
+        <div class="title-area">{{ $i18n.locale =='zh' ? detail.name : detail.name_en }}</div>
     </div>
-
-    <ItemHeader :detail='detail' :showSpec='indep_flag ? true : false'/>
-
-    <a-collapse ghost expand-icon-position="right" v-model:activeKey="activeKey">
-        <template #expandIcon ><i class="icon i_expan_l"/> </template>
-        <a-collapse-panel key="item" :header="$t('i.product_information')" class="gray-collapse-panel" >
-            <a-row class="panel-content info-container">
-                <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
-                    <div class="info-item">
-                        <div class="key">{{ $t('i.code') }}</div>
-                        <div class="value">{{detail.code || '-'}}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">{{ $t('n.type') }}</div>
-                        <div class="value"> {{ $Util.itemTypeFilter(detail.type, $i18n.locale) }}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">{{ $t('i.categories') }}</div>
-                        <div class="value">{{detail.category ? detail.category.name : '-'}}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">{{ $t('d.sales_area') }}</div>
-                        <div class="value">{{ detail.sales_area_name || '-'}}</div>
-                    </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" v-if="indep_flag">
-                    <div class="info-item">
-                        <div class="key">{{ $t('i.cost_price') }}</div>
-                        <div class="value">{{$Util.priceUnitFilter(detail.original_price_currency)}} {{$Util.countFilter(detail.original_price)}}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">FOB(EUR)</div>
-                        <div class="value">€{{$Util.countFilter(detail.fob_eur)}}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="key">FOB(USD)</div>
-                        <div class="value">${{$Util.countFilter(detail.fob_usd)}}</div>
-                    </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='12' class="info-block">
-                    <template v-for="(item, index) of config" :key="index">
-                        <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='8' class="info-item"
-                            :class="item.type" v-if="item.value">
-                            <div class="key">{{item.name}}</div>
-                            <div class="value" v-if="item.type == 'rich_text'" v-html='item.value'></div>
-                            <div class="value" v-else>{{item.value || '-'}}</div>
-                        </a-col>
-                    </template>
-                </a-col>
-            </a-row>
-        </a-collapse-panel>
-    </a-collapse>
-    <div class="gray-panel">
+    <div class="title-container jcs">
+        <div class="title">{{ $t('i.is_view') }}</div>
+        <!--  -->
+        <a-switch v-model:checked="checked" @click="handleAlarmChange(detail)"/>
+    </div>
+     <div class="gray-panel">
         <div class="panel-tabs">
             <a-tabs v-model:activeKey="currentTab" @change="clickChangTab">
                 <a-tab-pane :key="index" :tab="item.name || '-'" v-for="(item, index) of tabsArray">
@@ -138,7 +91,7 @@
             btn-class="panel-btn"
             :radioMode="true"
             :disabled-checked='checkedIds'
-            @select="(ids,items) => handleAddShow(TARGET_TYPE.ITEM, ids, items)"
+            @select="(ids,items) => handleAddShow(TARGET_TYPE.ITEM_CATEGORY, ids, items)"
         >
             {{ $t('i.add') }}
         </ItemSelect>
@@ -149,30 +102,28 @@
 <script>
 import { get } from 'lodash';
 import Core from '../../core';
-import ItemHeader from './components/ItemHeader.vue'
+import resData from './test.json';
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 import AddExploreImage from "./components/AddExploreImage.vue";
-import resData from './test.json';
 
 const TARGET_TYPE = Core.Const.BOM.TARGET_TYPE;
 export default {
     components: {
-        ItemHeader,
         ItemSelect,
         AddExploreImage
     },
-    data(){
+    data() {
         return {
             Core,
             TARGET_TYPE,
             // 载入
             loading: false,
 
-            activeKey: ['item'],
+            // activeKey: ['item'],
 
             // 商品
             id: null,
-            indep_flag: 0,
+            // indep_flag: 0,
             detail: {},
 
             specific: { // 规格
@@ -218,6 +169,9 @@ export default {
             showAddModal: false,
 
             isChangedPoint: false,
+
+
+            checked: false,
         }
     },
     computed: {
@@ -256,7 +210,7 @@ export default {
         this.canvas = this.$refs.exploreCanvas;
         this.ctx = this.canvas.getContext("2d");
         this.id = Number(this.$route.query.id) || 0
-        this.indep_flag = Number(this.$route.query.indep_flag) || 0
+        // this.indep_flag = Number(this.$route.query.indep_flag) || 0
 
         this.getItemDetail();
     },
@@ -321,7 +275,7 @@ export default {
         /** 添加｜编辑弹窗确认回调 */
         handlerAdd(info) {
             // addItemComponent
-            Core.Api.Item.addItemComponent({...info, ...{ target_id: this.id ,target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM }}).then(()=>{
+            Core.Api.Item.addItemComponent({...info, ...{ target_id: this.id ,target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM_CATEGORY }}).then(()=>{
                 this.loadImage(info.img);
                 this.$message.success(info.id ? this.$t('n.amend') + this.$t('pop_up.success') : this.$t('v.save') + this.$t('pop_up.success'));
                 this.clickShowAdd(false);
@@ -333,12 +287,13 @@ export default {
         /** 获取 商品详情 */
         getItemDetail() {
             this.loading = true;
-            Core.Api.Item.detail({
+            Core.Api.ItemCategory.detail({
                 id: this.id
             }).then(res => {
                 let detail = res.detail || {}
-                detail.sales_area_name = detail.sales_area_list ? detail.sales_area_list.map(i => i.name).join(' , ') : ''
                 this.detail = detail;
+                this.checked = !!detail.display_mode
+                console.log('getItemDetail res',res)
             }).catch(err => {
                 console.log('getItemDetail err', err)
             }).finally(() => {
@@ -350,7 +305,7 @@ export default {
             this.pointerList = [];
             this.tabsArray = [];
             Core.Api.Item.getItemComponent({
-                target_id: this.id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM
+                target_id: this.id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM_CATEGORY
             }).then((res)=>{
                 this.tabsArray = get(res, "list.list" , []);
                 this.parsePoint(true);
@@ -554,11 +509,40 @@ export default {
             };
             Core.Api.Item.deleteItemComponent(param).then(res => {})
         },
+
+        // 开关是否打开
+        handleAlarmChange(detail) {
+            let _this = this
+            console.log()
+            Core.Util.confirm({
+                title: _this.$t('pop_up.sure') + `${detail.display_mode == 2 ? _this.$t('pop_up.conceal') : _this.$t('pop_up.display')}` + _this.$t('i.diagram_w') + '？' ,
+                okText: _this.$t('def.ok'),
+                okType: 'success',
+                cancelText: _this.$t('def.cancel'),
+                onOk() {
+                    console.log('handleAlarmChange: ok',detail)
+                    Core.Api.ItemCategory.updateDisplay({
+                        id: detail.id,
+                    }).then(() => {
+                        _this.getItemDetail();
+                    })
+                }
+            })
+        }
     }
 }
 </script>
-
-<style lang="less" scoped>
+<style scoped lang="less">
+.jcs {
+    justify-content: flex-start;
+    .title {
+        font-weight: 500;
+        color: #000022;
+        line-height: 25px;
+        font-size: 16px;
+        margin-right: 10px;
+    }
+}
 .form-block .form-content .value .contain {
     width: 100%;
     height: 100%;
@@ -579,6 +563,7 @@ export default {
     height: 0;
     overflow: hidden;
 }
+
 .gray-panel {
     .panel-title {
         display: inline-block;
