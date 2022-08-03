@@ -75,7 +75,7 @@ export default {
     },
     components: {
         SimpleImageEmpty,
-        ZoomInOutlined, 
+        ZoomInOutlined,
         ZoomOutOutlined,
         ExploredContentPayCard
     },
@@ -129,7 +129,7 @@ export default {
             const ths = this;
             this.pointerList = [];
             this.tabsArray = [];
-            Core.Api.Item.getItemComponent({ target_id: id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM }).then((res)=>{
+            Core.Api.Item.getItemComponent({ target_id: id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM_CATEGORY }).then((res)=>{
                 this.tabsArray = get(res, "list.list" , []);
                 this.parsePoint();
                 ths.$nextTick(()=>{
