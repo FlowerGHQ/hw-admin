@@ -191,7 +191,7 @@
                                     </template>
 
                                     <template v-if="column.dataIndex === 'type'">
-                                        {{ $Util.purchasePayMethodFilter(text) }}
+                                        {{ $Util.purchasePayMethodFilter(text , $i18n.locale) }}
                                     </template>
                                     <template v-if="column.key === 'status'">
                                         {{ $Util.purchasePayStatusFilter(text, $i18n.locale) }}

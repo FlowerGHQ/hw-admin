@@ -26,7 +26,7 @@
                 </div>
                 <div class="info-item">
                     <div class="key">支付方式</div>
-                    <div class="value">{{$Util.purchasePayMethodFilter(detail.pay_method) || '-'}}</div>
+                    <div class="value">{{$Util.purchasePayMethodFilter(detail.pay_method , $i18n.locale) || '-'}}</div>
                 </div>
             </a-col>
         </a-row>

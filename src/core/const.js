@@ -573,8 +573,8 @@ let Const = {
             // 1: "支付宝",
             // 2: "微信",
             // 3: "银行转账",
-            10: "汇票",
-            20: "银行转账",
+            10: { value: 10, zh: '汇票', en: 'Draft'},
+            20: { value: 20, zh: '银行转账', en: 'Bank transfer'},
         },
         PAY_METHOD_LIST: [
             // { name: '支付宝', value: '1' },
