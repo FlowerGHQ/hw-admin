@@ -22,11 +22,19 @@
                     </a-radio-group>
                 </div>
             </div>
-            <div class="form-item required" v-if="form.type == 1">
+            <div class="form-item required" v-if="form.device_type == 1">
                 <div class="key">{{ $t('r.category') }}</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.category">
                         <a-radio v-for="item of categoryList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
+                    </a-radio-group>
+                </div>
+            </div>
+             <div class="form-item required" v-if="form.device_type == 2">
+                <div class="key">{{ $t('r.category') }}</div>
+                <div class="value">
+                    <a-radio-group v-model:value="form.category">
+                        <a-radio v-for="item of partsList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
@@ -201,6 +209,7 @@ export default {
             deviceList: REPAIR.DEVICE_LIST, // 工单类型
             typeList: REPAIR.TYPE_LIST, // 工单分类
             categoryList: REPAIR.CATEGORY_LIST, // 维修工单类别
+            partsList: REPAIR.PARTS_LIST, // 零配件类别
             methodList: REPAIR.METHOD_LIST, // 维修类别
             serviceList: REPAIR.SERVICE_TYPE_LIST,//工单帐类
             channelList: REPAIR.CHANNEL_LIST, // 维修方式

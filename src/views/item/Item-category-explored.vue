@@ -292,7 +292,7 @@ export default {
             }).then(res => {
                 let detail = res.detail || {}
                 this.detail = detail;
-                this.checked = !!detail.display_mode
+                this.checked = !!(detail.display_mode > 0 ? detail.display_mode - 1 : 0)
                 console.log('getItemDetail res',res)
             }).catch(err => {
                 console.log('getItemDetail err', err)
@@ -513,7 +513,7 @@ export default {
         // 开关是否打开
         handleAlarmChange(detail) {
             let _this = this
-            console.log()
+            let val = this.checked === true ? 2 : 1
             Core.Util.confirm({
                 title: _this.$t('pop_up.sure') + `${detail.display_mode == 2 ? _this.$t('pop_up.conceal') : _this.$t('pop_up.display')}` + _this.$t('i.diagram_w') + '？' ,
                 okText: _this.$t('def.ok'),
@@ -523,6 +523,7 @@ export default {
                     console.log('handleAlarmChange: ok',detail)
                     Core.Api.ItemCategory.updateDisplay({
                         id: detail.id,
+                        display_mode: val,
                     }).then(() => {
                         _this.getItemDetail();
                     })

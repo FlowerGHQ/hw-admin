@@ -15,12 +15,12 @@
                     <!-- :class="{'point-end-select': selectIndex===j}" -->
                     <div
                         class="point-end"
-                        :class="{'point-end-select': j === pointIndex}"
+                        :class="{'point-end-select': item.item_component_list[j].target_id === pointIndex}"
                         v-for="(point, j) in (item.item_component_list || [])"
                         :key="j"
                         :style="{'left': `${(point.end.x * (point.rate || 1)) - 4* (point.rate || 1)}px`, 'top': `${(point.end.y * (point.rate || 1))- 4* (point.rate || 1)}px`}"
                         @mouseenter.stop="showDetail(i,j)" @mouseleave="showDetail(-1)"
-                        @click="addPoint(j)"
+                        @click="addPoint(item.item_component_list[j].target_id)"
                     >
                         {{j + 1}}
                     </div>
@@ -52,7 +52,7 @@
     </div>
     <SimpleImageEmpty v-else :desc="$t('p.no_item_explode')"/>
     <div class="explored-lists" v-if="exploredList.length">
-        <ExploredContentPayCard v-for="list,index in exploredList[0].item_component_list" :class="{'active': index === pointIndex}" :data ="list" :num = "index" @change="exploreList" @click="addPoint(index)"/>
+        <ExploredContentPayCard v-for="list,index in exploredList" :class="{'active': list.id === pointIndex}" :data ="list" :num = "index" @change="exploreList" @click="addPoint(list.id)"/>
     </div>
     <SimpleImageEmpty v-else :desc="$t('i.no_bom_list')" class="mt"/>
 </template>
@@ -65,6 +65,7 @@ import ExploredContentPayCard from './ExploredContentPayCard.vue'
 export default {
      props: {
         id: Number,
+        data: Array
      },
      computed: {
         priceKey() {
@@ -81,12 +82,12 @@ export default {
     },
     mounted () {
         this.getItemExploreList(this.id)
-        this.getExploreList(this.id)
+        this.exploredList = this.data
+        console.log(this.exploredList,'this.exploredList')
     },
     watch: {
         id: function(newVal,oldVal) {
             this.getItemExploreList(newVal)
-            this.getExploreList(newVal)
         }
     },
     data() {
@@ -227,30 +228,23 @@ export default {
             this.explodeShow = data
         },
 
-        // 获取爆炸图列表数据
-        getExploreList(id) {
-            Core.Api.Item.getItemComponent({ target_id: id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM }).then((res)=>{
-                // 无爆炸图数据
-                console.log('getItemExploreList res', res);
-                this.exploredList = res.list.list
-            }).catch( err => {
-                console.log('getItemExploreList err', err);
-            });
-        },
-
         // 重新获取爆炸图列表数据
         exploreList() {
-            this.getExploreList(this.id)
+            this.$emit('change')
         },
 
         // 增加指示点
-        addPoint(j) {
-            this.pointIndex = j
+        addPoint(id) {
+            console.log(id)
+            this.pointIndex = id
         },
     },
 }
 </script>
 <style lang="less" scoped>
+.explored-lists {
+    margin-top: 40px;
+}
 .explored-content {
     position: relative;
     z-index: 10;

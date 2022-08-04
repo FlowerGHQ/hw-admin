@@ -5,12 +5,12 @@
             <div class="serial">{{ num + 1 }}</div>
         </div>
         <div class="card-info">
-            <div class="title">{{ $i18n.locale =='zh' ? data.item.name : data.item.name_en  }}</div>
+            <div class="title">{{ $i18n.locale =='zh' ? data.name : data.name_en  }}</div>
             <div class="info">{{ $t('i.price_suggest') }}</div>
             <!-- <ul>
                 <li v-for="attr in data.attr_list">{{ $i18n.locale =='zh' ? attr.attr_def_name : attr.attr_def_key }}：{{ $i18n.locale =='zh' ? attr.value : attr.value_en }}</li>
             </ul> -->
-            <div class="price">€{{$Util.countFilter(data.item[priceKey + 'eur'])}} | ${{$Util.countFilter(data.item[priceKey + 'usd'])}}</div>
+            <div class="price">€{{$Util.countFilter(data[priceKey + 'eur'])}} | ${{$Util.countFilter(data[priceKey + 'usd'])}}</div>
         </div>
     </div>
     <div class="shop-card">
@@ -19,7 +19,7 @@
                 <!-- <div class="spot"></div>
                 <span>库存：10</span> -->
             </div>
-            <div class="shop-price">€{{$Util.countFilter(data.item[price + 'eur'])}} | ${{$Util.countFilter(data.item[price + 'usd'])}}</div>
+            <div class="shop-price">€{{$Util.countFilter(data[price + 'eur'])}} | ${{$Util.countFilter(data[price + 'usd'])}}</div>
         </div>
         <div class="shop-bottom">
             <div class="cart-box">
@@ -36,9 +36,9 @@
                     <shopping-cart-outlined class="icon"/>
                 </div>
             </div>
-            <div class="stars" @click="hanldeAddToFavorite(data)" :class="{'active': data.item.in_favorite}">
+            <div class="stars" @click="hanldeAddToFavorite(data)" :class="{'active': data.in_favorite}">
                 <star-outlined />
-                <span class="star-text">{{ data.item.in_favorite ? $t('i.favorited') : $t('i.favorite_not') }}</span>
+                <span class="star-text">{{ data.in_favorite ? $t('i.favorited') : $t('i.favorite_not') }}</span>
             </div>
         </div>
     </div>
@@ -64,7 +64,7 @@ export default {
         }
     },
     mounted() {
-        console.log(this.data)
+        console.log(this.data,'this data')
     },
     methods: {
         // 添加到购物车
@@ -238,6 +238,9 @@ export default {
                 margin-top: 14px;
                 .star-text {
                     margin-left: 6px;
+                }
+                 &.active {
+                    color: @TC_car_price;
                 }
             }
         }
