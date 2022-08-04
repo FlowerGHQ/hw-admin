@@ -40,7 +40,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('d.pay_type') }}:</div>
                     <div class="value">
-                        <a-select v-model:value="form.pay_type" placeholder="请选择整车付款期限及方式">
+                        <a-select v-model:value="form.pay_type" :placeholder="$t('def.select_payment_term')">
                             <a-select-option v-for="(val, key) in PAY_TIME_LIST" :key="val['key']" :value="val['key']">{{ val[$i18n.locale]  }}</a-select-option>
                         </a-select>
                     </div>
@@ -95,8 +95,8 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary" v-if="$auth('store.save')">确定</a-button>
-            <a-button @click="routerChange('back')" type="primary" ghost>取消</a-button>
+            <a-button @click="handleSubmit" type="primary" v-if="$auth('store.save')">{{ $t('def.sure') }}</a-button>
+            <a-button @click="routerChange('back')" type="primary" ghost>{{ $t('def.cancel') }}</a-button>
         </div>
     </div>
 </template>

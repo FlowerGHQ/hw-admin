@@ -246,9 +246,13 @@ let Const = {
             { zh: '维修工单', en: 'repair order', value: 1 }, // 普通工单
             { zh: '特批工单', en: 'special repair order', value: 2 },
         ],
+        // TYPE_MAP: {
+        //     1: '维修工单',
+        //     2: '特批订单',
+        // },
         TYPE_MAP: {
-            1: '维修工单',
-            2: '特批订单',
+            1: { zh: '维修工单', en: 'repair order', value: 1 }, // 普通工单
+            2: { zh: '特批工单', en: 'special repair order', value: 2 },
         },
 	    TYPE: {
 		    TYPE_COMMON: 1,
@@ -579,8 +583,8 @@ let Const = {
             // 1: "支付宝",
             // 2: "微信",
             // 3: "银行转账",
-            10: "汇票",
-            20: "银行转账",
+            10: { value: 10, zh: '汇票', en: 'Draft'},
+            20: { value: 20, zh: '银行转账', en: 'Bank transfer'},
         },
         PAY_METHOD_LIST: [
             // { name: '支付宝', value: '1' },

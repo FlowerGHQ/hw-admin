@@ -14,13 +14,13 @@
                     </a-button>
                 </template>
                 <a-button type="primary" @click="handleAuditShow()" v-if="detail.status === STATUS.WAIT_AFTER_SALES_AUDIT && $auth('ADMIN') && $auth('quality-feedback.after-audit')">
-                    <i class="icon i_audit"/>{{ $t('n.audit') }}
+                    <i class="icon i_audit"/>{{ $t('fe.after_sales_audit') }}
                 </a-button>
                 <a-button type="primary" @click="handleAuditShow()" v-if="detail.status === STATUS.WAIT_QUALITY_AUDIT && $auth('ADMIN') && $auth('quality-feedback.quality-audit')">
-                    <i class="icon i_audit"/>{{ $t('n.audit') }}
+                    <i class="icon i_audit"/>{{ $t('fe.quality_audit') }}
                 </a-button>
                 <a-button type="primary" @click="handleAuditShow()" v-if="detail.status === STATUS.WAIT_FEEDBACK_AUDIT && $auth('ADMIN') && $auth('quality-feedback.feedback-audit')">
-                    <i class="icon i_audit"/>{{ $t('n.audit') }}
+                    <i class="icon i_audit"/>{{ $t('fe.feedback_audit') }}
                 </a-button>
                 <a-button type="primary" @click="handleFeedbackShow()" v-if="(detail.status === STATUS.WAIT_FEEDBACK || detail.status === STATUS.FEEDBACK_AUDIT_FAIL) && $auth('ADMIN') && $auth('quality-feedback.feedback')">
                     <i class="icon i_audit"/>{{ $t('fe.title') }}
@@ -196,9 +196,9 @@ export default {
             stepsList: [
                 // {title: '分配工单'},
                 // {title: '后台审核'},
-                {zh: '填写', en: 'Check'},
-                {zh: '审核', en: 'Service'},
-                {zh: '反馈', en: 'Settle accounts'},
+                {zh: '填写', en: 'Fill in'},
+                {zh: '审核', en: 'Audit'},
+                {zh: '反馈', en: 'Feedback'},
 
             ],
             currStep: 0,
@@ -492,9 +492,9 @@ export default {
         handleExportConfirm() { // 确认订单是否导出
             let _this = this;
             this.$confirm({
-                title: '确认要导出吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('fe.sure_export'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     _this.handleExportIn();
                 }

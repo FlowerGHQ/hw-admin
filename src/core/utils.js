@@ -431,9 +431,10 @@ const Util = {
         let value = MAP[val + ''] || {}
         return value[to] || '-'
     },
-    repairTypeFilter(val) {
+    repairTypeFilter(val, to = 'key') {
         const MAP = Const.REPAIR.TYPE_MAP
-        return MAP[val] || '未知'
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
     },
     repairChannelFilter(val, to='key') {
         const MAP = Const.REPAIR.CHANNEL_MAP
@@ -478,9 +479,10 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
-    purchasePayMethodFilter(val) {
+    purchasePayMethodFilter(val, to = 'zh') {
         const MAP = Const.PURCHASE.PAY_METHOD
-        return MAP[val] || '-'
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
     },
 	purchasePayStatusFilter(val, to = 'zh') {
 		const MAP = Const.PURCHASE.PAY_STATUS_LIST

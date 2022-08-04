@@ -110,7 +110,7 @@
                         {{$Util.purchaseFlagReviewFilter(text)}}
                     </template>
                     <template v-if="column.dataIndex === 'purchase_method'">
-                        {{$Util.purchasePayMethodFilter(text)}}
+                        {{$Util.purchasePayMethodFilter(text , $i18n.locale)}}
                     </template>
                     <template v-if="column.dataIndex === 'item_type'">
                         {{$Util.itemTypeFilter(text)}}
@@ -460,9 +460,9 @@ export default {
         handleExportConfirm() { // 确认订单是否导出
             let _this = this;
             this.$confirm({
-                title: '确认要导出吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('p.sure_export'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     _this.handleRepairExport();
                 }
@@ -488,7 +488,7 @@ export default {
             if(!this.searchForm.begin_time && !this.searchForm.end_time) {
                 // 没有选择时间
                 message.error({
-                    content: () => '请选择时间',
+                    content: () => this.$t('def.Please_select_time'),
                     class: 'custom-class',
                     style: {
                     marginTop: '20vh',
@@ -497,9 +497,9 @@ export default {
             } else {
                 let _this = this;
                 this.$confirm({
-                    title: '确认要导出吗？',
-                    okText: '确定',
-                    cancelText: '取消',
+                    title: _this.$t('p.sure_export'),
+                    okText: _this.$t('def.sure'),
+                    cancelText: _this.$t('def.cancel'),
                     onOk() {
                         _this.handleRepairExportSalesReport();
                         _this.handleSearchReset()
