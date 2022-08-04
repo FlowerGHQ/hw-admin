@@ -326,7 +326,7 @@ export default {
                 margin-top: 30px;
             }
         }
-        .tab-box {
+        .item-purchase-info-tab {
             .list {
                 margin-top: 30px;
             }
