@@ -285,7 +285,8 @@ export default {
                     ths.parsePoint(false);
                     const param = {
                         item_component_set_list: ths.tabsArray,
-                        item_id: ths.id,
+                        target_id: ths.id,
+                        target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM_CATEGORY,
                     }
                     ths.requestSave(param,"保存",ths.getItemExploreList.bind(ths))
                 },
@@ -517,7 +518,8 @@ export default {
             this.parsePoint();
             const param = {
                 item_component_set_list: this.tabsArray,
-                item_id: this.id,
+                target_id: ths.id,
+                target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM_CATEGORY,
             }
             this.requestSave(param)
         },
