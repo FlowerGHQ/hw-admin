@@ -11,7 +11,8 @@
                         class="point-start"
                         v-for="(point, j) in (item.item_component_list || [])"
                         :key="j"
-                        :style="{'left': `${(point.start.x * (point.rate || 1)) - 4}px`, 'top': `${(point.start.y * (point.rate || 1))- 4}px`}"></div>
+                        :style="{'left': `${(point.start.x * (point.rate || 1)) - 4}px`, 'top': `${(point.start.y * (point.rate || 1))- 4}px`}">
+                    </div>
                     <!-- :class="{'point-end-select': selectIndex===j}" -->
                     <div
                         class="point-end"
@@ -22,7 +23,7 @@
                         @mouseenter.stop="showDetail(i,j)" @mouseleave="showDetail(-1)"
                         @click="addPoint(item.item_component_list[j].target_id)"
                     >
-                        {{j + 1}}
+                        {{point.index}}
                     </div>
                 </div>
             </div>
@@ -52,7 +53,7 @@
     </div>
     <SimpleImageEmpty v-else :desc="$t('p.no_item_explode')"/>
     <div class="explored-lists" v-if="exploredList.length && tabsArray.length > 0">
-        <ExploredContentPayCard v-for="(list,index) in exploredList" :class="{'active': list.id === pointIndex}" :data ="list" :num = "index" @change="exploreList" @click="addPoint(list.id)"/>
+        <ExploredContentPayCard v-for="(list,index) in exploredList" :key="index" :class="{'active': list.id === pointIndex}" :data ="list" :num = "index" @change="exploreList" @click="addPoint(list.id)"/>
     </div>
     <SimpleImageEmpty v-else :desc="$t('i.no_bom_list')" class="mt"/>
 </template>

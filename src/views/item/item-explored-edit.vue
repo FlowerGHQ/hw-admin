@@ -75,6 +75,13 @@
             <a-table :columns="specificColumns" :data-source="pointerList" :scroll="{ x: true }"
                 :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, record, index }">
+                    <template v-if="column.dataIndex === 'index'" width="100px">
+                        <a-input v-model:value="record.index" @keydown.enter="saveRowIndex(record)" @blur="saveRowIndex(record)" placeholder="请输入序号"></a-input>
+                        <!-- <div v-if="!record.isEdit" @click="editRowIndex(record)">{{ (record || {}).index }}</div>
+                        <div v-else>
+                            <a-input v-model:value="record.index" @keydown.enter="saveRowIndex(record)" placeholder="请输入序号"></a-input>
+                        </div> -->
+                    </template>
                     <template v-if="column.dataIndex === 'name'">
                         {{ (record.item || {}).name }}
                     </template>
@@ -108,7 +115,7 @@
                     :style="{'left': `${item.end.x}px`, 'top': `${item.end.y}px`}"
                     @mousedown="pointMousedown(index, 'end')" @mouseup="pointMouseup"
                     @dblclick="showEdit(index)" @mousemove.stop="">
-                    {{index + 1}}
+                    {{item.index}}
                     <div class="component" v-show="moveIndex !== index" @mousedown.stop="">
                         <div class="component-contain">
                             <div class="contain-header"><i class="icon i_close" style="color: #fff" @click.stop="clickDeletePoint(index)"/></div>
@@ -238,6 +245,7 @@ export default {
             }))
             column = column.filter(item => item.title && item.dataIndex)
             column.unshift(
+                {title: this.$t('n.index'), key: 'index', dataIndex: 'index', width: '100px'},
                 {title: this.$t('n.name'), key: 'name', dataIndex: 'name'},
                 {title: this.$t('i.number'), key: 'model', dataIndex: 'model'},
                 {title: this.$t('i.code'), key: 'code', dataIndex: 'name'},
@@ -271,6 +279,10 @@ export default {
                 this.tabsArray[key]['item_component_list'] = [];
             }
             this.pointerList = this.tabsArray[key].item_component_list;
+            this.pointerList.forEach(item=>{
+                item.isEdit = false;
+            })
+            console.log('this.pointerList >> ', this.pointerList);
             this.pointerListData = Core.Util.deepCopy(this.pointerList);
             this.loadImage(get(this.tabsArray, `[${key}].img`, ""));
         },
@@ -476,6 +488,15 @@ export default {
                 this.pointerList.splice(index, 1);
             }
             this.canvasUpdata();
+        },
+
+        /**编辑点位编号 */
+        editRowIndex(row) {
+            row.isEdit = !row.isEdit;
+        },
+        saveRowIndex(row) {
+            this.editRowIndex(row);
+            this.clickSave();
         },
 
         /** 编辑点位详情 */

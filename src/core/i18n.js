@@ -41,6 +41,7 @@ const messages = {
             addresses: '收货地址',
         },
         n: {
+            index: '序号',
             name: '名称',
             state: '状态',
             type: '类型',
@@ -942,6 +943,7 @@ const messages = {
             addresses: 'Address',
         },
         n: {
+            index: 'Index',
             name: 'Name',
             state: 'State',
             type: 'Type',
