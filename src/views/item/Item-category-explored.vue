@@ -28,8 +28,17 @@
             <a-table :columns="specificColumns" :data-source="pointerList" :scroll="{ x: true }"
                 :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, record, index }">
+                    <template v-if="column.dataIndex === 'index'" width="100px">
+                        <a-input v-model:value="record.index" @blur="saveRowIndex(record)" placeholder="请输入序号"></a-input>
+                        <!-- <div v-if="!record.isEdit" @click="editRowIndex(record)">{{ (record || {}).index }}</div>
+                        <div v-else>
+                            <a-input v-model:value="record.index" @keydown.enter="saveRowIndex(record)" placeholder="请输入序号"></a-input>
+                        </div> -->
+                    </template>
                     <template v-if="column.dataIndex === 'name'">
-                        {{ (record.item || {}).name }}
+<!--                        {{ (record.item || {}).name }}-->
+                        <span v-if="$i18n.locale === 'zh'"> {{ (record.item || {}).name }}</span>
+                        <span v-if="$i18n.locale === 'en'"> {{ (record.item || {}).name_en }}</span>
                     </template>
                     <template v-if="column.dataIndex === 'model'">
                         {{ (record.item || {}).model }}
@@ -61,14 +70,16 @@
                     :style="{'left': `${item.end.x}px`, 'top': `${item.end.y}px`}"
                     @mousedown="pointMousedown(index, 'end')" @mouseup="pointMouseup"
                     @dblclick="showEdit(index)" @mousemove.stop="">
-                    {{index + 1}}
+                    {{item.index || 0}}
                     <div class="component" v-show="moveIndex !== index" @mousedown.stop="">
                         <div class="component-contain">
                             <div class="contain-header"><i class="icon i_close" style="color: #fff" @click.stop="clickDeletePoint(index)"/></div>
                             <div class="contain-name">
                                 <i class="icon i_skew-bg" />
                                 <span class="icon-name">{{ $t('n.name') }}</span>
-                                {{ (item.item || {}).name }}
+<!--                                {{ (item.item || {}).name }}-->
+                                <span v-if="$i18n.locale === 'zh'"> {{ (item.item || {}).name }}</span>
+                                <span v-if="$i18n.locale === 'en'"> {{ (item.item || {}).name_en }}</span>
                             </div>
                             <div class="contain-type">
                                 <div class="type-left">{{ $t('def.model') }}:&nbsp;{{ (item.item || {}).model}}</div>
@@ -192,6 +203,7 @@ export default {
             }))
             column = column.filter(item => item.title && item.dataIndex)
             column.unshift(
+                {title: this.$t('n.index'), key: 'index', dataIndex: 'index', width: '100px'},
                 {title: this.$t('n.name'), key: 'name', dataIndex: 'name'},
                 {title: this.$t('i.number'), key: 'model', dataIndex: 'model'},
                 {title: this.$t('i.code'), key: 'code', dataIndex: 'name'},
@@ -239,7 +251,8 @@ export default {
                     ths.parsePoint(false);
                     const param = {
                         item_component_set_list: ths.tabsArray,
-                        item_id: ths.id,
+                        target_id: ths.id,
+                        target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM_CATEGORY,
                     }
                     ths.requestSave(param,"保存",ths.getItemExploreList.bind(ths))
                 },
@@ -266,7 +279,8 @@ export default {
                 onOk() {
                     const param = {
                         item_component_set_list: ths.tabsArray.filter((item,index) => index !== ths.currentTab),
-                        item_id: ths.id,
+                        target_id: ths.id,
+                        target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM_CATEGORY,
                     }
                     ths.requestSave(param,ths.$t('pop_up.delete'),ths.getItemExploreList.bind(ths))
                 },
@@ -471,7 +485,8 @@ export default {
             this.parsePoint();
             const param = {
                 item_component_set_list: this.tabsArray,
-                item_id: this.id,
+                target_id: ths.id,
+                target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM_CATEGORY,
             }
             this.requestSave(param)
         },
@@ -509,6 +524,11 @@ export default {
             };
             Core.Api.Item.deleteItemComponent(param).then(res => {})
         },
+        saveRowIndex(row) {
+            // this.editRowIndex(row);
+            this.clickSave();
+        },
+
 
         // 开关是否打开
         handleAlarmChange(detail) {

@@ -29,21 +29,21 @@ export default {
             let list = null
             if (this.$auth('ADMIN')) {
                 list = [
-                    {value: 0, text: '全部'},
-                    {value: 1, text: '分销商'},
-                    {value: 2, text: '零售商'},
-                    {value: 3, text: '门店'},
+                    {value: 0, text: this.$t('n.all')},
+                    {value: 1, text: this.$t('n.distributor')},
+                    {value: 2, text: this.$t('n.agent')},
+                    {value: 3, text: this.$t('n.store')},
                 ]
             } else if (this.$auth('DISTRIBUTOR')) {
                 list = [
-                    {value: 0, text: '全部'},
-                    {value: 2, text: '零售商'},
-                    {value: 3, text: '门店'},
+                    {value: 0, text: this.$t('n.all')},
+                    {value: 2, text: this.$t('n.agent')},
+                    {value: 3, text: this.$t('n.store')},
                 ]
             } else if (this.$auth('AGENT')) {
                 list = [
-                    {value: 0, text: '全部'},
-                    {value: 3, text: '门店'},
+                    {value: 0, text: this.$t('n.all')},
+                    {value: 3, text: this.$t('n.store')},
                 ]
             }
             return list

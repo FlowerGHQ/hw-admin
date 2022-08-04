@@ -11,7 +11,8 @@
                         class="point-start"
                         v-for="(point, j) in (item.item_component_list || [])"
                         :key="j"
-                        :style="{'left': `${(point.start.x * (point.rate || 1)) - 4}px`, 'top': `${(point.start.y * (point.rate || 1))- 4}px`}"></div>
+                        :style="{'left': `${(point.start.x * (point.rate || 1)) - 4}px`, 'top': `${(point.start.y * (point.rate || 1))- 4}px`}">
+                    </div>
                     <!-- :class="{'point-end-select': selectIndex===j}" -->
                     <div
                         class="point-end"
@@ -22,7 +23,7 @@
                         @mouseenter.stop="showDetail(i,j)" @mouseleave="showDetail(-1)"
                         @click="addPoint(item.item_component_list[j].target_id)"
                     >
-                        {{j + 1}}
+                        {{point.index}}
                     </div>
                 </div>
             </div>
@@ -35,16 +36,18 @@
                     @mouseleave="showDetail(-1)">
                     <div class="contain-name">
                         <i class="icon i_skew-bg" />
-                        <span class="icon-name">产品名称</span>
-                        {{ componentDetail.name }}
+                        <span class="icon-name">{{ $t('n.name') }}</span>
+<!--                        {{ componentDetail.name }}-->
+                        <span v-if="$i18n.locale === 'zh'"> {{ componentDetail.name }}</span>
+                        <span v-if="$i18n.locale === 'en'"> {{ componentDetail.name_en }}</span>
                     </div>
                     <div class="contain-type">
-                        <div class="type-left">型号:&nbsp;{{ componentDetail.model}}</div>
+                        <div class="type-left">{{ $t('def.model') }}:&nbsp;{{ componentDetail.model}}</div>
                         <div class="type-left">€{{$Util.countFilter(componentDetail[priceKey + 'eur'])}} | ${{$Util.countFilter(componentDetail[priceKey + 'usd'])}}</div>
                     </div>
                     <div class="edit-btn">
-                        <a-button type="primary" class="disabled" v-if="componentDetail.in_shopping_cart">已在购物车中</a-button>
-                        <a-button type="primary" @click="hanldeAddToShopCart" v-else>添加到购物车</a-button> -->
+                        <a-button type="primary" class="disabled" v-if="componentDetail.in_shopping_cart">{{ $t('i.already') }}</a-button>
+                        <a-button type="primary" @click="hanldeAddToShopCart" v-else>{{ $t('i.cart') }}</a-button>
                     </div>
                 </div>
             </transition>
@@ -52,7 +55,7 @@
     </div>
     <SimpleImageEmpty v-else :desc="$t('p.no_item_explode')"/>
     <div class="explored-lists" v-if="exploredList.length && tabsArray.length > 0">
-        <ExploredContentPayCard v-for="list,index in exploredList" :class="{'active': list.id === pointIndex}" :data ="list" :num = "index" @change="exploreList" @click="addPoint(list.id)"/>
+        <ExploredContentPayCard v-for="(list,index) in exploredList" :key="index" :class="{'active': list.id === pointIndex}" :data ="list" :num = "index" @change="exploreList" @click="addPoint(list.id)"/>
     </div>
     <SimpleImageEmpty v-else :desc="$t('i.no_bom_list')" class="mt"/>
 </template>
@@ -87,6 +90,9 @@ export default {
     watch: {
         id: function(newVal,oldVal) {
             this.getItemExploreList(newVal)
+        },
+        data: function (newVal){
+            this.exploredList = newVal
         }
     },
     data() {
@@ -236,6 +242,18 @@ export default {
         addPoint(id) {
             console.log(id)
             this.pointIndex = id
+        },
+        // 添加到购物车
+        hanldeAddToShopCart() {
+            Core.Api.ShopCart.save({
+                item_id: this.componentDetail.id,
+                amount: 1,
+                price: this.componentDetail.purchase_price
+            }).then(res => {
+                console.log('hanldeAddToShopCart res:', res)
+                this.$message.success('添加成功')
+                this.componentDetail.in_shopping_cart = true;
+            })
         },
     },
 }

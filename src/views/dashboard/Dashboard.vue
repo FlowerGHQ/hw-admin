@@ -124,17 +124,17 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                { title: '排序', key: 'index' },
-                { title: '订单数量', dataIndex: 'count', key: 'item'},
-                { title: '商品总数', dataIndex: 'amount', key: 'item'},
-                { title: '订单总价', dataIndex: 'price', key: 'price' },
+                { title: this.$t('n.sort'), key: 'index' },
+                { title: this.$t('n.order_quantity'), dataIndex: 'count', key: 'item'},
+                { title: this.$t('n.item_quantity'), dataIndex: 'amount', key: 'item'},
+                { title: this.$t('n.total_price'), dataIndex: 'price', key: 'price' },
             ]
             switch (this.org_type) {
                 case 1:
-                    columns.splice(1, 0, {title: '零售商名称', dataIndex: 'org_name', key: 'org_name'})
+                    columns.splice(1, 0, {title: this.$t('n.agent_n'), dataIndex: 'org_name', key: 'org_name'})
                     break;
                 case 2:
-                    columns.splice(1, 0, {title: '门店名称', dataIndex: 'org_name', key: 'org_name'})
+                    columns.splice(1, 0, {title: this.$t('n.store_n'), dataIndex: 'org_name', key: 'org_name'})
                     break;
             }
             return columns
@@ -162,7 +162,7 @@ export default {
             switch (type) {
                 case 'purchase':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: this.$auth('ADMIN') ? '/item/purchase-order-list' : '/purchase/purchase-order-list',
+                        path: this.$auth('ADMIN') ? '/distributor/purchase-order-list' : '/purchase/purchase-order-list',
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -231,9 +231,9 @@ export default {
         handleDownloadConfirm(item){ // 下载问询
             let _this = this;
             this.$confirm({
-                title: '确认要下载吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('f.sure_download'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     _this.handleDownload(item);
                 }
@@ -288,7 +288,7 @@ export default {
                     type: 'cat',
                 },
                 price: {
-                    alias: '金额',
+                    alias: this.$t('n.amount'),
                     range: [0, 0.97],
                     type: 'linear',
                     formatter: (val) => {
@@ -296,11 +296,11 @@ export default {
                     },
                 },
                 count: {
-                    alias: '订单数',
+                    alias: this.$t('n.order_number'),
                     range: [0, 0.97],
                     type: 'linear',
                     formatter: (val) => {
-                        return val + '笔';
+                        return val + this.$t('n.order_unit');
                     },
                 }
             });
@@ -352,11 +352,11 @@ export default {
                     type: 'cat',
                 },
                 count: {
-                    alias: '订单数',
+                    alias: this.$t('n.order_number'),
                     range: [0, 0.97],
                     type: 'linear',
                     formatter: (val) => {
-                        return val + '笔';
+                        return val + this.$t('n.order_unit');
                     },
                 }
             });

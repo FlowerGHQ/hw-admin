@@ -41,6 +41,7 @@ const messages = {
             addresses: '收货地址',
         },
         n: {
+            index: '序号',
             name: '名称',
             state: '状态',
             type: '类型',
@@ -140,6 +141,15 @@ const messages = {
             no_org_auth: '该类型的组织尚未分配可管理权限',
             attachment: '附件信息',
             stock_in_completed: '入库完成',
+            sort: '排序',
+            order_quantity: '订单数量',
+            item_quantity: '商品总数',
+            total_price: '订单总价',
+            agent_n: '零售商名称',
+            store_n: '门店名称',
+            amount: '金额',
+            order_number: '订单数',
+            order_unit: '笔',
 
         },
         a: {
@@ -844,6 +854,8 @@ const messages = {
             save: '保存',
             none: '无',
             remark: '备注',
+            inaccessible: '当前身份无法访问',
+
         },
         search: {
             repair_sn: '工单编号',
@@ -931,6 +943,7 @@ const messages = {
             addresses: 'Address',
         },
         n: {
+            index: 'Index',
             name: 'Name',
             state: 'State',
             type: 'Type',
@@ -941,7 +954,7 @@ const messages = {
             country: 'Nation',
             enter: 'Please enter distributor name',
             area: 'Area',
-            choose: 'Please choose continent and nation',
+            choose: 'Please choose ',
             information: 'Basic Information',
             time: 'Time',
             information_a: 'Information',
@@ -1030,7 +1043,15 @@ const messages = {
             no_org_auth: 'This type of organization has not been assigned manageable permissions',
             attachment: 'Attachment information',
             stock_in_completed: 'Warehousing completed',
-
+            sort: 'Sequence',
+            order_quantity: 'Quantity of order',
+            item_quantity: 'Total number of products',
+            total_price: 'Total price of the order',
+            agent_n: 'Retailer name',
+            store_n: 'Store name',
+            amount: 'Amount',
+            order_number: 'Number of orders',
+            order_unit: ' Orders',
         },
         a: {
             new_retailer: 'Add a retailer',
@@ -1730,6 +1751,7 @@ const messages = {
             save: 'Save',
             none: 'None',
             remark: 'Remark',
+            inaccessible: 'Current identity inaccessible',
         },
         search: {
             repair_sn: 'Inquire Sn',

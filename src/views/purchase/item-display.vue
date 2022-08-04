@@ -9,7 +9,7 @@
                     <a>
                         <img :src="getImgUrl(props.i)" />
                     </a>
-                </template> 
+                </template>
                 <template #prevArrow>
                     <div class="custom-slick-arrow">
                         <left-outlined />
@@ -21,7 +21,7 @@
                     </div>
                 </template>
             </a-carousel> -->
-            <UpAndDownSwiper></UpAndDownSwiper>
+            <UpAndDownSwiper :imgs="specList" ></UpAndDownSwiper>
         </div>
         <div class="info-content">
             <div class="title">{{ $i18n.locale =='zh' ? detail.name : detail.name_en }}</div>
@@ -35,10 +35,10 @@
                     <span class="price-left">{{ $t('i.price_suggest') }}</span>
                     <span class="price-right">€{{$Util.countFilter(detail[priceKey + 'eur'])}} | ${{$Util.countFilter(detail[priceKey + 'usd'])}}</span>
                 </div>
-                <div class="price">
-                    <span class="price-left">{{ $t('i.price') }}</span>
-                    <span class="price-right">€{{$Util.countFilter(detail[priceKey + 'eur'])}} | ${{$Util.countFilter(detail[priceKey + 'usd'])}}</span>
-                </div>
+<!--                <div class="price">-->
+<!--                    <span class="price-left">{{ $t('i.price') }}</span>-->
+<!--                    <span class="price-right">€{{$Util.countFilter(detail[priceKey + 'eur'])}} | ${{$Util.countFilter(detail[priceKey + 'usd'])}}</span>-->
+<!--                </div>-->
             </div>
             <div class="stars" @click="hanldeAddToFavorite" :class="{'active': detail.in_favorite}">
                 <star-outlined />
@@ -51,12 +51,12 @@
                 <SpecificationCard v-for="item in specList" :data="item" @AddToFavorite="ToFavorite" class="list"/>
                 <SimpleImageEmpty v-if="!specList.length" :desc="$t('p.no_item_spec')"/>
             </div>
-            <a-tabs v-model:activeKey="activeKey" class="tab-box">
+            <a-tabs v-model:activeKey="activeKey" class="item-purchase-info-tab">
                 <a-tab-pane key="mountings" :tab="$t('i.fittings')">
                     <SpecificationCard v-for="item in specList" class="list" :data="item" @AddToFavorite="ToFavorite"/>
                     <SimpleImageEmpty v-if="!specList.length" :desc="$t('p.no_item_fitt')"/>
                 </a-tab-pane>
-                <a-tab-pane key="explosiveView" :tab="$t('i.view')" force-render> 
+                <a-tab-pane key="explosiveView" :tab="$t('i.view')" force-render>
                     <ExploredContent ref="ExploredContent" :id="id" :show="false" class="explored" @noData="noExplodeData"/>
                     <SimpleImageEmpty v-if="explodeShow" :desc="$t('p.no_item_explode')"/>
                 </a-tab-pane>
@@ -81,7 +81,7 @@ import UpAndDownSwiper from './components/UpAndDownSwiper.vue'
 export default {
     name: 'ItemDisplay',
     components: {
-        LeftOutlined, 
+        LeftOutlined,
         RightOutlined,
         StarOutlined,
         SpecificationCard,
@@ -116,11 +116,11 @@ export default {
     },
     watch: {},
     computed: {
-        // priceKey() {
-        //     let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
-        //     console.log('priceKey:', priceKey)
-        //     return priceKey
-        // }
+        priceKey() {
+            let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
+            console.log('priceKey:', priceKey)
+            return priceKey
+        }
     },
     mounted() {
         this.id = Number(this.$route.query.id) || 0
@@ -206,11 +206,19 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.item-purchase-info-tab {
+    .ant-tabs-tab-btn {
+        width: 86px;
+        text-align: center;
+    }
+}
 #ItemDisplay {
     display: flex;
     flex-wrap: wrap;
     box-sizing: border-box;
     padding: 63px 70px 200px;
+
+
 
     .imgs-content {
         // width: calc(~'100% - 620px');
@@ -237,7 +245,7 @@ export default {
         div, ul {
             width: 100%;
             overflow: hidden;
-        } 
+        }
         ul {
             // list-style: disc;
             margin-top: 20px;
@@ -319,7 +327,7 @@ export default {
                 margin-top: 30px;
             }
         }
-        .tab-box {
+        .item-purchase-info-tab {
             .list {
                 margin-top: 30px;
             }
@@ -332,7 +340,7 @@ export default {
     // padding: 42px;
     width: 800px;
     // height: auto;
-    border: 1px solid @TC_car_bc;
+    //border: 1px solid @TC_car_bc;
     border-radius: 4px;
 }
 
@@ -497,4 +505,5 @@ overflow: hidden;
 .ant-carousel :deep(.slick-slide h3) {
   color: #fff;
 }
+
 </style>

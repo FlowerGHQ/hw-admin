@@ -268,14 +268,15 @@ export default {
             let columns = [
                 {zh: '全  部',en: 'All', value: '0', color: 'primary', key: '-20'},
                 {zh: '待提交',en: 'Pending submission', value: '0', color: 'yellow',  key: STATUS.INIT },
-                {zh: '等待平台审核', en: 'Awaiting platform audit',value: '0', color: 'blue',    key: STATUS.WAIT_AFTER_SALES_AUDIT },
-                {zh: '平台审核不通过',en: 'Platform audit failed', value: '0', color: 'orange',  key: STATUS.AFTER_SALES_AUDIT_FAIL },
+                {zh: '等待售后审核', en: 'Awaiting after-sales audit',value: '0', color: 'blue',    key: STATUS.WAIT_AFTER_SALES_AUDIT },
+                {zh: '售后审核未通过',en: 'After-sales audit failed', value: '0', color: 'orange',  key: STATUS.AFTER_SALES_AUDIT_FAIL },
                 {zh: '等待质量审核',en: 'Awaiting quality audit', value: '0', color: 'purple',  key: STATUS.WAIT_QUALITY_AUDIT },
-                {zh: '质量审核不通过',en: 'Quality audit failed', value: '0', color: 'purple',  key: STATUS.QUALITY_AUDIT_FAIL },
+                {zh: '质量审核未通过',en: 'Quality audit failed', value: '0', color: 'purple',  key: STATUS.QUALITY_AUDIT_FAIL },
                 {zh: '等待反馈', en: 'Awaiting feedback', value: '0', color: 'green',  key: STATUS.WAIT_FEEDBACK},
                 {zh: '等待审核反馈信息', en: 'Awaiting audit feedback', value: '0', color: 'green',  key: STATUS.WAIT_FEEDBACK_AUDIT},
-                {zh: '反馈信息审核不通过', en: 'Feedback audit failed',value: '0', color: 'red',  key: STATUS.FEEDBACK_AUDIT_FAIL },
+                {zh: '反馈信息审核未通过', en: 'Feedback audit failed',value: '0', color: 'red',  key: STATUS.FEEDBACK_AUDIT_FAIL },
                 {zh: '已完成',en: 'Finished', value: '0', color: 'blue',  key: STATUS.CLOSE },
+                {zh: '审核失败',en: 'Audit failed', value: '0', color: 'gray',  key: STATUS.AUDIT_FAIL },
                 {zh: '已取消',en: 'Canceled', value: '0', color: 'gray',  key: STATUS.CANCEL },
             ]
             return columns
