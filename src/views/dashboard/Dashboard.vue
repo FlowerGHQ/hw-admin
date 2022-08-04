@@ -1,6 +1,6 @@
 <template>
 <!-- 财务结算 -->
-<div id="Dashboard">
+<div id="Dashboard" v-if="$auth('ADMIN')">
     <SearchRangePicker @search='handleTimeChange'/>
     <div class="statistic-container">
         <div class="statistic-item">
@@ -80,16 +80,19 @@
         </div>
     </div>
 </div>
+<Analytics v-else/>
 </template>
 
 <script>
 import Core from '../../core';
 import { Chart } from '@antv/g2'
 import SearchRangePicker from '@/components/statistic/SearchRangePicker.vue'
+import Analytics from './Analytics.vue'
 export default {
     name: 'Dashboard',
     components: {
-        SearchRangePicker
+        SearchRangePicker,
+        Analytics
     },
     props: {},
     data() {
