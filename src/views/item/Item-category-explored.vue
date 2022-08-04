@@ -70,7 +70,7 @@
                     :style="{'left': `${item.end.x}px`, 'top': `${item.end.y}px`}"
                     @mousedown="pointMousedown(index, 'end')" @mouseup="pointMouseup"
                     @dblclick="showEdit(index)" @mousemove.stop="">
-                    {{item.index}}
+                    {{item.index || 0}}
                     <div class="component" v-show="moveIndex !== index" @mousedown.stop="">
                         <div class="component-contain">
                             <div class="contain-header"><i class="icon i_close" style="color: #fff" @click.stop="clickDeletePoint(index)"/></div>

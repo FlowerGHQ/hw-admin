@@ -115,7 +115,7 @@
                     :style="{'left': `${item.end.x}px`, 'top': `${item.end.y}px`}"
                     @mousedown="pointMousedown(index, 'end')" @mouseup="pointMouseup"
                     @dblclick="showEdit(index)" @mousemove.stop="">
-                    {{item.index}}
+                    {{item.index || 0}}
                     <div class="component" v-show="moveIndex !== index" @mousedown.stop="">
                         <div class="component-contain">
                             <div class="contain-header"><i class="icon i_close" style="color: #fff" @click.stop="clickDeletePoint(index)"/></div>
@@ -298,7 +298,7 @@ export default {
                     const param = {
                         item_component_set_list: ths.tabsArray,
                         target_id: ths.id,
-                        target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM_CATEGORY,
+                        target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM,
                     }
                     ths.requestSave(param,"保存",ths.getItemExploreList.bind(ths))
                 },
@@ -540,7 +540,7 @@ export default {
             const param = {
                 item_component_set_list: this.tabsArray,
                 target_id: ths.id,
-                target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM_CATEGORY,
+                target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM,
             }
             this.requestSave(param)
         },
