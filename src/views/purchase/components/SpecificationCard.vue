@@ -1,7 +1,9 @@
 <template>
     <div id="SpecificationCard" class="list-container">
         <div class="card-left">
-            <img :src="$Util.imageFilter(data.logo)">
+            <div class="card-img">
+                <img :src="$Util.imageFilter(data.logo)" >
+            </div>
             <div class="card-info">
                 <div class="title">{{ $i18n.locale =='zh' ? data.name : data.name_en }}</div>
                 <div class="info">{{ data.code }}</div>
@@ -14,8 +16,8 @@
         <div class="shop-card">
             <div class="shop-top">
                 <div class="spot-box">
-                    <!-- <div class="spot"></div>
-                    <span>库存：89</span> -->
+<!--                     <div class="spot"></div>
+                    <span>库存：89</span>-->
                 </div>
                 <div class="shop-price">€{{$Util.countFilter(data[priceKey + 'eur'])}} | ${{$Util.countFilter(data[priceKey + 'usd'])}}</div>
             </div>
@@ -67,6 +69,11 @@ export default {
     },
     watch: {},
     computed: {
+        priceKey() {
+            let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
+            console.log('priceKey:', priceKey)
+            return priceKey
+        },
     },
     mounted() {
         console.log(this.data,'data')
@@ -122,10 +129,25 @@ export default {
         flex: 1;
         display: flex;
         overflow: hidden;
-        img {
-            width: 130px;
-            min-height: 99px;
+        .card-img{
+            width: 200px;
+            height: 200px;
+            margin: auto 0;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+                //width: 100;
+                //height: 100%;
+                img {
+                    margin:auto 0;
+                    width: auto;
+                    height: auto;
+                    max-width: 100%;
+                    max-height: 100%;
+                }
+
         }
+
         .card-info {
             flex: 1;
             display: flex;

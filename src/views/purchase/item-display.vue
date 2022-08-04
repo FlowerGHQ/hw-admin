@@ -21,7 +21,7 @@
                     </div>
                 </template>
             </a-carousel> -->
-            <UpAndDownSwiper></UpAndDownSwiper>
+            <UpAndDownSwiper :imgs="specList" ></UpAndDownSwiper>
         </div>
         <div class="info-content">
             <div class="title">{{ $i18n.locale =='zh' ? detail.name : detail.name_en }}</div>
@@ -35,10 +35,10 @@
                     <span class="price-left">{{ $t('i.price_suggest') }}</span>
                     <span class="price-right">€{{$Util.countFilter(detail[priceKey + 'eur'])}} | ${{$Util.countFilter(detail[priceKey + 'usd'])}}</span>
                 </div>
-                <div class="price">
-                    <span class="price-left">{{ $t('i.price') }}</span>
-                    <span class="price-right">€{{$Util.countFilter(detail[priceKey + 'eur'])}} | ${{$Util.countFilter(detail[priceKey + 'usd'])}}</span>
-                </div>
+<!--                <div class="price">-->
+<!--                    <span class="price-left">{{ $t('i.price') }}</span>-->
+<!--                    <span class="price-right">€{{$Util.countFilter(detail[priceKey + 'eur'])}} | ${{$Util.countFilter(detail[priceKey + 'usd'])}}</span>-->
+<!--                </div>-->
             </div>
             <div class="stars" @click="hanldeAddToFavorite" :class="{'active': detail.in_favorite}">
                 <star-outlined />
@@ -116,11 +116,11 @@ export default {
     },
     watch: {},
     computed: {
-        // priceKey() {
-        //     let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
-        //     console.log('priceKey:', priceKey)
-        //     return priceKey
-        // }
+        priceKey() {
+            let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
+            console.log('priceKey:', priceKey)
+            return priceKey
+        }
     },
     mounted() {
         this.id = Number(this.$route.query.id) || 0
