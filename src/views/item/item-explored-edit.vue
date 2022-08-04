@@ -76,7 +76,7 @@
                 :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, record, index }">
                     <template v-if="column.dataIndex === 'index'" width="100px">
-                        <a-input v-model:value="record.index" @keydown.enter="saveRowIndex(record)" @blur="saveRowIndex(record)" placeholder="请输入序号"></a-input>
+                        <a-input v-model:value="record.index" @blur="saveRowIndex(record)" placeholder="请输入序号"></a-input>
                         <!-- <div v-if="!record.isEdit" @click="editRowIndex(record)">{{ (record || {}).index }}</div>
                         <div v-else>
                             <a-input v-model:value="record.index" @keydown.enter="saveRowIndex(record)" placeholder="请输入序号"></a-input>
@@ -495,7 +495,7 @@ export default {
             row.isEdit = !row.isEdit;
         },
         saveRowIndex(row) {
-            this.editRowIndex(row);
+            // this.editRowIndex(row);
             this.clickSave();
         },
 
