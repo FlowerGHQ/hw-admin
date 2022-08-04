@@ -52,7 +52,7 @@
     </div>
     <SimpleImageEmpty v-else :desc="$t('p.no_item_explode')"/>
     <div class="explored-lists" v-if="exploredList.length && tabsArray.length > 0">
-        <ExploredContentPayCard v-for="list,index in exploredList" :class="{'active': list.id === pointIndex}" :data ="list" :num = "index" @change="exploreList" @click="addPoint(list.id)"/>
+        <ExploredContentPayCard v-for="(list,index) in exploredList" :class="{'active': list.id === pointIndex}" :data ="list" :num = "index" @change="exploreList" @click="addPoint(list.id)"/>
     </div>
     <SimpleImageEmpty v-else :desc="$t('i.no_bom_list')" class="mt"/>
 </template>
@@ -87,6 +87,9 @@ export default {
     watch: {
         id: function(newVal,oldVal) {
             this.getItemExploreList(newVal)
+        },
+        data: function (newVal){
+            this.exploredList = newVal
         }
     },
     data() {

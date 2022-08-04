@@ -65,7 +65,7 @@
                 <CategoryTree :parentId='firstLevelId' @change='handleCategoryChange' ref="CategoryTree"/>
             </div>
         </div>
-        <template v-if="!firstLevelId">
+        <template v-if="!bomShow">
             <div class="item-content" v-if="tableData.length">
                 <!-- <div class="switch-btn">
                     <a-radio-group v-model:value="pageType">
@@ -228,7 +228,7 @@ export default {
             console.log('handleCategoryChange category:', category)
             this.tableData = []
             this.isBomShow(category)
-            this.bomShow = false
+            // this.bomShow = false
             this.searchForm.category_id = category
             if ( this.firstLevelId && category === this.firstLevelId) {
                 this.firstLevelName = this.categoryList.find(i => i.id === category)
@@ -244,10 +244,9 @@ export default {
             this.categoryList.forEach(element => {
                 if(element.id === id) {
                     this.bomShow = element.display_mode === 2 ? true : false
-                    return 
                 }
             });
-            this.bomShow = true
+            // this.bomShow = true
         },
         getTableData() { // 获取 商品 数据
             let searchForm = Core.Util.deepCopy(this.searchForm);
@@ -273,11 +272,9 @@ export default {
                 console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
-                if(!this.bomShow) {
-                    this.bomShow = true
-                } else {
-                    ++this.menaKey
-                }
+                // if(!this.bomShow) {
+                //     this.bomShow = true
+                // }
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {
