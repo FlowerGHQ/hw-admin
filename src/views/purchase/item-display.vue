@@ -204,20 +204,21 @@ export default {
     }
 };
 </script>
-<style lang="scss">
+
+<style lang="less" scoped>
 .item-purchase-info-tab {
     .ant-tabs-tab-btn {
         width: 86px;
         text-align: center;
     }
 }
-</style>
-<style lang="less" scoped>
 #ItemDisplay {
     display: flex;
     flex-wrap: wrap;
     box-sizing: border-box;
     padding: 63px 70px 200px;
+
+
 
     .imgs-content {
         // width: calc(~'100% - 620px');
