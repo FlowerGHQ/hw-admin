@@ -225,7 +225,7 @@ export default {
             this.pageChange(1);
         },
         handleCategoryChange(category) {
-            console.log('handleCategoryChange category:', category)
+            // console.log('handleCategoryChange category:', category)
             this.tableData = []
             this.isBomShow(category)
             // this.bomShow = false
@@ -241,13 +241,37 @@ export default {
         // 是否显示爆炸图
         isBomShow(id) {
             this.bomShow = false
-            this.categoryList.forEach(element => {
-                if(element.id === id) {
-                    this.bomShow = element.display_mode === 2 ? true : false
+            console.log(' categoryList:', this.categoryList)
+            for (let i = 0; i < this.categoryList.length ; i++){
+                console.log(' categoryList:', this.categoryList)
+                if(this.categoryList[i].id === id) {
+                    this.bomShow = this.categoryList[i].display_mode === 2
+                    console.log("bomShow",this.bomShow)
+                    return
                 }
-            });
+                console.log("bomShow",this.bomShow)
+                if (this.categoryList[i].children != null){
+                    console.log("bomShow",this.bomShow)
+                    this.isBomChildren(this.categoryList[i], id);
+                }
+            };
             // this.bomShow = true
         },
+        isBomChildren(element, id){
+            for (let i = 0; i< element.children.length ; i++){
+                if (element.children[i].children != null){
+                    this.isBomChildren(element.children[i], id);
+                }
+                console.log("element.id",element.children[i].id)
+                console.log("id",id)
+                if(element.children[i].id === id) {
+                    this.bomShow = element.children[i].display_mode === 2
+
+                    return
+                }
+            }
+        },
+
         getTableData() { // 获取 商品 数据
             let searchForm = Core.Util.deepCopy(this.searchForm);
             if (this.searchType == Core.Const.ITEM.SEARCH_TYPE.CODE){
