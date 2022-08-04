@@ -266,7 +266,8 @@ export default {
                 onOk() {
                     const param = {
                         item_component_set_list: ths.tabsArray.filter((item,index) => index !== ths.currentTab),
-                        item_id: ths.id,
+                        target_id: ths.id,
+                        target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM_CATEGORY,
                     }
                     ths.requestSave(param,ths.$t('pop_up.delete'),ths.getItemExploreList.bind(ths))
                 },

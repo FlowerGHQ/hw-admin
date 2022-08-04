@@ -240,6 +240,18 @@ export default {
             console.log(id)
             this.pointIndex = id
         },
+        // 添加到购物车
+        hanldeAddToShopCart() {
+            Core.Api.ShopCart.save({
+                item_id: this.componentDetail.id,
+                amount: 1,
+                price: this.componentDetail.purchase_price
+            }).then(res => {
+                console.log('hanldeAddToShopCart res:', res)
+                this.$message.success('添加成功')
+                this.componentDetail.in_shopping_cart = true;
+            })
+        },
     },
 }
 </script>
