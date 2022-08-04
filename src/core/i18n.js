@@ -442,6 +442,7 @@ const messages = {
 
         },
 	    fe:{
+            feedback: '反馈',
             feedback_detail: '反馈单详情',
 		    feedback_uid: '反馈单编号',
 		    feedback_list: '质量反馈列表',
@@ -462,6 +463,10 @@ const messages = {
             maintenance: '维修措施',
             solution: '解决方案',
             demand: '需求',
+            sure_export: '确认要导出吗？',
+            after_sales_audit: '售后审核',
+            quality_audit: '质量审核',
+            feedback_audit: '反馈审核',
 	    },
         w: {
             list: '账户列表',
@@ -1328,6 +1333,7 @@ const messages = {
             is_view: 'Whether to display explosion diagram',
         },
         fe:{
+            feedback: 'Feedback',
             feedback_detail: 'Details of Feedback Sheet',
 		    feedback_uid: 'Feedback order number',
 		    feedback_list: 'Quality feedback list',
@@ -1348,6 +1354,10 @@ const messages = {
             maintenance: 'Maintenance measures',
             solution: 'solution',
             demand: 'demand',
+            sure_export: 'Are you sure you want to export?',
+            after_sales_audit: 'After-sales audit',
+            quality_audit: 'Quality audit',
+            feedback_audit: 'Feedback Review',
 	    },
         w: {
             list: 'Account List',

@@ -14,7 +14,7 @@
                 </div>
                 <div class="info-item">
                     <div class="key">{{ $t('n.type') }}</div>
-                    <div class="value">{{$Util.repairTypeFilter(detail.type)}}</div>
+                    <div class="value">{{$Util.repairTypeFilter(detail.type, $i18n.locale)}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">{{ $t('r.remark') }}</div>

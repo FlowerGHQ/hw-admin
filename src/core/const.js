@@ -246,9 +246,13 @@ let Const = {
             { zh: '维修工单', en: 'repair order', value: 1 }, // 普通工单
             { zh: '特批工单', en: 'special repair order', value: 2 },
         ],
+        // TYPE_MAP: {
+        //     1: '维修工单',
+        //     2: '特批订单',
+        // },
         TYPE_MAP: {
-            1: '维修工单',
-            2: '特批订单',
+            1: { zh: '维修工单', en: 'repair order', value: 1 }, // 普通工单
+            2: { zh: '特批工单', en: 'special repair order', value: 2 },
         },
 	    TYPE: {
 		    TYPE_COMMON: 1,

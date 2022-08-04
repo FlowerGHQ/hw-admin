@@ -431,9 +431,10 @@ const Util = {
         let value = MAP[val + ''] || {}
         return value[to] || '-'
     },
-    repairTypeFilter(val) {
+    repairTypeFilter(val, to = 'key') {
         const MAP = Const.REPAIR.TYPE_MAP
-        return MAP[val] || '未知'
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
     },
     repairChannelFilter(val, to='key') {
         const MAP = Const.REPAIR.CHANNEL_MAP

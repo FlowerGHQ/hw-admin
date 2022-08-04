@@ -11,7 +11,7 @@
             <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
                 <a-tab-pane :key="item.key" v-for="item of statusList">
                     <template #tab>
-                        <div class="tabs-title">{{item[$i18n.locale]}}<span :class="item.color">{{item.value}}</span></div>
+                        <div class="tabs-title">{{item[$i18n.locale]}}<span :class="item.color">{{' '}}{{item.value}}</span></div>
                     </template>
                 </a-tab-pane>
             </a-tabs>
@@ -89,7 +89,7 @@
                         </div>
                     </template>
                     <template v-if="column.dataIndex === 'type'">
-                        {{$Util.repairTypeFilter(text)}}
+                        {{$Util.repairTypeFilter(text, $i18n.locale)}}
                     </template>
                     <template v-if="column.dataIndex === 'priority'">
                         <div class="status status-bg status-tag smell" :class="$Util.repairPriorityFilter(text,'color')">
@@ -336,12 +336,12 @@ export default {
                 {zh: '维修中', en: 'Under repair',value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
                 {zh: '待结算', en: 'Pending settlement',value: '0', color: 'blue',    key: STATUS.REPAIR_END },
                 {zh: '已结算待审核',en: 'Settled accounts and awaiting audit', value: '0', color: 'orange',  key: 65 },
-                {zh: '分销商审核通过',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.DISTRIBUTOR_AUDIT_SUCCESS },
-                {zh: '平台方审核通过',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
-                {zh: '分销商已入库', value: '0', color: 'green',  key: STATUS.DISTRIBUTOR_WAREHOUSE},
-                {zh: '平台方已入库', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE},
+                {zh: '分销商审核通过',en: 'Distributor approved', value: '0', color: 'purple',  key: STATUS.DISTRIBUTOR_AUDIT_SUCCESS },
+                {zh: '平台方审核通过',en: 'Platform approved', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
+                {zh: '分销商已入库', en: 'Distributor has stocked in warehouse', value: '0', color: 'green',  key: STATUS.DISTRIBUTOR_WAREHOUSE},
+                {zh: '平台方已入库', en: 'Platform has stocked in warehouse', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE},
                 {zh: '工单审核未通过', en: 'Failed audit',value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
-                {zh: '故障件审核未通过', value: '0', color: 'red',  key: STATUS.FAULT_ENTITY_AUDIT_FAIL },
+                {zh: '故障件审核未通过', en: 'Failed parts audit failed', value: '0', color: 'red',  key: STATUS.FAULT_ENTITY_AUDIT_FAIL },
                 // {zh: '入库完成', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },
                 {zh: '已完成',en: 'Finished settle accounts', value: '0', color: 'blue',  key: STATUS.FINISH },
                 {zh: '已取消',en: 'Cancelled', value: '0', color: 'gray',  key: STATUS.CLOSE },
