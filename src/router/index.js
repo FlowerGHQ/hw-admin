@@ -51,7 +51,7 @@ router.beforeEach((to, from, next) => {
                     next();
                 } else {
                     // 表前userType禁止访问
-                    message.warning('当前身份无法访问');
+                    message.warning(this.$t('def.inaccessible'));
                     next('/dashboard');
                     NProgress.done();
                 }
