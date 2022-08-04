@@ -19,7 +19,7 @@
                         :style="{'left': `${(point.end.x * (point.rate || 1)) - 4* (point.rate || 1)}px`, 'top': `${(point.end.y * (point.rate || 1))- 4* (point.rate || 1)}px`}"
                         @mouseenter.stop="showDetail(i,j)" @mouseleave="showDetail(-1)"
                     >
-                        {{j + 1}}
+                        {{point.index}}
                     </div>
                 </div>
             </a-carousel>
@@ -32,16 +32,17 @@
                     @mouseleave="showDetail(-1)">
                     <div class="contain-name">
                         <i class="icon i_skew-bg" />
-                        <span class="icon-name">产品名称</span>
-                        {{ componentDetail.name }}
+                        <span class="icon-name">{{ $t('n.name') }}</span>
+                        <span v-if="$i18n.locale === 'zh'"> {{ componentDetail.name }}</span>
+                        <span v-if="$i18n.locale === 'en'"> {{ componentDetail.name_en }}</span>
                     </div>
                     <div class="contain-type">
-                        <div class="type-left">型号:&nbsp;{{ componentDetail.model}}</div>
+                        <div class="type-left">{{ $t('def.model') }}:&nbsp;{{ componentDetail.model}}</div>
                         <div class="type-left">€{{$Util.countFilter(componentDetail[priceKey + 'eur'])}} | ${{$Util.countFilter(componentDetail[priceKey + 'usd'])}}</div>
                     </div>
                     <div class="edit-btn">
-                        <a-button type="primary" class="disabled" v-if="componentDetail.in_shopping_cart">已在购物车中</a-button>
-                        <a-button type="primary" @click="hanldeAddToShopCart" v-else>添加到购物车</a-button> -->
+                        <a-button type="primary" class="disabled" v-if="componentDetail.in_shopping_cart">{{ $t('i.already') }}</a-button>
+                        <a-button type="primary" @click="hanldeAddToShopCart" v-else>{{ $t('i.cart') }}</a-button>
                     </div>
                 </div>
             </transition>

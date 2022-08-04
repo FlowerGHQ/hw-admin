@@ -47,7 +47,7 @@
                     </div>
                     <div class="edit-btn">
                         <a-button type="primary" class="disabled" v-if="componentDetail.in_shopping_cart">{{ $t('i.already') }}</a-button>
-                        <a-button type="primary" @click="hanldeAddToShopCart" v-else>{{ $t('i.cart') }}</a-button> -->
+                        <a-button type="primary" @click="hanldeAddToShopCart" v-else>{{ $t('i.cart') }}</a-button>
                     </div>
                 </div>
             </transition>
