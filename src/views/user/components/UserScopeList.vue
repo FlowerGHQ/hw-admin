@@ -8,6 +8,9 @@
                         <template v-if="column.key === 'text'">
                             {{ text || '-' }}
                         </template>
+                        <template v-if="column.key === 'name'">
+                            {{ $Util.userAuthFilter(record.resource_type, $i18n.locale) }}
+                        </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
@@ -76,9 +79,9 @@ export default {
             scopeShow: false,
 
             tableData : [
-                {name: this.$t('wa.warehouse'), content: "", resource_type: 10},
-                {name: this.$t('r.purchase'), content: "", resource_type: 20},
-                {name: this.$t('n.distributor'), content: "", resource_type: 30},
+                { content: "", resource_type: 10},
+                { content: "", resource_type: 20},
+                { content: "", resource_type: 30},
             ],
 
             form: {
@@ -92,7 +95,7 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: this.$t('u.resource_name'), dataIndex: 'name', key: "text"},
+                {title: this.$t('u.resource_name'), dataIndex: 'name', key: "name"},
                 {title: this.$t('u.resource_content'), dataIndex: "content", key: "text"},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ];

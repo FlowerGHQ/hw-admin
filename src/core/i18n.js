@@ -797,6 +797,7 @@ const messages = {
             resource_type: '资源类型',
             resource_obj: '资源对象',
             sure_delete: '确定要删除该权限吗？',
+	        add_role: '新增角色',
         },
         c: { // 客户
             list: '客户列表',
@@ -1996,6 +1997,7 @@ const messages = {
             resource_type: 'Resource Type',
             resource_obj: ' Resource Object',
             sure_delete: 'Are you sure you want to remove this authority?',
+	        add_role: 'Add Role',
 
         },
         c: {//客户列表
