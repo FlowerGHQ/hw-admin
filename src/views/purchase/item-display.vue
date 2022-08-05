@@ -29,7 +29,10 @@
             <ul>
                 <li v-for="attr in detail.attr_list">{{ $i18n.locale =='zh' ? attr.attr_def_name : attr.attr_def_key }}：{{ $i18n.locale =='zh' ? attr.value : attr.value_en }}</li>
             </ul>
-            <a-button type="primary" block class="btn">{{ $i18n.locale =='zh' ? '此商品 ' : 'This commodity has ' }}{{ specList.length }}{{ $i18n.locale =='zh' ? ' 种规格' : ' kinds of specifications' }}</a-button>
+            <a-button type="primary" block class="btn" v-if="specList.length > 0 ">{{ $i18n.locale =='zh' ? '此商品 ' : 'This commodity has ' }}{{ specList.length }}{{ $i18n.locale =='zh' ? ' 种规格' : ' kinds of specifications' }}</a-button>
+            <a-button type="primary" v-if="specList.length <= 0  && !this.detail.in_shopping_cart" block class="btn-cart" @click="hanldeAddToShopCart(detail.id)" >{{$t('i.cart')}}</a-button>
+            <a-button type="primary" v-if="specList.length <= 0  && this.detail.in_shopping_cart" block class="btn" >{{$t('i.added')}}</a-button>
+
             <div class="price-list">
                 <div class="retail-price">
                     <span class="price-left">{{ $t('i.price_suggest') }}</span>
@@ -46,11 +49,14 @@
             </div>
         </div>
         <div class="content">
-            <div class="title">{{ $t('i.commercial_specification') }}</div>
-            <div class="content-list">
-                <SpecificationCard v-for="item in specList" :data="item" @AddToFavorite="ToFavorite" class="list"/>
-                <SimpleImageEmpty v-if="!specList.length" :desc="$t('p.no_item_spec')"/>
+            <div v-if="this.specList.length > 0">
+                <div class="title">{{ $t('i.commercial_specification') }}</div>
+                <div class="content-list">
+                    <SpecificationCard v-for="item in specList" :data="item" @AddToFavorite="ToFavorite" class="list"/>
+                    <SimpleImageEmpty v-if="!specList.length" :desc="$t('p.no_item_spec')"/>
+                </div>
             </div>
+
             <a-tabs v-model:activeKey="activeKey" class="item-purchase-info-tab">
                 <a-tab-pane key="mountings" :tab="$t('i.fittings')">
                     <SpecificationCard v-for="item in specList" class="list" :data="item" @AddToFavorite="ToFavorite"/>
@@ -187,6 +193,18 @@ export default {
                 this.getItemDetail();
             })
         },
+        // 添加到购物车
+        hanldeAddToShopCart(id) {
+            Core.Api.ShopCart.save({
+                item_id: this.detail.id,
+                amount: 1,
+                price: this.detail.purchase_price
+            }).then(res => {
+                console.log('hanldeAddToShopCart res:', res)
+                this.$message.success('添加成功')
+                this.detail.in_shopping_cart = true;
+            })
+        },
 
         // 商品规格收藏商品成功
         ToFavorite(data) {
@@ -282,6 +300,13 @@ export default {
         }
         .btn {
             background-color: rgba(0, 110, 249, .5);
+            border: none;
+            color: @white;
+            height: 46px;
+            font-size: @fz_md;
+        }
+        .btn-cart {
+            background-color: rgba(0, 110, 249);
             border: none;
             color: @white;
             height: 46px;
