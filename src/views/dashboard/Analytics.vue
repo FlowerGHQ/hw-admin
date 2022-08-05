@@ -4,12 +4,12 @@
         <div class="banner-header">
             <img src="../../assets/images/default_banner-one.png" class="banner-bg">
             <p class="banner-title">Welcome！ HORWIN B2B Shop</p>
-            <a-input v-model:value="userName" placeholder="Basic usage" class="banner-search">
+            <a-input v-model:value="value" placeholder="Basic usage" class="banner-search" allowClear="true" maxlength="99" @pressEnter="hadleSearch">
                 <template #prefix>
-                    <search-outlined class="search"/>
+                    <search-outlined class="search" @click="hadleSearch"/>
                 </template>
                 <template #suffix>
-                    <arrow-right-outlined class="arrow"/>
+                    <arrow-right-outlined class="arrow" @click="hadleSearch"/>
                 </template>
             </a-input>
         </div>
@@ -54,7 +54,9 @@ export default {
                 master: '',
                 org: '',
                 list: []
-            }
+            },
+            // 搜索内容
+            value: ''
         }
     },
     mounted() {
@@ -81,6 +83,14 @@ export default {
                 console.log('getUnreadCount err', err)
             })
         },
+        hadleSearch() {
+            if(this.value.length) {
+                console.log(this.value)
+                // 请求数据
+            } else {
+                this.$message.error('请输入搜索内容');
+            }
+        }
     }
 }
 </script>
@@ -105,7 +115,7 @@ export default {
                 font-size: 24px;
                 font-family: Inter-Bold, Inter;
                 font-weight: bold;
-                color: #FFFFFF;
+                color:  @white;
                 width: 100%;
                 text-align: center;
                 .ell()
@@ -140,10 +150,10 @@ export default {
                 .title {
                     top: 10%;
                     left: 5%;
-                    font-size: 18px;
+                    font-size: @fz_lg;
                     font-family: Inter-Bold, Inter;
                     font-weight: bold;
-                    color: #FFFFFF;
+                    color: @white;
                     opacity: .8;
                 }
                 .info {
@@ -152,21 +162,21 @@ export default {
                     font-size: 24px;
                     font-family: Inter-Bold, Inter;
                     font-weight: bold;
-                    color: #FFFFFF;
+                    color: @white;
                 }
                 .arrow {
                     position: absolute;
                     bottom: 10%;
                     right: 6%;
-                    color: #fff;
-                    font-size: 25px;
+                    color: @white;
+                    font-size: @fz_25;
                 }
             }
         }
         .message {
             margin-top: 26px;
             .title {
-                font-size: 14px;
+                font-size: @fz_bs;
                 font-family: Inter-Bold, Inter;
                 font-weight: bold;
                 color: #323C4D;
@@ -183,12 +193,12 @@ export default {
                     padding: 19px 69px 19px 10px;
                     margin-top: 13px;
                     border-radius: 12px;
-                    margin-right: 25px;
+                    box-sizing: border-box;
                     .message-content {
                         border-left-width: 3px;
                         border-left-style: solid;
                         padding-left: 20px;
-                        font-size: 14px;
+                        font-size: @fz_bs;
                         .text {
                             margin-right: 10px;
                             font-weight: 500;
@@ -209,8 +219,6 @@ export default {
     > div {
         border-left-color: #367AFF;
     }
-    // background: linear-gradient(94deg, rgba(54, 122, 255, .4) 0%, rgba(54,122,255,.4) 100%);
-
     background: linear-gradient(94deg, rgba(54, 122, 255, .3) 0%, rgba(54,122,255,0) 40%);
 }
 .red {
@@ -220,7 +228,6 @@ export default {
     > div {
         border-left-color: #FF0000;
     }
-    // background: linear-gradient(90deg, rgba(255, 0, 0, .4) 0%, rgba(255,0,0,0) 100%);
     background: linear-gradient(90deg, rgba(255,0,0,.3) 0%, rgba(255,0,0,0) 40%);
 }
 :deep(.ant-badge-count) {
@@ -241,24 +248,34 @@ export default {
 }
 :deep(.ant-input) {
     background-color: transparent;
-    font-size: 14px;
+    font-size: @fz_bs;
     font-family: PingFang SC-Regular, PingFang SC;
     font-weight: 400;
-    color: #FFFFFF;
+    color: @white;
     padding-left: 15px !important;
     &::placeholder {
-        font-size: 14px;
+        font-size: @fz_bs;
         font-family: PingFang SC-Regular, PingFang SC;
         font-weight: 400;
-        color: #FFFFFF;
+        color: @white;
+    }
+}
+:deep(.ant-input-clear-icon) {
+    font-size: 20px;
+    margin-right: 20px;
+    color: #fff;
+    opacity: .6;
+    &:hover {
+        color: #fff;
+        opacity: 1;
     }
 }
 .search {
-    font-size: 20px;
-    color: #FFFFFF;
+    font-size: @fz_20;
+    color: @white;
 }
 .arrow {
-    font-size: 20px;
-    color: #FFFFFF;
+    font-size: @fz_20;
+    color: @white;
 }
 </style>

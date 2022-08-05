@@ -153,8 +153,10 @@ export default {
         }
     },
     beforeUnmount() {
-        this.$refs.RepairOrderChart.innerHTML = ''
-        this.$refs.PurchaseOrderChart.innerHTML = ''
+        if (this.$auth('ADMIN')) {
+            this.$refs.RepairOrderChart.innerHTML = ''
+            this.$refs.PurchaseOrderChart.innerHTML = ''
+        }
     },
     methods: {
         routerChange(type, item = {}) {
