@@ -129,50 +129,50 @@ export default {
     left: 0;
     width: 100%;
 }
-//
-//// .swiper-wrapper {
-////   top: 30px;
-//// }
-////左右上下页的样式
-//:deep(.swiper-button-prev), :deep(.swiper-button-next) {
-//    transform: translateX(-50%) rotate(90deg);
-//    // position: absolute;
-//    // transform: rotate(90deg);
-//    // width:40px;
-//    // height:40px;
-//    // background-color: hsla(0,0%,100%,.3);
-//    // border-radius: 50%;
-//    // transition: all .2s ease-in-out;
-//    // &:hover{
-//    //   background-color: hsla(0,0%,100%,.5);
-//    //   transition: all .2s ease-in-out;
-//    // }
-//}
-//
-//:deep(.swiper-button-prev) {
-//    top: 10px;
-//    left: 3.3%;
-//    transform: translateX(-50%) rotate(90deg);
-//}
-//
-//:deep(.swiper-button-next) {
-//    top: 98%;
-//    right: 96.7%;
-//    transform: translateX(50%) rotate(90deg);
-//}
-//
-////修改上下页左右箭头的样式
-//:deep(.swiper-button-prev:after), :deep(.swiper-button-next:after) {
-//    //   opacity: 1;
-//    //   object-fit: contain;
-//    color: #6E7C94;
-//    font-size: 20px;
-//    //   transition: all .2s ease-in-out;
-//    //   z-index: 5;
-//    //   display: flex;
-//    //   align-items: center;
-//    //   justify-content: center;
-//}
+
+// .swiper-wrapper {
+//   top: 30px;
+// }
+//左右上下页的样式
+:deep(.swiper-button-prev), :deep(.swiper-button-next) {
+    transform: translateX(-50%) rotate(90deg);
+    // position: absolute;
+    // transform: rotate(90deg);
+    // width:40px;
+    // height:40px;
+    // background-color: hsla(0,0%,100%,.3);
+    // border-radius: 50%;
+    // transition: all .2s ease-in-out;
+    // &:hover{
+    //   background-color: hsla(0,0%,100%,.5);
+    //   transition: all .2s ease-in-out;
+    // }
+}
+
+:deep(.swiper-button-prev) {
+    top: 10px;
+    left: 3.3%;
+    transform: translateX(-50%) rotate(90deg);
+}
+
+:deep(.swiper-button-next) {
+    top: 98%;
+    right: 96.7%;
+    transform: translateX(50%) rotate(90deg);
+}
+
+//修改上下页左右箭头的样式
+:deep(.swiper-button-prev:after), :deep(.swiper-button-next:after) {
+    //   opacity: 1;
+    //   object-fit: contain;
+    color: #6E7C94;
+    font-size: 20px;
+    //   transition: all .2s ease-in-out;
+    //   z-index: 5;
+    //   display: flex;
+    //   align-items: center;
+    //   justify-content: center;
+}
 
 .img-big {
     width: 500px;
