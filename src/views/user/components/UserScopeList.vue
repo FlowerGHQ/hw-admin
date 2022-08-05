@@ -12,7 +12,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="handleScopeTypeShow(record)" v-if="$auth('account.save', 'MANAGER')" >修改</a-button>
+                            <a-button type='link' @click="handleScopeTypeShow(record)" v-if="$auth('account.save', 'MANAGER')" >{{ $t('n.amend') }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -25,7 +25,7 @@
                     show-quick-jumper
                     show-size-changer
                     show-less-items
-                    :show-total="total => `共${total}条`"
+                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                     :hide-on-single-page='false'
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="pageChange"
@@ -33,10 +33,10 @@
                 />
             </div>
         </div>
-        <a-modal v-model:visible="scopeShow" :title=" '资源管理'" class="stock-change-modal" :width="800" :after-close="handleScopeTypeClose">
+        <a-modal v-model:visible="scopeShow" :title=" $t('u.resource')" class="stock-change-modal" :width="800" :after-close="handleScopeTypeClose">
             <UserScope :userId="userId" :userType="detail.type" :resourceType="scopeType" v-if="scopeShow" />
             <template #footer>
-                <a-button @click="scopeShow=false">关闭</a-button>
+                <a-button @click="scopeShow=false">{{ $t('pop_up.close') }}</a-button>
             </template>
         </a-modal>
     </div>
@@ -76,9 +76,9 @@ export default {
             scopeShow: false,
 
             tableData : [
-                {name: "仓库", content: "", resource_type: 10},
-                {name: "采购", content: "", resource_type: 20},
-                {name: "分销商", content: "", resource_type: 30},
+                {name: this.$t('wa.warehouse'), content: "", resource_type: 10},
+                {name: this.$t('r.purchase'), content: "", resource_type: 20},
+                {name: this.$t('n.distributor'), content: "", resource_type: 30},
             ],
 
             resourceMap: Core.Const.NOTICE.RESOURCE_TYPE_MAP,
@@ -93,8 +93,8 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: "资源名称", dataIndex: 'name', key: "text"},
-                {title: "资源内容", dataIndex: "content", key: "text"},
+                {title: this.$t('u.resource_name'), dataIndex: 'name', key: "text"},
+                {title: this.$t('u.resource_content'), dataIndex: "content", key: "text"},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ];
             return tableColumns;

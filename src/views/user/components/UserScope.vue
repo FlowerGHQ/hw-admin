@@ -4,7 +4,7 @@
             <div class="table-container">
 
                 <a-button type="primary" ghost @click="handleAuthShow" v-if="$auth('account.save','MANAGER')" class="panel-btn">
-                    <i class="icon i_add"/>新增资源
+                    <i class="icon i_add"/>{{ $t('u.new_resource') }}
                 </a-button>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false'>
@@ -20,7 +20,7 @@
                         </template>
                         <template v-if="column.key === 'operation'">
 <!--                            <a-button type='link' @click="handleAuthShow(record)"><i class="icon i_edit"/>编辑</a-button>-->
-                            <a-button type='link' @click="handleDelete(record)" class="danger"><i class="icon i_delete"/>删除</a-button>
+                            <a-button type='link' @click="handleDelete(record)" class="danger"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -33,7 +33,7 @@
                     show-quick-jumper
                     show-size-changer
                     show-less-items
-                    :show-total="total => `共${total}条`"
+                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                     :hide-on-single-page='false'
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="pageChange"
@@ -41,42 +41,42 @@
                 />
             </div>
         </div>
-        <a-modal v-model:visible="authShow" title="增加资源" class="stock-change-modal" :after-close="handleAuthClose">
+        <a-modal v-model:visible="authShow" :title="$t('u.new_resource')" class="stock-change-modal" :after-close="handleAuthClose">
             <div class="form-item required">
-                <div class="key">资源类型</div>
+                <div class="key">{{ $t('u.resource_type') }}</div>
                 <div class="value">
-                    <a-select v-model:value="form.resource_type" placeholder="请选择资源类型" disabled>
+                    <a-select v-model:value="form.resource_type" :placeholder="$t('def.select') + $t('u.resource_type')" disabled>
                         <a-select-option v-for="resource in resourceList" :key="resource.value" :value="resource.value">{{ resource.text }}</a-select-option>
                     </a-select>
                 </div>
             </div>
             <div class="form-item required" v-if="resourceType == RESOURCE_TYPE.WAREHOUSE">
-                <div class="key">资源对象</div>
+                <div class="key">{{ $t('u.resource_obj') }}</div>
                 <div class="value">
-                    <a-select v-model:value="form.resource_id" placeholder="请选择资源对象">
+                    <a-select v-model:value="form.resource_id" :placeholder="$t('def.select') + $t('u.resource_obj')">
                         <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id" :disabled="item.disabled">{{ item.name }}</a-select-option>
                     </a-select>
                 </div>
             </div>
             <div class="form-item required" v-if="resourceType == RESOURCE_TYPE.PURCHASE">
-                <div class="key">资源对象</div>
+                <div class="key">{{ $t('u.resource_obj') }}</div>
                 <div class="value">
-                    <a-select v-model:value="form.resource_id" placeholder="请选择资源对象">
+                    <a-select v-model:value="form.resource_id" :placeholder="$t('def.select') + $t('u.resource_obj')">
                         <a-select-option v-for="item of categoryList" :key="item.id" :value="item.id" :disabled="item.disabled">{{ item.name }}</a-select-option>
                     </a-select>
                 </div>
             </div>
             <div class="form-item required" v-if="resourceType == RESOURCE_TYPE.DISTRIBUTOR">
-                <div class="key">资源对象</div>
+                <div class="key">{{ $t('u.resource_obj') }}</div>
                 <div class="value">
-                    <a-select v-model:value="form.resource_id" placeholder="请选择资源对象">
+                    <a-select v-model:value="form.resource_id" :placeholder="$t('def.select') + $t('u.resource_obj')">
                         <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id" :disabled="item.disabled">{{ item.name }}</a-select-option>
                     </a-select>
                 </div>
             </div>
             <template #footer>
-                <a-button @click="handleAuthSubmit" type="primary">确定</a-button>
-                <a-button @click="authShow=false">取消</a-button>
+                <a-button @click="handleAuthSubmit" type="primary">{{ $t('def.sure') }}</a-button>
+                <a-button @click="authShow=false">{{ $t('def.cancel') }}</a-button>
             </template>
         </a-modal>
     </div>
@@ -132,9 +132,9 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: "权限类型", dataIndex: 'resource_type', key: "type"},
-                {title: "权限对象", dataIndex: ['resource', 'name'], key: "text"},
-                {title: "创建时间", dataIndex: "create_time", key: "time"},
+                {title: this.$t('u.resource_type'), dataIndex: 'resource_type', key: "type"},
+                {title: this.$t('u.resource_obj'), dataIndex: ['resource', 'name'], key: "text"},
+                {title: this.$t('def.create_time'), dataIndex: "create_time", key: "time"},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ];
             return tableColumns;
@@ -243,13 +243,13 @@ export default {
             form.user_id = this.userId
             form.user_type = this.userType
             if (!form.resource_type) {
-                return this.$message.warning('请选择权限类型')
+                return this.$message.warning(this.$t('def.select') + this.$t('u.resource_type'))
             }
             if (!form.resource_id) {
-                return this.$message.warning('请选择权限对象')
+                return this.$message.warning(this.$t('def.select') + this.$t('u.resource_obj'))
             }
             Core.Api.AuthorityUser.save(form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.handleAuthClose();
                 this.getTableData();
             }).catch(err => {
@@ -267,13 +267,13 @@ export default {
             console.log('form',form)
             let _this = this;
             this.$confirm({
-                title: '确定要删除该权限吗？',
-                okText: '确定',
+                title: _this.$t('u.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.AuthorityUser.delete(form).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(this.$t('pop_up.save_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete -> err", err);
