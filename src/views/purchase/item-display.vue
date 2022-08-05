@@ -59,8 +59,8 @@
 
             <a-tabs v-model:activeKey="activeKey" class="item-purchase-info-tab">
                 <a-tab-pane key="mountings" :tab="$t('i.fittings')">
-                    <SpecificationCard v-for="item in specList" class="list" :data="item" @AddToFavorite="ToFavorite"/>
-                    <SimpleImageEmpty v-if="!specList.length" :desc="$t('p.no_item_fitt')"/>
+                    <SpecificationCard v-for="item in accessoryData" class="list" :data="item" @AddToFavorite="ToFavorite"/>
+                    <SimpleImageEmpty v-if="!accessoryData.length" :desc="$t('p.no_item_fitt')"/>
                 </a-tab-pane>
                 <a-tab-pane key="explosiveView" :tab="$t('i.view')" force-render>
                     <ExploredContent ref="ExploredContent" :id="id" :show="false" class="explored" @noData="noExplodeData"/>
@@ -115,6 +115,7 @@ export default {
             // activeKey: 0,
 
             specList: [],
+            accessoryData: [],
 
             // 无爆炸图
             explodeShow: true,
@@ -131,6 +132,7 @@ export default {
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         this.getItemDetail();
+        this.getAccessoryData();
     },
     methods: {
         // getImgUrl(i) {
@@ -214,6 +216,29 @@ export default {
         // 无爆炸图数据
         noExplodeData(data) {
             this.explodeShow = data
+        },
+        getAccessoryData() {
+            Core.Api.ItemAccessory.list({item_id: this.id}).then(res => {
+                let list =[]
+                console.log(res)
+                res.list.forEach( it =>{
+                    let item = {
+                        logo: it.logo,
+                        imgs: it.imgs,
+                        name: it.target_name,
+                        name_en: it.target_name_en,
+                        code: it.target_uid,
+                        attr_list: it.attr_list,
+                        id: it.target_id,
+                        fob_usd: it.fob_usd,
+                        fob_eur: it.fob_eur,
+                        purchase_price_usd: it.purchase_price_usd,
+                        purchase_price_eur: it.purchase_price_eur,
+                    }
+                    list.push(item)
+                })
+                this.accessoryData = list
+            })
         },
 
         // getImgUrl(i) {

@@ -1,10 +1,10 @@
 <template>
     <div id='MaterialDetail' class='list-container'>
         <div class='title-container'>
-            <div class='title-area'>物料详情</div>
+            <div class='title-area'>{{ $t('m.material_detail') }}</div>
             <div class="btns-area">
-                <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('material.save')"><i class="icon i_edit"/>编辑</a-button>
-                <a-button type="danger" ghost @click="handleDelete(id)" v-if="$auth('material.delete')"><i class="icon i_close_c"/>删除</a-button>
+                <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('material.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                <a-button type="danger" ghost @click="handleDelete(id)" v-if="$auth('material.delete')"><i class="icon i_close_c"/>{{ $t('def.delete') }}</a-button>
             </div>
         </div>
         <div class="gray-panel">
@@ -17,35 +17,35 @@
                 </div>
                 <a-row class="desc-detail">
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">物料分类：</span>
+                        <span class="key">{{ $t('m.material_category') }}：</span>
                         <span class="value">{{ category_name }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">物料编码：</span>
+                        <span class="key">{{ $t('m.material_code') }}：</span>
                         <span class="value">{{ detail.code }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">规格：</span>
+                        <span class="key">{{ $t('m.spec') }}：</span>
                         <span class="value">{{ detail.spec }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">物料包装：</span>
+                        <span class="key">{{ $t('m.package') }}：</span>
                         <span class="value">{{ detail.encapsulation }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">包装尺寸：</span>
+                        <span class="key">{{ $t('m.size') }}：</span>
                         <span class="value">{{ detail.encapsulation_size }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">毛重(kg)：</span>
+                        <span class="key">{{ $t('m.weight') }}：</span>
                         <span class="value">{{ $Util.countFilter(detail.gross_weight) }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">单位：</span>
+                        <span class="key">{{ $t('m.unit') }}：</span>
                         <span class="value">{{ detail.unit }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">供应商：</span>
+                        <span class="key">{{ $t('m.supplier') }}：</span>
                         <template v-for="item of detail.supplier_list">
                             <a-tag>{{ item.short_name }}</a-tag>
                         </template>
@@ -59,10 +59,10 @@
         </div>
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
-                <a-tab-pane key="StockWarehouseList" tab="库存列表">
+                <a-tab-pane key="StockWarehouseList" :tab="$t('m.inventory')">
                     <StockWarehouseList :targetId="id" v-if="activeKey === 'StockWarehouseList'"/>
                 </a-tab-pane>
-                <a-tab-pane key="MaterialStockRecord" tab="变动记录">
+                <a-tab-pane key="MaterialStockRecord" :tab="$t('m.change_record')">
                     <MaterialStockRecord :supplierId="id" :targetId="id" v-if="activeKey === 'MaterialStockRecord'"/>
                 </a-tab-pane>
             </a-tabs>
@@ -136,14 +136,14 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该物料吗？',
-                okText: '确定',
+                title: _this.$t('m.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Material.delete({id})
                         .then(() => {
-                            _this.$message.success('删除成功');
+                            _this.$message.success(this.$t('pop_up.delete_success'));
                             _this.routerChange('list');
                         }).catch((err) => {
                         console.log('handleDelete err', err);

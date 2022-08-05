@@ -6,7 +6,7 @@
         </div>
         <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
             <template #expandIcon></template>
-            <a-collapse-panel v-for="(org,key) of orgType" :key="key" :header="org.name" class="gray-collapse-panel">
+            <a-collapse-panel v-for="(org,key) of orgType" :key="key" :header="$t('n.'+ org.name)" class="gray-collapse-panel">
 <!--                <div v-model:checked="checkAll"
                        :indeterminate="indeterminate"
                        @change="onCheckAllChange">  Check all</div>-->
@@ -21,9 +21,9 @@
                     <SimpleImageEmpty v-if="$Util.isEmptyObj(org.selected)" :desc="$t('n.no_org_auth')"/>
                     <template v-for="item of org.options" :key="item.key">
                         <div class="form-item afs" v-if="item.select.length">
-                            <div class="key">{{item.name}}:</div>
+                            <div class="key">{{$t('authority.title.'+item.key)}}:</div>
                             <div class="value">
-                                <span class="authority-item" v-for="i of item.select" :key="i">{{org.selected[i]}}</span>
+                                <span class="authority-item" v-for="i of item.select" :key="i">{{$t('authority.'+org.selected[i]) }}</span>
                             </div>
                         </div>
                     </template>
@@ -31,9 +31,12 @@
                 <div class="panel-content" v-else>
                     <template v-for="item of org.options" :key="item.key">
                         <div class="form-item afs" v-if="item.list.length">
-                            <div class="key">{{item.name}}:</div>
+                            <div class="key">{{$t('authority.title.'+item.key)}}:</div>
                             <div class="value">
-                                <a-checkbox-group :options="item.list" v-model:value="item.select"/>
+                                <a-checkbox-group v-model:value="item.select">
+                                    <a-checkbox v-for=" it in item.list" :value="it.value">{{$t('authority.'+it.label) }}</a-checkbox>
+                                </a-checkbox-group>
+
                             </div>
                         </div>
                     </template>
@@ -56,27 +59,28 @@ export default {
     components: { SimpleImageEmpty },
     props: {},
     data() {
+      let _this = this;
         return {
             activeKey: [],
 
             authItems: Core.Util.deepCopy(AUTH_LIST_TEMP), // 所有权限
 
             distributor: {
-                name: '代理商权限管理',
+                name: "distributor_auth",
                 type: USER_TYPE.DISTRIBUTOR,
                 edit: false,
                 options: [],
                 selected: {},
             },
             agent: {
-                name: '零售商权限管理',
+                name: "agent_auth",
                 type: USER_TYPE.AGENT,
                 edit: false,
                 options: [],
                 selected: {},
             },
             store: {
-                name: '门店权限管理',
+                name: "store_auth",
                 type: USER_TYPE.STORE,
                 edit: false,
                 options: [],
@@ -109,7 +113,7 @@ export default {
                     let key = auth.key.split('.')[0];
                     let item = this.authItems.find(i => key === i.key);
                     if (item) {
-                        item.list.push({ value: auth.id, label: auth.name });
+                        item.list.push({ value: auth.id, label: auth.key  });
                     }
                 })
                 console.log("getAllAuthItem authItems", this.authItems)
@@ -128,7 +132,7 @@ export default {
                 console.log('getOrgAuth', user_type, 'res:', res)
                 let selected = {}
                 res.list.forEach(auth => {
-                    selected[auth.id] = auth.name
+                    selected[auth.id] = auth.key
                     let key = auth.key.split('.')[0];
                     let item = this[user_type].options.find(i => key === i.key);
                     if (item) {

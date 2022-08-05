@@ -15,17 +15,17 @@
                         <SimpleImageEmpty v-if="$Util.isEmptyObj(selected)" desc='该用户尚未分配可管理权限'/>
                         <template v-for="item of options" :key="item.key">
                             <div class="form-item afs" v-if="item.select.length">
-                                <div class="key">{{item.name}}:</div>
+                                <div class="key">{{$t('authority.title.'+item.key)}}:</div>
                                 <div class="value">
                                     <span class="authority-item" v-for="i of item.select" :key="i">
                                         <a @click="handleScopeTypeShow(selected[i].scope_type)" v-if = "selected[i].scope_type > 0">
 <!--                                            {{selected[i].key}}-->
 <!--                                            {{$t('authority.'+ selected[i].key)}}-->
 <!--                                            {{$t("authority.\'distributor.save\'")}}-->
-                                            {{selected[i].key}}
+                                            {{$t('authority.'+selected[i].key)}}
                                         </a>
                                         <span v-else>
-                                            {{selected[i].key}}
+                                             {{$t('authority.'+selected[i].key)}}
                                         </span>
                                     </span>
                                 </div>
@@ -35,10 +35,11 @@
                     <div class="panel-content" v-else>
                         <template v-for="item of options" :key="item.key">
                             <div class="form-item afs" v-if="item.list.length">
-                                <div class="key">{{item.name}}:</div>
+<!--                                <div class="key">{{item.name}}:</div>-->
+                                <div class="key">{{$t('authority.title.'+item.key)}}:</div>
                                 <div class="value">
                                     <a-checkbox-group v-model:value="item.select" >
-                                        <a-checkbox v-for="it in item.list" :value="it.value" :disabled="it.disabled">{{ it.label }}</a-checkbox>
+                                        <a-checkbox v-for="it in item.list" :value="it.value" :disabled="it.disabled">{{$t('authority.'+it.label) }}</a-checkbox>
                                     </a-checkbox-group>
                                 </div>
                             </div>
@@ -130,7 +131,7 @@ export default {
                     let key = auth.key.split('.')[0];
                     let item = this.authItems.find(i => key === i.key);
                     if (item) {
-                        item.list.push({ value: auth.id, label: auth.name, scope_type: auth.scope_type });
+                        item.list.push({ value: auth.id, label: auth.key, scope_type: auth.scope_type });
                     }
                 })
                 console.log("getAllAuthItem authItems", this.authItems)
@@ -149,7 +150,7 @@ export default {
                 let selected = {}
                 res.list.forEach(auth => {
                     let selectedInfo ={
-                        key: auth.name,
+                        key: auth.key,
                         scope_type: 0
                     }
                     selected[auth.id] = selectedInfo;
@@ -180,7 +181,7 @@ export default {
                 let selected = this.selected;
                 res.list.forEach(auth => {
                     let selectedInfo = {
-                        key: auth.name,
+                        key: auth.key,
                         scope_type: 0
                     }
                     selected[auth.id] = selectedInfo;

@@ -231,10 +231,13 @@ const apiList = {
         getItemComponent: ['PostJson', 'item/item-component-set-list'], // 查询爆炸图列表
         bindItemComponent: ['PostJson', 'item/bind-item-component'], // 绑定零部件
         deleteItemComponent: ['PostJson', 'item/delete-item-component'], // 解绑零部件
-
-
-
     },
+	ItemAccessory: { // 商品
+		save: ['PostJson', 'item-accessory/save'],
+		list: ['PostJson', 'item-accessory/list'],
+		delete: ['PostJson', 'item-accessory/delete'],
+	},
+
     Entity: {// 车架
         list: ['PostJson', 'entity/list'],
         save: ['PostJson', 'entity/save'],
@@ -290,7 +293,7 @@ const apiList = {
 
         // 备注
         remark: ['PostJson', 'shopping-cart/remark'],
-        
+
     },
     Favorite: { // 收藏夹
         add: ['PostJson', 'favorite/create'],

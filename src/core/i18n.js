@@ -33,7 +33,7 @@ const messages = {
             money: '金额',
             operation: '账户操作',
         },
-        ad: {
+        ad: { // 收货地址
             address: '收货地址列表',
             specific_address: '详细地址',
             shipping_address: '收货地址',
@@ -157,8 +157,12 @@ const messages = {
             detail: '详情',
             service: '服务',
             pending: '待定',
+            distributor_auth: '经销商权限管理',
+            agent_auth: '零售商权限管理',
+            store_auth: '门店权限管理',
+
         },
-        a: {
+        a: { // 零售商
             new_retailer: '新建零售商',
             list_of_retailers: '零售商列表',
             superior: '所属分销商',
@@ -175,7 +179,7 @@ const messages = {
             set_sales: '批量设置销售区域',
             set_sale: '设置销售区域',
         },
-        r: {
+        r: { // 维修单
             sn: '维修单编号',
             unit: '所属单位',
             item: '更换商品',
@@ -272,7 +276,7 @@ const messages = {
             settlement: '结算完成',
             input_fault_number: '请输入故障件编号',
         },
-        d: {
+        d: { // 分销商
             distributor_detail: '分销商详情',
             name: '分销商名称',
             distribution_management: '分销管理',
@@ -305,7 +309,7 @@ const messages = {
             manage_account: '账户管理',
             item: '商品价格',
         },
-        e: {
+        e: { // 员工
             employee_list: '员工列表',
             new_employee: '新增员工',
             name: '姓名',
@@ -316,7 +320,7 @@ const messages = {
             select_warehouse: '请选择仓库',
             select_employees: '请选择员工',
         },
-        i: {
+        i: { // 商品
             commodity_management: '商品管理',
             categories: '商品分类',
             product_information: '商品信息',
@@ -457,7 +461,7 @@ const messages = {
             is_view: '是否显示爆炸图',
 
         },
-	    fe:{
+	    fe:{ // 反馈单
             feedback: '反馈',
             feedback_detail: '反馈单详情',
 		    feedback_uid: '反馈单编号',
@@ -484,7 +488,7 @@ const messages = {
             quality_audit: '质量审核',
             feedback_audit: '反馈审核',
 	    },
-        w: {
+        w: { // 钱包账户
             list: '账户列表',
             type: '账户类型',
             balance: '余额',
@@ -497,7 +501,7 @@ const messages = {
             new: '新建账户',
             choose_type: '请选择类型',
         },
-        v: {
+        v: { // 实例 车辆
             instance_management: '实例管理',
             vehicle: '整车',
             parts: '零部件',
@@ -566,7 +570,7 @@ const messages = {
 
 
         },
-        in: {
+        in: { // 出入库
             list: '出入库单列表',
             save: '新建出入库单',
             edit: '编辑出入库单',
@@ -612,7 +616,7 @@ const messages = {
             instance_gt_total: '商品实例数量不能大于总数量',
             sure_export: '确认要导出吗？',
         },
-        p: {
+        p: { // 采购订单
             list: '采购订单列表',
             purchase_order: '采购订单',
             order_number: '订单编号',
@@ -701,7 +705,7 @@ const messages = {
             audit_result: '请选择审核结果',
             determine_cancel: '确认取消吗',
         },
-        s: {
+        s: { // 门店
             store_list: '门店列表',
             new_store: '新建门店',
             superior: '所属零售商',
@@ -709,7 +713,7 @@ const messages = {
             edit: '门店编辑',
             sure_delete: '确定要删除该门店吗？',
         },
-        af: {//售后单
+        af: { // 售后单
             list: '售后单列表',
             number: '售后订单号',
             sn: '采购订单号',
@@ -784,12 +788,12 @@ const messages = {
             authority: '权限管理',
             resource: '资源管理',
         },
-        c: {
+        c: { // 客户
             list: '客户列表',
             save: '新建客户',
             edit: '编辑客户',
         },
-        role: {
+        role: { // 角色
             list: '角色列表',
             save: '新建角色',
             edit: '编辑角色',
@@ -806,7 +810,7 @@ const messages = {
             choose: '选择文件',
             sure_download: 'Are you sure you want to download?',
         },
-        no: {
+        no: { // 消息
             list: '消息列表',
             headers: '消息标题',
             read: '已读',
@@ -861,6 +865,7 @@ const messages = {
             none: '无',
             remark: '备注',
             inaccessible: '当前身份无法访问',
+            uploaded: '上传成功',
 
         },
         search: {
@@ -916,7 +921,7 @@ const messages = {
 		    remark: '审核信息',
             reason: '请输入审核未通过的原因',
 	    },
-        pt: {
+        pt: { // 打印
             list:'标签规则',
             rule:'打印规则',
             set_script:'设置打印脚本',
@@ -924,7 +929,230 @@ const messages = {
             enter_product_name:'请输入产品名称',
             script:'打印脚本',
             enter_script:'请输入打印脚本',
-        }
+        },
+        m: { // 物料
+            material_list:'物料列表',
+            import:'批量导入',
+            new_material:'新增物料',
+            material_name:'物料名称',
+            material_category:'物料分类',
+            material_code:'物料编码',
+            spec:'规格',
+            unit:'单位',
+            package:'物料包装',
+            size:'包装尺寸',
+            weight:'毛重(kg)',
+            boxes:'装箱数',
+            color:'颜色',
+            sure_delete:'确定要删除该物料吗？',
+            edit_material:'编辑物料',
+            enter_material:'请输入物料名称(最多输入50字符)',
+            material_en_name:'物料英文名',
+            enter_material_en:'请输入物料英文名(最多输入50字符)',
+            material_spec:'物料规格',
+            material_picture:'物料实物图',
+            pcs:'件',
+            material_detail:'物料详情',
+            supplier:'供应商',
+            inventory:'库存列表',
+            change_record:'变动记录',
+            edit_category:'编辑分类',
+            new_category:'新增分类',
+            edit_name:'编辑名称',
+            new_sub_category:'新增子分类',
+            category_name:'分类名称',
+            sure_delete_category_a:'确定要删分类',
+            sure_delete_category_b:'吗？',
+
+
+        },
+	    authority: {
+        	title: {
+		        distributor: "分销商管理",
+		        agent: '零售商',
+	        },
+		    distributor: {
+			    list: '查看分销商列表',
+			    save: '编辑分销商',
+			    detail: '分销商详情',
+			    delete: '禁用分销商',
+			    enable: '启用分销商'
+		    },
+		    agent: {
+			    list: '查看零售商列表',
+			    save: '编辑零售商',
+			    detail: '零售商详情',
+			    delete: '禁用零售商',
+			    enable: '启用零售商'
+		    },
+		    store: {
+			    list: '查看门店列表',
+			    save: '编辑门店',
+			    detail: '门店详情',
+			    delete: '禁用门店',
+			    enable: '启用门店'
+		    },
+		    account: {
+			    list: '查看账户列表',
+			    save: '编辑账户',
+			    detail: '账户详情',
+			    delete: '删除账户',
+			    operate: '账户操作'
+		    },
+		    repair_order: {
+			    list: '查看维修单列表',
+			    save: '编辑维修单',
+			    detail: '维修单详情',
+			    audit: '维修单审核',
+			    settlement: '查看维修结算单',
+			    save_to_invoicet: '维修单故障件入库',
+			    export: '维修单导出'
+		    },
+		    customer: {
+			    list: '查看客户列表',
+			    save: '编辑客户',
+			    detail: '客户详情',
+			    delete: '删除客户'
+		    },
+		    user: {
+			    list: '查看员工列表',
+			    save: '编辑员工',
+			    detail: '员工详情',
+			    delete: '删除员工',
+			    set_admin: '设置管理员'
+		    },
+		    item: {
+			    list: '查看商品列表',
+			    save: '编辑商品',
+			    detail: '商品详情',
+			    status: '商品上下架'
+		    },
+		    material_purchase_order: {
+			    list: '查看物料采购单列表',
+			    save: '编辑物料采购单',
+			    detail: '物料采购单详情',
+			    delete: '取消物料采购单',
+			    audit: '物料采购单审核',
+			    export: '物料采购单导出',
+			    save_to_invoice: '物料采购单入库'
+		    },
+		    purchase_order: {
+			    list: '查看采购单列表',
+			    detail: '采购单详情',
+			    deliver: '采购单发货',
+			    collection: '采购单收款',
+			    export: '采购单导出'
+		    },
+		    sales_area: {
+			    list: '查看销售区域列表',
+			    save: '编辑销售区域',
+			    detail: '销售区域详情',
+			    delete: '删除销售区域'
+		    },
+		    warehouse: {
+			    list: '查看仓库列表',
+			    save: '编辑仓库',
+			    detail: '仓库详情',
+			    delete: '删除仓库'
+		    },
+		    invoice: {
+			    list: '查看出入库单列表',
+			    save: '编辑出入库单',
+			    detail: '出入库单详情',
+			    delete: '取消出入库单',
+			    warehouse_audit: '出入库单仓库审核',
+			    finance_audit: '出入库单财务审核',
+			    import_export: '出入库单导入导出'
+		    },
+		    supplier: {
+			    list: '查看供应商列表',
+			    save: '编辑供应商',
+			    detail: '供应商详情',
+			    delete: '删除供应商',
+			    edit: '供应商编辑物料',
+			    import_export: '供应商导入导出'
+		    },
+		    stock: {
+			    list: '查看库存列表',
+			    detail: '库存详情'
+		    },
+		    material: {
+			    list: '查看物料列表',
+			    save: '编辑物料',
+			    detail: '物料详情',
+			    delete: '删除物料',
+			    import_export: '物料导入导出'
+		    },
+		    material_category: {
+			    list: '查看物料类别列表',
+			    save: '编辑物料类别',
+			    delete: '删除物料类别'
+		    },
+		    bom: {
+			    list: '查看BOM列表',
+			    save: '编辑BOM',
+			    detail: 'BOM详情',
+			    delete: '删除BOM',
+			    import_export: 'BOM明细导入导出'
+		    },
+		    production_order: {
+			    list: '查看生产单列表',
+			    save: '编辑生产单',
+			    detail: '生产单详情',
+			    delete: '取消生产单',
+			    save_to_invoice: '生产单产品入库',
+			    import_export: '生产单导入导出',
+			    picking: '生产单领料'
+		    },
+		    message: {
+			    list: '查看消息列表',
+			    save: '编辑消息',
+			    detail: '消息详情',
+			    delete: '删除消息'
+		    },
+		    authority: {
+			    list: '查看权限列表',
+			    save: '编辑权限',
+			    detail: '权限详情',
+			    delete: '删除权限'
+		    },
+		    role: {
+			    list: '查看角色列表',
+			    save: '编辑角色',
+			    detail: '角色详情',
+			    delete: '删除角色'
+		    },
+		    file: {
+			    list: '查看文件列表',
+			    save: '编辑文件',
+			    detail: '文件详情',
+			    delete: '删除文件'
+		    },
+		    entity: {
+			    list: '查看商品实例列表',
+			    save: '编辑商品实例',
+			    detail: '商品实例详情',
+			    delete: '删除商品实例'
+		    },
+		    transfer: {
+			    list: '查看调货单列表',
+			    save: '编辑调货单',
+			    detail: '调货单详情',
+			    delete: '删除调货单'
+		    },
+		    after_sales_order: {
+			    list: '查看售后单列表',
+			    save: '编辑售后单',
+			    detail: '售后单详情',
+			    delete: '取消售后单',
+			    audit: '售后单审核'
+		    },
+		    fault: {
+			    list: '查看故障件列表',
+			    save: '编辑故障件',
+			    delete: '删除故障件'
+		    },
+	    },
     },
     en: {
         ac: { //账户
@@ -1065,6 +1293,9 @@ const messages = {
             detail: 'Details',
             service: 'Service',
             pending: 'Pending',
+            distributor_auth: 'Distributor authority managementt',
+            agent_auth: 'Retailer Rights Management',
+            store_auth: 'Store authority management',
         },
         a: {
             new_retailer: 'Add a retailer',
@@ -1765,6 +1996,7 @@ const messages = {
             none: 'None',
             remark: 'Remark',
             inaccessible: 'Current identity inaccessible',
+            uploaded: 'Uploaded successfully',
         },
         search: {
             repair_sn: 'Inquire Sn',
@@ -1826,8 +2058,228 @@ const messages = {
             enter_product_name:'please input the product name',
             script:'print script',
             enter_script:'please input the product name',
-        }
+        },
+        m: { // 物料
+            material_list:'Material list',
+            import:'Bulk import',
+            new_material:'Create a new material',
+            material_name:'Material name',
+            material_category:'Classification',
+            material_code:'Code',
+            spec:'Specification',
+            unit:'Unit',
+            package:'Package',
+            size:'Package Size',
+            weight:'Gross weight (kg)',
+            boxes:'Packing number',
+            color:'Color',
+            sure_delete:'Are you sure you want to delete this item?',
+            edit_material:'Edit material',
+            enter_material:'Please enter a material name (maximum 50 characters)',
+            material_en_name:'English name of material',
+            enter_material_en:'Please enter the English name of the material (up to 50 characters)',
+            material_spec:'Material Specifications',
+            material_picture:'Material physical picture',
+            pcs:'PCS',
+            material_detail:'Material details',
+            supplier:'Supplier',
+            inventory:'Inventory List',
+            change_record:'Change record',
+            edit_category:'Edit Category',
+            new_category:'Add category',
+            edit_name:'Edit name',
+            new_sub_category:'Add subcategory',
+            category_name:' Category Name',
+            sure_delete_category_a:'Are you sure you want to delete category ',
+            sure_delete_category_b:' ?',
+
+
+        },
+	    authority: {
+		    distributor: {
+			    list: 'view a list of distributors',
+			    save: 'edit distributor info',
+			    detail: 'detail of distributor',
+			    delete: 'disable distributors',
+			    enable: 'enable distributors'
+		    },
+		    agent: {
+			    list: 'view a list of retailers',
+			    save: 'edit retailer info',
+			    detail: 'detail of retailer',
+			    delete: 'disable retailers',
+			    enable: 'enable retailers'
+		    },
+		    store: {
+			    list: 'view a list of stores',
+			    save: 'edit store info',
+			    detail: 'detail of store',
+			    delete: 'disable stores',
+			    enable: 'enable stores'
+		    },
+		    account: {
+			    list: 'view a list of accounts',
+			    save: 'edit account info',
+			    detail: 'detail of account',
+			    delete: 'delete account',
+			    operate: 'account operation'
+		    },
+		    repair_order: {
+			    list: 'view a list of repair orders',
+			    save: 'edit repair order',
+			    detail: 'detail of repair order',
+			    audit: 'audit repair order',
+			    settlement: 'view repair statement',
+			    save_to_invoicet: 'fault parts warehousing',
+			    export: 'export repair order'
+		    },
+		    customer: {
+			    list: 'view a list of customers',
+			    save: 'edit customer info',
+			    detail: 'detail of customer',
+			    delete: 'delete customer'
+		    },
+		    user: {
+			    list: 'view a list of staffs',
+			    save: 'edit staff info',
+			    detail: 'detail of staff',
+			    delete: 'delete staff',
+			    set_admin: 'set administrator'
+		    },
+		    item: {
+			    list: 'view a list of commoditys',
+			    save: 'edit commodity info',
+			    detail: 'detail of commodity',
+			    status: 'commodities on and off the shelf'
+		    },
+		    material_purchase_order: {
+			    list: 'view a list of material purchase orders',
+			    save: 'edit material purchase order',
+			    detail: 'detail of material purchase order',
+			    delete: 'cancel material purchase order',
+			    audit: 'audit material purchase order',
+			    export: 'export material purchase order',
+			    save_to_invoice: 'material purchase order warehousing'
+		    },
+		    purchase_order: {
+			    list: 'view a list of purchase orders',
+			    detail: 'detail of purchase order',
+			    deliver: 'purchase order shipment',
+			    collection: 'purchase order collection',
+			    export: 'export purchase order'
+		    },
+		    sales_area: {
+			    list: 'view a list of sales area',
+			    save: 'edit sales area',
+			    detail: 'detail of sales area',
+			    delete: 'delete sales area'
+		    },
+		    warehouse: {
+			    list: 'view a list of warehouses',
+			    save: 'edit warehouse info',
+			    detail: 'detail of warehouse',
+			    delete: 'delete warehouse'
+		    },
+		    invoice: {
+			    list: 'view a list of Inbound and outbound orders',
+			    save: 'edit Inbound and outbound order',
+			    detail: 'detail of Inbound and outbound order',
+			    delete: 'cancel the inbound and outbound order',
+			    warehouse_audit: 'warehouse audit',
+			    finance_audit: 'finance audit',
+			    import_export: 'import and export'
+		    },
+		    supplier: {
+			    list: 'view a list of suppliers',
+			    save: 'edit supplier info',
+			    detail: 'detail of supplier',
+			    delete: 'delete supplier',
+			    edit: 'binding material',
+			    import_export: 'import and export'
+		    },
+		    stock: {
+			    list: 'view a list of stock',
+			    detail: 'detail of stock'
+		    },
+		    material: {
+			    list: 'view a list of materials',
+			    save: 'edit material info',
+			    detail: 'detail of material',
+			    delete: 'delete material',
+			    import_export: 'import and export'
+		    },
+		    material_category: {
+			    list: 'view a list of material category',
+			    save: 'edit material category',
+			    delete: 'delete material categor'
+		    },
+		    bom: {
+			    list: 'view a list of BOMs',
+			    save: 'edit BOM',
+			    detail: 'detail of BOM',
+			    delete: 'delete BOM',
+			    import_export: 'import and export'
+		    },
+		    production_order: {
+			    list: 'view a list of production orders',
+			    save: 'edit production order',
+			    detail: 'detail of production order',
+			    delete: 'cancel production order',
+			    save_to_invoice: 'production order product warehousing',
+			    import_export: 'import and export',
+			    picking: 'picking'
+		    },
+		    message: {
+			    list: 'view a list of message',
+			    save: 'edit message',
+			    detail: 'detail of message',
+			    delete: 'delete message'
+		    },
+		    authority: {
+			    list: 'view a list of authority',
+			    save: 'edit authority',
+			    detail: 'detail of authority',
+			    delete: 'delete authority'
+		    },
+		    role: {
+			    list: 'view a list of roles',
+			    save: 'edit role info',
+			    detail: 'detail of role',
+			    delete: 'delete role'
+		    },
+		    file: {
+			    list: 'view a list of files',
+			    save: 'edit file',
+			    detail: 'detail of file',
+			    delete: 'delete file'
+		    },
+		    entity: {
+			    list: 'view a list of entitys',
+			    save: 'edit entity info',
+			    detail: 'detail of entity',
+			    delete: 'delete entity'
+		    },
+		    transfer: {
+			    list: 'view a list of transfer orders',
+			    save: 'edit transfer order',
+			    detail: 'detail of transfer order',
+			    delete: 'delete transfer order'
+		    },
+		    after_sales_order: {
+			    list: 'view a list of after_sale orders',
+			    save: 'edit after_sale order',
+			    detail: 'detail of after_sale order',
+			    delete: 'cancel the after_sale order',
+			    audit: 'audit after_sale order'
+		    },
+		    fault: {
+			    list: 'view a list of faulty parts',
+			    save: 'edit faulty parts info',
+			    delete: 'delete faulty parts'
+		    },
+	    },
     },
+
 }
 
 

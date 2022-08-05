@@ -1,53 +1,53 @@
 <template>
     <div id="MaterialEdit" class="edit-container">
         <div class="title-container">
-            <div class="title-area">{{ form.id ? '编辑物料' : '新增物料' }}</div>
+            <div class="title-area">{{ form.id ? $t('m.edit_material') : $t('m.new_material') }}</div>
         </div>
         <div class="form-block"> <!-- 基本信息 -->
             <div class="form-title">
-                <div class="title">基本信息</div>
+                <div class="title">{{ $t('n.information') }}</div>
             </div>
             <div class="form-content">
                 <div class="form-item required">
-                    <div class="key">物料名称</div>
+                    <div class="key">{{ $t('m.material_name') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" placeholder="请输入物料名称(最多输入50字符)" :maxlength='50'/>
+                        <a-input v-model:value="form.name" :placeholder="$t('m.enter_material')" :maxlength='50'/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">物料英文名</div>
+                    <div class="key">{{ $t('m.material_en_name') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.name_en" placeholder="请输入物料英文名(最多输入50字符)" :maxlength='50'/>
+                        <a-input v-model:value="form.name_en" :placeholder="$t('m.enter_material_en')" :maxlength='50'/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">物料分类</div>
+                    <div class="key">{{ $t('m.material_category') }}</div>
                     <div class="value">
                         <CategoryTreeSelect @change="handleCategorySelect"
                             :category='item_category' :category-id='form.category_id'
-                            placeholder="请选择物料分类" type="material"/>
+                            :placeholder="$t('n.choose') + $t('m.material_category')" type="material"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">物料编码</div>
+                    <div class="key">{{ $t('m.material_code') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.code" placeholder="请输入物料编码"/>
+                        <a-input v-model:value="form.code" :placeholder="$t('n.enter')+$t('m.material_code')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">物料规格</div>
+                    <div class="key">{{ $t('m.material_spec') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.spec" placeholder="请输入物料规格"/>
+                        <a-input v-model:value="form.spec" :placeholder="$t('n.enter')+$t('m.material_spec')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">单位</div>
+                    <div class="key">{{ $t('m.unit') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.unit" placeholder="请输入单位"/>
+                        <a-input v-model:value="form.unit" :placeholder="$t('n.enter')+$t('m.unit')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">物料实物图</div>
+                    <div class="key">{{ $t('m.material_picture') }}</div>
                     <div class="value">
                         <a-upload name="file" class="image-uploader"
                                   list-type="picture-card" accept='image/*'
@@ -62,46 +62,46 @@
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">装箱数</div>
+                    <div class="key">{{ $t('m.boxes') }}</div>
                     <div class="value">
-                        <a-input-number v-model:value="form.pack_count" placeholder="请输入" />件
+                        <a-input-number v-model:value="form.pack_count" :placeholder="$t('n.enter')" />{{ $t('m.pcs') }}
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">颜色</div>
+                    <div class="key">{{ $t('m.color') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.color" placeholder="请输入" />
+                        <a-input v-model:value="form.color" :placeholder="$t('n.enter')" />
                     </div>
                 </div>
                 <div class="form-item ">
-                    <div class="key">物料包装</div>
+                    <div class="key">{{ $t('m.package') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.encapsulation" placeholder="请输入物料包装"/>
+                        <a-input v-model:value="form.encapsulation" :placeholder="$t('n.enter')+$t('m.package')"/>
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">包装尺寸</div>
+                    <div class="key">{{ $t('m.size') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.encapsulation_size" placeholder="请输入包装尺寸"/>
+                        <a-input v-model:value="form.encapsulation_size" :placeholder="$t('n.enter')+$t('m.size')"/>
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">毛重</div>
+                    <div class="key">{{ $t('m.weight') }}</div>
                     <div class="value">
-                        <a-input-number v-model:value="gross_weight" placeholder="请输入" style="width: 80px;" :min="0" :precision="2"/> kg
+                        <a-input-number v-model:value="gross_weight" :placeholder="$t('n.enter')" style="width: 80px;" :min="0" :precision="2"/> kg
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">备注</div>
+                    <div class="key">{{ $t('m.weight') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.remark" placeholder="请输入备注"/>
+                        <a-input v-model:value="form.remark" :placeholder="$t('def.remark')"/>
                     </div>
                 </div>
             </div>
         </div>
         <div class="form-btns">
-            <a-button type="primary" @click="handleSubmit" v-if="$auth('material.save')">确定</a-button>
-            <a-button type="primary" ghost @click="routerChange('back')">取消</a-button>
+            <a-button type="primary" @click="handleSubmit" v-if="$auth('material.save')">{{ $t('def.sure') }}</a-button>
+            <a-button type="primary" ghost @click="routerChange('back')">{{ $t('def.cancel') }}</a-button>
         </div>
     </div>
 </template>
