@@ -150,7 +150,13 @@ const messages = {
             amount: '金额',
             order_number: '订单数',
             order_unit: '笔',
-
+            search_title: '欢迎光临 ! HORWIN B2B 商城',
+            search_placeholder: '我们能为您做些什么?',
+            more: '更多',
+            unread_num:'未读消息数',
+            detail: '详情',
+            service: '服务',
+            pending: '待定',
         },
         a: {
             new_retailer: '新建零售商',
@@ -1052,6 +1058,13 @@ const messages = {
             amount: 'Amount',
             order_number: 'Number of orders',
             order_unit: ' Orders',
+            search_title: 'Welcome ！ HORWIN B2B Shop',
+            search_placeholder: 'How can we help you？',
+            more: 'more',
+            unread_num:'Number of unread messages',
+            detail: 'Details',
+            service: 'Service',
+            pending: 'Pending',
         },
         a: {
             new_retailer: 'Add a retailer',
