@@ -540,6 +540,12 @@ let Const = {
             '2': {key: 2, zh: '编码', en: 'code'}
         },
     },
+	ITEM_ACCESSORY: {
+		TARGET_TYPE_MAP: {
+			ITEM: 1, // 商品
+			MATERIAL: 2, // 物料
+		},
+	},
     PURCHASE: { // 采购订单
         // 状态
         STATUS: {
