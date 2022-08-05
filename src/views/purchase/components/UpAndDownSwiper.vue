@@ -54,8 +54,9 @@ export default {
                 initialSlide: 0,
                 grabCursor: true,
                 slidesPerView: 3,
-                centeredSlides: true,
-                centeredSlidesBounds: true,
+                // centeredSlidesBounds: true,
+                // centeredSlides: true,
+                centerInsufficientSlides: true,
                 spaceBetween: -140,
                 //分页箭头
                 navigation: {
@@ -120,8 +121,8 @@ export default {
 }
 
 .swiper-slide {
-    width: 100px; /*设为固定值*/
-    width: auto; /*根据内容调整宽度*/
+    width: auto; /*设为固定值*/
+    height: auto; /*根据内容调整宽度*/
 }
 
 .swiper-pagination-horizontal {
