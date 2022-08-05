@@ -776,7 +776,7 @@ const Util = {
     /* =============== 调货单 ================ */
 
     /* =============== 权限 ================ */
-    userAuthFilter(val, to = 'text') {
+    userAuthFilter(val,  to='zh') {
         const MAP = Const.NOTICE.RESOURCE_TYPE_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''

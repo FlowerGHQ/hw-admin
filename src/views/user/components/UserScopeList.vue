@@ -81,7 +81,6 @@ export default {
                 {name: this.$t('n.distributor'), content: "", resource_type: 30},
             ],
 
-            resourceMap: Core.Const.NOTICE.RESOURCE_TYPE_MAP,
             form: {
                 role_id: '',
                 user_id: '',

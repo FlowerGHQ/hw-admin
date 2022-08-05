@@ -85,7 +85,6 @@ export default {
             // 弹框
             roleShow: false,
             roleList: [],
-            resourceMap: Core.Const.NOTICE.RESOURCE_TYPE_MAP,
             form: {
                 role_id: '',
                 user_id: '',

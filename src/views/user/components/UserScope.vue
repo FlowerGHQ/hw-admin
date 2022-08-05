@@ -13,7 +13,7 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'type'">
-                            {{ $Util.userAuthFilter(text) }}
+                            {{ $Util.userAuthFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -46,7 +46,7 @@
                 <div class="key">{{ $t('u.resource_type') }}</div>
                 <div class="value">
                     <a-select v-model:value="form.resource_type" :placeholder="$t('def.select') + $t('u.resource_type')" disabled>
-                        <a-select-option v-for="resource in resourceList" :key="resource.value" :value="resource.value">{{ resource.text }}</a-select-option>
+                        <a-select-option v-for="resource in resourceList" :key="resource.value" :value="resource.value">{{ resource[$i18n.locale] }}</a-select-option>
                     </a-select>
                 </div>
             </div>
@@ -117,7 +117,6 @@ export default {
             categoryList: [],
             distributorList: [],
             resourceList: Core.Const.NOTICE.RESOURCE_TYPE_LIST,
-            resourceMap: Core.Const.NOTICE.RESOURCE_TYPE_MAP,
             RESOURCE_TYPE: Core.Const.NOTICE.RESOURCE_TYPE,
             form: {
                 id: "",

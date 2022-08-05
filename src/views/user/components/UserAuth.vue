@@ -89,7 +89,6 @@ export default {
             name: this.$t('u.view_auth'),
             edit: false,
             scopeShow: false,
-            resourceMap: Core.Const.NOTICE.RESOURCE_TYPE_MAP,
             scopeType: 0,
             options: [],
             selected: {},

@@ -19,6 +19,9 @@
                         <template v-if="column.key === 'item'">
                             {{ text || '-'}}
                         </template>
+                        <template v-if="column.key === 'type'">
+                            {{ $Util.itemTypeFilter(text, $i18n.locale) }}
+                        </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>

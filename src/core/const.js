@@ -231,7 +231,7 @@ let Const = {
     REPAIR: { // 维修工单
         // 工单类型
         DEVICE_LIST: [
-            { zh: '整车', en: 'finished automobile', value: 1 }, 
+            { zh: '整车', en: 'finished automobile', value: 1 },
             { zh: '零部件', en: 'components and parts', value: 2 },
         ],
         DEVICE_MAP: {
@@ -795,14 +795,14 @@ let Const = {
 	        DISTRIBUTOR: 30,
         },
         RESOURCE_TYPE_MAP: {
-            '10': {text: '仓库'},
-	        '20': {text: '采购'},
-	        '30': {text: '分销商'},
+            '10': {zh: '仓库', en: 'warehouse'},
+	        '20': {zh: '采购', en: 'procurement'},
+	        '30': {zh: '分销商', en: 'distributors'},
         },
 	    RESOURCE_TYPE_LIST: [
-		    {value: 10, text:'仓库'},
-		    {value: 20, text:'采购'},
-		    {value: 30, text:'分销商'}
+		    {value: 10, zh: '仓库', en: 'warehouse'},
+		    {value: 20, zh: '采购', en: 'procurement'},
+		    {value: 30, zh: '分销商', en: 'distributors'}
 	    ]
     },
     SYSTEM: { //系统

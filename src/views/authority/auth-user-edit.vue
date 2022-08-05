@@ -18,7 +18,7 @@
                     <div class="key">{{ $t('n.type') }}</div>
                     <div class="value">
                         <a-select v-model:value="form.resource_type" :placeholder="$t('n.select_permission')">
-                            <a-select-option v-for="(val,key) in resourceMap" :key="key" :value="key">{{ val.text }}</a-select-option>
+                            <a-select-option v-for="(val,key) in resourceMap" :key="key" :value="key">{{ val[$i18n.locale] }}</a-select-option>
                         </a-select>
                     </div>
                 </div>
