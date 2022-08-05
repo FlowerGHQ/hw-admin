@@ -75,7 +75,7 @@
                             <a-tooltip placement="top" :title='$Util.itemSpecFilter(record.attr_list)' destroy-tooltip-on-hide>
                                 <div class="info">
                                     <a-button type="link" @click="routerChange('detail', record)">
-                                        <div class="ell" style="max-width: 150px">{{ text || '-' }}</div>
+                                        <div class="ell" style="max-width: 150px">{{$i18n.locale === 'zh' ? record.name : record.name_en || '-' }}</div>
                                     </a-button>
                                     <p class="sub-info" v-if="record.attr_list && record.attr_list.length">{{$Util.itemSpecFilter(record.attr_list)}}</p>
                                 </div>

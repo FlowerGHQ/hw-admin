@@ -2,18 +2,20 @@
 <div class="AttachmentFile">
     <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
         <template #expandIcon><i class="icon i_expan_l"/></template>
-        <a-collapse-panel key="attachmentFile" :header="$t('n.upload_attachment')" class="gray-collapse-panel">
+        <a-collapse-panel key="attachmentFile" :header="$t('i.upload_item_accessory')" class="gray-collapse-panel">
             <div class="panel-content table-container no-mg">
                 <div class="panel-header">
-                    <span class="name">{{ $t('n.attachment_list') }}</span>
-                    <ItemSelect btnType='primary' btnText="选择商品" btnClass="item-select-btn"
+                    <span class="name">{{ $t('i.item_accessory_list') }}</span>
+                    <ItemSelect btnType='primary' :btnText="$t('i.select_item')" btnClass="item-select-btn"
                                 @select="handleSelectItem" :radioMode="true"/>
 <!--                    <a-button type="primary" @click="handleModalShow" v-if="can_upload">{{$t('n.upload_attachment')}}</a-button>-->
                 </div>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record }">
-
+                        <template v-if="column.key === 'detail'">
+                            <div>{{$i18n.locale === 'zh' ? record.target_name : record.target_name_en || '-' }}</div>
+                        </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-'}}
                         </template>
@@ -80,8 +82,8 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                { title: this.$t('n.name'), dataIndex: 'target_name', key: 'item' },
-                { title: this.$t('i.code'), dataIndex: 'target_code', key: 'item' },
+                { title: this.$t('n.name'), dataIndex: 'target_name', key: 'detail' },
+                { title: this.$t('i.code'), dataIndex: 'target_uid', key: 'item' },
                 { title: this.$t('n.type'), dataIndex: 'type', key: 'type' },
                 { title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right'},

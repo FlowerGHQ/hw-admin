@@ -152,7 +152,7 @@
                     <div class="key">故障件:</div>
                     <div class="value item-display" >
                         <ItemSelect @select="handleSelectItem" :disabled-checked='[form.item_id]'
-                            :radio-mode='true' btn-type='primary' btnText="选择商品" btn-class="select-item-btn"/>
+                            :radio-mode='true' btn-type='primary' :btnText="$t('i.select_item')" btn-class="select-item-btn"/>
                         <div v-if="!$Util.isEmptyObj(selectItem)">
                             <img :src="$Util.imageFilter(selectItem.logo)" alt="" style="max-width: 60px"/>
                             {{selectItem.name}}
@@ -345,7 +345,7 @@ export default {
         this.getDistributorList();
     },
     methods: {
-        // 维修单详情入口 
+        // 维修单详情入口
         routerChange(type, item = {}) {
             let routeUrl = ''
             switch (type) {
@@ -386,13 +386,13 @@ export default {
         // 获取列表数据
         getAgentList() { // 获取零售商列表
             Core.Api.Agent.list().then(res => {
-                console.log('this.agentList', res.list);  
+                console.log('this.agentList', res.list);
                 this.agentList = res.list
             })
         },
         getStoreList() { // 获取门店列表
             Core.Api.Store.list().then(res => {
-                console.log('this.storeList', res.list);  
+                console.log('this.storeList', res.list);
                 this.storeList = res.list
             })
         },
@@ -573,7 +573,7 @@ export default {
                 for (const item of this.selectedRowItems) {
                     if (item.status !== this.AUDIT_TYPE.WAIT) {
                         return this.$message.warning('请勿审核已审核的故障件')
-                    } 
+                    }
                 }
             }
             if (!this.auditForm.audit_result) {

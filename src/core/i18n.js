@@ -459,6 +459,9 @@ const messages = {
             the_goods: '该商品吗？',
             item_instance: '商品实例',
             is_view: '是否显示爆炸图',
+	        select_item: '选择商品',
+	        upload_item_accessory: '上传配件',
+	        item_accessory_list: '配件列表',
 
         },
 	    fe:{ // 反馈单
@@ -1596,6 +1599,9 @@ const messages = {
             the_goods: 'the goods?',
             item_instance: 'Commodity instance',
             is_view: 'Whether to display explosion diagram',
+	        select_item: 'Choose goods',
+	        upload_item_accessory: 'Upload the accessories',
+	        item_accessory_list: 'Accessories list',
         },
         fe:{
             feedback: 'Feedback',
