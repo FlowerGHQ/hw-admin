@@ -1136,7 +1136,7 @@ const routes = [
                 component: () => import('@/views/warehouse/warehouse-transfer-list.vue'),
                 meta: {
                     title: '调货单管理',
-	                title_en: 'Transfer cargo',
+	                title_en: 'Transfer order',
                     roles: [LOGIN_TYPE.ADMIN],
                     auth: ['warehouse-transfer-order.list'],
                 }
@@ -1160,6 +1160,7 @@ const routes = [
 		        meta: {
 			        roles: [LOGIN_TYPE.ADMIN],
 			        title: '入库',
+                    title_en: 'Inbound',
                     auth: ['invoice.in'],
 		        }
 	        },
@@ -1170,6 +1171,7 @@ const routes = [
 		        meta: {
 			        roles: [LOGIN_TYPE.ADMIN],
 			        title: '出库',
+                    title_en: 'Outbound',
                     auth: ['invoice.out'],
 		        }
 	        },
