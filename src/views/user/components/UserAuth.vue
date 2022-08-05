@@ -5,10 +5,10 @@
                 <template #expandIcon></template>
                 <a-collapse-panel v-for="(org,key) of orgType" :key="key" :header="name" class="gray-collapse-panel">
                     <template #extra>
-                        <a-button @click.stop="handleEditShow(key)" type="link" v-if="!edit && $auth('authority.save', 'MANAGER')"><i class="icon i_edit"/>设置</a-button>
+                        <a-button @click.stop="handleEditShow(key)" type="link" v-if="!edit && $auth('authority.save', 'MANAGER')"><i class="icon i_edit"/>{{ $t('def.set') }}</a-button>
                         <template v-else>
-                            <a-button @click.stop="handleEditSubmit(key)" type="link" v-if="$auth('authority.save', 'MANAGER')"><i class="icon i_confirm"/>保存</a-button>
-                            <a-button @click.stop="handleEditClose(key)" type="link" class="cancel" v-if="$auth('authority.save', 'MANAGER')"><i class="icon i_close_c"/>取消</a-button>
+                            <a-button @click.stop="handleEditSubmit(key)" type="link" v-if="$auth('authority.save', 'MANAGER')"><i class="icon i_confirm"/>{{ $t('def.save') }}</a-button>
+                            <a-button @click.stop="handleEditClose(key)" type="link" class="cancel" v-if="$auth('authority.save', 'MANAGER')"><i class="icon i_close_c"/>{{ $t('def.cancel') }}</a-button>
                         </template>
                     </template>
                     <div class="panel-content" v-if="!edit">
@@ -86,7 +86,7 @@ export default {
         return {
             activeKey: [],
             authItems: Core.Util.deepCopy(AUTH_LIST_TEMP), // 所有权限
-            name: '权限查看',
+            name: this.$t('u.view_auth'),
             edit: false,
             scopeShow: false,
             resourceMap: Core.Const.NOTICE.RESOURCE_TYPE_MAP,
