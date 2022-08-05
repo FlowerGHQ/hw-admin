@@ -789,7 +789,7 @@ const messages = {
             resource: '资源管理',
             view_auth: '权限查看',
             resource_name: '资源名称',
-            resource_context: '资源内容',
+            resource_content: '资源内容',
             new_resource: '新增资源',
             resource_type: '资源类型',
             resource_obj: '资源对象',

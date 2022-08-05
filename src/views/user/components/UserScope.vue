@@ -243,10 +243,10 @@ export default {
             form.user_id = this.userId
             form.user_type = this.userType
             if (!form.resource_type) {
-                return this.$message.warning(this.$t('def.select') + this.$t('n.result'))
+                return this.$message.warning(this.$t('def.select') + this.$t('u.resource_type'))
             }
             if (!form.resource_id) {
-                return this.$message.warning('请选择权限对象')
+                return this.$message.warning(this.$t('def.select') + this.$t('u.resource_obj'))
             }
             Core.Api.AuthorityUser.save(form).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
