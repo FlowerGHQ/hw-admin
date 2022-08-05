@@ -33,7 +33,7 @@ const messages = {
             money: '金额',
             operation: '账户操作',
         },
-        ad: {
+        ad: { // 收货地址
             address: '收货地址列表',
             specific_address: '详细地址',
             shipping_address: '收货地址',
@@ -150,9 +150,12 @@ const messages = {
             amount: '金额',
             order_number: '订单数',
             order_unit: '笔',
+            distributor_auth: '经销商权限管理',
+            agent_auth: '零售商权限管理',
+            store_auth: '门店权限管理',
 
         },
-        a: {
+        a: { // 零售商
             new_retailer: '新建零售商',
             list_of_retailers: '零售商列表',
             superior: '所属分销商',
@@ -169,7 +172,7 @@ const messages = {
             set_sales: '批量设置销售区域',
             set_sale: '设置销售区域',
         },
-        r: {
+        r: { // 维修单
             sn: '维修单编号',
             unit: '所属单位',
             item: '更换商品',
@@ -266,7 +269,7 @@ const messages = {
             settlement: '结算完成',
             input_fault_number: '请输入故障件编号',
         },
-        d: {
+        d: { // 分销商
             distributor_detail: '分销商详情',
             name: '分销商名称',
             distribution_management: '分销管理',
@@ -299,7 +302,7 @@ const messages = {
             manage_account: '账户管理',
             item: '商品价格',
         },
-        e: {
+        e: { // 员工
             employee_list: '员工列表',
             new_employee: '新增员工',
             name: '姓名',
@@ -310,7 +313,7 @@ const messages = {
             select_warehouse: '请选择仓库',
             select_employees: '请选择员工',
         },
-        i: {
+        i: { // 商品
             commodity_management: '商品管理',
             categories: '商品分类',
             product_information: '商品信息',
@@ -451,7 +454,7 @@ const messages = {
             is_view: '是否显示爆炸图',
 
         },
-	    fe:{
+	    fe:{ // 反馈单
             feedback: '反馈',
             feedback_detail: '反馈单详情',
 		    feedback_uid: '反馈单编号',
@@ -478,7 +481,7 @@ const messages = {
             quality_audit: '质量审核',
             feedback_audit: '反馈审核',
 	    },
-        w: {
+        w: { // 钱包账户
             list: '账户列表',
             type: '账户类型',
             balance: '余额',
@@ -491,7 +494,7 @@ const messages = {
             new: '新建账户',
             choose_type: '请选择类型',
         },
-        v: {
+        v: { // 实例 车辆
             instance_management: '实例管理',
             vehicle: '整车',
             parts: '零部件',
@@ -560,7 +563,7 @@ const messages = {
 
 
         },
-        in: {
+        in: { // 出入库
             list: '出入库单列表',
             save: '新建出入库单',
             edit: '编辑出入库单',
@@ -606,7 +609,7 @@ const messages = {
             instance_gt_total: '商品实例数量不能大于总数量',
             sure_export: '确认要导出吗？',
         },
-        p: {
+        p: { // 采购订单
             list: '采购订单列表',
             purchase_order: '采购订单',
             order_number: '订单编号',
@@ -695,7 +698,7 @@ const messages = {
             audit_result: '请选择审核结果',
             determine_cancel: '确认取消吗',
         },
-        s: {
+        s: { // 门店
             store_list: '门店列表',
             new_store: '新建门店',
             superior: '所属零售商',
@@ -703,7 +706,7 @@ const messages = {
             edit: '门店编辑',
             sure_delete: '确定要删除该门店吗？',
         },
-        af: {//售后单
+        af: { // 售后单
             list: '售后单列表',
             number: '售后订单号',
             sn: '采购订单号',
@@ -778,12 +781,12 @@ const messages = {
             authority: '权限管理',
             resource: '资源管理',
         },
-        c: {
+        c: { // 客户
             list: '客户列表',
             save: '新建客户',
             edit: '编辑客户',
         },
-        role: {
+        role: { // 角色
             list: '角色列表',
             save: '新建角色',
             edit: '编辑角色',
@@ -800,7 +803,7 @@ const messages = {
             choose: '选择文件',
             sure_download: 'Are you sure you want to download?',
         },
-        no: {
+        no: { // 消息
             list: '消息列表',
             headers: '消息标题',
             read: '已读',
@@ -855,6 +858,7 @@ const messages = {
             none: '无',
             remark: '备注',
             inaccessible: '当前身份无法访问',
+            uploaded: '上传成功',
 
         },
         search: {
@@ -910,7 +914,7 @@ const messages = {
 		    remark: '审核信息',
             reason: '请输入审核未通过的原因',
 	    },
-        pt: {
+        pt: { // 打印
             list:'标签规则',
             rule:'打印规则',
             set_script:'设置打印脚本',
@@ -918,6 +922,42 @@ const messages = {
             enter_product_name:'请输入产品名称',
             script:'打印脚本',
             enter_script:'请输入打印脚本',
+        },
+        m: { // 物料
+            material_list:'物料列表',
+            import:'批量导入',
+            new_material:'新增物料',
+            material_name:'物料名称',
+            material_category:'物料分类',
+            material_code:'物料编码',
+            spec:'规格',
+            unit:'单位',
+            package:'物料包装',
+            size:'包装尺寸',
+            weight:'毛重(kg)',
+            boxes:'装箱数',
+            color:'颜色',
+            sure_delete:'确定要删除该物料吗？',
+            edit_material:'编辑物料',
+            enter_material:'请输入物料名称(最多输入50字符)',
+            material_en_name:'物料英文名',
+            enter_material_en:'请输入物料英文名(最多输入50字符)',
+            material_spec:'物料规格',
+            material_picture:'物料实物图',
+            pcs:'件',
+            material_detail:'物料详情',
+            supplier:'供应商',
+            inventory:'库存列表',
+            change_record:'变动记录',
+            edit_category:'编辑分类',
+            new_category:'新增分类',
+            edit_name:'编辑名称',
+            new_sub_category:'新增子分类',
+            category_name:'分类名称',
+            sure_delete_category_a:'确定要删分类',
+            sure_delete_category_b:'吗？',
+
+
         }
     },
     en: {
@@ -1052,6 +1092,9 @@ const messages = {
             amount: 'Amount',
             order_number: 'Number of orders',
             order_unit: ' Orders',
+            distributor_auth: 'Distributor authority managementt',
+            agent_auth: 'Retailer Rights Management',
+            store_auth: 'Store authority management',
         },
         a: {
             new_retailer: 'Add a retailer',
@@ -1752,6 +1795,7 @@ const messages = {
             none: 'None',
             remark: 'Remark',
             inaccessible: 'Current identity inaccessible',
+            uploaded: 'Uploaded successfully',
         },
         search: {
             repair_sn: 'Inquire Sn',
@@ -1813,6 +1857,42 @@ const messages = {
             enter_product_name:'please input the product name',
             script:'print script',
             enter_script:'please input the product name',
+        },
+        m: { // 物料
+            material_list:'Material list',
+            import:'Bulk import',
+            new_material:'Create a new material',
+            material_name:'Material name',
+            material_category:'Classification',
+            material_code:'Code',
+            spec:'Specification',
+            unit:'Unit',
+            package:'Package',
+            size:'Package Size',
+            weight:'Gross weight (kg)',
+            boxes:'Packing number',
+            color:'Color',
+            sure_delete:'Are you sure you want to delete this item?',
+            edit_material:'Edit material',
+            enter_material:'Please enter a material name (maximum 50 characters)',
+            material_en_name:'English name of material',
+            enter_material_en:'Please enter the English name of the material (up to 50 characters)',
+            material_spec:'Material Specifications',
+            material_picture:'Material physical picture',
+            pcs:'PCS',
+            material_detail:'Material details',
+            supplier:'Supplier',
+            inventory:'Inventory List',
+            change_record:'Change record',
+            edit_category:'Edit Category',
+            new_category:'Add category',
+            edit_name:'Edit name',
+            new_sub_category:'Add subcategory',
+            category_name:' Category Name',
+            sure_delete_category_a:'Are you sure you want to delete category ',
+            sure_delete_category_b:' ?',
+
+
         }
     },
 }

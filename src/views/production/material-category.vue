@@ -2,9 +2,9 @@
     <div id="MaterialCategory">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">物料分类</div>
+                <div class="title-area">{{ $t('m.material_category') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleModalShow({})" v-if="$auth('material-category.save')"><i class="icon i_add"/>新增分类</a-button>
+                    <a-button type="primary" @click="handleModalShow({})" v-if="$auth('material-category.save')"><i class="icon i_add"/>{{ $t('m.new_category') }}</a-button>
                 </div>
             </div>
             <div class="table-container">
@@ -24,21 +24,21 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="handleModalShow(record, record)" v-if="$auth('material-category.save')"><i class="icon i_edit"/>编辑名称</a-button>
-                            <a-button type='link' @click="handleModalShow({parent_id: record.id}, null,record)" v-if="$auth('material-category.save')"><i class="icon i_add"/>新增子分类</a-button>
-                            <a-button type='link' @click="handleDelete(record)" class="danger" v-if="$auth('material-category.delete')"><i class="icon i_delete"/>删除</a-button>
+                            <a-button type='link' @click="handleModalShow(record, record)" v-if="$auth('material-category.save')"><i class="icon i_edit"/>{{ $t('m.edit_name') }}</a-button>
+                            <a-button type='link' @click="handleModalShow({parent_id: record.id}, null,record)" v-if="$auth('material-category.save')"><i class="icon i_add"/>{{ $t('m.new_sub_category') }}</a-button>
+                            <a-button type='link' @click="handleDelete(record)" class="danger" v-if="$auth('material-category.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="modalVisible" :title="editForm.id ? '编辑分类' : '新增分类'" @ok="handleModalSubmit">
+            <a-modal v-model:visible="modalVisible" :title="editForm.id ? $t('m.edit_category') : $t('m.new_category')" @ok="handleModalSubmit">
                 <div class="modal-content">
                     <div class="form-item">
-                        <div class="key">分类名称</div>
+                        <div class="key">{{ $t('m.category_name') }}</div>
                         <div class="value">
-                            <a-input v-model:value="editForm.name" placeholder="请输入分类名称"/>
+                            <a-input v-model:value="editForm.name" :placeholder="$t('def.input')+$t('m.category_name')"/>
                         </div>
                     </div>
                 </div>
@@ -78,8 +78,8 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                { title: '分类名称', dataIndex: 'name' },
-                { title: '操作', key: 'operation', fixed: 'right', width: 100, },
+                { title: this.$t('m.category_name'), dataIndex: 'name' },
+                { title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100, },
             ]
             return columns
         },
@@ -167,12 +167,12 @@ export default {
         handleModalSubmit() {
             let form = Core.Util.deepCopy(this.editForm)
             if (!form.name) {
-                return this.$message.warning('请输入分类名称')
+                return this.$message.warning(this.$t('def.input')+this.$t('m.category_name'))
             }
             this.loading = true
             let apiName = form.id ? 'update' : 'save';
             Core.Api.MaterialCategory[apiName](form).then(res => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 if (form.parent_id == 0) {
                     this.getDataById()
                 } else if (form.id) {
@@ -200,16 +200,16 @@ export default {
             this.loading = false;
             let _this = this
             this.$confirm({
-                title: `确定要删分类[${record.name}]吗？`,
-                okText: '确定',
+                title: _this.$t('m.sure_delete_category_a')+`[${record.name}]`+_this.$t('m.sure_delete_category_b'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.MaterialCategory.delete({
                         id: record.id,
                     }).then(res => {
                         console.log("handleDelete res", res)
-                        _this.$message.success('删除成功')
+                        _this.$message.success(this.$t('pop_up.delete_success'))
                         if (record.parent_id !== 0) {
                             let index = _this.expandedRowKeys.indexOf(record.parent_id)
                             _this.expandedRowKeys.splice(index, 1)

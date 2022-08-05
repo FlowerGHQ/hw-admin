@@ -630,7 +630,7 @@ const Util = {
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
-    sourceTypeAdminFilter(val, to='text') {
+    sourceTypeAdminFilter(val, to='zh') {
         const MAP = Const.STOCK_RECORD.SOURCE_TYPE_ADMIN_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
