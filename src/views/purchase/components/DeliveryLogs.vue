@@ -613,7 +613,8 @@ export default {
         handleExportIn(id) {
             const params = {
                 id: id, // 订单id
-                currency: ''
+                currency: '',
+                id_type: 1
             };
 
             this.exportDisabled = true;
