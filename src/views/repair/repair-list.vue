@@ -88,6 +88,10 @@
                             </a-tooltip>
                         </div>
                     </template>
+
+                    <template v-if="column.dataIndex === 'device_type'">
+                        {{$Util.deviceTypeFilter(text, $i18n.locale)}}
+                    </template>
                     <template v-if="column.dataIndex === 'type'">
                         {{$Util.repairTypeFilter(text, $i18n.locale)}}
                     </template>
@@ -298,6 +302,7 @@ export default {
             filteredInfo = filteredInfo || {};
             let columns = [
                 { title: this.$t('r.repair_sn'), dataIndex: 'uid', key: 'detail' },
+                { title: this.$t('r.device_classify'), dataIndex: 'device_type',key: 'device_type'},
                 { title: this.$t('search.vehicle_no'), dataIndex: 'vehicle_no',key: 'item'},
                 { title: this.$t('r.repair_name'), dataIndex: 'name', key: 'tip_item' },
                 { title: this.$t('r.urgency'), dataIndex: 'priority' },

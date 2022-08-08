@@ -1606,7 +1606,7 @@ const routes = [
                 roles: [LOGIN_TYPE.ADMIN],
 		        meta: {
 			        title: '标签规则',
-			        roles: [LOGIN_TYPE.ADMIN,LOGIN_TYPE.DISTRIBUTOR,],
+			        roles: [LOGIN_TYPE.ADMIN,LOGIN_TYPE.DISTRIBUTOR],
 			        title_en: 'Label rules ',
 		        }
 	        },

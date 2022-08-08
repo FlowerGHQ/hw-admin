@@ -456,6 +456,12 @@ const Util = {
         let value = MAP[val + ''] || {}
         return value[to] || '-'
     },
+
+	deviceTypeFilter(val, to = 'zh') {
+		const MAP = Const.REPAIR.DEVICE_LIST
+		let value = MAP[val + ''] || {}
+		return value[to] || '-'
+	},
     /* repairItemTypeFilter(val) {
         const MAP = Const.REPAIR.ITEM_TYPE_MAP
         return MAP[val] || '未知'
