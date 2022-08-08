@@ -24,16 +24,16 @@
             <div class="shop-bottom">
                 <div class="cart-box">
                     <div class="num-box">
-                        <div class="icon add" @click.stop="add">
-                            <caret-up-outlined />
-                        </div>
-                        <a-input-number id="inputNumber" v-model:value="value" :bordered="false" :controls="false" :min="1" :max="999" class="num"/>
                         <div class="icon minus" @click.stop="minus">
                             <caret-down-outlined />
                         </div>
+                        <a-input-number id="inputNumber" v-model:value="value" :bordered="false" :controls="false" :min="1" :max="999" class="num"/>
+                         <div class="icon add" @click.stop="add">
+                            <caret-up-outlined />
+                        </div>
                     </div>
                     <div class="cart" @click="hanldeAddToShopCart">
-                        <shopping-cart-outlined class="icon"/>
+                        <shopping-cart-outlined class="icon shop-card"/>
                     </div>
                 </div>
                 <div class="stars" @click="hanldeAddToFavorite" :class="{'active': data.in_favorite}">
@@ -159,15 +159,18 @@ export default {
             overflow: hidden;
             .title {
                 font-size: @fz_bs;
+                font-weight: 600;
                 // margin-top: 12px;
                 .ell()
             }
             .info {
                 // margin-top: 12px;
+                font-weight: 500;
                 .ell()
             }
             .code {
                 // margin-top: 6px;
+                font-weight: 500;
                 .ell()
             }
         }
@@ -199,6 +202,7 @@ export default {
             .shop-price {
                 color: @TC_car_price;
                 font-size: @fz_md;
+                font-weight: 500;
             }
         }
         .shop-bottom {
@@ -228,13 +232,22 @@ export default {
                     height: 36px;
                     background-color: #006EF9;
                     margin-left: 10px;
-                    .fcc()
+                    .fcc();
+                    .shop-card {
+                        font-size: 22px;
+                        color: #fff;
+                        padding: 0;
+                        width: 100%;
+                        height: 100%;
+                        .fcc()
+                    }
                 }
             }
             .stars {
                 color: @TC_D;
                 font-size: @fz_bs;
                 margin-top: 14px;
+                font-weight: 400;
                 .star-text {
                     margin-left: 6px;
                 }
@@ -249,6 +262,7 @@ export default {
     width: 100%;
     color: @TC_car_info;
     font-size: @fz_sm;
+    font-weight: 400;
     li {
         // margin-top: 10px;
         position: relative;
@@ -283,5 +297,7 @@ export default {
     height: 100%;
     padding: 0;
     text-align: center;
+    font-size: @fz_sm;
+    font-weight: 500;
 }
 </style>

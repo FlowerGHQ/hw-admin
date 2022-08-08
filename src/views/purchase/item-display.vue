@@ -294,6 +294,7 @@ export default {
             margin-top: 20px;
             color: @TC_car_info;
             font-size: @fz_bs;
+            font-weight: 400;
             li {
                 margin-top: 10px;
                 position: relative;
@@ -321,6 +322,7 @@ export default {
         .title {
             font-size: @fz_28;
             color: @TC_car_title;
+            font-weight: 500;
             .ell();
         }
         .btn {
@@ -329,6 +331,7 @@ export default {
             color: @white;
             height: 46px;
             font-size: @fz_md;
+            font-weight: 500;
         }
         .btn-cart {
             background-color: rgba(0, 110, 249);
@@ -347,14 +350,17 @@ export default {
             .price-left {
                 color: @TC_D;
                 font-size: @fz_bs;
+                font-weight: 400;
             }
             .price-right {
                 color: @TC_car_price;
                 font-size: @fz_md;
+                font-weight: 500;
             }
         }
         .stars {
             padding: 10px 0;
+            font-weight: 400;
             .star-text {
                 margin-left: 7px;
             }

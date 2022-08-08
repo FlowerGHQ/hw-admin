@@ -59,7 +59,7 @@
             <div class="form-item required">
                 <div class="key">{{ $t('n.contact') }}:</div>
                 <div class="value">
-                    <a-input v-model:value="form.contact_name" :placeholder="$t('def.input')"/>
+                    <a-input v-model:value="form.contact" :placeholder="$t('def.input')"/>
                 </div>
             </div>
             <div class="form-item required">
@@ -121,7 +121,7 @@ export default {
                 parent_id: '',
                 name: '',
                 short_name: '',
-                contact_name: '',
+                contact: '',
                 currency: undefined,
                 phone: '',
                 email: '',

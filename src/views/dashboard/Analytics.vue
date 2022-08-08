@@ -27,9 +27,9 @@
                 <div class="message-content">
                     <p>
                         <span class="text">{{ $i18n.locale === 'zh' ? pend.name : pend.name_en }}</span>
-                        <span>{{ $i18n.locale === 'zh' ? pend.info : pend.info_en }}</span>
+                        <span class="info">{{ $i18n.locale === 'zh' ? pend.info : pend.info_en }}</span>
                     </p>
-                    <p>{{ $i18n.locale === 'zh' ? pend.content : pend.content_en }}</p>
+                    <p class="content">{{ $i18n.locale === 'zh' ? pend.content : pend.content_en }}</p>
                 </div>
             </div>
         </div>
@@ -54,6 +54,7 @@
                         <p class="more" @click="routerChange('notice')">{{ $t('n.detail') }}<right-outlined class="arrow"/></p>
                     </div>
                     <div class="notice-contents">{{ unread.content }}</div>
+                    <p class="time">{{ $Util.timeFilter(unread.create_time) }}</p>
                 </div>
             </div>
         </div>
@@ -311,7 +312,6 @@ export default {
             left: 50%;
             transform: translateX(-50%);
             font-size: 24px;
-            font-family: Inter-Bold, Inter;
             font-weight: bold;
             color:  @white;
             width: 100%;
@@ -349,7 +349,6 @@ export default {
                 top: 10%;
                 left: 5%;
                 font-size: @fz_lg;
-                font-family: Inter-Bold, Inter;
                 font-weight: bold;
                 color: @white;
                 opacity: .8;
@@ -358,7 +357,6 @@ export default {
                 top: 20%;
                 left: 5%;
                 font-size: 24px;
-                font-family: Inter-Bold, Inter;
                 font-weight: bold;
                 color: @white;
             }
@@ -375,7 +373,6 @@ export default {
         margin-top: @mt_26;
         .title {
             font-size: @fz_bs;
-            font-family: Inter-Bold, Inter;
             font-weight: bold;
             color: #323C4D;
             .badge {
@@ -404,20 +401,27 @@ export default {
                     p {
                         .ell()
                     }
+                    .info {
+                        font-weight: 500;
+                    }
+                    .content {
+                        font-weight: 500;
+                        color: #848181;
+                    }
                 }
             }
         }
     }
     .service {
         margin-top: @mt_26;
-        .fsb();
+        display: flex;
         .service-left {
-            flex: 1;
             margin-right: @mt_26;
-            min-width: 692px;
+            box-sizing: border-box;
         }
         .service-right {
             width: 400px;
+            box-sizing: border-box;
         }
         .card {
             padding: 22px 22px 32px;
@@ -431,7 +435,6 @@ export default {
         }
         .service-title {
             font-size: @fz_bs;
-            font-family: Inter-Bold, Inter;
             font-weight: bold;
             color: #323C4D;
         }
@@ -440,12 +443,15 @@ export default {
             &.service {
                 display: flex;
                 flex-wrap: wrap;
+                justify-content: space-between;
             }
         }
         .service-list {
             width: 30%;
+            // width: 40%;
             min-width: 200px;
             margin-bottom: 20px;
+            margin-bottom: 55px;
             display: flex;
             align-items: center;
             background: #FAFBFC;
@@ -460,6 +466,8 @@ export default {
             .service-info {
                 width: calc(100% - 46px);
                 .ell();
+                font-weight: bold;
+                color: #606C80;
             }
         }
         .notice-list {
@@ -471,7 +479,6 @@ export default {
                 display: flex;
                 .notice-title {
                     font-size: @fz_bs;
-                    font-family: Inter-Medium, Inter;
                     font-weight: 500;
                     color: #1EB4D1;
                     margin-right: 14px;
@@ -482,7 +489,6 @@ export default {
                 .notice-content {
                     flex: 1;
                     font-size: @fz_md;
-                    font-family: Inter-Medium, Inter;
                     font-weight: 500;
                     color: #000000;
                     .ell();
@@ -490,7 +496,6 @@ export default {
                 .more {
                     margin-left: 25px;
                     font-size: @fz_bs;
-                    font-family: Inter-Medium, Inter;
                     font-weight: 500;
                     color: #2563EB;
                     .fsb();
@@ -505,6 +510,11 @@ export default {
                 margin-top: 10px;
                 width: 100%;
                 .ell();
+                font-weight: 500;
+                color: #A9A9A9;
+            }
+            .time {
+                margin-top: 10px;
             }
         }
     }
@@ -534,13 +544,11 @@ export default {
                     text-align: center;
                     .day {
                         font-size: @fz_lg;
-                        font-family: Public Sans-Thin Italic, Public Sans;
                         font-weight: normal;
                         color: #566A7F;
                     }
                     .month {
                         font-size: @fz_13;
-                        font-family: Public Sans-Bold, Public Sans;
                         font-weight: bold;
                         color: #2563EB;
                     }
@@ -552,7 +560,6 @@ export default {
                 box-sizing: border-box;
                 .title {
                     font-size: @fz_lg;
-                    font-family: Public Sans-Light Italic, Public Sans;
                     font-weight: normal;
                     color: #323C4C;
                     .ell()
@@ -565,7 +572,6 @@ export default {
                         background: rgba(37, 99, 235, .16);
                         border-radius: 4px;
                         font-size: @fz_13;
-                        font-family: Public Sans-Medium, Public Sans;
                         font-weight: 500;
                         color: #2563EB;
                         margin-right: 12px;
@@ -576,6 +582,10 @@ export default {
                     margin-top: 20px;
                     display: flex;
                     justify-content: flex-end;
+                    :deep(.ant-btn) {
+                        font-size: 15px;
+                        font-weight: 400;
+                    }
                 }
             }
         }
@@ -618,13 +628,11 @@ export default {
 :deep(.ant-input) {
     background-color: transparent;
     font-size: @fz_bs;
-    font-family: PingFang SC-Regular, PingFang SC;
     font-weight: 400;
     color: @white;
     padding-left: 15px !important;
     &::placeholder {
         font-size: @fz_bs;
-        font-family: PingFang SC-Regular, PingFang SC;
         font-weight: 400;
         color: @white;
     }
