@@ -18,24 +18,26 @@
                         </div>
                     </div>
                     <div class="btns-area">
-                        <a-button type="primary" ghost @click="handleLocation()" v-if="$auth('warehouse.save')" class="panel-btn">
-                            <i class="icon i_add"/>{{ $t('wa.add_location') }}
-                        </a-button>
-                        <a-button type="primary" ghost @click="handleMaterial()" v-if="$auth('warehouse.save')" class="panel-btn">
-                            <i class="icon i_add"/>{{ $t('wa.allocated_material') }}
-                        </a-button>
-
                         <a-upload name="file" class="file-uploader"
                                   :file-list="upload.fileList" :action="upload.action"
                                   :show-upload-list='false'
                                   :headers="upload.headers" :data='upload.data'
                                   accept=".xlsx,.xls"
                                   @change="handleFileUpload">
-                            <a-button type="primary" ghost class="panel-btn">
-                                <i class="icon i_add"/> 批量导入
+                            <a-button type="primary" ghost class="panel-btn" style="margin-right: 7px">
+                                <i class="icon i_add"/> {{$t('i.import')}}
                             </a-button>
                         </a-upload>
+
+                        <a-button type="primary" ghost @click="handleLocation()" v-if="$auth('warehouse.save')" class="panel-btn">
+                            <i class="icon i_add"/>{{ $t('wa.add_location') }}
+                        </a-button>
+                        <a-button type="primary" ghost @click="handleMaterial()" v-if="$auth('warehouse.save')" class="panel-btn">
+                            <i class="icon i_add"/>{{ $t('wa.allocated_material') }}
+                        </a-button>
                     </div>
+
+
                 </div>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="(record) => record.id" :pagination="false" :row-selection="rowSelection">
@@ -380,6 +382,11 @@ export default {
 .WarehouseLocation {
     .search-container{
         background-color: #ffffff;
+    }
+    .btns-area {
+        .file-upload-btn {
+            margin-right: 15px;
+        }
     }
 }
 </style>

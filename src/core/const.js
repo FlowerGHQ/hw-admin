@@ -884,6 +884,12 @@ let Const = {
 		    NO: 0,
 	    },
     },
+	STOCK: {
+		TARGET_TYPE: {
+			ITEM: 1,
+			MATERIAL: 2,
+		}
+	},
     STOCK_RECORD: { // 出入库明细
         COMMODITY_TYPE: {
             ITEM: 10,
