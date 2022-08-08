@@ -503,7 +503,7 @@ export default {
                 return this.$message.warning(`该${type === 'item' ? '商品' : '商品实例'}不存在`);
             }
             Core.Api.WarehouseTransfer.itemSave(target).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.getWarehouseTransferDetail()
             })
         },
@@ -515,7 +515,7 @@ export default {
                 id: record.id,
                 warehouse_transfer_order_id: this.id
             }).then(() => {
-                this.$message.success('移除成功')
+                this.$message.success(this.$t('pop_up.remove_a'))
                 this.geTransferItemList()
             })
         },
@@ -610,7 +610,7 @@ export default {
             }
             console.log('handleAddSubmit list:', list)
             Core.Api.WarehouseTransfer.saveList(list).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 console.log('this.arrival_time',this.arrival_time)
                 this.getWarehouseTransferDetail()
                 this.addMode = false
@@ -632,7 +632,7 @@ export default {
                 cancelText: '取消',
                 onOk() {
                     Core.Api.WarehouseTransfer.submit({id: _this.id}).then(() => {
-                        _this.$message.success('操作成功');
+                        _this.$message.success(_this.$t('pop_up.operate'));
                         _this.getWarehouseTransferDetail();
                     }).catch(err => {
                         console.log("handleSubmit err", err);
@@ -650,7 +650,7 @@ export default {
                 cancelText: '撤销',
                 onOk() {
                     Core.Api.WarehouseTransfer.cancel({id: _this.id}).then(() => {
-                        _this.$message.success('操作成功');
+                        _this.$message.success(_this.$t('pop_up.operate'));
                         _this.getWarehouseTransferDetail();
                     }).catch(err => {
                         console.log("handleSubmit err", err);
@@ -705,7 +705,7 @@ export default {
             Core.Api.WarehouseTransfer.stock({
                 ...editForm
             }).then(() => {
-                this.$message.success('入库完成');
+                this.$message.success(this.$t('pop_up.inbound_finish'));
                 this.handlePurchaseClose()
                 this.getWarehouseTransferDetail()
             }).catch((err) => {

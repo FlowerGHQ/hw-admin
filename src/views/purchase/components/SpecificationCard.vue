@@ -91,14 +91,14 @@ export default {
         // 收藏商品
         hanldeAddToFavorite() {
             if (this.data.in_favorite) {
-                return this.$message.warning('该商品已在收藏夹中')
+                return this.$message.warning(this.$t('i.item_favorite'))
             }
             Core.Api.Favorite.add({
                 item_id: this.data.id,
                 price: this.data.purchase_price
             }).then(res => {
                 console.log('hanldeAddToFavorite res:', res)
-                this.$message.success('收藏成功')
+                this.$message.success(this.$t('i.favorite_success'))
                 // this.getItemDetail();
                 this.$emit('AddToFavorite')
             })
@@ -111,7 +111,7 @@ export default {
                 price: this.data.purchase_price
             }).then(res => {
                 console.log('hanldeAddToShopCart res:', res)
-                this.$message.success('添加购物车成功')
+                this.$message.success(this.$t('i.add_cart_success'))
                 this.$emit('AddToFavorite')
             })
         },

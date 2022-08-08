@@ -71,7 +71,7 @@
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.key === 'detail'">
                         <div class="table-img afs">
-                            <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" fallback='无'/>
+                            <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" :fallback="$t('def.none')"/>
                             <a-tooltip placement="top" :title='$Util.itemSpecFilter(record.attr_list)' destroy-tooltip-on-hide>
                                 <div class="info">
                                     <a-button type="link" @click="routerChange('detail', record)">

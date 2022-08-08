@@ -293,7 +293,7 @@ export default {
                 if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
                 } else {
-                    return this.$message.success('领料成功');
+                    return this.$message.success(this.$t('pop_up.packing'));
                 }
             }
             this.upload.fileList = fileList

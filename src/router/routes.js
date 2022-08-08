@@ -770,18 +770,18 @@ const routes = [
                     auth: ['entity.list'],
                 }
             },
-            {
-                path: 'part-list',
-                name: 'PartList',
-                component: () => import('@/views/entity/entity-list.vue'),
-                meta: {
-                    title: '零部件列表',
-                    title_en: 'Parts',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    type: "part",
-                    auth: ['entity.list'],
-                }
-            },
+            // {
+            //     path: 'part-list',
+            //     name: 'PartList',
+            //     component: () => import('@/views/entity/entity-list.vue'),
+            //     meta: {
+            //         title: '零部件列表',
+            //         title_en: 'Parts',
+            //         roles: [LOGIN_TYPE.ADMIN],
+            //         type: "part",
+            //         auth: ['entity.list'],
+            //     }
+            // },
             {
                 path: 'entity-detail',
                 name: 'EntityDetail',
@@ -1606,6 +1606,7 @@ const routes = [
                 roles: [LOGIN_TYPE.ADMIN],
 		        meta: {
 			        title: '标签规则',
+			        roles: [LOGIN_TYPE.ADMIN,LOGIN_TYPE.DISTRIBUTOR,],
 			        title_en: 'Label rules ',
 		        }
 	        },

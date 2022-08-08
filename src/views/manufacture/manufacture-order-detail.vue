@@ -236,7 +236,7 @@ export default {
                 onOk() {
                     Core.Api.ProductionOrder.cancel({id})
                         .then(() => {
-                            _this.$message.success('删除成功');
+                            _this.$message.success(_this.$t('pop_up.delete_success'));
                             _this.routerChange('list');
                         })
                         .catch((err) => {

@@ -18,24 +18,26 @@
                         </div>
                     </div>
                     <div class="btns-area">
-                        <a-button type="primary" ghost @click="handleLocation()" v-if="$auth('warehouse.save')" class="panel-btn">
-                            <i class="icon i_add"/>{{ $t('wa.add_location') }}
-                        </a-button>
-                        <a-button type="primary" ghost @click="handleMaterial()" v-if="$auth('warehouse.save')" class="panel-btn">
-                            <i class="icon i_add"/>{{ $t('wa.allocated_material') }}
-                        </a-button>
-
                         <a-upload name="file" class="file-uploader"
                                   :file-list="upload.fileList" :action="upload.action"
                                   :show-upload-list='false'
                                   :headers="upload.headers" :data='upload.data'
                                   accept=".xlsx,.xls"
                                   @change="handleFileUpload">
-                            <a-button type="primary" ghost class="panel-btn">
-                                <i class="icon i_add"/> 批量导入
+                            <a-button type="primary" ghost class="panel-btn" style="margin-right: 7px">
+                                <i class="icon i_add"/> {{$t('i.import')}}
                             </a-button>
                         </a-upload>
+
+                        <a-button type="primary" ghost @click="handleLocation()" v-if="$auth('warehouse.save')" class="panel-btn">
+                            <i class="icon i_add"/>{{ $t('wa.add_location') }}
+                        </a-button>
+                        <a-button type="primary" ghost @click="handleMaterial()" v-if="$auth('warehouse.save')" class="panel-btn">
+                            <i class="icon i_add"/>{{ $t('wa.allocated_material') }}
+                        </a-button>
                     </div>
+
+
                 </div>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="(record) => record.id" :pagination="false" :row-selection="rowSelection">
@@ -304,7 +306,7 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             form.warehouse_id = this.warehouseId
             Core.Api.WarehouseLocation.save(form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.handleModalClose()
                 this.getTableData();
                 // this.$emit('submit')
@@ -350,7 +352,7 @@ export default {
                 cancelText: '取消',
                 onOk() {
                     Core.Api.WarehouseLocation.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);
@@ -364,7 +366,7 @@ export default {
             if (file.status == 'done') {
                 let res = file.response
                 if (res && res.code === 0) {
-                    return this.$message.success('上传成功');
+                    return this.$message.success(this.$t('pop_up.uploaded'));
                 } else {
                     return this.$message.error('上传失败:' + res.message)
                 }
@@ -380,6 +382,11 @@ export default {
 .WarehouseLocation {
     .search-container{
         background-color: #ffffff;
+    }
+    .btns-area {
+        .file-upload-btn {
+            margin-right: 15px;
+        }
     }
 }
 </style>

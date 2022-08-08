@@ -4,9 +4,37 @@
         <div class="title-area">{{type_ch}}{{ $t('in.detail') }}</div>
         <div class="btn-area">
             <template v-if="detail.status === STATUS.INIT">
+                <div class="btns-area" v-if="$auth('invoice.save')">
+                    <a-upload name="file" class="file-uploader"
+                              :file-list="upload.fileList" :action="upload.action"
+                              :show-upload-list='false'
+                              :headers="upload.headers" :data='upload.data'
+                              accept=".xlsx,.xls"
+                              @change="handleFileUpload">
+                        <a-button type="primary" ghost class="panel-btn">
+                            <i class="icon i_add"/> {{ $t('i.import') }}
+                        </a-button>
+                    </a-upload>
+<!--                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('invoice.save')"><i class="icon i_add"/>{{ $t('i.import') }}</a-button>-->
+                </div>
                 <a-button type="primary" @click="handleSubmit()" v-if="$auth('invoice.save')"><i class="icon i_confirm"/>{{ $t('def.submit') }}</a-button>
                 <a-button type="danger" ghost @click="handleCancel()" v-if="$auth('invoice.delete')"> <i class="icon i_close_c"/>{{ $t('def.cancel') }}</a-button>
             </template>
+
+            <div class="btns-area" v-if="(detail.status === STATUS.AUDIT_PASS && detail.type === TYPE.IN && $auth('invoice.save')) || (detail.type === TYPE.OUT && detail.status === STATUS.AUDIT_PASS && $auth('invoice.save'))">
+                <a-upload name="file" class="file-uploader"
+                          :file-list="uploadPDA.fileList" :action="uploadPDA.action"
+                          :show-upload-list='false'
+                          :headers="uploadPDA.headers" :data='uploadPDA.data'
+                          accept=".xlsx,.xls"
+                          @change="handleFileUpload">
+                    <a-button type="primary" ghost class="panel-btn">
+                        <i class="icon i_add"/> {{ $t('i.import') }}
+                    </a-button>
+                </a-upload>
+                <!--                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('invoice.save')"><i class="icon i_add"/>{{ $t('i.import') }}</a-button>-->
+            </div>
+
             <template v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) && detail.type === TYPE.IN && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')">
                 <a-button type="primary" @click="handleExportIn"><i class="icon i_download"/>{{t('in.export')}}</a-button>
             </template>
@@ -486,6 +514,32 @@ export default {
             ],
             // 上传
             childInfoShow: false,
+            // 上传
+            upload: {
+                action: Core.Const.NET.URL_POINT + "/admin/1/invoice-item/import",
+                fileList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'xlsx',
+                    invoice_id: ''
+                },
+            },
+            // 上传
+            uploadPDA: {
+                action: Core.Const.NET.URL_POINT + "/admin/1/stock-record/import",
+                fileList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'xlsx',
+                    invoice_id: '',
+                },
+            },
 
         };
     },
@@ -564,6 +618,9 @@ export default {
     },
     mounted() {
         this.id = Number(this.$route.query.id) || 0
+        this.upload.data.invoice_id = this.id;
+        this.uploadPDA.data.invoice_id = this.id;
+
         this.getInvoiceDetail();
     },
     methods: {
@@ -1166,6 +1223,20 @@ export default {
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
         },
+        // 上传文件
+        handleFileUpload({file, fileList}) {
+            console.log("handleFileUpload status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                let res = file.response
+                if (res && res.code === 0) {
+                    return this.$message.success(this.$t('pop_up.uploaded'));
+                } else {
+                    return this.$message.error('上传失败:' + res.message)
+                }
+            }
+            this.upload.fileList = fileList
+            this.getInvoiceDetail();
+        },
     }
 };
 </script>
@@ -1196,6 +1267,11 @@ export default {
         }
     }
     .panel-content {
+    }
+    .btns-area {
+        .file-uploader {
+            margin-right: 15px;
+        }
     }
 }
 .prod-edit-popover {

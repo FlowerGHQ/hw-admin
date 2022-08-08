@@ -294,7 +294,7 @@ export default {
                         bom_id: _this.bomId,
                         ids
                     }).then(() => {
-                        _this.$message.success('移出成功');
+                        _this.$message.success(_this.$t('pop_up.move'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete -> err", err);

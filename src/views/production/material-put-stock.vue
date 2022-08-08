@@ -157,7 +157,8 @@ export default {
             invoice_uid: '',
             uid: '',
             form: {
-                id: '',
+                target_id: '',
+                target_type: '',
                 name: '',
                 code: '',
                 category_id: undefined,
@@ -212,9 +213,18 @@ export default {
             }
         },
         handleSearch() {
+
+            this.form.target_id = '';
+            this.form.target_type = '';
+            this.warehouseLocationOptions = [];
+            this.form.warehouse_location_id = ''
+            this.form.remark = '';
+            this.stock.stock = '';
+            this.stock.updateTime = '';
+            this.form.amount = '';
+            this.form.confirm_amount = '';
+            this.form.smallest_packaging = '';
             if (!this.form.code){
-                this.form.id = '';
-                this.warehouseLocationOptions = [];
                 return ;
             }
             let codeName = this.form.code;
@@ -228,7 +238,16 @@ export default {
 
             this.form.smallest_packaging = smallest_packaging
             Core.Api.Item.detailByCode({code: codeName}).then(res => {
-                this.form.id = res.detail.id;
+                if (res.detail.type != Core.Const.ITEM.TYPE.COMPONENT){
+                    this.form.target_id = res.detail.id;
+                    this.form.target_type = Core.Const.WAREHOUSE_TRANSFER.COMMODITY_TYPE.ITEM
+                    this.form.stock_target_type = Core.Const.STOCK.TARGET_TYPE.ITEM
+                } else {
+                    this.form.target_id = res.detail.material.id;
+                    this.form.target_type = Core.Const.WAREHOUSE_TRANSFER.COMMODITY_TYPE.MATERIALS
+                    this.form.stock_target_type = Core.Const.STOCK.TARGET_TYPE.MATERIAL
+                }
+                // this.form.id = res.detail.id;
                 this.form.flag_entity = res.detail.flag_entity;
                 this.handleWarehouseChange()
             })
@@ -239,23 +258,23 @@ export default {
                 console.log(1)
                 return
             }
-            if (!this.form.id) {
+            if (!this.form.target_id) {
                 console.log(1)
                 return
             }
             Core.Api.WarehouseLocationStock.list({
                 warehouse_id: this.warehouse_id,
-                target_id: this.form.id,
-                target_type: TARGET_TYPE_MAP.ITEM,
+                target_id: this.form.target_id,
+                target_type: this.form.stock_target_type,
             }).then(res => {
                 this.warehouseLocationOptions = res.list
             })
             Core.Api.Stock.detail({
                 warehouse_id: this.warehouse_id,
-                target_id: this.form.id,
-                target_type: TARGET_TYPE_MAP.ITEM,
+                target_id: this.form.target_id,
+                target_type: this.form.stock_target_type,
             }).then(res => {
-                // this.form.stock = res.stock
+                this.form.stock = res.stock
                 this.form.stock.updateTime = this.$Util.timeFormat(res.stock.updateTime != undefined ? res.stock.updateTime: res.stock.createTime)
             })
         },
@@ -264,14 +283,14 @@ export default {
                 console.log(1)
                 return
             }
-            if (!this.form.id) {
+            if (!this.form.target_id) {
                 console.log(1)
                 return
             }
             Core.Api.WarehouseLocationStock.detailByWarehouseId({
                 warehouse_location_id: this.form.warehouse_location_id,
-                target_id: this.form.id,
-                target_type: TARGET_TYPE_MAP.ITEM,
+                target_id: this.form.target_id,
+                target_type: this.form.stock_target_type,
             }).then(res => {
                 this.form.stock.stock = res.amount
                 // this.form.stock.updateTime = this.$Util.timeFormat(res.stock.updateTime != undefined ? res.stock.updateTime: res.stock.createTime)
@@ -291,7 +310,7 @@ export default {
         handleWarehouseByMaterialChange() {
             this.uid = ""
 
-            if (!this.form.id) {
+            if (!this.form.target_id) {
                 console.log(1)
                 return
             }
@@ -306,7 +325,8 @@ export default {
             }
             Core.Api.Invoice.detailByItemUid({
                 uid: this.invoice_uid,
-                item_id: this.form.id,
+                target_id: this.form.target_id,
+                target_type: this.form.target_type,
                 warehouse_id: this.warehouse_id
             }).then(res => {
                 this.form.amount = res.amount
@@ -372,8 +392,8 @@ export default {
                     Core.Api.StockRecord.add({
                         warehouse_id: _this.warehouse_id,
                         warehouse_location_id: _this.form.warehouse_location_id,
-                        target_id: _this.form.id,
-                        target_type: TARGET_TYPE_MAP.ITEM,
+                        target_id: _this.form.target_id,
+                        target_type: _this.form.stock_target_type,
                         type: STOCK_RECORD.TYPE.IN,
                         count: _this.form.inventory_amount,
                         source_type: STOCK_RECORD.SOURCE_FORM.INVOICE,
