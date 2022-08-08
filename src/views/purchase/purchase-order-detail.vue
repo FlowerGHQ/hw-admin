@@ -119,41 +119,45 @@
                                 <div class="value">{{$Util.timeFilter(detail.create_time) || '-'}}</div>
                             </div>
                         </a-col>
-                        <div v-show="!$auth('purchase-order.supply-detail')">
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
-                            <div class="info-item">
-                                <div class="key">{{ $t('n.contact')}}</div>
-                                <div class="value" v-if="detail.receive_info != null">{{detail.receive_info.phone || '-'}}</div>
-                                <div class="value" v-else>-</div>
+                            <div v-show="!$auth('purchase-order.supply-detail')">
+
+                                <div class="info-item">
+                                    <div class="key">{{ $t('n.contact')}}</div>
+                                    <div class="value" v-if="detail.receive_info != null">{{detail.receive_info.phone || '-'}}</div>
+                                    <div class="value" v-else>-</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="key">{{ $t('p.payment_terms')}}</div>
+                                    <div class="value">{{ DISTRIBUTOR.PAY_TIME_MAP[detail.pay_clause] || '-' }}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="key">{{ $t('p.remark')}}</div>
+                                    <div class="value">{{detail.remark || '-'}}</div>
+                                </div>
+                                <!-- <div class="info-item">
+                                    <div class="key">支付方式</div>
+                                    <div class="value">{{$Util.purchasePayMethodFilter(detail.pay_method) || '-'}}</div>
+                                </div> -->
                             </div>
-                            <div class="info-item">
-                                <div class="key">{{ $t('p.payment_terms')}}</div>
-                                <div class="value">{{ DISTRIBUTOR.PAY_TIME_MAP[detail.pay_clause] || '-' }}</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="key">{{ $t('p.remark')}}</div>
-                                <div class="value">{{detail.remark || '-'}}</div>
-                            </div>
-                            <!-- <div class="info-item">
-                                <div class="key">支付方式</div>
-                                <div class="value">{{$Util.purchasePayMethodFilter(detail.pay_method) || '-'}}</div>
-                            </div> -->
                         </a-col>
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
-                            <div class="info-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
-                                <div class="key">{{ $t('p.shipping_port')}}</div>
-                                <div class="value" >{{detail.port || '-'}}</div>
-                            </div>
-                            <div class="info-item" >
-                                <div class="key">{{ $t('p.partial_shipments')}}</div>
-                                <div class="value">{{$Util.purchaseTransferFilter(detail.flag_part_shipment, $i18n.locale)}}</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="key">{{ $t('p.transshipment')}}</div>
-                                <div class="value">{{$Util.purchaseTransferFilter(detail.flag_transfer, $i18n.locale)}}</div>
+                            <div v-show="!$auth('purchase-order.supply-detail')">
+                                <div class="info-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
+                                    <div class="key">{{ $t('p.shipping_port')}}</div>
+                                    <div class="value" >{{detail.port || '-'}}</div>
+                                </div>
+                                <div class="info-item" >
+                                    <div class="key">{{ $t('p.partial_shipments')}}</div>
+                                    <div class="value">{{$Util.purchaseTransferFilter(detail.flag_part_shipment, $i18n.locale)}}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="key">{{ $t('p.transshipment')}}</div>
+                                    <div class="value">{{$Util.purchaseTransferFilter(detail.flag_transfer, $i18n.locale)}}</div>
+                                </div>
                             </div>
                         </a-col>
-                        </div>
+
                     </a-row>
                 </a-collapse-panel>
             </a-collapse>
