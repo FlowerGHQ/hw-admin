@@ -750,8 +750,8 @@ let Const = {
             { name: '跨越速运', value: 'KYEXPRESS' },
         ],
         COURIER_LIST: [
-            { name: '国际物流', value: 1 },
-            { name: '货代公司', value: 2 },
+            { value: 1 , zh: '国际物流', en: 'International logistics'},
+            { value: 2 , zh: '货代公司', en: 'Shipping agent' },
         ],
         COURIER_MAP: {
             '1': { key: 1, zh: '国际物流', en: 'International logistics'},
