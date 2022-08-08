@@ -729,7 +729,7 @@ const messages = {
             no_item_explode: '暂无爆炸图',
             no_item_purchase_data: '暂无采购数据',
             change_item: '更换商品',
-            sure_transfer: 'Confirm the transfer order?',
+            sure_transfer: '确认转单吗？',
             whether_pass: '是否通过',
             enter_remark: '填写备注',
             transfer_success: '转单成功',
@@ -870,7 +870,7 @@ const messages = {
             upload: '上传文件',
             file: '文件',
             choose: '选择文件',
-            sure_download: 'Are you sure you want to download?',
+            sure_download: '确认要下载吗？',
         },
         no: { // 消息
             list: '消息列表',
@@ -2136,7 +2136,7 @@ const messages = {
             upload: 'Upload files',
             file: 'File',
             choose: 'Choose file',
-            sure_download: '确认要下载吗？',
+            sure_download: 'Are you sure you want to download?',
         },
         no: {
             list: 'Message list',
