@@ -1054,9 +1054,9 @@ let Const = {
             REPAIR_ORDER_DEDUCTIONS: 501,
         },
         SUBJECT_MAP: {
-            '101': '管理员操作',
-            '201': '采购单',
-            '501': '维修单',
+            '101': {key: 101, zh: '管理员操作', en: 'Admin action'},
+            '201': {key: 201, zh: '采购单', en: 'Purchase order'},
+            '501': {key: 501, zh: '维修单', en: 'Repair order'},
         }
     },
     FAULT_ENTITY: { //故障件

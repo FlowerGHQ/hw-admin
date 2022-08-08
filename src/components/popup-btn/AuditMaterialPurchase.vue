@@ -14,47 +14,47 @@
                 </div>
             </div>-->
             <div class="form-item required">
-                <div class="key">审核结果:</div>
+                <div class="key">{{ $t('n.result') }}:</div>
                 <a-radio-group v-model:value="form.status">
-                    <a-radio :value="STATUS.AUDIT_PASS">通过</a-radio>
-                    <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio>
+                    <a-radio :value="STATUS.AUDIT_PASS">{{ $t('n.pass') }}</a-radio>
+                    <a-radio :value="STATUS.AUDIT_REFUSE">{{ $t('n.fail') }}</a-radio>
                 </a-radio-group>
             </div>
             <div class="form-item textarea required" v-if="form.status === STATUS.AUDIT_REFUSE">
-                <div class="key">原因:</div>
+                <div class="key">{{ $t('n.reason') }}:</div>
                 <div class="value">
-                    <a-textarea v-model:value="form.audit_message" placeholder="请输入不通过原因"
+                    <a-textarea v-model:value="form.audit_message" :placeholder="$t('r.fail_result')"
                                 :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                 </div>
             </div>
         </div>
         <div class="modal-content" v-if="status === STATUS.FINANCE_PASS">
             <div class="form-item required">
-                <div class="key">审核结果:</div>
+                <div class="key">{{ $t('n.result') }}:</div>
                 <a-radio-group v-model:value="form.status">
-                    <a-radio :value="STATUS.FINANCE_PASS">通过</a-radio>
-                    <a-radio :value="STATUS.AUDIT_REFUSE">不通过</a-radio>
+                    <a-radio :value="STATUS.FINANCE_PASS">{{ $t('n.pass') }}</a-radio>
+                    <a-radio :value="STATUS.AUDIT_REFUSE">{{ $t('n.fail') }}</a-radio>
                 </a-radio-group>
             </div>
             <div class="form-item required">
-                <div class="key">财务审核:</div>
+                <div class="key">{{ $t('in.finance_audit') }}:</div>
                 <div class="value">
-                    <a-date-picker v-model:value="form.finance_audit_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" placeholder="请选择审核时间">
+                    <a-date-picker v-model:value="form.finance_audit_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" :placeholder="$t('audit.choose_time')">
                         <template #suffixIcon><i class="icon i_calendar"/></template>
                     </a-date-picker>
                 </div>
             </div>
             <div class="form-item textarea required" v-if="form.status === STATUS.AUDIT_REFUSE">
-                <div class="key">原因:</div>
+                <div class="key">{{ $t('n.reason') }}:</div>
                 <div class="value">
-                    <a-textarea v-model:value="form.audit_message" placeholder="请输入不通过原因"
+                    <a-textarea v-model:value="form.audit_message" :placeholder="$t('r.fail_result')"
                                 :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                 </div>
             </div>
         </div>
         <template #footer>
-            <a-button @click="handleModalClose">取消</a-button>
-            <a-button @click="handleConfirm" type="primary">确定</a-button>
+            <a-button @click="handleModalClose">{{ $t('def.cancel') }}</a-button>
+            <a-button @click="handleConfirm" type="primary">{{ $t('def.sure') }}</a-button>
         </template>
     </a-modal>
 </template>
@@ -131,10 +131,10 @@ export default {
         handleConfirm() {
             let form = Core.Util.deepCopy(this.form)
             if (!form.status) {
-                return this.$message.warning('请选择审核状态')
+                return this.$message.warning(this.$t('audit.choose_status'))
             }
             if (!form.finance_audit_time && this.status === STATUS.AUDIT_PASS) {
-                return this.$message.warning('请选择财务审核时间')
+                return this.$message.warning(this.$t('audit.choose_finance_time'))
             }
             Core.Api[this.apiList[0]][this.apiList[1]]({
                 status: this.form.status,
@@ -144,7 +144,7 @@ export default {
                 id: this.invoiceId
             }).then(res => {
                 console.log('handleAuditSubmit res', res)
-                this.$message.success('审核成功')
+                this.$message.success(this.$t('pop_up.audited'))
                 this.handleModalClose()
                 this.$emit('submit')
             }).catch(err => {

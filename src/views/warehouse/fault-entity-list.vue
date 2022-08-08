@@ -528,7 +528,7 @@ export default {
             }
             console.log('form', form)
             Core.Api.FaultEntity.save(form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.getTableData();
                 this.handleFaultItemClose()
             }).catch(err => {
@@ -580,7 +580,7 @@ export default {
                 return this.$message.warning('请选择审核结果')
             }
             Core.Api.FaultEntity.batchAudit(this.auditForm).then(() => {
-                this.$message.success('完成审核');
+                this.$message.success(this.$t('pop_up.audit_finish'));
                 this.getTableData();
                 this.handleAuditClose()
             }).catch(err => {
@@ -620,7 +620,7 @@ export default {
                 this.$message.warning('请选择所处仓库')
             } else {
                 Core.Api.FaultEntity.batchRecycle(this.entryForm).then(() => {
-                    this.$message.success('完成入库');
+                    this.$message.success(this.$t('pop_up.inbound_finish'));
                     this.getTableData();
                     this.handleEntryClose()
                 }).catch(err => {

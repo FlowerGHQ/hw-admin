@@ -5,7 +5,7 @@
         </div>
         <div class="panel-content">
             <div class="table-container">
-                <AddressEdit btnType="primary" :ghost="true" :orgId="orgId" :orgType="orgType" v-if="!$auth('ADMIN')" @submit='getTableData'><i class="icon i_add"/>新增收货地址</AddressEdit>
+                <AddressEdit btnType="primary" :ghost="true" :orgId="orgId" :orgType="orgType" v-if="!$auth('ADMIN')" @submit='getTableData'><i class="icon i_add"/>{{ $t('ad.add') }}</AddressEdit>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'item'">

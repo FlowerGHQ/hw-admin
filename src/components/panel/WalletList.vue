@@ -72,14 +72,14 @@
                         <div class="key">{{ $t('n.source') }}：</div>
                         <div class="value">
                             <a-select v-model:value="operateForm.source_type" :placeholder="$t('def.select')" @change="handleSelectChange">
-                                <a-select-option v-for="(val, key) of sourceTypeMap" :key='key' :value='key'>{{ val }}</a-select-option>
+                                <a-select-option v-for="(val, key) of sourceTypeMap" :key='key' :value='key'>{{ val[$i18n.locale] }}</a-select-option>
                             </a-select>
                         </div>
                     </div>
                     <div class="form-item required" v-if="needUid">
-                        <div class="key">{{sourceTypeMap[operateForm.source_type]}}号：</div>
+                        <div class="key">{{sourceTypeMap[operateForm.source_type]}}{{ $t('w.number') }}：</div>
                         <div class="value">
-                            <a-input v-model:value="sourceUid" :placeholder="`请输入相关的${sourceTypeMap[operateForm.source_type]}号`" @blur="handleSelectBlur()">
+                            <a-input v-model:value="sourceUid" :placeholder="$t('w.enter_number') + `${sourceTypeMap[operateForm.source_type]}` + $t('w.number')" @blur="handleSelectBlur()">
                                 <template #suffix>
                                     <span v-if="isExist == 1"><i class="icon suffix i_confirm"/></span>
                                     <span v-else-if="isExist == 2"><i class="icon suffix i_close_c"/></span>
@@ -268,22 +268,22 @@ export default {
         handleOperateSubmit() {
             let form = Core.Util.deepCopy(this.operateForm)
             if (!form.type) {
-                return this.$message.warning('请选择类型')
+                return this.$message.warning(this.$t('w.choose_type'))
             }
             if (!form.money) {
-                return this.$message.warning('请输入金额')
+                return this.$message.warning(this.$t('w.enter_money'))
             }
             if (!form.source_type) {
-                return this.$message.warning('请选择来源')
+                return this.$message.warning(this.$t('w.select_source'))
             }
             if (this.needUid && !this.sourceUid) {
-                return this.$message.warning(`请输入相关的${this.sourceTypeMap[form.source_type]}单号`)
+                return this.$message.warning($t('w.enter_number') + `${this.sourceTypeMap[form.source_type]}` + $t('w.number'))
             }
             if (this.needUid && !form.source_id) {
-                return this.$message.warning(`请输入正确的${this.sourceTypeMap[form.source_type]}单号`)
+                return this.$message.warning($t('w.enter_correct') + `${this.sourceTypeMap[form.source_type]}` + $t('w.number'))
             }
             if (this.isExist == 2) {
-                return this.$message.warning(`请输入正确的${this.sourceTypeMap[form.source_type]}单号`)
+                return this.$message.warning($t('w.enter_correct') + `${this.sourceTypeMap[form.source_type]}` + $t('w.number'))
             }
             Core.Api.Wallet.update({
                 ...form,

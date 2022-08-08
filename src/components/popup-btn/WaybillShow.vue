@@ -2,40 +2,40 @@
     <div class="WaybillShow">
         <div class="main">
             <span>{{ $Util.waybillCompanyFilter(detail.company_uid) }}({{ detail.uid }})</span>
-            <a-button type="link" @click="handleDetailShow">查看物流详情</a-button>
-            <a-button type="link" v-if="canEdit" @click='handleUpdateShow'>修改物流信息</a-button>
+            <a-button type="link" @click="handleDetailShow">{{ $t('i.view_logistics_detail') }}</a-button>
+            <a-button type="link" v-if="canEdit" @click='handleUpdateShow'>{{ $t('i.logistics_info') }}</a-button>
         </div>
         <div class="desc">{{ last.status }}</div>
         <div class="time">{{ last.time }}</div>
         <template class="modal-container">
-            <a-modal v-model:visible="detailShow" title="物流详情" class="waybill-show-modal">
+            <a-modal v-model:visible="detailShow" :title="$t('i.logistics_detail')" class="waybill-show-modal">
                 <div class="modal-content">
                     <a-steps progress-dot direction="vertical">
                         <a-step v-for="(item,index) of list" :key="index" :title="item.time" :description="item.status"/>
                     </a-steps>
                 </div>
                 <template #footer>
-                    <a-button key="back" @click="detailShow = false">关闭</a-button>
+                    <a-button key="back" @click="detailShow = false">{{ $t('pop_up.close') }}</a-button>
                 </template>
             </a-modal>
-            <a-modal v-model:visible="updateShow" title="编辑验收备注" class="remark-detail-modal">
+            <a-modal v-model:visible="updateShow" :title="$t('i.receive_remark')" class="remark-detail-modal">
                 <div class="form-item">
-                    <div class="key">物流公司:</div>
+                    <div class="key">{{ $t('n.logistics_company') }}:</div>
                     <div class="value">
-                        <a-select v-model:value="companyUid" placeholder="请选择物流公司">
+                        <a-select v-model:value="companyUid" :placeholder="$t('r.logistics_company')">
                             <a-select-option v-for="(val,key) in companyMap" :key="key" :value="key">{{ val }}</a-select-option>
                         </a-select>
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">物流单号:</div>
+                    <div class="key">{{ $t('n.tracking_number') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="uid" placeholder="请输入物流单号"/>
+                        <a-input v-model:value="uid" :placeholder="$t('r.tracking_number')"/>
                     </div>
                 </div>
                 <template #footer>
-                    <a-button key="back" @click="updateShow = false">关闭</a-button>
-                    <a-button type="primary" @click="updatePurchaseOrRepair">提交</a-button>
+                    <a-button key="back" @click="updateShow = false">{{ $t('pop_up.close') }}</a-button>
+                    <a-button type="primary" @click="updatePurchaseOrRepair">{{ $t('def.submit') }}</a-button>
                 </template>
             </a-modal>
         </template>
@@ -114,7 +114,7 @@ export default {
                 uid: this.uid,
             }).then(res => {
                 this.$emit('change')
-                this.$message.success('修改成功')
+                this.$message.success(this.$t('pop_up.modify'))
                 this.updateShow = false
             })
         },
@@ -126,7 +126,7 @@ export default {
                 waybill_uid: this.uid,
             }).then(res => {
                 this.$emit('change')
-                this.$message.success('修改成功')
+                this.$message.success(this.$t('pop_up.modify'))
                 this.updateShow = false
             })
         },

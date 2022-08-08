@@ -116,7 +116,7 @@ export default {
             }).then(res => {
                 this.staffList = res.list
                 if (val == 'refresh'){
-                    this.$message.success('刷新成功')
+                    this.$message.success(this.$t('pop_up.flash'))
                 }
             });
         },

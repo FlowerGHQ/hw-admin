@@ -306,7 +306,7 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             form.warehouse_id = this.warehouseId
             Core.Api.WarehouseLocation.save(form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.handleModalClose()
                 this.getTableData();
                 // this.$emit('submit')
@@ -352,7 +352,7 @@ export default {
                 cancelText: '取消',
                 onOk() {
                     Core.Api.WarehouseLocation.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);
@@ -366,7 +366,7 @@ export default {
             if (file.status == 'done') {
                 let res = file.response
                 if (res && res.code === 0) {
-                    return this.$message.success('上传成功');
+                    return this.$message.success(this.$t('pop_up.uploaded'));
                 } else {
                     return this.$message.error('上传失败:' + res.message)
                 }

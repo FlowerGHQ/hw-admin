@@ -261,7 +261,7 @@ export default {
                     return this.$message.error(file.response.message)
                     this.getTableData();
                 } else {
-                    return this.$message.success(this.$t('def.uploaded'));
+                    return this.$message.success(this.$t('pop_up.uploaded'));
                     this.getTableData();
                 }
             }

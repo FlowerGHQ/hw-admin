@@ -1274,7 +1274,7 @@ export default {
                 return
             }
             Core.Api.Purchase.payAudit(this.payAuditForm).then(res => {
-                this.$message.success('p.audit_result')
+                this.$message.success(this'p.audit_result')
                 this.payAuditShow = false
                 this.getList()
             })

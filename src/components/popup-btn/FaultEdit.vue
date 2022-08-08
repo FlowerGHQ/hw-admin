@@ -77,7 +77,7 @@ export default {
             Core.Api.Fault.save({
                 ...this.form
             }).then(res => {
-                this.$message.success('添加成功')
+                this.$message.success(this.$t('pop_up.add'))
                 this.handleFaultClose();
                 this.$emit('saveFault');
             }).catch(err => {

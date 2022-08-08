@@ -1,24 +1,24 @@
 <template>
 <div class="PricingStructure gray-panel no-margin">
     <div class="panel-title">
-        <div class="title">商品价格管理</div>
+        <div class="title">{{ $t('a.item_price') }}</div>
     </div>
     <div class="panel-content">
         <div class="table-container">
             <template v-if="canEdit">
             <template v-if="!addMode">
                 <ItemSelect :disabled-checked='tableData.map(i => i.item_id)' @select="handleAddItemShow" btn-class="panel-btn">
-                    <i class="icon i_add"/> 添加商品
+                    <i class="icon i_add"/> {{ $t('i.add') }}
                 </ItemSelect>
                 <a-button class="panel-btn" @click="handleMutiEditChange()" type="primary" ghost>
-                    <template v-if='editShow'><i class="icon i_confirm"/>确认设置</template>
-                    <template v-else>批量设置供货价</template>
+                    <template v-if='editShow'><i class="icon i_confirm"/>{{ $t('a.sure_set') }}</template>
+                    <template v-else>{{ $t('a.set_supply_price') }}</template>
                 </a-button>
-                <a-button class="panel-btn" @click="getTableData" v-if="editShow"><i class="icon i_close_c"/>取消设置</a-button>
+                <a-button class="panel-btn" @click="getTableData" v-if="editShow"><i class="icon i_close_c"/>{{ $t('a.cancel_set') }}</a-button>
             </template>
             <template v-else>
-                <a-button class="panel-btn" @click="handleAddItemConfirm()" type="primary" ghost><i class="icon i_confirm"/>确认添加</a-button>
-                <a-button class="panel-btn" @click="handleAddItemClose()"><i class="icon i_close_c"/>取消添加</a-button>
+                <a-button class="panel-btn" @click="handleAddItemConfirm()" type="primary" ghost><i class="icon i_confirm"/>{{ $t('a.sure_add') }}</a-button>
+                <a-button class="panel-btn" @click="handleAddItemClose()"><i class="icon i_close_c"/>{{ $t('a.cancel_add') }}</a-button>
             </template>
             </template>
             <a-table :columns="tableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' :loading='loading'>
@@ -64,10 +64,10 @@
                     </template>
                     <template v-if="column.key === 'operation'">
                         <a-button type='link' @click="handleEditChange(record)" v-if="!editShow">
-                            <template v-if="record.edit_show"><i class="icon i_confirm"/>确认设置</template>
-                            <template v-else><i class="icon i_edit"/>设置价格</template>
+                            <template v-if="record.edit_show"><i class="icon i_confirm"/>{{ $t('a.sure_set') }}</template>
+                            <template v-else><i class="icon i_edit"/>{{ $t('a.set_price') }}</template>
                         </a-button>
-                        <a-button type='link' class="danger" @click="handleDelete(record.id)"><i class="icon i_delete"/>移出</a-button>
+                        <a-button type='link' class="danger" @click="handleDelete(record.id)"><i class="icon i_delete"/>{{ $t('a.remove') }}</a-button>
                     </template>
                 </template>
             </a-table>
@@ -139,17 +139,17 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                { title: '商品名称', dataIndex: 'name', key: 'detail'},
-                { title: '商品规格', dataIndex: 'attr_list', key: 'spec' },
-                { title: '商品品号', dataIndex: 'model', key: 'item' },
-                { title: '商品编码', dataIndex: 'code',  key: 'item' },
+                { title: this.$t('r.item_name'), dataIndex: 'name', key: 'detail'},
+                { title: this.$t('i.commercial_specification'), dataIndex: 'attr_list', key: 'spec' },
+                { title: this.$t('i.number'), dataIndex: 'model', key: 'item' },
+                { title: this.$t('i.code'), dataIndex: 'code',  key: 'item' },
                 // { title: '供货价(CNY)', key: 'supply', dataIndex: 'purchase_price', unit: '￥', },
-                { title: '供货价(EUR)', key: 'supply', dataIndex: 'purchase_price_eur', unit: '€', },
-                { title: '供货价(USD)', key: 'supply', dataIndex: 'purchase_price_usd', unit: '$', },
+                { title: this.$t('i.eur'), key: 'supply', dataIndex: 'purchase_price_eur', unit: '€', },
+                { title: this.$t('i.usd'), key: 'supply', dataIndex: 'purchase_price_usd', unit: '$', },
                 // { title: '供货价(GBP)', key: 'supply', dataIndex: 'purchase_price_gbp', unit: '£', },
-                { title: '采购价', key: 'parent_price' },
+                { title: this.$t('i.purchase_price'), key: 'parent_price' },
                 // { title: '建议零售价', dataIndex: 'price' },
-                { title: '操作', key: 'operation', fixed: 'right'},
+                { title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             if (this.addMode || !this.canEdit) {
                 columns.pop()
@@ -214,13 +214,13 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要移出该商品吗？',
-                okText: '确定',
+                title: _this.$t('i.sure_remove'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.ItemPrice.delete({id}).then(() => {
-                        _this.$message.success('移出成功');
+                        _this.$message.success(_this.$t('pop_up.move'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete -> err", err);
@@ -264,10 +264,10 @@ export default {
             for (let i = 0; i < items.length; i++) {
                 let item = items[i]
                 if (item.purchase_price_eur <= 0) {
-                    return this.$message.warning('请填写供货价(EUR)')
+                    return this.$message.warning(this.$t('a.enter_eur'))
                 }
                 if (item.purchase_price_usd <= 0) {
-                    return this.$message.warning('请填写供货价(USD)')
+                    return this.$message.warning(this.$t('a.enter_usd'))
                 }
                 /* if (item.purchase_price_gbp <= 0) {
                     return this.$message.warning('请填写供货价(GBP)')
@@ -278,7 +278,7 @@ export default {
             }
             console.log('handleAddItemConfirm items:', items)
             Core.Api.ItemPrice.batchSave(items).then(() => {
-                this.$message.success('添加成功')
+                this.$message.success(this.$t('pop_up.add'))
                 this.getTableData()
             }).catch(err => {
                 console.log('handleAddItemShow err:', err)
@@ -292,10 +292,10 @@ export default {
             } else {
                 // 关闭编辑模式
                 if (item.purchase_price_eur <= 0) {
-                    return this.$message.warning('请填写供货价(EUR)')
+                    return this.$message.warning(this.$t('a.enter_eur'))
                 }
                 if (item.purchase_price_usd <= 0) {
-                    return this.$message.warning('请填写供货价(USD)')
+                    return this.$message.warning(this.$t('a.enter_usd'))
                 }
                 this.loading = true
                 Core.Api.ItemPrice.save({
@@ -306,7 +306,7 @@ export default {
                     purchase_price_usd: Math.round(item.purchase_price_usd * 100),
                     purchase_price_eur: Math.round(item.purchase_price_eur * 100),
                 }).then(() => {
-                    this.$message.success('更改成功')
+                    this.$message.success(this.$t('pop_up.change'))
                 }).catch(err => {
                     console.log('handleEditChange err:', err)
                 }).finally(() => {
@@ -331,10 +331,10 @@ export default {
                 for (let i = 0; i < items.length; i++) {
                     let item = items[i]
                     if (item.purchase_price_eur <= 0) {
-                        return this.$message.warning('请填写供货价(EUR)')
+                        return this.$message.warning(this.$t('a.enter_eur'))
                     }
                     if (item.purchase_price_usd <= 0) {
-                        return this.$message.warning('请填写供货价(USD)')
+                        return this.$message.warning(this.$t('a.enter_usd'))
                     }
                     /* if (item.purchase_price_gbp <= 0) {
                         return this.$message.warning('请填写供货价(GBP)')
@@ -345,7 +345,7 @@ export default {
                 }
                 this.loading = true
                 Core.Api.ItemPrice.batchSave(items).then(() => {
-                    this.$message.success('更改成功')
+                    this.$message.success(this.$t('pop_up.change'))
                 }).catch(err => {
                     console.log('handleMutiEditChange err:', err)
                 }).finally(() => {
