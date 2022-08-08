@@ -556,6 +556,11 @@ const Util = {
 		let value = MAP[val + ''] || {}
 		return value[to] || '-'
 	},
+    refundOrderStatusFilter(val, to='zh') {
+        const MAP = Const.REFUND.REFUND_STATUS_MAP
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
+    },
     /* =============== 采购单 && 售后管理 && 退款管理  ================ */
 
     /* =============== 员工/账号/用户 ================ */
