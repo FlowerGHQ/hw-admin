@@ -29,7 +29,7 @@
                 :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, record, index }">
                     <template v-if="column.dataIndex === 'index'" width="100px">
-                        <a-input v-model:value="record.index" @blur="saveRowIndex(record)" placeholder="请输入序号"></a-input>
+                        <a-input v-model:value="record.index" @change="saveRowIndex(record)" placeholder="请输入序号"></a-input>
                         <!-- <div v-if="!record.isEdit" @click="editRowIndex(record)">{{ (record || {}).index }}</div>
                         <div v-else>
                             <a-input v-model:value="record.index" @keydown.enter="saveRowIndex(record)" placeholder="请输入序号"></a-input>
@@ -100,7 +100,6 @@
         <ItemSelect
             ref="itemSelect"
             btn-class="panel-btn"
-            :radioMode="true"
             :disabled-checked='checkedIds'
             @select="(ids,items) => handleAddShow(TARGET_TYPE.ITEM_CATEGORY, ids, items)"
         >
@@ -453,28 +452,34 @@ export default {
 
         // 添加材料
         handleAddShow(type, ids, items) {
-            let obj;
-            this.isChangedPoint = true;
-            if(this.editPointer === null) {
-                obj = {
-                    id: null,
-                    start: { x: 50, y: 50 },
-                    end: { x: 50, y: 150 },
-                    set_id: get(this.tabsArray, `[${this.currentTab}].id`, null),
-                    target_id: null,
-                    target_type: null,
-                    item: null,
+            for(let i=0 ; i< items.length; i++){
+                let obj;
+                this.isChangedPoint = true;
+                if(this.editPointer === null) {
+                    obj = {
+                        id: null,
+                        start: { x: 50, y: 50 },
+                        end: { x: 50, y: 150 },
+                        set_id: get(this.tabsArray, `[${this.currentTab}].id`, null),
+                        target_id: ids[i],
+                        target_type: type,
+                        item: items[i],
+                    }
+                    this.pointerList.push(obj);
+                    this.canvasUpdata();
+                } else {
+                    obj = this.editPointer;
                 }
-                this.pointerList.push(obj);
-                this.canvasUpdata();
-            } else {
-                obj = this.editPointer;
-            }
-            items.map(item => {
-                obj.target_id = item.id;
+                obj.target_id = items[i].id;
                 obj.target_type = type;
-                obj.item = item;
-            });
+                obj.item = items[i];
+                // items.map(item => {
+                //     obj.target_id = item.id;
+                //     obj.target_type = type;
+                //     obj.item = item;
+                // });
+            }
+
         },
         /** 点击保存 */
         clickSave () {
@@ -526,7 +531,7 @@ export default {
         },
         saveRowIndex(row) {
             // this.editRowIndex(row);
-            this.clickSave();
+            this.isChangedPoint = true;
         },
 
 

@@ -770,18 +770,18 @@ const routes = [
                     auth: ['entity.list'],
                 }
             },
-            {
-                path: 'part-list',
-                name: 'PartList',
-                component: () => import('@/views/entity/entity-list.vue'),
-                meta: {
-                    title: '零部件列表',
-                    title_en: 'Parts',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    type: "part",
-                    auth: ['entity.list'],
-                }
-            },
+            // {
+            //     path: 'part-list',
+            //     name: 'PartList',
+            //     component: () => import('@/views/entity/entity-list.vue'),
+            //     meta: {
+            //         title: '零部件列表',
+            //         title_en: 'Parts',
+            //         roles: [LOGIN_TYPE.ADMIN],
+            //         type: "part",
+            //         auth: ['entity.list'],
+            //     }
+            // },
             {
                 path: 'entity-detail',
                 name: 'EntityDetail',
