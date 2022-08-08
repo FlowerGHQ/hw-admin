@@ -160,7 +160,7 @@ const messages = {
             distributor_auth: '经销商权限管理',
             agent_auth: '零售商权限管理',
             store_auth: '门店权限管理',
-
+            turn_logistics:'转单物流',
         },
         a: { // 零售商
             new_retailer: '新建零售商',
@@ -286,6 +286,7 @@ const messages = {
             short_name: '简称',
             abbreviation: '简称',
             port: '港口',
+            cost: '费用',
             receipt: '请输入收货港口',
             internal: '国内',
             export: '出口',
@@ -618,6 +619,8 @@ const messages = {
             material_not_exist: '该物料不存在',
             instance_gt_total: '商品实例数量不能大于总数量',
             sure_export: '确认要导出吗？',
+            select_outbound_type: '请选择出入库类型',
+            select_source:'请选择来源',
         },
         p: { // 采购订单
             list: '采购订单列表',
@@ -707,6 +710,8 @@ const messages = {
             sure_export: '确认要导出吗？',
             audit_result: '请选择审核结果',
             determine_cancel: '确认取消吗',
+            fill_address: '请填写发货地址',
+            modify_success:'修改成功',
         },
         s: { // 门店
             store_list: '门店列表',
@@ -715,6 +720,8 @@ const messages = {
             detail: '门店详情',
             edit: '门店编辑',
             sure_delete: '确定要删除该门店吗？',
+            store_settings_no: '确定要将该门店设置为不可接受转单吗？',
+            store_settings_yes: '确定要将该门店设置为可接受转单吗？',
         },
         af: { // 售后单
             list: '售后单列表',
@@ -1366,6 +1373,7 @@ const messages = {
             distributor_auth: 'Distributor authority managementt',
             agent_auth: 'Retailer Rights Management',
             store_auth: 'Store authority management',
+            turn_logistics: 'Turn single logistics',
         },
         a: {
             new_retailer: 'Add a retailer',
@@ -1492,6 +1500,7 @@ const messages = {
             short_name: 'Short name',
             abbreviation: 'Abbreviation',
             port: 'Port',
+            cost: 'cost',
             receipt: 'Please enter the port of receipt',
             internal: 'internal',
             export: 'export',
@@ -1821,6 +1830,8 @@ const messages = {
             material_not_exist: 'The material does not exist',
             instance_gt_total: 'The number of product instances cannot be greater than the total number',
             sure_export: 'Are you sure you want to export?',
+            select_outbound_type: 'Please select an inbound and outbound type',
+            select_source: 'Please select source',
         },
         p: {
             list: 'Purchase Order List',
@@ -1906,6 +1917,8 @@ const messages = {
             sure_cancel: 'Are you sure you want to cancel this purchase?',
             sure_export: 'Are you sure you want to export?',
             audit_result: 'Please select an audit result',
+            fill_address: 'Please fill in the shipping address',
+            modify_success:'modify successfully',
         },
         s: {
             store_list: 'Store list',
@@ -1914,7 +1927,8 @@ const messages = {
             detail: 'Store details',
             edit: 'Edit store',
             sure_delete: 'Are you sure you want to delete this store?',
-
+            store_settings_no: 'Are you sure you want to make this store unacceptable for forwarding orders?',
+            store_settings_yes: 'Are you sure you want to set this store to accept forwarding orders?',
         },
         af: {//售后单
             list: 'After-sales order list',

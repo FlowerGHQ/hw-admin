@@ -144,7 +144,7 @@ export default {
             Core.Api.Item.detail({
                 id: this.id,
             }).then(res => {
-                console.log('getItemDetail111111111 res', res)
+                console.log('getItemDetail res', res)
                 let detail = res.detail
                 this.detail = detail
                 if (detail.set_id) {
@@ -203,7 +203,7 @@ export default {
                 price: this.detail.purchase_price
             }).then(res => {
                 console.log('hanldeAddToShopCart res:', res)
-                this.$message.success('添加成功')
+                this.$message.success(this.$t('i.add_success'))
                 this.detail.in_shopping_cart = true;
             })
         },
@@ -433,8 +433,9 @@ export default {
         color: @white;
     }
     .ant-tabs :deep(.ant-tabs-tab) {
-        width: auto !important;
+        width: 82px !important;
         padding: 0 10px;
+        box-sizing: border-box;
     }
 }
 

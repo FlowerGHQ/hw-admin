@@ -275,13 +275,13 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该门店吗？',
-                okText: '确定',
+                title: _this.$t('s.sure_delete'),
+                okText: _this.$t('def.ok'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Store.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);
@@ -311,13 +311,13 @@ export default {
         handleTransferChange(record) {
             let _this = this;
             this.$confirm({
-                title: `确定要将该门店设置为${record.flag_receive_transfer ? '不可' : '可'}接受转单吗？`,
-                okText: '确定',
+                title: `${record.flag_receive_transfer ? _this.$t('s.store_settings_no') : _this.$t('s.store_settings_yes')}`,
+                okText: _this.$t('def.ok'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Store.updateTransfer({id:record.id}).then(() => {
-                        _this.$message.success(`${record.flag_receive_transfer ? '禁用' : '启用'}成功`);
+                        _this.$message.success(`${record.flag_receive_transfer ? _this.$t('def.disable') : _this.$t('def.enable')}` + _this.$t('pop_up.success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleTransferChange err", err);

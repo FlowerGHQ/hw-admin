@@ -113,19 +113,19 @@
     </div>
     <template class="modal-container">
         <!-- 转单物流 -->
-        <a-modal v-model:visible="deliveryShow" title="转单物流" @ok="handleDeliverySubmit">
+        <a-modal v-model:visible="deliveryShow" :title="$t('n.turn_logistics')" @ok="handleDeliverySubmit">
             <div class="form-item required">
-                <div class="key">物流公司:</div>
+                <div class="key">{{ $t('n.logistics_company') }}:</div>
                 <div class="value">
-                    <a-select v-model:value="deliveryForm.company_uid" placeholder="请选择物流公司">
+                    <a-select v-model:value="deliveryForm.company_uid" :placeholder="$t('r.logistics_company')">
                         <a-select-option v-for="(val,key) in companyMap" :key="key" :value="key">{{ val }}</a-select-option>
                     </a-select>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">物流单号:</div>
+                <div class="key">{{ $t('n.tracking_number') }}:</div>
                 <div class="value">
-                    <a-input v-model:value="deliveryForm.waybill_uid" placeholder="请输入物流单号"/>
+                    <a-input v-model:value="deliveryForm.waybill_uid" :placeholder="$t('r.logistics_number')"/>
                 </div>
             </div>
         </a-modal>

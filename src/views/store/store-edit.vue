@@ -263,11 +263,11 @@ export default {
         handleImgCheck(file) {
             const isCanUpType = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'].includes(file.type)
             if (!isCanUpType) {
-                this.$message.warning('文件格式不正确');
+                this.$message.warning(this.$t('n.file_incorrect'));
             }
             const isLt10M = (file.size / 1024 / 1024) < 10;
             if (!isLt10M) {
-                this.$message.warning('请上传小于10MB的图片');
+                this.$message.warning(this.$t('n.picture_smaller'));
             }
             return isCanUpType && isLt10M;
         },

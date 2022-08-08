@@ -196,16 +196,16 @@ export default {
             form.arrival_time = form.arrival_time ? dayjs(form.arrival_time).unix() : 0 // 日期转时间戳
             if (this.$auth('ADMIN')) {
                 if (!form.warehouse_id) {
-                    return this.$message.warning('请选择仓库')
+                    return this.$message.warning(this.$t('e.select_warehouse'))
                 }
                 if (!form.type) {
-                    return this.$message.warning('请选择出入库类型')
+                    return this.$message.warning(this.$t('in.select_outbound_type'))
                 }
                 // if (!form.target_type) {
                 //     return this.$message.warning('请选择类目')
                 // }
                 if (!form.source_type) {
-                    return this.$message.warning('请选择来源')
+                    return this.$message.warning(this.$t('in.select_source'))
                 }
                 if (this.needUid && !this.sourceUid) {
                     return this.$message.warning(`请输入相关的${this.sourceTypeAdminMap[form.source_type].text}单号`)

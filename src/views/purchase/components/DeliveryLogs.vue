@@ -98,11 +98,11 @@
                     <div class="value">{{ $Util.purchaseExpressFilter(waybillDetail.express_type, $i18n.locale) }}</div>
                 </div>
                 <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
-                    <div class="key">港口</div>
+                    <div class="key">{{ $t('d.port') }}</div>
                     <div class="value">{{ waybillDetail.port || '-' }}</div>
                 </div>
                 <div class="info-item">
-                    <div class="key">费用</div>
+                    <div class="key">{{ $t('d.cost') }}</div>
                     <div class="value">{{ waybillDetail.post_fee || '-' }}</div>
                 </div>
                 <div class="info-item" v-if="detail.waybill">
@@ -229,7 +229,7 @@
                     </div>
                 </template>
                 <div class="form-item">
-                    <div class="key">费用</div>
+                    <div class="key">{{ $t('d.cost') }}</div>
                     <div class="value">
                         <a-input-number
                             v-model:value="form.freight"
@@ -472,7 +472,7 @@ export default {
             }
             console.log(this.id)
             let adminRequire = [
-                {key: 'warehouse_id', msg: '请选择仓库'},
+                {key: 'warehouse_id', msg: this.$t('e.select_warehouse')},
                 // { key: 'target_type', msg: '请选择类型' },
             ];
             for (let index in adminRequire) {
@@ -484,7 +484,7 @@ export default {
                 }
             }
             Core.Api.Purchase.takeDeliver(param).then(res => {
-                this.$message.success('收货成功')
+                this.$message.success(this.$t('p.received'))
                 this.takeDeliverShow = false
                 this.getInvoiceList();
                 this.$emit('Submit')
@@ -518,17 +518,17 @@ export default {
 
             if (this.$auth('ADMIN')) {
                 adminRequire = [
-                    {key: 'express_type', msg: '请选择快递方式'},
-                    {key: 'port', msg: '请填写发货港口'},
-                    {key: 'delivery_address', msg: '请填写发货地址'},
-                    {key: 'freight', msg: '请填写运费'},
-                    {key: 'waybill', msg: '物流单号'},
+                    {key: 'express_type', msg: this.$t('p.choose_express')},
+                    {key: 'port', msg: this.$t('p.enter_harbor')},
+                    {key: 'delivery_address', msg: this.$t('p.fill_address')},
+                    {key: 'freight', msg: this.$t('p.enter_freight')},
+                    {key: 'waybill', msg: this.$t('n.tracking_number')},
                 ]
                 param['waybill'] = form['waybill'];
             } else if (this.$auth('DISTRIBUTOR')) {
                 adminRequire = [
-                    {key: 'receive_type', msg: '请选择收货方式'},
-                    {key: 'freight', msg: '请填写运费'},
+                    {key: 'receive_type', msg: this.$t('p.choose_receive')},
+                    {key: 'freight', msg: this.$t('p.enter_freight')},
                 ]
                 param['waybill_uid'] = form['waybill_uid'];
             }
@@ -543,7 +543,7 @@ export default {
             param['freight'] = Math.round(param['freight'] * 100)
             param['item_list'] = this.selectedRowItems
             Core.Api.Purchase.deliver(param).then(res => {
-                this.$message.success('发货成功')
+                this.$message.success(this.$t('p.shipped'))
                 this.deliverShow = false
                 this.getInvoiceList();
                 this.$emit('Submit')
@@ -566,9 +566,9 @@ export default {
 
             if (this.$auth('ADMIN')) {
                 adminRequire = [
-                    {key: 'delivery_address', msg: '请填写发货地址'},
-                    {key: 'port', msg: '请填写发货港口'},
-                    {key: 'freight', msg: '请填写运费'},
+                    {key: 'delivery_address', msg: this.$t('p.fill_address')},
+                    {key: 'port', msg: this.$t('p.enter_harbor')},
+                    {key: 'freight', msg: this.$t('p.enter_freight')},
                 ]
             }
             for (let index in adminRequire) {
@@ -581,7 +581,7 @@ export default {
             }
             param['freight'] = Math.round(param['freight'] * 100)
             Core.Api.Invoice.updatePI(param).then(res => {
-                this.$message.success('修改成功')
+                this.$message.success(this.$t('p.modify_success'))
                 this.PIShow = false
                 this.getInvoiceList();
                 this.$emit('Submit')

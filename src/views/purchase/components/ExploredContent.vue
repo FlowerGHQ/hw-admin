@@ -202,7 +202,7 @@ export default {
                 price: this.componentDetail.purchase_price
             }).then(res => {
                 console.log('hanldeAddToShopCart res:', res)
-                this.$message.success('添加成功')
+                this.$message.success(this.$t('pop_up.add'))
                 this.componentDetail.in_shopping_cart = true;
             })
         },
