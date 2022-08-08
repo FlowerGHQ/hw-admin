@@ -178,7 +178,7 @@ export default {
                 return this.$message.warning('请选择领料仓库')
             }
             Core.Api.ProductionOrder.save(form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)

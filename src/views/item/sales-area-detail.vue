@@ -17,11 +17,11 @@
                 <a-row class="desc-detail">
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">{{ $t('n.continent') }}：</span>
-                        <span class="value">{{ detail.continent }}</span>
+                        <span class="value">{{ $i18n.locale === 'zh' ? detail.continent : detail.continent_en || '-' }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">{{ $t('n.country') }}：</span>
-                        <span class="value">{{ detail.country }}</span>
+                        <span class="value">{{ $i18n.locale === 'zh' ? detail.country : detail.country_en || '-' }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">{{ $t('n.time') }}：</span>

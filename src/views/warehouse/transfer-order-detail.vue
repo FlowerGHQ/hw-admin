@@ -186,7 +186,7 @@ export default {
                 ...this.editForm
             }).then(res => {
                 console.log('handleTransferAuditSubmit res', res)
-                this.$message.success('审核成功')
+                this.$message.success(this.$t('pop_up.audited'))
                 this.handleTransferAuditClose()
                 this.routerChange('back')
             }).catch(err => {

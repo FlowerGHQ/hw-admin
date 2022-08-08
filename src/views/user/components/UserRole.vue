@@ -187,7 +187,7 @@ export default {
                     Core.Api.Authority.deleteUserRole({
                         id:item.id
                     }).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete -> err", err);

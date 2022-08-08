@@ -69,13 +69,14 @@ export default {
     methods: {
         // 添加到购物车
         hanldeAddToShopCart(list) {
+          let _this = this;
             Core.Api.ShopCart.save({
                 item_id: list.id,
                 amount: this.value,
                 price: list.purchase_price
             }).then(res => {
                 console.log('hanldeAddToShopCart res:', res)
-                this.$message.success('添加成功')
+                this.$message.success(_this.$t('pop_up.add'))
                 this.$emit('change')
                 // this.componentDetail.in_shopping_cart = true;
             })
@@ -83,15 +84,16 @@ export default {
 
         // 收藏商品
         hanldeAddToFavorite(list) {
+          let _this = this;
             if (list.in_favorite) {
-                return this.$message.warning('该商品已在收藏夹中')
+                return this.$message.warning(_this.$t('i.item_favorite'))
             }
             Core.Api.Favorite.add({
                 item_id: list.id,
                 price: list.purchase_price
             }).then(res => {
                 console.log('hanldeAddToFavorite res:', res)
-                this.$message.success('收藏成功')
+                this.$message.success(_this.$t('i.favorite_success'))
                 this.$emit('change')
             })
         },

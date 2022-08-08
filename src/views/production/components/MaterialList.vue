@@ -188,7 +188,7 @@ export default {
                 price: Math.round(item.price * 100),
                 supplier_id: this.supplierId
             }).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.getTableData()
             })
         },
@@ -208,7 +208,7 @@ export default {
                         material_id: item.item.id,
                         supplier_id: _this.supplierId
                     }).then(() => {
-                        _this.$message.success('移出成功');
+                        _this.$message.success(_this.$t('pop_up.move'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete -> err", err);

@@ -500,7 +500,7 @@ export default {
                 cancelText: '取消',
                 onOk() {
                     Core.Api.Transfer.deliver(_this.deliverForm).then(() => {
-                        _this.$message.success('完成发货');
+                        _this.$message.success(_this.$t('pop_up.delivery_finish'));
                         _this.getTableData();
                         _this.getStatusList()
                         _this.deliverShow = false
@@ -519,7 +519,7 @@ export default {
                 cancelText: '取消',
                 onOk() {
                     Core.Api.Transfer.receive({id}).then(() => {
-                        _this.$message.success('完成收货');
+                        _this.$message.success(_this.$t('pop_up.delivery_finish'));
                         _this.getTableData();
                         _this.getStatusList()
                     }).catch(err => {
@@ -685,7 +685,7 @@ export default {
                 return this.$message.warning('请输入申请原因')
             }
             Core.Api.Transfer.save(form).then(res => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.handleTransferOrderClose()
                 this.routerChange('edit', res.detail)
             }).catch(err => {

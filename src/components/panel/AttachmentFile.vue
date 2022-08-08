@@ -13,7 +13,7 @@
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail'">
                             <div class="table-img">
-                                <a-image :width="24" :height="24" :src="$Util.imageFilter(record.path.includes('img') ? record.path : '', 4)" fallback='无'/>
+                                <a-image :width="24" :height="24" :src="$Util.imageFilter(record.path.includes('img') ? record.path : '', 4)" :fallback="$t('def.none')"/>
                                 <a-tooltip placement="top" :title='text'>
                                     <p class="ell" style="max-width:120px;margin-left:12px;">{{text || '-'}}</p>
                                 </a-tooltip>

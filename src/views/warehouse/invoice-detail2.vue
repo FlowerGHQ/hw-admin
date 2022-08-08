@@ -1229,7 +1229,7 @@ export default {
             if (file.status == 'done') {
                 let res = file.response
                 if (res && res.code === 0) {
-                    return this.$message.success('上传成功');
+                    return this.$message.success(this.$t('pop_up.uploaded'));
                 } else {
                     return this.$message.error('上传失败:' + res.message)
                 }

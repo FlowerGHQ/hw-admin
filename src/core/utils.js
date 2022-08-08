@@ -690,9 +690,10 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
-    subjectTypeFilter(val) {
+    subjectTypeFilter(val, to= 'zh') {
         const MAP = Const.WALLET.SUBJECT_MAP
-        return MAP[val] || '未知'
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
     },
     /* =============== 账户 ================ */
 

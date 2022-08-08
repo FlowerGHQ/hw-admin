@@ -3,7 +3,7 @@
         <div class="panel-title">
             <div class="title">{{ $t('i.item_list') }}</div>
             <div class="btn-area">
-                <ItemSelect @select="(ids,items) => handleAddShow(TARGET_TYPE.ITEM,ids,items)" btn-class="panel-btn" :disabledChecked='checkedIds' v-if="$auth('sales-area.save')">
+                <ItemSelect :btn-text='$t("i.add")' @select="(ids,items) => handleAddShow(TARGET_TYPE.ITEM,ids,items)" btn-class="panel-btn" :disabledChecked='checkedIds' v-if="$auth('sales-area.save') ">
                     {{ $t('i.add') }}
                 </ItemSelect>
             </div>
@@ -16,15 +16,15 @@
                     :loading='loading'>
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.key === 'detail' && $auth('item.detail')">
-                                <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" fallback='无'/>
-                                <a-tooltip placement="top" :title='text' destroy-tooltip-on-hide>
+                                <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" :fallback="$t('def.none')"/>
+                                <a-tooltip placement="top" :title="$i18n.locale === 'zh' ? record.name : record.name_en || '-' " destroy-tooltip-on-hide>
                                         <a-button type="link" @click="routerChange('detail', record)">
-                                            <div class="ell" style="max-width: 150px">{{ text || '-' }}</div>
+                                            <div class="ell" style="max-width: 150px">{{$i18n.locale === 'zh' ? record.name : record.name_en || '-' }}</div>
                                         </a-button>
                                 </a-tooltip>
                         </template>
                         <template v-if="column.key === 'type'">
-                            {{ $Util.itemTypeFilter(text) }}
+                            {{ $Util.itemTypeFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'attr_list'">
 <!--                            <p class="sub-info" v-if="record.attr_list && record.attr_list.length">{{$Util.itemSpecFilter(record.item.attr_list)}}</p>-->
@@ -36,12 +36,6 @@
                         </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-'}}
-                        </template>
-                        <template v-if="column.key === 'money'">
-                            ￥{{$Util.countFilter(text)}}
-                        </template>
-                        <template v-if="column.key === 'fob_money'">
-                            {{column.unit}} {{$Util.countFilter(text)}}
                         </template>
                         <template v-if="column.key === 'man_hour'">
                             {{ $Util.countFilter(text) }}
@@ -232,7 +226,7 @@ export default {
                 item_id_list: ids,
                 sales_area_id: this.salesAreaId,
             }).then(() => {
-                this.$message.success('添加成功')
+                this.$message.success(this.$t('pop_up.add'))
                 this.getTableData()
             }).catch(err => {
                 console.log('handleAddShow err:', err)

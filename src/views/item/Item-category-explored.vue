@@ -29,7 +29,7 @@
                 :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, record, index }">
                     <template v-if="column.dataIndex === 'index'" width="100px">
-                        <a-input v-model:value="record.index" @change="saveRowIndex(record)" placeholder="请输入序号"></a-input>
+                        <a-input v-model:value="record.index" @change="saveRowIndex(record)" placeholder="$t('search.enter_sn')"></a-input>
                         <!-- <div v-if="!record.isEdit" @click="editRowIndex(record)">{{ (record || {}).index }}</div>
                         <div v-else>
                             <a-input v-model:value="record.index" @keydown.enter="saveRowIndex(record)" placeholder="请输入序号"></a-input>
@@ -253,7 +253,7 @@ export default {
                         target_id: ths.id,
                         target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM_CATEGORY,
                     }
-                    ths.requestSave(param,"保存",ths.getItemExploreList.bind(ths))
+                    ths.requestSave(param, ths.$t('def.save'), ths.getItemExploreList.bind(ths))
                 },
                 onCancel () {
                     ths.isChangedPoint = false;
@@ -495,9 +495,9 @@ export default {
             }
             this.requestSave(param)
         },
-        requestSave(param, msg = "点位保存", cb) {
+        requestSave(param, msg = this.$t('i.save_site'), cb) {
             Core.Api.Item.bindItemComponent(param).then(res => {
-                this.$message.success(`${msg}成功`);
+                this.$message.success(`${msg}`+this.$t('pop_up.success'));
                 this.isChangedPoint = false;
                 this.getItemExploreList();
                 if(cb) cb();
