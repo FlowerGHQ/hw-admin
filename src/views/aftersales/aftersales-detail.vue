@@ -91,7 +91,7 @@
                             </div>
                             <div class="info-item">
                                 <div class="key">{{ $t('af.refund_status')}}</div>
-                                <div class="value">{{AFTERSALES.REFUND_STATUS_MAP[detail.refund_status] || '-'}}</div>
+                                <div class="value">{{$Util.refundOrderStatusFilter(detail.refund_status, $i18n.locale) || '-'}}</div>
                             </div>
                             <div class="info-item">
                                 <div class="key">{{ $t('af.create_time')}}</div>

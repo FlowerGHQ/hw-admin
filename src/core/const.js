@@ -1118,9 +1118,9 @@ let Const = {
             '400' :'已入库',
         },
         REFUND_STATUS_MAP: {
-            '0' :'初始化',
-            '100' :'已申请',
-            '400' :'退款成功',
+            '0' : { key: 0, zh: '初始化',en: 'Initialization' },
+            '100' : { key: 100, zh: '已申请',en: 'Have applied' },
+            '400' : { key: 400, zh: '退款成功',en: 'Refund successfully' },
         },
     },
     REFUND: { // 退款管理

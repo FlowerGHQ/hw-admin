@@ -546,7 +546,7 @@ export default {
         },
         requestSave(param, msg = "点位保存", cb) {
             Core.Api.Item.bindItemComponent(param).then(res => {
-                this.$message.success(`${msg}成功`);
+                this.$message.success(`${msg}`+this.$t('pop_up.success'));
                 this.isChangedPoint = false;
                 this.getItemExploreList();
                 if(cb) cb();

@@ -9,12 +9,12 @@
             </div>
             <div class="form-content">
                 <div class="form-item required">
-                    <div class="key">仓库</div>
+                    <div class="key">{{ $t('n.warehouse') }}</div>
                     <div class="value">
                         <a-select
                             v-model:value="warehouse_id"
                             show-search
-                            placeholder="请输入仓库"
+                            :placeholder="$t('def.input')+$t('n.warehouse')"
                             :default-active-first-option="false"
                             :show-arrow="false"
                             :filter-option="false"
@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">出库单</div>
+                    <div class="key">{{ $t('in.outbound_o') }}</div>
                     <div class="value">
                         <a-input v-model:value="invoice_uid" @blur="handleWarehouseByMaterialChange"/>
                     </div>
@@ -60,13 +60,13 @@
                                     </div>
                                 </div>-->
                 <div class="form-item required">
-                    <div class="key">编码</div>
+                    <div class="key">{{ $t('p.code') }}</div>
                     <div class="value">
                         <a-input v-model:value="form.code"  @blur="handleSearch"/>
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">库位号</div>
+                    <div class="key">{{ $t('wa.uid') }}</div>
                     <div class="value">
                         <a-select v-model:value="form.warehouse_location_id" :placeholder="$t('def.select')" @change="handleWarehouseChange">
                             <a-select-option v-for=" item in warehouseLocationOptions" :key="item.warehouse_location_id" :value="item.warehouse_location_id">
@@ -77,50 +77,50 @@
                 </div>
 
                 <div class="form-item">
-                    <div class="key">备注</div>
+                    <div class="key">{{ $t('def.remark') }}</div>
                     <div class="value">
                         <a-input v-model:value="form.remark" disabled/>
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">当前库存</div>
+                    <div class="key">{{ $t('wa.current_stock') }}</div>
                     <div class="value">
                         <a-input v-model:value="form.stock.stock" disabled/>
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">库存变动时间</div>
+                    <div class="key">{{ $t('wa.stock_change') }}</div>
                     <div class="value">
                         <a-input v-model:value="form.stock.updateTime" disabled/>
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">共需出库数量</div>
+                    <div class="key">{{ $t('wa.need_out_amount') }}</div>
                     <div class="value">
                         <a-input type="number" v-model:value="form.amount" disabled/>
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">已出库数量</div>
+                    <div class="key">{{ $t('wa.outbounded') }}</div>
                     <div class="value">
                         <a-input type="number" v-model:value="form.confirm_amount" disabled/>
                     </div>
                 </div>
                 <div>
                     <div class="form-item">
-                        <div class="key">出库最小包装</div>
+                        <div class="key">{{ $t('wa.minimum') }}</div>
                         <div class="value">
                             <a-input type="number" v-model:value="form.smallest_packaging" disabled/>
                         </div>
                     </div>
                     <div class="form-item">
-                        <div class="key">出库包装数</div>
+                        <div class="key">{{ $t('wa.package') }}</div>
                         <div class="value">
-                            <a-input type="number" v-model:value="form.packaging_amount" @blur="handlePackagingAmount" placeholder="请输入出库包装数"/>
+                            <a-input type="number" v-model:value="form.packaging_amount" @blur="handlePackagingAmount" :placeholder="$t('def.input')+$t('wa.package')"/>
                         </div>
                     </div>
                     <div class="form-item">
-                        <div class="key">出库数量</div>
+                        <div class="key">{{ $t('wa.outbound') }}</div>
                         <div class="value">
                             <a-input type="number" v-model:value="form.inventory_amount" disabled/>
                         </div>
@@ -129,8 +129,8 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button type="primary" @click="handleSubmit">确定</a-button>
-            <a-button type="primary" ghost @click="routerChange('back')">取消</a-button>
+            <a-button type="primary" @click="handleSubmit">{{ $t('def.sure') }}</a-button>
+            <a-button type="primary" ghost @click="routerChange('back')">{{ $t('def.cancel') }}</a-button>
         </div>
     </div>
 </template>
