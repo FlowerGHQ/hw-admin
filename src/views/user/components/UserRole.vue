@@ -15,7 +15,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="handleDelete(record)" v-if="$auth('account.save', 'MANAGER')" class="danger"><i class="icon i_delete"/>删除</a-button>
+                            <a-button type='link' @click="handleDelete(record)" v-if="$auth('account.save', 'MANAGER')" class="danger"><i class="icon i_delete"/>{{$t('def.delete')}}</a-button>
                         </template>
                     </template>
                 </a-table>

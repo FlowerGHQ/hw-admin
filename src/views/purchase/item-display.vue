@@ -218,7 +218,7 @@ export default {
             this.explodeShow = data
         },
         getAccessoryData() {
-            Core.Api.ItemAccessory.list({item_id: this.id}).then(res => {
+            Core.Api.ItemAccessory.list({item_id: this.id,is_authority :1}).then(res => {
                 let list =[]
                 console.log(res)
                 res.list.forEach( it =>{
