@@ -161,6 +161,9 @@ const messages = {
             agent_auth: '零售商权限管理',
             store_auth: '门店权限管理',
             turn_logistics:'转单物流',
+            auth_type: '权限类型',
+            auth_obj: '权限对象',
+            enter_search: '请输入搜索内容',
         },
         a: { // 零售商
             new_retailer: '新建零售商',
@@ -463,7 +466,8 @@ const messages = {
 	        select_item: '选择商品',
 	        upload_item_accessory: '上传配件',
 	        item_accessory_list: '配件列表',
-
+            save_site: '点位保存',
+            add_cart_success: '添加购物车成功',
         },
 	    fe:{ // 反馈单
             feedback: '反馈',
@@ -721,6 +725,11 @@ const messages = {
             determine_cancel: '确认取消吗',
             fill_address: '请填写发货地址',
             modify_success:'修改成功',
+            contact: '联系方式',
+            payment_type: '支付方式',
+            delivery_info: '配送信息',
+            delivery_ad: '配送地址',
+            receiver: '接受人',
         },
         s: { // 门店
             store_list: '门店列表',
@@ -788,6 +797,7 @@ const messages = {
             confirm_cancel: '确认要取消本次售后吗',
             confirm_order: '确认要生成退款单吗',
             cancel_refund: '确认要取消本次退款吗',
+            create_refund: '创建退款单',
         },
         u: { //员工
             list: '员工列表',
@@ -814,6 +824,7 @@ const messages = {
             resource_obj: '资源对象',
             sure_delete: '确定要删除该权限吗？',
 	        add_role: '新增角色',
+            set_role: '设置角色',
         },
         c: { // 客户
             list: '客户列表',
@@ -905,6 +916,7 @@ const messages = {
             select_d_first: '请先选择分销商',
             select_store: '请选择所属门店',
             select_a_first: '请先选择所属零售商',
+            enter_sn: '请输入序号',
         },
         pop_up: {
             reason: '原因',
@@ -990,8 +1002,6 @@ const messages = {
             category_name:'分类名称',
             sure_delete_category_a:'确定要删分类',
             sure_delete_category_b:'吗？',
-
-
         },
 	    authority: {
         	title: {
@@ -1383,6 +1393,9 @@ const messages = {
             agent_auth: 'Retailer Rights Management',
             store_auth: 'Store authority management',
             turn_logistics: 'Turn single logistics',
+            auth_type: 'Authority type',
+            auth_obj: 'Authority object',
+            enter_search: 'Enter search content',
         },
         a: {
             new_retailer: 'Add a retailer',
@@ -1485,7 +1498,7 @@ const messages = {
             details: 'Back to details',
             device_classify: 'Work order type',
             select_arrival:'Please select the time of arrival',
-            time_buying:'time buying',
+            time_buying:'Purchase time',
             repair_a: 'Repair',
             result: 'Results',
             remark_a: 'Remark',
@@ -1687,6 +1700,8 @@ const messages = {
 	        select_item: 'Choose product',
 	        upload_item_accessory: 'Upload the accessories',
 	        item_accessory_list: 'Accessories list',
+            save_site: 'Save point',
+            add_cart_success: 'Add to cart successfully',
         },
         fe:{
             feedback: 'Feedback',
@@ -1940,6 +1955,12 @@ const messages = {
             audit_result: 'Please select an audit result',
             fill_address: 'Please fill in the shipping address',
             modify_success:'modify successfully',
+            determine_cancel: 'Are you sure to cancel',
+            contact: 'Contact way',
+            payment_type: 'Payment method',
+            delivery_info: 'Delivery Information',
+            delivery_ad: 'Delivery address',
+            receiver: 'receiver',
         },
         s: {
             store_list: 'Store list',
@@ -2007,6 +2028,7 @@ const messages = {
             confirm_cancel: 'Are you sure you want to cancel this after-sales service?',
             confirm_order: 'Are you sure you want to generate a refund slip?',
             cancel_refund: 'Are you sure you want to cancel this refund',
+            create_refund: 'Create a refund order',
         },
         u: { //员工
             list: 'Staff list',
@@ -2033,7 +2055,7 @@ const messages = {
             resource_obj: ' Resource Object',
             sure_delete: 'Are you sure you want to remove this authority?',
 	        add_role: 'Add Role',
-
+            set_role: 'Set up roles',
         },
         c: {//客户列表
             list: 'Customer list',
@@ -2123,7 +2145,9 @@ const messages = {
             select_agent: 'Please select the retailer',
             select_d_first: 'Please select a distributor first',
             select_store: 'Please select the Store',
-            select_a_first: 'Please select a Agent first'
+            select_a_first: 'Please select a Agent first',
+            enter_sn: 'Please enter serial number',
+
         },
         pop_up: {
             reason: 'reason',

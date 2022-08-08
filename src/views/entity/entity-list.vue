@@ -76,7 +76,7 @@
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail'">
                             <a-button type="link" @click="routerChange('detail', record)">
-                                <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" fallback='无'/>
+                                <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" :fallback="$t('def.none')"/>
                                 {{ text || '-' }}
                             </a-button>
                             <!-- <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" fallback='无'/>
@@ -240,7 +240,7 @@ export default {
                 arrival_time: '',
             },
             viewType: '',
-            title: '整车'
+            title: this.$t('v.vehicle')
         };
     },
     watch: {

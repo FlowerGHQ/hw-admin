@@ -286,7 +286,7 @@ export default {
                 console.log(this.searchValue)
                 // 请求数据
             } else {
-                this.$message.error('请输入搜索内容');
+                this.$message.error(this.$t('n.enter_search'));
             }
         }
     }

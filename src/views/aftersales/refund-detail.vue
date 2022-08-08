@@ -134,8 +134,8 @@ export default {
                 case STATUS.AUDIT_REFUSE: return 0
                 case STATUS.CANCEL:
                     this.stepsList = [
-                        {status: '0', title: '创建退款单'},
-                        {status: '-20', title: '取消'},
+                        {status: '0', title: this.$t('af.create_refund')},
+                        {status: '-20', title: this.$t('def.cancel')},
                     ]; return 1
                 default: return 0
             }

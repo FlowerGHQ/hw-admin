@@ -9,11 +9,11 @@
         <template #bodyCell="{ record, column ,text}">
             <template v-if="column.key === 'detail'">
                 <div class="table-img">
-                    <a-image :width="30" :height="30" :src="$Util.imageFilter(record.logo)" fallback='无'/>
-                    <a-tooltip placement="top" :title='text'>
+                    <a-image :width="30" :height="30" :src="$Util.imageFilter(record.logo)" :fallback="$t('def.none')"/>
+                    <a-tooltip placement="top" :title="$i18n.locale === 'zh' ? record.name : record.name_en || '-' ">
                         <div class="info">
                             <a-button type="link" @click="routerChange('detail', record)">
-                                <div class="ell" style="max-width: 100px">{{ text || '-' }}</div>
+                                <div class="ell" style="max-width: 100px">{{$i18n.locale === 'zh' ? record.name : record.name_en  || '-' }}</div>
                             </a-button>
                         </div>
                     </a-tooltip>

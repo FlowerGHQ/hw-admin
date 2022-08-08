@@ -53,7 +53,7 @@
                     <div class="value">{{$Util.timeFilter(detail.arrival_time)}}</div>
                 </div>
                 <div class="info-item">
-                    <div class="key">购买时间</div>
+                    <div class="key">{{ $t('r.time_buying') }}</div>
                     <div class="value">{{$Util.timeFilter(detail.sale_time)}}</div>
                 </div>
             </a-col>
