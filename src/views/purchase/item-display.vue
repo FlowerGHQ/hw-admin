@@ -21,7 +21,7 @@
                     </div>
                 </template>
             </a-carousel> -->
-            <UpAndDownSwiper :imgs="specList" ></UpAndDownSwiper>
+            <UpAndDownSwiper :imgs="specList" :imgIndex="mountingIndex" @handleChangeIndex="changeId"></UpAndDownSwiper>
         </div>
         <div class="info-content">
             <div class="title">{{ $i18n.locale =='zh' ? detail.name : detail.name_en }}</div>
@@ -52,14 +52,14 @@
             <div v-if="this.specList.length > 0">
                 <div class="title">{{ $t('i.commercial_specification') }}</div>
                 <div class="content-list">
-                    <SpecificationCard v-for="item in specList" :data="item" @AddToFavorite="ToFavorite" class="list"/>
+                    <SpecificationCard v-for="(item,index) in specList" :data="item" :i="index" :class="{'active': index === mountingIndex}" @AddToFavorite="ToFavorite" class="list" @handleChangeData="changeId"/>
                     <SimpleImageEmpty v-if="!specList.length" :desc="$t('p.no_item_spec')"/>
                 </div>
             </div>
 
             <a-tabs v-model:activeKey="activeKey" class="item-purchase-info-tab">
                 <a-tab-pane key="mountings" :tab="$t('i.fittings')">
-                    <SpecificationCard v-for="item in accessoryData" class="list" :data="item" @AddToFavorite="ToFavorite"/>
+                    <SpecificationCard v-for="(item,index) in accessoryData" class="list" :data="item" @AddToFavorite="ToFavorite"/>
                     <SimpleImageEmpty v-if="!accessoryData.length" :desc="$t('p.no_item_fitt')"/>
                 </a-tab-pane>
                 <a-tab-pane key="explosiveView" :tab="$t('i.view')" force-render>
@@ -67,7 +67,8 @@
                     <SimpleImageEmpty v-if="explodeShow" :desc="$t('p.no_item_explode')"/>
                 </a-tab-pane>
                 <a-tab-pane key="download" :tab="$t('n.download')">
-                    <DownLoad :target_id='id' :target_type='ATTACHMENT_TYPE.ITEM' />
+                    <!-- <DownLoad :target_id='id' :target_type='ATTACHMENT_TYPE.ITEM' /> -->
+                    <DownLoad :tableData='downloadData' />
                 </a-tab-pane>
             </a-tabs>
         </div>
@@ -113,6 +114,12 @@ export default {
 
             // 无爆炸图
             explodeShow: true,
+
+            // 规格选中
+            mountingIndex: 0,
+
+            // 下载数据
+            downloadData: [],
         };
     },
     watch: {},
@@ -127,6 +134,7 @@ export default {
         this.id = Number(this.$route.query.id) || 0
         this.getItemDetail();
         this.getAccessoryData();
+        this.getDownloadData()
     },
     methods: {
         // getImgUrl(i) {
@@ -235,6 +243,31 @@ export default {
             })
         },
 
+        // 获取下载数据
+        getDownloadData() {  // 获取 表格 数据
+            this.loading = true;
+            Core.Api.Attachment.list({
+                target_id: this.id,
+                target_type: this.ATTACHMENT_TYPE.ITEM,
+                page: 0
+            }).then(res => {
+                console.log("AttachmentFile res", res)
+                this.downloadData = res.list
+            }).catch(err => {
+                console.log('AttachmentFile err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+
+        // 点击规格(或者点击图片轮播)请求数据
+        changeId({id,i}) {
+            this.id = id
+            this.mountingIndex = i
+            this.getItemDetail()
+            this.getAccessoryData()
+            this.getDownloadData()
+        },
         // getImgUrl(i) {
         //     return Core.Util.imageFilter(this.imgs[i])
         // },
@@ -248,6 +281,9 @@ export default {
         width: 86px;
         text-align: center;
     }
+}
+.active {
+    border-color: #006EF9 !important;
 }
 #ItemDisplay {
     display: flex;
@@ -279,6 +315,7 @@ export default {
         // margin-right: 120px;
         overflow: hidden;
         min-width: 200px;
+        padding-top: 50px;
         div, ul {
             width: 100%;
             overflow: hidden;
@@ -564,5 +601,4 @@ overflow: hidden;
 .ant-carousel :deep(.slick-slide h3) {
   color: #fff;
 }
-
 </style>
