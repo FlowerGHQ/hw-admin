@@ -1047,12 +1047,9 @@ export default {
         // 确认收款
         handlePayment() {
             let form = Core.Util.deepCopy(this.form)
-            // if (this.upload.detailList.length) {
-            //     let detailList = this.upload.detailList.map(item => {
-            //         return item.short_path || item.response.data.filename
-            //     })
-            //     form.imgs = detailList.join(',')
-            // }
+            if (!form.path) {
+                return this.$message.warning(this.$t('p.pay_file_upload'))
+            }
             if (!form.pay_method) {
                 return this.$message.warning(this.$t('p.please_select_payment_method'))
             }
