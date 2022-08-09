@@ -487,6 +487,7 @@ const messages = {
             view_logistics_detail: '查看物流详情',
             logistics_info: '修改物流信息',
             receive_remark: '编辑验收备注',
+
         },
 	    fe:{ // 反馈单
             feedback: '反馈',
@@ -754,6 +755,7 @@ const messages = {
             delivery_info: '配送信息',
             delivery_ad: '配送地址',
             receiver: '接受人',
+	        pay_file_upload: '付款凭证未上传',
         },
         s: { // 门店
             store_list: '门店列表',
@@ -1756,6 +1758,7 @@ const messages = {
             view_logistics_detail: 'View logistics details',
             logistics_info: 'Modify logistics information',
             receive_remark: 'Edit acceptance remarks',
+
         },
         fe:{
             feedback: 'Feedback',
@@ -2020,6 +2023,7 @@ const messages = {
             delivery_info: 'Delivery Information',
             delivery_ad: 'Delivery address',
             receiver: 'receiver',
+	        pay_file_upload: 'Payment voucher not uploaded',
         },
         s: {
             store_list: 'Store list',

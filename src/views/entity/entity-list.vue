@@ -129,7 +129,7 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="vehicleShow" :title="editForm.uid ? title + $t('n.edit') : $t('v.save') + title" class="vehicle-edit-modal"
+            <a-modal v-model:visible="vehicleShow" :title="editForm.uid ? $t(titleType) + $t('n.edit') : $t('v.save') + $t(titleType)" class="vehicle-edit-modal"
                 :after-close='handleVehicleClose'>
                 <div class="modal-content">
                     <div class="form-item required">
@@ -139,8 +139,8 @@
                         <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                     </div>
                     <div class="form-item required">
-                        <div class="key">{{ title + $t('n.serial_number')}}</div>
-                        <a-input v-model:value="editForm.uid" :placeholder="$t('n.please_input') + title + $t('n.serial_number')"/>
+                        <div class="key">{{ $t(titleType) + $t('n.serial_number')}}</div>
+                        <a-input v-model:value="editForm.uid" :placeholder="$t('n.please_input') + $t(titleType) + $t('n.serial_number')"/>
                     </div>
                 </div>
                 <template #footer>
@@ -240,7 +240,8 @@ export default {
                 arrival_time: '',
             },
             viewType: '',
-            title: this.$t('v.vehicle')
+            title: '整车',
+            titleType: ''
         };
     },
     watch: {
@@ -252,8 +253,10 @@ export default {
                 this.viewType = type
                 if (type === "part")  {
                     this.title = this.$t('v.parts')
+                    this.titleType = 'v.parts'
                 } else {
                     this.title = this.$t('v.vehicle')
+                    this.titleType = 'v.vehicle'
                 }
                 Object.assign(this.searchForm, this.$options.data().searchForm)
                 this.pageChange(1)
