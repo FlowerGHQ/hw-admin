@@ -6,6 +6,7 @@
         </div>
         <div class="card-info">
             <div class="title">{{ $i18n.locale =='zh' ? data.name : data.name_en  }}</div>
+            <div class="title">{{ data.code}}</div>
             <div class="info">{{ $t('i.price_suggest') }}</div>
             <!-- <ul>
                 <li v-for="attr in data.attr_list">{{ $i18n.locale =='zh' ? attr.attr_def_name : attr.attr_def_key }}：{{ $i18n.locale =='zh' ? attr.value : attr.value_en }}</li>
@@ -19,7 +20,7 @@
                 <!-- <div class="spot"></div>
                 <span>库存：10</span> -->
             </div>
-            <div class="shop-price">€{{$Util.countFilter(data[price + 'eur'])}} | ${{$Util.countFilter(data[price + 'usd'])}}</div>
+            <div class="shop-price">€{{$Util.countFilter(data[priceKey + 'eur'])}} | ${{$Util.countFilter(data[priceKey + 'usd'])}}</div>
         </div>
         <div class="shop-bottom">
             <div class="cart-box">
@@ -53,6 +54,13 @@ export default {
         CaretDownOutlined,
         ShoppingCartOutlined,
         StarOutlined,
+    },
+    computed: {
+        priceKey() {
+            let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
+            console.log('priceKey:', priceKey)
+            return priceKey
+        }
     },
     props: {
         data: Object,
@@ -163,7 +171,7 @@ export default {
         .serial—number {
             width: 170px;
             height: 100%;
-            
+
             .serial {
                 display: inline-block;
                 width: 30px;
