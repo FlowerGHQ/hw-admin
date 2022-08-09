@@ -139,7 +139,7 @@
                         <div class="value">
                             <a-select v-model:value="form.express_type" :placeholder="$t('def.select')">
                                 <a-select-option v-for="courier of courierTypeList" :key="courier.value"
-                                                 :value="courier.value">{{ courier.name }}
+                                                 :value="courier.value">{{ courier[$i18n.locale] }}
                                 </a-select-option>
                             </a-select>
                         </div>

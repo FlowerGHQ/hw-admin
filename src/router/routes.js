@@ -1314,6 +1314,7 @@ const routes = [
                 meta: {
                     hidden: true,
                     title: '申请售后',
+                    title_en: 'Apply',
                     parent: '/aftersales/aftersales-list',
                     auth: ["after-sales-order.save"],
 	                roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
@@ -1372,7 +1373,7 @@ const routes = [
 			        roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
 			        // auth: ['aftersales.refund', 'asjncsaij'],
 			        title: '退款审核',
-			        title_en: 'Audit',
+			        title_en: 'Refund Audit',
 			        auth: ["refund.list"],
 		        }
 	        },

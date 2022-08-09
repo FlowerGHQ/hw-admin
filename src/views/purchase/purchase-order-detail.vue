@@ -19,9 +19,9 @@
                     <!-- <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && (detail.type !== TYPE. || PAYMENT_STATUS.PAY_ALL)" @click="handleModalShow('deliver')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.ship')}}</a-button>-->
                     <!-- <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && detail.type !== TYPE. && $auth('ADMIN')" @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>-->
                     <a-button type="primary" v-if="(detail.status === STATUS.WAIT_DELIVER  || detail.status === STATUS.WAIT_TAKE_DELIVER) && $auth('purchase-order.deliver') " @click="handleModalShow('out_stock')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.out_stock')}}</a-button>
-                    <template v-if="detail.type === FLAG_ORDER_TYPE.PRE_SALES">
-                        <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') " @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>
-                    </template>
+<!--                    <template v-if="detail.type === FLAG_ORDER_TYPE.PRE_SALES">-->
+<!--                        <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') " @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>-->
+<!--                    </template>-->
                     <a-button type="primary" ghost v-if="detail.type !== TYPE.GIVEAWAY && detail.type !== TYPE.MIX && !giveOrderShow && $auth('purchase-order.give')"  @click="giveOrderShow = true">{{ $t('p.give_order')}}</a-button>
                 </template>
                 <template v-if="authOrg(detail.org_id, detail.org_type) && detail.status !== STATUS.REVISE_AUDIT">
@@ -1047,12 +1047,9 @@ export default {
         // 确认收款
         handlePayment() {
             let form = Core.Util.deepCopy(this.form)
-            // if (this.upload.detailList.length) {
-            //     let detailList = this.upload.detailList.map(item => {
-            //         return item.short_path || item.response.data.filename
-            //     })
-            //     form.imgs = detailList.join(',')
-            // }
+            if (!form.path) {
+                return this.$message.warning(this.$t('p.pay_file_upload'))
+            }
             if (!form.pay_method) {
                 return this.$message.warning(this.$t('p.please_select_payment_method'))
             }
@@ -1278,7 +1275,7 @@ export default {
                 return
             }
             Core.Api.Purchase.payAudit(this.payAuditForm).then(res => {
-                this.$message.success(this.$t('p.audit_result'))
+                this.$message.success(this.$t('pop_up.audited'))
                 this.payAuditShow = false
                 this.getList()
             })

@@ -282,6 +282,7 @@ export default {
         statusList() {
             let columns = [
                 {zh: '全  部', en: 'All', value: '0', color: 'primary',  key: '0'},
+                {zh: '已拆单', en: 'Split orders', value: '0', color: 'yellow',  key: '50'},
                 {zh: '待支付', en: 'Wait to pay', value: '0', color: 'yellow',  key: '100'},
                 {zh: '待审核', en: 'Wait to pay', value: '0', color: 'yellow',  key: '630'},
                 {zh: '待发货', en: 'Wait for delivery', value: '0', color: 'orange',  key: '200'},
@@ -292,7 +293,7 @@ export default {
                 {zh: '交易取消', en: 'Canceled', value: '0', color: 'grey',  key: '-100'},
             ]
             if (this.$auth('ADMIN')) {
-                columns.splice(4, 0, {zh: '已转单', en: 'Order transferred', value: '0', color: 'blue',  key: '250'})
+                columns.splice(3, 0, {zh: '已转单', en: 'Order transferred', value: '0', color: 'blue',  key: '250'})
             }
             return columns
         }

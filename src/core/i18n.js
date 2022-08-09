@@ -487,6 +487,7 @@ const messages = {
             view_logistics_detail: '查看物流详情',
             logistics_info: '修改物流信息',
             receive_remark: '编辑验收备注',
+
         },
 	    fe:{ // 反馈单
             feedback: '反馈',
@@ -690,7 +691,7 @@ const messages = {
             delivery_method: '发货方式',
             shipment_number: '发货单号',
 	        payment: '付款',
-            confirm_payment: '确认收款',
+            confirm_payment: '确认付款',
             confirm_transfer: '确认转单',
 	        out_stock: '出库',
             ship: '发货',
@@ -707,7 +708,7 @@ const messages = {
 	        payment_method: '付款方式',
 	        export_purchase: '导出PI',
 	        payment_term: '收款方式',
-	        please_select_payment_method: '请选择收款方式',
+	        please_select_payment_method: '请选择付款方式',
 	        apply_for_after_sales: '申请售后',
 	        payment_detail: '付款明细',
 	        pay_amount: '支付金额',
@@ -754,6 +755,7 @@ const messages = {
             delivery_info: '配送信息',
             delivery_ad: '配送地址',
             receiver: '接受人',
+	        pay_file_upload: '付款凭证未上传',
         },
         s: { // 门店
             store_list: '门店列表',
@@ -1756,6 +1758,7 @@ const messages = {
             view_logistics_detail: 'View logistics details',
             logistics_info: 'Modify logistics information',
             receive_remark: 'Edit acceptance remarks',
+
         },
         fe:{
             feedback: 'Feedback',
@@ -2020,6 +2023,7 @@ const messages = {
             delivery_info: 'Delivery Information',
             delivery_ad: 'Delivery address',
             receiver: 'receiver',
+	        pay_file_upload: 'Payment voucher not uploaded',
         },
         s: {
             store_list: 'Store list',

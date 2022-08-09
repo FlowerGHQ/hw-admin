@@ -571,12 +571,10 @@ let Const = {
             '250': { value: '0', key: 400,  color: 'blue',   zh: '已转单', en: 'Order transferred'},
             '300': { value: '0', key: 300,  color: 'blue',   zh: '已发货', en: 'Shipped'},
             '330': { value: '0', key: 330,  color: 'yellow', zh: '部分收货', en: 'Received'},
-            '360': { value: '0', key: 360,  color: 'yellow', zh: '已收货', en: 'Received'},
+            '360': { value: '0', key: 360,  color: 'yellow', zh: '全部收货', en: 'Received'},
             '400': { value: '0', key: 400,  color: 'green',  zh: '交易完成', en: 'Order completed'},
-	        '600': { value: '0', key: 600,  color: 'blue',  zh: '已修改', en: 'The modified'},
 	        '630': { value: '0', key: 630,  color: 'yellow',  zh: '待审核', en: 'To audit'},
             '-100':{ value: '0', key: -100, color: 'gray',   zh: '交易关闭', en: 'Canceled'},
-	        '-200':{ value: '0', key: -200, color: 'gray',   zh: '已修改关闭', en: 'Modified closed'},
         },
         /* STATUS_COLOR_MAP: {
             '0': 'red',
@@ -750,8 +748,8 @@ let Const = {
             { name: '跨越速运', value: 'KYEXPRESS' },
         ],
         COURIER_LIST: [
-            { name: '国际物流', value: 1 },
-            { name: '货代公司', value: 2 },
+            { value: 1 , zh: '国际物流', en: 'International logistics'},
+            { value: 2 , zh: '货代公司', en: 'Shipping agent' },
         ],
         COURIER_MAP: {
             '1': { key: 1, zh: '国际物流', en: 'International logistics'},
