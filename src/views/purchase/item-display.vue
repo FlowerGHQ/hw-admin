@@ -99,9 +99,7 @@ export default {
     props: {},
     data() {
         return {
-            // imgs: ['https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2Ftp09%2F210F2130512J47-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1661495042&t=b77c1037ad5171fd86341525a2b14e7e','https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1113%2F052420110515%2F200524110515-2-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1661495151&t=1660dab7f77bcb019bb65f50621ece75','https://img1.baidu.com/it/u=2003496092,3295249130&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=313','https://img1.baidu.com/it/u=3164998783,2199444470&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=333','https://img1.baidu.com/it/u=3384796346,381674655&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500','https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2Ftp09%2F210F2130512J47-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1661495042&t=b77c1037ad5171fd86341525a2b14e7e','https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2Ftp09%2F210F2130512J47-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1661495042&t=b77c1037ad5171fd86341525a2b14e7e','https://img1.baidu.com/it/u=3164998783,2199444470&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=333','https://img1.baidu.com/it/u=3384796346,381674655&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500','https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2Ftp09%2F210F2130512J47-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1661495042&t=b77c1037ad5171fd86341525a2b14e7e',],
             activeKey: 'mountings',
-            // loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
             ATTACHMENT_TYPE: Core.Const.ATTACHMENT.TARGET_TYPE,
@@ -109,10 +107,6 @@ export default {
             detail: {
                 attr_list: {},
             },
-            // category: {},
-            // config: [],
-            // imgs: [],
-            // activeKey: 0,
 
             specList: [],
             accessoryData: [],
@@ -361,6 +355,7 @@ export default {
         .stars {
             padding: 10px 0;
             font-weight: 400;
+            font-size: @fz_bs;
             .star-text {
                 margin-left: 7px;
             }
@@ -376,6 +371,7 @@ export default {
             margin-top: 51px;
             color: @TC_D;
             font-size: @fz_24;
+            font-weight: 500;
         }
         .content-list {
             margin-top: 10px;
@@ -442,6 +438,12 @@ export default {
         width: 82px !important;
         padding: 0 10px;
         box-sizing: border-box;
+        &:nth-of-type(1) {
+            border-radius: 4px 0 0 4px;
+        }
+        &:nth-of-type(3) {
+            border-radius: 0 4px 4px 0;
+        }
     }
 }
 
