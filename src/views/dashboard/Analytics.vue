@@ -13,7 +13,7 @@
         </a-input>
     </div>
     <div class="banner-cards">
-        <div class="banner-card" v-for="banner,i in bannerList" :key="i">
+        <div class="banner-card" v-for="(banner,i) in bannerList" :key="i" @click="routerChange('item')">
             <img src="../../assets/images/default_banner-two.png" class="card-bg">
             <p class="title">{{ $i18n.locale === 'zh' ? banner.content : banner.content_en }}</p>
             <p class="info">{{ $i18n.locale === 'zh' ? banner.name : banner.name_en }}</p>
@@ -253,6 +253,12 @@ export default {
         routerChange(type) {
             let routeUrl = ''
             switch (type) {
+                case 'item' :
+                    routeUrl = this.$router.resolve({
+                        path: "/purchase/item-list",
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
                 case 'notice':        //系统
                     routeUrl = this.$router.resolve({
                         path: "/system/notice-list",
@@ -289,7 +295,8 @@ export default {
             } else {
                 this.$message.error(this.$t('n.enter_search'));
             }
-        }
+        },
+
     }
 }
 </script>
@@ -297,7 +304,7 @@ export default {
 #Analytics {
     padding: 22px;
     width: 100%;
-    box-sizing: border-box;    
+    box-sizing: border-box;
     .banner-header {
         width: 100%;
         position: relative;
