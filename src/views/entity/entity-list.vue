@@ -173,7 +173,6 @@ import Core from '../../core';
 import dayjs from "dayjs";
 import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue';
 import TimeSearch from '@/components/common/TimeSearch.vue'
-import { ZhihuCircleFilled } from '@ant-design/icons-vue';
 
 const ITEM_TYPE = Core.Const.ITEM.TYPE
 
@@ -242,7 +241,6 @@ export default {
             },
             viewType: '',
             title: '整车',
-            //this.$t('v.vehicle')
             titleType: ''
         };
     },
