@@ -359,7 +359,7 @@
     <a-modal v-model:visible="childShow" :title="$t('in.enter_instance_number')" class="attachment-file-upload-modal">
         <div class="form-title">
             <div class="form-item">
-                <div class="key">{{ $t('v.number') }}"</div>
+                <div class="key">{{ $t('v.number') }}</div>
                 <div class="value">
                     <a-input v-model:value="form.target_uid" style="width: 200px;" :placeholder="$t('def.input')" @blur="handleVehicleBlur()"/>
 <!--                        <template v-if="!$auth('ADMIN')">-->
