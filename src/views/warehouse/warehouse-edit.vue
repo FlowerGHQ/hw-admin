@@ -97,7 +97,7 @@ export default {
                 type: '',
                 contact_phone: '',
                 contact_name: '',
-                location_uid_regex: '[a-zA-Z]{0,6}\\d+-\\d+-\\d+-\\d+-\\d+-\\d',
+                location_uid_regex: '[a-zA-Z]{0,6}\\d+-\\d+-\\d+-\\d+-\\d+-[0-9]+(\\.[0-9]{1,3})?$',
                 country: '',
                 country_en: '',
                 province: '',
