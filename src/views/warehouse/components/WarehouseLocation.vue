@@ -2,16 +2,36 @@
     <div class="WarehouseLocation gray-panel no-margin">
         <div class="panel-content">
             <div class="table-container">
-                <div class="title-container">
                     <div class="search-container">
                         <a-row class="search-area">
-                            <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                            <a-col :xs='24' :sm='24' :xl="16" :xxl='8' class="search-item">
                                 <div class="key">uid：</div>
                                 <div class="value">
                                     <a-input placeholder="uid" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
                                 </div>
                             </a-col>
+
+                            <a-col :xs='24' :sm='24' :xl="16" :xxl='8' class="search-item">
+                                <div class="key">code：</div>
+                                <div class="value">
+                                    <a-select
+                                        v-model:value="searchForm.item_id"
+                                        show-search
+                                        placeholder="code"
+                                        :default-active-first-option="false"
+                                        :show-arrow="false"
+                                        :filter-option="false"
+                                        :not-found-content="null"
+                                        @search="handleItemSearch"
+                                    >
+                                        <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
+                                            {{ item.code }} - {{ item.name }}
+                                        </a-select-option>
+                                    </a-select>
+                                </div>
+                            </a-col>
                         </a-row>
+
                         <div class="btn-area">
                             <a-button @click="handleSearch" type="primary">{{$t('def.search')}}</a-button>
                             <a-button @click="handleSearchReset" >{{$t('def.reset')}}</a-button>
@@ -38,7 +58,6 @@
                     </div>
 
 
-                </div>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="(record) => record.id" :pagination="false" :row-selection="rowSelection">
                     <template #bodyCell="{ column, text, record }">
@@ -158,6 +177,7 @@ export default {
             materialShow: false,
             searchForm: {
                 uid: '',
+                item_id: '',
             },
             form: {
                 warehouse_id: '',
@@ -273,6 +293,7 @@ export default {
             Core.Api.WarehouseLocation.list({
                 warehouse_id: this.warehouseId,
                 uid: this.searchForm.uid,
+                item_id: this.searchForm.item_id,
                 page: this.currPage,
                 page_size: this.pageSize,
             }).then(res => {
