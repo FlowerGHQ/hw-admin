@@ -172,7 +172,7 @@ export default {
             });
         },
         async getWarehouseList() {
-            Core.Api.Warehouse.listAll().then(res => {
+            Core.Api.Warehouse.listAll({is_authority_warehouse: 0}).then(res => {
                 res.list.forEach(warehouse => {
                     this.tableData.forEach(it =>{
                         console.log(warehouse.id)
