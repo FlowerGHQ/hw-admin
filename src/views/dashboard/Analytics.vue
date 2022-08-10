@@ -38,8 +38,8 @@
         <div class="service-left card">
             <div class="service-title">{{ $t('n.service') }}</div>
             <div class="service-content service">
-                <div class="service-list" v-for="service,index in servicelist" :key="index">
-                    <img src="../../assets/images/defult_img.png" alt="" class="service-img">
+                <div class="service-list" v-for="(service,index) in servicelist" :key="index">
+                    <img :src="service.imgUrl" alt="" class="service-img">
                     <p class="service-info">{{ $i18n.locale === 'zh' ? service.name : service.name_en }}</p>
                 </div>
             </div>
@@ -160,26 +160,32 @@ export default {
                 {
                     name: '下载',
                     name_en: 'Downloads',
+                    imgUrl: '/src/assets/images/service/download.png',
                 },
                 {
                     name: '文档',
                     name_en: 'Documents',
+                    imgUrl: '/src/assets/images/service/documents.png',
                 },
                 {
                     name: '登录管理',
                     name_en: 'Login Management',
+                    imgUrl: '/src/assets/images/service/documents.png',
                 },
                 {
                     name: '配送地址',
                     name_en: 'Shipping Adresses',
+                    imgUrl: '/src/assets/images/service/shipping.png',
                 },
                 {
                     name: '常见问题',
                     name_en: 'FAQ',
+                    imgUrl: '/src/assets/images/service/FAQ.png',
                 },
                 {
                     name: '登录管理',
                     name_en: 'Login Management',
+                    imgUrl: '/src/assets/images/service/documents.png',
                 },
             ],
             // 推荐数据
@@ -191,6 +197,7 @@ export default {
                         {
                             name: '标签',
                             name_en: 'TAG',
+                            // imgurl: ''
                         },
                         {
                             name: '标签',
@@ -573,7 +580,7 @@ export default {
                 box-sizing: border-box;
                 .title {
                     font-size: @fz_lg;
-                    font-weight: normal;
+                    font-weight: 400;
                     color: #323C4C;
                     .ell()
                 }
@@ -585,7 +592,7 @@ export default {
                         background: rgba(37, 99, 235, .16);
                         border-radius: 4px;
                         font-size: @fz_13;
-                        font-weight: 500;
+                        font-weight: 400;
                         color: #2563EB;
                         margin-right: 12px;
                         padding: 2px 16px;

@@ -3,7 +3,7 @@
         <div class="swiper-container">
             <div class="swiper-wrapper">
                 <div class="swiper-slide" v-for="(item,index) in imgs" :key="index">
-                    <img :src="$Util.imageFilter(item.logo)" @click="changeIndex(index)"/>
+                    <img :src="$Util.imageFilter(item.logo)" @click="changeIndex(imgs,index)"/>
                 </div>
             </div>
             <!-- <div class="swiper-pagination"></div> -->
@@ -27,11 +27,12 @@ Swiper.use([Pagination, Autoplay, Navigation])
 export default {
     props: {
         imgs: Array,
+        imgIndex: Number
     },
     data() {
         return {
             // imgs: [],
-            imgIndex: 0,
+            // imgIndex: 0,
         }
     },
     watch: {
@@ -75,8 +76,9 @@ export default {
             }
 
         },
-        changeIndex(index) {
-            this.imgIndex = index
+        changeIndex(imgs,i) {
+            // this.imgIndex = index
+            this.$emit('handleChangeIndex',{id:imgs[i].id,i})
         }
     },
     mounted() {
