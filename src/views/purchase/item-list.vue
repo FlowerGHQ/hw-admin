@@ -59,7 +59,8 @@
     <div class="item-content-container" :class="firstLevelId ? '' : 'full-content'">
         <div class="category-container" v-if="firstLevelId">
             <a-button type="link" @click="handleCategoryChange(firstLevelId)" >
-                <div class="category-title">{{ $i18n.locale =='zh' ? firstLevelName.name : firstLevelName.name_en}}</div>
+
+                <div class="category-title" >{{ $i18n.locale =='zh' ? firstLevelName.name : firstLevelName.name_en}}</div>
             </a-button>
             <div class="category-content">
                 <CategoryTree :parentId='firstLevelId' @change='handleCategoryChange' ref="CategoryTree"/>
@@ -144,7 +145,10 @@ export default {
             // 搜索
             categoryList: [],
             firstLevelId: 0,
-            firstLevelName: '',
+            firstLevelName: {
+                name: '',
+                name_en: ''
+            },
             searchForm: {
                 name: '',
                 name_en: '',
@@ -176,10 +180,13 @@ export default {
             return this.$store.state.lang
         }
     },
-    mounted() {
+
+     mounted() {
         this.getTableData();
-        this.getCategoryList()
-        this.getShopCartData();
+         this.getCategoryList()
+         this.getShopCartData();
+         this.firstLevelId =  Number(this.$route.query.first_level_id) || 0
+
     },
 
     methods: {
@@ -348,6 +355,7 @@ export default {
                 is_authority: 1,
             }).then(res => {
                 this.categoryList = res.list
+                this.handleCategoryChange(this.firstLevelId)
             })
         },
 
