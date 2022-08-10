@@ -55,7 +55,7 @@
     </div>
     <SimpleImageEmpty v-else :desc="$t('p.no_item_explode')"/>
     <div class="explored-lists" v-if="exploredList.length && tabsArray.length > 0">
-        <ExploredContentPayCard v-for="(list,index) in exploredList" :key="index" :class="{'active': list.id === pointIndex}" :data ="list" :num = "index" @change="exploreList" @click="addPoint(list.id)"/>
+        <ExploredContentPayCard v-for="(list,index) in tabsArray[0].item_component_list" :key="index" :class="{'active': list.id === pointIndex}" :data ="list.item" :num = "list.index" @change="exploreList" @click="addPoint(list.item.id)"/>
     </div>
     <SimpleImageEmpty v-else :desc="$t('i.no_bom_list')" class="mt"/>
 </template>
