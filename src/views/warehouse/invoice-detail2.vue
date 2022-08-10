@@ -52,7 +52,8 @@
     </div>
     <div class="gray-panel info">
         <div class="panel-title">
-            <div class="left"><span>{{type_ch}}{{ $t('in.number') }}:</span> {{ detail.uid }}</div>
+            <div class="left"><span>{{type_ch}}{{ $t('in.number') }}:</span> {{ detail.uid }}<vue3-barcode :value="detail.uid" :height="50" displayValue="false" /></div>
+
             <div class="right">
                 <div class="status">
                     <i class="icon i_point" :class="$Util.invoiceStatusFilter(detail.status,'color')"/>
@@ -444,6 +445,7 @@ import ItemSelect from '../../components/popup-btn/ItemSelect.vue'
 import EntitySelect from '../../components/popup-btn/EntitySelect.vue'
 import MaterialSelect from '../../components/popup-btn/MaterialSelect.vue'
 import AuditHandle from '../../components/popup-btn/AuditHandle.vue'
+import Vue3Barcode from 'vue3-barcode'
 import data from "../../core/data";
 
 const STOCK_RECORD = Core.Const.STOCK_RECORD
@@ -459,7 +461,8 @@ export default {
         ItemSelect,
         EntitySelect,
         MaterialSelect,
-        AuditHandle
+        AuditHandle,
+        Vue3Barcode,
     },
     props: {},
     data() {
