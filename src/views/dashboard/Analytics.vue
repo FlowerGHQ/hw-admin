@@ -13,7 +13,7 @@
         </a-input>
     </div>
     <div class="banner-cards">
-        <div class="banner-card" v-for="(banner,i) in bannerList" :key="i" @click="routerChange('item')">
+        <div class="banner-card" v-for="(banner,i) in bannerList" :key="i" @click="routerChange('item',banner.first_level)">
             <img src="../../assets/images/default_banner-two.png" class="card-bg">
             <p class="title">{{ $i18n.locale === 'zh' ? banner.content : banner.content_en }}</p>
             <p class="info">{{ $i18n.locale === 'zh' ? banner.name : banner.name_en }}</p>
@@ -108,18 +108,21 @@ export default {
                     name_en: 'VEHICLE',
                     content: '内容 内容',
                     content_en: 'Content content',
+                    first_level: 'vehicle',
                 },
                 {
                     name: '备品',
                     name_en: 'SPAREPARTS',
                     content: '内容 内容',
                     content_en: 'Content content',
+                    first_level: 'spareparts',
                 },
                 {
                     name: '附件',
                     name_en: 'ACCESSOIRES',
                     content: '内容 内容',
                     content_en: 'Content content',
+                    first_level: 'accessoires',
                 }
             ],
             // 待定数据
@@ -250,12 +253,15 @@ export default {
         }
     },
     methods: {
-        routerChange(type) {
+        routerChange(type, first_level_id) {
             let routeUrl = ''
             switch (type) {
                 case 'item' :
                     routeUrl = this.$router.resolve({
                         path: "/purchase/item-list",
+                        query: {
+                            first_level_id : first_level_id
+                        }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
