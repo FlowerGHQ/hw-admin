@@ -52,7 +52,10 @@
     </div>
     <div class="gray-panel info">
         <div class="panel-title">
-            <div class="left"><span>{{type_ch}}{{ $t('in.number') }}:</span> {{ detail.uid }}<vue3-barcode :value="detail.uid" :height="50" displayValue="false" /></div>
+            <div class="left"><span>{{type_ch}}{{ $t('in.number') }}:</span> {{ detail.uid }}
+                <div v-if="detail.uid">
+                    <vue3-barcode :value="detail.uid" :height="50" displayValue="false" /></div>
+                </div>
 
             <div class="right">
                 <div class="status">
