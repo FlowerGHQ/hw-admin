@@ -2,7 +2,7 @@
     <div id="DownLoad" class="list-container">
         <div class="download">
             <div class="list" v-for="i in tableData">
-                <mac-command-outlined class="icon" />
+                <img src="../../../assets/images/default_download.png" class="img">
                 <a @click="handleDownload(i)">{{ i.name }}</a>
             </div>
         </div>
@@ -10,48 +10,48 @@
 </template>
 
 <script>
-import { MacCommandOutlined } from '@ant-design/icons-vue';
 import Core from "../../../core";
 export default {
     name: 'DownLoad',
-    components: {
-        MacCommandOutlined,
-    },
+    components: {},
     props: {
-        target_id: {
-            type: Number
-        },
-        target_type: {
-            type: Number
-        },
+        // target_id: {
+        //     type: Number
+        // },
+        // target_type: {
+        //     type: Number
+        // },
+        tableData: {
+            type: Array
+        }
     },
     data() {
         return {
-            tableData: []
+            // tableData: []
         };
     },
     watch: {},
     computed: {
     },
     mounted() {
-        this.getTableData()
+        // this.getTableData()
     },
     methods: {
-        getTableData() {  // 获取 表格 数据
-            this.loading = true;
-            Core.Api.Attachment.list({
-                target_id: this.target_id,
-                target_type: this.target_type,
-                page: 0
-            }).then(res => {
-                console.log("AttachmentFile res", res)
-                this.tableData = res.list
-            }).catch(err => {
-                console.log('AttachmentFile err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
+        // getTableData() {  // 获取 表格 数据
+        //     this.loading = true;
+        //     Core.Api.Attachment.list({
+        //         target_id: this.target_id,
+        //         target_type: this.target_type,
+        //         page: 0
+        //     }).then(res => {
+        //         console.log("AttachmentFile res", res)
+        //         this.tableData = res.list
+        //     }).catch(err => {
+        //         console.log('AttachmentFile err', err)
+        //     }).finally(() => {
+        //         this.loading = false;
+        //     });
+        // },
         // 下载附件
         handleDownload(record) {
             console.log('handleDownload record:', record)
@@ -77,12 +77,14 @@ export default {
         font-weight: 500;
         font-size: @fz_md;
     }
-    .icon {
+    .img {
         width: 21px;
         height: 21px;
     }
     .list {
         margin-top: 20px;
+        display: flex;
+        align-items: center;
         &:nth-of-type(1) {
             margin-top: 0;
         }

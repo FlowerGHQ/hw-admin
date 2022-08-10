@@ -2,7 +2,8 @@
     <div class="explored-content" v-if="tabsArray.length > 0">
         <div class="title" v-if="show">{{ $t('i.view') }}</div>
         <div class="explore-content">
-            <a-carousel autoplay class="carousel-list">
+            <!-- <a-carousel autoplay class="carousel-list"> -->
+            <div class="carousel-list">
                 <div class="carousel-item" v-for="(item,i) of tabsArray" :key="i">
                     <img :src="$Util.imageFilter(item.img)"/>
                     <canvas :ref="`exploreCanvas${i}`"></canvas>
@@ -22,7 +23,8 @@
                         {{point.index}}
                     </div>
                 </div>
-            </a-carousel>
+            </div>
+            <!-- </a-carousel> -->
             <transition name="fade">
                 <div
                     class="component-contain"
@@ -41,8 +43,8 @@
                         <div class="type-left">€{{$Util.countFilter(componentDetail[priceKey + 'eur'])}} | ${{$Util.countFilter(componentDetail[priceKey + 'usd'])}}</div>
                     </div>
                     <div class="edit-btn">
-                        <a-button type="primary" class="disabled" v-if="componentDetail.in_shopping_cart">{{ $t('i.already') }}</a-button>
-                        <a-button type="primary" @click="hanldeAddToShopCart" v-else>{{ $t('i.cart') }}</a-button>
+                        <a-button class="disabled btn-expored" v-if="componentDetail.in_shopping_cart">{{ $t('i.already') }}</a-button>
+                        <a-button class="btn-expored" @click="hanldeAddToShopCart" v-else>{{ $t('i.cart') }}</a-button>
                     </div>
                 </div>
             </transition>
@@ -189,8 +191,8 @@ export default {
                 let x = (get(ths.tabsArray, `[${i}].item_component_list[${ths.selectIndex }].end.x`, 0) - 15) * rate;
 
                 ths.componentDetail = get(ths.tabsArray, `[${i}].item_component_list[${ths.selectIndex }].item`, {})
-                ths.componentStyle.top = `${y}px`;
-                ths.componentStyle.left = `${x}px`;
+                ths.componentStyle.top = `${y + 12}px`;
+                ths.componentStyle.left = `${x - 16}px`;
                 ths.timer = null;
             }, delay)
         },
@@ -209,7 +211,7 @@ export default {
     },
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .explored-content {
     z-index: 10;
     margin-top: 30px;
@@ -280,7 +282,8 @@ export default {
         padding: 12px 0;
         width: 250px;
         border-radius: 2px;
-        background-color: @BG_LP;
+        // background-color: @BG_LP;
+        background-color: @primary;
         border: 1px solid @BG_LP;
         font-size: 0;
         &:before, &:after {
@@ -315,11 +318,12 @@ export default {
             .i_skew-bg {
                 font-size: 16px;
                 color: @TC_L;
+                margin-right: 10px;
             }
             .icon-name {
                 position: absolute;
                 top: 0;
-                left: 16px;
+                left: 26px;
                 font-style: italic;
                 font-size: 12px;
                 font-weight: bold;
@@ -347,6 +351,9 @@ export default {
             margin-top: 12px;
             width: 100%;
             text-align: center;
+            :deep(span) {
+                color:  @primary !important;
+            }
         }
         // position: absolute;
         // padding: 12px 24px;

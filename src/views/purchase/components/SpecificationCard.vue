@@ -1,5 +1,5 @@
 <template>
-    <div id="SpecificationCard" class="list-container">
+    <div id="SpecificationCard" class="list-container" @click="changeData(data.id,i)">
         <div class="card-left">
             <div class="card-img">
                 <img :src="$Util.imageFilter(data.logo)" >
@@ -7,9 +7,9 @@
             <div class="card-info">
                 <div class="title">{{ $i18n.locale =='zh' ? data.name : data.name_en }}</div>
                 <div class="info">{{ data.code }}</div>
-                <ul>
+                <!-- <ul>
                     <li v-for="attr in data.attr_list">{{ $i18n.locale =='zh' ? attr.attr_def_name : attr.attr_def_key }}：{{ $i18n.locale =='zh' ? attr.value : attr.value_en }}</li>
-                </ul>
+                </ul> -->
                 <!-- <div class="code">货号：{{ data.id }}</div> -->
             </div>
         </div>
@@ -47,6 +47,7 @@
 
 <script>
 import { CaretUpOutlined, CaretDownOutlined, ShoppingCartOutlined, StarOutlined } from '@ant-design/icons-vue';
+import { number } from '@intlify/core-base';
 import Core from '../../../core';
 export default {
     name: 'SpecificationCard',
@@ -61,6 +62,7 @@ export default {
             type: Object,
             default: {},
         },
+        i: number
     },
     data() {
         return {
@@ -115,13 +117,18 @@ export default {
                 this.$emit('AddToFavorite')
             })
         },
+
+        // 点击查看详情
+        changeData(id,i) {
+            this.$emit('handleChangeData',{id,i})
+        }
     }
 };
 </script>
 
 <style lang="less" scoped>
 #SpecificationCard {
-    border: 1px solid @TC_car_bc;
+    border: 2px solid @TC_car_bc;
     border-radius: 4px;
     padding: 10px;
     display: flex;
@@ -130,8 +137,8 @@ export default {
         display: flex;
         overflow: hidden;
         .card-img{
-            width: 200px;
-            height: 200px;
+            width: 100px;
+            height: 100px;
             margin: auto 0;
             display:flex;
             justify-content:center;
@@ -150,26 +157,27 @@ export default {
 
         .card-info {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            width: 100%;
             color: @TC_car_title;
             font-size: @fz_sm;
-            padding: 10px;
+            padding: 0 10px;
             overflow: hidden;
             .title {
                 font-size: @fz_bs;
                 font-weight: 600;
-                // margin-top: 12px;
+                width: 100%;
+                margin-top: 20px;
                 .ell()
             }
             .info {
-                // margin-top: 12px;
+                margin-top: 12px;
+                width: 100%;
                 font-weight: 500;
                 .ell()
             }
             .code {
                 // margin-top: 6px;
+                width: 100%;
                 font-weight: 500;
                 .ell()
             }
@@ -259,6 +267,7 @@ export default {
  ul {
     // list-style: disc;
     // margin-top: 20px;
+    margin-top: 6px;
     width: 100%;
     color: @TC_car_info;
     font-size: @fz_sm;
