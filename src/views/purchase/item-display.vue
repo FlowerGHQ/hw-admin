@@ -2,8 +2,8 @@
     <div id="ItemDisplay" class="list-container">
         <div class="imgs-content">
             <!-- <a-carousel arrows dots-class="slick-dots slick-thumb" >
-                <div v-for="item,index in imgs" :key="item">
-                    <img :src="getImgUrl(index)" />
+                <div v-for="item,index in specList" :key="item">
+                    <img :src="$Util.imageFilter(item.logo)" @click="changeIndex(imgs,index)"/>
                 </div>
                 <template #customPaging="props">
                     <a>
@@ -15,7 +15,7 @@
                         <left-outlined />
                     </div>
                 </template>
-                <template #nextArrow>
+                <template #nextArrow>s
                     <div class="custom-slick-arrow">
                         <right-outlined />
                     </div>
@@ -138,7 +138,11 @@ export default {
     },
     methods: {
         // getImgUrl(i) {
-        //     return this.imgs[i]
+        //     console.log("this.imgs",this.specList)
+        //     if (this.specList != undefined && this.specList != null&& this.specList != ""){
+        //         return this.$Util.imageFilter(this.specList[i].logo)
+        //     }
+
         // },
         // 获取商品详情
         getItemDetail() {
@@ -268,9 +272,6 @@ export default {
             this.getAccessoryData()
             this.getDownloadData()
         },
-        // getImgUrl(i) {
-        //     return Core.Util.imageFilter(this.imgs[i])
-        // },
     }
 };
 </script>
@@ -485,120 +486,118 @@ export default {
 }
 
 /* For demo */
-
-
-.ant-carousel {
-    width: 100%;
-    height: 540px;
-    // width: 110px;
-}
-.ant-carousel :deep(.slick-slider) {
-    position: relative;
-    display: flex;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-.ant-carousel :deep(.slick-list) {
-    // display: none;
-    width: 522px;
-    height: 500px;
-    margin-left: 100px;
-    margin-top: 40px;
-}
-.ant-carousel :deep(.slick-slide) {
-    height: 100%;
-}
-// .ant-carousel :deep(.slick-slide div) {
+// .ant-carousel {
+//     width: 100%;
+//     height: 540px;
+//     // width: 110px;
+// }
+// .ant-carousel :deep(.slick-slider) {
+//     position: relative;
+//     display: flex;
+//     width: 100%;
+//     height: 100%;
+//     overflow: hidden;
+// }
+// .ant-carousel :deep(.slick-list) {
+//     // display: none;
+//     width: 522px;
+//     height: 500px;
+//     margin-left: 100px;
+//     margin-top: 40px;
+// }
+// .ant-carousel :deep(.slick-slide) {
 //     height: 100%;
 // }
-.ant-carousel :deep(.slick-track) {
-    height: 500px;
-}
-.ant-carousel :deep(.slick-dots) {
-  position: relative;
-  height: auto;
-}
-.ant-carousel :deep(.slick-slide img) {
-  border: 5px solid #fff;
-  display: block;
-  margin: auto;
-  max-width: 80%;
-}
-.ant-carousel :deep(.slick-arrow) {
+// // .ant-carousel :deep(.slick-slide div) {
+// //     height: 100%;
+// // }
+// .ant-carousel :deep(.slick-track) {
+//     height: 500px;
+// }
+// .ant-carousel :deep(.slick-dots) {
+//   position: relative;
+//   height: auto;
+// }
+// .ant-carousel :deep(.slick-slide img) {
+//   border: 5px solid #fff;
+//   display: block;
+//   margin: auto;
+//   max-width: 80%;
+// }
+// .ant-carousel :deep(.slick-arrow) {
+// //   width: 40px;
+// //   height: 40px;
+//     background-color: #fff !important;
+//     color: #333 !important;
+//     transform: rotate(90deg);
+// }
+// .ant-carousel :deep(.slick-prev) {
+//     top: 0;
+//     left: 30px;
+// }
+// .ant-carousel :deep(.slick-next) {
+//     top: 92%;
+//     right: calc(100% - 72px) !important;
+// }
+// .ant-carousel :deep(.slick-thumb) {
+//   top: 40px;
+//   left: 20px;
+//   width: 100px;
+//   height: 430px;
+// //   overflow-y: auto;
+// //   max-height: 373px;
+// //   overflow-y: scroll;
+// overflow: hidden;
+//   flex-wrap: wrap;
+//   display: block !important;
+//   margin: 0;
+//   position: absolute;
+// }
+// .ant-carousel :deep(.slick-thumb li) {
+//   width: 60px;
+//   height: 45px;
+//   margin-top: 10px;
+// }
+// .ant-carousel :deep(.slick-thumb li img) {
+//   width: 100%;
+//   height: 100%;
+//   filter: grayscale(100%);
+//   display: block;
+// }
+// .ant-carousel :deep .slick-thumb li.slick-active img {
+//   filter: grayscale(0%);
+// }
+// .ant-carousel :deep(.slick-slide) {
+//   text-align: center;
+//   height: 100%;
+//   line-height: 360px;
+//   overflow: hidden;
+// }
+
+// .ant-carousel :deep(.slick-slide img) {
+//   width: 522px;
+// //   height: auto;
+// }
+
+// .ant-carousel :deep(.slick-arrow.custom-slick-arrow) {
 //   width: 40px;
 //   height: 40px;
-    background-color: #fff !important;
-    color: #333 !important;
-    transform: rotate(90deg);
-}
-.ant-carousel :deep(.slick-prev) {
-    top: 0;
-    left: 30px;
-}
-.ant-carousel :deep(.slick-next) {
-    top: 92%;
-    right: calc(100% - 72px) !important;
-}
-.ant-carousel :deep(.slick-thumb) {
-  top: 40px;
-  left: 20px;
-  width: 100px;
-  height: 430px;
-//   overflow-y: auto;
-//   max-height: 373px;
-//   overflow-y: scroll;
-overflow: hidden;
-  flex-wrap: wrap;
-  display: block !important;
-  margin: 0;
-  position: absolute;
-}
-.ant-carousel :deep(.slick-thumb li) {
-  width: 60px;
-  height: 45px;
-  margin-top: 10px;
-}
-.ant-carousel :deep(.slick-thumb li img) {
-  width: 100%;
-  height: 100%;
-  filter: grayscale(100%);
-  display: block;
-}
-.ant-carousel :deep .slick-thumb li.slick-active img {
-  filter: grayscale(0%);
-}
-.ant-carousel :deep(.slick-slide) {
-  text-align: center;
-  height: 100%;
-  line-height: 360px;
-  overflow: hidden;
-}
+//   text-align: center;
+//   line-height: 40px;
+//   font-size: 25px;
+//   color: #fff;
+//   background-color: rgba(31, 45, 61, 0.11);
+//   opacity: 0.3;
+//   z-index: 1;
+// }
+// .ant-carousel :deep(.custom-slick-arrow:before) {
+//   display: none;
+// }
+// .ant-carousel :deep(.custom-slick-arrow:hover) {
+//   opacity: 0.5;
+// }
 
-.ant-carousel :deep(.slick-slide img) {
-  width: 522px;
-//   height: auto;
-}
-
-.ant-carousel :deep(.slick-arrow.custom-slick-arrow) {
-  width: 40px;
-  height: 40px;
-  text-align: center;
-  line-height: 40px;
-  font-size: 25px;
-  color: #fff;
-  background-color: rgba(31, 45, 61, 0.11);
-  opacity: 0.3;
-  z-index: 1;
-}
-.ant-carousel :deep(.custom-slick-arrow:before) {
-  display: none;
-}
-.ant-carousel :deep(.custom-slick-arrow:hover) {
-  opacity: 0.5;
-}
-
-.ant-carousel :deep(.slick-slide h3) {
-  color: #fff;
-}
+// .ant-carousel :deep(.slick-slide h3) {
+//   color: #fff;
+// }
 </style>

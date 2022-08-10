@@ -43,8 +43,8 @@
                         <div class="type-left">€{{$Util.countFilter(componentDetail[priceKey + 'eur'])}} | ${{$Util.countFilter(componentDetail[priceKey + 'usd'])}}</div>
                     </div>
                     <div class="edit-btn">
-                        <a-button class="disabled btn-expored" v-if="componentDetail.in_shopping_cart">{{ $t('i.already') }}</a-button>
-                        <a-button class="btn-expored" @click="hanldeAddToShopCart" v-else>{{ $t('i.cart') }}</a-button>
+                        <a-button class="disabled" v-if="componentDetail.in_shopping_cart">{{ $t('i.already') }}</a-button>
+                        <a-button @click="hanldeAddToShopCart" v-else>{{ $t('i.cart') }}</a-button>
                     </div>
                 </div>
             </transition>
@@ -192,7 +192,7 @@ export default {
 
                 ths.componentDetail = get(ths.tabsArray, `[${i}].item_component_list[${ths.selectIndex }].item`, {})
                 ths.componentStyle.top = `${y + 12}px`;
-                ths.componentStyle.left = `${x - 16}px`;
+                ths.componentStyle.left = `${x - 15}px`;
                 ths.timer = null;
             }, delay)
         },
@@ -213,6 +213,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .explored-content {
+    position: relative;
     z-index: 10;
     margin-top: 30px;
     width: 100%;
@@ -350,7 +351,8 @@ export default {
         .edit-btn {
             margin-top: 12px;
             width: 100%;
-            text-align: center;
+            text-align: right;
+            margin-right: 20px;
             :deep(span) {
                 color:  @primary !important;
             }

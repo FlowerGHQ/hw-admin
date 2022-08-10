@@ -46,8 +46,8 @@
                         <div class="type-left">€{{$Util.countFilter(componentDetail[priceKey + 'eur'])}} | ${{$Util.countFilter(componentDetail[priceKey + 'usd'])}}</div>
                     </div>
                     <div class="edit-btn">
-                        <a-button type="primary" class="disabled" v-if="componentDetail.in_shopping_cart">{{ $t('i.already') }}</a-button>
-                        <a-button type="primary" @click="hanldeAddToShopCart" v-else>{{ $t('i.cart') }}</a-button>
+                        <a-button class="disabled" v-if="componentDetail.in_shopping_cart">{{ $t('i.already') }}</a-button>
+                        <a-button @click="hanldeAddToShopCart" v-else>{{ $t('i.cart') }}</a-button>
                     </div>
                 </div>
             </transition>
@@ -222,8 +222,8 @@ export default {
                 let x = (get(ths.tabsArray, `[${i}].item_component_list[${ths.selectIndex }].end.x`, 0) - 15) * rate;
 
                 ths.componentDetail = get(ths.tabsArray, `[${i}].item_component_list[${ths.selectIndex }].item`, {})
-                ths.componentStyle.top = `${y}px`;
-                ths.componentStyle.left = `${x}px`;
+                ths.componentStyle.top = `${y + 12}px`;
+                ths.componentStyle.left = `${x - 15}px`;
                 ths.timer = null;
             }, delay)
         },
@@ -335,7 +335,8 @@ export default {
         padding: 12px 0;
         width: 250px;
         border-radius: 2px;
-        background-color: @BG_LP;
+        // background-color: @BG_LP;
+        background-color: @primary;
         border: 1px solid @BG_LP;
         font-size: 0;
         &:before, &:after {
@@ -370,11 +371,12 @@ export default {
             .i_skew-bg {
                 font-size: 16px;
                 color: @TC_L;
+                margin-right: 10px;
             }
             .icon-name {
                 position: absolute;
                 top: 0;
-                left: 16px;
+                left: 26px;
                 font-style: italic;
                 font-size: 12px;
                 font-weight: bold;
@@ -401,7 +403,11 @@ export default {
         .edit-btn {
             margin-top: 12px;
             width: 100%;
-            text-align: center;
+            text-align: right;
+            margin-right: 20px;
+            :deep(span) {
+                color:  @primary !important;
+            }
         }
         // position: absolute;
         // padding: 12px 24px;
