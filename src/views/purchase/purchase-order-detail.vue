@@ -1271,7 +1271,7 @@ export default {
         },
         handlePayAudit(){
             if(!this.payAuditForm.audit_result) {
-                this.$message.warning(this.$t('p.'))
+                this.$message.warning(this.$t('r.audit_result'))
                 return
             }
             Core.Api.Purchase.payAudit(this.payAuditForm).then(res => {
