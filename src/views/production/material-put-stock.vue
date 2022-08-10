@@ -219,8 +219,8 @@ export default {
             this.warehouseLocationOptions = [];
             this.form.warehouse_location_id = ''
             this.form.remark = '';
-            this.stock.stock = '';
-            this.stock.updateTime = '';
+            this.form.stock.stock = '';
+            this.form.stock.updateTime = '';
             this.form.amount = '';
             this.form.confirm_amount = '';
             this.form.smallest_packaging = '';
@@ -274,7 +274,7 @@ export default {
                 target_id: this.form.target_id,
                 target_type: this.form.stock_target_type,
             }).then(res => {
-                this.form.stock = res.stock
+                this.form.stock.stock = res.stock
                 this.form.stock.updateTime = this.$Util.timeFormat(res.stock.updateTime != undefined ? res.stock.updateTime: res.stock.createTime)
             })
         },
