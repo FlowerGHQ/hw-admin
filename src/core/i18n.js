@@ -1491,7 +1491,7 @@ const messages = {
             creator_name: 'Creator name',
             associated_customer: 'Customer',
             name: 'Name',
-            repair_content: 'Repair Order Content',
+            repair_content: 'Warranty',
             repair_classify: 'Classify',
             category: 'Category',
             urgency: 'Urgency',
