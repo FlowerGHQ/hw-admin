@@ -124,7 +124,10 @@ export default {
                 .then(res => {
                     console.log('Material.detail res', res)
                     this.detail = res
-                    this.category_name = res.category.name
+                    if (res.category !== null){
+                        this.category_name = res.category.name
+                    }
+
                     console.log('category_id',res.category_id)
                     this.activeKey = 'StockWarehouseList'
                 })

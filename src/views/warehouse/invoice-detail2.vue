@@ -52,7 +52,13 @@
     </div>
     <div class="gray-panel info">
         <div class="panel-title">
-            <div class="left"><span>{{type_ch}}{{ $t('in.number') }}:</span> {{ detail.uid }}</div>
+            <div class="left"><span>{{type_ch}}{{ $t('in.number') }}:</span> {{ detail.uid }}
+                <div v-show="detail.uid">
+<!--                    <vue3-barcode :value="detail.uid" :height="50" displayValue="false" /></div>-->
+                    <img id="jsbarcodeImg" style="width:200px" />
+                </div>
+                </div>
+
             <div class="right">
                 <div class="status">
                     <i class="icon i_point" :class="$Util.invoiceStatusFilter(detail.status,'color')"/>
@@ -444,6 +450,7 @@ import ItemSelect from '../../components/popup-btn/ItemSelect.vue'
 import EntitySelect from '../../components/popup-btn/EntitySelect.vue'
 import MaterialSelect from '../../components/popup-btn/MaterialSelect.vue'
 import AuditHandle from '../../components/popup-btn/AuditHandle.vue'
+import JsBarcode from 'jsbarcode'
 import data from "../../core/data";
 
 const STOCK_RECORD = Core.Const.STOCK_RECORD
@@ -459,7 +466,8 @@ export default {
         ItemSelect,
         EntitySelect,
         MaterialSelect,
-        AuditHandle
+        AuditHandle,
+        JsBarcode,
     },
     props: {},
     data() {
@@ -724,10 +732,12 @@ export default {
                 this.detail = d
                 this.warehouse = d.warehouse || {}
                 this.getInvoiceList();
+                this.generateJSBarcodeImg(this.detail.uid)
             }).catch(err => {
                 console.log('getInvoiceDetail err', err)
             }).finally(() => {
                 this.loading = false;
+
             });
         },
         addInvoiceItemChild() {
@@ -1237,6 +1247,19 @@ export default {
             this.upload.fileList = fileList
             this.getInvoiceDetail();
         },
+        //循环生成条形码
+        generateJSBarcodeImg(uid){
+
+                // 根据动态id，动态赋值，动态生成条形码
+                JsBarcode('#jsbarcodeImg',uid, {
+                    format: 'CODE39',
+                    width: 2,
+                    height: 80,
+                    displayValue: false
+                })
+
+            }
+
     }
 };
 </script>

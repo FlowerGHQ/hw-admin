@@ -2,7 +2,7 @@
 <div class="expolred-list" >
     <div class="card-left">
         <div class="serial—number">
-            <div class="serial">{{ num + 1 }}</div>
+            <div class="serial">{{ num }}</div>
         </div>
         <div class="card-info">
             <div class="title">{{ $i18n.locale =='zh' ? data.name : data.name_en  }}</div>

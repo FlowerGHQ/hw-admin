@@ -1,33 +1,56 @@
 <template>
     <div class="banner_container">
-        <div class="swiper-container">
+        <!-- <div class="swiper-container">
             <div class="swiper-wrapper">
                 <div class="swiper-slide" v-for="(item,index) in imgs" :key="index">
                     <img :src="$Util.imageFilter(item.logo)" @click="changeIndex(imgs,index)"/>
                 </div>
-            </div>
+            </div> -->
             <!-- <div class="swiper-pagination"></div> -->
 
-        </div>
+        <!-- </div>
         <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
-        <img :src="getImgUrl(imgIndex)" class="img-big">
+        <div class="swiper-button-next"></div> -->
+        <!-- <img :src="getImgUrl(imgIndex)" class="img-big"> -->
+
+
+        <a-carousel arrows dots-class="slick-dots slick-thumb" dotPosition="left" :afterChange="handleAafterChange">
+            <template #customPaging="props">
+                <a>
+                    <img :src="getImgUrl(props.i)" @click="changeIndex(imgs,props.i)"/>
+                </a>
+            </template>
+            <div v-for="(item,index) in imgs" :key="index">
+                <!-- <img :src="$Util.imageFilter(item.logo)"/> -->
+            </div>
+            <template #prevArrow>
+                <div class="custom-slick-arrow" style="left: 10px; z-index: 1">
+                    <up-outlined />
+                </div>
+            </template>
+            <template #nextArrow>
+                <div class="custom-slick-arrow" style="right: 10px">
+                    <down-outlined />
+                </div>
+            </template>
+        </a-carousel>
+        <div class="img-big">
+            <img :src="getImgUrl(imgIndex)" />
+        </div>
     </div>
 </template>
 
 <script>
-import Swiper, {Pagination, Autoplay, Navigation} from 'swiper'
-
-import 'swiper/swiper.less';
-import 'swiper/swiper-bundle.min.css';
-
-
-Swiper.use([Pagination, Autoplay, Navigation])
+import { UpOutlined, DownOutlined } from '@ant-design/icons-vue';
 
 export default {
     props: {
         imgs: Array,
         imgIndex: Number
+    },
+    components: {
+        UpOutlined, 
+        DownOutlined
     },
     data() {
         return {
@@ -47,28 +70,6 @@ export default {
 
     },
     methods: {
-        //初始化swiper
-        initSwiper() {
-            var mySwiper = new Swiper('.swiper-container', {
-                direction: 'vertical', // 垂直切换选项
-                // loop: true,
-                initialSlide: 0,
-                grabCursor: true,
-                slidesPerView: 3,
-                // centeredSlidesBounds: true,
-                // centeredSlides: true,
-                centerInsufficientSlides: true,
-                spaceBetween: -140,
-                //分页箭头
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
-                },
-                // autoplay: {
-                //   delay: 3000 //自动播放
-                // },
-            })
-        },
         getImgUrl(i) {
             console.log("this.imgs",this.imgs)
             if (this.imgs != undefined && this.imgs != null&& this.imgs != ""){
@@ -77,13 +78,13 @@ export default {
 
         },
         changeIndex(imgs,i) {
-            // this.imgIndex = index
+            // this.imgIndex = i
             this.$emit('handleChangeIndex',{id:imgs[i].id,i})
+        },
+        handleAafterChange(i) {
+            this.$emit('handleChangeIndex',{id:this.imgs[i].id,i})
         }
     },
-    mounted() {
-        this.initSwiper();
-    }
 }
 
 
@@ -99,86 +100,96 @@ export default {
     padding: 20px 100px 20px 0;
     min-height: 372px;
     width: 100%;
-
-    .swiper-slide {
-        // height: 100px !important;
-        img {
-            width: 100%;
-            // transform: scale(0.9);
-            transition: 0.3s;
-        }
-    }
-
-    //swiper 指示点的颜色
-    .swiper-container {
-        margin: 0;
-        --swiper-pagination-color: #00937A;
-        width: 60px;
-        height: 80%;
-        padding-bottom: 20px;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-    }
 }
 
-.swiper-slide {
-    width: auto; /*设为固定值*/
-    height: auto; /*根据内容调整宽度*/
+/* For demo */
+.ant-carousel {
+    width: 90%;
+}
+.ant-carousel :deep(.slick-slider) {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.ant-carousel :deep(.slick-dots-left) {
+  left: 40px;
+}
+.ant-carousel :deep(.slick-dots) {
+  position: relative;
+  height: auto;
+}
+.ant-carousel :deep(.slick-slide img) {
+  border: 5px solid #fff;
+  display: block;
+  margin: auto;
+  max-width: 80%;
+}
+.ant-carousel :deep(.slick-arrow) {
+  display: none !important;
+}
+.ant-carousel :deep(.slick-thumb) {
+  bottom: 0px;
+}
+.ant-carousel :deep(.slick-thumb li) {
+  width: 60px;
+  height: 45px;
+  opacity: .5;
+}
+.ant-carousel :deep(.slick-thumb li img) {
+  width: 100%;
+  height: 100%;
+  filter: grayscale(100%);
+  display: block;
+}
+.ant-carousel :deep .slick-thumb li.slick-active img {
+  filter: grayscale(0%);
 }
 
-.swiper-pagination-horizontal {
-    bottom: 50px;
-    left: 0;
-    width: 100%;
+.ant-carousel :deep(.slick-active) {
+    opacity: 1 !important;
 }
 
-// .swiper-wrapper {
-//   top: 30px;
-// }
-//左右上下页的样式
-:deep(.swiper-button-prev), :deep(.swiper-button-next) {
-    transform: translateX(-50%) rotate(90deg);
-    // position: absolute;
-    // transform: rotate(90deg);
-    // width:40px;
-    // height:40px;
-    // background-color: hsla(0,0%,100%,.3);
-    // border-radius: 50%;
-    // transition: all .2s ease-in-out;
-    // &:hover{
-    //   background-color: hsla(0,0%,100%,.5);
-    //   transition: all .2s ease-in-out;
-    // }
+.ant-carousel :deep(.slick-arrow.custom-slick-arrow) {
+  width: 25px;
+  height: 25px;
+  font-size: 25px;
+  color: #fff;
+  background-color: rgba(31, 45, 61, 0.11);
+  opacity: 0.3;
+  z-index: 1;
+  position: absolute;
+  left: 60px !important;
+  display: inline-block !important;
+}
+.ant-carousel :deep(.custom-slick-arrow:before) {
+  display: none;
+}
+.ant-carousel :deep(.custom-slick-arrow:hover) {
+  opacity: 0.5;
 }
 
-:deep(.swiper-button-prev) {
-    top: 10px;
-    left: 3.3%;
-    transform: translateX(-50%) rotate(90deg);
+.ant-carousel :deep(.slick-slide h3) {
+  color: #fff;
 }
 
-:deep(.swiper-button-next) {
-    top: 98%;
-    right: 96.7%;
-    transform: translateX(50%) rotate(90deg);
+.ant-carousel :deep(.slick-arrow.custom-slick-arrow) {
+  color: #6E7C94;
+  background: #ffffff;
 }
-
-//修改上下页左右箭头的样式
-:deep(.swiper-button-prev:after), :deep(.swiper-button-next:after) {
-    //   opacity: 1;
-    //   object-fit: contain;
-    color: #6E7C94;
-    font-size: 20px;
-    //   transition: all .2s ease-in-out;
-    //   z-index: 5;
-    //   display: flex;
-    //   align-items: center;
-    //   justify-content: center;
+.ant-carousel :deep(.slick-prev) {
+  top: 20px;
+}
+.ant-carousel :deep(.slick-next) {
+  top: 480px;
 }
 
 .img-big {
     width: 500px;
-    margin-left: 160px;
+    height: 500px;
+    .fcc();
+    img {
+        width: 500px;
+    }
+    // margin-left: 160px;
 }
 </style>
