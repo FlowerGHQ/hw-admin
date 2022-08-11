@@ -55,6 +55,9 @@
                         <a-button type="primary" ghost @click="handleMaterial()" v-if="$auth('warehouse.save')" class="panel-btn">
                             <i class="icon i_add"/>{{ $t('wa.allocated_material') }}
                         </a-button>
+                        <a-button type="primary" ghost @click="handleAdjustMaterial()" v-if="$auth('warehouse.save')" class="panel-btn">
+                            <i class="icon i_add"/>{{ $t('wa.adjust') }}
+                        </a-button>
                     </div>
 
 
@@ -115,7 +118,7 @@
                 <a-button @click="handleModalSubmit" type="primary">{{ $t('def.sure') }}</a-button>
             </template>
         </a-modal>
-        <a-modal v-model:visible="materialShow" :title="$t('n.upload_attachment')" class="attachment-file-upload-modal" :after-close="handleMaterialClose">
+        <a-modal v-model:visible="materialShow" :title="$t('wa.allocated_material')" class="attachment-file-upload-modal" :after-close="handleMaterialClose">
             <div class="form-title">
                 <div class="form-item required">
                     <div class="key">{{ $t('wa.item_code') }}:</div>
@@ -140,6 +143,52 @@
             <template #footer>
                 <a-button @click="handleMaterialClose">{{ $t('def.cancel') }}</a-button>
                 <a-button @click="handleMaterialSubmit" type="primary">{{ $t('def.sure') }}</a-button>
+            </template>
+        </a-modal>
+        <a-modal v-model:visible="adjustModalShow" :title="$t('wa.adjust')" class="attachment-file-upload-modal" :after-close="handleModalClose">
+            <div class="form-title">
+                <div class="form-item required">
+                    <div class="key">{{$t('wa.out_uid')}}:</div>
+                    <div class="value">
+                        <a-select
+                            v-model:value="adjustForm.warehouse_location_id"
+                            show-search
+                            placeholder="uid"
+                            :default-active-first-option="false"
+                            :show-arrow="false"
+                            :filter-option="false"
+                            :not-found-content="null"
+                            @search="handleUidSearch"
+                        >
+                            <a-select-option v-for=" item in warehouseLocationOptions" :key="item.id" :value="item.id">
+                                {{ item.uid }}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{$t('wa.in_uid')}}:</div>
+                    <div class="value">
+                        <a-select
+                            v-model:value="adjustForm.in_warehouse_location_id"
+                            show-search
+                            placeholder="uid"
+                            :default-active-first-option="false"
+                            :show-arrow="false"
+                            :filter-option="false"
+                            :not-found-content="null"
+                            @search="handleUidSearch"
+                        >
+                            <a-select-option v-for=" item in warehouseLocationOptions" :key="item.id" :value="item.id">
+                                {{ item.uid }}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handleAdjustMaterialClose">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleAdjustSubmit" type="primary">{{ $t('def.sure') }}</a-button>
             </template>
         </a-modal>
     </div>
@@ -175,6 +224,8 @@ export default {
             total: 0,
             modalShow: false,
             materialShow: false,
+            adjustModalShow: false,
+            warehouseLocationOptions: [],
             searchForm: {
                 uid: '',
                 item_id: '',
@@ -186,6 +237,10 @@ export default {
             itemForm: {
                 ids: [],
                 item_id: '',
+            },
+            adjustForm: {
+                warehouse_location_id: '',
+                in_warehouse_location_id: '',
             },
             selectedRowKeys: [],
             selectedRowItems: [],
@@ -317,6 +372,14 @@ export default {
         handleMaterial(id) {
             this.materialShow = true;
         },
+        handleAdjustMaterial(id){
+            this.adjustModalShow = true;
+        },
+        handleAdjustMaterialClose() {
+            this.adjustModalShow = false;
+            Object.assign(this.itemForm, this.$options.data().itemForm)
+            // this.selectItem = {}
+        },
         handleMaterialClose() {
             this.materialShow = false;
             Object.assign(this.itemForm, this.$options.data().itemForm)
@@ -340,6 +403,12 @@ export default {
                 this.itemOptions = res.list
             })
         },
+        handleUidSearch(uid) {
+            Core.Api.WarehouseLocation.list({uid: uid,warehouse_id: this.detail.warehouse_id}).then(res => {
+                this.warehouseLocationOptions = res.list
+            })
+        },
+
         handleUpdateShow(item) {
             this.form = Core.Util.deepCopy(item)
 
@@ -393,6 +462,24 @@ export default {
                 }
             }
             this.upload.fileList = fileList
+        },
+        handleAdjustSubmit() {
+            if (!this.adjustForm.warehouse_location_id) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!this.adjustForm.in_warehouse_location_id) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+
+            Core.Api.WarehouseLocationStock.adjust({
+                warehouse_location_id: this.adjustForm.warehouse_location_id,
+                in_warehouse_location_id: this.adjustForm.in_warehouse_location_id,
+            }).then(res => {
+                this.getTableData();
+                this.handleMaterialClose();
+                this.$message.success(this.$t('pop_up.save_success'))
+
+            })
         },
 
     },

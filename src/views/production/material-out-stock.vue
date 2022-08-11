@@ -274,6 +274,7 @@ export default {
                 target_id: this.form.target_id,
                 target_type: this.form.stock_target_type,
             }).then(res => {
+                console.log("res.stock",res.stock)
                 this.form.stock.stock = res.stock
                 this.form.stock.updateTime = this.$Util.timeFormat(res.stock.updateTime != undefined ? res.stock.updateTime: res.stock.createTime)
             })

@@ -11,7 +11,7 @@
                         <template v-if="column.key === 'item_detail' && $auth('material.detail')">
                             <a-tooltip placement="top" :title='text'>
                                 <div class="ell" style="max-width: 120px">
-                                    <a-button type="link" @click="routerChange('material', record.material)">{{ record.material.name || '-' }}
+                                    <a-button type="link" @click="routerChange('material', record.material)">{{$i18n.locale == 'zh' ? record.material.name : record.material.name_en || '-' }}
                                     </a-button>
                                 </div>
                             </a-tooltip>
@@ -23,7 +23,7 @@
                     <template v-if="record.target_type === TARGET_TYPE.ITEM">
                         <template v-if="column.key === 'item_detail' && $auth('item.detail')">
                             <a-tooltip placement="top" :title='text'>
-                                <a-button type="link" @click="routerChange('item', record.item)">{{ record.item.name || '-' }}
+                                <a-button type="link" @click="routerChange('item', record.item)">{{$i18n.locale == 'zh' ? record.item.name : record.item.name_en || '-' }}
                                 </a-button>
                             </a-tooltip>
                         </template>

@@ -609,6 +609,9 @@ const messages = {
             need_out_amount: '共需出库数量',
             outbounded: '已入库数量',
             outbound: '出库数量',
+	        adjust: '库位调整',
+	        in_uid: '调入库位号',
+	        out_uid: '调出库位号',
         },
         in: { // 出入库
             list: '出入库单列表',
@@ -1880,6 +1883,9 @@ const messages = {
             need_out_amount: 'Need outbound quantity',
             outbounded: 'Has been outbound quantity',
             outbound: 'Outbound amount',
+	        adjust: 'Location adjustment',
+	        in_uid: 'Call the storage location number',
+	        out_uid: 'Call up the storage location number',
         },
         in: {
             list: 'Inbound and outbound order list',
