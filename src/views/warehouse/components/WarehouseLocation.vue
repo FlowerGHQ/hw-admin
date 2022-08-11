@@ -145,7 +145,7 @@
                 <a-button @click="handleMaterialSubmit" type="primary">{{ $t('def.sure') }}</a-button>
             </template>
         </a-modal>
-        <a-modal v-model:visible="adjustModalShow" :title="$t('wa.adjust')" class="attachment-file-upload-modal" :after-close="handleModalClose">
+        <a-modal v-model:visible="adjustModalShow" :title="$t('wa.adjust')" class="attachment-file-upload-modal" width="800px" :after-close="handleAdjustMaterialClose">
             <div class="form-title">
                 <div class="form-item required">
                     <div class="key">{{$t('wa.out_uid')}}:</div>
@@ -159,11 +159,19 @@
                             :filter-option="false"
                             :not-found-content="null"
                             @search="handleUidSearch"
+                            @change="warehouseLocationChange"
                         >
                             <a-select-option v-for=" item in warehouseLocationOptions" :key="item.id" :value="item.id">
                                 {{ item.uid }}
                             </a-select-option>
                         </a-select>
+                    </div>
+                </div>
+                <div class="form-item required">
+
+                    <div class="key">{{$t('wa.out_item')}}:</div>
+                    <div class="value">
+                        {{$i18n.locale == 'zh' ? adjustName: adjustNameEn}}
                     </div>
                 </div>
                 <div class="form-item required">
@@ -242,6 +250,9 @@ export default {
                 warehouse_location_id: '',
                 in_warehouse_location_id: '',
             },
+            adjustName:'',
+            adjustNameEn:'',
+
             selectedRowKeys: [],
             selectedRowItems: [],
             selectedRowItemsAll: [],
@@ -377,7 +388,9 @@ export default {
         },
         handleAdjustMaterialClose() {
             this.adjustModalShow = false;
-            Object.assign(this.itemForm, this.$options.data().itemForm)
+            Object.assign(this.adjustForm, this.$options.data().adjustForm)
+            this.adjustNameEn = ''
+            this.adjustName = ''
             // this.selectItem = {}
         },
         handleMaterialClose() {
@@ -479,6 +492,29 @@ export default {
                 this.handleMaterialClose();
                 this.$message.success(this.$t('pop_up.save_success'))
 
+            })
+        },
+        warehouseLocationChange(){
+            Core.Api.WarehouseLocationStock.detailByWarehouseLocation({
+                warehouse_location_id: this.adjustForm.warehouse_location_id,
+            }).then(res => {
+                console.log(res)
+                let name = ""
+                let name_en = ""
+                let count = ""
+                res.list.forEach(it => {
+                    if(it.material != undefined){
+                        name += it.material.name + ':' + it.amount+ ','
+                        name_en += it.material.name_en + ':' + it.amount+ ','
+                    }
+                    if(it.item != undefined){
+                        name += it.item.name + ':' + it.amount+ ','
+                        name_en += it.item.name_en + ':' + it.amount+ ','
+                    }
+
+                })
+                this.adjustName = name
+                this.adjustNameEn = name_en
             })
         },
 

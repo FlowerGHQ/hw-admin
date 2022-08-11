@@ -612,6 +612,7 @@ const messages = {
 	        adjust: '库位调整',
 	        in_uid: '调入库位号',
 	        out_uid: '调出库位号',
+	        out_item: '调出商品',
         },
         in: { // 出入库
             list: '出入库单列表',
@@ -1886,6 +1887,7 @@ const messages = {
 	        adjust: 'Location adjustment',
 	        in_uid: 'Call the storage location number',
 	        out_uid: 'Call up the storage location number',
+	        out_item: 'Bring up the goods',
         },
         in: {
             list: 'Inbound and outbound order list',
