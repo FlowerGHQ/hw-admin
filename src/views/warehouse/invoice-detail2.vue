@@ -126,23 +126,23 @@
         <a-collapse-panel key="ItemList" :header="$t('i.product_information')" class="gray-collapse-panel" collapsible="disabled">
             <template #extra>
                 <template  v-if="detail.status === STATUS.INIT && !addMode && $auth('invoice.save')">
-                    <ItemSelect btnType='link' :btnText="$t('i.add')" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION" :purchaseId="detail.type == TYPE.IN ? detail.source_id : 0"
-                                :sourceType="detail.type == TYPE.IN ? detail.source_type : 0"  :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
+                    <ItemSelect btnType='link' :btnText="$t('i.add')"  :purchaseId="detail.type == TYPE.IN ? detail.source_id : 0"
+                                :sourceType="detail.type == TYPE.IN ? detail.source_type : 0"  :warehouseId="0" :disabledChecked="disabledChecked"
                         @select="handleAddItemChange"/>
-                    <a-popover v-model:visible="production.addVisible" trigger="click" placement="left" v-else-if="production.maxCount"
-                        @visibleChange='(visible) => {!visible && handleProdAddCancel()}' title="{{ $t('in.input_add_amount') }}">
-                        <template #content>
-                            <div class="prod-edit-popover">
-                                <a-input-number v-model:value="production.addCount" placeholder="{{ $t('in.add_amount') }}"
-                                    @keydown.enter="handleProdAddChange(index)" :autofocus="true" :max="production.maxCount" :min='1' :precision="0"/>
-                                <div class="btns">
-                                    <a-button type="primary" @click="handleProdAddCancel()" ghost >{{ $t('def.cancel') }}</a-button>
-                                    <a-button type="primary" @click="handleProdAddChange()" >{{ $t('def.sure') }}</a-button>
-                                </div>
-                            </div>
-                        </template>
-                        <a-button type="link" class="extra-btn" @click.stop>{{ $t('in.add_item') }}</a-button>
-                    </a-popover>
+<!--                    <a-popover v-model:visible="production.addVisible" trigger="click" placement="left" v-else-if="production.maxCount"-->
+<!--                        @visibleChange='(visible) => {!visible && handleProdAddCancel()}' title="{{ $t('in.input_add_amount') }}">-->
+<!--                        <template #content>-->
+<!--                            <div class="prod-edit-popover">-->
+<!--                                <a-input-number v-model:value="production.addCount" placeholder="{{ $t('in.add_amount') }}"-->
+<!--                                    @keydown.enter="handleProdAddChange(index)" :autofocus="true" :max="production.maxCount" :min='1' :precision="0"/>-->
+<!--                                <div class="btns">-->
+<!--                                    <a-button type="primary" @click="handleProdAddCancel()" ghost >{{ $t('def.cancel') }}</a-button>-->
+<!--                                    <a-button type="primary" @click="handleProdAddChange()" >{{ $t('def.sure') }}</a-button>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </template>-->
+<!--                        <a-button type="link" class="extra-btn" @click.stop>{{ $t('in.add_item') }}</a-button>-->
+<!--                    </a-popover>-->
                 </template>
                 <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('item')">{{ $t('in.add') }}</a-button>
             </template>
