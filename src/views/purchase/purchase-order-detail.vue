@@ -1056,22 +1056,26 @@ export default {
             if (!form.payment) {
                 return this.$message.warning(this.$t('p.enter_payment'))
             }
-            Core.Api.Purchase.payment({
-                id: this.id,
-                pay_method: form.pay_method,
-                payment: form.payment * 100,
-                imgs: form.path,
-                img_type: form.type,
-                remark: form.remark
-            }).then(res => {
-                this.$message.success(this.$t('p.payment_success'))
-                this.getList()
-                this.paymentShow = false
-            }).catch(err => {
-                console.log('getPurchaseInfo err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+
+            if (this.loading !== true){
+                this.loading = true
+                Core.Api.Purchase.payment({
+                    id: this.id,
+                    pay_method: form.pay_method,
+                    payment: form.payment * 100,
+                    imgs: form.path,
+                    img_type: form.type,
+                    remark: form.remark
+                }).then(res => {
+                    this.$message.success(this.$t('p.payment_success'))
+                    this.getList()
+                    this.paymentShow = false
+                }).catch(err => {
+                    console.log('getPurchaseInfo err', err)
+                }).finally(() => {
+                    this.loading = false;
+                });
+            }
         },
         // 确认出库
         handleOutStock() {
