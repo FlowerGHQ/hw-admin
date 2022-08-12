@@ -70,6 +70,8 @@
         <div class="operate-container">
             <a-button type="primary" @click="handleExportConfirm" v-if="$auth('purchase-order.export')"><i class="icon i_download"/>{{$t('def.export')}}</a-button>
             <a-button type="primary" @click="handleExportSalesReport" v-if="$auth('ADMIN')"><i class="icon i_download"/>{{$t('def.sales_report_export')}}</a-button>
+            <a-button type="primary" @click="handleExportSalesQuantityStatistics" v-if="$auth('ADMIN')"><i class="icon i_download"/>{{$t('def.sales_report_export')}}</a-button>
+
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -508,6 +510,30 @@ export default {
                 })
             }
         },
+        // 以销售报表导出
+        handleExportSalesQuantityStatistics() {
+            if(!this.searchForm.begin_time && !this.searchForm.end_time) {
+                // 没有选择时间
+                message.error({
+                    content: () => this.$t('def.Please_select_time'),
+                    class: 'custom-class',
+                    style: {
+                        marginTop: '20vh',
+                    },
+                });
+            } else {
+                let _this = this;
+                this.$confirm({
+                    title: _this.$t('p.sure_export'),
+                    okText: _this.$t('def.sure'),
+                    cancelText: _this.$t('def.cancel'),
+                    onOk() {
+                        _this.handleRepairExportSalesQuantityStatistics();
+                        _this.handleSearchReset()
+                    }
+                })
+            }
+        },
          handleRepairExportSalesReport() { // 订单导出
             this.exportDisabled = true;
             let form = Core.Util.deepCopy(this.searchForm);
@@ -515,6 +541,20 @@ export default {
                 form[key] = form[key] || ''
             }
             let exportUrl = Core.Api.Export.exportSalesStatement({
+                ...form,
+                search_type: this.search_type
+            })
+            console.log("handleRepairExport _exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
+        },
+        handleRepairExportSalesQuantityStatistics() { // 订单导出
+            this.exportDisabled = true;
+            let form = Core.Util.deepCopy(this.searchForm);
+            for (const key in form) {
+                form[key] = form[key] || ''
+            }
+            let exportUrl = Core.Api.Export.exportSalesQuantityStatistics({
                 ...form,
                 search_type: this.search_type
             })

@@ -918,7 +918,7 @@ export default {
                 if (it.amount != it.confirm_amount){
                     flag_amount = true;
                 }
-                if (it.flag_entity === Core.Const.ITEM.FLAG_ENTITY.YES &&it.confirm_amount != it.item.child_size){
+                if (it.flag_entity === Core.Const.ITEM.FLAG_ENTITY.YES && it.confirm_amount != it.child_size){
                     flag_entity = true;
                 }
             })
