@@ -186,11 +186,19 @@
                             :filter-option="false"
                             :not-found-content="null"
                             @search="handleUidSearch"
+                            @change="warehouseLocationInChange"
                         >
                             <a-select-option v-for=" item in warehouseLocationOptions" :key="item.id" :value="item.id">
                                 {{ item.uid }}
                             </a-select-option>
                         </a-select>
+                    </div>
+                </div>
+                <div class="form-item required">
+
+                    <div class="key">{{$t('wa.out_item')}}:</div>
+                    <div class="value">
+                        {{$i18n.locale == 'zh' ? adjustInName: adjustInNameEn}}
                     </div>
                 </div>
             </div>
@@ -252,6 +260,8 @@ export default {
             },
             adjustName:'',
             adjustNameEn:'',
+            adjustInName: '',
+            adjustInNameEn:'',
 
             selectedRowKeys: [],
             selectedRowItems: [],
@@ -490,6 +500,8 @@ export default {
             }).then(res => {
                 this.getTableData();
                 this.handleMaterialClose();
+                this.warehouseLocationChange();
+                this.warehouseLocationInChange();
                 this.$message.success(this.$t('pop_up.save_success'))
 
             })
@@ -515,6 +527,29 @@ export default {
                 })
                 this.adjustName = name
                 this.adjustNameEn = name_en
+            })
+        },
+        warehouseLocationInChange(){
+            Core.Api.WarehouseLocationStock.detailByWarehouseLocation({
+                warehouse_location_id: this.adjustForm.in_warehouse_location_id,
+            }).then(res => {
+                console.log(res)
+                let name = ""
+                let name_en = ""
+                let count = ""
+                res.list.forEach(it => {
+                    if(it.material != undefined){
+                        name += it.material.name + ':' + it.amount+ ','
+                        name_en += it.material.name_en + ':' + it.amount+ ','
+                    }
+                    if(it.item != undefined){
+                        name += it.item.name + ':' + it.amount+ ','
+                        name_en += it.item.name_en + ':' + it.amount+ ','
+                    }
+
+                })
+                this.adjustInName = name
+                this.adjustInNameEn = name_en
             })
         },
 
