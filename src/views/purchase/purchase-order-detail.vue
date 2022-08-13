@@ -360,6 +360,10 @@
                     </div>
                 </div>
             </div>
+            <template #footer>
+                <a-button @click="handlePayment" type="primary" :disabled="loading">{{ $t('def.sure') }}</a-button>
+                <a-button @click="paymentShow = false">{{ $t('def.cancel') }}</a-button>
+            </template>
         </a-modal>
         <!-- 转单 -->
         <a-modal v-model:visible="transferShow" :title="$t('p.confirm_transfer')" :after-close="handleTransferClose">
@@ -1046,6 +1050,7 @@ export default {
         },
         // 确认收款
         handlePayment() {
+            this.loading = true
             let form = Core.Util.deepCopy(this.form)
             if (!form.path) {
                 return this.$message.warning(this.$t('p.pay_file_upload'))
@@ -1057,8 +1062,8 @@ export default {
                 return this.$message.warning(this.$t('p.enter_payment'))
             }
 
-            if (this.loading !== true){
-                this.loading = true
+            // if (this.loading !== true){
+
                 Core.Api.Purchase.payment({
                     id: this.id,
                     pay_method: form.pay_method,
@@ -1073,9 +1078,13 @@ export default {
                 }).catch(err => {
                     console.log('getPurchaseInfo err', err)
                 }).finally(() => {
-                    this.loading = false;
+
+                    this.timer = setTimeout(()=> {   //设置延迟执行
+                        this.loading = false;
+                    },300);
+
                 });
-            }
+            // }
         },
         // 确认出库
         handleOutStock() {
