@@ -366,10 +366,10 @@
     </a-collapse>
     <a-modal v-model:visible="childShow" :title="$t('in.enter_instance_number')" class="attachment-file-upload-modal">
         <div class="form-title">
-            <div class="form-item">
+            <div class="form-item"  v-if="authOrg(detail.org_id, detail.org_type)">
                 <div class="key">{{ $t('v.number') }}</div>
                 <div class="value">
-                    <a-input v-model:value="form.target_uid" style="width: 200px;" :placeholder="$t('def.input')" @blur="handleVehicleBlur()"/>
+                    <a-input v-model:value="form.target_uid" style="width: 200px;" :placeholder="$t('def.input')"  @blur="handleVehicleBlur()"/>
 <!--                        <template v-if="!$auth('ADMIN')">-->
                         <span v-if="form.target_id"><i class="icon suffix i_confirm"/></span>
                         <span v-else-if="entity_no_exist"><i class="icon suffix i_close_c"/></span>
@@ -386,7 +386,7 @@
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}
                     </template>
-                    <template v-if="column.key === 'operation' && $auth('invoice.save')" >
+                    <template v-if="column.key === 'operation' && $auth('invoice.save') && authOrg(detail.org_id, detail.org_type)" >
                         <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>{{ $t('def.remove') }}</a-button>
                     </template>
                 </template>
