@@ -954,7 +954,7 @@ let Const = {
         },
         SOURCE_TYPE_ADMIN_MAP: {
             '10': {key: 10, zh: '管理员操作', en: 'Admin action', color: 'yellow'},
-            // '15': {key: 15, text: '生产单', color: 'blue'},
+	        '20': {key: 20, zh: '采购单', en: 'Purchase order', color: 'orange'},
             '30': {key: 30, zh: '售后单', en: 'After-sale order', color: 'yellow'},
             // '40': {key: 40, zh: '调货单', en: 'Transfer order', color: 'blue'},
             '50': {key: 50, zh: '维修单', en: 'Repair order', color: 'orange'},
