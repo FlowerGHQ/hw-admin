@@ -2,53 +2,55 @@
 <div id="InvoiceDetail" class="list-container">
     <div class="title-container">
         <div class="title-area">{{type_ch}}{{ $t('in.detail') }}</div>
-        <div class="btn-area">
-            <template v-if="detail.status === STATUS.INIT">
-                <div class="btns-area" v-if="$auth('invoice.save')">
+        <template v-if="authOrg(detail.org_id, detail.org_type)">
+            <div class="btn-area">
+                <template v-if="detail.status === STATUS.INIT">
+                    <div class="btns-area" v-if="$auth('invoice.save')">
+                        <a-upload name="file" class="file-uploader"
+                                  :file-list="upload.fileList" :action="upload.action"
+                                  :show-upload-list='false'
+                                  :headers="upload.headers" :data='upload.data'
+                                  accept=".xlsx,.xls"
+                                  @change="handleFileUpload">
+                            <a-button type="primary" ghost class="panel-btn">
+                                <i class="icon i_add"/> {{ $t('i.import') }}
+                            </a-button>
+                        </a-upload>
+    <!--                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('invoice.save')"><i class="icon i_add"/>{{ $t('i.import') }}</a-button>-->
+                    </div>
+                    <a-button type="primary" @click="handleSubmit()" v-if="$auth('invoice.save')"><i class="icon i_confirm"/>{{ $t('def.submit') }}</a-button>
+                    <a-button type="danger" ghost @click="handleCancel()" v-if="$auth('invoice.delete')"> <i class="icon i_close_c"/>{{ $t('def.cancel') }}</a-button>
+                </template>
+
+                <div class="btns-area" v-if="(detail.status === STATUS.AUDIT_PASS && detail.type === TYPE.IN && $auth('invoice.save')) || (detail.type === TYPE.OUT && detail.status === STATUS.AUDIT_PASS && $auth('invoice.save'))">
                     <a-upload name="file" class="file-uploader"
-                              :file-list="upload.fileList" :action="upload.action"
+                              :file-list="uploadPDA.fileList" :action="uploadPDA.action"
                               :show-upload-list='false'
-                              :headers="upload.headers" :data='upload.data'
+                              :headers="uploadPDA.headers" :data='uploadPDA.data'
                               accept=".xlsx,.xls"
                               @change="handleFileUpload">
                         <a-button type="primary" ghost class="panel-btn">
                             <i class="icon i_add"/> {{ $t('i.import') }}
                         </a-button>
                     </a-upload>
-<!--                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('invoice.save')"><i class="icon i_add"/>{{ $t('i.import') }}</a-button>-->
+                    <!--                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('invoice.save')"><i class="icon i_add"/>{{ $t('i.import') }}</a-button>-->
                 </div>
-                <a-button type="primary" @click="handleSubmit()" v-if="$auth('invoice.save')"><i class="icon i_confirm"/>{{ $t('def.submit') }}</a-button>
-                <a-button type="danger" ghost @click="handleCancel()" v-if="$auth('invoice.delete')"> <i class="icon i_close_c"/>{{ $t('def.cancel') }}</a-button>
-            </template>
 
-            <div class="btns-area" v-if="(detail.status === STATUS.AUDIT_PASS && detail.type === TYPE.IN && $auth('invoice.save')) || (detail.type === TYPE.OUT && detail.status === STATUS.AUDIT_PASS && $auth('invoice.save'))">
-                <a-upload name="file" class="file-uploader"
-                          :file-list="uploadPDA.fileList" :action="uploadPDA.action"
-                          :show-upload-list='false'
-                          :headers="uploadPDA.headers" :data='uploadPDA.data'
-                          accept=".xlsx,.xls"
-                          @change="handleFileUpload">
-                    <a-button type="primary" ghost class="panel-btn">
-                        <i class="icon i_add"/> {{ $t('i.import') }}
-                    </a-button>
-                </a-upload>
-                <!--                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('invoice.save')"><i class="icon i_add"/>{{ $t('i.import') }}</a-button>-->
+                <template v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) && detail.type === TYPE.IN && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')">
+                    <a-button type="primary" @click="handleExportIn"><i class="icon i_download"/>{{t('in.export')}}</a-button>
+                </template>
+
+                <AuditHandle v-if="(detail.status === STATUS.FINANCE_PASS || (detail.status === STATUS.WAIT_AUDIT && detail.type === TYPE.IN)) && $auth('invoice.warehouse-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"
+                                       :sPass="STATUS.AUDIT_PASS" :sRefuse="STATUS.AUDIT_REFUSE" @submit="getInvoiceDetail" ><i class="icon i_audit"/>{{$t('in.warehouse_audit')}}</AuditHandle>
+                <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && detail.type === TYPE.IN && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}{{$t('in.finish')}}</a-button>
+                <template v-if="detail.type === TYPE.OUT">
+                    <AuditHandle v-if="detail.status === STATUS.WAIT_AUDIT && $auth('invoice.finance-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"
+                                           :sPass="STATUS.FINANCE_PASS" :sRefuse="STATUS.AUDIT_REFUSE" @submit="getInvoiceDetail" ><i class="icon i_audit"/>{{$t('in.finance_audit')}}</AuditHandle>
+                    <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}{{$t('in.finish')}}</a-button>
+                    <a-button type="primary" @click="handleExportOut" v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')"><i class="icon i_download"/>{{t('in.export')}}</a-button>
+                </template>
             </div>
-
-            <template v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) && detail.type === TYPE.IN && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')">
-                <a-button type="primary" @click="handleExportIn"><i class="icon i_download"/>{{t('in.export')}}</a-button>
-            </template>
-
-            <AuditHandle v-if="(detail.status === STATUS.FINANCE_PASS || (detail.status === STATUS.WAIT_AUDIT && detail.type === TYPE.IN)) && $auth('invoice.warehouse-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"
-                                   :sPass="STATUS.AUDIT_PASS" :sRefuse="STATUS.AUDIT_REFUSE" @submit="getInvoiceDetail" ><i class="icon i_audit"/>{{$t('in.warehouse_audit')}}</AuditHandle>
-            <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && detail.type === TYPE.IN && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}{{$t('in.finish')}}</a-button>
-            <template v-if="detail.type === TYPE.OUT">
-                <AuditHandle v-if="detail.status === STATUS.WAIT_AUDIT && $auth('invoice.finance-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"
-                                       :sPass="STATUS.FINANCE_PASS" :sRefuse="STATUS.AUDIT_REFUSE" @submit="getInvoiceDetail" ><i class="icon i_audit"/>{{$t('in.finance_audit')}}</AuditHandle>
-                <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}{{$t('in.finish')}}</a-button>
-                <a-button type="primary" @click="handleExportOut" v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')"><i class="icon i_download"/>{{t('in.export')}}</a-button>
-            </template>
-        </div>
+        </template>
     </div>
     <div class="gray-panel info">
         <div class="panel-title">
@@ -493,6 +495,9 @@ export default {
             addMode: false,
             addData: [],
             supplier_id: undefined,
+            loginType: Core.Data.getLoginType(),
+            loginOrgId: Core.Data.getOrgId(),
+            loginOrgType: Core.Data.getOrgType(),
             production: {
                 addVisible: false,
                 addCount: '',
@@ -632,6 +637,13 @@ export default {
         this.getInvoiceDetail();
     },
     methods: {
+        authOrg(orgId, orgType) {
+            console.log('org',this.loginOrgId === orgId && this.loginOrgType === orgType)
+            if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
+                return true
+            } else{ return false }
+        },
+
         routerChange(type, item= {}) {
             let routeUrl = ''
             switch (type) {
