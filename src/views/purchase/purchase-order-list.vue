@@ -70,7 +70,7 @@
         <div class="operate-container">
             <a-button type="primary" @click="handleExportConfirm" v-if="$auth('purchase-order.export')"><i class="icon i_download"/>{{$t('def.export')}}</a-button>
             <a-button type="primary" @click="handleExportSalesReport" v-if="$auth('ADMIN')"><i class="icon i_download"/>{{$t('def.sales_report_export')}}</a-button>
-            <a-button type="primary" @click="handleExportSalesQuantityStatistics" v-if="$auth('ADMIN')"><i class="icon i_download"/>{{$t('def.sales_report_export')}}</a-button>
+            <a-button type="primary" @click="handleExportSalesQuantityStatistics" v-if="$auth('ADMIN')"><i class="icon i_download"/>{{$t('def.quantity_sales_report_export')}}</a-button>
 
         </div>
         <div class="table-container">
