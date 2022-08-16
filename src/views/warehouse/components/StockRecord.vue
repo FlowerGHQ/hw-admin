@@ -11,7 +11,7 @@
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'count'">
-                            {{ text || 0 }} 件
+                            {{ text || 0 }} {{ $t('i.pcs2') }}
                         </template>
                         <template v-if="column.type && column.type === 'item'">
                             <template v-if="record.target_type === 1 && column.key === 'name'">

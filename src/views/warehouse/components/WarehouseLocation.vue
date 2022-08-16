@@ -66,7 +66,7 @@
                     <template #bodyCell="{ column, text, record }">
 
                         <template v-if="column.key === 'count'">
-                            {{ text || 0 }} 件
+                            {{ text || 0 }} {{ $t('i.pcs2') }}
                         </template>
 
                         <template v-if="column.dataIndex === 'type'">

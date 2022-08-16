@@ -49,7 +49,7 @@
 <!--                    </template>-->
 
                     <template v-if="column.key === 'count'">
-                        {{ text || 0 }} 件
+                        {{ text || 0 }} {{ $t('i.pcs2') }}
                     </template>
                     <template v-if="column.key === 'operation'">
                         <a-button type='link' v-if="record.target_type === TARGET_TYPE.ITEM && $auth('item.detail')" @click="routerChange('item', record.item)"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
