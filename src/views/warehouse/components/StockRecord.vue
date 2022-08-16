@@ -2,6 +2,34 @@
     <div class="StockRecord gray-panel no-margin">
         <div class="panel-content">
             <div class="table-container">
+                <div class="search-container">
+                    <a-row class="search-area">
+                        <a-col :xs='24' :sm='24' :xl="16" :xxl='8' class="search-item">
+                            <div class="key">code：</div>
+                            <div class="value">
+                                <a-select
+                                    v-model:value="searchForm.item_id"
+                                    show-search
+                                    placeholder="code"
+                                    :default-active-first-option="false"
+                                    :show-arrow="false"
+                                    :filter-option="false"
+                                    :not-found-content="null"
+                                    @search="handleItemSearch"
+                                >
+                                    <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
+                                        {{ item.code }} - {{ item.name }}
+                                    </a-select-option>
+                                </a-select>
+                            </div>
+                        </a-col>
+                    </a-row>
+
+                    <div class="btn-area">
+                        <a-button @click="handleSearch" type="primary">{{$t('def.search')}}</a-button>
+                        <a-button @click="handleSearchReset" >{{$t('def.reset')}}</a-button>
+                    </div>
+                </div>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="(record) => record.id" :pagination="false">
                     <template #bodyCell="{ column, text, record }">
@@ -101,6 +129,10 @@ export default {
             total: 0,
 
             tableData: [],
+            searchForm: {
+                item_id: '',
+            },
+            itemOptions: [],
         };
     },
     watch: {},
@@ -166,6 +198,7 @@ export default {
             this.loading = true;
             Core.Api.Stock.stockRecordList({
                 warehouse_id: this.warehouseId,
+                target_id: this.searchForm.item_id,
                 page: this.currPage,
                 page_size: this.pageSize,
             }).then(res => {
@@ -177,6 +210,18 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
+        },
+        handleItemSearch(code) {
+            Core.Api.Item.list({code: code,flag_spread: 1}).then(res => {
+                this.itemOptions = res.list
+            })
+        },
+        handleSearch() {
+            this.pageChange(1)
+        },
+        handleSearchReset() {
+            Object.assign(this.searchForm, this.$options.data().searchForm)
+            this.pageChange(1)
         },
     },
 };
