@@ -786,6 +786,13 @@ const Util = {
         return MAP[val] || '未知'
     },
     /* =============== 调货单 ================ */
+	/* =============== 整车 ================ */
+	entityStatusFilter(val,  to='zh') {
+		const MAP = Const.ENTITY.STATUS_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	/* =============== 整车 ================ */
 
     /* =============== 权限 ================ */
     userAuthFilter(val,  to='zh') {

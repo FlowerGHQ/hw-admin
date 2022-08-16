@@ -1083,6 +1083,22 @@ let Const = {
             SUCCESS: 1,
         }
     },
+	ENTITY: {
+    	STATUS: {
+		    INIT: 0,
+		    DISTRIBUTION: 1,
+		    SALE_OUT: 2,
+		    PRE_WAREHOUSING: 3,
+		    DISTRIBUTION_WAREHOUSING: 4,
+	    },
+		STATUS_MAP: {
+			'0': {key: 0, zh: '初始', en: 'Init'},
+			'1': {key: 1, zh: '已分销', en: 'Distributed'},
+			'2': {key: 2, zh: '已卖出', en: 'Sold'},
+			'3': {key: 3, zh: '预出入库', en: 'Pre-warehousing'},
+			'4': {key: 4, zh: '预分销出入库', en: 'Pre-distribution warehousing'},
+		}
+	},
     AFTERSALES: { // 售后
         STATUS: {
             INIT: 0,         // 待提交

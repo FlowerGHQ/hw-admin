@@ -94,6 +94,9 @@
                         <template v-if="column.dataIndex === 'org_name'">
                             {{ text || '-' }}
                         </template>
+                        <template v-if="column.dataIndex === 'status'">
+                            {{ $Util.entityStatusFilter(text, $i18n.locale) }}
+                        </template>
                         <template v-if="column.dataIndex === 'org_type'">
                             {{ $Util.userTypeFilter(text, $i18n.locale) }}
                         </template>
@@ -281,6 +284,8 @@ export default {
                 {title: 'i.spec', dataIndex: 'attr', key: 'attr'},
                 {title: 'v.type', dataIndex: 'org_type'},
                 {title: 'r.unit', dataIndex: 'org_name'},
+                {title: 'wa.related', dataIndex: 'warehouse_name'},
+                {title: 'p.status', dataIndex: 'status'},
                 {title: 'v.date', dataIndex: 'arrival_time', key: 'time'},
                 {title: 'd.create_time', dataIndex: 'create_time', key: 'time'},
                 {title: 'def.operate', key: 'operation', fixed: 'right', width: 180}
@@ -477,7 +482,8 @@ export default {
             console.log("handleMatterChange status:", file.status, "file:", file)
             if (file.status == 'done') {
                 if (file.response && file.response.code > 0) {
-                    return this.$message.error(file.response.message)
+                    return this.$message.error(this.$t(file.response.code + '',JSON.parse(file.response.message)))
+                    return this.$message.error(this.$t('2601',JSON.parse(file.response.message)))
                 } else {
                     return this.$message.success(this.$t('i.uploaded'));
                 }
