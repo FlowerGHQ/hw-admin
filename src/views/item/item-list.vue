@@ -409,7 +409,7 @@ export default {
             console.log("handleMatterChange status:", file.status, "file:", file)
             if (file.status == 'done') {
                 if (file.response && file.response.code > 0) {
-                    return this.$message.error(file.response.message)
+                    return this.$message.error(this.$t(file.response.code + ''))
                 } else {
                     return this.$message.success(this.$t('i.uploaded'));
                 }

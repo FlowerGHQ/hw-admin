@@ -483,7 +483,6 @@ export default {
             if (file.status == 'done') {
                 if (file.response && file.response.code > 0) {
                     return this.$message.error(this.$t(file.response.code + '',JSON.parse(file.response.message)))
-                    return this.$message.error(this.$t('2601',JSON.parse(file.response.message)))
                 } else {
                     return this.$message.success(this.$t('i.uploaded'));
                 }
