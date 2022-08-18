@@ -1,5 +1,9 @@
 import axios from 'axios';
 import { message } from 'ant-design-vue';
+import i18n from '../i18n';
+import Data from '../data';
+
+console.log('i18n.global', i18n.global)
 
 const showMessage = (msg) => {
     message.error(msg);
@@ -15,6 +19,17 @@ const errorHandle = (status, message = '未知错误') => {
     }
     if (status === -1) {
         return showMessage('系统异常');
+    }
+    if (status >= 1000) {
+        let lang = Data.getLang()
+        switch(lang) {
+            case "zh" :
+                return showMessage(i18n.global.messages.zh.error_code[status]);
+                break;
+            case "en" :
+                return showMessage(i18n.global.messages.en.error_code[status]);
+                break;
+        }
     }
     showMessage(message);
 };

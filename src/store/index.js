@@ -14,7 +14,7 @@ const store = createStore({
                 Data.setLang('en')
             } else {
                 state.lang = 'zh'
-                Data.setLang('en')
+                Data.setLang('zh')
             }
         }
     }
