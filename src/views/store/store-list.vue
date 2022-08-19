@@ -63,7 +63,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'pay_type'">
-                            {{$Util.payTypeFilter(text) || '-' }}
+                            {{$Util.payTypeFilter(text, $i18n.locale) || '-' }}
                         </template>
 <!--                        <template v-if="column.key === 'flag_receive_transfer'">
                             <a-switch v-if="$auth('ADMIN')" :checked="!!record.flag_receive_transfer"

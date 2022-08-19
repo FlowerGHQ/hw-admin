@@ -67,7 +67,7 @@
                         {{ text || '-'}}
                     </template>
                     <template v-if="column.key === 'pay_type'">
-                        {{$Util.payTypeFilter(text) || '-' }}
+                        {{$Util.payTypeFilter(text, $i18n.locale) || '-' }}
                     </template>
                     <template v-if="column.key === 'tip_item'">
                         <a-tooltip placement="top" :title='text'>
@@ -176,7 +176,7 @@ export default {
             //     tableColumns.splice(2, 0, {title: this.$t('a.superior'), dataIndex: 'distributor_name', key: 'item'})
             // }
             if (this.$i18n.locale === 'en' ) {
-                tableColumns.splice(3, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
+                tableColumns.splice(4, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
             }
             return tableColumns
         },
