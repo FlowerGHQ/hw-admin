@@ -116,9 +116,23 @@
                                                   @change='handleIndepChange(record)'/>
                                     </template>
                                 </template>
+                                <template v-if="column.dataIndex === 'flag_default'">
+                                    <template v-if="index === 0">
+                                        <a-tooltip :title="$t('i.default_a')">
+                                            {{ $t('i.default') }} <i class="icon i_hint" style="font-size: 12px;"/>
+                                        </a-tooltip>
+                                    </template>
+                                    <template v-else>
+                                        <a-switch v-model:checked="record.flag_default"
+                                                  @change='handleDefaults(record)'/>
+                                    </template>
+                                </template>
 
                                 <template v-if="column.key === 'operation'">
                                     <template v-if="record.flag_independent_info">
+                                        <a-button type="link" @click="setFlagDefault(record)"><i
+                                            class="icon i_relevance"/> {{ $t('i.view') }}
+                                        </a-button>
                                         <a-button type="link" @click="routerChange('edit-explored-indep', record)"><i
                                             class="icon i_relevance"/> {{ $t('i.view') }}
                                         </a-button>
@@ -204,6 +218,7 @@ export default {
                 {title: 'FOB(USD)', key: 'fob', dataIndex: 'fob_usd', unit: '$'},
                 // {title: '建议零售价', key: 'money', dataIndex: 'price'},
                 {title: this.$t('i.custom'), dataIndex: 'flag_independent_info'},
+                {title: this.$t('i.custom'), dataIndex: 'flag_default'},
                 {title: this.$t('def.operate'), key: 'operation'},
             )
             return column
@@ -333,6 +348,7 @@ export default {
                         fob_eur: item.fob_eur,
                         fob_usd: item.fob_usd,
                         flag_independent_info: item.flag_independent_info ? true : false,
+                        flag_default: item.flag_default ? true : false,
                     }
                 })
                 this.specific.data = data
@@ -386,6 +402,27 @@ export default {
                 }
             });
         },
+        // 开启、关闭 默认显示
+        handleDefaults(record) {
+            console.log('handleDefaults record:', record)
+            let _this = this;
+            this.$confirm({
+                title: this.$t('pop_up.sure') + `${record.flag_default ? this.$t('pop_up.open') : this.$t('pop_up.close')} [${record.code}] ` + this.$t('pop_up.information'),
+                okText: this.$t('def.sure'),
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.Item.setIndep({id: record.id}).then(() => {
+                        _this.$message.success(_this.$t('pop_up.save_success'))
+                        _this.getSpecList();
+                    }).catch(err => {
+                        console.log("handleIndepChange err", err);
+                    })
+                },
+                onCancel() {
+                    record.flag_independent_info = !record.flag_independent_info
+                }
+            });
+        },
 
         handleStatusChange() {
             let _this = this;
@@ -405,6 +442,9 @@ export default {
                     })
                 },
             });
+        },
+        setFlagDefault(item){
+
         },
     }
 };
