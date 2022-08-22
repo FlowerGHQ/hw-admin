@@ -408,7 +408,7 @@ export default {
                 okText: this.$t('def.sure'),
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.Item.setFlagDefault({id: record.id}).then(() => {
+                    Core.Api.Item.setDefaults({id: record.id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.save_success'))
                         _this.getSpecList();
                     }).catch(err => {
@@ -439,9 +439,6 @@ export default {
                     })
                 },
             });
-        },
-        setFlagDefault(item){
-
         },
     }
 };
