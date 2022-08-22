@@ -9,6 +9,12 @@
         </div>
         <div class="search-container">
             <a-row class="search-area">
+              <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                <div class="key">{{ $t('d.name_short_name') }}:</div>
+                <div class="value">
+                  <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                </div>
+              </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
                     <div class="key">{{ $t('a.superior') }}:</div>
                     <div class="value">
@@ -30,12 +36,6 @@
                                 {{name }}
                             </template>
                         </a-tree-select>
-                    </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">{{ $t('n.name') }}:</div>
-                    <div class="value">
-                        <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">

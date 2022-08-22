@@ -140,7 +140,7 @@ export default {
             let { filteredInfo } = this;
             filteredInfo = filteredInfo || {};
             let columns = [
-                {title: this.$t('d.distributor_name'), dataIndex: 'name'},
+                {title: this.$t('d.distributor_name'), dataIndex: 'name', sorter: true},
                 {title: this.$t('d.short_name'), dataIndex: 'short_name'},
                 { title: this.$t('d.pay_type'), dataIndex: 'pay_type', key:'pay_type' },
                 {title: this.$t('n.type'), dataIndex: 'type',
