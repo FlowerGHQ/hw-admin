@@ -921,7 +921,8 @@ let Const = {
 
 
             CLOSE: 40, //已完成
-	        DELIVERY: 50, //已完成
+	        DELIVERY: 50, //已发货
+            RECEIVED: 60, //已收货
             AUDIT_REFUSE: -10,//审核失败
             CANCEL: -20, // 取消
         },

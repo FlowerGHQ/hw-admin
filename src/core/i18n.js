@@ -323,6 +323,7 @@ const messages = {
             manage_store: '门店管理',
             manage_account: '账户管理',
             item: '商品价格',
+            name_short_name: '名称或简称',
         },
         e: { // 员工
             employee_list: '员工列表',
@@ -1461,7 +1462,7 @@ const messages = {
             phone: 'Phone',
             email: 'Email',
             country: 'Nation',
-            enter: 'Please enter distributor name',
+            enter: 'Please enter distributor name or short name',
             area: 'Area',
             choose: 'Please choose ',
             information: 'Basic Information',
@@ -1734,6 +1735,7 @@ const messages = {
             manage_store: 'Stores',
             manage_account: 'Accounts',
             item: 'Commodity price ',
+            name_short_name: 'Name or Short Name',
         },
         e: {
             employee_list: 'Employee list',

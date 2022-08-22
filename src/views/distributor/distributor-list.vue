@@ -10,7 +10,7 @@
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('n.name')}}:</div>
+                        <div class="key">{{ $t('d.name_short_name')}}:</div>
                         <div class="value">
                             <a-input :placeholder="$t('n.enter')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
@@ -22,7 +22,7 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
-                        <div class="key">{{ $t('d.create_time') }}:</div>
+                        <div class="key">{{ $t('def.create_time') }}:</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                     </a-col>
                 </a-row>

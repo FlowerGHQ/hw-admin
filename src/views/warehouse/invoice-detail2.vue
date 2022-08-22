@@ -86,7 +86,7 @@
             <div class="info-item">
                 <div class="key">{{ $t('n.source') }}</div>
 <!--                admin端设置了不翻译来源-->
-                <div class="value" v-if="$auth('ADMIN')">{{ $Util.sourceTypeAdminFilter(detail.source_type) || '-'}}</div>
+                <div class="value" v-if="$auth('ADMIN')">{{ $Util.sourceTypeAdminFilter(detail.source_type, $i18n.locale) || '-'}}</div>
                 <div class="value" v-if="!$auth('ADMIN')">{{ $Util.sourceTypeFilter(detail.source_type, $i18n.locale) || '-'}}</div>
             </div>
             <div class="info-item" v-if="detail.source_type !== SOURCE_TYPE.ADMIN">
