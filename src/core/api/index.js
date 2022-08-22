@@ -230,6 +230,7 @@ const apiList = {
         detailByCodeForRepair: ['PostJson','item/detail-by-code-for-repair'],
         delete: ['PostJson', 'item/delete'],
         setIndep: ['PostJson', 'item/set-flag-independent-info'],
+	    setDefaults: ['PostJson', 'item/set-flag-defaults'],
         addItemComponent: ['PostJson', 'item/item-component-set-save'], // 新增爆炸图
         getItemComponent: ['PostJson', 'item/item-component-set-list'], // 查询爆炸图列表
         bindItemComponent: ['PostJson', 'item/bind-item-component'], // 绑定零部件
