@@ -29,7 +29,7 @@
                 :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, record, index }">
                     <template v-if="column.dataIndex === 'index'" width="100px">
-                        <a-input v-model:value="record.index" @change="saveRowIndex(record)" placeholder="$t('search.enter_sn')"></a-input>
+                        <a-input v-model:value="record.index" @change="saveRowIndex(record)" :placeholder="$t('search.enter_sn')"></a-input>
                         <!-- <div v-if="!record.isEdit" @click="editRowIndex(record)">{{ (record || {}).index }}</div>
                         <div v-else>
                             <a-input v-model:value="record.index" @keydown.enter="saveRowIndex(record)" placeholder="请输入序号"></a-input>
@@ -75,15 +75,16 @@
                         <div class="component-contain">
                             <div class="contain-header"><i class="icon i_close" style="color: #fff" @click.stop="clickDeletePoint(index)"/></div>
                             <div class="contain-name">
-                                <i class="icon i_skew-bg" />
-                                <span class="icon-name">{{ $t('n.name') }}</span>
+<!--                                <i class="icon i_skew-bg" />-->
+<!--                                <span class="icon-name">{{ $t('n.name') }}</span>-->
 <!--                                {{ (item.item || {}).name }}-->
-                                <span v-if="$i18n.locale === 'zh'"> {{ (item.item || {}).name }}</span>
-                                <span v-if="$i18n.locale === 'en'"> {{ (item.item || {}).name_en }}</span>
+
+                                <span v-if="$i18n.locale === 'zh'"> {{ $t('n.name') }}:&nbsp;{{ (item.item || {}).name }}</span>
+                                <span v-if="$i18n.locale === 'en'"> {{ $t('def.model') }}:&nbsp;{{ (item.item || {}).name_en }}</span>
                             </div>
                             <div class="contain-type">
                                 <div class="type-left">{{ $t('def.model') }}:&nbsp;{{ (item.item || {}).model}}</div>
-                                <div class="edit-btn" @click="showEdit(index)">{{ $t('def.edit') }}</div>
+<!--                                <div class="edit-btn" @click="showEdit(index)">{{ $t('def.edit') }}</div>-->
                             </div>
                         </div>
                     </div>
@@ -697,9 +698,9 @@ export default {
                         position: relative;
                         padding: 0 16px;
                         width: 100%;
-                        height: 20px;
+                        height: px;
                         line-height: 20px;
-                        font-size: 16px;
+                        font-size: 12px;
                         color: @TC_L;
                         text-align: left;
                         overflow: hidden; //超出的文本隐藏
@@ -738,7 +739,7 @@ export default {
                         padding-right: 6px;
                         width: calc(100% - 48px);
                         color: @TC_L;
-                        font-size: 16px;
+                        font-size: 12px;
                         overflow: hidden; //超出的文本隐藏
                         text-overflow: ellipsis; //溢出用省略号显示
                         white-space: nowrap;
