@@ -198,7 +198,7 @@ export default {
                         path: '/purchase/item-display',
                         query: { id: item.id }
                     })
-                    window.open(routeUrl.href, '_self')
+                    window.open(routeUrl.href, '_blank')
                     break;
                 case 'favorite':  // 收藏夹
                 case 'shop_cart':  // 购物车
