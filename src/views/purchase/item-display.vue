@@ -139,7 +139,7 @@ export default {
         // 获取 同规格商品 列表
         getSpecList() {
             this.loading = true;
-            Core.Api.Item.listBySet({
+            Core.Api.Item.list({
                 set_id: this.detail.set_id
             }).then(res => {
                 console.log('getSpecList this.specific.data:', res)
