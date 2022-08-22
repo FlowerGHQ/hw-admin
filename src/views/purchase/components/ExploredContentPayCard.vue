@@ -7,7 +7,7 @@
         <div class="card-info">
             <div class="title">{{ $i18n.locale =='zh' ? data.name : data.name_en  }}</div>
             <div class="title">{{ data.code}}</div>
-            <div class="info">{{ $t('i.price_suggest') }}</div>
+<!--            <div class="info">{{ $t('i.price_suggest') }}</div>-->
             <!-- <ul>
                 <li v-for="attr in data.attr_list">{{ $i18n.locale =='zh' ? attr.attr_def_name : attr.attr_def_key }}：{{ $i18n.locale =='zh' ? attr.value : attr.value_en }}</li>
             </ul> -->
