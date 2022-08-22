@@ -90,7 +90,9 @@
                         </a-tooltip>
                     </template>
                     <template v-if="column.key === 'money'">
-                        {{$Util.priceUnitFilter(record.currency)}} {{$Util.countFilter(text)}}
+                        <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
+                        {{$Util.countFilter(text)}}
+<!--                        {{$Util.priceUnitFilter(record.currency)}} {{$Util.countFilter(text)}}-->
                     </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text,'color')">

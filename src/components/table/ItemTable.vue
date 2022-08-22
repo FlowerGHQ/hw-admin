@@ -20,7 +20,9 @@
                 </div>
             </template>
             <template v-if="column.key === 'money'">
-                {{column.unit}} {{$Util.countFilter(text)}}
+                <span v-if="text >= 0">{{column.unit}}</span>
+                {{$Util.countFilter(text)}}
+<!--                {{column.unit}} {{$Util.countFilter(text)}}-->
             </template>
             <template v-if="column.key === 'item'">
                 {{text || '-'}}

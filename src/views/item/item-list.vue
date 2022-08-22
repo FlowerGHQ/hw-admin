@@ -101,7 +101,9 @@
                         {{$Util.itemFlagEntityFilter(text, $i18n.locale)}}
                     </template>
                     <template v-if="column.key === 'fob_money'">
-                        {{column.unit}} {{$Util.countFilter(text)}}
+                        <span v-if="text >= 0">{{column.unit}}</span>
+                         {{$Util.countFilter(text)}}
+
                     </template>
                     <template v-if="column.key === 'man_hour'">
                         {{ $Util.countFilter(text) }}
