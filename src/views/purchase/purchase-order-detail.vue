@@ -76,7 +76,9 @@
                                     <a-input-number v-model:value="record.deliver_amount" style="width: 120px;" :min="0" :precision="0" :disabled="record.disabled"/>
                                 </template>
                                 <template v-if="column.key === 'money'">
-                                    {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(text)}}
+                                    <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
+                                    {{$Util.countFilter(text)}}
+<!--                                    {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(text)}}-->
                                 </template>
                                 <template v-if="column.key === 'spec'">
                                     {{$Util.itemSpecFilter(text, $i18n.locale )}}

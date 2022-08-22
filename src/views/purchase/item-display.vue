@@ -15,7 +15,7 @@
 
             <div class="price-list">
                 <div class="retail-price">
-                    <span class="price-left">{{ $t('i.price_suggest') }}</span>
+<!--                    <span class="price-left">{{ $t('i.price_suggest') }}</span>-->
                     <span class="price-right">€{{$Util.countFilter(detail[priceKey + 'eur'])}} | ${{$Util.countFilter(detail[priceKey + 'usd'])}}</span>
                 </div>
 <!--                <div class="price">-->
