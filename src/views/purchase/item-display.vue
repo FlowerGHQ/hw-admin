@@ -141,7 +141,7 @@ export default {
             this.loading = true;
             Core.Api.Item.list({
                 set_id: this.detail.set_id,
-                flag_default: 1,
+                flag_spread: 1,
                 status: 0,
 
             }).then(res => {
