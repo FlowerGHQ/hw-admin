@@ -221,6 +221,12 @@
                             <template v-if="column.dataIndex === 'code'">
                                 <a-input class="code" v-model:value="record.code" :placeholder="$t('def.input')"/>
                             </template>
+                            <template v-if="column.dataIndex === 'name'">
+                                <a-input class="code" v-model:value="record.name" :placeholder="$t('def.input')"/>
+                            </template>
+                            <template v-if="column.dataIndex === 'name_en'">
+                                <a-input class="code" v-model:value="record.name_en" :placeholder="$t('def.input')"/>
+                            </template>
                             <template v-if="column.dataIndex === 'price'">
                                 <a-input-number v-model:value="record.price" :min="0.01" :precision="2"
                                     :formatter="value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/€\s?|(,*)/g, '')"/>
@@ -470,6 +476,8 @@ export default {
             column = column.filter(item => item.title && item.dataIndex)
             column.unshift(
                 {title: this.$t('i.code'), key: 'input', dataIndex: 'code', fixed: 'left'},
+                {title: this.$t('n.name'), key: 'input', dataIndex: 'name', fixed: 'left'},
+                {title: this.$t('n.name_en'), key: 'input', dataIndex: 'name_en', fixed: 'left'},
             )
             column.push(
                 {title: this.$t('i.cost_price'), key: 'money', dataIndex: 'original_price', fixed: 'right'},
@@ -644,6 +652,8 @@ export default {
                     return {
                         ...params,
                         code: item.code,
+                        name: item.name,
+                        name_en: item.name_en,
                         price: Core.Util.countFilter(item.price),
                         fob_eur: Core.Util.countFilter(item.fob_eur),
                         fob_usd: Core.Util.countFilter(item.fob_usd),
@@ -711,6 +721,8 @@ export default {
                     return {
                         id: data.target_id,
                         code: data.code,
+                        name: data.name,
+                        name_en: data.name_en,
                         price: Math.round(data.price * 100),
                         fob_eur: Math.round(data.fob_eur * 100),
                         fob_usd: Math.round(data.fob_usd * 100),
@@ -918,6 +930,8 @@ export default {
                 this.specific.data = [{
                     target_id: this.form.id,
                     code: this.form.code,
+                    name: this.form.name,
+                    name_en: this.form.name_en,
                     price: this.form.price,
                     fob_eur: this.form.fob_eur,
                     fob_usd: this.form.fob_usd,
@@ -926,6 +940,8 @@ export default {
                 }]
             } else if (this.specific.mode === 1) {
                 this.form.code = this.specific.data[0].code
+                this.form.name = this.specific.data[0].name
+                this.form.name_en = this.specific.data[0].name_en
                 this.form.price = this.specific.data[0].price
                 this.form.fob_eur = this.specific.data[0].fob_eur
                 this.form.fob_usd = this.specific.data[0].fob_usd
@@ -1088,6 +1104,8 @@ export default {
             // }
             this.specific.data.push({
                 code: '',
+                name: '',
+                name_en: '',
                 price: '',
                 original_price: '',
                 fob_eur: '',
