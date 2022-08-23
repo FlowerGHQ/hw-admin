@@ -19,7 +19,9 @@
 <!--                     <div class="spot"></div>
                     <span>库存：89</span>-->
                 </div>
-                <div class="shop-price">€{{$Util.countFilter(data[priceKey + 'eur'])}} | ${{$Util.countFilter(data[priceKey + 'usd'])}}</div>
+                <div class="shop-price" v-if="currency === 'eur'">€{{$Util.countFilter(data[priceKey + 'eur'])}}</div>
+                <div class="shop-price" v-else>${{$Util.countFilter(data[priceKey + 'usd'])}}</div>
+<!--                <div class="shop-price">€{{$Util.countFilter(data[priceKey + 'eur'])}} | ${{$Util.countFilter(data[priceKey + 'usd'])}}</div>-->
             </div>
             <div class="shop-bottom">
                 <div class="cart-box">
@@ -67,6 +69,7 @@ export default {
     data() {
         return {
             value: 1,
+            currency: ''
         };
     },
     watch: {},
@@ -78,6 +81,7 @@ export default {
         },
     },
     mounted() {
+        this.currency = Core.Data.getCurrency();
         console.log(this.data,'data')
     },
     methods: {

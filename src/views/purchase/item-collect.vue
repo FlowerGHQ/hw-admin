@@ -11,9 +11,9 @@
             <i class="icon i_add"/> {{$t('i.bulk_import')}}
         </a-button>
     </a-upload>
-    <a-select v-model:value="currency" class="monetary-select">
-        <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>
-    </a-select>
+<!--    <a-select v-model:value="currency" class="monetary-select">-->
+<!--        <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>-->
+<!--    </a-select>-->
 
     <div class="list-container shop-cart-container">
         <div class="title-area">
@@ -134,7 +134,7 @@ export default {
                 "$": { key: '_usd', text: '$ (USD)'},
                 // "£": { key: '_gbp', text: '£ (GBP)'},
             },
-            currency: Core.Const.ITEM.MONETARY_TYPE_MAP.EUR,
+            currency: "",
             mark: '',
             // 上传
             upload: {
@@ -174,7 +174,17 @@ export default {
             return this.$store.state.lang
         }
     },
+    created() {
+        console.log(Core.Data.getCurrency())
+        this.currency = Core.Data.getCurrency()
+    },
     mounted() {
+        if (Core.Data.getCurrency() === 'EUR'){
+            this.currency =  "€"
+        } else {
+            this.currency =  "$"
+        }
+
         this.getList()
     },
     methods: {
@@ -260,7 +270,7 @@ export default {
 
         //修改备注
         handleRemarkEditShow(item) {
-            item.editRemark = !item.editRemark 
+            item.editRemark = !item.editRemark
             this.editRemark = item.remark
         },
         handleRemarkEditBlur(item) {
