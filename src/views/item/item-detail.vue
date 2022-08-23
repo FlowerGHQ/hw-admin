@@ -130,9 +130,6 @@
 
                                 <template v-if="column.key === 'operation'">
                                     <template v-if="record.flag_independent_info">
-                                        <a-button type="link" @click="setFlagDefault(record)"><i
-                                            class="icon i_relevance"/> {{ $t('i.view') }}
-                                        </a-button>
                                         <a-button type="link" @click="routerChange('edit-explored-indep', record)"><i
                                             class="icon i_relevance"/> {{ $t('i.view') }}
                                         </a-button>
@@ -407,11 +404,11 @@ export default {
             console.log('handleDefaults record:', record)
             let _this = this;
             this.$confirm({
-                title: this.$t('pop_up.sure') + `${record.flag_default ? this.$t('pop_up.open') : this.$t('pop_up.close')} [${record.code}] ` + this.$t('pop_up.information'),
+                title: this.$t('pop_up.sure') + `${record.flag_default ? this.$t('pop_up.open') : this.$t('pop_up.close')} [${record.code}] ` + this.$t('pop_up.default'),
                 okText: this.$t('def.sure'),
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.Item.setIndep({id: record.id}).then(() => {
+                    Core.Api.Item.setDefaults({id: record.id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.save_success'))
                         _this.getSpecList();
                     }).catch(err => {
@@ -419,7 +416,7 @@ export default {
                     })
                 },
                 onCancel() {
-                    record.flag_independent_info = !record.flag_independent_info
+                    record.flag_default = !record.flag_default
                 }
             });
         },
@@ -442,9 +439,6 @@ export default {
                     })
                 },
             });
-        },
-        setFlagDefault(item){
-
         },
     }
 };
