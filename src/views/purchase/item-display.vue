@@ -16,7 +16,9 @@
             <div class="price-list">
                 <div class="retail-price">
 <!--                    <span class="price-left">{{ $t('i.price_suggest') }}</span>-->
-                    <span class="price-right">€{{$Util.countFilter(detail[priceKey + 'eur'])}} | ${{$Util.countFilter(detail[priceKey + 'usd'])}}</span>
+                    <span class="price-right" v-if="currency === 'eur'">€{{$Util.countFilter(detail[priceKey + 'eur'])}}</span>
+                    <span class="price-right" v-else>€{{$Util.countFilter(detail[priceKey + 'usd'])}}</span>
+<!--                    <span class="price-right">€{{$Util.countFilter(detail[priceKey + 'eur'])}} | ${{$Util.countFilter(detail[priceKey + 'usd'])}}</span>-->
                 </div>
 <!--                <div class="price">-->
 <!--                    <span class="price-left">{{ $t('i.price') }}</span>-->
@@ -100,6 +102,7 @@ export default {
 
             // 下载数据
             downloadData: [],
+            currency:'',
         };
     },
     watch: {},
@@ -111,6 +114,7 @@ export default {
         }
     },
     mounted() {
+        this.currency = Core.Data.getCurrency();
         this.id = Number(this.$route.query.id) || 0
         this.getItemDetail();
         this.getAccessoryData();

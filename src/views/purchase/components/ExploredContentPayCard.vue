@@ -11,7 +11,13 @@
             <!-- <ul>
                 <li v-for="attr in data.attr_list">{{ $i18n.locale =='zh' ? attr.attr_def_name : attr.attr_def_key }}：{{ $i18n.locale =='zh' ? attr.value : attr.value_en }}</li>
             </ul> -->
-            <div class="price">€{{$Util.countFilter(data[priceKey + 'eur'])}} | ${{$Util.countFilter(data[priceKey + 'usd'])}}</div>
+            <div class="price" v-if="currency === 'eur'">
+                €{{$Util.countFilter(data[priceKey + 'eur'])}}
+            </div>
+            <div class="price" v-else>
+                ${{$Util.countFilter(data[priceKey + 'usd'])}}
+            </div>
+<!--            <div class="price">€{{$Util.countFilter(data[priceKey + 'eur'])}} | ${{$Util.countFilter(data[priceKey + 'usd'])}}</div>-->
         </div>
     </div>
     <div class="shop-card">
@@ -20,7 +26,13 @@
                 <!-- <div class="spot"></div>
                 <span>库存：10</span> -->
             </div>
-            <div class="shop-price">€{{$Util.countFilter(data[priceKey + 'eur'])}} | ${{$Util.countFilter(data[priceKey + 'usd'])}}</div>
+            <div class="shop-price" v-if="currency === 'eur'">
+                €{{$Util.countFilter(data[priceKey + 'eur'])}}
+            </div>
+            <div class="shop-price" v-else>
+                ${{$Util.countFilter(data[priceKey + 'usd'])}}
+            </div>
+<!--            <div class="shop-price">€{{$Util.countFilter(data[priceKey + 'eur'])}} | ${{$Util.countFilter(data[priceKey + 'usd'])}}</div>-->
         </div>
         <div class="shop-bottom">
             <div class="cart-box">
@@ -69,9 +81,11 @@ export default {
     data() {
         return {
             value: 1,
+            currency: '',
         }
     },
     mounted() {
+        this.currency = Core.Data.getCurrency();
         console.log(this.data,'this data')
     },
     methods: {
