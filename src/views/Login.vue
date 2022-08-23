@@ -97,6 +97,7 @@ export default {
                 Core.Data.setUser(res.user.account);
                 Core.Data.setOrgId(res.user.org_id);
                 Core.Data.setOrgType(res.user.org_type);
+                Core.Data.setCurrency(res.user.currency);
 
                 let loginType = TYPE_MAP[this.loginForm.user_type]
                 /* switch (this.loginForm.user_type) {

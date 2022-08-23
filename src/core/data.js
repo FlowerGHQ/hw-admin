@@ -104,6 +104,12 @@ class StorageHandler {
     getOrgType() {
         return this.getItem(Const.DATA.KEY_ORG_TYPE)
     }
+	setCurrency(value) {
+		this.setItem(Const.DATA.KEY_CURRENCY, value);
+	}
+	getCurrency() {
+		return this.getItem(Const.DATA.KEY_CURRENCY)
+	}
 
     setUserType(value) {
         this.setItem(Const.DATA.KEY_USER_TYPE, value);

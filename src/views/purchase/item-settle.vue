@@ -1,8 +1,8 @@
 <template>
 <div id="ItemSettle" class="list-container">
-    <a-select v-model:value="unit" class="monetary-select" @change="handleUnitChange">
-        <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>
-    </a-select>
+<!--    <a-select v-model:value="unit" class="monetary-select" @change="handleUnitChange">-->
+<!--        <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>-->
+<!--    </a-select>-->
     <div class="title-area">{{ $t('i.settle') }}</div>
     <div class="config-list">
         <div class="config-item receive">
@@ -128,7 +128,7 @@ export default {
 
             unit: '', // €、$
             currency: '', // EUR、USD
-            priceKey: '', // purchase_price_eur
+            priceKey: "", // purchase_price_eur
             unitMap: {
                 "€": { key: '_eur', text: '€ (EUR)', currency: 'EUR'},
                 "$": { key: '_usd', text: '$ (USD)', currency: 'USD'},
@@ -153,7 +153,7 @@ export default {
         let currency = this.$route.query.currency || '_eur';
         this.priceKey = (this.$auth('DISTRIBUTOR') ? 'fob' : 'purchase_price') + currency
         this.currency = currency ? currency.slice(1).toUpperCase() : 'CNY'
-
+        this.handleUnitChange(Core.Data.getCurrency())
         this.getReceiveList()
         this.getShopCartList()
     },

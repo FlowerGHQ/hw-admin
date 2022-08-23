@@ -82,7 +82,12 @@
                         <p class="sub">{{item.code}}</p>
                         <p class="name">{{ item.name ? lang =='zh' ? item.name : item.name_en : '-' }}</p>
                         <p class="desc">&nbsp;</p>
-                        <p class="price">€{{$Util.countFilter(item[priceKey + 'eur'])}} | ${{$Util.countFilter(item[priceKey + 'usd'])}}</p>
+                        <p class="price" v-if="currency === 'eur'">
+                            €{{$Util.countFilter(item[priceKey + 'eur'])}}
+                        </p>
+                        <p class="price" v-else>
+                            ${{$Util.countFilter(item[priceKey + 'usd'])}}
+                        </p>
                         <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">{{ $t('i.cart') }}</a-button>
                     </div>
                 </div>
@@ -169,6 +174,7 @@ export default {
             // 是否显示爆炸图
             bomShow: false,
             menaKey: 1,
+            currency: '',
         };
     },
     watch: {},
@@ -182,7 +188,8 @@ export default {
     },
 
      mounted() {
-        this.getTableData();
+         this.currency = Core.Data.getCurrency();
+         this.getTableData();
          this.getCategoryList()
          this.getShopCartData();
          this.firstLevelId =  Number(this.$route.query.first_level_id) || 0

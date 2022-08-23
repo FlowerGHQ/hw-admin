@@ -55,6 +55,7 @@ let Const = {
         KEY_LOGIN_TYPE: 'login.type',
         KEY_USER_TYPE: 'user.type',
         KEY_AUTHORITY_LIST: 'authority.list',
+	    KEY_CURRENCY: 'org.currency',
 
         KEY_FIELD_DISPLAY: 'field.display',
         KEY_LANGUAGE: 'language'
