@@ -153,7 +153,11 @@ export default {
         let currency = this.$route.query.currency || '_eur';
         this.priceKey = (this.$auth('DISTRIBUTOR') ? 'fob' : 'purchase_price') + currency
         this.currency = currency ? currency.slice(1).toUpperCase() : 'CNY'
-        this.handleUnitChange(Core.Data.getCurrency())
+        if (Core.Data.getCurrency() === 'EUR'){
+            this.handleUnitChange("€")
+        } else {
+            this.handleUnitChange("$")
+        }
         this.getReceiveList()
         this.getShopCartList()
     },
