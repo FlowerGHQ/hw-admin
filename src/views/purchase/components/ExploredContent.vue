@@ -40,7 +40,10 @@
                     </div>
                     <div class="contain-type">
                         <div class="type-left">{{ $t('def.model') }}:&nbsp;{{ componentDetail.model}}</div>
-                        <div class="type-left">€{{$Util.countFilter(componentDetail[priceKey + 'eur'])}} | ${{$Util.countFilter(componentDetail[priceKey + 'usd'])}}</div>
+
+                        <div class="type-left" v-if="currency === 'eur'">€{{$Util.countFilter(componentDetail[priceKey + 'eur'])}}</div>
+                        <div class="type-left" v-else>${{$Util.countFilter(componentDetail[priceKey + 'usd'])}}</div>
+<!--                        <div class="type-left">€{{$Util.countFilter(componentDetail[priceKey + 'eur'])}} | ${{$Util.countFilter(componentDetail[priceKey + 'usd'])}}</div>-->
                     </div>
                     <div class="edit-btn">
                         <a-button class="disabled" v-if="componentDetail.in_shopping_cart">{{ $t('i.already') }}</a-button>
@@ -68,7 +71,9 @@ export default {
             return priceKey
         }
     },
-    mounted () {},
+    mounted () {
+        this.currency = Core.Data.getCurrency();
+    },
     watch: {
         selectIndex:function(newData, oldData) {
             console.log(newData, oldData)
@@ -94,7 +99,8 @@ export default {
             currentExplore: {
                 i: null,
                 j: null
-            }
+            },
+            currency: ''
         }
     },
     methods: {
