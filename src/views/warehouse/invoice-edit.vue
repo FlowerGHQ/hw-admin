@@ -24,14 +24,14 @@
                     </a-radio-group>
                 </div>
             </div>
-<!--            <div class="form-item required">-->
-<!--                <div class="key">{{ $t('in.category') }}：</div>-->
-<!--                <div class="value">-->
-<!--                    <a-radio-group v-model:value="form.target_type">-->
-<!--                        <a-radio v-for="item in targetMap" :key='item.key' :value='item.key'>{{ item[$i18n.locale] }}</a-radio>-->
-<!--                    </a-radio-group>-->
-<!--                </div>-->
-<!--            </div>-->
+            <div class="form-item required">
+                <div class="key">{{ $t('in.category') }}：</div>
+                <div class="value">
+                    <a-radio-group v-model:value="form.target_type">
+                        <a-radio v-for="item in targetMap" :key='item.key' :value='item.key'>{{ item[$i18n.locale] }}</a-radio>
+                    </a-radio-group>
+                </div>
+            </div>
             <div class="form-item required" v-if="$auth('ADMIN')">
                 <div class="key">{{ $t('n.source') }}：</div>
                 <div class="value">

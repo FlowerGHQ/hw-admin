@@ -900,7 +900,6 @@ let Const = {
         COMMODITY_TYPE_MAP: {
             '10': { key: 10, zh: '商品', en: 'No instance'},
             '30': { key: 30, zh: '物料', en: 'Materiel'},
-            '40': { key: 40, zh: '广宣品', en: 'Other' },
         },
 	    COMMODITY_TYPE_OLD_MAP: {
 		    '10': { key: 10, zh: '无实例商品', en: 'No instance'},
