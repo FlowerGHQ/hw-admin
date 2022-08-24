@@ -21,6 +21,14 @@
                             <CountryCascader @search="handleOtherSearch" ref='CountryCascader'/>
                         </div>
                     </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                      <div class="key">{{ $t('d.pay_type')}}:</div>
+                      <div class="value">
+                        <a-select v-model:value="searchForm.pay_type" @change="handleSearch" :placeholder="$t('def.select')">
+                          <a-select-option v-for="(item,index) of payTypeList" :key="index" :value="key">{{ item[$i18n.locale] }}</a-select-option>
+                        </a-select>
+                      </div>
+                    </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                         <div class="key">{{ $t('def.create_time') }}:</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
@@ -102,6 +110,7 @@ import Core from '../../core';
 
 import CountryCascader from '@/components/common/CountryCascader.vue'
 import TimeSearch from '@/components/common/TimeSearch.vue'
+import Const from "../../core/const";
 export default {
     name: 'DistributorList',
     components: {
@@ -120,6 +129,7 @@ export default {
             total: 0,
             // 搜索
             statusList: Core.Const.ORG_STATUS_LIST,
+            payTypeList: Const.DISTRIBUTOR.PAY_TIME_LIST,
             filteredInfo: {status: [1]},
             searchForm: {
                 name: '',
@@ -127,6 +137,7 @@ export default {
                 type: '',
                 continent: '',
                 country: '',
+                pay_type: '',
             },
             // 表格
             tableData: [],
@@ -140,7 +151,7 @@ export default {
             let { filteredInfo } = this;
             filteredInfo = filteredInfo || {};
             let columns = [
-                {title: this.$t('d.distributor_name'), dataIndex: 'name', sorter: true},
+                {title: this.$t('d.distributor_name'), dataIndex: 'name'},
                 {title: this.$t('d.short_name'), dataIndex: 'short_name'},
                 { title: this.$t('d.pay_type'), dataIndex: 'pay_type', key:'pay_type' },
                 {title: this.$t('n.type'), dataIndex: 'type',
@@ -150,9 +161,9 @@ export default {
                 {title: this.$t('n.contact'), dataIndex: 'contact'},
                 {title: this.$t('n.phone'), dataIndex: 'phone'},
                 {title: this.$t('d.sales_area'), dataIndex: 'sales_area_list'},
-                {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
                 {title: this.$t('n.state'), dataIndex: 'status', key: 'status',
                     filters: this.$Util.tableFilterFormat(Core.Const.ORG_STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [1] },
+                {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             if (this.$i18n.locale === 'en' ) {

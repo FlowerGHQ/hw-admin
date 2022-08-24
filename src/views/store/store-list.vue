@@ -160,9 +160,9 @@ export default {
                 { title: this.$t('d.pay_type'), dataIndex: 'pay_type', key:'pay_type' },
                 {title: this.$t('n.contact'), dataIndex: 'contact_name', key:'item'},
                 {title: this.$t('n.phone'), dataIndex: 'contact_phone',key:'item'},
-                {title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time'},
                 {title: this.$t('n.state'), dataIndex: 'status', key: 'status',
                     filters: this.$Util.tableFilterFormat(Core.Const.ORG_STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [1] },
+                {title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             if (this.$auth('ADMIN')) {
