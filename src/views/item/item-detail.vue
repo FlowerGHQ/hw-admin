@@ -215,7 +215,7 @@ export default {
                 {title: 'FOB(USD)', key: 'fob', dataIndex: 'fob_usd', unit: '$'},
                 // {title: '建议零售价', key: 'money', dataIndex: 'price'},
                 {title: this.$t('i.custom'), dataIndex: 'flag_independent_info'},
-                {title: this.$t('i.custom'), dataIndex: 'flag_default'},
+                {title: this.$t('i.default_display'), dataIndex: 'flag_default'},
                 {title: this.$t('def.operate'), key: 'operation'},
             )
             return column
