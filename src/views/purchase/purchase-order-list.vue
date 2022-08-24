@@ -58,6 +58,14 @@
                 </div>
               </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                  <div class="key">{{ $t('p.payment_terms')}}:</div>
+                  <div class="value">
+                    <a-select v-model:value="searchForm.pay_type" @change="handleSearch" :placeholder="$t('def.select')">
+                      <a-select-option v-for="(item,index) of PAY_TIME_LIST" :key="index" :value="item.key">{{ item[$i18n.locale] }}</a-select-option>
+                    </a-select>
+                  </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">{{ $t('p.payment_status')}}:</div>
                     <div class="value">
                         <a-select v-model:value="searchForm.payment_status" @change="handleSearch" :placeholder="$t('def.select')">
@@ -170,6 +178,7 @@ const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 const SEARCH_TYPE = Core.Const.PURCHASE.SEARCH_TYPE
 const PAYMENT_STATUS_MAP = Core.Const.PURCHASE.PAYMENT_STATUS_MAP
 const PAYMENT_TYPE_LIST = Core.Const.PURCHASE.FLAG_ORDER_TYPE_LIST
+const PAY_TIME_LIST = Core.Const.DISTRIBUTOR.PAY_TIME_LIST
 import { message } from 'ant-design-vue';
 
 
@@ -187,6 +196,7 @@ export default {
             SEARCH_TYPE,
             PAYMENT_STATUS_MAP,
             PAYMENT_TYPE_LIST,
+            PAY_TIME_LIST,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -219,6 +229,7 @@ export default {
                 agent_id: undefined,
                 store_id: undefined,
                 type: undefined,
+                pay_type: undefined,
                 subject: 0,
                 begin_time: '',
                 end_time: '',

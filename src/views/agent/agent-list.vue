@@ -9,6 +9,12 @@
         </div>
         <div class="search-container">
             <a-row class="search-area">
+              <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                <div class="key">{{ $t('d.name_short_name') }}:</div>
+                <div class="value">
+                  <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                </div>
+              </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
                     <div class="key">{{ $t('a.superior') }}:</div>
                     <div class="value">
@@ -30,12 +36,6 @@
                                 {{name }}
                             </template>
                         </a-tree-select>
-                    </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">{{ $t('n.name') }}:</div>
-                    <div class="value">
-                        <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -167,9 +167,9 @@ export default {
                 { title: this.$t('n.country'), dataIndex: 'country', key: 'country' },
                 { title: this.$t('n.contact'), dataIndex: 'contact', key: 'item'},
                 { title: this.$t('n.phone'), dataIndex: 'phone', key: 'item'},
-                { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('n.state'), dataIndex: 'status', key: 'status',
                     filters: this.$Util.tableFilterFormat( Core.Const.ORG_STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [1] },
+                { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             // if (this.$auth('ADMIN')) {

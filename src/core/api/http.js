@@ -3,33 +3,28 @@ import { message } from 'ant-design-vue';
 import i18n from '../i18n';
 import Data from '../data';
 
-console.log('i18n.global', i18n.global)
-
 const showMessage = (msg) => {
     message.error(msg);
 };
 
-const errorHandle = (status, message = '未知错误') => {
+const errorHandle = (status, message = i18n.global.t('error_code.unknown')) => {
     if (message.includes('登录状态已过期，请重新登录')) {
         window.location.href = window.location.href.split('#')[0] + '#/login'
-        return showMessage(message);
+        return showMessage(i18n.global.t('error_code.expire'));
     }
     if (message.includes('timeout')) {
-        return showMessage('请求超时');
+        return showMessage(i18n.global.t('error_code.timeout'));
     }
     if (status === -1) {
-        return showMessage('系统异常');
+        return showMessage(i18n.global.t('error_code.system'));
     }
     if (status >= 1000) {
-        let lang = Data.getLang()
-        switch(lang) {
-            case "zh" :
-                return showMessage(i18n.global.messages.zh.error_code[status]);
-                break;
-            case "en" :
-                return showMessage(i18n.global.messages.en.error_code[status]);
-                break;
+        try {
+            message = JSON.parse(message)
+        } catch (err) {
+            message = {}
         }
+        return showMessage(i18n.global.t('error_code.' + status, message))
     }
     showMessage(message);
 };
