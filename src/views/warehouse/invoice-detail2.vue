@@ -788,9 +788,9 @@ export default {
                 if (this.isProd) {
                     this.getProductionItem()
                 }
-                if (this.detail.target_type === 30) {
-                    this.getSupplierName();
-                }
+                // if (this.detail.target_type === 30) {
+                //     this.getSupplierName();
+                // }
             }).catch(err => {
                 console.log('getInvoiceList err', err)
             }).finally(() => {
@@ -820,30 +820,30 @@ export default {
                 if (this.isProd) {
                     this.getProductionItem()
                 }
-                if (this.detail.target_type === 30) {
-                    this.getSupplierName();
-                }
+                // if (this.detail.target_type === 30) {
+                //     this.getSupplierName();
+                // }
             }).catch(err => {
                 console.log('getInvoiceList err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
-        getSupplierName() {
-            let data = [...this.tableData]
-            for (const item of data) {
-                let supplier_id
-                if (item.supplier_id) {
-                    supplier_id = item.supplier_id
-                }
-                Core.Api.Supplier.detail({
-                    id: supplier_id
-                }).then(res => {
-                    item.supplier_name = res.detail.name
-                    console.log('getSupplierName', res.detail.name)
-                })
-            }
-        },
+        // getSupplierName() {
+        //     let data = [...this.tableData]
+        //     for (const item of data) {
+        //         let supplier_id
+        //         if (item.supplier_id) {
+        //             supplier_id = item.supplier_id
+        //         }
+        //         Core.Api.Supplier.detail({
+        //             id: supplier_id
+        //         }).then(res => {
+        //             item.supplier_name = res.detail.name
+        //             console.log('getSupplierName', res.detail.name)
+        //         })
+        //     }
+        // },
         pageChange(curr) {    // 页码改变
             this.currPage = curr
             this.getInvoiceList()
