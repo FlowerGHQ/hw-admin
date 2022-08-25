@@ -5,14 +5,14 @@
                     <div class="search-container">
                         <a-row class="search-area">
                             <a-col :xs='24' :sm='24' :xl="16" :xxl='8' class="search-item">
-                                <div class="key">uid：</div>
+                                <div class="key">{{ $t('wa.uid') }}：</div>
                                 <div class="value">
                                     <a-input placeholder="uid" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
                                 </div>
                             </a-col>
 
                             <a-col :xs='24' :sm='24' :xl="16" :xxl='8' class="search-item">
-                                <div class="key">code：</div>
+                                <div class="key">{{ $t('i.code') }}：</div>
                                 <div class="value">
                                     <a-select
                                         v-model:value="searchForm.item_id"

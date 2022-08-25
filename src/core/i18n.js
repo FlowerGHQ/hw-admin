@@ -1051,6 +1051,28 @@ const messages = {
             sure_delete_category_a:'确定要删分类',
             sure_delete_category_b:'吗？',
         },
+        wb:{ // 物流
+            waybill_list:'物流列表',
+            waybill_sn:'物流编号',
+            enter_waybill_sn:'请输入物流编号',
+            target_type:'货物清单类型',
+            enter_target_type:'请选择货物清单类型',
+            waybill_detail:'物流详情',
+            no_detail:'暂无物流详情信息',
+            org_type:'收货机构',
+            send_receive: '收/发',
+            logistics_company: '物流公司',
+            company_name:'物流公司名称',
+            target_uid:'货物清单UID',
+            entry_bill_no:'报关单号',
+            lading_bill_no:'提单号',
+            receiver:'收件人',
+            receiver_phone:'收件人电话',
+            delivery_time:'发货时间',
+            choose_delivery_time:'请选择发货时间',
+            exist_order: '选择已有物流单',
+            exist_order_tip: '查询到该物流单号已存在，已根据原有物流信息填充表格'
+        },
 	    authority: {
         	title: {
                 'distributor' : '分销商管理',
@@ -2469,6 +2491,28 @@ const messages = {
             sure_delete_category_b:' ?',
 
 
+        },
+        wb:{ // 物流
+            waybill_list:'Logistics list',
+            waybill_sn:'Logistics',
+            enter_waybill_sn:'Please enter logistics number',
+            target_type:'Type',
+            enter_target_type:'Please select a manifest type',
+            waybill_detail:'Logistics details',
+            no_detail:'No logistics details yet',
+            org_type:'Receive Org',
+            send_receive: 'send/receive',
+            logistics_company: 'Logistics Company',
+            company_name:'Logistics company name',
+            target_uid:'Manifest UID',
+            entry_bill_no:'Customs Declaration',
+            lading_bill_no:'B/L',
+            receiver:'Recipient',
+            receiver_phone:'recipient\'s phone',
+            delivery_time:'Delivery Time',
+            choose_delivery_time:'Please select a delivery time',
+            exist_order: 'Select an existing logistics order',
+            exist_order_tip: 'Logistics order number already exists, and the form has been filled according to the original logistics information'
         },
 	    authority: {
             title: {

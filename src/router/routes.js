@@ -721,13 +721,14 @@ const routes = [
         ]
     },
 
-    /*{ // 物流管理
+    { // 物流管理
         path: '/waybill',
         component: Layout,
         redirect: '/waybill/waybill-list',
         name: 'WayBillManagement',
         meta: {
             title: '物流管理',
+            title_en: 'Logistics',
             icon: 'i_deliver',
             roles: [LOGIN_TYPE.ADMIN],
             not_sub_menu: true,
@@ -744,7 +745,7 @@ const routes = [
                 }
             },
         ]
-    },*/
+    },
     { // 实例管理
         path: '/entity',
         component: Layout,

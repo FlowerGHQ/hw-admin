@@ -133,23 +133,34 @@
         </a-modal>
         <a-modal v-model:visible="deliverShow" :title="$t('p.shipping_confirmation')" @ok="handleDeliver">
             <div class="modal-content">
+
                 <template v-if="$auth('ADMIN')">
+                    <div class="form-item required">
+                      <div class="key">{{ $t('p.sn_number') }}:</div>
+                      <div class="value">
+                        <a-input v-model:value="form.waybill" :placeholder="$t('def.input')" @blur="handleWaybillSearch"/>
+                      </div>
+                    </div>
                     <div class="form-item required">
                         <div class="key">{{ $t('p.delivery_method') }}</div>
                         <div class="value">
-                            <a-select v-model:value="form.express_type" :placeholder="$t('def.select')">
+                            <a-select v-model:value="form.company_uid" :placeholder="$t('def.select')">
                                 <a-select-option v-for="courier of courierTypeList" :key="courier.value"
                                                  :value="courier.value">{{ courier[$i18n.locale] }}
                                 </a-select-option>
                             </a-select>
                         </div>
                     </div>
-                    <div class="form-item required">
-                        <div class="key">{{ $t('p.sn_number') }}:</div>
-                        <div class="value">
-                            <a-input v-model:value="form.waybill" :placeholder="$t('def.input')"/>
-                        </div>
+                  <div class="form-item required">
+                    <div class="key">{{ $t('wb.logistics_company') }}</div>
+                    <div class="value">
+                      <a-select v-model:value="form.express_type" :placeholder="$t('def.select')">
+                        <a-select-option v-for="courier of courierTypeList" :key="courier.value"
+                                         :value="courier.value">{{ courier[$i18n.locale] }}
+                        </a-select-option>
+                      </a-select>
                     </div>
+                  </div>
                     <div class="form-item required">
                         <div class="key">{{ $t('p.shipping_port') }}:</div>
                         <div class="value">
@@ -161,6 +172,17 @@
                         <div class="value">
                             <a-input v-model:value="form.delivery_address" :placeholder="$t('def.input')"/>
                         </div>
+                    </div>
+                    <div class="form-item required">
+                      <div class="key">{{ $t('wb.delivery_time') }}:</div>
+                      <div class="value">
+                        <a-date-picker v-model:value="form.delivery_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" :placeholder="$t('wb.choose_delivery_time')">
+                          <template #suffixIcon><i class="icon i_calendar"/></template>
+                        </a-date-picker>
+                      </div>
+<!--                      <div class="value">-->
+<!--                        <a-input v-model:value="form.delivery_time" :placeholder="$t('def.input')"/>-->
+<!--                      </div>-->
                     </div>
                 </template>
                 <template v-if="$auth('DISTRIBUTOR')">
@@ -193,6 +215,18 @@
                             :prefix="`${$Util.priceUnitFilter(detail.currency)}`"/>
                     </div>
                 </div>
+              <div class="form-item required">
+                <div class="key">{{ $t('wb.entry_bill_no') }}:</div>
+                <div class="value">
+                  <a-input v-model:value="form.entry_bill_no" :placeholder="$t('def.input')"/>
+                </div>
+              </div>
+              <div class="form-item required">
+                <div class="key">{{ $t('wb.lading_bill_no') }}:</div>
+                <div class="value">
+                  <a-input v-model:value="form.lading_bill_no" :placeholder="$t('def.input')"/>
+                </div>
+              </div>
                 <div class="form-item">
                     <div class="key">{{ $t('p.remark') }}:</div>
                     <div class="value">
@@ -259,6 +293,8 @@ const USER_TYPE = Core.Const.USER.TYPE;
 const WAYBILL = Core.Const.WAYBILL;
 
 import ItemTable from '@/components/table/ItemTable.vue';
+import dayjs from "dayjs";
+import $Util from "../../../core/utils";
 
 export default {
     name: "DeliveryLogs",
@@ -282,7 +318,7 @@ export default {
             loading: false,
             activeKey: [],
             flagOpened: false,
-
+            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
             invoiceList: [],
             loginType: Core.Data.getLoginType(),
             loginOrgId: Core.Data.getOrgId(),
@@ -305,6 +341,9 @@ export default {
                 warehouse_id: '',
                 target_type: '',
                 payment: '', // 收款金额
+                entry_bill_no: '',
+                lading_bill_no: '',
+                delivery_time: '', //发货时间
             },
             waybillDetail: {},
             takeDeliverShow: false,
@@ -319,7 +358,7 @@ export default {
             tableData: [],
             warehouseList: [],
             PIShow: false,
-
+            uid: '',
         };
     },
     computed: {
@@ -508,7 +547,7 @@ export default {
         handleDeliver() {
             console.log("rowSelection", this.selectedRowItems)
             let form = Core.Util.deepCopy(this.form);
-
+            form.delivery_time = form.delivery_time ? dayjs(form.delivery_time).unix() : 0
             const param = {
                 id: this.orderId,
                 invoice_id: this.invoiceId,
@@ -521,8 +560,11 @@ export default {
                     {key: 'express_type', msg: this.$t('p.choose_express')},
                     {key: 'port', msg: this.$t('p.enter_harbor')},
                     {key: 'delivery_address', msg: this.$t('p.fill_address')},
+                    {key: 'delivery_time', msg: this.$t('wb.delivery_time')},
                     {key: 'freight', msg: this.$t('p.enter_freight')},
                     {key: 'waybill', msg: this.$t('n.tracking_number')},
+                    {key: 'entry_bill_no', msg: this.$t('wb.entry_bill_no')},
+                    {key: 'lading_bill_no', msg: this.$t('wb.lading_bill_no')},
                 ]
                 param['waybill'] = form['waybill'];
             } else if (this.$auth('DISTRIBUTOR')) {
@@ -628,7 +670,22 @@ export default {
             this.form.freight = Core.Util.countFilter(this.form.freight)
             this.PIShow = true;
         },
-
+        handleWaybillSearch() {
+          if (this.form.waybill == null) {
+            return
+          }
+          Core.Api.Waybill.detailByUidNoException({uid: this.form.waybill}).then(res => {
+            if (res.detail == null) {
+              return
+            }
+            this.form = res.detail
+            this.form.waybill = res.detail.uid
+            this.form.delivery_address = res.detail.sender_address
+            this.form.freight = res.detail.post_fee / 100.0
+            this.form.delivery_time = $Util.timeFilter(res.detail.delivery_time)
+                this.$message.success("查询到该物流单号已存在，已根据原有物流信息填充表格")
+          })
+        },
 
 
     },

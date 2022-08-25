@@ -583,9 +583,15 @@ const Util = {
         const MAP = Const.WAYBILL.COMPANY_MAP
         return MAP[key] || '未知物流公司'
     },
-    waybillTargetFilter(val) {
+    waybillTargetFilter(val, to='zh') {
         const MAP = Const.WAYBILL.TARGET_TYPE_MAP
-        return MAP[val] || '未知货物订单'
+        let value = MAP[val + ''] || {}
+        return value[to] || '未知货物订单'
+    },
+    waybillTypeFilter(val, to='zh') {
+        const MAP = Const.WAYBILL.TYPE_MAP
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
     },
     /* =============== 物流信息 ================ */
 

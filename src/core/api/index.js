@@ -401,6 +401,7 @@ const apiList = {
         save: ['PostJson', 'waybill/save'],
         saveByUid: ['PostJson', 'waybill/save-by-uid'],
         update: ['PostJson', 'waybill/update'],
+        detailByUidNoException: ['PostJson', 'waybill/detail-by-uid-no-exception'],
     },
     Distributor: { // 分销商
         list: ['PostJson', 'distributor/list'],

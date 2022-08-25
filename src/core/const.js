@@ -703,6 +703,10 @@ let Const = {
             IN: 1,
             OUT: 2,
         },
+        TYPE_MAP: {
+            '1': { key: 1, zh: '寄入', en: 'receive'},
+            '2': { key: 2, zh: '寄出', en: 'send'},
+        },
         TARGET_TYPE: {
             PURCHASE_ORDER: 10, //采购订单
             REPAIR_ORDER_TRANSFER: 20, //维修单转单
@@ -716,10 +720,10 @@ let Const = {
             { text: '售后单', value: 40 },
         ],
         TARGET_TYPE_MAP: {
-            10: '采购订单',
-            20: '维修单转单',
-            30: '维修单调货单',
-            40: '售后单'
+            '10': { key: 10, zh: '采购订单', en: 'Purchase Order'},
+            '20': { key: 20, zh: '维修单转单', en: '-'},
+            '30': { key: 20, zh: '维修单调货单', en: '-'},
+            '40': { key: 20, zh: '售后单', en: 'After-sale Order'},
         },
         COMPANY_MAP: {
             'EMS': 'EMS',
