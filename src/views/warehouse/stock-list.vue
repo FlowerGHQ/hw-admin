@@ -28,12 +28,12 @@
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">{{ $t('wa.product_type') }}:</div>
+                    <div class="key">{{ $t('i.code') }}:</div>
                     <div class="value">
                         <a-select
                             v-model:value="searchForm.target_id"
                             show-search
-                            placeholder="请输入仓库"
+                            :placeholder="$t('n.enter')"
                             :default-active-first-option="false"
                             :show-arrow="false"
                             :filter-option="false"
@@ -167,7 +167,7 @@ export default {
                 // 2: '物料',
             },
             searchForm: {
-                target_id: '',
+                target_id: undefined,
                 target_type: undefined,
                 warehouse_id: undefined,
             },
