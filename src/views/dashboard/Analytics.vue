@@ -14,10 +14,23 @@
     </div>
     <div class="banner-cards">
         <div class="banner-card" v-for="(banner,i) in bannerList" :key="i" @click="routerChange('item',banner.first_level)">
-            <img src="../../assets/images/default_banner-two.png" class="card-bg">
-            <p class="title">{{ $i18n.locale === 'zh' ? banner.content : banner.content_en }}</p>
-            <p class="info">{{ $i18n.locale === 'zh' ? banner.name : banner.name_en }}</p>
-            <arrow-right-outlined type="user" class="arrow"/>
+            <template v-if="banner.first_level !=='vehicle'">
+                <img src="../../assets/images/default_banner-two.png" class="card-bg">
+                <p class="title">{{ $i18n.locale === 'zh' ? banner.content : banner.content_en }}</p>
+                <p class="info">{{ $i18n.locale === 'zh' ? banner.name : banner.name_en }}</p>
+                <arrow-right-outlined type="user" class="arrow"/>
+            </template>
+            <template v-else>
+                <img src="../../assets/images/default_banner-five.jpeg" class="card-bg">
+                <!-- <p class="title-black">{{ $i18n.locale === 'zh' ? banner.content : banner.content_en }}</p>
+                <p class="info-black">{{ $i18n.locale === 'zh' ? banner.name : banner.name_en }}</p> -->
+                <arrow-right-outlined type="user" class="arrow-black"/>
+            </template>
+<!--            <img src="../../assets/images/default_banner-two.png" class="card-bg" v-if="banner.first_level !=='vehicle'">-->
+<!--            <img src="../../assets/images/default_banner-five.jpeg" class="card-bg" v-else>-->
+<!--            <p class="title">{{ $i18n.locale === 'zh' ? banner.content : banner.content_en }}</p>-->
+<!--            <p class="info">{{ $i18n.locale === 'zh' ? banner.name : banner.name_en }}</p>-->
+<!--            <arrow-right-outlined type="user" class="arrow"/>-->
         </div>
     </div>
     <div class="message card">
@@ -385,6 +398,28 @@ export default {
                 bottom: 10%;
                 right: 6%;
                 color: @white;
+                font-size: @fz_25;
+            }
+            .title-black {
+                top: 10%;
+                left: 5%;
+                font-size: @fz_lg;
+                font-weight: bold;
+                color: #000;
+                opacity: .8;
+            }
+            .info-black {
+                top: 20%;
+                left: 5%;
+                font-size: 24px;
+                font-weight: bold;
+                color: #000;
+            }
+            .arrow-black {
+                position: absolute;
+                bottom: 10%;
+                right: 6%;
+                color: #000;
                 font-size: @fz_25;
             }
         }

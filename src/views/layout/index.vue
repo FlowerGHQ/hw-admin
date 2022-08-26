@@ -3,11 +3,12 @@
     <a-layout id="Layout">
         <a-layout-header class="layout-header">
             <div class="header-left" @click="collapsed = !collapsed" :class="{'collapsed': collapsed}">
-                <img src="@images/header-logo.png" class="logo" alt="浩万"/>
+                <img src="@images/header-logo2.png" class="logo" alt="浩万"/>
                 <a-divider type="vertical"/>
                 <a-tag color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType][$i18n.locale] }}</a-tag>
             </div>
             <div class="header-right">
+                <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>
                 <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
                     <i class="icon" :class="lang =='zh' ? 'i_zh-en' : 'i_en-zh'"/>
                 </a-button>
@@ -221,6 +222,13 @@ export default {
                     })
                     window.open(routeUrl.href, '_self')
                     break;
+                case 'shop_cart':
+                    routeUrl = this.$router.resolve({
+                        path: "/purchase/item-collect",
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+
             }
         },
         getUnreadCount() {    // 获取 未读消息数 数据
@@ -367,20 +375,25 @@ export default {
             color: @TC_header_name;
         }
 
-        .header-item {
-            width: 64px;
+        .header-right {
             height: 100%;
             cursor: pointer;
             .fjc();
 
             i.icon {
                 font-size: 14px;
+            }
+            i.i_cart {
+                font-size: 25px;
                 color: @TC_header_item;
             }
 
-            &:hover i.icon {
-                color: @TC_P;
-            }
+            //&:hover i.i_cart {
+            //    color: @TC_P;
+            //}
+            //&:hover i.i_notify {
+            //    color: @TC_P;
+            //}
         }
     }
 
