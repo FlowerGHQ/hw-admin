@@ -3,9 +3,12 @@
         <div class="list-container">
             <div class="title-container">
                 <div class="title-area">{{ $t('wb.waybill_list') }}</div>
-                <!-- <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建物流</a-button>
-                </div> -->
+              <div class="btns-area">
+<!--                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新建物流</a-button>-->
+                <a-button type="primary" ghost @click="handleCompanyShow()" class="panel-btn">
+                  <i class="icon i_list"/>物流公司列表
+                </a-button>
+              </div>
             </div>
             <div class="search-container">
                 <a-row class="search-area">
@@ -38,7 +41,7 @@
                     :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, record, text}">
                         <template v-if="column.dataIndex === 'org_type'">
-                          {{ $Util.userTypeFilter(text) }}
+                          {{ $Util.userTypeFilter(text, $i18n.locale)+ ': ' +  record.org_name}}
                         </template>
                         <template v-if="column.dataIndex === 'type'">
                           {{ $Util.waybillTypeFilter(text, $i18n.locale) }}
@@ -63,16 +66,17 @@
 <!--                        </template>-->
                         <template v-if="column.dataIndex === 'target'">
                             <a-tooltip placement="top" :title='text'>
-                                <a-button type="link" v-for="ta in record.target" @click="routerChange(record.target_type, ta)">{{ta.uid}}
+                                <a-button type="link" v-for="t in record.target" @click="routerChange(record.target_type, t)">{{t.uid}}
                                 </a-button>
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'operation'">
                             <template v-if="!record.default_item_id">
                                 <!-- <a-button type='link' @click="routerChange('edit', record)"><i class="icon i_edit"/> 编辑</a-button> -->
-                                <a-button type='link' @click="handleModalShow(record)"><i class="icon i_detail"/> 详情</a-button>
+                                <a-button type='link' @click="handleModalShow(record)"><i class="icon i_detail"/> {{ $t('def.detail') }}</a-button>
                             </template>
-                            <a-button type='link' @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> 删除</a-button>
+                            <a-button type='link' @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>
+                              {{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -158,6 +162,7 @@ export default {
             ],
 
             modalShow: false,
+            companyShow: false,
             waybillInfo: []
         };
     },
@@ -258,6 +263,9 @@ export default {
         handleModalShow(record) {
             this.getWaybillInfo(record)
             this.modalShow = true
+        },
+        handleCompanyShow(record) {
+          this.companyShow = true
         },
         // 获取 物流单详情
         getWaybillInfo({uid, company_uid}) {

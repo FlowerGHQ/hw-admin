@@ -151,16 +151,16 @@
                             </a-select>
                         </div>
                     </div>
-                  <div class="form-item required">
-                    <div class="key">{{ $t('wb.logistics_company') }}</div>
-                    <div class="value">
-                      <a-select v-model:value="form.express_type" :placeholder="$t('def.select')">
-                        <a-select-option v-for="courier of courierTypeList" :key="courier.value"
-                                         :value="courier.value">{{ courier[$i18n.locale] }}
-                        </a-select-option>
-                      </a-select>
-                    </div>
-                  </div>
+<!--                  <div class="form-item required">-->
+<!--                    <div class="key">{{ $t('wb.logistics_company') }}</div>-->
+<!--                    <div class="value">-->
+<!--                      <a-select v-model:value="form.express_type" :placeholder="$t('def.select')">-->
+<!--                        <a-select-option v-for="courier of courierTypeList" :key="courier.value"-->
+<!--                                         :value="courier.value">{{ courier[$i18n.locale] }}-->
+<!--                        </a-select-option>-->
+<!--                      </a-select>-->
+<!--                    </div>-->
+<!--                  </div>-->
                     <div class="form-item required">
                         <div class="key">{{ $t('p.shipping_port') }}:</div>
                         <div class="value">

@@ -704,8 +704,8 @@ let Const = {
             OUT: 2,
         },
         TYPE_MAP: {
-            '1': { key: 1, zh: '寄入', en: 'receive'},
-            '2': { key: 2, zh: '寄出', en: 'send'},
+            '1': { key: 1, zh: '寄入', en: 'Receive'},
+            '2': { key: 2, zh: '寄出', en: 'Send'},
         },
         TARGET_TYPE: {
             PURCHASE_ORDER: 10, //采购订单

@@ -732,7 +732,6 @@ const routes = [
             icon: 'i_deliver',
             roles: [LOGIN_TYPE.ADMIN],
             not_sub_menu: true,
-            hidden: false,
         },
         children: [
             {
@@ -740,10 +739,19 @@ const routes = [
                 name: 'waybillList',
                 component: () => import('@/views/waybill/waybill-list.vue'),
                 meta: {
-                    title: '物流管理列表',
+                    title: '物流列表',
                     roles: [LOGIN_TYPE.ADMIN],
                 }
             },
+            // {
+            //     path: 'waybill-company',
+            //     name: 'WaybillCompanyList',
+            //     component: () => import('@/views/waybill/waybill-company.vue'),
+            //     meta: {
+            //         title: '物流公司',
+            //         roles: [LOGIN_TYPE.ADMIN],
+            //     }
+            // },
         ]
     },
     { // 实例管理

@@ -1071,7 +1071,8 @@ const messages = {
             delivery_time:'发货时间',
             choose_delivery_time:'请选择发货时间',
             exist_order: '选择已有物流单',
-            exist_order_tip: '查询到该物流单号已存在，已根据原有物流信息填充表格'
+            exist_order_tip: '查询到该物流单号已存在，已根据原有物流信息填充表格',
+            new_company :'新建物流公司'
         },
 	    authority: {
         	title: {
