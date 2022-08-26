@@ -27,6 +27,26 @@
                         </a-select>
                     </div>
                 </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">{{ $t('wa.product_type') }}:</div>
+                    <div class="value">
+                        <a-select
+                            v-model:value="searchForm.target_id"
+                            show-search
+                            placeholder="请输入仓库"
+                            :default-active-first-option="false"
+                            :show-arrow="false"
+                            :filter-option="false"
+                            :not-found-content="null"
+                            @search="handleItemSearch"
+                            @change="handleItemChange"
+                        >
+                            <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
+                                {{ item.name }}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
             </a-row>
             <div class="btn-area">
                 <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
@@ -93,6 +113,11 @@
                                 </div>
                             </a-tooltip>
                         </template>
+                        <template v-if="column.type === 'warehouse_location_list'">
+                            <p v-for="warehouse_location in record.warehouse_location_list">
+                                {{warehouse_location.warehouseLocationUid}},
+                            </p>
+                        </template>
                     </template>
                     <template v-if="column.key === 'operation'">
                         <a-button type='link' v-if="record.target_type === 1" @click="routerChange('item', record.item)"><i class="icon i_detail"/>{{$t('def.detail')}}</a-button>
@@ -129,7 +154,7 @@ export default {
     data() {
         return {
             loading: false,
-
+            itemOptions: [],
             currPage: 1,
             pageSize: 20,
             total: 0,
@@ -142,6 +167,7 @@ export default {
                 // 2: '物料',
             },
             searchForm: {
+                target_id: '',
                 target_type: undefined,
                 warehouse_id: undefined,
             },
@@ -157,9 +183,8 @@ export default {
                 {title: this.$t('wa.codes'), type: 'target', key: 'code'},
                 {title: this.$t('wa.related'), dataIndex: ['warehouse', 'name'], key: 'warehouse'},
                 {title: this.$t('wa.quantity'), dataIndex: 'stock', key: 'count'},
-                {title: this.$t('wa.required'), dataIndex: 'request_count', key: 'count'},
-                {title: this.$t('wa.production_quantity'), dataIndex: 'production_count', key: 'count'},
-                {title: this.$t('wa.category'), type: 'category'},
+                {title: this.$t('wa.uid'), type: 'warehouse_location_list'},
+
                 {title: this.$t('wa.spec'), type: 'spec'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
@@ -231,6 +256,14 @@ export default {
                 console.log('getTableData err', err)
             })
         },
+        handleItemSearch(code) {
+            Core.Api.Item.list({code: code,flag_spread: 1}).then(res => {
+                this.itemOptions = res.list
+            })
+        },
+        handleItemChange(){
+            this.searchForm.target_type = undefined
+        }
 
     },
 }
