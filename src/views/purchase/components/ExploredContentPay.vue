@@ -43,7 +43,7 @@
                     </div>
                     <div class="contain-type">
                         <div class="type-left">{{ $t('def.model') }}:&nbsp;{{ componentDetail.model}}</div>
-                        <div class="type-left" v-if="currency === 'eur'">
+                        <div class="type-left" v-if="currency === 'eur' || currency === 'EUR'">
                             €{{$Util.countFilter(componentDetail[priceKey + 'eur'])}}
                         </div>
                         <div class="type-left" v-else>

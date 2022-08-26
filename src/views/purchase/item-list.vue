@@ -82,7 +82,7 @@
                         <p class="sub">{{item.code}}</p>
                         <p class="name">{{ item.name ? lang =='zh' ? item.name : item.name_en : '-' }}</p>
                         <p class="desc">&nbsp;</p>
-                        <p class="price" v-if="currency === 'eur'">
+                        <p class="price" v-if="currency === 'eur' || currency === 'EUR'">
                             €{{$Util.countFilter(item[priceKey + 'eur'])}}
                         </p>
                         <p class="price" v-else>
