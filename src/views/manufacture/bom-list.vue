@@ -189,7 +189,7 @@ export default {
             Core.Api.Bom.list({
                 ...this.searchForm,
                 page: this.currPage,
-                pageSize: this.pageSize,
+                page_size: this.pageSize,
             }).then(res => {
                 console.log('Bom.list res', res)
                 this.tableData = res.list

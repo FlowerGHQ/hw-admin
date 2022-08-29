@@ -162,7 +162,7 @@ export default {
             this.loading = true;
             Core.Api.SupplierItem.list({
                 page: this.currPage,
-                pageSize: this.pageSize,
+                page_size: this.pageSize,
                 supplier_id: this.supplierId,
             }).then(res => {
                 this.total = res.count;

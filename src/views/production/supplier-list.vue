@@ -239,7 +239,7 @@ export default {
             Core.Api.Supplier.list({
                 ...this.searchForm,
                 page: this.currPage,
-                pageSize: this.pageSize,
+                page_size: this.pageSize,
             }).then(res => {
                 console.log('getTableData res', res)
                 this.tableData = res.list

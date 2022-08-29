@@ -173,7 +173,7 @@ export default {
             this.loading = true;
             Core.Api.SalesAreaItem.list({
                 page: this.currPage,
-                pageSize: this.pageSize,
+                page_size: this.pageSize,
                 sales_area_id: this.salesAreaId,
             }).then(res => {
                 this.total = res.count;

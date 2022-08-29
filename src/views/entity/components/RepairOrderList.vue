@@ -134,7 +134,7 @@ export default {
             this.loading = true;
             Core.Api.Repair.list({
                 page: this.currPage,
-                pageSize: this.pageSize,
+                page_size: this.pageSize,
                 item_id: this.itemId,
             }).then(res => {
                 console.log("getTableData res", res);

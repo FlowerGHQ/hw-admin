@@ -8,7 +8,7 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">{{ $t('wa.related') }}:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.warehouse_id" :placeholder="$t('wa.choose_warehouse')" @change="handleSearch">
+                        <a-select v-model:value="searchForm.warehouse_id" :placeholder="$t('wa.choose_warehouse')" @change="handleSearch" allowClear>
                             <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{
                                     item.name
                                 }}
@@ -19,7 +19,7 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">{{ $t('wa.product_type') }}:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.target_type" :placeholder="$t('wa.choose_product_type')" @change="handleSearch">
+                        <a-select v-model:value="searchForm.target_type" :placeholder="$t('wa.choose_product_type')" @change="handleSearch" allowClear>
                             <a-select-option v-for="(val, key) of targetTypeMap" :key="key" :value="Number(key)">{{
                                     val[$i18n.locale]
                                 }}
@@ -27,7 +27,7 @@
                         </a-select>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
                     <div class="key">{{ $t('i.code') }}:</div>
                     <div class="value">
                         <a-select
@@ -40,9 +40,31 @@
                             :not-found-content="null"
                             @search="handleItemSearch"
                             @change="handleItemChange"
+                            allowClear
                         >
                             <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
-                                {{ item.name }}
+                                {{$t("p.code")+ ":" + item.code }}-{{$t("r.name")+ ":" + (item.name ? lang =='zh' ? item.name : item.name_en : '-')}}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
+                    <div class="key">{{ $t('r.item_name') }}:</div>
+                    <div class="value">
+                        <a-select
+                            v-model:value="searchForm.target_id"
+                            show-search
+                            :placeholder="$t('n.enter')"
+                            :default-active-first-option="false"
+                            :show-arrow="false"
+                            :filter-option="false"
+                            :not-found-content="null"
+                            @search="handleItemNameSearch"
+                            @change="handleItemChange"
+                            allowClear
+                        >
+                            <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
+                                {{$t("p.code")+ ":" + item.code }}-{{$t("r.name")+ ":" + (item.name ? lang =='zh' ? item.name : item.name_en : '-')}}
                             </a-select-option>
                         </a-select>
                     </div>
@@ -51,6 +73,7 @@
             <div class="btn-area">
                 <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
                 <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
+                <a-button @click="handleExport">{{ $t('i.export') }}</a-button>
             </div>
         </div>
         <div class="table-container">
@@ -190,6 +213,9 @@ export default {
             ]
             return columns
         },
+        lang() {
+            return this.$store.state.lang
+        }
     },
     mounted() {
         this.getTableData()
@@ -247,7 +273,7 @@ export default {
             Core.Api.Stock.list({
                 ...this.searchForm,
                 page: this.currPage,
-                pageSize: this.pageSize,
+                page_size: this.pageSize,
             }).then(res => {
                 console.log('getTableData res', res)
                 this.tableData = res.list
@@ -261,9 +287,27 @@ export default {
                 this.itemOptions = res.list
             })
         },
+        handleItemNameSearch(name) {
+            Core.Api.Item.list({name: name,flag_spread: 1}).then(res => {
+                this.itemOptions = res.list
+            })
+        },
         handleItemChange(){
             this.searchForm.target_type = undefined
-        }
+        },
+        handleExport() { // 订单导出
+            this.exportDisabled = true;
+
+            let form = Core.Util.deepCopy(this.searchForm);
+
+            for (const key in form) {
+                form[key] = form[key] || 0
+            }
+            let exportUrl = Core.Api.Export.exportStock(form)
+            console.log("handleRepairExport exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
+        },
 
     },
 }

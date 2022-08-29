@@ -33,6 +33,8 @@ const apiList = {
 
         exportOrderPrice: ['GetJson', 'purchase-order/export-item-price'], // 采购数据导出
 
+	    exportStock: ['GetJson', 'stock/export'], // 采购数据导出
+
         exportItemPrice: ['GetJson', 'item/export-item-price'], // 导出数据
 
         exportSalesStatement: ['GetJson', 'purchase-order/export-sales-statement'], // 导出数据
