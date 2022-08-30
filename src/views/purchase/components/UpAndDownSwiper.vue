@@ -49,7 +49,7 @@ export default {
         imgIndex: Number
     },
     components: {
-        UpOutlined, 
+        UpOutlined,
         DownOutlined
     },
     data() {
@@ -73,7 +73,12 @@ export default {
         getImgUrl(i) {
             console.log("this.imgs",this.imgs)
             if (this.imgs != undefined && this.imgs != null&& this.imgs != ""){
-                return this.$Util.imageFilter(this.imgs[i].logo)
+                console.log(this.imgs[i])
+                let img = this.imgs[i].imgs.split(",")
+                if (img.length === 0){
+                    return
+                }
+                return this.$Util.imageFilter(img[0])
             }
 
         },
