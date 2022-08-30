@@ -80,7 +80,9 @@
                             <img :src="$Util.imageFilter(item.logo, 2)" />
                         </div>
                         <p  class="sub" v-if="item.type !== Core.Const.ITEM.TYPE.PRODUCT">{{item.code || '-'}}</p>
-<!--                        <p class="sub">{{item.code}}</p>-->
+                        <p  class="sub" v-if="item.type === Core.Const.ITEM.TYPE.PRODUCT">{{'' || ' '}} &ensp;</p>
+
+                        <!--                        <p class="sub">{{item.code}}</p>-->
                         <p class="name">{{ item.name ? lang =='zh' ? item.name : item.name_en : '-' }}</p>
                         <p class="desc">&nbsp;</p>
                         <p class="price" v-if="currency === 'eur' || currency === 'EUR'">
