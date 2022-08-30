@@ -1,55 +1,73 @@
 <template>
-<div id="PurchaseItemList">
-    <div class="item-content-container" :class="firstLevelId ? '' : 'full-content'">
-        <template v-if="!bomShow">
-            <div class="item-content" v-if="tableData.length">
-                <!-- <div class="switch-btn">
-                    <a-radio-group v-model:value="pageType">
-                        <a-radio-button value="agora"><i class="icon i_agora"/></a-radio-button>
-                        <a-radio-button value="list"><i class="icon i_list"/></a-radio-button>
-                    </a-radio-group>
-                </div> -->
-                <div class="list-container">
-                    <div class="list-item" v-for="item of tableData" :key="item.id" @click="routerChange('detail', item)">
-                        <div class="cover">
-                            <img :src="$Util.imageFilter(item.logo, 2)" />
-                        </div>
-                        <p  class="sub" v-if="item.type !== Core.Const.ITEM.TYPE.PRODUCT">{{item.code || '-'}}</p>
-                        <p  class="sub" v-if="item.type === Core.Const.ITEM.TYPE.PRODUCT">{{'' || ' '}} &ensp;</p>
+<div id="ItemIndex">
+    <div class="item-header-container">
+        <a-tabs v-model:activeKey="firstLevelId" @change="handleCategoryChange">
+            <a-tab-pane :key="0" :tab="$t('n.all')"></a-tab-pane>
+            <a-tab-pane v-for="item of categoryList" :key="item.id" :tab="$i18n.locale =='zh' ? item.name : item.name_en"></a-tab-pane>
+            <template #rightExtra>
+                <a-input-group  compact>
+                    <a-select v-model:value="searchType" class="search_select">
+                        <a-select-option v-for="(val, key) in SEARCH_TYPE_MAP" :key="key" :value="key">{{ val[$i18n.locale]  }}</a-select-option>
 
-                        <!--                        <p class="sub">{{item.code}}</p>-->
-                        <p class="name">{{ item.name ? lang =='zh' ? item.name : item.name_en : '-' }}</p>
-                        <p class="desc">&nbsp;</p>
-                        <p class="price" v-if="currency === 'eur' || currency === 'EUR'">
-                            €{{$Util.countFilter(item[priceKey + 'eur'])}}
-                        </p>
-                        <p class="price" v-else>
-                            ${{$Util.countFilter(item[priceKey + 'usd'])}}
-                        </p>
-                        <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">{{ $t('i.cart') }}</a-button>
-                    </div>
-                </div>
-                <div class="paging-container">
-                    <a-pagination
-                        v-model:current="currPage"
-                        :page-size='pageSize'
-                        :total="total"
-                        show-quick-jumper
-                        show-size-changer
-                        show-less-items
-                        :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
-                        :hide-on-single-page='false'
-                        :pageSizeOptions="['10', '20', '30', '40']"
-                        @change="pageChange"
-                        @showSizeChange="pageSizeChange"
-                    />
-                </div>
+                    </a-select>
+                <a-input class="search_input" v-model:value="searchForm.name" :placeholder="$t('def.input')" @pressEnter="handleSearch" style="width: 50%" >
+                    <template #prefix><i class="icon i_search" @click="handleSearch"/></template>
+                    <template #suffix><i class="icon i_close_b" @click="handleNameReset" v-if="searchForm.name"/></template>
+                </a-input>
+                </a-input-group>
+                <a-tooltip :title="$t('i.data_export')" class="popover">
+                <!--  @click="routerChange('favorite')"  {{$t('def.export')}}-->
+                    <a-button type="text" @click="handleExportConfirm"><i class="icon i_download"/></a-button>
+                </a-tooltip>
+                <a-tooltip :title="$t('i.favorites')" class="popover">
+                    <a-button type="link" @click="routerChange('favorite')"><i class="icon i_collect"/></a-button>
+                </a-tooltip>
+                <a-popover v-model:visible="briefVisible" arrow-point-at-center placement="bottomRight" trigger='click' overlayClassName='shop-cart-brief-content'>
+                    <template #content>
+                        <div class="shop-cart-brief" :class="briefVisible ? 'show' : 'hidden'">
+                            <div class="icon i_close" @click="briefVisible = false"></div>
+                            <div class="tip">
+                                <i class="icon i_check_b"/>{{ $t('i.added') }}
+                            </div>
+                            <div class="item" v-for="item of briefList" :key="item.id">
+                                <img class="cover" :src="$Util.imageFilter(item.logo, 2)" />
+                                <div class="desc">
+                                    <p>{{ item.name ? lang =='zh' ? item.name : item.name_en : '-' }}</p>
+                                    <span>{{item.code || '-'}}</span>
+                                    <p class="price">€{{$Util.countFilter(item[priceKey + 'eur'])}} | ${{$Util.countFilter(item[priceKey + 'usd'])}}</p>
+                                    <!-- <div v-if="!item.editRemark" @click="handleRemarkEditShow(item)" class="remark">{{$t('i.remark')}}：{{ item.remark }}</div> -->
+                                    <a-form :model="formState" :label-col="labelCol" :wrapper-col="wrapperCol">
+                                        <a-form-item :label="$t('i.remark')">
+                                            <a-input v-model:value="item.remark" @blur="handleRemarkEditBlur(item)" />
+                                        </a-form-item>
+                                    </a-form>
+                                </div>
+                            </div>
+                            <div class="btns">
+                                <a-button class='btn ghost' @click="routerChange('shop_cart')">{{ $t('i.look') }}({{briefCount}})</a-button>
+                                <a-button class='btn black' @click="routerChange('settle')">{{ $t('i.settle') }}</a-button>
+                            </div>
+                        </div>
+                    </template>
+                    <a-tooltip :title="$t('i.look') + `${briefCount ? '('+briefCount+')' : ''}`" class="popover">
+                        <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>
+                    </a-tooltip>
+                </a-popover>
+            </template>
+        </a-tabs>
+    </div>
+    <div class="item-content-container" :class="firstLevelId ? '' : 'full-content'">
+        <div class="category-container" v-if="firstLevelId">
+            <a-button type="link" @click="handleCategoryChange(firstLevelId)" >
+
+                <div class="category-title" >{{ $i18n.locale =='zh' ? firstLevelName.name : firstLevelName.name_en}}</div>
+            </a-button>
+            <div class="category-content">
+                <CategoryTree :parentId='firstLevelId' @change='handleCategoryChange' ref="CategoryTree"/>
             </div>
-            <SimpleImageEmpty class="item-content-empty" v-else :desc="$t('i.no_search_list')"/>
-        </template>
-        <div class="bom-content" v-else>
-            <ExploredContentPay v-if="bomShow" :key="menaKey" :id="searchForm.category_id" :data="tableData" @change="getData"></ExploredContentPay>
         </div>
+        <ItemList v-if="!flag_display"  :category_id="searchForm.category_id" @changeDisplay="changeDisplay" ></ItemList>
+        <ItemDisplay v-if="flag_display" :item_id="item_id"></ItemDisplay>
     </div>
 </div>
 </template>
@@ -61,6 +79,10 @@ import CategoryTree from './components/CategoryTree.vue'
 import SimpleImageEmpty from '../../components/common/SimpleImageEmpty.vue'
 import { ExportOutlined } from '@ant-design/icons-vue';
 import ExploredContentPay from './components/ExploredContentPay.vue';
+import ItemList from './item-list.vue';
+import ItemDisplay from './item-display.vue';
+
+
 const SEARCH_TYPE_MAP = Core.Const.ITEM.SEARCH_TYPE_MAP
 export default {
     name: 'PurchaseItemList',
@@ -69,20 +91,10 @@ export default {
         CategoryTree,
         ExportOutlined,
         ExploredContentPay,
+        ItemList,
+        ItemDisplay,
     },
-    props: {
-        category_id: {type: Number},
-
-
-    },
-    watch: {
-        category_id(n,o){
-           console.log("category_id",n)
-            this.searchForm.category_id = n
-            this.getTableData();
-            this.isBomShow(this.searchForm.category_id);
-        },
-    },
+    props: {},
     data() {
         return {
             Core,
@@ -126,8 +138,11 @@ export default {
             bomShow: false,
             menaKey: 1,
             currency: '',
+            flag_display: false,
+            item_id: 0,
         };
     },
+    watch: {},
     computed: {
         priceKey() {
             return this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
@@ -151,13 +166,11 @@ export default {
             let routeUrl = ''
             switch (type) {
                 case 'detail':  // 详情
-                    // routeUrl = this.$router.resolve({
-                    //     path: '/purchase/item-display',
-                    //     query: { id: item.id }
-                    // })
-                    // window.open(routeUrl.href, '_blank')
-                    this.$emit('changeDisplay',true,item.id)
-
+                    routeUrl = this.$router.resolve({
+                        path: '/purchase/item-display',
+                        query: { id: item.id }
+                    })
+                    window.open(routeUrl.href, '_blank')
                     break;
                 case 'favorite':  // 收藏夹
                 case 'shop_cart':  // 购物车
@@ -193,9 +206,11 @@ export default {
         handleCategoryChange(category) {
             // console.log('handleCategoryChange category:', category)
             this.tableData = []
+            this.searchForm.category_id = category
+            this.flag_display = false
             this.isBomShow(category)
             // this.bomShow = false
-            this.searchForm.category_id = category
+
             if ( this.firstLevelId && category === this.firstLevelId) {
                 this.firstLevelName = this.categoryList.find(i => i.id === category)
                 this.$nextTick(() => {
@@ -362,14 +377,22 @@ export default {
                 console.log('handleRemarkEditBlur: err', err)
             })
         },
+        changeDisplay(flag_display, item_id){
+
+            this.flag_display = flag_display;
+            this.item_id = item_id
+            console.log("item_id", this.item_id)
+        },
     }
 };
 </script>
 
 <style lang="less">
+
 .ant-form {
     width: 100%;
 }
+
 .ant-form-item {
     margin: 0;
 }
@@ -388,7 +411,8 @@ export default {
     box-shadow: none;
     outline: 0;
 }
-#PurchaseItemList {
+#ItemIndex {
+
     background-color: #fff;
     border-radius: 6px;
     overflow: hidden;

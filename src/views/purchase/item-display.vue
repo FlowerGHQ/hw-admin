@@ -79,7 +79,23 @@ export default {
         SimpleImageEmpty,
         UpAndDownSwiper,
     },
-    props: {},
+    props: {
+        item_id: {
+            type: Number,
+            default: 0},
+    },
+    watch: {
+        item_id: {
+            immediate: true,
+            handler(n) {
+                console.log("watch item_id",n)
+                this.id = n
+                this.getItemDetail();
+                this.getAccessoryData();
+                this.getDownloadData()
+            }
+        },
+    },
     data() {
         return {
             activeKey: 'mountings',
@@ -105,7 +121,6 @@ export default {
             currency:'',
         };
     },
-    watch: {},
     computed: {
         priceKey() {
             let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
@@ -115,10 +130,10 @@ export default {
     },
     mounted() {
         this.currency = Core.Data.getCurrency();
-        this.id = Number(this.$route.query.id) || 0
-        this.getItemDetail();
-        this.getAccessoryData();
-        this.getDownloadData()
+        // this.id = Number(this.$route.query.id) || 0
+        // this.getItemDetail();
+        // this.getAccessoryData();
+        // this.getDownloadData()
     },
     methods: {
         // 获取商品详情

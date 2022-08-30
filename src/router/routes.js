@@ -301,7 +301,7 @@ const routes = [
             {
                 path: 'item-list',
                 name: 'PurchaseItemList',
-                component: () => import('@/views/purchase/item-list.vue'),
+                component: () => import('@/views/purchase/item-index.vue'),
                 meta: {
                     title: '采购',
                     title_en: 'Purchase',
