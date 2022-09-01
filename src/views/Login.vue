@@ -132,9 +132,17 @@ export default {
                 }
             }).finally(() => {
                 Core.Data.setAuthority(authorityMap)
-                setTimeout(() => {
-                    this.$router.replace({ path: '/dashboard', query: {from: 'login'} })
-                }, 1000)
+                if (userType === Core.Const.USER.TYPE.ADMIN){
+                    setTimeout(() => {
+                        this.$router.replace({ path: '/dashboard', query: {from: 'login'} })
+                    }, 1000)
+                } else {
+                    setTimeout(() => {
+                        this.$router.replace({ path: '/dashboard/index', query: {from: 'login'} })
+                    }, 1000)
+                }
+
+
             })
 
 

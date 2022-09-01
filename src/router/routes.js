@@ -32,15 +32,28 @@ const routes = [
             icon: 'i_s_dashboard',
             // not_sub_menu: true,
         },
-        children: [{
-            path: '',
-            name: 'Dashboard',
-            component: () => import('@/views/dashboard/Dashboard.vue'),
-            meta: {
-                title: '时效看板',
-                title_en: 'RTDB',
-            }
-        }]
+        children: [
+	        {
+		        path: 'index',
+		        name: 'Index',
+		        component: () => import('@/views/dashboard/Analytics.vue'),
+		        meta: {
+			        title: '首页',
+			        title_en: 'Index',
+			        roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
+		        }
+	        },
+        	{
+	            path: '',
+	            name: 'Dashboard',
+	            component: () => import('@/views/dashboard/Dashboard.vue'),
+	            meta: {
+	                title: '时效看板',
+	                title_en: 'RTDB',
+	            }
+            },
+
+        ]
     },
 
     { // 维修单 结算下载

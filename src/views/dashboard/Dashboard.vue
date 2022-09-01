@@ -1,6 +1,6 @@
 <template>
 <!-- 财务结算 -->
-<div id="Dashboard" v-if="$auth('ADMIN')">
+<div id="Dashboard">
     <SearchRangePicker @search='handleTimeChange'/>
     <div class="statistic-container">
         <div class="statistic-item">
@@ -80,7 +80,6 @@
         </div>
     </div>
 </div>
-<Analytics v-else/>
 </template>
 
 <script>
