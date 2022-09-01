@@ -520,6 +520,7 @@ export default {
                 }
             }
             .category-content {
+                min-width: 150px;
                 .ant-menu.ant-menu-root {
                     border-right: 0;
                     margin-left: -24px;
