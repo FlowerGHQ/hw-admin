@@ -66,7 +66,7 @@
                 <CategoryTree :parentId='firstLevelId' @change='handleCategoryChange' ref="CategoryTree"/>
             </div>
         </div>
-        <ItemList v-if="!flag_display"  :category_id="searchForm.category_id" @changeDisplay="changeDisplay" ></ItemList>
+        <ItemList v-if="!flag_display"  :category_id="searchForm.category_id" :name="searchForm.name" @changeDisplay="changeDisplay" ref="itemList"></ItemList>
         <ItemDisplay v-if="flag_display" :item_id="item_id"></ItemDisplay>
     </div>
 </div>
@@ -197,11 +197,13 @@ export default {
             this.getTableData()
         },
         handleSearch() {  // 搜索
-            this.pageChange(1);
+            this.flag_display = false
+            this.$refs.itemList.pageChangeName(this.searchForm.name);
         },
         handleNameReset() {  // 重置名称
+            this.flag_display = false
             this.searchForm.name = ''
-            this.pageChange(1);
+            this.$refs.itemList.pageChangeName(this.searchForm.name);
         },
         handleCategoryChange(category) {
             // console.log('handleCategoryChange category:', category)

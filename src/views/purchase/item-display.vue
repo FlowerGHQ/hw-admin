@@ -159,8 +159,9 @@ export default {
         getSpecList() {
             this.loading = true;
             Core.Api.Item.list({
+                id: this.detail.id,
                 set_id: this.detail.set_id,
-                flag_spread: 1,
+                flag_spread: 2,
                 status: 0,
 
             }).then(res => {

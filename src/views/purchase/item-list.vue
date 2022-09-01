@@ -72,15 +72,37 @@ export default {
     },
     props: {
         category_id: {type: Number},
+        name: {name: String},
 
 
     },
     watch: {
-        category_id(n,o){
-           console.log("category_id",n)
-            this.searchForm.category_id = n
-            this.getTableData();
-            this.isBomShow(this.searchForm.category_id);
+        // category_id(n,o){
+        //    console.log("category_id",n)
+        //     this.searchForm.category_id = n
+        //     this.getTableData();
+        //     this.isBomShow(this.searchForm.category_id);
+        // },
+        // name(n,o){
+        //     console.log("category_id",n)
+        //     this.searchForm.name = n
+        // },
+        category_id: {
+            immediate: true,
+            handler(n) {
+                console.log("watch item_id",n)
+                this.searchForm.category_id = n
+                this.getTableData();
+                this.isBomShow(this.searchForm.category_id);
+            }
+        },
+        name: {
+            immediate: true,
+            handler(n) {
+                console.log("watch item_id",n)
+                this.searchForm.name = n
+
+            }
         },
     },
     data() {
@@ -173,6 +195,10 @@ export default {
                     window.open(routeUrl.href, '_self')
                     break;
             }
+        },
+        pageChangeName(name) {  // 页码改变
+            this.searchForm.name = name
+            this.pageChange(1)
         },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
