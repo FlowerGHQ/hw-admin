@@ -201,12 +201,12 @@ export default {
         },
         handleSearch() {  // 搜索
             this.flag_display = false
-            this.$refs.itemList.pageChangeName(this.searchForm.name);
+            this.$refs.itemList.pageChangeName(this.searchForm.name,this.searchType);
         },
         handleNameReset() {  // 重置名称
             this.flag_display = false
             this.searchForm.name = ''
-            this.$refs.itemList.pageChangeName(this.searchForm.name);
+            this.$refs.itemList.pageChangeName(this.searchForm.name,this.searchType);
         },
         handleCategoryChange(category) {
             console.log('handleCategoryChange category:', category)

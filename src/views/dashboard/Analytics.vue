@@ -33,20 +33,20 @@
 <!--            <arrow-right-outlined type="user" class="arrow"/>-->
         </div>
     </div>
-    <div class="message card">
-        <div class="title">{{ $t('n.pending') }} <a-badge :count="1" class="badge"/></div>
-        <div class="content">
-            <div class="message-card" v-for="pend,i in pendingList" :class=" !!pend.istrue ? 'red' : 'green' ">
-                <div class="message-content">
-                    <p>
-                        <span class="text">{{ $i18n.locale === 'zh' ? pend.name : pend.name_en }}</span>
-                        <span class="info">{{ $i18n.locale === 'zh' ? pend.info : pend.info_en }}</span>
-                    </p>
-                    <p class="content">{{ $i18n.locale === 'zh' ? pend.content : pend.content_en }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
+<!--    <div class="message card">-->
+<!--        <div class="title">{{ $t('n.pending') }} <a-badge :count="1" class="badge"/></div>-->
+<!--        <div class="content">-->
+<!--            <div class="message-card" v-for="pend,i in pendingList" :class=" !!pend.istrue ? 'red' : 'green' ">-->
+<!--                <div class="message-content">-->
+<!--                    <p>-->
+<!--                        <span class="text">{{ $i18n.locale === 'zh' ? pend.name : pend.name_en }}</span>-->
+<!--                        <span class="info">{{ $i18n.locale === 'zh' ? pend.info : pend.info_en }}</span>-->
+<!--                    </p>-->
+<!--                    <p class="content">{{ $i18n.locale === 'zh' ? pend.content : pend.content_en }}</p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
     <div class="service">
         <div class="service-left card">
             <div class="service-title">{{ $t('n.service') }}</div>

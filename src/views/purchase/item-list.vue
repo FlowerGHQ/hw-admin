@@ -195,8 +195,9 @@ export default {
                     break;
             }
         },
-        pageChangeName(name) {  // 页码改变
+        pageChangeName(name,searchType) {  // 页码改变
             this.searchForm.name = name
+            this.searchType = searchType
             this.pageChange(1)
         },
         pageChange(curr) {  // 页码改变
