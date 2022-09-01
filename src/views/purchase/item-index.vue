@@ -140,6 +140,7 @@ export default {
             currency: '',
             flag_display: false,
             item_id: 0,
+            firstLevel_key: '',
         };
     },
     watch: {},
@@ -154,10 +155,12 @@ export default {
 
      mounted() {
          this.currency = Core.Data.getCurrency();
+         this.firstLevel_key =  this.$route.query.first_level_id;
          this.getTableData();
          this.getCategoryList()
          this.getShopCartData();
-         this.firstLevelId =  Number(this.$route.query.first_level_id) || 0
+
+
 
     },
 
@@ -206,21 +209,38 @@ export default {
             this.$refs.itemList.pageChangeName(this.searchForm.name);
         },
         handleCategoryChange(category) {
-            // console.log('handleCategoryChange category:', category)
+            console.log('handleCategoryChange category:', category)
             this.tableData = []
             this.searchForm.category_id = category
             this.flag_display = false
             this.isBomShow(category)
             // this.bomShow = false
+            if (this.firstLevel_key !== ''){
+                this.firstLevelName = this.categoryList.find(i => i.index_key === this.firstLevel_key);
+                console.log("firstLevel_key", this.firstLevel_key)
+                console.log("categoryList", this.categoryList)
+                console.log("firstLevelName", this.firstLevelName)
+                if (this.firstLevelName !== undefined){
+                    this.searchForm.category_id = this.firstLevelName.id
+                    this.firstLevelId = this.firstLevelName.id
+                }
 
+                this.firstLevel_key = '';
+            }
             if ( this.firstLevelId && category === this.firstLevelId) {
-                this.firstLevelName = this.categoryList.find(i => i.id === category)
+
+
+                this.firstLevelName = this.categoryList.find(i => i.id === category);
+
                 this.$nextTick(() => {
                     this.$refs.CategoryTree.handleReset();
                 })
             }
             this.pageChange(1)
         },
+
+
+
         // 是否显示爆炸图
         isBomShow(id) {
             this.bomShow = false
