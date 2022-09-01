@@ -121,21 +121,21 @@ export default {
                     name_en: 'VEHICLE',
                     content: '内容 内容',
                     content_en: 'Content content',
-                    first_level: 'vehicle',
+                    first_level: '1',
                 },
                 {
                     name: '备品',
                     name_en: 'SPAREPARTS',
                     content: '内容 内容',
                     content_en: 'Content content',
-                    first_level: 'spareparts',
+                    first_level: '2',
                 },
                 {
                     name: '附件',
                     name_en: 'ACCESSOIRES',
                     content: '内容 内容',
                     content_en: 'Content content',
-                    first_level: 'accessoires',
+                    first_level: '3',
                 }
             ],
             // 待定数据

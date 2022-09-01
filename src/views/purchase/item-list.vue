@@ -164,7 +164,6 @@ export default {
          this.getTableData();
          this.getCategoryList()
          this.getShopCartData();
-         this.firstLevelId =  Number(this.$route.query.first_level_id) || 0
 
     },
 

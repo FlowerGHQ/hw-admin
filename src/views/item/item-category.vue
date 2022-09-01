@@ -60,6 +60,12 @@
                             <a-input v-model:value="editForm.index" :placeholder="$t('def.input')"/>
                         </div>
                     </div>
+                    <div class="form-item">
+                        <div class="key">{{ $t('i.home_page_redirect_number') }}</div>
+                        <div class="value">
+                            <a-input v-model:value="editForm.index_key" :placeholder="$t('def.input')"/>
+                        </div>
+                    </div>
                 </div>
             </a-modal>
         </template>
@@ -92,6 +98,7 @@ export default {
                 name: '',
                 name_en: '',
                 index: '',
+                index_key: '',
             },
         };
     },
@@ -102,6 +109,7 @@ export default {
                 {title: this.$t('n.name'), dataIndex: 'name'},
                 {title: this.$t('n.name_en'), dataIndex: 'name_en'},
                 {title: this.$t('n.index'), dataIndex: 'index'},
+                {title: this.$t('i.home_page_redirect_number'), dataIndex: 'index_key'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100,},
             ]
             return columns
@@ -195,13 +203,14 @@ export default {
         },
 
         // 编辑与新增子类
-        handleModalShow({parent_id = 0, id, name, name_en,index}, node = null, parent = null) {
+        handleModalShow({parent_id = 0, id, name, name_en,index,index_key}, node = null, parent = null) {
             this.editForm = {
                 id: id,
                 name: name,
                 name_en: name_en,
                 parent_id: parent_id,
                 index: index,
+                index_key: index_key,
             }
             console.log('this.editForm:', this.editForm)
             this.parentNode = parent
@@ -216,6 +225,7 @@ export default {
             if (!form.name_en) {
                 return this.$message.warning(this.$t('def.enter'))
             }
+            form.key = form.index_key
             this.loading = true
             let apiName = form.id ? 'update' : 'save';
             Core.Api.ItemCategory[apiName](form).then(res => {

@@ -490,6 +490,7 @@ const messages = {
             view_logistics_detail: '查看物流详情',
             logistics_info: '修改物流信息',
             receive_remark: '编辑验收备注',
+	        home_page_redirect_number: '首页跳转序号',
 
         },
 	    fe:{ // 反馈单
@@ -1933,7 +1934,7 @@ const messages = {
             view_logistics_detail: 'View logistics details',
             logistics_info: 'Modify logistics information',
             receive_remark: 'Edit acceptance remarks',
-
+	        home_page_redirect_number: 'Home Redirect',
         },
         fe:{
             feedback: 'Feedback',

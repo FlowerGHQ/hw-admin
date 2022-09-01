@@ -228,8 +228,6 @@ export default {
                 this.firstLevel_key = '';
             }
             if ( this.firstLevelId && category === this.firstLevelId) {
-
-
                 this.firstLevelName = this.categoryList.find(i => i.id === category);
 
                 this.$nextTick(() => {
@@ -277,6 +275,7 @@ export default {
 
         getTableData() { // 获取 商品 数据
             let searchForm = Core.Util.deepCopy(this.searchForm);
+            console.log("searchForm",searchForm)
             if (this.searchType == Core.Const.ITEM.SEARCH_TYPE.CODE){
                 searchForm.code = searchForm.name;
                 searchForm.name = "";
