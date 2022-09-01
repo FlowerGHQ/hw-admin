@@ -2,7 +2,7 @@
     <div id="SpecificationCard" class="list-container" @click="changeData(data.id,i)">
         <div class="card-left">
             <div class="card-img">
-                <img :src="$Util.imageFilter(data.logo)" >
+                <img :src="$Util.imageFilter(data.imgs)" >
             </div>
             <div class="card-info">
                 <div class="title">{{ $i18n.locale =='zh' ? data.name : data.name_en }}</div>
@@ -69,7 +69,8 @@ export default {
     data() {
         return {
             value: 1,
-            currency: ''
+            currency: '',
+            imgs: '',
         };
     },
     watch: {},
@@ -83,6 +84,14 @@ export default {
     mounted() {
         this.currency = Core.Data.getCurrency();
         console.log(this.data,'data')
+        this.imgs = this.data.imgs
+        if (this.imgs != undefined && this.imgs != null&& this.imgs != ""){
+            let img = this.imgs.split(",")
+            if (img.length === 0){
+                this.imgs = "";
+            }
+            this.imgs = img[0]
+        }
     },
     methods: {
         // 增加商品数量

@@ -14,9 +14,9 @@
         <!-- <img :src="getImgUrl(imgIndex)" class="img-big"> -->
 
 
-        <a-carousel arrows dots-class="slick-dots slick-thumb" dotPosition="left" :afterChange="handleAafterChange">
+        <a-carousel arrows dots-class="slick-dots slick-thumb" dotPosition="left" :afterChange="handleAafterChange" v-if="type === 0">
             <template #customPaging="props">
-                <a>
+                <a >
                     <img :src="getImgUrl(props.i)" @click="changeIndex(imgs,props.i)"/>
                 </a>
             </template>
@@ -46,6 +46,7 @@ import { UpOutlined, DownOutlined } from '@ant-design/icons-vue';
 export default {
     props: {
         imgs: Array,
+        type: Number,
         imgIndex: Number
     },
     components: {
@@ -67,14 +68,29 @@ export default {
                // this.imgs = n
             }
         },
+        "type": {
+            deep: true,
+            immediate: true,
+            handler(n) {
+                console.log('watch detail.item_code n:', n)
+                // this.imgs = n
+            }
+        },
 
     },
     methods: {
         getImgUrl(i) {
             console.log("this.imgs",this.imgs)
             if (this.imgs != undefined && this.imgs != null&& this.imgs != ""){
-                console.log(this.imgs[i])
-                let img = this.imgs[i].imgs.split(",")
+                let img = ''
+                if (this.type === 0){
+                    img = this.imgs[i].imgs.split(",")
+                } else {
+                    img = this.imgs.imgs.split(",")
+                }
+
+                // console.log(this.imgs[i])
+                // let img = this.imgs[i].imgs.split(",")
                 if (img.length === 0){
                     return
                 }

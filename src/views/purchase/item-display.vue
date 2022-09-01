@@ -1,7 +1,9 @@
 <template>
     <div id="ItemDisplay" class="list-container">
         <div class="imgs-content">
-            <UpAndDownSwiper :imgs="specList" :imgIndex="mountingIndex" @handleChangeIndex="changeId"></UpAndDownSwiper>
+            <UpAndDownSwiper :imgs="specList" :type ="0" :imgIndex="mountingIndex" @handleChangeIndex="changeId" v-if="specList.length > 0"/>
+            <UpAndDownSwiper :imgs="detail" :type ="1" :imgIndex="mountingIndex" @handleChangeIndex="changeId" v-else/>
+
         </div>
         <div class="info-content">
             <div class="title">{{ $i18n.locale =='zh' ? detail.name : detail.name_en }}</div>
