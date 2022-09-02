@@ -167,7 +167,7 @@ export default {
     methods: {
         clickTab(e, a) {
             this.flag_display = false;
-            // if(e == 16) 
+            // if(e == 16)
             // console.log('click tab >>', e, a)
         },
         routerChange(type, item = {}) {
@@ -574,13 +574,13 @@ export default {
                     .cover {
                         width: 180px;
                         height: 180px;
-                        background-color: #F5F5F5;
+                        background-color: #fff;
                         .fcc();
                         overflow: hidden;
                         img {
                             width: 100%;
                             height: 100%;
-                            object-fit: cover;
+                            object-fit: scale-down;
                         }
                     }
                     .sub {

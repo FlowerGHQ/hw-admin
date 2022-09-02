@@ -548,13 +548,13 @@ export default {
                     .cover {
                         width: 180px;
                         height: 180px;
-                        background-color: #F5F5F5;
+                        background-color: #fff;
                         .fcc();
                         overflow: hidden;
                         img {
                             width: 100%;
                             height: 100%;
-                            object-fit: cover;
+                            object-fit: scale-down;
                         }
                     }
                     .sub {

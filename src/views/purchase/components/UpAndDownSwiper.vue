@@ -170,7 +170,11 @@ export default {
   filter: grayscale(100%);
   display: block;
 }
+.ant-carousel :deep img {
+    object-fit: scale-down;
+}
 .ant-carousel :deep .slick-thumb li.slick-active img {
+    object-fit: scale-down;
   filter: grayscale(0%);
 }
 
