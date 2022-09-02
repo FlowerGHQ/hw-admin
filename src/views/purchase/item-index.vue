@@ -1,7 +1,7 @@
 <template>
 <div id="ItemIndex">
     <div class="item-header-container">
-        <a-tabs v-model:activeKey="firstLevelId" @change="handleCategoryChange">
+        <a-tabs v-model:activeKey="firstLevelId" @change="handleCategoryChange" @tabClick="clickTab">
             <a-tab-pane :key="0" :tab="$t('n.all')"></a-tab-pane>
             <a-tab-pane v-for="item of categoryList" :key="item.id" :tab="$i18n.locale =='zh' ? item.name : item.name_en"></a-tab-pane>
             <template #rightExtra>
@@ -63,7 +63,7 @@
                 <div class="category-title" >{{ $i18n.locale =='zh' ? firstLevelName.name : firstLevelName.name_en}}</div>
             </a-button>
             <div class="category-content">
-                <CategoryTree :parentId='firstLevelId' @change='handleCategoryChange' ref="CategoryTree"/>
+                <CategoryTree :parentId='firstLevelId' @change='handleCategoryChange' @clickCurrent='clickTab' ref="CategoryTree"/>
             </div>
         </div>
         <ItemList v-if="!flag_display"  :category_id="searchForm.category_id" :name="searchForm.name" @changeDisplay="changeDisplay" ref="itemList"></ItemList>
@@ -165,6 +165,11 @@ export default {
     },
 
     methods: {
+        clickTab(e, a) {
+            this.flag_display = false;
+            // if(e == 16) 
+            // console.log('click tab >>', e, a)
+        },
         routerChange(type, item = {}) {
             let routeUrl = ''
             switch (type) {
