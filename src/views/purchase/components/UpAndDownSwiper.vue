@@ -46,7 +46,10 @@ import { UpOutlined, DownOutlined } from '@ant-design/icons-vue';
 export default {
     props: {
         imgs: Array,
-        type: Number,
+        type: {
+            Number,
+            default: 0
+        },
         imgIndex: Number
     },
     components: {
@@ -84,9 +87,14 @@ export default {
             if (this.imgs != undefined && this.imgs != null&& this.imgs != ""){
                 let img = ''
                 if (this.type === 0){
+
                     img = this.imgs[i].imgs.split(",")
+
                 } else {
-                    img = this.imgs.imgs.split(",")
+                    if (this.imgs.imgs!== undefined){
+                        img = this.imgs.imgs.split(",")
+                    }
+
                 }
 
                 // console.log(this.imgs[i])

@@ -14,7 +14,7 @@
     </div>
     <div class="banner-cards">
         <div class="banner-card" v-for="(banner,i) in bannerList" :key="i" @click="routerChange('item',banner.first_level)">
-            <template v-if="banner.first_level !=='vehicle'">
+            <template v-if="banner.first_level !=='1'">
                 <img src="../../assets/images/default_banner-two.png" class="card-bg">
                 <p class="title">{{ $i18n.locale === 'zh' ? banner.content : banner.content_en }}</p>
                 <p class="info">{{ $i18n.locale === 'zh' ? banner.name : banner.name_en }}</p>

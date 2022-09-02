@@ -90,7 +90,7 @@ export default {
         category_id: {
             immediate: true,
             handler(n) {
-                console.log("watch item_id",n)
+                console.log("watch category_id",n)
                 this.searchForm.category_id = n
                 this.getTableData();
                 this.isBomShow(this.searchForm.category_id);
@@ -99,7 +99,7 @@ export default {
         name: {
             immediate: true,
             handler(n) {
-                console.log("watch item_id",n)
+                console.log("watch name",n)
                 this.searchForm.name = n
 
             }
@@ -228,6 +228,7 @@ export default {
                     this.$refs.CategoryTree.handleReset();
                 })
             }
+            console.log('pageSizeChange category_id:', this.searchForm.category_id)
             this.pageChange(1)
         },
         // 是否显示爆炸图
@@ -340,7 +341,7 @@ export default {
                 is_authority: 1,
             }).then(res => {
                 this.categoryList = res.list
-                this.handleCategoryChange(this.firstLevelId)
+                this.handleCategoryChange(this.searchForm.category_id)
             })
         },
 

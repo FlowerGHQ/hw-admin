@@ -156,7 +156,7 @@ export default {
      mounted() {
          this.currency = Core.Data.getCurrency();
          this.firstLevel_key =  this.$route.query.first_level_id;
-         this.getTableData();
+         // this.getTableData();
          this.getCategoryList()
          this.getShopCartData();
 
@@ -192,12 +192,12 @@ export default {
         },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
-            this.getTableData()
+            // this.getTableData()
         },
         pageSizeChange(current, size) {  // 页码尺寸改变
             console.log('pageSizeChange size:', size)
             this.pageSize = size
-            this.getTableData()
+            // this.getTableData()
         },
         handleSearch() {  // 搜索
             this.flag_display = false
@@ -209,7 +209,7 @@ export default {
             this.$refs.itemList.pageChangeName(this.searchForm.name,this.searchType);
         },
         handleCategoryChange(category) {
-            console.log('handleCategoryChange category:', category)
+            console.log('handleCategoryChange category1:', this.searchForm.category_id)
             this.tableData = []
             this.searchForm.category_id = category
             this.flag_display = false
@@ -227,6 +227,7 @@ export default {
 
                 this.firstLevel_key = '';
             }
+            console.log('handleCategoryChange category2:', this.searchForm.category_id)
             if ( this.firstLevelId && category === this.firstLevelId) {
                 this.firstLevelName = this.categoryList.find(i => i.id === category);
 
@@ -234,7 +235,8 @@ export default {
                     this.$refs.CategoryTree.handleReset();
                 })
             }
-            this.pageChange(1)
+            console.log('handleCategoryChange category3:', this.searchForm.category_id)
+            // this.pageChange(1)
         },
 
 
@@ -309,9 +311,9 @@ export default {
         },
 
         //
-        getData() {
-            this.getTableData()
-        },
+        // getData() {
+        //     this.getTableData()
+        // },
 
 
         getShopCartData(flag = false) { // 获取 购物车 数据
