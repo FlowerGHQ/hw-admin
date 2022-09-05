@@ -491,6 +491,7 @@ const messages = {
             logistics_info: '修改物流信息',
             receive_remark: '编辑验收备注',
 	        home_page_redirect_number: '首页跳转序号',
+	        on_board_battery: '随车电池',
 
         },
 	    fe:{ // 反馈单
@@ -1935,6 +1936,7 @@ const messages = {
             logistics_info: 'Modify logistics information',
             receive_remark: 'Edit acceptance remarks',
 	        home_page_redirect_number: 'Home Redirect',
+	        on_board_battery: 'Battery',
         },
         fe:{
             feedback: 'Feedback',

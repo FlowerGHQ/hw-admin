@@ -547,6 +547,9 @@ let Const = {
 			ITEM: 1, // 商品
 			MATERIAL: 2, // 物料
 		},
+		TYPE: {
+			BATTERY: 10, // 商品
+		},
 	},
     PURCHASE: { // 采购订单
         // 状态

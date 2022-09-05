@@ -72,6 +72,28 @@
                     </a-select>
                 </div>
             </div>
+            <div class="form-item" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
+                <div class="key">{{ $t('i.on_board_battery') }}</div>
+                <div class="value" v-if="form.accessory_code === '' || form.accessory_code === undefined">{{form.accessory_code}}
+                    <ItemSelect @select="handleAddItemShow" :radioMode="true" btn-class="select-item-btn" btnType='link'>
+                        <i class="icon i_add"/> {{ $t('i.add') }}
+                    </ItemSelect>
+                </div>
+                <div class="value" v-else>
+                        {{form.accessory_code}} {{form.accessory_name}}
+                        <ItemSelect @select="handleAddItemShow" :radioMode="true" btn-class="select-item-btn" btnType='link'>
+                            <i class="icon i_edit"/> {{ $t('def.edit') }}
+                        </ItemSelect>
+                        <a-button type="link" @click="handleDeleteItem"><i class="icon i_delete"/>删除</a-button>
+                </div>
+            </div>
+            <div class="form-item" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
+                <div class="key">{{ $t('i.on_board_battery') }}{{ $t('i.amount') }}</div>
+                <div class="value input-number" v-if="form.accessory_code !== '' && form.accessory_code !== undefined">
+                    <a-input-number v-model:value="form.accessory_amount" :min="0" :precision="0" placeholder="0"/>
+                    <span>{{ $t('i.pcs2') }}</span>
+                </div>
+            </div>
         </div>
     </div>
     <div class="form-block"> <!-- 图片信息 -->
@@ -361,6 +383,8 @@
 import Core from '../../core';
 import CategoryTreeSelectMultiple from '@/components/popup-btn/CategoryTreeSelectMultiple.vue'
 import ItemHeader from './components/ItemHeader.vue'
+import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
+
 // import VueTinymce from '@jsdawn/vue3-tinymce';
 
 export default {
@@ -368,11 +392,13 @@ export default {
     components: {
         CategoryTreeSelectMultiple,
         ItemHeader,
+        ItemSelect,
         // VueTinymce,
     },
     props: {},
     data() {
         return {
+            Core,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -401,6 +427,11 @@ export default {
                 sales_area_ids: undefined,
                 fob_eur: '',
                 fob_usd: '',
+                accessory_id:'',
+                accessory_name:'',
+                accessory_name_en:'',
+                accessory_code:'',
+                accessory_amount: '',
             },
             salesList: [],
             // 商品分类
@@ -608,7 +639,23 @@ export default {
                     status: 'done',
                 }))
             }
+
+            if (this.form.type === Core.Const.ITEM.TYPE.PRODUCT){
+                Core.Api.ItemAccessory.list({type: 10}).then(res => {
+
+                    if (res.list.length > 0){
+                        this.form.accessory_code = res.list[0].target_uid
+                        this.form.accessory_name = res.list[0].target_name
+                        this.form.accessory_name_en = res.list[0].target_name_en
+
+                        this.form.accessory_id = res.list[0].target_id
+                        this.form.accessory_amount = res.list[0].amount
+                    }
+                })
+
+            }
             this.loading = false
+
         },
         setSpecificData(itemList) {
             this.loading = true
@@ -1143,6 +1190,23 @@ export default {
             }
             // value.value = item.zh
             console.log("record",record)
+        },
+        // 添加商品
+        handleAddItemShow(ids, items) {
+            this.form.accessory_id = items[0].id
+            this.form.accessory_name = items[0].name
+            this.form.accessory_name_en = items[0].name_en
+
+            this.form.accessory_code = items[0].code
+            this.form.accessory_amount = 0
+        },
+        // 添加商品
+        handleDeleteItem() {
+            this.form.accessory_id = ''
+            this.form.accessory_name = ''
+            this.form.accessory_name_en = ''
+            this.form.accessory_code = ''
+            this.form.accessory_amount = 0
         },
     }
 };
