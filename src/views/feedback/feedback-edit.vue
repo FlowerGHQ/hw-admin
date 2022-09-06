@@ -48,14 +48,14 @@
                     {{ item_name }}
                 </div>
             </div>
-            <div class="form-item">
+            <div class="form-item required">
                 <div class="key">{{ $t('r.miles_driven') }}</div>
                 <div class="value">
                     <a-input-number v-model:value="form.mileage" :min="0" :precision="3"/>
                     <span class="unit">{{ $t('r.km') }}</span>
                 </div>
             </div>
-            <div class="form-item">
+            <div class="form-item required">
                 <div class="key">{{ $t('r.time_buying') }}</div>
                 <div class="value">
                     <a-date-picker v-model:value="form.sale_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" :placeholder="$t('r.select_arrival')">
@@ -328,10 +328,14 @@ export default {
         // 检查表单输入
         checkFormInput(form,area) {
 
-            /* if (!form.mileage) {
-                this.$message.warning('请输入行程公里数')
+            if (!form.mileage) {
+                this.$message.warning(this.$t('def.enter'))
                 return 0
-            }*/
+            }
+            if (!form.sale_time) {
+                this.$message.warning(this.$t('def.enter'))
+                return 0
+            }
             if (!form.title) {
                 this.$message.warning(this.$t('def.enter')+1)
                 return 0

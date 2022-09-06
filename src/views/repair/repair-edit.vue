@@ -107,7 +107,7 @@
                     {{ $Util.timeFilter(arrival_time) }}
                 </div>
             </div>
-            <div class="form-item">
+            <div class="form-item required">
                 <div class="key">{{ $t('r.miles_driven') }}</div>
                 <div class="value">
                     <a-input-number v-model:value="form.mileage" :min="0" :precision="3"/>
@@ -408,10 +408,10 @@ export default {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
-            /* if (!form.mileage) {
-                this.$message.warning('请输入行程公里数')
+             if (!form.mileage) {
+                this.$message.warning(this.$t('def.enter'))
                 return 0
-            }*/
+            }
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0

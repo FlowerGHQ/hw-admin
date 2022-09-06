@@ -18,6 +18,10 @@
     <div class="list-container shop-cart-container">
         <div class="title-area">
             <div class="shop-area">{{ $t('i.shopping') }}</div>
+            <div class="shop-right">
+                <a-button type="link" @click="handleClearShopCart">{{$t('i.clear_shop_car')}}</a-button>
+            </div>
+
         </div>
         <div class="list-content">
             <div class="list-item" v-for="item of shopCartList" :key="item.id">
@@ -387,6 +391,13 @@ export default {
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
         },
+        handleClearShopCart() {
+            let _this = this
+            Core.Api.ShopCart.clear().then(() => {
+                _this.$message.success(_this.$t('i.clear_shop_car'));
+                _this.getList()
+            })
+        },
     }
 };
 </script>
@@ -458,14 +469,17 @@ export default {
         align-items: flex-start;
         + .list-container { margin-top: 76px; }
         .title-area {
-            display: flex;
-            width: 100%;
+            width: 72%;
             font-size: 24px;
             font-weight: 500;
             color: #111111;
             line-height: 28px;
             margin-bottom: 8px;
-
+            box-sizing: border-box;
+            padding-right: 10%;
+            .shop-right{
+                float: right;
+            }
         }
         .list-content {
             width: 72%;

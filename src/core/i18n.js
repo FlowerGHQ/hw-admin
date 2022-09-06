@@ -492,7 +492,7 @@ const messages = {
             receive_remark: '编辑验收备注',
 	        home_page_redirect_number: '首页跳转序号',
 	        on_board_battery: '随车电池',
-
+			clear_shop_car: '清空购物车',
         },
 	    fe:{ // 反馈单
             feedback: '反馈',
@@ -1937,6 +1937,7 @@ const messages = {
             receive_remark: 'Edit acceptance remarks',
 	        home_page_redirect_number: 'Home Redirect',
 	        on_board_battery: 'Battery',
+	        clear_shop_car: 'Clear shop car',
         },
         fe:{
             feedback: 'Feedback',
