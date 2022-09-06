@@ -1076,6 +1076,18 @@ const messages = {
             exist_order_tip: '查询到该物流单号已存在，已根据原有物流信息填充表格',
             new_company :'新建物流公司'
         },
+	    crm_c: {
+		    extended_information: '扩展信息',
+		    level: '级别',
+		    gender: '性别',
+		    birthday: '性别',
+		    industry: '行业',
+		    nationality: '国籍',
+		    hobby:'爱好',
+		    marital_status:'婚姻状态',
+			income: '年收入',
+		    company_size: '公司规模',
+	    },
 	    authority: {
         	title: {
                 'distributor' : '分销商管理',

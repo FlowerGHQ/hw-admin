@@ -1474,6 +1474,63 @@ const routes = [
             },
         ]
     },
+	{ // 客户管理
+		path: '/crm-customer',
+		component: Layout,
+		redirect: '/crm-customer/customer-list',
+		name: 'CRMCustomerManagement',
+		meta: {
+			title: 'CRM客户',
+			title_en: 'CRM Customers',
+			icon: 'i_s_customer',
+			// auth: ["crm-customer.list"],
+
+		},
+		children: [
+			{
+				path: 'customer-list',
+				name: 'CustomerList',
+				component: () => import('@/views/crm-customer/customer-list.vue'),
+				meta: {
+					title: '公海客户',
+					title_en: 'Community Customer list',
+					// auth: ["crm-community-customer.list"],
+				}
+			},
+			{
+				path: 'customer-edit',
+				name: 'CustomerEdit',
+				component: () => import('@/views/crm-customer/customer-edit.vue'),
+				meta: {
+					hidden: true,
+					title: '新建客户',
+					parent: '/customer/customer-list',
+					// auth: ["crm-customer.save"],
+				}
+			},
+			// {
+			// 	path: 'customer-list',
+			// 	name: 'CustomerList',
+			// 	component: () => import('@/views/crm/customer/customer-list.vue'),
+			// 	meta: {
+			// 		title: '公海客户',
+			// 		title_en: 'Customer list',
+			// 		// auth: ["crm-customer.list"],
+			// 	}
+			// },
+			// {
+			// 	path: 'customer-edit',
+			// 	name: 'CustomerEdit',
+			// 	component: () => import('@/views/crm/customer/customer-edit.vue'),
+			// 	meta: {
+			// 		hidden: true,
+			// 		title: '新建客户',
+			// 		parent: '/customer/customer-list',
+			// 		// auth: ["crm-customer.save"],
+			// 	}
+			// },
+		]
+	},
     { // 系统管理
         path: '/system',
         component: Layout,
