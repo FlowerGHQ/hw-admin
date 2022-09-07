@@ -807,6 +807,41 @@ const Util = {
         return item[to] || ''
     },
     /* =============== 权限 ================ */
+	/* =============== CRM客户管理 ================ */
+	CRMCustomerTypeFilter(val,  to='zh') {
+		const MAP = Const.CRM_CUSTOMER.TYPE_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	CRMCustomerLevelFilter(val,  to='zh') {
+		const MAP = Const.CRM_CUSTOMER.LEVEL_MAP
+		let item = MAP[val + ''] || {}
+		console.log("item",val)
+		return item[to] || ''
+	},
+	CRMCustomerSourceFilter(val,  to='zh') {
+		const MAP = Const.CRM_CUSTOMER.SOURCE_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	CRMCustomerIndustryFilter(val,  to='zh') {
+		const MAP = Const.CRM_CUSTOMER.INDUSTRY_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	CRMCustomerGenderFilter(val,  to='zh') {
+		const MAP = Const.CRM_CUSTOMER.GENDER_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	CRMCustomerMaritalStatusFilter(val,  to='zh') {
+		const MAP = Const.CRM_CUSTOMER.MARITAL_STATUS_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+
+
+	/* =============== CRM客户管理 ================ */
 
 
 }

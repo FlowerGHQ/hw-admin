@@ -1078,15 +1078,17 @@ const messages = {
         },
 	    crm_c: {
 		    extended_information: '扩展信息',
-		    level: '级别',
+		    level: '客户级别',
+		    type: '客户类型',
 		    gender: '性别',
-		    birthday: '性别',
+		    birthday: '生日',
 		    industry: '行业',
 		    nationality: '国籍',
 		    hobby:'爱好',
 		    marital_status:'婚姻状态',
 			income: '年收入',
 		    company_size: '公司规模',
+		    company_license_id: '营业执照',
 	    },
 	    authority: {
         	title: {

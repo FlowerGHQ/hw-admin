@@ -22,15 +22,11 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('n.continent') }}：</div>
+                        <div class="key">{{ $t('crm_c.type') }}：</div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.continent" @keydown.enter='handleSearch'/>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('n.country') }}：</div>
-                        <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.country" @keydown.enter='handleSearch'/>
+                            <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" @change="handleSearch">
+                                <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                            </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
@@ -60,11 +56,11 @@
                         <template v-if="column.key === 'phone'">
                             {{ text || '-' }}
                         </template>
-                        <template v-if="column.key === 'email'">
-                            {{ text || '-' }}
+                        <template v-if="column.key === 'type'">
+                            {{ $Util.CRMCustomerTypeFilter(text, $i18n.locale) }}
                         </template>
-                        <template v-if="column.key === 'country'">
-                            {{ text || '-' }}
+                        <template v-if="column.key === 'level'">
+                            {{ $Util.CRMCustomerLevelFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.dataIndex === 'address'">
                             {{ $Util.addressFilter(record, $i18n.locale) }}
@@ -116,6 +112,8 @@ export default {
             // 分页
             currPage: 1,
             pageSize: 20,
+
+            CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
             total: 0,
             orderByFields: {},
             // 搜索
@@ -124,8 +122,7 @@ export default {
                 phone:'',
                 begin_time: '',
                 end_time: '',
-                continent: '',
-                country: '',
+                type: '',
             },
             // 表格
             tableData: [],
@@ -137,11 +134,13 @@ export default {
             let columns = [
                 {title: 'n.name', dataIndex: 'name', key:'detail', sorter: true},
                 {title: 'n.phone', dataIndex: 'phone', key:'phone', sorter: true},
-                {title: 'n.email', dataIndex: 'email', key:'email', sorter: true},
                 // {title: 'n.continent', dataIndex: 'continent', key:'item'},
-                {title: 'n.country', dataIndex: 'country', key:'country', sorter: true},
+                {title: 'crm_c.level', dataIndex: 'level', key:'level', sorter: true},
+                {title: 'crm_c.type', dataIndex: 'type', key:'type', sorter: true},
+                {title: 'r.creator_name', dataIndex: 'creator_name', key:'creator_name', sorter: true},
                 {title: 'ad.specific_address', dataIndex: 'address', sorter: true},
                 {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
+                {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
             if (this.$i18n.locale === 'en') {
@@ -192,7 +191,7 @@ export default {
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
-            Core.Api.Customer.list({
+            Core.Api.CRMCustomer.list({
                 ...this.searchForm,
                 order_by_fields: this.orderByFields,
                 page: this.currPage,

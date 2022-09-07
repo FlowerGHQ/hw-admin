@@ -8,7 +8,7 @@
                 <a-tag color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType][$i18n.locale] }}</a-tag>
             </div>
             <div class="header-right">
-                <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>
+<!--                <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>-->
                 <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
                     <i class="icon" :class="lang =='zh' ? 'i_zh-en' : 'i_en-zh'"/>
                 </a-button>

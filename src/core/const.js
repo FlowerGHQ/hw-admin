@@ -1364,6 +1364,54 @@ let Const = {
 		    ITEM_CATEGORY: 2,
 	    }
 	},
+	CRM_CUSTOMER: {
+		TYPE: {
+			INDIVIDUAL: 1,
+			UNIT: 2,
+		},
+		TYPE_MAP: {
+			'1': { key: 1, zh: '个人客户',en: 'Individual customers', value: 1 },
+			'2': { key: 2, zh: '单位客户',en: 'Unit of the customer', value: 2 },
+		},
+		LEVEL_MAP: {
+			'10': { key: 10, zh: '重点客户',en: 'Important customer', value: 10 },
+			'20': { key: 20, zh: '普通客户',en: 'Ordinary customer', value: 20 },
+			'30': { key: 30, zh: '非优先客户',en: 'Non-preferred customers', value: 30 },
+			'40': { key: 40, zh: '黑名单客户',en: 'Blacklist clients', value: 40 },
+		},
+		SOURCE_MAP: {
+			'10': { key: 10, zh: '客户介绍',en: 'Customers', value: 10 },
+			'20': { key: 20, zh: '广告',en: 'Advertising', value: 20 },
+			'30': { key: 30, zh: '活动推广',en: 'Activities to promote', value: 30 },
+			'40': { key: 40, zh: '其他',en: 'Other', value: 40 },
+		},
+		INDUSTRY_MAP: {
+			'10': { key: 10, zh: '金融',en: 'Finance', value: 10 },
+			'20': { key: 20, zh: '电信',en: 'Telecom', value: 20 },
+			'30': { key: 30, zh: '教育',en: 'Education', value: 30 },
+			'40': { key: 40, zh: '高科技',en: 'High-tech', value: 40 },
+			'50': { key: 50, zh: '政府',en: 'The government', value: 50 },
+			'60': { key: 60, zh: '制造业',en: 'Manufacturing', value: 60 },
+			'70': { key: 70, zh: '服务',en: 'Service', value: 70 },
+			'80': { key: 80, zh: '能源',en: 'Energy', value: 80 },
+			'90': { key: 90, zh: '零售',en: 'Retail', value: 90 },
+			'100': { key: 100, zh: '媒体',en: 'Media', value: 100 },
+			'110': { key: 110, zh: '娱乐',en: 'Entertainment', value: 110 },
+			'120': { key: 120, zh: '咨询',en: 'Consulting', value: 120 },
+			'130': { key: 130, zh: '非盈利事业',en: 'Non profit cause', value: 130 },
+			'140': { key: 140, zh: '公用事业',en: 'Utilities', value: 140 },
+			'500': { key: 500, zh: '其他',en: 'Other', value: 500 },
+		},
+		GENDER_MAP: {
+			'1': { key: 1, zh: '女',en: 'Woman', value: 1 },
+			'2': { key: 2, zh: '男',en: 'Man', value: 2 },
+		},
+		MARITAL_STATUS_MAP: {
+			'1': { key: 1, zh: '未婚',en: 'Single', value: 1 },
+			'2': { key: 2, zh: '已婚',en: 'Married', value: 2 },
+		},
+
+	},
 };
 
 export default Const;

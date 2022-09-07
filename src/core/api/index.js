@@ -582,6 +582,16 @@ const apiList = {
 		save: ['PostJson', 'print-template/save'],//
 		delete: ['PostJson', 'print-template/delete'],//
 	},
+	CRMCustomer:{//CRM 客户
+		save: ['PostJson', 'crm-customer/save'],//
+		list: ['PostJson', 'crm-customer/list'],//
+		delete: ['PostJson', 'crm-customer/delete'],//
+		detail: ['PostJson', 'crm-customer/detail'],//
+		obtain: ['PostJson', 'crm-customer/obtain'],//
+		distribute: ['PostJson', 'crm-customer/distribute'],//
+		returnPool: ['PostJson', 'crm-customer/return-pool'],//
+		transfer: ['PostJson', 'crm-customer/transfer'],//
+	}
 
 };
 

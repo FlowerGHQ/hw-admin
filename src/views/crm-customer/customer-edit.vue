@@ -11,7 +11,11 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('n.type') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.type" :placeholder="$t('def.input')"/>
+                        <a-radio-group v-model:value="form.type">
+                            <a-radio v-for="item in CRM_TYPE_MAP" :value="item.value">
+                                {{lang === 'zh' ? item.zh: item.en}}
+                            </a-radio>
+                        </a-radio-group>
                     </div>
                 </div>
                 <div class="form-item required">
@@ -29,7 +33,9 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_c.level') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.level" :placeholder="$t('def.input')"/>
+                        <a-select v-model:value="form.level" :placeholder="$t('def.input')" >
+                            <a-select-option v-for="item of CRM_LEVEL_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                        </a-select>
                     </div>
                 </div>
             </div>
@@ -42,62 +48,79 @@
                 <div class="form-item">
                     <div class="key">{{ $t('n.source') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.source" :placeholder="$t('def.input')"/>
+                        <a-select v-model:value="form.source" :placeholder="$t('def.input')" >
+                            <a-select-option v-for="item of CRM_SOURCE_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                        </a-select>
                     </div>
                 </div>
-                <div class="form-item">
+                <div class="form-item" v-if="form.type === CRM_TYPE.UNIT">
                     <div class="key">{{ $t('crm_c.company_size') }}：</div>
                     <div class="value">
                         <a-input v-model:value="form.company_size" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-                <div class="form-item">
+                <div class="form-item" v-if="form.type === CRM_TYPE.INDIVIDUAL">
                     <div class="key">{{ $t('crm_c.gender') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.gender" :placeholder="$t('def.input')"/>
+                        <a-radio-group v-model:value="form.gender">
+                            <a-radio v-for="item in CRM_GENDER_MAP" :value="item.value">
+                                {{lang === 'zh' ? item.zh: item.en}}
+                            </a-radio>
+                        </a-radio-group>
                     </div>
                 </div>
-                <div class="form-item">
+                <div class="form-item" v-if="form.type === CRM_TYPE.INDIVIDUAL">
                     <div class="key">{{ $t('crm_c.birthday') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.birthday" :placeholder="$t('def.input')"/>
+                        <a-date-picker v-model:value="form.birthday" valueFormat='YYYY-MM-DD' :placeholder="$t('def.input')"/>
+<!--                        <a-input v-model:value="form.birthday" :placeholder="$t('def.input')"/>-->
                     </div>
                 </div>
 
                 <div class="form-item">
                     <div class="key">{{ $t('crm_c.industry') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.industry" :placeholder="$t('def.input')"/>
+                        <a-select v-model:value="form.industry" :placeholder="$t('def.input')" >
+                            <a-select-option v-for="item of CRM_INDUSTRY_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                        </a-select>
                     </div>
                 </div>
-                <div class="form-item">
+                <div class="form-item" v-if="form.type === CRM_TYPE.UNIT">
+                    <div class="key">{{ $t('crm_c.company_license_id') }}：</div>
+                    <div class="value">
+                        <a-input v-model:value="form.company_license_id" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
+                <div class="form-item" v-if="form.type === CRM_TYPE.INDIVIDUAL">
                     <div class="key">{{ $t('crm_c.nationality') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.nationality" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-                <div class="form-item">
+                <div class="form-item" v-if="form.type === CRM_TYPE.INDIVIDUAL">
                     <div class="key">{{ $t('crm_c.hobby') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.hobby" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-                <div class="form-item">
+                <div class="form-item" v-if="form.type === CRM_TYPE.INDIVIDUAL">
                     <div class="key">{{ $t('crm_c.marital_status') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.marital_status" :placeholder="$t('def.input')"/>
+                        <a-select v-model:value="form.marital_status" :placeholder="$t('def.input')" >
+                            <a-select-option v-for="item of CRM_MARITAL_STATUS_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                        </a-select>
                     </div>
                 </div>
-                <div class="form-item">
+                <div class="form-item" v-if="form.type === CRM_TYPE.INDIVIDUAL">
                     <div class="key">{{ $t('crm_c.income') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.income" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">{{ $t('ad.addresses') }}:</div>
+                    <div class="key">{{ $t('r.address') }}:</div>
                     <div class="value">
-                        <AddressCascader v-model:value="areaMap" :def-area='area'/>
+                        <ChinaAddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
                     </div>
                 </div>
                 <div class="form-item ">
@@ -126,9 +149,11 @@
 
 <script>
 import Core from '../../core';
+
 import ChinaAddressCascader from '@/components/common/ChinaAddressCascader.vue'
 import CountryCascader from '@/components/common/CountryCascader.vue'
 import AddressCascader from '@/components/common/AddressCascader.vue';
+import dayjs from "dayjs";
 
 export default {
     name: 'CustomerEdit',
@@ -137,6 +162,14 @@ export default {
     data() {
         return {
             loginType: Core.Data.getLoginType(),
+            CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
+            CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
+            CRM_SOURCE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_MAP,
+            CRM_INDUSTRY_MAP: Core.Const.CRM_CUSTOMER.INDUSTRY_MAP,
+            CRM_GENDER_MAP: Core.Const.CRM_CUSTOMER.GENDER_MAP,
+            CRM_MARITAL_STATUS_MAP: Core.Const.CRM_CUSTOMER.MARITAL_STATUS_MAP,
+            CRM_TYPE: Core.Const.CRM_CUSTOMER.TYPE,
+            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
             TYPE_MAP: 1,
             // 加载
             loading: false,
@@ -149,6 +182,7 @@ export default {
                 level: '',
                 source: '',
                 company_size: '',
+                company_license_id:'',
                 gender: '',
                 birthday: '',
                 industry: '',
@@ -180,6 +214,9 @@ export default {
     },
     watch: {},
     computed: {
+        lang() {
+            return this.$store.state.lang
+        }
     },
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0
@@ -192,7 +229,7 @@ export default {
             switch (type) {
                 case 'back':    // 详情
                     let routeUrl = this.$router.resolve({
-                        path: "/customer/customer-list",
+                        path: "/crm-customer/customer-list",
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -200,20 +237,19 @@ export default {
         },
         getCustomerDetail() {
             this.loading = true;
-            Core.Api.Customer.detail({
+            Core.Api.CRMCustomer.detail({
                 id: this.form.id,
             }).then(res => {
                 console.log('getCustomerDetail res', res)
                 let d = res.detail
                 this.detail = d
+                this.detail.birthday = this.detail.birthday ? dayjs.unix(this.detail.birthday).format('YYYY-MM-DD') : undefined
                 for (const key in this.form) {
                     this.form[key] = d[key]
                 }
-                for (const key in this.area) {
-                    this.area[key] = d[key]
-                }
                 this.defAddr = [d.province, d.city, d.county]
-                this.defArea = [d.continent || '', d.country || '']
+
+                // this.defArea = [d.continent || '', d.country || '']
             }).catch(err => {
                 console.log('getCustomerDetail err', err)
             }).finally(() => {
@@ -238,32 +274,23 @@ export default {
            /* if (!form.province || !form.city || !form.county || !form.address) {
                 // return this.$message.warning('请完善客户地址')
             }*/
-            console.log('area',this.area)
-            if (!Core.Util.isEmptyObj(this.areaMap)) {
-                console.log('areaMap2222',this.areaMap)
-                area.country = this.areaMap.country.name
-                area.country_en = this.areaMap.country.name_en
-                area.city = this.areaMap.city.name
-                area.city_en = this.areaMap.city.name_en
-                if (this.areaMap.province) {
-                    area.province = this.areaMap.province.name
-                    area.province_en = this.areaMap.province.name_en
-                }
-                if (this.areaMap.county) {
-                    area.county = this.areaMap.county.name
-                    area.county_en = this.areaMap.county.name_en
-                }
-                console.log('area1234556',area)
-            }
-            if (!(Object.values(area).filter(i => i).length)) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.address) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            Core.Api.Customer.save({
+            form.birthday = form.birthday ? dayjs(form.birthday).unix() : 0 // 日期转时间戳
+
+            console.log('form',this.form)
+            // if (!Core.Util.isEmptyObj(this.defAddr)) {
+            //     console.log('areaMap2222',this.defAddr)
+            //     area.country = this.defAddr.country
+            //     area.city = this.defAddr.city
+            //     if (this.defAddr.province) {
+            //         area.province = this.defAddr.province
+            //     }
+            //     if (this.defAddr.county) {
+            //         area.county = this.defAddr.county
+            //     }
+            //     console.log('area1234556',area)
+            // }
+            Core.Api.CRMCustomer.save({
                 ...form,
-                ...area
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
