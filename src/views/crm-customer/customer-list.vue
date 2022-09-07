@@ -69,6 +69,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
+                            <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('customer.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
                             <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('customer.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
                             <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('customer.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>
                         </template>
@@ -143,9 +144,6 @@ export default {
                 {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
-            if (this.$i18n.locale === 'en') {
-                columns.splice(3, 1,{title: 'n.country', dataIndex: 'country_en', key:'item', sorter: true})
-            }
             return columns
         },
     },
@@ -156,6 +154,13 @@ export default {
         routerChange(type, item = {}) {
             let routeUrl = ''
             switch (type) {
+                case 'detail':    // 编辑
+                    routeUrl = this.$router.resolve({
+                        path: "/crm-customer/customer-detail",
+                        query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/crm-customer/customer-edit",

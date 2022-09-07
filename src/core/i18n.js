@@ -1078,6 +1078,7 @@ const messages = {
         },
 	    crm_c: {
 		    extended_information: '扩展信息',
+		    detail: '客户详情',
 		    level: '客户级别',
 		    type: '客户类型',
 		    gender: '性别',
@@ -1089,6 +1090,7 @@ const messages = {
 			income: '年收入',
 		    company_size: '公司规模',
 		    company_license_id: '营业执照',
+		    track_status: '跟进状态',
 	    },
 	    authority: {
         	title: {

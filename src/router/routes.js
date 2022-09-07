@@ -1508,6 +1508,17 @@ const routes = [
 					// auth: ["crm-customer.save"],
 				}
 			},
+			{
+				path: 'customer-detail',
+				name: 'CustomerDetail',
+				component: () => import('@/views/crm-customer/customer-detail.vue'),
+				meta: {
+					hidden: true,
+					title: '客户详情',
+					parent: '/customer/customer-list',
+					// auth: ["crm-customer.save"],
+				}
+			},
 			// {
 			// 	path: 'customer-list',
 			// 	name: 'CustomerList',
