@@ -1,7 +1,7 @@
 <template>
 <div class="InformationInfo gray-panel no-margin">
     <div class="panel-title">
-        <div class="title">{{ $t('n.information') }}</div>
+        <div class="title">{{ $t('crm_c.summary_information') }}</div>
     </div>
     <div class="panel-content">
         <a-descriptions title="基本信息" bordered :column="2" size="small">
@@ -17,6 +17,13 @@
             <a-descriptions-item :label="$t('crm_c.hobby')">{{detail.hobby}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.marital_status')">{{detail.marital_status}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.income')">{{detail.income}}</a-descriptions-item>
+
+        </a-descriptions>
+        <a-descriptions title="数据权限" bordered :column="2" size="small">
+            <a-descriptions-item :label="$t('crm_c.create_user')">{{detail.create_user_name}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.create_time')">{{$Util.timeFilter(detail.create_time) || '-'}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.update_user')">{{detail.update_user_name}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.update_time')">{{$Util.timeFilter(detail.update_time) || '-'}}</a-descriptions-item>
 
         </a-descriptions>
         <a-modal v-model:visible="userRoleShow" :title="$t('p.confirm_payment')" :after-close='handleRoleClose'>

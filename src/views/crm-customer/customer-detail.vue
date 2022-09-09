@@ -48,10 +48,10 @@
             <a-col :xs='24' :sm='24' :lg='16' >
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="activeKey">
-                        <a-tab-pane key="CustomerSituation" :tab="$t('d.manage_employees')">
+                        <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.summary_information')">
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
-                        <a-tab-pane key="InformationInfo" :tab="$t('d.manage_employees')">
+                        <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
                             <Contact :detail="detail"/>
                             <Bo :detail="detail"/>
                             <Bo :detail="detail"/>

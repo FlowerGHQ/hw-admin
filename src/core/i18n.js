@@ -1093,6 +1093,12 @@ const messages = {
 		    track_status: '跟进状态',
 		    add: '添加联系人',
 		    edit: '修改联系人',
+		    create_user: '创建人',
+		    create_time: '创建时间',
+		    update_user: '修改人',
+		    update_time: '修改时间',
+		    summary_information:"概括信息",
+		    related: '相关',
 	    },
 	    crm_t: {
         	add_track_record: '添加跟进记录',
