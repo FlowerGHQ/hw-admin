@@ -591,7 +591,19 @@ const apiList = {
 		distribute: ['PostJson', 'crm-customer/distribute'],//
 		returnPool: ['PostJson', 'crm-customer/return-pool'],//
 		transfer: ['PostJson', 'crm-customer/transfer'],//
+	},
+	CRMTrackMember:{//CRM 团队
+		save: ['PostJson', 'crm-track-member/save'],//
+		list: ['PostJson', 'crm-track-member/list'],//
+		delete: ['PostJson', 'crm-track-member/delete'],//
+	},
+	CRMTrackRecord:{//CRM 团队
+		save: ['PostJson', 'crm-track-record/save'],//
+		list: ['PostJson', 'crm-track-record/list'],//
+		delete: ['PostJson', 'crm-track-record/delete'],//
+		detail: ['PostJson', 'crm-track-record/detail'],//
 	}
+
 
 };
 

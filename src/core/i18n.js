@@ -1091,6 +1091,19 @@ const messages = {
 		    company_size: '公司规模',
 		    company_license_id: '营业执照',
 		    track_status: '跟进状态',
+		    add: '添加联系人',
+		    edit: '修改联系人',
+	    },
+	    crm_t: {
+        	add_track_record: '添加跟进记录',
+		    type: '跟进方式',
+		    content: '内容记录',
+		    images: '内容图片',
+		    file: '附件',
+		    track_time: '跟进时间',
+		    next_track_time: '下次跟进时间',
+		    intent: '意向程度',
+		    contact_customer:'联系人',
 	    },
 	    authority: {
         	title: {

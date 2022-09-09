@@ -32,7 +32,7 @@
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                        <a-button>写跟进</a-button>
+                        <a-button @click="TrackRecordShow = true">写跟进</a-button>
                         <a-button>编辑</a-button>
                         <a-button>新建联系人</a-button>
                         <a-button>新建商机</a-button>
@@ -44,85 +44,186 @@
                 </a-row>
             </div>
         </div>
-        <a-row class="desc-detail has-logo">
-            <a-col :xs='16' :sm='16' :lg='16' class='detail-item'>
+        <a-row >
+            <a-col :xs='24' :sm='24' :lg='16' >
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="activeKey">
-                        <a-tab-pane key="UserList" :tab="$t('d.manage_employees')">
-                            <InformationInfo/>
+                        <a-tab-pane key="CustomerSituation" :tab="$t('d.manage_employees')">
+                            <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
-
+                        <a-tab-pane key="InformationInfo" :tab="$t('d.manage_employees')">
+                            <Contact :detail="detail"/>
+                            <Bo :detail="detail"/>
+                            <Bo :detail="detail"/>
+                        </a-tab-pane>
                     </a-tabs>
                 </div>
             </a-col>
-            <a-col :xs='8' :sm='8' :lg='8' class='detail-item'>
-
+            <a-col :xs='24' :sm='24' :lg='8' >
+                <div class="tabs-container">
+                    <a-tabs v-model:activeKey="activeKey">
+                        <a-tab-pane key="CustomerSituation" :tab="$t('d.manage_employees')">
+                            <TrackRecord :detail="detail"/>
+                        </a-tab-pane>
+                        <a-tab-pane key="InformationInfo" :tab="$t('d.manage_employees')">
+                            <TrackRecord :detail="detail"/>
+                        </a-tab-pane>
+                    </a-tabs>
+                </div>
             </a-col>
         </a-row>
+        <a-modal v-model:visible="TrackRecordShow" :title="$t('crm_t.add_track_record')" :after-close='handleTrackRecordClose'>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_t.type') }}：</div>
+                <div class="value">
+                    <a-select v-model:value="trackRecordForm.type" :placeholder="$t('def.input')">
+                        <a-select-option v-for="item of TYPE_MAP" :key="item.value" :value="item.value">{{ lang === 'zh' ? item.zh: item.en }}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
+            <div class="form-item textarea required">
+                <div class="key">{{ $t('crm_t.content') }}：</div>
+                <div class="value">
+                    <a-textarea v-model:value="trackRecordForm.content" :placeholder="$t('r.enter_remark')"
+                                :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
+                    <span class="content-length">{{ trackRecordForm.content.length }}/500</span>
+                </div>
+            </div>
+            <div class="form-item img-upload">
+                <div class="key">{{ $t('i.picture') }}</div>
+                <div class="value">
+                    <a-upload name="file" class="image-uploader"
+                              list-type="picture-card" accept='image/*'
+                              :file-list="upload.detailList" :action="upload.action"
+                              :headers="upload.headers" :data='upload.data'
+                              :before-upload="handleImgCheck"
+                              @change="handleCoverChange">
+                        <div class="image-inner" v-if="upload.detailList.length < 10">
+                            <i class="icon i_upload"/>
+                        </div>
+                    </a-upload>
+                    <div class="tip">{{ $t('n.size') }}：800*800px</div>
+                </div>
+            </div>
+            <div class="form-item file-upload">
+                <div class="key">{{  $t('f.file') }}:</div>
+                <div class="value">
+                    <a-upload name="file"
+                              :file-list="fileUpload.fileList" :action="fileUpload.action"
+                              :headers="fileUpload.headers" :data='fileUpload.data'
+                              :before-upload="handleImgCheck"
+                              @change="handleFileChange">
+                        <a-button class="file-upload-btn" type="primary" ghost v-if="fileUpload.fileList.length < 1">
+                            <i class="icon i_upload"/> {{  $t('f.upload') }}
+                        </a-button>
+                    </a-upload>
+                </div>
+            </div>
+            <div class="form-item">
+                <div class="key">{{ $t('crm_t.contact_customer') }}：</div>
+                <div class="value">
+                    <div v-if="trackRecordForm.contact_customer_id === ''">
+
+                        <CustomerSelect @select="handleAddCustomerShow" :radioMode="true" btn-class="select-item-btn" btnType='link'>
+                            <i class="icon i_edit"/> {{ $t('crm_c.add') }}
+                        </CustomerSelect>
+                    </div>
+                    <div v-else>
+                        {{trackRecordForm.contact_customer_name}}
+                        <CustomerSelect @select="handleAddCustomerShow" :radioMode="true" btn-class="select-item-btn" btnType='link'>
+                            <i class="icon i_edit"/> {{ $t('crm_c.edit') }}
+                        </CustomerSelect>
+                    </div>
+                </div>
+            </div>
+            <div class="form-item">
+                <div class="key">{{ $t('crm_t.track_time') }}：</div>
+                <div class="value">
+                    <a-date-picker v-model:value="trackRecordForm.track_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" :placeholder="$t('def.input')"/>
+                </div>
+            </div>
+            <div class="form-item">
+                <div class="key">{{ $t('crm_t.intent') }}：</div>
+                <div class="value">
+                    <a-select v-model:value="trackRecordForm.intent" :placeholder="$t('def.input')">
+                        <a-select-option v-for="item of INTENT_MAP" :key="item.key" :value="item.value">{{lang === 'zh' ? item.zh: item.en }}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
+            <div class="form-item">
+                <div class="key">{{ $t('crm_t.next_track_time') }}：</div>
+                <div class="value">
+                    <a-date-picker v-model:value="trackRecordForm.next_track_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" :placeholder="$t('def.input')"/>
+                </div>
+            </div>
+
+            <template #footer>
+                <a-button @click="handleTrackRecordSubmit" type="primary">{{ $t('def.ok') }}</a-button>
+                <a-button @click="handleTrackRecordClose">{{ $t('def.cancel') }}</a-button>
+            </template>
+        </a-modal>
     </div>
 </template>
 
 <script>
 import Core from '../../core';
-import InformationInfo from './components/InformationInfo.vue';
+import Contact from './components/Contact.vue';
+import CustomerSituation from './components/CustomerSituation.vue';
+import Bo from './components/Bo.vue';
+import TrackRecord from './components/TrackRecord.vue';
+import CustomerSelect from '@/components/popup-btn/CustomerSelect.vue';
+
 
 import dayjs from "dayjs";
+import {get} from "lodash";
 
 export default {
     name: 'CustomerEdit',
-    components: { InformationInfo},
+    components: { CustomerSelect, Contact, Bo, TrackRecord, CustomerSituation},
     props: {},
     data() {
         return {
-            loginType: Core.Data.getLoginType(),
-            CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
-            CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
-            CRM_SOURCE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_MAP,
-            CRM_INDUSTRY_MAP: Core.Const.CRM_CUSTOMER.INDUSTRY_MAP,
-            CRM_GENDER_MAP: Core.Const.CRM_CUSTOMER.GENDER_MAP,
-            CRM_MARITAL_STATUS_MAP: Core.Const.CRM_CUSTOMER.MARITAL_STATUS_MAP,
-            CRM_TYPE: Core.Const.CRM_CUSTOMER.TYPE,
+            TYPE_MAP: Core.Const.CRM_TRACK_RECORD.TYPE_MAP,
+            INTENT_MAP: Core.Const.CRM_TRACK_RECORD.INTENT_MAP,
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
-            TYPE_MAP: 1,
+
+            loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
             detail: {},
-            form: {
-                id: '',
+            TrackRecordShow: false,
+            trackRecordForm: {
                 type: '',
-                name: '',
-                phone: '',
-                level: '',
-                source: '',
-                company_size: '',
-                company_license_id:'',
-                gender: '',
-                birthday: '',
-                industry: '',
-                nationality: '',
-                hobby: '',
-                marital_status: '',
-                income: '',
-                remark: '',
-
-                address: '',
+                content: "",
+                contact_customer_id: '',
+                track_time: undefined,
+                intent: "",
+                next_track_time: undefined,
             },
-            defAddr: [],
-            areaList: [],
-            defArea: [],
-            area: {
-                country: '',
-                country_en: '',
-                province: '',
-                province_en: '',
-                city: '',
-                city_en: '',
-                county: '',
-                county_en: '',
 
+            upload: { // 上传图片
+                action: Core.Const.NET.FILE_UPLOAD_END_POINT,
+                coverList: [],
+                detailList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'img',
+                },
             },
-            areaMap: {},
-            countryShow: false,
+            fileUpload: {
+                action: Core.Const.NET.FILE_UPLOAD_END_POINT,
+                fileList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'file',
+                },
+            },
         };
     },
     watch: {},
@@ -132,8 +233,8 @@ export default {
         }
     },
     mounted() {
-        this.form.id = Number(this.$route.query.id) || 0
-        if (this.form.id) {
+        this.id = Number(this.$route.query.id) || 0
+        if (this.id) {
             this.getCustomerDetail();
         }
     },
@@ -151,7 +252,7 @@ export default {
         getCustomerDetail() {
             this.loading = true;
             Core.Api.CRMCustomer.detail({
-                id: this.form.id,
+                id: this.id,
             }).then(res => {
                 console.log('getCustomerDetail res', res)
                 let d = res.detail
@@ -169,63 +270,84 @@ export default {
                 this.loading = false;
             });
         },
-        handleSubmit() {
-            let form = Core.Util.deepCopy(this.form)
-            let area = Core.Util.deepCopy(this.area)
-            if (!form.name) {
-                return this.$message.warning(this.$t('def.enter'))
+        handleTrackRecordSubmit() {
+            let form = Core.Util.deepCopy(this.trackRecordForm)
+            let track_time = form.track_time
+            if (typeof track_time === 'string') {
+                track_time = dayjs(form.track_time).unix()
             }
-            if (!form.phone) {
-                return this.$message.warning(this.$t('def.enter'))
+            let next_track_time = form.next_track_time
+            if (typeof next_track_time === 'string') {
+                next_track_time = dayjs(form.next_track_time).unix()
             }
-            if (!form.type) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.level) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-           /* if (!form.province || !form.city || !form.county || !form.address) {
-                // return this.$message.warning('请完善客户地址')
-            }*/
-            form.birthday = form.birthday ? dayjs(form.birthday).unix() : 0 // 日期转时间戳
-
-            console.log('form',this.form)
-            // if (!Core.Util.isEmptyObj(this.defAddr)) {
-            //     console.log('areaMap2222',this.defAddr)
-            //     area.country = this.defAddr.country
-            //     area.city = this.defAddr.city
-            //     if (this.defAddr.province) {
-            //         area.province = this.defAddr.province
-            //     }
-            //     if (this.defAddr.county) {
-            //         area.county = this.defAddr.county
-            //     }
-            //     console.log('area1234556',area)
-            // }
-            Core.Api.CRMCustomer.save({
-                ...form,
+            Core.Api.CRMTrackRecord.save({
+                target_id: this.detail.id,
+                target_type: Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER,
+                type: form.type,
+                content: form.content,
+                contact_customer_id: form.contact_customer_id,
+                track_time: track_time,
+                intent: form.intent,
+                next_track_time: next_track_time,
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
-                this.routerChange('back')
+                this.handleTrackRecordClose();
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
         },
-
-        handleAddressSelect(address = []) {
-            this.form.province = address[0]
-            this.form.city = address[1]
-            this.form.county = address[2]
+        handleTrackRecordClose(){
+            this.TrackRecordShow = false;
+            Object.assign(this.trackRecordForm, this.$options.data().trackRecordForm)
         },
-        getCountry(data) {
-            console.log('getCountry data',data)
-            if (data.country == '中国' || data.country == 'China') {
-                this.countryShow = true
-            } else {
-                this.countryShow = false
+        // 校验图片
+        handleImgCheck(file) {
+            const isCanUpType = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'].includes(file.type)
+            if (!isCanUpType) {
+                this.$message.warning(this.$t('n.file_incorrect'));
             }
-            console.log('data.country',data.country)
-            console.log('countryShow',this.countryShow)
+            const isLt10M = (file.size / 1024 / 1024) < 10;
+            if (!isLt10M) {
+                this.$message.warning(this.$t('n.picture_smaller'));
+            }
+
+            // this.loadImage(TEST_IMAGE);
+            // return false;
+            return isCanUpType && isLt10M;
+        },
+        // 上传图片
+        handleCoverChange({ file, fileList }) {
+            if (file.status == 'done') {
+                if (file.response && file.response.code > 0) {
+                    return this.$message.error(file.response.message)
+                }
+                this.shortPath = get(fileList,'[0].response.data.filename', null);
+                if(this.shortPath) {
+                    this.form.img = this.shortPath;
+                    // this.loadImage(this.detailImageUrl);
+                }
+            }
+            this.upload.coverList = fileList;
+        },
+        // 上传文件
+        handleFileChange({file, fileList}) {
+            console.log("handleCoverChange status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                if (file.response && file.response.code > 0) {
+                    return this.$message.error(file.response.message)
+                }
+                this.form.path = file.response.data.filename
+                this.form.type = this.form.path.split('.').pop()
+                if (this.form.path){
+                    this.submitDisabled = false
+                }
+            }
+            this.upload.fileList = fileList
+        },
+        // 添加商品
+        handleAddCustomerShow(ids, items) {
+            this.trackRecordForm.contact_customer_id = items[0].id
+            this.trackRecordForm.contact_customer_name = items[0].name
 
         },
     }

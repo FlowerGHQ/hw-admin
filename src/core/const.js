@@ -1412,6 +1412,24 @@ let Const = {
 		},
 
 	},
+	CRM_TRACK_RECORD: {
+		TYPE_MAP: {
+			'10': { key: 10, zh: '上门拜访',en: 'Home visits', value: 10 },
+			'20': { key: 20, zh: '电话沟通',en: 'Telephone communication', value: 20 },
+			'30': { key: 30, zh: '其他',en: 'Other', value: 30 },
+		},
+		INTENT_MAP: {
+			'10': { key: 10, zh: '高',en: 'High', value: 10 },
+			'20': { key: 20, zh: '一般',en: 'General', value: 20 },
+			'30': { key: 30, zh: '低',en: 'Low', value: 30 },
+		},
+		TARGET_TYPE: {
+			CUSTOMER: 1,
+			BO: 2,
+		},
+
+
+	},
 };
 
 export default Const;

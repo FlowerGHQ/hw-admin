@@ -1,46 +1,43 @@
 <template>
-<div class="UserList gray-panel no-margin">
-    <div class="panel-title">
-        <div class="title">{{ $t('n.information') }}</div>
-    </div>
+<div class="InformationInfo gray-panel no-margin">
     <div class="panel-content">
-        <a-descriptions title="User Info" bordered :column="2" size="small">
-            <a-descriptions-item :label="$t('n.name')">{{detail}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.level')">{{detail}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('n.source')">{{detail}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.industry')">{{detail}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.track_status')">{{detail}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.track_status')">{{detail}}</a-descriptions-item>
-        </a-descriptions>
-        <a-descriptions title="User Info" bordered :column="2" size="small">
-            <a-descriptions-item :label="$t('crm_c.gender')">{{detail}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.birthday')">{{detail}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.hobby')">{{detail}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.hobby')">{{detail}}</a-descriptions-item>
+        <div>
+            <a-list
+                class="demo-loadmore-list"
+                :loading="initLoading"
+                item-layout="horizontal"
+                :data-source="tableData"
+            >
+                <template #loadMore>
+                    <div
+                        v-if="!initLoading && !loading"
+                        :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"
+                    >
+<!--                        <a-button @click="onLoadMore">loading more</a-button>-->
+                    </div>
+                </template>
+                <template #renderItem="{ item }">
+                    <a-list-item>
+                        <template #actions>
+                            <div>{{item.create_time}}</div>
+                            <a key="list-loadmore-edit">edit</a>
+                            <a key="list-loadmore-more">more</a>
+                        </template>
+                        <a-skeleton avatar :title="false" :loading="!!item.loading" active>
+                            <a-list-item-meta
+                                :description="item.name"
+                            >
+                                <template #title>
+                                    {{ item.name }}
+                                </template>
+                            </a-list-item-meta>
+                            <div>{{item.create_time}}</div>
+                        </a-skeleton>
+                    </a-list-item>
+                </template>
+            </a-list>
+        </div>
 
-            
-
-
-
-
-        </a-descriptions>
-        <a-descriptions title="User Info" bordered :column="2" size="small">
-            <a-descriptions-item :label="$t('n.name')">{{detail}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('n.name')">{{detail}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('n.name')">{{detail}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('n.name')">{{detail}}</a-descriptions-item>
-        </a-descriptions>
-        <a-descriptions title="User Info" bordered :column="2" size="small">
-            <a-descriptions-item :label="$t('n.name')">{{detail}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('n.name')">{{detail}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('n.name')">{{detail}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('n.name')">{{detail}}</a-descriptions-item>
-        </a-descriptions>
-        <a-modal v-model:visible="userRoleShow" :title="$t('p.confirm_payment')" :after-close='handleRoleClose'>
-            <template #footer>
-                <a-button @click="handleRoleClose">{{ $t('def.cancel') }}</a-button>
-            </template>
-        </a-modal>
     </div>
 </div>
 </template>
@@ -60,6 +57,14 @@ export default {
     },
     data() {
         return {
+            CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
+            CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
+            CRM_SOURCE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_MAP,
+            CRM_INDUSTRY_MAP: Core.Const.CRM_CUSTOMER.INDUSTRY_MAP,
+            CRM_GENDER_MAP: Core.Const.CRM_CUSTOMER.GENDER_MAP,
+            CRM_MARITAL_STATUS_MAP: Core.Const.CRM_CUSTOMER.MARITAL_STATUS_MAP,
+            CRM_TYPE: Core.Const.CRM_CUSTOMER.TYPE,
+            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
             USER_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
@@ -70,10 +75,11 @@ export default {
             total: 0,
             // 表格数据
             tableData: [],
-            userRoleShow: false,
+            trackMemberShow: false,
 
             userId: '',
             userDetail: '',
+            initLoading: false,
         };
     },
     watch: {},
@@ -89,11 +95,11 @@ export default {
                 {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
-            if (this.$auth('user.set-admin')) { // 维修工不显示管理员
-                columns.splice(5, 0,{title: this.$t('e.administrator'), dataIndex: 'flag_admin'},)
-            }
             return columns
         },
+        lang() {
+            return this.$store.state.lang
+        }
     },
     mounted() {
         this.getTableData();
@@ -148,10 +154,10 @@ export default {
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
-            Core.Api.User.list({
-                org_id: this.orgId,
-                org_type: this.orgType,
-                type: this.type,
+            Core.Api.CRMTrackMember.list({
+                target_id: this.targetId,
+                target_type: this.targetType,
+                user_id: this.userId,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -172,7 +178,7 @@ export default {
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.User.delete({id}).then(() => {
+                    Core.Api.CRMCustomer.delete({id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
@@ -197,9 +203,19 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.UserList {
+.InformationInfo {
     .table-container {
         margin-top: -10px;
     }
+
+}
+.ant-descriptions-view{
+    th.ant-descriptions-item-label {
+        width: 25%;
+    }
+    td.ant-descriptions-item-content {
+        width: 25%;
+    }
+
 }
 </style>
