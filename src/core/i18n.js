@@ -1111,6 +1111,9 @@ const messages = {
 		    intent: '意向程度',
 		    contact_customer:'联系人',
 	    },
+	    crm_b: {
+			list: '商机列表',
+	    },
 	    authority: {
         	title: {
                 'distributor' : '分销商管理',

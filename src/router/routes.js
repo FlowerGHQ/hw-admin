@@ -734,7 +734,7 @@ const routes = [
         ]
     },
 
-    { // 物流管理
+   /* { // 物流管理
         path: '/waybill',
         component: Layout,
         redirect: '/waybill/waybill-list',
@@ -766,7 +766,7 @@ const routes = [
             //     }
             // },
         ]
-    },
+    },*/
     { // 实例管理
         path: '/entity',
         component: Layout,
@@ -1324,6 +1324,7 @@ const routes = [
                 component: () => import('@/views/aftersales/aftersales-list.vue'),
                 meta: {
                     title: '售后单列表',
+	                title_en: 'Aftersales list',
                     query_type: REFUND_QUERY_TYPE.APPLY,
 	                roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
                     auth: ["after-sales-order.list"],
@@ -1516,6 +1517,74 @@ const routes = [
 					hidden: true,
 					title: '客户详情',
 					parent: '/customer/customer-list',
+					// auth: ["crm-customer.save"],
+				}
+			},
+			// {
+			// 	path: 'customer-list',
+			// 	name: 'CustomerList',
+			// 	component: () => import('@/views/crm/customer/customer-list.vue'),
+			// 	meta: {
+			// 		title: '公海客户',
+			// 		title_en: 'Customer list',
+			// 		// auth: ["crm-customer.list"],
+			// 	}
+			// },
+			// {
+			// 	path: 'customer-edit',
+			// 	name: 'CustomerEdit',
+			// 	component: () => import('@/views/crm/customer/customer-edit.vue'),
+			// 	meta: {
+			// 		hidden: true,
+			// 		title: '新建客户',
+			// 		parent: '/customer/customer-list',
+			// 		// auth: ["crm-customer.save"],
+			// 	}
+			// },
+		]
+	},
+	{ // 客户管理
+		path: '/crm-bo',
+		component: Layout,
+		redirect: '/crm-bo/bo-list',
+		name: 'CRMBoManagement',
+		meta: {
+			title: 'CRM商机',
+			title_en: 'CRM BO',
+			icon: 'i_s_customer',
+			// auth: ["crm-customer.list"],
+
+		},
+		children: [
+			{
+				path: 'bo-list',
+				name: 'BoList',
+				component: () => import('@/views/crm-bo/bo-list.vue'),
+				meta: {
+					title: '商机列表',
+					title_en: 'Business opportunities list',
+					// auth: ["crm-community-customer.list"],
+				}
+			},
+			{
+				path: 'bo-edit',
+				name: 'BoEdit',
+				component: () => import('@/views/crm-bo/bo-edit.vue'),
+				meta: {
+					hidden: true,
+					title: '新建客户',
+					parent: '/bo/bo-list',
+					// auth: ["crm-customer.save"],
+				}
+			},
+			{
+				path: 'bo-detail',
+				name: 'BoDetail',
+				component: () => import('@/views/crm-bo/bo-detail.vue'),
+				meta: {
+					hidden: true,
+					title: '客户详情',
+					parent: '/bo/bo-list',
 					// auth: ["crm-customer.save"],
 				}
 			},
