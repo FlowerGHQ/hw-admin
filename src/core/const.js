@@ -1427,8 +1427,13 @@ let Const = {
 			CUSTOMER: 1,
 			BO: 2,
 		},
-
-
+	},
+	CRM_BO: {
+		STATUS_MAP: {
+			'10': { key: 10, zh: '上门拜访',en: 'Home visits', value: 10 },
+			'20': { key: 20, zh: '电话沟通',en: 'Telephone communication', value: 20 },
+			'30': { key: 30, zh: '其他',en: 'Other', value: 30 },
+		},
 	},
 };
 

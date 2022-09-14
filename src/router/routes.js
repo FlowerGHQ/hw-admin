@@ -1588,27 +1588,31 @@ const routes = [
 					// auth: ["crm-customer.save"],
 				}
 			},
-			// {
-			// 	path: 'customer-list',
-			// 	name: 'CustomerList',
-			// 	component: () => import('@/views/crm/customer/customer-list.vue'),
-			// 	meta: {
-			// 		title: '公海客户',
-			// 		title_en: 'Customer list',
-			// 		// auth: ["crm-customer.list"],
-			// 	}
-			// },
-			// {
-			// 	path: 'customer-edit',
-			// 	name: 'CustomerEdit',
-			// 	component: () => import('@/views/crm/customer/customer-edit.vue'),
-			// 	meta: {
-			// 		hidden: true,
-			// 		title: '新建客户',
-			// 		parent: '/customer/customer-list',
-			// 		// auth: ["crm-customer.save"],
-			// 	}
-			// },
+		]
+	},
+	{ // 客户管理
+		path: '/crm-setting',
+		component: Layout,
+		redirect: '/crm-setting/setting-list',
+		name: 'CRMSettingManagement',
+		meta: {
+			title: 'CRM设置',
+			title_en: 'CRM Setting',
+			icon: 'i_s_customer',
+			// auth: ["crm-customer.list"],
+
+		},
+		children: [
+			{
+				path: 'setting-list',
+				name: 'SettingList',
+				component: () => import('@/views/crm-setting/group-status.vue'),
+				meta: {
+					title: '设置',
+					title_en: 'Setting',
+					// auth: ["crm-community-customer.list"],
+				}
+			},
 		]
 	},
     { // 系统管理

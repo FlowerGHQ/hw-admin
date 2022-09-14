@@ -602,8 +602,19 @@ const apiList = {
 		list: ['PostJson', 'crm-track-record/list'],//
 		delete: ['PostJson', 'crm-track-record/delete'],//
 		detail: ['PostJson', 'crm-track-record/detail'],//
+	},
+	CRMBo:{//CRM 商机
+		save: ['PostJson', 'crm-bo/save'],//
+		list: ['PostJson', 'crm-bo/list'],//
+		delete: ['PostJson', 'crm-bo/delete'],//
+		detail: ['PostJson', 'crm-bo/detail'],//
+	},
+	CrmBoStatusGroup:{//CRM 阶段
+		save: ['PostJson', 'crm-bo/save'],//
+		list: ['PostJson', 'crm-bo/list'],//
+		delete: ['PostJson', 'crm-bo/delete'],//
+		detail: ['PostJson', 'crm-bo/detail'],//
 	}
-
 
 };
 

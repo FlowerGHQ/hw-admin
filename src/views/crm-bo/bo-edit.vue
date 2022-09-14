@@ -1,5 +1,5 @@
 <template>
-    <div id="CustomerEdit" class="edit-container">
+    <div id="CRMBoEdit" class="edit-container">
         <div class="title-container">
             <div class="title-area">{{ form.id ? $t('c.edit') : $t('c.save') }}</div>
         </div>
@@ -9,127 +9,45 @@
             </div>
             <div class="form-content">
                 <div class="form-item required">
-                    <div class="key">{{ $t('n.type') }}：</div>
+                    <div class="key">{{ $t('crm_b.customer_name') }}：</div>
                     <div class="value">
-                        <a-radio-group v-model:value="form.type">
-                            <a-radio v-for="item in CRM_TYPE_MAP" :value="item.value">
-                                {{lang === 'zh' ? item.zh: item.en}}
-                            </a-radio>
-                        </a-radio-group>
+                        <a-input v-model:value="form.customer_name" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">{{ $t('n.name') }}：</div>
+                    <div class="key">{{ $t('crm_b.name') }}：</div>
                     <div class="value">
                         <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">{{ $t('n.phone') }}：</div>
+                    <div class="key">{{ $t('crm_b.money') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')"/>
+                        <a-input v-model:value="form.money" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
+
+                <div class="form-item required">
+                    <div class="key">{{ $t('crm_b.status') }}：</div>
+                    <div class="value">
+                        <a-select v-model:value="form.status" :placeholder="$t('def.input')" >
+                            <a-select-option v-for="item of CRM_LEVEL_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                        </a-select>
+                        <a-input v-model:value="form.status" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">{{ $t('crm_c.level') }}：</div>
+                    <div class="key">{{ $t('crm_b.estimated_deal_time') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.level" :placeholder="$t('def.input')" >
-                            <a-select-option v-for="item of CRM_LEVEL_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
-                        </a-select>
+                        <a-date-picker v-model:value="form.estimated_deal_time" valueFormat='YYYY-MM-DD' :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="form-block">
-            <div class="form-title">
-                <div class="title-colorful">{{ $t('crm_c.extended_information') }}</div>
-            </div>
-            <div class="form-content">
-                <div class="form-item">
-                    <div class="key">{{ $t('n.source') }}：</div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('crm_b.source') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.source" :placeholder="$t('def.input')" >
-                            <a-select-option v-for="item of CRM_SOURCE_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
-                        </a-select>
+                        <a-input v-model:value="form.source" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-                <div class="form-item" v-if="form.type === CRM_TYPE.UNIT">
-                    <div class="key">{{ $t('crm_c.company_size') }}：</div>
-                    <div class="value">
-                        <a-input v-model:value="form.company_size" :placeholder="$t('def.input')"/>
-                    </div>
-                </div>
-                <div class="form-item" v-if="form.type === CRM_TYPE.INDIVIDUAL">
-                    <div class="key">{{ $t('crm_c.gender') }}：</div>
-                    <div class="value">
-                        <a-radio-group v-model:value="form.gender">
-                            <a-radio v-for="item in CRM_GENDER_MAP" :value="item.value">
-                                {{lang === 'zh' ? item.zh: item.en}}
-                            </a-radio>
-                        </a-radio-group>
-                    </div>
-                </div>
-                <div class="form-item" v-if="form.type === CRM_TYPE.INDIVIDUAL">
-                    <div class="key">{{ $t('crm_c.birthday') }}：</div>
-                    <div class="value">
-                        <a-date-picker v-model:value="form.birthday" valueFormat='YYYY-MM-DD' :placeholder="$t('def.input')"/>
-<!--                        <a-input v-model:value="form.birthday" :placeholder="$t('def.input')"/>-->
-                    </div>
-                </div>
-
-                <div class="form-item">
-                    <div class="key">{{ $t('crm_c.industry') }}:</div>
-                    <div class="value">
-                        <a-select v-model:value="form.industry" :placeholder="$t('def.input')" >
-                            <a-select-option v-for="item of CRM_INDUSTRY_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
-                        </a-select>
-                    </div>
-                </div>
-                <div class="form-item" v-if="form.type === CRM_TYPE.UNIT">
-                    <div class="key">{{ $t('crm_c.company_license_id') }}：</div>
-                    <div class="value">
-                        <a-input v-model:value="form.company_license_id" :placeholder="$t('def.input')"/>
-                    </div>
-                </div>
-                <div class="form-item" v-if="form.type === CRM_TYPE.INDIVIDUAL">
-                    <div class="key">{{ $t('crm_c.nationality') }}:</div>
-                    <div class="value">
-                        <a-input v-model:value="form.nationality" :placeholder="$t('def.input')"/>
-                    </div>
-                </div>
-                <div class="form-item" v-if="form.type === CRM_TYPE.INDIVIDUAL">
-                    <div class="key">{{ $t('crm_c.hobby') }}:</div>
-                    <div class="value">
-                        <a-input v-model:value="form.hobby" :placeholder="$t('def.input')"/>
-                    </div>
-                </div>
-                <div class="form-item" v-if="form.type === CRM_TYPE.INDIVIDUAL">
-                    <div class="key">{{ $t('crm_c.marital_status') }}:</div>
-                    <div class="value">
-                        <a-select v-model:value="form.marital_status" :placeholder="$t('def.input')" >
-                            <a-select-option v-for="item of CRM_MARITAL_STATUS_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
-                        </a-select>
-                    </div>
-                </div>
-                <div class="form-item" v-if="form.type === CRM_TYPE.INDIVIDUAL">
-                    <div class="key">{{ $t('crm_c.income') }}:</div>
-                    <div class="value">
-                        <a-input v-model:value="form.income" :placeholder="$t('def.input')"/>
-                    </div>
-                </div>
-                <div class="form-item">
-                    <div class="key">{{ $t('r.address') }}:</div>
-                    <div class="value">
-                        <ChinaAddressCascader @select='handleAddressSelect' :default-address='defAddr'/>
-                    </div>
-                </div>
-                <div class="form-item ">
-                    <div class="key"></div>
-                    <div class="value">
-                        <a-input v-model:value="form.address" :placeholder="$t('def.input')"/>
-                    </div>
-                </div>
-
                 <div class="form-item textarea">
                     <div class="key">{{ $t('r.remark') }}</div>
                     <div class="value">
@@ -137,6 +55,49 @@
                                     :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
                         <span class="content-length">{{ form.remark }}/500</span>
                     </div>
+                </div>
+                <div class="form-item textarea">
+                    <div class="key">{{ $t('r.remark') }}</div>
+
+                        <div class="fault-title">
+                            <ItemSelect @select="handleAddFailItem"
+                                        :disabled-checked='tableData.map(i => i.id)'
+                                        btn-type='primary' :btn-text="$t('i.add')" btn-class="fault-btn" v-if="$auth('repair-order.save')"/>
+                        </div>
+                        <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                                 :row-key="record => record.id" :pagination='false' size="small">
+                            <template #headerCell="{title}">
+                                {{ $t(title) }}
+                            </template>
+                            <template #bodyCell="{ column , record ,index, text}">
+                                <template v-if="column.key === 'item'">
+                                    {{ text || '-' }}
+                                </template>
+                                <template v-if="column.dataIndex === 'price'">
+                                    $ {{ text || '-' }}
+<!--                                    <a-input-number v-model:value="record.price" style="width: 82px;"-->
+<!--                                                      :min="0" :precision="2" placeholder="请输入"/>-->
+                                </template>
+                                <template v-if="column.key === 'amount'">
+                                    <a-input-number v-model:value="record.amount" style="width: 66px;"
+                                                    :min="1" :precision="0" placeholder="请输入" /> {{ $t('in.item') }}
+                                </template>
+                                <template v-if="column.key === 'discount'">
+                                    <a-input-number v-model:value="record.discount" style="width: 66px;"
+                                                    :min="1" :max="100" :precision="0" placeholder="请输入" />%
+                                </template>
+
+                                <template v-if="column.key === 'total_price'">
+                                    $ {{ $Util.countFilter(record.price * record.amount * record.discount / 100 , 1) }}
+                                </template>
+
+                                <template v-if="column.dataIndex === 'operation'">
+                                    <a-button type="link" class="danger" @click="handleFailItemDelete(index)"><i class="icon i_delete"/>{{ $t('def.remove') }}</a-button>
+                                </template>
+                            </template>
+                        </a-table>
+
+
                 </div>
             </div>
         </div>
@@ -149,7 +110,7 @@
 
 <script>
 import Core from '../../core';
-
+import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 import ChinaAddressCascader from '@/components/common/ChinaAddressCascader.vue'
 import CountryCascader from '@/components/common/CountryCascader.vue'
 import AddressCascader from '@/components/common/AddressCascader.vue';
@@ -157,19 +118,13 @@ import dayjs from "dayjs";
 
 export default {
     name: 'CustomerEdit',
-    components: { ChinaAddressCascader, CountryCascader, AddressCascader},
+    components: { ItemSelect, ChinaAddressCascader, CountryCascader, AddressCascader},
     props: {},
     data() {
         return {
             loginType: Core.Data.getLoginType(),
-            CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
-            CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
-            CRM_SOURCE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_MAP,
-            CRM_INDUSTRY_MAP: Core.Const.CRM_CUSTOMER.INDUSTRY_MAP,
-            CRM_GENDER_MAP: Core.Const.CRM_CUSTOMER.GENDER_MAP,
-            CRM_MARITAL_STATUS_MAP: Core.Const.CRM_CUSTOMER.MARITAL_STATUS_MAP,
-            CRM_TYPE: Core.Const.CRM_CUSTOMER.TYPE,
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
+            CRM_STATUS_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
+
             TYPE_MAP: 1,
             // 加载
             loading: false,
@@ -210,19 +165,34 @@ export default {
             },
             areaMap: {},
             countryShow: false,
+            tableData: [],
+            statusGroup: {},
         };
     },
     watch: {},
     computed: {
         lang() {
             return this.$store.state.lang
-        }
+        },
+        tableColumns() {
+            let columns = [
+                {title: 'n.name', dataIndex: 'name', key: 'item'},
+                {title: 'i.code', dataIndex: 'code', key: 'item'},
+                {title: 'i.unit_price', dataIndex: 'price'},
+                {title: 'i.amount', key: 'amount'},
+                {title: 'crm_b.discount', key: 'discount'},
+                {title: 'i.total_price', key: 'total_price'},
+                {title: 'def.operate', dataIndex: 'operation'},
+            ]
+            return columns
+        },
     },
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0
         if (this.form.id) {
             this.getCustomerDetail();
         }
+        this.getStatusGroup()
     },
     methods: {
         routerChange(type, item) {
@@ -315,15 +285,57 @@ export default {
             console.log('countryShow',this.countryShow)
 
         },
+        getStatusGroup() {
+            Core.Api.CrmBoStatusGroup.list({}).then((res) => {
+                if (res.list.length > 0)
+                this.statusGroup = JSON.parse(res.list[0])
+            }).catch(err => {
+                console.log('handleSubmit err:', err)
+            })
+
+        },
+        // 添加商品
+        async handleAddFailItem(ids, items) {
+            for (let i = 0; i < items.length; i++) {
+                const element = items[i];
+                element.amount = 1
+                element.price = element.fob_usd/100
+                element.discount = 100
+            }
+            console.log('handleAddFailItem items:', items)
+            this.tableData.push(...items)
+        },
+        // 移除商品
+        handleFailItemDelete(index, name) {
+            this.tableData.splice(index, 1)
+        },
     }
 };
 </script>
 
 <style lang="less">
-.CustomerEdit {
+.CRMBoEdit {
 
     .icon {
         font-size: 12px;
+    }
+    .fault-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 13px;
+
+        .fault-name {
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 22px;
+            color: rgba(0, 0, 0, 0.85);
+        }
+
+        .fault-btn {
+            border-radius: 2px;
+            height: 32px;
+        }
     }
 }
 </style>

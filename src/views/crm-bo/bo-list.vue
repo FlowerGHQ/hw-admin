@@ -4,25 +4,31 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('crm_b.list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" ><i class="icon i_add"/>{{ $t('c.save') }}</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" ><i class="icon i_add"/>{{ $t('crm_b.save') }}</a-button>
                 </div>
             </div>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('n.name') }}：</div>
+                        <div class="key">{{ $t('crm_b.name') }}：</div>
                         <div class="value">
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('n.phone') }}：</div>
+                        <div class="key">{{ $t('crm_b.customer_name') }}：</div>
                         <div class="value">
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('crm_c.type') }}：</div>
+                        <div class="key">{{ $t('crm_b.own_user_name') }}：</div>
+                        <div class="value">
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">{{ $t('crm_b.status') }}：</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" @change="handleSearch">
                                 <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
@@ -133,15 +139,14 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: 'n.name', dataIndex: 'name', key:'detail', sorter: true},
-                {title: 'n.phone', dataIndex: 'phone', key:'phone', sorter: true},
-                // {title: 'n.continent', dataIndex: 'continent', key:'item'},
-                {title: 'crm_c.level', dataIndex: 'level', key:'level', sorter: true},
-                {title: 'crm_c.type', dataIndex: 'type', key:'type', sorter: true},
-                {title: 'r.creator_name', dataIndex: 'creator_name', key:'creator_name', sorter: true},
-                {title: 'ad.specific_address', dataIndex: 'address', sorter: true},
+                {title: 'crm_b.name', dataIndex: 'name', key:'detail', sorter: true},
+                {title: 'crm_b.customer_name', dataIndex: 'customer_name', key:'customer_name', sorter: true},
+                {title: 'crm_b.own_user_name', dataIndex: 'own_user_name', key:'own_user_name', sorter: true},
+                {title: 'crm_b.status', dataIndex: 'status', key:'status', sorter: true},
+                {title: 'crm_b.estimated_deal_time', dataIndex: 'estimated_deal_time', sorter: true},
+                {title: 'r.creator_name', dataIndex: 'creator_name', key: 'time', sorter: true},
                 {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
-                {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
+                {title: 'crm_c.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
             return columns
@@ -156,14 +161,14 @@ export default {
             switch (type) {
                 case 'detail':    // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/crm-customer/customer-detail",
+                        path: "/crm-bo/bo-detail",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/crm-customer/customer-edit",
+                        path: "/crm-bo/bo-edit",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
@@ -196,7 +201,7 @@ export default {
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
-            Core.Api.CRMCustomer.list({
+            Core.Api.CRMBo.list({
                 ...this.searchForm,
                 order_by_fields: this.orderByFields,
                 page: this.currPage,
@@ -231,7 +236,7 @@ export default {
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.Customer.delete({id}).then(() => {
+                    Core.Api.CRMBo.delete({id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success')),
                         _this.getTableData();
                     }).catch(err => {

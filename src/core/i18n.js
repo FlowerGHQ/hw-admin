@@ -1112,7 +1112,23 @@ const messages = {
 		    contact_customer:'联系人',
 	    },
 	    crm_b: {
+        	save: '新建商机',
 			list: '商机列表',
+		    name: '商机名称',
+		    customer_name: "客户名称",
+		    own_user_name: "负责人",
+		    status: '商机阶段',
+		    estimated_deal_time: '预计结单日期',
+		    money: '商机金额',
+		    source:'机会来源',
+		    discount: '折扣'
+	    },
+	    crm_s: {
+		    business_opportunities_phase: '商机阶段',
+		    results_the_preview: '效果预览',
+		    custom_business_opportunity_stage: '商机阶段自定义',
+		    sales_stage: '销售阶段',
+			phase_type: '阶段类型',
 	    },
 	    authority: {
         	title: {
