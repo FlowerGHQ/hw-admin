@@ -146,7 +146,6 @@ export default {
             loginType: Core.Data.getLoginType(),
             CRM_SOURCE_MAP: Core.Const.CRM_BO.SOURCE_MAP,
 
-            TYPE_MAP: 1,
             // 加载
             loading: false,
             detail: {},
@@ -238,26 +237,17 @@ export default {
         },
         getBoDetailItemList(){
             this.loading = true;
-            Core.Api.CRMBo.detail({
-                id: this.form.id,
+            Core.Api.CRMItemBind.list({
+                source_id: this.form.id,
+                source_type: Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.BO,
             }).then(res => {
-                console.log('getCustomerDetail res', res)
-                let d = res.detail
-                this.detail = d
-                this.detail.estimated_deal_time = this.detail.estimated_deal_time ? dayjs.unix(this.detail.estimated_deal_time).format('YYYY-MM-DD') : undefined
-                this.handleCustomerNameSearch(this.detail.customer_name)
-                for (const key in this.form) {
-                    this.form[key] = d[key]
-                }
+                this.tableData = res.list
 
             }).catch(err => {
                 console.log('getCustomerDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
-            Core.Api.CRMItemBind.list(res => {
-                this.tableData = res.list
-            })
 
         },
         handleSubmit() {

@@ -35,13 +35,16 @@
                         <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>
                         <a-button @click="routerChange('edit')">编辑</a-button>
                         <a-button>新建联系人</a-button>
-                        <CustomerSelect :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>
+                        <CustomerAdd :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>
                         <a-button>新建订单</a-button>
                         <a-button>移交</a-button>
                         <a-button>退回</a-button>
                         <a-button>删除</a-button>
                     </a-col>
                 </a-row>
+                <div class="panel-content">
+                    <MySteps :stepsList='groupStatusTableData' :current='detail.status'></MySteps>
+                </div>
             </div>
         </div>
         <a-row >
@@ -82,15 +85,14 @@ import CustomerSituation from './components/CustomerSituation.vue';
 import Bo from './components/Bo.vue';
 import TrackRecord from './components/TrackRecord.vue';
 import FollowUpShow from '@/components/crm/popup-btn/FollowUpShow.vue';
-import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
-
-
+import CustomerAdd from '@/components/crm/popup-btn/CustomerAdd.vue';
+import MySteps from "@/components/common/MySteps.vue"
 import dayjs from "dayjs";
 import {get} from "lodash";
 
 export default {
     name: 'CustomerEdit',
-    components: { FollowUpShow, CustomerSelect, Contact, Bo, TrackRecord, CustomerSituation},
+    components: { FollowUpShow, CustomerAdd, MySteps, Contact, Bo, TrackRecord, CustomerSituation},
     props: {},
     data() {
         return {
@@ -136,6 +138,7 @@ export default {
                     type: 'file',
                 },
             },
+            groupStatusTableData: [],
         };
     },
     watch: {},
@@ -147,8 +150,9 @@ export default {
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         if (this.id) {
-            this.getCustomerDetail();
+            this.getBoDetail();
         }
+        this.getGroupStatusDetail()
     },
     methods: {
         routerChange(type, item) {
@@ -169,7 +173,7 @@ export default {
                     break;
             }
         },
-        getCustomerDetail() {
+        getBoDetail() {
             this.loading = true;
             Core.Api.CRMBo.detail({
                 id: this.id,
@@ -269,6 +273,18 @@ export default {
             this.trackRecordForm.contact_customer_id = items[0].id
             this.trackRecordForm.contact_customer_name = items[0].name
 
+        },
+        getGroupStatusDetail() {    // 获取 表格 数据
+            this.loading = true;
+            Core.Api.CRMBoStatusGroup.detail({
+                id: 1,
+            }).then(res => {
+                this.groupStatusTableData = JSON.parse(res.detail.status_list)
+            }).catch(err => {
+                console.log('getTableData err:', err)
+            }).finally(() => {
+                this.loading = false;
+            });
         },
     }
 };

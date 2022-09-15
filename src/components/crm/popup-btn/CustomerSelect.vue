@@ -7,7 +7,7 @@
         <div class="modal-content">
             <div class="search-container">
                 <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!purchaseId">
+                    <a-col :xs='24' :sm='24' :md='12' class="search-item">
                         <div class="key"><span>{{ $t('n.name') }}:</span></div>
                         <div class="value">
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
@@ -97,10 +97,6 @@ export default {
             type: Number,
             default: 0
         },
-        purchaseId: {
-            type: Number,
-            default: 0
-        }
     },
     data() {
         return {

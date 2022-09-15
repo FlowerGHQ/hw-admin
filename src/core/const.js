@@ -1439,6 +1439,12 @@ let Const = {
 			'2': { key: 2, zh: '老客户',en: 'Old customer', value: 2 },
 		},
 	},
+    CRM_ITEM_BIND: {
+        SOURCE_TYPE: {
+            BO: 1,
+            ORDER: 2,
+        }
+    }
 };
 
 export default Const;
