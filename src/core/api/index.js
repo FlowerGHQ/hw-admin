@@ -610,10 +610,10 @@ const apiList = {
 		detail: ['PostJson', 'crm-bo/detail'],//
 	},
 	CrmBoStatusGroup:{//CRM 阶段
-		save: ['PostJson', 'crm-bo/save'],//
-		list: ['PostJson', 'crm-bo/list'],//
-		delete: ['PostJson', 'crm-bo/delete'],//
-		detail: ['PostJson', 'crm-bo/detail'],//
+		save: ['PostJson', 'crm-bo-status-group/save'],//
+		list: ['PostJson', 'crm-bo-status-group/list'],//
+		delete: ['PostJson', 'crm-bo-status-group/delete'],//
+		detail: ['PostJson', 'crm-bo-status-group/detail'],//
 	}
 
 };

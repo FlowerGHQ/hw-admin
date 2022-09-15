@@ -2,24 +2,28 @@
     <div id="CustomerList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">{{ $t('crm_s.business_opportunities_phase') }}</div>
+                <div class="title-area">{{ $t('crm_g.business_opportunities_phase') }}</div>
                 <div class="btns-area">
                     <a-button type="primary" @click="addBoStatusGroup" ><i class="icon i_add"/>{{ $t('crm_b.save') }}</a-button>
                 </div>
             </div>
             <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' @change="getTableDataSorter">
+                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="(record,index) => record.id" :pagination='false' @change="getTableDataSorter">
                     <template #headerCell="{title}">
                         {{ $t(title) }}
                     </template>
-                    <template #bodyCell="{ column, text , record }">
+                    <template #bodyCell="{ column, text , record ,index}">
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
+                        <template v-if="column.key === 'status'">
+                            {{ $t('crm_g.underway') }}
+                        </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('detail',record)" ><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
-                            <a-button type="link" @click="routerChange('edit',record)" ><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger" ><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>
+                            <a-button type="link" @click="routerChange('up',record ,index)" :disabled="index === 0 "><i class="icon i_detail"/>{{ $t('crm_g.up') }}</a-button>
+                            <a-button type="link" @click="routerChange('down',record ,index)" :disabled="index === tableData.length-1 "><i class="icon i_detail"/>{{ $t('crm_g.down') }}</a-button>
+                            <a-button type="link" @click="routerChange('edit',record ,index)" ><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type="link" @click="handleDelete(index)" class="danger" ><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -27,17 +31,17 @@
             <a-modal :title="$t('ad.add')" v-model:visible="modalShow" :after-close='handleClose' :maskClosable="false" class="receiver-address-edit-modal">
                 <div class="modal-content">
                     <div class="form-item required">
-                        <div class="key">{{ $t('crm_s.sales_stage') }}:</div>
+                        <div class="key">{{ $t('crm_g.sales_stage') }}:</div>
                         <div class="value">
                             <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
                         </div>
                     </div>
-                    <div class="form-item required">
-                        <div class="key">{{ $t('crm_s.phase_type') }}:</div>
-                        <div class="value">
-                            <a-input v-model:value="form.status" :placeholder="$t('def.input')"/>
-                        </div>
-                    </div>
+<!--                    <div class="form-item required">-->
+<!--                        <div class="key">{{ $t('crm_g.phase_type') }}:</div>-->
+<!--                        <div class="value">-->
+<!--                            <a-input v-model:value="form.status" :placeholder="$t('def.input')"/>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
                 <template #footer>
                     <a-button @click="handleClose">{{ $t('def.cancel') }}</a-button>
@@ -65,38 +69,33 @@ export default {
             // 加载
             loading: false,
             modalShow: false,
-            // 搜索
-            searchForm: {
-                name: '',
-                phone:'',
-                begin_time: '',
-                end_time: '',
-                type: '',
-            },
+            modalShowIndex: '',
             form:{
                 name: '',
                 status: '',
             },
             // 表格
             tableData: [],
+
         };
     },
     watch: {},
     computed: {
         tableColumns() {
             let columns = [
-                {title: 'crm_s.sales_stage', dataIndex: 'name', key:'name'},
-                {title: 'crm_s.phase_type', dataIndex: 'status', key:'status'},
+                {title: 'crm_g.sales_stage', dataIndex: 'name', key:'name'},
+                {title: 'crm_g.phase_type', dataIndex: 'status', key:'status'},
+                // {title: 'crm_g.phase_type', dataIndex: 'status', key:'status'},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
             return columns
         },
     },
     mounted() {
-        this.getTableData();
+        this.getDetail();
     },
     methods: {
-        routerChange(type, item = {}) {
+        routerChange(type, item = {}, index) {
             let routeUrl = ''
             switch (type) {
                 case 'detail':    // 编辑
@@ -107,81 +106,66 @@ export default {
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'edit':    // 编辑
-                    routeUrl = this.$router.resolve({
-                        path: "/crm-bo/bo-edit",
-                        query: {id: item.id}
-                    })
-                    window.open(routeUrl.href, '_self')
+                    this.form = Core.Util.deepCopy(item)
+                    this.modalShow = true
+                    this.modalShowIndex = index
+                    break;
+                case 'up' :
+                    if (this.tableData[index-1] != null) {
+                        this.form = this.tableData[index]
+                        this.tableData[index] = this.tableData[index - 1]
+                        this.tableData[index - 1] = this.form
+                        this.handleSave()
+                    }
+                    break;
+                case 'down' :
+                    if (this.tableData[index+1] != null){
+                        this.form = this.tableData[index]
+                        this.tableData[index] = this.tableData[index+1]
+                        this.tableData[index+1] =this.form
+                        this.handleSave()
+                    }
                     break;
             }
         },
-        pageChange(curr) {    // 页码改变
-            this.currPage = curr
-            this.getTableData()
-        },
-        pageSizeChange(current, size) {    // 页码尺寸改变
-            console.log('pageSizeChange size:', size)
-            this.pageSize = size
-            this.getTableData()
-        },
-        handleSearch() {    // 搜索
-            this.pageChange(1);
-        },
-        handleOtherSearch(params) { // 时间等组件化的搜索
-            for (const key in params) {
-                this.searchForm[key] = params[key]
-            }
-            this.pageChange(1);
-        },
-        handleSearchReset() {    // 重置搜索
-            Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.$refs.TimeSearch.handleReset()
-            this.orderByFields = {}
-            this.pageChange(1);
-        },
-        getTableData() {    // 获取 表格 数据
+        getDetail() {    // 获取 表格 数据
             this.loading = true;
-            Core.Api.CRMBo.list({
-                ...this.searchForm,
-                order_by_fields: this.orderByFields,
-                page: this.currPage,
-                page_size: this.pageSize
+            Core.Api.CrmBoStatusGroup.detail({
+                id: 1,
             }).then(res => {
-                console.log("getTableData res:", res)
-                this.total = res.count;
-                this.tableData = res.list;
+                this.detail = res.detail
+                console.log('tableData err:', this.detail)
+                console.log('tableData err:', this.detail.status_list)
+                this.tableData = JSON.parse(this.detail.status_list)
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
-        getTableDataSorter( paginate, sort, filter){
-            this.orderByFields = {}
-            switch (filter.order){
-                case "ascend":
-                    this.orderByFields[filter.field] =  0
-            }
-            switch (filter.order){
-                case "descend":
-                    this.orderByFields[filter.field] =  1
-            }
-            this.getTableData()
-        },
-        handleDelete(id) {
+        handleDelete(index) {
             let _this = this;
+            console.log('tableData err:', _this.tableData[0])
+            console.log('index err:', index)
             this.$confirm({
                 title: this.$t('pop_up.sure_delete'),
                 okText: this.$t('def.sure'),
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.CRMBo.delete({id}).then(() => {
-                        _this.$message.success(_this.$t('pop_up.delete_success')),
-                        _this.getTableData();
+                    _this.tableData.splice(index, 1)
+                    let status_list = JSON.stringify( _this.tableData)
+                    Core.Api.CrmBoStatusGroup.save({
+                        id: 1,
+                        status_list: status_list
+                    }).then(res => {
+
                     }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
+
+                    }).finally(() => {
+                        _this.loading = false;
+                        _this.getDetail()
+                    });
                 },
             });
         },
@@ -191,12 +175,34 @@ export default {
         handleClose() {
             Object.assign(this.form, this.$options.data().form)
             this.modalShow = false
+            this.modalShowIndex = ''
         },
         handleConfirm() {
             let form = Core.Util.deepCopy(this.form)
-            this.tableData.push(form)
+            if (this.modalShowIndex !== ''){
+                this.tableData[this.modalShowIndex] = form
+            } else {
+                this.tableData.push(form)
+            }
+
+            this.handleSave()
             this.handleClose()
         },
+        handleSave(){
+            let status_list = JSON.stringify( this.tableData)
+            Core.Api.CrmBoStatusGroup.save({
+                id: 1,
+                status_list: status_list
+            }).then(res => {
+
+            }).catch(err => {
+
+            }).finally(() => {
+                this.loading = false;
+                this.getDetail()
+            });
+            this.handleClose()
+        }
     }
 };
 </script>

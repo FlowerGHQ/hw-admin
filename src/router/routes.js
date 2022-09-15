@@ -1608,8 +1608,8 @@ const routes = [
 				name: 'SettingList',
 				component: () => import('@/views/crm-setting/group-status.vue'),
 				meta: {
-					title: '设置',
-					title_en: 'Setting',
+					title: '商机阶段',
+					title_en: 'Business opportunities phase',
 					// auth: ["crm-community-customer.list"],
 				}
 			},

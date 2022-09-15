@@ -1123,12 +1123,16 @@ const messages = {
 		    source:'机会来源',
 		    discount: '折扣'
 	    },
-	    crm_s: {
+
+	    crm_g: {
 		    business_opportunities_phase: '商机阶段',
 		    results_the_preview: '效果预览',
 		    custom_business_opportunity_stage: '商机阶段自定义',
 		    sales_stage: '销售阶段',
-			phase_type: '阶段类型',
+		    phase_type: '阶段类型',
+		    underway: '进行中',
+		    up: '上移',
+		    down: '下移',
 	    },
 	    authority: {
         	title: {
