@@ -1112,6 +1112,7 @@ const messages = {
 		    contact_customer:'联系人',
 	    },
 	    crm_b: {
+            detail: '商机详情',
         	save: '新建商机',
 			list: '商机列表',
 		    name: '商机名称',

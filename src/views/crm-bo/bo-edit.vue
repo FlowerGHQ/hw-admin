@@ -210,7 +210,7 @@ export default {
             switch (type) {
                 case 'back':    // 详情
                     let routeUrl = this.$router.resolve({
-                        path: "/crm-customer/customer-list",
+                        path: "/crm-bo/bo-list",
                     })
                     window.open(routeUrl.href, '_self')
                     break;

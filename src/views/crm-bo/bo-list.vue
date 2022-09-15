@@ -152,8 +152,9 @@ export default {
         }
     },
     mounted() {
-        this.getTableData();
         this.getGroupStatusDetail()
+        this.getTableData();
+
     },
     methods: {
         routerChange(type, item = {}) {
