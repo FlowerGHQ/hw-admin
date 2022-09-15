@@ -1434,6 +1434,10 @@ let Const = {
 			'20': { key: 20, zh: '电话沟通',en: 'Telephone communication', value: 20 },
 			'30': { key: 30, zh: '其他',en: 'Other', value: 30 },
 		},
+		SOURCE_MAP: {
+			'1': { key: 1, zh: '新客户',en: 'New customer', value: 1 },
+			'2': { key: 2, zh: '老客户',en: 'Old customer', value: 2 },
+		},
 	},
 };
 

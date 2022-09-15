@@ -33,7 +33,13 @@
                     <div class="form-item required">
                         <div class="key">{{ $t('crm_g.sales_stage') }}:</div>
                         <div class="value">
-                            <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
+                            <a-input v-model:value="form.zh" :placeholder="$t('def.input')"/>
+                        </div>
+                    </div>
+                    <div class="form-item required">
+                        <div class="key">{{ $t('crm_g.sales_stage_en') }}:</div>
+                        <div class="value">
+                            <a-input v-model:value="form.en" :placeholder="$t('def.input')"/>
                         </div>
                     </div>
 <!--                    <div class="form-item required">-->
@@ -71,7 +77,8 @@ export default {
             modalShow: false,
             modalShowIndex: '',
             form:{
-                name: '',
+                zh: '',
+                en: '',
                 status: '',
             },
             // 表格
@@ -83,7 +90,8 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: 'crm_g.sales_stage', dataIndex: 'name', key:'name'},
+                {title: 'crm_g.sales_stage', dataIndex: 'zh', key:'zh'},
+                {title: 'crm_g.sales_stage_en', dataIndex: 'en', key:'en'},
                 {title: 'crm_g.phase_type', dataIndex: 'status', key:'status'},
                 // {title: 'crm_g.phase_type', dataIndex: 'status', key:'status'},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
@@ -130,7 +138,7 @@ export default {
         },
         getDetail() {    // 获取 表格 数据
             this.loading = true;
-            Core.Api.CrmBoStatusGroup.detail({
+            Core.Api.CRMBoStatusGroup.detail({
                 id: 1,
             }).then(res => {
                 this.detail = res.detail
@@ -155,7 +163,7 @@ export default {
                 onOk() {
                     _this.tableData.splice(index, 1)
                     let status_list = JSON.stringify( _this.tableData)
-                    Core.Api.CrmBoStatusGroup.save({
+                    Core.Api.CRMBoStatusGroup.save({
                         id: 1,
                         status_list: status_list
                     }).then(res => {
@@ -190,7 +198,7 @@ export default {
         },
         handleSave(){
             let status_list = JSON.stringify( this.tableData)
-            Core.Api.CrmBoStatusGroup.save({
+            Core.Api.CRMBoStatusGroup.save({
                 id: 1,
                 status_list: status_list
             }).then(res => {
