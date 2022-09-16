@@ -63,7 +63,7 @@
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="activeKey">
                         <a-tab-pane key="CustomerSituation" :tab="$t('d.manage_employees')">
-                            <TrackRecord :detail="detail"/>
+                            <Group :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('d.manage_employees')">
                             <TrackRecord :detail="detail"/>
@@ -170,6 +170,7 @@ import Core from '../../core';
 import Contact from './components/Contact.vue';
 import CustomerSituation from './components/CustomerSituation.vue';
 import Bo from './components/Bo.vue';
+import Group from './components/Group.vue';
 import TrackRecord from './components/TrackRecord.vue';
 import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
 
@@ -179,7 +180,7 @@ import {get} from "lodash";
 
 export default {
     name: 'CustomerEdit',
-    components: { CustomerSelect, Contact, Bo, TrackRecord, CustomerSituation},
+    components: { CustomerSelect, Contact, Bo, Group, TrackRecord, CustomerSituation},
     props: {},
     data() {
         return {

@@ -1,43 +1,37 @@
 <template>
 <div class="InformationInfo gray-panel no-margin">
     <div class="panel-content">
-        <div>
-            <a-list
-                class="demo-loadmore-list"
-                :loading="initLoading"
-                item-layout="horizontal"
-                :data-source="tableData"
-            >
-                <template #loadMore>
-                    <div
-                        v-if="!initLoading && !loading"
-                        :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"
-                    >
-<!--                        <a-button @click="onLoadMore">loading more</a-button>-->
-                    </div>
-                </template>
-                <template #renderItem="{ item }">
-                    <a-list-item>
-                        <template #actions>
-                            <div>{{item.create_time}}</div>
-                            <a key="list-loadmore-edit">edit</a>
-                            <a key="list-loadmore-more">more</a>
-                        </template>
-                        <a-skeleton avatar :title="false" :loading="!!item.loading" active>
-                            <a-list-item-meta
-                                :description="item.name"
-                            >
-                                <template #title>
-                                    {{ item.name }}
-                                </template>
-                            </a-list-item-meta>
-                            <div>{{item.create_time}}</div>
-                        </a-skeleton>
-                    </a-list-item>
-                </template>
-            </a-list>
+        <div class="title">
+            <div class="tab" :class="{'active': activeType === item.key}" v-for="(item, i) in searchType" :key="i" @click="clickType(item)">
+                {{ item.name }}
+            </div>
         </div>
-
+        <!-- <div class="search">
+            <a-input-search v-model:value="searchKey" :placeholder="'搜索成员和标签'" @onSearch="clickSearch"/>
+        </div> -->
+        <!-- $Util.timeFormat(detail.create_time, 'YYYY/MM/DD') -->
+        <div class="list">
+            <div v-for="(day, i) in tableData" :key="i" class="day-content">
+                <div class="day-item tag">
+                    <div class="tag-bg">今天</div>
+                </div>
+                <div class="day-item" v-for="(item, j) in day.list" :key="`${i}-${j}`">
+                    <div class="panel">
+                        <div class="top">
+                            <span class="item-title">{{ item.title }}</span>
+                            <span class="item-time"><i class="icon i_cart" style="color:blue"/>时间</span>
+                        </div>
+                        <div class="content">
+                            <div class="line">黑色字体</div>
+                            <div class="line grey">灰色字体</div>
+                        </div>
+                        <div class="foot">
+                            <div class="line">黑色字体</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </template>
@@ -57,14 +51,12 @@ export default {
     },
     data() {
         return {
-            CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
-            CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
-            CRM_SOURCE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_MAP,
-            CRM_INDUSTRY_MAP: Core.Const.CRM_CUSTOMER.INDUSTRY_MAP,
-            CRM_GENDER_MAP: Core.Const.CRM_CUSTOMER.GENDER_MAP,
-            CRM_MARITAL_STATUS_MAP: Core.Const.CRM_CUSTOMER.MARITAL_STATUS_MAP,
-            CRM_TYPE: Core.Const.CRM_CUSTOMER.TYPE,
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
+            searchType: [
+                { name: '全部', key: '1' },
+                { name: '跟进记录', key: '2' },
+                { name: '操作日志', key: '3' },
+            ],
+            activeType: '1',
             USER_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
@@ -74,12 +66,21 @@ export default {
             pageSize: 20,
             total: 0,
             // 表格数据
-            tableData: [],
-            trackMemberShow: false,
+            tableData: [{
+                time: new Date(),
+                list: [
+                    { title: '标题', content: '内容', customer: '客户', contacts: '联系人', status: '状态', operator: '操作人', time: new Date() },
+                    { title: '标题', content: '内容', customer: '客户', contacts: '联系人', status: '状态', operator: '操作人', time: new Date() }
+                ]
+            },{
+
+            }],
 
             userId: '',
             userDetail: '',
             initLoading: false,
+
+            searchKey: '',
         };
     },
     watch: {},
@@ -102,46 +103,29 @@ export default {
         }
     },
     mounted() {
-        this.getTableData();
+        // this.getTableData();
     },
     methods: {
-        handleManagerChange(record){
-            this.loading = true;
-            Core.Api.User.setAdmin({
-                id: record.id,
-                flag_admin: record.flag_admin ? 0 : 1
-            }).then(() => {
-                this.getTableData();
-            }).catch(err => {
-                console.log('handleManagerChange err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-        routerChange(type, item = {}) {
-            console.log(item)
-            let routeUrl = ''
-            switch (type) {
-                case 'edit':    // 编辑
-                    routeUrl = this.$router.resolve({
-                        path: "/system/user-edit",
-                        query: {
-                            id: item.id,
-                            org_id: this.orgId,
-                            org_type: this.orgType,
-                            type: this.type,
-                        }
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
-                case 'detail':    // 详情
-                    routeUrl = this.$router.resolve({
-                        path: "/system/user-detail",
-                        query: {id: item.id}
-                    })
-                    window.open(routeUrl.href, '_blank')
-                    break;
+        changeTimeTitle(time) {
+            let today = this.$Util.timeFormat(new Date().value() / 1000, 'YYYY/MM/DD');
+            let day = this.$Util.timeFormat(time, 'YYYY/MM/DD');
+            if(today === day) {
+                return `今天 ${this.$Util.timeFormat(time, 'mm:ss')}`
+            } else {
+                return this.$Util.timeFormat(time, 'YYYY/MM/DD mm:ss')
             }
+        },
+        // 切换类型
+        clickType(item) {
+            this.activeType = item.key;
+        },
+        // 点击添加
+        clickAdd() {},
+        // 点击编辑
+        clickEidt() {},
+        // 点击搜索
+        clickSearch(key) {
+            console.log('click search >>', key);
         },
         pageChange(curr) {    // 页码改变
             this.currPage = curr
@@ -170,34 +154,6 @@ export default {
                 this.loading = false;
             });
         },
-        handleDelete(id) {
-            let _this = this;
-            this.$confirm({
-                title: _this.$t('pop_up.sure_delete'),
-                okText: _this.$t('def.sure'),
-                okType: 'danger',
-                cancelText: this.$t('def.cancel'),
-                onOk() {
-                    Core.Api.CRMCustomer.delete({id}).then(() => {
-                        _this.$message.success(_this.$t('pop_up.delete_success'));
-                        _this.getTableData();
-                    }).catch(err => {
-                        console.log("handleDelete -> err", err);
-                    })
-                },
-            });
-        },
-        handleUserRole(item) {
-            console.log(item)
-            this.userId = item.id;
-            this.userDetail = item;
-            this.userRoleShow = true;
-        },
-        handleRoleClose() {
-            this.userId = '';
-            this.userDetail = '';
-            this.userRoleShow = false;
-        },
     }
 };
 </script>
@@ -209,13 +165,125 @@ export default {
     }
 
 }
-.ant-descriptions-view{
-    th.ant-descriptions-item-label {
-        width: 25%;
+.panel-content {
+    .title {
+        position: relative;
+        width: 100%;
+        font-size: 14px;
+        margin-bottom: 20px;
+        .tab {
+            margin-left: 10px;
+            padding-right: 10px;
+            display: inline-block;
+            color: @TC_tip;
+            border-right: 1px solid @TC_tip;
+            cursor: pointer;
+            &:hover {
+                color: @TC_P;
+            }
+            &:first-child {
+                margin-left: 0;
+            }
+            &:last-child {
+                border-right: none;
+            }
+        }
+        .active {
+            color: @TC_P;
+        }
     }
-    td.ant-descriptions-item-content {
-        width: 25%;
+    .list {
+        .day-content {
+            position: relative;
+            width: 100%;
+        }
+        .day-item {
+            position: relative;
+            box-sizing: border-box;
+            padding-left: 20px;
+            margin-bottom: 15px;
+            // border: 1px solid red;
+            &:before {
+                content: "";
+                position: absolute;
+                // top: 5px;
+                left: 0;
+                width: 10px;
+                height: 10px;
+                border: 2px solid @BC_P;
+                border-radius: 50%;
+            }
+            &:after {
+                content: "";
+                position: absolute;
+                left: 4px;
+                top: 14px;
+                width: 1px;
+                height: 100%;
+                border-left: 2px solid #F8FAFC;
+            }
+            .tag-bg {
+                position: relative;
+                display: inline-block;
+                margin-left: 12px;
+                padding-right: 8px;
+                height: 20px;
+                line-height: 20px;
+                background-color: @BC_P;
+                color: @TC_L;
+                font-size: 12px;
+                &:before {
+                    content: "";
+                    position: absolute;
+                    left: -10px;
+                    width: 0;
+                    height: 0;
+                    border-top: 10px solid transparent;
+                    border-right: 10px solid @BC_P;
+                    border-bottom: 10px solid transparent;
+                }
+            }
+            .panel {
+                padding: 12px;
+                width: 100%;
+                background-color: #F8FAFC;
+                .top {
+                    .flex(space-between, center, row);
+                    .item-title {
+                        font-size: 14px;
+                        font-weight: bold;
+                    }
+                    .item-time {
+                        font-size: 12px;
+                        color: @TC_tip;
+                    }
+                }
+                .content {
+                    margin-top: 6px;
+                }
+                .foot {
+                    text-align: right;
+                }
+                .line {
+                    height: 20px;
+                    line-height: 20px;
+                    font-size: 12px;
+                }
+                .grey {
+                    color: @TC_tip;
+                }
+            }
+        }
+        .tag {
+            &:before {
+                top: 6px;
+                background-color: @BC_P;
+            }
+            &:after {
+                top: 20px;
+                height: calc(100% - 6px);
+            }
+        }
     }
-
 }
 </style>
