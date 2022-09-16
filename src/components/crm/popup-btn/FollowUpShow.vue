@@ -1,77 +1,8 @@
 <template>
-    <div id="CustomerEdit" class="edit-container">
-        <div class="title-container">
-                <div class="title-area">{{  $t('crm_c.detail')  }}
-                <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>
-                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}
-                </a-tag>
-            </div>
-        </div>
-        <div class="gray-panel">
-            <div class="panel-content desc-container">
-                <div class="desc-title">
-                    <div class="title-area">
-                        <span class="title">{{ detail.name }}</span>
-                    </div>
-                </div>
-                <a-row class="desc-detail">
-                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('crm_c.level') }}：</span>
-                        <span class="value">{{ $Util.CRMCustomerLevelFilter(detail.level, $i18n.locale) || '-'  }}</span>
-                    </a-col>
-                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('crm_c.type') }}：</span>
-                        <span class="value">{{ $Util.CRMCustomerTypeFilter(detail.type, $i18n.locale) || '-'  }}</span>
-                    </a-col>
-                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('n.phone') }}：</span>
-                        <span class="value">{{detail.phone}}</span>
-                    </a-col>
-                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('n.time') }}：</span>
-                        <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                        <a-button @click="TrackRecordShow = true">写跟进</a-button>
-                        <a-button>编辑</a-button>
-                        <a-button>新建联系人</a-button>
-                        <a-button>新建商机</a-button>
-                        <a-button>新建订单</a-button>
-                        <a-button>移交</a-button>
-                        <a-button>退回</a-button>
-                        <a-button>删除</a-button>
-                    </a-col>
-                </a-row>
-            </div>
-        </div>
-        <a-row >
-            <a-col :xs='24' :sm='24' :lg='16' >
-                <div class="tabs-container">
-                    <a-tabs v-model:activeKey="activeKey">
-                        <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.summary_information')">
-                            <CustomerSituation :detail="detail"/>
-                        </a-tab-pane>
-                        <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
-                            <Contact :detail="detail"/>
-                            <Bo :detail="detail"/>
-                            <Bo :detail="detail"/>
-                        </a-tab-pane>
-                    </a-tabs>
-                </div>
-            </a-col>
-            <a-col :xs='24' :sm='24' :lg='8' >
-                <div class="tabs-container">
-                    <a-tabs v-model:activeKey="activeKey">
-                        <a-tab-pane key="CustomerSituation" :tab="$t('d.manage_employees')">
-                            <Group :detail="detail"/>
-                        </a-tab-pane>
-                        <a-tab-pane key="InformationInfo" :tab="$t('d.manage_employees')">
-                            <TrackRecord :detail="detail"/>
-                        </a-tab-pane>
-                    </a-tabs>
-                </div>
-            </a-col>
-        </a-row>
+    <a-button class="FollowUpShow" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
+        <slot>{{ btnText }}</slot>
+    </a-button>
+    <template class="modal-container">
         <a-modal v-model:visible="TrackRecordShow" :title="$t('crm_t.add_track_record')" :after-close='handleTrackRecordClose'>
             <div class="form-item required">
                 <div class="key">{{ $t('crm_t.type') }}：</div>
@@ -162,28 +93,48 @@
                 <a-button @click="handleTrackRecordClose">{{ $t('def.cancel') }}</a-button>
             </template>
         </a-modal>
-    </div>
+    </template>
 </template>
 
 <script>
-import Core from '../../core';
-import Contact from './components/Contact.vue';
-import CustomerSituation from './components/CustomerSituation.vue';
-import Bo from './components/Bo.vue';
-import Group from './components/Group.vue';
-import TrackRecord from './components/TrackRecord.vue';
-import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
-
-
+import Core from '../../../core'
 import dayjs from "dayjs";
 import {get} from "lodash";
+import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
+
+const WAYBILL = Core.Const.WAYBILL
 
 export default {
-    name: 'CustomerEdit',
-    components: { CustomerSelect, Contact, Bo, Group, TrackRecord, CustomerSituation},
-    props: {},
+    name: 'FollowUpShow',
+    components: { CustomerSelect},
+    props: {
+        btnText: {
+            type: String,
+            default: '添加跟进记录'
+        },
+        btnType: {
+            type: String,
+            default: 'primary'
+        },
+        btnClass: {
+            type: String,
+        },
+        ghost: {
+            type: Boolean,
+            default: false,
+        },
+        targetType: {
+            type: Number,
+            default: 0
+        },
+        targetId: {
+            type: Number,
+            default: 0
+        }
+    },
     data() {
         return {
+
             TYPE_MAP: Core.Const.CRM_TRACK_RECORD.TYPE_MAP,
             INTENT_MAP: Core.Const.CRM_TRACK_RECORD.INTENT_MAP,
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
@@ -225,51 +176,22 @@ export default {
                     type: 'file',
                 },
             },
-        };
+        }
     },
     watch: {},
     computed: {
-        lang() {
+        lang(){
             return this.$store.state.lang
         }
     },
+    created() {
+    },
     mounted() {
-        this.id = Number(this.$route.query.id) || 0
-        if (this.id) {
-            this.getCustomerDetail();
-        }
+
     },
     methods: {
-        routerChange(type, item) {
-            switch (type) {
-                case 'back':    // 详情
-                    let routeUrl = this.$router.resolve({
-                        path: "/crm-customer/customer-list",
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
-            }
-        },
-        getCustomerDetail() {
-            this.loading = true;
-            Core.Api.CRMCustomer.detail({
-                id: this.id,
-            }).then(res => {
-                console.log('getCustomerDetail res', res)
-                let d = res.detail
-                this.detail = d
-                this.detail.birthday = this.detail.birthday ? dayjs.unix(this.detail.birthday).format('YYYY-MM-DD') : undefined
-                for (const key in this.form) {
-                    this.form[key] = d[key]
-                }
-                this.defAddr = [d.province, d.city, d.county]
-
-                // this.defArea = [d.continent || '', d.country || '']
-            }).catch(err => {
-                console.log('getCustomerDetail err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+        handleModalShow() {
+            this.TrackRecordShow = true
         },
         handleTrackRecordSubmit() {
             let form = Core.Util.deepCopy(this.trackRecordForm)
@@ -282,8 +204,8 @@ export default {
                 next_track_time = dayjs(form.next_track_time).unix()
             }
             Core.Api.CRMTrackRecord.save({
-                target_id: this.detail.id,
-                target_type: Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER,
+                target_id: this.target_id,
+                target_type: this.target_type,
                 type: form.type,
                 content: form.content,
                 contact_customer_id: form.contact_customer_id,
@@ -352,14 +274,38 @@ export default {
 
         },
     }
-};
+}
 </script>
 
-<style lang="less">
-.CustomerEdit {
-
-    .icon {
+<style lang='less'>
+.FollowUpShow {
+    .main {
         font-size: 12px;
+        font-weight: 500;
+        color: #3C3C3C;
+        line-height: 20px;
+
+        .ant-btn {
+            height: 20px;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+    }
+
+    .desc, .time {
+        font-size: 12px;
+        font-weight: 400;
+        color: #6C6C6C;
+        line-height: 20px;
+        margin: 6px 0;
+    }
+}
+
+.waybill-show-modal {
+    .ant-steps-item-container {
+        .ant-steps-item-content {
+            width: calc(~'100% - 30px');
+        }
     }
 }
 </style>

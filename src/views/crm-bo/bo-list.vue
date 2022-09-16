@@ -30,8 +30,8 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('crm_b.status') }}：</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                            <a-select v-model:value="searchForm.status" :placeholder="$t('def.select')" @change="handleSearch">
+                                <a-select-option v-for="(item,index) of groupStatusTableData" :key="index" :value="index">{{ lang==='zh' ? item.zh: item.en }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -59,21 +59,16 @@
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
-                        <template v-if="column.key === 'phone'">
-                            {{ text || '-' }}
-                        </template>
-                        <template v-if="column.key === 'type'">
-                            {{ $Util.CRMCustomerTypeFilter(text, $i18n.locale) }}
-                        </template>
-                        <template v-if="column.key === 'level'">
-                            {{ $Util.CRMCustomerLevelFilter(text, $i18n.locale) }}
-                        </template>
-                        <template v-if="column.dataIndex === 'address'">
-                            {{ $Util.addressFilter(record, $i18n.locale) }}
+                        <template v-if="column.key === 'status'">
+                            {{ lang === 'zh'? groupStatusTableData[text].zh : groupStatusTableData[text].en}}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
+                        <template v-if="column.key === 'estimated_deal_time'">
+                            {{ $Util.timeFilter(text, 3) }}
+                        </template>
+
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('customer.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
                             <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('customer.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
@@ -133,6 +128,7 @@ export default {
             },
             // 表格
             tableData: [],
+            groupStatusTableData: [],
         };
     },
     watch: {},
@@ -143,7 +139,7 @@ export default {
                 {title: 'crm_b.customer_name', dataIndex: 'customer_name', key:'customer_name', sorter: true},
                 {title: 'crm_b.own_user_name', dataIndex: 'own_user_name', key:'own_user_name', sorter: true},
                 {title: 'crm_b.status', dataIndex: 'status', key:'status', sorter: true},
-                {title: 'crm_b.estimated_deal_time', dataIndex: 'estimated_deal_time', sorter: true},
+                {title: 'crm_b.estimated_deal_time', dataIndex: 'estimated_deal_time', key: 'estimated_deal_time', sorter: true},
                 {title: 'r.creator_name', dataIndex: 'creator_name', key: 'time', sorter: true},
                 {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
                 {title: 'crm_c.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
@@ -151,9 +147,14 @@ export default {
             ]
             return columns
         },
+        lang() {
+            return this.$store.state.lang
+        }
     },
     mounted() {
+        this.getGroupStatusDetail()
         this.getTableData();
+
     },
     methods: {
         routerChange(type, item = {}) {
@@ -243,6 +244,18 @@ export default {
                         console.log("handleDelete err", err);
                     })
                 },
+            });
+        },
+        getGroupStatusDetail() {    // 获取 表格 数据
+            this.loading = true;
+            Core.Api.CRMBoStatusGroup.detail({
+                id: 1,
+            }).then(res => {
+                this.groupStatusTableData = JSON.parse(res.detail.status_list)
+            }).catch(err => {
+                console.log('getTableData err:', err)
+            }).finally(() => {
+                this.loading = false;
             });
         },
     }

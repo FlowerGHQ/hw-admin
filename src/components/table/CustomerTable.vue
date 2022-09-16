@@ -89,10 +89,6 @@ export default {
             type: Array,
             default: () => { return [] }
         },
-        showStock: {
-            type: Boolean,
-            default: false,
-        }
     },
     emit: ['submit'],
     data() {
@@ -139,7 +135,7 @@ export default {
                     this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
                 },
                 getCheckboxProps: record => ({
-                    disabled: (this.showStock && record.stock === 0) || this.disabledChecked.includes(record.id)
+                    disabled: this.disabledChecked.includes(record.id)
                 }),
             };
         },

@@ -1112,6 +1112,7 @@ const messages = {
 		    contact_customer:'联系人',
 	    },
 	    crm_b: {
+            detail: '商机详情',
         	save: '新建商机',
 			list: '商机列表',
 		    name: '商机名称',
@@ -1129,6 +1130,7 @@ const messages = {
 		    results_the_preview: '效果预览',
 		    custom_business_opportunity_stage: '商机阶段自定义',
 		    sales_stage: '销售阶段',
+		    sales_stage_en: '销售阶段英文名',
 		    phase_type: '阶段类型',
 		    underway: '进行中',
 		    up: '上移',
