@@ -635,7 +635,15 @@ const apiList = {
 		list: ['PostJson', 'crm-item-bind/list'],//
 		delete: ['PostJson', 'crm-item-bind/delete'],//
 		detail: ['PostJson', 'crm-item-bind/detail'],//
-	}
+	},
+	CrmContactBind:{//CRM联系人绑定
+		save: ['PostJson', 'crm-contact-bind/save'],//
+		list: ['PostJson', 'crm-contact-bind/list'],//
+		delete: ['PostJson', 'crm-contact-bind/delete'],//
+		detail: ['PostJson', 'crm-contact-bind/detail'],//
+		batchSave: ['PostJson', 'crm-contact-bind/batch-save'],//
+	},
+
 
 };
 

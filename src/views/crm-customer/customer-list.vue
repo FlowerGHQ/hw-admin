@@ -110,7 +110,7 @@
         </div>
         <a-modal v-model:visible="batchShow" :title="$t('crm_c.distribute_customer')" :after-close='handleBatchClose'>
             <div class="form-item required">
-                <div class="key">{{ $t('crm_t.type') }}：</div>
+                <div class="key">{{ $t('crm_b.own_user_name') }}：</div>
                 <div class="value">
                     <a-select
                         v-model:value="batchForm.own_user_id"
@@ -173,6 +173,7 @@ export default {
             batchForm: {
                 own_user_id: '',
             },
+            batchShow: false,
             userData: [],
             // 表格
             tableData: [],
@@ -180,7 +181,6 @@ export default {
             selectedRowKeys: [],
             selectedRowItems: [],
             selectedRowItemsAll: [],
-            batchShow: false,
         };
     },
     watch: {
@@ -390,7 +390,7 @@ export default {
                 okType: 'primary',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.CRMCustomer.batchObtain({id_list: _this.selectedRowKeys}).then(() => {
+                    Core.Api.CRMCustomer.batchReturnPool({id_list: _this.selectedRowKeys}).then(() => {
                         _this.$message.success(_this.$t('crm_c.return_pool_success'));
                         _this.getTableData();
                     }).catch(err => {
@@ -405,23 +405,8 @@ export default {
             if (this.selectedRowKeys.length === 0) {
                 return this.$message.warning(this.$t('crm_c.select'))
             }
+            this.batchType = type;
             this.batchShow = true;
-            this.batchType = "distribute"
-            // let _this = this;
-            // this.$confirm({
-            //     title: this.$t('pop_up.sure_delete'),
-            //     okText: this.$t('def.sure'),
-            //     okType: 'danger',
-            //     cancelText: this.$t('def.cancel'),
-            //     onOk() {
-            //         Core.Api.CRMCustomer.batchDistribute({id_list: _this.selectedRowKeys}).then(() => {
-            //             _this.$message.success(_this.$t('pop_up.delete_success'));
-            //                 _this.getTableData();
-            //         }).catch(err => {
-            //             console.log("handleDelete err", err);
-            //         })
-            //     },
-            // });
         },
         handleBatchClose() {
 

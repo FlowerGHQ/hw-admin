@@ -1438,6 +1438,12 @@ let Const = {
 			BO: 2,
 		},
 	},
+	CRM_TRACK_MEMBER: {
+		TARGET_TYPE: {
+			CUSTOMER: 1,
+			BO: 2,
+		},
+	},
 	CRM_BO: {
 		STATUS_MAP: {
 			'10': { key: 10, zh: '上门拜访',en: 'Home visits', value: 10 },
@@ -1454,7 +1460,13 @@ let Const = {
             BO: 1,
             ORDER: 2,
         }
-    }
+    },
+	CRM_CONTACT_BIND: {
+		TARGET_TYPE: {
+			CUSTOMER: 1,
+			BO: 2,
+		}
+	},
 };
 
 export default Const;

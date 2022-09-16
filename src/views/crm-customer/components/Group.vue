@@ -4,8 +4,9 @@
         <div class="title">
             <span>团队成员({{total}})</span>
             <div class="right-btn">
-                <div class="button" @click="clickAdd"><i class="icon i_add"/></div>
-                <div class="button" @click="clickEdit"><i class="icon i_edit"/></div>
+                <TrackMemberSelect @select="handleGroupShow" btnType="link"><i class="icon i_add"/></TrackMemberSelect>
+<!--                <a-button type="link" @click="clickAdd"><i class="icon i_add"/></a-button>-->
+<!--                <div class="button" @click="clickEdit"><i class="icon i_edit"/></div>-->
             </div>
         </div>
         <div class="search">
@@ -17,7 +18,7 @@
                     <img class="avatar" src="" alt="">
                 </div>
                 <div class="item-right">
-                    <div class="name">名称</div>
+                    <div class="name">{{ item.user ? item.user.account ? item.user.account.name : '-' : '-'}}</div>
                     <div class="type">职位</div>
                 </div>
                 <div class="item-button">
@@ -68,28 +69,27 @@
 
 <script>
 import Core from '../../../core';
-const USER_TYPE = Core.Const.USER.TYPE
+import TrackMemberSelect from '@/components/crm/popup-btn/TrackMemberSelect.vue';
 
 export default {
     name: 'InformationInfo',
-    components: {},
+    components: {TrackMemberSelect},
     props: {
         detail:{
             type: Object,
-        }
+        },
+        targetId: {
+            type: Number,
+            default: 0
+        },
+        targetType: {
+            type: Number,
+            default: 0
+        },
 
     },
     data() {
         return {
-            CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
-            CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
-            CRM_SOURCE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_MAP,
-            CRM_INDUSTRY_MAP: Core.Const.CRM_CUSTOMER.INDUSTRY_MAP,
-            CRM_GENDER_MAP: Core.Const.CRM_CUSTOMER.GENDER_MAP,
-            CRM_MARITAL_STATUS_MAP: Core.Const.CRM_CUSTOMER.MARITAL_STATUS_MAP,
-            CRM_TYPE: Core.Const.CRM_CUSTOMER.TYPE,
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
-            USER_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -110,19 +110,6 @@ export default {
     },
     watch: {},
     computed: {
-        tableColumns() {
-            let columns = [
-                {title: this.$t('e.name'), dataIndex: ['account', 'name'], key: 'item'},
-                {title: this.$t('e.account'), dataIndex: ['account', 'username'], key: 'item'},
-                {title: this.$t('n.phone'), dataIndex: ['account', 'phone']},
-                {title: this.$t('n.email'), dataIndex: ['account', 'email']},
-                {title: this.$t('n.type'), dataIndex: 'type'},
-                {title: this.$t('e.login_time'), dataIndex: ['account', 'last_login_time'], key: 'time'},
-                {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
-                {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
-            ]
-            return columns
-        },
         lang() {
             return this.$store.state.lang
         }
@@ -132,25 +119,14 @@ export default {
     },
     methods: {
         // 点击添加
-        clickAdd() {},
+        clickAdd() {
+
+        },
         // 点击编辑
         clickEidt() {},
         // 点击搜索
         clickSearch(key) {
             console.log('click search >>', key);
-        },
-        handleManagerChange(record){
-            this.loading = true;
-            Core.Api.User.setAdmin({
-                id: record.id,
-                flag_admin: record.flag_admin ? 0 : 1
-            }).then(() => {
-                this.getTableData();
-            }).catch(err => {
-                console.log('handleManagerChange err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
         },
         routerChange(type, item = {}) {
             console.log(item)
@@ -191,7 +167,6 @@ export default {
             Core.Api.CRMTrackMember.list({
                 target_id: this.targetId,
                 target_type: this.targetType,
-                user_id: this.userId,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -221,16 +196,9 @@ export default {
                 },
             });
         },
-        handleUserRole(item) {
-            console.log(item)
-            this.userId = item.id;
-            this.userDetail = item;
-            this.userRoleShow = true;
-        },
-        handleRoleClose() {
-            this.userId = '';
-            this.userDetail = '';
-            this.userRoleShow = false;
+        // 添加商品
+        handleGroupShow(ids, items) {
+
         },
     }
 };

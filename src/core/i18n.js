@@ -1082,6 +1082,8 @@ const messages = {
 		    detail: '客户详情',
 		    level: '客户级别',
 		    type: '客户类型',
+		    name: '名称',
+		    phone: '电话',
 		    gender: '性别',
 		    birthday: '生日',
 		    industry: '行业',
@@ -1111,6 +1113,8 @@ const messages = {
 		    obtain_success: '领取成功',
 		    distribute_customer: '分配客户',
 		    select: '请选择',
+		    team_members: '团队成员',
+		    dynamic: '动态',
 	    },
 	    crm_t: {
         	add_track_record: '添加跟进记录',
@@ -1124,6 +1128,7 @@ const messages = {
 		    contact_customer:'联系人',
 	    },
 	    crm_b: {
+        	bo: '商机',
             detail: '商机详情',
         	save: '新建商机',
 			list: '商机列表',

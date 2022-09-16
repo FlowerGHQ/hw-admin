@@ -46,7 +46,15 @@ export default {
     props: {
         detail:{
             type: Object,
-        }
+        },
+        targetId: {
+            type: Number,
+            default: 0
+        },
+        targetType: {
+            type: Number,
+            default: 0
+        },
 
     },
     data() {
@@ -141,7 +149,6 @@ export default {
             Core.Api.CRMTrackMember.list({
                 target_id: this.targetId,
                 target_type: this.targetType,
-                user_id: this.userId,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
