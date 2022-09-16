@@ -1495,6 +1495,7 @@ const routes = [
 				meta: {
 					title: '公海客户',
 					title_en: 'Community Customer list',
+					type: 'high_seas'
 					// auth: ["crm-community-customer.list"],
 				}
 			},

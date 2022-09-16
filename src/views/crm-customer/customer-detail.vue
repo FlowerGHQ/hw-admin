@@ -32,14 +32,16 @@
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                        <a-button @click="TrackRecordShow = true">写跟进</a-button>
-                        <a-button>编辑</a-button>
-                        <a-button>新建联系人</a-button>
+                        <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>
+                        <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
+                        <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :addCustomerBtn="true"/>
                         <a-button>新建商机</a-button>
                         <a-button>新建订单</a-button>
-                        <a-button>移交</a-button>
-                        <a-button>退回</a-button>
-                        <a-button>删除</a-button>
+                        <a-button type="primary" @click="handleBatch('distribute')">{{ $t('crm_c.distribute') }}</a-button>
+                        <a-button type="primary" @click="handleBatch('transfer')">{{ $t('crm_c.transfer') }}</a-button>
+                        <a-button type="primary" @click="handleObtain">{{ $t('crm_c.obtain') }}</a-button>
+                        <a-button type="danger" @click="handleReturnPool">{{ $t('crm_c.return_pool') }}</a-button>
+                        <a-button type="danger" @click="handleDelete">{{ $t('crm_c.delete') }}</a-button>
                     </a-col>
                 </a-row>
             </div>
@@ -52,7 +54,7 @@
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
-                            <Contact :detail="detail"/>
+                            <Contact :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :detail="detail"/>
                             <Bo :detail="detail"/>
                             <Bo :detail="detail"/>
                         </a-tab-pane>
@@ -62,10 +64,10 @@
             <a-col :xs='24' :sm='24' :lg='8' >
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="activeKey">
-                        <a-tab-pane key="CustomerSituation" :tab="$t('d.manage_employees')">
-                            <Group :detail="detail"/>
+                        <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.team_members')">
+                            <Group :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :detail="detail"/>
                         </a-tab-pane>
-                        <a-tab-pane key="InformationInfo" :tab="$t('d.manage_employees')">
+                        <a-tab-pane key="InformationInfo" :tab="$t('crm_c.dynamic')">
                             <TrackRecord :detail="detail"/>
                         </a-tab-pane>
                     </a-tabs>
@@ -162,6 +164,31 @@
                 <a-button @click="handleTrackRecordClose">{{ $t('def.cancel') }}</a-button>
             </template>
         </a-modal>
+        <a-modal v-model:visible="batchShow" :title="$t('crm_c.distribute_customer')" :after-close='handleBatchClose'>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_b.own_user_name') }}：</div>
+                <div class="value">
+                    <a-select
+                        v-model:value="batchForm.own_user_id"
+                        show-search
+                        :placeholder="$t('def.input')+$t('n.warehouse')"
+                        :default-active-first-option="false"
+                        :show-arrow="false"
+                        :filter-option="false"
+                        :not-found-content="null"
+                        @search="getUserData"
+                    >
+                        <a-select-option v-for=" item in userData" :key="item.id" :value="item.id">
+                            {{ item.account ? item.account.name : '-' }}
+                        </a-select-option>
+                    </a-select>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handleBatchSubmit" type="primary">{{ $t('def.ok') }}</a-button>
+                <a-button @click="handleBatchClose">{{ $t('def.cancel') }}</a-button>
+            </template>
+        </a-modal>
     </div>
 </template>
 
@@ -173,17 +200,18 @@ import Bo from './components/Bo.vue';
 import Group from './components/Group.vue';
 import TrackRecord from './components/TrackRecord.vue';
 import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
-
+import FollowUpShow from '@/components/crm/popup-btn/FollowUpShow.vue';
 
 import dayjs from "dayjs";
 import {get} from "lodash";
 
 export default {
     name: 'CustomerEdit',
-    components: { CustomerSelect, Contact, Bo, Group, TrackRecord, CustomerSituation},
+    components: { CustomerSelect, FollowUpShow, Contact, Bo, Group, TrackRecord, CustomerSituation},
     props: {},
     data() {
         return {
+            Core,
             TYPE_MAP: Core.Const.CRM_TRACK_RECORD.TYPE_MAP,
             INTENT_MAP: Core.Const.CRM_TRACK_RECORD.INTENT_MAP,
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
@@ -201,7 +229,11 @@ export default {
                 intent: "",
                 next_track_time: undefined,
             },
-
+            batchForm: {
+                own_user_id: '',
+            },
+            batchShow: false,
+            userData: [],
             upload: { // 上传图片
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
                 coverList: [],
@@ -241,10 +273,18 @@ export default {
     },
     methods: {
         routerChange(type, item) {
+            let routeUrl = ""
             switch (type) {
-                case 'back':    // 详情
-                    let routeUrl = this.$router.resolve({
+                case 'back':    // 返回
+                    routeUrl = this.$router.resolve({
                         path: "/crm-customer/customer-list",
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'edit':  // 修改
+                    routeUrl = this.$router.resolve({
+                        path: "/crm-customer/customer-edit",
+                        query: { id: this.detail.id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -347,9 +387,119 @@ export default {
         },
         // 添加商品
         handleAddCustomerShow(ids, items) {
-            this.trackRecordForm.contact_customer_id = items[0].id
-            this.trackRecordForm.contact_customer_name = items[0].name
+            this.trackRecordForm.contact_customer_id = items
+            Core.Api.CrmContactBind.batchSave({
+                target_id: this.detail.id,
+                target_type: Core.Const.CRM_CONTACT_BIND.TARGET_TYPE.CUSTOMER,
+                contact_customer_ids: ids,
+            }).then(() => {
+                this.$message.success(this.$t('pop_up.delete_success'));
+            }).catch(err => {
+                console.log("handleDelete err", err);
+            })
 
+        },
+        handleBatch(type) {
+            this.batchShow = true;
+            this.batchType = type
+        },
+        handleBatchClose() {
+
+            this.batchShow = false;
+            this.batchType = '';
+        },
+        handleBatchSubmit() {
+            if (this.batchForm.own_user_id) {
+                return this.$message.warning(this.$t('crm_c.select'))
+            }
+            switch (this.batchType){
+                case "distribute":
+                    Core.Api.CRMCustomer.batchDistribute({
+                        id: this.detail.id,
+                        own_user_id: this.batchForm.own_user_id,
+                    }).then(() => {
+                        this.$message.success(_this.$t('pop_up.delete_success'));
+                        this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                    break;
+                case "transfer":
+                    Core.Api.CRMCustomer.batchTransfer({
+                        id: this.detail.id,
+                        own_user_id: this.batchForm.own_user_id,
+                    }).then(() => {
+                        this.$message.success(_this.$t('pop_up.delete_success'));
+                        this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                    break;
+            }
+        },
+        getUserData(query){
+            this.loading = true;
+            Core.Api.User.list({
+                name: query
+            }).then(res => {
+                console.log("getTableData res:", res)
+                this.userData = res.list;
+            }).catch(err => {
+                console.log('getTableData err:', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        handleDelete() {
+            let _this = this;
+            this.$confirm({
+                title: this.$t('pop_up.sure_delete'),
+                okText: this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.CRMCustomer.delete({id: _this.detail.id}).then(() => {
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
+        handleObtain() {
+            let _this = this;
+            this.$confirm({
+                title: this.$t('crm_c.sure_obtain'),
+                okText: this.$t('def.sure'),
+                okType: 'primary',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.CRMCustomer.obtain({id: _this.detail.id}).then(() => {
+                        _this.$message.success(_this.$t('crm_c.obtain_success'));
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
+        handleReturnPool() {
+            let _this = this;
+            this.$confirm({
+                title: this.$t('crm_c.sure_return_pool'),
+                okText: this.$t('def.sure'),
+                okType: 'primary',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.CRMCustomer.returnPool({id: _this.detail.id}).then(() => {
+                        _this.$message.success(_this.$t('crm_c.return_pool_success'));
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
         },
     }
 };
