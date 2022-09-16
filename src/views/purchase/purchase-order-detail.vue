@@ -14,6 +14,7 @@
                 </template>
 
                 <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status !== STATUS.REVISE_AUDIT">
+                    <a-button type="primary" @click="handleExport" v-if="$auth('ADMIN')"><i class="icon i_download"/>{{$t('def.export_as_supplier_report')}}</a-button>
 
                     <!-- <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.confirm_payment')}}</a-button>-->
                     <!-- <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && (detail.type !== TYPE. || PAYMENT_STATUS.PAY_ALL)" @click="handleModalShow('deliver')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.ship')}}</a-button>-->
@@ -486,6 +487,7 @@ import AuditHandle from '@/components/popup-btn/AuditHandle.vue';
 import ActionLog from '../repair/components/ActionLog.vue';
 
 import EditItem from './components/EditItem.vue';
+import {message} from "ant-design-vue";
 
 
 const PURCHASE = Core.Const.PURCHASE;
@@ -1316,6 +1318,28 @@ export default {
                     })
                 },
             });
+        },
+        // 以销售报表导出
+        handleExport() {
+
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('p.sure_export'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
+                onOk() {
+                    _this.handleExportAccessoriesOrder();
+                }
+            })
+        },
+        handleExportAccessoriesOrder() { // 订单导出
+            this.exportDisabled = true;
+            let exportUrl = Core.Api.Export.exportAccessoriesOrder({
+                id: this.detail.id
+            })
+            console.log("handleRepairExport _exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
         },
 
     }
