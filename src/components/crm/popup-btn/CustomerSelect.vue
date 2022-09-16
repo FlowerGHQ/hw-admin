@@ -5,6 +5,7 @@
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'
         class="ItemSelectModal">
         <div class="modal-content">
+            <CustomerAdd :targetId="targetId" :targetType="targetType" v-if="addCustomerBtn"/>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
@@ -26,14 +27,14 @@
                 </div>
             </div>
             <div class="table-container">
-                <ItemTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :showStock='!!warehouseId'
+                <CustomerTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow"
                     :check-mode='true' :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode'/>
             </div>
         </div>
         <template #footer>
             <div class="modal-footer">
                 <div class="paging-area">
-                    <a-pagination v-if="!purchaseId"
+                    <a-pagination
                         show-less-items
                         :hide-on-single-page='false'
                         :total="total"
@@ -57,13 +58,14 @@
 <script>
 import Core from '@/core';
 
-import ItemTable from '@/components/table/ItemTable.vue'
-import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue'
+import CustomerTable from '@/components/table/CustomerTable.vue'
+import CustomerAdd from '@/components/crm/popup-btn/CustomerAdd.vue';
+
 
 export default {
     components: {
-        ItemTable,
-        CategoryTreeSelect,
+        CustomerTable,
+        CustomerAdd,
     },
     emits: ['select', 'option'],
     props: {
@@ -93,13 +95,23 @@ export default {
                 return []
             }
         },
-        warehouseId: {
+        targetId: {
             type: Number,
             default: 0
         },
+        targetType: {
+            type: Number,
+            default: 0
+        },
+        addCustomerBtn: {
+            type: Boolean,
+            default: false,
+        },
+
     },
     data() {
         return {
+            Core,
             loading: false,
             modalShow: false,
 

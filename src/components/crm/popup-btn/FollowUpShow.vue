@@ -100,7 +100,7 @@
 import Core from '../../../core'
 import dayjs from "dayjs";
 import {get} from "lodash";
-import CustomerSelect from '@/components/popup-btn/CustomerSelect.vue';
+import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
 
 const WAYBILL = Core.Const.WAYBILL
 

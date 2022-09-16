@@ -2,9 +2,6 @@
     <div id="CustomerEdit" class="edit-container">
         <div class="title-container">
                 <div class="title-area">{{  $t('crm_b.detail')  }}
-                <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>
-                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}
-                </a-tag>
             </div>
         </div>
         <div class="gray-panel">
@@ -16,29 +13,28 @@
                 </div>
                 <a-row class="desc-detail">
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('crm_c.level') }}：</span>
-                        <span class="value">{{ $Util.CRMCustomerLevelFilter(detail.level, $i18n.locale) || '-'  }}</span>
+                        <span class="key">{{ $t('crm_b.customer_name') }}：</span>
+                        <span class="value">{{detail.customer_name}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('crm_c.type') }}：</span>
-                        <span class="value">{{ $Util.CRMCustomerTypeFilter(detail.type, $i18n.locale) || '-'  }}</span>
+                        <span class="key">{{ $t('crm_b.money') }}：</span>
+                        <span class="value">{{detail.money}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('n.phone') }}：</span>
-                        <span class="value">{{detail.phone}}</span>
+                        <span class="key">{{ $t('crm_b.estimated_deal_time') }}：</span>
+                        <span class="value">{{$Util.timeFilter(detail.estimated_deal_time)}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('n.time') }}：</span>
-                        <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
+                        <span class="key">{{ $t('crm_b.customer_name') }}：</span>
+                        <span class="value">{{detail.customer_name}}</span>
                     </a-col>
+
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                         <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>
                         <a-button @click="routerChange('edit')">编辑</a-button>
-                        <a-button>新建联系人</a-button>
-                        <CustomerAdd :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>
+                        <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :addCustomerBtn="true"/>
                         <a-button>新建订单</a-button>
                         <a-button>移交</a-button>
-                        <a-button>退回</a-button>
                         <a-button>删除</a-button>
                     </a-col>
                 </a-row>
@@ -86,13 +82,14 @@ import Bo from './components/Bo.vue';
 import TrackRecord from './components/TrackRecord.vue';
 import FollowUpShow from '@/components/crm/popup-btn/FollowUpShow.vue';
 import CustomerAdd from '@/components/crm/popup-btn/CustomerAdd.vue';
+import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
 import MySteps from "@/components/common/MySteps.vue"
 import dayjs from "dayjs";
 import {get} from "lodash";
 
 export default {
     name: 'CustomerEdit',
-    components: { FollowUpShow, CustomerAdd, MySteps, Contact, Bo, TrackRecord, CustomerSituation},
+    components: { FollowUpShow, CustomerAdd, CustomerSelect, MySteps, Contact, Bo, TrackRecord, CustomerSituation},
     props: {},
     data() {
         return {
@@ -194,84 +191,8 @@ export default {
                 this.loading = false;
             });
         },
-        handleTrackRecordSubmit() {
-            let form = Core.Util.deepCopy(this.trackRecordForm)
-            let track_time = form.track_time
-            if (typeof track_time === 'string') {
-                track_time = dayjs(form.track_time).unix()
-            }
-            let next_track_time = form.next_track_time
-            if (typeof next_track_time === 'string') {
-                next_track_time = dayjs(form.next_track_time).unix()
-            }
-            Core.Api.CRMTrackRecord.save({
-                target_id: this.detail.id,
-                target_type: Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER,
-                type: form.type,
-                content: form.content,
-                contact_customer_id: form.contact_customer_id,
-                track_time: track_time,
-                intent: form.intent,
-                next_track_time: next_track_time,
-            }).then(() => {
-                this.$message.success(this.$t('pop_up.save_success'))
-                this.handleTrackRecordClose();
-            }).catch(err => {
-                console.log('handleSubmit err:', err)
-            })
-        },
-        handleTrackRecordClose(){
-            this.TrackRecordShow = false;
-            Object.assign(this.trackRecordForm, this.$options.data().trackRecordForm)
-        },
-        // 校验图片
-        handleImgCheck(file) {
-            const isCanUpType = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'].includes(file.type)
-            if (!isCanUpType) {
-                this.$message.warning(this.$t('n.file_incorrect'));
-            }
-            const isLt10M = (file.size / 1024 / 1024) < 10;
-            if (!isLt10M) {
-                this.$message.warning(this.$t('n.picture_smaller'));
-            }
-
-            // this.loadImage(TEST_IMAGE);
-            // return false;
-            return isCanUpType && isLt10M;
-        },
-        // 上传图片
-        handleCoverChange({ file, fileList }) {
-            if (file.status == 'done') {
-                if (file.response && file.response.code > 0) {
-                    return this.$message.error(file.response.message)
-                }
-                this.shortPath = get(fileList,'[0].response.data.filename', null);
-                if(this.shortPath) {
-                    this.form.img = this.shortPath;
-                    // this.loadImage(this.detailImageUrl);
-                }
-            }
-            this.upload.coverList = fileList;
-        },
-        // 上传文件
-        handleFileChange({file, fileList}) {
-            console.log("handleCoverChange status:", file.status, "file:", file)
-            if (file.status == 'done') {
-                if (file.response && file.response.code > 0) {
-                    return this.$message.error(file.response.message)
-                }
-                this.form.path = file.response.data.filename
-                this.form.type = this.form.path.split('.').pop()
-                if (this.form.path){
-                    this.submitDisabled = false
-                }
-            }
-            this.upload.fileList = fileList
-        },
-        // 添加商品
+        // 添加联系人
         handleAddCustomerShow(ids, items) {
-            this.trackRecordForm.contact_customer_id = items[0].id
-            this.trackRecordForm.contact_customer_name = items[0].name
 
         },
         getGroupStatusDetail() {    // 获取 表格 数据

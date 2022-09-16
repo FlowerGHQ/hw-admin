@@ -150,14 +150,14 @@ export default {
             type: Boolean,
             default: false,
         },
-        warehouseId: {
+        targetId: {
             type: Number,
             default: 0
         },
-        purchaseId: {
+        targetType: {
             type: Number,
             default: 0
-        }
+        },
     },
     data() {
         return {
@@ -292,7 +292,8 @@ export default {
             // }
             Core.Api.CRMCustomer.save({
                 ...form,
-                own_customer_id: this.detail.id,
+                target_id: this.targetId,
+                target_type: this.targetType,
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')

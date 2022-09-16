@@ -171,7 +171,7 @@ import Contact from './components/Contact.vue';
 import CustomerSituation from './components/CustomerSituation.vue';
 import Bo from './components/Bo.vue';
 import TrackRecord from './components/TrackRecord.vue';
-import CustomerSelect from '@/components/popup-btn/CustomerSelect.vue';
+import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
 
 
 import dayjs from "dayjs";
