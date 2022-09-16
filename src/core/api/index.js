@@ -591,6 +591,11 @@ const apiList = {
 		distribute: ['PostJson', 'crm-customer/distribute'],//
 		returnPool: ['PostJson', 'crm-customer/return-pool'],//
 		transfer: ['PostJson', 'crm-customer/transfer'],//
+		batchDelete: ['PostJson', 'crm-customer/batch-delete'],
+		batchObtain: ['PostJson', 'crm-customer/batch-obtain'],
+		batchDistribute: ['PostJson', 'crm-customer/batch-distribute'],
+		batchReturnPool: ['PostJson', 'crm-customer/batch-return-pool'],
+		batchTransfer: ['PostJson', 'crm-customer/batch-transfer'],
 	},
 	CRMTrackMember:{//CRM 团队
 		save: ['PostJson', 'crm-track-member/save'],//

@@ -39,8 +39,13 @@
                     <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
+            <div class="operate-container">
+                <a-button type="primary" @click="handleBatchObtain">{{ $t('crm_c.obtain') }}</a-button>
+                <a-button type="primary" @click="handleBatchDistribute">{{ $t('crm_c.distribute') }}</a-button>
+                <a-button type="danger" @click="handleBatchDelete">{{ $t('crm_c.delete') }}</a-button>
+            </div>
             <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' @change="getTableDataSorter">
+                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' :row-selection="rowSelection" @change="getTableDataSorter">
                     <template #headerCell="{title}">
                         {{ $t(title) }}
                     </template>
@@ -77,6 +82,11 @@
                 </a-table>
             </div>
             <div class="paging-container">
+                <div class="tip">
+                    {{ $t('in.selected') + ` ${this.selectedRowItems.length} ` + $t('in.total')}}
+                </div>
+            </div>
+            <div class="paging-container">
                 <a-pagination
                     v-model:current="currPage"
                     :page-size='pageSize'
@@ -90,14 +100,33 @@
                     @change="pageChange"
                     @showSizeChange="pageSizeChange"
                 />
+
             </div>
         </div>
+        <a-modal v-model:visible="batchDistributeShow" :title="$t('crm_t.add_track_record')" :after-close='handleBatchDistributeClose'>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_t.type') }}：</div>
+                <div class="value">
+                    <a-select v-model:value="batchDistributeForm.own_user_id" :placeholder="$t('def.input')">
+                        <a-select-option v-for="item of TYPE_MAP" :key="item.value" :value="item.value">{{ lang === 'zh' ? item.zh: item.en }}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
+
+
+
+            <template #footer>
+                <a-button @click="handleBatchDistributeSubmit" type="primary">{{ $t('def.ok') }}</a-button>
+                <a-button @click="handleBatchDistributeClose">{{ $t('def.cancel') }}</a-button>
+            </template>
+        </a-modal>
     </div>
 </template>
 
 <script>
 import Core from '../../core';
 import TimeSearch from '../../components/common/TimeSearch.vue'
+
 
 export default {
     name: 'CustomerList',
@@ -107,6 +136,7 @@ export default {
     props: {},
     data() {
         return {
+
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -115,6 +145,7 @@ export default {
             pageSize: 20,
 
             CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
+            CRM_STATUS: Core.Const.CRM_CUSTOMER.STATUS,
             total: 0,
             orderByFields: {},
             // 搜索
@@ -124,12 +155,31 @@ export default {
                 begin_time: '',
                 end_time: '',
                 type: '',
+                status: '',
+            },
+            batchDistributeForm: {
+                own_user_id: '',
             },
             // 表格
             tableData: [],
+            operMode: '',
+            selectedRowKeys: [],
+            selectedRowItems: [],
+            selectedRowItemsAll: [],
+            batchDistributeShow: false,
         };
     },
-    watch: {},
+    watch: {
+        $route: {
+            deep: true,
+            immediate: true,
+            handler(newRoute) {
+                let type = newRoute.meta ? newRoute.meta.type : ''
+                this.operMode = type
+                this.handleSearchReset(false);
+            }
+        },
+    },
     computed: {
         tableColumns() {
             let columns = [
@@ -145,6 +195,25 @@ export default {
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
             return columns
+        },
+        rowSelection() {
+            return {
+                type: 'checkbox',
+                selectedRowKeys: this.selectedRowKeys,
+                preserveSelectedRowKeys: true,
+                onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
+                    this.selectedRowKeys = selectedRowKeys
+                    this.selectedRowItemsAll.push(...selectedRows)
+                    let selectedRowItems = []
+                    selectedRowKeys.forEach(id => {
+                        let element = this.selectedRowItemsAll.find(i => i.id == id)
+                        selectedRowItems.push(element)
+                    });
+                    this.selectedRowItems = selectedRowItems
+                    console.log('rowSelection this.selectedRowKeys:', this.selectedRowKeys,'selectedRowItems:', selectedRowItems)
+                    // this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
+                },
+            };
         },
     },
     mounted() {
@@ -190,7 +259,10 @@ export default {
         },
         handleSearchReset() {    // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.$refs.TimeSearch.handleReset()
+            if (this.operMode === 'private' ) {
+                this.searchForm.status = this.CRM_STATUS.CUSTOMER
+            }
+            // this.$refs.TimeSearch.handleReset()
             this.orderByFields = {}
             this.pageChange(1);
         },
@@ -232,7 +304,7 @@ export default {
                 cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Customer.delete({id}).then(() => {
-                        _this.$message.success(_this.$t('pop_up.delete_success')),
+                        _this.$message.success(_this.$t('pop_up.delete_success'))
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);
@@ -240,10 +312,87 @@ export default {
                 },
             });
         },
+        getUserData(){
+            this.loading = true;
+            Core.Api.Account.list({
+                ...this.searchForm,
+                page_size: this.pageSize
+            }).then(res => {
+                console.log("getTableData res:", res)
+                this.userData = res.list;
+            }).catch(err => {
+                console.log('getTableData err:', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        handleBatchDelete() {
+            let _this = this;
+            this.$confirm({
+                title: this.$t('pop_up.sure_delete'),
+                okText: this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.CRMCustomer.delete({id_list: _this.selectedRowKeys}).then(() => {
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
+                            _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
+        handleBatchObtain() {
+            let _this = this;
+            this.$confirm({
+                title: this.$t('pop_up.sure_delete'),
+                okText: this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.CRMCustomer.batchObtain({id_list: _this.selectedRowKeys}).then(() => {
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
+        handleBatchDistribute() {
+            this.batchDistributeShow = true;
+            // let _this = this;
+            // this.$confirm({
+            //     title: this.$t('pop_up.sure_delete'),
+            //     okText: this.$t('def.sure'),
+            //     okType: 'danger',
+            //     cancelText: this.$t('def.cancel'),
+            //     onOk() {
+            //         Core.Api.CRMCustomer.batchDistribute({id_list: _this.selectedRowKeys}).then(() => {
+            //             _this.$message.success(_this.$t('pop_up.delete_success'));
+            //                 _this.getTableData();
+            //         }).catch(err => {
+            //             console.log("handleDelete err", err);
+            //         })
+            //     },
+            // });
+        },
+        handleBatchDistributeClose() {
+            this.batchDistributeShow = false;
+        },
+        handleBatchDistributeSubmit() {
+            Core.Api.CRMCustomer.batchDistribute({id_list: _this.selectedRowKeys}).then(() => {
+                this.$message.success(_this.$t('pop_up.delete_success'));
+                this.getTableData();
+            }).catch(err => {
+                console.log("handleDelete err", err);
+            })
+        }
+
     }
 };
 </script>
 
 <style lang="less" scoped>
-// #CustomerList {}
 </style>

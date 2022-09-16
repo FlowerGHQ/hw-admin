@@ -1373,6 +1373,12 @@ let Const = {
 			'1': { key: 1, zh: '个人客户',en: 'Individual customers', value: 1 },
 			'2': { key: 2, zh: '单位客户',en: 'Unit of the customer', value: 2 },
 		},
+		STATUS: {
+			POOL: 10,
+			CUSTOMER: 20,
+			INVALID: 30,
+			NOT_YET_A_CUSTOMER: 40,
+		},
 		LEVEL_MAP: {
 			'10': { key: 10, zh: '重点客户',en: 'Important customer', value: 10 },
 			'20': { key: 20, zh: '普通客户',en: 'Ordinary customer', value: 20 },
