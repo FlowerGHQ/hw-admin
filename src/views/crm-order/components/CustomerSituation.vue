@@ -4,26 +4,26 @@
         <div class="title">{{ $t('crm_c.summary_information') }}</div>
     </div>
     <div class="panel-content">
-        <a-descriptions title="基本信息" bordered :column="2" size="small">
-            <a-descriptions-item :label="$t('n.name')">{{detail.name}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.level')">{{detail.level}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('n.source')">{{detail.source}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.industry')">{{detail.industry}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.track_status')">{{detail.track_status}}</a-descriptions-item>
+        <a-descriptions title="基本信息" bordered :column="2" size="small" class="pannel">
+            <a-descriptions-item :label="$t('n.name')" class="label">{{detail.name}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.level')" class="label">{{detail.level}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('n.source')" class="label">{{detail.source}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.industry')" class="label">{{detail.industry}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.track_status')" class="label">{{detail.track_status}}</a-descriptions-item>
         </a-descriptions>
-        <a-descriptions title="客户信息" bordered :column="2" size="small">
-            <a-descriptions-item :label="$t('crm_c.gender')">{{detail.gender}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.birthday')">{{detail.birthday}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.hobby')">{{detail.hobby}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.marital_status')">{{detail.marital_status}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.income')">{{detail.income}}</a-descriptions-item>
+        <a-descriptions title="客户信息" bordered :column="2" size="small" class="pannel">
+            <a-descriptions-item :label="$t('crm_c.gender')" class="label">{{detail.gender}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.birthday')" class="label">{{detail.birthday}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.hobby')" class="label">{{detail.hobby}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.marital_status')" class="label">{{detail.marital_status}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.income')" class="label">{{detail.income}}</a-descriptions-item>
 
         </a-descriptions>
-        <a-descriptions title="数据权限" bordered :column="2" size="small">
-            <a-descriptions-item :label="$t('crm_c.create_user')">{{detail.create_user_name}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.create_time')">{{$Util.timeFilter(detail.create_time) || '-'}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.update_user')">{{detail.update_user_name}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.update_time')">{{$Util.timeFilter(detail.update_time) || '-'}}</a-descriptions-item>
+        <a-descriptions title="数据权限" bordered :column="2" size="small" class="pannel">
+            <a-descriptions-item :label="$t('crm_c.create_user')" class="label">{{detail.create_user_name}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.create_time')" class="label">{{$Util.timeFilter(detail.create_time) || '-'}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.update_user')" class="label">{{detail.update_user_name}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.update_time')" class="label">{{$Util.timeFilter(detail.update_time) || '-'}}</a-descriptions-item>
 
         </a-descriptions>
         <a-modal v-model:visible="userRoleShow" :title="$t('p.confirm_payment')" :after-close='handleRoleClose'>
@@ -186,6 +186,16 @@ export default {
 };
 </script>
 
+<style lang="less">
+.panel-content {
+    .pannel {
+        margin-bottom: 40px;
+    }
+    .label {
+        width: 10%;
+    }
+}
+</style>
 <style lang="less" scoped>
 .InformationInfo {
     .table-container {
@@ -200,6 +210,5 @@ export default {
     td.ant-descriptions-item-content {
         width: 25%;
     }
-
 }
 </style>

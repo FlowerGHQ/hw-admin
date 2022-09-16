@@ -839,9 +839,20 @@ const Util = {
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
-
-
 	/* =============== CRM客户管理 ================ */
+
+	/* =============== CRM订单管理 ================ */
+	CRMOrderTypeFilter(val,  to='zh') {
+		const MAP = Const.CRM_ORDER.TYPE_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	CRMOrderStatusFilter(val,  to='zh') {
+		const MAP = Const.CRM_ORDER.STATUS_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	/* =============== CRM订单管理 ================ */
 
 
 }

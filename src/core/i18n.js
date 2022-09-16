@@ -1147,10 +1147,10 @@ const messages = {
 		    name: '合同名称',
 		    customer_name: "客户名称",
 		    own_user_name: "负责人",
-		    status: '合同阶段',
+		    status: '合同状态',
 		    collection_schedule: '回款进度',
 		    create_user: '创建人',
-		    paid_money:'回款进度',
+		    paid_money_progress:'回款进度',
 		    belone_customer: '所属客户',
 		    contract_no: '合同编号',
 		    signing_date: '签约日期',
@@ -1158,6 +1158,7 @@ const messages = {
 		    contract_type: '合同类型',
 		    buyer_signatory: '客户方签约人',
 		    remark: '备注',
+		    money: '合同金额',
 	    },
 	    authority: {
         	title: {

@@ -1,7 +1,7 @@
 <template>
-    <div id="CustomerEdit" class="edit-container">
+    <div id="OrderDetail" class="edit-container">
         <div class="title-container">
-                <div class="title-area">{{  $t('crm_c.detail')  }}
+                <div class="title-area">{{  $t('crm_o.detail')  }}
                 <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>
                     {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}
                 </a-tag>
@@ -16,35 +16,35 @@
                 </div>
                 <a-row class="desc-detail">
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('crm_c.level') }}：</span>
-                        <span class="value">{{ $Util.CRMCustomerLevelFilter(detail.level, $i18n.locale) || '-'  }}</span>
+                        <span class="key">{{ $t('crm_o.customer_name') }}：</span>
+                        <span class="value">{{ detail.customer_name || '-'   || '-'  }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('crm_c.type') }}：</span>
-                        <span class="value">{{ $Util.CRMCustomerTypeFilter(detail.type, $i18n.locale) || '-'  }}</span>
+                        <span class="key">{{ $t('crm_o.contract_no') }}：</span>
+                        <span class="value">{{ detail.uid || '-'  }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('n.phone') }}：</span>
-                        <span class="value">{{detail.phone}}</span>
+                        <span class="key">{{ $t('crm_o.money') }}：</span>
+                        <span class="value">{{ detail.money || '-'  }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('n.time') }}：</span>
-                        <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
+                        <span class="key">{{ $t('crm_o.paid_money_progress') }}：</span>
+                        <span class="value">{{ detail.paid_money_progress || '-'  }}</span>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('crm_o.own_user_name') }}：</span>
+                        <span class="value">{{ detail.own_user_name || '-'}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                        <a-button @click="TrackRecordShow = true">写跟进</a-button>
-                        <a-button>编辑</a-button>
-                        <a-button>新建联系人</a-button>
-                        <a-button>新建商机</a-button>
-                        <a-button>新建订单</a-button>
-                        <a-button>移交</a-button>
-                        <a-button>退回</a-button>
+                        <!-- <a-button @click="TrackRecordShow = true">写跟进</a-button> -->
+                        <a-button @click="routerChange("edit")">编辑</a-button>
                         <a-button>删除</a-button>
+                        <a-button>新建回款单</a-button>
                     </a-col>
                 </a-row>
             </div>
         </div>
-        <a-row >
+        <a-row>
             <a-col :xs='24' :sm='24' :lg='16' >
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="activeKey">
@@ -54,7 +54,6 @@
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
                             <Contact :detail="detail"/>
                             <Bo :detail="detail"/>
-                            <Bo :detail="detail"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -63,7 +62,7 @@
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="activeKey">
                         <a-tab-pane key="CustomerSituation" :tab="$t('d.manage_employees')">
-                            <TrackRecord :detail="detail"/>
+                            <Group :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('d.manage_employees')">
                             <TrackRecord :detail="detail"/>
@@ -170,6 +169,7 @@ import Core from '../../core';
 import Contact from './components/Contact.vue';
 import CustomerSituation from './components/CustomerSituation.vue';
 import Bo from './components/Bo.vue';
+import Group from './components/Group.vue';
 import TrackRecord from './components/TrackRecord.vue';
 import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
 
@@ -178,8 +178,8 @@ import dayjs from "dayjs";
 import {get} from "lodash";
 
 export default {
-    name: 'CustomerEdit',
-    components: { CustomerSelect, Contact, Bo, TrackRecord, CustomerSituation},
+    name: 'OrderDetail',
+    components: { CustomerSelect, Contact, Bo, Group, TrackRecord, CustomerSituation},
     props: {},
     data() {
         return {
@@ -195,7 +195,7 @@ export default {
             trackRecordForm: {
                 type: '',
                 content: "",
-                contact_customer_id: '',
+                contact_order_id: '',
                 track_time: undefined,
                 intent: "",
                 next_track_time: undefined,
@@ -235,7 +235,7 @@ export default {
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         if (this.id) {
-            this.getCustomerDetail();
+            this.getOrderDetail();
         }
     },
     methods: {
@@ -243,18 +243,24 @@ export default {
             switch (type) {
                 case 'back':    // 详情
                     let routeUrl = this.$router.resolve({
-                        path: "/crm-customer/customer-list",
+                        path: "/crm-order/order-list",
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'edit':    // 编辑
+                    let routeUrl = this.$router.resolve({
+                        path: "/crm-order/order-list",
                     })
                     window.open(routeUrl.href, '_self')
                     break;
             }
         },
-        getCustomerDetail() {
+        getOrderDetail() {
             this.loading = true;
-            Core.Api.CRMCustomer.detail({
+            Core.Api.CRMOrder.detail({
                 id: this.id,
             }).then(res => {
-                console.log('getCustomerDetail res', res)
+                console.log('getOrderDetail res', res)
                 let d = res.detail
                 this.detail = d
                 this.detail.birthday = this.detail.birthday ? dayjs.unix(this.detail.birthday).format('YYYY-MM-DD') : undefined
@@ -265,7 +271,7 @@ export default {
 
                 // this.defArea = [d.continent || '', d.country || '']
             }).catch(err => {
-                console.log('getCustomerDetail err', err)
+                console.log('getOrderDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
@@ -285,7 +291,7 @@ export default {
                 target_type: Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER,
                 type: form.type,
                 content: form.content,
-                contact_customer_id: form.contact_customer_id,
+                contact_order_id: form.contact_order_id,
                 track_time: track_time,
                 intent: form.intent,
                 next_track_time: next_track_time,
@@ -345,9 +351,9 @@ export default {
             this.upload.fileList = fileList
         },
         // 添加商品
-        handleAddCustomerShow(ids, items) {
-            this.trackRecordForm.contact_customer_id = items[0].id
-            this.trackRecordForm.contact_customer_name = items[0].name
+        handleAddorderShow(ids, items) {
+            this.trackRecordForm.contact_order_id = items[0].id
+            this.trackRecordForm.contact_order_name = items[0].name
 
         },
     }
@@ -355,7 +361,7 @@ export default {
 </script>
 
 <style lang="less">
-.CustomerEdit {
+.OrderDetail {
 
     .icon {
         font-size: 12px;

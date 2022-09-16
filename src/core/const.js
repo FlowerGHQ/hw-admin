@@ -1422,6 +1422,35 @@ let Const = {
 		},
 
 	},
+    CRM_ORDER: {
+		TYPE: {
+            SALES: 10,               // 10产品销售
+            COOPERATION: 20,         // 20业务合作
+            SERVICE: 30,             // 30服务
+            DISTRIBUTE: 40,          // 40代理分销
+            OTHER: 50,               // 50其他
+        },
+		TYPE_MAP: {
+			'10': { key: 10, zh: '产品销售',en: 'Individual customers', value: 10 },
+			'20': { key: 20, zh: '业务合作',en: 'Unit of the customer', value: 20 },
+			'30': { key: 30, zh: '服务',en: 'Unit of the customer', value: 30 },
+			'40': { key: 40, zh: '代理分销',en: 'Unit of the customer', value: 40 },
+			'50': { key: 50, zh: '其他',en: 'Unit of the customer', value: 50 },
+		},
+		STATUS: {
+            WAIT_AUDIT: 20,        // 20待审核
+            REFUSE: 30,            // 30审核拒绝
+            EXECUTING: 40,         // 40执行中
+            FINISH: 50,            // 50已结束
+        },
+		STATUS_MAP: {
+			'10': { key: 10, zh: '初始化',en: 'Individual customers', value: 10 },
+			'20': { key: 20, zh: '待审核',en: 'Individual customers', value: 20 },
+			'30': { key: 30, zh: '审核拒绝',en: 'Unit of the customer', value: 30 },
+			'40': { key: 40, zh: '执行中',en: 'Unit of the customer', value: 40 },
+			'50': { key: 50, zh: '已结束',en: 'Unit of the customer', value: 50 },
+		},
+    },
 	CRM_TRACK_RECORD: {
 		TYPE_MAP: {
 			'10': { key: 10, zh: '上门拜访',en: 'Home visits', value: 10 },

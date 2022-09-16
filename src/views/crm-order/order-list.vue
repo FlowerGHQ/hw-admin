@@ -76,22 +76,14 @@
                         <template v-if="column.key === 'phone'">
                             {{ text || '-' }}
                         </template>
-                        <template v-if="column.key === 'type'">
-                            {{ $Util.CRMOrderTypeFilter(text, $i18n.locale) }}
-                        </template>
-                        <template v-if="column.key === 'level'">
-                            {{ $Util.CRMOrderLevelFilter(text, $i18n.locale) }}
-                        </template>
-                        <template v-if="column.dataIndex === 'address'">
-                            {{ $Util.addressFilter(record, $i18n.locale) }}
-                        </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
+                        <template v-if="column.key === 'util'">
+                            {{ $Util[column.util](text, $i18n.locale) }}
+                        </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('order.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
-                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('order.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('order.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>
+                            <a-button type="link" @click="routerChange('detail', record)"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -155,12 +147,11 @@ export default {
             let columns = [
                 {title: 'crm_o.name', dataIndex: 'name', key:'item', sorter: true},
                 {title: 'crm_o.customer_name', dataIndex: 'customer_name', key:'item', sorter: true},
-                {title: 'crm_o.own_user_name', dataIndex: 'own_user.name', key:'item', sorter: true},
-                // {title: 'crm_o.status', dataIndex: 'status', key:'util', util:'util22', sorter: true},
-                {title: 'crm_o.collection_schedule', dataIndex: 'type', key:'type', sorter: true},
-                // {title: 'crm_o.paid_money', dataIndex: 'paid_money', key:'util', util:'util22', sorter: true},
+                {title: 'crm_o.own_user_name', dataIndex:  "own_user_name", key:'item', sorter: true},
+                {title: 'crm_o.status', dataIndex: 'status', key: 'util', util: 'CRMOrderStatusFilter', sorter: true},
+                {title: 'crm_o.paid_money_progress', dataIndex: 'paid_money_progress', key:'item', sorter: true},
                 {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
-                {title: 'crm_o.create_user', dataIndex: 'create_user.name', key: 'item', sorter: true},
+                {title: 'crm_o.create_user', dataIndex: "create_user_name", key: 'item', sorter: true},
                 {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
@@ -219,12 +210,14 @@ export default {
             Core.Api.CRMOrder.list({
                 ...this.searchForm,
                 order_by_fields: this.orderByFields,
+                search_type: 30,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
                 console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
+                console.log("🚀 ~ file: order-list.vue ~ line 229 ~ getTableData ~ this.tableData", this.tableData)
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {
