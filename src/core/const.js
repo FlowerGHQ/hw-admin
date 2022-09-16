@@ -31,6 +31,9 @@ switch (window.location.hostname) {
     case "192.168.31.224":
         URL_POINT = 'http://192.168.31.224:8889'
         break;
+    case "10.0.0.9":
+        URL_POINT = 'http://10.0.0.9:8889'
+        break;
     case "localhost":
         URL_POINT = 'http://localhost:8889'
         break;

@@ -1590,6 +1590,53 @@ const routes = [
 			},
 		]
 	},
+	{ // 合同订单
+		path: '/crm-order',
+		component: Layout,
+		redirect: '/crm-order/order-list',
+		name: 'CRMOrder',
+		meta: {
+			title: 'CRM合同',
+			title_en: 'CRM Order',
+			icon: 'i_s_customer',
+			// auth: ["crm-customer.list"],
+		},
+		children: [
+			{
+				path: 'order-list',
+				name: 'OrderList',
+				component: () => import('@/views/crm-order/order-list.vue'),
+				meta: {
+					title: '合同列表',
+					title_en: 'Business opportunities list',
+					// auth: ["crm-community-customer.list"],
+				}
+			},
+			{
+				path: 'order-edit',
+				name: 'OrderEdit',
+				component: () => import('@/views/crm-order/order-edit.vue'),
+				meta: {
+					hidden: true,
+					title: '新建合同',
+					parent: '/crm-order/order-list',
+					// auth: ["crm-customer.save"],
+				}
+			},
+			{
+				path: 'order-detail',
+				name: 'OrderDetail',
+				component: () => import('@/views/crm-order/order-detail.vue'),
+				meta: {
+					hidden: true,
+					title: '合同详情',
+					title_en: 'Business opportunities phase',
+					parent: '/crm-order/order-list',
+					// auth: ["crm-community-customer.list"],
+				}
+			},
+		]
+	},
 	{ // 客户管理
 		path: '/crm-setting',
 		component: Layout,
