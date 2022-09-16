@@ -1100,6 +1100,9 @@ const messages = {
 		    update_time: '修改时间',
 		    summary_information:"概括信息",
 		    related: '相关',
+		    obtain: '领取',
+		    distribute: '分配',
+		    delete: '删除',
 	    },
 	    crm_t: {
         	add_track_record: '添加跟进记录',

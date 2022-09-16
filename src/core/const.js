@@ -34,8 +34,9 @@ switch (window.location.hostname) {
     case "10.0.0.9":
         URL_POINT = 'http://10.0.0.9:8889'
         break;
+    case "10.0.0.66":
     case "localhost":
-        URL_POINT = 'http://localhost:8889'
+        URL_POINT = 'http://10.0.0.125:8889'
         break;
     default:
         URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
@@ -1375,6 +1376,12 @@ let Const = {
 		TYPE_MAP: {
 			'1': { key: 1, zh: '个人客户',en: 'Individual customers', value: 1 },
 			'2': { key: 2, zh: '单位客户',en: 'Unit of the customer', value: 2 },
+		},
+		STATUS: {
+			POOL: 10,
+			CUSTOMER: 20,
+			INVALID: 30,
+			NOT_YET_A_CUSTOMER: 40,
 		},
 		LEVEL_MAP: {
 			'10': { key: 10, zh: '重点客户',en: 'Important customer', value: 10 },
