@@ -170,7 +170,6 @@ export default {
             CRM_MARITAL_STATUS_MAP: Core.Const.CRM_CUSTOMER.MARITAL_STATUS_MAP,
             CRM_TYPE: Core.Const.CRM_CUSTOMER.TYPE,
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
-            TYPE_MAP: 1,
             // 加载
             loading: false,
             detail: {},

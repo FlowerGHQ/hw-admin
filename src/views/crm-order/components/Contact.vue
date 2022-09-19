@@ -1,10 +1,11 @@
 <template>
 <div class="InformationInfo gray-panel no-margin">
     <div class="panel-title">
-        <div class="title">{{ $t('crm_b.bo') }}</div>
+        <div class="title">{{ $t('n.information') }}</div>
     </div>
     <div class="panel-content">
         <div>
+            <a-button @click="trackMemberShow = true">新建联系人</a-button>
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                      :row-key="record => record.id" :loading='loading' :pagination='false'>
                 <template #headerCell="{title}">
@@ -35,12 +36,91 @@
             </div>
         </div>
 
+        <a-modal v-model:visible="trackMemberShow" :title="$t('p.confirm_payment')" :after-close='handleRoleClose'>
+            <div class="form-item required">
+                <div class="key">{{ $t('n.name') }}：</div>
+                <div class="value">
+                    <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('n.phone') }}：</div>
+                <div class="value">
+                    <a-input v-model:value="form.phone" :placeholder="$t('def.input')"/>
+                </div>
+            </div>
+            <div class="form-item" >
+                <div class="key">{{ $t('crm_c.gender') }}：</div>
+                <div class="value">
+                    <a-radio-group v-model:value="form.gender">
+                        <a-radio v-for="item in CRM_GENDER_MAP" :value="item.value">
+                            {{lang === 'zh' ? item.zh: item.en}}
+                        </a-radio>
+                    </a-radio-group>
+                </div>
+            </div>
+            <div class="form-item">
+                <div class="key">{{ $t('crm_c.birthday') }}：</div>
+                <div class="value">
+                    <a-date-picker v-model:value="form.birthday" valueFormat='YYYY-MM-DD' :placeholder="$t('def.input')"/>
+                    <!--                        <a-input v-model:value="form.birthday" :placeholder="$t('def.input')"/>-->
+                </div>
+            </div>
+
+            <div class="form-item">
+                <div class="key">{{ $t('crm_c.industry') }}:</div>
+                <div class="value">
+                    <a-select v-model:value="form.industry" :placeholder="$t('def.input')" >
+                        <a-select-option v-for="item of CRM_INDUSTRY_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
+            <div class="form-item" >
+                <div class="key">{{ $t('crm_c.nationality') }}:</div>
+                <div class="value">
+                    <a-input v-model:value="form.nationality" :placeholder="$t('def.input')"/>
+                </div>
+            </div>
+            <div class="form-item" >
+                <div class="key">{{ $t('crm_c.hobby') }}:</div>
+                <div class="value">
+                    <a-input v-model:value="form.hobby" :placeholder="$t('def.input')"/>
+                </div>
+            </div>
+            <div class="form-item" >
+                <div class="key">{{ $t('crm_c.marital_status') }}:</div>
+                <div class="value">
+                    <a-select v-model:value="form.marital_status" :placeholder="$t('def.input')" >
+                        <a-select-option v-for="item of CRM_MARITAL_STATUS_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
+            <div class="form-item" >
+                <div class="key">{{ $t('crm_c.income') }}:</div>
+                <div class="value">
+                    <a-input v-model:value="form.income" :placeholder="$t('def.input')"/>
+                </div>
+            </div>
+
+            <div class="form-item textarea">
+                <div class="key">{{ $t('r.remark') }}</div>
+                <div class="value">
+                    <a-textarea v-model:value="form.remark" :placeholder="$t('r.enter_remark')"
+                                :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
+                    <span class="content-length">{{ form.remark }}/500</span>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handleRoleClose">{{ $t('def.cancel') }}</a-button>
+            </template>
+        </a-modal>
     </div>
 </div>
 </template>
 
 <script>
 import Core from '../../../core';
+const USER_TYPE = Core.Const.USER.TYPE
 
 export default {
     name: 'InformationInfo',
@@ -48,12 +128,20 @@ export default {
     props: {
         detail:{
             type: Object,
-        },
+        }
 
     },
     data() {
         return {
-
+            CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
+            CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
+            CRM_SOURCE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_MAP,
+            CRM_INDUSTRY_MAP: Core.Const.CRM_CUSTOMER.INDUSTRY_MAP,
+            CRM_GENDER_MAP: Core.Const.CRM_CUSTOMER.GENDER_MAP,
+            CRM_MARITAL_STATUS_MAP: Core.Const.CRM_CUSTOMER.MARITAL_STATUS_MAP,
+            CRM_TYPE: Core.Const.CRM_CUSTOMER.TYPE,
+            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
+            USER_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -112,6 +200,19 @@ export default {
         this.getTableData();
     },
     methods: {
+        handleManagerChange(record){
+            this.loading = true;
+            Core.Api.User.setAdmin({
+                id: record.id,
+                flag_admin: record.flag_admin ? 0 : 1
+            }).then(() => {
+                this.getTableData();
+            }).catch(err => {
+                console.log('handleManagerChange err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
         routerChange(type, item = {}) {
             console.log(item)
             let routeUrl = ''
@@ -148,8 +249,10 @@ export default {
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
-            Core.Api.CRMBo.list({
-                customer_id: this.detail.id,
+            Core.Api.CRMCustomer.list({
+                target_id: this.targetId,
+                target_type: this.targetType,
+                user_id: this.userId,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -178,6 +281,17 @@ export default {
                     })
                 },
             });
+        },
+        handleUserRole(item) {
+            console.log(item)
+            this.userId = item.id;
+            this.userDetail = item;
+            this.userRoleShow = true;
+        },
+        handleRoleClose() {
+            this.userId = '';
+            this.userDetail = '';
+            this.userRoleShow = false;
         },
     }
 };

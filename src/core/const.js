@@ -31,8 +31,12 @@ switch (window.location.hostname) {
     case "192.168.31.224":
         URL_POINT = 'http://192.168.31.224:8889'
         break;
+    case "10.0.0.9":
+        URL_POINT = 'http://10.0.0.9:8889'
+        break;
+    case "10.0.0.66":
     case "localhost":
-        URL_POINT = 'http://localhost:8889'
+        URL_POINT = 'http://10.0.0.125:8889'
         break;
     default:
         URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
@@ -1373,6 +1377,12 @@ let Const = {
 			'1': { key: 1, zh: '个人客户',en: 'Individual customers', value: 1 },
 			'2': { key: 2, zh: '单位客户',en: 'Unit of the customer', value: 2 },
 		},
+		STATUS: {
+			POOL: 10,
+			CUSTOMER: 20,
+			INVALID: 30,
+			NOT_YET_A_CUSTOMER: 40,
+		},
 		LEVEL_MAP: {
 			'10': { key: 10, zh: '重点客户',en: 'Important customer', value: 10 },
 			'20': { key: 20, zh: '普通客户',en: 'Ordinary customer', value: 20 },
@@ -1412,6 +1422,35 @@ let Const = {
 		},
 
 	},
+    CRM_ORDER: {
+		TYPE: {
+            SALES: 10,               // 10产品销售
+            COOPERATION: 20,         // 20业务合作
+            SERVICE: 30,             // 30服务
+            DISTRIBUTE: 40,          // 40代理分销
+            OTHER: 50,               // 50其他
+        },
+		TYPE_MAP: {
+			'10': { key: 10, zh: '产品销售',en: 'Individual customers', value: 10 },
+			'20': { key: 20, zh: '业务合作',en: 'Unit of the customer', value: 20 },
+			'30': { key: 30, zh: '服务',en: 'Unit of the customer', value: 30 },
+			'40': { key: 40, zh: '代理分销',en: 'Unit of the customer', value: 40 },
+			'50': { key: 50, zh: '其他',en: 'Unit of the customer', value: 50 },
+		},
+		STATUS: {
+            WAIT_AUDIT: 20,        // 20待审核
+            REFUSE: 30,            // 30审核拒绝
+            EXECUTING: 40,         // 40执行中
+            FINISH: 50,            // 50已结束
+        },
+		STATUS_MAP: {
+			'10': { key: 10, zh: '初始化',en: 'Individual customers', value: 10 },
+			'20': { key: 20, zh: '待审核',en: 'Individual customers', value: 20 },
+			'30': { key: 30, zh: '审核拒绝',en: 'Unit of the customer', value: 30 },
+			'40': { key: 40, zh: '执行中',en: 'Unit of the customer', value: 40 },
+			'50': { key: 50, zh: '已结束',en: 'Unit of the customer', value: 50 },
+		},
+    },
 	CRM_TRACK_RECORD: {
 		TYPE_MAP: {
 			'10': { key: 10, zh: '上门拜访',en: 'Home visits', value: 10 },
@@ -1427,8 +1466,35 @@ let Const = {
 			CUSTOMER: 1,
 			BO: 2,
 		},
-
-
+	},
+	CRM_TRACK_MEMBER: {
+		TARGET_TYPE: {
+			CUSTOMER: 1,
+			BO: 2,
+		},
+	},
+	CRM_BO: {
+		STATUS_MAP: {
+			'10': { key: 10, zh: '上门拜访',en: 'Home visits', value: 10 },
+			'20': { key: 20, zh: '电话沟通',en: 'Telephone communication', value: 20 },
+			'30': { key: 30, zh: '其他',en: 'Other', value: 30 },
+		},
+		SOURCE_MAP: {
+			'1': { key: 1, zh: '新客户',en: 'New customer', value: 1 },
+			'2': { key: 2, zh: '老客户',en: 'Old customer', value: 2 },
+		},
+	},
+    CRM_ITEM_BIND: {
+        SOURCE_TYPE: {
+            BO: 1,
+            ORDER: 2,
+        }
+    },
+	CRM_CONTACT_BIND: {
+		TARGET_TYPE: {
+			CUSTOMER: 1,
+			BO: 2,
+		}
 	},
 };
 

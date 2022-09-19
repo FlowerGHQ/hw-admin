@@ -591,6 +591,27 @@ const apiList = {
 		distribute: ['PostJson', 'crm-customer/distribute'],//
 		returnPool: ['PostJson', 'crm-customer/return-pool'],//
 		transfer: ['PostJson', 'crm-customer/transfer'],//
+		batchDelete: ['PostJson', 'crm-customer/batch-delete'],
+		batchObtain: ['PostJson', 'crm-customer/batch-obtain'],
+		batchDistribute: ['PostJson', 'crm-customer/batch-distribute'],
+		batchReturnPool: ['PostJson', 'crm-customer/batch-return-pool'],
+		batchTransfer: ['PostJson', 'crm-customer/batch-transfer'],
+	},
+	CRMBo:{//CRM 商机
+		save: ['PostJson', 'crm-bo/save'],//
+		list: ['PostJson', 'crm-bo/list'],//
+		delete: ['PostJson', 'crm-bo/delete'],//
+		detail: ['PostJson', 'crm-bo/detail'],//
+	},
+	CRMOrder:{//CRM 合同订单
+		save: ['PostJson', 'crm-order/save'],//
+		list: ['PostJson', 'crm-order/list'],//
+		delete: ['PostJson', 'crm-order/delete'],//
+		detail: ['PostJson', 'crm-order/detail'],//
+		// obtain: ['PostJson', 'crm-order/obtain'],//
+		// distribute: ['PostJson', 'crm-order/distribute'],//
+		// returnPool: ['PostJson', 'crm-order/return-pool'],//
+		// transfer: ['PostJson', 'crm-order/transfer'],//
 	},
 	CRMTrackMember:{//CRM 团队
 		save: ['PostJson', 'crm-track-member/save'],//
@@ -617,7 +638,21 @@ const apiList = {
 		list: ['PostJson', 'crm-item-bind/list'],//列表
 		delete: ['PostJson', 'crm-item-bind/delete'],//删除
 		detail: ['PostJson', 'crm-item-bind/detail'],//详情
-    }
+    },
+
+	CRMBoStatusGroup:{//CRM 阶段
+		save: ['PostJson', 'crm-bo-status-group/save'],//
+		list: ['PostJson', 'crm-bo-status-group/list'],//
+		delete: ['PostJson', 'crm-bo-status-group/delete'],//
+		detail: ['PostJson', 'crm-bo-status-group/detail'],//
+	},
+	CrmContactBind:{//CRM联系人绑定
+		save: ['PostJson', 'crm-contact-bind/save'],//
+		list: ['PostJson', 'crm-contact-bind/list'],//
+		delete: ['PostJson', 'crm-contact-bind/delete'],//
+		detail: ['PostJson', 'crm-contact-bind/detail'],//
+		batchSave: ['PostJson', 'crm-contact-bind/batch-save'],//
+	},
 
 
 };

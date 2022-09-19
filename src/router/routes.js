@@ -1495,6 +1495,18 @@ const routes = [
 				meta: {
 					title: '公海客户',
 					title_en: 'Community Customer list',
+					type: 'high_seas'
+					// auth: ["crm-community-customer.list"],
+				}
+			},
+			{
+				path: 'customer-private-list',
+				name: 'CustomerPrivateList',
+				component: () => import('@/views/crm-customer/customer-list.vue'),
+				meta: {
+					title: '私人客户',
+					title_en: 'Private clients',
+					type: 'private'
 					// auth: ["crm-community-customer.list"],
 				}
 			},
@@ -1597,27 +1609,78 @@ const routes = [
 					// auth: ["crm-customer.save"],
 				}
 			},
-			// {
-			// 	path: 'customer-list',
-			// 	name: 'CustomerList',
-			// 	component: () => import('@/views/crm/customer/customer-list.vue'),
-			// 	meta: {
-			// 		title: '公海客户',
-			// 		title_en: 'Customer list',
-			// 		// auth: ["crm-customer.list"],
-			// 	}
-			// },
-			// {
-			// 	path: 'customer-edit',
-			// 	name: 'CustomerEdit',
-			// 	component: () => import('@/views/crm/customer/customer-edit.vue'),
-			// 	meta: {
-			// 		hidden: true,
-			// 		title: '新建客户',
-			// 		parent: '/customer/customer-list',
-			// 		// auth: ["crm-customer.save"],
-			// 	}
-			// },
+		]
+	},
+	{ // 合同订单
+		path: '/crm-order',
+		component: Layout,
+		redirect: '/crm-order/order-list',
+		name: 'CRMOrder',
+		meta: {
+			title: 'CRM合同',
+			title_en: 'CRM Order',
+			icon: 'i_s_customer',
+			// auth: ["crm-customer.list"],
+		},
+		children: [
+			{
+				path: 'order-list',
+				name: 'OrderList',
+				component: () => import('@/views/crm-order/order-list.vue'),
+				meta: {
+					title: '合同列表',
+					title_en: 'Business opportunities list',
+					// auth: ["crm-community-customer.list"],
+				}
+			},
+			{
+				path: 'order-edit',
+				name: 'OrderEdit',
+				component: () => import('@/views/crm-order/order-edit.vue'),
+				meta: {
+					hidden: true,
+					title: '新建合同',
+					parent: '/crm-order/order-list',
+					// auth: ["crm-customer.save"],
+				}
+			},
+			{
+				path: 'order-detail',
+				name: 'OrderDetail',
+				component: () => import('@/views/crm-order/order-detail.vue'),
+				meta: {
+					hidden: true,
+					title: '合同详情',
+					title_en: 'Business opportunities phase',
+					parent: '/crm-order/order-list',
+					// auth: ["crm-community-customer.list"],
+				}
+			},
+		]
+	},
+	{ // 客户管理
+		path: '/crm-setting',
+		component: Layout,
+		redirect: '/crm-setting/setting-list',
+		name: 'CRMSettingManagement',
+		meta: {
+			title: 'CRM设置',
+			title_en: 'CRM Setting',
+			icon: 'i_s_customer',
+			// auth: ["crm-customer.list"],
+
+		},
+		children: [
+			{
+				path: 'setting-list',
+				name: 'SettingList',
+				component: () => import('@/views/crm-setting/group-status.vue'),
+				meta: {
+					title: '商机阶段',
+					title_en: 'Business opportunities phase',
+					// auth: ["crm-community-customer.list"],
+				}
+			},
 		]
 	},
     { // 系统管理
