@@ -602,7 +602,22 @@ const apiList = {
 		list: ['PostJson', 'crm-track-record/list'],//
 		delete: ['PostJson', 'crm-track-record/delete'],//
 		detail: ['PostJson', 'crm-track-record/detail'],//
-	}
+	},
+    CRMOrder: { // CRM合同订单
+        save: ['PostJson', 'crm-order/save'],//新增/修改
+		list: ['PostJson', 'crm-order/list'],//列表
+		delete: ['PostJson', 'crm-order/delete'],// 删除
+		detail: ['PostJson', 'crm-order/detail'],// 详情
+        batchDelete: ['PostJson', 'crm-order/batch-delete'],// 批量删除
+        audit: ['PostJson', 'crm-order/audit'],// 审核
+        reactivation: ['PostJson', 'crm-order/reactivation'],// 审核未通过，修改后再次提交从头审核
+    },
+    CRMItemBind: {  //CRM销售信息
+        save: ['PostJson', 'crm-item-bind/save'],//新增/修改
+		list: ['PostJson', 'crm-item-bind/list'],//列表
+		delete: ['PostJson', 'crm-item-bind/delete'],//删除
+		detail: ['PostJson', 'crm-item-bind/detail'],//详情
+    }
 
 
 };

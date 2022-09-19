@@ -6,6 +6,11 @@
                 <div class="btns-area">
                     <a-button type="primary" @click="routerChange('edit')" ><i class="icon i_add"/>{{ $t('c.save') }}</a-button>
                 </div>
+
+                <!-- test -->
+                <!-- <div class="btns-area">
+                    <a-button type="primary" @click="routerChange('order-edit')" ><i class="icon i_add"/>111</a-button>
+                </div> -->
             </div>
             <div class="search-container">
                 <a-row class="search-area">
@@ -164,6 +169,16 @@ export default {
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/crm-customer/customer-edit",
+                        query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+
+
+
+                case 'order-edit':    // 编辑
+                    routeUrl = this.$router.resolve({
+                        path: "/crm-customer/order-edit",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
