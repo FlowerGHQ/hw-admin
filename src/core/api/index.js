@@ -607,6 +607,7 @@ const apiList = {
 		save: ['PostJson', 'crm-track-member/save'],//
 		list: ['PostJson', 'crm-track-member/list'],//
 		delete: ['PostJson', 'crm-track-member/delete'],//
+		saveList: ['PostJson', 'crm-track-member/save-list'],//
 	},
 	CRMTrackRecord:{//CRM 团队
 		save: ['PostJson', 'crm-track-record/save'],//
