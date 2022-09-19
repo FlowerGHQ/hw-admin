@@ -22,8 +22,8 @@
                     <div class="type">职位</div>
                 </div>
                 <div class="item-button">
-                    <div class="button" @click="clickDelete(item)"><i class="icon i_delete"/></div>
-                    <div class="button" @click="clickEdit(item)"><i class="icon i_edit"/></div>
+                    <div class="button" @click="handleDelete(item.id)"><i class="icon i_delete"/></div>
+<!--                    <div class="button" @click="clickEdit(item)"><i class="icon i_edit"/></div>-->
                 </div>
             </div>
         </div>
@@ -187,7 +187,7 @@ export default {
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.CRMCustomer.delete({id}).then(() => {
+                    Core.Api.CRMTrackMember.delete({id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
@@ -198,7 +198,18 @@ export default {
         },
         // 添加商品
         handleGroupShow(ids, items) {
+            Core.Api.CRMTrackMember.saveList({
+                target_id: this.targetId,
+                target_type: this.targetType,
+                user_id_list: ids,
+                type: 1,
+            }).then(()=> {
 
+            }).catch(err => {
+                console.log('getTableData err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
         },
     }
 };
