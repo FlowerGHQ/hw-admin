@@ -2,7 +2,7 @@
 <div class="InformationInfo gray-panel no-margin">
     <div class="panel-content">
         <div class="title">
-            <span>团队成员({{total}})</span>
+            <span>团队成员({{total}})</span>{{targetId}}
             <div class="right-btn">
                 <TrackMemberSelect @select="handleGroupShow" btnType="link"><i class="icon i_add"/></TrackMemberSelect>
 <!--                <a-button type="link" @click="clickAdd"><i class="icon i_add"/></a-button>-->
@@ -79,12 +79,10 @@ export default {
             type: Object,
         },
         targetId: {
-            type: Number,
-            default: 0
+            type: Number
         },
         targetType: {
-            type: Number,
-            default: 0
+            type: Number
         },
 
     },
@@ -108,7 +106,6 @@ export default {
             search_name: '',
         };
     },
-    watch: {},
     computed: {
         lang() {
             return this.$store.state.lang
