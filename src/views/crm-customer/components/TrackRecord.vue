@@ -11,18 +11,18 @@
         </div> -->
         <!-- $Util.timeFormat(detail.create_time, 'YYYY/MM/DD') -->
         <div class="list">
-            <div v-for="(day, i) in tableData" :key="i" class="day-content">
+            <div v-for="(item, i) in tableData" :key="i" class="day-content">
                 <div class="day-item tag">
                     <div class="tag-bg">今天</div>
                 </div>
-                <div class="day-item" v-for="(item, j) in day.list" :key="`${i}-${j}`">
+                <div class="day-item"  :key="`${i}-${j}`">
                     <div class="panel">
                         <div class="top">
                             <span class="item-title">{{ item.title }}</span>
                             <span class="item-time"><i class="icon i_cart" style="color:blue"/>时间</span>
                         </div>
                         <div class="content">
-                            <div class="line">黑色字体</div>
+                            <div class="line">{{ item }}</div>
                             <div class="line grey">灰色字体</div>
                         </div>
                         <div class="foot">
@@ -60,9 +60,8 @@ export default {
     data() {
         return {
             searchType: [
-                { name: '全部', key: '1' },
-                { name: '跟进记录', key: '2' },
-                { name: '操作日志', key: '3' },
+                { name: '跟进记录', key: '1' },
+                { name: '操作日志', key: '2' },
             ],
             activeType: '1',
             USER_TYPE,
@@ -93,25 +92,12 @@ export default {
     },
     watch: {},
     computed: {
-        tableColumns() {
-            let columns = [
-                {title: this.$t('e.name'), dataIndex: ['account', 'name'], key: 'item'},
-                {title: this.$t('e.account'), dataIndex: ['account', 'username'], key: 'item'},
-                {title: this.$t('n.phone'), dataIndex: ['account', 'phone']},
-                {title: this.$t('n.email'), dataIndex: ['account', 'email']},
-                {title: this.$t('n.type'), dataIndex: 'type'},
-                {title: this.$t('e.login_time'), dataIndex: ['account', 'last_login_time'], key: 'time'},
-                {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
-                {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
-            ]
-            return columns
-        },
         lang() {
             return this.$store.state.lang
         }
     },
     mounted() {
-        // this.getTableData();
+        this.getCRMTrackRecordTableData();
     },
     methods: {
         changeTimeTitle(time) {
@@ -144,9 +130,26 @@ export default {
             this.pageSize = size
             this.getTableData()
         },
-        getTableData() {    // 获取 表格 数据
+        getCRMTrackRecordTableData() {    // 获取 表格 数据
             this.loading = true;
-            Core.Api.CRMTrackMember.list({
+            Core.Api.CRMTrackRecord.list({
+                target_id: this.targetId,
+                target_type: this.targetType,
+                page: this.currPage,
+                page_size: this.pageSize
+            }).then(res => {
+                console.log("getTableData res", res)
+                this.total = res.count;
+                this.tableData = res.list;
+            }).catch(err => {
+                console.log('getTableData err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        getCrmActionRecordTableData() {    // 获取 表格 数据
+            this.loading = true;
+            Core.Api.CrmActionRecord.list({
                 target_id: this.targetId,
                 target_type: this.targetType,
                 page: this.currPage,

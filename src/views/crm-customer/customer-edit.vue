@@ -190,7 +190,7 @@ export default {
                 marital_status: '',
                 income: '',
                 remark: '',
-
+                status: Core.Const.CRM_CUSTOMER.STATUS.POOL,
                 address: '',
             },
             defAddr: [],
@@ -221,6 +221,8 @@ export default {
         this.form.id = Number(this.$route.query.id) || 0
         if (this.form.id) {
             this.getCustomerDetail();
+        } else {
+            this.form.status = Core.Const.CRM_CUSTOMER.STATUS.CUSTOMER
         }
     },
     methods: {

@@ -644,6 +644,9 @@ const apiList = {
 		detail: ['PostJson', 'crm-contact-bind/detail'],//
 		batchSave: ['PostJson', 'crm-contact-bind/batch-save'],//
 	},
+	CrmActionRecord:{//CRM联系人绑定
+		list: ['PostJson', 'crm-action-record/list'],//
+	},
 
 
 };

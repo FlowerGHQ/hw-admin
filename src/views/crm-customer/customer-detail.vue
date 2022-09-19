@@ -63,9 +63,9 @@
             </a-col>
             <a-col :xs='24' :sm='24' :lg='8' >
                 <div class="tabs-container">
-                    <a-tabs v-model:activeKey="activeKey">
+                    <a-tabs v-model:activeKey="tabActiveKey">
                         <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.team_members')">
-                            <Group :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :detail="detail"/>
+                            <Group :targetId="id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.dynamic')">
                             <TrackRecord :detail="detail"/>
@@ -219,6 +219,8 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
+            activeKey: 'CustomerSituation',
+            tabActiveKey: 'CustomerSituation',
             detail: {},
             TrackRecordShow: false,
             trackRecordForm: {
@@ -265,8 +267,11 @@ export default {
             return this.$store.state.lang
         }
     },
-    mounted() {
+    created() {
         this.id = Number(this.$route.query.id) || 0
+    },
+    mounted() {
+        // this.id = Number(this.$route.query.id) || 0
         if (this.id) {
             this.getCustomerDetail();
         }
