@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="search">
-            <a-input-search v-model:value="searchKey" :placeholder="'搜索成员和标签'" @onSearch="clickSearch"/>
+            <a-input-search v-model:value="search_name" :placeholder="'搜索成员和标签'" @search="handleSearch"/>
         </div>
         <div class="list">
             <div class="list-item" v-for="(item, i) in tableData" :key="i">
@@ -105,7 +105,7 @@ export default {
             userDetail: '',
             initLoading: false,
 
-            searchKey: '',
+            search_name: '',
         };
     },
     watch: {},
@@ -125,8 +125,9 @@ export default {
         // 点击编辑
         clickEidt() {},
         // 点击搜索
-        clickSearch(key) {
-            console.log('click search >>', key);
+        handleSearch() {
+            this.getTableData()
+            // console.log('click search >>', key);
         },
         routerChange(type, item = {}) {
             console.log(item)
@@ -165,6 +166,7 @@ export default {
         getTableData() {    // 获取 表格 数据
             this.loading = true;
             Core.Api.CRMTrackMember.list({
+                name: this.search_name,
                 target_id: this.targetId,
                 target_type: this.targetType,
                 page: this.currPage,
