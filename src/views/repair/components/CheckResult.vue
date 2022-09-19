@@ -51,8 +51,8 @@
                         <a-table-summary>
                             <a-table-summary-row>
                                 <a-table-summary-cell :index="0" :col-span="4">{{ $t('p.total') }}</a-table-summary-cell>
-                                <a-table-summary-cell :index="1" :col-span="2">{{ total.amount }}{{ $t('in.item') }}</a-table-summary-cell>
-                                <a-table-summary-cell :index="2" :col-span="3">€ {{ $Util.countFilter(total.price) }}</a-table-summary-cell>
+                                <a-table-summary-cell :index="1" :col-span="3">{{ total.amount }}{{ $t('in.item') }}</a-table-summary-cell>
+<!--                                <a-table-summary-cell :index="2" :col-span="3">€ {{ $Util.countFilter(total.price) }}</a-table-summary-cell>-->
                                 <a-table-summary-cell :index="3" :col-span="1">{{ $Util.countFilter(total.man_hour) }}{{ $t('i.hours') }}</a-table-summary-cell>
                             </a-table-summary-row>
                         </a-table-summary>
