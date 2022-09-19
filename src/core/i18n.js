@@ -1184,6 +1184,13 @@ const messages = {
             other_fee: '其他费用',
             discounted: '优惠金额',
 	    },
+        sl: {  // 智能标签
+            list: '标签列表',
+            save: '新建标签',
+            classification: '标签分类',
+            name: '标签名称',
+            principal: '负责人'
+        },
 	    authority: {
         	title: {
                 'distributor' : '分销商管理',
@@ -2672,6 +2679,13 @@ const messages = {
             other_fee: 'Other fee',
             discounted: 'Discounted price',
 	    },
+        sl: {  // 智能标签
+            list: 'Label List',
+            save: 'New label',
+            classification: 'Label classification',
+            name : 'Label name',
+            principal: 'Principal',
+        },
 	    authority: {
             title: {
                 'distributor' : 'Distributor management',
