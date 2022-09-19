@@ -1532,15 +1532,6 @@ const routes = [
 					// auth: ["crm-customer.save"],
 				}
 			},
-            {
-                path: 'order-edit',
-                name: 'OrderEdit',
-                meta: {
-                    hidden: true,
-                    title: '新建订单',
-                },
-                component: () => import ('@/components/popup-btn/OrderEdit.vue'),
-            },
 			// {
 			// 	path: 'customer-list',
 			// 	name: 'CustomerList',

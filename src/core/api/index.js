@@ -603,16 +603,6 @@ const apiList = {
 		delete: ['PostJson', 'crm-bo/delete'],//
 		detail: ['PostJson', 'crm-bo/detail'],//
 	},
-	CRMOrder:{//CRM 合同订单
-		save: ['PostJson', 'crm-order/save'],//
-		list: ['PostJson', 'crm-order/list'],//
-		delete: ['PostJson', 'crm-order/delete'],//
-		detail: ['PostJson', 'crm-order/detail'],//
-		// obtain: ['PostJson', 'crm-order/obtain'],//
-		// distribute: ['PostJson', 'crm-order/distribute'],//
-		// returnPool: ['PostJson', 'crm-order/return-pool'],//
-		// transfer: ['PostJson', 'crm-order/transfer'],//
-	},
 	CRMTrackMember:{//CRM 团队
 		save: ['PostJson', 'crm-track-member/save'],//
 		list: ['PostJson', 'crm-track-member/list'],//

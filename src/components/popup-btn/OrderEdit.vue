@@ -86,9 +86,51 @@
                 <div class="title-colorful">销售信息</div>
             </div>
             <div class="form-content">
-                <div class="table-container">
-                    <ItemTable :columns="tableColumns" :data-source="tableData" :loading='loading'
-                        :check-mode='true' @submit="handleSelectItem"/>
+                <div class="form-item textarea">
+                    <div class="key">{{ $t('r.remark') }}</div>
+
+                    <div class="fault-title">
+                        <ItemSelect @select="handleAddFailItem"
+                                    :disabled-checked='tableData.map(i => i.item_id)'
+                                    btn-type='primary' :btn-text="$t('i.add')" btn-class="fault-btn"
+                                    v-if="$auth('repair-order.save')"/>
+                    </div>
+                    <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                             :row-key="record => record.id" :pagination='false' size="small">
+                        <template #headerCell="{title}">
+                            {{ $t(title) }}
+                        </template>
+                        <template #bodyCell="{ column , record ,index, text}">
+                            <template v-if="column.key === 'item'">
+                                {{ text || '-' }}
+                            </template>
+                            <template v-if="column.dataIndex === 'price'">
+                                $ {{ text || '-' }}
+                                <!--                                    <a-input-number v-model:value="record.price" style="width: 82px;"-->
+                                <!--                                                      :min="0" :precision="2" placeholder="请输入"/>-->
+                            </template>
+                            <template v-if="column.key === 'amount'">
+                                <a-input-number v-model:value="record.amount" style="width: 66px;"
+                                                :min="1" :precision="0" placeholder="请输入"/>
+                                {{ $t('in.item') }}
+                            </template>
+                            <template v-if="column.key === 'discount'">
+                                <a-input-number v-model:value="record.discount" style="width: 66px;"
+                                                :min="1" :max="100" :precision="0" placeholder="请输入"/>
+                                %
+                            </template>
+
+                            <template v-if="column.key === 'total_price'">
+                                $ {{ $Util.countFilter(record.price * record.amount * record.discount / 100, 1) }}
+                            </template>
+
+                            <template v-if="column.dataIndex === 'operation'">
+                                <a-button type="link" class="danger" @click="handleFailItemDelete(index)"><i
+                                    class="icon i_delete"/>{{ $t('def.remove') }}
+                                </a-button>
+                            </template>
+                        </template>
+                    </a-table>
                 </div>
                 <div class="form-item">
                     <div class="key">产品合计金额：</div>
@@ -192,7 +234,17 @@ export default {
             loading: false,
         };
     },
-    watch: {},
+    watch: {
+        'tableData':{
+            deep: true,
+                immediate: true,
+                handler(n) {
+                this.moneyCheck()
+                // this.imgs = n
+            }
+
+        },
+    },
     computed: {
         tableColumns() {
             let tableColumns = [
@@ -269,6 +321,37 @@ export default {
             // console.log('handleSelectItem ids, items:', ids, items)
             // this.selectItems = items
             // this.selectItemIds = ids
+        },
+
+        // 添加商品
+        async handleAddFailItem(ids, items) {
+            for (let i = 0; i < items.length; i++) {
+                const element = items[i];
+                element.item_id = element.id
+                element.id = 0
+                element.amount = 1
+                element.price = element.fob_usd / 100
+                element.discount = 100
+            }
+            console.log('handleAddFailItem items:', items)
+            this.tableData.push(...items)
+        },
+        // 移除商品
+        handleFailItemDelete(index, name) {
+            this.tableData.splice(index, 1)
+        },
+        moneyCheck(){
+            if (this.tableData.length > 0){
+                let total_price = 0
+                this.tableData.forEach(record => {
+                    total_price += record.price * record.amount * record.discount / 100
+                })
+                this.form.money = total_price
+                this.moneyDisabled = true;
+
+            } else {
+                this.moneyDisabled = false;
+            }
         },
 
         handleSubmit() {
