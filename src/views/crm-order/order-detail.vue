@@ -37,7 +37,7 @@
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                         <!-- <a-button @click="TrackRecordShow = true">写跟进</a-button> -->
-                        <a-button @click="routerChange("edit")">编辑</a-button>
+                        <a-button @click="routerChange('edit')">编辑</a-button>
                         <a-button>删除</a-button>
                         <a-button>新建回款单</a-button>
                     </a-col>
@@ -240,15 +240,16 @@ export default {
     },
     methods: {
         routerChange(type, item) {
+            let routeUrl = ""
             switch (type) {
                 case 'back':    // 详情
-                    let routeUrl = this.$router.resolve({
+                    routeUrl = this.$router.resolve({
                         path: "/crm-order/order-list",
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'edit':    // 编辑
-                    let routeUrl = this.$router.resolve({
+                    routeUrl = this.$router.resolve({
                         path: "/crm-order/order-list",
                     })
                     window.open(routeUrl.href, '_self')
