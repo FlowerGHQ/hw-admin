@@ -1220,7 +1220,10 @@ const messages = {
             save: '新建标签',
             classification: '标签分类',
             name: '标签名称',
-            principal: '负责人'
+            principal: '负责人',
+            edit: '修改标签',
+            remark: '备注',
+            synchronize: '同步新建',
         },
 	    authority: {
         	title: {
@@ -2716,6 +2719,9 @@ const messages = {
             classification: 'Label classification',
             name : 'Label name',
             principal: 'Principal',
+            edit: 'Edit Label',
+            remark: 'Remark',
+            synchronize: 'Synchronize new',
         },
 	    authority: {
             title: {
