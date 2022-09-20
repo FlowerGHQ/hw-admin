@@ -2,7 +2,7 @@
 <div class="InformationInfo gray-panel no-margin">
     <div class="panel-content">
         <div class="title">
-            <span>团队成员({{total}})</span>{{targetId}}
+            <span>团队成员({{total}})</span>
             <div class="right-btn">
                 <TrackMemberSelect @select="handleGroupShow" btnType="link"><i class="icon i_add"/></TrackMemberSelect>
 <!--                <a-button type="link" @click="clickAdd"><i class="icon i_add"/></a-button>-->
@@ -197,7 +197,7 @@ export default {
         },
         // 添加商品
         handleGroupShow(ids, items) {
-            Core.Api.CRMTrackMember.saveList({
+            Core.Api.CRMTrackMember.batchSave({
                 target_id: this.targetId,
                 target_type: this.targetType,
                 user_id_list: ids,

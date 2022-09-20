@@ -156,6 +156,7 @@ export default {
         getTableData() {
             Core.Api.User.list({
                 name: this.searchForm.name,
+                org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
             }).then(res => {
                 this.tableData = res.list
                 this.$emit('option', this.tableData)

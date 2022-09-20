@@ -32,16 +32,28 @@
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                        <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>
-                        <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
-                        <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :addCustomerBtn="true"/>
-                        <a-button>新建商机</a-button>
-                        <a-button>新建订单</a-button>
-                        <a-button type="primary" @click="handleBatch('distribute')">{{ $t('crm_c.distribute') }}</a-button>
-                        <a-button type="primary" @click="handleBatch('transfer')">{{ $t('crm_c.transfer') }}</a-button>
-                        <a-button type="primary" @click="handleObtain">{{ $t('crm_c.obtain') }}</a-button>
-                        <a-button type="danger" @click="handleReturnPool">{{ $t('crm_c.return_pool') }}</a-button>
-                        <a-button type="danger" @click="handleDelete">{{ $t('crm_c.delete') }}</a-button>
+                        <div v-if="detail.status === STATUS.POOL">
+                            <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>
+                            <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
+                            <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :addCustomerBtn="true"/>
+                            <a-button type="primary" @click="handleObtain">{{ $t('crm_c.obtain') }}</a-button>
+                            <a-button type="primary" @click="handleBatch('distribute')">{{ $t('crm_c.distribute') }}</a-button>
+                            <a-button type="danger" @click="handleDelete">{{ $t('crm_c.delete') }}</a-button>
+                        </div>
+                        <div v-if="detail.status === STATUS.CUSTOMER &&  trackMemberDetail!== undefined  &&  trackMemberDetail!== null  &&  trackMemberDetail!== ''">
+                            <span v-if="trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ">
+                                <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>
+                                <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
+                                <a-button>新建商机</a-button>
+                                <a-button>新建订单</a-button>
+                            </span>
+                            <span v-if="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN">
+                                <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :addCustomerBtn="true"/>
+                                <a-button type="primary" @click="handleBatch('transfer')">{{ $t('crm_c.transfer') }}</a-button>
+                                <a-button type="danger" @click="handleReturnPool">{{ $t('crm_c.return_pool') }}</a-button>
+                            </span>
+
+                        </div>
                     </a-col>
                 </a-row>
             </div>
@@ -218,6 +230,7 @@ export default {
             Core,
             TYPE_MAP: Core.Const.CRM_TRACK_RECORD.TYPE_MAP,
             INTENT_MAP: Core.Const.CRM_TRACK_RECORD.INTENT_MAP,
+            STATUS: Core.Const.CRM_CUSTOMER.STATUS,
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
 
             loginType: Core.Data.getLoginType(),
@@ -240,6 +253,7 @@ export default {
             },
             batchShow: false,
             userData: [],
+            trackMemberDetail: undefined,
             upload: { // 上传图片
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
                 coverList: [],
@@ -278,6 +292,7 @@ export default {
         // this.id = Number(this.$route.query.id) || 0
         if (this.id) {
             this.getCustomerDetail();
+            this.getTargetByUserId();
         }
     },
     methods: {
@@ -449,7 +464,8 @@ export default {
         getUserData(query){
             this.loading = true;
             Core.Api.User.list({
-                name: query
+                name: query,
+                org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
             }).then(res => {
                 console.log("getTableData res:", res)
                 this.userData = res.list;
@@ -509,6 +525,15 @@ export default {
                     })
                 },
             });
+        },
+        getTargetByUserId() {
+            Core.Api.CRMTrackMember.getTargetByUserId({
+                target_id: this.id,
+                target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER,
+            }).then(res => {
+                this.trackMemberDetail = res.detail
+                console.log("trackMemberDetail", this.trackMemberDetail);
+            })
         },
     }
 };

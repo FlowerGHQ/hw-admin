@@ -329,7 +329,8 @@ export default {
         getUserData(query){
             this.loading = true;
             Core.Api.User.list({
-                name: query
+                name: query,
+                org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
             }).then(res => {
                 console.log("getTableData res:", res)
                 this.userData = res.list;
