@@ -854,6 +854,14 @@ const Util = {
 	},
 	/* =============== CRM订单管理 ================ */
 
+	/* =============== CRM订单管理 ================ */
+	CRMTrackRecordFilter(val,  to='zh') {
+		const MAP = Const.CRM_TRACK_RECORD.TYPE_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+
+	/* =============== CRM订单管理 ================ */
 
 }
 

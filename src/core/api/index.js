@@ -609,7 +609,7 @@ const apiList = {
 		delete: ['PostJson', 'crm-track-member/delete'],//
 		saveList: ['PostJson', 'crm-track-member/save-list'],//
 	},
-	CRMTrackRecord:{//CRM 团队
+	CRMTrackRecord:{//CRM跟进记录
 		save: ['PostJson', 'crm-track-record/save'],//
 		list: ['PostJson', 'crm-track-record/list'],//
 		delete: ['PostJson', 'crm-track-record/delete'],//

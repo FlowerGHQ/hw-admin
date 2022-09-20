@@ -10,23 +10,45 @@
             <a-input-search v-model:value="searchKey" :placeholder="'搜索成员和标签'" @onSearch="clickSearch"/>
         </div> -->
         <!-- $Util.timeFormat(detail.create_time, 'YYYY/MM/DD') -->
-        <div class="list">
-            <div v-for="(item, i) in tableData" :key="i" class="day-content">
-                <div class="day-item tag">
+        <div class="list" v-if="activeType === '1'"  v-for="(item, i) in tableData" :key="i">
+            <div  class="day-content" >
+                <div class="day-item tag" v-if="i === 0">
                     <div class="tag-bg">今天</div>
                 </div>
-                <div class="day-item"  :key="`${i}-${j}`">
+                <div class="day-item">
                     <div class="panel">
                         <div class="top">
-                            <span class="item-title">{{ item.title }}</span>
-                            <span class="item-time"><i class="icon i_cart" style="color:blue"/>时间</span>
+                            <span class="item-title">{{$Util.CRMTrackRecordFilter(item.type, $i18n.locale) || '-'  }}</span>
+                            <span class="item-time"><i class="" style="color:blue"/>{{$Util.timeFilter(item.create_time) || '-'}}</span>
                         </div>
                         <div class="content">
-                            <div class="line">{{ item }}</div>
-                            <div class="line grey">灰色字体</div>
+                            <div class="line">{{ item.content }}</div>
+                            <div class="line grey">{{$t('crm_r.from_customer')}}:{{ item.contact? item.contact.name : "-"}}</div>
                         </div>
                         <div class="foot">
-                            <div class="line">黑色字体</div>
+                            <div class="line">{{$t('n.operator')}}:{{ item.create_user_name }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="list" v-if="activeType === '2'">
+            <div class="day-content" v-for="(item, i) in recordTableData"  :key="i">
+                <div class="day-item tag" v-if="i === 0">
+                    <div class="tag-bg">今天</div>
+                </div>
+                <div class="day-item" >
+                    <div class="panel">
+                        <div class="top">
+                            <span class="item-title">{{$Util.CRMTrackRecordFilter(item.type, $i18n.locale) || '-'  }}</span>
+                            <span class="item-time"><i class="" style="color:blue"/>{{$Util.timeFilter(item.create_time) || '-'}}</span>
+                        </div>
+                        <div class="content">
+                            <div class="line">{{ item.content }}</div>
+                            <div class="line grey">来自客户:{{ item.contact? item.contact.name : "-"}}</div>
+                        </div>
+                        <div class="foot">
+                            <div class="line">操作人:{{ item.create_user_name }}</div>
                         </div>
                     </div>
                 </div>
@@ -73,15 +95,9 @@ export default {
             pageSize: 20,
             total: 0,
             // 表格数据
-            tableData: [{
-                time: new Date(),
-                list: [
-                    { title: '标题', content: '内容', customer: '客户', contacts: '联系人', status: '状态', operator: '操作人', time: new Date() },
-                    { title: '标题', content: '内容', customer: '客户', contacts: '联系人', status: '状态', operator: '操作人', time: new Date() }
-                ]
-            },{
-
-            }],
+            tableData: [],
+            // 表格数据
+            recordTableData: [],
 
             userId: '',
             userDetail: '',
@@ -98,6 +114,7 @@ export default {
     },
     mounted() {
         this.getCRMTrackRecordTableData();
+        this.getCrmActionRecordTableData();
     },
     methods: {
         changeTimeTitle(time) {
@@ -130,7 +147,7 @@ export default {
             this.pageSize = size
             this.getTableData()
         },
-        getCRMTrackRecordTableData() {    // 获取 表格 数据
+        getCRMTrackRecordTableData() {    // 获取 跟进记录
             this.loading = true;
             Core.Api.CRMTrackRecord.list({
                 target_id: this.targetId,
@@ -157,7 +174,7 @@ export default {
             }).then(res => {
                 console.log("getTableData res", res)
                 this.total = res.count;
-                this.tableData = res.list;
+                this.recordTableData = res.list;
             }).catch(err => {
                 console.log('getTableData err', err)
             }).finally(() => {

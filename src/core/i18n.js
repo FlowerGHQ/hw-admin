@@ -1184,6 +1184,9 @@ const messages = {
             other_fee: '其他费用',
             discounted: '优惠金额',
 	    },
+	    crm_r: {
+		    from_customer: '来自客户',
+	    },
         sl: {  // 智能标签
             list: '标签列表',
             save: '新建标签',
