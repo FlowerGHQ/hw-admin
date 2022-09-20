@@ -608,14 +608,22 @@ const apiList = {
 		list: ['PostJson', 'crm-order/list'],//
 		delete: ['PostJson', 'crm-order/delete'],//
 		detail: ['PostJson', 'crm-order/detail'],//
+		createUser: ['PostJson', 'crm-order/join-create-user-list'],//
 		// obtain: ['PostJson', 'crm-order/obtain'],//
 		// distribute: ['PostJson', 'crm-order/distribute'],//
 		// returnPool: ['PostJson', 'crm-order/return-pool'],//
 		// transfer: ['PostJson', 'crm-order/transfer'],//
 	},
+	CRMOrderIncome:{//CRM 回款单
+		save: ['PostJson', 'crm-order/save'],//
+		list: ['PostJson', 'crm-order/list'],//
+		delete: ['PostJson', 'crm-order/delete'],//
+		detail: ['PostJson', 'crm-order/detail'],//
+	},
 	CRMTrackMember:{//CRM 团队
 		save: ['PostJson', 'crm-track-member/save'],//
 		list: ['PostJson', 'crm-track-member/list'],//
+		delete: ['PostJson', 'crm-track-member/delete'],//
 		delete: ['PostJson', 'crm-track-member/delete'],//
 	},
 	CRMTrackRecord:{//CRM 团队

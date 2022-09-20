@@ -243,7 +243,7 @@ export default {
             switch (type) {
                 case 'edit':    // 编辑
                     let routeUrl = this.$router.resolve({
-                        path: "/crm-order/order-edit",
+                        path: "/crm-order-income/order-income-edit",
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_self')
@@ -252,7 +252,7 @@ export default {
         },
         getOrderDetail() {
             this.loading = true;
-            Core.Api.CRMOrder.detail({
+            Core.Api.CRMOrderIncome.detail({
                 id: this.id,
             }).then(res => {
                 console.log('getOrderDetail res', res)
@@ -360,7 +360,7 @@ export default {
                 okType: 'danger',
                 cancelText: _this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.CRMOrder.delete({id}).then(() => {
+                    Core.Api.CRMOrderIncome.delete({id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {

@@ -18,33 +18,20 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('crm_o.customer_name') }}：</div> <!-- 客户名称 -->
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.customer_name" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('crm_o.own_user_name') }}：</div> <!-- 负责人 -->
                         <div class="value">
-                            <a-select
-                                v-model:value="searchForm.own_user_id"
-                                show-search
-                                :placeholder="$t('def.input')"
-                                :default-active-first-option="false"
-                                :show-arrow="false"
-                                :filter-option="false"
-                                :not-found-content="null"
-                                @search="handleOwnUserSearch"
-                            >
-                                <a-select-option v-for=" item in ownUserOptions" :key="item.user.id" :value="item.user.id">
-                                    {{ item.user.account.name }}
-                                </a-select-option>
-                            </a-select>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('crm_o.status') }}：</div> <!-- 合同状态 -->
                         <div class="value">
-                            <a-select v-model:value="searchForm.status" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of CRM_STATUS_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                            <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" @change="handleSearch">
+                                <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -59,20 +46,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('crm_o.create_user') }}：</div> <!-- 创建人 -->
                         <div class="value">
-                            <a-select
-                                v-model:value="searchForm.create_user_id"
-                                show-search
-                                :placeholder="$t('def.input')"
-                                :default-active-first-option="false"
-                                :show-arrow="false"
-                                :filter-option="false"
-                                :not-found-content="null"
-                                @search="handleCreateUserSearch"
-                            >
-                                <a-select-option v-for=" item in createUserOptions" :key="item.user.id" :value="item.user.id">
-                                    {{ item.user.account.name }}
-                                </a-select-option>
-                            </a-select>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
@@ -152,23 +126,17 @@ export default {
             currPage: 1,
             pageSize: 20,
 
-            CRM_TYPE_MAP: Core.Const.CRM_ORDER.TYPE_MAP,
-            CRM_STATUS_MAP: Core.Const.CRM_ORDER.STATUS_MAP,
+            CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
             total: 0,
             orderByFields: {},
             // 搜索
             searchForm: {
                 name: '',
-                customer_name:'',
-                own_user_id:'',
-                create_user_name:'',
-                status:'',
+                phone:'',
                 begin_time: '',
                 end_time: '',
                 type: '',
             },
-            ownUserOptions: [],
-            createUserOptions: [],
             // 表格
             tableData: [],
         };
@@ -180,7 +148,7 @@ export default {
                 {title: 'crm_o.name', dataIndex: 'name', key:'item', sorter: true},
                 {title: 'crm_o.customer_name', dataIndex: 'customer_name', key:'item', sorter: true},
                 {title: 'crm_o.own_user_name', dataIndex:  "own_user_name", key:'item', sorter: true},
-                {title: 'crm_o.status', dataIndex: 'status', key: 'util', util: 'CRMOrderStatusFilter', sorter: true},
+                {title: 'crm_o.status', dataIndex: 'status', key: 'util', util: 'CRMOrderIncomeStatusFilter', sorter: true},
                 {title: 'crm_o.paid_money_progress', dataIndex: 'paid_money_progress', key:'item', sorter: true},
                 {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
                 {title: 'crm_o.create_user', dataIndex: "create_user_name", key: 'item', sorter: true},
@@ -199,14 +167,14 @@ export default {
             switch (type) {
                 case 'detail':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/crm-order/order-detail",
+                        path: "/crm-order-income/order-income-detail",
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/crm-order/order-edit",
+                        path: "/crm-order-income/order-income-edit",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
@@ -239,7 +207,7 @@ export default {
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
-            Core.Api.CRMOrder.list({
+            Core.Api.CRMOrderIncome.list({
                 ...this.searchForm,
                 order_by_fields: this.orderByFields,
                 search_type: 30,
@@ -267,22 +235,6 @@ export default {
                     this.orderByFields[filter.field] =  1
             }
             this.getTableData()
-        },
-        handleOwnUserSearch(name) { // 负责人条件搜索 下拉框
-            Core.Api.CRMTrackMember.list({
-                type: Core.Const.CRM_TRACK_MEMBER.TYPE.OWN,
-                target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.ORDER,
-                name: name,
-            }).then(res => {
-                this.ownUserOptions = res.list
-            })
-        },
-        handleCreateUserSearch(name) { // 创建人条件搜索 下拉框
-            Core.Api.CRMOrder.createUser({
-                name: name,
-            }).then(res => {
-                this.createUserOptions = res.list
-            })
         },
         handleDelete(id) {
             let _this = this;
