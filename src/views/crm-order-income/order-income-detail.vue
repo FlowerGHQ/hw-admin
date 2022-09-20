@@ -36,6 +36,7 @@
                         <span class="value">{{ detail.own_user_name || '-'}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
+                        <!-- <a-button @click="TrackRecordShow = true">写跟进</a-button> -->
                         <a-button @click="routerChange('edit', detail)">编辑</a-button>
                         <a-button @click="handleDelete(detail.id)">删除</a-button>
                         <a-button>新建回款单</a-button>
@@ -239,18 +240,11 @@ export default {
     },
     methods: {
         routerChange(type, item = {}) {
-            let routeUrl = ""
             switch (type) {
                 case 'edit':    // 编辑
-                    routeUrl = this.$router.resolve({
-                        path: "/crm-order/order-edit",
+                    let routeUrl = this.$router.resolve({
+                        path: "/crm-order-income/order-income-edit",
                         query: { id: item.id }
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
-                case 'back':    // 返回列表
-                    routeUrl = this.$router.resolve({
-                        path: "/crm-order/order-list",
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -258,7 +252,7 @@ export default {
         },
         getOrderDetail() {
             this.loading = true;
-            Core.Api.CRMOrder.detail({
+            Core.Api.CRMOrderIncome.detail({
                 id: this.id,
             }).then(res => {
                 console.log('getOrderDetail res', res)
@@ -366,7 +360,7 @@ export default {
                 okType: 'danger',
                 cancelText: _this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.CRMOrder.delete({id}).then(() => {
+                    Core.Api.CRMOrderIncome.delete({id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {

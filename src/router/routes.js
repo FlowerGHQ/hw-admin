@@ -1649,6 +1649,53 @@ const routes = [
 			},
 		]
 	},
+	{ // 回款单
+		path: '/crm-order-income',
+		component: Layout,
+		redirect: '/crm-order-income/order-income-list',
+		name: 'CRMOrderIncome',
+		meta: {
+			title: 'CRM回款单',
+			title_en: 'CRM Order Income',
+			icon: 'i_s_customer',
+			// auth: ["crm-customer.list"],
+		},
+		children: [
+			{
+				path: 'order-income-list',
+				name: 'OrderIncomeList',
+				component: () => import('@/views/crm-order-income/order-income-list.vue'),
+				meta: {
+					title: '回款单列表',
+					title_en: 'Business opportunities list',
+					// auth: ["crm-community-customer.list"],
+				}
+			},
+			{
+				path: 'order-income-edit',
+				name: 'OrderIncomeEdit',
+				component: () => import('@/views/crm-order-income/order-income-edit.vue'),
+				meta: {
+					hidden: true,
+					title: '新建回款单',
+					parent: '/crm-order-income/order-income-list',
+					// auth: ["crm-customer.save"],
+				}
+			},
+			{
+				path: 'order-income-detail',
+				name: 'OrderIncomeDetail',
+				component: () => import('@/views/crm-order-income/order-income-detail.vue'),
+				meta: {
+					hidden: true,
+					title: '回款单详情',
+					title_en: 'Business opportunities phase',
+					parent: '/crm-order-income/order-income-list',
+					// auth: ["crm-community-customer.list"],
+				}
+			},
+		]
+	},
 	{ // 客户管理
 		path: '/crm-setting',
 		component: Layout,
