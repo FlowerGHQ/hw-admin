@@ -854,6 +854,27 @@ const Util = {
 	},
 	/* =============== CRM订单管理 ================ */
 
+	/* =============== CRM跟进记录 ================ */
+	CRMTrackRecordFilter(val,  to='zh') {
+		const MAP = Const.CRM_TRACK_RECORD.TYPE_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	/* =============== CRM跟进记录 ================ */
+
+	/* =============== CRM回款单 ================ */
+	CRMOrderIncomeTypeFilter(val,  to='zh') {
+		const MAP = Const.CRM_ORDER_INCOME.TYPE_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	CRMOrderIncomeStatusFilter(val,  to='zh') {
+		const MAP = Const.CRM_ORDER_INCOME.STATUS_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	/* =============== CRM回款单 ================ */
+
 
 }
 

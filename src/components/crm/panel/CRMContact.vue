@@ -1,7 +1,7 @@
 <template>
 <div class="InformationInfo gray-panel no-margin">
     <div class="panel-title">
-        <div class="title">{{ $t('crm_b.bo') }}</div>
+        <div class="title">{{ $t('crm_t.contact_customer') }}</div>
     </div>
     <div class="panel-content">
         <div>
@@ -14,6 +14,11 @@
                     <template v-if="column.key === 'status'">
                         <template v-if="record.target_type === Core.Const.AUDIT_RECORD.TARGET_TYPE.QUALITY_FEEDBACK ">
                             {{ $Util.feedbackStatusFilter(text, $i18n.locale) }}
+                        </template>
+                    </template>
+                    <template v-if="column.key === 'operation'" >
+                        <template v-if="$auth('ADMIN')">
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('file.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </template>
@@ -34,7 +39,6 @@
                 />
             </div>
         </div>
-
     </div>
 </div>
 </template>
@@ -49,11 +53,18 @@ export default {
         detail:{
             type: Object,
         },
-
+        targetId: {
+            type: Number,
+            default: 0
+        },
+        targetType: {
+            type: Number,
+            default: 0
+        },
     },
     data() {
         return {
-
+            Core,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -67,39 +78,14 @@ export default {
 
             userId: '',
             userDetail: '',
-            form: {
-                id: '',
-                type: '',
-                name: '',
-                phone: '',
-                level: '',
-                source: '',
-                company_size: '',
-                company_license_id:'',
-                gender: '',
-                birthday: '',
-                industry: '',
-                nationality: '',
-                hobby: '',
-                marital_status: '',
-                income: '',
-                remark: '',
-
-                address: '',
-            },
         };
     },
     watch: {},
     computed: {
         tableColumns() {
             let columns = [
-                {title: this.$t('e.name'), dataIndex: ['account', 'name'], key: 'item'},
-                {title: this.$t('e.account'), dataIndex: ['account', 'username'], key: 'item'},
-                {title: this.$t('n.phone'), dataIndex: ['account', 'phone']},
-                {title: this.$t('n.email'), dataIndex: ['account', 'email']},
-                {title: this.$t('n.type'), dataIndex: 'type'},
-                {title: this.$t('e.login_time'), dataIndex: ['account', 'last_login_time'], key: 'time'},
-                {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
+                {title: this.$t('crm_c.name'), dataIndex: ['contact','name'], key: 'item'},
+                {title: this.$t('crm_c.phone'), dataIndex: ['contact','phone'], key: 'time'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             return columns
@@ -148,8 +134,9 @@ export default {
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
-            Core.Api.CRMBo.list({
-                customer_id: this.detail.id,
+            Core.Api.CrmContactBind.list({
+                target_id: this.targetId,
+                target_type: this.targetType,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -170,7 +157,7 @@ export default {
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.CRMCustomer.delete({id}).then(() => {
+                    Core.Api.CrmContactBind.delete({id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {

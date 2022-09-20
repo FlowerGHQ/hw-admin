@@ -603,13 +603,20 @@ const apiList = {
 		delete: ['PostJson', 'crm-bo/delete'],//
 		detail: ['PostJson', 'crm-bo/detail'],//
 	},
+	CRMOrderIncome:{//CRM 回款单
+		save: ['PostJson', 'crm-order/save'],//
+		list: ['PostJson', 'crm-order/list'],//
+		delete: ['PostJson', 'crm-order/delete'],//
+		detail: ['PostJson', 'crm-order/detail'],//
+	},
 	CRMTrackMember:{//CRM 团队
 		save: ['PostJson', 'crm-track-member/save'],//
 		list: ['PostJson', 'crm-track-member/list'],//
 		delete: ['PostJson', 'crm-track-member/delete'],//
-		saveList: ['PostJson', 'crm-track-member/save-list'],//
+		batchSave: ['PostJson', 'crm-track-member/batch-save'],//
+		getTargetByUserId: ['PostJson', 'crm-track-member/get_target_by_user_id'],//
 	},
-	CRMTrackRecord:{//CRM 团队
+	CRMTrackRecord:{//CRM跟进记录
 		save: ['PostJson', 'crm-track-record/save'],//
 		list: ['PostJson', 'crm-track-record/list'],//
 		delete: ['PostJson', 'crm-track-record/delete'],//
@@ -621,6 +628,7 @@ const apiList = {
 		delete: ['PostJson', 'crm-order/delete'],// 删除
 		detail: ['PostJson', 'crm-order/detail'],// 详情
         batchDelete: ['PostJson', 'crm-order/batch-delete'],// 批量删除
+	    createUser: ['PostJson', 'crm-order/join-create-user-list'],//
         audit: ['PostJson', 'crm-order/audit'],// 审核
         reactivation: ['PostJson', 'crm-order/reactivation'],// 审核未通过，修改后再次提交从头审核
     },
