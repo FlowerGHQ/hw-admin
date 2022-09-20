@@ -1,7 +1,7 @@
 <template>
     <div id="OrderDetail" class="edit-container">
         <div class="title-container">
-                <div class="title-area">{{  $t('crm_o.detail')  }}
+                <div class="title-area">{{  $t('crm_oi.detail')  }}
                 <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>
                     {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}
                 </a-tag>
@@ -16,30 +16,28 @@
                 </div>
                 <a-row class="desc-detail">
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('crm_o.customer_name') }}：</span>
-                        <span class="value">{{ detail.customer_name || '-'   || '-'  }}</span>
+                        <span class="key">{{ $t('crm_oi.order') }}：</span>
+                        <span class="value">{{ detail.order || '-'   || '-'  }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('crm_o.contract_no') }}：</span>
-                        <span class="value">{{ detail.uid || '-'  }}</span>
+                        <span class="key">{{ $t('crm_oi.status') }}：</span>
+                        <span class="value">{{ $Util.CRMOrderIncomeStatusFilter(detail.status) || '-'  }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('crm_o.money') }}：</span>
+                        <span class="key">{{ $t('crm_oi.money') }}：</span>
                         <span class="value">{{ detail.money || '-'  }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('crm_o.paid_money_progress') }}：</span>
-                        <span class="value">{{ detail.paid_money_progress || '-'  }}</span>
+                        <span class="key">{{ $t('crm_oi.date') }}：</span>
+                        <span class="value">{{ $Util.timeFilter(detail.date) || '-'  }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('crm_o.own_user_name') }}：</span>
+                        <span class="key">{{ $t('crm_oi.own_user_name') }}：</span>
                         <span class="value">{{ detail.own_user_name || '-'}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                        <!-- <a-button @click="TrackRecordShow = true">写跟进</a-button> -->
-                        <a-button @click="routerChange('edit', detail)">编辑</a-button>
+                        <a-button>退款</a-button>
                         <a-button @click="handleDelete(detail.id)">删除</a-button>
-                        <a-button>新建回款单</a-button>
                     </a-col>
                 </a-row>
             </div>
@@ -355,7 +353,7 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: _this.$t('crm_o.delete') + '？',
+                title: _this.$t('crm_oi.delete') + '？',
                 okText: _this.$t('def.ok'),
                 okType: 'danger',
                 cancelText: _this.$t('def.cancel'),

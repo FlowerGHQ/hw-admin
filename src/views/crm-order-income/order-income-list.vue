@@ -2,33 +2,29 @@
     <div id="OrderList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">{{ $t('crm_o.list') }}</div>
+                <div class="title-area">{{ $t('crm_oi.list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" ><i class="icon i_add"/>{{ $t('crm_o.save') }}</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" ><i class="icon i_add"/>{{ $t('crm_oi.save') }}</a-button>
                 </div>
             </div>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('crm_o.name') }}：</div> <!-- 合同名称 -->
+                        <div class="key">{{ $t('crm_oi.uid') }}：</div> <!-- 回款单编号 -->
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('crm_o.customer_name') }}：</div> <!-- 客户名称 -->
+                        <div class="key">{{ $t('crm_oi.status') }}：</div> <!-- 回款单状态 -->
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
+                            <a-select v-model:value="searchForm.status" :placeholder="$t('def.select')" @change="handleSearch">
+                                <a-select-option v-for="item of CRM_STATUS_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                            </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('crm_o.own_user_name') }}：</div> <!-- 负责人 -->
-                        <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('crm_o.status') }}：</div> <!-- 合同状态 -->
+                        <div class="key">{{ $t('crm_oi.type') }}：</div> <!-- 回款类型 -->
                         <div class="value">
                             <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" @change="handleSearch">
                                 <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
@@ -36,17 +32,57 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('crm_o.collection_schedule') }}：</div> <!-- 回款进度 -->
+                        <div class="key">{{ $t('crm_oi.payment_type') }}：</div> <!-- 支付方式 -->
                         <div class="value">
-                            <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                            <a-select v-model:value="searchForm.payment_type" :placeholder="$t('def.select')" @change="handleSearch">
+                                <a-select-option v-for="item of CRM_PAYMENT_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('crm_o.create_user') }}：</div> <!-- 创建人 -->
+                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
+                        <div class="key">{{ $t('crm_oi.date') }}：</div> <!-- 回款日期 -->
+                        <div class="value"><TimeSearch @search="handleOtherSearch" :keys="dateTime" ref='DateTimeSearch'/></div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
+                        <div class="key">{{ $t('crm_oi.money') }}：</div> <!-- 回款金额 -->
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
+                            <a-input-group compact>
+                                <a-input
+                                    v-model:value="searchForm.money_interval_low"
+                                    style="width: 100px; text-align: center"
+                                    :placeholder="$t('def.input')"
+                                />
+                                <a-input
+                                    v-model:value="value13"
+                                    style="width: 30px; border-left: 0; pointer-events: none; background-color: #fff"
+                                    placeholder="-"
+                                    disabled
+                                />
+                                <a-input
+                                    v-model:value="searchForm.money_interval_high"
+                                    style="width: 100px; text-align: center; border-left: 0"
+                                    :placeholder="$t('def.input')"
+                                />
+                            </a-input-group>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">{{ $t('crm_oi.create_user') }}：</div> <!-- 创建人 -->
+                        <div class="value">
+                            <a-select
+                                v-model:value="searchForm.create_user_id"
+                                show-search
+                                :placeholder="$t('def.input')"
+                                :default-active-first-option="false"
+                                :show-arrow="false"
+                                :filter-option="false"
+                                :not-found-content="null"
+                                @search="handleCreateUserSearch"
+                            >
+                                <a-select-option v-for=" item in createUserOptions" :key="item.create_user_id" :value="item.create_user_id">
+                                    {{ item.create_user_name }}
+                                </a-select-option>
+                            </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
@@ -73,8 +109,8 @@
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
-                        <template v-if="column.key === 'phone'">
-                            {{ text || '-' }}
+                        <template v-if="column.key === 'money'">
+                            {{ text / 100 + '元' || '-' }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -110,7 +146,6 @@
 <script>
 import Core from '../../core';
 import TimeSearch from '../../components/common/TimeSearch.vue'
-
 export default {
     name: 'OrderList',
     components: {
@@ -126,17 +161,28 @@ export default {
             currPage: 1,
             pageSize: 20,
 
-            CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
             total: 0,
             orderByFields: {},
             // 搜索
             searchForm: {
-                name: '',
+                uid: '',
+                status: '',
                 phone:'',
+                type: '',
+                payment_type: '',
+                create_user_id: '',
+                money_interval_low: '',
+                money_interval_high: '',
+                date_begin_time: '',
+                date_end_time: '',
                 begin_time: '',
                 end_time: '',
-                type: '',
             },
+            dateTime: ['date_begin_time', 'date_end_time'],
+            createUserOptions: [], // 创建人列表
+            CRM_STATUS_MAP: Core.Const.CRM_ORDER_INCOME.STATUS_MAP, // 回款单状态
+            CRM_TYPE_MAP: Core.Const.CRM_ORDER_INCOME.TYPE_MAP, // 回款类型
+            CRM_PAYMENT_TYPE_MAP: Core.Const.CRM_ORDER_INCOME.PAYMENT_TYPE_MAP, // 支付方式
             // 表格
             tableData: [],
         };
@@ -145,13 +191,14 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: 'crm_o.name', dataIndex: 'name', key:'item', sorter: true},
-                {title: 'crm_o.customer_name', dataIndex: 'customer_name', key:'item', sorter: true},
-                {title: 'crm_o.own_user_name', dataIndex:  "own_user_name", key:'item', sorter: true},
-                {title: 'crm_o.status', dataIndex: 'status', key: 'util', util: 'CRMOrderIncomeStatusFilter', sorter: true},
-                {title: 'crm_o.paid_money_progress', dataIndex: 'paid_money_progress', key:'item', sorter: true},
+                {title: 'crm_oi.uid', dataIndex:  "uid", key:'item', sorter: true},
+                {title: 'crm_oi.status', dataIndex: 'status', key: 'util', util: 'CRMOrderIncomeStatusFilter', sorter: true},
+                {title: 'crm_oi.money', dataIndex: 'money', key: 'money', sorter: true},
+                {title: 'crm_oi.date', dataIndex: 'date', key: 'time', sorter: true},
+                {title: 'crm_oi.type', dataIndex: 'type', key:'util', util: 'CRMOrderIncomeTypeFilter', sorter: true},
+                {title: 'crm_oi.payment_type', dataIndex: 'payment_type', key:'util', util: 'CRMOrderIncomePaymentTypeFilter', sorter: true},
                 {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
-                {title: 'crm_o.create_user', dataIndex: "create_user_name", key: 'item', sorter: true},
+                {title: 'crm_oi.create_user', dataIndex: "create_user_name", key: 'item', sorter: true},
                 {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
@@ -202,6 +249,7 @@ export default {
         handleSearchReset() {    // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
             this.$refs.TimeSearch.handleReset()
+            this.$refs.DateTimeSearch.handleReset()
             this.orderByFields = {}
             this.pageChange(1);
         },
@@ -210,7 +258,6 @@ export default {
             Core.Api.CRMOrderIncome.list({
                 ...this.searchForm,
                 order_by_fields: this.orderByFields,
-                search_type: 30,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -235,6 +282,13 @@ export default {
                     this.orderByFields[filter.field] =  1
             }
             this.getTableData()
+        },
+        handleCreateUserSearch(name) { // 创建人条件搜索 下拉框
+            Core.Api.CRMOrderIncome.createUser({
+                create_user_name: name,
+            }).then(res => {
+                this.createUserOptions = res.list
+            })
         },
         handleDelete(id) {
             let _this = this;

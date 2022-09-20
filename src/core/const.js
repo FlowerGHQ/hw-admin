@@ -1450,29 +1450,28 @@ let Const = {
 			'40': { key: 40, zh: '执行中',en: 'Unit of the customer', value: 40 },
 			'50': { key: 50, zh: '已结束',en: 'Unit of the customer', value: 50 },
 		},
+        // PAID_MONEY_PROGRESS: {
+        //     0_20: 1,        // 回款进度 0%-20%
+        //     20_40: 2,       // 回款进度 20%-40%
+        //     40_60: 3,       // 回款进度 40%-60%
+        //     60_80: 4,       // 回款进度 60%-80%
+        //     80_100: 5,      // 回款进度 80%-100%
+        // },
+        PAID_MONEY_PROGRESS_MAP: {
+			'1': { key: 1, zh: '回款进度 0%-20%',en: 'Individual customers', value: 1 },
+			'2': { key: 2, zh: '回款进度 20%-40%',en: 'Individual customers', value: 2 },
+			'3': { key: 3, zh: '回款进度 40%-60%',en: 'Unit of the customer', value: 3 },
+			'4': { key: 4, zh: '回款进度 60%-80%',en: 'Unit of the customer', value: 4 },
+			'5': { key: 5, zh: '回款进度 80%-100%',en: 'Unit of the customer', value: 5 },
+        },
     },
     CRM_ORDER_INCOME: {
-		TYPE: {
-            // SALES: 10,               // 10产品销售
-            // COOPERATION: 20,         // 20业务合作
-            // SERVICE: 30,             // 30服务
-            // DISTRIBUTE: 40,          // 40代理分销
-            // OTHER: 50,               // 50其他
-        },
-		TYPE_MAP: {
-			// '10': { key: 10, zh: '产品销售',en: 'Individual customers', value: 10 },
-			// '20': { key: 20, zh: '业务合作',en: 'Unit of the customer', value: 20 },
-			// '30': { key: 30, zh: '服务',en: 'Unit of the customer', value: 30 },
-			// '40': { key: 40, zh: '代理分销',en: 'Unit of the customer', value: 40 },
-			// '50': { key: 50, zh: '其他',en: 'Unit of the customer', value: 50 },
-		},
 		STATUS: {
             WAIT_AUDIT: 20,        // 20待审核
             REFUSE: 30,            // 30审核拒绝
             EXECUTING: 40,         // 40审核完成
             PARTIAL_REFUND: 50,    // 50部分退款
             FULL_REFUND: 60,       // 60全部退款
-    
         },
 		STATUS_MAP: {
 			'20': { key: 20, zh: '待审核',en: 'Individual customers', value: 20 },
@@ -1480,6 +1479,34 @@ let Const = {
 			'40': { key: 40, zh: '审核完成',en: 'Unit of the customer', value: 40 },
 			'50': { key: 50, zh: '部分退款',en: 'Unit of the customer', value: 50 },
 			'60': { key: 60, zh: '全部退款',en: 'Unit of the customer', value: 60 },
+		},
+		TYPE: {
+            ADVANCE_PAYMENT: 10,     // 预付款
+            FULL: 20,                // 全款
+            BALANCE_PAYMENT: 30,     // 尾款
+            OTHER: 40,               // 其他
+        },
+		TYPE_MAP: {
+			'10': { key: 10, zh: '预付款',en: 'Individual customers', value: 10 },
+			'20': { key: 20, zh: '全款',en: 'Unit of the customer', value: 20 },
+			'30': { key: 30, zh: '尾款',en: 'Unit of the customer', value: 30 },
+			'40': { key: 40, zh: '其他',en: 'Unit of the customer', value: 40 },
+		},
+		PAYMENT_TYPE: {
+            CASH: 10,        // 现金
+            WECHAT: 20,      // 微信
+            ALIPAY: 30,      // 支付宝
+            UNION_PAY: 40,   // 银联
+            CHECK: 50,       // 支票
+            OTHER: 60,       // 其他
+        },
+		PAYMENT_TYPE_MAP: {
+			'10': { key: 10, zh: '现金',en: 'Individual customers', value: 10 },
+			'20': { key: 20, zh: '微信',en: 'Unit of the customer', value: 20 },
+			'30': { key: 30, zh: '支付宝',en: 'Unit of the customer', value: 30 },
+			'40': { key: 40, zh: '银联',en: 'Unit of the customer', value: 40 },
+			'50': { key: 50, zh: '支票',en: 'Unit of the customer', value: 50 },
+			'60': { key: 60, zh: '其他',en: 'Unit of the customer', value: 60 },
 		},
     },
 	CRM_TRACK_RECORD: {

@@ -1,7 +1,7 @@
 <template>
     <div id="OrderEdit" class="edit-container">
         <div class="title-container">
-            <div class="title-area">{{ form.id ? $t('crm_o.edit') : $t('crm_o.save') }}</div>
+            <div class="title-area">{{ form.id ? $t('crm_oi.edit') : $t('crm_oi.save') }}</div>
         </div>
         <div class="form-block">
             <div class="form-title">
@@ -9,49 +9,43 @@
             </div>
             <div class="form-content">
                 <div class="form-item required">
-                    <div class="key">{{ $t('crm_o.belone_customer') }}：</div> <!-- 所属客户 -->
+                    <div class="key">{{ $t('crm_oi.belong_order') }}：</div> <!-- 归属合同订单 -->
                     <div class="value">
-                        <a-input v-model:value="form.customer_id" :placeholder="$t('def.input')"/>
+                        <a-input v-model:value="form.order_id" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">{{ $t('crm_o.contract_no') }}：</div> <!-- 合同编号 -->
+                    <div class="key">{{ $t('crm_oi.uid') }}：</div> <!-- 回款编号 -->
                     <div class="value">
                         <a-input v-model:value="form.uid" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">{{ $t('crm_o.name') }}：</div> <!-- 合同名称 -->
+                    <div class="key">{{ $t('crm_oi.money') }}：</div> <!-- 回款金额 -->
                     <div class="value">
-                        <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
+                        <a-input v-model:value="form.money" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">{{ $t('crm_o.signing_date') }}：</div> <!-- 签约日期 -->
+                    <div class="key">{{ $t('crm_oi.date') }}：</div> <!-- 回款日期 -->
                     <div class="value">
                         <a-input v-model:value="form.date" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">{{ $t('crm_o.seller_signatory') }}：</div> <!-- 我方签约人 -->
+                    <div class="key">{{ $t('crm_oi.payment_type') }}：</div> <!-- 支付方式 -->
                     <div class="value">
-                        <a-input v-model:value="form.seller_signatory" :placeholder="$t('def.input')"/>
+                        <a-input v-model:value="form.payment_type" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">{{ $t('crm_o.contract_type') }}：</div> <!-- 合同类型 -->
+                    <div class="key">{{ $t('crm_oi.type') }}：</div> <!-- 回款类型 -->
                     <div class="value">
                         <a-input v-model:value="form.type" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">{{ $t('crm_o.buyer_signatory') }}：</div> <!-- 客户方签约人 -->
-                    <div class="value">
-                        <a-input v-model:value="form.buyer_signatory" :placeholder="$t('def.input')"/>
-                    </div>
-                </div>
-                <div class="form-item required">
-                    <div class="key">{{ $t('crm_o.remark') }}：</div> <!-- 备注 -->
+                    <div class="key">{{ $t('crm_oi.remark') }}：</div> <!-- 备注 -->
                     <div class="value">
                         <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>
                     </div>
@@ -165,11 +159,11 @@ export default {
         },
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
-            let area = Core.Util.deepCopy(this.area)
-            if (!form.name) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            form.birthday = form.birthday ? dayjs(form.birthday).unix() : 0 // 日期转时间戳
+            // let area = Core.Util.deepCopy(this.area)
+            // if (!form.name) {
+            //     return this.$message.warning(this.$t('def.enter'))
+            // }
+            // form.birthday = form.birthday ? dayjs(form.birthday).unix() : 0 // 日期转时间戳
 
             console.log('form',this.form)
             Core.Api.CRMOrderIncome.save({

@@ -51,8 +51,8 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('crm_o.collection_schedule') }}：</div> <!-- 回款进度 -->
                         <div class="value">
-                            <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                            <a-select v-model:value="searchForm.paid_money_progress" :placeholder="$t('def.select')" @change="handleSearch">
+                                <a-select-option v-for="item of CRM_PAID_MONEY_PROGRESS_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -69,8 +69,8 @@
                                 :not-found-content="null"
                                 @search="handleCreateUserSearch"
                             >
-                                <a-select-option v-for=" item in createUserOptions" :key="item.user.id" :value="item.user.id">
-                                    {{ item.user.account.name }}
+                                <a-select-option v-for=" item in createUserOptions" :key="item.create_user_id" :value="item.create_user_id">
+                                    {{ item.create_user_name }}
                                 </a-select-option>
                             </a-select>
                         </div>
@@ -154,6 +154,7 @@ export default {
 
             CRM_TYPE_MAP: Core.Const.CRM_ORDER.TYPE_MAP,
             CRM_STATUS_MAP: Core.Const.CRM_ORDER.STATUS_MAP,
+            CRM_PAID_MONEY_PROGRESS_MAP: Core.Const.CRM_ORDER.PAID_MONEY_PROGRESS_MAP,
             total: 0,
             orderByFields: {},
             // 搜索
@@ -162,13 +163,14 @@ export default {
                 customer_name:'',
                 own_user_id:'',
                 create_user_name:'',
+                paid_money_progress: '',
                 status:'',
                 begin_time: '',
                 end_time: '',
                 type: '',
             },
             ownUserOptions: [],
-            createUserOptions: [],
+            createUserOptions: [], // 创建人列表
             // 表格
             tableData: [],
         };
@@ -242,7 +244,7 @@ export default {
             Core.Api.CRMOrder.list({
                 ...this.searchForm,
                 order_by_fields: this.orderByFields,
-                search_type: 30,
+                search_type: 30, // 权限相关先传30 代表全部
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
@@ -279,7 +281,7 @@ export default {
         },
         handleCreateUserSearch(name) { // 创建人条件搜索 下拉框
             Core.Api.CRMOrder.createUser({
-                name: name,
+                create_user_name: name,
             }).then(res => {
                 this.createUserOptions = res.list
             })
