@@ -14,7 +14,7 @@
                         <div class="key">{{ $t('sl.classification') }}：</div> <!-- 标签分类 -->
                         <div class="value">
                             <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                                <a-select-option v-for="item of LABEl_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -22,7 +22,7 @@
                         <div class="key">{{ $t('sl.name') }}：</div> <!-- 标签名称 -->
                         <div class="value">
                             <a-select v-model:value="searchForm.name" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                                <a-select-option v-for="item of LABEl_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -30,7 +30,7 @@
                         <div class="key">{{ $t('r.creator_name') }}：</div> <!-- 创建人 -->
                         <div class="value">
                             <a-select v-model:value="searchForm.user_name" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                                <a-select-option v-for="item of LABEl_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
