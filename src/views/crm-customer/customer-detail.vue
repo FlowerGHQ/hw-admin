@@ -32,16 +32,28 @@
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                        <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>
-                        <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
-                        <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :addCustomerBtn="true"/>
-                        <a-button>新建商机</a-button>
-                        <a-button>新建订单</a-button>
-                        <a-button type="primary" @click="handleBatch('distribute')">{{ $t('crm_c.distribute') }}</a-button>
-                        <a-button type="primary" @click="handleBatch('transfer')">{{ $t('crm_c.transfer') }}</a-button>
-                        <a-button type="primary" @click="handleObtain">{{ $t('crm_c.obtain') }}</a-button>
-                        <a-button type="danger" @click="handleReturnPool">{{ $t('crm_c.return_pool') }}</a-button>
-                        <a-button type="danger" @click="handleDelete">{{ $t('crm_c.delete') }}</a-button>
+                        <span v-if="detail.status === STATUS.POOL">
+                            <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>
+                            <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
+                            <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :addCustomerBtn="true"/>
+                            <a-button type="primary" @click="handleObtain">{{ $t('crm_c.obtain') }}</a-button>
+                            <a-button type="primary" @click="handleBatch('distribute')">{{ $t('crm_c.distribute') }}</a-button>
+                            <a-button type="danger" @click="handleDelete">{{ $t('crm_c.delete') }}</a-button>
+                        </span>
+                        <span v-if="detail.status === STATUS.CUSTOMER &&  trackMemberDetail!== undefined  &&  trackMemberDetail!== null  &&  trackMemberDetail!== ''">
+                            <span v-if="trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ">
+                                <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>
+                                <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
+                                <a-button>新建商机</a-button>
+                                <a-button>新建订单</a-button>
+                            </span>
+                            <span v-if="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN">
+                                <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :addCustomerBtn="true"/>
+                                <a-button type="primary" @click="handleBatch('transfer')">{{ $t('crm_c.transfer') }}</a-button>
+                                <a-button type="danger" @click="handleReturnPool">{{ $t('crm_c.return_pool') }}</a-button>
+                            </span>
+
+                        </span>
                     </a-col>
                 </a-row>
             </div>
@@ -54,9 +66,9 @@
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
-                            <Contact :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :detail="detail"/>
-                            <Bo :detail="detail"/>
-                            <Bo :detail="detail"/>
+                            <CRMContact :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER"/>
+                            <CRMBo :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER"/>
+                            <CRMOrder :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -68,7 +80,7 @@
                             <Group :targetId="id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.dynamic')">
-                            <TrackRecord :detail="detail"/>
+                            <TrackRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :detail="detail"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -194,11 +206,15 @@
 
 <script>
 import Core from '../../core';
-import Contact from './components/Contact.vue';
 import CustomerSituation from './components/CustomerSituation.vue';
-import Bo from './components/Bo.vue';
-import Group from './components/Group.vue';
-import TrackRecord from './components/TrackRecord.vue';
+
+import CRMBo from '@/components/crm/panel/CRMBo.vue';
+import CRMContact from '@/components/crm/panel/CRMContact.vue';
+import CRMOrder from '@/components/crm/panel/CRMOrder.vue';
+import Group from '@/components/crm/panel/Group.vue';
+import TrackRecord from '@/components/crm/panel/TrackRecord.vue';
+
+
 import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
 import FollowUpShow from '@/components/crm/popup-btn/FollowUpShow.vue';
 
@@ -207,13 +223,14 @@ import {get} from "lodash";
 
 export default {
     name: 'CustomerEdit',
-    components: { CustomerSelect, FollowUpShow, Contact, Bo, Group, TrackRecord, CustomerSituation},
+    components: { CustomerSelect, FollowUpShow, CRMContact, CRMBo, Group, CRMOrder, TrackRecord, CustomerSituation},
     props: {},
     data() {
         return {
             Core,
             TYPE_MAP: Core.Const.CRM_TRACK_RECORD.TYPE_MAP,
             INTENT_MAP: Core.Const.CRM_TRACK_RECORD.INTENT_MAP,
+            STATUS: Core.Const.CRM_CUSTOMER.STATUS,
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
 
             loginType: Core.Data.getLoginType(),
@@ -236,6 +253,7 @@ export default {
             },
             batchShow: false,
             userData: [],
+            trackMemberDetail: undefined,
             upload: { // 上传图片
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
                 coverList: [],
@@ -274,6 +292,7 @@ export default {
         // this.id = Number(this.$route.query.id) || 0
         if (this.id) {
             this.getCustomerDetail();
+            this.getTargetByUserId();
         }
     },
     methods: {
@@ -414,28 +433,30 @@ export default {
             this.batchType = '';
         },
         handleBatchSubmit() {
-            if (this.batchForm.own_user_id) {
+            if (!this.batchForm.own_user_id) {
                 return this.$message.warning(this.$t('crm_c.select'))
             }
             switch (this.batchType){
                 case "distribute":
-                    Core.Api.CRMCustomer.batchDistribute({
+                    Core.Api.CRMCustomer.distribute({
                         id: this.detail.id,
                         own_user_id: this.batchForm.own_user_id,
                     }).then(() => {
-                        this.$message.success(_this.$t('pop_up.delete_success'));
-                        this.getTableData();
+                        this.$message.success(this.$t('pop_up.delete_success'));
+                        this.getCustomerDetail();
+                        this.handleBatchClose();
                     }).catch(err => {
                         console.log("handleDelete err", err);
                     })
                     break;
                 case "transfer":
-                    Core.Api.CRMCustomer.batchTransfer({
+                    Core.Api.CRMCustomer.transfer({
                         id: this.detail.id,
                         own_user_id: this.batchForm.own_user_id,
                     }).then(() => {
-                        this.$message.success(_this.$t('pop_up.delete_success'));
-                        this.getTableData();
+                        this.$message.success(this.$t('pop_up.delete_success'));
+                        this.getCustomerDetail();
+                        this.handleBatchClose();
                     }).catch(err => {
                         console.log("handleDelete err", err);
                     })
@@ -445,7 +466,8 @@ export default {
         getUserData(query){
             this.loading = true;
             Core.Api.User.list({
-                name: query
+                name: query,
+                org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
             }).then(res => {
                 console.log("getTableData res:", res)
                 this.userData = res.list;
@@ -465,7 +487,8 @@ export default {
                 onOk() {
                     Core.Api.CRMCustomer.delete({id: _this.detail.id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
-                        _this.getTableData();
+                        _this.getCustomerDetail();
+                        _this.handleBatchClose();
                     }).catch(err => {
                         console.log("handleDelete err", err);
                     })
@@ -482,7 +505,8 @@ export default {
                 onOk() {
                     Core.Api.CRMCustomer.obtain({id: _this.detail.id}).then(() => {
                         _this.$message.success(_this.$t('crm_c.obtain_success'));
-                        _this.getTableData();
+                        _this.getCustomerDetail();
+                        _this.handleBatchClose();
                     }).catch(err => {
                         console.log("handleDelete err", err);
                     })
@@ -499,12 +523,21 @@ export default {
                 onOk() {
                     Core.Api.CRMCustomer.returnPool({id: _this.detail.id}).then(() => {
                         _this.$message.success(_this.$t('crm_c.return_pool_success'));
-                        _this.getTableData();
+                        _this.getCustomerDetail();
                     }).catch(err => {
                         console.log("handleDelete err", err);
                     })
                 },
             });
+        },
+        getTargetByUserId() {
+            Core.Api.CRMTrackMember.getTargetByUserId({
+                target_id: this.id,
+                target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER,
+            }).then(res => {
+                this.trackMemberDetail = res.detail
+                console.log("trackMemberDetail", this.trackMemberDetail);
+            })
         },
     }
 };

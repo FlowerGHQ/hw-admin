@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('sl.list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleModalShow()"><i class="icon i_add"/>{{ $t('i.add_category') }}</a-button>
+                    <a-button type="primary" @click="handleModalShow()"><i class="icon i_add"/>{{ $t('sl.save') }}</a-button>
                     <!-- <a-button type="primary" @click="routerChange('edit')" ><i class="icon i_add"/>{{ $t('sl.save') }}</a-button> -->
                 </div>
             </div>
@@ -14,7 +14,7 @@
                         <div class="key">{{ $t('sl.classification') }}：</div> <!-- 标签分类 -->
                         <div class="value">
                             <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                                <a-select-option v-for="item of LABEl_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -22,7 +22,7 @@
                         <div class="key">{{ $t('sl.name') }}：</div> <!-- 标签名称 -->
                         <div class="value">
                             <a-select v-model:value="searchForm.name" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                                <a-select-option v-for="item of LABEl_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -30,7 +30,7 @@
                         <div class="key">{{ $t('r.creator_name') }}：</div> <!-- 创建人 -->
                         <div class="value">
                             <a-select v-model:value="searchForm.user_name" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                                <a-select-option v-for="item of LABEl_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -107,30 +107,28 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="modalVisible" :title="editForm.id ? $t('i.edit_a') : $t('i.add_category')" @ok="handleModalSubmit">
+            <a-modal v-model:visible="modalVisible" :title="editForm.id ? $t('sl.edit') : $t('sl.save')" @ok="handleModalSubmit">
                 <div class="modal-content">
                     <div class="form-item">
-                        <div class="key">{{ $t('n.name') }}</div>
+                        <div class="key">{{ $t('sl.name') }}</div>
                         <div class="value">
                             <a-input v-model:value="editForm.name" :placeholder="$t('def.input')"/>
                         </div>
                     </div>
-                    <div class="form-item">
-                        <div class="key">{{ $t('n.name_en') }}</div>
+                    <div class="form-item textarea">
+                        <div class="key">{{ $t('sl.remark') }}</div>
                         <div class="value">
-                            <a-input v-model:value="editForm.name_en" :placeholder="$t('def.input')"/>
+                            <a-textarea v-model:value="editForm.remark" placeholder="请输入维修备注" :auto-size="{ minRows: 2, maxRows: 2 }"/>
                         </div>
                     </div>
-                    <div class="form-item">
-                        <div class="key">{{ $t('n.index') }}</div>
+                    <div class="form-item" >
+                        <div class="key">{{ $t('sl.synchronize') }}：</div>
                         <div class="value">
-                            <a-input v-model:value="editForm.index" :placeholder="$t('def.input')"/>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="key">{{ $t('i.home_page_redirect_number') }}</div>
-                        <div class="value">
-                            <a-input v-model:value="editForm.index_key" :placeholder="$t('def.input')"/>
+                            <a-radio-group v-model:value="editForm.gender">
+                                <a-radio v-for="item in LABEl_TYPE_MAP" :value="item.value">
+                                    {{lang === 'zh' ? item.zh: item.en}}
+                                </a-radio>
+                            </a-radio-group>
                         </div>
                     </div>
                 </div>
@@ -150,7 +148,7 @@
         data() {
             return {
                 loginType: Core.Data.getLoginType(),
-                CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
+                LABEl_TYPE_MAP: Core.Const.LABEl.TYPE_MAP,
                 orderByFields: {},
                 // 搜索
                 searchForm: {
@@ -183,6 +181,9 @@
             }
         },
         computed: {
+            lang() {
+                return this.$store.state.lang
+            },
             tableColumns() {
                 let columns = [
                     {title: 'n.name', dataIndex: 'name', key:'item', sorter: true},
@@ -334,7 +335,7 @@
                 });
             },
 
-            // 编辑与新增子类
+            // 编辑与新增标签
             handleModalShow() {
                 this.modalVisible = true
             },

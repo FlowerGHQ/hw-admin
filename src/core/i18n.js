@@ -1193,12 +1193,18 @@ const messages = {
             order: '合同订单',
 		    own_user_name: "回款单负责人",
 	    },
+	    crm_r: {
+		    from_customer: '来自客户',
+	    },
         sl: {  // 智能标签
             list: '标签列表',
             save: '新建标签',
             classification: '标签分类',
             name: '标签名称',
-            principal: '负责人'
+            principal: '负责人',
+            edit: '修改标签',
+            remark: '备注',
+            synchronize: '同步新建',
         },
 	    authority: {
         	title: {
@@ -2694,6 +2700,9 @@ const messages = {
             classification: 'Label classification',
             name : 'Label name',
             principal: 'Principal',
+            edit: 'Edit Label',
+            remark: 'Remark',
+            synchronize: 'Synchronize new',
         },
 	    authority: {
             title: {

@@ -614,9 +614,10 @@ const apiList = {
 		save: ['PostJson', 'crm-track-member/save'],//
 		list: ['PostJson', 'crm-track-member/list'],//
 		delete: ['PostJson', 'crm-track-member/delete'],//
-		saveList: ['PostJson', 'crm-track-member/save-list'],//
+		batchSave: ['PostJson', 'crm-track-member/batch-save'],//
+		getTargetByUserId: ['PostJson', 'crm-track-member/get-target-by-user-id'],//
 	},
-	CRMTrackRecord:{//CRM 团队
+	CRMTrackRecord:{//CRM跟进记录
 		save: ['PostJson', 'crm-track-record/save'],//
 		list: ['PostJson', 'crm-track-record/list'],//
 		delete: ['PostJson', 'crm-track-record/delete'],//
