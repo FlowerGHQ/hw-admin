@@ -32,15 +32,15 @@
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                        <div v-if="detail.status === STATUS.POOL">
+                        <span v-if="detail.status === STATUS.POOL">
                             <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>
                             <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
                             <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :addCustomerBtn="true"/>
                             <a-button type="primary" @click="handleObtain">{{ $t('crm_c.obtain') }}</a-button>
                             <a-button type="primary" @click="handleBatch('distribute')">{{ $t('crm_c.distribute') }}</a-button>
                             <a-button type="danger" @click="handleDelete">{{ $t('crm_c.delete') }}</a-button>
-                        </div>
-                        <div v-if="detail.status === STATUS.CUSTOMER &&  trackMemberDetail!== undefined  &&  trackMemberDetail!== null  &&  trackMemberDetail!== ''">
+                        </span>
+                        <span v-if="detail.status === STATUS.CUSTOMER &&  trackMemberDetail!== undefined  &&  trackMemberDetail!== null  &&  trackMemberDetail!== ''">
                             <span v-if="trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ">
                                 <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>
                                 <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
@@ -53,7 +53,7 @@
                                 <a-button type="danger" @click="handleReturnPool">{{ $t('crm_c.return_pool') }}</a-button>
                             </span>
 
-                        </div>
+                        </span>
                     </a-col>
                 </a-row>
             </div>
@@ -433,28 +433,30 @@ export default {
             this.batchType = '';
         },
         handleBatchSubmit() {
-            if (this.batchForm.own_user_id) {
+            if (!this.batchForm.own_user_id) {
                 return this.$message.warning(this.$t('crm_c.select'))
             }
             switch (this.batchType){
                 case "distribute":
-                    Core.Api.CRMCustomer.batchDistribute({
+                    Core.Api.CRMCustomer.distribute({
                         id: this.detail.id,
                         own_user_id: this.batchForm.own_user_id,
                     }).then(() => {
-                        this.$message.success(_this.$t('pop_up.delete_success'));
-                        this.getTableData();
+                        this.$message.success(this.$t('pop_up.delete_success'));
+                        this.getCustomerDetail();
+                        this.handleBatchClose();
                     }).catch(err => {
                         console.log("handleDelete err", err);
                     })
                     break;
                 case "transfer":
-                    Core.Api.CRMCustomer.batchTransfer({
+                    Core.Api.CRMCustomer.transfer({
                         id: this.detail.id,
                         own_user_id: this.batchForm.own_user_id,
                     }).then(() => {
-                        this.$message.success(_this.$t('pop_up.delete_success'));
-                        this.getTableData();
+                        this.$message.success(this.$t('pop_up.delete_success'));
+                        this.getCustomerDetail();
+                        this.handleBatchClose();
                     }).catch(err => {
                         console.log("handleDelete err", err);
                     })
@@ -485,7 +487,8 @@ export default {
                 onOk() {
                     Core.Api.CRMCustomer.delete({id: _this.detail.id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
-                        _this.getTableData();
+                        _this.getCustomerDetail();
+                        _this.handleBatchClose();
                     }).catch(err => {
                         console.log("handleDelete err", err);
                     })
@@ -502,7 +505,8 @@ export default {
                 onOk() {
                     Core.Api.CRMCustomer.obtain({id: _this.detail.id}).then(() => {
                         _this.$message.success(_this.$t('crm_c.obtain_success'));
-                        _this.getTableData();
+                        _this.getCustomerDetail();
+                        _this.handleBatchClose();
                     }).catch(err => {
                         console.log("handleDelete err", err);
                     })
@@ -519,7 +523,7 @@ export default {
                 onOk() {
                     Core.Api.CRMCustomer.returnPool({id: _this.detail.id}).then(() => {
                         _this.$message.success(_this.$t('crm_c.return_pool_success'));
-                        _this.getTableData();
+                        _this.getCustomerDetail();
                     }).catch(err => {
                         console.log("handleDelete err", err);
                     })
