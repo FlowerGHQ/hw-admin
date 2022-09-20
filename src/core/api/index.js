@@ -603,17 +603,6 @@ const apiList = {
 		delete: ['PostJson', 'crm-bo/delete'],//
 		detail: ['PostJson', 'crm-bo/detail'],//
 	},
-	CRMOrder:{//CRM 合同订单
-		save: ['PostJson', 'crm-order/save'],//
-		list: ['PostJson', 'crm-order/list'],//
-		delete: ['PostJson', 'crm-order/delete'],//
-		detail: ['PostJson', 'crm-order/detail'],//
-		createUser: ['PostJson', 'crm-order/join-create-user-list'],//
-		// obtain: ['PostJson', 'crm-order/obtain'],//
-		// distribute: ['PostJson', 'crm-order/distribute'],//
-		// returnPool: ['PostJson', 'crm-order/return-pool'],//
-		// transfer: ['PostJson', 'crm-order/transfer'],//
-	},
 	CRMOrderIncome:{//CRM 回款单
 		save: ['PostJson', 'crm-order/save'],//
 		list: ['PostJson', 'crm-order/list'],//
@@ -638,6 +627,7 @@ const apiList = {
 		delete: ['PostJson', 'crm-order/delete'],// 删除
 		detail: ['PostJson', 'crm-order/detail'],// 详情
         batchDelete: ['PostJson', 'crm-order/batch-delete'],// 批量删除
+	    createUser: ['PostJson', 'crm-order/join-create-user-list'],//
         audit: ['PostJson', 'crm-order/audit'],// 审核
         reactivation: ['PostJson', 'crm-order/reactivation'],// 审核未通过，修改后再次提交从头审核
     },

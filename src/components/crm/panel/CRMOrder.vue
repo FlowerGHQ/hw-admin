@@ -1,20 +1,34 @@
 <template>
 <div class="InformationInfo gray-panel no-margin">
     <div class="panel-title">
-        <div class="title">{{ $t('crm_t.contact_customer') }}</div>
+        <div class="title">{{ $t('crm_o.list') }}</div>
     </div>
     <div class="panel-content">
         <div>
-            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                     :row-key="record => record.id" :loading='loading' :pagination='false'>
+            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' @change="getTableDataSorter">
                 <template #headerCell="{title}">
                     {{ $t(title) }}
                 </template>
-                <template #bodyCell="{record, column, text }">
-                    <template v-if="column.key === 'status'">
-                        <template v-if="record.target_type === Core.Const.AUDIT_RECORD.TARGET_TYPE.QUALITY_FEEDBACK ">
-                            {{ $Util.feedbackStatusFilter(text, $i18n.locale) }}
-                        </template>
+                <template #bodyCell="{ column, text , record }">
+                    <template v-if="column.key === 'detail'">
+                        <a-tooltip placement="top" :title='text'>
+                            <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
+                        </a-tooltip>
+                    </template>
+                    <template v-if="column.key === 'item'">
+                        {{ text || '-' }}
+                    </template>
+                    <template v-if="column.key === 'phone'">
+                        {{ text || '-' }}
+                    </template>
+                    <template v-if="column.key === 'time'">
+                        {{ $Util.timeFilter(text) }}
+                    </template>
+                    <template v-if="column.key === 'util'">
+                        {{ $Util[column.util](text, $i18n.locale) }}
+                    </template>
+                    <template v-if="column.key === 'operation'">
+                        <a-button type="link" @click="routerChange('detail', record)"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
                     </template>
                 </template>
             </a-table>
@@ -34,6 +48,7 @@
                 />
             </div>
         </div>
+
     </div>
 </div>
 </template>
@@ -59,6 +74,7 @@ export default {
     },
     data() {
         return {
+
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -76,14 +92,22 @@ export default {
     },
     watch: {},
     computed: {
+
         tableColumns() {
             let columns = [
-                {title: this.$t('crm_c.name'), dataIndex: ['contact','name'], key: 'item'},
-                {title: this.$t('crm_c.phone'), dataIndex: ['contact','phone'], key: 'time'},
-                {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
+                {title: 'crm_o.name', dataIndex: 'name', key:'item', sorter: true},
+                {title: 'crm_o.customer_name', dataIndex: 'customer_name', key:'item', sorter: true},
+                {title: 'crm_o.own_user_name', dataIndex:  "own_user_name", key:'item', sorter: true},
+                {title: 'crm_o.status', dataIndex: 'status', key: 'util', util: 'CRMOrderStatusFilter', sorter: true},
+                {title: 'crm_o.paid_money_progress', dataIndex: 'paid_money_progress', key:'item', sorter: true},
+                {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
+                {title: 'crm_o.create_user', dataIndex: "create_user_name", key: 'item', sorter: true},
+                {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
+                {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
             return columns
         },
+
         lang() {
             return this.$store.state.lang
         }
@@ -128,17 +152,19 @@ export default {
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
-            Core.Api.CrmContactBind.list({
-                target_id: this.targetId,
-                target_type: this.targetType,
+            Core.Api.CRMOrder.list({
+                target_id:this.targetId,
+                target_type:this.targetType,
+                search_type: 30,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
-                console.log("getTableData res", res)
+                console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
+                console.log("🚀 ~ file: order-list.vue ~ line 229 ~ getTableData ~ this.tableData", this.tableData)
             }).catch(err => {
-                console.log('getTableData err', err)
+                console.log('getTableData err:', err)
             }).finally(() => {
                 this.loading = false;
             });

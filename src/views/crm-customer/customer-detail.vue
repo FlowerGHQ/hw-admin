@@ -54,9 +54,9 @@
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
-                            <Contact :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :detail="detail"/>
-                            <Bo :detail="detail"/>
-                            <Bo :detail="detail"/>
+                            <CRMContact :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER"/>
+                            <CRMBo :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER"/>
+                            <CRMOrder :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -68,7 +68,7 @@
                             <Group :targetId="id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.dynamic')">
-                            <TrackRecord :detail="detail"/>
+                            <TrackRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :detail="detail"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -194,11 +194,15 @@
 
 <script>
 import Core from '../../core';
-import Contact from './components/Contact.vue';
 import CustomerSituation from './components/CustomerSituation.vue';
-import Bo from './components/Bo.vue';
-import Group from './components/Group.vue';
-import TrackRecord from './components/TrackRecord.vue';
+
+import CRMBo from '@/components/crm/panel/CRMBo.vue';
+import CRMContact from '@/components/crm/panel/CRMContact.vue';
+import CRMOrder from '@/components/crm/panel/CRMOrder.vue';
+import Group from '@/components/crm/panel/Group.vue';
+import TrackRecord from '@/components/crm/panel/TrackRecord.vue';
+
+
 import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
 import FollowUpShow from '@/components/crm/popup-btn/FollowUpShow.vue';
 
@@ -207,7 +211,7 @@ import {get} from "lodash";
 
 export default {
     name: 'CustomerEdit',
-    components: { CustomerSelect, FollowUpShow, Contact, Bo, Group, TrackRecord, CustomerSituation},
+    components: { CustomerSelect, FollowUpShow, CRMContact, CRMBo, Group, CRMOrder, TrackRecord, CustomerSituation},
     props: {},
     data() {
         return {
