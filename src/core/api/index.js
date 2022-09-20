@@ -624,7 +624,7 @@ const apiList = {
 		save: ['PostJson', 'crm-track-member/save'],//
 		list: ['PostJson', 'crm-track-member/list'],//
 		delete: ['PostJson', 'crm-track-member/delete'],//
-		delete: ['PostJson', 'crm-track-member/delete'],//
+		saveList: ['PostJson', 'crm-track-member/save-list'],//
 	},
 	CRMTrackRecord:{//CRM 团队
 		save: ['PostJson', 'crm-track-record/save'],//
@@ -632,17 +632,27 @@ const apiList = {
 		delete: ['PostJson', 'crm-track-record/delete'],//
 		detail: ['PostJson', 'crm-track-record/detail'],//
 	},
+    CRMOrder: { // CRM合同订单
+        save: ['PostJson', 'crm-order/save'],//新增/修改
+		list: ['PostJson', 'crm-order/list'],//列表
+		delete: ['PostJson', 'crm-order/delete'],// 删除
+		detail: ['PostJson', 'crm-order/detail'],// 详情
+        batchDelete: ['PostJson', 'crm-order/batch-delete'],// 批量删除
+        audit: ['PostJson', 'crm-order/audit'],// 审核
+        reactivation: ['PostJson', 'crm-order/reactivation'],// 审核未通过，修改后再次提交从头审核
+    },
+    CRMItemBind: {  //CRM销售信息
+        save: ['PostJson', 'crm-item-bind/save'],//新增/修改
+		list: ['PostJson', 'crm-item-bind/list'],//列表
+		delete: ['PostJson', 'crm-item-bind/delete'],//删除
+		detail: ['PostJson', 'crm-item-bind/detail'],//详情
+    },
+
 	CRMBoStatusGroup:{//CRM 阶段
 		save: ['PostJson', 'crm-bo-status-group/save'],//
 		list: ['PostJson', 'crm-bo-status-group/list'],//
 		delete: ['PostJson', 'crm-bo-status-group/delete'],//
 		detail: ['PostJson', 'crm-bo-status-group/detail'],//
-	},
-	CRMItemBind:{//CRM 阶段
-		save: ['PostJson', 'crm-item-bind/save'],//
-		list: ['PostJson', 'crm-item-bind/list'],//
-		delete: ['PostJson', 'crm-item-bind/delete'],//
-		detail: ['PostJson', 'crm-item-bind/detail'],//
 	},
 	CrmContactBind:{//CRM联系人绑定
 		save: ['PostJson', 'crm-contact-bind/save'],//
@@ -650,6 +660,9 @@ const apiList = {
 		delete: ['PostJson', 'crm-contact-bind/delete'],//
 		detail: ['PostJson', 'crm-contact-bind/detail'],//
 		batchSave: ['PostJson', 'crm-contact-bind/batch-save'],//
+	},
+	CrmActionRecord:{//CRM联系人绑定
+		list: ['PostJson', 'crm-action-record/list'],//
 	},
 
 

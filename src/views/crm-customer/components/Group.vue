@@ -2,7 +2,7 @@
 <div class="InformationInfo gray-panel no-margin">
     <div class="panel-content">
         <div class="title">
-            <span>团队成员({{total}})</span>
+            <span>团队成员({{total}})</span>{{targetId}}
             <div class="right-btn">
                 <TrackMemberSelect @select="handleGroupShow" btnType="link"><i class="icon i_add"/></TrackMemberSelect>
 <!--                <a-button type="link" @click="clickAdd"><i class="icon i_add"/></a-button>-->
@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="search">
-            <a-input-search v-model:value="searchKey" :placeholder="'搜索成员和标签'" @onSearch="clickSearch"/>
+            <a-input-search v-model:value="search_name" :placeholder="'搜索成员和标签'" @search="handleSearch"/>
         </div>
         <div class="list">
             <div class="list-item" v-for="(item, i) in tableData" :key="i">
@@ -22,8 +22,8 @@
                     <div class="type">职位</div>
                 </div>
                 <div class="item-button">
-                    <div class="button" @click="clickDelete(item)"><i class="icon i_delete"/></div>
-                    <div class="button" @click="clickEdit(item)"><i class="icon i_edit"/></div>
+                    <div class="button" @click="handleDelete(item.id)"><i class="icon i_delete"/></div>
+<!--                    <div class="button" @click="clickEdit(item)"><i class="icon i_edit"/></div>-->
                 </div>
             </div>
         </div>
@@ -79,12 +79,10 @@ export default {
             type: Object,
         },
         targetId: {
-            type: Number,
-            default: 0
+            type: Number
         },
         targetType: {
-            type: Number,
-            default: 0
+            type: Number
         },
 
     },
@@ -105,10 +103,9 @@ export default {
             userDetail: '',
             initLoading: false,
 
-            searchKey: '',
+            search_name: '',
         };
     },
-    watch: {},
     computed: {
         lang() {
             return this.$store.state.lang
@@ -125,8 +122,9 @@ export default {
         // 点击编辑
         clickEidt() {},
         // 点击搜索
-        clickSearch(key) {
-            console.log('click search >>', key);
+        handleSearch() {
+            this.getTableData()
+            // console.log('click search >>', key);
         },
         routerChange(type, item = {}) {
             console.log(item)
@@ -165,6 +163,7 @@ export default {
         getTableData() {    // 获取 表格 数据
             this.loading = true;
             Core.Api.CRMTrackMember.list({
+                name: this.search_name,
                 target_id: this.targetId,
                 target_type: this.targetType,
                 page: this.currPage,
@@ -187,7 +186,7 @@ export default {
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.CRMCustomer.delete({id}).then(() => {
+                    Core.Api.CRMTrackMember.delete({id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
@@ -198,7 +197,18 @@ export default {
         },
         // 添加商品
         handleGroupShow(ids, items) {
+            Core.Api.CRMTrackMember.saveList({
+                target_id: this.targetId,
+                target_type: this.targetType,
+                user_id_list: ids,
+                type: 1,
+            }).then(()=> {
 
+            }).catch(err => {
+                console.log('getTableData err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
         },
     }
 };

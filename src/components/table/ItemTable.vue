@@ -52,6 +52,9 @@
             <template v-if="column.key === 'time'">
                 {{ $Util.timeFilter(text)}}
             </template>
+            <!-- <template v-if="column.key === 'operate'">
+                <a-button type='link' @click="handleDelete(record.id)" class="danger">{{ $t('def.delete') }}</a-button>
+            </template> -->
         </template>
     </a-table>
 </template>

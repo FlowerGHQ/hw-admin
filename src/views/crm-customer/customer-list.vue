@@ -247,7 +247,7 @@ export default {
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/crm-customer/customer-edit",
-                        query: {id: item.id}
+                        query: {id: item.id, status: this.searchForm.status}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -417,7 +417,7 @@ export default {
             if (this.selectedRowKeys.length === 0) {
                 return this.$message.warning(this.$t('crm_c.select'))
             }
-            if (this.batchForm.own_user_id) {
+            if (!this.batchForm.own_user_id) {
                 return this.$message.warning(this.$t('crm_c.select'))
             }
             switch (this.batchType){
@@ -428,6 +428,7 @@ export default {
                     }).then(() => {
                         this.$message.success(_this.$t('pop_up.delete_success'));
                         this.getTableData();
+                        this.handleBatchClose();
                     }).catch(err => {
                         console.log("handleDelete err", err);
                     })
@@ -439,6 +440,7 @@ export default {
                     }).then(() => {
                         this.$message.success(_this.$t('pop_up.delete_success'));
                         this.getTableData();
+                        this.handleBatchClose();
                     }).catch(err => {
                         console.log("handleDelete err", err);
                     })

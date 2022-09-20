@@ -1721,6 +1721,31 @@ const routes = [
 			},
 		]
 	},
+    { // 客户管理
+		path: '/smart-label',
+		component: Layout,
+		redirect: '/smart-label/label-list',
+		name: 'SmartLabel',
+		meta: {
+			title: '智能标签',
+			title_en: 'Smart Label',
+			icon: 'i_s_customer',
+			// auth: ["crm-customer.list"],
+
+		},
+		children: [
+			{
+				path: 'label-list',
+				name: 'LabelList',
+				component: () => import('@/views/smart-label/label-list.vue'),
+				meta: {
+					title: '标签列表',
+					title_en: 'Label List',
+					// auth: ["crm-community-customer.list"],
+				}
+			},
+		]
+	},
     { // 系统管理
         path: '/system',
         component: Layout,
