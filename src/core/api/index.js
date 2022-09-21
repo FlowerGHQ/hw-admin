@@ -39,6 +39,7 @@ const apiList = {
 
         exportSalesStatement: ['GetJson', 'purchase-order/export-sales-statement'], // 导出数据
 	    exportSalesQuantityStatistics: ['GetJson', 'purchase-order/export-sales-quantity-statistics'], // 导出数据
+	    exportAccessoriesOrder: ['GetJson', 'purchase-order/export-accessories-order'], // 导出数据
     },
     User: { // 员工
         save: ['PostJson', 'user/save'],

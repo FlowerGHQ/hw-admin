@@ -944,6 +944,8 @@ const messages = {
             remark: '备注',
             inaccessible: '当前身份无法访问',
             uploaded: '上传成功',
+	        export_as_supplier_report: '以供应商报表方式导出',
+
 
         },
         search: {
