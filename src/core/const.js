@@ -399,7 +399,6 @@ let Const = {
 			WAIT_AFTER_SALES_AUDIT: 100,
 			AFTER_SALES_AUDIT_FAIL: 110,
 			WAIT_FEEDBACK : 200 ,// 等待反馈
-
 			WAIT_QUALITY_AUDIT : 300,
 			QUALITY_AUDIT_FAIL : 310,
 			WAIT_AFTER_FEEDBACK : 400 ,//等待售后反馈
@@ -411,11 +410,11 @@ let Const = {
 			'0': { key: 0, color: 'yellow', zh: '待提交', en: 'Pending submission'},
 			'100': { key: 100, color: 'blue', zh: '等待平台售后审核', en: 'Awaiting after-sales audit'},
 			'110': { key: 110, color: 'blue', zh: '待修改', en: 'Pending modification'},
-			'200': { key: 200, color: 'orange', zh: '等待平台质量审核', en: 'Awaiting quality audit'},
+			'200': { key: 200, color: 'purple', zh: '等待反馈', en: 'Awaiting feedback'},
 			'210': { key: 210, color: 'orange', zh: '待修改',en: 'Pending modification'},
-			'300': { key: 300, color: 'purple', zh: '等待反馈', en: 'Awaiting feedback'},
-			'400': { key: 400, color: 'purple', zh: '等待审核反馈', en: 'Awaiting audit feedback'},
-			'410': { key: 410, color: 'purple', zh: '反馈待修改', en: 'Feedback to be modified'},
+			'300': { key: 300, color: 'purple', zh: '等待审核反馈', en: 'Awaiting audit feedback'},
+			'310': { key: 310, color: 'purple', zh: '反馈待修改', en: 'Feedback to be modified'},
+			'400': { key: 400, color: 'purple', zh: '等待售后反馈', en: 'Feedback to be modified'},
 			'500': { key: 500, color: 'blue', zh: '已完成', en: 'Finished'},
 			'-10': { key: -10, color: 'blue', zh: '审核失败',en: 'Audit failed'},
 			'-1': { key: -1, color: 'gray', zh: '已取消', en: 'Canceled'},

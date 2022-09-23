@@ -2,7 +2,7 @@
 <div class="Feedback">
     <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
         <template #expandIcon ><i class="icon i_expan_l"/> </template>
-        <a-collapse-panel key="feedback" :header="$t('fe.feedback')" class="gray-collapse-panel">
+        <a-collapse-panel key="feedback" :header="$t('fe.after_feedback')" class="gray-collapse-panel">
             <div class="panel-content">
                 <div class="form-item textarea">
                     <div class="key">{{ $t('fe.title') }}:</div>

@@ -19,10 +19,10 @@
                 <a-button type="primary" @click="handleAuditShow()" v-if="detail.status === STATUS.WAIT_QUALITY_AUDIT && $auth('ADMIN') && $auth('quality-feedback.quality-audit')">
                     <i class="icon i_audit"/>{{ $t('fe.quality_audit') }}
                 </a-button>
-                <a-button type="primary" @click="handleFeedbackShow()" v-if="(detail.status === STATUS.WAIT_FEEDBACK ) && $auth('ADMIN') && $auth('quality-feedback.feedback')">
+                <a-button type="primary" @click="handleFeedbackShow()" v-if="(detail.status === STATUS.WAIT_FEEDBACK || detail.status === STATUS.QUALITY_AUDIT_FAIL ) && $auth('ADMIN') && $auth('quality-feedback.feedback')">
                     <i class="icon i_audit"/>{{ $t('fe.title') }}
                 </a-button>
-                <a-button type="primary" @click="handleFeedbackEnShow()" v-if="(detail.status === STATUS.WAIT_AFTER_FEEDBACK) && $auth('ADMIN') && $auth('quality-feedback.feedback')">
+                <a-button type="primary" @click="handleFeedbackEnShow()" v-if="(detail.status === STATUS.WAIT_AFTER_FEEDBACK) && $auth('ADMIN') && $auth('fe.after_feedback')">
                     <i class="icon i_audit"/>{{ $t('fe.title') }}
                 </a-button>
 
@@ -86,7 +86,7 @@
         </div>
     </div>
     <template class="modal-container">
-        <a-modal v-model:visible="feedbackAuditShow" :title="$t('n.audit')" class="repair-audit-modal" :after-close='handleAuditClose'>
+        <a-modal v-model:visible="feedbackAuditShow" :title="$t('fe.feedback')" class="repair-audit-modal" :after-close='handleAuditClose'>
             <div class="modal-content">
                 <div class="form-item required">
                     <div class="key">{{ $t('n.result_a') }}:</div>
@@ -109,7 +109,7 @@
                 <a-button @click="handleAuditSubmit()" type="primary">{{ $t('def.ok') }}</a-button>
             </template>
         </a-modal>
-        <a-modal v-model:visible="feedbackShow" :title="$t('n.audit')" class="repair-audit-modal" :after-close='handleFeedbackClose'>
+        <a-modal v-model:visible="feedbackShow" :title="$t('fe.after_feedback')" class="repair-audit-modal" :after-close='handleFeedbackClose'>
             <div class="modal-content">
                 <div class="form-item textarea required">
                     <div class="key">{{ $t('n.fault_analysis') }}:</div>
@@ -314,7 +314,6 @@ export default {
         haveUpdate() {
             switch (this.detail.status) {
                 case STATUS.INIT:
-                case STATUS.QUALITY_AUDIT_FAIL:
                 case STATUS.AFTER_SALES_AUDIT_FAIL:
                     return true
                 default: return false

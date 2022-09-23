@@ -520,6 +520,7 @@ const messages = {
             after_sales_audit: '售后审核',
             quality_audit: '质量审核',
             feedback_audit: '反馈审核',
+		    after_feedback: '售后反馈',
 	    },
         w: { // 钱包账户
             list: '账户列表',
