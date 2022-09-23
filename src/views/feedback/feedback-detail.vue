@@ -19,10 +19,10 @@
                 <a-button type="primary" @click="handleAuditShow()" v-if="detail.status === STATUS.WAIT_QUALITY_AUDIT && $auth('ADMIN') && $auth('quality-feedback.quality-audit')">
                     <i class="icon i_audit"/>{{ $t('fe.quality_audit') }}
                 </a-button>
-                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status === STATUS.WAIT_FEEDBACK_AUDIT && $auth('ADMIN') && $auth('quality-feedback.feedback-audit')">
-                    <i class="icon i_audit"/>{{ $t('fe.feedback_audit') }}
+                <a-button type="primary" @click="handleFeedbackShow()" v-if="(detail.status === STATUS.WAIT_FEEDBACK ) && $auth('ADMIN') && $auth('quality-feedback.feedback')">
+                    <i class="icon i_audit"/>{{ $t('fe.title') }}
                 </a-button>
-                <a-button type="primary" @click="handleFeedbackShow()" v-if="(detail.status === STATUS.WAIT_FEEDBACK || detail.status === STATUS.FEEDBACK_AUDIT_FAIL) && $auth('ADMIN') && $auth('quality-feedback.feedback')">
+                <a-button type="primary" @click="handleFeedbackEnShow()" v-if="(detail.status === STATUS.WAIT_AFTER_FEEDBACK) && $auth('ADMIN') && $auth('quality-feedback.feedback')">
                     <i class="icon i_audit"/>{{ $t('fe.title') }}
                 </a-button>
 
@@ -73,7 +73,8 @@
         </div>
         <MySteps :stepsList='stepsList' :current='currStep' v-if="detail.status != STATUS.CLOSE"/>
         <div class="form-container">
-            <Feedback  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.WAIT_FEEDBACK_AUDIT || detail.status == STATUS.FEEDBACK_AUDIT_FAIL || detail.status == STATUS.CLOSE" ref="CheckFault"/>
+            <FeedbackEn  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.CLOSE" ref="FeedbackEn"/>
+            <Feedback  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.WAIT_AFTER_FEEDBACK || detail.status == STATUS.CLOSE" ref="Feedback"/>
 
             <CheckFault  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.INIT && sameOrg" ref="CheckFault"/>
             <CheckResult :id='id' :detail='detail' @hasTransfer='hasTransfer = true' v-if="showCheckResult"/>
@@ -144,6 +145,42 @@
                 <a-button @click="handleFeedbackSubmit()" type="primary">{{ $t('def.ok') }}</a-button>
             </template>
         </a-modal>
+        <a-modal v-model:visible="feedbackEnShow" :title="$t('n.audit')" class="repair-audit-modal" :after-close='handleFeedbackEnClose'>
+            <div class="modal-content">
+                <div class="form-item textarea required">
+                    <div class="key">{{ $t('n.fault_analysis') }}:</div>
+                    <div class="value">
+                        <a-textarea v-model:value="feedbackEnForm.fault_en" :placeholder="$t('n.please_input')+ $t('n.fault_analysis')"
+                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                    </div>
+                </div>
+                <div class="form-item textarea required">
+                    <div class="key">{{ $t('fe.maintenance') }}:</div>
+                    <div class="value">
+                        <a-textarea v-model:value="feedbackEnForm.treatment_en" :placeholder="$t('n.please_input')+ $t('fe.maintenance')"
+                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                    </div>
+                </div>
+                <div class="form-item textarea required">
+                    <div class="key">{{ $t('fe.solution') }}:</div>
+                    <div class="value">
+                        <a-textarea v-model:value="feedbackEnForm.solution_en" :placeholder="$t('n.please_input')+ $t('fe.solution')"
+                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                    </div>
+                </div>
+                <div class="form-item textarea required">
+                    <div class="key">{{ $t('fe.demand') }}:</div>
+                    <div class="value">
+                        <a-textarea v-model:value="feedbackEnForm.requirement_en" :placeholder="$t('n.please_input')+ $t('fe.demand')"
+                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="feedbackEnShow = false">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleFeedbackEnSubmit()" type="primary">{{ $t('def.ok') }}</a-button>
+            </template>
+        </a-modal>
     </template>
 </div>
 </template>
@@ -156,6 +193,7 @@ import CheckResult from './components/CheckResult.vue';
 import FeedbackInfo from './components/FeedbackInfo.vue';
 import ActionLog from '../repair/components/ActionLog.vue';
 import Feedback from './components/Feedback.vue';
+import FeedbackEn from './components/FeedbackEn.vue';
 import MySteps from '@/components/common/MySteps.vue';
 import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 import AuditRecord from '@/components/common/AuditRecord.vue';
@@ -177,6 +215,7 @@ export default {
         MySteps,
         AuditRecord,
         Feedback,
+        FeedbackEn,
     },
     props: {},
     data() {
@@ -207,6 +246,7 @@ export default {
 
             feedbackAuditShow: false, //审核
             feedbackShow: false,
+            feedbackEnShow: false,
             // auditType: '',
             auditForm: {
                 audit_result: '',
@@ -218,6 +258,12 @@ export default {
                 treatment: '',
                 solution: '',
                 requirement: '',
+            },
+            feedbackEnForm: {
+                fault_en: '',
+                treatment_en: '',
+                solution_en: '',
+                requirement_en: '',
             },
 
             repairEndShow: false,
@@ -325,25 +371,29 @@ export default {
         // 获取当前工单进度
         getCurrStep(status) {
             switch (status) {
-                case STATUS.WAIT_DETECTION:
+                case STATUS.INIT:
                     this.currStep = 0;
                     break;
-                case STATUS.WAIT_REPAIR:
+                case STATUS.AFTER_SALES_AUDIT_FAIL:
+                    this.currStep = 0;
+                    break;
+                case STATUS.WAIT_AFTER_SALES_AUDIT:
                     this.currStep = 1;
                     break;
-                case STATUS.REPAIR_END:
+                case STATUS.WAIT_FEEDBACK:
                     this.currStep = 2;
                     break;
-                case STATUS.SETTLEMENT:
-                    this.currStep = 3;
+                case STATUS.WAIT_AFTER_FEEDBACK:
+                    this.currStep = 2;
                     break;
-                case STATUS.SETTLEMENT_DISTRIBUTOR:
-                    this.currStep = 3;
+                case STATUS.WAIT_QUALITY_AUDIT:
+                    this.currStep = 2;
                     break;
-                case STATUS.AUDIT_SUCCESS:
-                    this.currStep = 3;
+                case STATUS.QUALITY_AUDIT_FAIL:
+                    this.currStep = 2;
                     break;
-                case STATUS.FINISH:
+
+                case STATUS.CLOSE:
                     this.currStep = 3;
                     break;
             }
@@ -403,10 +453,17 @@ export default {
         handleFeedbackShow() { // 显示弹框
             this.feedbackShow = true;
         },
+        handleFeedbackEnShow() { // 显示弹框
+            this.feedbackEnShow = true;
+        },
 
         handleFeedbackClose() { // 关闭弹框
             this.feedbackShow = false;
             Object.assign(this.feedbackForm, this.$options.data().feedbackForm)
+        },
+        handleFeedbackEnClose() {
+            this.feedbackEnShow = false;
+            Object.assign(this.feedbackEnForm, this.$options.data().feedbackEnForm)
         },
         handleFeedbackSubmit() { // 审核提交
             let form = Core.Util.deepCopy(this.feedbackForm)
@@ -420,6 +477,26 @@ export default {
             }).then(res => {
                 console.log('handleAuditSubmit res', res)
                 this.handleFeedbackClose();
+                this.getFeedbackDetail();
+                // this.routerChange('back')
+            }).catch(err => {
+                console.log('handleAuditSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        handleFeedbackEnSubmit() { // 审核提交
+            let form = Core.Util.deepCopy(this.feedbackEnForm)
+            // if ((form.audit_result === 2 ||form.audit_result === 3) && !form.audit_message) {
+            //     return this.$message.warning('请输入审核未通过的原因')
+            // }
+            this.loading = true;
+            Core.Api.Feedback.feedback({
+                ...form,
+                id: this.id
+            }).then(res => {
+                console.log('handleAuditSubmit res', res)
+                this.handleFeedbackEnClose();
                 this.getFeedbackDetail();
                 // this.routerChange('back')
             }).catch(err => {
@@ -454,11 +531,6 @@ export default {
             });
         },*/
 
-        // 转单物流
-        handleDeliveryShow() {
-            this.deliveryShow = true;
-            Object.assign(this.deliveryForm, this.$options.data().deliveryForm)
-        },
         handleDeliverySubmit() {
             this.loading = true;
             let form = Core.Util.deepCopy(this.deliveryForm)
