@@ -527,8 +527,8 @@ export default {
         }
     }
 
-    .layout-breadcrumb {
-    }
+    // .layout-breadcrumb {
+    // }
 
     .layout-content {
         padding: 16px;

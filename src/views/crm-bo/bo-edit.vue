@@ -79,15 +79,18 @@
                 </div>
                 <div class="form-item textarea">
                     <div class="key">{{ $t('r.remark') }}</div>
-
-                    <div class="fault-title">
-                        <ItemSelect @select="handleAddFailItem"
-                                    :disabled-checked='tableData.map(i => i.item_id)'
-                                    btn-type='primary' :btn-text="$t('i.add')" btn-class="fault-btn"
-                                    v-if="$auth('repair-order.save')"/>
+                    <div class="value">
+                        <div class="form-item file-upload">
+                            <ItemSelect @select="handleAddFailItem"
+                                        :disabled-checked='tableData.map(i => i.item_id)'
+                                        btn-type='primary' :btn-text="$t('i.add')" btn-class="fault-btn"
+                                        v-if="$auth('repair-order.save')"/>
+                        </div>
                     </div>
+                </div>
+                <div class="table-container">
                     <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                             :row-key="record => record.id" :pagination='false' size="small">
+                            :row-key="record => record.id" :pagination='false' size="small">
                         <template #headerCell="{title}">
                             {{ $t(title) }}
                         </template>

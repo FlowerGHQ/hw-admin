@@ -51,7 +51,7 @@
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
-                            <Contact :detail="detail"/>
+                            <AttachmentFile :target_id="id" :target_type="CRM_ORDER_FILE" />
                             <Bo :detail="detail"/>
                         </a-tab-pane>
                     </a-tabs>
@@ -171,6 +171,7 @@ import Bo from './components/Bo.vue';
 import Group from './components/Group.vue';
 import TrackRecord from './components/TrackRecord.vue';
 import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
+import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 
 
 import dayjs from "dayjs";
@@ -178,10 +179,12 @@ import {get} from "lodash";
 
 export default {
     name: 'OrderDetail',
-    components: { CustomerSelect, Contact, Bo, Group, TrackRecord, CustomerSituation},
+    components: { CustomerSelect, Contact, Bo, Group, TrackRecord, CustomerSituation, AttachmentFile},
     props: {},
     data() {
         return {
+            CRM_ORDER_FILE: Core.Const.ATTACHMENT.TARGET_TYPE.CRM_ORDER_FILE,
+
             TYPE_MAP: Core.Const.CRM_TRACK_RECORD.TYPE_MAP,
             INTENT_MAP: Core.Const.CRM_TRACK_RECORD.INTENT_MAP,
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,

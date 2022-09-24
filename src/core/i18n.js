@@ -1156,6 +1156,7 @@ const messages = {
 	    crm_o: {
 			list: '合同列表',
         	save: '新建合同',
+        	edit: '编辑合同',
             detail: '合同详情',
 		    name: '合同名称',
 		    customer_name: "客户名称",

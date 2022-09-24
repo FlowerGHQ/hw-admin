@@ -50,7 +50,9 @@
                         <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-            </div>
+                <!-- 附件上传及列表 -->
+                <UploadFileWithList :target_id="form.id" :target_type="CRM_ORDER_INCOME_FILE" @getUploadData="getUploadData" ref='UploadFile'/>
+        </div>
         </div>
         <div class="form-btns">
             <a-button @click="handleSubmit" type="primary">{{ $t('def.sure') }}</a-button>
@@ -65,14 +67,17 @@ import Core from '../../core';
 import ChinaAddressCascader from '@/components/common/ChinaAddressCascader.vue'
 import CountryCascader from '@/components/common/CountryCascader.vue'
 import AddressCascader from '@/components/common/AddressCascader.vue';
+import UploadFileWithList from '@/components/common/UploadFileWithList.vue'
 import dayjs from "dayjs";
 
 export default {
     name: 'OrderEdit',
-    components: { ChinaAddressCascader, CountryCascader, AddressCascader},
+    components: { ChinaAddressCascader, CountryCascader, AddressCascader, UploadFileWithList},
     props: {},
     data() {
         return {
+            CRM_ORDER_INCOME_FILE: Core.Const.ATTACHMENT.TARGET_TYPE.CRM_ORDER_INCOME_FILE,
+
             loginType: Core.Data.getLoginType(),
             CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
             CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
@@ -90,10 +95,11 @@ export default {
                 uid: '',
                 name: '',
                 date: '',
-                seller_signatory: '',
                 type: '',
+                seller_signatory: '',
                 buyer_signatory: '',
                 remark:'',
+                attachment_list: [],
             },
             defAddr: [],
             areaList: [],
@@ -158,6 +164,7 @@ export default {
             });
         },
         handleSubmit() {
+            this.$refs.UploadFile.getUploadData() // 子组件拿值
             let form = Core.Util.deepCopy(this.form)
             // let area = Core.Util.deepCopy(this.area)
             // if (!form.name) {
@@ -174,6 +181,9 @@ export default {
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
+        },
+        getUploadData(uploadData) { // 子组件拿值
+            this.form.attachment_list = uploadData
         },
 
         handleAddressSelect(address = []) {

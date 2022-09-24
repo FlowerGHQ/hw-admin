@@ -874,7 +874,13 @@ let Const = {
             REPAIR_ORDER: 1, // 维修单附件
             PURCHASE_ORDER: 2,// 采购单附件
             QUALITY_FEEDBACK: 5, // 质量反馈单
-            ITEM: 6 // 商品
+            ITEM: 6, // 商品
+
+            CRM_TRACK_RECORD_FILE: 20,    // CRM跟进记录-附件文件
+            CRM_TRACK_RECORD_IMAGE: 25,   // CRM跟进记录-附件图片
+            CRM_ORDER_FILE: 30,           // CRM合同订单-附件文件
+            CRM_ORDER_INCOME_FILE: 40,    // CRM回款单-附件文件
+            CRM_REFUND_RECORD_FILE: 50,   // CRM退款记录-附件文件
         }
     },
     WAREHOUSE: {

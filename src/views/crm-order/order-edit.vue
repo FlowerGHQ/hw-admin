@@ -30,7 +30,6 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_o.signing_date') }}：</div> <!-- 签约日期 -->
                     <div class="value">
-                        <!-- <a-input v-model:value="form.date" :placeholder="$t('def.input')"/> -->
                         <a-date-picker v-model:value="form.date" valueFormat='YYYY-MM-DD' placeholder="选择日期"/>
                     </div>
                 </div>
@@ -43,7 +42,6 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_o.contract_type') }}：</div> <!-- 合同类型 -->
                     <div class="value">
-                        <!-- <a-input v-model:value="form.type" :placeholder="$t('def.input')"/> -->
                         <a-select v-model:value="form.type" :placeholder="$t('def.select')" >
                             <a-select-option v-for="item of CRM_ORDER_TYPE" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
                         </a-select>
@@ -58,63 +56,12 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_o.remark') }}：</div> <!-- 备注 -->
                     <div class="value">
-                        <!-- <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/> -->
                         <a-textarea v-model:value="form.remark" :placeholder="$t('def.input')"
                                     :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
                     </div>
                 </div>
-                <div class="form-item file-upload">
-                    <div class="key">附件:</div>
-                    <div class="value">
-                        <a-button type="primary" @click="handleModalShow" v-if="can_upload">{{$t('n.upload_attachment')}}</a-button>
-                    </div>
-                </div>
-                <div class="table-container">
-                    <a-table :columns="uploadColumns" :data-source="uploadData" :scroll="{ x: true }"
-                             :row-key="record => record.id" :pagination='false' size="small">
-                        <template #headerCell="{title}">
-                            {{ $t(title) }}
-                        </template>
-                        <template #bodyCell="{ column , record ,index, text}">
-                            <template v-if="column.key === 'item'">
-                                {{ text || '-' }}
-                            </template>
-                            <template v-if="column.dataIndex === 'price'">
-                                $ {{ text || '-' }}
-                                <!--                                    <a-input-number v-model:value="record.price" style="width: 82px;"-->
-                                <!--                                                      :min="0" :precision="2" placeholder="请输入"/>-->
-                            </template>
-                            <template v-if="column.key === 'amount'">
-                                <a-input-number v-model:value="record.amount" style="width: 66px;"
-                                                :min="1" :precision="0" placeholder="请输入"/>
-                                {{ $t('in.item') }}
-                            </template>
-                            <template v-if="column.key === 'discount'">
-                                <a-input-number v-model:value="record.discount" style="width: 66px;"
-                                                :min="1" :max="100" :precision="0" placeholder="请输入"/>
-                                %
-                            </template>
-
-                            <template v-if="column.key === 'total_price'">
-                                $ {{ $Util.countFilter(record.price * record.amount * record.discount / 100, 1) }}
-                            </template>
-
-                            <template v-if="column.key === 'time'">
-                                {{ text || '-' }}
-                            </template>
-
-                            <template v-if="column.dataIndex === 'operation'">
-                                <!-- handleFailUploadDelete(index) -->
-                                <a-button type="link" class="danger" @click="handleFileRemove"><i
-                                    class="icon i_delete"/>{{ $t('def.remove') }}
-                                </a-button>
-                            </template>
-                            <template v-if="column.key === 'remark'">
-                                <a-input v-model:value="record.remark" :placeholder="$t('def.input')"/>
-                            </template>
-                        </template>
-                    </a-table>
-                </div>
+                <!-- 附件上传及列表 -->
+                <UploadFileWithList :target_id="form.id" :target_type="CRM_ORDER_FILE" @getUploadData="getUploadData" ref='UploadFile'/>
             </div>
         </div>
         <div class="form-block">
@@ -136,14 +83,14 @@
                         <template #headerCell="{title}">
                             {{ $t(title) }}
                         </template>
-                        <template #bodyCell="{ column , record ,index, text}">
+                        <template #bodyCell="{ column , record , index, text}">
                             <template v-if="column.key === 'item'">
                                 {{ text || '-' }}
                             </template>
                             <template v-if="column.dataIndex === 'price'">
                                 $ {{ text || '-' }}
-                                <!--                                    <a-input-number v-model:value="record.price" style="width: 82px;"-->
-                                <!--                                                      :min="0" :precision="2" placeholder="请输入"/>-->
+                                <!-- <a-input-number v-model:value="record.price" style="width: 82px;"-->
+                                <!-- :min="0" :precision="2" placeholder="请输入"/>-->
                             </template>
                             <template v-if="column.key === 'amount'">
                                 <a-input-number v-model:value="record.amount" style="width: 66px;"
@@ -155,7 +102,6 @@
                                                 :min="1" :max="100" :precision="0" placeholder="请输入"/>
                                 %
                             </template>
-
                             <template v-if="column.key === 'total_price'">
                                 $ {{ $Util.countFilter(record.price * record.amount * record.discount / 100, 1) }}
                             </template>
@@ -211,36 +157,6 @@
             <a-button @click="handleSubmit" type="primary">{{ $t('def.sure') }}</a-button>
             <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
         </div>
-
-        <!-- 上传附件 -->
-        <a-modal v-model:visible="modalShow" :title="$t('n.upload_attachment')" class="attachment-file-upload-modal" :after-close="handleModalClose">
-            <div class="form-title">
-                <div class="form-item required">
-                    <div class="key">{{ $t('n.name') }}:</div>
-                    <div class="value">
-                        <a-input v-model:value="modelForm.name" :placeholder="$t('def.input')"/>
-                    </div>
-                </div>
-                <div class="form-item required file-upload">
-                    <div class="key">{{ $t('f.upload') }}:</div>
-                    <div class="value">
-                        <a-upload name="file" class="file-uploader"
-                            :file-list="upload.fileList" :action="upload.action"
-                            :headers="upload.headers" :data='upload.data'
-                            :before-upload="handleFileCheck"
-                            @change="handleFileChange">
-                            <a-button type="primary" ghost class="file-upload-btn" v-if="upload.fileList.length < 1">
-                                <i class="icon i_upload"/> {{ $t('f.choose') }}
-                            </a-button>
-                        </a-upload>
-                    </div>
-                </div>
-            </div>
-            <template #footer>
-                <a-button @click="modalShow = false">{{ $t('def.cancel') }}</a-button>
-                <a-button @click="handleModalSubmit" type="primary" :disabled="submitDisabled">{{ $t('def.sure') }}</a-button>
-            </template>
-        </a-modal>
     </div>
 </template>
 
@@ -252,15 +168,16 @@ import CountryCascader from '@/components/common/CountryCascader.vue'
 import AddressCascader from '@/components/common/AddressCascader.vue';
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 import ItemTable from '@/components/table/ItemTable.vue'
+import UploadFileWithList from '@/components/common/UploadFileWithList.vue'
 import dayjs from "dayjs";
 
 export default {
     name: 'OrderEdit',
-    components: { ChinaAddressCascader, CountryCascader, AddressCascader,ItemSelect,ItemTable },
+    components: { ChinaAddressCascader, CountryCascader, AddressCascader, ItemSelect, ItemTable, UploadFileWithList },
     props: {},
     data() {
         return {
-            ATTACHMENT_TYPE: Core.Const.ATTACHMENT.TARGET_TYPE,
+            CRM_ORDER_FILE: Core.Const.ATTACHMENT.TARGET_TYPE.CRM_ORDER_FILE,
             // 加载
             loading: false,
             detail: {},
@@ -270,10 +187,11 @@ export default {
                 name: '',
                 date: '',
                 seller_signatory: '',
-                // type: '',
+                type: '',
                 buyer_signatory: '',
                 remark:'',
-                item_bind_list: []
+                item_bind_list: [],
+                attachment_list: [],
             },
             // defAddr: [],
             // areaList: [],
@@ -294,26 +212,7 @@ export default {
 
             tableData: [],
             CRM_ORDER_TYPE: Core.Const.CRM_ORDER.TYPE_MAP,
-            modalShow: false,
-            submitDisabled: true,
-            modelForm: {
-                name: '',
-                path: '',
-                type: ''
-            },
-            // 上传文件
-            upload: {
-                action: Core.Const.NET.FILE_UPLOAD_END_POINT,
-                fileList: [],
-                headers: {
-                    ContentType: false
-                },
-                data: {
-                    token: Core.Data.getToken(),
-                    type: 'file',
-                },
-            },
-            uploadData: [],
+
         };
     },
     watch: {},
@@ -334,23 +233,9 @@ export default {
             ]
             return tableColumns
         },
-        uploadColumns() {
-            let uploadColumns = [
-                {title: 'crm_o.file_name' , dataIndex: 'name', key: 'item'},
-                {title: 'n.uploader', dataIndex: 'belone_customer', key: 'item' },
-                {title: 'n.upload_time', dataIndex: 'phone', key: 'time' },
-                {title: 'crm_o.file_size', dataIndex: 'phone', key: 'item' },
-                {title: 'i.remark', dataIndex: 'remark', key: 'remark' },
-                {title: 'def.operate', dataIndex: 'operation', key: 'operation' },
-            ]
-            return uploadColumns
-        },
         contractAmount() {
             let amount = Number(this.form.total_price * this.form.discount_rate) + Number(this.form.other_cost) - Number(this.form.discount_amount)
             return amount || ''
-        },
-        can_upload() {
-            return true
         },
         // user_type() {
         //     return Core.Data.getUserType()
@@ -384,8 +269,8 @@ export default {
                 for (const key in this.form) {
                     this.form[key] = this.detail[key]
                 }
+                console.log("🚀 ~ file: order-edit.vue ~ line 270 ~ getOrderDetail ~ this.form", this.form)
                 // this.defAddr = [d.province, d.city, d.county]
-
                 // this.defArea = [d.continent || '', d.country || '']
             }).catch(err => {
                 console.log('getOrderDetail err', err)
@@ -393,9 +278,11 @@ export default {
                 this.loading = false;
             });
         },
+        // 提交
         handleSubmit() {
+            this.$refs.UploadFile.getUploadData() // 子组件拿值
             let form = Core.Util.deepCopy(this.form)
-            // let area = Core.Util.deepCopy(this.area)
+            let area = Core.Util.deepCopy(this.area)
             if (!form.customer_id) {
                 return this.$message.warning(this.$t('def.input'))
             }
@@ -420,134 +307,37 @@ export default {
             if (!form.remark) {
                 return this.$message.warning(this.$t('def.input'))
             }
-            if (!form.item_bind_list) {
-                return this.$message.warning(this.$t('def.select'))
-            }
-            if (!form.total_price) {
-                return this.$message.warning(this.$t('def.input'))
-            }
-            if (!form.discount_rate) {
-                return this.$message.warning(this.$t('def.input'))
-            }
-            if (!form.other_cost) {
-                return this.$message.warning(this.$t('def.input'))
-            }
-            if (!form.discount_amount) {
-                return this.$message.warning(this.$t('def.input'))
-            }
+            // if (!form.item_bind_list) {
+            //     return this.$message.warning(this.$t('def.select'))
+            // }
+            // if (!form.total_price) {
+            //     return this.$message.warning(this.$t('def.input'))
+            // }
+            // if (!form.discount_rate) {
+            //     return this.$message.warning(this.$t('def.input'))
+            // }
+            // if (!form.other_cost) {
+            //     return this.$message.warning(this.$t('def.input'))
+            // }
+            // if (!form.discount_amount) {
+            //     return this.$message.warning(this.$t('def.input'))
+            // }
             form.date = form.date ? dayjs(form.date).unix() : 0 // 日期转时间戳
             form.item_bind_list = this.tableData
-
+           
 
             console.log('form',form)
-            // Core.Api.CRMOrder.save({
-            //     ...form,
-            // }).then(() => {
-            //     this.$message.success(this.$t('pop_up.save_success'))
-            //     this.routerChange('back')
-            // }).catch(err => {
-            //     console.log('handleSubmit err:', err)
-            // })
-        },
-
-        // 添加附件
-        handleModalShow() {
-            this.modalShow = true;
-            this.submitDisabled = true;
-        },
-        handleModalClose() {
-            this.modalShow = false;
-            Object.assign(this.modelForm, this.$options.data().modelForm)
-            this.upload.fileList = []
-        },
-        handleModalSubmit() {
-            let form = Core.Util.deepCopy(this.modelForm)
-            console.log('handleLogin form:', form)
-            if (!form.name) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            this.loading = true;
-            Core.Api.Attachment.save({
+            Core.Api.CRMOrder.save({
                 ...form,
-                target_type: this.ATTACHMENT_TYPE.ITEM,
-                // target_id: this.target_id,
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
-                this.handleModalClose();
-                this.getUploadData();
+                this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
         },
-        // 上传前检查文件
-        handleFileCheck(file) {
-            console.log('handleFileCheck file.type', file.type)
-            if (file.type.includes('image/')) {
-                this.upload.data.type = 'img'
-            } else if (file.type.includes('video/')) {
-                this.upload.data.type = 'video'
-            } else if (file.type.includes('audio/')) {
-                this.upload.data.type = 'audio'
-            } else {
-                this.upload.data.type = 'file'
-            }
-            return true
-        },
-        // 上传文件
-        handleFileChange({file, fileList}) {
-            console.log("handleCoverChange status:", file.status, "file:", file)
-            if (file.status == 'done') {
-                if (file.response && file.response.code > 0) {
-                    return this.$message.error(file.response.message)
-                }
-                this.form.path = file.response.data.filename
-                this.form.type = this.form.path.split('.').pop()
-                if (this.form.path){
-                    this.submitDisabled = false
-                }
-            }
-            this.upload.fileList = fileList
-        },
-
-        getUploadData() {  // 获取 附件 数据
-            this.loading = true;
-            Core.Api.Attachment.list({
-                // target_id: this.target_id,
-                target_type: this.ATTACHMENT_TYPE.ITEM,
-                page: 0
-            }).then(res => {
-                console.log("AttachmentFile res", res)
-                this.uploadData = res.list
-            }).catch(err => {
-                console.log('AttachmentFile err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-
-        // 删除附件
-        handleDelete(id) {
-            let _this = this;
-            this.$confirm({
-                title: _this.$t('pop_up.sure_delete'),
-                okText: _this.$t('def.sure'),
-                okType: 'danger',
-                cancelText: this.$t('def.cancel'),
-                onOk() {
-                    Core.Api.Attachment.delete({id}).then(() => {
-                        _this.$message.success(_this.$t('pop_up.delete_success'));
-                        _this.getUploadData();
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
-                },
-            });
-        },
-        // 下载附件
-        handleDownload(record) {
-            console.log('handleDownload record:', record)
-            let url = Core.Const.NET.FILE_URL_PREFIX + record.path
-            window.open(url, '_self')
+        getUploadData(uploadData) {
+            this.form.attachment_list = uploadData
         },
 
         // 添加商品

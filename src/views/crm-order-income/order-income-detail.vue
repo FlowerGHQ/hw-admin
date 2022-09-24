@@ -36,7 +36,7 @@
                         <span class="value">{{ detail.own_user_name || '-'}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                        <a-button></a-button>退款</a-button>
+                        <a-button>退款</a-button>
                         <a-button @click="handleDelete(detail.id)">删除</a-button>
                     </a-col>
                 </a-row>
@@ -50,7 +50,7 @@
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
-                            <Contact :detail="detail"/>
+                            <AttachmentFile :target_id="id" :target_type="CRM_ORDER_INCOME_FILE" />
                             <Bo :detail="detail"/>
                         </a-tab-pane>
                     </a-tabs>
@@ -170,6 +170,7 @@ import Bo from './components/Bo.vue';
 import Group from './components/Group.vue';
 import TrackRecord from './components/TrackRecord.vue';
 import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
+import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 
 
 import dayjs from "dayjs";
@@ -177,10 +178,12 @@ import {get} from "lodash";
 
 export default {
     name: 'OrderDetail',
-    components: { CustomerSelect, Contact, Bo, Group, TrackRecord, CustomerSituation},
+    components: { CustomerSelect, Contact, Bo, Group, TrackRecord, CustomerSituation, AttachmentFile},
     props: {},
     data() {
         return {
+            CRM_ORDER_INCOME_FILE: Core.Const.ATTACHMENT.TARGET_TYPE.CRM_ORDER_INCOME_FILE,
+            
             TYPE_MAP: Core.Const.CRM_TRACK_RECORD.TYPE_MAP,
             INTENT_MAP: Core.Const.CRM_TRACK_RECORD.INTENT_MAP,
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
@@ -238,11 +241,18 @@ export default {
     },
     methods: {
         routerChange(type, item = {}) {
+            let routeUrl = ''
             switch (type) {
                 case 'edit':    // 编辑
-                    let routeUrl = this.$router.resolve({
+                    routeUrl = this.$router.resolve({
                         path: "/crm-order-income/order-income-edit",
                         query: { id: item.id }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'back':    // 编辑
+                    routeUrl = this.$router.resolve({
+                        path: "/crm-order-income/order-income-list",
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -360,7 +370,7 @@ export default {
                 onOk() {
                     Core.Api.CRMOrderIncome.delete({id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
-                        _this.getTableData();
+                        _this.routerChange("back");
                     }).catch(err => {
                         console.log("handleDelete err", err);
                     })
