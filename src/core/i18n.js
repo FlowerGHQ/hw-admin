@@ -1139,7 +1139,20 @@ const messages = {
 		    estimated_deal_time: '预计结单日期',
 		    money: '商机金额',
 		    source:'机会来源',
-		    discount: '折扣'
+		    discount: '折扣',
+		    next_step: '下一步',
+		    whether_next_step: '是否进行下一步',
+		    whether_next_step_success: '进行下一步成功',
+		    win_order: '赢单',
+		    whether_win_order: '是否赢单',
+		    whether_win_order_success: '赢单完成',
+		    lost_order: "输单",
+		    whether_lost_order: '是否输单',
+		    whether_lost_order_success: '输单完成',
+		    reactivation: '重新激活',
+		    whether_reactivation: '是否重新激活',
+		    whether_reactivation_success: '重新激活',
+
 	    },
 
 	    crm_g: {

@@ -602,7 +602,11 @@ const apiList = {
 		list: ['PostJson', 'crm-bo/list'],//
 		delete: ['PostJson', 'crm-bo/delete'],//
 		detail: ['PostJson', 'crm-bo/detail'],//
-		transfer: ['PostJson', 'crm-customer/transfer'],//
+		transfer: ['PostJson', 'crm-bo/transfer'],//
+		updateStatus: ['PostJson', 'crm-bo/update-status'],
+		success: ['PostJson', 'crm-bo/success'],
+		fail: ['PostJson', 'crm-bo/fail'],
+		reactivation: ['PostJson', 'crm-bo/reactivation'],
 	},
 	CRMOrderIncome:{//CRM 回款单
 		save: ['PostJson', 'crm-order-income/save'],//

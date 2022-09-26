@@ -222,7 +222,7 @@ export default {
         if (this.form.id) {
             this.getCustomerDetail();
         } else {
-            this.form.status = Core.Const.CRM_CUSTOMER.STATUS.CUSTOMER
+            this.form.status = Core.Const.CRM_CUSTOMER.STATUS.POOL
         }
     },
     methods: {

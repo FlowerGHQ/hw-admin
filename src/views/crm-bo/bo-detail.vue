@@ -3,6 +3,12 @@
         <div class="title-container">
                 <div class="title-area">{{  $t('crm_b.detail')  }}
             </div>
+            <div class="btns-area">
+                <a-button @click="nextStep"><i class="icon i_audit"/>{{$t('crm_b.next_step')}}</a-button>
+                <a-button @click="loseTheOrder"><i class="icon i_audit"/>{{$t('crm_b.lost_order')}}</a-button>
+                <a-button @click="winTheOrder"><i class="icon i_audit"/>{{$t('crm_b.win_order')}}</a-button>
+                <a-button @click="reactivation"><i class="icon i_audit"/>{{$t('crm_b.reactivation')}}</a-button>
+            </div>
         </div>
         <div class="gray-panel">
             <div class="panel-content desc-container">
@@ -221,6 +227,10 @@ export default {
                 id: 1,
             }).then(res => {
                 this.groupStatusTableData = JSON.parse(res.detail.status_list)
+                if (this.detail.status !== -100){
+                    this.groupStatusTableData.push( {status: '100', zh: '赢单',en: 'Win order'})
+                }
+
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {
@@ -270,13 +280,13 @@ export default {
         handleReturnPool() {
             let _this = this;
             this.$confirm({
-                title: this.$t('crm_c.sure_return_pool'),
+                title: this.$t('crm_b.sure_return_pool'),
                 okText: this.$t('def.sure'),
                 okType: 'primary',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.CRMBo.returnPool({id: _this.detail.id}).then(() => {
-                        _this.$message.success(_this.$t('crm_c.return_pool_success'));
+                        _this.$message.success(_this.$t('crm_b.return_pool_success'));
                         _this.getCustomerDetail();
                     }).catch(err => {
                         console.log("handleDelete err", err);
@@ -315,6 +325,76 @@ export default {
                 this.loading = false;
             });
         },
+        nextStep(){
+            let _this = this;
+            this.$confirm({
+                title: this.$t('crm_b.whether_next_step'),
+                okText: this.$t('def.sure'),
+                okType: 'primary',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.CRMBo.updateStatus({id: _this.detail.id, status: _this.detail.status +1}).then(() => {
+                        _this.$message.success(_this.$t('crm_b.whether_next_step_success'));
+                        _this.getBoDetail();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
+        loseTheOrder(){
+            let _this = this;
+            this.$confirm({
+                title: this.$t('crm_b.whether_lost_order'),
+                okText: this.$t('def.sure'),
+                okType: 'primary',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.CRMBo.fail({id: _this.detail.id}).then(() => {
+                        _this.$message.success(_this.$t('crm_b.whether_lost_order_success'));
+                        _this.getBoDetail();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
+        winTheOrder(){
+            let _this = this;
+            this.$confirm({
+                title: this.$t('crm_b.whether_win_order'),
+                okText: this.$t('def.sure'),
+                okType: 'primary',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.CRMBo.success({id: _this.detail.id}).then(() => {
+                        _this.$message.success(_this.$t('crm_b.whether_win_order_success'));
+                        _this.getBoDetail();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
+        reactivation(){
+            let _this = this;
+            this.$confirm({
+                title: this.$t('crm_b.whether_reactivation'),
+                okText: this.$t('def.sure'),
+                okType: 'primary',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.CRMBo.reactivation({id: _this.detail.id}).then(() => {
+                        _this.$message.success(_this.$t('crm_b.whether_reactivation_success'));
+                        _this.getBoDetail();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        }
+
+
     }
 };
 </script>
