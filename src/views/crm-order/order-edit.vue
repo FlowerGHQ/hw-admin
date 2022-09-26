@@ -20,6 +20,7 @@
                             :filter-option="false"
                             :not-found-content="null"
                             @search="handleCustomerNameSearch"
+                            @change="handleCustomerChange"
                             allowClear
                         >
                             <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
@@ -282,6 +283,7 @@ export default {
     mounted() {
         this.form.id = Number(this.$route.query.id) || undefined
         this.form.customer_id = Number(this.$route.query.customer_id) || undefined
+        this.form.bo_id = Number(this.$route.query.bo_id) || undefined
         if (this.form.id) {
             this.getOrderDetail();
         } else if (this.form.customer_id){
@@ -407,23 +409,27 @@ export default {
 
             })
         },
+        handleCustomerChange(){
+            this.boOptions = [];
+            this.form.bo_id = '';
+        },
         handleCustomerIdSearch(){
             Core.Api.CRMCustomer.detail({id: this.form.customer_id}).then(res => {
                 this.handleCustomerNameSearch(res.name)
             })
         },
         handleBoNameSearch(){
-            if (this.form.customer_id){
-                return
-            }
             Core.Api.CRMBo.list({name: name,customer_id: this.form.customer_id}).then(res => {
                 this.boOptions = res.list
-
             })
         },
         handleBoIdSearch(){
             Core.Api.CRMBo.detail({id: this.form.bo_id}).then(res => {
-                this.handleBoNameSearch(res.name)
+                console.log("res.customer_id",res.detail.customer_id)
+                this.form.customer_id = res.detail.customer_id
+                let customer_name = res.detail.customer_name
+                this.handleCustomerNameSearch(customer_name)
+                this.handleBoNameSearch(res.detail.name)
             })
         },
     }

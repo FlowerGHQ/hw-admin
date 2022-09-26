@@ -29,38 +29,27 @@
                         <span class="value">{{detail.customer_name}}</span>
                     </a-col>
 
-                    <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-<!--                        <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>-->
-<!--                        <a-button @click="routerChange('edit')">编辑</a-button>-->
-<!--                        <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :addCustomerBtn="true"/>-->
-<!--                        <a-button>新建订单</a-button>-->
-<!--                        <a-button>移交</a-button>-->
-<!--                        <a-button>删除</a-button>-->
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                        <div v-if="detail.status === STATUS.POOL">
-                            <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>
-                            <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
-                            <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :addCustomerBtn="true"/>
+                    <a-col :xs='24' :sm='24' :lg='24' >
+                        <div class="panel-content">
+                            <MySteps :stepsList='groupStatusTableData' :current='detail.status'></MySteps>
                         </div>
-                        <div v-if="detail.status === STATUS.CUSTOMER &&  trackMemberDetail!== undefined  &&  trackMemberDetail!== null  &&  trackMemberDetail!== ''">
-                            <span v-if="trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ">
+                    </a-col>
+
+                    <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
+                            <span v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ ||  trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.OWN: false">
                                 <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>
                                 <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
-                                <a-button>新建订单</a-button>
+                                 <a-button @click="routerChange('order-save')">新建订单</a-button>
                             </span>
-                            <span v-if="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN">
+                            <span v-if="trackMemberDetail!= null ? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
                                 <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :addCustomerBtn="true"/>
                                 <a-button type="primary" @click="handleBatch('transfer')">{{ $t('crm_c.transfer') }}</a-button>
                                 <a-button type="danger" @click="handleReturnPool">{{ $t('crm_c.return_pool') }}</a-button>
                             </span>
 
-                        </div>
                     </a-col>
                 </a-row>
-                <div class="panel-content">
-                    <MySteps :stepsList='groupStatusTableData' :current='detail.status'></MySteps>
-                </div>
+
             </div>
         </div>
         <a-row >
@@ -101,7 +90,6 @@ import CustomerAdd from '@/components/crm/popup-btn/CustomerAdd.vue';
 import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
 import MySteps from "@/components/common/MySteps.vue"
 import dayjs from "dayjs";
-import {get} from "lodash";
 
 import CRMContact from '@/components/crm/panel/CRMContact.vue';
 import CRMOrder from '@/components/crm/panel/CRMOrder.vue';
@@ -159,6 +147,13 @@ export default {
                     routeUrl = this.$router.resolve({
                         path: "/crm-bo/bo-edit",
                         query: { id: this.detail.id }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'order-save':  // 修改
+                    routeUrl = this.$router.resolve({
+                        path: "/crm-order/order-edit",
+                        query: { bo_id: this.detail.id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -261,7 +256,7 @@ export default {
         getTargetByUserId() {
             Core.Api.CRMTrackMember.getTargetByUserId({
                 target_id: this.id,
-                target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER,
+                target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO,
             }).then(res => {
                 this.trackMemberDetail = res.detail
                 console.log("trackMemberDetail", this.trackMemberDetail);

@@ -9,8 +9,8 @@
             <a-descriptions-item :label="$t('crm_o.name')" class="label">{{detail.name}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.signing_date')" class="label">{{$Util.timeFilter(detail.signing_date) || '-'}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.belone_customer')" class="label">{{detail.customer_name}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.contract_type')" class="label">{{detail.type}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.status')" class="label">{{detail.status}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_o.contract_type')" class="label">{{$Util.CRMOrderTypeFilter(detail.type)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_o.status')" class="label">{{$Util.CRMOrderStatusFilter(detail.status)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.seller_signatory')" class="label">{{detail.seller_signatory}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.buyer_signatory')" class="label">{{detail.buyer_signatory}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.remark')" class="label">{{detail.remark}}</a-descriptions-item>

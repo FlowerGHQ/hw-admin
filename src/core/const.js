@@ -1534,6 +1534,7 @@ let Const = {
 		TARGET_TYPE: {
 			CUSTOMER: 1,
 			BO: 2,
+			ORDER:3,
 		},
 	},
 	CRM_TRACK_MEMBER: {
@@ -1651,45 +1652,6 @@ let Const = {
 			'	1030	'	:	 { key	:	1030	, zh	:	'	 修改商机	'	,en	:	'	REVISE_BO 	'	, value:	1030	},
 			'	1040	'	:	 { key	:	1040	, zh	:	'	 修改订单	'	,en	:	'	REVISE_ORDER 	'	, value:	1040	},
 			'	1050	'	:	 { key	:	1050	, zh	:	'	 修改回款单	'	,en	:	'	REVISE_ORDER_INCOME 	'	, value:	1050	},
-
-			CREATE_CUSTOMER : 100,       // 新建客户
-			DELETE_CUSTOMER : 110,       // 删除客户
-			OBTAIN_CUSTOMER : 120,       // 领取客户
-			DISTRIBUTE_CUSTOMER : 130,   // 分配客户
-			RETURN_POOL : 140,           // 退回公海
-			CUSTOMER_TO_OTHERS : 150,    // 将客户转交给
-
-			CREATE_BO : 200,             // 新建商机
-			DELETE_BO : 210,             // 删除商机
-			UPDATE_BO_STATUS : 220,      // 更新商机阶段
-			BO_TO_OTHERS : 230,          // 将商机转交给
-
-			CREATE_ORDER : 300,          // 新建订单
-			DELETE_ORDER : 310,          // 删除订单
-			CREATE_ORDER_INCOME : 320,   // 新建回款单
-			DELETE_ORDER_INCOME : 330,   // 删除回款单
-			AUDIT_PASS : 340,            // 审核人...审核通过
-			AUDIT_REFUSE : 350,          // 审核人...审核拒绝
-			REFUND : 360,                // 向客户退款
-			CANCEL_REFUND : 360,         // 取消退款
-
-			CREATE_CONTACT : 400,        // 创建联系人
-			ADD_CONTACT : 400,           // 添加联系人
-			DELETE_CONTACT : 410,        // 删除联系人
-			ADD_MEMBER : 420,            // 添加团队成员
-			DELETE_MEMBER : 430,         // 删除团队成员
-			ADD_TRACK_RECORD : 440,      // 添加跟进记录
-			DELETE_TRACK_RECORD : 450,   // 删除跟进记录
-			ADD_TABLE : 460,             // 添加标签
-			DELETE_TABLE : 470,          // 删除标签
-
-			// 修改操作
-			REVISE_CUSTOMER : 1000,      // 修改客户信息
-			REVISE_CONTACT : 1010,       // 修改联系人
-			REVISE_TRACK_RECORD : 1020,  // 修改跟进记录
-			REVISE_BO : 1030,            // 修改商机
-			REVISE_ORDER : 1040,         // 修改订单
-			REVISE_ORDER_INCOME : 1050,  // 修改回款单
 
 		}
 	},

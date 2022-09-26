@@ -68,7 +68,6 @@
 
 <script>
 import Core from '../../../core';
-import br from "../../../../dist/assets/invoice-detail2.6547b016";
 const USER_TYPE = Core.Const.USER.TYPE
 
 export default {
@@ -90,11 +89,12 @@ export default {
     },
     data() {
         return {
+            Core,
             searchType: [
                 { name: '跟进记录', key: '1' },
                 { name: '操作日志', key: '2' },
             ],
-            TYPE: Core.CRM_ACTION_RECORD.TYPE,
+            // TYPE: Core.CRM_ACTION_RECORD.TYPE,
             activeType: '1',
             USER_TYPE,
             loginType: Core.Data.getLoginType(),
@@ -120,9 +120,14 @@ export default {
     computed: {
         lang() {
             return this.$store.state.lang
-        }
+        },
     },
     mounted() {
+        if (this.targetType == Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.ORDER){
+            this.searchType = this.searchType.slice(1)
+            this.activeType= '2'
+        }
+
         this.getCRMTrackRecordTableData();
         this.getCrmActionRecordTableData();
     },
