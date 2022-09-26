@@ -186,7 +186,11 @@ export default {
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.CRMTrackMember.delete({id}).then(() => {
+                    Core.Api.CRMTrackMember.delete({
+                        id:id,
+                        target_id: _this.targetId,
+                        target_type: _this.targetType,
+                    }).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
@@ -203,7 +207,7 @@ export default {
                 user_id_list: ids,
                 type: 1,
             }).then(()=> {
-
+                this.handleSearch()
             }).catch(err => {
                 console.log('getTableData err', err)
             }).finally(() => {

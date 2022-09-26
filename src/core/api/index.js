@@ -602,6 +602,7 @@ const apiList = {
 		list: ['PostJson', 'crm-bo/list'],//
 		delete: ['PostJson', 'crm-bo/delete'],//
 		detail: ['PostJson', 'crm-bo/detail'],//
+		transfer: ['PostJson', 'crm-customer/transfer'],//
 	},
 	CRMOrderIncome:{//CRM 回款单
 		save: ['PostJson', 'crm-order-income/save'],//

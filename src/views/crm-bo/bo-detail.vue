@@ -79,6 +79,31 @@
                 </div>
             </a-col>
         </a-row>
+        <a-modal v-model:visible="batchShow" :title="$t('crm_c.distribute_customer')" :after-close='handleBatchClose'>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_b.own_user_name') }}：</div>
+                <div class="value">
+                    <a-select
+                        v-model:value="batchForm.own_user_id"
+                        show-search
+                        :placeholder="$t('def.input')+$t('n.warehouse')"
+                        :default-active-first-option="false"
+                        :show-arrow="false"
+                        :filter-option="false"
+                        :not-found-content="null"
+                        @search="getUserData"
+                    >
+                        <a-select-option v-for=" item in userData" :key="item.id" :value="item.id">
+                            {{ item.account ? item.account.name : '-' }}
+                        </a-select-option>
+                    </a-select>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handleBatchSubmit" type="primary">{{ $t('def.ok') }}</a-button>
+                <a-button @click="handleBatchClose">{{ $t('def.cancel') }}</a-button>
+            </template>
+        </a-modal>
     </div>
 </template>
 
@@ -117,6 +142,10 @@ export default {
             detail: {},
             trackMemberDetail: undefined,
             groupStatusTableData: [],
+            batchForm: {
+                own_user_id: '',
+            },
+            userData: [],
         };
     },
     watch: {},
@@ -125,8 +154,10 @@ export default {
             return this.$store.state.lang
         }
     },
-    mounted() {
+    created() {
         this.id = Number(this.$route.query.id) || 0
+    },
+    mounted() {
         if (this.id) {
             this.getBoDetail();
             this.getTargetByUserId();
@@ -228,7 +259,7 @@ export default {
                         own_user_id: this.batchForm.own_user_id,
                     }).then(() => {
                         this.$message.success(this.$t('pop_up.delete_success'));
-                        this.getCustomerDetail();
+                        this.getBoDetail();
                         this.handleBatchClose();
                     }).catch(err => {
                         console.log("handleDelete err", err);
@@ -269,6 +300,20 @@ export default {
         getCrmActionRecordTableData(){
             console.log("getCrmActionRecordTableData");
             this.$refs.TrackRecord.getCrmActionRecordTableData();
+        },
+        getUserData(query){
+            this.loading = true;
+            Core.Api.User.list({
+                name: query,
+                org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
+            }).then(res => {
+                console.log("getTableData res:", res)
+                this.userData = res.list;
+            }).catch(err => {
+                console.log('getTableData err:', err)
+            }).finally(() => {
+                this.loading = false;
+            });
         },
     }
 };

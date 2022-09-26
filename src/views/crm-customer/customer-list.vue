@@ -275,6 +275,8 @@ export default {
             Object.assign(this.searchForm, this.$options.data().searchForm)
             if (this.operMode === 'private' ) {
                 this.searchForm.status = this.CRM_STATUS.CUSTOMER
+            } else {
+                this.searchForm.status = this.CRM_STATUS.POOL
             }
             // this.$refs.TimeSearch.handleReset()
             this.orderByFields = {}

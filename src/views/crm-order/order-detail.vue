@@ -39,6 +39,14 @@
                         <a-button @click="routerChange('edit', detail)">编辑</a-button>
                         <a-button @click="handleDelete(detail.id)">删除</a-button>
                         <a-button>新建回款单</a-button>
+                        <span v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ ||  trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.OWN: false">
+                                <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>
+                                <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
+                            </span>
+                        <span v-if="trackMemberDetail!= null ? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
+                                <a-button type="primary" @click="handleBatch('transfer')">{{ $t('crm_c.transfer') }}</a-button>
+                                <a-button type="danger" @click="handleDelete(detail.id)">{{ $t('crm_c.return_pool') }}</a-button>
+                        </span>
                     </a-col>
                 </a-row>
             </div>
@@ -137,6 +145,13 @@ export default {
                 },
             },
             tabActiveKey: "CustomerSituation",
+            trackMemberDetail: undefined,
+            batchForm: {
+                own_user_id: '',
+            },
+            userData: [],
+            batchShow: false,
+            batchType: '',
         };
     },
     watch: {},
@@ -167,6 +182,34 @@ export default {
                         path: "/crm-order/order-list",
                     })
                     window.open(routeUrl.href, '_self')
+                    break;
+            }
+        },
+        handleBatch(type) {
+            this.batchShow = true;
+            this.batchType = type
+        },
+        handleBatchClose() {
+
+            this.batchShow = false;
+            this.batchType = '';
+        },
+        handleBatchSubmit() {
+            if (!this.batchForm.own_user_id) {
+                return this.$message.warning(this.$t('crm_c.select'))
+            }
+            switch (this.batchType){
+                case "transfer":
+                    Core.Api.CRMBo.transfer({
+                        id: this.detail.id,
+                        own_user_id: this.batchForm.own_user_id,
+                    }).then(() => {
+                        this.$message.success(this.$t('pop_up.delete_success'));
+                        this.getBoDetail();
+                        this.handleBatchClose();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
                     break;
             }
         },
@@ -287,6 +330,29 @@ export default {
                         console.log("handleDelete err", err);
                     })
                 },
+            });
+        },
+        getTargetByUserId() {
+            Core.Api.CRMTrackMember.getTargetByUserId({
+                target_id: this.id,
+                target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.ORDER,
+            }).then(res => {
+                this.trackMemberDetail = res.detail
+                console.log("trackMemberDetail", this.trackMemberDetail);
+            })
+        },
+        getUserData(query){
+            this.loading = true;
+            Core.Api.User.list({
+                name: query,
+                org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
+            }).then(res => {
+                console.log("getTableData res:", res)
+                this.userData = res.list;
+            }).catch(err => {
+                console.log('getTableData err:', err)
+            }).finally(() => {
+                this.loading = false;
             });
         },
     }
