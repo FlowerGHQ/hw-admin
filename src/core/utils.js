@@ -885,7 +885,13 @@ const Util = {
 		return item[to] || ''
 	},
 	/* =============== CRM回款单 ================ */
-
+	/* =============== CRM回款单 ================ */
+	CRMActionRecordTypeMapFilter(val,  to='zh') {
+		const MAP = Const.CRM_ACTION_RECORD.TYPE_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	/* =============== CRM回款单 ================ */
 
 }
 

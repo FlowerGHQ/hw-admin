@@ -68,6 +68,7 @@
 
 <script>
 import Core from '../../../core';
+import br from "../../../../dist/assets/invoice-detail2.6547b016";
 const USER_TYPE = Core.Const.USER.TYPE
 
 export default {
@@ -93,6 +94,7 @@ export default {
                 { name: '跟进记录', key: '1' },
                 { name: '操作日志', key: '2' },
             ],
+            TYPE: Core.CRM_ACTION_RECORD.TYPE,
             activeType: '1',
             USER_TYPE,
             loginType: Core.Data.getLoginType(),
@@ -189,6 +191,25 @@ export default {
                 this.loading = false;
             });
         },
+        actionParsing(type, content, user) {
+            let item = JSON.parse(content)
+            switch (type) {
+                //类型1 操作人领取了客户
+                case TYPE.CREATE_CUSTOMER:
+                case TYPE.DELETE_CUSTOMER:
+                    return user + Core.Util.CRMActionRecordTypeMapFilter(type, this.lang)
+                //类型2 将商机转交给另一操作人
+                case TYPE.BO_TO_OTHERS:
+                    return user + Core.Util.CRMActionRecordTypeMapFilter(type, this.lang) + item.value
+                //类型3 客户信息修改
+                case TYPE.REVISE_CUSTOMER:
+                    let con = ""
+                    item.forEach(it => {
+                        con += "将" + $t(it.key)+"从" + it.old_value + "改为" + it.new_value
+                    })
+                    return user + Core.Util.CRMActionRecordTypeMapFilter(type, this.lang) + con
+            }
+        }
     }
 };
 </script>

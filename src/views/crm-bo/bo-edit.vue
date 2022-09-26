@@ -164,6 +164,7 @@ export default {
                 source: '',
                 remark: '',
             },
+            CRMCustomer: {},
             tableData: [],
             groupStatusTableData: [],
             moneyDisabled: false,
@@ -201,9 +202,12 @@ export default {
     },
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0
+        this.form.customer_id = Number(this.$route.query.customer_id) || 0
         if (this.form.id) {
             this.getBoDetail();
             this.getBoDetailItemList()
+        } else if (this.form.customer_id){
+            this.handleCustomerIdSearch()
         }
         this.getGroupStatusDetail()
     },
@@ -332,6 +336,12 @@ export default {
 
             })
         },
+        handleCustomerIdSearch(){
+            Core.Api.CRMCustomer.detail({id: this.form.customer_id}).then(res => {
+                this.handleCustomerNameSearch(res.name)
+            })
+        },
+
     }
 };
 </script>

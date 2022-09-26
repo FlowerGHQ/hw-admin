@@ -44,8 +44,8 @@
                             <span v-if="trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ">
                                 <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getTrackRecord"/>
                                 <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
-                                <a-button>新建商机</a-button>
-                                <a-button>新建订单</a-button>
+                                <a-button @click="routerChange('bo-save')">新建商机</a-button>
+                                <a-button @click="routerChange('order-save')">新建订单</a-button>
                             </span>
                             <span v-if="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN">
                                 <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :addCustomerBtn="true"/>
@@ -187,6 +187,20 @@ export default {
                     routeUrl = this.$router.resolve({
                         path: "/crm-customer/customer-edit",
                         query: { id: this.detail.id }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'bo-save':  // 修改
+                    routeUrl = this.$router.resolve({
+                        path: "/crm-bo/bo-edit",
+                        query: { customer_id: this.detail.id }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'order-save':  // 修改
+                    routeUrl = this.$router.resolve({
+                        path: "/crm-order/order-edit",
+                        query: { customer_id: this.detail.id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;

@@ -11,8 +11,43 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_o.belone_customer') }}：</div> <!-- 所属客户 -->
                     <div class="value">
-                        <!--  user_type -->
-                        <a-input v-model:value="form.customer_id" :placeholder="$t('def.input')"/>
+                        <a-select
+                            v-model:value="form.customer_id"
+                            show-search
+                            :placeholder="$t('n.enter')"
+                            :default-active-first-option="false"
+                            :show-arrow="false"
+                            :filter-option="false"
+                            :not-found-content="null"
+                            @search="handleCustomerNameSearch"
+                            allowClear
+                        >
+                            <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
+                                {{item.name}}
+                            </a-select-option>
+                        </a-select>
+
+                    </div>
+                </div>
+                <div class="form-item">
+                    <div class="key">{{ $t('crm_b.name') }}：</div> <!-- 所属客户 -->
+                    <div class="value">
+                        <a-select
+                            v-model:value="form.bo_id"
+                            show-search
+                            :placeholder="$t('n.enter')"
+                            :default-active-first-option="false"
+                            :show-arrow="false"
+                            :filter-option="false"
+                            :not-found-content="null"
+                            @search="handleBoNameSearch"
+                            allowClear
+                        >
+                            <a-select-option v-for=" item in boOptions" :key="item.id" :value="item.id">
+                                {{item.name}}
+                            </a-select-option>
+                        </a-select>
+
                     </div>
                 </div>
                 <div class="form-item required">
@@ -182,6 +217,7 @@ export default {
             loading: false,
             detail: {},
             form: {
+                bo_id: '',
                 customer_id: '',
                 uid: '',
                 name: '',
@@ -212,6 +248,8 @@ export default {
 
             tableData: [],
             CRM_ORDER_TYPE: Core.Const.CRM_ORDER.TYPE_MAP,
+            itemOptions: [],
+            boOptions: [],
 
         };
     },
@@ -242,9 +280,14 @@ export default {
         // },
     },
     mounted() {
-        this.form.id = Number(this.$route.query.id) || 0
+        this.form.id = Number(this.$route.query.id) || undefined
+        this.form.customer_id = Number(this.$route.query.customer_id) || undefined
         if (this.form.id) {
             this.getOrderDetail();
+        } else if (this.form.customer_id){
+            this.handleCustomerIdSearch();
+        } else if (this.form.bo_id){
+            this.handleBoIdSearch();
         }
     },
     methods: {
@@ -324,7 +367,7 @@ export default {
             // }
             form.date = form.date ? dayjs(form.date).unix() : 0 // 日期转时间戳
             form.item_bind_list = this.tableData
-           
+
 
             console.log('form',form)
             Core.Api.CRMOrder.save({
@@ -357,6 +400,31 @@ export default {
         // 移除商品
         handleFailItemDelete(index, name) {
             this.tableData.splice(index, 1)
+        },
+        handleCustomerNameSearch(name){
+            Core.Api.CRMCustomer.list({name: name}).then(res => {
+                this.itemOptions = res.list
+
+            })
+        },
+        handleCustomerIdSearch(){
+            Core.Api.CRMCustomer.detail({id: this.form.customer_id}).then(res => {
+                this.handleCustomerNameSearch(res.name)
+            })
+        },
+        handleBoNameSearch(){
+            if (this.form.customer_id){
+                return
+            }
+            Core.Api.CRMBo.list({name: name,customer_id: this.form.customer_id}).then(res => {
+                this.boOptions = res.list
+
+            })
+        },
+        handleBoIdSearch(){
+            Core.Api.CRMBo.detail({id: this.form.bo_id}).then(res => {
+                this.handleBoNameSearch(res.name)
+            })
         },
     }
 };
