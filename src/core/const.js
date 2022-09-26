@@ -1555,15 +1555,15 @@ let Const = {
         },
 	},
 	CRM_BO: {
-		STATUS_MAP: {
-			'10': { key: 10, zh: '上门拜访',en: 'Home visits', value: 10 },
-			'20': { key: 20, zh: '电话沟通',en: 'Telephone communication', value: 20 },
-			'30': { key: 30, zh: '其他',en: 'Other', value: 30 },
+		STATUS: {
+			WIN: 100,
+			LOSE: -100,
 		},
 		SOURCE_MAP: {
 			'1': { key: 1, zh: '新客户',en: 'New customer', value: 1 },
 			'2': { key: 2, zh: '老客户',en: 'Old customer', value: 2 },
 		},
+
 	},
     CRM_ITEM_BIND: {
         SOURCE_TYPE: {

@@ -39,8 +39,7 @@
                         <a-button @click="routerChange('edit', detail)">编辑</a-button>
                         <a-button @click="handleDelete(detail.id)">删除</a-button>
                         <a-button>新建回款单</a-button>
-                        <span v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ ||  trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.OWN: false">
-                                <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>
+                        <span v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
                                 <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
                             </span>
                         <span v-if="trackMemberDetail!= null ? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
