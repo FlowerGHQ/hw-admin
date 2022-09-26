@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('c.list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" ><i class="icon i_add"/>{{ $t('c.save') }}</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" ><i class="icon i_add"/>{{ operMode ==='private' ? $t('c.save') : $t('crm_c.new_pool_c') }}</a-button>
                 </div>
             </div>
             <div class="search-container">

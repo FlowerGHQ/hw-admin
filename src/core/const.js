@@ -36,7 +36,7 @@ switch (window.location.hostname) {
         break;
     case "10.0.0.66":
     case "localhost":
-        URL_POINT = 'http://10.0.0.125:8889'
+        URL_POINT = 'http://localhost:8889'
         break;
     default:
         URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
@@ -1387,13 +1387,17 @@ let Const = {
 			POOL: 10,
 			CUSTOMER: 20,
 			INVALID: 30,
-			NOT_YET_A_CUSTOMER: 40,
+			NOT_YET_A_CUSTOMER: 0,
 		},
 		LEVEL_MAP: {
-			'10': { key: 10, zh: '重点客户',en: 'Important customer', value: 10 },
-			'20': { key: 20, zh: '普通客户',en: 'Ordinary customer', value: 20 },
-			'30': { key: 30, zh: '非优先客户',en: 'Non-preferred customers', value: 30 },
-			'40': { key: 40, zh: '黑名单客户',en: 'Blacklist clients', value: 40 },
+			'10': { key: 10, zh: '已试驾',en: 'Test Drive', value: 10 },
+			'20': { key: 20, zh: '预约试驾',en: 'Reserve Test Drive', value: 20 },
+			'30': { key: 30, zh: '试驾意向低',en: 'Low Test Drive Intention', value: 30 },
+			'40': { key: 40, zh: '试驾意向中',en: 'Moderate Test Drive Intention', value: 40 },
+            '50': { key: 50, zh: '试驾意向高',en: 'High Test Drive Intention', value: 50 },
+            '60': { key: 60, zh: '购买意向低',en: 'Low Purchase Intention', value: 60 },
+            '70': { key: 70, zh: '购买意向中',en: 'Moderate Purchase Intention', value: 70 },
+            '80': { key: 80, zh: '购买意向高',en: 'High Purchase Intention', value: 80 },
 		},
 		SOURCE_MAP: {
 			'10': { key: 10, zh: '客户介绍',en: 'Customers', value: 10 },
