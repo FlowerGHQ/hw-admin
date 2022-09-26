@@ -1426,6 +1426,11 @@ let Const = {
 			'1': { key: 1, zh: '未婚',en: 'Single', value: 1 },
 			'2': { key: 2, zh: '已婚',en: 'Married', value: 2 },
 		},
+		TRACK_STATUS_MAP: {
+			'10': { key: 10, zh: '未跟进',en: 'Not followed up', value: 10 },
+			'20': { key: 20, zh: '跟进中',en: 'Following up', value: 20 },
+			'30': { key: 30, zh: '7天未跟进',en: '7 days without follow up', value: 30 },
+		},
 
 	},
     CRM_ORDER: {
@@ -1541,7 +1546,7 @@ let Const = {
 		TYPE: {
             READ: 1,             // 1只读
             READ_WRITE: 2,       // 2读写
-            OWN: 3,              // 3负责人		
+            OWN: 3,              // 3负责人
         },
 	},
 	CRM_BO: {

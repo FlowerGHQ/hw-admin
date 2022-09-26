@@ -110,6 +110,7 @@
         </div>
         <template #footer>
             <div class="modal-footer">
+                <div class="paging-area"></div>
                 <div class="btn-area">
                     <a-button @click="handleModalClose">{{ $t('def.cancel') }}</a-button>
                     <a-button @click="handleConfirm" type="primary">{{ $t('def.sure') }}</a-button>
@@ -319,11 +320,20 @@ export default {
 
         },
         handleModalClose() {
-            this.modalShow = false
+            this.modalShow = false;
             Object.assign(this.form, this.$options.data().form)
         },
         handleConfirm() {
-            this.modalShow = false
+            Core.Api.CRMCustomer.save({
+                ...this.form,
+            }).then(() => {
+                this.$message.success(this.$t('pop_up.save_success'));
+                this.handleModalClose();
+                this.$emit("select");
+            }).catch(err => {
+                console.log('handleSubmit err:', err)
+            })
+
         },
     },
 }

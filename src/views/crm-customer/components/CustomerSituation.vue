@@ -6,13 +6,13 @@
     <div class="panel-content">
         <a-descriptions title="基本信息" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('n.name')" class="label">{{detail.name}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.level')" class="label">{{detail.level}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('n.source')" class="label">{{detail.source}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.industry')" class="label">{{detail.industry}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.track_status')" class="label">{{detail.track_status}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.level')" class="label">{{$Util.CRMCustomerLevelFilter(detail.level, $i18n.locale)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('n.source')" class="label">{{$Util.CRMCustomerSourceFilter(detail.source, $i18n.locale)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.industry')" class="label">{{$Util.CRMCustomerIndustryFilter(detail.industry, $i18n.locale)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.track_status')" class="label">{{$Util.CRMTrackStatusMapFilter(detail.track_status, $i18n.locale)}}</a-descriptions-item>
         </a-descriptions>
         <a-descriptions title="客户信息" bordered :column="2" size="small" class="pannel">
-            <a-descriptions-item :label="$t('crm_c.gender')" class="label">{{detail.gender}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.gender')" class="label">{{$Util.CRMCustomerGenderFilter(detail.gender, $i18n.locale)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.birthday')" class="label">{{detail.birthday}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.hobby')" class="label">{{detail.hobby}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.marital_status')" class="label">{{detail.marital_status}}</a-descriptions-item>

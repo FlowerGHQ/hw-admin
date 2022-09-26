@@ -204,8 +204,8 @@ export default {
                 next_track_time = dayjs(form.next_track_time).unix()
             }
             Core.Api.CRMTrackRecord.save({
-                target_id: this.target_id,
-                target_type: this.target_type,
+                target_id: this.targetId,
+                target_type: this.targetType,
                 type: form.type,
                 content: form.content,
                 contact_customer_id: form.contact_customer_id,
@@ -215,6 +215,7 @@ export default {
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.handleTrackRecordClose();
+                this.$emit("submit")
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
@@ -273,6 +274,7 @@ export default {
             this.trackRecordForm.contact_customer_name = items[0].name
 
         },
+
     }
 }
 </script>

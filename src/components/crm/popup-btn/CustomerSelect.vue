@@ -5,7 +5,7 @@
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'
         class="ItemSelectModal">
         <div class="modal-content">
-            <CustomerAdd :targetId="targetId" :targetType="targetType" v-if="addCustomerBtn"/>
+            <CustomerAdd :targetId="targetId" :targetType="targetType" v-if="addCustomerBtn" @select="getTableData"/>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
@@ -167,7 +167,6 @@ export default {
                 phone: this.searchForm.phone,
             }).then(res => {
                 this.tableData = res.list
-                this.$emit('option', this.tableData)
             }).catch(err => {
                 console.log('Purchase.itemList err', err)
             }).finally(() => {

@@ -10,11 +10,19 @@
             <a-input-search v-model:value="searchKey" :placeholder="'搜索成员和标签'" @onSearch="clickSearch"/>
         </div> -->
         <!-- $Util.timeFormat(detail.create_time, 'YYYY/MM/DD') -->
-        <div class="list" v-if="activeType === '1'"  v-for="(item, i) in tableData" :key="i">
+        <div class="list" v-if="activeType === '1'" >
             <div  class="day-content" >
-                <div class="day-item tag" v-if="i === 0">
+                <div class="day-item tag" >
                     <div class="tag-bg">今天</div>
                 </div>
+            </div>
+        </div>
+
+        <div class="list" v-if="activeType === '1'"  v-for="(item, i) in tableData" :key="i">
+            <div  class="day-content" >
+<!--                <div class="day-item tag" v-if="i === 0">-->
+<!--                    <div class="tag-bg">今天</div>-->
+<!--                </div>-->
                 <div class="day-item">
                     <div class="panel">
                         <div class="top">

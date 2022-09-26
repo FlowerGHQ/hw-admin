@@ -839,6 +839,12 @@ const Util = {
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
+	CRMTrackStatusMapFilter(val,  to='zh') {
+		const MAP = Const.CRM_CUSTOMER.TRACK_STATUS_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+
 	/* =============== CRM客户管理 ================ */
 
 	/* =============== CRM订单管理 ================ */

@@ -71,8 +71,8 @@
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
-                            <CRMContact :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO"/>
-                            <CRMOrder :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO"/>
+                            <CRMContact :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" ref ="CRMContact"/>
+                            <CRMOrder :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" ref ="CRMOrder"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -81,10 +81,10 @@
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="tabActiveKey">
                         <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.team_members')">
-                            <Group :targetId="id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" :detail="detail"/>
+                            <Group :targetId="id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" :detail="detail" ref ="Group"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.dynamic')">
-                            <TrackRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :detail="detail"/>
+                            <TrackRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :detail="detail" ref ="TrackRecord"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -127,40 +127,7 @@ export default {
             // 加载
             loading: false,
             detail: {},
-            TrackRecordShow: false,
-            trackRecordForm: {
-                type: '',
-                content: "",
-                contact_customer_id: '',
-                track_time: undefined,
-                intent: "",
-                next_track_time: undefined,
-            },
-
-            upload: { // 上传图片
-                action: Core.Const.NET.FILE_UPLOAD_END_POINT,
-                coverList: [],
-                detailList: [],
-                headers: {
-                    ContentType: false
-                },
-                data: {
-                    token: Core.Data.getToken(),
-                    type: 'img',
-                },
-            },
             trackMemberDetail: undefined,
-            fileUpload: {
-                action: Core.Const.NET.FILE_UPLOAD_END_POINT,
-                fileList: [],
-                headers: {
-                    ContentType: false
-                },
-                data: {
-                    token: Core.Data.getToken(),
-                    type: 'file',
-                },
-            },
             groupStatusTableData: [],
         };
     },
@@ -299,6 +266,14 @@ export default {
                 this.trackMemberDetail = res.detail
                 console.log("trackMemberDetail", this.trackMemberDetail);
             })
+        },
+        getTrackRecord(){
+            console.log("getTrackRecord");
+            this.$refs.TrackRecord.getCRMTrackRecordTableData();
+        },
+        getCrmActionRecordTableData(){
+            console.log("getCrmActionRecordTableData");
+            this.$refs.TrackRecord.getCrmActionRecordTableData();
         },
     }
 };
