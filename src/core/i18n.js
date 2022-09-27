@@ -1210,6 +1210,11 @@ const messages = {
 	    crm_r: {
 		    from_customer: '来自客户',
 	    },
+	    crm_set: {
+			name: '名称',
+		    name_en: '英文名',
+		    index: '排序',
+	    },
         sl: {  // 智能标签
             list: '标签列表',
             save: '新建标签',

@@ -48,15 +48,15 @@
                 <div class="day-item" >
                     <div class="panel">
                         <div class="top">
-                            <span class="item-title">{{$Util.CRMTrackRecordFilter(item.type, $i18n.locale) || '-'  }}</span>
+                            <span class="item-title">{{$Util.CRMActionRecordTypeMapFilter(item.type, $i18n.locale) || '-'  }}</span>
                             <span class="item-time"><i class="" style="color:blue"/>{{$Util.timeFilter(item.create_time) || '-'}}</span>
                         </div>
                         <div class="content">
                             <div class="line">{{ item.content }}</div>
-                            <div class="line grey">来自客户:{{ item.contact? item.contact.name : "-"}}</div>
+<!--                            <div class="line grey">来自客户:{{ item.contact? item.contact.name : "-"}}</div>-->
                         </div>
                         <div class="foot">
-                            <div class="line">操作人:{{ item.create_user_name }}</div>
+                            <div class="line">操作人:{{ item.operator_name }}</div>
                         </div>
                     </div>
                 </div>
@@ -94,7 +94,7 @@ export default {
                 { name: '跟进记录', key: '1' },
                 { name: '操作日志', key: '2' },
             ],
-            // TYPE: Core.CRM_ACTION_RECORD.TYPE,
+            TYPE: Core.Const.CRM_ACTION_RECORD.TYPE,
             activeType: '1',
             USER_TYPE,
             loginType: Core.Data.getLoginType(),
@@ -189,6 +189,10 @@ export default {
             }).then(res => {
                 console.log("getTableData res", res)
                 this.total = res.count;
+                res.list.forEach(it =>{
+                    it.content = this.actionParsing(it.type, it.content, it.operator_name)
+                })
+                console.log("getTableData res2", res)
                 this.recordTableData = res.list;
             }).catch(err => {
                 console.log('getTableData err', err)
@@ -198,23 +202,48 @@ export default {
         },
         actionParsing(type, content, user) {
             let item = JSON.parse(content)
+            console.log("type", type)
+            console.log("item", item)
             switch (type) {
                 //类型1 操作人领取了客户
-                case TYPE.CREATE_CUSTOMER:
-                case TYPE.DELETE_CUSTOMER:
-                    return user + Core.Util.CRMActionRecordTypeMapFilter(type, this.lang)
+                case this.TYPE.CREATE_CUSTOMER:
+                case this.TYPE.DELETE_CUSTOMER:
+                    return ""
+                    // return user + Core.Util.CRMActionRecordTypeMapFilter(type, this.lang)
+
                 //类型2 将商机转交给另一操作人
-                case TYPE.BO_TO_OTHERS:
-                    return user + Core.Util.CRMActionRecordTypeMapFilter(type, this.lang) + item.value
+                case this.TYPE.DISTRIBUTE_CUSTOMER:
+                    return user + Core.Util.CRMActionRecordTypeMapFilter(type, this.lang) + item.user_name
+
                 //类型3 客户信息修改
-                case TYPE.REVISE_CUSTOMER:
+                case this.TYPE.REVISE_CUSTOMER:
+                    item = item.content
+                    // console.log("con",item)
                     let con = ""
+                    // for (let key of item.keys()){
+                    //     con += "将" + key + "从" + item[key].old_value + "改为" + item[key].new_value
+                    // }
+                    // for(let i=0; i < item.length; i++)
+                    // {
+                    //     con += "将" + item[i].key + "从" + item[i].old_value + "改为" + item[i].new_value
+                    //     console.log("con",item[i].key)
+                    // }
                     item.forEach(it => {
-                        con += "将" + $t(it.key)+"从" + it.old_value + "改为" + it.new_value
+                        con += "将" + this.$t(it.key)+"从" + this.valueParsing(it.key, it.old_value) + "改为" + this.valueParsing(it.key, it.new_value) + ","
                     })
-                    return user + Core.Util.CRMActionRecordTypeMapFilter(type, this.lang) + con
+                    console.log("con", user + Core.Util.CRMActionRecordTypeMapFilter(type, this.lang) + con)
+                    return user + con
             }
+            return item
+        },
+        valueParsing(key, value) {
+            switch (key){
+                case "gender" : return this.$Util.CRMCustomerGenderFilter(value, this.lang)
+
+            }
+            return value
         }
+
     }
 };
 </script>
