@@ -8,7 +8,7 @@
                 </div>
             </div>
             <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="(record,index) => record.id" :pagination='false' @change="getTableDataSorter">
+                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"  :pagination='false'>
                     <template #headerCell="{title}">
                         {{ $t(title) }}
                     </template>
@@ -79,7 +79,6 @@ export default {
             form:{
                 zh: '',
                 en: '',
-                status: '',
             },
             // 表格
             tableData: [],
