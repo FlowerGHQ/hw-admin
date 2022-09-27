@@ -1214,6 +1214,9 @@ const messages = {
 			name: '名称',
 		    name_en: '英文名',
 		    index: '排序',
+		    list: '客户来源列表',
+		    save: '客户来源新增',
+		    edit: '客户来源修改',
 	    },
         sl: {  // 智能标签
             list: '标签列表',

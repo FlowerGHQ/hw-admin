@@ -2,7 +2,7 @@
     <div id="SalesAreaList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">{{ $t('ar.list')}}</div>
+                <div class="title-area">{{ $t('crm_set.list')}}</div>
                 <div class="btns-area">
                     <a-button type="primary" @click="handleModalShow({})" v-if="$auth('sales-area.save')"><i class="icon i_add"/>{{ $t('ar.save')}}</a-button>
                 </div>
@@ -53,7 +53,7 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="modalVisible" :title="editForm.id ? $t('i.edit_a') : $t('i.add_category')" @ok="handleModalSubmit">
+            <a-modal v-model:visible="modalVisible" :title="editForm.name ? $t('crm_set.edit') : $t('crm_set.save')" @ok="handleModalSubmit">
                 <div class="modal-content">
                     <div class="form-item">
                         <div class="key">{{ $t('n.name') }}</div>
