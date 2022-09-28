@@ -660,7 +660,12 @@ const apiList = {
 	CrmActionRecord:{//CRM联系人绑定
 		list: ['PostJson', 'crm-action-record/list'],//
 	},
-
+	CRMCustomerSource:{//CRM联系人绑定
+		save: ['PostJson', 'crm-customer-source/save'],//
+		list: ['PostJson', 'crm-customer-source/list'],//
+		delete: ['PostJson', 'crm-customer-source/delete'],//
+		detail: ['PostJson', 'crm-customer-source/detail'],//
+	},
 
 };
 

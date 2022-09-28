@@ -1719,6 +1719,16 @@ const routes = [
 					// auth: ["crm-community-customer.list"],
 				}
 			},
+			{
+				path: 'source-list',
+				name: 'SourceList',
+				component: () => import('@/views/crm-setting/source-list.vue'),
+				meta: {
+					title: '客户来源',
+					title_en: 'Customer source',
+					// auth: ["crm-community-customer.list"],
+				}
+			},
 		]
 	},
     { // 客户管理

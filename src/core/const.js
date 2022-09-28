@@ -1575,83 +1575,85 @@ let Const = {
 	},
 	CRM_ACTION_RECORD: {
 		TYPE:{
-			CREATE_CUSTOMER : 100,       // 新建客户
-			DELETE_CUSTOMER : 110,       // 删除客户
-			OBTAIN_CUSTOMER : 120,       // 领取客户
-			DISTRIBUTE_CUSTOMER : 130,   // 分配客户
-			RETURN_POOL : 140,           // 退回公海
-			CUSTOMER_TO_OTHERS : 150,    // 将客户转交给
+			CREATE_CUSTOMER : 1001,        // 新建客户
+			DELETE_CUSTOMER : 1002,        // 删除客户
+			OBTAIN_CUSTOMER : 1003,        // 领取客户
+			DISTRIBUTE_CUSTOMER : 2001,    // 分配客户
+			RETURN_POOL : 1004,            // 退回公海
+			CUSTOMER_TO_OTHERS : 2002,     // 将客户转交给
 
-			CREATE_BO : 200,             // 新建商机
-			DELETE_BO : 210,             // 删除商机
-			UPDATE_BO_STATUS : 220,      // 更新商机阶段
-			BO_TO_OTHERS : 230,          // 将商机转交给
+			CREATE_BO : 2003,              // 新建商机
+			DELETE_BO : 2004,              // 删除商机
+			UPDATE_BO_STATUS : 2005,       // 更新商机阶段
+			BO_TO_OTHERS : 2006,           // 将商机转交给
 
-			CREATE_ORDER : 300,          // 新建订单
-			DELETE_ORDER : 310,          // 删除订单
-			CREATE_ORDER_INCOME : 320,   // 新建回款单
-			DELETE_ORDER_INCOME : 330,   // 删除回款单
-			AUDIT_PASS : 340,            // 审核人...审核通过
-			AUDIT_REFUSE : 350,          // 审核人...审核拒绝
-			REFUND : 360,                // 向客户退款
-			CANCEL_REFUND : 360,         // 取消退款
+			CREATE_ORDER : 2007,           // 新建订单
+			DELETE_ORDER : 2008,           // 删除订单
+			CREATE_ORDER_INCOME : 1005,    // 新建回款单
+			DELETE_ORDER_INCOME : 1006,    // 删除回款单
+			AUDIT_PASS : 1007,             // 审核人...审核通过
+			AUDIT_REFUSE : 1008,           // 审核人...审核拒绝
+			REFUND : 2009,                 // 向客户退款
+			CANCEL_REFUND : 2010,          // 取消退款
 
-			CREATE_CONTACT : 400,        // 创建联系人
-			ADD_CONTACT : 400,           // 添加联系人
-			DELETE_CONTACT : 410,        // 删除联系人
-			ADD_MEMBER : 420,            // 添加团队成员
-			DELETE_MEMBER : 430,         // 删除团队成员
-			ADD_TRACK_RECORD : 440,      // 添加跟进记录
-			DELETE_TRACK_RECORD : 450,   // 删除跟进记录
-			ADD_TABLE : 460,             // 添加标签
-			DELETE_TABLE : 470,          // 删除标签
+			CREATE_CONTACT : 2019,         // 创建联系人
+			ADD_CONTACT : 2011,            // 添加联系人
+			DELETE_CONTACT : 2012,         // 删除联系人
+			ADD_MEMBER : 2013,             // 添加团队成员
+			DELETE_MEMBER : 2014,          // 删除团队成员
+			ADD_TRACK_RECORD : 2015,       // 添加跟进记录
+			DELETE_TRACK_RECORD : 2016,    // 删除跟进记录
+			ADD_LABEL : 2017,              // 添加标签
+			DELETE_LABEL : 2018,           // 删除标签
 
-			// 修改操作
-			REVISE_CUSTOMER : 1000,      // 修改客户信息
-			REVISE_CONTACT : 1010,       // 修改联系人
-			REVISE_TRACK_RECORD : 1020,  // 修改跟进记录
-			REVISE_BO : 1030,            // 修改商机
-			REVISE_ORDER : 1040,         // 修改订单
-			REVISE_ORDER_INCOME : 1050,  // 修改回款单
+// 修改操作
+			REVISE_CUSTOMER : 3001,        // 修改客户信息
+			REVISE_CONTACT : 3002,         // 修改联系人
+			REVISE_TRACK_RECORD : 3003,    // 修改跟进记录
+			REVISE_BO : 3004,              // 修改商机
+			REVISE_ORDER : 3005,           // 修改订单
+			REVISE_ORDER_INCOME : 3006,    // 修改回款单
 
 		},
 		TYPE_MAP:{
-			'	100	'	:	 { key	:	100	, zh	:	'	 新建客户	'	,en	:	'	CREATE_CUSTOMER 	'	, value:	100	},
-			'	110	'	:	 { key	:	110	, zh	:	'	 删除客户	'	,en	:	'	DELETE_CUSTOMER 	'	, value:	110	},
-			'	120	'	:	 { key	:	120	, zh	:	'	 领取客户	'	,en	:	'	OBTAIN_CUSTOMER 	'	, value:	120	},
-			'	130	'	:	 { key	:	130	, zh	:	'	 分配客户	'	,en	:	'	DISTRIBUTE_CUSTOMER 	'	, value:	130	},
-			'	140	'	:	 { key	:	140	, zh	:	'	 退回公海	'	,en	:	'	RETURN_POOL 	'	, value:	140	},
-			'	150	'	:	 { key	:	150	, zh	:	'	 将客户转交给	'	,en	:	'	CUSTOMER_TO_OTHERS 	'	, value:	150	},
+				'1001': { key:1001, zh:'新建客户',en:'CREATE_CUSTOMER', value:1001},
+				'1002': { key:1002, zh:'删除客户',en:'DELETE_CUSTOMER', value:1002},
+				'1003': { key:1003, zh:'领取客户',en:'OBTAIN_CUSTOMER', value:1003},
+				'2001': { key:2001, zh:'分配客户',en:'DISTRIBUTE_CUSTOMER', value:2001},
+				'1004': { key:1004, zh:'退回公海',en:'RETURN_POOL', value:1004},
+				'2002': { key:2002, zh:'将客户转交给',en:'CUSTOMER_TO_OTHERS', value:2002},
 
-			'	200	'	:	 { key	:	200	, zh	:	'	 新建商机	'	,en	:	'	CREATE_BO 	'	, value:	200	},
-			'	210	'	:	 { key	:	210	, zh	:	'	 删除商机	'	,en	:	'	DELETE_BO 	'	, value:	210	},
-			'	220	'	:	 { key	:	220	, zh	:	'	 更新商机阶段	'	,en	:	'	UPDATE_BO_STATUS 	'	, value:	220	},
-			'	230	'	:	 { key	:	230	, zh	:	'	 将商机转交给	'	,en	:	'	BO_TO_OTHERS 	'	, value:	230	},
+				'2003': { key:2003, zh:'新建商机',en:'CREATE_BO', value:2003},
+				'2004': { key:2004, zh:'删除商机',en:'DELETE_BO', value:2004},
+				'2005': { key:2005, zh:'更新商机阶段',en:'UPDATE_BO_STATUS', value:2005},
+				'2006': { key:2006, zh:'将商机转交给',en:'BO_TO_OTHERS', value:2006},
 
-			'	300	'	:	 { key	:	300	, zh	:	'	 新建订单	'	,en	:	'	CREATE_ORDER 	'	, value:	300	},
-			'	310	'	:	 { key	:	310	, zh	:	'	 删除订单	'	,en	:	'	DELETE_ORDER 	'	, value:	310	},
-			'	320	'	:	 { key	:	320	, zh	:	'	 新建回款单	'	,en	:	'	CREATE_ORDER_INCOME 	'	, value:	320	},
-			'	330	'	:	 { key	:	330	, zh	:	'	 删除回款单	'	,en	:	'	DELETE_ORDER_INCOME 	'	, value:	330	},
-			'	340	'	:	 { key	:	340	, zh	:	'	 审核人...审核通过	'	,en	:	'	AUDIT_PASS 	'	, value:	340	},
-			'	350	'	:	 { key	:	350	, zh	:	'	 审核人...审核拒绝	'	,en	:	'	AUDIT_REFUSE 	'	, value:	350	},
-			'	360	'	:	 { key	:	360	, zh	:	'	 向客户退款	'	,en	:	'	REFUND 	'	, value:	360	},
-			'	370	'	:	 { key	:	370	, zh	:	'	 取消退款	'	,en	:	'	CANCEL_REFUND 	'	, value:	370	},
+				'2007': { key:2007, zh:'新建订单',en:'CREATE_ORDER', value:2007},
+				'2008': { key:2008, zh:'删除订单',en:'DELETE_ORDER', value:2008},
+				'1005': { key:1005, zh:'新建回款单',en:'CREATE_ORDER_INCOME', value:1005},
+				'1006': { key:1006, zh:'删除回款单',en:'DELETE_ORDER_INCOME', value:1006},
+				'1007': { key:1007, zh:'审核人...审核通过',en:'AUDIT_PASS', value:1007},
+				'1008': { key:1008, zh:'审核人...审核拒绝',en:'AUDIT_REFUSE', value:1008},
+				'2009': { key:2009, zh:'向客户退款',en:'REFUND', value:2009},
+				'2010': { key:2010, zh:'取消退款',en:'CANCEL_REFUND', value:2010},
 
-			'	400	'	:	 { key	:	400	, zh	:	'	 创建联系人	'	,en	:	'	CREATE_CONTACT 	'	, value:	400	},
-			'	410	'	:	 { key	:	410	, zh	:	'	 删除联系人	'	,en	:	'	DELETE_CONTACT 	'	, value:	410	},
-			'	420	'	:	 { key	:	420	, zh	:	'	 添加团队成员	'	,en	:	'	ADD_MEMBER 	'	, value:	420	},
-			'	430	'	:	 { key	:	430	, zh	:	'	 删除团队成员	'	,en	:	'	DELETE_MEMBER 	'	, value:	430	},
-			'	440	'	:	 { key	:	440	, zh	:	'	 添加跟进记录	'	,en	:	'	ADD_TRACK_RECORD 	'	, value:	440	},
-			'	450	'	:	 { key	:	450	, zh	:	'	 删除跟进记录	'	,en	:	'	DELETE_TRACK_RECORD 	'	, value:	450	},
-			'	460	'	:	 { key	:	460	, zh	:	'	 添加标签	'	,en	:	'	ADD_TABLE 	'	, value:	460	},
-			'	470	'	:	 { key	:	470	, zh	:	'	 删除标签	'	,en	:	'	DELETE_TABLE 	'	, value:	470	},
+				'2019': { key:2010, zh:'创建联系人',en:'CREATE_CONTACT', value:2010},
+				'2011': { key:2011, zh:'添加联系人',en:'ADD_CONTACT', value:2011},
+				'2012': { key:2012, zh:'删除联系人',en:'DELETE_CONTACT', value:2012},
+				'2013': { key:2013, zh:'添加团队成员',en:'ADD_MEMBER', value:2013},
+				'2014': { key:2014, zh:'删除团队成员',en:'DELETE_MEMBER', value:2014},
+				'2015': { key:2015, zh:'添加跟进记录',en:'ADD_TRACK_RECORD', value:2015},
+				'2016': { key:2016, zh:'删除跟进记录',en:'DELETE_TRACK_RECORD', value:2016},
+				'2017': { key:2017, zh:'添加标签',en:'ADD_LABEL', value:2017},
+				'2018': { key:2018, zh:'删除标签',en:'DELETE_LABEL', value:2018},
 
-			'	1000	'	:	 { key	:	1000	, zh	:	'	 修改客户信息	'	,en	:	'	REVISE_CUSTOMER 	'	, value:	1000	},
-			'	1010	'	:	 { key	:	1010	, zh	:	'	 修改联系人	'	,en	:	'	REVISE_CONTACT 	'	, value:	1010	},
-			'	1020	'	:	 { key	:	1020	, zh	:	'	 修改跟进记录	'	,en	:	'	REVISE_TRACK_RECORD 	'	, value:	1020	},
-			'	1030	'	:	 { key	:	1030	, zh	:	'	 修改商机	'	,en	:	'	REVISE_BO 	'	, value:	1030	},
-			'	1040	'	:	 { key	:	1040	, zh	:	'	 修改订单	'	,en	:	'	REVISE_ORDER 	'	, value:	1040	},
-			'	1050	'	:	 { key	:	1050	, zh	:	'	 修改回款单	'	,en	:	'	REVISE_ORDER_INCOME 	'	, value:	1050	},
+				'3001': { key:3001, zh:'修改客户信息',en:'REVISE_CUSTOMER', value:3001},
+				'3002': { key:3002, zh:'修改联系人',en:'REVISE_CONTACT', value:3002},
+				'3003': { key:3003, zh:'修改跟进记录',en:'REVISE_TRACK_RECORD', value:3003},
+				'3004': { key:3004, zh:'修改商机',en:'REVISE_BO', value:3004},
+				'3005': { key:3005, zh:'修改订单',en:'REVISE_ORDER', value:3005},
+				'3006': { key:3006, zh:'修改回款单',en:'REVISE_ORDER_INCOME', value:3006},
+
 
 		}
 	},
