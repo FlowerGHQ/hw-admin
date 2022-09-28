@@ -929,7 +929,8 @@ export default {
         // 获取 采购单 商品列表
         getPurchaseItemList() {
             Core.Api.Purchase.itemList({
-                order_id: this.id
+                order_id: this.id,
+                page: 0,
             }).then(res => {
                 let total_amount = 0,total_charge = 0,total_price = 0;
                 res.list.forEach(it =>{
