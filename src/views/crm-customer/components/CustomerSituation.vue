@@ -15,7 +15,7 @@
             <a-descriptions-item :label="$t('crm_c.gender')" class="label">{{$Util.CRMCustomerGenderFilter(detail.gender, $i18n.locale)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.birthday')" class="label">{{detail.birthday}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.hobby')" class="label">{{detail.hobby}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.marital_status')" class="label">{{detail.marital_status}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.marital_status')" class="label">{{$Util.CRMCustomerMaritalStatusFilter(detail.marital_status, $i18n.locale)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.income')" class="label">{{detail.income}}</a-descriptions-item>
 
         </a-descriptions>

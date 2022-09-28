@@ -29,6 +29,14 @@
                             </a-select>
                         </div>
                     </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">{{ $t('crm_c.level') }}：</div>
+                        <div class="value">
+                            <a-select v-model:value="searchForm.level" :placeholder="$t('def.select')" @change="handleSearch">
+                                <a-select-option v-for="item of CRM_LEVEL_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                            </a-select>
+                        </div>
+                    </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
                         <div class="key">{{ $t('d.create_time') }}：</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
@@ -158,6 +166,7 @@ export default {
             pageSize: 20,
 
             CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
+            CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
             CRM_STATUS: Core.Const.CRM_CUSTOMER.STATUS,
             total: 0,
             orderByFields: {},
@@ -165,6 +174,7 @@ export default {
             searchForm: {
                 name: '',
                 phone:'',
+                level:'',
                 begin_time: '',
                 end_time: '',
                 type: '',
@@ -202,7 +212,7 @@ export default {
                 // {title: 'n.continent', dataIndex: 'continent', key:'item'},
                 {title: 'crm_c.level', dataIndex: 'level', key:'level', sorter: true},
                 {title: 'crm_c.type', dataIndex: 'type', key:'type', sorter: true},
-                {title: 'r.creator_name', dataIndex: 'creator_name', key:'creator_name', sorter: true},
+                {title: 'r.creator_name', dataIndex: ['create_user','name'], key:'creator_name', sorter: true},
                 {title: 'ad.specific_address', dataIndex: 'address', sorter: true},
                 {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
                 {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
@@ -319,7 +329,7 @@ export default {
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.Customer.delete({id}).then(() => {
+                    Core.Api.CRMCustomer.delete({id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'))
                         _this.getTableData();
                     }).catch(err => {

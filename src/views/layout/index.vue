@@ -1,5 +1,5 @@
 <template>
-<a-config-provider :locale="lang == 'zh' ? zhCN : enUS" :autoInsertSpaceInButton='false'>
+<a-config-provider :locale="zhCN" :autoInsertSpaceInButton='false'>
     <a-layout id="Layout">
         <a-layout-header class="layout-header">
             <div class="header-left" @click="collapsed = !collapsed" :class="{'collapsed': collapsed}">

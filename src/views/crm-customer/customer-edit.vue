@@ -133,9 +133,9 @@
                 <div class="form-item textarea">
                     <div class="key">{{ $t('def.remark') }}</div>
                     <div class="value">
-                        <a-textarea v-model:value="form.remark" :placeholder="$t('r.enter_remark')"
+                        <a-textarea v-model:value="form.remark" :placeholder="$t('def.input')"
                                     :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
-                        <span class="content-length">{{ form.remark }}/500</span>
+                        <span class="content-length">{{ form.remark != undefined?form.remark.length : 0 }}/500</span>
                     </div>
                 </div>
             </div>

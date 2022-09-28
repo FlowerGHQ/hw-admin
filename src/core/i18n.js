@@ -1086,7 +1086,7 @@ const messages = {
 		    phone: '电话',
 		    gender: '性别',
 		    birthday: '生日',
-		    industry: '行业',
+		    industry: '客户行业',
 		    nationality: '国籍',
 		    hobby:'爱好',
 		    marital_status:'婚姻状态',
