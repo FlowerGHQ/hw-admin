@@ -1115,6 +1115,7 @@ const messages = {
 		    select: '请选择',
 		    team_members: '团队成员',
 		    dynamic: '动态',
+		    source: '客户来源',
 	    },
 	    crm_t: {
         	add_track_record: '添加跟进记录',

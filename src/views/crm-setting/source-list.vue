@@ -185,17 +185,9 @@ export default {
                 },
             });
         },
-        // 编辑与新增子类
-        handleModalShow({parent_id = 0, id, name, name_en,index}) {
-            this.editForm = {
-                id: id,
-                name: name,
-                name_en: name_en,
-                parent_id: parent_id,
-                index: index,
-            }
-            console.log('this.editForm:', this.editForm)
-            this.modalVisible = true
+        handleModalShow(record) {
+            this.editForm =  Core.Util.deepCopy(record)
+            this.modalShow = true
         },
         handleModalSubmit() {
             let form = Core.Util.deepCopy(this.editForm)
@@ -205,24 +197,10 @@ export default {
             if (!form.name_en) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            form.key = form.index_key
             this.loading = true
             let apiName = form.id ? 'update' : 'save';
-            Core.Api.ItemCategory[apiName](form).then(res => {
+            Core.Api.CRMCustomerSource[apiName](form).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'))
-                if (form.parent_id == 0) {
-                    this.getDataById()
-                } else if (form.id) {
-                    this.getDataById(form.id, this.editNode)
-                } else {
-                    this.getDataByParent(form.parent_id, this.parentNode)
-                }
-                if (form.parent_id !== 0) {
-                    let index = this.expandedRowKeys.indexOf(form.parent_id)
-                    this.expandedRowKeys.splice(index, 1)
-                } else {
-                    this.expandedRowKeys = []
-                }
                 this.modalVisible = false
             }).catch(err => {
                 console.log('handleModalSubmit err:', err)

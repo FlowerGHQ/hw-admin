@@ -19,7 +19,7 @@
                         {{ text || '-' }}
                     </template>
                     <template v-if="column.key === 'status'">
-                        {{ lang === 'zh'? groupStatusTableData[text].zh : groupStatusTableData[text].en}}
+                        {{ groupStatusTableData[text] !== undefined ? lang === 'zh' ? groupStatusTableData[text].zh : groupStatusTableData[text].en : "" }}
                     </template>
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
@@ -91,6 +91,7 @@ export default {
 
             userId: '',
             userDetail: '',
+            groupStatusTableData: [],
         };
     },
     watch: {},
@@ -115,6 +116,7 @@ export default {
     },
     mounted() {
         this.getTableData();
+        this.getGroupStatusDetail()
     },
     methods: {
         routerChange(type, item = {}) {
@@ -177,6 +179,18 @@ export default {
                         console.log("handleDelete -> err", err);
                     })
                 },
+            });
+        },
+        getGroupStatusDetail() {    // 获取 表格 数据
+            this.loading = true;
+            Core.Api.CRMBoStatusGroup.detail({
+                id: 1,
+            }).then(res => {
+                this.groupStatusTableData = JSON.parse(res.detail.status_list)
+            }).catch(err => {
+                console.log('getTableData err:', err)
+            }).finally(() => {
+                this.loading = false;
             });
         },
     }
