@@ -204,41 +204,101 @@ export default {
             let item = JSON.parse(content)
             console.log("type", type)
             console.log("item", item)
-            switch (type) {
-                //类型1 操作人领取了客户
-                case this.TYPE.CREATE_CUSTOMER:
-                case this.TYPE.DELETE_CUSTOMER:
-                    return ""
-                    // return user + Core.Util.CRMActionRecordTypeMapFilter(type, this.lang)
-
-                //类型2 将商机转交给另一操作人
-                case this.TYPE.DISTRIBUTE_CUSTOMER:
-                    return user + Core.Util.CRMActionRecordTypeMapFilter(type, this.lang) + item.user_name
-
-                //类型3 客户信息修改
-                case this.TYPE.REVISE_CUSTOMER:
-                    item = item.content
-                    // console.log("con",item)
-                    let con = ""
-                    // for (let key of item.keys()){
-                    //     con += "将" + key + "从" + item[key].old_value + "改为" + item[key].new_value
-                    // }
-                    // for(let i=0; i < item.length; i++)
-                    // {
-                    //     con += "将" + item[i].key + "从" + item[i].old_value + "改为" + item[i].new_value
-                    //     console.log("con",item[i].key)
-                    // }
-                    item.forEach(it => {
-                        con += "将" + this.$t(it.key)+"从" + this.valueParsing(it.key, it.old_value) + "改为" + this.valueParsing(it.key, it.new_value) + ","
-                    })
-                    console.log("con", user + Core.Util.CRMActionRecordTypeMapFilter(type, this.lang) + con)
-                    return user + con
+            if(type >= 1000 && type < 2000) {
+                switch (type) {
+                    case this.TYPE.CREATE_CUSTOMER: return " 创建了该客户"; break;
+                    case this.TYPE.DELETE_CUSTOMER: return " 将该客户删除了"; break;
+                    case this.TYPE.OBTAIN_CUSTOMER: return " 领取了该客户"; break;
+                    case this.TYPE.RETURN_POOL: return " 将该客户退回了公海"; break;
+                    case this.TYPE.CREATE_ORDER_INCOME: return " 创建了新的回款单"; break;
+                    case this.TYPE.DELETE_ORDER_INCOME: return " 删除了回款单"; break;
+                    case this.TYPE.AUDIT_PASS: return "审核人 " + user +" 审核通过"; break;
+                    case this.TYPE.AUDIT_REFUSE: return "审核人 " + user +" 审核未通过"; break;
+                }
+            } else if(type >= 2000 && type < 3000) {
+                switch (type) {
+                    case this.TYPE.DISTRIBUTE_CUSTOMER: return user + " 将客户分配给了: " + item.user_name; break;
+                    case this.TYPE.CUSTOMER_TO_OTHERS: return user + " 将客户转交给了: " + item.user_name; break;
+                    case this.TYPE.CREATE_BO: return user + " 创建了新的商机：" + item.bo_name; break;
+                    case this.TYPE.DELETE_BO: return user + " 删除了商机：" + item.bo_name; break;
+                    case this.TYPE.UPDATE_BO_STATUS: return user + " 更新了商机阶段："; break;
+                    case this.TYPE.BO_TO_OTHERS: return user + " 将商机转交给了: " + item.user_name; break;
+                    case this.TYPE.CREATE_ORDER: return user + " 创建了新的合同订单: " + item.order_name; break;
+                    case this.TYPE.DELETE_ORDER: return user + " 删除了合同订单: " + item.order_name; break;
+                    case this.TYPE.REFUND: return user + " 向客户退款: " + item.money + " 元"; break;
+                    case this.TYPE.CANCEL_REFUND: return user + " 取消退款: " + item.money + " 元"; break;
+                    case this.TYPE.CREATE_CONTACT: return user + " 创建了新的联系人: " + item.contact_name; break;
+                    case this.TYPE.ADD_CONTACT: return user + " 添加了联系人: " + item.contact_name; break;
+                    case this.TYPE.DELETE_CONTACT: return user + " 删除了联系人: " + item.contact_name; break;
+                    case this.TYPE.ADD_MEMBER: return user + " 添加团队成员: " + item.user_name; break;
+                    case this.TYPE.DELETE_MEMBER: return user + " 删除团队成员: " + item.user_name; break;
+                    case this.TYPE.ADD_TRACK_RECORD: return user + " 添加了新的跟进记录"; break;
+                    case this.TYPE.DELETE_TRACK_RECORD: return user + " 删除了跟进记录"; break;
+                    case this.TYPE.ADD_LABEL: return user + " 添加了标签: " + item.label; break;
+                    case this.TYPE.DELETE_LABEL: return user + " 删除了标签: " + item.label; break;
+                }
+            } else if(type >= 3000 && type < 4000) {
+                item = item.content
+                let con = ""
+                item.forEach(it => {
+                  con += "将 " + this.$t(it.key)+" 从【" + this.valueParsing(it.key, it.old_value) + "】更新为【" + this.valueParsing(it.key, it.new_value) + "】, "
+                })
+                return con
+                // switch (type) {
+                //     case this.TYPE.REVISE_CUSTOMER: return user + " 将客户分配给了 "; break;
+                //     case this.TYPE.REVISE_CONTACT: return user + " 将客户分配给了 "; break;
+                //     case this.TYPE.REVISE_TRACK_RECORD: return user + " 将客户分配给了 "; break;
+                //     case this.TYPE.REVISE_BO: return user + " 将客户分配给了 "; break;
+                //     case this.TYPE.REVISE_ORDER: return user + " 将客户分配给了 "; break;
+                //     case this.TYPE.REVISE_ORDER_INCOME: return user + " 将客户分配给了 "; break;
+                // }
             }
+            //
+            // switch (type) {
+            //     //类型1 操作人领取了客户
+            //         // return user + Core.Util.CRMActionRecordTypeMapFilter(type, this.lang)
+            //
+            //     //类型2 将商机转交给另一操作人
+            //     case this.TYPE.DISTRIBUTE_CUSTOMER:
+            //         return user + Core.Util.CRMActionRecordTypeMapFilter(type, this.lang) + item.user_name
+            //
+            //     //类型3 客户信息修改
+            //     case this.TYPE.REVISE_CUSTOMER:
+            //         item = item.content
+            //         // console.log("con",item)
+            //         let con = ""
+            //         // for (let key of item.keys()){
+            //         //     con += "将" + key + "从" + item[key].old_value + "改为" + item[key].new_value
+            //         // }
+            //         // for(let i=0; i < item.length; i++)
+            //         // {
+            //         //     con += "将" + item[i].key + "从" + item[i].old_value + "改为" + item[i].new_value
+            //         //     console.log("con",item[i].key)
+            //         // }
+            //         item.forEach(it => {
+            //             con += "将" + this.$t(it.key)+"从" + this.valueParsing(it.key, it.old_value) + "改为" + this.valueParsing(it.key, it.new_value) + ","
+            //         })
+            //         console.log("con", user + Core.Util.CRMActionRecordTypeMapFilter(type, this.lang) + con)
+            //         return user + con
+            // }
             return item
         },
         valueParsing(key, value) {
-            switch (key){
-                case "gender" : return this.$Util.CRMCustomerGenderFilter(value, this.lang)
+            switch (key) {
+                case "crm_c.type" : return this.$Util.CRMCustomerTypeFilter(value, this.lang)
+                case "crm_c.level" : return this.$Util.CRMCustomerLevelFilter(value, this.lang)
+                case "crm_c.industry" : return this.$Util.CRMCustomerIndustryFilter(value, this.lang)
+                case "crm_c.gender" : return this.$Util.CRMCustomerGenderFilter(value, this.lang)
+                case "crm_c.marital_status" : return this.$Util.CRMCustomerMaritalStatusFilter(value, this.lang)
+                case "crm_b.source" : return this.$Util.CRMBoSourceMapFilter(value, this.lang)
+                case "crm_b.track_status" : return this.$Util.CRMTrackStatusMapFilter(value, this.lang)
+                case "crm_b.lost_reason" : return this.$Util.CRMBoLostReasonFilter(value, this.lang)
+                case "crm_o.type" : return this.$Util.CRMOrderTypeFilter(value, this.lang)
+                case "crm_o.status" : return this.$Util.CRMOrderStatusFilter(value, this.lang)
+                case "crm_oi.type" : return this.$Util.CRMOrderIncomeTypeFilter(value, this.lang)
+                case "crm_oi.status" : return this.$Util.CRMOrderIncomeStatusFilter(value, this.lang)
+                case "crm_oi.payment_type" : return this.$Util.CRMOrderIncomePaymentTypeFilter(value, this.lang)
+                case "crm_r.type" : return this.$Util.CRMRefundRecordTypeMapFilter(value, this.lang)
 
             }
             return value

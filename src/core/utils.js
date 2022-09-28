@@ -885,15 +885,38 @@ const Util = {
 		return item[to] || ''
 	},
 	/* =============== CRM回款单 ================ */
-	/* =============== CRM回款单 ================ */
+	/* =============== CRM操作记录 ================ */
 	CRMActionRecordTypeMapFilter(val,  to='zh') {
 		console.log(val)
 		const MAP = Const.CRM_ACTION_RECORD.TYPE_MAP
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
-	/* =============== CRM回款单 ================ */
+	/* =============== CRM操作记录 ================ */
 
+    /* =============== CRM商机 ================ */
+    CRMBoSourceMapFilter(val,  to='zh') {
+        console.log(val)
+        const MAP = Const.CRM_BO.SOURCE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMBoLostReasonFilter(val,  to='zh') {
+        console.log(val)
+        const MAP = Const.CRM_BO.LOST_REASON_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== CRM商机 ================ */
+
+    /* =============== CRM退款记录 ================ */
+    CRMRefundRecordTypeMapFilter(val,  to='zh') {
+        console.log(val)
+        const MAP = Const.CRM_REFUND_RECORD.TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== CRM退款记录 ================ */
 }
 
 export default Util

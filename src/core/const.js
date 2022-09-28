@@ -1563,7 +1563,12 @@ let Const = {
 			'1': { key: 1, zh: '新客户',en: 'New customer', value: 1 },
 			'2': { key: 2, zh: '老客户',en: 'Old customer', value: 2 },
 		},
-
+        LOST_REASON_MAP: {
+            '10': { key: 10, zh: '价格原因',en: 'Price Reason', value: 10 },
+            '20': { key: 20, zh: '质量原因',en: 'Quality Reasons', value: 20 },
+            '30': { key: 30, zh: '客户关系原因',en: 'Customer Relationship Reasons', value: 30 },
+            '40': { key: 40, zh: '其他',en: 'Other', value: 40 },
+        },
 	},
     CRM_ITEM_BIND: {
         SOURCE_TYPE: {
@@ -1600,15 +1605,15 @@ let Const = {
 			REFUND : 2009,                 // 向客户退款
 			CANCEL_REFUND : 2010,          // 取消退款
 
-			CREATE_CONTACT : 2019,         // 创建联系人
-			ADD_CONTACT : 2011,            // 添加联系人
-			DELETE_CONTACT : 2012,         // 删除联系人
-			ADD_MEMBER : 2013,             // 添加团队成员
-			DELETE_MEMBER : 2014,          // 删除团队成员
-			ADD_TRACK_RECORD : 2015,       // 添加跟进记录
-			DELETE_TRACK_RECORD : 2016,    // 删除跟进记录
-			ADD_LABEL : 2017,              // 添加标签
-			DELETE_LABEL : 2018,           // 删除标签
+			CREATE_CONTACT : 2011,         // 创建联系人
+			ADD_CONTACT : 2012,            // 添加联系人
+			DELETE_CONTACT : 2013,         // 删除联系人
+			ADD_MEMBER : 2014,             // 添加团队成员
+			DELETE_MEMBER : 2015,          // 删除团队成员
+			ADD_TRACK_RECORD : 1009,       // 添加跟进记录
+			DELETE_TRACK_RECORD : 1010,    // 删除跟进记录
+			ADD_LABEL : 2016,              // 添加标签
+			DELETE_LABEL : 2017,           // 删除标签
 
 // 修改操作
 			REVISE_CUSTOMER : 3001,        // 修改客户信息
@@ -1641,15 +1646,15 @@ let Const = {
 				'2009': { key:2009, zh:'向客户退款',en:'REFUND', value:2009},
 				'2010': { key:2010, zh:'取消退款',en:'CANCEL_REFUND', value:2010},
 
-				'2019': { key:2010, zh:'创建联系人',en:'CREATE_CONTACT', value:2010},
-				'2011': { key:2011, zh:'添加联系人',en:'ADD_CONTACT', value:2011},
-				'2012': { key:2012, zh:'删除联系人',en:'DELETE_CONTACT', value:2012},
-				'2013': { key:2013, zh:'添加团队成员',en:'ADD_MEMBER', value:2013},
-				'2014': { key:2014, zh:'删除团队成员',en:'DELETE_MEMBER', value:2014},
-				'2015': { key:2015, zh:'添加跟进记录',en:'ADD_TRACK_RECORD', value:2015},
-				'2016': { key:2016, zh:'删除跟进记录',en:'DELETE_TRACK_RECORD', value:2016},
-				'2017': { key:2017, zh:'添加标签',en:'ADD_LABEL', value:2017},
-				'2018': { key:2018, zh:'删除标签',en:'DELETE_LABEL', value:2018},
+				'2011': { key:2011, zh:'创建联系人',en:'CREATE_CONTACT', value:2011},
+				'2012': { key:2012, zh:'添加联系人',en:'ADD_CONTACT', value:2012},
+				'2013': { key:2013, zh:'删除联系人',en:'DELETE_CONTACT', value:2013},
+				'2014': { key:2014, zh:'添加团队成员',en:'ADD_MEMBER', value:2014},
+				'2015': { key:2015, zh:'删除团队成员',en:'DELETE_MEMBER', value:2015},
+				'1009': { key:1009, zh:'添加跟进记录',en:'ADD_TRACK_RECORD', value:1009},
+				'1010': { key:1010, zh:'删除跟进记录',en:'DELETE_TRACK_RECORD', value:1010},
+				'2016': { key:2016, zh:'添加标签',en:'ADD_LABEL', value:2016},
+				'2017': { key:2017, zh:'删除标签',en:'DELETE_LABEL', value:2017},
 
 				'3001': { key:3001, zh:'修改客户信息',en:'REVISE_CUSTOMER', value:3001},
 				'3002': { key:3002, zh:'修改联系人',en:'REVISE_CONTACT', value:3002},
@@ -1672,6 +1677,14 @@ let Const = {
             '1': { key: 1, zh: '客户',en: 'Client', value: 1 },
 			'2': { key: 2, zh: '商机',en: 'Business', value: 2 },
             '3': { key: 3, zh: '合同订单',en: 'Contract order', value: 3 },
+        }
+    },
+
+    CRM_REFUND_RECORD: {
+        TYPE_MAP: {
+            '10': { key: 10, zh: '仅退款',en: 'Only Refund', value: 10 },
+            '20': { key: 20, zh: '退货退款',en: 'Return and Refund', value: 20 },
+            '30': { key: 30, zh: '其他',en: 'Other', value: 30 },
         }
     }
 };

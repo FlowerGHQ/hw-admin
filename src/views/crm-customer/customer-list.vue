@@ -429,7 +429,7 @@ export default {
                         id_list: this.selectedRowKeys,
                         own_user_id: this.batchForm.own_user_id,
                     }).then(() => {
-                        this.$message.success(_this.$t('pop_up.delete_success'));
+                        this.$message.success(this.$t('crm_c.distribute_success'));
                         this.getTableData();
                         this.handleBatchClose();
                     }).catch(err => {
@@ -441,7 +441,7 @@ export default {
                         id_list: this.selectedRowKeys,
                         own_user_id: this.batchForm.own_user_id,
                     }).then(() => {
-                        this.$message.success(_this.$t('pop_up.delete_success'));
+                        this.$message.success(this.$t('crm_c.transfer_success'));
                         this.getTableData();
                         this.handleBatchClose();
                     }).catch(err => {
