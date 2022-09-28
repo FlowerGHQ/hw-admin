@@ -1100,7 +1100,7 @@ const messages = {
 		    create_time: '创建时间',
 		    update_user: '修改人',
 		    update_time: '修改时间',
-		    summary_information:"概括信息",
+		    summary_information:"资料",
 		    related: '相关',
 		    obtain: '领取',
 		    distribute: '分配',
@@ -1121,7 +1121,7 @@ const messages = {
 	    },
 	    crm_t: {
 		    track_record: '跟进记录',
-        	add_track_record: '添加跟进记录',
+        	add_track_record: '写跟进',
 		    type: '跟进方式',
 		    content: '内容记录',
 		    images: '内容图片',
