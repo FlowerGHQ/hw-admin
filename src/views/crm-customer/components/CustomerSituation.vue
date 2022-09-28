@@ -7,7 +7,7 @@
         <a-descriptions title="基本信息" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('n.name')" class="label">{{detail.name}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.level')" class="label">{{$Util.CRMCustomerLevelFilter(detail.level, $i18n.locale)}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('n.source')" class="label">{{$Util.CRMCustomerSourceFilter(detail.source, $i18n.locale)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('n.source')" class="label">{{detail.source}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.industry')" class="label">{{$Util.CRMCustomerIndustryFilter(detail.industry, $i18n.locale)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.track_status')" class="label">{{$Util.CRMTrackStatusMapFilter(detail.track_status, $i18n.locale)}}</a-descriptions-item>
         </a-descriptions>

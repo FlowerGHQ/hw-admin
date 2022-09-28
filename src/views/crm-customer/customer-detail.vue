@@ -155,6 +155,7 @@ export default {
             batchShow: false,
             userData: [],
             trackMemberDetail: undefined,
+
         };
     },
     watch: {},
@@ -364,6 +365,7 @@ export default {
             console.log("getCrmActionRecordTableData");
             this.$refs.TrackRecord.getCrmActionRecordTableData();
         },
+
     }
 };
 </script>

@@ -46,10 +46,10 @@
             </div>
             <div class="form-content">
                 <div class="form-item">
-                    <div class="key">{{ $t('n.source') }}：</div>
+                    <div class="key">{{ $t('crm_c.source') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.source" :placeholder="$t('def.input')" >
-                            <a-select-option v-for="item of CRM_SOURCE_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                        <a-select v-model:value="form.source_def_id" :placeholder="$t('def.input')" >
+                            <a-select-option v-for="item of sourceList" :key="item.id" :value="item.id">{{lang === 'zh' ? item.name: item.name_en}}</a-select-option>
                         </a-select>
                     </div>
                 </div>
@@ -131,7 +131,7 @@
                 </div>
 
                 <div class="form-item textarea">
-                    <div class="key">{{ $t('r.remark') }}</div>
+                    <div class="key">{{ $t('def.remark') }}</div>
                     <div class="value">
                         <a-textarea v-model:value="form.remark" :placeholder="$t('r.enter_remark')"
                                     :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
@@ -179,7 +179,7 @@ export default {
                 name: '',
                 phone: '',
                 level: '',
-                source: '',
+                source_def_id: '',
                 company_size: '',
                 company_license_id:'',
                 gender: '',
@@ -209,6 +209,7 @@ export default {
             },
             areaMap: {},
             countryShow: false,
+            sourceList: [],
         };
     },
     watch: {},
@@ -224,16 +225,13 @@ export default {
         } else {
             this.form.status = Core.Const.CRM_CUSTOMER.STATUS.POOL
         }
+        this.getSourceList()
     },
     methods: {
         routerChange(type, item) {
             switch (type) {
                 case 'back':    // 详情
-                    let routeUrl = this.$router.resolve({
-                        path: "/crm-customer/customer-list",
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
+                    this.$router.go(-1)
             }
         },
         getCustomerDetail() {
@@ -315,6 +313,13 @@ export default {
             console.log('data.country',data.country)
             console.log('countryShow',this.countryShow)
 
+        },
+        getSourceList(){
+            Core.Api.CRMCustomerSource.list({
+
+            }).then(res => {
+                this.sourceList = res.list
+            })
         },
     }
 };
