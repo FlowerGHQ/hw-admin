@@ -168,7 +168,7 @@ import Contact from './components/Contact.vue';
 import CustomerSituation from './components/CustomerSituation.vue';
 import Bo from './components/Bo.vue';
 import Group from './components/Group.vue';
-import TrackRecord from './components/TrackRecord.vue';
+import TrackRecord from './components/ActionRecord.vue';
 import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
 import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 
@@ -183,7 +183,7 @@ export default {
     data() {
         return {
             CRM_ORDER_INCOME_FILE: Core.Const.ATTACHMENT.TARGET_TYPE.CRM_ORDER_INCOME_FILE,
-            
+
             TYPE_MAP: Core.Const.CRM_TRACK_RECORD.TYPE_MAP,
             INTENT_MAP: Core.Const.CRM_TRACK_RECORD.INTENT_MAP,
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,

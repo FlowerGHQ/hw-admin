@@ -1,16 +1,11 @@
 <template>
 <div class="InformationInfo gray-panel no-margin">
     <div class="panel-content">
-        <div class="title">
-            <div class="tab" :class="{'active': activeType === item.key}" v-for="(item, i) in searchType" :key="i" @click="clickType(item)">
-                {{ item.name }}
-            </div>
-        </div>
         <!-- <div class="search">
             <a-input-search v-model:value="searchKey" :placeholder="'搜索成员和标签'" @onSearch="clickSearch"/>
         </div> -->
         <!-- $Util.timeFormat(detail.create_time, 'YYYY/MM/DD') -->
-        <div class="list" v-if="activeType === '1'" >
+        <div class="list" >
             <div  class="day-content" >
                 <div class="day-item tag" >
                     <div class="tag-bg">今天</div>
@@ -18,33 +13,8 @@
             </div>
         </div>
 
-        <div class="list" v-if="activeType === '1'"  v-for="(item, i) in tableData" :key="i">
-            <div  class="day-content" >
-<!--                <div class="day-item tag" v-if="i === 0">-->
-<!--                    <div class="tag-bg">今天</div>-->
-<!--                </div>-->
-                <div class="day-item">
-                    <div class="panel">
-                        <div class="top">
-                            <span class="item-title">{{$Util.CRMTrackRecordFilter(item.type, $i18n.locale) || '-'  }}</span>
-                            <span class="item-time"><i class="" style="color:blue"/>{{$Util.timeFilter(item.create_time) || '-'}}</span>
-                        </div>
-                        <div class="content">
-                            <div class="line">{{ item.content }}</div>
-                            <div class="line grey">{{$t('crm_r.from_customer')}}:{{ item.contact? item.contact.name : "-"}}</div>
-                        </div>
-                        <div class="foot">
-                            <div class="line">{{$t('n.operator')}}:{{ item.create_user_name }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="list" v-if="activeType === '2'">
+        <div class="list">
             <div class="day-content" v-for="(item, i) in recordTableData"  :key="i">
-                <div class="day-item tag" v-if="i === 0">
-                    <div class="tag-bg">今天</div>
-                </div>
                 <div class="day-item" >
                     <div class="panel">
                         <div class="top">
@@ -128,7 +98,6 @@ export default {
             this.activeType= '2'
         }
 
-        this.getCRMTrackRecordTableData();
         this.getCrmActionRecordTableData();
     },
     methods: {
@@ -201,6 +170,9 @@ export default {
             });
         },
         actionParsing(type, content, user) {
+            if (content === ""){
+                return ""
+            }
             let item = JSON.parse(content)
             console.log("type", type)
             console.log("item", item)

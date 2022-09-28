@@ -43,7 +43,7 @@
 
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                             <span v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
-                                <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO"/>
+                                <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" @submit="getCRMTrackRecord"/>
                                 <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
                                  <a-button @click="routerChange('order-save')">新建订单</a-button>
                             </span>
@@ -62,6 +62,9 @@
             <a-col :xs='24' :sm='24' :lg='16' >
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="activeKey">
+                        <a-tab-pane key="TrackRecord" :tab="$t('crm_t.track_record')">
+                            <CRMTrackRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :detail="detail" ref ="CRMTrackRecord"/>
+                        </a-tab-pane>
                         <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.summary_information')">
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
@@ -79,7 +82,7 @@
                             <Group :targetId="id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" :detail="detail" ref ="Group"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.dynamic')">
-                            <TrackRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :detail="detail" ref ="TrackRecord"/>
+                            <ActionRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :detail="detail" ref ="ActionRecord"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -125,11 +128,12 @@ import dayjs from "dayjs";
 import CRMContact from '@/components/crm/panel/CRMContact.vue';
 import CRMOrder from '@/components/crm/panel/CRMOrder.vue';
 import Group from '@/components/crm/panel/Group.vue';
-import TrackRecord from '@/components/crm/panel/TrackRecord.vue';
+import ActionRecord from '@/components/crm/panel/ActionRecord.vue';
+import CRMTrackRecord from '@/components/crm/panel/CRMTrackRecord.vue';
 
 export default {
     name: 'CustomerEdit',
-    components: { FollowUpShow, CustomerAdd, CustomerSelect, MySteps, CRMContact, CRMOrder, TrackRecord, CustomerSituation,Group},
+    components: { FollowUpShow, CustomerAdd, CustomerSelect, MySteps, CRMContact, CRMOrder, ActionRecord, CustomerSituation,Group, CRMTrackRecord},
     props: {},
     data() {
         return {
@@ -303,13 +307,13 @@ export default {
                 console.log("trackMemberDetail", this.trackMemberDetail);
             })
         },
-        getTrackRecord(){
+        getCRMTrackRecord(){
             console.log("getTrackRecord");
-            this.$refs.TrackRecord.getCRMTrackRecordTableData();
+            this.$refs.CRMTrackRecord.getCRMTrackRecordTableData();
         },
         getCrmActionRecordTableData(){
             console.log("getCrmActionRecordTableData");
-            this.$refs.TrackRecord.getCrmActionRecordTableData();
+            this.$refs.ActionRecord.getCrmActionRecordTableData();
         },
         getUserData(query){
             this.loading = true;

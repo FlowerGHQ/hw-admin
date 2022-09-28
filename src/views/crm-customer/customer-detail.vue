@@ -33,7 +33,7 @@
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                         <span v-if="detail.status === STATUS.POOL">
-                            <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getTrackRecord"/>
+                            <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord"/>
                             <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
                             <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :addCustomerBtn="true"/>
                             <a-button type="primary" @click="handleObtain">{{ $t('crm_c.obtain') }}</a-button>
@@ -42,7 +42,7 @@
                         </span>
                         <span v-if="detail.status === STATUS.CUSTOMER &&  trackMemberDetail!== undefined  &&  trackMemberDetail!== null  &&  trackMemberDetail!== ''">
                             <span v-if="trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ">
-                                <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getTrackRecord"/>
+                                <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord"/>
                                 <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
                                 <a-button @click="routerChange('bo-save')">新建商机</a-button>
                                 <a-button @click="routerChange('order-save')">新建订单</a-button>
@@ -62,6 +62,9 @@
             <a-col :xs='24' :sm='24' :lg='16' >
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="activeKey">
+                        <a-tab-pane key="TrackRecord" :tab="$t('crm_t.track_record')">
+                            <CRMTrackRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :detail="detail" ref ="CRMTrackRecord"/>
+                        </a-tab-pane>
                         <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.summary_information')">
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
@@ -80,7 +83,7 @@
                             <Group :targetId="id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :detail="detail" ref ="Group"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.dynamic')">
-                            <TrackRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :detail="detail" ref ="TrackRecord"/>
+                            <ActionRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :detail="detail" ref ="ActionRecord"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -121,8 +124,11 @@ import CustomerSituation from './components/CustomerSituation.vue';
 import CRMBo from '@/components/crm/panel/CRMBo.vue';
 import CRMContact from '@/components/crm/panel/CRMContact.vue';
 import CRMOrder from '@/components/crm/panel/CRMOrder.vue';
+import CRMTrackRecord from '@/components/crm/panel/CRMTrackRecord.vue';
+
 import Group from '@/components/crm/panel/Group.vue';
-import TrackRecord from '@/components/crm/panel/TrackRecord.vue';
+import ActionRecord from '@/components/crm/panel/ActionRecord.vue';
+
 
 
 import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
@@ -133,7 +139,7 @@ import {get} from "lodash";
 
 export default {
     name: 'CustomerEdit',
-    components: { CustomerSelect, FollowUpShow, CRMContact, CRMBo, Group, CRMOrder, TrackRecord, CustomerSituation},
+    components: { CustomerSelect, FollowUpShow, CRMContact, CRMBo, CRMTrackRecord, Group, CRMOrder, ActionRecord, CustomerSituation},
     props: {},
     data() {
         return {
@@ -146,7 +152,7 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            activeKey: 'CustomerSituation',
+            activeKey: 'TrackRecord',
             tabActiveKey: 'CustomerSituation',
             detail: {},
             batchForm: {
@@ -357,9 +363,9 @@ export default {
                 console.log("trackMemberDetail", this.trackMemberDetail);
             })
         },
-        getTrackRecord(){
+        getCRMTrackRecord(){
             console.log("getTrackRecord");
-            this.$refs.TrackRecord.getCRMTrackRecordTableData();
+            this.$refs.CRMTrackRecord.getTableData();
         },
         getCrmActionRecordTableData(){
             console.log("getCrmActionRecordTableData");

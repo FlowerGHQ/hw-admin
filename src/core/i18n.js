@@ -1117,8 +1117,10 @@ const messages = {
 		    dynamic: '动态',
 		    source: '客户来源',
             new_pool_c: '新建公海客户',
+
 	    },
 	    crm_t: {
+		    track_record: '跟进记录',
         	add_track_record: '添加跟进记录',
 		    type: '跟进方式',
 		    content: '内容记录',
@@ -1128,6 +1130,8 @@ const messages = {
 		    next_track_time: '下次跟进时间',
 		    intent: '意向程度',
 		    contact_customer:'联系人',
+		    operator: '跟进人',
+
 	    },
 	    crm_b: {
         	bo: '商机',
