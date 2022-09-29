@@ -218,6 +218,9 @@ export default {
                 {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
+            if (this.operMode ==='private') {
+              columns.splice(5, 0, {title: 'crm_b.own_user_name', dataIndex: ['own_user','name'], key:'own_user_name', sorter: true})
+            }
             return columns
         },
         rowSelection() {
@@ -439,7 +442,7 @@ export default {
                         id_list: this.selectedRowKeys,
                         own_user_id: this.batchForm.own_user_id,
                     }).then(() => {
-                        this.$message.success(this.$t('crm_c.distribute_success'));
+                        this.$message.success($t('crm_c.distribute_success'));
                         this.getTableData();
                         this.handleBatchClose();
                     }).catch(err => {
@@ -451,7 +454,7 @@ export default {
                         id_list: this.selectedRowKeys,
                         own_user_id: this.batchForm.own_user_id,
                     }).then(() => {
-                        this.$message.success(this.$t('crm_c.transfer_success'));
+                        this.$message.success($t('crm_c.transfer_success'));
                         this.getTableData();
                         this.handleBatchClose();
                     }).catch(err => {

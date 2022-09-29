@@ -1115,9 +1115,9 @@ const messages = {
 		    select: '请选择',
 		    team_members: '团队成员',
 		    dynamic: '动态',
-		    source: '客户来源',
             new_pool_c: '新建公海客户',
-
+		    source: '客户来源',
+            distribute_success: '分配成功',
 	    },
 	    crm_t: {
 		    track_record: '跟进记录',
