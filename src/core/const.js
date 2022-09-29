@@ -1610,8 +1610,8 @@ let Const = {
 			DELETE_CONTACT : 2013,         // 删除联系人
 			ADD_MEMBER : 2014,             // 添加团队成员
 			DELETE_MEMBER : 2015,          // 删除团队成员
-			ADD_TRACK_RECORD : 1009,       // 添加跟进记录
-			DELETE_TRACK_RECORD : 1010,    // 删除跟进记录
+			ADD_TRACK_RECORD : 2018,       // 添加跟进记录
+			DELETE_TRACK_RECORD : 2019,    // 删除跟进记录
 			ADD_LABEL : 2016,              // 添加标签
 			DELETE_LABEL : 2017,           // 删除标签
 
@@ -1651,8 +1651,8 @@ let Const = {
 				'2013': { key:2013, zh:'删除联系人',en:'DELETE_CONTACT', value:2013},
 				'2014': { key:2014, zh:'添加团队成员',en:'ADD_MEMBER', value:2014},
 				'2015': { key:2015, zh:'删除团队成员',en:'DELETE_MEMBER', value:2015},
-				'1009': { key:1009, zh:'添加跟进记录',en:'ADD_TRACK_RECORD', value:1009},
-				'1010': { key:1010, zh:'删除跟进记录',en:'DELETE_TRACK_RECORD', value:1010},
+				'2018': { key:2018, zh:'添加跟进记录',en:'ADD_TRACK_RECORD', value:2018},
+				'2019': { key:2019, zh:'删除跟进记录',en:'DELETE_TRACK_RECORD', value:2019},
 				'2016': { key:2016, zh:'添加标签',en:'ADD_LABEL', value:2016},
 				'2017': { key:2017, zh:'删除标签',en:'DELETE_LABEL', value:2017},
 
