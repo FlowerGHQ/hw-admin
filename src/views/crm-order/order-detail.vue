@@ -71,7 +71,7 @@
                             <Group :targetId="id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.ORDER" :detail="detail" ref ="Group"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.dynamic')">
-                            <TrackRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.ORDER" :detail="detail" ref ="TrackRecord"/>
+                            <ActionRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.ORDER" :detail="detail" ref ="ActionRecord"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -87,7 +87,7 @@ import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
 import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 
 import Group from '@/components/crm/panel/Group.vue';
-import TrackRecord from '@/components/crm/panel/TrackRecord.vue';
+import ActionRecord from '@/components/crm/panel/ActionRecord.vue';
 
 
 import dayjs from "dayjs";
@@ -95,7 +95,7 @@ import {get} from "lodash";
 
 export default {
     name: 'OrderDetail',
-    components: { CustomerSelect, Group, TrackRecord, CustomerSituation, AttachmentFile},
+    components: { CustomerSelect, Group, ActionRecord, CustomerSituation, AttachmentFile},
     props: {},
     data() {
         return {

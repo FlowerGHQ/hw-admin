@@ -130,6 +130,9 @@ export default {
         targetId: {
             type: Number,
             default: 0
+        },
+        detail: {
+            type: Object,
         }
     },
     data() {
@@ -142,9 +145,9 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            detail: {},
             TrackRecordShow: false,
             trackRecordForm: {
+                id:'',
                 type: '',
                 content: "",
                 contact_customer_id: '',
@@ -191,6 +194,17 @@ export default {
     },
     methods: {
         handleModalShow() {
+            if (this.detail) {
+                for (const key in this.trackRecordForm) {
+                    this.trackRecordForm[key] = this.detail[key]
+                }
+                console.log('this.form:', this.detail)
+                this.trackRecordForm.track_time = this.detail.track_time ? dayjs.unix(this.detail.track_time).format('YYYY-MM-DD HH:mm:ss') : undefined
+                this.trackRecordForm.next_track_time = this.detail.next_track_time ? dayjs.unix(this.detail.next_track_time).format('YYYY-MM-DD HH:mm:ss') : undefined
+                this.trackRecordForm.contact_customer_name = this.detail.contact? this.detail.contact.name : "-"
+
+            }
+
             this.TrackRecordShow = true
         },
         handleTrackRecordSubmit() {
@@ -204,6 +218,7 @@ export default {
                 next_track_time = dayjs(form.next_track_time).unix()
             }
             Core.Api.CRMTrackRecord.save({
+                id: form.id,
                 target_id: this.targetId,
                 target_type: this.targetType,
                 type: form.type,

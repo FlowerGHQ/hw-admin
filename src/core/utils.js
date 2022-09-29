@@ -866,6 +866,11 @@ const Util = {
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
+	CRMTrackRecordIntentFilter(val,  to='zh') {
+		const MAP = Const.CRM_TRACK_RECORD.INTENT_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
 	/* =============== CRM跟进记录 ================ */
 
 	/* =============== CRM回款单 ================ */

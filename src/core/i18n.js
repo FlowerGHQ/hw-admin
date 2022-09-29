@@ -1100,7 +1100,7 @@ const messages = {
 		    create_time: '创建时间',
 		    update_user: '修改人',
 		    update_time: '修改时间',
-		    summary_information:"概括信息",
+		    summary_information:"资料",
 		    related: '相关',
 		    obtain: '领取',
 		    distribute: '分配',
@@ -1115,11 +1115,13 @@ const messages = {
 		    select: '请选择',
 		    team_members: '团队成员',
 		    dynamic: '动态',
-            new_pool_c: '新建公海客户',
 		    source: '客户来源',
+            new_pool_c: '新建公海客户',
+
 	    },
 	    crm_t: {
-        	add_track_record: '添加跟进记录',
+		    track_record: '跟进记录',
+        	add_track_record: '写跟进',
 		    type: '跟进方式',
 		    content: '内容记录',
 		    images: '内容图片',
@@ -1128,6 +1130,8 @@ const messages = {
 		    next_track_time: '下次跟进时间',
 		    intent: '意向程度',
 		    contact_customer:'联系人',
+		    operator: '跟进人',
+
 	    },
 	    crm_b: {
         	bo: '商机',
