@@ -934,8 +934,8 @@ let Const = {
         },
         STATUS_MAP: {
             '0': {key: 0, zh: '待提交', en: 'Awaiting commit',color: 'orange'},
-            '10': {key: 10, zh: '待审核', en: 'Awaiting review', color: 'yellow'},
-	        '20': {key: 30, zh: '财务审核通过', en: 'Financial review passed', color: 'purple'},
+            '10': {key: 10, zh: '等待财务审核', en: 'Waiting for financial review', color: 'yellow'},
+	        '20': {key: 30, zh: '等待仓库审核', en: 'Waiting for warehouse review', color: 'purple'},
             '30': {key: 20, zh: '仓库审核通过', en: 'Admin review passed', color: 'blue'},
             '40': {key: 40, zh: '已完成', en: 'In the warehouse', color: 'green'},
 	        '50': {key: 40, zh: '已发货', en: 'Delivery', color: 'green'},
