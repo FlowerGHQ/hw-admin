@@ -781,11 +781,13 @@ p {
     .fac();
     margin-bottom: 16px;
     .key {
-        width: 86px;
+        width: 150px;
         box-sizing: border-box;
-        white-space: nowrap;
+        //white-space: nowrap;
         color: @TC_I;
         font-size: @fz_sm;
+        word-wrap: break-word;
+        white-space: pre-wrap;
     }
     .value {
         width: calc(~'100% - 86px');
