@@ -91,7 +91,7 @@
                     <template v-if="column.key === 'category_list'">
                         <span v-for="(category, index) in text">
                             <span v-if="index !== 0">,</span>
-                            {{category.category_name}}
+                            {{$i18n.locale ==='zh'?category.category_name:category.category_name_en}}
                         </span>
                     </template>
                     <template v-if="column.key === 'money'">
