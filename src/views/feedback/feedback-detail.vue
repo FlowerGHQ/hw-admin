@@ -109,7 +109,7 @@
                 <a-button @click="handleAuditSubmit()" type="primary">{{ $t('def.ok') }}</a-button>
             </template>
         </a-modal>
-        <a-modal v-model:visible="feedbackShow" :title="$t('fe.after_feedback')" class="repair-audit-modal" :after-close='handleFeedbackClose'>
+        <a-modal v-model:visible="feedbackShow" :title="$t('fe.feedback')" class="repair-audit-modal" :after-close='handleFeedbackClose'>
             <div class="modal-content">
                 <div class="form-item textarea required">
                     <div class="key">{{ $t('n.fault_analysis') }}:</div>

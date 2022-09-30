@@ -734,39 +734,39 @@ const routes = [
         ]
     },
 
-    { // 物流管理
-        path: '/waybill',
-        component: Layout,
-        redirect: '/waybill/waybill-list',
-        name: 'WayBillManagement',
-        meta: {
-            title: '物流管理',
-            title_en: 'Logistics',
-            icon: 'i_deliver',
-            roles: [LOGIN_TYPE.ADMIN],
-            not_sub_menu: true,
-        },
-        children: [
-            {
-                path: 'waybill-list',
-                name: 'waybillList',
-                component: () => import('@/views/waybill/waybill-list.vue'),
-                meta: {
-                    title: '物流列表',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-            // {
-            //     path: 'waybill-company',
-            //     name: 'WaybillCompanyList',
-            //     component: () => import('@/views/waybill/waybill-company.vue'),
-            //     meta: {
-            //         title: '物流公司',
-            //         roles: [LOGIN_TYPE.ADMIN],
-            //     }
-            // },
-        ]
-    },
+    // { // 物流管理
+    //     path: '/waybill',
+    //     component: Layout,
+    //     redirect: '/waybill/waybill-list',
+    //     name: 'WayBillManagement',
+    //     meta: {
+    //         title: '物流管理',
+    //         title_en: 'Logistics',
+    //         icon: 'i_deliver',
+    //         roles: [LOGIN_TYPE.ADMIN],
+    //         not_sub_menu: true,
+    //     },
+    //     children: [
+    //         {
+    //             path: 'waybill-list',
+    //             name: 'waybillList',
+    //             component: () => import('@/views/waybill/waybill-list.vue'),
+    //             meta: {
+    //                 title: '物流列表',
+    //                 roles: [LOGIN_TYPE.ADMIN],
+    //             }
+    //         },
+    //         // {
+    //         //     path: 'waybill-company',
+    //         //     name: 'WaybillCompanyList',
+    //         //     component: () => import('@/views/waybill/waybill-company.vue'),
+    //         //     meta: {
+    //         //         title: '物流公司',
+    //         //         roles: [LOGIN_TYPE.ADMIN],
+    //         //     }
+    //         // },
+    //     ]
+    // },
     { // 实例管理
         path: '/entity',
         component: Layout,
