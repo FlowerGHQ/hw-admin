@@ -11,6 +11,10 @@
                         <template v-if="column.key === 'name'">
                             {{ $Util.userAuthFilter(record.resource_type, $i18n.locale) }}
                         </template>
+                        <template v-if="column.key === 'content'">
+                            {{ $i18n.locale === 'zh'? record.content: record.content_en }}
+
+                        </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
@@ -79,9 +83,9 @@ export default {
             scopeShow: false,
 
             tableData : [
-                { content: "", resource_type: 10},
-                { content: "", resource_type: 20},
-                { content: "", resource_type: 30},
+                { content: "",content_en: '', resource_type: 10},
+                { content: "",content_en: '', resource_type: 20},
+                { content: "",content_en: '', resource_type: 30},
             ],
 
             form: {
@@ -96,7 +100,7 @@ export default {
         tableColumns() {
             let tableColumns = [
                 {title: this.$t('u.resource_name'), dataIndex: 'name', key: "name"},
-                {title: this.$t('u.resource_content'), dataIndex: "content", key: "text"},
+                {title: this.$t('u.resource_content'), dataIndex: "content", key: "content"},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ];
             return tableColumns;
@@ -125,6 +129,7 @@ export default {
                     res.list.forEach(it =>{
                         if (it.resource_type === item.resource_type){
                             item.content += it.resource.name + ","
+                            item.content_en += it.resource.nameEn + ","
                         }
                     })
                 })

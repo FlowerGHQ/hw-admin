@@ -12,6 +12,9 @@
                         <template v-if="column.key === 'text'">
                             {{ text || '-' }}
                         </template>
+                        <template v-if="column.key === 'content'">
+                            {{ $i18n.locale === 'zh'? record.resource.name: record.resource.nameEn }}
+                        </template>
                         <template v-if="column.key === 'type'">
                             {{ $Util.userAuthFilter(text, $i18n.locale) }}
                         </template>
@@ -62,7 +65,7 @@
                 <div class="key">{{ $t('u.resource_obj') }}</div>
                 <div class="value">
                     <a-select v-model:value="form.resource_id" :placeholder="$t('def.select') + $t('u.resource_obj')">
-                        <a-select-option v-for="item of categoryList" :key="item.id" :value="item.id" :disabled="item.disabled">{{ item.name }}</a-select-option>
+                        <a-select-option v-for="item of categoryList" :key="item.id" :value="item.id" :disabled="item.disabled">{{ $i18n.locale === 'zh'? item.name : item.name_en }}</a-select-option>
                     </a-select>
                 </div>
             </div>
@@ -132,7 +135,7 @@ export default {
         tableColumns() {
             let tableColumns = [
                 {title: this.$t('u.resource_type'), dataIndex: 'resource_type', key: "type"},
-                {title: this.$t('u.resource_obj'), dataIndex: ['resource', 'name'], key: "text"},
+                {title: this.$t('u.resource_obj'), dataIndex: ['resource', 'name'], key: "content"},
                 {title: this.$t('def.create_time'), dataIndex: "create_time", key: "time"},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ];
