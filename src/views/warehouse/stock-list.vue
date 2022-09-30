@@ -119,7 +119,7 @@
                         <template v-if="column.type === 'name'">
                             <a-tooltip placement="top" :title='record.material.name'>
                                 <a-button type="link" @click="routerChange('material', record)">
-                                    {{ record.material.name || '-' }}
+                                    {{ lang === 'zh'? record.material.name: record.material.name_en || '-' }}
                                 </a-button>
                             </a-tooltip>
                         </template>

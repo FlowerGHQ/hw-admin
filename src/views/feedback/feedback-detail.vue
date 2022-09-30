@@ -22,7 +22,7 @@
                 <a-button type="primary" @click="handleFeedbackShow()" v-if="(detail.status === STATUS.WAIT_FEEDBACK || detail.status === STATUS.QUALITY_AUDIT_FAIL ) && $auth('ADMIN') && $auth('quality-feedback.feedback')">
                     <i class="icon i_audit"/>{{ $t('fe.title') }}
                 </a-button>
-                <a-button type="primary" @click="handleFeedbackEnShow()" v-if="(detail.status === STATUS.WAIT_AFTER_FEEDBACK) && $auth('ADMIN') && $auth('fe.after_feedback')">
+                <a-button type="primary" @click="handleFeedbackEnShow()" v-if="(detail.status === STATUS.WAIT_AFTER_FEEDBACK) && $auth('ADMIN') && $auth('quality-feedback.feedback')">
                     <i class="icon i_audit"/>{{ $t('fe.title') }}
                 </a-button>
 

@@ -1965,9 +1965,9 @@ const messages = {
 		    feedback_create: 'Create a feedback list',
 		    feedback_update: 'Modification feedback Form',
 		    feedback_content: 'Content of feedback Sheet',
-		    feedback_title: 'Title of feedback sheet',
+		    feedback_title: 'Title',
 		    enter_name: 'Please enter the title of the feedback sheet',
-		    feedback_desc: 'Description of feedback Sheet',
+		    feedback_desc: 'Description',
 		    fault_description: 'Please enter the title of the feedback sheet',
 		    vehicle_model: 'model of car',
 		    feedback_company: 'Feedback unit',
@@ -2404,6 +2404,8 @@ const messages = {
             remark: 'Remark',
             inaccessible: 'Current identity inaccessible',
             uploaded: 'Uploaded successfully',
+	        export_as_supplier_report: 'Export as a supplier report',
+
         },
         search: {
             repair_sn: 'Inquire Sn',

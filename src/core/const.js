@@ -410,7 +410,7 @@ let Const = {
 			'0': { key: 0, color: 'yellow', zh: '待提交', en: 'Pending submission'},
 			'100': { key: 100, color: 'blue', zh: '等待平台售后审核', en: 'Awaiting after-sales audit'},
 			'110': { key: 110, color: 'blue', zh: '待修改', en: 'Pending modification'},
-			'200': { key: 200, color: 'purple', zh: '等待反馈', en: 'Waiting for the feedback'},
+			'200': { key: 200, color: 'purple', zh: '等待质量反馈', en: 'Waiting for quality feedback'},
 			'210': { key: 210, color: 'orange', zh: '待修改',en: 'To modify the'},
 			'300': { key: 300, color: 'purple', zh: '等待审核反馈', en: 'Waiting for review feedback'},
 			'310': { key: 310, color: 'purple', zh: '反馈待修改', en: 'Feedback to be modified'},

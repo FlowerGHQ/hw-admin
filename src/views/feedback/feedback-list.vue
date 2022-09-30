@@ -270,7 +270,7 @@ export default {
                 {zh: '待提交',en: 'Pending submission', value: '0', color: 'yellow',  key: STATUS.INIT },
                 {zh: '等待平台售后审核', en: 'Awaiting after-sales audit',value: '0', color: 'blue',    key: STATUS.WAIT_AFTER_SALES_AUDIT },
                 {zh: '待修改',en: 'Pending modification', value: '0', color: 'orange',  key: STATUS.AFTER_SALES_AUDIT_FAIL },
-                {zh: '等待反馈',en: 'Waiting for the feedback', value: '0', color: 'purple',  key: STATUS.WAIT_FEEDBACK },
+                {zh: '等待质量反馈',en: 'Waiting for quality feedback', value: '0', color: 'purple',  key: STATUS.WAIT_FEEDBACK },
                 {zh: '反馈待修改',en: 'Feedback to be modified', value: '0', color: 'purple',  key: STATUS.QUALITY_AUDIT_FAIL },
                 {zh: '等待审核反馈', en: 'Waiting for review feedback', value: '0', color: 'green',  key: STATUS.WAIT_QUALITY_AUDIT},
                 {zh: '等待售后反馈', en: 'Waiting for after-sales feedback',value: '0', color: 'red',  key: STATUS.WAIT_AFTER_FEEDBACK },
