@@ -129,7 +129,12 @@ export default {
                     res.list.forEach(it =>{
                         if (it.resource_type === item.resource_type){
                             item.content += it.resource.name + ","
-                            item.content_en += it.resource.nameEn + ","
+                            if (it.resource_type === Core.Const.NOTICE.RESOURCE_TYPE.PURCHASE){
+                                item.content_en += it.resource.nameEn + ","
+                            } else {
+                                item.content_en += it.resource.name + ","
+                            }
+
                         }
                     })
                 })

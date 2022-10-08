@@ -277,7 +277,7 @@ export default {
 <style lang="less" scoped>
 .item-purchase-info-tab {
     .ant-tabs-tab-btn {
-        width: 86px;
+        width: auto;
         text-align: center;
     }
 }
@@ -447,7 +447,6 @@ export default {
         font-size: @fz_20;
     }
     .ant-tabs :deep(.ant-tabs-tab) {
-        width: 120px;
         height: 46px;
         background: #FFFFFF;
         border-radius: 0px 0px 0px 0px;
@@ -471,7 +470,6 @@ export default {
         color: @white;
     }
     .ant-tabs :deep(.ant-tabs-tab) {
-        width: 82px !important;
         padding: 0 10px;
         box-sizing: border-box;
         &:nth-of-type(1) {

@@ -9,7 +9,7 @@
                     <a-checkbox v-for="(value,key) of faultMap" :key='key' :value='key' @change="handleFaultSelect">{{ value }}</a-checkbox>
                 </a-checkbox-group>
                 <div class="title-fault">
-                    <FaultEdit :id="id" ref="FaultEdit" @saveFault="getFaultData" btn-type="primary" />
+                    <FaultEdit :id="id" ref="FaultEdit" @saveFault="getFaultData" btn-type="primary" >{{ $t('r.new_fault') }}</FaultEdit>
                 </div>
             </div>
         </a-collapse-panel>

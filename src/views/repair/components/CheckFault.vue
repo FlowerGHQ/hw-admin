@@ -9,7 +9,7 @@
                     <a-checkbox v-for="(value,key) of faultMap" :key='key' :value='key' @change="handleFaultSelect">{{ value }}</a-checkbox>
                 </a-checkbox-group>
                 <div class="title-fault">
-                    <FaultEdit :id="id" ref="FaultEdit" @saveFault="getFaultData" btn-type="primary" />
+                    <FaultEdit :id="id" ref="FaultEdit" @saveFault="getFaultData" btn-type="primary" >{{ $t('r.new_fault') }}</FaultEdit>
                 </div>
             </div>
         </a-collapse-panel>
@@ -108,7 +108,7 @@
     </a-collapse>
     <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
         <template #expandIcon ><i class="icon i_expan_l"/> </template>
-        <a-collapse-panel key="Remark" header="备注" class="gray-collapse-panel">
+        <a-collapse-panel key="Remark" :header="$t('r.remark')" class="gray-collapse-panel">
             <div class="panel-content">
                 <div class="form-item required textarea">
                     <div class="value">
