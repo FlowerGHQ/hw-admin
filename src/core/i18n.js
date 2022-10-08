@@ -767,6 +767,7 @@ const messages = {
             delivery_ad: '配送地址',
             receiver: '接受人',
 	        pay_file_upload: '付款凭证未上传',
+	        create_audit: '订单审核',
         },
         s: { // 门店
             store_list: '门店列表',
@@ -2228,6 +2229,7 @@ const messages = {
             delivery_ad: 'Delivery address',
             receiver: 'receiver',
 	        pay_file_upload: 'Payment voucher not uploaded',
+	        create_audit: 'Order review',
         },
         s: {
             store_list: 'Store list',

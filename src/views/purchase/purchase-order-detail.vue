@@ -6,7 +6,8 @@
             <div class="btns-area" v-if="detail.status != STATUS.CANCEL && detail.status != STATUS.RE_REVISE && detail.status != STATUS.REVISE && detail.status != STATUS.ORDER_TRANSFERRED && !$auth('purchase-order.supply-detail')">
                 <template v-if="$auth('ADMIN') && $auth('purchase-order.export')">
                     <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
-                     <a-button @click="handleExportIn"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>
+                    <a-button @click="handleExportIn"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>
+                    <a-button @click="handleUpdatePI(record)"><i class="icon i_edit"/>{{ $t('p.update_PI') }}</a-button>
                 </template>
                 <template v-if="!$auth('ADMIN') && $auth('purchase-order.export')">
                     <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
@@ -28,7 +29,7 @@
                 <template v-if="authOrg(detail.org_id, detail.org_type) && detail.status !== STATUS.REVISE_AUDIT">
                     <a-button type="primary" ghost v-if="beforeDeliver && !itemEditShow && $auth('purchase-order.save')" @click="itemEditShow = true">{{$t('p.change_item')}}</a-button>
 
-                    <a-button type="primary" v-if="detail.status !== STATUS.CANCEL && detail.status !== STATUS.DEAL_SUCCESS && detail.status !== STATUS.SPLIT && detail.status !== STATUS.REVISE && detail.status !== STATUS.REVISE_AUDIT && detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.payment')}}</a-button>
+                    <a-button type="primary" v-if="detail.status !== STATUS.WAIT_AUDIT && detail.status !== STATUS.CANCEL && detail.status !== STATUS.DEAL_SUCCESS && detail.status !== STATUS.SPLIT && detail.status !== STATUS.REVISE && detail.status !== STATUS.REVISE_AUDIT && detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.payment')}}</a-button>
                     <!-- <a-button type="primary" v-if="detail.status === STATUS.WAIT_TAKE_DELIVER" @click="handleReceived()"><i class="icon i_goods"/>no_item_purchase_data: '更换商品',</a-button>-->
                     <!-- {{detail.status}}-->
                     <a-button type="primary" v-if="detail.status === STATUS.WAIT_PAY || (detail.payment_status !== PAYMENT_STATUS.WAIT_PAY && detail.WAIT_DELIVER)" @click="handleCancel()"><i class="icon i_close_c"/>{{ $t('def.cancel')}}</a-button>
@@ -39,6 +40,9 @@
                         btnType='primary' :api-list="['Purchase', 'reviseAudit']" :id="detail.id" @submit="getList"
                         :s-pass="FLAG.YES" :s-refuse="FLAG.NO" no-refuse><i class="icon i_audit"/>{{ $t('n.audit') }}
                     </AuditHandle>
+                </template>
+                <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status === STATUS.WAIT_AUDIT && detail.type === TYPE.AFTER_SALES && $auth('purchase-order.audit')">
+                     <a-button type="primary" @click="handleModalShow('createAuditShow')" ><i class="icon i_audit"/>{{ $t('p.create_audit')}}</a-button>
                 </template>
             </div>
         </div>
@@ -472,6 +476,61 @@
                 <a-button @click="transferShow = false">{{ $t('def.cancel') }}</a-button>
             </template>
         </a-modal>-->
+        <a-modal v-model:visible="createAuditShow" :title="$t('p.create_audit')" @ok="handleCreateAudit">
+            <div class="modal-content">
+                <div class="form-item required">
+                    <div class="key">{{$t('n.result_a')}}:</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.audit_result">
+                            <a-radio :value="1">{{ $t('n.pass') }}</a-radio>
+                            <a-radio :value="2">{{ $t('n.fail') }}</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="form-item" v-if="form.audit_result === 1">
+                    <div class="key">{{$t('p.freight')}}:</div>
+                    <div class="value">
+                        <a-input-number
+                            v-model:value="form.freight"
+                            placeholder="0.00"
+                            style="width: 120px"
+                            :min="0.00"
+                            :precision="2"
+                            :prefix="`${$Util.priceUnitFilter(detail.currency)}`" />
+                    </div>
+                </div>
+                <div class="form-item" >
+                    <div class="key">{{$t('p.remark')}}:</div>
+                    <div class="value">
+                        <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
+            </div>
+        </a-modal>
+        <a-modal v-model:visible="PIShow" :title="$t('p.update_PI')" @ok="UpdatePI">
+            <div class="modal-content">
+
+                    <div class="form-item required">
+                        <div class="key">{{ $t('p.shipping_port') }}:</div>
+                        <div class="value">
+                            <a-input v-model:value="form.port" :placeholder="$t('def.input')"/>
+                        </div>
+                    </div>
+                    <div class="form-item required">
+                        <div class="key">{{ $t('p.delivery_address') }}:</div>
+                        <div class="value">
+                            <a-input v-model:value="form.delivery_address" :placeholder="$t('def.input')"/>
+                        </div>
+                    </div>
+                <div class="form-item">
+                    <div class="key">{{ $t('p.remark') }}:</div>
+                    <div class="value">
+                        <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
+
+            </div>
+        </a-modal>
     </template>
 </div>
 </template>
@@ -612,6 +671,7 @@ export default {
                 company_uid: undefined,
                 waybill_uid: '', // 快递单号
                 warehouse_id: '',
+                audit_result: '',
                 target_type: Core.Const.STOCK_RECORD.COMMODITY_TYPE.ITEM,
                 payment: '', // 收款金额
             },
@@ -636,6 +696,8 @@ export default {
 
             itemEditShow: true, // 是否开启商品编辑
             giveOrderShow: false,
+            createAuditShow: false,
+            PIShow: false,
         };
     },
     watch: {},
@@ -1021,6 +1083,9 @@ export default {
                     this.transferShow = true
                     this.getDistributorListAll();
                     break;
+                case "createAuditShow":
+                    this.createAuditShow = true
+                    break;
             }
         },
         //获取分销商列表
@@ -1297,6 +1362,65 @@ export default {
                 this.payAuditShow = false
                 this.getList()
             })
+        },
+        handleCreateAudit() {
+            let form = Core.Util.deepCopy(this.form)
+            if(!this.form.audit_result) {
+                this.$message.warning(this.$t('r.audit_result'))
+                return
+            }
+            form.freight = Math.round(form.freight * 100) || 0;
+            Core.Api.Purchase.createAudit({
+                id:this.id,
+                ...form
+            }).then(res => {
+                this.$message.success(this.$t('pop_up.audited'))
+                this.createAuditShow = false
+                this.getList()
+                this.getPurchaseInfo()
+            })
+        },
+        handleUpdatePI(){
+            // this.form.freight = Core.Util.countFilter(this.form.freight)
+            this.PIShow = true;
+        },
+        // 修改pi
+        UpdatePI() {
+            console.log("rowSelection", this.selectedRowItems)
+            let form = Core.Util.deepCopy(this.form);
+            const param = {
+                id: form.id,
+                remark: form.remark,
+            }
+            let adminRequire = [];
+
+            if (this.$auth('ADMIN')) {
+                adminRequire = [
+                    {key: 'delivery_address', msg: this.$t('p.fill_address')},
+                    {key: 'port', msg: this.$t('p.enter_harbor')},
+                    {key: 'freight', msg: this.$t('p.enter_freight')},
+                ]
+            }
+            for (let index in adminRequire) {
+                let key = adminRequire[index].key
+                if (!this.form[key]) {
+                    return this.$message.warning(adminRequire[index].msg)
+                } else {
+                    param[key] = form[key];
+                }
+            }
+            Core.Api.Invoice.updatePI(param).then(res => {
+                this.$message.success(this.$t('p.modify_success'))
+                this.PIShow = false
+                this.getInvoiceList();
+                this.$emit('Submit')
+                this.handleWaybillClear()
+
+            }).catch(err => {
+                console.log('handleDeliver err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
         },
         handlePayAuditClose() {
             this.payAuditShow = false
