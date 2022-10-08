@@ -1324,6 +1324,7 @@ const routes = [
                 component: () => import('@/views/aftersales/aftersales-list.vue'),
                 meta: {
                     title: '售后单列表',
+                    title_en: 'After sales order list',
                     query_type: REFUND_QUERY_TYPE.APPLY,
 	                roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
                     auth: ["after-sales-order.list"],
