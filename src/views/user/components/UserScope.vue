@@ -167,7 +167,14 @@ export default {
             }).then(res => {
                 console.log("getTableData res", res)
                 this.total = res.count;
+
+                res.list.forEach(it =>{
+                    if (it.resource_type !== Core.Const.NOTICE.RESOURCE_TYPE.PURCHASE){
+                        it.resource.nameEn = it.resource.name
+                    }
+                })
                 this.tableData = res.list;
+
             }).catch(err => {
                 console.log('getTableData err', err)
             }).finally(() => {
