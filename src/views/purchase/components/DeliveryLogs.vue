@@ -31,7 +31,7 @@
                                         $t('p.logistics')
                                     }}
                                 </a-button>
-                                <template v-if="$auth('ADMIN') && $auth('purchase-order.export') && type == Core.Const.STOCK_RECORD.TYPE.OUT">
+                                <template v-if="$auth('ADMIN') && $auth('purchase-order.export') && type == Core.Const.STOCK_RECORD.TYPE.OUT && detail.type == Core.Const.PURCHASE.TYPE.PRE_SALES">
                                     <a-button type='link' @click="handleExportIn(record.id)"><i
                                         class="icon i_download"/>{{ $t('p.export_purchase') }}
                                     </a-button>
