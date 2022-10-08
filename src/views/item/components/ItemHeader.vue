@@ -3,7 +3,7 @@
     <div class="panel-content">
         <img :src="$Util.imageFilter(detail.logo ? detail.logo : '', 2)" />
         <div class="info-block">
-            <p class="name">{{detail.name}}</p>
+            <p class="name">{{$i18n.locale =='zh' ? detail.name: detail.name_en}}</p>
             <p class="model">{{ $t('i.number') }}：{{detail.model}}</p>
             <p class="spec" v-if="showSpec"><span>{{ $t('i.spec') }}：</span>{{attr_str}}</p>
             <p class="price">{{ $t('i.cost_price') }}：{{$Util.priceUnitFilter(detail.original_price_currency)}}{{$Util.countFilter(detail.original_price)}}</p>

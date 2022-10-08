@@ -44,7 +44,7 @@
                                 <div class="key">{{ $t('i.categories') }}</div>
                                 <div class="value">
                                 <span v-for="(category, index) in detail.category_list">
-                                    <span v-if="index !== 0">,</span>{{ category.category_name }}
+                                    <span v-if="index !== 0">,</span>{{$i18n.locale =='zh' ? category.category_name : category.category_name_en }}
                                 </span>
                                 </div>
                             </div>
