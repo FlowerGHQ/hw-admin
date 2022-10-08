@@ -261,7 +261,7 @@
                                 <div class="info-item">
                                     <div class="key">{{ $t('ad.shipping_address') }}</div>
                                     <div class="value" v-if="detail.receive_info !=null">
-                                        {{ detail.receive_info.country + detail.receive_info.province + detail.receive_info.city + detail.receive_info.county + detail.receive_info.address || '-' }}
+                                        {{ this.$i18n.locale === 'zh' ? detail.receive_info.country + detail.receive_info.province + detail.receive_info.city + detail.receive_info.county + detail.receive_info.address || '-' : detail.receive_info.countryEn + detail.receive_info.provinceEn + detail.receive_info.cityEn + detail.receive_info.county + detail.receive_info.address || '-' }}
                                     </div>
                                     <div class="value" v-else>-</div>
                                 </div>
