@@ -28,6 +28,9 @@
                             {{ $t(title) }}
                         </template>
                         <template #bodyCell="{ column , record ,index, text}">
+                            <template v-if="column.dataIndex === 'name'">
+                                {{ $i18n.locale === 'zh' ? record.name : record.name_en }}
+                            </template>
                             <template v-if="column.key === 'item'">
                                 {{ text || '-' }}
                             </template>
@@ -131,7 +134,7 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: 'n.name', dataIndex: 'name', key: 'item'},
+                {title: 'n.name', dataIndex: 'name', key: 'name'},
                 {title: 'i.code', dataIndex: 'code', key: 'item'},
                 {title: 'i.amount', key: 'amount'},
                 {title: 'i.unit_price', dataIndex: 'price'},
