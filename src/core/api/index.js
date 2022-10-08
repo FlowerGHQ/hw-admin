@@ -341,7 +341,7 @@ const apiList = {
         reviseAudit: ['PostJson', 'purchase-order/revise-audit'], // 已下单的订单-编辑商品-审核
 
 	    createGiveaway: ['PostJson', 'purchase-order/create-giveaway'], // 已下单的订单-编辑商品-审核
-
+	    updatePI: ['PostJson', 'purchase-order/update-pi'], // 修改pi
 
     },
     Aftersales: { // 售后单

@@ -7,7 +7,7 @@
                 <template v-if="$auth('ADMIN') && $auth('purchase-order.export')">
                     <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
                     <a-button @click="handleExportIn"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>
-                    <a-button @click="handleUpdatePI(record)"><i class="icon i_edit"/>{{ $t('p.update_PI') }}</a-button>
+                    <a-button @click="handleUpdatePI()"><i class="icon i_edit"/>{{ $t('p.update_PI') }}</a-button>
                 </template>
                 <template v-if="!$auth('ADMIN') && $auth('purchase-order.export')">
                     <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
@@ -516,12 +516,12 @@
                             <a-input v-model:value="form.port" :placeholder="$t('def.input')"/>
                         </div>
                     </div>
-                    <div class="form-item required">
-                        <div class="key">{{ $t('p.delivery_address') }}:</div>
-                        <div class="value">
-                            <a-input v-model:value="form.delivery_address" :placeholder="$t('def.input')"/>
-                        </div>
-                    </div>
+<!--                    <div class="form-item required">-->
+<!--                        <div class="key">{{ $t('p.delivery_address') }}:</div>-->
+<!--                        <div class="value">-->
+<!--                            <a-input v-model:value="form.delivery_address" :placeholder="$t('def.input')"/>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 <div class="form-item">
                     <div class="key">{{ $t('p.remark') }}:</div>
                     <div class="value">
@@ -1396,9 +1396,8 @@ export default {
 
             if (this.$auth('ADMIN')) {
                 adminRequire = [
-                    {key: 'delivery_address', msg: this.$t('p.fill_address')},
+                    // {key: 'delivery_address', msg: this.$t('p.fill_address')},
                     {key: 'port', msg: this.$t('p.enter_harbor')},
-                    {key: 'freight', msg: this.$t('p.enter_freight')},
                 ]
             }
             for (let index in adminRequire) {
@@ -1409,7 +1408,10 @@ export default {
                     param[key] = form[key];
                 }
             }
-            Core.Api.Invoice.updatePI(param).then(res => {
+            Core.Api.Purchase.updatePI({
+                ...param,
+                id:this.id
+            }).then(res => {
                 this.$message.success(this.$t('p.modify_success'))
                 this.PIShow = false
                 this.getInvoiceList();
