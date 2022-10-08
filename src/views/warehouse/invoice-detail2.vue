@@ -173,12 +173,12 @@
 <!--                            </template>-->
 
                             <template v-if="column.key === 'target_type'">
-                                {{ $Util.targetTypeFilter(record.target_type) }}
+                                {{ $Util.targetTypeFilter(record.target_type, $i18n.locale ) }}
                             </template>
                             <template v-if="record.target_type === COMMODITY_TYPE.MATERIALS">
                                 <template v-if="column.key === 'name'">
                                     <div class="ell" style="max-width: 160px">
-                                        <a-button type="link" @click="routerChange('material', record )">{{ record.material.name || '-' }}</a-button>
+                                        <a-button type="link" @click="routerChange('material', record )">{{$i18n.locale == 'zh' ? record.material.name || '-': record.material.name_en || '-' }}</a-button>
                                     </div>
                                 </template>
                                 <template v-if="column.key === 'code'">
@@ -202,16 +202,16 @@
                             <template v-if="record.target_type === COMMODITY_TYPE.ITEM">
                                 <template v-if="column.key === 'name'">
                                     <div class="ell" style="max-width: 160px">
-                                        <a-button type="link" @click="routerChange('item', record )">{{ record.item.name || '-' }}</a-button>
+                                        <a-button type="link" @click="routerChange('item', record )">{{$i18n.locale == 'zh' ? record.item.name || '-': record.item.name_en || '-' }}</a-button>
                                     </div>
                                 </template>
                                 <template v-if="column.key === 'code'">
                                     {{ record.item.code || '-' }}
                                 </template>
                                 <template v-if="column.key === 'spec'">
-                                    <a-tooltip placement="top" :title='$Util.itemSpecFilter(text)'>
+                                    <a-tooltip placement="top" :title='$Util.itemSpecFilter(text, $i18n.locale)'>
                                         <div class="ell" style="max-width: 120px">
-                                            {{ $Util.itemSpecFilter(text) }}
+                                            {{ $Util.itemSpecFilter(text, $i18n.locale) }}
                                         </div>
                                     </a-tooltip>
                                 </template>
@@ -230,7 +230,7 @@
 
 
                             <template v-if="column.key === 'flag_entity'">
-                                {{ $Util.itemFlagEntityFilter(text) }}
+                                {{ $Util.itemFlagEntityFilter(text, $i18n.locale) }}
                             </template>
 
                             <template v-if="column.key === 'count'">
@@ -520,11 +520,7 @@ export default {
 
             childShow: false,
             childDate: [],
-            childColumns: [
-                {title: this.$t('n.name'), dataIndex: ['item', 'name']},
-                {title: this.$t('uid'), dataIndex: ['entity', 'uid'], key: 'uid' },
-                {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100,},
-            ],
+
             // 上传
             childInfoShow: false,
             // 上传
@@ -575,6 +571,14 @@ export default {
             return list
 
         },
+        childColumns(){
+            let columns = [
+                {title: this.$t('n.name'), dataIndex: ['item', 'name']},
+                {title: this.$t('uid'), dataIndex: ['entity', 'uid'], key: 'uid' },
+                {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100,},
+            ]
+            return columns
+        } ,
         itemTableColumns() {
             // 无实例商品的 出入库
             let columns = [
