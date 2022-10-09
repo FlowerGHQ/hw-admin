@@ -1412,10 +1412,8 @@ export default {
             }).then(res => {
                 this.$message.success(this.$t('p.modify_success'))
                 this.PIShow = false
-                this.getInvoiceList();
-                this.$emit('Submit')
-                this.handleWaybillClear()
-
+                this.getPurchaseInfo()
+                this.getList()
             }).catch(err => {
                 console.log('handleDeliver err', err)
             }).finally(() => {
