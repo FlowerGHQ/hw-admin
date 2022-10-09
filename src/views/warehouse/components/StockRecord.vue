@@ -46,7 +46,7 @@
                                 <a-tooltip placement="top" :title='record.item[column.key]'>
                                     <div class="ell" style="max-width: 120px">
                                         <a-button type="link" @click="routerChange('item', record)">
-                                            {{ record.item.name || '-' }}
+                                          {{ lang === 'zh'? record.item.name || '-': record.item.name_en || '-' }}
                                         </a-button>
                                     </div>
                                 </a-tooltip>
@@ -58,7 +58,7 @@
                                 <a-tooltip placement="top" :title='record.material[column.key]'>
                                     <div class="ell" style="max-width: 120px">
                                         <a-button type="link" @click="routerChange('material', record)">
-                                            {{ record.material.name || '-' }}
+                                          {{ lang === 'zh'? record.material.name || '-': record.material.name_en || '-' }}
                                         </a-button>
                                     </div>
                                 </a-tooltip>
@@ -152,6 +152,9 @@ export default {
             ];
             return tableColumns;
         },
+      lang() {
+        return this.$store.state.lang
+      }
     },
     mounted() {
         this.getTableData();

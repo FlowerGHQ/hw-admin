@@ -99,9 +99,9 @@
                     </template>
                     <template v-if="record.target_type === 1 && record.item">
                         <template v-if="column.type === 'name'">
-                            <a-tooltip placement="top" :title='record.item.name'>
+                            <a-tooltip placement="top" :title="lang === 'zh'? record.item.name || '-': record.item.name_en || '-' ">
                                 <a-button type="link" @click="routerChange('item', record.item)">
-                                    {{ record.item.name || '-' }}
+                                    {{ lang === 'zh'? record.item.name || '-': record.item.name_en || '-' }}
                                 </a-button>
                             </a-tooltip>
                         </template>
@@ -112,12 +112,12 @@
                             {{ record.item.category ? record.item.category.name || '-' : '-' }}
                         </template>
                         <template v-if="column.type === 'spec'">
-                            {{ $Util.itemSpecFilter(record.item.attr_list) }}
+                            {{ $Util.itemSpecFilter(record.item.attr_list, lang) }}
                         </template>
                     </template>
                     <template v-if="record.target_type === 2 && record.material">
                         <template v-if="column.type === 'name'">
-                            <a-tooltip placement="top" :title='record.material.name'>
+                            <a-tooltip placement="top" :title="lang === 'zh'? record.material.name || '-': record.material.name_en || '-' ">
                                 <a-button type="link" @click="routerChange('material', record)">
                                     {{ lang === 'zh'? record.material.name: record.material.name_en || '-' }}
                                 </a-button>

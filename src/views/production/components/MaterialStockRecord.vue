@@ -5,21 +5,21 @@
                 <div class="search-container inline">
                     <a-row class="search-area">
                         <a-col :xs='24' :sm='24' :xl="8" :xxl='4' class="search-item" v-if="!warehouseId">
-                            <div class="key">仓库:</div>
+                            <div class="key">{{ $t('n.warehouse') }}:</div>
                             <div class="value">
-                                <a-select v-model:value="searchForm.warehouse_id" placeholder="请选择仓库" @change="handleSearch">
+                                <a-select v-model:value="searchForm.warehouse_id" :placeholder="$t('wa.choose_warehouse')" @change="handleSearch">
                                     <a-select-option v-for="warehouse of warehouseList" :key="warehouse.id" :value="warehouse.id">{{ warehouse.name }}</a-select-option>
                                 </a-select>
                             </div>
                         </a-col>
                         <a-col :xs='24' :sm='24' :xl="8" :xxl='10' class="search-item">
-                            <div class="key">创建时间:</div>
+                            <div class="key">{{ $t('def.create_time') }}:</div>
                             <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                         </a-col>
                     </a-row>
                     <div class="btn-area">
-                        <a-button @click="handleSearch" type="primary">查询</a-button>
-                        <a-button @click="handleSearchReset">重置</a-button>
+                        <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
+                        <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                     </div>
                 </div>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -31,7 +31,7 @@
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'count'">
-                            {{ text || 0 }} 件
+                            {{ text || 0  + $t('m.pcs')}}
                         </template>
                         <template v-if="column.key === 'uid'">
                                 {{text || record.parent_uid}}
@@ -46,13 +46,13 @@
                             </template>
                         </template>
                         <template v-if="column.dataIndex === 'type'">
-                            {{ $Util.stockRecordFilter(text) }}
+                            {{ $Util.stockRecordFilter(text,$i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'warehouse_name'">
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.dataIndex === 'source_type'">
-                            {{ $Util.sourceFormFilter(text) }}
+                            {{ $Util.sourceFormFilter(text,$i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
