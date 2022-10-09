@@ -1,96 +1,55 @@
 <template>
 <div id="PurchaseItemList">
-    <div class="item-header-container">
-        <a-tabs v-model:activeKey="firstLevelId" @change="handleCategoryChange">
-            <a-tab-pane :key="0" :tab="$t('n.all')"></a-tab-pane>
-            <a-tab-pane v-for="item of categoryList" :key="item.id" :tab="$i18n.locale =='zh' ? item.name : item.name_en"></a-tab-pane>
-            <template #rightExtra>
-                <a-input-group  compact>
-                    <a-select v-model:value="searchType" class="search_select">
-                        <a-select-option v-for="(val, key) in SEARCH_TYPE_MAP" :key="key" :value="key">{{ val[$i18n.locale]  }}</a-select-option>
-
-                    </a-select>
-                <a-input class="search_input" v-model:value="searchForm.name" :placeholder="$t('def.input')" @pressEnter="handleSearch" style="width: 50%" >
-                    <template #prefix><i class="icon i_search" @click="handleSearch"/></template>
-                    <template #suffix><i class="icon i_close_b" @click="handleNameReset" v-if="searchForm.name"/></template>
-                </a-input>
-                </a-input-group>
-                <a-tooltip :title="$t('i.favorites')" class="popover">
-                    <a-button type="link" @click="routerChange('favorite')"><i class="icon i_collect"/></a-button>
-                </a-tooltip>
-                <a-popover v-model:visible="briefVisible" arrow-point-at-center placement="bottomRight" trigger='click' overlayClassName='shop-cart-brief-content'>
-                    <template #content>
-                        <div class="shop-cart-brief" :class="briefVisible ? 'show' : 'hidden'">
-                            <div class="icon i_close" @click="briefVisible = false"></div>
-                            <div class="tip">
-                                <i class="icon i_check_b"/>{{ $t('i.added') }}
-                            </div>
-                            <div class="item" v-for="item of briefList" :key="item.id">
-                                <img class="cover" :src="$Util.imageFilter(item.logo, 2)" />
-                                <div class="desc">
-                                    <p>{{ item.name ? lang =='zh' ? item.name : item.name_en : '-' }}</p>
-                                    <span>{{item.code || '-'}}</span>
-                                    <p class="price">€{{$Util.countFilter(item[priceKey + 'eur'])}} | ${{$Util.countFilter(item[priceKey + 'usd'])}}</p>
-                                </div>
-                            </div>
-                            <div class="btns">
-                                <a-button class='btn ghost' @click="routerChange('shop_cart')">{{ $t('i.look') }}({{briefCount}})</a-button>
-                                <a-button class='btn black' @click="routerChange('settle')">{{ $t('i.settle') }}</a-button>
-                            </div>
-                        </div>
-                    </template>
-                    <a-tooltip :title="$t('i.look') + `${briefCount ? '('+briefCount+')' : ''}`" class="popover">
-                        <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>
-                    </a-tooltip>
-                </a-popover>
-            </template>
-        </a-tabs>
-    </div>
     <div class="item-content-container" :class="firstLevelId ? '' : 'full-content'">
-        <div class="category-container" v-if="firstLevelId">
-            <a-button type="link" @click="handleCategoryChange(firstLevelId)" >
-                <div class="category-title">{{ $i18n.locale =='zh' ? firstLevelName.name : firstLevelName.name_en}}</div>
-            </a-button>
-            <div class="category-content">
-                <CategoryTree :parentId='firstLevelId' @change='handleCategoryChange' ref="CategoryTree"/>
-            </div>
-        </div>
-        <div class="item-content" v-if="tableData.length">
-            <!-- <div class="switch-btn">
-                <a-radio-group v-model:value="pageType">
-                    <a-radio-button value="agora"><i class="icon i_agora"/></a-radio-button>
-                    <a-radio-button value="list"><i class="icon i_list"/></a-radio-button>
-                </a-radio-group>
-            </div> -->
-            <div class="list-container">
-                <div class="list-item" v-for="item of tableData" :key="item.id" @click="routerChange('detail', item)">
-                    <div class="cover">
-                        <img :src="$Util.imageFilter(item.logo, 2)" />
+        <template v-if="!bomShow">
+            <div class="item-content" v-if="tableData.length">
+                <!-- <div class="switch-btn">
+                    <a-radio-group v-model:value="pageType">
+                        <a-radio-button value="agora"><i class="icon i_agora"/></a-radio-button>
+                        <a-radio-button value="list"><i class="icon i_list"/></a-radio-button>
+                    </a-radio-group>
+                </div> -->
+                <div class="list-container">
+                    <div class="list-item" v-for="item of tableData" :key="item.id" @click="routerChange('detail', item)">
+                        <div class="cover">
+                            <img :src="$Util.imageFilter(item.logo, 2)" />
+                        </div>
+                        <p  class="sub" v-if="item.type !== Core.Const.ITEM.TYPE.PRODUCT">{{item.code || '-'}}</p>
+                        <p  class="sub" v-if="item.type === Core.Const.ITEM.TYPE.PRODUCT">{{'' || ' '}} &ensp;</p>
+
+                        <!--                        <p class="sub">{{item.code}}</p>-->
+                        <p class="name">{{ item.name ? lang =='zh' ? item.name : item.name_en : '-' }}</p>
+                        <p class="desc">&nbsp;</p>
+                        <p class="price" v-if="currency === 'eur' || currency === 'EUR'">
+                            €{{$Util.countFilter(item[priceKey + 'eur'])}}
+                        </p>
+                        <p class="price" v-else>
+                            ${{$Util.countFilter(item[priceKey + 'usd'])}}
+                        </p>
+                        <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">{{ $t('i.cart') }}</a-button>
                     </div>
-                    <p class="sub">{{item.code}}</p>
-                    <p class="name">{{ item.name ? lang =='zh' ? item.name : item.name_en : '-' }}</p>
-                    <p class="desc">&nbsp;</p>
-                    <p class="price">€{{$Util.countFilter(item[priceKey + 'eur'])}} | ${{$Util.countFilter(item[priceKey + 'usd'])}}</p>
-                    <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">{{ $t('i.cart') }}</a-button>
+                </div>
+                <div class="paging-container">
+                    <a-pagination
+                        v-model:current="currPage"
+                        :page-size='pageSize'
+                        :total="total"
+                        show-quick-jumper
+                        show-size-changer
+                        show-less-items
+                        :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
+                        :hide-on-single-page='false'
+                        :pageSizeOptions="['10', '20', '30', '40']"
+                        @change="pageChange"
+                        @showSizeChange="pageSizeChange"
+                    />
                 </div>
             </div>
-            <div class="paging-container">
-                <a-pagination
-                    v-model:current="currPage"
-                    :page-size='pageSize'
-                    :total="total"
-                    show-quick-jumper
-                    show-size-changer
-                    show-less-items
-                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
-                    :hide-on-single-page='false'
-                    :pageSizeOptions="['10', '20', '30', '40']"
-                    @change="pageChange"
-                    @showSizeChange="pageSizeChange"
-                />
-            </div>
+            <SimpleImageEmpty class="item-content-empty" v-else :desc="$t('i.no_search_list')"/>
+        </template>
+        <div class="bom-content" v-else>
+            <ExploredContentPay v-if="bomShow" :key="menaKey" :id="searchForm.category_id" :data="tableData" @change="getData"></ExploredContentPay>
         </div>
-        <SimpleImageEmpty class="item-content-empty" v-else desc="暂无满足搜索条件的商品"/>
     </div>
 </div>
 </template>
@@ -100,16 +59,55 @@ import Core from '../../core';
 
 import CategoryTree from './components/CategoryTree.vue'
 import SimpleImageEmpty from '../../components/common/SimpleImageEmpty.vue'
+import { ExportOutlined } from '@ant-design/icons-vue';
+import ExploredContentPay from './components/ExploredContentPay.vue';
 const SEARCH_TYPE_MAP = Core.Const.ITEM.SEARCH_TYPE_MAP
 export default {
     name: 'PurchaseItemList',
     components: {
         SimpleImageEmpty,
         CategoryTree,
+        ExportOutlined,
+        ExploredContentPay,
     },
-    props: {},
+    props: {
+        category_id: {type: Number},
+        name: {name: String},
+
+
+    },
+    watch: {
+        // category_id(n,o){
+        //    console.log("category_id",n)
+        //     this.searchForm.category_id = n
+        //     this.getTableData();
+        //     this.isBomShow(this.searchForm.category_id);
+        // },
+        // name(n,o){
+        //     console.log("category_id",n)
+        //     this.searchForm.name = n
+        // },
+        category_id: {
+            immediate: true,
+            handler(n) {
+                console.log("watch category_id",n)
+                this.searchForm.category_id = n
+                this.getTableData();
+                this.isBomShow(this.searchForm.category_id);
+            }
+        },
+        name: {
+            immediate: true,
+            handler(n) {
+                console.log("watch name",n)
+                this.searchForm.name = n
+
+            }
+        },
+    },
     data() {
         return {
+            Core,
             loginType: Core.Data.getLoginType(),
             pageType: 'list',
             SEARCH_TYPE_MAP,
@@ -125,9 +123,13 @@ export default {
             // 搜索
             categoryList: [],
             firstLevelId: 0,
-            firstLevelName: '',
+            firstLevelName: {
+                name: '',
+                name_en: ''
+            },
             searchForm: {
                 name: '',
+                name_en: '',
                 category_id: '',
             },
 
@@ -135,9 +137,19 @@ export default {
             briefVisible: false,
             briefList: [],
             briefCount: 0,
+
+
+            //  备注
+            labelCol: { style: { width: '40px' } },
+            wrapperCol: { span: 14 },
+            orderId:'',
+
+            // 是否显示爆炸图
+            bomShow: false,
+            menaKey: 1,
+            currency: '',
         };
     },
-    watch: {},
     computed: {
         priceKey() {
             return this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
@@ -146,10 +158,12 @@ export default {
             return this.$store.state.lang
         }
     },
-    mounted() {
-        this.getTableData();
-        this.getCategoryList()
-        this.getShopCartData();
+
+     mounted() {
+         this.currency = Core.Data.getCurrency();
+         this.getTableData();
+         // this.getCategoryList()
+         // this.getShopCartData();
 
     },
 
@@ -158,11 +172,13 @@ export default {
             let routeUrl = ''
             switch (type) {
                 case 'detail':  // 详情
-                    routeUrl = this.$router.resolve({
-                        path: '/purchase/item-display',
-                        query: { id: item.id }
-                    })
-                    window.open(routeUrl.href, '_self')
+                    // routeUrl = this.$router.resolve({
+                    //     path: '/purchase/item-display',
+                    //     query: { id: item.id }
+                    // })
+                    // window.open(routeUrl.href, '_blank')
+                    this.$emit('changeDisplay',true,item.id)
+
                     break;
                 case 'favorite':  // 收藏夹
                 case 'shop_cart':  // 购物车
@@ -178,6 +194,11 @@ export default {
                     window.open(routeUrl.href, '_self')
                     break;
             }
+        },
+        pageChangeName(name,searchType) {  // 页码改变
+            this.searchForm.name = name
+            this.searchType = searchType
+            this.pageChange(1)
         },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
@@ -196,7 +217,10 @@ export default {
             this.pageChange(1);
         },
         handleCategoryChange(category) {
-            console.log('handleCategoryChange category:', category)
+            // console.log('handleCategoryChange category:', category)
+            this.tableData = []
+            this.isBomShow(category)
+            // this.bomShow = false
             this.searchForm.category_id = category
             if ( this.firstLevelId && category === this.firstLevelId) {
                 this.firstLevelName = this.categoryList.find(i => i.id === category)
@@ -204,20 +228,59 @@ export default {
                     this.$refs.CategoryTree.handleReset();
                 })
             }
+            console.log('pageSizeChange category_id:', this.searchForm.category_id)
             this.pageChange(1)
         },
+        // 是否显示爆炸图
+        isBomShow(id) {
+            this.bomShow = false
+            console.log(' categoryList:', this.categoryList)
+            for (let i = 0; i < this.categoryList.length ; i++){
+                console.log(' categoryList:', this.categoryList)
+                if(this.categoryList[i].id === id) {
+                    this.bomShow = this.categoryList[i].display_mode === 2
+                    console.log("bomShow",this.bomShow)
+                    return
+                }
+                console.log("bomShow",this.bomShow)
+                if (this.categoryList[i].children != null){
+                    console.log("bomShow",this.bomShow)
+                    this.isBomChildren(this.categoryList[i], id);
+                }
+            };
+            // this.bomShow = true
+        },
+        isBomChildren(element, id){
+            for (let i = 0; i< element.children.length ; i++){
+                if (element.children[i].children != null){
+                    this.isBomChildren(element.children[i], id);
+                }
+                console.log("element.id",element.children[i].id)
+                console.log("id",id)
+                if(element.children[i].id === id) {
+                    this.bomShow = element.children[i].display_mode === 2
+
+                    return
+                }
+            }
+        },
+
         getTableData() { // 获取 商品 数据
             let searchForm = Core.Util.deepCopy(this.searchForm);
             if (this.searchType == Core.Const.ITEM.SEARCH_TYPE.CODE){
                 searchForm.code = searchForm.name;
                 searchForm.name = "";
-
+            }
+            if (this.$i18n.locale === 'en'){
+                searchForm.name_en = searchForm.name;
+                searchForm.name = "";
             }
             this.loading = true;
             Core.Api.Item.list({
-                flag_spread: 1,
+                flag_spread: 0,
                 category_id: searchForm.category_id,
                 name: searchForm.name,
+                name_en: searchForm.name_en,
                 code: searchForm.code,
                 page: this.currPage,
                 is_authority: 1,
@@ -226,12 +289,21 @@ export default {
                 console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
+                // if(!this.bomShow) {
+                //     this.bomShow = true
+                // }
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
+
+        //
+        getData() {
+            this.getTableData()
+        },
+
 
         getShopCartData(flag = false) { // 获取 购物车 数据
             Core.Api.ShopCart.list().then(res => {
@@ -245,6 +317,7 @@ export default {
         },
 
         handleCartAdd(item) { // 添加到购物车
+          let _this = this;
             console.log('handleCartAdd item:', item)
             if (item.set_id && item.attr_list.length > 1) {
                 this.routerChange('detail', item)
@@ -256,8 +329,9 @@ export default {
                 price: item.purchase_price
             }).then(res => {
                 console.log('res:', res)
-                this.$message.success('添加成功')
+                this.$message.success(_this.$t('i.add_success'))
                 this.getShopCartData(true);
+                this.orderId = res.id
             })
         },
 
@@ -267,13 +341,80 @@ export default {
                 is_authority: 1,
             }).then(res => {
                 this.categoryList = res.list
+                this.handleCategoryChange(this.searchForm.category_id)
             })
-        }
+        },
+
+        handleExportConfirm() { // 确认订单是否导出
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('pop_up.sure') + _this.$t('n.export') + '?',
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
+                onOk() {
+                    _this.handleRepairExport();
+                }
+            })
+        },
+        handleRepairExport() { // 订单导出
+            this.exportDisabled = true;
+
+            let form = Core.Util.deepCopy(this.searchForm);
+
+            // 编码
+            if (this.searchType === Core.Const.ITEM.SEARCH_TYPE.CODE){
+                form.code = form.name;
+                form.name = "";
+            }
+
+            for (const key in form) {
+                form[key] = form[key] || ''
+            }
+            let exportUrl = Core.Api.Export.exportOrderPrice(form)
+            console.log("handleRepairExport exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
+        },
+
+        // 备注
+        handleRemarkEditBlur(item) {
+            let _item = Core.Util.deepCopy(item)
+            console.log('handleCountEditBlur _item:', _item)
+            Core.Api.ShopCart.remark({
+                id: this.orderId,
+                remark: _item.remark,
+            }).then(res => {
+                console.log('handleRemarkEditBlur: res', res)
+            }).catch(err => {
+                console.log('handleRemarkEditBlur: err', err)
+            })
+        },
     }
 };
 </script>
 
 <style lang="less">
+.ant-form {
+    width: 100%;
+}
+.ant-form-item {
+    margin: 0;
+}
+.ant-input {
+    border: none;
+    border-radius: 0px !important;
+    border-bottom: 1px solid #d9d9d9;
+}
+.ant-input:hover {
+    border-color: #fff;
+    border-bottom-color: #d9d9d9;
+}
+.ant-input:focus{
+    border-color: #fff;
+    border-bottom-color: #d9d9d9;
+    box-shadow: none;
+    outline: 0;
+}
 #PurchaseItemList {
     background-color: #fff;
     border-radius: 6px;
@@ -407,13 +548,13 @@ export default {
                     .cover {
                         width: 180px;
                         height: 180px;
-                        background-color: #F5F5F5;
+                        background-color: #fff;
                         .fcc();
                         overflow: hidden;
                         img {
                             width: 100%;
                             height: 100%;
-                            object-fit: cover;
+                            object-fit: scale-down;
                         }
                     }
                     .sub {
@@ -460,6 +601,11 @@ export default {
                 width: 100%;
             }
         }
+        .bom-content {
+            padding: 48px;
+            width: 100%;
+        }
+
     }
 }
 .shop-cart-brief-content {
@@ -526,7 +672,8 @@ export default {
         }
     }
     .btns {
-        margin-top: 52px;
+        // margin-top: 52px;
+        margin-top: 30px;
         .btn {
             width: 172px;
             height: 55px;
@@ -560,4 +707,5 @@ export default {
         display: none;
     }
 }
+
 </style>

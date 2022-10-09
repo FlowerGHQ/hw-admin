@@ -2,7 +2,7 @@
     <div id="MaterialsList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">物料列表</div>
+                <div class="title-area">{{ $t('m.material_list') }}</div>
                 <div class="btns-area">
                     <a-upload name="file" class="file-uploader"
                               :file-list="upload.fileList" :action="upload.action"
@@ -11,40 +11,40 @@
                               accept=".xlsx,.xls"
                               @change="handleMatterChange">
                         <a-button type="primary" ghost class="file-upload-btn" v-if="$auth('material.import-export')">
-                            <i class="icon i_add"/> 批量导入
+                            <i class="icon i_add"/> {{ $t('m.import') }}
                         </a-button>
                     </a-upload>
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('material.save')"><i class="icon i_add"/>新建物料</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('material.save')"><i class="icon i_add"/>{{ $t('m.new_material') }}</a-button>
                 </div>
             </div>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">物料名称:</div>
+                        <div class="key">{{ $t('m.material_name') }}:</div>
                         <div class="value">
-                           <a-input v-model:value="searchForm.name" placeholder="请输入物料名称" @keydown.enter='handleSearch'/>
+                           <a-input v-model:value="searchForm.name" :placeholder="$t('n.enter')+$t('m.material_name')" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">物料分类:</div>
+                        <div class="key">{{ $t('m.material_category') }}:</div>
                         <div class="value">
-                            <CategoryTreeSelect @change="handleCategorySelect" :category='item_category' :category-id='searchForm.category_id' placeholder="请选择物料分类" type="material"/>
+                            <CategoryTreeSelect @change="handleCategorySelect" :category='item_category' :category-id='searchForm.category_id' :placeholder="$t('n.choose')+$t('m.material_category')" type="material"/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">物料编码:</div>
+                        <div class="key">{{ $t('m.material_code') }}:</div>
                         <div class="value">
-                            <a-input v-model:value="searchForm.code" placeholder="请输入物料编码" @keydown.enter='handleSearch'/>
+                            <a-input v-model:value="searchForm.code" :placeholder="$t('n.enter')+$t('m.material_code')" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
-                        <div class="key">创建时间:</div>
+                        <div class="key">{{ $t('def.create_time') }}:</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">查询</a-button>
-                    <a-button @click="handleSearchReset">重置</a-button>
+                    <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
+                    <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
             <div class="table-container">
@@ -57,9 +57,9 @@
                                 </a-button>
                             </a-tooltip>-->
                             <div class="table-img">
-                                <a-image class="image" :width="30" :height="30" :src="$Util.imageFilter(record.image)" fallback='无'/>
+                                <a-image class="image" :width="30" :height="30" :src="$Util.imageFilter(record.image)" :fallback="$t('def.none')"/>
                                 <a-tooltip placement="top" :title='text'>
-                                    <a-button type="link" @click="routerChange('detail', record)" style="margin-left: 6px;">{{ text || '-' }}</a-button>
+                                    <a-button type="link" @click="routerChange('detail', record)" style="margin-left: 6px;">{{ lang =='zh' ? record.name : record.name_en  }}</a-button>
                                 </a-tooltip>
                             </div>
                         </template>
@@ -80,9 +80,9 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('material.detail')"><i class="icon i_detail"/>详情</a-button>
-                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('material.save')"><i class="icon i_edit"/>编辑</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('material.delete')"><i class="icon i_delete"/>删除</a-button>
+                            <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('material.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
+                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('material.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('material.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -132,19 +132,7 @@ export default {
                 code: undefined,
             },
             item_category: {},
-            tableColumns: [
-                { title: '物料名称', dataIndex: 'name', key: 'detail' },
-                { title: '物料分类', dataIndex: ['category','name'], key: 'item' },
-                { title: '物料编码', dataIndex: 'code', key: 'item' },
-                { title: '规格', dataIndex: 'spec', key: 'spec' },
-                { title: '单位', dataIndex: 'unit', key: 'item' },
-                { title: '物料包装', dataIndex: 'encapsulation', key: 'item' },
-                { title: '包装尺寸', dataIndex: 'encapsulation_size', key: 'item' },
-                { title: '毛重(kg)', dataIndex: 'gross_weight', key: 'gross_weight' },
-                { title: '备注', dataIndex: 'remark', key: 'spec' },
-                { title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                { title: '操作', key: 'operation', fixed: 'right', width: 180 }
-            ],
+
             tableData: [],
             // 上传
             upload: {
@@ -161,7 +149,29 @@ export default {
         }
     },
     watch: {},
-    computed: {},
+    computed: {
+        lang() {
+            return this.$store.state.lang
+        },
+      tableColumns() {
+        let columns = [
+        { title: this.$t('m.material_name'), dataIndex: 'name', key: 'detail' },
+        { title: this.$t('m.material_category'), dataIndex: ['category','name'], key: 'item' },
+        { title: this.$t('m.material_code'), dataIndex: 'code', key: 'item' },
+        { title: this.$t('m.spec'), dataIndex: 'spec', key: 'spec' },
+        { title: this.$t('m.unit'), dataIndex: 'unit', key: 'item' },
+        { title: this.$t('m.package'), dataIndex: 'encapsulation', key: 'item' },
+        { title: this.$t('m.size'), dataIndex: 'encapsulation_size', key: 'item' },
+        { title: this.$t('m.weight'), dataIndex: 'gross_weight', key: 'gross_weight' },
+        { title: this.$t('m.boxes'), dataIndex: 'pack_count', key: 'pack_count' },
+        { title: this.$t('m.color'), dataIndex: 'color', key: 'item' },
+        { title: this.$t('def.remark'), dataIndex: 'remark', key: 'spec' },
+        { title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time'},
+        { title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 180 }
+      ]
+        return columns
+      },
+    },
     mounted() {
         this.getTableData()
     },
@@ -216,7 +226,7 @@ export default {
             Core.Api.Material.list({
                 ...this.searchForm,
                 page: this.currPage,
-                pageSize: this.pageSize,
+                page_size: this.pageSize,
             }).then(res => {
                 console.log('ProductionOrderlist res', res)
                 this.tableData = res.list
@@ -229,13 +239,13 @@ export default {
         handleDelete(id) {
             let _this = this
             this.$confirm({
-                title: '确定要删除该物料吗？',
-                okText: '确定',
+                title: _this.$t('m.sure_delete'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Material.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);
@@ -247,11 +257,11 @@ export default {
         handleMatterChange({file, fileList}) {
             console.log("handleMatterChange status:", file.status, "file:", file)
             if (file.status == 'done') {
-                if (file.response && file.response.code < 0) {
+                if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
                     this.getTableData();
                 } else {
-                    return this.$message.success('上传成功');
+                    return this.$message.success(this.$t('pop_up.uploaded'));
                     this.getTableData();
                 }
             }

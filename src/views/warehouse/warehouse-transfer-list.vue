@@ -400,7 +400,7 @@ export default {
                 return this.$message.warning('发货仓和收货仓不能相同')
             }
             Core.Api.WarehouseTransfer.save(form).then(() => {
-                this.$message.success('操作成功')
+                this.$message.success(this.$t('pop_up.operate'))
                 this.handleModalClose()
                 this.getTableData()
             }).finally(() => {

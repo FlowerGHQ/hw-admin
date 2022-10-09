@@ -3,7 +3,7 @@
         <div class="panel-content">
             <div class="table-container">
                 <a-button type="primary" ghost @click="handleRoleShow" v-if="$auth('account.save', 'MANAGER')" class="panel-btn">
-                    <i class="icon i_add"/>新增角色
+                    <i class="icon i_add"/>{{$t('u.add_role')}}
                 </a-button>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false'>
@@ -15,7 +15,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="handleDelete(record)" v-if="$auth('account.save', 'MANAGER')" class="danger"><i class="icon i_delete"/>删除</a-button>
+                            <a-button type='link' @click="handleDelete(record)" v-if="$auth('account.save', 'MANAGER')" class="danger"><i class="icon i_delete"/>{{$t('def.delete')}}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -36,18 +36,18 @@
                 />
             </div>
         </div>
-        <a-modal v-model:visible="roleShow" title="增加角色" class="stock-change-modal" :after-close="handleRoleClose">
+        <a-modal v-model:visible="roleShow" :title="$t('u.add_role')" class="stock-change-modal" :after-close="handleRoleClose">
             <div class="form-item required">
-                <div class="key">角色</div>
+                <div class="key">{{ $t('u.role') }}</div>
                 <div class="value">
-                    <a-select v-model:value="form.role_id" placeholder="请选择角色">
+                    <a-select v-model:value="form.role_id" :placeholder="$t('n.choose')">
                         <a-select-option v-for="role in roleList" :key="role.id" :value="role.id" :disabled="role.disabled">{{ role.name }}</a-select-option>
                     </a-select>
                 </div>
             </div>
             <template #footer>
-                <a-button @click="handleRoleSubmit" type="primary">确定</a-button>
-                <a-button @click="roleShow=false">取消</a-button>
+                <a-button @click="handleRoleSubmit" type="primary">{{$t('def.ok')}}</a-button>
+                <a-button @click="roleShow=false">{{$t('def.cancel')}}</a-button>
             </template>
         </a-modal>
     </div>
@@ -85,7 +85,6 @@ export default {
             // 弹框
             roleShow: false,
             roleList: [],
-            resourceMap: Core.Const.NOTICE.RESOURCE_TYPE_MAP,
             form: {
                 role_id: '',
                 user_id: '',
@@ -97,8 +96,8 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: "角色名称", dataIndex: 'role_name', key: "text"},
-                {title: "创建时间", dataIndex: "create_time", key: "time"},
+                {title: this.$t('u.role'), dataIndex: 'role_name', key: "text"},
+                {title: this.$t('def.create_time'), dataIndex: "create_time", key: "time"},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ];
             return tableColumns;
@@ -165,7 +164,7 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             form.user_id = this.detail.id
             if (!form.role_id) {
-                return this.$message.warning('请选择角色')
+                return this.$message.warning(this.$t('u.choose_role'))
             }
 
             Core.Api.Authority.allotRole(form).then(() => {
@@ -180,15 +179,15 @@ export default {
 
             let _this = this;
             this.$confirm({
-                title: '确定要删除该角色吗？',
-                okText: '确定',
+                title: _this.$t('u.sure_delete_role'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Authority.deleteUserRole({
                         id:item.id
                     }).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete -> err", err);

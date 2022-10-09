@@ -75,6 +75,13 @@
             <a-table :columns="specificColumns" :data-source="pointerList" :scroll="{ x: true }"
                 :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, record, index }">
+                    <template v-if="column.dataIndex === 'index'" width="100px">
+                        <a-input v-model:value="record.index" @blur="saveRowIndex(record)" placeholder="$t('search.enter_sn')"></a-input>
+                        <!-- <div v-if="!record.isEdit" @click="editRowIndex(record)">{{ (record || {}).index }}</div>
+                        <div v-else>
+                            <a-input v-model:value="record.index" @keydown.enter="saveRowIndex(record)" placeholder="请输入序号"></a-input>
+                        </div> -->
+                    </template>
                     <template v-if="column.dataIndex === 'name'">
                         {{ (record.item || {}).name }}
                     </template>
@@ -100,15 +107,15 @@
             <div class="image-contain" @mouseup="mouseupHandler" @mousemove="mousemoveHandler">
                 <img :src="detailImageUrl" ref="exploreImg" alt="">
                 <canvas ref="exploreCanvas"></canvas>
-                <div class="pointer-start" v-for="(item, index) in pointerList" :key="index" 
+                <div class="pointer-start" v-for="(item, index) in pointerList" :key="index"
                     :style="{'left': `${item.start.x}px`, 'top': `${item.start.y }px`}"
                     @mousedown="pointMousedown(index, 'start')" @mouseup="pointMouseup" @mousemove.stop=""></div>
 
-                <div class="pointer-end" v-for="(item, index) in pointerList" :key="index" 
+                <div class="pointer-end" v-for="(item, index) in pointerList" :key="index"
                     :style="{'left': `${item.end.x}px`, 'top': `${item.end.y}px`}"
                     @mousedown="pointMousedown(index, 'end')" @mouseup="pointMouseup"
                     @dblclick="showEdit(index)" @mousemove.stop="">
-                    {{index + 1}}
+                    {{item.index || 0}}
                     <div class="component" v-show="moveIndex !== index" @mousedown.stop="">
                         <div class="component-contain">
                             <div class="contain-header"><i class="icon i_close" style="color: #fff" @click.stop="clickDeletePoint(index)"/></div>
@@ -118,7 +125,7 @@
                                 {{ (item.item || {}).name }}
                             </div>
                             <div class="contain-type">
-                                <div class="type-left">型号:&nbsp;{{ (item.item || {}).model}}</div>
+                                <div class="type-left">{{ $t('def.model') }}:&nbsp;{{ (item.item || {}).model}}</div>
                                 <div class="edit-btn" @click="showEdit(index)">{{ $t('def.edit') }}</div>
                             </div>
                         </div>
@@ -133,14 +140,14 @@
     </div>
     <!-- 绑定配件弹窗 -->
     <div class="form-block form-hide">
-        <ItemSelect 
+        <ItemSelect
             ref="itemSelect"
             btn-class="panel-btn"
             :radioMode="true"
             :disabled-checked='checkedIds'
             @select="(ids,items) => handleAddShow(TARGET_TYPE.ITEM, ids, items)"
         >
-            添加商品
+            {{ $t('i.add') }}
         </ItemSelect>
     </div>
     <AddExploreImage :modalShow="showAddModal" @addExplore="handlerAdd" @closeModal="clickShowAdd(false)"/>
@@ -161,15 +168,9 @@ export default {
         ItemSelect,
         AddExploreImage
     },
-    computed: {
-        priceKey() {
-            let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
-            console.log('priceKey:', priceKey)
-            return priceKey
-        }
-    },
     data(){
         return {
+            Core,
             TARGET_TYPE,
             // 载入
             loading: false,
@@ -227,6 +228,11 @@ export default {
         }
     },
     computed: {
+        priceKey() {
+            let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
+            console.log('priceKey:', priceKey)
+            return priceKey
+        },
         specificColumns() {
             let column = []
             column = this.specific.list.map((item, index) => ({
@@ -239,6 +245,7 @@ export default {
             }))
             column = column.filter(item => item.title && item.dataIndex)
             column.unshift(
+                {title: this.$t('n.index'), key: 'index', dataIndex: 'index', width: '100px'},
                 {title: this.$t('n.name'), key: 'name', dataIndex: 'name'},
                 {title: this.$t('i.number'), key: 'model', dataIndex: 'model'},
                 {title: this.$t('i.code'), key: 'code', dataIndex: 'name'},
@@ -272,6 +279,10 @@ export default {
                 this.tabsArray[key]['item_component_list'] = [];
             }
             this.pointerList = this.tabsArray[key].item_component_list;
+            this.pointerList.forEach(item=>{
+                item.isEdit = false;
+            })
+            console.log('this.pointerList >> ', this.pointerList);
             this.pointerListData = Core.Util.deepCopy(this.pointerList);
             this.loadImage(get(this.tabsArray, `[${key}].img`, ""));
         },
@@ -286,9 +297,10 @@ export default {
                     ths.parsePoint(false);
                     const param = {
                         item_component_set_list: ths.tabsArray,
-                        item_id: ths.id,
+                        target_id: ths.id,
+                        target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM,
                     }
-                    ths.requestSave(param,"保存",ths.getItemExploreList.bind(ths))
+                    ths.requestSave(param,ths.$t('def.save'), ths.getItemExploreList.bind(ths))
                 },
                 onCancel () {
                     ths.isChangedPoint = false;
@@ -306,32 +318,33 @@ export default {
         clickDeleteExplore() {
             const ths = this;
             this.$confirm({
-                title: `确定要删除 ${this.tabsArray[this.currentTab].name} 爆炸图？`,
-                okText: '确定',
+                title: ths.$t('pop_up.sure') + ths.$t('pop_up.delete') + `${this.tabsArray[this.currentTab].name}` + ths.$t('i.view') + '？ ' ,
+                okText: ths.$t('def.ok'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: ths.$t('def.cancel'),
                 onOk() {
                     const param = {
                         item_component_set_list: ths.tabsArray.filter((item,index) => index !== ths.currentTab),
-                        item_id: ths.id,
+                        target_id: ths.id,
+                        target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM,
                     }
-                    ths.requestSave(param,"删除",ths.getItemExploreList.bind(ths))
+                    ths.requestSave(param,ths.$t('pop_up.delete'),ths.getItemExploreList.bind(ths))
                 },
             });
         },
         /** 添加｜编辑弹窗确认回调 */
         handlerAdd(info) {
             // addItemComponent
-            Core.Api.Item.addItemComponent({...info, ...{ item_id: this.id }}).then(()=>{
+            Core.Api.Item.addItemComponent({...info, ...{ target_id: this.id ,target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM }}).then(()=>{
                 this.loadImage(info.img);
-                this.$message.success(info.id ? "修改成功" : "新增成功");
+                this.$message.success(info.id ? this.$t('n.amend') + this.$t('pop_up.success') : this.$t('v.save') + this.$t('pop_up.success'));
                 this.clickShowAdd(false);
                 this.getItemExploreList();
             }).catch(err => {
                 console.log('handlerAdd err', err);
             });
         },
-        /** 获取 商品详情 */ 
+        /** 获取 商品详情 */
         getItemDetail() {
             this.loading = true;
             Core.Api.Item.detail({
@@ -346,12 +359,12 @@ export default {
                 this.getItemExploreList();
             });
         },
-        /** 获取 商品爆炸图 */ 
+        /** 获取 商品爆炸图 */
         getItemExploreList() {
             this.pointerList = [];
             this.tabsArray = [];
             Core.Api.Item.getItemComponent({
-                id: this.id
+                target_id: this.id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM
             }).then((res)=>{
                 this.tabsArray = get(res, "list.list" , []);
                 this.parsePoint(true);
@@ -477,6 +490,15 @@ export default {
             this.canvasUpdata();
         },
 
+        /**编辑点位编号 */
+        editRowIndex(row) {
+            row.isEdit = !row.isEdit;
+        },
+        saveRowIndex(row) {
+            // this.editRowIndex(row);
+            this.clickSave();
+        },
+
         /** 编辑点位详情 */
         showEdit (index) {
             this.editPointer = this.pointerList[index];
@@ -517,13 +539,14 @@ export default {
             this.parsePoint();
             const param = {
                 item_component_set_list: this.tabsArray,
-                item_id: this.id,
+                target_id: ths.id,
+                target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM,
             }
             this.requestSave(param)
         },
-        requestSave(param, msg = "点位保存", cb) {
+        requestSave(param, msg = this.$t('i.save_site'), cb) {
             Core.Api.Item.bindItemComponent(param).then(res => {
-                this.$message.success(`${msg}成功`);
+                this.$message.success(`${msg}`+this.$t('pop_up.success'));
                 this.isChangedPoint = false;
                 this.getItemExploreList();
                 if(cb) cb();
@@ -665,7 +688,7 @@ export default {
                         border-color: transparent transparent @BG_LP  transparent;
                         font-size: 0;
                         line-height: 0;
-                    } 
+                    }
                     &:after {
                         top: -9px;
                         left: 30px;

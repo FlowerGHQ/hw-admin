@@ -3,7 +3,7 @@
     <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
         <template #expandIcon>
             <div class="collapse-title-right" >
-                <ItemSelect  @select="handleAddItem" :disabledChecked='disabledChecked'>{{ $t('i.add') }}</ItemSelect>
+                <ItemSelect  @select="handleAddItem" :disabledChecked='disabledChecked' :btn-text="$t('i.add')">{{ $t('i.add') }}</ItemSelect>
                 <a-divider type="vertical" />
                 <a-button type="primary" ghost @click.stop="handleSave()">{{ $t('def.changes') }}</a-button>
                 <a-button ghost danger @click.stop="handleCancel()">{{ $t('def.cancel_changes') }}</a-button>
@@ -29,7 +29,9 @@
                             <a-input-number v-model:value="record.amount" style="width: 120px;" :min="0" :precision="0"/>
                         </template>
                         <template v-if="column.key === 'money'">
-                            {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(text)}}
+<!--                            {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(text)}}-->
+                            <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
+                            {{$Util.countFilter(text)}}
                         </template>
                         <template v-if="column.key === 'spec'">
                             {{$Util.itemSpecFilter(text, $i18n.locale)}}

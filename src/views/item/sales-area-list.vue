@@ -16,7 +16,7 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">地区:</div>
+                        <div class="key">{{ $t('n.area') }}:</div>
                         <div class="value">
                             <CountryCascader @search="handleOtherSearch" ref='CountryCascader'/>
                         </div>

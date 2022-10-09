@@ -99,7 +99,7 @@ export default {
                 { title: this.$t('r.repair_unit'), dataIndex: 'repair_name', key: 'item' },
                 { title: this.$t('r.repair_phone'), dataIndex: 'repair_phone', key: 'item' },
                 { title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time' },
-                { title: "操作", dataIndex: 'operation' },
+                { title: this.$t('def.operate'), dataIndex: 'operation' },
             ]
             return columns
         },
@@ -134,7 +134,7 @@ export default {
             this.loading = true;
             Core.Api.Repair.list({
                 page: this.currPage,
-                pageSize: this.pageSize,
+                page_size: this.pageSize,
                 item_id: this.itemId,
             }).then(res => {
                 console.log("getTableData res", res);

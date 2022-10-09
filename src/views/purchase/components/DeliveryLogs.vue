@@ -31,7 +31,7 @@
                                         $t('p.logistics')
                                     }}
                                 </a-button>
-                                <template v-if="$auth('ADMIN') && $auth('purchase-order.export') && type == Core.Const.STOCK_RECORD.TYPE.OUT">
+                                <template v-if="$auth('ADMIN') && $auth('purchase-order.export') && type == Core.Const.STOCK_RECORD.TYPE.OUT && detail.type == Core.Const.PURCHASE.TYPE.PRE_SALES">
                                     <a-button type='link' @click="handleExportIn(record.id)"><i
                                         class="icon i_download"/>{{ $t('p.export_purchase') }}
                                     </a-button>
@@ -98,11 +98,11 @@
                     <div class="value">{{ $Util.purchaseExpressFilter(waybillDetail.express_type, $i18n.locale) }}</div>
                 </div>
                 <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
-                    <div class="key">港口</div>
+                    <div class="key">{{ $t('d.port') }}</div>
                     <div class="value">{{ waybillDetail.port || '-' }}</div>
                 </div>
                 <div class="info-item">
-                    <div class="key">费用</div>
+                    <div class="key">{{ $t('d.cost') }}</div>
                     <div class="value">{{ waybillDetail.post_fee || '-' }}</div>
                 </div>
                 <div class="info-item" v-if="detail.waybill">
@@ -133,23 +133,34 @@
         </a-modal>
         <a-modal v-model:visible="deliverShow" :title="$t('p.shipping_confirmation')" @ok="handleDeliver">
             <div class="modal-content">
+
                 <template v-if="$auth('ADMIN')">
+                    <div class="form-item required">
+                      <div class="key">{{ $t('p.sn_number') }}:</div>
+                      <div class="value">
+                        <a-input v-model:value="form.waybill" :placeholder="$t('def.input')" @blur="handleWaybillSearch"/>
+                      </div>
+                    </div>
                     <div class="form-item required">
                         <div class="key">{{ $t('p.delivery_method') }}</div>
                         <div class="value">
-                            <a-select v-model:value="form.express_type" :placeholder="$t('def.select')">
+                            <a-select v-model:value="form.company_uid" :placeholder="$t('def.select')">
                                 <a-select-option v-for="courier of courierTypeList" :key="courier.value"
-                                                 :value="courier.value">{{ courier.name }}
+                                                 :value="courier.value">{{ courier[$i18n.locale] }}
                                 </a-select-option>
                             </a-select>
                         </div>
                     </div>
-                    <div class="form-item required">
-                        <div class="key">{{ $t('p.sn_number') }}:</div>
-                        <div class="value">
-                            <a-input v-model:value="form.waybill" :placeholder="$t('def.input')"/>
-                        </div>
-                    </div>
+<!--                  <div class="form-item required">-->
+<!--                    <div class="key">{{ $t('wb.logistics_company') }}</div>-->
+<!--                    <div class="value">-->
+<!--                      <a-select v-model:value="form.express_type" :placeholder="$t('def.select')">-->
+<!--                        <a-select-option v-for="courier of courierTypeList" :key="courier.value"-->
+<!--                                         :value="courier.value">{{ courier[$i18n.locale] }}-->
+<!--                        </a-select-option>-->
+<!--                      </a-select>-->
+<!--                    </div>-->
+<!--                  </div>-->
                     <div class="form-item required">
                         <div class="key">{{ $t('p.shipping_port') }}:</div>
                         <div class="value">
@@ -161,6 +172,17 @@
                         <div class="value">
                             <a-input v-model:value="form.delivery_address" :placeholder="$t('def.input')"/>
                         </div>
+                    </div>
+                    <div class="form-item required">
+                      <div class="key">{{ $t('wb.delivery_time') }}:</div>
+                      <div class="value">
+                        <a-date-picker v-model:value="form.delivery_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" :placeholder="$t('wb.choose_delivery_time')">
+                          <template #suffixIcon><i class="icon i_calendar"/></template>
+                        </a-date-picker>
+                      </div>
+<!--                      <div class="value">-->
+<!--                        <a-input v-model:value="form.delivery_time" :placeholder="$t('def.input')"/>-->
+<!--                      </div>-->
                     </div>
                 </template>
                 <template v-if="$auth('DISTRIBUTOR')">
@@ -193,6 +215,18 @@
                             :prefix="`${$Util.priceUnitFilter(detail.currency)}`"/>
                     </div>
                 </div>
+              <div class="form-item required">
+                <div class="key">{{ $t('wb.entry_bill_no') }}:</div>
+                <div class="value">
+                  <a-input v-model:value="form.entry_bill_no" :placeholder="$t('def.input')"/>
+                </div>
+              </div>
+              <div class="form-item required">
+                <div class="key">{{ $t('wb.lading_bill_no') }}:</div>
+                <div class="value">
+                  <a-input v-model:value="form.lading_bill_no" :placeholder="$t('def.input')"/>
+                </div>
+              </div>
                 <div class="form-item">
                     <div class="key">{{ $t('p.remark') }}:</div>
                     <div class="value">
@@ -229,7 +263,7 @@
                     </div>
                 </template>
                 <div class="form-item">
-                    <div class="key">费用</div>
+                    <div class="key">{{ $t('d.cost') }}</div>
                     <div class="value">
                         <a-input-number
                             v-model:value="form.freight"
@@ -259,6 +293,8 @@ const USER_TYPE = Core.Const.USER.TYPE;
 const WAYBILL = Core.Const.WAYBILL;
 
 import ItemTable from '@/components/table/ItemTable.vue';
+import dayjs from "dayjs";
+import $Util from "../../../core/utils";
 
 export default {
     name: "DeliveryLogs",
@@ -282,7 +318,7 @@ export default {
             loading: false,
             activeKey: [],
             flagOpened: false,
-
+            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
             invoiceList: [],
             loginType: Core.Data.getLoginType(),
             loginOrgId: Core.Data.getOrgId(),
@@ -305,6 +341,9 @@ export default {
                 warehouse_id: '',
                 target_type: '',
                 payment: '', // 收款金额
+                entry_bill_no: '',
+                lading_bill_no: '',
+                delivery_time: '', //发货时间
             },
             waybillDetail: {},
             takeDeliverShow: false,
@@ -319,7 +358,7 @@ export default {
             tableData: [],
             warehouseList: [],
             PIShow: false,
-
+            uid: '',
         };
     },
     computed: {
@@ -472,7 +511,7 @@ export default {
             }
             console.log(this.id)
             let adminRequire = [
-                {key: 'warehouse_id', msg: '请选择仓库'},
+                {key: 'warehouse_id', msg: this.$t('e.select_warehouse')},
                 // { key: 'target_type', msg: '请选择类型' },
             ];
             for (let index in adminRequire) {
@@ -484,7 +523,7 @@ export default {
                 }
             }
             Core.Api.Purchase.takeDeliver(param).then(res => {
-                this.$message.success('收货成功')
+                this.$message.success(this.$t('p.received'))
                 this.takeDeliverShow = false
                 this.getInvoiceList();
                 this.$emit('Submit')
@@ -508,7 +547,7 @@ export default {
         handleDeliver() {
             console.log("rowSelection", this.selectedRowItems)
             let form = Core.Util.deepCopy(this.form);
-
+            form.delivery_time = form.delivery_time ? dayjs(form.delivery_time).unix() : 0
             const param = {
                 id: this.orderId,
                 invoice_id: this.invoiceId,
@@ -518,17 +557,20 @@ export default {
 
             if (this.$auth('ADMIN')) {
                 adminRequire = [
-                    {key: 'express_type', msg: '请选择快递方式'},
-                    {key: 'port', msg: '请填写发货港口'},
-                    {key: 'delivery_address', msg: '请填写发货地址'},
-                    {key: 'freight', msg: '请填写运费'},
-                    {key: 'waybill', msg: '物流单号'},
+                    {key: 'express_type', msg: this.$t('p.choose_express')},
+                    {key: 'port', msg: this.$t('p.enter_harbor')},
+                    {key: 'delivery_address', msg: this.$t('p.fill_address')},
+                    {key: 'delivery_time', msg: this.$t('wb.delivery_time')},
+                    {key: 'freight', msg: this.$t('p.enter_freight')},
+                    {key: 'waybill', msg: this.$t('n.tracking_number')},
+                    {key: 'entry_bill_no', msg: this.$t('wb.entry_bill_no')},
+                    {key: 'lading_bill_no', msg: this.$t('wb.lading_bill_no')},
                 ]
                 param['waybill'] = form['waybill'];
             } else if (this.$auth('DISTRIBUTOR')) {
                 adminRequire = [
-                    {key: 'receive_type', msg: '请选择收货方式'},
-                    {key: 'freight', msg: '请填写运费'},
+                    {key: 'receive_type', msg: this.$t('p.choose_receive')},
+                    {key: 'freight', msg: this.$t('p.enter_freight')},
                 ]
                 param['waybill_uid'] = form['waybill_uid'];
             }
@@ -543,7 +585,7 @@ export default {
             param['freight'] = Math.round(param['freight'] * 100)
             param['item_list'] = this.selectedRowItems
             Core.Api.Purchase.deliver(param).then(res => {
-                this.$message.success('发货成功')
+                this.$message.success(this.$t('p.shipped'))
                 this.deliverShow = false
                 this.getInvoiceList();
                 this.$emit('Submit')
@@ -566,9 +608,9 @@ export default {
 
             if (this.$auth('ADMIN')) {
                 adminRequire = [
-                    {key: 'delivery_address', msg: '请填写发货地址'},
-                    {key: 'port', msg: '请填写发货港口'},
-                    {key: 'freight', msg: '请填写运费'},
+                    {key: 'delivery_address', msg: this.$t('p.fill_address')},
+                    {key: 'port', msg: this.$t('p.enter_harbor')},
+                    {key: 'freight', msg: this.$t('p.enter_freight')},
                 ]
             }
             for (let index in adminRequire) {
@@ -581,7 +623,7 @@ export default {
             }
             param['freight'] = Math.round(param['freight'] * 100)
             Core.Api.Invoice.updatePI(param).then(res => {
-                this.$message.success('修改成功')
+                this.$message.success(this.$t('p.modify_success'))
                 this.PIShow = false
                 this.getInvoiceList();
                 this.$emit('Submit')
@@ -613,7 +655,8 @@ export default {
         handleExportIn(id) {
             const params = {
                 id: id, // 订单id
-                currency: ''
+                currency: '',
+                id_type: 1
             };
 
             this.exportDisabled = true;
@@ -627,7 +670,22 @@ export default {
             this.form.freight = Core.Util.countFilter(this.form.freight)
             this.PIShow = true;
         },
-
+        handleWaybillSearch() {
+          if (this.form.waybill == null) {
+            return
+          }
+          Core.Api.Waybill.detailByUidNoException({uid: this.form.waybill}).then(res => {
+            if (res.detail == null) {
+              return
+            }
+            this.form = res.detail
+            this.form.waybill = res.detail.uid
+            this.form.delivery_address = res.detail.sender_address
+            this.form.freight = res.detail.post_fee / 100.0
+            this.form.delivery_time = $Util.timeFilter(res.detail.delivery_time)
+                this.$message.success("查询到该物流单号已存在，已根据原有物流信息填充表格")
+          })
+        },
 
 
     },

@@ -21,6 +21,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+	let _this = this
     NProgress.start();
     if (to.meta.title) {
         /* let sys_name = Core.Data.getLoginType() === 1 ? '管理 | ' : '运营 | '

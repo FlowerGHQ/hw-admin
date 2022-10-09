@@ -1,11 +1,11 @@
 <template>
     <div id="AuthRoleEdit" class="edit-container">
         <div class="title-container">
-            <div class="title-area">{{ form.id ? '编辑用户权限' : '新建用户权限' }}</div>
+            <div class="title-area">{{ form.id ? $t('n.edit_user') : $t('n.create_user') }}</div>
         </div>
         <div class="form-block">
             <div class="form-title">
-                <div class="title-colorful">基本信息</div>
+                <div class="title-colorful">{{ $t('n.information') }}</div>
             </div>
             <div class="form-content">
 <!--                <div class="form-item required">
@@ -15,17 +15,17 @@
                     </div>
                 </div>-->
                 <div class="form-item required">
-                    <div class="key">类型</div>
+                    <div class="key">{{ $t('n.type') }}</div>
                     <div class="value">
-                        <a-select v-model:value="form.resource_type" placeholder="请选择权限对象">
-                            <a-select-option v-for="(val,key) in resourceMap" :key="key" :value="key">{{ val.text }}</a-select-option>
+                        <a-select v-model:value="form.resource_type" :placeholder="$t('n.select_permission')">
+                            <a-select-option v-for="(val,key) in resourceMap" :key="key" :value="key">{{ val[$i18n.locale] }}</a-select-option>
                         </a-select>
                     </div>
                 </div>
                 <div class="form-item required" >
-                    <div class="key">对象</div>
+                    <div class="key">{{ $t('n.object') }}</div>
                     <div class="value">
-                        <a-select v-model:value="form.resource_id" placeholder="请选择权限对象">
+                        <a-select v-model:value="form.resource_id" :placeholder="$t('n.select_permission')">
                             <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                         </a-select>
                     </div>
@@ -41,8 +41,8 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary" v-if="$auth('role.save')">确定</a-button>
-            <a-button @click="routerChange('back')" type="primary" ghost>取消</a-button>
+            <a-button @click="handleSubmit" type="primary" v-if="$auth('role.save')">{{ $t('def.ok') }}</a-button>
+            <a-button @click="routerChange('back')" type="primary" ghost>{{ $t('def.cancel') }}</a-button>
         </div>
     </div>
 </template>
@@ -132,13 +132,13 @@ export default {
                 return this.$message.warning('请输入权限名称')
             }*/
             if (!form.resource_type) {
-                return this.$message.warning('请选择用户权限类型')
+                return this.$message.warning(this.$t('e.select_permission'))
             }
             if (!form.resource_id) {
-                return this.$message.warning('请选择仓库')
+                return this.$message.warning(this.$t('e.select_warehouse'))
             }
             if (!form.user_ids) {
-                return this.$message.warning('请选择员工')
+                return this.$message.warning(this.$t('e.select_employees'))
             }
             let list = []
             for (const item of this.authItems) {
@@ -148,7 +148,7 @@ export default {
             Core.Api.AuthorityUser.save({
                 ...form,
             }).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)

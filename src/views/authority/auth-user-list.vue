@@ -2,9 +2,9 @@
     <div id="AuthUserList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">用户权限管理</div>
+                <div class="title-area">{{ $t('n.user_auth') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" class="menu-item-btn" v-if="$auth('role.save')"><i class="icon i_add"/>新建用户权限</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" class="menu-item-btn" v-if="$auth('role.save')"><i class="icon i_add"/>{{ $t('n.create_user') }}</a-button>
                 </div>
             </div>
             <!-- <div class="search-container">
@@ -40,8 +40,8 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('role.save')"><i class="icon i_edit"/>编辑</a-button>
-                            <a-button type='link' danger @click="handleDelete(record.id)" v-if="$auth('role.delete')"><i class="icon i_delete"/>删除</a-button>
+                            <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('role.save')"><i class="icon i_edit"/>{{ $t('n.edit') }}</a-button>
+                            <a-button type='link' danger @click="handleDelete(record.id)" v-if="$auth('role.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -89,10 +89,10 @@ export default {
             tableData: [],
             tableColumns: [
                 // {title: '权限名称', dataIndex: 'name'},
-                {title: '权限类型', dataIndex: 'resource_type', key: 'type' },
-                {title: '权限对象', dataIndex: ['resource', 'name'], key: 'tip_item' },
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
-                {title: '操作', key: 'operation', fixed: 'right', width: 100,},
+                {title: this.$t('n.auth_type'), dataIndex: 'resource_type', key: 'type' },
+                {title: this.$t('n.auth_obj'), dataIndex: ['resource', 'name'], key: 'tip_item' },
+                {title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time'},
+                {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100,},
             ],
         };
     },

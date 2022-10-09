@@ -97,6 +97,7 @@ export default {
                 Core.Data.setUser(res.user.account);
                 Core.Data.setOrgId(res.user.org_id);
                 Core.Data.setOrgType(res.user.org_type);
+                Core.Data.setCurrency(res.user.currency);
 
                 let loginType = TYPE_MAP[this.loginForm.user_type]
                 /* switch (this.loginForm.user_type) {
@@ -131,9 +132,17 @@ export default {
                 }
             }).finally(() => {
                 Core.Data.setAuthority(authorityMap)
-                setTimeout(() => {
-                    this.$router.replace({ path: '/dashboard', query: {from: 'login'} })
-                }, 1000)
+                if (userType === Core.Const.USER.TYPE.ADMIN){
+                    setTimeout(() => {
+                        this.$router.replace({ path: '/dashboard', query: {from: 'login'} })
+                    }, 1000)
+                } else {
+                    setTimeout(() => {
+                        this.$router.replace({ path: '/dashboard/index', query: {from: 'login'} })
+                    }, 1000)
+                }
+
+
             })
 
 

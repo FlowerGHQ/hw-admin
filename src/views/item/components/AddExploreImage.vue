@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-modal v-model:visible="modalShow" :title="form.id ? '编辑爆炸图' : '新增爆炸图'" class="EditExploreModal"
+        <a-modal v-model:visible="modalShow" :title="form.id ? $t('i.edit_view') : $t('i.save_view')" class="EditExploreModal"
             :after-close='closeModal'>
             <div class="modal-content">
                 <div class="form-item required">
@@ -71,10 +71,10 @@ export default {
             // this.$emit("addExplore", this.form);
             let msg = "";
             if(!this.form.name) {
-                msg = "请填写爆炸图名称";
+                msg = this.$t('i.explosion_diagram')
             }
             if(!this.form.img) {
-                msg = "请上传一张图片";
+                msg = this.$t('i.upload_picture')
             }
             if(msg) {
                 this.$message.warning(msg);
@@ -87,11 +87,11 @@ export default {
         handleImgCheck(file) {
             const isCanUpType = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'].includes(file.type)
             if (!isCanUpType) {
-                this.$message.warning('文件格式不正确');
+                this.$message.warning(this.$t('n.file_incorrect'));
             }
             const isLt10M = (file.size / 1024 / 1024) < 10;
             if (!isLt10M) {
-                this.$message.warning('请上传小于10MB的图片');
+                this.$message.warning(this.$t('n.picture_smaller'));
             }
 
             // this.loadImage(TEST_IMAGE);
@@ -101,7 +101,7 @@ export default {
         // 上传图片
         handleCoverChange({ file, fileList }) {
             if (file.status == 'done') {
-                if (file.response && file.response.code < 0) {
+                if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
                 }
                 this.shortPath = get(fileList,'[0].response.data.filename', null);

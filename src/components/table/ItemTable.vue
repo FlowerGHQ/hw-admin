@@ -9,18 +9,20 @@
         <template #bodyCell="{ record, column ,text}">
             <template v-if="column.key === 'detail'">
                 <div class="table-img">
-                    <a-image :width="30" :height="30" :src="$Util.imageFilter(record.logo)" fallback='无'/>
-                    <a-tooltip placement="top" :title='text'>
+                    <a-image :width="30" :height="30" :src="$Util.imageFilter(record.logo)" :fallback="$t('def.none')"/>
+                    <a-tooltip placement="top" :title="$i18n.locale === 'zh' ? record.name : record.name_en || '-' ">
                         <div class="info">
                             <a-button type="link" @click="routerChange('detail', record)">
-                                <div class="ell" style="max-width: 100px">{{ text || '-' }}</div>
+                                <div class="ell" style="max-width: 100px">{{$i18n.locale === 'zh' ? record.name : record.name_en  || '-' }}</div>
                             </a-button>
                         </div>
                     </a-tooltip>
                 </div>
             </template>
             <template v-if="column.key === 'money'">
-                {{column.unit}} {{$Util.countFilter(text)}}
+                <span v-if="text >= 0">{{column.unit}}</span>
+                {{$Util.countFilter(text)}}
+<!--                {{column.unit}} {{$Util.countFilter(text)}}-->
             </template>
             <template v-if="column.key === 'item'">
                 {{text || '-'}}
@@ -28,14 +30,15 @@
             <template v-if="column.key === 'category_list'">
                           <span v-for="(category, index) in text">
                               <span v-if="index !== 0">,</span>
-                              {{category.category_name}}
+
+                              {{ $i18n.locale === 'zh' ? category.category_name: category.category_name_en}}
                           </span>
             </template>
             <template v-if="column.key === 'count'">
-                {{text ? text + '件' : '-'}}
+                {{text ? text + $t('m.pcs') : '-'}}
             </template>
             <template v-if="column.key === 'spec'">
-                {{ $Util.itemSpecFilter(text)}}
+                {{ $Util.itemSpecFilter(text,$i18n.locale)}}
             </template>
             <template v-if="column.key === 'supplier_list'"  >
                 <template v-for="item of record.supplier_list">

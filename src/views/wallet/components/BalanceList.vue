@@ -12,7 +12,7 @@
                             {{ walletMap[detail.type] + ( text /100)}}
                         </template>
                         <template v-if="column.dataIndex === 'source_type'">
-                            {{ $Util.subjectTypeFilter(text) }}
+                            {{ $Util.subjectTypeFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'remark'">
                             {{ text || '-'}}

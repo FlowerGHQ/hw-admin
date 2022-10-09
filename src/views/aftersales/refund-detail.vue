@@ -14,7 +14,7 @@
             </template>
             <template v-if="sameOrg(detail.org_id, detail.org_type)">
                 <template v-if="canEdit">
-                    <a-button type="danger" @click="handleCancel()"><i class="icon i_close_c"/>取消</a-button>
+                    <a-button type="danger" @click="handleCancel()"><i class="icon i_close_c"/>{{ $t('def.cancel') }}</a-button>
                 </template>
             </template>
         </div>
@@ -134,8 +134,8 @@ export default {
                 case STATUS.AUDIT_REFUSE: return 0
                 case STATUS.CANCEL:
                     this.stepsList = [
-                        {status: '0', title: '创建退款单'},
-                        {status: '-20', title: '取消'},
+                        {status: '0', title: this.$t('af.create_refund')},
+                        {status: '-20', title: this.$t('def.cancel')},
                     ]; return 1
                 default: return 0
             }
@@ -202,9 +202,9 @@ export default {
         handleCancel() {
             let _this = this
             this.$confirm({
-                title: '确认要取消本次退款吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$('af.cancel_refund') + '？',
+                okText: _this.$('def.ok'),
+                cancelText: _this.$('def.cancel'),
                 onOk() {
                     Core.Api.Refund.cancel({
                         id: _this.id

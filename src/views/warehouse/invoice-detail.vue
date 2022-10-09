@@ -213,7 +213,7 @@
                             <template v-if="column.dataIndex === 'amount'">
                                 <template v-if="addMode || record.editMode">
                                     <a-input-number v-model:value="record.amount" placeholder="请输入"
-                                        :min="1" :max="detail.type === TYPE.IN ? 9999: record.item.stock" :precision="0"/> 件
+                                        :min="1" :max="detail.type === TYPE.IN ? 9999: record.item.stock" :precision="0"/> {{ $t('i.pcs2') }}
                                 </template>
                                 <template v-else>{{ text ? text + '件' : '-' }}</template>
                             </template>

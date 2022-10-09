@@ -11,13 +11,17 @@
             <i class="icon i_add"/> {{$t('i.bulk_import')}}
         </a-button>
     </a-upload>
-    <a-select v-model:value="currency" class="monetary-select">
-        <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>
-    </a-select>
+<!--    <a-select v-model:value="currency" class="monetary-select">-->
+<!--        <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>-->
+<!--    </a-select>-->
 
     <div class="list-container shop-cart-container">
         <div class="title-area">
             <div class="shop-area">{{ $t('i.shopping') }}</div>
+            <div class="shop-right">
+                <a-button type="link" @click="handleClearShopCart">{{$t('i.clear_shop_car')}}</a-button>
+            </div>
+
         </div>
         <div class="list-content">
             <div class="list-item" v-for="item of shopCartList" :key="item.id">
@@ -32,6 +36,12 @@
                     <div class="count-edit" v-else>
                         <a-input-number v-model:value="editCount" :min="1" :precision="0" autofocus @blur="handleCountEditBlur(item)"/>
                     </div>
+                    <div v-if="!item.editRemark" @click="handleRemarkEditShow(item)" class="remark">{{$t('i.remark')}}：{{ item.remark }}</div>
+                    <a-form v-else :model="formState" :label-col="labelCol" :wrapper-col="wrapperCol">
+                        <a-form-item :label="$t('i.remark')">
+                            <a-input v-model:value="editRemark" @blur="handleRemarkEditBlur(item)" />
+                        </a-form-item>
+                    </a-form>
                     <div class="btns">
                         <a-button type="link" class="disabled" v-if="item.item && item.item.in_favorite">{{ $t('i.favorited') }}</a-button>
                         <a-button type="link" @click="handleMoveToFavorite(item)" v-else>{{ $t('i.move') }}</a-button>
@@ -59,7 +69,7 @@
 <!--                        {{$Util.itemSpecFilter(item.item.attr_list)}}-->
 <!--                    </div>-->
                 </div>
-                <span class="price">{{item.amount}}个</span>
+                <span class="price">{{item.amount}}{{$t('i.pcs')}}</span>
                 <span class="price">{{currency}} {{$Util.countFilter(item.item[priceKey + unitMap[currency].key])}}</span>
                 <span class="price">{{currency}} {{$Util.countFilter(item.item[priceKey + unitMap[currency].key] * item.amount)}}</span>
             </div>
@@ -116,6 +126,7 @@ export default {
             loading: false,
 
             editCount: '',
+            editRemark: '',
             // 商品详情
             detail: {},
             shopCartList: [],
@@ -127,7 +138,7 @@ export default {
                 "$": { key: '_usd', text: '$ (USD)'},
                 // "£": { key: '_gbp', text: '£ (GBP)'},
             },
-            currency: Core.Const.ITEM.MONETARY_TYPE_MAP.EUR,
+            currency: "",
             mark: '',
             // 上传
             upload: {
@@ -141,6 +152,10 @@ export default {
                     type: 'xlsx',
                 },
             },
+
+            //  备注
+            labelCol: { style: { width: '40px' } },
+            wrapperCol: { span: 14 },
         };
     },
     watch: {},
@@ -163,9 +178,18 @@ export default {
             return this.$store.state.lang
         }
     },
+    created() {
+        console.log(Core.Data.getCurrency())
+        this.currency = Core.Data.getCurrency()
+    },
     mounted() {
-        this.getList()
+        if (Core.Data.getCurrency() === 'EUR'){
+            this.currency =  "€"
+        } else {
+            this.currency =  "$"
+        }
 
+        this.getList()
     },
     methods: {
 
@@ -248,6 +272,26 @@ export default {
             })
         },
 
+        //修改备注
+        handleRemarkEditShow(item) {
+            item.editRemark = !item.editRemark
+            this.editRemark = item.remark
+        },
+        handleRemarkEditBlur(item) {
+            // if (this.editRemark === item.remark) { return }
+            let _item = Core.Util.deepCopy(item)
+            _item.remark = this.editRemark
+            console.log('handleCountEditBlur _item:', _item)
+            Core.Api.ShopCart.remark({
+                id: _item.id,
+                remark: _item.remark,
+            }).then(res => {
+                this.getShopCartList();
+            }).finally(() => {
+                this.editRemark = ''
+            })
+        },
+
         // 从购物车移至收藏
         handleMoveToFavorite(item) {
             console.log("handleMoveToFavorite item", item)
@@ -317,23 +361,23 @@ export default {
             let _this = this
             console.log("handleMatterChange status:", file.status, "file:", file)
             if (file.status == 'done') {
-                if (file.response && file.response.code < 0) {
+                if (file.response && file.response.code > 0) {
                     _this.getList()
                     return this.$message.error(file.response.message)
                 } else {
                     _this.getList()
-                    return this.$message.success('上传成功');
+                    return this.$message.success($t('i.uploaded'));
 
                 }
             }
             this.upload.fileList = fileList
         },
-        handleExport() { // 确认库单是否导出
+        handleExport() { // 确认购物车模版是否导出
             let _this = this;
             this.$confirm({
-                title: '确认要导出吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('i.sure_export'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     _this.handleCollectExport();
                 }
@@ -347,11 +391,39 @@ export default {
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
         },
+        handleClearShopCart() {
+            let _this = this
+            Core.Api.ShopCart.clear().then(() => {
+                _this.$message.success(_this.$t('i.clear_shop_car'));
+                _this.getList()
+            })
+        },
     }
 };
 </script>
 
 <style lang="less">
+.ant-form {
+    width: 100%;
+}
+.ant-form-item {
+    margin: 0;
+}
+.ant-input {
+    border: none;
+    border-radius: 0px !important;
+    border-bottom: 1px solid #d9d9d9;
+}
+.ant-input:hover {
+    border-color: #fff;
+    border-bottom-color: #d9d9d9;
+}
+.ant-input:focus{
+    border-color: #fff;
+    border-bottom-color: #d9d9d9;
+    box-shadow: none;
+    outline: 0;
+}
 #ItemCollect {
     padding: 60px 56px 150px 48px;
     position: relative;
@@ -397,14 +469,17 @@ export default {
         align-items: flex-start;
         + .list-container { margin-top: 76px; }
         .title-area {
-            display: flex;
-            width: 100%;
+            width: 72%;
             font-size: 24px;
             font-weight: 500;
             color: #111111;
             line-height: 28px;
             margin-bottom: 8px;
-
+            box-sizing: border-box;
+            padding-right: 10%;
+            .shop-right{
+                float: right;
+            }
         }
         .list-content {
             width: 72%;
@@ -424,7 +499,7 @@ export default {
                 }
                 .info {
                     width: calc(~'100% - 180px');
-                    height: 175px;
+                    // height: 175px;
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
@@ -475,6 +550,11 @@ export default {
                         font-size: 14px;
                         font-weight: 400;
                         color: #111111;
+                    }
+                    .remark {
+                        font-size: @fz_bs;
+                        height: 31px;
+                        line-height: 31px;
                     }
                 }
                 .price {

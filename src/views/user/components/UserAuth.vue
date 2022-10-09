@@ -5,27 +5,27 @@
                 <template #expandIcon></template>
                 <a-collapse-panel v-for="(org,key) of orgType" :key="key" :header="name" class="gray-collapse-panel">
                     <template #extra>
-                        <a-button @click.stop="handleEditShow(key)" type="link" v-if="!edit && $auth('authority.save', 'MANAGER')"><i class="icon i_edit"/>设置</a-button>
+                        <a-button @click.stop="handleEditShow(key)" type="link" v-if="!edit && $auth('authority.save', 'MANAGER')"><i class="icon i_edit"/>{{ $t('def.set') }}</a-button>
                         <template v-else>
-                            <a-button @click.stop="handleEditSubmit(key)" type="link" v-if="$auth('authority.save', 'MANAGER')"><i class="icon i_confirm"/>保存</a-button>
-                            <a-button @click.stop="handleEditClose(key)" type="link" class="cancel" v-if="$auth('authority.save', 'MANAGER')"><i class="icon i_close_c"/>取消</a-button>
+                            <a-button @click.stop="handleEditSubmit(key)" type="link" v-if="$auth('authority.save', 'MANAGER')"><i class="icon i_confirm"/>{{ $t('def.save') }}</a-button>
+                            <a-button @click.stop="handleEditClose(key)" type="link" class="cancel" v-if="$auth('authority.save', 'MANAGER')"><i class="icon i_close_c"/>{{ $t('def.cancel') }}</a-button>
                         </template>
                     </template>
                     <div class="panel-content" v-if="!edit">
                         <SimpleImageEmpty v-if="$Util.isEmptyObj(selected)" desc='该用户尚未分配可管理权限'/>
                         <template v-for="item of options" :key="item.key">
                             <div class="form-item afs" v-if="item.select.length">
-                                <div class="key">{{item.name}}:</div>
+                                <div class="key">{{$t('authority.title.'+item.key)}}:</div>
                                 <div class="value">
                                     <span class="authority-item" v-for="i of item.select" :key="i">
                                         <a @click="handleScopeTypeShow(selected[i].scope_type)" v-if = "selected[i].scope_type > 0">
 <!--                                            {{selected[i].key}}-->
 <!--                                            {{$t('authority.'+ selected[i].key)}}-->
 <!--                                            {{$t("authority.\'distributor.save\'")}}-->
-                                            {{selected[i].key}}
+                                            {{$t('authority.'+selected[i].key)}}
                                         </a>
                                         <span v-else>
-                                            {{selected[i].key}}
+                                             {{$t('authority.'+selected[i].key)}}
                                         </span>
                                     </span>
                                 </div>
@@ -35,10 +35,11 @@
                     <div class="panel-content" v-else>
                         <template v-for="item of options" :key="item.key">
                             <div class="form-item afs" v-if="item.list.length">
-                                <div class="key">{{item.name}}:</div>
+<!--                                <div class="key">{{item.name}}:</div>-->
+                                <div class="key">{{$t('authority.title.'+item.key)}}:</div>
                                 <div class="value">
                                     <a-checkbox-group v-model:value="item.select" >
-                                        <a-checkbox v-for="it in item.list" :value="it.value" :disabled="it.disabled">{{ it.label }}</a-checkbox>
+                                        <a-checkbox v-for="it in item.list" :value="it.value" :disabled="it.disabled">{{$t('authority.'+it.label) }}</a-checkbox>
                                     </a-checkbox-group>
                                 </div>
                             </div>
@@ -85,10 +86,9 @@ export default {
         return {
             activeKey: [],
             authItems: Core.Util.deepCopy(AUTH_LIST_TEMP), // 所有权限
-            name: '权限查看',
+            name: this.$t('u.view_auth'),
             edit: false,
             scopeShow: false,
-            resourceMap: Core.Const.NOTICE.RESOURCE_TYPE_MAP,
             scopeType: 0,
             options: [],
             selected: {},
@@ -130,7 +130,7 @@ export default {
                     let key = auth.key.split('.')[0];
                     let item = this.authItems.find(i => key === i.key);
                     if (item) {
-                        item.list.push({ value: auth.id, label: auth.name, scope_type: auth.scope_type });
+                        item.list.push({ value: auth.id, label: auth.key, scope_type: auth.scope_type });
                     }
                 })
                 console.log("getAllAuthItem authItems", this.authItems)
@@ -149,7 +149,7 @@ export default {
                 let selected = {}
                 res.list.forEach(auth => {
                     let selectedInfo ={
-                        key: auth.name,
+                        key: auth.key,
                         scope_type: 0
                     }
                     selected[auth.id] = selectedInfo;
@@ -180,7 +180,7 @@ export default {
                 let selected = this.selected;
                 res.list.forEach(auth => {
                     let selectedInfo = {
-                        key: auth.name,
+                        key: auth.key,
                         scope_type: 0
                     }
                     selected[auth.id] = selectedInfo;

@@ -84,7 +84,11 @@ export default {
         },
 
         handleSelect(record) {
-            if (record.id === this.selectKeys) { return }
+
+            if (record.id === this.selectKeys) {
+                this.$emit('clickCurrent');
+                return;
+            }
             this.selectKeys = record.id
             this.$emit('change', record.id)
         },

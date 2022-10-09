@@ -44,7 +44,7 @@
                                 <div class="key">{{ $t('i.categories') }}</div>
                                 <div class="value">
                                 <span v-for="(category, index) in detail.category_list">
-                                    <span v-if="index !== 0">,</span>{{ category.category_name }}
+                                    <span v-if="index !== 0">,</span>{{$i18n.locale =='zh' ? category.category_name : category.category_name_en }}
                                 </span>
                                 </div>
                             </div>
@@ -116,6 +116,17 @@
                                                   @change='handleIndepChange(record)'/>
                                     </template>
                                 </template>
+                                <template v-if="column.dataIndex === 'flag_default'">
+                                    <template v-if="index === 0">
+                                        <a-tooltip :title="$t('i.default_a')">
+                                            {{ $t('i.default') }} <i class="icon i_hint" style="font-size: 12px;"/>
+                                        </a-tooltip>
+                                    </template>
+                                    <template v-else>
+                                        <a-switch v-model:checked="record.flag_default"
+                                                  @change='handleDefaults(record)'/>
+                                    </template>
+                                </template>
 
                                 <template v-if="column.key === 'operation'">
                                     <template v-if="record.flag_independent_info">
@@ -137,6 +148,11 @@
                         </a-table>
                     </div>
                 </a-collapse-panel>
+                <ItemAccessory :item_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
+                               @submit="getItemDetail" ref="AttachmentFile"/>
+                <!-- 上传附件 -->
+                <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
+                                @submit="getItemDetail" ref="AttachmentFile"/>
             </a-collapse>
         </div>
     </div>
@@ -145,13 +161,16 @@
 <script>
 import Core from '../../core';
 import ItemHeader from './components/ItemHeader.vue'
+import AttachmentFile from '@/components/panel/AttachmentFile.vue';
+import ItemAccessory from './components/ItemAccessory.vue';
 
 export default {
     name: 'RepairDetail',
-    components: {ItemHeader},
+    components: {ItemHeader, AttachmentFile, ItemAccessory},
     props: {},
     data() {
         return {
+            ATTACHMENT_TYPE: Core.Const.ATTACHMENT.TARGET_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -196,6 +215,7 @@ export default {
                 {title: 'FOB(USD)', key: 'fob', dataIndex: 'fob_usd', unit: '$'},
                 // {title: '建议零售价', key: 'money', dataIndex: 'price'},
                 {title: this.$t('i.custom'), dataIndex: 'flag_independent_info'},
+                {title: this.$t('i.default_display'), dataIndex: 'flag_default'},
                 {title: this.$t('def.operate'), key: 'operation'},
             )
             return column
@@ -325,6 +345,7 @@ export default {
                         fob_eur: item.fob_eur,
                         fob_usd: item.fob_usd,
                         flag_independent_info: item.flag_independent_info ? true : false,
+                        flag_default: item.flag_default ? true : false,
                     }
                 })
                 this.specific.data = data
@@ -375,6 +396,27 @@ export default {
                 },
                 onCancel() {
                     record.flag_independent_info = !record.flag_independent_info
+                }
+            });
+        },
+        // 开启、关闭 默认显示
+        handleDefaults(record) {
+            console.log('handleDefaults record:', record)
+            let _this = this;
+            this.$confirm({
+                title: this.$t('pop_up.sure') + `${record.flag_default ? this.$t('pop_up.open') : this.$t('pop_up.close')} [${record.code}] ` + this.$t('pop_up.default'),
+                okText: this.$t('def.sure'),
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.Item.setDefaults({id: record.id}).then(() => {
+                        _this.$message.success(_this.$t('pop_up.save_success'))
+                        _this.getSpecList();
+                    }).catch(err => {
+                        console.log("handleIndepChange err", err);
+                    })
+                },
+                onCancel() {
+                    record.flag_default = !record.flag_default
                 }
             });
         },

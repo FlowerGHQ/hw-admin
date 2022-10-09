@@ -1,8 +1,8 @@
 <template>
 <div id="ItemSettle" class="list-container">
-    <a-select v-model:value="unit" class="monetary-select" @change="handleUnitChange">
-        <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>
-    </a-select>
+<!--    <a-select v-model:value="unit" class="monetary-select" @change="handleUnitChange">-->
+<!--        <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>-->
+<!--    </a-select>-->
     <div class="title-area">{{ $t('i.settle') }}</div>
     <div class="config-list">
         <div class="config-item receive">
@@ -77,6 +77,7 @@
                     <span v-if="item.item && item.item.attr_str">{{ $t('i.spec') }}：{{item.item ? lang =='zh' ? item.item.attr_str:item.item.attr_str_en : '-'}}</span>
                     <span>{{ $t('i.amount') }}：{{item.amount}}</span>
                     <span>{{ $t('p.unit_price') }}：{{unit}} {{$Util.countFilter(item.item[priceKey])}}</span>
+                    <span>{{ $t('i.remark') }}：{{item.remark}}</span>
                 </div>
             </div>
         </div>
@@ -127,7 +128,7 @@ export default {
 
             unit: '', // €、$
             currency: '', // EUR、USD
-            priceKey: '', // purchase_price_eur
+            priceKey: "", // purchase_price_eur
             unitMap: {
                 "€": { key: '_eur', text: '€ (EUR)', currency: 'EUR'},
                 "$": { key: '_usd', text: '$ (USD)', currency: 'USD'},
@@ -152,7 +153,11 @@ export default {
         let currency = this.$route.query.currency || '_eur';
         this.priceKey = (this.$auth('DISTRIBUTOR') ? 'fob' : 'purchase_price') + currency
         this.currency = currency ? currency.slice(1).toUpperCase() : 'CNY'
-
+        if (Core.Data.getCurrency() === 'EUR'){
+            this.handleUnitChange("€")
+        } else {
+            this.handleUnitChange("$")
+        }
         this.getReceiveList()
         this.getShopCartList()
     },
@@ -298,6 +303,7 @@ export default {
                     charge: item.amount * item.item[this.priceKey],
                     price: item.amount * item.item[this.priceKey],
                     unit_price: item.item[this.priceKey],
+                    remark: item.remark,
                 }))
             }
             if(this.$auth('DISTRIBUTOR')) {
@@ -306,7 +312,8 @@ export default {
 
             }
             Core.Api.Purchase.create(parms).then(res => {
-                this.$message.success('下单成功');
+              let _this = this;
+                this.$message.success(_this.$t('i.order_success'));
                 this.routerChange('order');
                 this.handleClearShopCart()
             })

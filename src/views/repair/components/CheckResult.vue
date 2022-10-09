@@ -25,6 +25,9 @@
 <!--                        <template v-if="column.dataIndex === 'item_fault_id'">
                             {{ faultMap[text] || '-' }}
                         </template>-->
+                        <template v-if="column.dataIndex === 'name'">
+                            {{ $i18n.locale === 'zh' ? record.item.name : record.item.name_en }}
+                        </template>
                         <template v-if="column.key === 'service_type'">
                             {{ $Util.repairServiceFilter(detail.service_type,  $i18n.locale) }}
                         </template>
@@ -51,8 +54,8 @@
                         <a-table-summary>
                             <a-table-summary-row>
                                 <a-table-summary-cell :index="0" :col-span="4">{{ $t('p.total') }}</a-table-summary-cell>
-                                <a-table-summary-cell :index="1" :col-span="2">{{ total.amount }}{{ $t('in.item') }}</a-table-summary-cell>
-                                <a-table-summary-cell :index="2" :col-span="3">€ {{ $Util.countFilter(total.price) }}</a-table-summary-cell>
+                                <a-table-summary-cell :index="1" :col-span="3">{{ total.amount }}{{ $t('in.item') }}</a-table-summary-cell>
+<!--                                <a-table-summary-cell :index="2" :col-span="3">€ {{ $Util.countFilter(total.price) }}</a-table-summary-cell>-->
                                 <a-table-summary-cell :index="3" :col-span="1">{{ $Util.countFilter(total.man_hour) }}{{ $t('i.hours') }}</a-table-summary-cell>
                             </a-table-summary-row>
                         </a-table-summary>
@@ -110,7 +113,7 @@ export default {
             let tableColumns = [
                 {title: 'r.warranty', key: 'service_type'},
                 {title: 'r.fault_cause', dataIndex: 'item_fault_name'},
-                {title: 'r.item_name', dataIndex: ['item','name'], key: 'item'},
+                {title: 'r.item_name', dataIndex: 'name', key: 'item'},
                 {title: 'i.code', dataIndex: ['item','code'], key: 'item'},
                 {title: 'i.amount', dataIndex: 'amount'},
                 {title: 'i.unit_price', dataIndex: 'price'},
@@ -121,9 +124,12 @@ export default {
             ]
             if (this.detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME) {
                 tableColumns.splice(8, 0, {title: 'r.defective', dataIndex: 'recycle_warehouse_name', key: 'item'})
-                tableColumns.splice(5, 2)
+                // tableColumns.splice(5, 2)
             } else {
                 tableColumns.push({title: 'i.hours', dataIndex: 'man_hour'})
+            }
+            if (!this.$auth('ADMIN')) {
+                tableColumns.splice(5, 2)
             }
             return tableColumns
         }

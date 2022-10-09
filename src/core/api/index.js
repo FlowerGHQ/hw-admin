@@ -29,6 +29,17 @@ const apiList = {
         invoiceInExport: ['PostJson', 'invoice/export-in-invoice'],//导出
         materialPurchaseExport: ['PostJson', '/material-purchase-order/export'],//导出
 	    ItemCollectExport: ['PostJson', '/shopping-cart/download-import-template'],//导出
+	    feedbackTemplateExport: ['PostJson', 'feedback/export-template'], // 采购单模版导出
+
+        exportOrderPrice: ['GetJson', 'purchase-order/export-item-price'], // 采购数据导出
+
+	    exportStock: ['GetJson', 'stock/export'], // 采购数据导出
+
+        exportItemPrice: ['GetJson', 'item/export-item-price'], // 导出数据
+
+        exportSalesStatement: ['GetJson', 'purchase-order/export-sales-statement'], // 导出数据
+	    exportSalesQuantityStatistics: ['GetJson', 'purchase-order/export-sales-quantity-statistics'], // 导出数据
+	    exportAccessoriesOrder: ['GetJson', 'purchase-order/export-accessories-order'], // 导出数据
     },
     User: { // 员工
         save: ['PostJson', 'user/save'],
@@ -77,8 +88,6 @@ const apiList = {
         delete: ['PostJson', 'authority/delete-user-authority-scope'],//删除用户权限范围
         authority: ['PostJson', 'authority/list-by-resource-authorized'], //获得某个资源授权的用户ID列表
         user: ['PostJson', 'authority/user-has-authority'],//判断用户是否拥有对某个资源的权限
-
-
     },
     Agent: { // 零售商
         list: ['PostJson', 'agent/list'], // 列表
@@ -116,13 +125,18 @@ const apiList = {
 		listAll: ['PostJson', 'warehouse-location/list-name'],
 		delete: ['PostJson', 'warehouse-location/delete'],
 	},
-	MaterialWarehouseLocation: {
-		save: ['PostJson', 'material-warehouse-location-bind/save'],
-		saveList: ['PostJson', 'material-warehouse-location-bind/save-list'],
-		detail: ['PostJson', 'material-warehouse-location-bind/detail'],
-		list: ['PostJson', 'material-warehouse-location-bind/list'],
-		listAll: ['PostJson', 'material-warehouse-location-bind/list-name'],
-		delete: ['PostJson', 'material-warehouse-location-bind/delete'],
+	WarehouseLocationStock: {
+		save: ['PostJson', 'warehouse-location-stock/save'],
+		saveList: ['PostJson', 'warehouse-location-stock/save-list'],
+		detail: ['PostJson', 'warehouse-location-stock/detail'],
+		detailByWarehouseLocation: ['PostJson', 'warehouse-location-stock/detail-by-warehouse_location_id'],
+
+		list: ['PostJson', 'warehouse-location-stock/list'],
+		listAll: ['PostJson', 'warehouse-location-stock/list-name'],
+		delete: ['PostJson', 'warehouse-location-stock/delete'],
+		detailByWarehouseId: ['PostJson', 'warehouse-location-stock/detail-by-warehouse-id'],
+		adjust: ['PostJson', 'warehouse-location-stock/adjust'],
+
 	},
     Stock: { //仓库库存管理
         add: ['PostJson', 'stock/add'],
@@ -199,7 +213,7 @@ const apiList = {
         detailByUid: ['PostJson', 'repair/detail-by-uid'],
         pay: ['PostJson', 'repair/pay'],
         stock: ['PostJson', 'repair/save-to-invoice'], //入库
-
+	    remark: ['PostJson', 'repair/remark'], //入库
         settleDetail: ['PostJson', 'clearing-order/detail-by-source'], //结算单
     },
     RepairItem: { // 维修单
@@ -219,11 +233,18 @@ const apiList = {
         detailByCodeForRepair: ['PostJson','item/detail-by-code-for-repair'],
         delete: ['PostJson', 'item/delete'],
         setIndep: ['PostJson', 'item/set-flag-independent-info'],
+	    setDefaults: ['PostJson', 'item/set-flag-defaults'],
         addItemComponent: ['PostJson', 'item/item-component-set-save'], // 新增爆炸图
         getItemComponent: ['PostJson', 'item/item-component-set-list'], // 查询爆炸图列表
         bindItemComponent: ['PostJson', 'item/bind-item-component'], // 绑定零部件
         deleteItemComponent: ['PostJson', 'item/delete-item-component'], // 解绑零部件
     },
+	ItemAccessory: { // 商品
+		save: ['PostJson', 'item-accessory/save'],
+		list: ['PostJson', 'item-accessory/list'],
+		delete: ['PostJson', 'item-accessory/delete'],
+	},
+
     Entity: {// 车架
         list: ['PostJson', 'entity/list'],
         save: ['PostJson', 'entity/save'],
@@ -241,6 +262,8 @@ const apiList = {
         tree: ['PostJson', 'item-category/tree'],
         delete: ['PostJson', 'item-category/delete'],
         detail: ['PostJson', 'item-category/detail'],
+        // 是否显示爆炸图
+        updateDisplay: ['PostJson', 'item-category/update-display'],
     },
     ItemPrice: { // 商品价格体系
         save: ['PostJson', 'item-price/save'],
@@ -274,6 +297,10 @@ const apiList = {
         clear: ['PostJson', 'shopping-cart/clear'],
         detail: ['GetJson', 'shopping-cart/detail'],
         remove: ['PostJson', 'shopping-cart/delete'],
+
+        // 备注
+        remark: ['PostJson', 'shopping-cart/remark'],
+
     },
     Favorite: { // 收藏夹
         add: ['PostJson', 'favorite/create'],
@@ -296,6 +323,7 @@ const apiList = {
         itemList: ['PostJson', 'purchase-order-item/list'], // 采购订单明细列表
         payList: ['PostJson', 'purchase-order-pay/list'], // 采购订单收款明细列表
 	    payAudit: ['PostJson', 'purchase-order-pay/audit'], // 采购订单收款明细列表
+	    createAudit: ['PostJson', 'purchase-order/create-audit'], // 售后采购单创建审核
 	    delete: ['PostJson', 'purchase-order-pay/delete'], // 采购订单收款明细列表
         itemByIdList: ['PostJson', 'purchase-order-item/list-by-item-id'], // 采购订单明细列表
         payment: ['PostJson', 'purchase-order/payment'], // 支付订单
@@ -313,7 +341,7 @@ const apiList = {
         reviseAudit: ['PostJson', 'purchase-order/revise-audit'], // 已下单的订单-编辑商品-审核
 
 	    createGiveaway: ['PostJson', 'purchase-order/create-giveaway'], // 已下单的订单-编辑商品-审核
-
+	    updatePI: ['PostJson', 'purchase-order/update-pi'], // 修改pi
 
     },
     Aftersales: { // 售后单
@@ -364,6 +392,7 @@ const apiList = {
     },
     ActionLog: { // 维修单 操作记录
         list: ['PostJson', 'action-log/list'],
+	    content: ['PostJson', 'action-log/content'],
     },
     Waybill: { // 物流
         delete: ['PostJson', 'waybill/delete'],
@@ -376,6 +405,7 @@ const apiList = {
         save: ['PostJson', 'waybill/save'],
         saveByUid: ['PostJson', 'waybill/save-by-uid'],
         update: ['PostJson', 'waybill/update'],
+        detailByUidNoException: ['PostJson', 'waybill/detail-by-uid-no-exception'],
     },
     Distributor: { // 分销商
         list: ['PostJson', 'distributor/list'],
@@ -526,7 +556,35 @@ const apiList = {
         detailByUid: ['PostJson', 'warehouse-transfer-order/detail-by-sn'],//入库
 
 
-    }
+    },
+	Feedback: {//质量反馈单
+		list: ['PostJson', 'feedback/list'],//
+		statusList: ['PostJson', 'feedback/status-list'],//
+		create: ['PostJson', 'feedback/create'],//
+		update: ['PostJson', 'feedback/update'],//
+		detail: ['PostJson', 'feedback/detail'],//
+		detailByUid: ['PostJson', 'feedback/detail-by-uid'],//
+		delete: ['PostJson', 'feedback/delete'],//删除
+		audit: ['PostJson', 'feedback/audit'],//审核
+		submit: ['PostJson', 'feedback/submit'],//提交
+		feedback: ['PostJson', 'feedback/feedback'],//
+		saveTitle: ['PostJson', 'feedback/save-title'],//
+		content: ['PostJson', 'feedback/content'],//
+	},
+    FeedbackItem: { // 维修单
+        saveList: ['PostJson', 'quality-feedback-item/save-list'], // 列表
+        list: ['PostJson', 'quality-feedback-item/list'], // 列表
+        faultList: ['PostJson', 'quality-feedback-item/fault-list'], // 列表
+    },
+	AuditRecord: {//审核流程单
+		list: ['PostJson', 'audit-record/list'],//
+	},
+	PrintTemplate: {//审核流程单
+		list: ['PostJson', 'print-template/list'],//
+		save: ['PostJson', 'print-template/save'],//
+		delete: ['PostJson', 'print-template/delete'],//
+	},
+
 };
 
 export default new Api(baseUrl, apiList);

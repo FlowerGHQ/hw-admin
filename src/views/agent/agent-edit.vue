@@ -43,15 +43,23 @@
             <div class="form-item required">
                 <div class="key">{{ $t('d.pay_type') }}:</div>
                 <div class="value">
-                    <a-select v-model:value="form.pay_type" placeholder="请选择整车付款期限及方式">
+                    <a-select v-model:value="form.pay_type" :placeholder="$t('def.select_payment_term')">
                         <a-select-option v-for="(val, key) in PAY_TIME_LIST" :key="val['key']" :value="val['key']">{{ val[$i18n.locale]  }}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('p.currency') }}:</div>
+                <div class="value">
+                    <a-select v-model:value="form.currency" :placeholder="$t('def.input')">
+                        <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">{{ key }}</a-select-option>
                     </a-select>
                 </div>
             </div>
             <div class="form-item required">
                 <div class="key">{{ $t('n.contact') }}:</div>
                 <div class="value">
-                    <a-input v-model:value="form.contact_name" :placeholder="$t('def.input')"/>
+                    <a-input v-model:value="form.contact" :placeholder="$t('def.input')"/>
                 </div>
             </div>
             <div class="form-item required">
@@ -70,6 +78,17 @@
                 <div class="key">{{ $t('n.country') }}:</div>
                 <div class="value">
                     <CountryCascader v-model:value="areaList" :def-area='defArea'/>
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('n.pda') }}:</div>
+                <div class="value">
+                    <div class="value">
+                        <a-radio-group v-model:value="form.flag_stock_change_use_pda">
+                            <a-radio :value="Core.Const.FLAG.YES">{{ $t('i.yes') }}</a-radio>
+                            <a-radio :value="Core.Const.FLAG.NO">{{ $t('i.no') }}</a-radio>
+                        </a-radio-group>
+                    </div>
                 </div>
             </div>
         </div>
@@ -91,6 +110,7 @@ export default {
     props: {},
     data() {
         return {
+            Core,
             PAY_TIME_LIST: Core.Const.DISTRIBUTOR.PAY_TIME_LIST,
             // 加载
             loading: false,
@@ -101,7 +121,8 @@ export default {
                 parent_id: '',
                 name: '',
                 short_name: '',
-                contact_name: '',
+                contact: '',
+                currency: undefined,
                 phone: '',
                 email: '',
                 country: undefined,
@@ -111,6 +132,7 @@ export default {
             treeData: [],
             areaList: [],
             defArea: [],
+            monetaryList: Core.Const.ITEM.MONETARY_TYPE_MAP,
             value: '',
             area: {
                 continent: '',
@@ -196,6 +218,9 @@ export default {
                 return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.email) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.currency) {
                 return this.$message.warning(this.$t('def.enter'))
             }
             if (!area.country) {

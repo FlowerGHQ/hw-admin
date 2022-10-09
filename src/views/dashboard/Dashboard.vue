@@ -4,14 +4,14 @@
     <SearchRangePicker @search='handleTimeChange'/>
     <div class="statistic-container">
         <div class="statistic-item">
-            <div class="title"><i class="icon i_cart"/>采购订单总计</div>
+            <div class="title"><i class="icon i_cart"/>{{ $t('n.total_purchase') }}</div>
             <div class="count">
                 <span>{{stat.purchase}}</span>
                 <div class="more"><i class="icon i_more" @click="routerChange('purchase')"/></div>
             </div>
         </div>
         <div class="statistic-item">
-            <div class="title"><i class="icon i_order"/>维修工单总计</div>
+            <div class="title"><i class="icon i_order"/>{{ $t('n.total_maintenance') }}</div>
             <div class="count">
                 <span>{{stat.repair}}</span>
                 <div class="more"><i class="icon i_more" @click="routerChange('repair')"/></div>
@@ -20,7 +20,7 @@
     </div>
     <div class="statistic-container">
         <div class="statistic-content">
-            <div class="title-container">订单分析</div>
+            <div class="title-container">{{ $t('n.analysis_order') }}</div>
             <div class="chart-container">
                 <div id="PurchaseOrderChart" class="chart" ref="PurchaseOrderChart"></div>
             </div>
@@ -49,13 +49,13 @@
     </div>
     <div class="statistic-container seven-three">
         <div class="statistic-content">
-            <div class="title-container">维修单量分析</div>
+            <div class="title-container">{{ $t('n.volume_analysis') }}</div>
             <div class="chart-container">
                 <div id="RepairOrderChart" class="chart" ref='RepairOrderChart'></div>
             </div>
         </div>
         <div class="statistic-content">
-            <div class="title-container">故障排行</div>
+            <div class="title-container">{{ $t('n.fault_ranking') }}</div>
             <div class="rank-container">
                 <div class="rank-item" v-for="(item,index) of repairRank" :key="index">
                     <div class="number" :class="index < 3 ? 'color' : ''">{{index + 1}}</div>
@@ -69,12 +69,12 @@
         <div class="statistic-content">
         </div>
         <div class="statistic-content">
-            <div class="title-container">系统文件</div>
+            <div class="title-container">{{ $t('n.system_file') }}</div>
             <div class="rank-container">
                 <div class="rank-item" v-for="(item,index) of systeFmileData" :key="index">
                     <div class="number" :class="index < 3 ? 'color' : ''">{{index + 1}}</div>
                     <div class="name">{{item.name}}</div>
-                    <a-button class="count" style="height: 1em;font-size: 12px;" type="link" @click="handleDownloadConfirm(item)"><i class="icon i_download"/>下载</a-button>
+                    <a-button class="count" style="height: 1em;font-size: 12px;" type="link" @click="handleDownloadConfirm(item)"><i class="icon i_download"/>{{ $t('n.download') }}</a-button>
                 </div>
             </div>
         </div>
@@ -86,10 +86,12 @@
 import Core from '../../core';
 import { Chart } from '@antv/g2'
 import SearchRangePicker from '@/components/statistic/SearchRangePicker.vue'
+import Analytics from './Analytics.vue'
 export default {
     name: 'Dashboard',
     components: {
-        SearchRangePicker
+        SearchRangePicker,
+        Analytics
     },
     props: {},
     data() {
@@ -121,17 +123,17 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                { title: '排序', key: 'index' },
-                { title: '订单数量', dataIndex: 'count', key: 'item'},
-                { title: '商品总数', dataIndex: 'amount', key: 'item'},
-                { title: '订单总价', dataIndex: 'price', key: 'price' },
+                { title: this.$t('n.sort'), key: 'index' },
+                { title: this.$t('n.order_quantity'), dataIndex: 'count', key: 'item'},
+                { title: this.$t('n.item_quantity'), dataIndex: 'amount', key: 'item'},
+                { title: this.$t('n.total_price'), dataIndex: 'price', key: 'price' },
             ]
             switch (this.org_type) {
                 case 1:
-                    columns.splice(1, 0, {title: '零售商名称', dataIndex: 'org_name', key: 'org_name'})
+                    columns.splice(1, 0, {title: this.$t('n.agent_n'), dataIndex: 'org_name', key: 'org_name'})
                     break;
                 case 2:
-                    columns.splice(1, 0, {title: '门店名称', dataIndex: 'org_name', key: 'org_name'})
+                    columns.splice(1, 0, {title: this.$t('n.store_n'), dataIndex: 'org_name', key: 'org_name'})
                     break;
             }
             return columns
@@ -150,8 +152,10 @@ export default {
         }
     },
     beforeUnmount() {
-        this.$refs.RepairOrderChart.innerHTML = ''
-        this.$refs.PurchaseOrderChart.innerHTML = ''
+        if (this.$auth('ADMIN')) {
+            this.$refs.RepairOrderChart.innerHTML = ''
+            this.$refs.PurchaseOrderChart.innerHTML = ''
+        }
     },
     methods: {
         routerChange(type, item = {}) {
@@ -159,7 +163,7 @@ export default {
             switch (type) {
                 case 'purchase':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: this.$auth('ADMIN') ? '/item/purchase-order-list' : '/purchase/purchase-order-list',
+                        path: this.$auth('ADMIN') ? '/distributor/purchase-order-list' : '/purchase/purchase-order-list',
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -228,9 +232,9 @@ export default {
         handleDownloadConfirm(item){ // 下载问询
             let _this = this;
             this.$confirm({
-                title: '确认要下载吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('f.sure_download'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     _this.handleDownload(item);
                 }
@@ -285,7 +289,7 @@ export default {
                     type: 'cat',
                 },
                 price: {
-                    alias: '金额',
+                    alias: this.$t('n.amount'),
                     range: [0, 0.97],
                     type: 'linear',
                     formatter: (val) => {
@@ -293,11 +297,11 @@ export default {
                     },
                 },
                 count: {
-                    alias: '订单数',
+                    alias: this.$t('n.order_number'),
                     range: [0, 0.97],
                     type: 'linear',
                     formatter: (val) => {
-                        return val + '笔';
+                        return val + this.$t('n.order_unit');
                     },
                 }
             });
@@ -349,11 +353,11 @@ export default {
                     type: 'cat',
                 },
                 count: {
-                    alias: '订单数',
+                    alias: this.$t('n.order_number'),
                     range: [0, 0.97],
                     type: 'linear',
                     formatter: (val) => {
-                        return val + '笔';
+                        return val + this.$t('n.order_unit');
                     },
                 }
             });

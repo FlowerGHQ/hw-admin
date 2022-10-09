@@ -431,9 +431,10 @@ const Util = {
         let value = MAP[val + ''] || {}
         return value[to] || '-'
     },
-    repairTypeFilter(val) {
+    repairTypeFilter(val, to = 'key') {
         const MAP = Const.REPAIR.TYPE_MAP
-        return MAP[val] || '未知'
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
     },
     repairChannelFilter(val, to='key') {
         const MAP = Const.REPAIR.CHANNEL_MAP
@@ -455,6 +456,12 @@ const Util = {
         let value = MAP[val + ''] || {}
         return value[to] || '-'
     },
+
+	deviceTypeFilter(val, to = 'zh') {
+		const MAP = Const.REPAIR.DEVICE_LIST
+		let value = MAP[val + ''] || {}
+		return value[to] || '-'
+	},
     /* repairItemTypeFilter(val) {
         const MAP = Const.REPAIR.ITEM_TYPE_MAP
         return MAP[val] || '未知'
@@ -478,9 +485,10 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
-    purchasePayMethodFilter(val) {
+    purchasePayMethodFilter(val, to = 'zh') {
         const MAP = Const.PURCHASE.PAY_METHOD
-        return MAP[val] || '-'
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
     },
 	purchasePayStatusFilter(val, to = 'zh') {
 		const MAP = Const.PURCHASE.PAY_STATUS_LIST
@@ -554,6 +562,11 @@ const Util = {
 		let value = MAP[val + ''] || {}
 		return value[to] || '-'
 	},
+    refundOrderStatusFilter(val, to='zh') {
+        const MAP = Const.REFUND.REFUND_STATUS_MAP
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
+    },
     /* =============== 采购单 && 售后管理 && 退款管理  ================ */
 
     /* =============== 员工/账号/用户 ================ */
@@ -570,9 +583,15 @@ const Util = {
         const MAP = Const.WAYBILL.COMPANY_MAP
         return MAP[key] || '未知物流公司'
     },
-    waybillTargetFilter(val) {
+    waybillTargetFilter(val, to='zh') {
         const MAP = Const.WAYBILL.TARGET_TYPE_MAP
-        return MAP[val] || '未知货物订单'
+        let value = MAP[val + ''] || {}
+        return value[to] || '未知货物订单'
+    },
+    waybillTypeFilter(val, to='zh') {
+        const MAP = Const.WAYBILL.TYPE_MAP
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
     },
     /* =============== 物流信息 ================ */
 
@@ -628,7 +647,7 @@ const Util = {
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
-    sourceTypeAdminFilter(val, to='text') {
+    sourceTypeAdminFilter(val, to='zh') {
         const MAP = Const.STOCK_RECORD.SOURCE_TYPE_ADMIN_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
@@ -683,9 +702,10 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
-    subjectTypeFilter(val) {
+    subjectTypeFilter(val, to= 'zh') {
         const MAP = Const.WALLET.SUBJECT_MAP
-        return MAP[val] || '未知'
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
     },
     /* =============== 账户 ================ */
 
@@ -752,6 +772,15 @@ const Util = {
     },
 
     /* =============== 物料采购 ================ */
+
+	/* =============== 质量反馈单 ================ */
+	feedbackStatusFilter(val, to = 'key') {
+		const MAP = Const.FEEDBACK.STATUS_MAP
+		let value = MAP[val + ''] || {}
+		return value[to] || '-'
+	},
+	/* =============== 质量反馈单 ================ */
+
     /* =============== 调货单 ================ */
     warehouseTransferStatusFilter(val, to = 'text') {
         const MAP = Const.WAREHOUSE_TRANSFER.STATUS_MAP
@@ -763,9 +792,16 @@ const Util = {
         return MAP[val] || '未知'
     },
     /* =============== 调货单 ================ */
+	/* =============== 整车 ================ */
+	entityStatusFilter(val,  to='zh') {
+		const MAP = Const.ENTITY.STATUS_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	/* =============== 整车 ================ */
 
     /* =============== 权限 ================ */
-    userAuthFilter(val, to = 'text') {
+    userAuthFilter(val,  to='zh') {
         const MAP = Const.NOTICE.RESOURCE_TYPE_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''

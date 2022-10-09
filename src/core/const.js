@@ -17,14 +17,32 @@ switch (window.location.hostname) {
         URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
         break;
     case "10.0.0.205":
-    case "10.0.0.219":
-        // URL_POINT = 'http://10.0.0.213:8889'
+    case "10.0.0.132":
+        // URL_POINT = 'http://10.0.0.194:8889'
+        URL_POINT = 'http://10.0.0.188:8889'
+        URL_POINT = 'http://10.0.0.117:8889'
+        URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
+        // URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服
+        break;
+    case "10.0.0.230":
+        URL_POINT = 'http://10.0.0.230:8889'
+	    // URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
+        break;
+	case "10.0.0.230":
+		URL_POINT = 'http://10.0.0.230:8889'
+		// URL_POINT = 'http://eos-api.hw.innotick.com' // 测试服
+		break;
+    case "192.168.31.224":
+        URL_POINT = 'http://192.168.31.224:8889'
+        break;
+    case "localhost":
+        URL_POINT = 'http://localhost:8889'
         break;
     default:
         // URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
         break;
 }
-
+// URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
 let Const = {
     NET: {
         URL_POINT: URL_POINT,
@@ -41,6 +59,7 @@ let Const = {
         KEY_LOGIN_TYPE: 'login.type',
         KEY_USER_TYPE: 'user.type',
         KEY_AUTHORITY_LIST: 'authority.list',
+	    KEY_CURRENCY: 'org.currency',
 
         KEY_FIELD_DISPLAY: 'field.display',
         KEY_LANGUAGE: 'language'
@@ -159,6 +178,10 @@ let Const = {
             STORE: 30,
         },
     },
+	FLAG: {
+		YES:1,
+		NO:0,
+	},
 
     DISTRIBUTOR: { // 代理商
         TYPE: {
@@ -212,14 +235,31 @@ let Const = {
     ],
 
     REPAIR: { // 维修工单
+        // 工单类型
+        DEVICE_LIST: [
+            { zh: '整车', en: 'finished automobile', value: 1 },
+            { zh: '零部件', en: 'components and parts', value: 2 },
+        ],
+        DEVICE_MAP: {
+            1: '整车',
+            2: '零部件',
+        },
+	    DEVICE: {
+		    FINISHED_AUTOMOBILE: 1,
+		    COMPONENTS_AND_PARTS: 2,
+	    },
         // 工单分类
         TYPE_LIST: [
             { zh: '维修工单', en: 'repair order', value: 1 }, // 普通工单
             { zh: '特批工单', en: 'special repair order', value: 2 },
         ],
+        // TYPE_MAP: {
+        //     1: '维修工单',
+        //     2: '特批订单',
+        // },
         TYPE_MAP: {
-            1: '维修工单',
-            2: '特批订单',
+            1: { zh: '维修工单', en: 'repair order', value: 1 }, // 普通工单
+            2: { zh: '特批工单', en: 'special repair order', value: 2 },
         },
 	    TYPE: {
 		    TYPE_COMMON: 1,
@@ -228,9 +268,14 @@ let Const = {
         // 维修单类别
         CATEGORY_LIST: [
             { zh: '维修', en: 'repair', value: 1 },
-            { zh: '换车', en: 'replace car', value: 2 },
+            // { zh: '换车', en: 'replace car', value: 2 },
             { zh: '开箱损', en: 'unpacking damage', value: 3 },
             { zh: '电池维修', en: 'battery', value: 4 },
+        ],
+        // 维修单类别
+        PARTS_LIST: [
+            { zh: '质保', en: 'quality guarantee', value: 5 },
+            { zh: '开箱损', en: 'dead on arrival', value: 3 },
         ],
         // 工单帐类
         SERVICE_TYPE: {
@@ -303,15 +348,15 @@ let Const = {
 	        '45': { key: 40, color: 'blue', zh: '维修结束', en: 'Under repair'},
             '60': { key: 60, color: 'orange', zh: '已结算待审核', en: 'Settled accounts and awaiting audit'},
             '70': { key: 70, color: 'orange', zh: '已结算待审核',en: 'Settled accounts and awaiting audit'},
-            '80': { key: 80, color: 'purple', zh: '分销商审核通过', en: 'Passed audit'},
-            '90': { key: 90, color: 'purple', zh: '平台审核通过', en: 'Passed audit'},
-            '95': { key: 95, color: 'purple', zh: '分销商已入库',},
-            '100': { key: 100, color: 'blue', zh: '已完成', en: 'Finished settle accounts'},
-            '105': { key: 105, color: 'blue', zh: '故障件审核通过',en: ''},
-            '110': { key: 110, color: 'green', zh: '平台方已入库'},
+            '80': { key: 80, color: 'purple', zh: '分销商审核通过', en: 'Approved by Distributor'},
+            '90': { key: 90, color: 'purple', zh: '平台审核通过', en: 'Platform approval'},
+            '95': { key: 95, color: 'purple', zh: '分销商已入库',en: 'The distributor has put it in stock'},
+            '100': { key: 100, color: 'blue', zh: '已完成', en: 'Has been completed'},
+            '105': { key: 105, color: 'blue', zh: '故障件审核通过',en: 'The fault parts are approved'},
+            '110': { key: 110, color: 'green', zh: '平台方已入库',en: 'The platform has been put into storage'},
             '-10': { key: -10, color: 'gray', zh: '已取消', en: 'Cancelled'},
-            '-30': { key: -30, color: 'red', zh: '工单审核未通过', en: 'Failed audit'},
-            '-40': { key: -40, color: 'red', zh: '故障件审核未通过'},
+            '-30': { key: -30, color: 'red', zh: '工单审核未通过', en: 'Work order review failed'},
+            '-40': { key: -40, color: 'red', zh: '故障件审核未通过',en: 'Failed to pass the faulty parts audit'},
         },
         // 故障类型 - 放弃使用
         FAULT_OPTIONS_MAP: {
@@ -350,11 +395,45 @@ let Const = {
 
         },
     },
+
+	FEEDBACK: {
+		// 状态
+		STATUS: {
+			INIT:0,
+			WAIT_AFTER_SALES_AUDIT: 100,
+			AFTER_SALES_AUDIT_FAIL: 110,
+			WAIT_FEEDBACK : 200 ,// 等待反馈
+			WAIT_QUALITY_AUDIT : 300,
+			QUALITY_AUDIT_FAIL : 310,
+			WAIT_AFTER_FEEDBACK : 400 ,//等待售后反馈
+			CLOSE: 500,
+			AUDIT_FAIL: -10,
+			CANCEL: -1,
+		},
+		STATUS_MAP: {
+			'0': { key: 0, color: 'yellow', zh: '待提交', en: 'Pending submission'},
+			'100': { key: 100, color: 'blue', zh: '等待平台售后审核', en: 'Awaiting after-sales audit'},
+			'110': { key: 110, color: 'blue', zh: '待修改', en: 'Pending modification'},
+			'200': { key: 200, color: 'purple', zh: '等待质量反馈', en: 'Waiting for quality feedback'},
+			'210': { key: 210, color: 'orange', zh: '待修改',en: 'To modify the'},
+			'300': { key: 300, color: 'purple', zh: '等待审核反馈', en: 'Waiting for review feedback'},
+			'310': { key: 310, color: 'purple', zh: '反馈待修改', en: 'Feedback to be modified'},
+			'400': { key: 400, color: 'purple', zh: '等待售后反馈', en: 'Waiting for after-sales feedback'},
+			'500': { key: 500, color: 'blue', zh: '已完成', en: 'Finished'},
+			'-10': { key: -10, color: 'blue', zh: '审核失败',en: 'Audit failed'},
+			'-1': { key: -1, color: 'gray', zh: '已取消', en: 'Canceled'},
+		},
+        SOURCE_TYPE: {
+            REPAIR_ORDER:1
+        }
+	},
+
     ACTION_LOG: { // 操作记录
         SOURCE_TYPE: {
             PURCHASE_ORDER: 10,
             REPAIR_ORDER: 20,
             AFTER_SALES_ORDER: 40,
+            QUALITY_FEEDBACK: 50,
         },
         TYPE_MAP: {
             '201': {key: 201, zh: '维修单创建', en: 'Create repair order'},
@@ -367,6 +446,29 @@ let Const = {
             '215': {key: 215, zh: '删除故障零件', en: 'Deleted faulty parts'},
             '216': {key: 216, zh: '维修完成', en: 'Repair is complete'},
             '217': {key: 217, zh: '结算完成', en: 'Settlement completed'},
+
+	        '510': {key: 510, zh: '采购单修改', en: 'Purchase order modification'},
+
+	        '601': {key: 601, zh: '反馈单创建', en: 'Feedback ticket creation'},
+	        '602': {key: 601, zh: '反馈单提交', en: 'Feedback submission'},
+	        '603': {key: 601, zh: '反馈单修改', en: 'Feedback form modification'},
+	        '611': {key: 601, zh: '反馈单平台审核通过', en: 'Feedback single platform approved'},
+	        '612': {key: 601, zh: '反馈单平台审核不通过', en: 'Feedback single platform review failed'},
+	        '613': {key: 601, zh: '反馈单平台审核后关闭', en: 'Feedback single platform will be closed after review'},
+	        '614': {key: 601, zh: '反馈单平台审核后修改', en: 'Modification after the feedback form is reviewed by the platform'},
+	        '621': {key: 601, zh: '反馈单平台质量审核通过', en: 'Feedback single platform quality review passed'},
+	        '622': {key: 601, zh: '反馈单平台质量审核不通过', en: 'Feedback single platform quality review failed'},
+	        '623': {key: 601, zh: '反馈单平台质量审核后关闭', en: 'Feedback single platform closed after quality review'},
+	        '624': {key: 601, zh: '反馈单平台质量审核后修改', en: 'Modification after feedback single platform quality review'},
+	        '631': {key: 601, zh: '反馈单平台反馈', en: 'Feedback Single Platform Feedback'},
+	        '632': {key: 601, zh: '反馈单平台反馈审核通过', en: 'Feedback single platform feedback review passed'},
+	        '633': {key: 601, zh: '反馈单平台质量审核不通过', en: 'Feedback single platform quality review failed'},
+	        '634': {key: 601, zh: '反馈单平台反馈修改', en: 'Feedback Single Platform Feedback Modification'},
+	        '650': {key: 601, zh: '反馈单平台反馈关闭', en: 'Feedback Single Platform Feedback Close'},
+
+
+
+
             // '218': {key: 218, zh: '订单转移', en: 'Parts'},
            /* 201: '维修单创建',
             202: '维修单信息完善/修改',
@@ -390,20 +492,20 @@ let Const = {
         TYPE_MAP: {
             '1': {key: 1, zh: '整车', en: 'Vehicle'},
             '2': {key: 2, zh: '零部件', en: 'Parts'},
-	        '3': {key: 3, zh: '周边', en: 'Parts'},
-	        '4': {key: 4, zh: '广宣品', en: 'Parts'},
+	        '3': {key: 3, zh: '周边', en: 'Peripheral'},
+	        '4': {key: 4, zh: '广宣品', en: 'Publicity products'},
         },
         MONETARY_TYPE: {
-            '￥': 'CNY',
+            // '￥': 'CNY',
             '€': 'EUR',
             '$': 'USD',
-            '£': 'GBP',
+            // '£': 'GBP',
         },
         MONETARY_TYPE_MAP: {
-            'CNY': '￥',
+            // 'CNY': '￥',
             'EUR': '€',
             'USD': '$',
-            'GBP': '£',
+            // 'GBP': '£',
         },
         STATUS: {
         },
@@ -443,11 +545,21 @@ let Const = {
             '2': {key: 2, zh: '编码', en: 'code'}
         },
     },
+	ITEM_ACCESSORY: {
+		TARGET_TYPE_MAP: {
+			ITEM: 1, // 商品
+			MATERIAL: 2, // 物料
+		},
+		TYPE: {
+			BATTERY: 10, // 商品
+		},
+	},
     PURCHASE: { // 采购订单
         // 状态
         STATUS: {
             INIT: 0,
 	        SPLIT: 50,
+	        WAIT_AUDIT: 60,
             WAIT_PAY: 100,
             WAIT_DELIVER: 200,
 	        ORDER_TRANSFERRED: 250,
@@ -463,17 +575,16 @@ let Const = {
         STATUS_MAP: {
             '0':   { value: '0', key: 0,    color: 'red',    zh: '未知', en: 'Unknown'},
 	        '50': { value: '0', key: 50,  color: 'green', zh: '已拆单', en: 'Separate bill'},
+	        '60': { value: '0', key: 50,  color: 'orange', zh: '订单待审核', en: 'Order pending review'},
             '100': { value: '0', key: 100,  color: 'orange', zh: '待支付', en: 'Wait to pay'},
             '200': { value: '0', key: 200,  color: 'orange', zh: '待发货', en: 'Wait for delivery'},
             '250': { value: '0', key: 400,  color: 'blue',   zh: '已转单', en: 'Order transferred'},
             '300': { value: '0', key: 300,  color: 'blue',   zh: '已发货', en: 'Shipped'},
             '330': { value: '0', key: 330,  color: 'yellow', zh: '部分收货', en: 'Received'},
-            '360': { value: '0', key: 360,  color: 'yellow', zh: '已收货', en: 'Received'},
+            '360': { value: '0', key: 360,  color: 'yellow', zh: '全部收货', en: 'Received'},
             '400': { value: '0', key: 400,  color: 'green',  zh: '交易完成', en: 'Order completed'},
-	        '600': { value: '0', key: 600,  color: 'blue',  zh: '已修改', en: 'The modified'},
 	        '630': { value: '0', key: 630,  color: 'yellow',  zh: '待审核', en: 'To audit'},
             '-100':{ value: '0', key: -100, color: 'gray',   zh: '交易关闭', en: 'Canceled'},
-	        '-200':{ value: '0', key: -200, color: 'gray',   zh: '已修改关闭', en: 'Modified closed'},
         },
         /* STATUS_COLOR_MAP: {
             '0': 'red',
@@ -487,8 +598,8 @@ let Const = {
             // 1: "支付宝",
             // 2: "微信",
             // 3: "银行转账",
-            10: "汇票",
-            20: "银行转账",
+            10: { value: 10, zh: '汇票', en: 'Draft'},
+            20: { value: 20, zh: '银行转账', en: 'Bank transfer'},
         },
         PAY_METHOD_LIST: [
             // { name: '支付宝', value: '1' },
@@ -600,6 +711,10 @@ let Const = {
             IN: 1,
             OUT: 2,
         },
+        TYPE_MAP: {
+            '1': { key: 1, zh: '寄入', en: 'Receive'},
+            '2': { key: 2, zh: '寄出', en: 'Send'},
+        },
         TARGET_TYPE: {
             PURCHASE_ORDER: 10, //采购订单
             REPAIR_ORDER_TRANSFER: 20, //维修单转单
@@ -613,10 +728,10 @@ let Const = {
             { text: '售后单', value: 40 },
         ],
         TARGET_TYPE_MAP: {
-            10: '采购订单',
-            20: '维修单转单',
-            30: '维修单调货单',
-            40: '售后单'
+            '10': { key: 10, zh: '采购订单', en: 'Purchase Order'},
+            '20': { key: 20, zh: '维修单转单', en: '-'},
+            '30': { key: 20, zh: '维修单调货单', en: '-'},
+            '40': { key: 20, zh: '售后单', en: 'After-sale Order'},
         },
         COMPANY_MAP: {
             'EMS': 'EMS',
@@ -647,8 +762,8 @@ let Const = {
             { name: '跨越速运', value: 'KYEXPRESS' },
         ],
         COURIER_LIST: [
-            { name: '国际物流', value: 1 },
-            { name: '货代公司', value: 2 },
+            { value: 1 , zh: '国际物流', en: 'International logistics'},
+            { value: 2 , zh: '货代公司', en: 'Shipping agent' },
         ],
         COURIER_MAP: {
             '1': { key: 1, zh: '国际物流', en: 'International logistics'},
@@ -692,14 +807,14 @@ let Const = {
 	        DISTRIBUTOR: 30,
         },
         RESOURCE_TYPE_MAP: {
-            '10': {text: '仓库'},
-	        '20': {text: '采购'},
-	        '30': {text: '分销商'},
+            '10': {zh: '仓库', en: 'warehouse'},
+	        '20': {zh: '采购', en: 'procurement'},
+	        '30': {zh: '分销商', en: 'distributors'},
         },
 	    RESOURCE_TYPE_LIST: [
-		    {value: 10, text:'仓库'},
-		    {value: 20, text:'采购'},
-		    {value: 30, text:'分销商'}
+		    {value: 10, zh: '仓库', en: 'warehouse'},
+		    {value: 20, zh: '采购', en: 'procurement'},
+		    {value: 30, zh: '分销商', en: 'distributors'}
 	    ]
     },
     SYSTEM: { //系统
@@ -725,19 +840,26 @@ let Const = {
         { list: [], select: [], key: 'distributor', name: '分销商管理' },
         { list: [], select: [], key: 'agent', name: '零售商管理' },
         { list: [], select: [], key: 'store', name: '门店管理' },
-        { list: [], select: [], key: 'account', name: '账户管理' },
+        { list: [], select: [], key: 'purchase-order', name: '采购订单' },
+        { list: [], select: [], key: 'sales-area', name: '销售区域' },
+        { list: [], select: [], key: 'item', name: '商品管理' },
+        { list: [], select: [], key: 'item-category', name: '商品分类' },
+        { list: [], select: [], key: 'entity', name: '商品实例' },
+        { list: [], select: [], key: 'after-sales-order', name: '售后订单' },
         { list: [], select: [], key: 'repair-order', name: '维修单' },
+        { list: [], select: [], key: 'quality-feedback', name: '质量反馈' },
+        { list: [], select: [], key: 'fault', name: '故障件' },
+        { list: [], select: [], key: 'account', name: '账户管理' },
         { list: [], select: [], key: 'customer', name: '客户管理' },
         { list: [], select: [], key: 'user', name: '员工管理' },
-        { list: [], select: [], key: 'item', name: '商品管理' },
-        { list: [], select: [], key: 'purchase-order', name: '采购订单' },
-        { list: [], select: [], key: 'after-sales-order', name: '售后订单' },
-        { list: [], select: [], key: 'sales-area', name: '销售区域' },
+	    { list: [], select: [], key: 'refund', name: '退款' },
         { list: [], select: [], key: 'warehouse', name: '仓库' },
         { list: [], select: [], key: 'invoice', name: '出入库单' },
-        { list: [], select: [], key: 'supplier', name: '供应商' },
-        { list: [], select: [], key: 'material-purchase-order', name: '物料采购单'},
         { list: [], select: [], key: 'stock', name: '库存总览'},
+        { list: [], select: [], key: 'supplier', name: '供应商' },
+        { list: [], select: [], key: 'transfer', name: '调货单' },
+        { list: [], select: [], key: 'warehouse-transfer-order', name: '仓库调货单' },
+        { list: [], select: [], key: 'material-purchase-order', name: '物料采购单'},
         { list: [], select: [], key: 'material', name: '物料' },
         { list: [], select: [], key: 'material-category', name: '物料分类' },
         { list: [], select: [], key: 'bom', name: 'BOM表' },
@@ -751,7 +873,9 @@ let Const = {
     ATTACHMENT: {
         TARGET_TYPE: { // 来源类型
             REPAIR_ORDER: 1, // 维修单附件
-            PURCHASE_ORDER: 2 // 采购单附件
+            PURCHASE_ORDER: 2,// 采购单附件
+            QUALITY_FEEDBACK: 5, // 质量反馈单
+            ITEM: 6 // 商品
         }
     },
     WAREHOUSE: {
@@ -772,6 +896,12 @@ let Const = {
 		    NO: 0,
 	    },
     },
+	STOCK: {
+		TARGET_TYPE: {
+			ITEM: 1,
+			MATERIAL: 2,
+		}
+	},
     STOCK_RECORD: { // 出入库明细
         COMMODITY_TYPE: {
             ITEM: 10,
@@ -780,13 +910,12 @@ let Const = {
             CUSTOMIZE: 40,
         },
         COMMODITY_TYPE_MAP: {
-            '10': { key: 10, zh: '商品', en: 'No instance'},
+            '10': { key: 10, zh: '商品', en: 'Item'},
             '30': { key: 30, zh: '物料', en: 'Materiel'},
-            '40': { key: 40, zh: '广宣品', en: 'Other' },
         },
 	    COMMODITY_TYPE_OLD_MAP: {
 		    '10': { key: 10, zh: '无实例商品', en: 'No instance'},
-		    '20': { key: 10, zh: '有实例商品', en: 'No instance'},
+		    '20': { key: 10, zh: '有实例商品', en: 'There are instance goods'},
 	    },
         TYPE: {
             IN: 1, //入库
@@ -804,14 +933,15 @@ let Const = {
 
 
             CLOSE: 40, //已完成
-	        DELIVERY: 50, //已完成
+	        DELIVERY: 50, //已发货
+            RECEIVED: 60, //已收货
             AUDIT_REFUSE: -10,//审核失败
             CANCEL: -20, // 取消
         },
         STATUS_MAP: {
             '0': {key: 0, zh: '待提交', en: 'Awaiting commit',color: 'orange'},
-            '10': {key: 10, zh: '待审核', en: 'Awaiting review', color: 'yellow'},
-	        '20': {key: 30, zh: '财务审核通过', en: 'Financial review passed', color: 'purple'},
+            '10': {key: 10, zh: '等待财务审核', en: 'Waiting for financial review', color: 'yellow'},
+	        '20': {key: 30, zh: '等待仓库审核', en: 'Waiting for warehouse review', color: 'purple'},
             '30': {key: 20, zh: '仓库审核通过', en: 'Admin review passed', color: 'blue'},
             '40': {key: 40, zh: '已完成', en: 'In the warehouse', color: 'green'},
 	        '50': {key: 40, zh: '已发货', en: 'Delivery', color: 'green'},
@@ -836,19 +966,19 @@ let Const = {
             ITEM_PURCHASE: 80, // 商品采购单 todo:零时加的不一定是这个值
         },
         SOURCE_TYPE_ADMIN_MAP: {
-            '10': {key: 10, text: '管理员操作', color: 'yellow'},
-            '15': {key: 15, text: '生产单', color: 'blue'},
-            '30': {key: 30, text: '售后单', color: 'yellow'},
-            '40': {key: 40, text: '调货单', color: 'blue'},
-            '50': {key: 50, text: '维修单', color: 'orange'},
-            '60': {key: 60, text: '物料采购单', color: 'yellow'},
-            '70': {key: 70, text: '仓库调货单', color: 'blue'},
+            '10': {key: 10, zh: '管理员操作', en: 'Admin action', color: 'yellow'},
+	        '20': {key: 20, zh: '采购单', en: 'Purchase order', color: 'orange'},
+            '30': {key: 30, zh: '售后单', en: 'After-sale order', color: 'yellow'},
+            // '40': {key: 40, zh: '调货单', en: 'Transfer order', color: 'blue'},
+            '50': {key: 50, zh: '维修单', en: 'Repair order', color: 'orange'},
+            // '60': {key: 60, text: '物料采购单', color: 'yellow'},
+            '70': {key: 70, zh: '仓库调货单', en: 'Warehouse transfer order', color: 'blue'},
         },
         SOURCE_TYPE_MAP: {
             '10': {key: 10, zh: '管理员操作', en: 'Admin action', color: 'yellow'},
-            '20': {key: 20, zh: '采购单', en: 'Purchase order',color: 'orange'},
+            '20': {key: 20, zh: '采购单', en: 'Purchase order', color: 'orange'},
             '30': {key: 30, zh: '售后单', en: 'After-sale order', color: 'yellow'},
-            '50': {key: 50, zh: '维修单', en: 'Repair order',color: 'orange'},
+            '50': {key: 50, zh: '维修单', en: 'Repair order', color: 'orange'},
         },
         SOURCE_FORM: { //出入库单变更来源
             UNKNOWN: 0,
@@ -936,9 +1066,9 @@ let Const = {
             REPAIR_ORDER_DEDUCTIONS: 501,
         },
         SUBJECT_MAP: {
-            '101': '管理员操作',
-            '201': '采购单',
-            '501': '维修单',
+            '101': {key: 101, zh: '管理员操作', en: 'Admin action'},
+            '201': {key: 201, zh: '采购单', en: 'Purchase order'},
+            '501': {key: 501, zh: '维修单', en: 'Repair order'},
         }
     },
     FAULT_ENTITY: { //故障件
@@ -966,6 +1096,22 @@ let Const = {
             SUCCESS: 1,
         }
     },
+	ENTITY: {
+    	STATUS: {
+		    INIT: 0,
+		    DISTRIBUTION: 1,
+		    SALE_OUT: 2,
+		    PRE_WAREHOUSING: 3,
+		    DISTRIBUTION_WAREHOUSING: 4,
+	    },
+		STATUS_MAP: {
+			'0': {key: 0, zh: '初始', en: 'Init'},
+			'1': {key: 1, zh: '已分销', en: 'Distributed'},
+			'2': {key: 2, zh: '已卖出', en: 'Sold'},
+			'3': {key: 3, zh: '预出入库', en: 'Pre-warehousing'},
+			'4': {key: 4, zh: '预分销出入库', en: 'Pre-distribution warehousing'},
+		}
+	},
     AFTERSALES: { // 售后
         STATUS: {
             INIT: 0,         // 待提交
@@ -1006,9 +1152,9 @@ let Const = {
             '400' :'已入库',
         },
         REFUND_STATUS_MAP: {
-            '0' :'初始化',
-            '100' :'已申请',
-            '400' :'退款成功',
+            '0' : { key: 0, zh: '初始化',en: 'Initialization' },
+            '100' : { key: 100, zh: '已申请',en: 'Have applied' },
+            '400' : { key: 400, zh: '退款成功',en: 'Refund successfully' },
         },
     },
     REFUND: { // 退款管理
@@ -1211,7 +1357,18 @@ let Const = {
             10: '商品',
             30: '物料',
         },
-    }
+    },
+	AUDIT_RECORD: {
+		TARGET_TYPE:{
+			QUALITY_FEEDBACK: 10
+		}
+	},
+	ITEM_COMPONENT_SET: {
+    	TARGET_TYPE:{
+			ITEM: 1,
+		    ITEM_CATEGORY: 2,
+	    }
+	},
 };
 
 export default Const;

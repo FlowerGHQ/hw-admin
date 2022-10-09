@@ -1,30 +1,32 @@
 <template>
     <div class="explored-content" v-if="tabsArray.length > 0">
-        <div class="title">{{ $t('i.view') }}</div>
+        <div class="title" v-if="show">{{ $t('i.view') }}</div>
         <div class="explore-content">
-            <a-carousel autoplay class="carousel-list">
+            <!-- <a-carousel autoplay class="carousel-list"> -->
+            <div class="carousel-list">
                 <div class="carousel-item" v-for="(item,i) of tabsArray" :key="i">
                     <img :src="$Util.imageFilter(item.img)"/>
                     <canvas :ref="`exploreCanvas${i}`"></canvas>
-                    <div 
+                    <div
                         class="point-start"
                         v-for="(point, j) in (item.item_component_list || [])"
-                        :key="j" 
+                        :key="j"
                         :style="{'left': `${(point.start.x * (point.rate || 1)) - 4}px`, 'top': `${(point.start.y * (point.rate || 1))- 4}px`}"></div>
-                    <div 
+                    <div
                         class="point-end"
                         :class="{'point-end-select': selectIndex===j}"
                         v-for="(point, j) in (item.item_component_list || [])"
-                        :key="j" 
+                        :key="j"
                         :style="{'left': `${(point.end.x * (point.rate || 1)) - 4* (point.rate || 1)}px`, 'top': `${(point.end.y * (point.rate || 1))- 4* (point.rate || 1)}px`}"
                         @mouseenter.stop="showDetail(i,j)" @mouseleave="showDetail(-1)"
                     >
-                        {{j + 1}}
+                        {{point.index}}
                     </div>
                 </div>
-            </a-carousel>
+            </div>
+            <!-- </a-carousel> -->
             <transition name="fade">
-                <div 
+                <div
                     class="component-contain"
                     v-if="selectIndex > -1"
                     :style="componentStyle"
@@ -32,16 +34,20 @@
                     @mouseleave="showDetail(-1)">
                     <div class="contain-name">
                         <i class="icon i_skew-bg" />
-                        <span class="icon-name">产品名称</span>
-                        {{ componentDetail.name }}
+                        <span class="icon-name">{{ $t('n.name') }}</span>
+                        <span v-if="$i18n.locale === 'zh'"> {{ componentDetail.name }}</span>
+                        <span v-if="$i18n.locale === 'en'"> {{ componentDetail.name_en }}</span>
                     </div>
                     <div class="contain-type">
-                        <div class="type-left">型号:&nbsp;{{ componentDetail.model}}</div>
-                        <div class="type-left">€{{$Util.countFilter(componentDetail[priceKey + 'eur'])}} | ${{$Util.countFilter(componentDetail[priceKey + 'usd'])}}</div>
+                        <div class="type-left">{{ $t('def.model') }}:&nbsp;{{ componentDetail.model}}</div>
+
+                        <div class="type-left" v-if="currency === 'eur' || currency === 'EUR'">€{{$Util.countFilter(componentDetail[priceKey + 'eur'])}}</div>
+                        <div class="type-left" v-else>${{$Util.countFilter(componentDetail[priceKey + 'usd'])}}</div>
+<!--                        <div class="type-left">€{{$Util.countFilter(componentDetail[priceKey + 'eur'])}} | ${{$Util.countFilter(componentDetail[priceKey + 'usd'])}}</div>-->
                     </div>
                     <div class="edit-btn">
-                        <a-button type="primary" class="disabled" v-if="componentDetail.in_shopping_cart">已在购物车中</a-button>
-                        <a-button type="primary" @click="hanldeAddToShopCart" v-else>添加到购物车</a-button> -->
+                        <a-button class="disabled" v-if="componentDetail.in_shopping_cart">{{ $t('i.already') }}</a-button>
+                        <a-button @click="hanldeAddToShopCart" v-else>{{ $t('i.cart') }}</a-button>
                     </div>
                 </div>
             </transition>
@@ -52,7 +58,12 @@
 import { get } from 'lodash';
 import Core from '../../../core';
 export default {
-    props: {},
+    props: {
+        show: {
+            type: Boolean,
+            default: true,
+        }
+    },
     computed: {
         priceKey() {
             let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
@@ -60,11 +71,19 @@ export default {
             return priceKey
         }
     },
-    mounted () {},
+    mounted () {
+        this.currency = Core.Data.getCurrency();
+    },
+    watch: {
+        selectIndex:function(newData, oldData) {
+            console.log(newData, oldData)
+        },
+    },
     data() {
         return {
+            Core,
             id: undefined,
-            
+
             canvasGroup: [],
 
             pointerList: [],
@@ -80,17 +99,18 @@ export default {
             currentExplore: {
                 i: null,
                 j: null
-            }
+            },
+            currency: ''
         }
     },
     methods: {
-        /** 获取 商品爆炸图 */ 
+        /** 获取 商品爆炸图 */
         getItemExploreList(id) {
             if(!id) return;
             const ths = this;
             this.pointerList = [];
             this.tabsArray = [];
-            Core.Api.Item.getItemComponent({ id }).then((res)=>{
+            Core.Api.Item.getItemComponent({ target_id: id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM }).then((res)=>{
                 this.tabsArray = get(res, "list.list" , []);
                 this.parsePoint();
                 ths.$nextTick(()=>{
@@ -98,6 +118,11 @@ export default {
                         ths.loadImage(item.img, index);
                     })
                 })
+                // 无爆炸图数据
+                console.log('getItemExploreList res', res);
+                if(res.list.count) {
+                    this.$emit('noData',false)
+                }
             }).catch( err => {
                 console.log('getItemExploreList err', err);
             });
@@ -115,7 +140,7 @@ export default {
         loadImage(url, index){
             let img = new Image();
             const ths = this;
-            
+
             img.onload = ()=>{
                 ths.imageLoadCallback(img.naturalWidth, img.naturalHeight, index);
                 img.onload = null;
@@ -172,8 +197,8 @@ export default {
                 let x = (get(ths.tabsArray, `[${i}].item_component_list[${ths.selectIndex }].end.x`, 0) - 15) * rate;
 
                 ths.componentDetail = get(ths.tabsArray, `[${i}].item_component_list[${ths.selectIndex }].item`, {})
-                ths.componentStyle.top = `${y}px`;
-                ths.componentStyle.left = `${x}px`;
+                ths.componentStyle.top = `${y + 12}px`;
+                ths.componentStyle.left = `${x - 15}px`;
                 ths.timer = null;
             }, delay)
         },
@@ -185,15 +210,16 @@ export default {
                 price: this.componentDetail.purchase_price
             }).then(res => {
                 console.log('hanldeAddToShopCart res:', res)
-                this.$message.success('添加成功')
+                this.$message.success(this.$t('pop_up.add'))
                 this.componentDetail.in_shopping_cart = true;
             })
         },
     },
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .explored-content {
+    position: relative;
     z-index: 10;
     margin-top: 30px;
     width: 100%;
@@ -263,7 +289,8 @@ export default {
         padding: 12px 0;
         width: 250px;
         border-radius: 2px;
-        background-color: @BG_LP;
+        // background-color: @BG_LP;
+        background-color: @primary;
         border: 1px solid @BG_LP;
         font-size: 0;
         &:before, &:after {
@@ -277,7 +304,7 @@ export default {
             border-color: transparent transparent @BG_LP  transparent;
             font-size: 0;
             line-height: 0;
-        } 
+        }
         &:after {
             top: -9px;
             left: 30px;
@@ -298,11 +325,12 @@ export default {
             .i_skew-bg {
                 font-size: 16px;
                 color: @TC_L;
+                margin-right: 10px;
             }
             .icon-name {
                 position: absolute;
                 top: 0;
-                left: 16px;
+                left: 26px;
                 font-style: italic;
                 font-size: 12px;
                 font-weight: bold;
@@ -329,7 +357,11 @@ export default {
         .edit-btn {
             margin-top: 12px;
             width: 100%;
-            text-align: center;
+            text-align: right;
+            margin-right: 20px;
+            :deep(span) {
+                color:  @primary !important;
+            }
         }
         // position: absolute;
         // padding: 12px 24px;
@@ -348,7 +380,7 @@ export default {
         //     border-color: transparent transparent @BG_LP  transparent;
         //     font-size: 0;
         //     line-height: 0;
-        // } 
+        // }
         // &:after {
         //     top: -23px;
         //     left: 22px;

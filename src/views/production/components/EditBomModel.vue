@@ -14,7 +14,7 @@
             <div class="form-item required afs">
                 <div class="key">对应商品:</div>
                 <div class="value">
-                    <ItemSelect btnType='primary' btnText="选择商品" btnClass="item-select-btn"
+                    <ItemSelect btnType='primary' :btnText="$t('i.select_item')" btnClass="item-select-btn"
                         @select="handleSelectItem" :radioMode="true"/>
                     <div class="item-select-display" v-if="!$Util.isEmptyObj(selectItem)">
                         <img :src="$Util.imageFilter(selectItem.logo)" />
@@ -135,7 +135,7 @@ export default {
                 return this.$message.warning('请选择BOM表对应商品')
             }
             Core.Api.Bom.save(form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.handleModalClose()
                 this.$emit('submit')
             }).catch(err => {

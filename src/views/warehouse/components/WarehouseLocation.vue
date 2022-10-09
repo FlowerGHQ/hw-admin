@@ -2,36 +2,71 @@
     <div class="WarehouseLocation gray-panel no-margin">
         <div class="panel-content">
             <div class="table-container">
-                <div class="title-container">
                     <div class="search-container">
                         <a-row class="search-area">
-                            <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                                <div class="key">uid：</div>
+                            <a-col :xs='24' :sm='24' :xl="16" :xxl='8' class="search-item">
+                                <div class="key">{{ $t('wa.uid') }}：</div>
                                 <div class="value">
                                     <a-input placeholder="uid" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
                                 </div>
                             </a-col>
+
+                            <a-col :xs='24' :sm='24' :xl="16" :xxl='8' class="search-item">
+                                <div class="key">{{ $t('i.code') }}：</div>
+                                <div class="value">
+                                    <a-select
+                                        v-model:value="searchForm.item_id"
+                                        show-search
+                                        placeholder="code"
+                                        :default-active-first-option="false"
+                                        :show-arrow="false"
+                                        :filter-option="false"
+                                        :not-found-content="null"
+                                        @search="handleItemSearch"
+                                    >
+                                        <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
+                                            {{ item.code }} - {{ item.name }}
+                                        </a-select-option>
+                                    </a-select>
+                                </div>
+                            </a-col>
                         </a-row>
+
                         <div class="btn-area">
                             <a-button @click="handleSearch" type="primary">{{$t('def.search')}}</a-button>
                             <a-button @click="handleSearchReset" >{{$t('def.reset')}}</a-button>
                         </div>
                     </div>
                     <div class="btns-area">
+                        <a-upload name="file" class="file-uploader"
+                                  :file-list="upload.fileList" :action="upload.action"
+                                  :show-upload-list='false'
+                                  :headers="upload.headers" :data='upload.data'
+                                  accept=".xlsx,.xls"
+                                  @change="handleFileUpload">
+                            <a-button type="primary" ghost class="panel-btn" style="margin-right: 7px">
+                                <i class="icon i_add"/> {{$t('i.import')}}
+                            </a-button>
+                        </a-upload>
+
                         <a-button type="primary" ghost @click="handleLocation()" v-if="$auth('warehouse.save')" class="panel-btn">
                             <i class="icon i_add"/>{{ $t('wa.add_location') }}
                         </a-button>
                         <a-button type="primary" ghost @click="handleMaterial()" v-if="$auth('warehouse.save')" class="panel-btn">
                             <i class="icon i_add"/>{{ $t('wa.allocated_material') }}
                         </a-button>
+                        <a-button type="primary" ghost @click="handleAdjustMaterial()" v-if="$auth('warehouse.save')" class="panel-btn">
+                            <i class="icon i_add"/>{{ $t('wa.adjust') }}
+                        </a-button>
                     </div>
-                </div>
+
+
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="(record) => record.id" :pagination="false" :row-selection="rowSelection">
                     <template #bodyCell="{ column, text, record }">
 
                         <template v-if="column.key === 'count'">
-                            {{ text || 0 }} 件
+                            {{ text || 0 }} {{ $t('i.pcs2') }}
                         </template>
 
                         <template v-if="column.dataIndex === 'type'">
@@ -47,8 +82,8 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('agent.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
-                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('agent.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type="link" @click="handleUpdateShow(record)" v-if="$auth('agent.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" v-if="$auth('agent.save')">{{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -69,10 +104,10 @@
                 />
             </div>
         </div>
-        <a-modal v-model:visible="modalShow" :title="$t('n.upload_attachment')" class="attachment-file-upload-modal" :after-close="handleModalClose">
+        <a-modal v-model:visible="modalShow" :title="form.id > 0 ? $t('wa.update_location'):$t('wa.add_location')" class="attachment-file-upload-modal" :after-close="handleModalClose">
             <div class="form-title">
                 <div class="form-item required">
-                    <div class="key">uid:</div>
+                    <div class="key">{{$t('wa.uid')}}:</div>
                     <div class="value">
                         <a-input v-model:value="form.uid" :placeholder="$t('def.input')"/>
                     </div>
@@ -83,23 +118,23 @@
                 <a-button @click="handleModalSubmit" type="primary">{{ $t('def.sure') }}</a-button>
             </template>
         </a-modal>
-        <a-modal v-model:visible="materialShow" :title="$t('n.upload_attachment')" class="attachment-file-upload-modal" :after-close="handleMaterialClose">
+        <a-modal v-model:visible="materialShow" :title="$t('wa.allocated_material')" class="attachment-file-upload-modal" :after-close="handleMaterialClose">
             <div class="form-title">
                 <div class="form-item required">
-                    <div class="key">{{ $t('wa.material') }}:</div>
+                    <div class="key">{{ $t('wa.item_code') }}:</div>
                     <div class="value">
                         <a-select
-                            v-model:value="materialForm.material_id"
+                            v-model:value="itemForm.item_id"
                             show-search
                             :placeholder="$t('def.input')"
                             :default-active-first-option="false"
                             :show-arrow="false"
                             :filter-option="false"
                             :not-found-content="null"
-                            @search="handleMaterialSearch"
+                            @search="handleItemSearch"
                         >
-                            <a-select-option v-for=" item in materialOptions" :key="item.id" :value="item.id">
-                                {{ item.name }}
+                            <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
+                                Code:{{ item.code }}  Name:{{ item.name }}
                             </a-select-option>
                         </a-select>
                     </div>
@@ -108,6 +143,68 @@
             <template #footer>
                 <a-button @click="handleMaterialClose">{{ $t('def.cancel') }}</a-button>
                 <a-button @click="handleMaterialSubmit" type="primary">{{ $t('def.sure') }}</a-button>
+            </template>
+        </a-modal>
+        <a-modal v-model:visible="adjustModalShow" :title="$t('wa.adjust')" class="attachment-file-upload-modal" width="800px" :after-close="handleAdjustMaterialClose">
+            <div class="form-title">
+                <div class="form-item required">
+                    <div class="key">{{$t('wa.out_uid')}}:</div>
+                    <div class="value">
+                        <a-select
+                            v-model:value="adjustForm.warehouse_location_id"
+                            show-search
+                            placeholder="uid"
+                            :default-active-first-option="false"
+                            :show-arrow="false"
+                            :filter-option="false"
+                            :not-found-content="null"
+                            @search="handleUidSearch"
+                            @change="warehouseLocationChange"
+                        >
+                            <a-select-option v-for=" item in warehouseLocationOptions" :key="item.id" :value="item.id">
+                                {{ item.uid }}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item required">
+
+                    <div class="key">{{$t('wa.out_item')}}:</div>
+                    <div class="value">
+                        {{$i18n.locale == 'zh' ? adjustName: adjustNameEn}}
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{$t('wa.in_uid')}}:</div>
+                    <div class="value">
+                        <a-select
+                            v-model:value="adjustForm.in_warehouse_location_id"
+                            show-search
+                            placeholder="uid"
+                            :default-active-first-option="false"
+                            :show-arrow="false"
+                            :filter-option="false"
+                            :not-found-content="null"
+                            @search="handleUidSearch"
+                            @change="warehouseLocationInChange"
+                        >
+                            <a-select-option v-for=" item in warehouseLocationOptions" :key="item.id" :value="item.id">
+                                {{ item.uid }}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item required">
+
+                    <div class="key">{{$t('wa.out_item')}}:</div>
+                    <div class="value">
+                        {{$i18n.locale == 'zh' ? adjustInName: adjustInNameEn}}
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handleAdjustMaterialClose">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleAdjustSubmit" type="primary">{{ $t('def.sure') }}</a-button>
             </template>
         </a-modal>
     </div>
@@ -143,31 +240,57 @@ export default {
             total: 0,
             modalShow: false,
             materialShow: false,
+            adjustModalShow: false,
+            warehouseLocationOptions: [],
             searchForm: {
                 uid: '',
+                item_id: '',
             },
             form: {
                 warehouse_id: '',
                 uid: '',
             },
-            materialForm: {
+            itemForm: {
                 ids: [],
-                material_id: '',
+                item_id: '',
             },
+            adjustForm: {
+                warehouse_location_id: '',
+                in_warehouse_location_id: '',
+            },
+            adjustName:'',
+            adjustNameEn:'',
+            adjustInName: '',
+            adjustInNameEn:'',
+
             selectedRowKeys: [],
             selectedRowItems: [],
             selectedRowItemsAll: [],
 
             tableData: [],
-            materialOptions: [],
+            itemOptions: [],
+            upload: {
+                action: Core.Const.NET.URL_POINT + "/admin/1/warehouse-location/import",
+                fileList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'xlsx',
+                    warehouse_id: '',
+                },
+            },
         };
     },
     watch: {},
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: "uid", key: "uid"},
+                {title:  this.$t('wa.uid'), key: "uid"},
+                {title: this.$t('wa.code'), dataIndex: "target_code", key: "name"},
                 {title: this.$t('wa.name'), dataIndex: "target_name", key: "name"},
+                {title: this.$t('i.amount'), dataIndex: "amount", key: "amount"},
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ];
             return tableColumns;
@@ -194,6 +317,7 @@ export default {
     },
     mounted() {
         this.getTableData();
+        this.upload.data.warehouse_id = this.warehouseId;
     },
     methods: {
         routerChange(type, item = {}) {
@@ -245,6 +369,7 @@ export default {
             Core.Api.WarehouseLocation.list({
                 warehouse_id: this.warehouseId,
                 uid: this.searchForm.uid,
+                item_id: this.searchForm.item_id,
                 page: this.currPage,
                 page_size: this.pageSize,
             }).then(res => {
@@ -268,9 +393,19 @@ export default {
         handleMaterial(id) {
             this.materialShow = true;
         },
+        handleAdjustMaterial(id){
+            this.adjustModalShow = true;
+        },
+        handleAdjustMaterialClose() {
+            this.adjustModalShow = false;
+            Object.assign(this.adjustForm, this.$options.data().adjustForm)
+            this.adjustNameEn = ''
+            this.adjustName = ''
+            // this.selectItem = {}
+        },
         handleMaterialClose() {
             this.materialShow = false;
-            Object.assign(this.materialForm, this.$options.data().materialForm)
+            Object.assign(this.itemForm, this.$options.data().itemForm)
             // this.selectItem = {}
         },
 
@@ -278,7 +413,7 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             form.warehouse_id = this.warehouseId
             Core.Api.WarehouseLocation.save(form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.handleModalClose()
                 this.getTableData();
                 // this.$emit('submit')
@@ -286,28 +421,135 @@ export default {
                 console.log('handleModalSubmit err', err)
             })
         },
-        handleMaterialSearch(name) {
-            Core.Api.Material.list({name: name}).then(res => {
-                this.materialOptions = res.list
+        handleItemSearch(code) {
+            Core.Api.Item.list({code: code,flag_spread: 1}).then(res => {
+                this.itemOptions = res.list
             })
         },
+        handleUidSearch(uid) {
+            Core.Api.WarehouseLocation.list({uid: uid,warehouse_id: this.detail.warehouse_id}).then(res => {
+                this.warehouseLocationOptions = res.list
+            })
+        },
+
+        handleUpdateShow(item) {
+            this.form = Core.Util.deepCopy(item)
+
+            this.modalShow = true
+        },
         handleMaterialSubmit() {
-            this.materialForm.ids = this.selectedRowKeys;
-            if (this.materialForm.ids === []) {
+            this.itemForm.ids = this.selectedRowKeys;
+            if (this.itemForm.ids === []) {
                 return
             }
-            if (!this.materialForm.material_id) {
+            if (!this.itemForm.item_id) {
                 return
             }
 
-            Core.Api.MaterialWarehouseLocation.saveList({
-                ids: this.materialForm.ids,
-                target_id: this.materialForm.material_id,
-                target_type: this.Core.Const.ITEM.TARGET_TYPE_MAP.MATERIAL
+            Core.Api.WarehouseLocationStock.saveList({
+                ids: this.itemForm.ids,
+                target_id: this.itemForm.item_id,
+                target_type: this.Core.Const.ITEM.TARGET_TYPE_MAP.ITEM
             }).then(res => {
                 this.getTableData();
                 this.handleMaterialClose();
 
+            })
+        },
+        handleDelete(id) {
+            let _this = this;
+            this.$confirm({
+                title: '确定要删除库位吗？',
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onOk() {
+                    Core.Api.WarehouseLocation.delete({id}).then(() => {
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
+        // 上传文件
+        handleFileUpload({file, fileList}) {
+            console.log("handleFileUpload status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                let res = file.response
+                if (res && res.code === 0) {
+                    return this.$message.success(this.$t('pop_up.uploaded'));
+                } else {
+                    return this.$message.error('上传失败:' + res.message)
+                }
+            }
+            this.upload.fileList = fileList
+        },
+        handleAdjustSubmit() {
+            if (!this.adjustForm.warehouse_location_id) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!this.adjustForm.in_warehouse_location_id) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+
+            Core.Api.WarehouseLocationStock.adjust({
+                warehouse_location_id: this.adjustForm.warehouse_location_id,
+                in_warehouse_location_id: this.adjustForm.in_warehouse_location_id,
+            }).then(res => {
+                this.getTableData();
+                this.handleMaterialClose();
+                this.warehouseLocationChange();
+                this.warehouseLocationInChange();
+                this.$message.success(this.$t('pop_up.save_success'))
+
+            })
+        },
+        warehouseLocationChange(){
+            Core.Api.WarehouseLocationStock.detailByWarehouseLocation({
+                warehouse_location_id: this.adjustForm.warehouse_location_id,
+            }).then(res => {
+                console.log(res)
+                let name = ""
+                let name_en = ""
+                let count = ""
+                res.list.forEach(it => {
+                    if(it.material != undefined){
+                        name += it.material.name + ':' + it.amount+ ','
+                        name_en += it.material.name_en + ':' + it.amount+ ','
+                    }
+                    if(it.item != undefined){
+                        name += it.item.name + ':' + it.amount+ ','
+                        name_en += it.item.name_en + ':' + it.amount+ ','
+                    }
+
+                })
+                this.adjustName = name
+                this.adjustNameEn = name_en
+            })
+        },
+        warehouseLocationInChange(){
+            Core.Api.WarehouseLocationStock.detailByWarehouseLocation({
+                warehouse_location_id: this.adjustForm.in_warehouse_location_id,
+            }).then(res => {
+                console.log(res)
+                let name = ""
+                let name_en = ""
+                let count = ""
+                res.list.forEach(it => {
+                    if(it.material != undefined){
+                        name += it.material.name + ':' + it.amount+ ','
+                        name_en += it.material.name_en + ':' + it.amount+ ','
+                    }
+                    if(it.item != undefined){
+                        name += it.item.name + ':' + it.amount+ ','
+                        name_en += it.item.name_en + ':' + it.amount+ ','
+                    }
+
+                })
+                this.adjustInName = name
+                this.adjustInNameEn = name_en
             })
         },
 
@@ -319,6 +561,11 @@ export default {
 .WarehouseLocation {
     .search-container{
         background-color: #ffffff;
+    }
+    .btns-area {
+        .file-upload-btn {
+            margin-right: 15px;
+        }
     }
 }
 </style>

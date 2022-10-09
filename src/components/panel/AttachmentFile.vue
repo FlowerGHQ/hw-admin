@@ -13,7 +13,7 @@
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail'">
                             <div class="table-img">
-                                <a-image :width="24" :height="24" :src="$Util.imageFilter(record.path.includes('img') ? record.path : '', 4)" fallback='无'/>
+                                <a-image :width="24" :height="24" :src="$Util.imageFilter(record.path.includes('img') ? record.path : '', 4)" :fallback="$t('def.none')"/>
                                 <a-tooltip placement="top" :title='text'>
                                     <p class="ell" style="max-width:120px;margin-left:12px;">{{text || '-'}}</p>
                                 </a-tooltip>
@@ -198,7 +198,7 @@ export default {
         handleFileChange({file, fileList}) {
             console.log("handleCoverChange status:", file.status, "file:", file)
             if (file.status == 'done') {
-                if (file.response && file.response.code < 0) {
+                if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
                 }
                 this.form.path = file.response.data.filename

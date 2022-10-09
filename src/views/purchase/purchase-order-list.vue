@@ -49,6 +49,22 @@
                         </a-select>
                     </div>
                 </a-col>
+              <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                <div class="key">{{ $t('p.order_type')}}:</div>
+                <div class="value">
+                  <a-select v-model:value="searchForm.type" @change="handleSearch" :placeholder="$t('def.select')">
+                    <a-select-option v-for="(item,index) of PAYMENT_TYPE_LIST" :key="index" :value="item.key">{{ item[$i18n.locale] }}</a-select-option>
+                  </a-select>
+                </div>
+              </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                  <div class="key">{{ $t('p.payment_terms')}}:</div>
+                  <div class="value">
+                    <a-select v-model:value="searchForm.pay_type" @change="handleSearch" :placeholder="$t('def.select')">
+                      <a-select-option v-for="(item,index) of PAY_TIME_LIST" :key="index" :value="item.key">{{ item[$i18n.locale] }}</a-select-option>
+                    </a-select>
+                  </div>
+                </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">{{ $t('p.payment_status')}}:</div>
                     <div class="value">
@@ -69,6 +85,9 @@
         </div>
         <div class="operate-container">
             <a-button type="primary" @click="handleExportConfirm" v-if="$auth('purchase-order.export')"><i class="icon i_download"/>{{$t('def.export')}}</a-button>
+            <a-button type="primary" @click="handleExportSalesReport" v-if="$auth('ADMIN')"><i class="icon i_download"/>{{$t('def.sales_report_export')}}</a-button>
+            <a-button type="primary" @click="handleExportSalesQuantityStatistics" v-if="$auth('ADMIN')"><i class="icon i_download"/>{{$t('def.quantity_sales_report_export')}}</a-button>
+
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -87,7 +106,9 @@
                         </a-tooltip>
                     </template>
                     <template v-if="column.key === 'money'">
-                        {{$Util.priceUnitFilter(record.currency)}} {{$Util.countFilter(text)}}
+                        <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
+                        {{$Util.countFilter(text)}}
+<!--                        {{$Util.priceUnitFilter(record.currency)}} {{$Util.countFilter(text)}}-->
                     </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text,'color')">
@@ -109,7 +130,7 @@
                         {{$Util.purchaseFlagReviewFilter(text)}}
                     </template>
                     <template v-if="column.dataIndex === 'purchase_method'">
-                        {{$Util.purchasePayMethodFilter(text)}}
+                        {{$Util.purchasePayMethodFilter(text , $i18n.locale)}}
                     </template>
                     <template v-if="column.dataIndex === 'item_type'">
                         {{$Util.itemTypeFilter(text)}}
@@ -156,6 +177,9 @@ import Core from '../../core';
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 const SEARCH_TYPE = Core.Const.PURCHASE.SEARCH_TYPE
 const PAYMENT_STATUS_MAP = Core.Const.PURCHASE.PAYMENT_STATUS_MAP
+const PAYMENT_TYPE_LIST = Core.Const.PURCHASE.FLAG_ORDER_TYPE_LIST
+const PAY_TIME_LIST = Core.Const.DISTRIBUTOR.PAY_TIME_LIST
+import { message } from 'ant-design-vue';
 
 
 import TimeSearch from '@/components/common/TimeSearch.vue'
@@ -171,6 +195,8 @@ export default {
             LOGIN_TYPE,
             SEARCH_TYPE,
             PAYMENT_STATUS_MAP,
+            PAYMENT_TYPE_LIST,
+            PAY_TIME_LIST,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -202,7 +228,8 @@ export default {
                 distributor_id: undefined,
                 agent_id: undefined,
                 store_id: undefined,
-                type: 0,
+                type: undefined,
+                pay_type: undefined,
                 subject: 0,
                 begin_time: '',
                 end_time: '',
@@ -240,17 +267,32 @@ export default {
                 { title: this.$t('p.parent_sn'), dataIndex: 'parent_sn', },
                 { title: this.$t('p.order_type'), dataIndex: 'type', key: 'type' },
                 { title: this.$t('p.payment_terms'), dataIndex: 'pay_type', key: 'pay_type' },
-                { title: this.$t('n.institution'), dataIndex: ['create_org', 'name'], key: 'item' },
-                { title: this.$t('p.total_price'), dataIndex: 'price', key: 'money' },
-                { title: this.$t('p.freight'), dataIndex: 'freight', key: 'money' },
+
+                // { title: this.$t('p.total_price'), dataIndex: 'price', key: 'money' },
+                // { title: this.$t('p.freight'), dataIndex: 'freight', key: 'money' },
                 { title: this.$t('p.order_status'), dataIndex: 'status' },
                 { title: this.$t('n.order_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('p.payment_status'), dataIndex: 'payment_status' },
-                { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'money' },
+                // { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'money' },
                 { title: this.$t('p.payment_time'), dataIndex: 'pay_time', key: 'time' },
                 { title: this.$t('p.complete_time'), dataIndex: 'close_time', key: 'time' },
-                { title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
+
             ]
+            if (!this.$auth('purchase-order.supply-detail')) {
+                columns.splice(4, 0, { title: this.$t('n.institution'), dataIndex: ['create_org', 'name'], key: 'item' },)
+                columns.splice(5, 0, { title: this.$t('p.total_price'), dataIndex: 'total_price', key: 'money' },)
+                // columns.splice(5, 0, { title: this.$t('p.total_price'), dataIndex: 'price', key: 'money' },)
+                columns.splice(6, 0, { title: this.$t('p.freight'), dataIndex: 'freight', key: 'money' },)
+                columns.splice(9, 0, { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'money' },)
+
+                columns.push(
+                    { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'money'},
+                    { title: this.$t('i.total_price'),dataIndex: 'price', key: 'money'},
+                )
+            }
+            columns.push(
+                { title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
+            )
      /*       if ((this.$auth('AGENT', 'DISTRIBUTOR') && this.search_type != SEARCH_TYPE.SELF) ||  (this.$auth('ADMIN') && this.search_type == SEARCH_TYPE.ALL)) {
                 columns.splice(2, 0, {title: '所属门店', dataIndex: 'store_name', key: 'item'})
             }
@@ -265,7 +307,10 @@ export default {
         statusList() {
             let columns = [
                 {zh: '全  部', en: 'All', value: '0', color: 'primary',  key: '0'},
+                {zh: '已拆单', en: 'Split orders', value: '0', color: 'yellow',  key: '50'},
+                {zh: '订单待审核', en: 'Order pending review', value: '0', color: 'yellow',  key: '60'},
                 {zh: '待支付', en: 'Wait to pay', value: '0', color: 'yellow',  key: '100'},
+                {zh: '待审核', en: 'Wait to audit', value: '0', color: 'yellow',  key: '630'},
                 {zh: '待发货', en: 'Wait for delivery', value: '0', color: 'orange',  key: '200'},
                 {zh: '已发货', en: 'Shipped',value: '0', color: 'primary',  key: '300'},
                 {zh: '部分收货', en: 'Received',value: '0', color: 'primary',  key: '330'},
@@ -274,7 +319,7 @@ export default {
                 {zh: '交易取消', en: 'Canceled', value: '0', color: 'grey',  key: '-100'},
             ]
             if (this.$auth('ADMIN')) {
-                columns.splice(4, 0, {zh: '已转单', en: 'Order transferred', value: '0', color: 'blue',  key: '250'})
+                columns.splice(3, 0, {zh: '已转单', en: 'Order transferred', value: '0', color: 'blue',  key: '250'})
             }
             return columns
         }
@@ -442,9 +487,9 @@ export default {
         handleExportConfirm() { // 确认订单是否导出
             let _this = this;
             this.$confirm({
-                title: '确认要导出吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('p.sure_export'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     _this.handleRepairExport();
                 }
@@ -457,6 +502,83 @@ export default {
                 form[key] = form[key] || ''
             }
             let exportUrl = Core.Api.Export.purchaseExport({
+                ...form,
+                search_type: this.search_type
+            })
+            console.log("handleRepairExport _exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
+        },
+
+        // 以销售报表导出
+        handleExportSalesReport() {
+            if(!this.searchForm.begin_time && !this.searchForm.end_time) {
+                // 没有选择时间
+                message.error({
+                    content: () => this.$t('def.Please_select_time'),
+                    class: 'custom-class',
+                    style: {
+                    marginTop: '20vh',
+                    },
+                });
+            } else {
+                let _this = this;
+                this.$confirm({
+                    title: _this.$t('p.sure_export'),
+                    okText: _this.$t('def.sure'),
+                    cancelText: _this.$t('def.cancel'),
+                    onOk() {
+                        _this.handleRepairExportSalesReport();
+                        _this.handleSearchReset()
+                    }
+                })
+            }
+        },
+        // 以销售报表导出
+        handleExportSalesQuantityStatistics() {
+            if(!this.searchForm.begin_time && !this.searchForm.end_time) {
+                // 没有选择时间
+                message.error({
+                    content: () => this.$t('def.Please_select_time'),
+                    class: 'custom-class',
+                    style: {
+                        marginTop: '20vh',
+                    },
+                });
+            } else {
+                let _this = this;
+                this.$confirm({
+                    title: _this.$t('p.sure_export'),
+                    okText: _this.$t('def.sure'),
+                    cancelText: _this.$t('def.cancel'),
+                    onOk() {
+                        _this.handleRepairExportSalesQuantityStatistics();
+                        _this.handleSearchReset()
+                    }
+                })
+            }
+        },
+         handleRepairExportSalesReport() { // 订单导出
+            this.exportDisabled = true;
+            let form = Core.Util.deepCopy(this.searchForm);
+            for (const key in form) {
+                form[key] = form[key] || ''
+            }
+            let exportUrl = Core.Api.Export.exportSalesStatement({
+                ...form,
+                search_type: this.search_type
+            })
+            console.log("handleRepairExport _exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
+        },
+        handleRepairExportSalesQuantityStatistics() { // 订单导出
+            this.exportDisabled = true;
+            let form = Core.Util.deepCopy(this.searchForm);
+            for (const key in form) {
+                form[key] = form[key] || ''
+            }
+            let exportUrl = Core.Api.Export.exportSalesQuantityStatistics({
                 ...form,
                 search_type: this.search_type
             })

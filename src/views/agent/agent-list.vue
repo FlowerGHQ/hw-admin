@@ -9,6 +9,12 @@
         </div>
         <div class="search-container">
             <a-row class="search-area">
+              <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                <div class="key">{{ $t('d.name_short_name') }}:</div>
+                <div class="value">
+                  <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                </div>
+              </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
                     <div class="key">{{ $t('a.superior') }}:</div>
                     <div class="value">
@@ -30,12 +36,6 @@
                                 {{name }}
                             </template>
                         </a-tree-select>
-                    </div>
-                </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">{{ $t('n.name') }}:</div>
-                    <div class="value">
-                        <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -67,7 +67,7 @@
                         {{ text || '-'}}
                     </template>
                     <template v-if="column.key === 'pay_type'">
-                        {{$Util.payTypeFilter(text) || '-' }}
+                        {{$Util.payTypeFilter(text, $i18n.locale) || '-' }}
                     </template>
                     <template v-if="column.key === 'tip_item'">
                         <a-tooltip placement="top" :title='text'>
@@ -167,16 +167,16 @@ export default {
                 { title: this.$t('n.country'), dataIndex: 'country', key: 'country' },
                 { title: this.$t('n.contact'), dataIndex: 'contact', key: 'item'},
                 { title: this.$t('n.phone'), dataIndex: 'phone', key: 'item'},
-                { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('n.state'), dataIndex: 'status', key: 'status',
                     filters: this.$Util.tableFilterFormat( Core.Const.ORG_STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [1] },
+                { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             // if (this.$auth('ADMIN')) {
             //     tableColumns.splice(2, 0, {title: this.$t('a.superior'), dataIndex: 'distributor_name', key: 'item'})
             // }
             if (this.$i18n.locale === 'en' ) {
-                tableColumns.splice(3, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
+                tableColumns.splice(4, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
             }
             return tableColumns
         },
@@ -269,13 +269,13 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该零售商吗？',
-                okText: '确定',
+                title: _this.$t('a.remove_retailer') + '？',
+                okText: _this.$t('def.ok'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Agent.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

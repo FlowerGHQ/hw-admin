@@ -5,6 +5,7 @@
     v-model:value="selectCode"
     :options="countryOptions"
     @change="handleChange"
+    :show-search="filter"
     :field-names="fieldNames"
 />
 </template>
@@ -95,7 +96,10 @@ export default {
         handleReset() {
             this.selectCode = []
             this.selectItems = []
-        }
+        },
+        filter(inputValue, path){
+            return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
+        },
     },
 }
 </script>
