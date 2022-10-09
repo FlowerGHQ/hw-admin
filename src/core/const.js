@@ -21,7 +21,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.0.0.213:8889'
         break;
     default:
-        URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
+        // URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
         break;
 }
 
