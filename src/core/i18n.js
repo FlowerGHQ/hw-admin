@@ -2088,8 +2088,8 @@ const messages = {
         },
         in: {
             list: 'Inbound and outbound order list',
-            save: 'Add new form',
-            edit: 'Edit the form',
+            save: 'Add new order',
+            edit: 'Edit the order',
             sn: 'Number',
             admin: 'Review',
             category: 'Category',
