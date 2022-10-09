@@ -487,18 +487,6 @@
                         </a-radio-group>
                     </div>
                 </div>
-                <div class="form-item" v-if="form.audit_result === 1">
-                    <div class="key">{{$t('p.freight')}}:</div>
-                    <div class="value">
-                        <a-input-number
-                            v-model:value="form.freight"
-                            placeholder="0.00"
-                            style="width: 120px"
-                            :min="0.00"
-                            :precision="2"
-                            :prefix="`${$Util.priceUnitFilter(detail.currency)}`" />
-                    </div>
-                </div>
                 <div class="form-item" >
                     <div class="key">{{$t('p.remark')}}:</div>
                     <div class="value">
@@ -510,18 +498,25 @@
         <a-modal v-model:visible="PIShow" :title="$t('p.update_PI')" @ok="UpdatePI">
             <div class="modal-content">
 
-                    <div class="form-item required">
-                        <div class="key">{{ $t('p.shipping_port') }}:</div>
-                        <div class="value">
-                            <a-input v-model:value="form.port" :placeholder="$t('def.input')"/>
-                        </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('p.shipping_port') }}:</div>
+                    <div class="value">
+                        <a-input v-model:value="form.port" :placeholder="$t('def.input')"/>
                     </div>
-<!--                    <div class="form-item required">-->
-<!--                        <div class="key">{{ $t('p.delivery_address') }}:</div>-->
-<!--                        <div class="value">-->
-<!--                            <a-input v-model:value="form.delivery_address" :placeholder="$t('def.input')"/>-->
-<!--                        </div>-->
-<!--                    </div>-->
+                </div>
+
+                <div class="form-item" v-if="detail.status === Core.Const.PURCHASE.STATUS.WAIT_AUDIT">
+                    <div class="key">{{$t('p.freight')}}:</div>
+                    <div class="value">
+                        <a-input-number
+                            v-model:value="form.freight"
+                            placeholder="0.00"
+                            style="width: 120px"
+                            :min="0.00"
+                            :precision="2"
+                            :prefix="`${$Util.priceUnitFilter(detail.currency)}`" />
+                    </div>
+                </div>
                 <div class="form-item">
                     <div class="key">{{ $t('p.remark') }}:</div>
                     <div class="value">
@@ -1369,7 +1364,7 @@ export default {
                 this.$message.warning(this.$t('r.audit_result'))
                 return
             }
-            form.freight = Math.round(form.freight * 100) || 0;
+
             Core.Api.Purchase.createAudit({
                 id:this.id,
                 ...form
@@ -1381,7 +1376,8 @@ export default {
             })
         },
         handleUpdatePI(){
-            // this.form.freight = Core.Util.countFilter(this.form.freight)
+            this.form.freight = Core.Util.countFilter(this.detail.freight);
+            this.form.port = this.detail.port;
             this.PIShow = true;
         },
         // 修改pi
@@ -1390,6 +1386,7 @@ export default {
             let form = Core.Util.deepCopy(this.form);
             const param = {
                 id: form.id,
+                freight: form.freight,
                 remark: form.remark,
             }
             let adminRequire = [];
@@ -1408,6 +1405,7 @@ export default {
                     param[key] = form[key];
                 }
             }
+            param.freight = Math.round(param.freight * 100) || 0;
             Core.Api.Purchase.updatePI({
                 ...param,
                 id:this.id

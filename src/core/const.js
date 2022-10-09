@@ -28,6 +28,10 @@ switch (window.location.hostname) {
         URL_POINT = 'http://10.0.0.230:8889'
 	    // URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
         break;
+	case "10.0.0.230":
+		URL_POINT = 'http://10.0.0.230:8889'
+		// URL_POINT = 'http://eos-api.hw.innotick.com' // 测试服
+		break;
     case "192.168.31.224":
         URL_POINT = 'http://192.168.31.224:8889'
         break;
