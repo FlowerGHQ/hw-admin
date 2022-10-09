@@ -30,6 +30,25 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">{{ $t('crm_o.create_user') }}：</div> <!-- 创建人 -->
+                    <div class="value">
+                        <a-select
+                            v-model:value="searchForm.create_user_id"
+                            show-search
+                            :placeholder="$t('def.input')"
+                            :default-active-first-option="false"
+                            :show-arrow="false"
+                            :filter-option="false"
+                            :not-found-content="null"
+                            @search="handleCreateUserSearch"
+                        >
+                            <a-select-option v-for=" item in createUserOptions" :key="item.create_user_id" :value="item.create_user_id">
+                                {{ item.create_user_name }}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('crm_c.level') }}：</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.level" :placeholder="$t('def.select')" @change="handleSearch">
@@ -191,6 +210,7 @@ export default {
             selectedRowKeys: [],
             selectedRowItems: [],
             selectedRowItemsAll: [],
+            createUserOptions: [], // 创建人列表
         };
     },
     watch: {
@@ -212,7 +232,8 @@ export default {
                 // {title: 'n.continent', dataIndex: 'continent', key:'item'},
                 {title: 'crm_c.level', dataIndex: 'level', key:'level', sorter: true},
                 {title: 'crm_c.type', dataIndex: 'type', key:'type', sorter: true},
-                {title: 'r.creator_name', dataIndex: ['create_user','name'], key:'creator_name', sorter: true},
+                {title: 'r.creator_name', dataIndex: ['create_user','name'], key:'creator_name'},
+                {title: 'crm_c.order_success_count', dataIndex: 'order_count', key:'order_count'},
                 {title: 'ad.specific_address', dataIndex: 'address', sorter: true},
                 {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
                 {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
@@ -463,7 +484,14 @@ export default {
                     break;
             }
 
-        }
+        },
+        handleCreateUserSearch(name) { // 创建人条件搜索 下拉框
+            Core.Api.CRMOrder.createUser({
+                create_user_name: name,
+            }).then(res => {
+                this.createUserOptions = res.list
+            })
+        },
 
     }
 };

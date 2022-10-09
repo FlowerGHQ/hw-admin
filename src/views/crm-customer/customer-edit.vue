@@ -11,7 +11,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('n.type') }}：</div>
                     <div class="value">
-                        <a-radio-group v-model:value="form.type">
+                        <a-radio-group v-model:value="form.type" :disabled="form.id !== null">
                             <a-radio v-for="item in CRM_TYPE_MAP" :value="item.value">
                                 {{lang === 'zh' ? item.zh: item.en}}
                             </a-radio>

@@ -1118,6 +1118,8 @@ const messages = {
             new_pool_c: '新建公海客户',
 		    source: '客户来源',
             distribute_success: '分配成功',
+		    order_success_count: '成单数量',
+		    pre_own_user: '前负责人',
 	    },
 	    crm_t: {
 		    track_record: '跟进记录',

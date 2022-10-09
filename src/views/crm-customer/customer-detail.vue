@@ -28,6 +28,10 @@
                         <span class="value">{{detail.phone}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('crm_c.pre_own_user') }}：</span>
+                        <span class="value">{{detail.pre_own_user_name}}</span>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('n.time') }}：</span>
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
@@ -35,7 +39,7 @@
                         <span v-if="detail.status === STATUS.POOL">
                             <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord"/>
                             <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
-                            <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :addCustomerBtn="true"/>
+                            <CustomerAdd :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER"  />
                             <a-button type="primary" @click="handleObtain">{{ $t('crm_c.obtain') }}</a-button>
                             <a-button type="primary" @click="handleBatch('distribute')">{{ $t('crm_c.distribute') }}</a-button>
                             <a-button type="danger" @click="handleDelete">{{ $t('crm_c.delete') }}</a-button>
@@ -131,7 +135,7 @@ import ActionRecord from '@/components/crm/panel/ActionRecord.vue';
 
 
 
-import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
+import CustomerAdd from '@/components/crm/popup-btn/CustomerAdd.vue';
 import FollowUpShow from '@/components/crm/popup-btn/FollowUpShow.vue';
 
 import dayjs from "dayjs";
@@ -139,7 +143,7 @@ import {get} from "lodash";
 
 export default {
     name: 'CustomerEdit',
-    components: { CustomerSelect, FollowUpShow, CRMContact, CRMBo, CRMTrackRecord, Group, CRMOrder, ActionRecord, CustomerSituation},
+    components: { CustomerAdd, FollowUpShow, CRMContact, CRMBo, CRMTrackRecord, Group, CRMOrder, ActionRecord, CustomerSituation},
     props: {},
     data() {
         return {
