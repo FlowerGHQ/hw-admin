@@ -568,6 +568,7 @@ const apiList = {
 		audit: ['PostJson', 'feedback/audit'],//审核
 		submit: ['PostJson', 'feedback/submit'],//提交
 		feedback: ['PostJson', 'feedback/feedback'],//
+		afterSalesDesc: ['PostJson', 'feedback/after-sales-desc'],//
 		saveTitle: ['PostJson', 'feedback/save-title'],//
 		content: ['PostJson', 'feedback/content'],//
 	},

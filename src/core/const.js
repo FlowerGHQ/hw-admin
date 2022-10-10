@@ -24,8 +24,8 @@ switch (window.location.hostname) {
         URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
         // URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服
         break;
-    case "10.0.0.230":
-        URL_POINT = 'http://10.0.0.230:8889'
+    case "10.0.0.194":
+        URL_POINT = 'http://10.0.0.194:8889'
 	    // URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
         break;
 	case "10.0.0.230":
@@ -348,15 +348,15 @@ let Const = {
 	        '45': { key: 40, color: 'blue', zh: '维修结束', en: 'Under repair'},
             '60': { key: 60, color: 'orange', zh: '已结算待审核', en: 'Settled accounts and awaiting audit'},
             '70': { key: 70, color: 'orange', zh: '已结算待审核',en: 'Settled accounts and awaiting audit'},
-            '80': { key: 80, color: 'purple', zh: '分销商审核通过', en: 'Approved by Distributor'},
-            '90': { key: 90, color: 'purple', zh: '平台审核通过', en: 'Platform approval'},
-            '95': { key: 95, color: 'purple', zh: '分销商已入库',en: 'The distributor has put it in stock'},
-            '100': { key: 100, color: 'blue', zh: '已完成', en: 'Has been completed'},
-            '105': { key: 105, color: 'blue', zh: '故障件审核通过',en: 'The fault parts are approved'},
-            '110': { key: 110, color: 'green', zh: '平台方已入库',en: 'The platform has been put into storage'},
+            '80': { key: 80, color: 'purple', zh: '分销商审核通过', en: 'Passed audit'},
+            '90': { key: 90, color: 'purple', zh: '平台审核通过', en: 'Passed audit'},
+            '95': { key: 95, color: 'purple', zh: '分销商已入库',},
+            '100': { key: 100, color: 'blue', zh: '已完成', en: 'Finished settle accounts'},
+            '105': { key: 105, color: 'blue', zh: '故障件审核通过',en: ''},
+            '110': { key: 110, color: 'green', zh: '平台方已入库'},
             '-10': { key: -10, color: 'gray', zh: '已取消', en: 'Cancelled'},
-            '-30': { key: -30, color: 'red', zh: '工单审核未通过', en: 'Work order review failed'},
-            '-40': { key: -40, color: 'red', zh: '故障件审核未通过',en: 'Failed to pass the faulty parts audit'},
+            '-30': { key: -30, color: 'red', zh: '工单审核未通过', en: 'Failed audit'},
+            '-40': { key: -40, color: 'red', zh: '故障件审核未通过'},
         },
         // 故障类型 - 放弃使用
         FAULT_OPTIONS_MAP: {
@@ -402,10 +402,11 @@ let Const = {
 			INIT:0,
 			WAIT_AFTER_SALES_AUDIT: 100,
 			AFTER_SALES_AUDIT_FAIL: 110,
-			WAIT_FEEDBACK : 200 ,// 等待反馈
-			WAIT_QUALITY_AUDIT : 300,
-			QUALITY_AUDIT_FAIL : 310,
-			WAIT_AFTER_FEEDBACK : 400 ,//等待售后反馈
+			WAIT_AFTER_SALES_DESC: 150,
+			WAIT_FEEDBACK: 200,
+			WAIT_QUALITY_AUDIT: 300,
+			QUALITY_AUDIT_FAIL: 310,
+			WAIT_AFTER_FEEDBACK: 400,
 			CLOSE: 500,
 			AUDIT_FAIL: -10,
 			CANCEL: -1,
@@ -414,10 +415,10 @@ let Const = {
 			'0': { key: 0, color: 'yellow', zh: '待提交', en: 'Pending submission'},
 			'100': { key: 100, color: 'blue', zh: '等待平台售后审核', en: 'Awaiting after-sales audit'},
 			'110': { key: 110, color: 'blue', zh: '待修改', en: 'Pending modification'},
-			'200': { key: 200, color: 'purple', zh: '等待质量反馈', en: 'Waiting for quality feedback'},
-			'210': { key: 210, color: 'orange', zh: '待修改',en: 'To modify the'},
-			'300': { key: 300, color: 'purple', zh: '等待审核反馈', en: 'Waiting for review feedback'},
-			'310': { key: 310, color: 'purple', zh: '反馈待修改', en: 'Feedback to be modified'},
+			'150': { key: 150, color: 'blue', zh: '等待售后填写故障信息', en: 'Waiting for after-sale filling'},
+			'200': { key: 200, color: 'orange', zh: '等待质量反馈', en: 'Waiting for quality feedback'},
+			'300': { key: 300, color: 'purple', zh: '等待质量审核', en: 'Waiting for quality audit'},
+			'310': { key: 300, color: 'purple', zh: '等待修改反馈', en: 'Waiting for modification feedback'},
 			'400': { key: 400, color: 'purple', zh: '等待售后反馈', en: 'Waiting for after-sales feedback'},
 			'500': { key: 500, color: 'blue', zh: '已完成', en: 'Finished'},
 			'-10': { key: -10, color: 'blue', zh: '审核失败',en: 'Audit failed'},
@@ -559,7 +560,6 @@ let Const = {
         STATUS: {
             INIT: 0,
 	        SPLIT: 50,
-	        WAIT_AUDIT: 60,
             WAIT_PAY: 100,
             WAIT_DELIVER: 200,
 	        ORDER_TRANSFERRED: 250,
@@ -575,7 +575,6 @@ let Const = {
         STATUS_MAP: {
             '0':   { value: '0', key: 0,    color: 'red',    zh: '未知', en: 'Unknown'},
 	        '50': { value: '0', key: 50,  color: 'green', zh: '已拆单', en: 'Separate bill'},
-	        '60': { value: '0', key: 50,  color: 'orange', zh: '订单待审核', en: 'Order pending review'},
             '100': { value: '0', key: 100,  color: 'orange', zh: '待支付', en: 'Wait to pay'},
             '200': { value: '0', key: 200,  color: 'orange', zh: '待发货', en: 'Wait for delivery'},
             '250': { value: '0', key: 400,  color: 'blue',   zh: '已转单', en: 'Order transferred'},
@@ -910,12 +909,12 @@ let Const = {
             CUSTOMIZE: 40,
         },
         COMMODITY_TYPE_MAP: {
-            '10': { key: 10, zh: '商品', en: 'Item'},
+            '10': { key: 10, zh: '商品', en: 'No instance'},
             '30': { key: 30, zh: '物料', en: 'Materiel'},
         },
 	    COMMODITY_TYPE_OLD_MAP: {
 		    '10': { key: 10, zh: '无实例商品', en: 'No instance'},
-		    '20': { key: 10, zh: '有实例商品', en: 'There are instance goods'},
+		    '20': { key: 10, zh: '有实例商品', en: 'No instance'},
 	    },
         TYPE: {
             IN: 1, //入库
@@ -940,8 +939,8 @@ let Const = {
         },
         STATUS_MAP: {
             '0': {key: 0, zh: '待提交', en: 'Awaiting commit',color: 'orange'},
-            '10': {key: 10, zh: '等待财务审核', en: 'Waiting for financial review', color: 'yellow'},
-	        '20': {key: 30, zh: '等待仓库审核', en: 'Waiting for warehouse review', color: 'purple'},
+            '10': {key: 10, zh: '待审核', en: 'Awaiting review', color: 'yellow'},
+	        '20': {key: 30, zh: '财务审核通过', en: 'Financial review passed', color: 'purple'},
             '30': {key: 20, zh: '仓库审核通过', en: 'Admin review passed', color: 'blue'},
             '40': {key: 40, zh: '已完成', en: 'In the warehouse', color: 'green'},
 	        '50': {key: 40, zh: '已发货', en: 'Delivery', color: 'green'},
