@@ -49,7 +49,7 @@
                     <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}{{$t('in.finish')}}</a-button>
                     <a-button type="primary" @click="handleExportOut" v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')"><i class="icon i_download"/>{{$t('in.export')}}</a-button>
 
-                    <a-button type="primary" @click="handleExportDetail" v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY)  && $auth('ADMIN') && $auth('invoice.import-export')"><i class="icon i_download"/>{{$t('in.export_invoice')}}</a-button>
+                    <a-button type="primary" @click="handleExportDetail" v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY|| detail.status === STATUS.RECEIVED|| detail.status === STATUS.AUDIT_PASS)  && $auth('ADMIN') && $auth('invoice.import-export')"><i class="icon i_download"/>{{$t('in.export_invoice')}}</a-button>
 
                 </template>
             </div>
