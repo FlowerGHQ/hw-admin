@@ -7,7 +7,7 @@
             <div class="form-item required">
                 <div class="key">{{ $t('crm_t.type') }}：</div>
                 <div class="value">
-                    <a-select v-model:value="trackRecordForm.type" :placeholder="$t('def.input')">
+                    <a-select v-model:value="trackRecordForm.type" :placeholder="$t('def.select')">
                         <a-select-option v-for="item of TYPE_MAP" :key="item.value" :value="item.value">{{ lang === 'zh' ? item.zh: item.en }}</a-select-option>
                     </a-select>
                 </div>
@@ -15,7 +15,7 @@
             <div class="form-item textarea required">
                 <div class="key">{{ $t('crm_t.content') }}：</div>
                 <div class="value">
-                    <a-textarea v-model:value="trackRecordForm.content" :placeholder="$t('r.enter_remark')"
+                    <a-textarea v-model:value="trackRecordForm.content" :placeholder="$t('def.input') + $t('crm_t.content')"
                                 :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
                     <span class="content-length">{{ trackRecordForm.content.length }}/500</span>
                 </div>
@@ -70,13 +70,13 @@
             <div class="form-item">
                 <div class="key">{{ $t('crm_t.track_time') }}：</div>
                 <div class="value">
-                    <a-date-picker v-model:value="trackRecordForm.track_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" :placeholder="$t('def.input')"/>
+                    <a-date-picker v-model:value="trackRecordForm.track_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" :placeholder="$t('def.select')"/>
                 </div>
             </div>
             <div class="form-item">
                 <div class="key">{{ $t('crm_t.intent') }}：</div>
                 <div class="value">
-                    <a-select v-model:value="trackRecordForm.intent" :placeholder="$t('def.input')">
+                    <a-select v-model:value="trackRecordForm.intent" :placeholder="$t('def.select')">
                         <a-select-option v-for="item of INTENT_MAP" :key="item.key" :value="item.value">{{lang === 'zh' ? item.zh: item.en }}</a-select-option>
                     </a-select>
                 </div>
@@ -84,9 +84,17 @@
             <div class="form-item">
                 <div class="key">{{ $t('crm_t.next_track_time') }}：</div>
                 <div class="value">
-                    <a-date-picker v-model:value="trackRecordForm.next_track_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" :placeholder="$t('def.input')"/>
+                    <a-date-picker v-model:value="trackRecordForm.next_track_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" :placeholder="$t('def.select')"/>
                 </div>
             </div>
+          <div class="form-item textarea">
+            <div class="key">{{ $t('crm_t.next_track_plan') }}：</div>
+            <div class="value">
+              <a-textarea v-model:value="trackRecordForm.next_track_plan" :placeholder="$t('def.input') + $t('crm_t.next_track_plan')"
+                          :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
+              <span class="content-length">{{ trackRecordForm.content.length }}/500</span>
+            </div>
+          </div>
 
             <template #footer>
                 <a-button @click="handleTrackRecordSubmit" type="primary">{{ $t('def.ok') }}</a-button>
@@ -154,6 +162,7 @@ export default {
                 track_time: undefined,
                 intent: "",
                 next_track_time: undefined,
+                next_track_plan: undefined,
             },
 
             upload: { // 上传图片
@@ -227,6 +236,7 @@ export default {
                 track_time: track_time,
                 intent: form.intent,
                 next_track_time: next_track_time,
+                next_track_plan: form.next_track_plan,
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.handleTrackRecordClose();

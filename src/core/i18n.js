@@ -1133,6 +1133,7 @@ const messages = {
 		    intent: '意向程度',
 		    contact_customer:'联系人',
 		    operator: '跟进人',
+            next_track_plan: '下次跟进计划',
 
 	    },
 	    crm_b: {

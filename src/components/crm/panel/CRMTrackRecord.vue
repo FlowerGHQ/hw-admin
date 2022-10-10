@@ -47,6 +47,14 @@
                                     </div>
                                 </a-col>
                             </a-row>
+                            <a-row>
+                              <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='12'>
+                                  <div class="content">
+                                    <div class="line grey">{{$t('crm_t.next_track_plan')}}:</div>
+                                    <div class="line">{{ item.next_track_plan }}</div>
+                                  </div>
+                              </a-col>
+                            </a-row>
                             <div class="content">
                                 <div class="line grey">{{$t('crm_t.images')}}:</div>
                                 <div class="line">{{ item.content }}</div>
