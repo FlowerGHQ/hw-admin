@@ -519,7 +519,7 @@ const messages = {
             demand: '需求',
             sure_export: '确认要导出吗？',
             after_sales_audit: '售后审核',
-		    after_sales_desc: '售后填写故障信息',
+		    after_sales_desc: '故障信息',
             quality_audit: '质量审核',
             feedback_audit: '反馈审核',
 		    after_feedback: '售后反馈',

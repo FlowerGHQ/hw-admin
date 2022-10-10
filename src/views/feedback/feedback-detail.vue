@@ -78,6 +78,7 @@
         <div class="form-container">
             <FeedbackEn  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.CLOSE" ref="FeedbackEn"/>
             <Feedback  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.WAIT_AFTER_FEEDBACK || detail.status == STATUS.CLOSE" ref="Feedback"/>
+            <AfterSalesDesc  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.WAIT_FEEDBACK ||detail.status == STATUS.WAIT_QUALITY_AUDIT ||detail.status == STATUS.QUALITY_AUDIT_FAIL || detail.status == STATUS.WAIT_AFTER_FEEDBACK || detail.status == STATUS.CLOSE" ref="AfterSalesDesc"/>
 
             <CheckFault  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.INIT && sameOrg" ref="CheckFault"/>
             <CheckResult :id='id' :detail='detail' @hasTransfer='hasTransfer = true' v-if="showCheckResult"/>
@@ -212,6 +213,8 @@ import FeedbackInfo from './components/FeedbackInfo.vue';
 import ActionLog from '../repair/components/ActionLog.vue';
 import Feedback from './components/Feedback.vue';
 import FeedbackEn from './components/FeedbackEn.vue';
+import AfterSalesDesc from './components/AfterSalesDesc.vue';
+
 import MySteps from '@/components/common/MySteps.vue';
 import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 import AuditRecord from '@/components/common/AuditRecord.vue';
@@ -234,6 +237,7 @@ export default {
         AuditRecord,
         Feedback,
         FeedbackEn,
+        AfterSalesDesc,
     },
     props: {},
     data() {
