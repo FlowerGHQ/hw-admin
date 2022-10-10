@@ -560,6 +560,7 @@ let Const = {
         STATUS: {
             INIT: 0,
 	        SPLIT: 50,
+	        WAIT_AUDIT: 60,
             WAIT_PAY: 100,
             WAIT_DELIVER: 200,
 	        ORDER_TRANSFERRED: 250,
