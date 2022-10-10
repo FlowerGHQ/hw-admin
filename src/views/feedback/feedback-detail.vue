@@ -30,7 +30,7 @@
                 </a-button>
 
               <a-button type="primary" @click="handleExportConfirm()" v-if="detail.status === STATUS.CLOSE && $auth('ADMIN')">
-                <i class="icon i_audit"/>{{ $t('n.export') }}
+                <i class="icon i_download"/>{{ $t('n.export') }}
               </a-button>
             </div>
         </div>
