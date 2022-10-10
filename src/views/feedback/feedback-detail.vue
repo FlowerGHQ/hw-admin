@@ -77,7 +77,7 @@
         <MySteps :stepsList='stepsList' :current='currStep' v-if="detail.status != STATUS.CLOSE"/>
         <div class="form-container">
             <FeedbackEn  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.CLOSE" ref="FeedbackEn"/>
-            <Feedback  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.WAIT_AFTER_FEEDBACK || detail.status == STATUS.CLOSE" ref="Feedback"/>
+            <Feedback  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.QUALITY_AUDIT_FAIL ||detail.status == STATUS.WAIT_QUALITY_AUDIT ||detail.status == STATUS.WAIT_AFTER_FEEDBACK || detail.status == STATUS.CLOSE" ref="Feedback"/>
             <AfterSalesDesc  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.WAIT_FEEDBACK ||detail.status == STATUS.WAIT_QUALITY_AUDIT ||detail.status == STATUS.QUALITY_AUDIT_FAIL || detail.status == STATUS.WAIT_AFTER_FEEDBACK || detail.status == STATUS.CLOSE" ref="AfterSalesDesc"/>
 
             <CheckFault  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.INIT && sameOrg" ref="CheckFault"/>
