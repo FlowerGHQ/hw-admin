@@ -730,7 +730,9 @@ export default {
             return columns
         },
         currStep() {
+
             for (let i = 0; i < this.stepsList.length; i++) {
+
                 const item = this.stepsList[i];
                 switch (this.detail.status){
                     case STATUS.CANCEL:
@@ -1334,6 +1336,15 @@ export default {
                     {status: '300', zh: '收货',en: 'Receipt'},
                     {status: '400', zh: '交易完成',en: 'Transaction completed'},
                 ]
+                if (this.detail.type === Core.Const.PURCHASE.TYPE.AFTER_SALES){
+                    this.stepsList = [
+                        {status: '60', zh: '审核', en: 'Audit'},
+                        {status: '100', zh: '支付', en: 'Payment'},
+                        {status: '200', zh: '发货', en: 'Deliver'},
+                        {status: '300', zh: '收货',en: 'Receipt'},
+                        {status: '400', zh: '交易完成',en: 'Transaction completed'},
+                    ]
+                }
             } else {
                 this.stepsList = [
                     {status: '200', zh: '发货', en: 'Deliver'},
@@ -1342,6 +1353,7 @@ export default {
                     {status: '400', zh: '交易完成',en: 'Transaction completed'},
                 ]
             }
+
         },
         handlePayAuditShow(id){
             this.payAuditForm.id = id
