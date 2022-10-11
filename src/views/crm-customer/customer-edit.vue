@@ -333,7 +333,7 @@ export default {
                 id: this.form.id,
                 name: this.form.name,
             }).then(res => {
-                this.isExist = res.results ? 2 : 1
+                this.isExist = res.results ? 1 : 2
                 console.log("handleVehicleBlur res", res)
             }).catch(err => {
                 console.log('handleVehicleBlur err', err)

@@ -5,7 +5,8 @@
     </div>
     <div class="panel-content">
         <div>
-            <div class="list" v-for="(item, i) in tableData" :key="i">
+            <SimpleImageEmpty :desc="$t('crm_t.track_record_null')" v-if='!tableData.length'/>
+            <div class="list" v-for="(item, i) in tableData" :key="i" v-if='tableData.length'>
                 <div  class="day-content" >
                     <!--                <div class="day-item tag" v-if="i === 0">-->
                     <!--                    <div class="tag-bg">今天</div>-->
@@ -74,7 +75,7 @@
                     </div>
                 </div>
             </div>
-            <div class="paging-container">
+            <div class="paging-container" v-if='tableData.length'>
                 <a-pagination
                     v-model:current="currPage"
                     :page-size="pageSize"
@@ -98,10 +99,11 @@
 <script>
 import Core from '../../../core';
 import FollowUpShow from '@/components/crm/popup-btn/FollowUpShow.vue';
+import SimpleImageEmpty from '@/components/common/SimpleImageEmpty.vue';
 
 export default {
     name: 'CRMTrackRecord',
-    components: {FollowUpShow},
+    components: {FollowUpShow,SimpleImageEmpty},
     props: {
         detail:{
             type: Object,

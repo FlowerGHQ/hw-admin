@@ -83,7 +83,7 @@
             <a-col :xs='24' :sm='24' :lg='8' >
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="tabActiveKey">
-                        <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.team_members')">
+                        <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.team_members')" v-if="detail.status !== Core.Const.CRM_CUSTOMER.STATUS.POOL">
                             <Group :targetId="id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :detail="detail" ref ="Group"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.dynamic')">
@@ -230,6 +230,10 @@ export default {
                     this.form[key] = d[key]
                 }
                 this.defAddr = [d.province, d.city, d.county]
+                if (this.detail.status === Core.Const.CRM_CUSTOMER.STATUS.POOL){
+                    this.tabActiveKey = "InformationInfo";
+                }
+
 
                 // this.defArea = [d.continent || '', d.country || '']
             }).catch(err => {
