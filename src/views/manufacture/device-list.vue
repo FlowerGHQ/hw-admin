@@ -107,7 +107,7 @@
                         <div class="key">{{ $t('i.code') }}:</div>
                         <div class="value">
                             <a-select
-                                v-model:value="searchForm.item_id"
+                                v-model:value="editForm.item_id"
                                 show-search
                                 placeholder="code"
                                 :default-active-first-option="false"
