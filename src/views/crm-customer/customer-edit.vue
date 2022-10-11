@@ -21,7 +21,9 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('n.name') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
+                        <a-input v-model:value="form.name" :placeholder="$t('def.input')" @blur="handleCustomerBlur"/>
+                        <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
+                        <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                     </div>
                 </div>
                 <div class="form-item required">
@@ -210,6 +212,8 @@ export default {
             areaMap: {},
             countryShow: false,
             sourceList: [],
+
+            isExist: '', // 名称输入框提示
         };
     },
     watch: {},
@@ -321,6 +325,21 @@ export default {
                 this.sourceList = res.list
             })
         },
+        handleCustomerBlur() {  // 获取 车架号
+            if (!this.form.name) {
+                return this.isExist = ''
+            }
+            Core.Api.CRMCustomer.checkName({
+                id: this.form.id,
+                name: this.form.name,
+            }).then(res => {
+                this.isExist = res.results ? 2 : 1
+                console.log("handleVehicleBlur res", res)
+            }).catch(err => {
+                console.log('handleVehicleBlur err', err)
+            }).finally(() => {
+            });
+        },
     }
 };
 </script>
@@ -330,6 +349,32 @@ export default {
 
     .icon {
         font-size: 12px;
+    }
+
+}
+.form-item {
+    .fac();
+    .value{
+        .ant-input {
+            width: calc(~'100% - 24px');
+        }
+    }
+
+
+    i.icon {
+        display: inline-block;
+        width: 24px;
+        text-align: right;
+    }
+
+    .i_confirm {
+        color: @green;
+        font-size: 18px;
+    }
+
+    .i_close_c {
+        color: @red;
+        font-size: 18px;
     }
 }
 </style>
