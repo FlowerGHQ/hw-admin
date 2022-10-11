@@ -4,10 +4,10 @@
                 <div class="title-area">{{  $t('crm_b.detail')  }}
             </div>
             <div class="btns-area">
-                <a-button @click="nextStep" v-if="detail.status + 1 < groupStatusTableData.length && detail.status !== STATUS.LOSE"><i class="icon i_audit"/>{{$t('crm_b.next_step')}}</a-button>
-                <a-button @click="loseTheOrder" v-if="detail.status !== STATUS.LOSE"><i class="icon i_audit"/>{{$t('crm_b.lost_order')}}</a-button>
-                <a-button @click="winTheOrder"  v-if="detail.status !== STATUS.LOSE && detail.status !== STATUS.WIN"><i class="icon i_audit"/>{{$t('crm_b.win_order')}}</a-button>
-                <a-button @click="reactivation"  v-if="detail.status === STATUS.LOSE"><i class="icon i_audit"/>{{$t('crm_b.reactivation')}}</a-button>
+                <a-button @click="nextStep" v-if="detail.status + 1 < groupStatusTableData.length && detail.status !== STATUS.LOSE" v-if="$auth('crm-bo.update-status')"><i class="icon i_audit"/>{{$t('crm_b.next_step')}}</a-button>
+                <a-button @click="loseTheOrder" v-if="detail.status !== STATUS.LOSE" v-if="$auth('crm-bo.update-status')"><i class="icon i_audit"/>{{$t('crm_b.lost_order')}}</a-button>
+                <a-button @click="winTheOrder"  v-if="detail.status !== STATUS.LOSE && detail.status !== STATUS.WIN" v-if="$auth('crm-bo.update-status')"><i class="icon i_audit"/>{{$t('crm_b.win_order')}}</a-button>
+                <a-button @click="reactivation"  v-if="detail.status === STATUS.LOSE"><i class="icon i_audit" v-if="$auth('crm-bo.reactivation')"/>{{$t('crm_b.reactivation')}}</a-button>
             </div>
         </div>
         <div class="gray-panel">
@@ -44,12 +44,12 @@
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                             <span v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
                                 <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" @submit="getCRMTrackRecord"/>
-                                <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
-                                 <a-button @click="routerChange('order-save')">新建订单</a-button>
+                                <a-button @click="routerChange('edit')" v-if="$auth('crm-bo.save')">{{ $t('n.edit') }}</a-button>
+                                 <a-button @click="routerChange('order-save')" v-if="$auth('crm-order.save')">新建订单</a-button>
                             </span>
                             <span v-if="trackMemberDetail!= null ? trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
                                 <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :addCustomerBtn="true"/>
-                                <a-button type="primary" @click="handleBatch('transfer')">{{ $t('crm_c.transfer') }}</a-button>
+                                <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-bo.transfer')">{{ $t('crm_c.transfer') }}</a-button>
                                 <a-button type="danger" @click="handleReturnPool">{{ $t('crm_c.return_pool') }}</a-button>
                             </span>
 

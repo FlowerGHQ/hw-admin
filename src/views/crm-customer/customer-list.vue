@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('c.list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" ><i class="icon i_add"/>{{ operMode ==='private' ? $t('c.save') : $t('crm_c.new_pool_c') }}</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('crm-customer.save')"><i class="icon i_add"/>{{ operMode ==='private' ? $t('c.save') : $t('crm_c.new_pool_c') }}</a-button>
                 </div>
             </div>
             <div class="search-container">
@@ -67,14 +67,14 @@
                 </div>
             </div>
             <div class="operate-container" v-if="operMode ==='high_seas'">
-                <a-button type="primary" @click="handleBatchObtain">{{ $t('crm_c.obtain') }}</a-button>
-                <a-button type="primary" @click="handleBatch('distribute')">{{ $t('crm_c.distribute') }}</a-button>
-                <a-button type="danger" @click="handleBatchDelete">{{ $t('crm_c.delete') }}</a-button>
+                <a-button type="primary" @click="handleBatchObtain" v-if="$auth('crm-customer.obtain')">{{ $t('crm_c.obtain') }}</a-button>
+                <a-button type="primary" @click="handleBatch('distribute')" v-if="$auth('crm-customer.distribute')">{{ $t('crm_c.distribute') }}</a-button>
+                <a-button type="danger" @click="handleBatchDelete" v-if="$auth('crm-customer.delete')">{{ $t('crm_c.delete') }}</a-button>
             </div>
             <div class="operate-container" v-if="operMode ==='private'">
-                <a-button type="primary" @click="handleBatchReturnPool">{{ $t('crm_c.return_pool') }}</a-button>
-                <a-button type="primary" @click="handleBatch('transfer')">{{ $t('crm_c.transfer') }}</a-button>
-                <a-button type="danger" @click="handleBatchDelete">{{ $t('crm_c.delete') }}</a-button>
+                <a-button type="primary" @click="handleBatchReturnPool" v-if="$auth('crm-customer.return-pool')">{{ $t('crm_c.return_pool') }}</a-button>
+                <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-customer.transfer')">{{ $t('crm_c.transfer') }}</a-button>
+                <a-button type="danger" @click="handleBatchDelete" v-if="$auth('crm-customer.delete')">{{ $t('crm_c.delete') }}</a-button>
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' :row-selection="rowSelection" @change="getTableDataSorter">
@@ -106,9 +106,9 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('customer.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
-<!--                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('customer.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>-->
-<!--                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('customer.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>-->
+                            <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('crm-customer.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
+<!--                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('crm-customer.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>-->
+<!--                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('crm-customer.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>-->
                         </template>
                     </template>
                 </a-table>

@@ -1484,8 +1484,7 @@ const routes = [
 			title: 'CRM客户',
 			title_en: 'CRM Customers',
 			icon: 'i_s_customer',
-			// auth: ["crm-customer.list"],
-
+			auth: ["crm-customer.list"],
 		},
 		children: [
 			{
@@ -1495,8 +1494,8 @@ const routes = [
 				meta: {
 					title: '公海客户',
 					title_en: 'Community Customer list',
-					type: 'high_seas'
-					// auth: ["crm-community-customer.list"],
+					type: 'high_seas',
+					auth: ["crm-customer.list"],
 				}
 			},
 			{
@@ -1506,8 +1505,8 @@ const routes = [
 				meta: {
 					title: '私人客户',
 					title_en: 'Private clients',
-					type: 'private'
-					// auth: ["crm-community-customer.list"],
+					type: 'private',
+                    auth: ["crm-customer.list"],
 				}
 			},
 			{
@@ -1518,7 +1517,7 @@ const routes = [
 					hidden: true,
 					title: '新建客户',
 					parent: '/customer/customer-list',
-					// auth: ["crm-customer.save"],
+					auth: ["crm-customer.save"],
 				}
 			},
 			{
@@ -1529,7 +1528,7 @@ const routes = [
 					hidden: true,
 					title: '客户详情',
 					parent: '/customer/customer-list',
-					// auth: ["crm-customer.save"],
+					auth: ["crm-customer.detail"],
 				}
 			},
 			// {
@@ -1555,7 +1554,7 @@ const routes = [
 			// },
 		]
 	},
-	{ // 客户管理
+	{ // 商机管理
 		path: '/crm-bo',
 		component: Layout,
 		redirect: '/crm-bo/bo-list',
@@ -1564,7 +1563,7 @@ const routes = [
 			title: 'CRM商机',
 			title_en: 'CRM BO',
 			icon: 'i_s_customer',
-			// auth: ["crm-customer.list"],
+			auth: ["crm-bo.list"],
 
 		},
 		children: [
@@ -1575,7 +1574,7 @@ const routes = [
 				meta: {
 					title: '商机列表',
 					title_en: 'Business opportunities list',
-					// auth: ["crm-community-customer.list"],
+                    auth: ["crm-bo.list"],
 				}
 			},
 			{
@@ -1586,7 +1585,7 @@ const routes = [
 					hidden: true,
 					title: '新建客户',
 					parent: '/bo/bo-list',
-					// auth: ["crm-customer.save"],
+                    auth: ["crm-bo.save"],
 				}
 			},
 			{
@@ -1597,7 +1596,7 @@ const routes = [
 					hidden: true,
 					title: '客户详情',
 					parent: '/bo/bo-list',
-					// auth: ["crm-customer.save"],
+                    auth: ["crm-bo.detail"],
 				}
 			},
 		]
@@ -1611,7 +1610,7 @@ const routes = [
 			title: 'CRM合同',
 			title_en: 'CRM Order',
 			icon: 'i_s_customer',
-			// auth: ["crm-customer.list"],
+            auth: ["crm-order.list"],
 		},
 		children: [
 			{
@@ -1621,7 +1620,7 @@ const routes = [
 				meta: {
 					title: '合同列表',
 					title_en: 'Business opportunities list',
-					// auth: ["crm-community-customer.list"],
+                    auth: ["crm-order.list"],
 				}
 			},
 			{
@@ -1632,7 +1631,7 @@ const routes = [
 					hidden: true,
 					title: '新建合同',
 					parent: '/crm-order/order-list',
-					// auth: ["crm-customer.save"],
+                    auth: ["crm-order.save"],
 				}
 			},
 			{
@@ -1644,7 +1643,7 @@ const routes = [
 					title: '合同详情',
 					title_en: 'Business opportunities phase',
 					parent: '/crm-order/order-list',
-					// auth: ["crm-community-customer.list"],
+                    auth: ["crm-order.detail"],
 				}
 			},
 		]
@@ -1658,7 +1657,7 @@ const routes = [
 			title: 'CRM回款单',
 			title_en: 'CRM Order Income',
 			icon: 'i_s_customer',
-			// auth: ["crm-customer.list"],
+            auth: ["crm-order-income.list"],
 		},
 		children: [
 			{
@@ -1668,7 +1667,7 @@ const routes = [
 				meta: {
 					title: '回款单列表',
 					title_en: 'Business opportunities list',
-					// auth: ["crm-community-customer.list"],
+                    auth: ["crm-order-income.list"],
 				}
 			},
 			{
@@ -1679,7 +1678,7 @@ const routes = [
 					hidden: true,
 					title: '新建回款单',
 					parent: '/crm-order-income/order-income-list',
-					// auth: ["crm-customer.save"],
+                    auth: ["crm-order-income.save"],
 				}
 			},
 			{
@@ -1691,7 +1690,7 @@ const routes = [
 					title: '回款单详情',
 					title_en: 'Business opportunities phase',
 					parent: '/crm-order-income/order-income-list',
-					// auth: ["crm-community-customer.list"],
+                    auth: ["crm-order-income.detail"],
 				}
 			},
 		]
@@ -1716,7 +1715,7 @@ const routes = [
 				meta: {
 					title: '商机阶段',
 					title_en: 'Business opportunities phase',
-					// auth: ["crm-community-customer.list"],
+                    auth: ["crm-bo-status.list"],
 				}
 			},
 			{
@@ -1726,7 +1725,7 @@ const routes = [
 				meta: {
 					title: '客户来源',
 					title_en: 'Customer source',
-					// auth: ["crm-community-customer.list"],
+                    auth: ["crm-customer-source.list"],
 				}
 			},
 		]
@@ -1740,7 +1739,7 @@ const routes = [
 			title: '智能标签',
 			title_en: 'Smart Label',
 			icon: 'i_s_customer',
-			// auth: ["crm-customer.list"],
+			auth: ["crm-label.list"],
 
 		},
 		children: [
@@ -1751,7 +1750,7 @@ const routes = [
 				meta: {
 					title: '标签列表',
 					title_en: 'Label List',
-					// auth: ["crm-community-customer.list"],
+                    auth: ["crm-label.list"],
 				}
 			},
 		]

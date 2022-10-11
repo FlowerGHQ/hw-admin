@@ -143,7 +143,7 @@
                             </template>
 
                             <template v-if="column.dataIndex === 'operation'">
-                                <a-button type="link" class="danger" @click="handleFailItemDelete(index)"><i
+                                <a-button type="link" class="danger" @click="handleFailItemDelete(index)" v-if="$auth('crm-order.delete')"><i
                                     class="icon i_delete"/>{{ $t('def.remove') }}
                                 </a-button>
                             </template>
@@ -190,7 +190,7 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary">{{ $t('def.sure') }}</a-button>
+            <a-button @click="handleSubmit" type="primary" v-if="$auth('crm-order.save')">{{ $t('def.sure') }}</a-button>
             <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
         </div>
     </div>
