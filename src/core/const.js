@@ -1364,6 +1364,43 @@ let Const = {
 		    ITEM_CATEGORY: 2,
 	    }
 	},
+
+    // 测试
+    TEST: {
+        SPACE_MAP: {
+            '26005': { value: 26005, text: 'BMS-26005'}
+        },
+
+        TYPE: {
+            BMS_PLUG_IN_MACHINE: 10001,
+        },
+        TYPE_MAP: {
+            '10001': { value: 10001, key: 't.test_case.bms_plug_in_machine', text: 'BMS外挂整机测试'}
+        },
+
+        TYPE_CASE_MAP: {
+            '10001': {
+                "0001": "扫电池条码",
+                "0002": "连接设备",
+                "0005": "DTU连通性测试",
+                "0004": "电池电量测试",
+                "0003": "读取数据校验项",
+            }
+        },
+
+        STATUS: {
+            INIT: 0,
+            RUNNING: 100,
+            PASS: 200,
+            FAIL: -100,
+        },
+        STATUS_MAP: {
+            '0':    { value: 0,    text: '初始化', color: 'gray' },
+            '100':  { value: 100,  text: '测试中', color: 'blue' },
+            '200':  { value: 200,  text: '已通过', color: 'green' },
+            '-100': { value: -100, text: '未通过', color: 'red' },
+        }
+    },
 };
 
 export default Const;

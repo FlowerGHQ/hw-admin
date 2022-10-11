@@ -584,6 +584,10 @@ const apiList = {
 		delete: ['PostJson', 'print-template/delete'],//
 	},
 
+    TestReport: { // 测试报告
+        list: ['PostJson', 'report/list'],
+		detail: ['PostJson', 'report/detail'],
+    },
 };
 
 export default new Api(baseUrl, apiList);
