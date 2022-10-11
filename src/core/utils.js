@@ -829,6 +829,13 @@ const Util = {
 		return item[to] || ''
 	},
 	/* =============== 整车 ================ */
+	/* =============== 整车 ================ */
+	deviceStatusFilter(val,  to='zh') {
+		const MAP = Const.DEVICE.STATUS_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	/* =============== 整车 ================ */
 
     /* =============== 权限 ================ */
     userAuthFilter(val,  to='zh') {

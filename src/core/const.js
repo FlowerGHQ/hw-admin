@@ -1113,6 +1113,20 @@ let Const = {
 			'4': {key: 4, zh: '预分销出入库', en: 'Pre-distribution warehousing'},
 		}
 	},
+	DEVICE: {
+		STATUS_MAP: {
+			'100': {key: 100, zh: '初始', en: 'Init'},
+			'200': {key: 200, zh: '已转换', en: 'conversion'},
+		},
+		TYPE_MAP: {
+			'1': {key: 1, zh: '整车', en: 'Vehicle'},
+			'2': {key: 2, zh: '零部件', en: 'Parts'},
+		},
+		TYPE: {
+			VEHICLE: 1,
+			PARTS: 2,
+		},
+	},
     AFTERSALES: { // 售后
         STATUS: {
             INIT: 0,         // 待提交

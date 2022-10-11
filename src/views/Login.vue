@@ -31,7 +31,7 @@
             <a-button class="form-button" type="primary" @click="handleLogin">{{ $t('n.login') }}</a-button>
         </div>
     </div>
-    <div class="login-footer">Copyright © 2021 杭州重构科技有限公司 浙ICP备17006717号</div>
+    <div class="login-footer">Copyright © 2019-2022 常州浩万新能源科技有限公司 苏ICP备2022002975号-2</div>
 </div>
 </template>
 

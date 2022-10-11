@@ -494,6 +494,7 @@ const messages = {
 	        home_page_redirect_number: '首页跳转序号',
 	        on_board_battery: '随车电池',
 			clear_shop_car: '清空购物车',
+
         },
 	    fe:{ // 反馈单
             feedback: '反馈',

@@ -255,6 +255,10 @@ const apiList = {
         getByUid: ['PostJson', 'entity/get-by-uid'],
         batchSave: ['PostJson', 'entity/batch-save-arrival-time'],
     },
+	Device: {// 车架
+		list: ['PostJson', 'device/list'],
+		deviceToEntity: ['PostJson', 'device/device-to-entity'],
+	},
     ItemCategory: { // 商品分类
         list: ['PostJson', 'item-category/list'],
 	    listAll: ['PostJson', 'item-category/list-all'],
