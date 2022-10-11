@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('crm_b.list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" ><i class="icon i_add"/>{{ $t('crm_b.save') }}</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('crm-bo.save')"><i class="icon i_add"/>{{ $t('crm_b.save') }}</a-button>
                 </div>
             </div>
             <div class="search-container">
@@ -70,9 +70,9 @@
                         </template>
 
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('customer.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
-                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('customer.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('customer.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>
+                            <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('crm-bo.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
+                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('crm-bo.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('crm-bo.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>

@@ -36,8 +36,8 @@
                         <span class="value">{{ detail.own_user_name || '-'}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                        <a-button>退款</a-button>
-                        <a-button @click="handleDelete(detail.id)">删除</a-button>
+                        <a-button v-if="$auth('crm-order-income.refund')">退款</a-button>
+                        <a-button @click="handleDelete(detail.id)" v-if="$auth('crm-order-income.delete')">删除</a-button>
                     </a-col>
                 </a-row>
             </div>

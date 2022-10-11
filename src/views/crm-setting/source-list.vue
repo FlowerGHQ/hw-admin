@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('crm_set.list')}}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleModalShow({})" v-if="$auth('sales-area.save')"><i class="icon i_add"/>{{ $t('ar.save')}}</a-button>
+                    <a-button type="primary" @click="handleModalShow({})" v-if="$auth('crm-customer-source.save')"><i class="icon i_add"/>{{ $t('ar.save')}}</a-button>
                 </div>
             </div>
             <div class="search-container">
@@ -30,8 +30,8 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleModalShow(record)" v-if="$auth('sales-area.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('sales-area.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                            <a-button type="link" @click="handleModalShow(record)" v-if="$auth('crm-customer-source.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('crm-customer-source.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>

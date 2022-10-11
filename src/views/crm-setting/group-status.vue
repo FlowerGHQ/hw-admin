@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('crm_g.business_opportunities_phase') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="addBoStatusGroup" ><i class="icon i_add"/>{{ $t('crm_b.save') }}</a-button>
+                    <a-button type="primary" @click="addBoStatusGroup" v-if="$auth('crm-bo-status.save')"><i class="icon i_add"/>{{ $t('crm_b.save') }}</a-button>
                 </div>
             </div>
             <div class="table-container">
@@ -20,10 +20,10 @@
                             {{ $t('crm_g.underway') }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('up',record ,index)" :disabled="index === 0 "><i class="icon i_detail"/>{{ $t('crm_g.up') }}</a-button>
-                            <a-button type="link" @click="routerChange('down',record ,index)" :disabled="index === tableData.length-1 "><i class="icon i_detail"/>{{ $t('crm_g.down') }}</a-button>
-                            <a-button type="link" @click="routerChange('edit',record ,index)" ><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                            <a-button type="link" @click="handleDelete(index)" class="danger" ><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>
+                            <a-button type="link" @click="routerChange('up',record ,index)" :disabled="index === 0 " v-if="$auth('crm-bo-status.save')"><i class="icon i_detail"/>{{ $t('crm_g.up') }}</a-button>
+                            <a-button type="link" @click="routerChange('down',record ,index)" :disabled="index === tableData.length-1 " v-if="$auth('crm-bo-status.save')"><i class="icon i_detail"/>{{ $t('crm_g.down') }}</a-button>
+                            <a-button type="link" @click="routerChange('edit',record ,index)" v-if="$auth('crm-bo-status.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type="link" @click="handleDelete(index)" class="danger" v-if="$auth('crm-bo-status.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>
