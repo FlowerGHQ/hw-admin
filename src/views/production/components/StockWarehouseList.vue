@@ -10,7 +10,7 @@
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'type'">
-                            {{ $Util.warehouseTypeFilter(text) }}
+                            {{ $Util.warehouseTypeFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'stock'">
                             {{ text || '-' }}
@@ -65,11 +65,11 @@ export default {
             pageSize: 20,
             total: 0,
             tableColumns: [
-                {title: '仓库名称', dataIndex: ['warehouse','name'],key: 'detail',},
-                {title: '仓库类型', dataIndex:  ['warehouse','type'],key: 'type',},
-                {title: '库存数量', dataIndex: 'stock',key: 'stock',},
-                {title: '仓库地址', dataIndex: 'warehouse', key:'address'},
-                {title: '创建时间', dataIndex: 'create_time', key: 'time'},
+                {title: this.$t('wa.warehouse_name'), dataIndex: ['warehouse','name'],key: 'detail',},
+                {title: this.$t('wa.type'), dataIndex:  ['warehouse','type'],key: 'type',},
+                {title: this.$t('wa.quantity'), dataIndex: 'stock',key: 'stock',},
+                {title: this.$t('wa.address'), dataIndex: 'warehouse', key:'address'},
+                {title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time'},
             ],
             tableData: [],
         };

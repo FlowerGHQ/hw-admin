@@ -37,7 +37,7 @@
                 </div>
 
                 <template v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) && detail.type === TYPE.IN && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')">
-                    <a-button type="primary" @click="handleExportIn"><i class="icon i_download"/>{{t('in.export')}}</a-button>
+                    <a-button type="primary" @click="handleExportIn"><i class="icon i_download"/>{{$t('in.export')}}</a-button>
                 </template>
 
                 <AuditHandle v-if="(detail.status === STATUS.FINANCE_PASS || (detail.status === STATUS.WAIT_AUDIT && detail.type === TYPE.IN)) && $auth('invoice.warehouse-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"
@@ -47,7 +47,10 @@
                     <AuditHandle v-if="detail.status === STATUS.WAIT_AUDIT && $auth('invoice.finance-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"
                                            :sPass="STATUS.FINANCE_PASS" :sRefuse="STATUS.AUDIT_REFUSE" @submit="getInvoiceDetail" ><i class="icon i_audit"/>{{$t('in.finance_audit')}}</AuditHandle>
                     <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}{{$t('in.finish')}}</a-button>
-                    <a-button type="primary" @click="handleExportOut" v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')"><i class="icon i_download"/>{{t('in.export')}}</a-button>
+                    <a-button type="primary" @click="handleExportOut" v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')"><i class="icon i_download"/>{{$t('in.export')}}</a-button>
+
+                    <a-button type="primary" @click="handleExportDetail" v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY|| detail.status === STATUS.RECEIVED)  && $auth('ADMIN') && $auth('invoice.import-export')"><i class="icon i_download"/>{{$t('in.export_invoice')}}</a-button>
+
                 </template>
             </div>
         </template>
@@ -173,12 +176,12 @@
 <!--                            </template>-->
 
                             <template v-if="column.key === 'target_type'">
-                                {{ $Util.targetTypeFilter(record.target_type) }}
+                                {{ $Util.targetTypeFilter(record.target_type, $i18n.locale ) }}
                             </template>
                             <template v-if="record.target_type === COMMODITY_TYPE.MATERIALS">
                                 <template v-if="column.key === 'name'">
                                     <div class="ell" style="max-width: 160px">
-                                        <a-button type="link" @click="routerChange('material', record )">{{ record.material.name || '-' }}</a-button>
+                                        <a-button type="link" @click="routerChange('material', record )">{{$i18n.locale == 'zh' ? record.material.name || '-': record.material.name_en || '-' }}</a-button>
                                     </div>
                                 </template>
                                 <template v-if="column.key === 'code'">
@@ -202,16 +205,16 @@
                             <template v-if="record.target_type === COMMODITY_TYPE.ITEM">
                                 <template v-if="column.key === 'name'">
                                     <div class="ell" style="max-width: 160px">
-                                        <a-button type="link" @click="routerChange('item', record )">{{ record.item.name || '-' }}</a-button>
+                                        <a-button type="link" @click="routerChange('item', record )">{{$i18n.locale == 'zh' ? record.item.name || '-': record.item.name_en || '-' }}</a-button>
                                     </div>
                                 </template>
                                 <template v-if="column.key === 'code'">
                                     {{ record.item.code || '-' }}
                                 </template>
                                 <template v-if="column.key === 'spec'">
-                                    <a-tooltip placement="top" :title='$Util.itemSpecFilter(text)'>
+                                    <a-tooltip placement="top" :title='$Util.itemSpecFilter(text, $i18n.locale)'>
                                         <div class="ell" style="max-width: 120px">
-                                            {{ $Util.itemSpecFilter(text) }}
+                                            {{ $Util.itemSpecFilter(text, $i18n.locale) }}
                                         </div>
                                     </a-tooltip>
                                 </template>
@@ -230,7 +233,7 @@
 
 
                             <template v-if="column.key === 'flag_entity'">
-                                {{ $Util.itemFlagEntityFilter(text) }}
+                                {{ $Util.itemFlagEntityFilter(text, $i18n.locale) }}
                             </template>
 
                             <template v-if="column.key === 'count'">
@@ -520,11 +523,7 @@ export default {
 
             childShow: false,
             childDate: [],
-            childColumns: [
-                {title: this.$t('n.name'), dataIndex: ['item', 'name']},
-                {title: this.$t('uid'), dataIndex: ['entity', 'uid'], key: 'uid' },
-                {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100,},
-            ],
+
             // 上传
             childInfoShow: false,
             // 上传
@@ -575,6 +574,14 @@ export default {
             return list
 
         },
+        childColumns(){
+            let columns = [
+                {title: this.$t('n.name'), dataIndex: ['item', 'name']},
+                {title: this.$t('uid'), dataIndex: ['entity', 'uid'], key: 'uid' },
+                {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100,},
+            ]
+            return columns
+        } ,
         itemTableColumns() {
             // 无实例商品的 出入库
             let columns = [
@@ -1215,6 +1222,26 @@ export default {
                     _this.handleInvoiceExportOut();
                 }
             })
+        },
+        handleExportDetail() { // 确认入库单是否导出
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('in.sure_export'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
+                onOk() {
+                    _this.handleInvoiceDetailExport();
+                }
+            })
+        },
+        handleInvoiceDetailExport() { // 订单导出
+            this.exportDisabled = true;
+            let exportUrl = Core.Api.Export.invoiceDetailExport({
+                invoice_id: this.id,
+            })
+            console.log("handleRepairExport _exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
         },
         handleInvoiceExportOut() { // 订单导出
             this.exportDisabled = true;

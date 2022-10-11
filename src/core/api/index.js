@@ -27,6 +27,7 @@ const apiList = {
         repairExport: ['PostJson', 'repair/export-repair-order-record'],
         invoiceOutExport: ['PostJson', 'invoice/export-out-invoice'],//导出
         invoiceInExport: ['PostJson', 'invoice/export-in-invoice'],//导出
+	    invoiceDetailExport: ['PostJson', 'invoice/export-detail'],//导出
         materialPurchaseExport: ['PostJson', '/material-purchase-order/export'],//导出
 	    ItemCollectExport: ['PostJson', '/shopping-cart/download-import-template'],//导出
 	    feedbackTemplateExport: ['PostJson', 'feedback/export-template'], // 采购单模版导出
@@ -323,6 +324,7 @@ const apiList = {
         itemList: ['PostJson', 'purchase-order-item/list'], // 采购订单明细列表
         payList: ['PostJson', 'purchase-order-pay/list'], // 采购订单收款明细列表
 	    payAudit: ['PostJson', 'purchase-order-pay/audit'], // 采购订单收款明细列表
+	    createAudit: ['PostJson', 'purchase-order/create-audit'], // 售后采购单创建审核
 	    delete: ['PostJson', 'purchase-order-pay/delete'], // 采购订单收款明细列表
         itemByIdList: ['PostJson', 'purchase-order-item/list-by-item-id'], // 采购订单明细列表
         payment: ['PostJson', 'purchase-order/payment'], // 支付订单
@@ -340,7 +342,7 @@ const apiList = {
         reviseAudit: ['PostJson', 'purchase-order/revise-audit'], // 已下单的订单-编辑商品-审核
 
 	    createGiveaway: ['PostJson', 'purchase-order/create-giveaway'], // 已下单的订单-编辑商品-审核
-
+	    updatePI: ['PostJson', 'purchase-order/update-pi'], // 修改pi
 
     },
     Aftersales: { // 售后单
@@ -567,6 +569,7 @@ const apiList = {
 		audit: ['PostJson', 'feedback/audit'],//审核
 		submit: ['PostJson', 'feedback/submit'],//提交
 		feedback: ['PostJson', 'feedback/feedback'],//
+		afterSalesDesc: ['PostJson', 'feedback/after-sales-desc'],//
 		saveTitle: ['PostJson', 'feedback/save-title'],//
 		content: ['PostJson', 'feedback/content'],//
 	},

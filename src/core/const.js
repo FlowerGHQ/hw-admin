@@ -28,6 +28,10 @@ switch (window.location.hostname) {
         URL_POINT = 'http://10.0.0.194:8889'
 	    // URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
         break;
+	case "10.0.0.230":
+		URL_POINT = 'http://10.0.0.230:8889'
+		// URL_POINT = 'http://eos-api.hw.innotick.com' // 测试服
+		break;
     case "192.168.31.224":
         URL_POINT = 'http://192.168.31.224:8889'
         break;
@@ -398,11 +402,11 @@ let Const = {
 			INIT:0,
 			WAIT_AFTER_SALES_AUDIT: 100,
 			AFTER_SALES_AUDIT_FAIL: 110,
-			WAIT_QUALITY_AUDIT: 200,
-			QUALITY_AUDIT_FAIL: 210,
-			WAIT_FEEDBACK: 300,
-			WAIT_FEEDBACK_AUDIT: 400,
-			FEEDBACK_AUDIT_FAIL: 410,
+			WAIT_AFTER_SALES_DESC: 150,
+			WAIT_FEEDBACK: 200,
+			WAIT_QUALITY_AUDIT: 300,
+			QUALITY_AUDIT_FAIL: 310,
+			WAIT_AFTER_FEEDBACK: 400,
 			CLOSE: 500,
 			AUDIT_FAIL: -10,
 			CANCEL: -1,
@@ -411,11 +415,11 @@ let Const = {
 			'0': { key: 0, color: 'yellow', zh: '待提交', en: 'Pending submission'},
 			'100': { key: 100, color: 'blue', zh: '等待平台售后审核', en: 'Awaiting after-sales audit'},
 			'110': { key: 110, color: 'blue', zh: '待修改', en: 'Pending modification'},
-			'200': { key: 200, color: 'orange', zh: '等待平台质量审核', en: 'Awaiting quality audit'},
-			'210': { key: 210, color: 'orange', zh: '待修改',en: 'Pending modification'},
-			'300': { key: 300, color: 'purple', zh: '等待反馈', en: 'Awaiting feedback'},
-			'400': { key: 400, color: 'purple', zh: '等待审核反馈', en: 'Awaiting audit feedback'},
-			'410': { key: 410, color: 'purple', zh: '反馈待修改', en: 'Feedback to be modified'},
+			'150': { key: 150, color: 'blue', zh: '等待售后填写故障信息', en: 'Waiting for after-sale filling'},
+			'200': { key: 200, color: 'orange', zh: '等待质量反馈', en: 'Waiting for quality feedback'},
+			'300': { key: 300, color: 'purple', zh: '等待质量审核', en: 'Waiting for quality audit'},
+			'310': { key: 300, color: 'purple', zh: '等待修改反馈', en: 'Waiting for modification feedback'},
+			'400': { key: 400, color: 'purple', zh: '等待售后反馈', en: 'Waiting for after-sales feedback'},
 			'500': { key: 500, color: 'blue', zh: '已完成', en: 'Finished'},
 			'-10': { key: -10, color: 'blue', zh: '审核失败',en: 'Audit failed'},
 			'-1': { key: -1, color: 'gray', zh: '已取消', en: 'Canceled'},
@@ -556,6 +560,7 @@ let Const = {
         STATUS: {
             INIT: 0,
 	        SPLIT: 50,
+	        WAIT_AUDIT: 60,
             WAIT_PAY: 100,
             WAIT_DELIVER: 200,
 	        ORDER_TRANSFERRED: 250,
@@ -571,6 +576,7 @@ let Const = {
         STATUS_MAP: {
             '0':   { value: '0', key: 0,    color: 'red',    zh: '未知', en: 'Unknown'},
 	        '50': { value: '0', key: 50,  color: 'green', zh: '已拆单', en: 'Separate bill'},
+	        '60': { value: '0', key: 60,  color: 'green', zh: '等待审核', en: 'Waiting for audit'},
             '100': { value: '0', key: 100,  color: 'orange', zh: '待支付', en: 'Wait to pay'},
             '200': { value: '0', key: 200,  color: 'orange', zh: '待发货', en: 'Wait for delivery'},
             '250': { value: '0', key: 400,  color: 'blue',   zh: '已转单', en: 'Order transferred'},

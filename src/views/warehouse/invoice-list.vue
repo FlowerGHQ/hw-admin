@@ -206,8 +206,8 @@ export default {
             let columns = [
                 {zh: '全  部', en: 'All', value: '0', color: 'primary', key: -1},
                 {zh: '待提交', en: 'Awaiting commit', value: '0', color: 'yellow', key: STATUS.INIT},
-                {zh: '待财务审核', en: 'Waiting for financial approval', value: '0', color: 'blue', key: STATUS.WAIT_AUDIT},
-                {zh: '待仓库审核', en: 'Awaiting admin review', value: '0', color: 'blue', key: STATUS.FINANCE_PASS},
+                {zh: '待财务审核', en: 'Waiting for financial review', value: '0', color: 'blue', key: STATUS.WAIT_AUDIT},
+                {zh: '待仓库审核', en: 'Waiting for warehouse review', value: '0', color: 'blue', key: STATUS.FINANCE_PASS},
                 {zh: '审核失败', en: 'Review failed', value: '0', color: 'red', key: STATUS.AUDIT_REFUSE},
                 {zh: '审核通过 待完成', en: 'Review passed', value: '0', color: 'blue', key: STATUS.AUDIT_PASS},
                 {zh: '已完成', en: 'In the warehouse', value: '0', color: 'green', key: STATUS.CLOSE},

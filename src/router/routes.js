@@ -758,39 +758,39 @@ const routes = [
         ]
     },
 
-    { // 物流管理
-        path: '/waybill',
-        component: Layout,
-        redirect: '/waybill/waybill-list',
-        name: 'WayBillManagement',
-        meta: {
-            title: '物流管理',
-            title_en: 'Logistics',
-            icon: 'i_deliver',
-            roles: [LOGIN_TYPE.ADMIN],
-            not_sub_menu: true,
-        },
-        children: [
-            {
-                path: 'waybill-list',
-                name: 'waybillList',
-                component: () => import('@/views/waybill/waybill-list.vue'),
-                meta: {
-                    title: '物流列表',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-            // {
-            //     path: 'waybill-company',
-            //     name: 'WaybillCompanyList',
-            //     component: () => import('@/views/waybill/waybill-company.vue'),
-            //     meta: {
-            //         title: '物流公司',
-            //         roles: [LOGIN_TYPE.ADMIN],
-            //     }
-            // },
-        ]
-    },
+    // { // 物流管理
+    //     path: '/waybill',
+    //     component: Layout,
+    //     redirect: '/waybill/waybill-list',
+    //     name: 'WayBillManagement',
+    //     meta: {
+    //         title: '物流管理',
+    //         title_en: 'Logistics',
+    //         icon: 'i_deliver',
+    //         roles: [LOGIN_TYPE.ADMIN],
+    //         not_sub_menu: true,
+    //     },
+    //     children: [
+    //         {
+    //             path: 'waybill-list',
+    //             name: 'waybillList',
+    //             component: () => import('@/views/waybill/waybill-list.vue'),
+    //             meta: {
+    //                 title: '物流列表',
+    //                 roles: [LOGIN_TYPE.ADMIN],
+    //             }
+    //         },
+    //         // {
+    //         //     path: 'waybill-company',
+    //         //     name: 'WaybillCompanyList',
+    //         //     component: () => import('@/views/waybill/waybill-company.vue'),
+    //         //     meta: {
+    //         //         title: '物流公司',
+    //         //         roles: [LOGIN_TYPE.ADMIN],
+    //         //     }
+    //         // },
+    //     ]
+    // },
     { // 实例管理
         path: '/entity',
         component: Layout,
@@ -1348,6 +1348,7 @@ const routes = [
                 component: () => import('@/views/aftersales/aftersales-list.vue'),
                 meta: {
                     title: '售后单列表',
+                    title_en: 'After sales order list',
                     query_type: REFUND_QUERY_TYPE.APPLY,
 	                roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
                     auth: ["after-sales-order.list"],
@@ -1498,6 +1499,63 @@ const routes = [
             },
         ]
     },
+	// { // 客户管理
+	// 	path: '/crm-customer',
+	// 	component: Layout,
+	// 	redirect: '/crm-customer/customer-list',
+	// 	name: 'CRMCustomerManagement',
+	// 	meta: {
+	// 		title: 'CRM客户',
+	// 		title_en: 'CRM Customers',
+	// 		icon: 'i_s_customer',
+	// 		// auth: ["crm-customer.list"],
+	//
+	// 	},
+	// 	children: [
+	// 		{
+	// 			path: 'customer-list',
+	// 			name: 'CustomerList',
+	// 			component: () => import('@/views/crm-customer/customer-list.vue'),
+	// 			meta: {
+	// 				title: '公海客户',
+	// 				title_en: 'Community Customer list',
+	// 				// auth: ["crm-community-customer.list"],
+	// 			}
+	// 		},
+	// 		{
+	// 			path: 'customer-edit',
+	// 			name: 'CustomerEdit',
+	// 			component: () => import('@/views/crm-customer/customer-edit.vue'),
+	// 			meta: {
+	// 				hidden: true,
+	// 				title: '新建客户',
+	// 				parent: '/customer/customer-list',
+	// 				// auth: ["crm-customer.save"],
+	// 			}
+	// 		},
+	// 		// {
+	// 		// 	path: 'customer-list',
+	// 		// 	name: 'CustomerList',
+	// 		// 	component: () => import('@/views/crm/customer/customer-list.vue'),
+	// 		// 	meta: {
+	// 		// 		title: '公海客户',
+	// 		// 		title_en: 'Customer list',
+	// 		// 		// auth: ["crm-customer.list"],
+	// 		// 	}
+	// 		// },
+	// 		// {
+	// 		// 	path: 'customer-edit',
+	// 		// 	name: 'CustomerEdit',
+	// 		// 	component: () => import('@/views/crm/customer/customer-edit.vue'),
+	// 		// 	meta: {
+	// 		// 		hidden: true,
+	// 		// 		title: '新建客户',
+	// 		// 		parent: '/customer/customer-list',
+	// 		// 		// auth: ["crm-customer.save"],
+	// 		// 	}
+	// 		// },
+	// 	]
+	// },
     { // 系统管理
         path: '/system',
         component: Layout,
