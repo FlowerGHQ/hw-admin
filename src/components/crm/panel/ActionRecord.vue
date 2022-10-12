@@ -387,7 +387,6 @@ export default {
                     text-align: right;
                 }
                 .line {
-                    height: 20px;
                     line-height: 20px;
                     font-size: 12px;
                 }

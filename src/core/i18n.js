@@ -1120,6 +1120,10 @@ const messages = {
             distribute_success: '分配成功',
 		    order_success_count: '成单数量',
 		    pre_own_user: '前负责人',
+		    remark: '备注',
+		    province: '省',
+		    city: '市',
+		    county: '区',
 	    },
 	    crm_t: {
 		    track_record: '跟进记录',

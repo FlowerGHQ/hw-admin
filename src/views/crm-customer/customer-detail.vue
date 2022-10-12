@@ -39,7 +39,7 @@
                         <span v-if="detail.status === STATUS.POOL">
                             <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord"/>
                             <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button>
-                            <CustomerAdd :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER"  />
+                            <CustomerAdd :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @select="getCRMContactList"/>
                             <a-button type="primary" @click="handleObtain" v-if="$auth('crm-customer.obtain')">{{ $t('crm_c.obtain') }}</a-button>
                             <a-button type="primary" @click="handleBatch('distribute')" v-if="$auth('crm-customer.distribute')">{{ $t('crm_c.distribute') }}</a-button>
                             <a-button type="danger" @click="handleDelete" v-if="$auth('crm-customer.delete')">{{ $t('crm_c.delete') }}</a-button>
@@ -52,7 +52,7 @@
                                 <a-button @click="routerChange('order-save')" v-if="$auth('crm-order.save')">新建订单</a-button>
                             </span>
                             <span v-if="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN">
-                                <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :addCustomerBtn="true"/>
+                                <CustomerAdd :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @select="getCRMContactList" :addCustomerBtn="true"/>
                                 <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-customer.transfer')">{{ $t('crm_c.transfer') }}</a-button>
                                 <a-button type="danger" @click="handleReturnPool" v-if="$auth('crm-customer.return-pool')">{{ $t('crm_c.return_pool') }}</a-button>
                             </span>
@@ -254,6 +254,9 @@ export default {
                 console.log("handleDelete err", err);
             })
 
+        },
+        getCRMContactList(){
+            this.$refs.CRMContact.getTableData();
         },
         handleBatch(type) {
             this.batchShow = true;

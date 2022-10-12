@@ -1551,6 +1551,7 @@ let Const = {
 			CUSTOMER: 1,
 			BO: 2,
 			ORDER:3,
+
 		},
 	},
 	CRM_TRACK_MEMBER: {
@@ -1592,6 +1593,7 @@ let Const = {
 		TARGET_TYPE: {
 			CUSTOMER: 1,
 			BO: 2,
+			BO_ADD_CUSTOMER: 10,
 		}
 	},
 	CRM_ACTION_RECORD: {

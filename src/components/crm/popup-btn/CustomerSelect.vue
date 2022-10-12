@@ -165,6 +165,9 @@ export default {
             Core.Api.CRMCustomer.list({
                 name: this.searchForm.name,
                 phone: this.searchForm.phone,
+                target_id: this.targetId,
+                target_type: this.targetType,
+
             }).then(res => {
                 this.tableData = res.list
             }).catch(err => {

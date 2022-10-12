@@ -113,7 +113,7 @@
                 <div class="paging-area"></div>
                 <div class="btn-area">
                     <a-button @click="handleModalClose">{{ $t('def.cancel') }}</a-button>
-                    <a-button @click="handleConfirm" type="primary">{{ $t('def.sure') }}</a-button>
+                    <a-button @click="handleSubmit" type="primary">{{ $t('def.sure') }}</a-button>
                 </div>
             </div>
         </template>
@@ -279,6 +279,7 @@ export default {
             form.birthday = form.birthday ? dayjs(form.birthday).unix() : 0 // 日期转时间戳
 
             console.log('form',this.form)
+            console.log('targetId',this.targetId)
             // if (!Core.Util.isEmptyObj(this.defAddr)) {
             //     console.log('areaMap2222',this.defAddr)
             //     area.country = this.defAddr.country
@@ -297,7 +298,8 @@ export default {
                 target_type: this.targetType,
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
-                this.routerChange('back')
+                this.handleModalClose();
+                this.$emit("select");
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
@@ -323,18 +325,18 @@ export default {
             this.modalShow = false;
             Object.assign(this.form, this.$options.data().form)
         },
-        handleConfirm() {
-            Core.Api.CRMCustomer.save({
-                ...this.form,
-            }).then(() => {
-                this.$message.success(this.$t('pop_up.save_success'));
-                this.handleModalClose();
-                this.$emit("select");
-            }).catch(err => {
-                console.log('handleSubmit err:', err)
-            })
-
-        },
+        // handleConfirm() {
+        //     Core.Api.CRMCustomer.save({
+        //         ...this.form,
+        //     }).then(() => {
+        //         this.$message.success(this.$t('pop_up.save_success'));
+        //         this.handleModalClose();
+        //         this.$emit("select");
+        //     }).catch(err => {
+        //         console.log('handleSubmit err:', err)
+        //     })
+        //
+        // },
     },
 }
 </script>
