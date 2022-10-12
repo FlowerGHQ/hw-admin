@@ -10,6 +10,9 @@ let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' //
 let URL_POINT = 'https://eos-api.hw.innotick.com'
 
 switch (window.location.hostname) {
+    case 'eos.horwincloud.com':
+        URL_POINT = 'https://eos-api.horwincloud.com' // 正式服
+        break;
     case 'eos.hw.innotick.com':
         URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服
         break;
