@@ -102,6 +102,12 @@
                         <template v-if="column.dataIndex === 'address'">
                             {{ $Util.addressFilter(record, $i18n.locale) }}
                         </template>
+                        <template v-if="column.key === 'creator_name'">
+                            {{ record.create_user.name || '-' }}
+                        </template>
+                        <template v-if="column.key === 'own_user_name'">
+                            {{ record.own_user.name || '-' }}
+                        </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
@@ -232,7 +238,7 @@ export default {
                 // {title: 'n.continent', dataIndex: 'continent', key:'item'},
                 {title: 'crm_c.level', dataIndex: 'level', key:'level', sorter: true},
                 {title: 'crm_c.type', dataIndex: 'type', key:'type', sorter: true},
-                {title: 'r.creator_name', dataIndex: ['create_user','name'], key:'creator_name'},
+                {title: 'r.creator_name', dataIndex: 'create_user_id', key:'creator_name',sorter: true},
                 {title: 'crm_c.order_success_count', dataIndex: 'order_count', key:'order_count'},
                 {title: 'ad.specific_address', dataIndex: 'address', sorter: true},
                 {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
@@ -240,7 +246,7 @@ export default {
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
             if (this.operMode ==='private') {
-              columns.splice(5, 0, {title: 'crm_b.own_user_name', dataIndex: ['own_user','name'], key:'own_user_name', sorter: true})
+              columns.splice(5, 0, {title: 'crm_b.own_user_name', dataIndex: "own_user_id", key:'own_user_name', sorter: true})
             }
             return columns
         },

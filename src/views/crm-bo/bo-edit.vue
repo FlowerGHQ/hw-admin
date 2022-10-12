@@ -1,7 +1,7 @@
 <template>
     <div id="CRMBoEdit" class="edit-container">
         <div class="title-container">
-            <div class="title-area">{{ form.id ? $t('c.edit') : $t('c.save') }}</div>
+            <div class="title-area">{{ form.id ? $t('crm_b.edit') : $t('crm_b.save') }}</div>
         </div>
         <div class="form-block">
             <div class="form-title">
@@ -21,6 +21,7 @@
                             :not-found-content="null"
                             @search="handleCustomerNameSearch"
                             allowClear
+                            :disabled="customer_id != undefined"
                         >
                             <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
                                 {{item.name}}
@@ -37,8 +38,8 @@
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_b.money') }}：</div>
-                    <div class="value">
-                        <a-input v-model:value="form.money" :disabled="moneyDisabled" :placeholder="$t('def.input')"/>
+                    <div class="value form-item-value">
+                        <a-input-number v-model:value="form.money" :min="0" :precision="2" placeholder="0.00" :disabled="moneyDisabled" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
 
@@ -59,7 +60,7 @@
                                        :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('crm_b.source') }}：</div>
                     <div class="value">
                         <a-select v-model:value="form.source" :placeholder="$t('def.input')">
@@ -70,15 +71,15 @@
                     </div>
                 </div>
                 <div class="form-item textarea">
-                    <div class="key">{{ $t('r.remark') }}</div>
+                    <div class="key">{{ $t('crm_b.remark') }}</div>
                     <div class="value">
-                        <a-textarea v-model:value="form.remark" :placeholder="$t('r.enter_remark')"
+                        <a-textarea v-model:value="form.remark" :placeholder="$t('def.input')"
                                     :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
                         <span class="content-length">{{ form.remark }}/500</span>
                     </div>
                 </div>
                 <div class="form-item textarea">
-                    <div class="key">{{ $t('r.remark') }}</div>
+                    <div class="key">{{ $t('crm_b.select_item') }}</div>
                     <div class="value">
                         <div class="form-item file-upload">
                             <ItemSelect @select="handleAddFailItem"
@@ -152,6 +153,7 @@ export default {
             // 加载
             loading: false,
             detail: {},
+            customer_id: '',
             form: {
                 id: '',
                 customer_id: '',
@@ -202,7 +204,8 @@ export default {
     },
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0
-        this.form.customer_id = Number(this.$route.query.customer_id) || 0
+        this.customer_id = Number(this.$route.query.customer_id) || undefined
+        this.form.customer_id = Number(this.$route.query.customer_id) || undefined
         if (this.form.id) {
             this.getBoDetail();
             this.getBoDetailItemList()
@@ -259,9 +262,22 @@ export default {
         },
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
+            if (!form.customer_id) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'))
             }
+            if (!form.money) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (form.status !== "") {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.estimated_deal_time) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+
             form.estimated_deal_time = form.estimated_deal_time ? dayjs(form.estimated_deal_time).unix() : 0 // 日期转时间戳
 
             console.log('form', this.form)

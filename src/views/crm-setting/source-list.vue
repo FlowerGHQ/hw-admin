@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('crm_set.list')}}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleModalShow({})" v-if="$auth('crm-customer-source.save')"><i class="icon i_add"/>{{ $t('ar.save')}}</a-button>
+                    <a-button type="primary" @click="handleModalShow({})" v-if="$auth('crm-customer-source.save')"><i class="icon i_add"/>{{ $t('crm_set.save')}}</a-button>
                 </div>
             </div>
             <div class="search-container">
@@ -53,7 +53,7 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="modalVisible" :title="editForm.name ? $t('crm_set.edit') : $t('crm_set.save')" @ok="handleModalSubmit">
+            <a-modal v-model:visible="modalShow" :title="editForm.id ? $t('crm_set.edit') : $t('crm_set.save')" :after-close="handleModalClose">
                 <div class="modal-content">
                     <div class="form-item">
                         <div class="key">{{ $t('n.name') }}</div>
@@ -73,7 +73,12 @@
                             <a-input v-model:value="editForm.index" :placeholder="$t('def.input')"/>
                         </div>
                     </div>
+
                 </div>
+                <template #footer>
+                    <a-button @click="handleModalClose()">{{ $t('def.cancel') }}</a-button>
+                    <a-button @click="handleModalSubmit()" type="primary">{{ $t('def.sure') }}</a-button>
+                </template>
             </a-modal>
         </template>
     </div>
@@ -103,7 +108,7 @@ export default {
             },
             // 表格
             tableData: [],
-            modalVisible: false,
+            modalShow: false,
             editForm: {
                 id: '',
                 name: '',
@@ -189,6 +194,10 @@ export default {
             this.editForm =  Core.Util.deepCopy(record)
             this.modalShow = true
         },
+        handleModalClose() {
+            this.editForm = Core.Util.deepCopy(this.$options.data().editForm)
+            this.modalShow = false
+        },
         handleModalSubmit() {
             let form = Core.Util.deepCopy(this.editForm)
             if (!form.name) {
@@ -201,7 +210,7 @@ export default {
             let apiName = form.id ? 'update' : 'save';
             Core.Api.CRMCustomerSource[apiName](form).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'))
-                this.modalVisible = false
+                this.modalShow = false
             }).catch(err => {
                 console.log('handleModalSubmit err:', err)
             }).finally(() => {

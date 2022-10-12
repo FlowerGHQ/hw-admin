@@ -1166,7 +1166,8 @@ const messages = {
 		    reactivation: '重新激活',
 		    whether_reactivation: '是否重新激活',
 		    whether_reactivation_success: '重新激活',
-
+		    remark: '备注',
+		    select_item: '销售信息',
 	    },
 
 	    crm_g: {
@@ -1200,10 +1201,23 @@ const messages = {
 		    buyer_signatory: '客户方签约人',
 		    remark: '备注',
 		    money: '合同金额',
-            total_price:'产品合计金额',
+		    money_tip: '注:合同金额=产品总金额*整个订单折扣+其他费用-折扣金额',
+		    sales_info: '销售信息',
+		    choose_product: '选择一个产品',
+		    price_list: '价格表的价格',
+		    unit_price: '单价',
+		    file_name: '文件名称',
+		    file_size: '文件大小',
+		    total_amount: '产品的总额',
+		    whole_discount: '整单折扣',
+		    other_fee: '其他费用',
+		    discounted: '折扣价格',
+		    total_price:'产品合计金额',
             discount_rate:'整单折扣',
             discount_amount:'优惠金额',
             other_cost:'其他费用',
+
+
 	    },
 	    crm_oi: {
 			list: '回款单列表',

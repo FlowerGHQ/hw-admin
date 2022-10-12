@@ -15,7 +15,7 @@
                         <div class="panel">
                             <div class="top">
                                 <span class="item-title">{{$Util.CRMTrackRecordFilter(item.type, $i18n.locale) || '-'  }}</span>
-                                <span class="item-time">
+                                <span class="item-time" v-if="item.create_user_id === user.id">
                                     <FollowUpShow btnType="link" :targetId="targetId" :targetType="targetType" :detail="item" @submit="getTableData"><i class="icon i_edit"  /></FollowUpShow>
                                     <a class="button" @click="handleDelete(item.id)"><i class="icon i_delete"/></a>
                                 </span>
@@ -121,6 +121,7 @@ export default {
         return {
 
             loginType: Core.Data.getLoginType(),
+            user: Core.Data.getUser(),
             // 加载
             loading: false,
             // 分页
@@ -335,7 +336,6 @@ export default {
                     text-align: right;
                 }
                 .line {
-                    height: 20px;
                     line-height: 20px;
                     font-size: 12px;
                 }

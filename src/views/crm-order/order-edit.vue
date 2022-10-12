@@ -22,6 +22,7 @@
                             @search="handleCustomerNameSearch"
                             @change="handleCustomerChange"
                             allowClear
+                            :disabled="bo_id !== undefined || customer_id !== undefined"
                         >
                             <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
                                 {{item.name}}
@@ -42,6 +43,7 @@
                             :filter-option="false"
                             :not-found-content="null"
                             @search="handleBoNameSearch"
+                            :disabled="bo_id !== undefined"
                             allowClear
                         >
                             <a-select-option v-for=" item in boOptions" :key="item.id" :value="item.id">
@@ -251,6 +253,8 @@ export default {
             CRM_ORDER_TYPE: Core.Const.CRM_ORDER.TYPE_MAP,
             itemOptions: [],
             boOptions: [],
+            bo_id: '',
+            customer_id: '',
 
         };
     },
@@ -282,7 +286,9 @@ export default {
     },
     mounted() {
         this.form.id = Number(this.$route.query.id) || undefined
+        this.customer_id = Number(this.$route.query.customer_id) || undefined
         this.form.customer_id = Number(this.$route.query.customer_id) || undefined
+        this.bo_id = Number(this.$route.query.bo_id) || undefined
         this.form.bo_id = Number(this.$route.query.bo_id) || undefined
         if (this.form.id) {
             this.getOrderDetail();

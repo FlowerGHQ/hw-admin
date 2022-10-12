@@ -36,28 +36,29 @@
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                        <span v-if="detail.status === STATUS.POOL">
+                        <template v-if="detail.status === STATUS.POOL">
                             <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord"/>
-                            <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button>
                             <CustomerAdd :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @select="getCRMContactList"/>
+                            <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button>
+
                             <a-button type="primary" @click="handleObtain" v-if="$auth('crm-customer.obtain')">{{ $t('crm_c.obtain') }}</a-button>
                             <a-button type="primary" @click="handleBatch('distribute')" v-if="$auth('crm-customer.distribute')">{{ $t('crm_c.distribute') }}</a-button>
                             <a-button type="danger" @click="handleDelete" v-if="$auth('crm-customer.delete')">{{ $t('crm_c.delete') }}</a-button>
-                        </span>
-                        <span v-if="detail.status === STATUS.CUSTOMER &&  trackMemberDetail!== undefined  &&  trackMemberDetail!== null  &&  trackMemberDetail!== ''">
-                            <span v-if="trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ">
+                        </template>
+                        <template v-if="detail.status === STATUS.CUSTOMER &&  trackMemberDetail!== undefined  &&  trackMemberDetail!== null  &&  trackMemberDetail!== ''">
+                            <template v-if="trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ">
                                 <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord"/>
                                 <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button>
                                 <a-button @click="routerChange('bo-save')" v-if="$auth('crm-bo.save')">新建商机</a-button>
                                 <a-button @click="routerChange('order-save')" v-if="$auth('crm-order.save')">新建订单</a-button>
-                            </span>
-                            <span v-if="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN">
+                            </template>
+                            <template v-if="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN">
                                 <CustomerAdd :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @select="getCRMContactList" :addCustomerBtn="true"/>
                                 <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-customer.transfer')">{{ $t('crm_c.transfer') }}</a-button>
                                 <a-button type="danger" @click="handleReturnPool" v-if="$auth('crm-customer.return-pool')">{{ $t('crm_c.return_pool') }}</a-button>
-                            </span>
+                            </template>
 
-                        </span>
+                        </template>
                     </a-col>
                 </a-row>
             </div>
@@ -95,6 +96,13 @@
         </a-row>
         <a-modal v-model:visible="batchShow" :title="$t('crm_c.distribute_customer')" :after-close='handleBatchClose'>
             <div class="form-item required">
+                <div class="key">{{ $t('crm_b.customer_name') }}：</div>
+                <div class="value">
+                    {{detail.name}}
+                </div>
+            </div>
+            <div class="form-item required">
+
                 <div class="key">{{ $t('crm_b.own_user_name') }}：</div>
                 <div class="value">
                     <a-select
@@ -259,6 +267,7 @@ export default {
             this.$refs.CRMContact.getTableData();
         },
         handleBatch(type) {
+            this.getUserData()
             this.batchShow = true;
             this.batchType = type
         },
@@ -279,6 +288,7 @@ export default {
                     }).then(() => {
                         this.$message.success(this.$t('pop_up.delete_success'));
                         this.getCustomerDetail();
+                        this.getTargetByUserId();
                         this.handleBatchClose();
                     }).catch(err => {
                         console.log("handleDelete err", err);
@@ -291,6 +301,7 @@ export default {
                     }).then(() => {
                         this.$message.success(this.$t('pop_up.delete_success'));
                         this.getCustomerDetail();
+                        this.getTargetByUserId();
                         this.handleBatchClose();
                     }).catch(err => {
                         console.log("handleDelete err", err);
@@ -323,6 +334,7 @@ export default {
                     Core.Api.CRMCustomer.delete({id: _this.detail.id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getCustomerDetail();
+                        _this.getTargetByUserId();
                         _this.handleBatchClose();
                     }).catch(err => {
                         console.log("handleDelete err", err);
@@ -341,6 +353,7 @@ export default {
                     Core.Api.CRMCustomer.obtain({id: _this.detail.id}).then(() => {
                         _this.$message.success(_this.$t('crm_c.obtain_success'));
                         _this.getCustomerDetail();
+                        _this.getTargetByUserId();
                         _this.handleBatchClose();
                     }).catch(err => {
                         console.log("handleDelete err", err);
@@ -359,6 +372,8 @@ export default {
                     Core.Api.CRMCustomer.returnPool({id: _this.detail.id}).then(() => {
                         _this.$message.success(_this.$t('crm_c.return_pool_success'));
                         _this.getCustomerDetail();
+                        _this.getTargetByUserId();
+                        _this.handleBatchClose();
                     }).catch(err => {
                         console.log("handleDelete err", err);
                     })

@@ -22,9 +22,9 @@
                     <div class="key">{{ $t('n.name') }}：</div>
                     <div class="value">
                         <a-input v-model:value="form.name" :placeholder="$t('def.input')" @blur="handleCustomerBlur"/>
-                        <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
-                        <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                     </div>
+                    <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
+                    <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('n.phone') }}：</div>
@@ -39,6 +39,7 @@
                             <a-select-option v-for="item of CRM_LEVEL_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
                         </a-select>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -53,6 +54,9 @@
                         <a-select v-model:value="form.source_def_id" :placeholder="$t('def.input')" >
                             <a-select-option v-for="item of sourceList" :key="item.id" :value="item.id">{{lang === 'zh' ? item.name: item.name_en}}</a-select-option>
                         </a-select>
+                    </div>
+                    <div class="sp">
+                        <a-button type="link" v-if="$auth('customer.save')" @click="handleSourceModalShow">{{ $t('crm_set.save') }}</a-button>
                     </div>
                 </div>
                 <div class="form-item" v-if="form.type === CRM_TYPE.UNIT">
@@ -146,6 +150,35 @@
             <a-button @click="handleSubmit" type="primary" v-if="$auth('crm-customer.save')">{{ $t('def.sure') }}</a-button>
             <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
         </div>
+        <template class="modal-container">
+            <a-modal v-model:visible="sourceModalShow" :title="sourceForm.id ? $t('crm_set.edit') : $t('crm_set.save')" :after-close="handleSourceModalClose">
+                <div class="modal-content">
+                    <div class="form-item">
+                        <div class="key">{{ $t('n.name') }}</div>
+                        <div class="value">
+                            <a-input v-model:value="sourceForm.name" :placeholder="$t('def.input')"/>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="key">{{ $t('n.name_en') }}</div>
+                        <div class="value">
+                            <a-input v-model:value="sourceForm.name_en" :placeholder="$t('def.input')"/>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="key">{{ $t('n.index') }}</div>
+                        <div class="value">
+                            <a-input v-model:value="sourceForm.index" :placeholder="$t('def.input')"/>
+                        </div>
+                    </div>
+
+                </div>
+                <template #footer>
+                    <a-button @click="handleSourceModalClose()">{{ $t('def.cancel') }}</a-button>
+                    <a-button @click="handleSourceModalSubmit()" type="primary">{{ $t('def.sure') }}</a-button>
+                </template>
+            </a-modal>
+        </template>
     </div>
 </template>
 
@@ -214,6 +247,14 @@ export default {
             sourceList: [],
 
             isExist: '', // 名称输入框提示
+
+            sourceModalShow: false,
+            sourceForm: {
+                id: '',
+                name: '',
+                name_en: '',
+                index: '',
+            },
         };
     },
     watch: {},
@@ -227,7 +268,7 @@ export default {
         if (this.form.id) {
             this.getCustomerDetail();
         } else {
-            this.form.status = Core.Const.CRM_CUSTOMER.STATUS.POOL
+            this.form.status = Number(this.$route.query.status) || 0
         }
         this.getSourceList()
     },
@@ -340,6 +381,35 @@ export default {
             }).finally(() => {
             });
         },
+        handleSourceModalShow(record) {
+            this.sourceForm =  Core.Util.deepCopy(record)
+            this.sourceModalShow = true
+        },
+        handleSourceModalClose() {
+            this.sourceForm = Core.Util.deepCopy(this.$options.data().sourceForm)
+            this.sourceModalShow = false
+        },
+        handleSourceModalSubmit() {
+            let form = Core.Util.deepCopy(this.sourceForm)
+            if (!form.name) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.name_en) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            this.loading = true
+            let apiName = form.id ? 'update' : 'save';
+            Core.Api.CRMCustomerSource[apiName](form).then(res => {
+                this.$message.success(this.$t('pop_up.save_success'))
+                this.getSourceList()
+                this.sourceModalShow = false
+            }).catch(err => {
+                console.log('handleModalSubmit err:', err)
+            }).finally(() => {
+                this.loading = false
+            })
+
+        },
     }
 };
 </script>
@@ -354,12 +424,10 @@ export default {
 }
 .form-item {
     .fac();
-    .value{
-        .ant-input {
-            width: calc(~'100% - 24px');
-        }
-    }
 
+    .ant-input {
+        width: calc(~'100% - 24px');
+    }
 
     i.icon {
         display: inline-block;

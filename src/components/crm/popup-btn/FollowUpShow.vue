@@ -54,14 +54,13 @@
                 <div class="key">{{ $t('crm_t.contact_customer') }}：</div>
                 <div class="value">
                     <div v-if="trackRecordForm.contact_customer_id === ''">
-
-                        <CustomerSelect @select="handleAddCustomerShow" :radioMode="true" btn-class="select-item-btn" btnType='link'>
+                        <CustomerSelect @select="handleAddCustomerShow" :radioMode="true" btn-class="select-item-btn" btnType='link' addCustomerBtn="true" :targetId="targetId" :targetType="targetType">
                             <i class="icon i_edit"/> {{ $t('crm_c.add') }}
                         </CustomerSelect>
                     </div>
                     <div v-else>
                         {{trackRecordForm.contact_customer_name}}
-                        <CustomerSelect @select="handleAddCustomerShow" :radioMode="true" btn-class="select-item-btn" btnType='link'>
+                        <CustomerSelect @select="handleAddCustomerShow" :radioMode="true" btn-class="select-item-btn" btnType='link' addCustomerBtn="true" :targetId="targetId" :targetType="targetType">
                             <i class="icon i_edit"/> {{ $t('crm_c.edit') }}
                         </CustomerSelect>
                     </div>
@@ -219,6 +218,13 @@ export default {
         handleTrackRecordSubmit() {
             let form = Core.Util.deepCopy(this.trackRecordForm)
             let track_time = form.track_time
+            if (!form.type) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.content) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+
             if (typeof track_time === 'string') {
                 track_time = dayjs(form.track_time).unix()
             }
@@ -306,6 +312,7 @@ export default {
 
 <style lang='less'>
 .FollowUpShow {
+    margin-right: 8px;
     .main {
         font-size: 12px;
         font-weight: 500;
@@ -318,6 +325,7 @@ export default {
             margin-left: 8px;
         }
     }
+
 
     .desc, .time {
         font-size: 12px;
