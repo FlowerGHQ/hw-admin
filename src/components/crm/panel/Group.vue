@@ -22,11 +22,42 @@
                     <div class="type">{{ $Util.CRMGroupFilter(item.type)}}</div>
                 </div>
                 <div class="item-button">
+                    <div class="button" @click="handleTrackMemberShow(item)"><i class="icon i_edit"/></div>
                     <div class="button" @click="handleDelete(item.id)"><i class="icon i_delete"/></div>
-<!--                    <div class="button" @click="clickEdit(item)"><i class="icon i_edit"/></div>-->
                 </div>
             </div>
         </div>
+        <div class="paging-container">
+            <a-pagination
+                v-model:current="currPage"
+                :page-size="pageSize"
+                :total="total"
+                show-quick-jumper
+                show-size-changer
+                show-less-items
+                :show-total="(total) => $t('n.all_total') + ` ${total} ` + $t('in.total')"
+                :hide-on-single-page="false"
+                :pageSizeOptions="['10', '20', '30', '40']"
+                @change="pageChange"
+                @showSizeChange="pageSizeChange"
+            />
+        </div>
+        <template class="modal-container">
+            <a-modal v-model:visible="trackMemberShow" :title="$t('crm_group.edit_type')" :after-close='handleTrackMemberClose'>
+                <div class="form-item required">
+                    <div class="key">{{ $t('crm_group.type') }}：</div>
+                    <div class="value">
+                        <a-select v-model:value="form.type" :placeholder="$t('def.select')">
+                            <a-select-option v-for="item of TYPE_MAP" :key="item.value" :value="item.value">{{ lang === 'zh' ? item.zh: item.en }}</a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <template #footer>
+                    <a-button @click="handleTrackMemberSubmit" type="primary">{{ $t('def.ok') }}</a-button>
+                    <a-button @click="handleTrackMemberClose">{{ $t('def.cancel') }}</a-button>
+                </template>
+            </a-modal>
+        </template>
         <!-- <div>
             <a-list
                 class="demo-loadmore-list"
@@ -63,6 +94,8 @@
             </a-list>
         </div> -->
 
+
+
     </div>
 </div>
 </template>
@@ -98,10 +131,14 @@ export default {
             // 表格数据
             tableData: [{},{}],
             trackMemberShow: false,
-
+            TYPE_MAP: Core.Const.CRM_TRACK_MEMBER.TYPE_EDIT_MAP,
             userId: '',
             userDetail: '',
             initLoading: false,
+            form: {
+                id: '',
+                type: '',
+            },
 
             search_name: '',
         };
@@ -200,12 +237,12 @@ export default {
             });
         },
         // 添加商品
-        handleGroupShow(ids, items) {
+        handleGroupShow(ids, items, type) {
             Core.Api.CRMTrackMember.batchSave({
                 target_id: this.targetId,
                 target_type: this.targetType,
                 user_id_list: ids,
-                type: 1,
+                type: type,
             }).then(()=> {
                 this.handleSearch()
             }).catch(err => {
@@ -214,6 +251,29 @@ export default {
                 this.loading = false;
             });
         },
+        handleTrackMemberShow(item) {
+            this.form.id = item.id;
+            this.trackMemberShow = true;
+
+        },
+        handleTrackMemberSubmit() {
+            Core.Api.CRMTrackMember.savePermissions({
+                ...this.form
+            }).then(()=> {
+                this.handleSearch()
+                this.handleTrackMemberClose()
+                this.$message.success(this.$t('pop_up.delete_success'));
+            }).catch(err => {
+                console.log('getTableData err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        handleTrackMemberClose() {
+            this.form = Core.Util.deepCopy(this.$options.data().form)
+            this.trackMemberShow = false;
+        },
+
     }
 };
 </script>

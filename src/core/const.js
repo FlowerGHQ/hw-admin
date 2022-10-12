@@ -1571,6 +1571,10 @@ let Const = {
 			'2': { key: 2, zh: '读写',en: 'Read and write', value: 2 },
 			'3': { key: 3, zh: '负责人',en: 'Head', value: 3 },
 		},
+		TYPE_EDIT_MAP: {
+			'1': { key: 1, zh: '只读',en: 'Read only', value: 1 },
+			'2': { key: 2, zh: '读写',en: 'Read and write', value: 2 },
+		},
 	},
 	CRM_BO: {
 		STATUS: {

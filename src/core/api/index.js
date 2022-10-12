@@ -622,6 +622,8 @@ const apiList = {
 		delete: ['PostJson', 'crm-track-member/delete'],//
 		batchSave: ['PostJson', 'crm-track-member/batch-save'],//
 		getTargetByUserId: ['PostJson', 'crm-track-member/get-target-by-user-id'],//
+		savePermissions: ['PostJson', 'crm-track-member/save-permissions'],//
+
 	},
 	CRMTrackRecord:{//CRM跟进记录
 		save: ['PostJson', 'crm-track-record/save'],//

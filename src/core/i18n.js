@@ -1169,7 +1169,10 @@ const messages = {
 		    remark: '备注',
 		    select_item: '销售信息',
 	    },
-
+	    crm_group: {
+		    edit_type: '修改权限',
+		    type: '权限',
+	    },
 	    crm_g: {
 		    business_opportunities_phase: '商机阶段',
 		    results_the_preview: '效果预览',

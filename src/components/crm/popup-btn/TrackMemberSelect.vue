@@ -20,6 +20,14 @@
                     <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
+            <div class="form-item">
+                <div class="key">{{ $t('crm_group.type') }}：</div>
+                <div class="value">
+                    <a-select v-model:value="type" :placeholder="$t('def.select')">
+                        <a-select-option v-for="item of TYPE_MAP" :key="item.value" :value="item.value">{{ lang === 'zh' ? item.zh: item.en }}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
             <div class="table-container">
                 <TrackMemberTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow"
                     :check-mode='true' :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode'/>
@@ -104,6 +112,7 @@ export default {
     data() {
         return {
             Core,
+            TYPE_MAP: Core.Const.CRM_TRACK_MEMBER.TYPE_EDIT_MAP,
             loading: false,
             modalShow: false,
 
@@ -114,7 +123,7 @@ export default {
                 phone: '',
                 name: '',
             },
-
+            type: '',
             tableData: [],
 
             selectItems: [],
@@ -130,6 +139,9 @@ export default {
             ]
             return tableColumns
         },
+        lang() {
+            return this.$store.state.lang
+        }
     },
     created() {
     },
@@ -149,7 +161,7 @@ export default {
         },
         handleConfirm() {
             console.log('handleConfirm this.selectItems:', this.selectItems)
-            this.$emit('select', this.selectItemIds, this.selectItems, this.faultName)
+            this.$emit('select', this.selectItemIds, this.selectItems, this.type)
             this.modalShow = false
         },
 
@@ -203,6 +215,9 @@ export default {
     }
 }
 .ItemSelectModal {
+    .form-item{
+        max-width: 250px;
+    }
     .tip {
         height: 30px;
         line-height: 30px;
