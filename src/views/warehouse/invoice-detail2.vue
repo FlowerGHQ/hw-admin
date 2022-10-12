@@ -37,7 +37,7 @@
                 </div>
 
                 <template v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) && detail.type === TYPE.IN && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')">
-                    <a-button type="primary" @click="handleExportIn"><i class="icon i_download"/>{{t('in.export')}}</a-button>
+                    <a-button type="primary" @click="handleExportIn"><i class="icon i_download"/>{{$t('in.export')}}</a-button>
                 </template>
 
                 <AuditHandle v-if="(detail.status === STATUS.FINANCE_PASS || (detail.status === STATUS.WAIT_AUDIT && detail.type === TYPE.IN)) && $auth('invoice.warehouse-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"
@@ -47,7 +47,10 @@
                     <AuditHandle v-if="detail.status === STATUS.WAIT_AUDIT && $auth('invoice.finance-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"
                                            :sPass="STATUS.FINANCE_PASS" :sRefuse="STATUS.AUDIT_REFUSE" @submit="getInvoiceDetail" ><i class="icon i_audit"/>{{$t('in.finance_audit')}}</AuditHandle>
                     <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}{{$t('in.finish')}}</a-button>
-                    <a-button type="primary" @click="handleExportOut" v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')"><i class="icon i_download"/>{{t('in.export')}}</a-button>
+                    <a-button type="primary" @click="handleExportOut" v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')"><i class="icon i_download"/>{{$t('in.export')}}</a-button>
+
+                    <a-button type="primary" @click="handleExportDetail" v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY|| detail.status === STATUS.RECEIVED)  && $auth('ADMIN') && $auth('invoice.import-export')"><i class="icon i_download"/>{{$t('in.export_invoice')}}</a-button>
+
                 </template>
             </div>
         </template>
@@ -1219,6 +1222,26 @@ export default {
                     _this.handleInvoiceExportOut();
                 }
             })
+        },
+        handleExportDetail() { // 确认入库单是否导出
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('in.sure_export'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
+                onOk() {
+                    _this.handleInvoiceDetailExport();
+                }
+            })
+        },
+        handleInvoiceDetailExport() { // 订单导出
+            this.exportDisabled = true;
+            let exportUrl = Core.Api.Export.invoiceDetailExport({
+                invoice_id: this.id,
+            })
+            console.log("handleRepairExport _exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
         },
         handleInvoiceExportOut() { // 订单导出
             this.exportDisabled = true;

@@ -10,11 +10,14 @@
                     </a-button>
 
                     <a-button type="primary" @click="updateFeedback()" v-if="haveUpdate && !$auth('ADMIN') && $auth('quality-feedback.save')">
-                        <i class="icon i_audit"/>{{ $t('n.amend') }}
+                        <i class="icon i_edit"/>{{ $t('n.amend') }}
                     </a-button>
                 </template>
                 <a-button type="primary" @click="handleAuditShow()" v-if="detail.status === STATUS.WAIT_AFTER_SALES_AUDIT && $auth('ADMIN') && $auth('quality-feedback.after-audit')">
                     <i class="icon i_audit"/>{{ $t('fe.after_sales_audit') }}
+                </a-button>
+                <a-button type="primary" @click="handleAfterSalesDescShow()" v-if="detail.status === STATUS.WAIT_AFTER_SALES_DESC && $auth('ADMIN') && $auth('quality-feedback.after-audit')">
+                    <i class="icon i_edit"/>{{ $t('fe.after_sales_desc') }}
                 </a-button>
                 <a-button type="primary" @click="handleAuditShow()" v-if="detail.status === STATUS.WAIT_QUALITY_AUDIT && $auth('ADMIN') && $auth('quality-feedback.quality-audit')">
                     <i class="icon i_audit"/>{{ $t('fe.quality_audit') }}
@@ -27,7 +30,7 @@
                 </a-button>
 
               <a-button type="primary" @click="handleExportConfirm()" v-if="detail.status === STATUS.CLOSE && $auth('ADMIN')">
-                <i class="icon i_audit"/>{{ $t('n.export') }}
+                <i class="icon i_download"/>{{ $t('n.export') }}
               </a-button>
             </div>
         </div>
@@ -74,7 +77,8 @@
         <MySteps :stepsList='stepsList' :current='currStep' v-if="detail.status != STATUS.CLOSE"/>
         <div class="form-container">
             <FeedbackEn  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.CLOSE" ref="FeedbackEn"/>
-            <Feedback  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.WAIT_AFTER_FEEDBACK || detail.status == STATUS.CLOSE" ref="Feedback"/>
+            <Feedback  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.QUALITY_AUDIT_FAIL ||detail.status == STATUS.WAIT_QUALITY_AUDIT ||detail.status == STATUS.WAIT_AFTER_FEEDBACK || detail.status == STATUS.CLOSE" ref="Feedback"/>
+            <AfterSalesDesc  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.WAIT_FEEDBACK ||detail.status == STATUS.WAIT_QUALITY_AUDIT ||detail.status == STATUS.QUALITY_AUDIT_FAIL || detail.status == STATUS.WAIT_AFTER_FEEDBACK || detail.status == STATUS.CLOSE" ref="AfterSalesDesc"/>
 
             <CheckFault  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getFeedbackDetail" v-if="detail.status == STATUS.INIT && sameOrg" ref="CheckFault"/>
             <CheckResult :id='id' :detail='detail' @hasTransfer='hasTransfer = true' v-if="showCheckResult"/>
@@ -181,6 +185,21 @@
                 <a-button @click="handleFeedbackEnSubmit()" type="primary">{{ $t('def.ok') }}</a-button>
             </template>
         </a-modal>
+        <a-modal v-model:visible="afterSalesDescShow" :title="$t('fe.after_sales_desc')" class="repair-audit-modal" :after-close='handleAfterSalesDescClose'>
+            <div class="modal-content">
+                <div class="form-item textarea required">
+                    <div class="key">{{ $t('n.fault_analysis') }}:</div>
+                    <div class="value">
+                        <a-textarea v-model:value="afterSalesDescForm.after_sales_fault_desc" :placeholder="$t('n.please_input')+ $t('n.fault_desc')"
+                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handleAfterSalesDescClose">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleAfterSalesDescSubmit()" type="primary">{{ $t('def.ok') }}</a-button>
+            </template>
+        </a-modal>
     </template>
 </div>
 </template>
@@ -194,6 +213,8 @@ import FeedbackInfo from './components/FeedbackInfo.vue';
 import ActionLog from '../repair/components/ActionLog.vue';
 import Feedback from './components/Feedback.vue';
 import FeedbackEn from './components/FeedbackEn.vue';
+import AfterSalesDesc from './components/AfterSalesDesc.vue';
+
 import MySteps from '@/components/common/MySteps.vue';
 import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 import AuditRecord from '@/components/common/AuditRecord.vue';
@@ -216,6 +237,7 @@ export default {
         AuditRecord,
         Feedback,
         FeedbackEn,
+        AfterSalesDesc,
     },
     props: {},
     data() {
@@ -271,7 +293,10 @@ export default {
                 results: '',
                 repair_message: '',
             },
-
+            afterSalesDescShow: false,
+            afterSalesDescForm: {
+                after_sales_fault_desc: '',
+            },
 
             // 二次维修
             secondShow: false,
@@ -379,16 +404,16 @@ export default {
                 case STATUS.WAIT_AFTER_SALES_AUDIT:
                     this.currStep = 1;
                     break;
+                case STATUS.WAIT_AFTER_SALES_DESC:
+                    this.currStep = 2;
+                    break;
                 case STATUS.WAIT_FEEDBACK:
                     this.currStep = 2;
                     break;
-                case STATUS.WAIT_AFTER_FEEDBACK:
-                    this.currStep = 2;
-                    break;
-                case STATUS.WAIT_QUALITY_AUDIT:
-                    this.currStep = 2;
-                    break;
                 case STATUS.QUALITY_AUDIT_FAIL:
+                    this.currStep = 2;
+                    break;
+                case STATUS.WAIT_AFTER_FEEDBACK:
                     this.currStep = 2;
                     break;
 
@@ -449,6 +474,34 @@ export default {
                 this.loading = false;
             });
         },
+        handleAfterSalesDescShow() { // 显示弹框
+            this.afterSalesDescShow = true;
+        },
+        handleAfterSalesDescClose() { // 关闭弹框
+            this.afterSalesDescShow = false;
+            Object.assign(this.afterSalesDescForm, this.$options.data().afterSalesDescForm)
+        },
+        handleAfterSalesDescSubmit() { // 审核提交
+            let form = Core.Util.deepCopy(this.afterSalesDescForm)
+            // if ((form.audit_result === 2 ||form.audit_result === 3) && !form.audit_message) {
+            //     return this.$message.warning('请输入审核未通过的原因')
+            // }
+            this.loading = true;
+            Core.Api.Feedback.afterSalesDesc({
+                ...form,
+                id: this.id
+            }).then(res => {
+                console.log('handleAuditSubmit res', res)
+                this.handleAfterSalesDescClose();
+                this.getFeedbackDetail();
+                // this.routerChange('back')
+            }).catch(err => {
+                console.log('handleAuditSubmit err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+
         handleFeedbackShow() { // 显示弹框
             this.feedbackShow = true;
         },

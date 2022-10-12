@@ -230,6 +230,30 @@ const Util = {
                 return dayjs(timestamp).endOf(to).unix();
         }
     },
+    /**
+     * 转换两个时间点间的耗时并转换成对应格式
+     * @param {String, Number} begin_time 开始时间戳
+     * @param {String, Number} end_time 结束时间戳 不传则默认当前时间
+     */
+    timeConsumedFilter(begin_time, end_time = dayjs().unix(), type = 1) {
+        let begin = dayjs.unix(begin_time)
+        let end = dayjs.unix(end_time)
+        let diff = end.diff(begin, 's')
+
+        if (diff < 0) { return '-' }
+
+        let d_h = end.diff(begin, 'h')
+        let d_m = end.diff(begin, 'm')
+        let d_s = diff
+
+        let s_h = (d_h).toString().padStart(2,'0')
+        let s_m = (d_m - (60 * d_h)).toString().padStart(2,'0')
+        let s_s = (d_s - (60 * d_m)).toString().padStart(2,'0')
+
+        switch (type) {
+            case 1: return [s_h, s_m, s_s].filter(i => i).join(':')
+        }
+    },
     /* =============== 时间 ================ */
 
     /* =============== 数值 ================ */
@@ -293,6 +317,12 @@ const Util = {
     /* =============== 数值 ================ */
 
     /* =============== 通用过滤器 ================ */
+    valueFilter(val, map, to = 'text') {
+        let arr = map.split('.')
+        let MAP = Const[arr[0]][arr[1]] || {}
+        let ITEM = MAP[val + ''] || {}
+        return ITEM[to] || ''
+    },
     imageFilter(item, default_type = 1) {
         if (!item || typeof item !== 'string') {
             // console.warn("imageFilter 没有找到图像")
@@ -799,6 +829,13 @@ const Util = {
 		return item[to] || ''
 	},
 	/* =============== 整车 ================ */
+	/* =============== 整车 ================ */
+	deviceStatusFilter(val,  to='zh') {
+		const MAP = Const.DEVICE.STATUS_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	/* =============== 整车 ================ */
 
     /* =============== 权限 ================ */
     userAuthFilter(val,  to='zh') {
@@ -809,6 +846,12 @@ const Util = {
     /* =============== 权限 ================ */
 
 
+    /* =============== 测试报告 ================ */
+    testCaseNameFilter(id, type) {
+        const TAR = Const.TEST.TYPE_CASE_MAP[type + ''] || {}
+        return TAR[id + ''] || ''
+    },
+    /* =============== 测试报告 ================ */
 }
 
 export default Util

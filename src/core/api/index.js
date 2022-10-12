@@ -27,6 +27,7 @@ const apiList = {
         repairExport: ['PostJson', 'repair/export-repair-order-record'],
         invoiceOutExport: ['PostJson', 'invoice/export-out-invoice'],//导出
         invoiceInExport: ['PostJson', 'invoice/export-in-invoice'],//导出
+	    invoiceDetailExport: ['PostJson', 'invoice/export-detail'],//导出
         materialPurchaseExport: ['PostJson', '/material-purchase-order/export'],//导出
 	    ItemCollectExport: ['PostJson', '/shopping-cart/download-import-template'],//导出
 	    feedbackTemplateExport: ['PostJson', 'feedback/export-template'], // 采购单模版导出
@@ -254,6 +255,10 @@ const apiList = {
         getByUid: ['PostJson', 'entity/get-by-uid'],
         batchSave: ['PostJson', 'entity/batch-save-arrival-time'],
     },
+	Device: {// 车架
+		list: ['PostJson', 'device/list'],
+		deviceToEntity: ['PostJson', 'device/device-to-entity'],
+	},
     ItemCategory: { // 商品分类
         list: ['PostJson', 'item-category/list'],
 	    listAll: ['PostJson', 'item-category/list-all'],
@@ -568,6 +573,7 @@ const apiList = {
 		audit: ['PostJson', 'feedback/audit'],//审核
 		submit: ['PostJson', 'feedback/submit'],//提交
 		feedback: ['PostJson', 'feedback/feedback'],//
+		afterSalesDesc: ['PostJson', 'feedback/after-sales-desc'],//
 		saveTitle: ['PostJson', 'feedback/save-title'],//
 		content: ['PostJson', 'feedback/content'],//
 	},
@@ -585,6 +591,10 @@ const apiList = {
 		delete: ['PostJson', 'print-template/delete'],//
 	},
 
+    TestReport: { // 测试报告
+        list: ['PostJson', 'report/list'],
+		detail: ['PostJson', 'report/detail'],
+    },
 };
 
 export default new Api(baseUrl, apiList);
