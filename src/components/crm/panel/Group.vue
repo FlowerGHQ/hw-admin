@@ -19,7 +19,7 @@
                 </div>
                 <div class="item-right">
                     <div class="name">{{ item.user ? item.user.account ? item.user.account.name : '-' : '-'}}</div>
-                    <div class="type">职位</div>
+                    <div class="type">{{ $Util.CRMGroupFilter(item.type)}}</div>
                 </div>
                 <div class="item-button">
                     <div class="button" @click="handleDelete(item.id)"><i class="icon i_delete"/></div>

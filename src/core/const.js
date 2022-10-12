@@ -1566,6 +1566,11 @@ let Const = {
             READ_WRITE: 2,       // 2读写
             OWN: 3,              // 3负责人
         },
+		TYPE_MAP: {
+			'1': { key: 1, zh: '只读',en: 'Read only', value: 1 },
+			'2': { key: 2, zh: '读写',en: 'Read and write', value: 2 },
+			'3': { key: 3, zh: '负责人',en: 'Head', value: 3 },
+		},
 	},
 	CRM_BO: {
 		STATUS: {
