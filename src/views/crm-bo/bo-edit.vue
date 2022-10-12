@@ -21,7 +21,7 @@
                             :not-found-content="null"
                             @search="handleCustomerNameSearch"
                             allowClear
-                            :disabled="customer_id != undefined"
+                            :disabled="customer_id !== undefined"
                         >
                             <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
                                 {{item.name}}
@@ -271,7 +271,7 @@ export default {
             if (!form.money) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (form.status !== "") {
+            if (form.status === "" || form.status === undefined) {
                 return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.estimated_deal_time) {

@@ -106,7 +106,7 @@
                             {{ record.create_user.name || '-' }}
                         </template>
                         <template v-if="column.key === 'own_user_name'">
-                            {{ record.own_user.name || '-' }}
+                            {{ record.own_user? record.own_user.name || '-' : '-' }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -227,6 +227,8 @@ export default {
                 let type = newRoute.meta ? newRoute.meta.type : ''
                 this.operMode = type
                 this.handleSearchReset(false);
+                this.getUserData()
+                this.getTableData();
             }
         },
     },

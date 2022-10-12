@@ -95,7 +95,10 @@ export default {
         }
     },
     mounted() {
-        this.getTableData();
+        if (this.targetId !== 0){
+            this.getTableData();
+        }
+
     },
     methods: {
         routerChange(type, item = {}) {
@@ -133,6 +136,7 @@ export default {
             this.getTableData()
         },
         getTableData() {    // 获取 表格 数据
+            console.log("targetId", this.targetId)
             this.loading = true;
             Core.Api.CrmContactBind.list({
                 target_id: this.targetId,

@@ -143,7 +143,10 @@ export default {
     },
     mounted() {
         console.log('this.disabledChecked:', this.disabledChecked)
-        this.getTableData()
+        if (this.targetId !== 0){
+            this.getTableData()
+        }
+
     },
     methods: {
         handleModalShow() {
@@ -200,6 +203,7 @@ export default {
 
 <style lang='less' scoped>
 .ItemSelectBtn {
+    margin-left: 8px;
     &.ant-btn-link {
         line-height: 1;
         height: 1em;

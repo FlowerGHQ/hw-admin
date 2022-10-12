@@ -30,10 +30,6 @@
                         <span class="key">{{ $t('crm_b.estimated_deal_time') }}：</span>
                         <span class="value">{{$Util.timeFilter(detail.estimated_deal_time)}}</span>
                     </a-col>
-                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('crm_b.customer_name') }}：</span>
-                        <span class="value">{{detail.customer_name}}</span>
-                    </a-col>
 
                     <a-col :xs='24' :sm='24' :lg='24' >
                         <div class="panel-content">
@@ -89,6 +85,18 @@
             </a-col>
         </a-row>
         <a-modal v-model:visible="batchShow" :title="$t('crm_c.distribute_customer')" :after-close='handleBatchClose'>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_b.customer_name') }}：</div>
+                <div class="value">
+                    {{detail.customer_name}}
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_b.name') }}：</div>
+                <div class="value">
+                    {{detail.name}}
+                </div>
+            </div>
             <div class="form-item required">
                 <div class="key">{{ $t('crm_b.own_user_name') }}：</div>
                 <div class="value">
