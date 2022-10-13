@@ -45,8 +45,12 @@
                     <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
+            <div class="operate-container">
+                <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-bo.transfer')">{{ $t('crm_c.transfer') }}</a-button>
+                <a-button type="danger" @click="handleBatchDelete" v-if="$auth('crm-bo.delete')">{{ $t('crm_c.delete') }}</a-button>
+            </div>
             <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' @change="getTableDataSorter">
+                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' :row-selection="rowSelection" @change="getTableDataSorter">
                     <template #headerCell="{title}">
                         {{ $t(title) }}
                     </template>
@@ -62,6 +66,15 @@
                         <template v-if="column.key === 'status'">
                             {{ groupStatusTableData[text] !== undefined ? lang === 'zh' ? groupStatusTableData[text].zh : groupStatusTableData[text].en : "" }}
                         </template>
+                        <template v-if="column.key === 'customer_name'">
+                            {{ record.customer_name|| '-' }}
+                        </template>
+                        <template v-if="column.key === 'own_user_name'">
+                            {{ record.own_user? record.own_user.name || '-': '-' }}
+                        </template>
+                        <template v-if="column.key === 'create_user'">
+                            {{ record.create_user? record.create_user.name || '-': '-' }}
+                        </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
@@ -71,8 +84,8 @@
 
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('crm-bo.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
-                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('crm-bo.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('crm-bo.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>
+<!--                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('crm-bo.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>-->
+<!--                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('crm-bo.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>-->
                         </template>
                     </template>
                 </a-table>
@@ -93,6 +106,31 @@
                 />
             </div>
         </div>
+        <a-modal v-model:visible="batchShow" :title="$t('crm_c.distribute_customer')" :after-close='handleBatchClose'>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_b.own_user_name') }}：</div>
+                <div class="value">
+                    <a-select
+                        v-model:value="batchForm.own_user_id"
+                        show-search
+                        :placeholder="$t('def.input')+$t('n.warehouse')"
+                        :default-active-first-option="false"
+                        :show-arrow="false"
+                        :filter-option="false"
+                        :not-found-content="null"
+                        @search="getUserData"
+                    >
+                        <a-select-option v-for=" item in userData" :key="item.id" :value="item.id">
+                            {{ item.account ? item.account.name : '-' }}
+                        </a-select-option>
+                    </a-select>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handleBatchSubmit" type="primary">{{ $t('def.ok') }}</a-button>
+                <a-button @click="handleBatchClose">{{ $t('def.cancel') }}</a-button>
+            </template>
+        </a-modal>
     </div>
 </template>
 
@@ -126,9 +164,17 @@ export default {
                 end_time: '',
                 type: '',
             },
+            batchForm: {
+                own_user_id: '',
+            },
             // 表格
             tableData: [],
             groupStatusTableData: [],
+            userData: [],
+            batchShow: false,
+            selectedRowKeys: [],
+            selectedRowItems: [],
+            selectedRowItemsAll: [],
         };
     },
     watch: {},
@@ -136,11 +182,11 @@ export default {
         tableColumns() {
             let columns = [
                 {title: 'crm_b.name', dataIndex: 'name', key:'detail', sorter: true},
-                {title: 'crm_b.customer_name', dataIndex: 'customer_name', key:'customer_name', sorter: true},
-                {title: 'crm_b.own_user_name', dataIndex: 'own_user_name', key:'own_user_name', sorter: true},
+                {title: 'crm_b.customer_name', dataIndex: 'customer_id', key:'customer_name', sorter: true},
+                {title: 'crm_b.own_user_name', dataIndex: 'own_user_id', key:'own_user_name', sorter: true},
                 {title: 'crm_b.status', dataIndex: 'status', key:'status', sorter: true},
                 {title: 'crm_b.estimated_deal_time', dataIndex: 'estimated_deal_time', key: 'estimated_deal_time', sorter: true},
-                {title: 'r.creator_name', dataIndex: 'creator_name', key: 'time', sorter: true},
+                {title: 'r.creator_name', dataIndex: 'create_user_id', key: 'create_user', sorter: true},
                 {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
                 {title: 'crm_c.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
@@ -149,12 +195,31 @@ export default {
         },
         lang() {
             return this.$store.state.lang
-        }
+        },
+        rowSelection() {
+            return {
+                type: 'checkbox',
+                selectedRowKeys: this.selectedRowKeys,
+                preserveSelectedRowKeys: true,
+                onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
+                    this.selectedRowKeys = selectedRowKeys
+                    this.selectedRowItemsAll.push(...selectedRows)
+                    let selectedRowItems = []
+                    selectedRowKeys.forEach(id => {
+                        let element = this.selectedRowItemsAll.find(i => i.id == id)
+                        selectedRowItems.push(element)
+                    });
+                    this.selectedRowItems = selectedRowItems
+                    console.log('rowSelection this.selectedRowKeys:', this.selectedRowKeys,'selectedRowItems:', selectedRowItems)
+                    // this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
+                },
+            };
+        },
     },
     mounted() {
         this.getGroupStatusDetail()
         this.getTableData();
-
+        this.getUserData()
     },
     methods: {
         routerChange(type, item = {}) {
@@ -256,6 +321,75 @@ export default {
                 console.log('getTableData err:', err)
             }).finally(() => {
                 this.loading = false;
+            });
+        },
+        handleBatch(type) {
+            if (this.selectedRowKeys.length === 0) {
+                return this.$message.warning(this.$t('crm_c.select'))
+            }
+            this.batchType = type;
+            this.batchShow = true;
+        },
+        handleBatchClose() {
+
+            this.batchShow = false;
+            this.batchType = '';
+        },
+        handleBatchSubmit() {
+            if (this.selectedRowKeys.length === 0) {
+                return this.$message.warning(this.$t('crm_c.select'))
+            }
+            if (!this.batchForm.own_user_id) {
+                return this.$message.warning(this.$t('crm_c.select'))
+            }
+            switch (this.batchType){
+                case "transfer":
+                    Core.Api.CRMBo.batchTransfer({
+                        id_list: this.selectedRowKeys,
+                        own_user_id: this.batchForm.own_user_id,
+                    }).then(() => {
+                        this.$message.success(this.$t('crm_c.transfer_success'));
+                        this.getTableData();
+                        this.handleBatchClose();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                    break;
+            }
+
+        },
+        getUserData(query){
+            this.loading = true;
+            Core.Api.User.list({
+                name: query,
+                org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
+            }).then(res => {
+                console.log("getTableData res:", res)
+                this.userData = res.list;
+            }).catch(err => {
+                console.log('getTableData err:', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        handleBatchDelete() {
+            if (this.selectedRowKeys.length === 0) {
+                return this.$message.warning(this.$t('crm_c.select'))
+            }
+            let _this = this;
+            this.$confirm({
+                title: this.$t('pop_up.sure_delete'),
+                okText: this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.CRMBo.batchDelete({id_list: _this.selectedRowKeys}).then(() => {
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
             });
         },
     }

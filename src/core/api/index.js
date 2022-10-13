@@ -608,6 +608,8 @@ const apiList = {
 		success: ['PostJson', 'crm-bo/success'],
 		fail: ['PostJson', 'crm-bo/fail'],
 		reactivation: ['PostJson', 'crm-bo/reactivation'],
+		batchTransfer: ['PostJson', 'crm-bo/batch-transfer'],
+		batchDelete: ['PostJson', 'crm-bo/batch-delete'],
 	},
 	CRMOrderIncome:{//CRM 回款单
 		save: ['PostJson', 'crm-order-income/save'],//
@@ -640,6 +642,7 @@ const apiList = {
 		createUser: ['PostJson', 'crm-order/join-create-user-list'],// 搜索条件-创建人列表
         audit: ['PostJson', 'crm-order/audit'],// 审核
         reactivation: ['PostJson', 'crm-order/reactivation'],// 审核未通过，修改后再次提交从头审核
+	    batchTransfer: ['PostJson', 'crm-order/batch-transfer'],
     },
     CRMItemBind: {  //CRM销售信息
         save: ['PostJson', 'crm-item-bind/save'],//新增/修改

@@ -307,7 +307,7 @@ export default {
         // },
     },
     mounted() {
-        this.form.id = Number(this.$route.query.id) || undefined
+        this.form.id = Number(this.$route.query.id) || ''
         this.customer_id = Number(this.$route.query.customer_id) || ""
         this.form.customer_id = Number(this.$route.query.customer_id) || undefined
         this.bo_id = Number(this.$route.query.bo_id) || ""

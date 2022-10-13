@@ -85,8 +85,12 @@
                     <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
+            <div class="operate-container">
+                <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-order.save')">{{ $t('crm_c.transfer') }}</a-button>
+                <a-button type="danger" @click="handleBatchDelete" v-if="$auth('crm-order.delete')">{{ $t('crm_c.delete') }}</a-button>
+            </div>
             <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' @change="getTableDataSorter">
+                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-selection="rowSelection"  :row-key="record => record.id" :pagination='false' @change="getTableDataSorter">
                     <template #headerCell="{title}">
                         {{ $t(title) }}
                     </template>
@@ -130,6 +134,31 @@
                 />
             </div>
         </div>
+        <a-modal v-model:visible="batchShow" :title="$t('crm_c.distribute_customer')" :after-close='handleBatchClose'>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_b.own_user_name') }}：</div>
+                <div class="value">
+                    <a-select
+                        v-model:value="batchForm.own_user_id"
+                        show-search
+                        :placeholder="$t('def.input')+$t('n.warehouse')"
+                        :default-active-first-option="false"
+                        :show-arrow="false"
+                        :filter-option="false"
+                        :not-found-content="null"
+                        @search="getUserData"
+                    >
+                        <a-select-option v-for=" item in userData" :key="item.id" :value="item.id">
+                            {{ item.account ? item.account.name : '-' }}
+                        </a-select-option>
+                    </a-select>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handleBatchSubmit" type="primary">{{ $t('def.ok') }}</a-button>
+                <a-button @click="handleBatchClose">{{ $t('def.cancel') }}</a-button>
+            </template>
+        </a-modal>
     </div>
 </template>
 
@@ -173,6 +202,14 @@ export default {
             createUserOptions: [], // 创建人列表
             // 表格
             tableData: [],
+            batchForm: {
+                own_user_id: '',
+            },
+            userData: [],
+            batchShow: false,
+            selectedRowKeys: [],
+            selectedRowItems: [],
+            selectedRowItemsAll: [],
         };
     },
     watch: {},
@@ -190,6 +227,25 @@ export default {
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
             return columns
+        },
+        rowSelection() {
+            return {
+                type: 'checkbox',
+                selectedRowKeys: this.selectedRowKeys,
+                preserveSelectedRowKeys: true,
+                onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
+                    this.selectedRowKeys = selectedRowKeys
+                    this.selectedRowItemsAll.push(...selectedRows)
+                    let selectedRowItems = []
+                    selectedRowKeys.forEach(id => {
+                        let element = this.selectedRowItemsAll.find(i => i.id == id)
+                        selectedRowItems.push(element)
+                    });
+                    this.selectedRowItems = selectedRowItems
+                    console.log('rowSelection this.selectedRowKeys:', this.selectedRowKeys,'selectedRowItems:', selectedRowItems)
+                    // this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
+                },
+            };
         },
     },
     mounted() {
@@ -301,6 +357,76 @@ export default {
                         console.log("handleDelete err", err);
                     })
                 },
+            });
+        },
+        handleBatch(type) {
+            if (this.selectedRowKeys.length === 0) {
+                return this.$message.warning(this.$t('crm_c.select'))
+            }
+            this.batchType = type;
+            this.batchShow = true;
+        },
+        handleBatchClose() {
+
+            this.batchShow = false;
+            this.batchType = '';
+        },
+        handleBatchSubmit() {
+            if (this.selectedRowKeys.length === 0) {
+                return this.$message.warning(this.$t('crm_c.select'))
+            }
+            if (!this.batchForm.own_user_id) {
+                return this.$message.warning(this.$t('crm_c.select'))
+            }
+            switch (this.batchType){
+
+                case "transfer":
+                    Core.Api.CRMOrder.batchTransfer({
+                        id_list: this.selectedRowKeys,
+                        own_user_id: this.batchForm.own_user_id,
+                    }).then(() => {
+                        this.$message.success(this.$t('crm_c.transfer_success'));
+                        this.getTableData();
+                        this.handleBatchClose();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                    break;
+            }
+
+        },
+        handleBatchDelete() {
+            if (this.selectedRowKeys.length === 0) {
+                return this.$message.warning(this.$t('crm_c.select'))
+            }
+            let _this = this;
+            this.$confirm({
+                title: this.$t('pop_up.sure_delete'),
+                okText: this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.CRMOrder.batchDelete({id_list: _this.selectedRowKeys}).then(() => {
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
+                        _this.getTableData();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
+        getUserData(query){
+            this.loading = true;
+            Core.Api.User.list({
+                name: query,
+                org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
+            }).then(res => {
+                console.log("getTableData res:", res)
+                this.userData = res.list;
+            }).catch(err => {
+                console.log('getTableData err:', err)
+            }).finally(() => {
+                this.loading = false;
             });
         },
     }
