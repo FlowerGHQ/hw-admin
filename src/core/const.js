@@ -1622,12 +1622,12 @@ let Const = {
 			OBTAIN_CUSTOMER : 1003,        // 领取客户
 			DISTRIBUTE_CUSTOMER : 2001,    // 分配客户
 			RETURN_POOL : 1004,            // 退回公海
-			CUSTOMER_TO_OTHERS : 2002,     // 将客户转交给
+			CUSTOMER_TO_OTHERS : 2002,     // 将客户移交给
 
 			CREATE_BO : 2003,              // 新建商机
 			DELETE_BO : 2004,              // 删除商机
 			UPDATE_BO_STATUS : 2005,       // 更新商机阶段
-			BO_TO_OTHERS : 2006,           // 将商机转交给
+			BO_TO_OTHERS : 2006,           // 将商机移交给
 
 			CREATE_ORDER : 2007,           // 新建订单
 			DELETE_ORDER : 2008,           // 删除订单
@@ -1663,12 +1663,12 @@ let Const = {
 				'1003': { key:1003, zh:'领取客户',en:'OBTAIN_CUSTOMER', value:1003},
 				'2001': { key:2001, zh:'分配客户',en:'DISTRIBUTE_CUSTOMER', value:2001},
 				'1004': { key:1004, zh:'退回公海',en:'RETURN_POOL', value:1004},
-				'2002': { key:2002, zh:'将客户转交给',en:'CUSTOMER_TO_OTHERS', value:2002},
+				'2002': { key:2002, zh:'将客户移交给',en:'CUSTOMER_TO_OTHERS', value:2002},
 
 				'2003': { key:2003, zh:'新建商机',en:'CREATE_BO', value:2003},
 				'2004': { key:2004, zh:'删除商机',en:'DELETE_BO', value:2004},
 				'2005': { key:2005, zh:'更新商机阶段',en:'UPDATE_BO_STATUS', value:2005},
-				'2006': { key:2006, zh:'将商机转交给',en:'BO_TO_OTHERS', value:2006},
+				'2006': { key:2006, zh:'将商机移交给',en:'BO_TO_OTHERS', value:2006},
 
 				'2007': { key:2007, zh:'新建订单',en:'CREATE_ORDER', value:2007},
 				'2008': { key:2008, zh:'删除订单',en:'DELETE_ORDER', value:2008},

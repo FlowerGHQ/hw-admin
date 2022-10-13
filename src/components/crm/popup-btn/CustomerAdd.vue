@@ -63,7 +63,7 @@
             <div class="form-item">
                 <div class="key">{{ $t('crm_c.nationality') }}:</div>
                 <div class="value">
-                    <a-input v-model:value="form.nationality" :placeholder="$t('def.input')"/>
+                    <CountryCascader v-model:value="areaListContinent" :def-area='defAreaContinent'/>
                 </div>
             </div>
             <div class="form-item">
@@ -124,6 +124,7 @@
 import Core from '@/core';
 
 import ChinaAddressCascader from '@/components/common/ChinaAddressCascader.vue'
+import CountryCascader from '@/components/common/CountryCascader.vue'
 import ItemTable from '@/components/table/ItemTable.vue'
 import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue'
 import dayjs from "dayjs";
@@ -133,6 +134,7 @@ export default {
         ItemTable,
         CategoryTreeSelect,
         ChinaAddressCascader,
+        CountryCascader,
     },
     emits: ['select', 'option'],
     props: {
@@ -211,6 +213,14 @@ export default {
             },
             areaMap: {},
             countryShow: false,
+            areaListContinent: [],
+            defAreaContinent: [],
+            areaContinent: {
+                continent: '',
+                country: '',
+                country_en: '',
+                country_code: '',
+            },
         }
     },
     watch: {},
@@ -261,6 +271,16 @@ export default {
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
             let area = Core.Util.deepCopy(this.area)
+            let areaContinent = Core.Util.deepCopy(this.areaContinent)
+            if (this.areaListContinent.length) {
+                console.log('this.areaList:', this.areaListContinent)
+                areaContinent = {
+                    continent: this.areaListContinent[0].name,
+                    country: this.areaListContinent[1].name,
+                    country_en: this.areaListContinent[1].name_en,
+                    country_code: this.areaListContinent[1].code,
+                }
+            }
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'))
             }
@@ -294,6 +314,7 @@ export default {
             // }
             Core.Api.CRMCustomer.save({
                 ...form,
+                ...areaContinent,
                 target_id: this.targetId,
                 target_type: this.targetType,
             }).then(() => {

@@ -190,11 +190,11 @@ export default {
             } else if(type >= 2000 && type < 3000) {
                 switch (type) {
                     case this.TYPE.DISTRIBUTE_CUSTOMER: return user + " 将客户分配给了: " + item.user_name; break;
-                    case this.TYPE.CUSTOMER_TO_OTHERS: return user + " 将客户转交给了: " + item.user_name; break;
+                    case this.TYPE.CUSTOMER_TO_OTHERS: return user + " 将客户移交给了: " + item.user_name; break;
                     case this.TYPE.CREATE_BO: return user + " 创建了新的商机：" + item.bo_name; break;
                     case this.TYPE.DELETE_BO: return user + " 删除了商机：" + item.bo_name; break;
                     case this.TYPE.UPDATE_BO_STATUS: return user + " 更新了商机阶段："; break;
-                    case this.TYPE.BO_TO_OTHERS: return user + " 将商机转交给了: " + item.user_name; break;
+                    case this.TYPE.BO_TO_OTHERS: return user + " 将商机移交给了: " + item.user_name; break;
                     case this.TYPE.CREATE_ORDER: return user + " 创建了新的合同订单: " + item.order_name; break;
                     case this.TYPE.DELETE_ORDER: return user + " 删除了合同订单: " + item.order_name; break;
                     case this.TYPE.REFUND: return user + " 向客户退款: " + item.money + " 元"; break;
@@ -230,7 +230,7 @@ export default {
             //     //类型1 操作人领取了客户
             //         // return user + Core.Util.CRMActionRecordTypeMapFilter(type, this.lang)
             //
-            //     //类型2 将商机转交给另一操作人
+            //     //类型2 将商机移交给另一操作人
             //     case this.TYPE.DISTRIBUTE_CUSTOMER:
             //         return user + Core.Util.CRMActionRecordTypeMapFilter(type, this.lang) + item.user_name
             //

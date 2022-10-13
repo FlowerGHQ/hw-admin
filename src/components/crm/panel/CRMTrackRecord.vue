@@ -338,6 +338,8 @@ export default {
                 .line {
                     line-height: 20px;
                     font-size: 12px;
+                    word-wrap: break-word;
+                    word-break: normal;
                 }
                 .grey {
                     color: @TC_tip;

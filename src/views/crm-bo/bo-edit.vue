@@ -104,19 +104,26 @@
                                 <!--                                    <a-input-number v-model:value="record.price" style="width: 82px;"-->
                                 <!--                                                      :min="0" :precision="2" placeholder="请输入"/>-->
                             </template>
+                            <template v-if="column.dataIndex === 'discount_price'">
+                                $ <a-input-number v-model:value="record.discount_price" style="width: 150px;"
+                                                :min="0"  :precision="0.00" placeholder="请输入" @change="checkDiscount(record, 'discount_price')"/>
+
+                            </template>
                             <template v-if="column.key === 'amount'">
                                 <a-input-number v-model:value="record.amount" style="width: 66px;"
-                                                :min="1" :precision="0" placeholder="请输入"/>
+                                                :min="1" :precision="0.00" placeholder="请输入" @change="checkDiscount(record, 'amount')"/>
                                 {{ $t('in.item') }}
                             </template>
                             <template v-if="column.key === 'discount'">
                                 <a-input-number v-model:value="record.discount" style="width: 66px;"
-                                                :min="1" :max="100" :precision="0" placeholder="请输入"/>
+                                                :min="1" :max="100" :precision="0.00" placeholder="请输入" @change="checkDiscount(record, 'discount')"/>
                                 %
                             </template>
 
                             <template v-if="column.key === 'total_price'">
-                                $ {{ $Util.countFilter(record.price * record.amount * record.discount / 100, 1) }}
+                                $ <a-input-number v-model:value="record.total_price" style="width: 150px;"
+                                                :min="0" :precision="0.00" placeholder="请输入" @change="checkDiscount(record, 'total_price')"/>
+<!--                                 {{ $Util.countFilter(record.price * record.amount * record.discount / 100, 1) }}-->
                             </template>
 
                             <template v-if="column.dataIndex === 'operation'">
@@ -194,6 +201,7 @@ export default {
                 {title: 'n.name', dataIndex: 'name', key: 'item'},
                 {title: 'i.code', dataIndex: 'code', key: 'item'},
                 {title: 'i.unit_price', dataIndex: 'price'},
+                {title: 'crm_b.discount_price', dataIndex: 'discount_price'},
                 {title: 'i.amount', key: 'amount'},
                 {title: 'crm_b.discount', key: 'discount'},
                 {title: 'i.total_price', key: 'total_price'},
@@ -312,6 +320,8 @@ export default {
                 element.id = 0
                 element.amount = 1
                 element.price = element.fob_usd / 100
+                element.discount_price = element.fob_usd / 100
+                element.total_price = element.fob_usd / 100 * element.amount
                 element.discount = 100
             }
             console.log('handleAddFailItem items:', items)
@@ -356,6 +366,25 @@ export default {
             Core.Api.CRMCustomer.detail({id: this.form.customer_id}).then(res => {
                 this.handleCustomerNameSearch(res.name)
             })
+        },
+        checkDiscount(item, type) {
+            switch (type) {
+                case 'discount_price':
+                    item.discount = 1.0 * item.discount_price / item.price * 100
+                    break
+                case 'amount':
+                    break
+                case 'discount':
+                    item.discount_price =  1.0 * item.price * item.discount / 100
+                    break
+                case 'total_price':
+                    item.discount = 1.0 * item.total_price / item.price / item.amount * 100
+                    item.discount_price = 1.0 * item.price * item.discount / 100
+                    break
+
+            }
+            item.total_price = 1.0 * item.amount * item.discount * item.price / 100
+
         },
 
     }

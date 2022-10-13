@@ -1105,7 +1105,7 @@ const messages = {
 		    obtain: '领取',
 		    distribute: '分配',
 		    delete: '删除',
-		    transfer: '转交',
+		    transfer: '移交',
 		    return_pool: '退回',
 		    sure_return_pool: '确定要退回该账户吗？',
 		    return_pool_success: '退回成功',
@@ -1169,6 +1169,7 @@ const messages = {
 		    whether_reactivation_success: '重新激活',
 		    remark: '备注',
 		    select_item: '销售信息',
+		    discount_price: '销售单价',
 	    },
 	    crm_group: {
 		    edit_type: '修改权限',
