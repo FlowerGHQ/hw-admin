@@ -1145,6 +1145,7 @@ const messages = {
 	    crm_b: {
         	bo: '商机',
             detail: '商机详情',
+		    edit: '修改商机',
         	save: '新建商机',
 			list: '商机列表',
 		    name: '商机名称',

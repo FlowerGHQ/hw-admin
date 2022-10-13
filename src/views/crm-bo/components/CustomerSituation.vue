@@ -6,25 +6,11 @@
     <div class="panel-content">
         <a-descriptions title="基本信息" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('n.name')" class="label">{{detail.name}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.level')" class="label">{{detail.level}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.level')" class="label">{{$Util.CRMCustomerLevelFilter(detail.level, $i18n.locale)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('n.source')" class="label">{{detail.source}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.industry')" class="label">{{detail.industry}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.track_status')" class="label">{{detail.track_status}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.industry')" class="label">{{$Util.CRMCustomerIndustryFilter(detail.industry, $i18n.locale)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.track_status')" class="label">{{$Util.CRMTrackStatusMapFilter(detail.track_status, $i18n.locale)}}</a-descriptions-item>
         </a-descriptions>
-
-        <a-descriptions title="客户信息" bordered :column="2" size="small" class="pannel" v-if="detail.type === Core.Const.CRM_CUSTOMER.TYPE.INDIVIDUAL">
-            <a-descriptions-item :label="$t('crm_c.gender')" class="label">{{detail.gender}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.birthday')" class="label">{{detail.birthday}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.hobby')" class="label">{{detail.hobby}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.marital_status')" class="label">{{detail.marital_status}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.income')" class="label">{{detail.income}}</a-descriptions-item>
-        </a-descriptions>
-        {{detail.type}}
-        <a-descriptions title="客户信息" bordered :column="2" size="small" class="pannel" v-if="detail.type === Core.Const.CRM_CUSTOMER.TYPE.UNIT">
-            <a-descriptions-item :label="$t('crm_c.company_size')" class="label">{{detail.company_size}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.company_license_id')" class="label">{{detail.company_license_id}}</a-descriptions-item>
-        </a-descriptions>
-
         <a-descriptions title="数据权限" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('crm_c.create_user')" class="label">{{detail.create_user_name}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.create_time')" class="label">{{$Util.timeFilter(detail.create_time) || '-'}}</a-descriptions-item>

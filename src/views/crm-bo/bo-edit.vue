@@ -105,25 +105,24 @@
                                 <!--                                                      :min="0" :precision="2" placeholder="请输入"/>-->
                             </template>
                             <template v-if="column.dataIndex === 'discount_price'">
-                                $ <a-input-number v-model:value="record.discount_price" style="width: 150px;"
-                                                :min="0"  :precision="0.00" placeholder="请输入" @change="checkDiscount(record, 'discount_price')"/>
+                                $<a-input-number v-model:value="record.discount_price" :min="0" :precision="2" placeholder="0.00" :placeholder="$t('def.input')" @change="checkDiscount(record, 'discount_price')"/>
+<!--                                 <a-input-number v-model:value="record.discount_price" style="width: 150px;"-->
+<!--                                                :min="0.00"  :precision="2" placeholder="请输入" @change="checkDiscount(record, 'discount_price')"/>-->
 
                             </template>
                             <template v-if="column.key === 'amount'">
                                 <a-input-number v-model:value="record.amount" style="width: 66px;"
-                                                :min="1" :precision="0.00" placeholder="请输入" @change="checkDiscount(record, 'amount')"/>
+                                                :min="1" :precision="0" placeholder="请输入" @change="checkDiscount(record, 'amount')"/>
                                 {{ $t('in.item') }}
                             </template>
                             <template v-if="column.key === 'discount'">
-                                <a-input-number v-model:value="record.discount" style="width: 66px;"
-                                                :min="1" :max="100" :precision="0.00" placeholder="请输入" @change="checkDiscount(record, 'discount')"/>
-                                %
+                                $<a-input-number v-model:value="record.discount" :min="0" :precision="2" placeholder="0.00" :placeholder="$t('def.input')" @change="checkDiscount(record, 'discount')"/>%
                             </template>
 
                             <template v-if="column.key === 'total_price'">
-                                $ <a-input-number v-model:value="record.total_price" style="width: 150px;"
-                                                :min="0" :precision="0.00" placeholder="请输入" @change="checkDiscount(record, 'total_price')"/>
-<!--                                 {{ $Util.countFilter(record.price * record.amount * record.discount / 100, 1) }}-->
+<!--                                $ <a-input-number v-model:value="record.total_price" style="width: 150px;"-->
+<!--                                                :min="0" :precision="2" placeholder="请输入" @change="checkDiscount(record, 'total_price')"/>-->
+                                 {{ $Util.countFilter(record.price * record.amount * record.discount / 100, 1) }}
                             </template>
 
                             <template v-if="column.dataIndex === 'operation'">
@@ -259,6 +258,9 @@ export default {
                 source_id: this.form.id,
                 source_type: Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.BO,
             }).then(res => {
+                res.list.forEach(it => {
+                    it.discount_price = it.price * it.discount / 100
+                })
                 this.tableData = res.list
 
             }).catch(err => {
