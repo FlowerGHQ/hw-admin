@@ -11,10 +11,10 @@ let URL_POINT = 'https://eos-api.hw.innotick.com'
 
 switch (window.location.hostname) {
     case 'eos.horwincloud.com':
-        URL_POINT = 'https://eos-api.horwincloud.com' // 正式服
+        URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
         break;
     case 'eos-dev.horwincloud.com':
-        URL_POINT = 'https://eos-dev-api.horwincloud.com' // 正式服
+        URL_POINT = 'http://eos-dev-api.horwincloud.com' // 正式服
         break;
     case 'eos.hw.innotick.com':
         URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服
