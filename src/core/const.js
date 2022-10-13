@@ -1723,6 +1723,13 @@ let Const = {
             '20': { key: 20, zh: '退货退款',en: 'Return and Refund', value: 20 },
             '30': { key: 30, zh: '其他',en: 'Other', value: 30 },
         }
+    },
+
+    CRM_DICT: {
+        TYPE: {
+            TYPE_CUSTOMER_SOURCE: 1,
+            TYPE_TEST_MODEL: 2
+        },
     }
 };
 
