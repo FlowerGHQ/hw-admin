@@ -337,9 +337,8 @@ export default {
                 onOk() {
                     Core.Api.CRMCustomer.delete({id: _this.detail.id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
-                        _this.getCustomerDetail();
-                        _this.getTargetByUserId();
-                        _this.handleBatchClose();
+
+                        _this.routerChange('back')
                     }).catch(err => {
                         console.log("handleDelete err", err);
                     })
