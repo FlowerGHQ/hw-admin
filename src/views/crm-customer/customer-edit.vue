@@ -101,8 +101,12 @@
                 </div>
                 <div class="form-item" v-if="form.type === CRM_TYPE.INDIVIDUAL">
                     <div class="key">{{ $t('crm_c.nationality') }}:</div>
+<!--                    <div class="value">-->
+
+<!--                        <a-input v-model:value="form.nationality" :placeholder="$t('def.input')"/>-->
+<!--                    </div>-->
                     <div class="value">
-                        <a-input v-model:value="form.nationality" :placeholder="$t('def.input')"/>
+                        <CountryCascader v-model:value="areaListContinent" :def-area='defAreaContinent'/>
                     </div>
                 </div>
                 <div class="form-item" v-if="form.type === CRM_TYPE.INDIVIDUAL">
@@ -190,6 +194,7 @@ import Core from '../../core';
 import ChinaAddressCascader from '@/components/common/ChinaAddressCascader.vue'
 import CountryCascader from '@/components/common/CountryCascader.vue'
 import AddressCascader from '@/components/common/AddressCascader.vue';
+
 import dayjs from "dayjs";
 
 export default {
@@ -259,6 +264,14 @@ export default {
                 name_en: '',
                 index: '',
             },
+            areaListContinent: [],
+            defAreaContinent: [],
+            areaContinent: {
+                continent: '',
+                country: '',
+                country_en: '',
+                country_code: '',
+            },
         };
     },
     watch: {},
@@ -296,8 +309,9 @@ export default {
                     this.form[key] = d[key]
                 }
                 this.defAddr = [d.province, d.city, d.county]
-
-                // this.defArea = [d.continent || '', d.country || '']
+                this.defAreaContinent = [d.continent || '', d.country || '', d.country_en || '']
+                this.handleContinentSelect(this.defAreaContinent)
+                this.handleAddressSelect(this.defAddr)
             }).catch(err => {
                 console.log('getCustomerDetail err', err)
             }).finally(() => {
@@ -306,7 +320,18 @@ export default {
         },
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
-            let area = Core.Util.deepCopy(this.area)
+            let areaContinent = Core.Util.deepCopy(this.areaContinent)
+            if (this.areaListContinent.length) {
+                console.log('this.areaList:', this.areaListContinent)
+                areaContinent = {
+                    continent: this.areaListContinent[0].name,
+                    country: this.areaListContinent[1].name,
+                    country_en: this.areaListContinent[1].name_en,
+                    country_code: this.areaListContinent[1].code,
+                }
+            }
+
+            console.log("areaContinent", areaContinent)
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'))
             }
@@ -339,6 +364,7 @@ export default {
             // }
             Core.Api.CRMCustomer.save({
                 ...form,
+                ...areaContinent,
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
@@ -351,6 +377,11 @@ export default {
             this.form.province = address[0]
             this.form.city = address[1]
             this.form.county = address[2]
+        },
+        handleContinentSelect(continent = []) {
+            this.areaContinent.continent = continent[0]
+            this.areaContinent.country = continent[1]
+            this.areaContinent.country_en = continent[2]
         },
         getCountry(data) {
             console.log('getCountry data',data)

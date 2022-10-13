@@ -17,6 +17,7 @@
             <a-descriptions-item :label="$t('crm_c.hobby')" class="label">{{detail.hobby}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.marital_status')" class="label">{{$Util.CRMCustomerMaritalStatusFilter(detail.marital_status, $i18n.locale)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.income')" class="label">{{detail.income}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.nationality')" class="label">{{detail.country}}</a-descriptions-item>
         </a-descriptions>
 
         <a-descriptions title="客户信息" bordered :column="2" size="small" class="pannel" v-if="detail.type === Core.Const.CRM_CUSTOMER.TYPE.UNIT">
