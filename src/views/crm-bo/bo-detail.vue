@@ -68,6 +68,8 @@
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
+
+                            <CRMItem :detail="detail" :sourceId="detail.id" :sourceType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" ref ="CRMItem"/>
                             <CRMContact :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" ref ="CRMContact"/>
                             <CRMOrder :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" ref ="CRMOrder"/>
                         </a-tab-pane>
@@ -141,10 +143,12 @@ import CRMOrder from '@/components/crm/panel/CRMOrder.vue';
 import Group from '@/components/crm/panel/Group.vue';
 import ActionRecord from '@/components/crm/panel/ActionRecord.vue';
 import CRMTrackRecord from '@/components/crm/panel/CRMTrackRecord.vue';
+import CRMItem from '@/components/crm/panel/CRMItem.vue';
+
 
 export default {
     name: 'CustomerEdit',
-    components: { FollowUpShow, CustomerAdd, CustomerSelect, MySteps, CRMContact, CRMOrder, ActionRecord, CustomerSituation,Group, CRMTrackRecord},
+    components: { FollowUpShow, CustomerAdd, CustomerSelect, MySteps, CRMContact, CRMOrder, ActionRecord, CustomerSituation,Group, CRMTrackRecord, CRMItem},
     props: {},
     data() {
         return {

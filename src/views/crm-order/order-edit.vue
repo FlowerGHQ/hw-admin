@@ -43,7 +43,7 @@
                             :show-arrow="false"
                             :filter-option="false"
                             :not-found-content="null"
-                            @change="getBoDetailItemList"
+                            @change="getDetailItemList(form.bo_id, Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.BO)"
                             @search="handleBoNameSearch"
                             :disabled="bo_id !== ''|| customer_id !== '' || form.id !== ''"
                             allowClear
@@ -239,6 +239,7 @@ export default {
     props: {},
     data() {
         return {
+            Core,
             CRM_ORDER_FILE: Core.Const.ATTACHMENT.TARGET_TYPE.CRM_ORDER_FILE,
             // 加载
             loading: false,
@@ -319,11 +320,12 @@ export default {
         this.form.bo_id = Number(this.$route.query.bo_id) || undefined
         if (this.form.id) {
             this.getOrderDetail();
+            this.getDetailItemList(this.form.id, Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.ORDER)
         } else if (this.form.customer_id){
             this.handleCustomerIdSearch('init');
         } else if (this.form.bo_id){
             this.handleBoIdSearch();
-            this.getBoDetailItemList()
+            this.getDetailItemList(this.form.bo_id, Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.BO)
         }
     },
     methods: {
@@ -486,11 +488,11 @@ export default {
                 this.handleCustomerIdSearch()
             })
         },
-        getBoDetailItemList(){
+        getDetailItemList(source_id, source_type){
             this.loading = true;
             Core.Api.CRMItemBind.list({
-                source_id: this.form.bo_id,
-                source_type: Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.BO,
+                source_id: source_id,
+                source_type: source_type,
             }).then(res => {
                 res.list.forEach(it => {
                     it.discount_price = it.price * it.discount / 100

@@ -6,17 +6,13 @@
     <div class="panel-content">
         <a-descriptions title="基本信息" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('n.name')" class="label">{{detail.name}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.level')" class="label">{{$Util.CRMCustomerLevelFilter(detail.level, $i18n.locale)}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('n.source')" class="label">{{detail.source}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.industry')" class="label">{{$Util.CRMCustomerIndustryFilter(detail.industry, $i18n.locale)}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.track_status')" class="label">{{$Util.CRMTrackStatusMapFilter(detail.track_status, $i18n.locale)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_b.money')" class="label">${{detail.money}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_b.status')" class="label">{{detail.status}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_b.estimated_deal_time')" class="label">{{$Util.timeFilter(detail.estimated_deal_time, 3)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_b.source')" class="label">{{$Util.CRMBoSourceMapFilter(detail.source, $i18n.locale)}}</a-descriptions-item>
         </a-descriptions>
-        <a-descriptions title="数据权限" bordered :column="2" size="small" class="pannel">
-            <a-descriptions-item :label="$t('crm_c.create_user')" class="label">{{detail.create_user_name}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.create_time')" class="label">{{$Util.timeFilter(detail.create_time) || '-'}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.update_user')" class="label">{{detail.update_user_name}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.update_time')" class="label">{{$Util.timeFilter(detail.update_time) || '-'}}</a-descriptions-item>
-
+        <a-descriptions title="备注" bordered :column="2" size="small" class="pannel">
+            <a-descriptions-item :label="$t('crm_b.remark')" class="label">{{detail.remark}}</a-descriptions-item>
         </a-descriptions>
         <a-modal v-model:visible="userRoleShow" :title="$t('p.confirm_payment')" :after-close='handleRoleClose'>
             <template #footer>
