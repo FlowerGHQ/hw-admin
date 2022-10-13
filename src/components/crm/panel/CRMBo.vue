@@ -66,11 +66,7 @@ export default {
         detail:{
             type: Object,
         },
-        targetId: {
-            type: Number,
-            default: 0
-        },
-        targetType: {
+        customerId: {
             type: Number,
             default: 0
         },
@@ -99,13 +95,13 @@ export default {
         tableColumns() {
             let columns = [
                 {title: 'crm_b.name', dataIndex: 'name', key:'detail', sorter: true},
-                {title: 'crm_b.customer_name', dataIndex: 'customer_name', key:'customer_name', sorter: true},
+                // {title: 'crm_b.customer_name', dataIndex: 'customer_name', key:'customer_name', sorter: true},
                 {title: 'crm_b.own_user_name', dataIndex: 'own_user_name', key:'own_user_name', sorter: true},
                 {title: 'crm_b.status', dataIndex: 'status', key:'status', sorter: true},
-                {title: 'crm_b.estimated_deal_time', dataIndex: 'estimated_deal_time', key: 'estimated_deal_time', sorter: true},
-                {title: 'r.creator_name', dataIndex: 'creator_name', key: 'time', sorter: true},
-                {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
-                {title: 'crm_c.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
+                // {title: 'crm_b.estimated_deal_time', dataIndex: 'estimated_deal_time', key: 'estimated_deal_time', sorter: true},
+                // {title: 'r.creator_name', dataIndex: 'creator_name', key: 'time', sorter: true},
+                // {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
+                // {title: 'crm_c.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
             return columns
@@ -150,8 +146,7 @@ export default {
         getTableData() {    // 获取 表格 数据
             this.loading = true;
             Core.Api.CRMBo.list({
-                target_id: this.targetId,
-                target_type: this.targetType,
+                customer_id: this.customerId,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {

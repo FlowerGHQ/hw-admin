@@ -20,6 +20,7 @@
                             :filter-option="false"
                             :not-found-content="null"
                             @search="handleCustomerNameSearch"
+                            @change="handleCustomerIdSearch"
                             allowClear
                             :disabled="customer_id !== undefined"
                         >
@@ -28,6 +29,24 @@
                             </a-select-option>
                         </a-select>
 
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('crm_c.phone') }}：</div>
+                    <div class="value">
+                        {{CRMCustomer.phone}}
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('crm_c.level') }}：</div>
+                    <div class="value">
+                        {{$Util.CRMCustomerLevelFilter(CRMCustomer.level, $i18n.locale) || '-'}}
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('crm_c.type') }}：</div>
+                    <div class="value">
+                        {{ $Util.CRMCustomerTypeFilter(CRMCustomer.type, $i18n.locale) || '-'  }}
                     </div>
                 </div>
                 <div class="form-item required">
@@ -116,13 +135,13 @@
                                 {{ $t('in.item') }}
                             </template>
                             <template v-if="column.key === 'discount'">
-                                $<a-input-number v-model:value="record.discount" :min="0" :precision="2" placeholder="0.00" :placeholder="$t('def.input')" @change="checkDiscount(record, 'discount')"/>%
+                                <a-input-number v-model:value="record.discount" :min="0" :precision="2" placeholder="0.00" :placeholder="$t('def.input')" @change="checkDiscount(record, 'discount')"/>%
                             </template>
 
                             <template v-if="column.key === 'total_price'">
 <!--                                $ <a-input-number v-model:value="record.total_price" style="width: 150px;"-->
 <!--                                                :min="0" :precision="2" placeholder="请输入" @change="checkDiscount(record, 'total_price')"/>-->
-                                 {{ $Util.countFilter(record.price * record.amount * record.discount / 100, 1) }}
+                                ${{ $Util.countFilter(record.price * record.amount * record.discount / 100, 1) }}
                             </template>
 
                             <template v-if="column.dataIndex === 'operation'">
@@ -217,7 +236,7 @@ export default {
             this.getBoDetail();
             this.getBoDetailItemList()
         } else if (this.form.customer_id){
-            this.handleCustomerIdSearch()
+            this.handleCustomerIdSearch('init')
         }
         this.getGroupStatusDetail()
     },
@@ -245,6 +264,7 @@ export default {
                 for (const key in this.form) {
                     this.form[key] = d[key]
                 }
+                this.handleCustomerIdSearch()
 
             }).catch(err => {
                 console.log('getCustomerDetail err', err)
@@ -359,14 +379,19 @@ export default {
             }
         },
         handleCustomerNameSearch(name){
-            Core.Api.CRMCustomer.list({name: name}).then(res => {
+            Core.Api.CRMCustomer.list({name: name, status: Core.Const.CRM_CUSTOMER.STATUS.CUSTOMER}).then(res => {
                 this.itemOptions = res.list
 
             })
         },
-        handleCustomerIdSearch(){
+        handleCustomerIdSearch(type){
             Core.Api.CRMCustomer.detail({id: this.form.customer_id}).then(res => {
-                this.handleCustomerNameSearch(res.name)
+                this.CRMCustomer = res.detail
+                console.log("res", res)
+                if (type === 'init'){
+                    this.handleCustomerNameSearch(res.name)
+                }
+
             })
         },
         checkDiscount(item, type) {

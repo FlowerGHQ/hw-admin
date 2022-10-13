@@ -54,6 +54,24 @@
                     </div>
                 </div>
                 <div class="form-item required">
+                    <div class="key">{{ $t('crm_c.phone') }}：</div>
+                    <div class="value">
+                        {{CRMCustomer.phone}}
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('crm_c.level') }}：</div>
+                    <div class="value">
+                        {{$Util.CRMCustomerLevelFilter(CRMCustomer.level, $i18n.locale) || '-'}}
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('crm_c.type') }}：</div>
+                    <div class="value">
+                        {{ $Util.CRMCustomerTypeFilter(CRMCustomer.type, $i18n.locale) || '-'  }}
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">{{ $t('crm_o.contract_no') }}：</div> <!-- 合同编号 -->
                     <div class="value">
                         <a-input v-model:value="form.uid" :placeholder="$t('def.input')"/>
@@ -229,6 +247,8 @@ export default {
                 type: '',
                 buyer_signatory: '',
                 remark:'',
+                source_id: '',
+                source_type: '',
                 item_bind_list: [],
                 attachment_list: [],
             },
@@ -293,7 +313,7 @@ export default {
         if (this.form.id) {
             this.getOrderDetail();
         } else if (this.form.customer_id){
-            this.handleCustomerIdSearch();
+            this.handleCustomerIdSearch('init');
         } else if (this.form.bo_id){
             this.handleBoIdSearch();
         }
@@ -320,7 +340,12 @@ export default {
                 for (const key in this.form) {
                     this.form[key] = this.detail[key]
                 }
-                console.log("🚀 ~ file: order-edit.vue ~ line 270 ~ getOrderDetail ~ this.form", this.form)
+                if (this.detail.source_type === Core.Const.CRM_ORDER.SOURCE_TYPE.BO){
+                    this.form.bo_id = this.detail.source_id
+                    this.handleBoIdSearch();
+                }
+                this.handleCustomerIdSearch();
+
                 // this.defAddr = [d.province, d.city, d.county]
                 // this.defArea = [d.continent || '', d.country || '']
             }).catch(err => {
@@ -375,6 +400,13 @@ export default {
             // }
             form.date = form.date ? dayjs(form.date).unix() : 0 // 日期转时间戳
             form.item_bind_list = this.tableData
+            if ( this.form.bo_id !== ""){
+                form.source_id = this.form.bo_id
+                form.source_type = Core.Const.CRM_ORDER.SOURCE_TYPE.BO
+            } else {
+                form.source_id = this.form.customer_id
+                form.source_type = Core.Const.CRM_ORDER.SOURCE_TYPE.CUSTOMER
+            }
 
 
             console.log('form',form)
@@ -410,24 +442,30 @@ export default {
             this.tableData.splice(index, 1)
         },
         handleCustomerNameSearch(name){
-            Core.Api.CRMCustomer.list({name: name}).then(res => {
+            Core.Api.CRMCustomer.list({name: name, status: Core.Const.CRM_CUSTOMER.STATUS.CUSTOMER}).then(res => {
                 this.itemOptions = res.list
 
             })
         },
         handleCustomerChange(){
+            this.handleCustomerIdSearch()
             this.boOptions = [];
             this.form.bo_id = '';
         },
-        handleCustomerIdSearch(){
+        handleCustomerIdSearch(type){
             Core.Api.CRMCustomer.detail({id: this.form.customer_id}).then(res => {
-                this.handleCustomerNameSearch(res.name)
+                this.CRMCustomer = res.detail
+                // this.handleCustomerNameSearch(res.name)
+                if (type === 'init'){
+                    this.handleCustomerNameSearch(res.name)
+                }
             })
         },
         handleBoNameSearch(){
             Core.Api.CRMBo.list({name: name,customer_id: this.form.customer_id}).then(res => {
                 this.boOptions = res.list
             })
+            this.handleCustomerIdSearch()
         },
         handleBoIdSearch(){
             Core.Api.CRMBo.detail({id: this.form.bo_id}).then(res => {
@@ -436,6 +474,7 @@ export default {
                 let customer_name = res.detail.customer_name
                 this.handleCustomerNameSearch(customer_name)
                 this.handleBoNameSearch(res.detail.name)
+                this.handleCustomerIdSearch()
             })
         },
     }

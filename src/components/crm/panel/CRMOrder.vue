@@ -22,7 +22,7 @@
                         {{ text || '-' }}
                     </template>
                     <template v-if="column.key === 'time'">
-                        {{ $Util.timeFilter(text) }}
+                        {{ $Util.timeFilter(text,3) }}
                     </template>
                     <template v-if="column.key === 'util'">
                         {{ $Util[column.util](text, $i18n.locale) }}
@@ -63,6 +63,10 @@ export default {
         detail:{
             type: Object,
         },
+        customerId: {
+            type: Number,
+            default: 0
+        },
         targetId: {
             type: Number,
             default: 0
@@ -96,13 +100,14 @@ export default {
         tableColumns() {
             let columns = [
                 {title: 'crm_o.name', dataIndex: 'name', key:'item', sorter: true},
-                {title: 'crm_o.customer_name', dataIndex: 'customer_name', key:'item', sorter: true},
+                // {title: 'crm_o.customer_name', dataIndex: 'customer_name', key:'item', sorter: true},
                 {title: 'crm_o.own_user_name', dataIndex:  "own_user_name", key:'item', sorter: true},
-                {title: 'crm_o.status', dataIndex: 'status', key: 'util', util: 'CRMOrderStatusFilter', sorter: true},
-                {title: 'crm_o.paid_money_progress', dataIndex: 'paid_money_progress', key:'item', sorter: true},
-                {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
-                {title: 'crm_o.create_user', dataIndex: "create_user_name", key: 'item', sorter: true},
-                {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
+                {title: 'crm_o.signing_date', dataIndex:  "date", key:'time', sorter: true},
+                // {title: 'crm_o.status', dataIndex: 'status', key: 'util', util: 'CRMOrderStatusFilter', sorter: true},
+                // {title: 'crm_o.paid_money_progress', dataIndex: 'paid_money_progress', key:'item', sorter: true},
+                // {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
+                // {title: 'crm_o.create_user', dataIndex: "create_user_name", key: 'item', sorter: true},
+                // {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
             return columns
@@ -151,10 +156,12 @@ export default {
             this.getTableData()
         },
         getTableData() {    // 获取 表格 数据
+
             this.loading = true;
             Core.Api.CRMOrder.list({
-                target_id:this.targetId,
-                target_type:this.targetType,
+                customer_id: this.customerId,
+                source_id:this.targetId,
+                source_type:this.targetType,
                 search_type: 30,
                 page: this.currPage,
                 page_size: this.pageSize

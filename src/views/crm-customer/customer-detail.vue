@@ -79,8 +79,8 @@
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
                             <CRMContact :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" ref="CRMContact"/>
-                            <CRMBo :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" ref ="CRMBo"/>
-                            <CRMOrder :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" ref ="CRMOrder"/>
+                            <CRMBo :detail="detail" :customerId="detail.id" ref ="CRMBo"/>
+                            <CRMOrder :detail="detail" :customerId="detail.id"  ref ="CRMOrder"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>

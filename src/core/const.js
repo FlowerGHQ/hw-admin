@@ -1460,6 +1460,10 @@ let Const = {
 
 	},
     CRM_ORDER: {
+	    SOURCE_TYPE: {
+		    CUSTOMER: 1,
+		    BO: 2,
+	    },
 		TYPE: {
             SALES: 10,               // 10产品销售
             COOPERATION: 20,         // 20业务合作

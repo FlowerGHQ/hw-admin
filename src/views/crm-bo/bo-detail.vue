@@ -59,7 +59,7 @@
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="activeKey">
                         <a-tab-pane key="TrackRecord" :tab="$t('crm_t.track_record')">
-                            <CRMTrackRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :detail="detail" ref ="CRMTrackRecord"/>
+                            <CRMTrackRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :detail="detail" ref ="CRMTrackRecord"/>
                         </a-tab-pane>
                         <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.summary_information')">
                             <CustomerSituation :detail="detail"/>
@@ -325,11 +325,11 @@ export default {
         },
         getCRMTrackRecord(){
             console.log("getTrackRecord");
-            this.$refs.CRMTrackRecord.getCRMTrackRecordTableData();
+            this.$refs.CRMTrackRecord.getTableData();
         },
         getCrmActionRecordTableData(){
             console.log("getCrmActionRecordTableData");
-            this.$refs.ActionRecord.getCrmActionRecordTableData();
+            this.$refs.ActionRecord.getTableData();
         },
         getUserData(query){
             this.loading = true;

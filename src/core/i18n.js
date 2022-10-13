@@ -1119,6 +1119,8 @@ const messages = {
 		    source: '客户来源',
             distribute_success: '分配成功',
 		    order_success_count: '成单数量',
+		    order_success_price: '成单总金额',
+
 		    own_user_name: "负责人",
 		    pre_own_user: '前负责人',
 		    remark: '备注',

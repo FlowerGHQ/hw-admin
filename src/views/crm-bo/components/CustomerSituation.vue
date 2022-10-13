@@ -179,7 +179,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .panel-content {
   .pannel {
       margin-bottom: 40px;
