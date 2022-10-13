@@ -62,7 +62,9 @@
                 <div class="form-item" v-if="form.type === CRM_TYPE.UNIT">
                     <div class="key">{{ $t('crm_c.company_size') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.company_size" :placeholder="$t('def.input')"/>
+                        <a-select v-model:value="form.company_size" :placeholder="$t('def.input')" >
+                            <a-select-option v-for="item of CRM_COMPANY_SIZE_MAP" :key="item.key" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                        </a-select>
                     </div>
                 </div>
                 <div class="form-item" v-if="form.type === CRM_TYPE.INDIVIDUAL">
@@ -204,6 +206,8 @@ export default {
             CRM_GENDER_MAP: Core.Const.CRM_CUSTOMER.GENDER_MAP,
             CRM_MARITAL_STATUS_MAP: Core.Const.CRM_CUSTOMER.MARITAL_STATUS_MAP,
             CRM_TYPE: Core.Const.CRM_CUSTOMER.TYPE,
+            CRM_COMPANY_SIZE_MAP: Core.Const.CRM_CUSTOMER.COMPANY_SIZE_MAP,
+
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
             // 加载
             loading: false,

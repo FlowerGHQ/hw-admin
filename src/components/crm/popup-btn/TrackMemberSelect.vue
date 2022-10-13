@@ -20,7 +20,7 @@
                     <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
-            <div class="form-item">
+            <div class="form-item required">
                 <div class="key">{{ $t('crm_group.type') }}：</div>
                 <div class="value">
                     <a-select v-model:value="type" :placeholder="$t('def.select')">
@@ -160,6 +160,9 @@ export default {
             this.selectItems = []
         },
         handleConfirm() {
+            if (!this.type) {
+                return this.$message.warning(this.$t('crm_c.select'))
+            }
             console.log('handleConfirm this.selectItems:', this.selectItems)
             this.$emit('select', this.selectItemIds, this.selectItems, this.type)
             this.modalShow = false

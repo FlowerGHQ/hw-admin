@@ -844,6 +844,11 @@ const Util = {
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
+	CRMCompanySizeMapMapFilter(val,  to='zh') {
+		const MAP = Const.CRM_CUSTOMER.COMPANY_SIZE_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
 
 	/* =============== CRM客户管理 ================ */
 

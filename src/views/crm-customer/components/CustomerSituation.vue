@@ -11,14 +11,19 @@
             <a-descriptions-item :label="$t('crm_c.industry')" class="label">{{$Util.CRMCustomerIndustryFilter(detail.industry, $i18n.locale)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.track_status')" class="label">{{$Util.CRMTrackStatusMapFilter(detail.track_status, $i18n.locale)}}</a-descriptions-item>
         </a-descriptions>
-        <a-descriptions title="客户信息" bordered :column="2" size="small" class="pannel">
+        <a-descriptions title="客户信息" bordered :column="2" size="small" class="pannel" v-if="detail.type === Core.Const.CRM_CUSTOMER.TYPE.INDIVIDUAL">
             <a-descriptions-item :label="$t('crm_c.gender')" class="label">{{$Util.CRMCustomerGenderFilter(detail.gender, $i18n.locale)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.birthday')" class="label">{{detail.birthday}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.hobby')" class="label">{{detail.hobby}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.marital_status')" class="label">{{$Util.CRMCustomerMaritalStatusFilter(detail.marital_status, $i18n.locale)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.income')" class="label">{{detail.income}}</a-descriptions-item>
-
         </a-descriptions>
+
+        <a-descriptions title="客户信息" bordered :column="2" size="small" class="pannel" v-if="detail.type === Core.Const.CRM_CUSTOMER.TYPE.UNIT">
+            <a-descriptions-item :label="$t('crm_c.company_size')" class="label">{{$Util.CRMCompanySizeMapMapFilter(detail.company_size)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.company_license_id')" class="label">{{detail.company_license_id}}</a-descriptions-item>
+        </a-descriptions>
+
         <a-descriptions title="数据权限" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('crm_c.create_user')" class="label">{{detail.create_user_name}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.create_time')" class="label">{{$Util.timeFilter(detail.create_time) || '-'}}</a-descriptions-item>
@@ -50,6 +55,7 @@ export default {
     },
     data() {
         return {
+            Core,
             USER_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载

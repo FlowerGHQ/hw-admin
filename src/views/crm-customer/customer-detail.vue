@@ -2,9 +2,9 @@
     <div id="CustomerEdit" class="edit-container">
         <div class="title-container">
                 <div class="title-area">{{  $t('crm_c.detail')  }}
-                <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>
-                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}
-                </a-tag>
+<!--                <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>-->
+<!--                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
+<!--                </a-tag>-->
             </div>
         </div>
         <div class="gray-panel">
@@ -26,6 +26,10 @@
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('n.phone') }}：</span>
                         <span class="value">{{detail.phone}}</span>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('crm_c.own_user_name') }}：</span>
+                        <span class="value">{{detail.own_user ? detail.own_user.name : "-"}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_c.pre_own_user') }}：</span>

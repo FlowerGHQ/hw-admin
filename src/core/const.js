@@ -1447,6 +1447,16 @@ let Const = {
 			'20': { key: 20, zh: '跟进中',en: 'Following up', value: 20 },
 			'30': { key: 30, zh: '7天未跟进',en: '7 days without follow up', value: 30 },
 		},
+		COMPANY_SIZE_MAP: {
+			'100': { key: 100, zh: '0 - 20',en: '0 - 20', value: 100 },
+			'200': { key: 200, zh: '21 - 50',en: '21 - 50', value: 200 },
+			'300': { key: 300, zh: '51 - 100',en: '51 - 100', value: 300 },
+			'400': { key: 400, zh: '101 - 200',en: '101 - 200', value: 400 },
+			'500': { key: 500, zh: '201 - 500',en: '201 - 500', value: 500 },
+			'600': { key: 600, zh: '501 - 1000',en: '501 - 1000', value: 600 },
+			'700': { key: 700, zh: '1001 - 2000',en: '1001 - 2000', value: 700 },
+			'800': { key: 800, zh: '2000人以上',en: 'More than 2000', value: 800 },
+		},
 
 	},
     CRM_ORDER: {
