@@ -11,6 +11,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_o.belone_customer') }}：</div> <!-- 所属客户 -->
                     <div class="value">
+                        {{bo_id}}
                         <a-select
                             v-model:value="form.customer_id"
                             show-search
@@ -22,7 +23,7 @@
                             @search="handleCustomerNameSearch"
                             @change="handleCustomerChange"
                             allowClear
-                            :disabled="bo_id !== undefined || customer_id !== undefined"
+                            :disabled="bo_id !== '' || customer_id !== '' || form.id !== ''"
                         >
                             <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
                                 {{item.name}}
@@ -43,7 +44,7 @@
                             :filter-option="false"
                             :not-found-content="null"
                             @search="handleBoNameSearch"
-                            :disabled="bo_id !== undefined"
+                            :disabled="bo_id !== ''|| customer_id !== '' || form.id !== ''"
                             allowClear
                         >
                             <a-select-option v-for=" item in boOptions" :key="item.id" :value="item.id">
@@ -275,6 +276,7 @@ export default {
             boOptions: [],
             bo_id: '',
             customer_id: '',
+            CRMCustomer: {},
 
         };
     },
@@ -306,9 +308,9 @@ export default {
     },
     mounted() {
         this.form.id = Number(this.$route.query.id) || undefined
-        this.customer_id = Number(this.$route.query.customer_id) || undefined
+        this.customer_id = Number(this.$route.query.customer_id) || ""
         this.form.customer_id = Number(this.$route.query.customer_id) || undefined
-        this.bo_id = Number(this.$route.query.bo_id) || undefined
+        this.bo_id = Number(this.$route.query.bo_id) || ""
         this.form.bo_id = Number(this.$route.query.bo_id) || undefined
         if (this.form.id) {
             this.getOrderDetail();

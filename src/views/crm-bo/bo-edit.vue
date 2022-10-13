@@ -22,7 +22,7 @@
                             @search="handleCustomerNameSearch"
                             @change="handleCustomerIdSearch"
                             allowClear
-                            :disabled="customer_id !== undefined"
+                            :disabled="customer_id !== ''"
                         >
                             <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
                                 {{item.name}}
@@ -230,7 +230,7 @@ export default {
     },
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0
-        this.customer_id = Number(this.$route.query.customer_id) || undefined
+        this.customer_id = Number(this.$route.query.customer_id) || ''
         this.form.customer_id = Number(this.$route.query.customer_id) || undefined
         if (this.form.id) {
             this.getBoDetail();
