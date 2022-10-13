@@ -95,11 +95,13 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: 'crm_b.name', dataIndex: 'name', key:'detail', sorter: true},
-                // {title: 'crm_b.customer_name', dataIndex: 'customer_name', key:'customer_name', sorter: true},
-                {title: 'crm_b.own_user_name', dataIndex: 'own_user_name', key:'own_user_name', sorter: true},
-                {title: 'crm_b.status', dataIndex: 'status', key:'status', sorter: true},
-                {title: 'def.operate', key: 'operation', fixed: 'right'},
+                {title: 'n.name', dataIndex: 'name', key: 'item'},
+                {title: 'i.code', dataIndex: 'code', key: 'item'},
+                {title: 'i.unit_price', dataIndex: 'price'},
+                {title: 'crm_b.discount_price', dataIndex: 'discount_price'},
+                {title: 'i.amount',  dataIndex: 'amount',key: 'amount'},
+                {title: 'crm_b.discount',dataIndex: 'discount', key: 'discount'},
+                {title: 'i.total_price',dataIndex: 'total_price', key: 'total_price'},
             ]
             return columns
         },
@@ -147,6 +149,7 @@ export default {
             }).then(res => {
                 res.list.forEach(it => {
                     it.discount_price = it.price * it.discount / 100
+                    it.total_price = it.discount_price * it.amount
                 })
                 this.tableData = res.list
 

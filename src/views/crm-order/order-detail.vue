@@ -59,7 +59,7 @@
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
-                            <CRMItem :detail="detail" :sourceId="detail.id" :sourceType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.ORDER" ref ="CRMItem"/>
+                            <CRMItem :detail="detail" :sourceId="detail.id" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.ORDER" ref ="CRMItem"/>
                             <AttachmentFile :target_id="id" :target_type="CRM_ORDER_FILE" />
                         </a-tab-pane>
                     </a-tabs>
