@@ -43,6 +43,7 @@
                             :show-arrow="false"
                             :filter-option="false"
                             :not-found-content="null"
+                            @change="getDetailItemList(form.bo_id, Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.BO)"
                             @search="handleBoNameSearch"
                             :disabled="bo_id !== ''|| customer_id !== '' || form.id !== ''"
                             allowClear
@@ -140,36 +141,40 @@
                         <template #headerCell="{title}">
                             {{ $t(title) }}
                         </template>
-                        <template #bodyCell="{ column , record , index, text}">
+                        <template #bodyCell="{ column , record ,index, text}">
                             <template v-if="column.key === 'item'">
                                 {{ text || '-' }}
                             </template>
                             <template v-if="column.dataIndex === 'price'">
                                 $ {{ text || '-' }}
-                                <!-- <a-input-number v-model:value="record.price" style="width: 82px;"-->
-                                <!-- :min="0" :precision="2" placeholder="请输入"/>-->
+                                <!--                                    <a-input-number v-model:value="record.price" style="width: 82px;"-->
+                                <!--                                                      :min="0" :precision="2" placeholder="请输入"/>-->
+                            </template>
+                            <template v-if="column.dataIndex === 'discount_price'">
+                                $<a-input-number v-model:value="record.discount_price" :min="0" :precision="2" placeholder="0.00" :placeholder="$t('def.input')" @change="checkDiscount(record, 'discount_price')"/>
+                                <!--                                 <a-input-number v-model:value="record.discount_price" style="width: 150px;"-->
+                                <!--                                                :min="0.00"  :precision="2" placeholder="请输入" @change="checkDiscount(record, 'discount_price')"/>-->
+
                             </template>
                             <template v-if="column.key === 'amount'">
                                 <a-input-number v-model:value="record.amount" style="width: 66px;"
-                                                :min="1" :precision="0" placeholder="请输入"/>
+                                                :min="1" :precision="0" placeholder="请输入" @change="checkDiscount(record, 'amount')"/>
                                 {{ $t('in.item') }}
                             </template>
                             <template v-if="column.key === 'discount'">
-                                <a-input-number v-model:value="record.discount" style="width: 66px;"
-                                                :min="1" :max="100" :precision="0" placeholder="请输入"/>
-                                %
+                                <a-input-number v-model:value="record.discount" :min="0" :precision="2" placeholder="0.00" :placeholder="$t('def.input')" @change="checkDiscount(record, 'discount')"/>%
                             </template>
+
                             <template v-if="column.key === 'total_price'">
-                                $ {{ $Util.countFilter(record.price * record.amount * record.discount / 100, 1) }}
+                                <!--                                $ <a-input-number v-model:value="record.total_price" style="width: 150px;"-->
+                                <!--                                                :min="0" :precision="2" placeholder="请输入" @change="checkDiscount(record, 'total_price')"/>-->
+                                ${{ $Util.countFilter(record.price * record.amount * record.discount / 100, 1) }}
                             </template>
 
                             <template v-if="column.dataIndex === 'operation'">
-                                <a-button type="link" class="danger" @click="handleFailItemDelete(index)" v-if="$auth('crm-order.delete')"><i
+                                <a-button type="link" class="danger" @click="handleFailItemDelete(index)" v-if="$auth('crm-bo.delete')"><i
                                     class="icon i_delete"/>{{ $t('def.remove') }}
                                 </a-button>
-                            </template>
-                            <template v-if="column.key === 'remark'">
-                                <a-input v-model:value="record.remark" :placeholder="$t('def.input')"/>
                             </template>
                         </template>
                     </a-table>
@@ -234,6 +239,7 @@ export default {
     props: {},
     data() {
         return {
+            Core,
             CRM_ORDER_FILE: Core.Const.ATTACHMENT.TARGET_TYPE.CRM_ORDER_FILE,
             // 加载
             loading: false,
@@ -287,14 +293,14 @@ export default {
         },
         tableColumns() {
             let tableColumns = [
-                {title: 'def.operate', dataIndex: 'operation', key: 'operation' },
-                {title: "crm_o.choose_product", dataIndex: 'name', key: 'item'},
-                {title: 'crm_o.price_list', dataIndex: 'price', key: 'price' },
-                {title: 'crm_o.unit_price', dataIndex: 'price', key: 'price' },
-                {title: 'i.amount', dataIndex: 'amount', key: 'item' },
-                {title: 'crm_b.discount', dataIndex: 'discount', key: 'item' },
-                {title: 'i.total_price', dataIndex: 'price', key: 'price' },
-                {title: 'i.remark', dataIndex: 'remark', key: 'remark' },
+                {title: 'n.name', dataIndex: 'name', key: 'item'},
+                {title: 'i.code', dataIndex: 'code', key: 'item'},
+                {title: 'i.unit_price', dataIndex: 'price'},
+                {title: 'crm_b.discount_price', dataIndex: 'discount_price'},
+                {title: 'i.amount', key: 'amount'},
+                {title: 'crm_b.discount', key: 'discount'},
+                {title: 'i.total_price', key: 'total_price'},
+                {title: 'def.operate', dataIndex: 'operation'},
             ]
             return tableColumns
         },
@@ -314,10 +320,12 @@ export default {
         this.form.bo_id = Number(this.$route.query.bo_id) || undefined
         if (this.form.id) {
             this.getOrderDetail();
+            this.getDetailItemList(this.form.id, Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.ORDER)
         } else if (this.form.customer_id){
             this.handleCustomerIdSearch('init');
         } else if (this.form.bo_id){
             this.handleBoIdSearch();
+            this.getDetailItemList(this.form.bo_id, Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.BO)
         }
     },
     methods: {
@@ -434,6 +442,7 @@ export default {
                 element.amount = 1
                 element.price = element.fob_usd / 100
                 element.discount = 100
+                element.discount_price = element.price
                 element.remark = ''
             }
             console.log('handleAddFailItem items:', items)
@@ -478,6 +487,43 @@ export default {
                 this.handleBoNameSearch(res.detail.name)
                 this.handleCustomerIdSearch()
             })
+        },
+        getDetailItemList(source_id, source_type){
+            this.loading = true;
+            Core.Api.CRMItemBind.list({
+                source_id: source_id,
+                source_type: source_type,
+            }).then(res => {
+                res.list.forEach(it => {
+                    it.discount_price = it.price * it.discount / 100
+                })
+                this.tableData = res.list
+
+            }).catch(err => {
+                console.log('getCustomerDetail err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+
+        },
+        checkDiscount(item, type) {
+            switch (type) {
+                case 'discount_price':
+                    item.discount = 1.0 * item.discount_price / item.price * 100
+                    break
+                case 'amount':
+                    break
+                case 'discount':
+                    item.discount_price =  1.0 * item.price * item.discount / 100
+                    break
+                case 'total_price':
+                    item.discount = 1.0 * item.total_price / item.price / item.amount * 100
+                    item.discount_price = 1.0 * item.price * item.discount / 100
+                    break
+
+            }
+            item.total_price = 1.0 * item.amount * item.discount * item.price / 100
+
         },
     }
 };

@@ -59,6 +59,7 @@
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
+                            <CRMItem :detail="detail" :sourceId="detail.id" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.ORDER" ref ="CRMItem"/>
                             <AttachmentFile :target_id="id" :target_type="CRM_ORDER_FILE" />
                         </a-tab-pane>
                     </a-tabs>
@@ -92,10 +93,10 @@ import ActionRecord from '@/components/crm/panel/ActionRecord.vue';
 
 import dayjs from "dayjs";
 import {get} from "lodash";
-
+import CRMItem from '@/components/crm/panel/CRMItem.vue';
 export default {
     name: 'OrderDetail',
-    components: { CustomerSelect, Group, ActionRecord, CustomerSituation, AttachmentFile},
+    components: { CustomerSelect, Group, ActionRecord, CustomerSituation, AttachmentFile,CRMItem},
     props: {},
     data() {
         return {
