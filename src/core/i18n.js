@@ -1194,6 +1194,7 @@ const messages = {
         	save: '新建合同',
         	edit: '编辑合同',
             detail: '合同详情',
+		    delete: '删除合同',
 		    name: '合同名称',
 		    customer_name: "客户名称",
 		    own_user_name: "负责人",

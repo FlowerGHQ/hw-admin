@@ -109,6 +109,17 @@
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
+
+                        <template v-if="column.key === 'customer_name'">
+                            {{ record.customer_name || '-' }}
+                        </template>
+                        <template v-if="column.key === 'own_user_name'">
+                            {{ record.own_user_name || '-' }}
+                        </template>
+                        <template v-if="column.key === 'create_user_name'">
+                            {{ record.create_user_name || '-' }}
+                        </template>
+
                         <template v-if="column.key === 'util'">
                             {{ $Util[column.util](text, $i18n.locale) }}
                         </template>
@@ -217,12 +228,12 @@ export default {
         tableColumns() {
             let columns = [
                 {title: 'crm_o.name', dataIndex: 'name', key:'item', sorter: true},
-                {title: 'crm_o.customer_name', dataIndex: 'customer_name', key:'item', sorter: true},
-                {title: 'crm_o.own_user_name', dataIndex:  "own_user_name", key:'item', sorter: true},
+                {title: 'crm_o.customer_name', dataIndex: 'customer_id', key:'customer_name', sorter: true},
+                {title: 'crm_o.own_user_name', dataIndex:  "own_user_id", key:'own_user_name', sorter: true},
                 {title: 'crm_o.status', dataIndex: 'status', key: 'util', util: 'CRMOrderStatusFilter', sorter: true},
-                {title: 'crm_o.paid_money_progress', dataIndex: 'paid_money_progress', key:'item', sorter: true},
+                {title: 'crm_o.paid_money_progress', dataIndex: 'paid_money_progress', key:'item'},
                 {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
-                {title: 'crm_o.create_user', dataIndex: "create_user_name", key: 'item', sorter: true},
+                {title: 'crm_o.create_user', dataIndex: "create_user_id", key: 'create_user_name', sorter: true},
                 {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]

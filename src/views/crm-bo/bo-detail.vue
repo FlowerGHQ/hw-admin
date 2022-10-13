@@ -28,9 +28,12 @@
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_b.estimated_deal_time') }}：</span>
-                        <span class="value">{{$Util.timeFilter(detail.estimated_deal_time)}}</span>
+                        <span class="value">{{$Util.timeFilter(detail.estimated_deal_time,3)}}</span>
                     </a-col>
-
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('crm_c.own_user_name') }}：</span>
+                        <span class="value">{{detail.own_user ? detail.own_user.name : "-"}}</span>
+                    </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' >
                         <div class="panel-content">
                             <MySteps :stepsList='groupStatusTableData' :current='detail.status'></MySteps>
@@ -46,7 +49,7 @@
                             <span v-if="trackMemberDetail!= null ? trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
                                 <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_CONTACT_BIND.TARGET_TYPE.BO_ADD_CUSTOMER" :addCustomerBtn="true"/>
                                 <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-bo.transfer')">{{ $t('crm_c.transfer') }}</a-button>
-                                <a-button type="danger" @click="handleReturnPool">{{ $t('crm_c.return_pool') }}</a-button>
+                                <a-button type="danger" @click="handleDelete">{{ $t('crm_c.delete') }}</a-button>
                             </span>
 
                     </a-col>
@@ -271,18 +274,6 @@ export default {
                 return this.$message.warning(this.$t('crm_c.select'))
             }
             switch (this.batchType){
-                case "distribute":
-                    Core.Api.CRMBo.distribute({
-                        id: this.detail.id,
-                        own_user_id: this.batchForm.own_user_id,
-                    }).then(() => {
-                        this.$message.success(this.$t('pop_up.delete_success'));
-                        this.getCustomerDetail();
-                        this.handleBatchClose();
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
-                    break;
                 case "transfer":
                     Core.Api.CRMBo.transfer({
                         id: this.detail.id,
@@ -297,17 +288,17 @@ export default {
                     break;
             }
         },
-        handleReturnPool() {
+        handleDelete() {
             let _this = this;
             this.$confirm({
-                title: this.$t('crm_b.sure_return_pool'),
+                title: this.$t('pop_up.sure_delete'),
                 okText: this.$t('def.sure'),
-                okType: 'primary',
+                okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.CRMBo.returnPool({id: _this.detail.id}).then(() => {
-                        _this.$message.success(_this.$t('crm_b.return_pool_success'));
-                        _this.getCustomerDetail();
+                    Core.Api.CRMBo.delete({id: _this.detail.id}).then(() => {
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
+                        _this.routerChange('back')
                     }).catch(err => {
                         console.log("handleDelete err", err);
                     })
