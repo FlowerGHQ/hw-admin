@@ -1259,7 +1259,7 @@ const messages = {
 			name: '名称',
 		    name_en: '英文名',
 		    index: '排序序号',
-		    list: '字典管理',
+		    list: '数据字典管理',
 		    save: '新增',
 		    edit: '编辑',
             term: '词条',
