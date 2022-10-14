@@ -2,11 +2,18 @@
     <div id="OrderDetail" class="edit-container">
         <div class="title-container">
                 <div class="title-area">{{  $t('crm_o.detail')  }}
-                <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>
-                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}
-                </a-tag>
+<!--                <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>-->
+<!--                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
+<!--                </a-tag>-->
+            </div>
+            <div class="btns-area">
+                <AuditHandle v-if="user.id === audit.audit_user_id"
+                    btnType='primary' :api-list="['CRMOrder', 'audit']" :id="detail.id" @submit="getOrderDetail"
+                    :s-pass="Core.Const.FLAG.YES" :s-refuse="Core.Const.FLAG.NO" :current-audit-process-id="detail.current_audit_process_id" no-refuse><i class="icon i_audit"/>{{ $t('n.audit') }}
+                </AuditHandle>
             </div>
         </div>
+
         <div class="gray-panel">
             <div class="panel-content desc-container">
                 <div class="desc-title">
@@ -48,8 +55,24 @@
                         </span>
                     </a-col>
                 </a-row>
+
+                <a-steps :current="current">
+                    <a-step v-for="(item,index) in auditUserList">
+                        <template #icon>
+                            <user-outlined />
+                        </template>
+                        <template #title>
+                            {{item.audit_user_name}}
+                        </template>
+                        <template #status>
+                            {{item.audit_step}}
+                        </template>
+                    </a-step>
+
+                </a-steps>
             </div>
         </div>
+
 
         <a-row >
             <a-col :xs='24' :sm='24' :lg='16' >
@@ -89,14 +112,17 @@ import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 
 import Group from '@/components/crm/panel/Group.vue';
 import ActionRecord from '@/components/crm/panel/ActionRecord.vue';
-
+import AuditHandle from '@/components/popup-btn/AuditHandle.vue';
 
 import dayjs from "dayjs";
 import {get} from "lodash";
 import CRMItem from '@/components/crm/panel/CRMItem.vue';
+import {
+    UserOutlined,
+} from '@ant-design/icons-vue';
 export default {
     name: 'OrderDetail',
-    components: { CustomerSelect, Group, ActionRecord, CustomerSituation, AttachmentFile,CRMItem},
+    components: { CustomerSelect, Group, ActionRecord, CustomerSituation, AttachmentFile,CRMItem, UserOutlined, AuditHandle},
     props: {},
     data() {
         return {
@@ -106,7 +132,7 @@ export default {
             TYPE_MAP: Core.Const.CRM_TRACK_RECORD.TYPE_MAP,
             INTENT_MAP: Core.Const.CRM_TRACK_RECORD.INTENT_MAP,
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
-
+            user: Core.Data.getUser(),
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -152,6 +178,13 @@ export default {
             userData: [],
             batchShow: false,
             batchType: '',
+            auditUserList: [],
+            current:0,
+            audit: {
+                id:'',
+                audit_user_id: '',
+                current_audit_process_id:'',
+            },
         };
     },
     watch: {},
@@ -226,6 +259,17 @@ export default {
                     this.form[key] = d[key]
                 }
                 this.defAddr = [d.province, d.city, d.county]
+                this.detail = d
+                this.auditUserList = res.detail.audit_user_list
+                this.auditUserList.forEach(item => {
+                    if (item.audit_status == Core.Const.CRM_AUDIT_PROCESS.AUDIT_STATUS.WAIT_AUDIT){
+                        this.current = item.audit_step
+                        this.audit = item
+
+                    }
+                })
+
+
 
                 // this.defArea = [d.continent || '', d.country || '']
             }).catch(err => {

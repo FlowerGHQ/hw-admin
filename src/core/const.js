@@ -1624,6 +1624,15 @@ let Const = {
 			BO_ADD_CUSTOMER: 10,
 		}
 	},
+	CRM_AUDIT_PROCESS: {
+		AUDIT_STATUS: {
+			NOT_AUDIT : 10 ,      // 10 未轮到我审核
+			WAIT_AUDIT : 20 ,     // 20 待我审核
+			PASS : 30      ,      // 30 审核通过
+			REFUSE : 40   ,       // 40 审核拒绝
+		}
+
+	},
 	CRM_ACTION_RECORD: {
 		TYPE:{
 			CREATE_CUSTOMER : 1001,        // 新建客户
