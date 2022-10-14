@@ -25,7 +25,7 @@
                     </div>
                     <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
                     <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
-                    <CustomerSelect @select="handleAddCustomerShow" :radioMode="true" :name="this.form.name" checkMode="false" selectCustomer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
+                    <CustomerSelect @select="handleAddCustomerShow" :radioMode="true" :name="this.form.name" :check-mode="false" :select-customer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
                          {{ $t('crm_c.rechecking') }}
                     </CustomerSelect>
                 </div>

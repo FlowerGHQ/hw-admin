@@ -47,7 +47,7 @@
                 </div>
                 <div class="btn-area">
                     <a-button @click="handleModalClose">{{ $t('def.cancel') }}</a-button>
-                    <a-button @click="handleConfirm" type="primary" v-if="selectCustomer">{{ $t('def.sure') }}</a-button>
+                    <a-button @click="handleConfirm" type="primary" v-if="!selectCustomer">{{ $t('def.sure') }}</a-button>
                 </div>
             </div>
         </template>
@@ -155,8 +155,12 @@ export default {
                 {title: this.$t('n.name'), dataIndex: 'name', key: 'name'},
                 {title: this.$t('n.phone'), dataIndex: 'phone', key: 'phone' },
                 {title: this.$t('crm_c.type'), dataIndex: 'type', key:'type'},
-                {title: this.$t('crm_c.own_user_name'), dataIndex: ['own_user','name'], key: 'name' },
+
             ]
+            if (this.selectCustomer){
+                tableColumns.push({title: this.$t('crm_c.own_user_name'), dataIndex: ['own_user','name'], key: 'name' })
+            }
+
             return tableColumns
         },
     },
