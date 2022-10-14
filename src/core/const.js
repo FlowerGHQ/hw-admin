@@ -1460,6 +1460,11 @@ let Const = {
 
 	},
     CRM_ORDER: {
+	    SEARCH_TYPE: {
+		    PERSONAL: 10,
+		    AUDIT: 10,
+		    ALL: 30,
+	    },
 	    SOURCE_TYPE: {
 		    CUSTOMER: 1,
 		    BO: 2,

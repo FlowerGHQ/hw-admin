@@ -8,37 +8,34 @@
                 <div class="title-colorful">{{ $t('n.information') }}</div>
             </div>
             <div class="form-content">
-                <div class="form-item required">
-                    <div class="key">{{ $t('crm_oi.belong_order') }}：</div> <!-- 归属合同订单 -->
-                    <div class="value">
-                        <a-input v-model:value="form.order_id" :placeholder="$t('def.input')"/>
-                    </div>
-                </div>
-
 <!--                <div class="form-item required">-->
-<!--                    <div class="key">{{ $t('crm_o.belone_customer') }}：</div> &lt;!&ndash; 所属客户 &ndash;&gt;-->
+<!--                    <div class="key">{{ $t('crm_oi.belong_order') }}：</div> &lt;!&ndash; 归属合同订单 &ndash;&gt;-->
 <!--                    <div class="value">-->
-<!--                        {{bo_id}}-->
-<!--                        <a-select-->
-<!--                            v-model:value="form.customer_id"-->
-<!--                            show-search-->
-<!--                            :placeholder="$t('n.enter')"-->
-<!--                            :default-active-first-option="false"-->
-<!--                            :show-arrow="false"-->
-<!--                            :filter-option="false"-->
-<!--                            :not-found-content="null"-->
-<!--                            @search="handleCustomerNameSearch"-->
-<!--                            @change="handleCustomerChange"-->
-<!--                            allowClear-->
-<!--                            :disabled="bo_id !== '' || customer_id !== '' || form.id !== ''"-->
-<!--                        >-->
-<!--                            <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">-->
-<!--                                {{item.name}}-->
-<!--                            </a-select-option>-->
-<!--                        </a-select>-->
-
+<!--                        <a-input v-model:value="form.order_id" :placeholder="$t('def.input')"/>-->
 <!--                    </div>-->
 <!--                </div>-->
+
+                <div class="form-item required">
+                    <div class="key">{{ $t('crm_oi.belong_order') }}：</div> <!-- 所属客户 -->
+                    <div class="value">
+                        <a-select
+                            v-model:value="form.order_id"
+                            show-search
+                            :placeholder="$t('n.enter')"
+                            :default-active-first-option="false"
+                            :show-arrow="false"
+                            :filter-option="false"
+                            :not-found-content="null"
+                            @search="handleOrderNameSearch"
+                            allowClear
+                            :disabled="order_id !== ''"
+                        >
+                            <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
+                                {{item.name}}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </div>
 
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_oi.uid') }}：</div> <!-- 回款编号 -->
@@ -53,24 +50,28 @@
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">{{ $t('crm_oi.date') }}：</div> <!-- 回款日期 -->
+                    <div class="key">{{ $t('crm_oi.date') }}：</div> <!-- 签约日期 -->
                     <div class="value">
-                        <a-input v-model:value="form.date" :placeholder="$t('def.input')"/>
+                        <a-date-picker v-model:value="form.date" valueFormat='YYYY-MM-DD' placeholder="选择日期"/>
                     </div>
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_oi.payment_type') }}：</div> <!-- 支付方式 -->
                     <div class="value">
-                        <a-input v-model:value="form.payment_type" :placeholder="$t('def.input')"/>
+                        <a-select v-model:value="form.payment_type" :placeholder="$t('def.select')" >
+                            <a-select-option v-for="item of CRM_PAYMENT_TYPE" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                        </a-select>
                     </div>
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_oi.type') }}：</div> <!-- 回款类型 -->
                     <div class="value">
-                        <a-input v-model:value="form.type" :placeholder="$t('def.input')"/>
+                        <a-select v-model:value="form.type" :placeholder="$t('def.select')" >
+                            <a-select-option v-for="item of CRM_TYPE" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                        </a-select>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('crm_oi.remark') }}：</div> <!-- 备注 -->
                     <div class="value">
                         <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>
@@ -105,23 +106,19 @@ export default {
             CRM_ORDER_INCOME_FILE: Core.Const.ATTACHMENT.TARGET_TYPE.CRM_ORDER_INCOME_FILE,
 
             loginType: Core.Data.getLoginType(),
-            CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
-            CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
-            CRM_SOURCE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_MAP,
-            CRM_INDUSTRY_MAP: Core.Const.CRM_CUSTOMER.INDUSTRY_MAP,
-            CRM_GENDER_MAP: Core.Const.CRM_CUSTOMER.GENDER_MAP,
-            CRM_MARITAL_STATUS_MAP: Core.Const.CRM_CUSTOMER.MARITAL_STATUS_MAP,
-            CRM_TYPE: Core.Const.CRM_CUSTOMER.TYPE,
+            CRM_PAYMENT_TYPE: Core.Const.CRM_ORDER_INCOME.PAYMENT_TYPE_MAP,
+            CRM_TYPE: Core.Const.CRM_ORDER_INCOME.TYPE_MAP,
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
             // 加载
             loading: false,
             detail: {},
             form: {
-                customer_id: '',
+                order_id: undefined,
                 uid: '',
                 name: '',
                 date: '',
-                type: '',
+                payment_type: undefined,
+                type: undefined,
                 seller_signatory: '',
                 buyer_signatory: '',
                 remark:'',
@@ -143,6 +140,8 @@ export default {
             },
             areaMap: {},
             countryShow: false,
+            order_id: '',
+            itemOptions: [],
         };
     },
     watch: {},
@@ -156,15 +155,13 @@ export default {
         if (this.form.id) {
             this.getOrderDetail();
         }
+        this.handleOrderNameSearch()
     },
     methods: {
         routerChange(type, item) {
             switch (type) {
                 case 'back':    // 详情
-                    let routeUrl = this.$router.resolve({
-                        path: "/crm-order-income/order-income-list",
-                    })
-                    window.open(routeUrl.href, '_self')
+                    this.$router.go(-1)
                     break;
             }
         },
@@ -176,7 +173,7 @@ export default {
                 console.log('getOrderDetail res', res)
                 let d = res.detail
                 this.detail = d
-                this.detail.birthday = this.detail.birthday ? dayjs.unix(this.detail.birthday).format('YYYY-MM-DD') : undefined
+                this.detail.date = detail.date ? dayjs.unix(detail.date).format('YYYY-MM-DD') : undefined
                 for (const key in this.form) {
                     this.form[key] = d[key]
                 }
@@ -193,17 +190,32 @@ export default {
             this.$refs.UploadFile.getUploadData() // 子组件拿值
             let form = Core.Util.deepCopy(this.form)
             // let area = Core.Util.deepCopy(this.area)
-            // if (!form.name) {
-            //     return this.$message.warning(this.$t('def.enter'))
-            // }
+            if (!form.order_id) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.uid) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.money) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.date) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.payment_type) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.type) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
             // form.birthday = form.birthday ? dayjs(form.birthday).unix() : 0 // 日期转时间戳
-
+            form.date = form.date ? dayjs(form.date).unix() : 0 // 日期转时间戳
             console.log('form',this.form)
             Core.Api.CRMOrderIncome.save({
                 ...form,
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
-                this.routerChange('back')
+                this.$router.go(-1)
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
@@ -228,6 +240,22 @@ export default {
             console.log('countryShow',this.countryShow)
 
         },
+        handleOrderNameSearch(name){
+            Core.Api.CRMOrder.list({name: name, search_type: Core.Const.CRM_ORDER.SEARCH_TYPE.PERSONAL}).then(res => {
+                this.itemOptions = res.list
+
+            })
+        },
+        // handleOrderIdSearch(type){
+        //     Core.Api.CRMOrder.detail({id: this.form.customer_id}).then(res => {
+        //         this.CRMOrder = res.detail
+        //         console.log("res", res)
+        //         if (type === 'init'){
+        //             this.handleCustomerNameSearch(res.name)
+        //         }
+        //
+        //     })
+        // },
     }
 };
 </script>
