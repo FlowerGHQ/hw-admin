@@ -1226,7 +1226,7 @@ const messages = {
             discount_rate:'整单折扣',
             discount_amount:'优惠金额',
             other_cost:'其他费用',
-
+			create_order: '保存并创建订单',
 
 	    },
 	    crm_oi: {

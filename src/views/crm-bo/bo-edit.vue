@@ -155,6 +155,7 @@
             </div>
         </div>
         <div class="form-btns">
+            <a-button @click="handleCreateOrder" type="primary" v-if="$auth('crm-order.save')">{{ $t('crm_o.create_order') }}</a-button>
             <a-button @click="handleSubmit" type="primary" v-if="$auth('crm-bo.save')">{{ $t('def.sure') }}</a-button>
             <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
         </div>
@@ -290,7 +291,7 @@ export default {
             });
 
         },
-        handleSubmit() {
+        handleSubmit(router = true) {
             let form = Core.Util.deepCopy(this.form)
             if (!form.customer_id) {
                 return this.$message.warning(this.$t('def.enter'))
@@ -326,12 +327,25 @@ export default {
             Core.Api.CRMBo.save({
                 ...form,
                 item_bind_list: this.tableData
-            }).then(() => {
+            }).then((res) => {
+                this.form.id = res.detail.id
                 this.$message.success(this.$t('pop_up.save_success'))
-                this.routerChange('back')
+                if (router){
+                    this.routerChange('back')
+                }
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
+        },
+        handleCreateOrder(){
+            this.handleSubmit(false)
+            let routeUrl = this.$router.resolve({
+                path: "/crm-order/order-edit",
+                query: {
+                    bo_id: this.form.id
+                }
+            })
+            window.open(routeUrl.href, '_self')
         },
 
         // 添加商品

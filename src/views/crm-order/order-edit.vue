@@ -11,7 +11,6 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_o.belone_customer') }}：</div> <!-- 所属客户 -->
                     <div class="value">
-                        {{bo_id}}
                         <a-select
                             v-model:value="form.customer_id"
                             show-search
