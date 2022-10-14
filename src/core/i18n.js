@@ -1211,7 +1211,7 @@ const messages = {
 		    buyer_signatory: '客户方签约人',
 		    remark: '备注',
 		    money: '合同金额',
-		    money_tip: '注:合同金额=产品总金额*整个订单折扣+其他费用-折扣金额',
+		    money_tip: '注:合同金额=产品总金额+其他费用-折扣金额',
 		    sales_info: '销售信息',
 		    choose_product: '选择一个产品',
 		    price_list: '价格表的价格',
@@ -1227,6 +1227,8 @@ const messages = {
             discount_amount:'优惠金额',
             other_cost:'其他费用',
 			create_order: '保存并创建订单',
+		    approval_process: '审核流程',
+		    add_reviewer: '添加审核人',
 
 	    },
 	    crm_oi: {
@@ -2815,7 +2817,7 @@ const messages = {
 		    buyer_signatory: 'Client side signatory',
 		    remark: 'Remark',
 		    money: 'Contract amount',
-            money_tip: 'Note: Contract Amount = Total Product Amount * Whole Order Discount + Other Fees - Discount Amount',
+            money_tip: 'Note: Contract Amount = Total Product Amount + Other Fees - Discount Amount',
             sales_info: 'Sales information',
             choose_product: 'Choose a product',
             price_list: 'Price list price',

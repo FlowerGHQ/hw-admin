@@ -171,47 +171,58 @@
                             </template>
 
                             <template v-if="column.dataIndex === 'operation'">
-                                <a-button type="link" class="danger" @click="handleFailItemDelete(index)" v-if="$auth('crm-bo.delete')"><i
+                                <a-button type="link" class="danger" @click="handleFailItemDelete(index)" v-if="$auth('crm-bo.save')"><i
                                     class="icon i_delete"/>{{ $t('def.remove') }}
                                 </a-button>
                             </template>
                         </template>
                     </a-table>
                 </div>
+
+
                 <div class="form-item">
                     <div class="key">{{ $t('crm_o.total_amount') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.total_price" :placeholder="$t('def.input')"/>
+                        <a-input-number v-model:value="form.total_price" :min="0" :precision="2" placeholder="0.00" :disabled="moneyDisabled" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-                <div class="form-item">
-                    <div class="key">{{ $t('crm_o.whole_discount') }}：</div>
-                    <div class="value">
-                        <a-input v-model:value="form.discount_rate" :placeholder="$t('def.input')"/>
-                    </div>
-                </div>
+
+
+<!--                <div class="form-item">-->
+<!--                    <div class="key">{{ $t('crm_o.whole_discount') }}：</div>-->
+<!--                    <div class="value">-->
+<!--                        <a-input v-model:value="form.discount_rate" :placeholder="$t('def.input')"/>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <div class="form-item">
                     <div class="key">{{ $t('crm_o.other_fee') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.other_cost" :placeholder="$t('def.input')"/>
+                        <a-input-number v-model:value="form.other_cost" :min="0" :precision="2" placeholder="0.00"  :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">{{ $t('crm_o.discounted') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.discount_amount" :placeholder="$t('def.input')"/>
+                        <a-input-number v-model:value="form.discount_amount" :min="0" :precision="2" placeholder="0.00"  :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_o.money') }}：</div>
                     <div class="value">
                         <!--  disabled -->
-                        <a-input :value="contractAmount" :placeholder="$t('def.input')"/>
+                        <a-input-number v-model:value="contractAmount" :min="0" :precision="2" placeholder="0.00" :disabled="true" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
                     <div>{{ $t('crm_o.money_tip') }}</div>
                 </div>
+
+                <div class="form-item required">
+                    <div class="key">{{ $t('crm_o.approval_process') }}：</div>
+                        <!--  disabled -->
+                    <AuditUser :def-audit-user-list="auditUserList"  @list="handleAuditUserIdList"></AuditUser>
+                </div>
+
             </div>
         </div>
         <div class="form-btns">
@@ -230,11 +241,16 @@ import AddressCascader from '@/components/common/AddressCascader.vue';
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 import ItemTable from '@/components/table/ItemTable.vue'
 import UploadFileWithList from '@/components/common/UploadFileWithList.vue'
+import AuditUser from '@/components/crm/popup-btn/AuditUser.vue'
+
 import dayjs from "dayjs";
+import {
+    UserOutlined,
+} from '@ant-design/icons-vue';
 
 export default {
     name: 'OrderEdit',
-    components: { ChinaAddressCascader, CountryCascader, AddressCascader, ItemSelect, ItemTable, UploadFileWithList },
+    components: { ChinaAddressCascader, CountryCascader, AddressCascader, ItemSelect, ItemTable, UploadFileWithList,UserOutlined ,AuditUser},
     props: {},
     data() {
         return {
@@ -252,6 +268,9 @@ export default {
                 seller_signatory: '',
                 type: '',
                 buyer_signatory: '',
+                other_cost: '',
+                discount_amount: '',
+
                 remark:'',
                 source_id: '',
                 source_type: '',
@@ -282,10 +301,22 @@ export default {
             bo_id: '',
             customer_id: '',
             CRMCustomer: {},
+            auditUserList: [],
+            moneyDisabled: 'false',
 
         };
     },
-    watch: {},
+    watch: {
+        'tableData':{
+            deep: true,
+            immediate: true,
+            handler(n) {
+                this.moneyCheck()
+                // this.imgs = n
+            }
+
+        },
+    },
     computed: {
         lang() {
             return this.$store.state.lang
@@ -304,7 +335,7 @@ export default {
             return tableColumns
         },
         contractAmount() {
-            let amount = Number(this.form.total_price * this.form.discount_rate) + Number(this.form.other_cost) - Number(this.form.discount_amount)
+            let amount = Number(this.form.total_price) + Number(this.form.other_cost) - Number(this.form.discount_amount)
             return amount || ''
         },
         // user_type() {
@@ -350,7 +381,17 @@ export default {
                     this.form.bo_id = this.detail.source_id
                     this.handleBoIdSearch();
                 }
-                this.handleCustomerIdSearch();
+                let auditUserList= []
+                detail.audit_user_list.forEach(item => {
+                    let param = {
+                        id: item.audit_user_id,
+                        name: item.audit_user_name,
+                    }
+                   auditUserList.push(param)
+               })
+                this.auditUserList = auditUserList
+                console.log('auditUserList err', this.auditUserList)
+                this.handleCustomerIdSearch('init');
 
                 // this.defAddr = [d.province, d.city, d.county]
                 // this.defArea = [d.continent || '', d.country || '']
@@ -360,6 +401,7 @@ export default {
                 this.loading = false;
             });
         },
+
         // 提交
         handleSubmit() {
             this.$refs.UploadFile.getUploadData() // 子组件拿值
@@ -413,11 +455,15 @@ export default {
                 form.source_id = this.form.customer_id
                 form.source_type = Core.Const.CRM_ORDER.SOURCE_TYPE.CUSTOMER
             }
-
+            let audit_user_id_list = []
+            this.auditUserList.forEach(it => {
+                audit_user_id_list.push(it.id)
+            })
 
             console.log('form',form)
             Core.Api.CRMOrder.save({
                 ...form,
+                audit_user_id_list: audit_user_id_list
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
@@ -519,8 +565,30 @@ export default {
 
             }
             item.total_price = 1.0 * item.amount * item.discount * item.price / 100
+        },
+        handleAuditUserIdList(auditUserList){
+            console.log("auditUserList11111",auditUserList)
+            if (auditUserList !== null){
+                this.auditUserList = auditUserList
+            } else {
+                this.auditUserList = []
+            }
 
         },
+        moneyCheck(){
+            if (this.tableData.length > 0){
+                let total_price = 0
+                this.tableData.forEach(record => {
+                    total_price += record.price * record.amount * record.discount / 100
+                })
+                this.form.total_price = total_price
+                this.moneyDisabled = true;
+
+            } else {
+                this.moneyDisabled = false;
+            }
+        },
+
     }
 };
 </script>
