@@ -29,9 +29,21 @@
                         <template v-if="column.key === 'country'">
                             {{ text || '-' }}
                         </template>
+                        <template v-if="column.dataIndex === 'editable'">
+                          <div class="status status-bg status-tag" :class="text == 1 ? 'yellow' : 'blue'">
+                            {{ text == 1 ? $t('crm_set.unpreset') : $t('crm_set.preset') }}
+                          </div>
+                        </template>
+                        <template v-if="column.dataIndex === 'status'">
+                          <div class="status status-bg status-tag" :class="text == 1 ? 'green' : 'grey'">
+                            {{ text == 1 ? $t('crm_set.able') : $t('crm_set.unable') }}
+                          </div>
+                        </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleModalShow(record)" v-if="$auth('crm-customer-source.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('crm-customer-source.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                            <a-button type="link" @click="handleModalShow(record)" v-if="record.editable !== 2 && $auth('crm-customer-source.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="record.editable !== 2 && $auth('crm-customer-source.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                            <a-button type="link" @click="handlePreset(record.id, record.editable)" v-if="$auth('crm-customer-source.save')"><i :class="record.editable === 2 ? 'icon i_close_c' : 'icon i_confirm'"/>{{ record.editable === 2 ? $t('crm_set.cancel_pre') : $t('crm_set.set_pre') }}</a-button>
+                            <a-button type="link" @click="handleStatus(record.id, record.status)" v-if="$auth('crm-customer-source.save')"><i :class="record.status === 1 ? 'icon i_close_c' : 'icon i_confirm'"/>{{ record.status === 1 ? $t('crm_set.set_unable') : $t('crm_set.set_able') }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -115,6 +127,8 @@ export default {
                 name_en: '',
                 weight: '',
                 type: '',
+                status: '',
+                editable: '',
             },
         };
     },
@@ -125,6 +139,8 @@ export default {
                 {title: this.$t('crm_set.name'), dataIndex: 'name'},
                 {title: this.$t('crm_set.name_en'), dataIndex: 'name_en'},
                 {title: this.$t('crm_set.index'), dataIndex: 'weight'},
+                {title: this.$t('n.type'), dataIndex: 'editable'},
+                {title: this.$t('n.state'), dataIndex: 'status'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             return columns
@@ -221,6 +237,46 @@ export default {
             })
 
         },
+
+        handlePreset(id, editable) {
+            let _this = this;
+            this.$confirm({
+            title: editable === 2 ? _this.$t('pop_up.sure_cancel_pre') : _this.$t('pop_up.sure_set_pre'),
+            okText: _this.$t('def.sure'),
+            okType: 'danger',
+            cancelText: this.$t('def.cancel'),
+            onOk() {
+              editable = editable === 2 ? 1 : 2
+              Core.Api.CRMDict.change({id, editable}).then(() => {
+                _this.$message.success(_this.$t('pop_up.operate'));
+                _this.getTableData();
+              }).catch(err => {
+                console.log("handleDelete err", err);
+              })
+            },
+          });
+        },
+
+        handleStatus(id, status) {
+            let _this = this;
+            this.$confirm({
+                title: status === 1 ? _this.$t('pop_up.sure_set_disable') : _this.$t('pop_up.sure_set_able'),
+                okText: _this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                  status = status === 1 ? 2 : 1
+                  Core.Api.CRMDict.change({id, status}).then(() => {
+                    _this.$message.success(_this.$t('pop_up.operate'));
+                    _this.getTableData();
+                  }).catch(err => {
+                    console.log("handleDelete err", err);
+                  })
+                },
+            });
+        },
+
+
     }
 };
 </script>

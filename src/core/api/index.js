@@ -671,6 +671,7 @@ const apiList = {
         list: ['PostJson', 'crm-dict/list'],//
         delete: ['PostJson', 'crm-dict/delete'],//
         detail: ['PostJson', 'crm-dict/detail'],//
+        change: ['PostJson', 'crm-dict/change'],//
     },
 
 };
