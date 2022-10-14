@@ -173,7 +173,10 @@ export default {
         routerChange(type, item) {
             switch (type) {
                 case 'back':    // 详情
-                    this.$router.go(-1)
+                    let routeUrl = this.$router.resolve({
+                        path: "/crm-order-income/order-income-list",
+                    })
+                    window.open(routeUrl.href, '_self')
                     break;
             }
         },

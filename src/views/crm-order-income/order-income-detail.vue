@@ -81,7 +81,7 @@
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
                             <CrmRefundRecord :detail="detail" :orderId="detail.id" ref ="CrmRefundRecord"/>
-                            <AttachmentFile :target_id="id" :target_type="CRM_ORDER_INCOME_FILE" />
+                            <CRMAttachmentFile :target_id="id" :target_type="CRM_ORDER_INCOME_FILE" />
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -139,7 +139,7 @@ import Core from '../../core';
 import CustomerSituation from './components/CustomerSituation.vue';
 
 import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
-import AttachmentFile from '@/components/panel/AttachmentFile.vue';
+import CRMAttachmentFile from '@/components/crm/panel/CRMAttachmentFile.vue';
 
 import Group from '@/components/crm/panel/Group.vue';
 import ActionRecord from '@/components/crm/panel/ActionRecord.vue';
@@ -154,7 +154,7 @@ import {get} from "lodash";
 
 export default {
     name: 'OrderDetail',
-    components: { CustomerSelect, Group, CustomerSituation, AttachmentFile,ActionRecord,AuditHandle,UserOutlined,CrmRefundRecord},
+    components: { CustomerSelect, Group, CustomerSituation, CRMAttachmentFile,ActionRecord,AuditHandle,UserOutlined,CrmRefundRecord},
     props: {},
     data() {
         return {

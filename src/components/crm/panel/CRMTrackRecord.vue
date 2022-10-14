@@ -58,11 +58,17 @@
                             </a-row>
                             <div class="content">
                                 <div class="line grey">{{$t('crm_t.images')}}:</div>
-                                <div class="line">{{ item.content }}</div>
+                                <div class="line">
+                                    <a-image v-for="it in item.image_attachment_list" class="image" :width="55" :height="55" :src="$Util.imageFilter(it.path)" :fallback="$t('def.none')"/>
+                                </div>
                             </div>
                             <div class="content">
                                 <div class="line grey">{{$t('crm_t.file')}}:</div>
-                                <div class="line">{{ item.content }}</div>
+                                <div class="line">
+                                    <div class="list" v-for="i in item.file_attachment_list">
+                                        <a @click="handleDownload(i)">{{ i.name }}</a>
+                                    </div>
+                                </div>
                             </div>
                             <div class="foot">
                                 <div class="line">{{$t('crm_t.operator')}}:{{ item.create_user_name }}</div>
@@ -221,6 +227,12 @@ export default {
                     })
                 },
             });
+        },
+        // 下载附件
+        handleDownload(record) {
+            console.log('handleDownload record:', record)
+            let url = Core.Const.NET.FILE_URL_PREFIX + record.path
+            window.open(url, '_self')
         },
     }
 };

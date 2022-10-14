@@ -29,7 +29,7 @@
                               :headers="upload.headers" :data='upload.data'
                               :before-upload="handleImgCheck"
                               @change="handleCoverChange">
-                        <div class="image-inner" v-if="upload.detailList.length < 10">
+                        <div class="image-inner" v-if="upload.coverList.length < 10">
                             <i class="icon i_upload"/>
                         </div>
                     </a-upload>
@@ -42,9 +42,8 @@
                     <a-upload name="file"
                               :file-list="fileUpload.fileList" :action="fileUpload.action"
                               :headers="fileUpload.headers" :data='fileUpload.data'
-                              :before-upload="handleImgCheck"
                               @change="handleFileChange">
-                        <a-button class="file-upload-btn" type="primary" ghost v-if="fileUpload.fileList.length < 1">
+                        <a-button class="file-upload-btn" type="primary" ghost v-if="fileUpload.fileList.length < 10">
                             <i class="icon i_upload"/> {{  $t('f.upload') }}
                         </a-button>
                     </a-upload>
@@ -162,6 +161,8 @@ export default {
                 intent: "",
                 next_track_time: undefined,
                 next_track_plan: undefined,
+                image_attachment_list:[],
+                file_attachment_list: [],
             },
 
             upload: { // 上传图片
@@ -243,6 +244,8 @@ export default {
                 intent: form.intent,
                 next_track_time: next_track_time,
                 next_track_plan: form.next_track_plan,
+                image_attachment_list: form.image_attachment_list,
+                file_attachment_list: form.file_attachment_list,
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.handleTrackRecordClose();
@@ -276,13 +279,19 @@ export default {
                 if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
                 }
-                this.shortPath = get(fileList,'[0].response.data.filename', null);
-                if(this.shortPath) {
-                    this.form.img = this.shortPath;
-                    // this.loadImage(this.detailImageUrl);
+                let imageAttachment = {
+                    name: file.name,
+                    path: file.response.data.filename,
+                    type: file.response.data.filename.split('.').pop()
                 }
+                // this.shortPath = get(fileList,'[0].response.data.filename', null);
+                // if(this.shortPath) {
+                //     // this.form.img = this.shortPath;
+                //     // this.loadImage(this.detailImageUrl);
+                // }
+                this.trackRecordForm.image_attachment_list.push(imageAttachment)
             }
-            this.upload.coverList = fileList;
+            this.upload.detailList = fileList;
         },
         // 上传文件
         handleFileChange({file, fileList}) {
@@ -291,13 +300,19 @@ export default {
                 if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
                 }
-                this.form.path = file.response.data.filename
-                this.form.type = this.form.path.split('.').pop()
-                if (this.form.path){
-                    this.submitDisabled = false
+                let fileAttachment = {
+                    name: file.name,
+                    path: file.response.data.filename,
+                    type: file.response.data.filename.split('.').pop()
                 }
+                // this.form.path = file.response.data.filename
+                // this.form.type = this.form.path.split('.').pop()
+                // if (fileAttachment.path){
+                //     this.submitDisabled = false
+                // }
+                this.trackRecordForm.file_attachment_list.push(fileAttachment)
             }
-            this.upload.fileList = fileList
+            this.fileUpload.fileList = fileList
         },
         // 添加商品
         handleAddCustomerShow(ids, items) {

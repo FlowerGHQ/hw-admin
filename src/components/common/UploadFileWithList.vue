@@ -112,7 +112,12 @@ export default {
             },
         }
     },
-    watch: {},
+    watch: {
+        target_id(n) {
+            this.getAttachmentList();
+        },
+
+    },
     computed: {
         uploadColumns() {
             let uploadColumns = [
@@ -131,7 +136,7 @@ export default {
     },
     created() {},
     mounted() {
-        if(this.target_id) {
+        if(this.target_id > 0) {
             this.getAttachmentList();
         }
     },
@@ -209,8 +214,6 @@ export default {
         },
         // 删除附件
         handleFileRemove(id, index) {
-            // 删除列表指定列
-            this.uploadData.splice(index, 1)
             // 编辑-删除后台数据
             if (!id) { return }
             let _this = this;
@@ -221,6 +224,8 @@ export default {
                 cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Attachment.delete({id}).then(() => {
+                        // 删除列表指定列
+                        this.uploadData.splice(index, 1)
                         _this.$message.success(_this.$t('pop_up.delete_success'));
                     }).catch(err => {
                         console.log("handleDelete err", err);

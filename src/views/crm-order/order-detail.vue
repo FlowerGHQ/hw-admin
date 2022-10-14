@@ -89,7 +89,7 @@
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
                             <CRMItem :detail="detail" :sourceId="detail.id" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.ORDER" ref ="CRMItem"/>
                             <CrmOrderIncome :detail="detail" :orderId="detail.id" ref ="CrmOrderIncome"/>
-                            <AttachmentFile :target_id="id" :target_type="CRM_ORDER_FILE" />
+                            <CRMAttachmentFile :target_id="id" :target_type="CRM_ORDER_FILE" />
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -114,7 +114,7 @@
 import Core from '../../core';
 import CustomerSituation from './components/CustomerSituation.vue';
 import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
-import AttachmentFile from '@/components/panel/AttachmentFile.vue';
+import CRMAttachmentFile from '@/components/crm/panel/CRMAttachmentFile.vue';
 
 import Group from '@/components/crm/panel/Group.vue';
 import ActionRecord from '@/components/crm/panel/ActionRecord.vue';
@@ -130,7 +130,7 @@ import {
 } from '@ant-design/icons-vue';
 export default {
     name: 'OrderDetail',
-    components: { CustomerSelect, Group, ActionRecord, CustomerSituation, AttachmentFile,CRMItem, UserOutlined, AuditHandle,CrmOrderIncome},
+    components: { CustomerSelect, Group, ActionRecord, CustomerSituation, CRMAttachmentFile,CRMItem, UserOutlined, AuditHandle,CrmOrderIncome},
     props: {},
     data() {
         return {
