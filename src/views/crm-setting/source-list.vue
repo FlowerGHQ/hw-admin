@@ -4,8 +4,17 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('crm_set.list')}}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleModalShow({})" v-if="$auth('crm-customer-source.save')"><i class="icon i_add"/>{{ $t('crm_set.save')}}</a-button>
+                    <a-button type="primary" @click="handleModalShow({})" v-if="$auth('crm-customer-source.save')"><i class="icon i_add"/>{{ $t('crm_set.save') + $Util.CRMDictTypeMapFilter(searchForm.type, $i18n.locale) + $t('crm_set.term') }}</a-button>
                 </div>
+            </div>
+            <div class="tabs-container colorful">
+              <a-tabs v-model:activeKey="searchForm.type" @change='handleSearch'>
+                <a-tab-pane :key="item.type" v-for="item of typeList">
+                  <template #tab>
+                    <div class="tabs-title">{{item[$i18n.locale]}}<span :class="item.color">{{item.value}}</span></div>
+                  </template>
+                </a-tab-pane>
+              </a-tabs>
             </div>
             <div class="search-container">
                 <a-row class="search-area">
@@ -65,7 +74,7 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="modalShow" :title="editForm.id ? $t('crm_set.edit') : $t('crm_set.save')" :after-close="handleModalClose">
+            <a-modal v-model:visible="modalShow" :title="(editForm.id ? $t('crm_set.edit') : $t('crm_set.save')) + $t('crm_set.term')" :after-close="handleModalClose">
                 <div class="modal-content">
                     <div class="form-item">
                         <div class="key">{{ $t('n.name') }}</div>
@@ -115,8 +124,8 @@ export default {
             // 搜索
             searchForm: {
                 name: '',
-                continent: '',
-                country: '',
+                name_en: '',
+                type: '1',
             },
             // 表格
             tableData: [],
@@ -126,7 +135,7 @@ export default {
                 name: '',
                 name_en: '',
                 weight: '',
-                type: '',
+                type: '1',
                 status: '',
                 editable: '',
             },
@@ -145,6 +154,13 @@ export default {
             ]
             return columns
         },
+        typeList() {
+          let columns = [
+            {zh: '客户来源', en: 'Customer source',  type: '1'},
+            {zh: '试驾车型', en: 'Test drive model',  type: '2'},
+          ]
+          return columns
+        }
     },
     mounted() {
         this.getTableData();
@@ -176,7 +192,8 @@ export default {
             this.loading = true;
             // return
             Core.Api.CRMDict.list({
-                type: Core.Const.CRM_DICT.TYPE.TYPE_CUSTOMER_SOURCE,
+                type: this.searchForm.type,
+                name: this.searchForm.name,
                 ...this.searchForm,
                 page: this.currPage,
                 page_size: this.pageSize
@@ -226,7 +243,7 @@ export default {
             }
             this.loading = true
             let apiName = form.id ? 'update' : 'save';
-            form.type = Core.Const.CRM_DICT.TYPE.TYPE_CUSTOMER_SOURCE
+            form.type = this.searchForm.type,
             Core.Api.CRMDict.save(form).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.modalShow = false
@@ -238,6 +255,7 @@ export default {
 
         },
 
+        // 是否预置
         handlePreset(id, editable) {
             let _this = this;
             this.$confirm({
@@ -257,6 +275,7 @@ export default {
           });
         },
 
+        // 是否可用
         handleStatus(id, status) {
             let _this = this;
             this.$confirm({

@@ -934,6 +934,14 @@ const Util = {
         return item[to] || ''
     },
     /* =============== CRM退款记录 ================ */
+
+    /* =============== CRM设置 ================ */
+    CRMDictTypeMapFilter(val,  to='zh') {
+        const MAP = Const.CRM_DICT.TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== CRM退款记录 ================ */
 }
 
 export default Util
