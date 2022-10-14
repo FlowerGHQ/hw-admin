@@ -1723,8 +1723,8 @@ const routes = [
 				name: 'SourceList',
 				component: () => import('@/views/crm-setting/source-list.vue'),
 				meta: {
-					title: '客户来源',
-					title_en: 'Customer source',
+					title: '字典选项',
+					title_en: 'Dictionary',
                     auth: ["crm-customer-source.list"],
 				}
 			},

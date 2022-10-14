@@ -1744,10 +1744,18 @@ let Const = {
             TYPE_CUSTOMER_SOURCE: 1,    // 客户来源
             TYPE_TEST_MODEL: 2          // 试驾车型
         },
+        TYPE_MAP: {
+            '1': { key: 1, zh: '客户来源', en: 'customer source'},
+            '2': { key: 2, zh: '试驾车型', en: 'test drive model'},
+        },
         STATUS: {
-            // 0是全部
+            // 0是全部M
             STATUS_NORM : 1,      // 1正常
             STATUS_DISABLE : 2    // 2停用
+        },
+        STATUS_MAP: {
+            '1': { key: 1, zh: '正常', en: 'Normal'},
+            '2': { key: 2, zh: '停用', en: 'Disable'},
         },
     }
 };
