@@ -42,7 +42,7 @@
                         <span class="value">{{ detail.own_user_name || '-'}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                        <a-button v-if="$auth('crm-order-income.refund')">退款</a-button>
+                        <a-button @click="handleRefundShow" v-if="$auth('crm-order-income.refund')">退款</a-button>
                         <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order-income.save')">编辑</a-button>
                         <a-button @click="handleDelete(detail.id)" v-if="$auth('crm-order-income.delete')">删除</a-button>
                     </a-col>
@@ -80,6 +80,7 @@
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
+                            <CrmRefundRecord :detail="detail" :orderId="detail.id" ref ="CrmRefundRecord"/>
                             <AttachmentFile :target_id="id" :target_type="CRM_ORDER_INCOME_FILE" />
                         </a-tab-pane>
                     </a-tabs>
@@ -95,6 +96,41 @@
                 </div>
             </a-col>
         </a-row>
+        <a-modal v-model:visible="refundShow" :title="$t('crm_refund.save')" :after-close='handleRefundClose'>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_oi.uid') }}：</div>
+                <div class="value">
+                    {{detail.uid}}
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_refund.type') }}：</div>
+                <div class="value">
+                    <a-select v-model:value="refundForm.type" :placeholder="$t('def.input')" >
+                        <a-select-option v-for="item of CRM_REFUND_TYPE_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_refund.money') }}：</div>
+                <div class="value">
+                    <a-input v-model:value="refundForm.money" :placeholder="$t('def.input')"/>
+                </div>
+            </div>
+            <div class="form-item textarea">
+                <div class="key">{{ $t('crm_refund.remark') }}</div>
+                <div class="value">
+                    <a-textarea v-model:value="refundForm.remark" :placeholder="$t('def.input')"
+                                :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
+                    <span class="content-length">{{ refundForm.remark != undefined?refundForm.remark.length : 0 }}/500</span>
+                </div>
+            </div>
+
+            <template #footer>
+                <a-button @click="handleRefundSubmit" type="primary">{{ $t('def.ok') }}</a-button>
+                <a-button @click="handleRefundClose">{{ $t('def.cancel') }}</a-button>
+            </template>
+        </a-modal>
     </div>
 </template>
 
@@ -109,6 +145,7 @@ import Group from '@/components/crm/panel/Group.vue';
 import ActionRecord from '@/components/crm/panel/ActionRecord.vue';
 import AuditHandle from '@/components/popup-btn/AuditHandle.vue';
 
+import CrmRefundRecord from '@/components/crm/panel/CrmRefundRecord.vue';
 import {
     UserOutlined,
 } from '@ant-design/icons-vue';
@@ -117,7 +154,7 @@ import {get} from "lodash";
 
 export default {
     name: 'OrderDetail',
-    components: { CustomerSelect, Group, CustomerSituation, AttachmentFile,ActionRecord,AuditHandle,UserOutlined},
+    components: { CustomerSelect, Group, CustomerSituation, AttachmentFile,ActionRecord,AuditHandle,UserOutlined,CrmRefundRecord},
     props: {},
     data() {
         return {
@@ -125,6 +162,7 @@ export default {
             CRM_ORDER_INCOME_FILE: Core.Const.ATTACHMENT.TARGET_TYPE.CRM_ORDER_INCOME_FILE,
 
             TYPE_MAP: Core.Const.CRM_TRACK_RECORD.TYPE_MAP,
+            CRM_REFUND_TYPE_MAP: Core.Const.CRM_REFUND_RECORD.TYPE_MAP,
             INTENT_MAP: Core.Const.CRM_TRACK_RECORD.INTENT_MAP,
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
             user: Core.Data.getUser(),
@@ -175,6 +213,12 @@ export default {
             },
             flag_message: false,
             audit_message: '',
+            refundShow: false,
+            refundForm: {
+                type: '',
+                money: '',
+                remark: '',
+            },
         };
     },
     watch: {},
@@ -339,6 +383,28 @@ export default {
                     })
                 },
             });
+        },
+        handleRefundShow() {
+            this.refundShow = true;
+        },
+        handleRefundClose() {
+            this.refundShow = false;
+            Object.assign(this.refundForm, this.$options.data().refundForm);
+        },
+        handleRefundSubmit() {
+            Core.Api.CRMRefundRecord.save({
+                order_income_id: this.detail.id,
+                type: this.refundForm.type,
+                money: this.refundForm.money,
+                remark: this.refundForm.remark,
+
+            }).then(() => {
+                this.$message.success(this.$t('pop_up.save_success'))
+                this.handleRefundClose();
+            }).catch(err => {
+                console.log('handleSubmit err:', err)
+            })
+
         },
     }
 };

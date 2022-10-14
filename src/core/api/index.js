@@ -619,6 +619,12 @@ const apiList = {
 		createUser: ['PostJson', 'crm-order-income/join-create-user-list'],// 搜索条件-创建人列表
 		audit: ['PostJson', 'crm-order-income/audit'],// 审核
 	},
+	CRMRefundRecord: {
+		save: ['PostJson', 'crm-refund-record/save'],//
+		list: ['PostJson', 'crm-refund-record/list'],//
+		delete: ['PostJson', 'crm-refund-record/delete'],//
+	},
+
 	CRMTrackMember:{//CRM 团队成员
 		save: ['PostJson', 'crm-track-member/save'],//
 		list: ['PostJson', 'crm-track-member/list'],//

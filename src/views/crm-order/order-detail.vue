@@ -88,6 +88,7 @@
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
                             <CRMItem :detail="detail" :sourceId="detail.id" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.ORDER" ref ="CRMItem"/>
+                            <CrmOrderIncome :detail="detail" :orderId="detail.id" ref ="CrmOrderIncome"/>
                             <AttachmentFile :target_id="id" :target_type="CRM_ORDER_FILE" />
                         </a-tab-pane>
                     </a-tabs>
@@ -122,12 +123,14 @@ import AuditHandle from '@/components/popup-btn/AuditHandle.vue';
 import dayjs from "dayjs";
 import {get} from "lodash";
 import CRMItem from '@/components/crm/panel/CRMItem.vue';
+import CrmOrderIncome from '@/components/crm/panel/CrmOrderIncome.vue';
+
 import {
     UserOutlined,
 } from '@ant-design/icons-vue';
 export default {
     name: 'OrderDetail',
-    components: { CustomerSelect, Group, ActionRecord, CustomerSituation, AttachmentFile,CRMItem, UserOutlined, AuditHandle},
+    components: { CustomerSelect, Group, ActionRecord, CustomerSituation, AttachmentFile,CRMItem, UserOutlined, AuditHandle,CrmOrderIncome},
     props: {},
     data() {
         return {

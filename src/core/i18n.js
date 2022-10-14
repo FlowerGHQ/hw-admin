@@ -1238,6 +1238,7 @@ const messages = {
 	    },
 	    crm_oi: {
 			list: '回款单列表',
+		    name: '回款单名称',
         	save: '新建回款单',
 		    edit: '修改回款单',
             detail: '回款单详情',
@@ -1254,6 +1255,13 @@ const messages = {
 		    own_user_name: "回款单负责人",
 		    delete: '删除回款单',
 		    error:'拒绝原因',
+	    },
+	    crm_refund: {
+		    list: '退款单列表',
+			save: "保存退款单",
+		    type: '退款类型',
+		    money: '退款金额',
+		    remark: '退款说明',
 	    },
 	    crm_r: {
 		    from_customer: '来自客户',
