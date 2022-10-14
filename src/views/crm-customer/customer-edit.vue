@@ -60,6 +60,7 @@
                     </div>
                     <div class="sp">
                         <a-button type="link" v-if="$auth('customer.save')" @click="handleSourceModalShow">{{ $t('crm_set.save') }}</a-button>
+                        <a-button type="link"  @click="getSourceList()">{{ $t('crm_set.refresh') }}</a-button>
                     </div>
                 </div>
                 <div class="form-item" v-if="form.type === CRM_TYPE.UNIT">

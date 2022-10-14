@@ -6,6 +6,12 @@
 <!--                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
 <!--                </a-tag>-->
             </div>
+            <div class="btns-area">
+                <AuditHandle v-if="user.id === audit.audit_user_id"
+                             btnType='primary' :api-list="['CRMOrderIncome', 'audit']" :id="detail.id" @submit="getOrderDetail"
+                             :s-pass="Core.Const.FLAG.YES" :s-refuse="Core.Const.FLAG.NO" :current-audit-process-id="detail.current_audit_process_id" no-refuse><i class="icon i_audit"/>{{ $t('n.audit') }}
+                </AuditHandle>
+            </div>
         </div>
         <div class="gray-panel">
             <div class="panel-content desc-container">
@@ -41,8 +47,24 @@
                         <a-button @click="handleDelete(detail.id)" v-if="$auth('crm-order-income.delete')">删除</a-button>
                     </a-col>
                 </a-row>
+                <a-steps :current="current">
+                    <a-step v-for="(item,index) in auditUserList">
+                        <template #icon>
+                            <user-outlined />
+                        </template>
+                        <template #title>
+                            {{item.audit_user_name}}
+                        </template>
+                        <template #status>
+                            {{item.audit_step}}
+                        </template>
+                    </a-step>
+
+                </a-steps>
             </div>
+
         </div>
+
         <a-row>
             <a-col :xs='24' :sm='24' :lg='16' >
                 <div class="tabs-container">
@@ -80,13 +102,15 @@ import Group from '@/components/crm/panel/Group.vue';
 import ActionRecord from '@/components/crm/panel/ActionRecord.vue';
 import AuditHandle from '@/components/popup-btn/AuditHandle.vue';
 
-
+import {
+    UserOutlined,
+} from '@ant-design/icons-vue';
 import dayjs from "dayjs";
 import {get} from "lodash";
 
 export default {
     name: 'OrderDetail',
-    components: { CustomerSelect, Group, CustomerSituation, AttachmentFile,ActionRecord,AuditHandle},
+    components: { CustomerSelect, Group, CustomerSituation, AttachmentFile,ActionRecord,AuditHandle,UserOutlined},
     props: {},
     data() {
         return {
@@ -96,7 +120,7 @@ export default {
             TYPE_MAP: Core.Const.CRM_TRACK_RECORD.TYPE_MAP,
             INTENT_MAP: Core.Const.CRM_TRACK_RECORD.INTENT_MAP,
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
-
+            user: Core.Data.getUser(),
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -134,6 +158,13 @@ export default {
                     token: Core.Data.getToken(),
                     type: 'file',
                 },
+            },
+            auditUserList: [],
+            current:0,
+            audit: {
+                id:'',
+                audit_user_id: '',
+                current_audit_process_id:'',
             },
         };
     },
@@ -181,7 +212,14 @@ export default {
                     this.form[key] = d[key]
                 }
                 this.defAddr = [d.province, d.city, d.county]
+                this.auditUserList = res.detail.audit_user_list
+                this.auditUserList.forEach(item => {
+                    if (item.audit_status == Core.Const.CRM_AUDIT_PROCESS.AUDIT_STATUS.WAIT_AUDIT){
+                        this.current = item.audit_step
+                        this.audit = item
 
+                    }
+                })
                 // this.defArea = [d.continent || '', d.country || '']
             }).catch(err => {
                 console.log('getOrderDetail err', err)

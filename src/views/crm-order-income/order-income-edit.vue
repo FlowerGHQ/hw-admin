@@ -235,6 +235,9 @@ export default {
             this.auditUserList.forEach(it => {
                 audit_user_id_list.push(it.id)
             })
+            if (audit_user_id_list.length === 0) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
             Core.Api.CRMOrderIncome.save({
                 ...form,
                 audit_user_id_list: audit_user_id_list

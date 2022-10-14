@@ -86,7 +86,7 @@
                 </div>
             </div>
             <div class="operate-container">
-                <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-order.save')">{{ $t('crm_c.transfer') }}</a-button>
+<!--                <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-order.save')">{{ $t('crm_c.transfer') }}</a-button>-->
                 <a-button type="danger" @click="handleBatchDelete" v-if="$auth('crm-order.delete')">{{ $t('crm_c.delete') }}</a-button>
             </div>
             <div class="table-container">

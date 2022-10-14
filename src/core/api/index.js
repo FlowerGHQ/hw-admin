@@ -617,6 +617,7 @@ const apiList = {
 		delete: ['PostJson', 'crm-order-income/delete'],//
 		detail: ['PostJson', 'crm-order-income/detail'],//
 		createUser: ['PostJson', 'crm-order-income/join-create-user-list'],// 搜索条件-创建人列表
+		audit: ['PostJson', 'crm-order-income/audit'],// 审核
 	},
 	CRMTrackMember:{//CRM 团队成员
 		save: ['PostJson', 'crm-track-member/save'],//

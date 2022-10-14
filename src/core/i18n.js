@@ -1273,6 +1273,7 @@ const messages = {
             unable: '不可用',
             preset: '预置｜不可编辑',
             unpreset: '自定义｜可编辑',
+		    refresh: '刷新',
 	    },
         sl: {  // 智能标签
             list: '标签列表',
