@@ -1725,7 +1725,7 @@ const routes = [
 				meta: {
 					title: '字典选项',
 					title_en: 'Dictionary',
-                    auth: ["crm-customer-source.list"],
+                    auth: ["crm-dict.list"],
 				}
 			},
 		]

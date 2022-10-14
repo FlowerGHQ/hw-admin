@@ -1328,12 +1328,12 @@ const messages = {
                 'role': '角色',
                 'file': '文件',
                 'crm-customer': 'CRM客户',
-                'crm-customer-source': 'CRM客户来源',
                 'crm-bo': 'CRM商机',
                 'crm-bo-status': 'CRM商机阶段',
                 'crm-order': 'CRM合同订单',
                 'crm-order-income': 'CRM回款单',
-                'crm-label': 'CRM标签'
+                'crm-label': 'CRM标签',
+                'crm-dict': 'CRM数据字典'
             },
             'distributor': {
                 'list': '查看分销商列表',
@@ -1562,11 +1562,6 @@ const messages = {
                 'save-track-member': '添加团队成员',
                 'delete-track-member': '删除团队成员',
             },
-            'crm-customer-source': {
-                'list': '查看客户来源列表',
-                'save': '编辑客户来源',
-                'delete': '删除客户来源',
-            },
             'crm-bo': {
                 'list': '查看商机列表',
                 'save': '编辑商机',
@@ -1611,6 +1606,14 @@ const messages = {
                 'save': '编辑标签',
                 'detail': '标签详情',
                 'delete': '删除标签',
+            },
+            'crm-dict': {
+                'list': '查看字典列表',
+                'save': '编辑词条',
+                'delete': '删除词条',
+                'preset': '设置词条预置',
+                'status': '设置词条状态',
+
             },
         },
         error_code: {
@@ -2899,12 +2902,12 @@ const messages = {
                 'role' : 'Role',
                 'file' : 'File',
                 'crm-customer': 'CRM customer',
-                'crm-customer-source': 'CRM customer source',
                 'crm-bo': 'CRM business opportunity',
                 'crm-bo-status': 'CRM business opportunity stages',
                 'crm-order': 'CRM contract order',
                 'crm-order-income': 'CRM receipt order',
-                'crm-label': 'CRM label'
+                'crm-label': 'CRM label',
+                'crm-dict': 'CRM dictionary'
             },
             'distributor': {
                 'list': 'view a list of distributors',
@@ -3133,11 +3136,6 @@ const messages = {
                 'save-track-member': 'add team members',
                 'delete-track-member': 'delete team members',
             },
-            'crm-customer-source': {
-                'list': 'view customer sources list',
-                'save': 'edit customer source',
-                'delete': 'delete customer source',
-            },
             'crm-bo': {
                 'list': 'view business opportunity list',
                 'save': 'edit business opportunity',
@@ -3182,6 +3180,13 @@ const messages = {
                 'save': 'edit label',
                 'detail': 'label details',
                 'delete': 'delete label',
+            },
+            'crm-dict': {
+                'list': 'view dictionary list',
+                'save': 'edit entry',
+                'delete': 'delete entry',
+                'preset': 'set preset',
+                'status': 'set status',
             },
 
         },

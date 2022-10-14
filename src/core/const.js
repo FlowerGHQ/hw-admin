@@ -872,12 +872,12 @@ let Const = {
         { list: [], select: [], key: 'role', name: '角色' },
         { list: [], select: [], key: 'file', name: '文件' },
         { list: [], select: [], key: 'crm-customer', name: 'CRM客户' },
-        { list: [], select: [], key: 'crm-customer-source', name: 'CRM客户来源' },
         { list: [], select: [], key: 'crm-bo', name: 'CRM商机' },
         { list: [], select: [], key: 'crm-bo-status', name: 'CRM商机阶段' },
         { list: [], select: [], key: 'crm-order', name: 'CRM合同订单' },
         { list: [], select: [], key: 'crm-order-income', name: 'CRM回款单' },
         { list: [], select: [], key: 'crm-label', name: 'CRM标签' },
+        { list: [], select: [], key: 'crm-dict', name: 'CRM数据字典' },
 
     ],
 
