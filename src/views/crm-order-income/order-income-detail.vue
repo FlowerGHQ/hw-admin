@@ -47,20 +47,27 @@
                         <a-button @click="handleDelete(detail.id)" v-if="$auth('crm-order-income.delete')">删除</a-button>
                     </a-col>
                 </a-row>
-                <a-steps :current="current">
-                    <a-step v-for="(item,index) in auditUserList">
-                        <template #icon>
-                            <user-outlined />
-                        </template>
-                        <template #title>
-                            {{item.audit_user_name}}
-                        </template>
-                        <template #status>
-                            {{item.audit_step}}
-                        </template>
-                    </a-step>
+                <a-row class="desc-detail">
+                    <a-col :xs='24' :sm='24' :lg='24' class='detail-item' v-if="flag_message">
+                        <span class="key">{{ $t('crm_oi.error') }}：</span>
+                        <span class="value">{{ audit_message ||  '-'  }}</span>
+                    </a-col>
+                    <a-steps :current="current">
+                        <a-step v-for="(item,index) in auditUserList">
+                            <template #icon>
+                                <user-outlined />
+                            </template>
+                            <template #title>
+                                {{item.audit_user_name}}
+                            </template>
+                            <template #status>
+                                {{item.audit_step}}
+                            </template>
+                        </a-step>
 
-                </a-steps>
+                    </a-steps>
+                </a-row>
+
             </div>
 
         </div>
@@ -166,6 +173,8 @@ export default {
                 audit_user_id: '',
                 current_audit_process_id:'',
             },
+            flag_message: false,
+            audit_message: '',
         };
     },
     watch: {},
@@ -213,12 +222,18 @@ export default {
                 }
                 this.defAddr = [d.province, d.city, d.county]
                 this.auditUserList = res.detail.audit_user_list
+                this.audit = Core.Util.deepCopy(this.$options.data().audit)
+
                 this.auditUserList.forEach(item => {
-                    if (item.audit_status == Core.Const.CRM_AUDIT_PROCESS.AUDIT_STATUS.WAIT_AUDIT){
+                    if (item.audit_status === Core.Const.CRM_AUDIT_PROCESS.AUDIT_STATUS.WAIT_AUDIT){
                         this.current = item.audit_step
                         this.audit = item
-
                     }
+                    if (item.audit_status === Core.Const.CRM_AUDIT_PROCESS.AUDIT_STATUS.REFUSE){
+                        this.flag_message = true
+                        this.audit_message = item.remark
+                    }
+
                 })
                 // this.defArea = [d.continent || '', d.country || '']
             }).catch(err => {

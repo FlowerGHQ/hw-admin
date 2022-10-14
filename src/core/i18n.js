@@ -1253,6 +1253,7 @@ const messages = {
             order: '合同订单',
 		    own_user_name: "回款单负责人",
 		    delete: '删除回款单',
+		    error:'拒绝原因',
 	    },
 	    crm_r: {
 		    from_customer: '来自客户',
