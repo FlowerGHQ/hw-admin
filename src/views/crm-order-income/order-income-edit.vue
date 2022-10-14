@@ -79,6 +79,11 @@
                 </div>
                 <!-- 附件上传及列表 -->
                 <UploadFileWithList :target_id="form.id" :target_type="CRM_ORDER_INCOME_FILE" @getUploadData="getUploadData" ref='UploadFile'/>
+                <div class="form-item required">
+                    <div class="key">{{ $t('crm_o.approval_process') }}：</div>
+                    <!--  disabled -->
+                    <AuditUser :def-audit-user-list="auditUserList"  @list="handleAuditUserIdList"></AuditUser>
+                </div>
         </div>
         </div>
         <div class="form-btns">
@@ -95,11 +100,12 @@ import ChinaAddressCascader from '@/components/common/ChinaAddressCascader.vue'
 import CountryCascader from '@/components/common/CountryCascader.vue'
 import AddressCascader from '@/components/common/AddressCascader.vue';
 import UploadFileWithList from '@/components/common/UploadFileWithList.vue'
+import AuditUser from '@/components/crm/popup-btn/AuditUser.vue'
 import dayjs from "dayjs";
 
 export default {
     name: 'OrderEdit',
-    components: { ChinaAddressCascader, CountryCascader, AddressCascader, UploadFileWithList},
+    components: { ChinaAddressCascader, CountryCascader, AddressCascader, UploadFileWithList, AuditUser},
     props: {},
     data() {
         return {
@@ -117,6 +123,7 @@ export default {
                 uid: '',
                 name: '',
                 date: '',
+                money: '',
                 payment_type: undefined,
                 type: undefined,
                 seller_signatory: '',
@@ -142,6 +149,7 @@ export default {
             countryShow: false,
             order_id: '',
             itemOptions: [],
+            auditUserList: [],
         };
     },
     watch: {},
@@ -152,8 +160,12 @@ export default {
     },
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0
+        this.order_id = Number(this.$route.query.order_id) || 0
+
         if (this.form.id) {
             this.getOrderDetail();
+        } else if (this.order_id !=0){
+            this.form.order_id = this.order_id
         }
         this.handleOrderNameSearch()
     },
@@ -171,13 +183,21 @@ export default {
                 id: this.form.id,
             }).then(res => {
                 console.log('getOrderDetail res', res)
-                let d = res.detail
-                this.detail = d
-                this.detail.date = detail.date ? dayjs.unix(detail.date).format('YYYY-MM-DD') : undefined
+                this.detail = res.detail
+                this.detail.date = this.detail.date ? dayjs.unix(this.detail.date).format('YYYY-MM-DD') : undefined
+
                 for (const key in this.form) {
-                    this.form[key] = d[key]
+                    this.form[key] = this.detail[key]
                 }
-                this.defAddr = [d.province, d.city, d.county]
+                let auditUserList= []
+                this.detail.audit_user_list.forEach(item => {
+                    let param = {
+                        id: item.audit_user_id,
+                        name: item.audit_user_name,
+                    }
+                    auditUserList.push(param)
+                })
+                this.auditUserList = auditUserList
 
                 // this.defArea = [d.continent || '', d.country || '']
             }).catch(err => {
@@ -211,8 +231,13 @@ export default {
             // form.birthday = form.birthday ? dayjs(form.birthday).unix() : 0 // 日期转时间戳
             form.date = form.date ? dayjs(form.date).unix() : 0 // 日期转时间戳
             console.log('form',this.form)
+            let audit_user_id_list = []
+            this.auditUserList.forEach(it => {
+                audit_user_id_list.push(it.id)
+            })
             Core.Api.CRMOrderIncome.save({
                 ...form,
+                audit_user_id_list: audit_user_id_list
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.$router.go(-1)
@@ -245,6 +270,15 @@ export default {
                 this.itemOptions = res.list
 
             })
+        },
+        handleAuditUserIdList(auditUserList){
+            console.log("auditUserList11111",auditUserList)
+            if (auditUserList !== null){
+                this.auditUserList = auditUserList
+            } else {
+                this.auditUserList = []
+            }
+
         },
         // handleOrderIdSearch(type){
         //     Core.Api.CRMOrder.detail({id: this.form.customer_id}).then(res => {

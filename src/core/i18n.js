@@ -1234,6 +1234,7 @@ const messages = {
 	    crm_oi: {
 			list: '回款单列表',
         	save: '新建回款单',
+		    edit: '修改回款单',
             detail: '回款单详情',
             uid: '回款单编号',
             status: '回款单状态',

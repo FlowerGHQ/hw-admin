@@ -348,6 +348,7 @@ export default {
         this.form.customer_id = Number(this.$route.query.customer_id) || undefined
         this.bo_id = Number(this.$route.query.bo_id) || ""
         this.form.bo_id = Number(this.$route.query.bo_id) || undefined
+        this.handleCustomerNameSearch()
         if (this.form.id) {
             this.getOrderDetail();
             this.getDetailItemList(this.form.id, Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.ORDER)
@@ -390,7 +391,6 @@ export default {
                    auditUserList.push(param)
                })
                 this.auditUserList = auditUserList
-                console.log('auditUserList err', this.auditUserList)
                 this.handleCustomerIdSearch('init');
 
                 // this.defAddr = [d.province, d.city, d.county]

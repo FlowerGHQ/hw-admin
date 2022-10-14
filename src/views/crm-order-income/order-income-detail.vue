@@ -2,9 +2,9 @@
     <div id="OrderDetail" class="edit-container">
         <div class="title-container">
                 <div class="title-area">{{  $t('crm_oi.detail')  }}
-                <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>
-                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}
-                </a-tag>
+<!--                <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>-->
+<!--                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
+<!--                </a-tag>-->
             </div>
         </div>
         <div class="gray-panel">
@@ -37,6 +37,7 @@
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                         <a-button v-if="$auth('crm-order-income.refund')">退款</a-button>
+                        <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order-income.save')">编辑</a-button>
                         <a-button @click="handleDelete(detail.id)" v-if="$auth('crm-order-income.delete')">删除</a-button>
                     </a-col>
                 </a-row>
@@ -168,7 +169,7 @@ import Contact from './components/Contact.vue';
 import CustomerSituation from './components/CustomerSituation.vue';
 import Bo from './components/Bo.vue';
 import Group from './components/Group.vue';
-import TrackRecord from './components/ActionRecord.vue';
+import TrackRecord from '@/components/crm/panel/CRMTrackRecord.vue';
 import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
 import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 
