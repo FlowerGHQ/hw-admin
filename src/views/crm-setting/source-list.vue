@@ -145,9 +145,9 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
+                {title: this.$t('crm_set.index'), dataIndex: 'weight'},
                 {title: this.$t('crm_set.name'), dataIndex: 'name'},
                 {title: this.$t('crm_set.name_en'), dataIndex: 'name_en'},
-                {title: this.$t('crm_set.index'), dataIndex: 'weight'},
                 {title: this.$t('n.type'), dataIndex: 'editable'},
                 {title: this.$t('n.state'), dataIndex: 'status'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
