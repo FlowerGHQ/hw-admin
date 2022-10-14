@@ -27,8 +27,7 @@
                 </div>
             </div>
             <div class="table-container">
-                <CustomerTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow"
-                    :check-mode='true' :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode'/>
+                <CustomerTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode' :check-mode="checkMode"/>
             </div>
         </div>
         <template #footer>
@@ -48,7 +47,7 @@
                 </div>
                 <div class="btn-area">
                     <a-button @click="handleModalClose">{{ $t('def.cancel') }}</a-button>
-                    <a-button @click="handleConfirm" type="primary">{{ $t('def.sure') }}</a-button>
+                    <a-button @click="handleConfirm" type="primary" v-if="selectCustomer">{{ $t('def.sure') }}</a-button>
                 </div>
             </div>
         </template>
@@ -107,6 +106,18 @@ export default {
             type: Boolean,
             default: false,
         },
+        selectCustomer: {
+            type: Boolean,
+            default: false,
+        },
+        name: {
+            type: String,
+            default: ''
+        },
+        checkMode: {
+            type: Boolean,
+            default: true,
+        }
 
     },
     data() {
@@ -129,12 +140,22 @@ export default {
             selectItemIds: [],
         }
     },
-    watch: {},
+    watch: {
+        name: {
+            deep: true,
+            immediate: true,
+            handler(name) {
+                this.searchForm.name = this.name;
+            }
+        }
+    },
     computed: {
         tableColumns() {
             let tableColumns = [
                 {title: this.$t('n.name'), dataIndex: 'name', key: 'name'},
                 {title: this.$t('n.phone'), dataIndex: 'phone', key: 'phone' },
+                {title: this.$t('crm_c.type'), dataIndex: 'type', key:'type'},
+                {title: this.$t('crm_c.own_user_name'), dataIndex: ['own_user','name'], key: 'name' },
             ]
             return tableColumns
         },
@@ -143,6 +164,9 @@ export default {
     },
     mounted() {
         console.log('this.disabledChecked:', this.disabledChecked)
+        if (this.name !== ''){
+            this.searchForm.name = this.name;
+        }
         if (this.targetId !== 0){
             this.getTableData()
         }

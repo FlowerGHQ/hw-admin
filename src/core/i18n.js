@@ -1127,6 +1127,7 @@ const messages = {
 		    province: '省',
 		    city: '市',
 		    county: '区',
+		    rechecking : '查重',
 	    },
 	    crm_t: {
 		    track_record: '跟进记录',

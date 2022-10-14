@@ -14,6 +14,32 @@
                         <a-input v-model:value="form.order_id" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
+
+<!--                <div class="form-item required">-->
+<!--                    <div class="key">{{ $t('crm_o.belone_customer') }}：</div> &lt;!&ndash; 所属客户 &ndash;&gt;-->
+<!--                    <div class="value">-->
+<!--                        {{bo_id}}-->
+<!--                        <a-select-->
+<!--                            v-model:value="form.customer_id"-->
+<!--                            show-search-->
+<!--                            :placeholder="$t('n.enter')"-->
+<!--                            :default-active-first-option="false"-->
+<!--                            :show-arrow="false"-->
+<!--                            :filter-option="false"-->
+<!--                            :not-found-content="null"-->
+<!--                            @search="handleCustomerNameSearch"-->
+<!--                            @change="handleCustomerChange"-->
+<!--                            allowClear-->
+<!--                            :disabled="bo_id !== '' || customer_id !== '' || form.id !== ''"-->
+<!--                        >-->
+<!--                            <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">-->
+<!--                                {{item.name}}-->
+<!--                            </a-select-option>-->
+<!--                        </a-select>-->
+
+<!--                    </div>-->
+<!--                </div>-->
+
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_oi.uid') }}：</div> <!-- 回款编号 -->
                     <div class="value">

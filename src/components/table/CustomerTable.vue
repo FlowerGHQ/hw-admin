@@ -24,6 +24,9 @@
                 {{$Util.countFilter(text)}}
 <!--                {{column.unit}} {{$Util.countFilter(text)}}-->
             </template>
+            <template v-if="column.key === 'type'">
+                {{ $Util.CRMCustomerTypeFilter(text, $i18n.locale) }}
+            </template>
             <template v-if="column.key === 'item'">
                 {{text || '-'}}
             </template>

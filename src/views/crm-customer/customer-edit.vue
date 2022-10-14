@@ -25,6 +25,9 @@
                     </div>
                     <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
                     <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
+                    <CustomerSelect @select="handleAddCustomerShow" :radioMode="true" :name="this.form.name" checkMode="false" selectCustomer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
+                         {{ $t('crm_c.rechecking') }}
+                    </CustomerSelect>
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('n.phone') }}：</div>
@@ -194,12 +197,13 @@ import Core from '../../core';
 import ChinaAddressCascader from '@/components/common/ChinaAddressCascader.vue'
 import CountryCascader from '@/components/common/CountryCascader.vue'
 import AddressCascader from '@/components/common/AddressCascader.vue';
+import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
 
 import dayjs from "dayjs";
 
 export default {
     name: 'CustomerEdit',
-    components: { ChinaAddressCascader, CountryCascader, AddressCascader},
+    components: { ChinaAddressCascader, CountryCascader, AddressCascader, CustomerSelect},
     props: {},
     data() {
         return {
@@ -444,6 +448,18 @@ export default {
                 this.loading = false
             })
 
+        },
+        // 添加联系人
+        handleAddCustomerShow(ids, items) {
+            Core.Api.CrmContactBind.batchSave({
+                target_id: this.detail.id,
+                target_type: Core.Const.CRM_CONTACT_BIND.TARGET_TYPE.BO,
+                contact_customer_ids: ids,
+            }).then(() => {
+                this.$message.success(this.$t('pop_up.save_success'));
+            }).catch(err => {
+                console.log("handleDelete err", err);
+            })
         },
     }
 };
