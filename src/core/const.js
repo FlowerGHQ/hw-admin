@@ -1570,7 +1570,7 @@ let Const = {
 			CUSTOMER: 1,
 			BO: 2,
 			ORDER:3,
-
+			ORDER_INCOME:4,
 		},
 	},
 	CRM_TRACK_MEMBER: {

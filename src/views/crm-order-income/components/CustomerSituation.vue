@@ -5,24 +5,14 @@
     </div>
     <div class="panel-content">
         <a-descriptions title="基本信息" bordered :column="2" size="small" class="pannel">
-            <a-descriptions-item :label="$t('crm_o.contract_no')" class="label">{{detail.uid}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.name')" class="label">{{detail.name}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.signing_date')" class="label">{{$Util.timeFilter(detail.signing_date) || '-'}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.belone_customer')" class="label">{{detail.customer_name}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.contract_type')" class="label">{{detail.type}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.status')" class="label">{{detail.status}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.seller_signatory')" class="label">{{detail.seller_signatory}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.buyer_signatory')" class="label">{{detail.buyer_signatory}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.remark')" class="label">{{detail.remark}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_o.name')" class="label">{{detail.order? detail.order.name || '-'  :  '-' }}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_oi.uid')" class="label">{{detail.uid}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_oi.date')" class="label">{{$Util.timeFilter(detail.date,3) || '-'}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_oi.money')" class="label">${{detail.money}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_oi.type')" class="label">{{$Util.CRMOrderIncomeTypeFilter(detail.type) || '-'}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_oi.payment_type')" class="label">{{$Util.CRMOrderIncomePaymentTypeFilter(detail.payment_type) || '-'}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_oi.status')" class="label">{{$Util.CRMOrderIncomeStatusFilter(detail.status) || '-'}}</a-descriptions-item>
         </a-descriptions>
-        <a-descriptions title="销售信息" bordered :column="2" size="small" class="pannel">
-            <a-descriptions-item :label="$t('crm_o.total_price')" class="label">{{detail.total_price}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.discount_rate')" class="label">{{detail.discount_rate}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.discount_amount')" class="label">{{detail.discount_amount}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.other_cost')" class="label">{{detail.other_cost}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.money')" class="label">{{detail.money}}</a-descriptions-item>
-        </a-descriptions>
-        <p>注：合同金额=产品合计金额*整单折扣+其他费用-优惠金额</p>
         <a-descriptions title="数据权限" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('crm_c.create_user')" class="label">{{detail.create_user_name}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.create_time')" class="label">{{$Util.timeFilter(detail.create_time) || '-'}}</a-descriptions-item>
