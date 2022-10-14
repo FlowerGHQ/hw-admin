@@ -158,7 +158,7 @@ export default {
         getTableData() {    // 获取 表格 数据
             this.loading = true;
             // return
-            Core.Api.CRMCustomerSource.list({
+            Core.Api.CRMDict.list({
                 ...this.searchForm,
                 page: this.currPage,
                 page_size: this.pageSize
@@ -181,7 +181,7 @@ export default {
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.CRMCustomerSource.delete({id}).then(() => {
+                    Core.Api.CRMDict.delete({id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
@@ -208,7 +208,7 @@ export default {
             }
             this.loading = true
             let apiName = form.id ? 'update' : 'save';
-            Core.Api.CRMCustomerSource[apiName](form).then(res => {
+            Core.Api.CRMDict[apiName](form).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.modalShow = false
             }).catch(err => {

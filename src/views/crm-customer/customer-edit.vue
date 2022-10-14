@@ -52,9 +52,9 @@
             </div>
             <div class="form-content">
                 <div class="form-item">
-                    <div class="key">{{ $t('crm_c.source') }}：</div>
+                    <div class="key">{{ $t('crm_c.crm_dict_id') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.source_def_id" :placeholder="$t('def.input')" >
+                        <a-select v-model:value="form.crm_dict_id" :placeholder="$t('def.input')" >
                             <a-select-option v-for="item of sourceList" :key="item.id" :value="item.id">{{lang === 'zh' ? item.name: item.name_en}}</a-select-option>
                         </a-select>
                     </div>
@@ -227,7 +227,7 @@ export default {
                 name: '',
                 phone: '',
                 level: '',
-                source_def_id: '',
+                crm_dict_id: '',
                 company_size: '',
                 company_license_id:'',
                 gender: '',
@@ -399,8 +399,8 @@ export default {
 
         },
         getSourceList(){
-            Core.Api.CRMCustomerSource.list({
-
+            Core.Api.CRMDict.list({
+              type: Core.Const.CRM_DICT.TYPE.TYPE_CUSTOMER_SOURCE
             }).then(res => {
                 this.sourceList = res.list
             })
@@ -438,7 +438,7 @@ export default {
             }
             this.loading = true
             let apiName = form.id ? 'update' : 'save';
-            Core.Api.CRMCustomerSource[apiName](form).then(res => {
+            Core.Api.CRMDict[apiName](form).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.getSourceList()
                 this.sourceModalShow = false

@@ -1116,7 +1116,7 @@ const messages = {
 		    team_members: '团队成员',
 		    dynamic: '动态',
             new_pool_c: '新建公海客户',
-		    source: '客户来源',
+            crm_dict_id: '客户来源',
             distribute_success: '分配成功',
 		    order_success_count: '成单数量',
 		    order_success_price: '成单总金额',
