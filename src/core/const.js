@@ -1732,8 +1732,13 @@ let Const = {
 
     CRM_DICT: {
         TYPE: {
-            TYPE_CUSTOMER_SOURCE: 1,
-            TYPE_TEST_MODEL: 2
+            TYPE_CUSTOMER_SOURCE: 1,    // 客户来源
+            TYPE_TEST_MODEL: 2          // 试驾车型
+        },
+        STATUS: {
+            // 0是全部
+            STATUS_NORM : 1,      // 1正常
+            STATUS_DISABLE : 2    // 2停用
         },
     }
 };

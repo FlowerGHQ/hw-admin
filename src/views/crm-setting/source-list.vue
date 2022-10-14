@@ -70,7 +70,7 @@
                     <div class="form-item">
                         <div class="key">{{ $t('n.index') }}</div>
                         <div class="value">
-                            <a-input v-model:value="editForm.index" :placeholder="$t('def.input')"/>
+                            <a-input v-model:value="editForm.weight" :placeholder="$t('def.input')"/>
                         </div>
                     </div>
 
@@ -113,7 +113,8 @@ export default {
                 id: '',
                 name: '',
                 name_en: '',
-                index: '',
+                weight: '',
+                type: '',
             },
         };
     },
@@ -123,7 +124,7 @@ export default {
             let columns = [
                 {title: this.$t('crm_set.name'), dataIndex: 'name'},
                 {title: this.$t('crm_set.name_en'), dataIndex: 'name_en'},
-                {title: this.$t('crm_set.index'), dataIndex: 'index'},
+                {title: this.$t('crm_set.index'), dataIndex: 'weight'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             return columns
@@ -159,6 +160,7 @@ export default {
             this.loading = true;
             // return
             Core.Api.CRMDict.list({
+                type: Core.Const.CRM_DICT.TYPE.TYPE_CUSTOMER_SOURCE,
                 ...this.searchForm,
                 page: this.currPage,
                 page_size: this.pageSize
@@ -208,7 +210,8 @@ export default {
             }
             this.loading = true
             let apiName = form.id ? 'update' : 'save';
-            Core.Api.CRMDict[apiName](form).then(res => {
+            form.type = Core.Const.CRM_DICT.TYPE.TYPE_CUSTOMER_SOURCE
+            Core.Api.CRMDict.save(form).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.modalShow = false
             }).catch(err => {

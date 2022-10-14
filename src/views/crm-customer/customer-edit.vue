@@ -177,7 +177,7 @@
                     <div class="form-item">
                         <div class="key">{{ $t('n.index') }}</div>
                         <div class="value">
-                            <a-input v-model:value="sourceForm.index" :placeholder="$t('def.input')"/>
+                            <a-input v-model:value="sourceForm.weight" :placeholder="$t('def.input')"/>
                         </div>
                     </div>
 
@@ -266,7 +266,8 @@ export default {
                 id: '',
                 name: '',
                 name_en: '',
-                index: '',
+                weight: '',
+                type: '',
             },
             areaListContinent: [],
             defAreaContinent: [],
@@ -400,7 +401,8 @@ export default {
         },
         getSourceList(){
             Core.Api.CRMDict.list({
-              type: Core.Const.CRM_DICT.TYPE.TYPE_CUSTOMER_SOURCE
+              type: Core.Const.CRM_DICT.TYPE.TYPE_CUSTOMER_SOURCE,
+              status: Core.Const.CRM_DICT.STATUS.STATUS_NORM
             }).then(res => {
                 this.sourceList = res.list
             })
@@ -438,7 +440,8 @@ export default {
             }
             this.loading = true
             let apiName = form.id ? 'update' : 'save';
-            Core.Api.CRMDict[apiName](form).then(res => {
+            form.type = Core.Const.CRM_DICT.TYPE.TYPE_CUSTOMER_SOURCE
+            Core.Api.CRMDict.save(form).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.getSourceList()
                 this.sourceModalShow = false
