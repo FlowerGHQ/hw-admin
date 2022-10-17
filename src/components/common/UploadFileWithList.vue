@@ -114,7 +114,10 @@ export default {
     },
     watch: {
         target_id(n) {
-            this.getAttachmentList();
+            if(this.target_id > 0) {
+                this.getAttachmentList();
+            }
+            // this.getAttachmentList();
         },
 
     },
@@ -203,7 +206,7 @@ export default {
             this.upload.fileList = fileList
         },
         // 附件提交
-        handleModalSubmit() { 
+        handleModalSubmit() {
             // 添加到list中
             let length = this.uploadData.length
             this.uploadData[length] = this.modelForm

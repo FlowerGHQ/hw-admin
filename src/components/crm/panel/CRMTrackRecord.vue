@@ -59,7 +59,7 @@
                             <div class="content">
                                 <div class="line grey">{{$t('crm_t.images')}}:</div>
                                 <div class="line">
-                                    <a-image v-for="it in item.image_attachment_list" class="image" :width="55" :height="55" :src="$Util.imageFilter(it.path)" :fallback="$t('def.none')"/>
+                                    <a-image v-for="it in item.image_attachment_list" class="image" :src="$Util.imageFilter(it.path)" :fallback="$t('def.none')"/>
                                 </div>
                             </div>
                             <div class="content">
@@ -238,10 +238,13 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .CRMTrackRecord {
     .table-container {
         margin-top: -10px;
+    }
+    .ant-image-img {
+        width: 50px;
     }
 
 }
@@ -357,6 +360,8 @@ export default {
                     color: @TC_tip;
                 }
             }
+
+
         }
         .tag {
             &:before {
@@ -368,6 +373,8 @@ export default {
                 height: calc(100% - 6px);
             }
         }
+
+
     }
 }
 </style>
