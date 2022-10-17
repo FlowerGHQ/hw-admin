@@ -1148,6 +1148,7 @@ const messages = {
 		    operator: '跟进人',
             next_track_plan: '下次跟进计划',
 		    track_record_null: '暂无跟进记录',
+            contact_customer_id: '联系人',
 
 	    },
 	    crm_b: {

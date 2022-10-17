@@ -159,7 +159,7 @@ export default {
                 console.log("getTableData res", res)
                 this.total = res.count;
                 res.list.forEach(it =>{
-                    it.content = this.actionParsing(it.type, it.content, it.operator_name)
+                    it.content = this.actionParsing(it.type, it, it.operator_name)
                 })
                 console.log("getTableData res2", res)
                 this.recordTableData = res.list;
@@ -169,13 +169,14 @@ export default {
                 this.loading = false;
             });
         },
-        actionParsing(type, content, user) {
+        actionParsing(type, record, user) {
+            const content = record.content;
             if (content === ""){
                 return ""
             }
             let item = JSON.parse(content)
-            console.log("type", type)
-            console.log("item", item)
+            // console.log("type", type)
+            // console.log("item", item)
             if(type >= 1000 && type < 2000) {
                 switch (type) {
                     case this.TYPE.CREATE_CUSTOMER: return " 创建了该客户"; break;
@@ -213,7 +214,12 @@ export default {
                 item = item.content
                 let con = ""
                 item.forEach(it => {
-                  con += "将 " + this.$t(it.key)+" 从【" + this.valueParsing(it.key, it.old_value) + "】更新为【" + this.valueParsing(it.key, it.new_value) + "】, "
+                  switch (it.key) {
+                    case "crm_c.crm_dict_id" :
+                    case "crm_t.contact_customer_id" :
+                      con += "将 " + this.$t(it.key)+" 从【" + record.old_value + "】更新为【" + record.new_value + "】, "; break;
+                    default :  con += "将 " + this.$t(it.key)+" 从【" + this.valueParsing(it.key, it.old_value) + "】更新为【" + this.valueParsing(it.key, it.new_value) + "】, "
+                  }
                 })
                 return con
                 // switch (type) {
@@ -257,20 +263,31 @@ export default {
         },
         valueParsing(key, value) {
             switch (key) {
+                // 客户
                 case "crm_c.type" : return this.$Util.CRMCustomerTypeFilter(value, this.lang)
                 case "crm_c.level" : return this.$Util.CRMCustomerLevelFilter(value, this.lang)
                 case "crm_c.industry" : return this.$Util.CRMCustomerIndustryFilter(value, this.lang)
                 case "crm_c.gender" : return this.$Util.CRMCustomerGenderFilter(value, this.lang)
                 case "crm_c.marital_status" : return this.$Util.CRMCustomerMaritalStatusFilter(value, this.lang)
+                // 商机
                 case "crm_b.source" : return this.$Util.CRMBoSourceMapFilter(value, this.lang)
                 case "crm_b.track_status" : return this.$Util.CRMTrackStatusMapFilter(value, this.lang)
                 case "crm_b.lost_reason" : return this.$Util.CRMBoLostReasonFilter(value, this.lang)
+                // 订单
                 case "crm_o.type" : return this.$Util.CRMOrderTypeFilter(value, this.lang)
                 case "crm_o.status" : return this.$Util.CRMOrderStatusFilter(value, this.lang)
+                // 回款单
                 case "crm_oi.type" : return this.$Util.CRMOrderIncomeTypeFilter(value, this.lang)
                 case "crm_oi.status" : return this.$Util.CRMOrderIncomeStatusFilter(value, this.lang)
                 case "crm_oi.payment_type" : return this.$Util.CRMOrderIncomePaymentTypeFilter(value, this.lang)
+                // 退款记录
                 case "crm_r.type" : return this.$Util.CRMRefundRecordTypeMapFilter(value, this.lang)
+                // 跟进记录
+                case "crm_t.type" : return this.$Util.CRMTrackRecordFilter(value, this.lang)
+                case "crm_t.track_time" : return this.$Util.timeFilter(value)
+                case "crm_t.next_track_time" : return this.$Util.timeFilter(value)
+                case "crm_t.intent" : return this.$Util.CRMTrackRecordIntentFilter(value, this.lang)
+
 
             }
             return value

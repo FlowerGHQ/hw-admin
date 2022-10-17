@@ -877,13 +877,13 @@ const Util = {
 		return item[to] || ''
 	},
 	/* =============== CRM跟进记录 ================ */
-	/* =============== CRM跟进记录 ================ */
+	/* =============== CRM跟进团队 ================ */
 	CRMGroupFilter(val,  to='zh') {
 		const MAP = Const.CRM_TRACK_MEMBER.TYPE_MAP
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
-	/* =============== CRM跟进记录 ================ */
+	/* =============== CRM跟进团队 ================ */
 
 	/* =============== CRM回款单 ================ */
 	CRMOrderIncomeStatusFilter(val,  to='zh') {
