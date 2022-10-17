@@ -155,8 +155,8 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleCreateOrder" type="primary" v-if="$auth('crm-order.save')">{{ $t('crm_o.create_order') }}</a-button>
-            <a-button @click="handleSubmit" type="primary" v-if="$auth('crm-bo.save')">{{ $t('def.sure') }}</a-button>
+            <a-button @click="handleSubmit('order')" type="primary" v-if="$auth('crm-order.save')">{{ $t('crm_o.create_order') }}</a-button>
+            <a-button @click="handleSubmit('back')" type="primary" v-if="$auth('crm-bo.save')">{{ $t('def.sure') }}</a-button>
             <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
         </div>
     </div>
@@ -233,6 +233,7 @@ export default {
         this.form.id = Number(this.$route.query.id) || ''
         this.customer_id = Number(this.$route.query.customer_id) || ''
         this.form.customer_id = Number(this.$route.query.customer_id) || undefined
+        this.handleCustomerNameSearch()
         if (this.form.id) {
             this.getBoDetail();
             this.getBoDetailItemList()
@@ -240,12 +241,22 @@ export default {
             this.handleCustomerIdSearch('init')
         }
         this.getGroupStatusDetail()
+
     },
     methods: {
         routerChange(type, item) {
             switch (type) {
                 case 'back':    // 详情
                     this.$router.go(-1)
+                    break;
+                case 'order':
+                    let routeUrl = this.$router.resolve({
+                        path: "/crm-order/order-edit",
+                        query: {
+                            bo_id: this.form.id
+                        }
+                    })
+                    window.open(routeUrl.href, '_self')
                     break;
             }
         },
@@ -288,7 +299,7 @@ export default {
             });
 
         },
-        handleSubmit(router = true) {
+        handleSubmit(router = 'back') {
             let form = Core.Util.deepCopy(this.form)
             if (!form.customer_id) {
                 return this.$message.warning(this.$t('def.enter'))
@@ -327,22 +338,10 @@ export default {
             }).then((res) => {
                 this.form.id = res.detail.id
                 this.$message.success(this.$t('pop_up.save_success'))
-                if (router){
-                    this.routerChange('back')
-                }
+                this.routerChange(router)
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
-        },
-        handleCreateOrder(){
-            this.handleSubmit(false)
-            let routeUrl = this.$router.resolve({
-                path: "/crm-order/order-edit",
-                query: {
-                    bo_id: this.form.id
-                }
-            })
-            window.open(routeUrl.href, '_self')
         },
 
         // 添加商品
