@@ -1,5 +1,5 @@
 <template>
-    <div id="CustomerEdit" class="edit-container">
+    <div id="CustomerDetail" class="edit-container">
         <div class="title-container">
                 <div class="title-area">{{  $t('crm_b.detail')  }}
             </div>
@@ -415,7 +415,7 @@ export default {
 </script>
 
 <style lang="less">
-.CustomerEdit {
+.CustomerDetail {
 
     .icon {
         font-size: 12px;

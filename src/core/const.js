@@ -31,7 +31,7 @@ switch (window.location.hostname) {
 	case "10.0.0.230":
 		URL_POINT = 'http://10.0.0.230:8889'
 		// URL_POINT = 'http://eos-api.hw.innotick.com' // 测试服
-		URL_POINT = 'http://eos-dev-api.horwincloud.com' // 正式服
+		// URL_POINT = 'http://eos-dev-api.horwincloud.com' // 正式服
 		break;
     case "192.168.31.224":
         // URL_POINT = 'https://eos-api.horwincloud.com' // 正式服
@@ -1620,6 +1620,13 @@ let Const = {
             ORDER: 2,
         }
     },
+	CRM_LABEL: {
+		CATEGORY: {
+			CUSTOMER: 1,
+			BO: 2,
+			ORDER: 3,
+		}
+	},
 	CRM_CONTACT_BIND: {
 		TARGET_TYPE: {
 			CUSTOMER: 1,

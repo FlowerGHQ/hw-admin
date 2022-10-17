@@ -246,135 +246,136 @@ export default {
     .ant-image-img {
         width: 50px;
     }
-
-}
-.panel-content {
-    .title {
-        position: relative;
-        width: 100%;
-        font-size: 14px;
-        margin-bottom: 20px;
-        .tab {
-            margin-left: 10px;
-            padding-right: 10px;
-            display: inline-block;
-            color: @TC_tip;
-            border-right: 1px solid @TC_tip;
-            cursor: pointer;
-            &:hover {
-                color: @TC_P;
-            }
-            &:first-child {
-                margin-left: 0;
-            }
-            &:last-child {
-                border-right: none;
-            }
-        }
-        .active {
-            color: @TC_P;
-        }
-    }
-    .list {
-        .day-content {
+    .panel-content {
+        .title {
             position: relative;
             width: 100%;
-        }
-        .day-item {
-            position: relative;
-            box-sizing: border-box;
-            padding-left: 20px;
-            margin-bottom: 15px;
-            // border: 1px solid red;
-            &:before {
-                content: "";
-                position: absolute;
-                // top: 5px;
-                left: 0;
-                width: 10px;
-                height: 10px;
-                border: 2px solid @BC_P;
-                border-radius: 50%;
-            }
-            &:after {
-                content: "";
-                position: absolute;
-                left: 4px;
-                top: 14px;
-                width: 1px;
-                height: 100%;
-                border-left: 2px solid #F8FAFC;
-            }
-            .tag-bg {
-                position: relative;
+            font-size: 14px;
+            margin-bottom: 20px;
+            .tab {
+                margin-left: 10px;
+                padding-right: 10px;
                 display: inline-block;
-                margin-left: 12px;
-                padding-right: 8px;
-                height: 20px;
-                line-height: 20px;
-                background-color: @BC_P;
-                color: @TC_L;
-                font-size: 12px;
+                color: @TC_tip;
+                border-right: 1px solid @TC_tip;
+                cursor: pointer;
+                &:hover {
+                    color: @TC_P;
+                }
+                &:first-child {
+                    margin-left: 0;
+                }
+                &:last-child {
+                    border-right: none;
+                }
+            }
+            .active {
+                color: @TC_P;
+            }
+        }
+        .list {
+            .day-content {
+                position: relative;
+                width: 100%;
+            }
+            .day-item {
+                position: relative;
+                box-sizing: border-box;
+                padding-left: 20px;
+                margin-bottom: 15px;
+                // border: 1px solid red;
                 &:before {
                     content: "";
                     position: absolute;
-                    left: -10px;
-                    width: 0;
-                    height: 0;
-                    border-top: 10px solid transparent;
-                    border-right: 10px solid @BC_P;
-                    border-bottom: 10px solid transparent;
+                    // top: 5px;
+                    left: 0;
+                    width: 10px;
+                    height: 10px;
+                    border: 2px solid @BC_P;
+                    border-radius: 50%;
                 }
-            }
-            .panel {
-                padding: 12px;
-                width: 100%;
-                background-color: #F8FAFC;
-                .top {
-                    .flex(space-between, center, row);
-                    .item-title {
-                        font-size: 14px;
-                        font-weight: bold;
+                &:after {
+                    content: "";
+                    position: absolute;
+                    left: 4px;
+                    top: 14px;
+                    width: 1px;
+                    height: 100%;
+                    border-left: 2px solid #F8FAFC;
+                }
+                .tag-bg {
+                    position: relative;
+                    display: inline-block;
+                    margin-left: 12px;
+                    padding-right: 8px;
+                    height: 20px;
+                    line-height: 20px;
+                    background-color: @BC_P;
+                    color: @TC_L;
+                    font-size: 12px;
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        left: -10px;
+                        width: 0;
+                        height: 0;
+                        border-top: 10px solid transparent;
+                        border-right: 10px solid @BC_P;
+                        border-bottom: 10px solid transparent;
                     }
-                    .item-time {
-                        font-size: 12px;
-                        color: @TC_tip;
-                        a{
-                            padding-right: 5px;
+                }
+                .panel {
+                    padding: 12px;
+                    width: 100%;
+                    background-color: #F8FAFC;
+                    .top {
+                        .flex(space-between, center, row);
+                        .item-title {
+                            font-size: 14px;
+                            font-weight: bold;
+                        }
+                        .item-time {
+                            font-size: 12px;
+                            color: @TC_tip;
+                            a{
+                                padding-right: 5px;
+                            }
                         }
                     }
+                    .content {
+                        margin-top: 6px;
+                    }
+                    .foot {
+                        text-align: right;
+                    }
+                    .line {
+                        line-height: 20px;
+                        font-size: 12px;
+                        word-wrap: break-word;
+                        word-break: normal;
+                    }
+                    .grey {
+                        color: @TC_tip;
+                    }
                 }
-                .content {
-                    margin-top: 6px;
+
+
+            }
+            .tag {
+                &:before {
+                    top: 6px;
+                    background-color: @BC_P;
                 }
-                .foot {
-                    text-align: right;
-                }
-                .line {
-                    line-height: 20px;
-                    font-size: 12px;
-                    word-wrap: break-word;
-                    word-break: normal;
-                }
-                .grey {
-                    color: @TC_tip;
+                &:after {
+                    top: 20px;
+                    height: calc(100% - 6px);
                 }
             }
 
 
         }
-        .tag {
-            &:before {
-                top: 6px;
-                background-color: @BC_P;
-            }
-            &:after {
-                top: 20px;
-                height: calc(100% - 6px);
-            }
-        }
-
-
     }
+
 }
+
 </style>

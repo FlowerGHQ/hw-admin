@@ -1289,6 +1289,7 @@ const messages = {
             save: '新建标签',
             classification: '标签分类',
             name: '标签名称',
+	        name_en: '标签英文名',
             principal: '负责人',
             edit: '修改标签',
             remark: '备注',

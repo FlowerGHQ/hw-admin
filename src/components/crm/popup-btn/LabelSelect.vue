@@ -2,10 +2,10 @@
     <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
         <slot>{{ btnText }}</slot>
     </a-button>
-    <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'
+    <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='560px'
         class="ItemSelectModal">
         <div class="modal-content">
-            <CustomerAdd :targetId="targetId" :targetType="targetType" v-if="addCustomerBtn" @select="getTableData"/>
+            <LabelAdd :category="category" v-if="addCustomerBtn" @select="getTableData"/>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
@@ -14,12 +14,7 @@
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :md='12' class="search-item">
-                        <div class="key"><span>{{ $t('n.phone') }}:</span></div>
-                        <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
-                        </div>
-                    </a-col>
+
                 </a-row>
                 <div class="btn-area">
                     <a-button @click="handleSearch" :disabled="searchForm.name === '' && selectCustomer" type="primary">{{ $t('def.search') }}</a-button>
@@ -27,7 +22,7 @@
                 </div>
             </div>
             <div class="table-container">
-                <CustomerTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode' :check-mode="checkMode"/>
+                <LabelTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode' :check-mode="checkMode"/>
             </div>
         </div>
         <template #footer>
@@ -57,20 +52,20 @@
 <script>
 import Core from '@/core';
 
-import CustomerTable from '@/components/table/CustomerTable.vue'
-import CustomerAdd from '@/components/crm/popup-btn/CustomerAdd.vue';
+import LabelTable from '@/components/table/LabelTable.vue'
+import LabelAdd from '@/components/crm/popup-btn/LabelAdd.vue';
 
 
 export default {
     components: {
-        CustomerTable,
-        CustomerAdd,
+        LabelTable,
+        LabelAdd,
     },
     emits: ['select', 'option'],
     props: {
         btnText: {
             type: String,
-            default: '添加联系人'
+            default: '添加标签'
         },
         btnType: {
             type: String,
@@ -117,6 +112,10 @@ export default {
         checkMode: {
             type: Boolean,
             default: true,
+        },
+        category: {
+            type: Number,
+            default: 0
         }
 
     },
@@ -127,7 +126,7 @@ export default {
             modalShow: false,
 
             currPage: 1,
-            pageSize: 10,
+            pageSize: 20,
             total: 0,
             searchForm: {
                 phone: '',
@@ -147,19 +146,13 @@ export default {
             handler(name) {
                 this.searchForm.name = this.name;
             }
-        }
+        },
     },
     computed: {
         tableColumns() {
             let tableColumns = [
                 {title: this.$t('n.name'), dataIndex: 'name', key: 'name'},
-                {title: this.$t('n.phone'), dataIndex: 'phone', key: 'phone' },
-                {title: this.$t('crm_c.type'), dataIndex: 'type', key:'type'},
-
             ]
-            if (this.selectCustomer){
-                tableColumns.push({title: this.$t('crm_c.own_user_name'), dataIndex: ['own_user','name'], key: 'name' }, {title: this.$t('def.operate'), key: 'operation', fixed: 'right'})
-            }
 
             return tableColumns
         },
@@ -193,14 +186,9 @@ export default {
         },
 
         getTableData() {
-            if (this.selectCustomer && this.searchForm.name === ""){
-                return
-            }
-            Core.Api.CRMCustomer.list({
+            Core.Api.CRMLabel.list({
                 name: this.searchForm.name,
-                phone: this.searchForm.phone,
-                target_id: this.targetId,
-                target_type: this.targetType,
+                category: this.category,
                 page: this.currPage,
                 pageSize: this.pageSize,
             }).then(res => {

@@ -154,8 +154,18 @@
                         <span class="content-length">{{ form.remark != undefined?form.remark.length : 0 }}/500</span>
                     </div>
                 </div>
+                <div class="form-item textarea">
+                    <div class="key">{{ $t('sl.name') }}</div>
+                    <div class="value">
+                        <a-tag color="success" v-for="label in labelList">
+                            {{ label.name }}
+                        </a-tag>
+                        <LabelSelect :category="Core.Const.CRM_LABEL.CATEGORY.CUSTOMER" add-customer-btn="true" @select="handleAddLabelShow" :disabled-checked="labelList"/>
+                    </div>
+                </div>
             </div>
         </div>
+
         <div class="form-btns">
             <a-button @click="handleSubmit" type="primary" v-if="$auth('crm-customer.save')">{{ $t('def.sure') }}</a-button>
             <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
@@ -199,15 +209,17 @@ import ChinaAddressCascader from '@/components/common/ChinaAddressCascader.vue'
 import CountryCascader from '@/components/common/CountryCascader.vue'
 import AddressCascader from '@/components/common/AddressCascader.vue';
 import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
+import LabelSelect from '@/components/crm/popup-btn/LabelSelect.vue';
 
 import dayjs from "dayjs";
 
 export default {
     name: 'CustomerEdit',
-    components: { ChinaAddressCascader, CountryCascader, AddressCascader, CustomerSelect},
+    components: { ChinaAddressCascader, CountryCascader, AddressCascader, CustomerSelect, LabelSelect},
     props: {},
     data() {
         return {
+            Core,
             loginType: Core.Data.getLoginType(),
             CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
             CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
@@ -278,6 +290,7 @@ export default {
                 country_en: '',
                 country_code: '',
             },
+            labelList: [],
         };
     },
     watch: {},
@@ -464,6 +477,17 @@ export default {
             }).catch(err => {
                 console.log("handleDelete err", err);
             })
+        },
+        // 添加商品
+        handleAddLabelShow(ids, items) {
+            console.log("items",items)
+            let labelList = Core.Util.deepCopy(this.labelList)
+            items.forEach(it => {
+                labelList.push(it)
+            })
+            this.labelList = labelList
+
+            console.log("items",this.labelList)
         },
     }
 };

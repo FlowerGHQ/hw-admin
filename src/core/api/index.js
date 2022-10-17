@@ -634,6 +634,13 @@ const apiList = {
 		savePermissions: ['PostJson', 'crm-track-member/save-permissions'],//
 
 	},
+	CRMLabel:{//CRM 标签
+		save: ['PostJson', 'crm-label/save'],//
+		list: ['PostJson', 'crm-label/list'],//
+		delete: ['PostJson', 'crm-label/delete'],//
+		batchSave: ['PostJson', 'crm-label/batch-save'],//
+		detail: ['PostJson', 'crm-label/detail'],//
+	},
 	CRMTrackRecord:{//CRM跟进记录
 		save: ['PostJson', 'crm-track-record/save'],//
 		list: ['PostJson', 'crm-track-record/list'],//
