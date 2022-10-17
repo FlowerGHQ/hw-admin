@@ -55,6 +55,9 @@
             <template v-if="column.key === 'time'">
                 {{ $Util.timeFilter(text)}}
             </template>
+            <template v-if="column.key === 'operation'">
+                <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('crm-customer.detail') && record.status === CRM_STATUS.POOL"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
+            </template>
         </template>
     </a-table>
 </template>
@@ -96,6 +99,7 @@ export default {
     emit: ['submit'],
     data() {
         return {
+            CRM_STATUS: Core.Const.CRM_CUSTOMER.STATUS,
             selectedRowKeys: [],
             selectedRowItems: [],
             selectedRowItemsAll: [],
@@ -149,14 +153,14 @@ export default {
             // return
             let routeUrl = ''
             switch (type) {
-                case 'detail':  // 商品编辑
+                case 'detail':    // 编辑
                     routeUrl = this.$router.resolve({
-                        path: this.$auth('ADMIN') ? "/item/item-detail" : '/purchase/item-display',
-                        query: { id: item.id }
+                        path: "/crm-customer/customer-detail",
+                        query: {id: item.id}
                     })
+                    window.open(routeUrl.href, '_blank')
                     break;
             }
-            window.open(routeUrl.href, '_blank')
         },
     }
 }

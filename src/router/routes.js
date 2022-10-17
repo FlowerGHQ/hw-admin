@@ -1440,9 +1440,9 @@ const routes = [
         ]
     },
     { // 客户管理
-        path: '/customer',
+        path: '/eos-customer',
         component: Layout,
-        redirect: '/customer/customer-list',
+        redirect: '/eos-customer/customer-list',
         name: 'CustomerManagement',
         meta: {
             title: '客户管理',
@@ -1469,7 +1469,7 @@ const routes = [
                 meta: {
                     hidden: true,
                     title: '新建客户',
-                    parent: '/customer/customer-list',
+                    parent: '/eos-customer/customer-list',
                     auth: ["customer.save"],
                 }
             },

@@ -22,7 +22,7 @@
                     </a-col>
                 </a-row>
                 <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
+                    <a-button @click="handleSearch" :disabled="searchForm.name === '' && selectCustomer" type="primary">{{ $t('def.search') }}</a-button>
                     <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
@@ -158,7 +158,7 @@ export default {
 
             ]
             if (this.selectCustomer){
-                tableColumns.push({title: this.$t('crm_c.own_user_name'), dataIndex: ['own_user','name'], key: 'name' })
+                tableColumns.push({title: this.$t('crm_c.own_user_name'), dataIndex: ['own_user','name'], key: 'name' }, {title: this.$t('def.operate'), key: 'operation', fixed: 'right'})
             }
 
             return tableColumns
@@ -193,6 +193,9 @@ export default {
         },
 
         getTableData() {
+            if (this.selectCustomer && this.searchForm.name === ""){
+                return
+            }
             Core.Api.CRMCustomer.list({
                 name: this.searchForm.name,
                 phone: this.searchForm.phone,
