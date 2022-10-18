@@ -1695,6 +1695,53 @@ const routes = [
 			},
 		]
 	},
+	{ // 试驾单
+		path: '/crm-test-drive-order',
+		component: Layout,
+		redirect: '/crm-test-drive-order/test-drive-list',
+		name: 'CRMTestDriveList',
+		meta: {
+			title: 'CRM试驾单',
+			title_en: 'CRM Order Income',
+			icon: 'i_s_customer',
+			auth: ["crm-order-income.list"],
+		},
+		children: [
+			{
+				path: 'order-income-list',
+				name: 'TestDriveList',
+				component: () => import('@/views/crm-test-drive-order/test-drive-list.vue'),
+				meta: {
+					title: '试驾单列表',
+					title_en: 'Business opportunities list',
+					auth: ["crm-order-income.list"],
+				}
+			},
+			{
+				path: 'test-drive-edit',
+				name: 'TestDriveEdit',
+				component: () => import('@/views/crm-test-drive-order/test-drive-edit.vue'),
+				meta: {
+					hidden: true,
+					title: '新建试驾单',
+					parent: '/crm-order-income/order-income-list',
+					auth: ["crm-test-drive-order.save"],
+				}
+			},
+			{
+				path: 'test-drive-detail',
+				name: 'TestDriveDetail',
+				component: () => import('@/views/crm-order-income/test-drive-detail.vue'),
+				meta: {
+					hidden: true,
+					title: '试驾单详情',
+					title_en: 'Business opportunities phase',
+					parent: '/crm-order-income/order-income-list',
+					auth: ["crm-order-income.detail"],
+				}
+			},
+		]
+	},
 	{ // 客户管理
 		path: '/crm-setting',
 		component: Layout,

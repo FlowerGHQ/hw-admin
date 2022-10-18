@@ -1768,7 +1768,63 @@ let Const = {
             '1': { key: 1, zh: '正常', en: 'Normal'},
             '2': { key: 2, zh: '停用', en: 'Disable'},
         },
-    }
+    },
+	CRM_TEST_DRIVE: {
+		BUY_TYPE_MAP: {
+			'10': { key: 10, zh: '首购', en: ''},
+			'20': { key: 20, zh: '置换', en: ''},
+			'30': { key: 30, zh: '增购', en: ''},
+			'40': { key: 40, zh: '暂不考虑', en: ''},
+			'100': { key: 100, zh: '其他', en: ''},
+		},
+		RENTAL_DEMAND_MAP: {
+			'1': { key: 1, zh: '有', en: ''},
+			'2': { key: 2, zh: '无', en: ''},
+		},
+		TRAVEL_RANGE_MAP: {
+			'10': { key: 10, zh: '上下班通勤', en: ''},
+			'20': { key: 20, zh: '摩旅需求', en: ''},
+			'30': { key: 30, zh: '市区出行', en: ''},
+			'40': { key: 40, zh: '郊区出行', en: ''},
+		},
+		GREEN_CAR_OWNER_MAP: {
+			'1': { key: 1, zh: '是', en: ''},
+			'2': { key: 2, zh: '否', en: ''},
+		},
+		DRIVER_LICENSE_MAP: {
+			'1': { key: 1, zh: '有驾照', en: ''},
+			'2': { key: 2, zh: '无驾照', en: ''},
+			'3': { key: 3, zh: '驾考中', en: ''},
+		},
+		RIDE_EXP_MAP: {
+			'1': { key: 1, zh: '有', en: ''},
+			'2': { key: 2, zh: '无', en: ''},
+		},
+		MOTO_EXP_MAP: {
+			'1': { key: 1, zh: '有', en: ''},
+			'2': { key: 2, zh: '无', en: ''},
+		},
+		MOTO_TOUR_INTENTION_MAP: {
+			'1': { key: 1, zh: '有意向', en: ''},
+			'2': { key: 2, zh: '意向不高', en: ''},
+			'3': { key: 3, zh: '无意向', en: ''},
+		},
+		PAY_ATTENTION_TO_MAP: {
+			'1': { key: 1, zh: '体验', en: ''},
+			'2': { key: 2, zh: '技术', en: ''},
+		},
+		GREEN_ENERGY_UNDERSTAND_MAP: {
+			'10': { key: 10, zh: '看好新能源前景', en: ''},
+			'20': { key: 20, zh: '对新能源了解较多', en: ''},
+			'30': { key: 30, zh: '对新能源了解较浅', en: ''},
+			'40': { key: 40, zh: '相信大众选择', en: ''},
+		},
+		ELECTRIC_TWO_WHEELER_UNDERSTAND_MAP: {
+			'10': { key: 10, zh: '了解整车架构', en: ''},
+			'20': { key: 20, zh: '出行便捷', en: ''},
+			'30': { key: 30, zh: '不了解', en: ''},
+		},
+	},
 };
 
 export default Const;
