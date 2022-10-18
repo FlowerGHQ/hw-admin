@@ -687,6 +687,9 @@ const apiList = {
         detail: ['PostJson', 'crm-dict/detail'],//
         change: ['PostJson', 'crm-dict/change'],//
     },
+	CRMLabelBind: {
+		list: ['PostJson', 'crm-label-bind/list'],//
+	},
 
 };
 

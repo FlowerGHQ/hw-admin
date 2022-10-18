@@ -5,6 +5,7 @@
 <!--                <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>-->
 <!--                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
 <!--                </a-tag>-->
+                    <LabelList :targetId="id" :targetType="Core.Const.CRM_LABEL.CATEGORY.CUSTOMER"></LabelList>
             </div>
         </div>
         <div class="gray-panel">
@@ -152,10 +153,10 @@ import FollowUpShow from '@/components/crm/popup-btn/FollowUpShow.vue';
 
 import dayjs from "dayjs";
 import {get} from "lodash";
-
+import LabelList from '@/components/crm/common/LabelList.vue';
 export default {
     name: 'CustomerEdit',
-    components: { CustomerAdd, FollowUpShow, CRMContact, CRMBo, CRMTrackRecord, Group, CRMOrder, ActionRecord, CustomerSituation},
+    components: { CustomerAdd, FollowUpShow, CRMContact, CRMBo, CRMTrackRecord, Group, CRMOrder, ActionRecord, CustomerSituation,LabelList},
     props: {},
     data() {
         return {

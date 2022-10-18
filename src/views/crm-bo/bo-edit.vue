@@ -152,6 +152,16 @@
                         </template>
                     </a-table>
                 </div>
+                <div class="form-item textarea">
+                    <div class="key">{{ $t('sl.name') }}</div>
+                    <div class="value">
+                        <LabelSelect :category="Core.Const.CRM_LABEL.CATEGORY.ORDER_INCOME" add-customer-btn="true" @select="handleAddLabelShow" :disabled-checked="labelIdList"/>
+                        <br/>
+                        <a-tag v-for="(label,index) in labelList" closable @close="handleDeleteLabel(index)" class="customer-tag">
+                            {{ label.name }}
+                        </a-tag>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-btns">
@@ -166,13 +176,15 @@
 import Core from '../../core';
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 import dayjs from "dayjs";
+import LabelSelect from '@/components/crm/popup-btn/LabelSelect.vue';
 
 export default {
     name: 'CustomerEdit',
-    components: {ItemSelect},
+    components: {ItemSelect,LabelSelect},
     props: {},
     data() {
         return {
+            Core,
             loginType: Core.Data.getLoginType(),
             CRM_SOURCE_MAP: Core.Const.CRM_BO.SOURCE_MAP,
 
@@ -197,6 +209,8 @@ export default {
             groupStatusTableData: [],
             moneyDisabled: false,
             itemOptions: [],
+            labelList: [],
+            labelIdList: [],
 
         };
     },
@@ -235,6 +249,7 @@ export default {
         this.form.customer_id = Number(this.$route.query.customer_id) || undefined
         this.handleCustomerNameSearch()
         if (this.form.id) {
+            this.getLabelList()
             this.getBoDetail();
             this.getBoDetailItemList()
         } else if (this.form.customer_id){
@@ -334,7 +349,8 @@ export default {
             // }
             Core.Api.CRMBo.save({
                 ...form,
-                item_bind_list: this.tableData
+                item_bind_list: this.tableData,
+                label_id_list: this.labelIdList,
             }).then((res) => {
                 this.form.id = res.detail.id
                 this.$message.success(this.$t('pop_up.save_success'))
@@ -423,16 +439,52 @@ export default {
             item.total_price = 1.0 * item.amount * item.discount * item.price / 100
 
         },
+        handleAddLabelShow(ids, items) {
+            console.log("items",items)
+            let labelList = Core.Util.deepCopy(this.labelList)
+            items.forEach(it => {
+                labelList.push(it)
+                this.labelIdList.push(it.id)
+            })
+            this.labelList = labelList
+
+            console.log("items",this.labelList)
+        },
+        // 添加商品
+        handleDeleteLabel(index ) {
+            this.labelIdList.splice(index, 1)
+            this.labelList.splice(index, 1)
+        },
+        getLabelList(){
+            Core.Api.CRMLabelBind.list({
+                target_id: this.form.id,
+                target_type: Core.Const.CRM_LABEL.CATEGORY.BO,
+            }).then(res => {
+                let labelList = [];
+                res.list.forEach(it => {
+                    labelList.push({
+                        id: it.label_id,
+                        name: it.label
+                    })
+                    this.labelIdList.push(it.id)
+                })
+                this.labelList = labelList
+            })
+        },
 
     }
 };
 </script>
 
 <style lang="less">
-.CRMBoEdit {
+#CRMBoEdit {
 
     .icon {
         font-size: 12px;
+    }
+    .customer-tag {
+        margin-top: 10px;
+
     }
 
     .fault-title {

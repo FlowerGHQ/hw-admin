@@ -79,6 +79,16 @@
                 </div>
                 <!-- 附件上传及列表 -->
                 <UploadFileWithList :target_id="form.id" :target_type="CRM_ORDER_INCOME_FILE" @getUploadData="getUploadData" ref='UploadFile'/>
+                <div class="form-item textarea">
+                    <div class="key">{{ $t('sl.name') }}</div>
+                    <div class="value">
+                        <LabelSelect :category="Core.Const.CRM_LABEL.CATEGORY.ORDER_INCOME" add-customer-btn="true" @select="handleAddLabelShow" :disabled-checked="labelIdList"/>
+                        <br/>
+                        <a-tag v-for="(label,index) in labelList" closable @close="handleDeleteLabel(index)" class="customer-tag">
+                            {{ label.name }}
+                        </a-tag>
+                    </div>
+                </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_o.approval_process') }}：</div>
                     <!--  disabled -->
@@ -102,13 +112,14 @@ import AddressCascader from '@/components/common/AddressCascader.vue';
 import UploadFileWithList from '@/components/common/UploadFileWithList.vue'
 import AuditUser from '@/components/crm/popup-btn/AuditUser.vue'
 import dayjs from "dayjs";
-
+import LabelSelect from '@/components/crm/popup-btn/LabelSelect.vue';
 export default {
     name: 'OrderEdit',
-    components: { ChinaAddressCascader, CountryCascader, AddressCascader, UploadFileWithList, AuditUser},
+    components: { ChinaAddressCascader, CountryCascader, AddressCascader, UploadFileWithList, AuditUser,LabelSelect},
     props: {},
     data() {
         return {
+            Core,
             CRM_ORDER_INCOME_FILE: Core.Const.ATTACHMENT.TARGET_TYPE.CRM_ORDER_INCOME_FILE,
 
             loginType: Core.Data.getLoginType(),
@@ -150,6 +161,8 @@ export default {
             order_id: '',
             itemOptions: [],
             auditUserList: [],
+            labelList: [],
+            labelIdList: [],
         };
     },
     watch: {},
@@ -164,6 +177,7 @@ export default {
 
         if (this.form.id) {
             this.getOrderDetail();
+            this.getLabelList()
         } else if (this.order_id !=0){
             this.form.order_id = this.order_id
         }
@@ -243,7 +257,8 @@ export default {
             }
             Core.Api.CRMOrderIncome.save({
                 ...form,
-                audit_user_id_list: audit_user_id_list
+                audit_user_id_list: audit_user_id_list,
+                label_id_list: this.labelIdList,
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.$router.go(-1)
@@ -296,13 +311,49 @@ export default {
         //
         //     })
         // },
+        // 添加商品
+        handleAddLabelShow(ids, items) {
+            console.log("items",items)
+            let labelList = Core.Util.deepCopy(this.labelList)
+            items.forEach(it => {
+                labelList.push(it)
+                this.labelIdList.push(it.id)
+            })
+            this.labelList = labelList
+
+            console.log("items",this.labelList)
+        },
+        // 添加商品
+        handleDeleteLabel(index ) {
+            this.labelIdList.splice(index, 1)
+            this.labelList.splice(index, 1)
+        },
+        getLabelList(){
+            Core.Api.CRMLabelBind.list({
+                target_id: this.form.id,
+                target_type: Core.Const.CRM_LABEL.CATEGORY.ORDER_INCOME,
+            }).then(res => {
+                let labelList = [];
+                res.list.forEach(it => {
+                    labelList.push({
+                        id: it.label_id,
+                        name: it.label
+                    })
+                    this.labelIdList.push(it.id)
+                })
+                this.labelList = labelList
+            })
+        },
     }
 };
 </script>
 
 <style lang="less">
-.OrderEdit {
+#OrderEdit {
+    .customer-tag {
+        margin-top: 10px;
 
+    }
     .icon {
         font-size: 12px;
     }

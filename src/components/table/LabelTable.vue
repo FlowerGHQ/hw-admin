@@ -84,10 +84,13 @@ export default {
             console.log('defaultChecked:', n)
             this.selectedRowKeys = Core.Util.deepCopy(this.defaultChecked)
         },
-        disabledChecked: function(n) {
-            console.log('disabledChecked:', n)
-            this.disabledChecked = Core.Util.deepCopy(n)
-        }
+        disabledChecked: {
+            deep: true,
+            immediate: true,
+            handler(name) {
+                console.log("disabledChecked2",this.disabledChecked)
+            }
+        },
     },
     created() {
 

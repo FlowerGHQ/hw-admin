@@ -2,6 +2,7 @@
     <div id="CustomerDetail" class="edit-container">
         <div class="title-container">
                 <div class="title-area">{{  $t('crm_b.detail')  }}
+                <LabelList :targetId="id" :targetType="Core.Const.CRM_LABEL.CATEGORY.BO"></LabelList>
             </div>
             <div class="btns-area">
                 <a-button @click="nextStep" v-if="detail.status + 1 < groupStatusTableData.length && detail.status !== STATUS.LOSE && $auth('crm-bo.update-status')" ><i class="icon i_audit"/>{{$t('crm_b.next_step')}}</a-button>
@@ -145,10 +146,12 @@ import ActionRecord from '@/components/crm/panel/ActionRecord.vue';
 import CRMTrackRecord from '@/components/crm/panel/CRMTrackRecord.vue';
 import CRMItem from '@/components/crm/panel/CRMItem.vue';
 
+import LabelList from '@/components/crm/common/LabelList.vue';
+
 
 export default {
     name: 'CustomerEdit',
-    components: { FollowUpShow, CustomerAdd, CustomerSelect, MySteps, CRMContact, CRMOrder, ActionRecord, CustomerSituation,Group, CRMTrackRecord, CRMItem},
+    components: { FollowUpShow, CustomerAdd, CustomerSelect, MySteps, CRMContact, CRMOrder, ActionRecord, CustomerSituation,Group, CRMTrackRecord, CRMItem,LabelList},
     props: {},
     data() {
         return {

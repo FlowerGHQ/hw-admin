@@ -157,10 +157,11 @@
                 <div class="form-item textarea">
                     <div class="key">{{ $t('sl.name') }}</div>
                     <div class="value">
-                        <a-tag color="success" v-for="label in labelList">
+                        <LabelSelect :category="Core.Const.CRM_LABEL.CATEGORY.CUSTOMER" add-customer-btn="true" @select="handleAddLabelShow" :disabled-checked="labelIdList"/>
+                        <br/>
+                        <a-tag v-for="(label,index) in labelList" closable @close="handleDeleteLabel(index)" class="customer-tag">
                             {{ label.name }}
                         </a-tag>
-                        <LabelSelect :category="Core.Const.CRM_LABEL.CATEGORY.CUSTOMER" add-customer-btn="true" @select="handleAddLabelShow" :disabled-checked="labelList"/>
                     </div>
                 </div>
             </div>
@@ -291,6 +292,7 @@ export default {
                 country_code: '',
             },
             labelList: [],
+            labelIdList: [],
         };
     },
     watch: {},
@@ -303,6 +305,7 @@ export default {
         this.form.id = Number(this.$route.query.id) || 0
         if (this.form.id) {
             this.getCustomerDetail();
+            this.getLabelList()
         } else {
             this.form.status = Number(this.$route.query.status) || 0
         }
@@ -331,6 +334,8 @@ export default {
                 this.defAreaContinent = [d.continent || '', d.country || '', d.country_en || '']
                 this.handleContinentSelect(this.defAreaContinent)
                 this.handleAddressSelect(this.defAddr)
+
+
             }).catch(err => {
                 console.log('getCustomerDetail err', err)
             }).finally(() => {
@@ -384,6 +389,7 @@ export default {
             Core.Api.CRMCustomer.save({
                 ...form,
                 ...areaContinent,
+                label_id_list: this.labelIdList,
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
@@ -484,20 +490,46 @@ export default {
             let labelList = Core.Util.deepCopy(this.labelList)
             items.forEach(it => {
                 labelList.push(it)
+                this.labelIdList.push(it.id)
             })
             this.labelList = labelList
 
             console.log("items",this.labelList)
+        },
+        // 添加商品
+        handleDeleteLabel(index ) {
+            this.labelIdList.splice(index, 1)
+            this.labelList.splice(index, 1)
+        },
+        getLabelList(){
+            Core.Api.CRMLabelBind.list({
+                target_id: this.form.id,
+                target_type: Core.Const.CRM_LABEL.CATEGORY.CUSTOMER,
+            }).then(res => {
+                let labelList = [];
+                res.list.forEach(it => {
+                    labelList.push({
+                        id: it.label_id,
+                        name: it.label
+                    })
+                    this.labelIdList.push(it.id)
+                })
+                this.labelList = labelList
+            })
         },
     }
 };
 </script>
 
 <style lang="less">
-.CustomerEdit {
+#CustomerEdit {
 
     .icon {
         font-size: 12px;
+    }
+    .customer-tag {
+        margin-top: 10px;
+
     }
 
 }

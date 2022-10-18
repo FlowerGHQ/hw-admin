@@ -222,6 +222,16 @@
                         <!--  disabled -->
                     <AuditUser :def-audit-user-list="auditUserList"  @list="handleAuditUserIdList"></AuditUser>
                 </div>
+                <div class="form-item textarea">
+                    <div class="key">{{ $t('sl.name') }}</div>
+                    <div class="value">
+                        <LabelSelect :category="Core.Const.CRM_LABEL.CATEGORY.ORDER_INCOME" add-customer-btn="true" @select="handleAddLabelShow" :disabled-checked="labelIdList"/>
+                        <br/>
+                        <a-tag v-for="(label,index) in labelList" closable @close="handleDeleteLabel(index)" class="customer-tag">
+                            {{ label.name }}
+                        </a-tag>
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -242,6 +252,7 @@ import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 import ItemTable from '@/components/table/ItemTable.vue'
 import UploadFileWithList from '@/components/common/UploadFileWithList.vue'
 import AuditUser from '@/components/crm/popup-btn/AuditUser.vue'
+import LabelSelect from '@/components/crm/popup-btn/LabelSelect.vue';
 
 import dayjs from "dayjs";
 import {
@@ -250,7 +261,7 @@ import {
 
 export default {
     name: 'OrderEdit',
-    components: { ChinaAddressCascader, CountryCascader, AddressCascader, ItemSelect, ItemTable, UploadFileWithList,UserOutlined ,AuditUser},
+    components: { ChinaAddressCascader, CountryCascader, AddressCascader, ItemSelect, ItemTable, UploadFileWithList,UserOutlined ,AuditUser,LabelSelect},
     props: {},
     data() {
         return {
@@ -303,6 +314,8 @@ export default {
             CRMCustomer: {},
             auditUserList: [],
             moneyDisabled: 'false',
+            labelList: [],
+            labelIdList: [],
 
         };
     },
@@ -350,6 +363,7 @@ export default {
         this.form.bo_id = Number(this.$route.query.bo_id) || undefined
         this.handleCustomerNameSearch()
         if (this.form.id) {
+            this.getLabelList()
             this.getOrderDetail();
             this.getDetailItemList(this.form.id, Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.ORDER)
         } else if (this.form.customer_id){
@@ -468,7 +482,8 @@ export default {
             console.log('form',form)
             Core.Api.CRMOrder.save({
                 ...form,
-                audit_user_id_list: audit_user_id_list
+                audit_user_id_list: audit_user_id_list,
+                label_id_list: this.labelIdList,
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
@@ -593,14 +608,49 @@ export default {
                 this.moneyDisabled = false;
             }
         },
+        handleAddLabelShow(ids, items) {
+            console.log("items",items)
+            let labelList = Core.Util.deepCopy(this.labelList)
+            items.forEach(it => {
+                labelList.push(it)
+                this.labelIdList.push(it.id)
+            })
+            this.labelList = labelList
+
+            console.log("items",this.labelList)
+        },
+        // 添加商品
+        handleDeleteLabel(index ) {
+            this.labelIdList.splice(index, 1)
+            this.labelList.splice(index, 1)
+        },
+        getLabelList(){
+            Core.Api.CRMLabelBind.list({
+                target_id: this.form.id,
+                target_type: Core.Const.CRM_LABEL.CATEGORY.ORDER,
+            }).then(res => {
+                let labelList = [];
+                res.list.forEach(it => {
+                    labelList.push({
+                        id: it.label_id,
+                        name: it.label
+                    })
+                    this.labelIdList.push(it.id)
+                })
+                this.labelList = labelList
+            })
+        },
 
     }
 };
 </script>
 
 <style lang="less">
-.OrderEdit {
+#OrderEdit {
+    .customer-tag {
+        margin-top: 10px;
 
+    }
     .icon {
         font-size: 12px;
     }

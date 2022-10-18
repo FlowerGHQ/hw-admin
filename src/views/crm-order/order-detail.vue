@@ -5,6 +5,7 @@
 <!--                <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>-->
 <!--                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
 <!--                </a-tag>-->
+                    <LabelList :targetId="id" :targetType="Core.Const.CRM_LABEL.CATEGORY.ORDER"></LabelList>
             </div>
             <div class="btns-area">
                 <AuditHandle v-if="user.id === audit.audit_user_id"
@@ -128,9 +129,10 @@ import CrmOrderIncome from '@/components/crm/panel/CrmOrderIncome.vue';
 import {
     UserOutlined,
 } from '@ant-design/icons-vue';
+import LabelList from '@/components/crm/common/LabelList.vue';
 export default {
     name: 'OrderDetail',
-    components: { CustomerSelect, Group, ActionRecord, CustomerSituation, CRMAttachmentFile,CRMItem, UserOutlined, AuditHandle,CrmOrderIncome},
+    components: { CustomerSelect, Group, ActionRecord, CustomerSituation, CRMAttachmentFile,CRMItem, UserOutlined, AuditHandle,CrmOrderIncome,LabelList},
     props: {},
     data() {
         return {

@@ -5,6 +5,7 @@
 <!--                <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>-->
 <!--                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
 <!--                </a-tag>-->
+                    <LabelList :targetId="id" :targetType="Core.Const.CRM_LABEL.CATEGORY.ORDER_INCOME"></LabelList>
             </div>
             <div class="btns-area">
                 <AuditHandle v-if="user.id === audit.audit_user_id"
@@ -151,10 +152,11 @@ import {
 } from '@ant-design/icons-vue';
 import dayjs from "dayjs";
 import {get} from "lodash";
+import LabelList from '@/components/crm/common/LabelList.vue';
 
 export default {
     name: 'OrderDetail',
-    components: { CustomerSelect, Group, CustomerSituation, CRMAttachmentFile,ActionRecord,AuditHandle,UserOutlined,CrmRefundRecord},
+    components: { CustomerSelect, Group, CustomerSituation, CRMAttachmentFile,ActionRecord,AuditHandle,UserOutlined,CrmRefundRecord,LabelList},
     props: {},
     data() {
         return {

@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="table-container">
-                <LabelTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode' :check-mode="checkMode"/>
+                <LabelTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :disabled-checked='disabledList' @submit="handleSelectItem" :radio-mode='radioMode' :check-mode="checkMode"/>
             </div>
         </div>
         <template #footer>
@@ -137,6 +137,7 @@ export default {
 
             selectItems: [],
             selectItemIds: [],
+            disabledList: [],
         }
     },
     watch: {
@@ -147,6 +148,16 @@ export default {
                 this.searchForm.name = this.name;
             }
         },
+        disabledChecked: {
+            deep: true,
+            immediate: true,
+            handler(disabledChecked) {
+                console.log("disabledChecked",this.disabledChecked)
+                this.disabledList = this.disabledChecked
+            }
+        },
+
+
     },
     computed: {
         tableColumns() {
