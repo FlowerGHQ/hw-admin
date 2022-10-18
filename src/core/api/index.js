@@ -582,6 +582,13 @@ const apiList = {
 		save: ['PostJson', 'print-template/save'],//
 		delete: ['PostJson', 'print-template/delete'],//
 	},
+    Dept: { // 物料分类
+        tree: ['PostJson', 'dept/tree'],
+        list: ['PostJson', 'dept/list'],
+        save: ['PostJson', 'dept/save'],
+        detail: ['PostJson', 'dept/detail'],
+        delete: ['PostJson', 'dept/delete'],
+    },
 	CRMCustomer:{//CRM 客户
 		save: ['PostJson', 'crm-customer/save'],//
 		list: ['PostJson', 'crm-customer/list'],//

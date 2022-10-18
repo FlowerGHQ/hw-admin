@@ -1082,6 +1082,17 @@ const messages = {
             exist_order_tip: '查询到该物流单号已存在，已根据原有物流信息填充表格',
             new_company :'新建物流公司'
         },
+        dept: {
+            list: '部门列表',
+            name: '部门名称',
+            sub: '下级部门',
+            new_top: '新增顶级部门',
+            edit: '编辑部门',
+            new: '新增部门',
+            add: '添加管理员',
+            user_count: '员工数量',
+            customer_count: '客户数量',
+        },
 	    crm_c: {
 		    extended_information: '扩展信息',
 		    detail: '客户详情',
@@ -1649,6 +1660,7 @@ const messages = {
             2003:'禁止重复操作',
             2004:'对象不存在',
             2005:'{param}为系统保留字段',
+            2006:'该部门存在下级部门, 请先删除下级部门',
             2101:'无权限',
             2102:'权限不存在',
             2103:'该用户未分配权限',
@@ -3223,6 +3235,7 @@ const messages = {
             2003:'Do not repeat operations',
             2004:'Object does not exist',
             2005:'All fields reserved for the system',
+            2006:'There is a subordinate department in this department, please delete the subordinate department first',
             2101:'No permission',
             2102:'Permission does not exist',
             2103:'This user has no permissions assigned',

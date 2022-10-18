@@ -1825,6 +1825,15 @@ const routes = [
                 }
             },*/
             {
+                path: 'dept-list',
+                name: 'DeptList',
+                component: () => import('@/views/system/dept-list.vue'),
+                meta: {
+                    title: '部门管理',
+                    title_en: 'Dept',
+                }
+            },
+            {
                 path: 'auth-role-list',
                 name: 'RoleList',
                 component: () => import('@/views/authority/auth-role-list.vue'),

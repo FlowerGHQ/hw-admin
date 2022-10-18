@@ -120,7 +120,7 @@
                     <a-select
                         v-model:value="batchForm.own_user_id"
                         show-search
-                        :placeholder="$t('def.input')+$t('n.warehouse')"
+                        :placeholder="$t('def.select')+$t('crm_b.own_user_name')"
                         :default-active-first-option="false"
                         :show-arrow="false"
                         :filter-option="false"
