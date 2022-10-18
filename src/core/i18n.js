@@ -1295,6 +1295,7 @@ const messages = {
             edit: '修改标签',
             remark: '备注',
             synchronize: '同步新建',
+	        show:'标签展示',
         },
         authority: {
             title: {

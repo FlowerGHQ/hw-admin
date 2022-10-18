@@ -21,19 +21,20 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('n.name') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" :placeholder="$t('def.input')" @blur="handleCustomerBlur"/>
+                        <a-input v-model:value="form.name" :placeholder="$t('def.input')" />
                     </div>
-                    <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
-                    <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
-                    <CustomerSelect @select="handleAddCustomerShow" :radioMode="true" :name="this.form.name" :check-mode="false" :select-customer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
-                         {{ $t('crm_c.rechecking') }}
-                    </CustomerSelect>
+
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('n.phone') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')"/>
+                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerBlur"/>
                     </div>
+                    <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
+                    <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
+                    <CustomerSelect @select="handleAddCustomerShow" :radioMode="true" :phone="this.form.phone" :check-mode="false" :select-customer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
+                        {{ $t('crm_c.rechecking') }}
+                    </CustomerSelect>
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_c.level') }}：</div>
@@ -159,7 +160,7 @@
                     <div class="value">
                         <LabelSelect :category="Core.Const.CRM_LABEL.CATEGORY.CUSTOMER" add-customer-btn="true" @select="handleAddLabelShow" :disabled-checked="labelIdList"/>
                         <br/>
-                        <a-tag v-for="(label,index) in labelList" closable @close="handleDeleteLabel(index)" class="customer-tag">
+                        <a-tag v-for="(label,index) in labelList" color="blue" closable @close="handleDeleteLabel(index)" class="customer-tag">
                             {{ label.name }}
                         </a-tag>
                     </div>
@@ -431,9 +432,9 @@ export default {
             if (!this.form.name) {
                 return this.isExist = ''
             }
-            Core.Api.CRMCustomer.checkName({
+            Core.Api.CRMCustomer.checkPhone({
                 id: this.form.id,
-                name: this.form.name,
+                phone: this.form.phone,
             }).then(res => {
                 this.isExist = res.results ? 1 : 2
                 console.log("handleVehicleBlur res", res)

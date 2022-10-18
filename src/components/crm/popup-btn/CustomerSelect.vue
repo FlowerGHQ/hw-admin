@@ -8,7 +8,7 @@
             <CustomerAdd :targetId="targetId" :targetType="targetType" v-if="addCustomerBtn" @select="getTableData"/>
             <div class="search-container">
                 <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :md='12' class="search-item">
+                    <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!selectCustomer">
                         <div class="key"><span>{{ $t('n.name') }}:</span></div>
                         <div class="value">
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
@@ -22,7 +22,7 @@
                     </a-col>
                 </a-row>
                 <div class="btn-area">
-                    <a-button @click="handleSearch" :disabled="searchForm.name === '' && selectCustomer" type="primary">{{ $t('def.search') }}</a-button>
+                    <a-button @click="handleSearch" :disabled="searchForm.phone === '' && selectCustomer" type="primary">{{ $t('def.search') }}</a-button>
                     <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
@@ -114,6 +114,10 @@ export default {
             type: String,
             default: ''
         },
+        phone: {
+            type: String,
+            default: ''
+        },
         checkMode: {
             type: Boolean,
             default: true,
@@ -141,11 +145,11 @@ export default {
         }
     },
     watch: {
-        name: {
+        phone: {
             deep: true,
             immediate: true,
-            handler(name) {
-                this.searchForm.name = this.name;
+            handler(phone) {
+                this.searchForm.phone = this.phone;
             }
         }
     },

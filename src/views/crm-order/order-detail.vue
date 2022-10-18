@@ -5,7 +5,6 @@
 <!--                <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>-->
 <!--                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
 <!--                </a-tag>-->
-                    <LabelList :targetId="id" :targetType="Core.Const.CRM_LABEL.CATEGORY.ORDER"></LabelList>
             </div>
             <div class="btns-area">
                 <AuditHandle v-if="user.id === audit.audit_user_id"
@@ -54,7 +53,14 @@
                                 <a-button type="danger" @click="handleDelete(detail.id)">{{ $t('crm_c.return_pool') }}</a-button>
                         </span>
                     </a-col>
+                    <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
+                        <span class="key">{{ $t('sl.show') }}：</span>
+                        <span class="value">
+                            <LabelList :targetId="id" :targetType="Core.Const.CRM_LABEL.CATEGORY.ORDER"/>
+                        </span>
+                    </a-col>
                 </a-row>
+
                 <a-row class="desc-detail">
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item' v-if="flag_message">
                         <span class="key">{{ $t('crm_oi.error') }}：</span>

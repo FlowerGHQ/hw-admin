@@ -1,5 +1,5 @@
 <template>
-    <a-tag v-for="(label,index) in tableData" class="customer-tag">
+    <a-tag v-for="(label,index) in tableData" color="blue" class="customer-tag">
         {{ label.label }}
     </a-tag>
 </template>

@@ -5,7 +5,6 @@
 <!--                <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>-->
 <!--                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
 <!--                </a-tag>-->
-                    <LabelList :targetId="id" :targetType="Core.Const.CRM_LABEL.CATEGORY.ORDER_INCOME"></LabelList>
             </div>
             <div class="btns-area">
                 <AuditHandle v-if="user.id === audit.audit_user_id"
@@ -46,6 +45,12 @@
                         <a-button @click="handleRefundShow" v-if="$auth('crm-order-income.refund')">退款</a-button>
                         <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order-income.save')">编辑</a-button>
                         <a-button @click="handleDelete(detail.id)" v-if="$auth('crm-order-income.delete')">删除</a-button>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
+                        <span class="key">{{ $t('sl.show') }}：</span>
+                        <span class="value">
+                            <LabelList :targetId="id" :targetType="Core.Const.CRM_LABEL.CATEGORY.ORDER_INCOME"/>
+                        </span>
                     </a-col>
                 </a-row>
                 <a-row class="desc-detail">

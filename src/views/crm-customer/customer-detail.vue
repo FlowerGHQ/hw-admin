@@ -1,11 +1,11 @@
 <template>
-    <div id="CustomerEdit" class="edit-container">
+    <div id="CustomerDetail" class="edit-container">
         <div class="title-container">
                 <div class="title-area">{{  $t('crm_c.detail')  }}
 <!--                <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>-->
 <!--                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
 <!--                </a-tag>-->
-                    <LabelList :targetId="id" :targetType="Core.Const.CRM_LABEL.CATEGORY.CUSTOMER"></LabelList>
+
             </div>
         </div>
         <div class="gray-panel">
@@ -40,6 +40,13 @@
                         <span class="key">{{ $t('n.time') }}：</span>
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
+                    <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
+                        <span class="key">{{ $t('sl.show') }}：</span>
+                        <span class="value">
+                            <LabelList :targetId="id" :targetType="Core.Const.CRM_LABEL.CATEGORY.CUSTOMER"/>
+                        </span>
+                    </a-col>
+
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                         <template v-if="detail.status === STATUS.POOL">
                             <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord"/>

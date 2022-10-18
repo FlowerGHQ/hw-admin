@@ -84,7 +84,7 @@
                     <div class="value">
                         <LabelSelect :category="Core.Const.CRM_LABEL.CATEGORY.ORDER_INCOME" add-customer-btn="true" @select="handleAddLabelShow" :disabled-checked="labelIdList"/>
                         <br/>
-                        <a-tag v-for="(label,index) in labelList" closable @close="handleDeleteLabel(index)" class="customer-tag">
+                        <a-tag v-for="(label,index) in labelList" closable color="blue" @close="handleDeleteLabel(index)" class="customer-tag">
                             {{ label.name }}
                         </a-tag>
                     </div>

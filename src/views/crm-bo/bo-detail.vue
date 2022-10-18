@@ -2,7 +2,6 @@
     <div id="CustomerDetail" class="edit-container">
         <div class="title-container">
                 <div class="title-area">{{  $t('crm_b.detail')  }}
-                <LabelList :targetId="id" :targetType="Core.Const.CRM_LABEL.CATEGORY.BO"></LabelList>
             </div>
             <div class="btns-area">
                 <a-button @click="nextStep" v-if="detail.status + 1 < groupStatusTableData.length && detail.status !== STATUS.LOSE && $auth('crm-bo.update-status')" ><i class="icon i_audit"/>{{$t('crm_b.next_step')}}</a-button>
@@ -34,6 +33,12 @@
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_c.own_user_name') }}：</span>
                         <span class="value">{{detail.own_user ? detail.own_user.name : "-"}}</span>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
+                        <span class="key">{{ $t('sl.show') }}：</span>
+                        <span class="value">
+                            <LabelList :targetId="id" :targetType="Core.Const.CRM_LABEL.CATEGORY.BO"/>
+                        </span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' >
                         <div class="panel-content">
