@@ -272,11 +272,18 @@ export default {
             switch (type) {
                 case 'detail':    // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/crm-test-drive-order/test-drive-detail",
-                        query: {id: item.id}
+                        path: "/crm-customer/customer-detail",
+                        query: {id: item.customer_id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
+                // case 'detail':    // 编辑
+                //     routeUrl = this.$router.resolve({
+                //         path: "/crm-test-drive-order/test-drive-detail",
+                //         query: {id: item.id}
+                //     })
+                //     window.open(routeUrl.href, '_self')
+                //     break;
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/crm-test-drive-order/test-drive-edit",

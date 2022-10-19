@@ -86,6 +86,7 @@
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
+                            <CRMTestDrive :detail="detail" :customerId="detail.id" ref="CRMTestDrive"/>
                             <CRMContact :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" ref="CRMContact"/>
                             <CRMBo :detail="detail" :customerId="detail.id" ref ="CRMBo"/>
                             <CRMOrder :detail="detail" :customerId="detail.id"  ref ="CRMOrder"/>
@@ -149,6 +150,8 @@ import CRMBo from '@/components/crm/panel/CRMBo.vue';
 import CRMContact from '@/components/crm/panel/CRMContact.vue';
 import CRMOrder from '@/components/crm/panel/CRMOrder.vue';
 import CRMTrackRecord from '@/components/crm/panel/CRMTrackRecord.vue';
+import CRMTestDrive from '@/components/crm/panel/CRMTestDrive.vue';
+
 
 import Group from '@/components/crm/panel/Group.vue';
 import ActionRecord from '@/components/crm/panel/ActionRecord.vue';
@@ -163,7 +166,7 @@ import {get} from "lodash";
 import LabelList from '@/components/crm/common/LabelList.vue';
 export default {
     name: 'CustomerEdit',
-    components: { CustomerAdd, FollowUpShow, CRMContact, CRMBo, CRMTrackRecord, Group, CRMOrder, ActionRecord, CustomerSituation,LabelList},
+    components: { CustomerAdd, FollowUpShow, CRMContact, CRMBo, CRMTrackRecord, Group, CRMOrder, ActionRecord, CustomerSituation,LabelList,CRMTestDrive},
     props: {},
     data() {
         return {

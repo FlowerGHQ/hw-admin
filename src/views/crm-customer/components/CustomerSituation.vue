@@ -24,6 +24,23 @@
             <a-descriptions-item :label="$t('crm_c.company_size')" class="label">{{$Util.CRMCompanySizeMapMapFilter(detail.company_size)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.company_license_id')" class="label">{{detail.company_license_id}}</a-descriptions-item>
         </a-descriptions>
+        <a-descriptions :title="$t('crm_d.user_portrait')" bordered :column="2" size="small" class="pannel">
+            <a-descriptions-item :label="$t('crm_c_p.buy_type')" class="label">{{$Util.CRMTestDriveBuyTypeMapFilter(customerPortrait.buy_type)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c_p.rental_demand')" class="label">{{$Util.CRMTestDriveRentalDemandMapFilter(customerPortrait.rental_demand)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c_p.city')" class="label">{{customerPortrait.city}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c_p.travel_range')" class="label">{{$Util.CRMTestDriveTravelRangeMapFilter(customerPortrait.travel_range)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c_p.other_brand_model')" class="label">{{customerPortrait.other_brand_model}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c_p.park_and_charging_pile')" class="label">{{customerPortrait.park_and_charging_pile}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c_p.family_member')" class="label">{{customerPortrait.family_member}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c_p.green_car_owner')" class="label">{{$Util.CRMTestDriveGreenCarOwnerMapFilter(customerPortrait.green_car_owner)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c_p.driver_license')" class="label">{{$Util.CRMTestDriveDriverLicenseMapFilter(customerPortrait.driver_license)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c_p.ride_exp')" class="label">{{$Util.CRMTestDriveRideExpMapFilter(customerPortrait.ride_exp)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c_p.moto_exp')" class="label">{{$Util.CRMTestDriveMotoExpMapFilter(customerPortrait.moto_exp)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c_p.moto_tour_intention')" class="label">{{$Util.CRMTestDriveMotoTourIntentionMapFilter(customerPortrait.moto_tour_intention)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c_p.pay_attention_to')" class="label">{{$Util.CRMTestDrivePayAttentionToMapFilter(customerPortrait.pay_attention_to)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c_p.green_energy_understand')" class="label">{{$Util.CRMTestDriveGreenEnergyUnderstandMapFilter(customerPortrait.green_energy_understand)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c_p.electric_two_wheeler_understand')" class="label">{{$Util.CRMTestDriveElectricTwoWheelerUnderstandMapFilter(customerPortrait.electric_two_wheeler_understand)}}</a-descriptions-item>
+        </a-descriptions>
         <a-descriptions title="商机信息" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('crm_c.order_success_count')" class="label">{{detail.order_count}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.order_success_price')" class="label">{{detail.order_price}}</a-descriptions-item>
@@ -74,6 +91,7 @@ export default {
 
             userId: '',
             userDetail: '',
+            customerPortrait: {},
         };
     },
     watch: {},
@@ -97,6 +115,7 @@ export default {
     },
     mounted() {
         this.getTableData();
+        this.getCustomerPortraitDetail();
     },
     methods: {
         handleManagerChange(record){
@@ -160,6 +179,19 @@ export default {
                 this.tableData = res.list;
             }).catch(err => {
                 console.log('getTableData err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        getCustomerPortraitDetail() {
+            this.loading = true;
+            Core.Api.CRMCustomerPortrait.detailCustomerId({
+                customer_id: this.detail.id,
+            }).then(res => {
+                console.log('getCustomerDetail res', res)
+                this.customerPortrait = res.detail
+            }).catch(err => {
+                console.log('getCustomerDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
