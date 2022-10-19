@@ -33,7 +33,15 @@
                     <div class="form-item afs" v-if="item.list.length">
                         <div class="key">{{$t('authority.title.'+item.key)}}:</div>
                         <div class="value">
-                            <a-checkbox-group v-model:value="item.select">
+                            <a-checkbox
+                                v-model:checked="itemCheckAll[item.key]"
+                                :indeterminate="indeterminate[item.key]"
+                                @change="onCheckAllChange(itemCheckAll[item.key],item, key)"
+                            >
+                                {{$t('u.select_all')}}
+
+                            </a-checkbox>
+                            <a-checkbox-group v-model:value="item.select"  @change="onChange(item.select, item.key, item.list)">
                                 <a-checkbox v-for=" it in item.list" :value="it.value">{{$t('authority.'+it.label) }}</a-checkbox>
                             </a-checkbox-group>
                         </div>
@@ -72,7 +80,9 @@ export default {
                 id: '',
                 name: '',
                 remark: '',
-            }
+            },
+            itemCheckAll: {},
+            indeterminate: {},
         };
     },
     watch: {},
@@ -121,6 +131,8 @@ export default {
                     let item = this.authItems.find(i => key === i.key);
                     if (item) {
                         item.list.push({ value: auth.id, label: auth.key });
+                        this.itemCheckAll[key] = false;
+                        this.indeterminate[key] = false;
                     }
                 })
                 if (this.form.id) {
@@ -141,6 +153,9 @@ export default {
                     if (item) {
                         item.select.push(auth.id);
                     }
+                })
+                this.authItems.forEach(it => {
+                    this.onChange(it.select, it.key, it.list)
                 })
             }).catch(err => {
                 console.log('getRoleSelectedAuth err:', err)
@@ -166,7 +181,31 @@ export default {
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
-        }
+        },
+        onChange(checkedList, key, plainOptions) {
+            this.indeterminate[key] = !!checkedList.length && checkedList.length < plainOptions.length;
+            this.itemCheckAll[key] = checkedList.length === plainOptions.length;
+        },
+        onCheckAllChange(e,item, key) {
+            console.log("e",e)
+            let select = []
+            let selectDisabled = []
+            item.list.forEach(it => {
+                if (it.disabled){
+                    selectDisabled.push(it.value)
+                }
+                select.push(it.value)
+            })
+            console.log("list",select)
+            item.select = e ? select: selectDisabled;
+            this.indeterminate[key] = false;
+            this.itemCheckAll[key] = e;
+            // Object.assign(this, {
+            //     checkedList: e.checked ? item.list: [],
+            //     indeterminate: false,
+            //     checkAll: e.checked,
+            // });
+        },
     }
 };
 </script>

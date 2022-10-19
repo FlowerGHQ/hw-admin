@@ -862,6 +862,7 @@ const messages = {
             sure_delete: '确定要删除该权限吗？',
 	        add_role: '新增角色',
             set_role: '设置角色',
+	        select_all: '全选/全不选',
         },
         c: { // 客户
             list: '客户列表',
@@ -2647,6 +2648,7 @@ const messages = {
             sure_delete: 'Are you sure you want to remove this authority?',
 	        add_role: 'Add Role',
             set_role: 'Set up roles',
+	        select_all: 'Select all/none',
         },
         c: {//客户列表
             list: 'Customer list',

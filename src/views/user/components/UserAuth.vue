@@ -38,7 +38,16 @@
 <!--                                <div class="key">{{item.name}}:</div>-->
                                 <div class="key">{{$t('authority.title.'+item.key)}}:</div>
                                 <div class="value">
-                                    <a-checkbox-group v-model:value="item.select" >
+
+                                    <a-checkbox
+                                        v-model:checked="itemCheckAll[item.key]"
+                                        :indeterminate="indeterminate[item.key]"
+                                        @change="onCheckAllChange(itemCheckAll[item.key],item, key)"
+                                    >
+                                        {{$t('u.select_all')}}
+
+                                    </a-checkbox>
+                                    <a-checkbox-group v-model:value="item.select" @change="onChange(item.select, item.key, item.list)" >
                                         <a-checkbox v-for="it in item.list" :value="it.value" :disabled="it.disabled">{{$t('authority.'+it.label) }}</a-checkbox>
                                     </a-checkbox-group>
                                 </div>
@@ -93,6 +102,8 @@ export default {
             options: [],
             selected: {},
             disabled: {},
+            itemCheckAll: {},
+            indeterminate: {},
 
         };
     },
@@ -131,8 +142,12 @@ export default {
                     let item = this.authItems.find(i => key === i.key);
                     if (item) {
                         item.list.push({ value: auth.id, label: auth.key, scope_type: auth.scope_type });
+                        this.itemCheckAll[key] = false;
+                        this.indeterminate[key] = false;
                     }
                 })
+                console.log("checkAll authItems", this.itemCheckAll)
+                console.log("indeterminate authItems", this.indeterminate)
                 console.log("getAllAuthItem authItems", this.authItems)
 
                 this.getUserRoleAuth();
@@ -195,9 +210,14 @@ export default {
                     }
                 })
                 this.selected = selected
+                this.options.forEach(it => {
+                    this.onChange(it.select, it.key, it.list)
+                })
+
             }).catch(err => {
             })
         },
+
 
         handleEditShow() { // 进入编辑模式
             this.edit = true
@@ -242,7 +262,30 @@ export default {
         handleScopeTypeClose() { // 取消编辑
             this.scopeShow = false
         },
-
+        onChange(checkedList, key, plainOptions) {
+            this.indeterminate[key] = !!checkedList.length && checkedList.length < plainOptions.length;
+            this.itemCheckAll[key] = checkedList.length === plainOptions.length;
+        },
+        onCheckAllChange(e,item, key) {
+            console.log("e",e)
+            let select = []
+            let selectDisabled = []
+            item.list.forEach(it => {
+                if (it.disabled){
+                    selectDisabled.push(it.value)
+                }
+                select.push(it.value)
+            })
+            console.log("list",select)
+            item.select = e ? select: selectDisabled;
+            this.indeterminate[key] = false;
+            this.itemCheckAll[key] = e;
+            // Object.assign(this, {
+            //     checkedList: e.checked ? item.list: [],
+            //     indeterminate: false,
+            //     checkAll: e.checked,
+            // });
+        },
     }
 };
 </script>
