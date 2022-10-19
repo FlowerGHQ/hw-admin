@@ -11,22 +11,22 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('n.name') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" :placeholder="$t('def.input')" />
+                        <a-input v-model:value="form.name" :placeholder="$t('def.input')" :disabled="form.id > 0"/>
                     </div>
 
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('n.phone') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerBlur"/>
+                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerBlur" :disabled="form.id > 0"/>
                     </div>
                     <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
                     <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
-                    <CustomerSelect :radioMode="true" :phone="this.form.phone" :check-mode="false" :select-customer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
+                    <CustomerSelect v-if="form.id == 0" @select="selectItem" :radioMode="true" :phone="this.form.phone" :check-mode="false" :select-customer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
                         {{ $t('crm_c.rechecking') }}
                     </CustomerSelect>
                 </div>
-                <div class="form-item required">
+                <div class="form-item required" v-if="form.id == 0">
                     <div class="key">{{ $t('crm_c.level') }}：</div>
                     <div class="value">
                         <a-select v-model:value="form.level" :placeholder="$t('def.input')" >
@@ -35,7 +35,7 @@
                     </div>
 
                 </div>
-                <div class="form-item" >
+                <div class="form-item"  v-if="form.id == 0">
                     <div class="key">{{ $t('crm_c.gender') }}：</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.gender">
@@ -45,7 +45,7 @@
                         </a-radio-group>
                     </div>
                 </div>
-                <div class="form-item">
+                <div class="form-item" v-if="form.id == 0">
                     <div class="key">{{ $t('crm_c.birthday') }}：</div>
                     <div class="value">
                         <a-date-picker v-model:value="form.birthday" valueFormat='YYYY-MM-DD' :placeholder="$t('def.input')"/>
@@ -73,13 +73,15 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_d.data') }}：</div>
                     <div class="value">
-                        <a-date-picker v-model:value="form.test_drive_time" valueFormat='YYYY-MM-DD HH:mm:ss' :placeholder="$t('def.input')"/>
+                        <a-date-picker v-model:value="form.test_drive_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" :placeholder="$t('def.input')">
+                            <template #suffixIcon><i class="icon i_calendar"/></template>
+                        </a-date-picker>
                     </div>
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('n.name') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.crm_dept_id" :placeholder="$t('def.input')" />
+                        <a-input v-model:value="form.dept_id" :placeholder="$t('def.input')" />
                     </div>
 
                 </div>
@@ -292,11 +294,11 @@ export default {
             // 加载
             loading: false,
             detail: {},
+            id: '',
             form: {
                 id: '',
 
-
-                customerId:	'',
+                customer_id:'',
                 //用户信息
                 name: '',
                 phone: '',
@@ -333,7 +335,8 @@ export default {
                 //试驾信息
                 test_drive_time: '',
                 crm_dict_id: '',
-                crm_dept_id: '',
+                dept_id: '',
+                channel:Core.Const.CRM_TEST_DRIVE.SALES_ENTRY,
 
             },
 
@@ -349,9 +352,11 @@ export default {
         }
     },
     mounted() {
-        this.form.id = Number(this.$route.query.id) || 0
+        this.id = Number(this.$route.query.id) || 0
+        this.form.id = this.id
         if (this.form.id) {
-            this.getCustomerDetail();
+            this.getCrmTestDriveOrder()
+            // this.getCustomerDetail();
         } else {
             this.form.status = Number(this.$route.query.status) || 0
         }
@@ -364,19 +369,63 @@ export default {
                     this.$router.go(-1)
             }
         },
+        getCrmTestDriveOrder() {
+            this.loading = true;
+            Core.Api.CRMTestDriveOrder.detail({
+                id: this.form.id,
+            }).then(res => {
+                console.log('getCustomerDetail res', res)
+                let detail = res.detail
+                this.form.test_drive_time = detail.test_drive_time? dayjs.unix(detail.test_drive_time).format('YYYY-MM-DD  HH:mm:ss') : undefined
+                this.form.crm_dict_id = detail.crm_dict_id;
+                this.form.dept_id = detail.dept_id;
+                this.form.customer_id = detail.customer_id;
+                console.log("customer_id",res)
+                this.getCustomerDetail();
+                this.getCustomerPortraitDetail();
+
+            }).catch(err => {
+                console.log('getCustomerDetail err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
         getCustomerDetail() {
+            console.log("customer_id",this.form.customer_id)
             this.loading = true;
             Core.Api.CRMCustomer.detail({
-                id: this.form.id,
+                id: this.form.customer_id,
             }).then(res => {
                 console.log('getCustomerDetail res', res)
                 let d = res.detail
                 this.detail = d
-                this.detail.birthday = this.detail.birthday ? dayjs.unix(this.detail.birthday).format('YYYY-MM-DD') : undefined
+                this.form.birthday = this.detail.birthday ? dayjs.unix(this.detail.birthday).format('YYYY-MM-DD') : undefined
+                this.form.customer_type = this.detail.type;
+                this.form.customer_status = this.detail.status;
+                this.form.name = this.detail.name;
+                this.form.phone = this.detail.phone;
+                this.form.level = this.detail.level;
 
-                for (const key in this.form) {
+            }).catch(err => {
+                console.log('getCustomerDetail err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        getCustomerPortraitDetail() {
+            console.log("customer_id",this.form.customer_id)
+            this.loading = true;
+            Core.Api.CRMCustomerPortrait.detailCustomerId({
+                customer_id: this.form.customer_id,
+            }).then(res => {
+                console.log('getCustomerDetail res', res)
+                let d = res.detail
+                this.detail = d
+                for (const key in this.detail) {
                     this.form[key] = d[key]
                 }
+                this.form.customer_portrait_id = this.detail.id
+                this.form.id = this.id
 
 
             }).catch(err => {
@@ -404,7 +453,7 @@ export default {
             form.test_drive_time = form.test_drive_time ? dayjs(form.test_drive_time).unix() : 0 // 日期转时间戳
             form.birthday = form.birthday ? dayjs(form.birthday).unix() : 0 // 日期转时间戳
 
-            Core.Api.crmTestDriveOrder.save({
+            Core.Api.CRMTestDriveOrder.save({
                 ...form,
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
@@ -435,6 +484,11 @@ export default {
             }).then(res => {
                 this.sourceList = res.list
             })
+        },
+        selectItem(id){
+            this.form.customer_id = id
+            this.getCustomerDetail()
+
         },
 
     }

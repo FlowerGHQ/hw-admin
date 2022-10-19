@@ -697,11 +697,19 @@ const apiList = {
 	CRMLabelBind: {
 		list: ['PostJson', 'crm-label-bind/list'],//
 	},
-	crmTestDriveOrder: {
+	CRMTestDriveOrder: {
 		save: ['PostJson', 'crm-test-drive-order/save'],//
 		list: ['PostJson', 'crm-test-drive-order/list'],//
 		delete: ['PostJson', 'crm-test-drive-order/delete'],//
 		detail: ['PostJson', 'crm-test-drive-order/detail'],//
+	},
+	CRMCustomerPortrait:{//CRM 客户画像
+		save: ['PostJson', 'crm-customer-portrait/save'],//
+		list: ['PostJson', 'crm-customer-portrait/list'],//
+		delete: ['PostJson', 'crm-customer-portrait/delete'],//
+		detail: ['PostJson', 'crm-customer-portrait/detail'],//
+		detailCustomerId: ['PostJson', 'crm-customer-portrait/detail-customer-id'],//
+
 	},
 };
 

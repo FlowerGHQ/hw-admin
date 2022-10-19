@@ -1280,6 +1280,8 @@ const messages = {
 		    user_portrait: '用户画像',
 		    crm_dict_id: '试驾车型',
 		    data: '试驾时间',
+		    channel: '预约渠道',
+		    status: '状态',
 	    },
 	    crm_c_p: {
 		    buy_type:'购车方式',

@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div class="table-container">
-                <CustomerTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode' :check-mode="checkMode"/>
+                <CustomerTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :disabled-checked='disabledChecked' @submit="handleSelectItem" @select="selectItem" :radio-mode='radioMode' :check-mode="checkMode"/>
             </div>
         </div>
         <template #footer>
@@ -172,8 +172,8 @@ export default {
     },
     mounted() {
         console.log('this.disabledChecked:', this.disabledChecked)
-        if (this.name !== ''){
-            this.searchForm.name = this.name;
+        if (this.phone !== ''){
+            this.searchForm.phone = this.phone;
         }
         if (this.targetId !== 0){
             this.getTableData()
@@ -197,7 +197,7 @@ export default {
         },
 
         getTableData() {
-            if (this.selectCustomer && this.searchForm.name === ""){
+            if (this.selectCustomer && this.searchForm.phone === ""){
                 return
             }
             Core.Api.CRMCustomer.list({
@@ -233,6 +233,11 @@ export default {
             console.log('handleSelectItem ids, items:', ids, items)
             this.selectItems = items
             this.selectItemIds = ids
+        },
+        selectItem(id){
+            console.log('select2 item:', id)
+            this.$emit('select', id)
+            this.modalShow = false
         },
     },
 }

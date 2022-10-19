@@ -1770,6 +1770,18 @@ let Const = {
         },
     },
 	CRM_TEST_DRIVE: {
+		CHANNEL: {
+			SALES_ENTRY: 10,
+		},
+		CHANNEL_MAP: {
+			'10': { key: 10, zh: '销售录入', en: ''},
+		},
+		STATUS_MAP: {
+			'10': { key: 10, zh: '已预约', en: ''},
+			'20': { key: 20, zh: '跟进中', en: ''},
+			'30': { key: 30, zh: '待跟进', en: ''},
+		},
+
 		BUY_TYPE_MAP: {
 			'10': { key: 10, zh: '首购', en: ''},
 			'20': { key: 20, zh: '置换', en: ''},

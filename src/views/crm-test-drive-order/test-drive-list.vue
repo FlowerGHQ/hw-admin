@@ -7,6 +7,26 @@
                     <a-button type="primary" @click="routerChange('edit')" v-if="$auth('crm-customer.save')"><i class="icon i_add"/>{{ $t('crm_d.save') }}</a-button>
                 </div>
             </div>
+<!--            <div class="search-container">-->
+                <a-calendar v-model:value="calendar" @change="getCalendarDate" >
+<!--                    <template #headerRender="{ value: current, type, onChange, onTypeChange }">-->
+<!--                        -->
+<!--                    </template>-->
+                    <template #dateCellRender="{ current }">
+                        <ul class="events">
+                            <li v-for="item in getListData(current)" :key="item.content" >
+                                <a-badge :status="item.type" :text="item.content" />
+                            </li>
+                        </ul>
+                    </template>
+<!--                    <template #monthCellRender="{ current }">-->
+<!--                        <div v-if="getMonthData(current)" class="notes-month">-->
+<!--                            <section>{{ getMonthData(current) }}</section>-->
+<!--                            <span>Backlog number</span>-->
+<!--                        </div>-->
+<!--                    </template>-->
+                </a-calendar>
+<!--            </div>-->
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -22,43 +42,28 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('crm_c.type') }}：</div>
+                        <div class="key">{{ $t('crm_d.status') }}：</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                            <a-select v-model:value="searchForm.status" :placeholder="$t('def.select')" @change="handleSearch">
+                                <a-select-option v-for="item of CRM_STATUS" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('crm_o.create_user') }}：</div> <!-- 创建人 -->
+                        <div class="key">{{ $t('crm_d.crm_dict_id') }}：</div>
                         <div class="value">
-                            <a-select
-                                v-model:value="searchForm.create_user_id"
-                                show-search
-                                :placeholder="$t('def.input')"
-                                :default-active-first-option="false"
-                                :show-arrow="false"
-                                :filter-option="false"
-                                :not-found-content="null"
-                                @search="handleCreateUserSearch"
-                            >
-                                <a-select-option v-for=" item in createUserOptions" :key="item.create_user_id" :value="item.create_user_id">
-                                    {{ item.create_user_name }}
-                                </a-select-option>
-                            </a-select>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('crm_c.level') }}：</div>
-                        <div class="value">
-                            <a-select v-model:value="searchForm.level" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of CRM_LEVEL_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                            <a-select v-model:value="searchForm.crm_dict_id" :placeholder="$t('def.select')" @change="handleSearch">
+                                <a-select-option v-for="item of sourceList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
-                        <div class="key">{{ $t('d.create_time') }}：</div>
-                        <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
+                        <div class="key">{{ $t('crm_d.data') }}：</div>
+                        <div class="value">
+                            <a-range-picker v-model:value="createTime" valueFormat='YYYY-MM-DD HH:mm:ss' @change="handleTimeSearch" :show-time="defaultTime" :allow-clear='false'>
+                                <template #suffixIcon><i class="icon i_calendar"/></template>
+                            </a-range-picker>
+                        </div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
@@ -66,14 +71,8 @@
                     <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
-            <div class="operate-container" v-if="operMode ==='high_seas'">
-                <a-button type="primary" @click="handleBatchObtain" v-if="$auth('crm-customer.obtain')">{{ $t('crm_c.obtain') }}</a-button>
-                <a-button type="primary" @click="handleBatch('distribute')" v-if="$auth('crm-customer.distribute')">{{ $t('crm_c.distribute') }}</a-button>
-                <a-button type="danger" @click="handleBatchDelete" v-if="$auth('crm-customer.delete')">{{ $t('crm_c.delete') }}</a-button>
-            </div>
-            <div class="operate-container" v-if="operMode ==='private'">
-                <a-button type="primary" @click="handleBatchReturnPool" v-if="$auth('crm-customer.return-pool')">{{ $t('crm_c.return_pool') }}</a-button>
-                <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-customer.transfer')">{{ $t('crm_c.transfer') }}</a-button>
+            <div class="operate-container" >
+<!--                <a-button type="primary" @click="handleBatch('distribute')" v-if="$auth('crm-customer.distribute')">{{ $t('crm_c.distribute') }}</a-button>-->
                 <a-button type="danger" @click="handleBatchDelete" v-if="$auth('crm-customer.delete')">{{ $t('crm_c.delete') }}</a-button>
             </div>
             <div class="table-container">
@@ -93,28 +92,25 @@
                         <template v-if="column.key === 'phone'">
                             {{ text || '-' }}
                         </template>
-                        <template v-if="column.key === 'type'">
-                            {{ $Util.CRMCustomerTypeFilter(text, $i18n.locale) }}
+                        <template v-if="column.key === 'status'">
+                            {{ $Util.CRMTestDriveStatusMapFilter(text, $i18n.locale) }}
                         </template>
-                        <template v-if="column.key === 'level'">
-                            {{ $Util.CRMCustomerLevelFilter(text, $i18n.locale) }}
-                        </template>
-                        <template v-if="column.dataIndex === 'address'">
-                            {{ $Util.addressFilter(record, $i18n.locale) }}
+                        <template v-if="column.key === 'channel'">
+                            {{ $Util.CRMTestDriveChannelMapFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'creator_name'">
-                            {{ record.create_user.name || '-' }}
+                            {{ record.create_user_name || '-' }}
                         </template>
-                        <template v-if="column.key === 'own_user_name'">
-                            {{ record.own_user? record.own_user.name || '-' : '-' }}
+                        <template v-if="column.key === 'customer'">
+                            {{ record.customer ? record.customer.name || '-' : '-' }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('crm-customer.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
-                            <!--                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('crm-customer.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>-->
-                            <!--                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('crm-customer.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>-->
+                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('crm-customer.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('crm-customer.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -170,6 +166,8 @@
 </template>
 
 <script>
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn'; // dayjs.locale('zh-cn');
 import Core from '../../core';
 import TimeSearch from '../../components/common/TimeSearch.vue'
 
@@ -190,9 +188,7 @@ export default {
             currPage: 1,
             pageSize: 20,
 
-            CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
-            CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
-            CRM_STATUS: Core.Const.CRM_CUSTOMER.STATUS,
+            CRM_STATUS: Core.Const.CRM_TEST_DRIVE.STATUS_MAP,
             total: 0,
             orderByFields: {},
             // 搜索
@@ -212,44 +208,34 @@ export default {
             userData: [],
             // 表格
             tableData: [],
+            tableTimeData: [],
             operMode: '',
             selectedRowKeys: [],
             selectedRowItems: [],
             selectedRowItemsAll: [],
             createUserOptions: [], // 创建人列表
+            sourceList: [],
+            calendar:"",
+            createTime: [],
+            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
+            calendarTime: "",
         };
     },
     watch: {
-        $route: {
-            deep: true,
-            immediate: true,
-            handler(newRoute) {
-                let type = newRoute.meta ? newRoute.meta.type : ''
-                this.operMode = type
-                this.handleSearchReset(false);
-                this.getUserData()
-                this.getTableData();
-            }
-        },
+
     },
     computed: {
         tableColumns() {
             let columns = [
-                {title: 'n.name', dataIndex: 'name', key:'detail', sorter: true},
-                {title: 'n.phone', dataIndex: 'phone', key:'phone', sorter: true},
-                // {title: 'n.continent', dataIndex: 'continent', key:'item'},
-                {title: 'crm_c.level', dataIndex: 'level', key:'level', sorter: true},
-                {title: 'crm_c.type', dataIndex: 'type', key:'type', sorter: true},
+                {title: 'n.name', dataIndex: 'customer_id', key:'customer', sorter: true},
+                {title: 'n.phone', dataIndex: ['customer', 'phone'], key:'phone'},
+                {title: 'crm_d.data', dataIndex: 'test_drive_time', key:'time'},
+                {title: 'crm_d.crm_dict_id', dataIndex: ['crm_dict', 'name'], key:'item'},
+                {title: 'crm_d.channel', dataIndex: 'channel', key:'channel', sorter: true},
+                {title: 'crm_d.status', dataIndex: 'status', key:'status', sorter: true},
                 {title: 'r.creator_name', dataIndex: 'create_user_id', key:'creator_name',sorter: true},
-                {title: 'crm_c.order_success_count', dataIndex: 'order_count', key:'order_count'},
-                {title: 'ad.specific_address', dataIndex: 'address', sorter: true},
-                {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
-                {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
-            if (this.operMode ==='private') {
-                columns.splice(5, 0, {title: 'crm_b.own_user_name', dataIndex: "own_user_id", key:'own_user_name', sorter: true})
-            }
             return columns
         },
         rowSelection() {
@@ -275,6 +261,10 @@ export default {
     mounted() {
         this.getUserData()
         this.getTableData();
+        this.getSourceList()
+        this.calendarTime = new Date()
+        this.getTableTimeData()
+        dayjs.locale('zh-cn')
     },
     methods: {
         routerChange(type, item = {}) {
@@ -290,7 +280,7 @@ export default {
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/crm-test-drive-order/test-drive-edit",
-                        query: {id: item.id, status: this.searchForm.status}
+                        query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -307,6 +297,7 @@ export default {
         },
         handleSearch() {    // 搜索
             this.pageChange(1);
+            this.getTableTimeData()
         },
         handleOtherSearch(params) { // 时间等组件化的搜索
             for (const key in params) {
@@ -316,19 +307,18 @@ export default {
         },
         handleSearchReset() {    // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            if (this.operMode === 'private' ) {
-                this.searchForm.status = this.CRM_STATUS.CUSTOMER
-            } else {
-                this.searchForm.status = this.CRM_STATUS.POOL
-            }
             // this.$refs.TimeSearch.handleReset()
             this.orderByFields = {}
+            this.createTime = []
             this.pageChange(1);
         },
         getTableData() {    // 获取 表格 数据
+            let searchForm = this.$Util.deepCopy(this.searchForm)
+            searchForm.begin_time = searchForm.begin_time ? dayjs(searchForm.begin_time).unix() : 0 // 日期转时间戳
+            searchForm.end_time = searchForm.end_time ? dayjs(searchForm.end_time).unix() : 0 // 日期转时间戳
             this.loading = true;
-            Core.Api.CRMCustomer.list({
-                ...this.searchForm,
+            Core.Api.CRMTestDriveOrder.list({
+                ...searchForm,
                 order_by_fields: this.orderByFields,
                 page: this.currPage,
                 page_size: this.pageSize
@@ -336,6 +326,25 @@ export default {
                 console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
+            }).catch(err => {
+                console.log('getTableData err:', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        getTableTimeData() {    // 获取 表格 数据
+            let searchForm = this.$Util.deepCopy(this.searchForm)
+
+            searchForm.begin_time = Math.round(this.calendarTime.getTime()/1000 - 60 * 24 * 3600)
+            searchForm.end_time = Math.round(this.calendarTime.getTime()/1000 + 60 * 24 * 3600)
+
+            this.loading = true;
+            Core.Api.CRMTestDriveOrder.list({
+                ...searchForm,
+                page: 0,
+            }).then(res => {
+                console.log("getTableData res:", res)
+                this.tableTimeData = res.list;
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {
@@ -501,6 +510,53 @@ export default {
                 this.createUserOptions = res.list
             })
         },
+        getSourceList(){
+            Core.Api.CRMDict.list({
+                type: Core.Const.CRM_DICT.TYPE.TYPE_TEST_MODEL,
+                status: Core.Const.CRM_DICT.STATUS.STATUS_NORM
+            }).then(res => {
+                this.sourceList = res.list
+            })
+        },
+        getListData(value) {
+            // console.log("value", value.month())
+            // console.log("value", value.date())
+            let listData = [];
+            this.tableTimeData.forEach(res =>{
+                let date = new Date(res.test_drive_time*1000)
+                // console.log("date", date)
+                // console.log("content", date.getMonth())
+                // console.log("content", date.getDate())
+                if (value.month() === date.getMonth() && value.date() === date.getDate()){
+
+                    let content = (res.customer !== null ? res.customer.name : "-" ) + ' ' +  (res.crm_dict !== null ? res.crm_dict.name : "-") + ' '+ this.$Util.timeFilter(res.test_drive_time,5)
+                    // console.log("content", content)
+                    listData.push({ type: 'blue', content: content })
+                }
+            })
+            return listData || [];
+        },
+        getCalendarDate(e){
+            this.calendarTime = new Date(e);
+            let begin_time = Math.round(new Date(new Date(e).setHours(0, 0, 0, 0)).getTime()/1000)
+            let end_time = Math.round(new Date(new Date(e).setHours(23,59,59,999)).getTime()/1000)
+            // this.createTime[0] = Math.round(new Date(e).getTime())
+            // this.createTime[1] = Math.round(new Date(e).getTime())
+            let createTime =[]
+            createTime[0] = begin_time ? dayjs.unix(begin_time).format('YYYY-MM-DD HH:mm:ss') : undefined
+            createTime[1] = end_time ? dayjs.unix(end_time).format('YYYY-MM-DD HH:mm:ss') : undefined
+            this.createTime = createTime
+            this.handleTimeSearch()
+            this.getTableData()
+
+            this.getTableTimeData()
+
+        },
+        handleTimeSearch() {
+            this.searchForm.begin_time = this.createTime[0]
+            this.searchForm.end_time = this.createTime[1]
+        },
+
 
     }
 };

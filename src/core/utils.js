@@ -142,6 +142,8 @@ const Util = {
                 return dayjs.unix(value).format('YYYY-MM-DD');
             case 4:
                 return dayjs.unix(value).format('YYYY年MM月DD日');
+	        case 5:
+		        return dayjs.unix(value).format('HH:mm:ss');
             default:
                 return '-';
         }
@@ -942,6 +944,76 @@ const Util = {
         return item[to] || ''
     },
     /* =============== CRM退款记录 ================ */
+	/* =============== 试驾单 ================ */
+	CRMTestDriveChannelMapFilter(val,  to='zh') {
+		const MAP = Const.CRM_TEST_DRIVE.CHANNEL_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	CRMTestDriveStatusMapFilter(val,  to='zh') {
+		const MAP = Const.CRM_TEST_DRIVE.STATUS_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	CRMTestDriveBuyTypeMapFilter(val,  to='zh') {
+		const MAP = Const.CRM_TEST_DRIVE.BUY_TYPE_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	CRMTestDriveRentalDemandMapFilter(val,  to='zh') {
+		const MAP = Const.CRM_TEST_DRIVE.RENTAL_DEMAND_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	CRMTestDriveTravelRangeMapFilter(val,  to='zh') {
+		const MAP = Const.CRM_TEST_DRIVE.TRAVEL_RANGE_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	CRMTestDriveGreenCarOwnerMapFilter(val,  to='zh') {
+		const MAP = Const.CRM_TEST_DRIVE.GREEN_CAR_OWNER_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	CRMTestDriveDriverLicenseMapFilter(val,  to='zh') {
+		const MAP = Const.CRM_TEST_DRIVE.DRIVER_LICENSE_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	CRMTestDriveRideExpMapFilter(val,  to='zh') {
+		const MAP = Const.CRM_TEST_DRIVE.RIDE_EXP_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	CRMTestDriveMotoExpMapFilter(val,  to='zh') {
+		const MAP = Const.CRM_TEST_DRIVE.MOTO_EXP_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	CRMTestDriveMotoTourIntentionMapFilter(val,  to='zh') {
+		const MAP = Const.CRM_TEST_DRIVE.MOTO_TOUR_INTENTION_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	CRMTestDrivePayAttentionToMapFilter(val,  to='zh') {
+		const MAP = Const.CRM_TEST_DRIVE.PAY_ATTENTION_TO_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	CRMTestDriveGreenEnergyUnderstandMapFilter(val,  to='zh') {
+		const MAP = Const.CRM_TEST_DRIVE.GREEN_ENERGY_UNDERSTAND_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	CRMTestDriveElectricTwoWheelerUnderstandMapFilter(val,  to='zh') {
+		const MAP = Const.CRM_TEST_DRIVE.ELECTRIC_TWO_WHEELER_UNDERSTAND_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+
+
+
+	/* =============== 试驾单 ================ */
 }
 
 export default Util
