@@ -1145,6 +1145,9 @@ const messages = {
 		    city: '市',
 		    county: '区',
 		    rechecking : '查重',
+		    purchase_intent: '购买意向',
+		    test_drive_intent: '试驾意向',
+
 	    },
 	    crm_t: {
 		    track_record: '跟进记录',

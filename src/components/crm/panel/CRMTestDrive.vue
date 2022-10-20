@@ -131,6 +131,9 @@ export default {
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
+            if (this.customerId === 0){
+                return
+            }
             Core.Api.CRMTestDriveOrder.list({
                 customer_id: this.customerId,
                 page: this.currPage,

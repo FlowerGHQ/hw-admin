@@ -53,6 +53,25 @@
             </div>
             <div class="form-content">
                 <div class="form-item">
+                    <div class="key">{{ $t('crm_c.purchase_intent') }}：</div>
+                    <div class="value">
+                        <a-select v-model:value="form.purchase_intent" :placeholder="$t('def.input')" >
+                            <a-select-option v-for="item of CRM_PURCHASE_INTENT_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                        </a-select>
+                    </div>
+
+                </div>
+                <div class="form-item">
+                    <div class="key">{{ $t('crm_c.test_drive_intent') }}：</div>
+                    <div class="value">
+                        <a-select v-model:value="form.test_drive_intent" :placeholder="$t('def.input')" >
+                            <a-select-option v-for="item of CRM_TEST_DRIVE_INTENT_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                        </a-select>
+                    </div>
+
+                </div>
+
+                <div class="form-item">
                     <div class="key">{{ $t('crm_c.crm_dict_id') }}：</div>
                     <div class="value">
                         <a-select v-model:value="form.crm_dict_id" :placeholder="$t('def.input')" >
@@ -225,6 +244,8 @@ export default {
             loginType: Core.Data.getLoginType(),
             CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
             CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
+            CRM_PURCHASE_INTENT_MAP: Core.Const.CRM_CUSTOMER.PURCHASE_INTENT_MAP,
+            CRM_TEST_DRIVE_INTENT_MAP: Core.Const.CRM_CUSTOMER.TEST_DRIVE_INTENT_MAP,
             CRM_SOURCE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_MAP,
             CRM_INDUSTRY_MAP: Core.Const.CRM_CUSTOMER.INDUSTRY_MAP,
             CRM_GENDER_MAP: Core.Const.CRM_CUSTOMER.GENDER_MAP,
@@ -242,6 +263,8 @@ export default {
                 name: '',
                 phone: '',
                 level: '',
+                purchase_intent: '',
+                test_drive_intent: '',
                 crm_dict_id: '',
                 company_size: '',
                 company_license_id:'',

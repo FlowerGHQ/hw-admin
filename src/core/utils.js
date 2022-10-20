@@ -821,6 +821,18 @@ const Util = {
 		console.log("item",val)
 		return item[to] || ''
 	},
+	CRMCustomerPurchaseIntentFilter(val,  to='zh') {
+		const MAP = Const.CRM_CUSTOMER.PURCHASE_INTENT_MAP
+		let item = MAP[val + ''] || {}
+		console.log("item",val)
+		return item[to] || ''
+	},
+	CRMCustomerTestDriveIntentFilter(val,  to='zh') {
+		const MAP = Const.CRM_CUSTOMER.TEST_DRIVE_INTENT_MAP
+		let item = MAP[val + ''] || {}
+		console.log("item",val)
+		return item[to] || ''
+	},
 	CRMCustomerSourceFilter(val,  to='zh') {
 		const MAP = Const.CRM_CUSTOMER.SOURCE_MAP
 		let item = MAP[val + ''] || {}
