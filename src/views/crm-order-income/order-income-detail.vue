@@ -144,7 +144,6 @@
 import Core from '../../core';
 import CustomerSituation from './components/CustomerSituation.vue';
 
-import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
 import CRMAttachmentFile from '@/components/crm/panel/CRMAttachmentFile.vue';
 
 import Group from '@/components/crm/panel/Group.vue';
@@ -161,7 +160,7 @@ import LabelList from '@/components/crm/common/LabelList.vue';
 
 export default {
     name: 'OrderDetail',
-    components: { CustomerSelect, Group, CustomerSituation, CRMAttachmentFile,ActionRecord,AuditHandle,UserOutlined,CrmRefundRecord,LabelList},
+    components: {  Group, CustomerSituation, CRMAttachmentFile,ActionRecord,AuditHandle,UserOutlined,CrmRefundRecord,LabelList},
     props: {},
     data() {
         return {

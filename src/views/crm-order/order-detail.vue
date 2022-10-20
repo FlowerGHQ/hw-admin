@@ -120,7 +120,6 @@
 <script>
 import Core from '../../core';
 import CustomerSituation from './components/CustomerSituation.vue';
-import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
 import CRMAttachmentFile from '@/components/crm/panel/CRMAttachmentFile.vue';
 
 import Group from '@/components/crm/panel/Group.vue';
@@ -138,7 +137,7 @@ import {
 import LabelList from '@/components/crm/common/LabelList.vue';
 export default {
     name: 'OrderDetail',
-    components: { CustomerSelect, Group, ActionRecord, CustomerSituation, CRMAttachmentFile,CRMItem, UserOutlined, AuditHandle,CrmOrderIncome,LabelList},
+    components: {  Group, ActionRecord, CustomerSituation, CRMAttachmentFile,CRMItem, UserOutlined, AuditHandle,CrmOrderIncome,LabelList},
     props: {},
     data() {
         return {
