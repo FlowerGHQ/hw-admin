@@ -238,6 +238,8 @@ const apiList = {
         getItemComponent: ['PostJson', 'item/item-component-set-list'], // 查询爆炸图列表
         bindItemComponent: ['PostJson', 'item/bind-item-component'], // 绑定零部件
         deleteItemComponent: ['PostJson', 'item/delete-item-component'], // 解绑零部件
+	    saveSalesAreaByCategory: ['PostJson', 'item/save-sales-area-by-category'], // 解绑零部件
+
     },
 	ItemAccessory: { // 商品
 		save: ['PostJson', 'item-accessory/save'],
