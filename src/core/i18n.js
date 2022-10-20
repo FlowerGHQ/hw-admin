@@ -88,6 +88,7 @@ const messages = {
             result_a: '审核结果',
             pass: '通过',
             fail: '不通过',
+	        back: '退回',
             reason: '原因',
             warehouse: '仓库',
             fault: '故障件编号',

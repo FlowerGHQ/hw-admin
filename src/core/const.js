@@ -30,9 +30,9 @@ switch (window.location.hostname) {
         URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
         // URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服
         break;
-    case "10.0.0.194":
+    case "10.0.0.230":
         URL_POINT = 'http://10.0.0.194:8889'
-	    // URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
+	    URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
         break;
     case "192.168.31.224":
         URL_POINT = 'http://192.168.31.224:8889'
@@ -384,6 +384,18 @@ let Const = {
             REFUSE: 2
         },
     },
+	INVOICE_ITEM:{
+		TARGET_TYPE: {
+			ITEM: 10,
+			MATERIAL: 30,
+		},
+		TARGET_TYPE_MAP: {
+			'10':  { key: 10, zh: '商品', en: 'Item' },
+			'30':  { key: 30, zh: '物料', en: 'Material' },
+			// '3':  { key: 3, zh: '维修转单', en: '1' },
+
+		},
+	},
     REPAIR_ITEM: { //维修商品
         TYPE: {
             ADD: 1,
@@ -936,7 +948,9 @@ let Const = {
             CLOSE: 40, //已完成
 	        DELIVERY: 50, //已发货
             RECEIVED: 60, //已收货
+	        AUDIT_BACK: -5,//退回
             AUDIT_REFUSE: -10,//审核失败
+
             CANCEL: -20, // 取消
         },
         STATUS_MAP: {
