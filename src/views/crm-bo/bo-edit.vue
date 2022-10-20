@@ -103,7 +103,7 @@
                         <div class="form-item file-upload">
                             <ItemSelect @select="handleAddFailItem"
                                         :disabled-checked='tableData.map(i => i.item_id)'
-                                        btn-type='primary' :btn-text="$t('i.add')" btn-class="fault-btn"
+                                        btn-type='primary' :btn-text="$t('crm_b.interested_models')" btn-class="fault-btn"
                                         v-if="$auth('repair-order.save')"/>
                         </div>
                     </div>

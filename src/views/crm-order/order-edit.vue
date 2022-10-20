@@ -220,7 +220,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_o.approval_process') }}：</div>
                         <!--  disabled -->
-                    <AuditUser :def-audit-user-list="auditUserList"  @list="handleAuditUserIdList"></AuditUser>
+                    <AuditUser :def-audit-user-list="auditUserList"  @list="handleAuditUserIdList" :btn-text="$t('crm_o.add_reviewer')"></AuditUser>
                 </div>
                 <div class="form-item textarea">
                     <div class="key">{{ $t('sl.name') }}</div>

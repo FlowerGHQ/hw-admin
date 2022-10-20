@@ -22,7 +22,7 @@
                     </div>
                     <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
                     <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
-                    <CustomerSelect v-if="form.id == 0" @select="selectItem" :radioMode="true" :phone="this.form.phone" :check-mode="false" :select-customer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
+                    <CustomerSelect v-if="form.id == 0" @select="selectItem" :select-btn="true" :radioMode="true" :phone="this.form.phone" :check-mode="false" :select-customer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
                         {{ $t('crm_c.rechecking') }}
                     </CustomerSelect>
                 </div>

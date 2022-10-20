@@ -2,7 +2,7 @@
     <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
         <slot>{{ btnText }}</slot>
     </a-button>
-    <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='600px'
+    <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='700px'
         class="ItemSelectModal">
         <div class="form-title">
 
@@ -17,6 +17,9 @@
                 <div class="value">
                     <a-input v-model:value="form.phone" :placeholder="$t('def.input')"/>
                 </div>
+                <ContactSelect :radioMode="true" :phone="this.form.phone" :check-mode="false" :select-btn="true" :select-customer="true" btn-class="select-item-btn" btnType='link' @select="selectItem" :btnText="$t('crm_c.rechecking')">
+                    {{ $t('crm_c.rechecking') }}
+                </ContactSelect>
             </div>
             <div class="form-item required">
                 <div class="key">{{ $t('crm_c.level') }}：</div>
@@ -100,11 +103,11 @@
             </div>
 
             <div class="form-item textarea">
-                <div class="key">{{ $t('r.remark') }}</div>
+                <div class="key">{{ $t('crm_c.remark') }}</div>
                 <div class="value">
                     <a-textarea v-model:value="form.remark" :placeholder="$t('r.enter_remark')"
                                 :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
-                    <span class="content-length">{{ form.remark }}/500</span>
+                    <span class="content-length">{{ form.remark.length }}/500</span>
                 </div>
             </div>
         </div>
@@ -129,12 +132,16 @@ import ItemTable from '@/components/table/ItemTable.vue'
 import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue'
 import dayjs from "dayjs";
 
+import ContactSelect from '@/components/crm/popup-btn/ContactSelect.vue';
+
+
 export default {
     components: {
         ItemTable,
         CategoryTreeSelect,
         ChinaAddressCascader,
         CountryCascader,
+        ContactSelect,
     },
     emits: ['select', 'option'],
     props: {
@@ -161,6 +168,10 @@ export default {
             type: Number,
             default: 0
         },
+        selectBtn: {
+            type: Boolean,
+            default: false,
+        }
     },
     data() {
         return {
@@ -345,6 +356,14 @@ export default {
         handleModalClose() {
             this.modalShow = false;
             Object.assign(this.form, this.$options.data().form)
+        },
+        selectItem(id, item){
+            console.log('select2 item:', id)
+            item.birthday = item.birthday ? dayjs.unix(item.birthday).format('YYYY-MM-DD') : undefined
+            for (const key in this.form) {
+                this.form[key] = item[key]
+            }
+            this.form.id = 0
         },
         // handleConfirm() {
         //     Core.Api.CRMCustomer.save({

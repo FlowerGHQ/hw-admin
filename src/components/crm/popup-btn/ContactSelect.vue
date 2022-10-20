@@ -5,15 +5,14 @@
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'
         class="ItemSelectModal">
         <div class="modal-content">
-            <CustomerAdd :targetId="targetId" :targetType="targetType" v-if="addCustomerBtn" @select="getTableData"/>
             <div class="search-container">
                 <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!selectCustomer">
-                        <div class="key"><span>{{ $t('n.name') }}:</span></div>
-                        <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
-                        </div>
-                    </a-col>
+<!--                    <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!selectCustomer">-->
+<!--                        <div class="key"><span>{{ $t('n.name') }}:</span></div>-->
+<!--                        <div class="value">-->
+<!--                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>-->
+<!--                        </div>-->
+<!--                    </a-col>-->
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
                         <div class="key"><span>{{ $t('n.phone') }}:</span></div>
                         <div class="value">
@@ -27,7 +26,7 @@
                 </div>
             </div>
             <div class="table-container">
-                <CustomerTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :select-btn="selectBtn" :disabled-checked='disabledChecked' @submit="handleSelectItem" @select="selectItem" :radio-mode='radioMode' :check-mode="checkMode"/>
+                <CustomerTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :disabled-checked='disabledChecked' :select-btn="selectBtn" @submit="handleSelectItem" @select="selectItem" :radio-mode='radioMode' :check-mode="checkMode"/>
             </div>
         </div>
         <template #footer>
@@ -58,13 +57,11 @@
 import Core from '@/core';
 
 import CustomerTable from '@/components/table/CustomerTable.vue'
-import CustomerAdd from '@/components/crm/popup-btn/CustomerAdd.vue';
 
 
 export default {
     components: {
         CustomerTable,
-        CustomerAdd,
     },
     emits: ['select', 'option'],
     props: {
@@ -122,10 +119,10 @@ export default {
             type: Boolean,
             default: true,
         },
-        selectBtn:{
+        selectBtn: {
             type: Boolean,
             default: false,
-        },
+        }
 
 
     },
@@ -213,6 +210,12 @@ export default {
                 page: this.currPage,
                 pageSize: this.pageSize,
             }).then(res => {
+                res.list.forEach(it => {
+                    if (it.status === Core.Const.CRM_CUSTOMER.STATUS.POOL){
+                        it.permissions = true
+                    }
+
+                })
                 this.tableData = res.list
                 this.total = res.count
             }).catch(err => {
@@ -239,9 +242,9 @@ export default {
             this.selectItems = items
             this.selectItemIds = ids
         },
-        selectItem(id){
+        selectItem(id, item){
             console.log('select2 item:', id)
-            this.$emit('select', id)
+            this.$emit('select', id, item)
             this.modalShow = false
         },
     },

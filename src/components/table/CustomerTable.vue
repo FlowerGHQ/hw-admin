@@ -56,7 +56,7 @@
                 {{ $Util.timeFilter(text)}}
             </template>
             <template v-if="column.key === 'operation'">
-                <a-button type="link" @click="selectItem(record)" v-if="$auth('crm-customer.detail') && record.permissions"><i class="icon i_add"/>{{ $t('n.select') }}</a-button>
+                <a-button type="link" @click="selectItem(record)" v-if="$auth('crm-customer.detail') && record.permissions && selectBtn"><i class="icon i_add"/>{{ $t('n.select') }}</a-button>
                 <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('crm-customer.detail') && record.status === CRM_STATUS.POOL"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
             </template>
         </template>
@@ -96,6 +96,10 @@ export default {
             type: Array,
             default: () => { return [] }
         },
+        selectBtn: {
+            type: Boolean,
+            default: false,
+        }
     },
     emit: ['submit'],
     data() {
@@ -165,7 +169,7 @@ export default {
         },
         selectItem(item){
             console.log('select item:', item)
-            this.$emit('select', item.id)
+            this.$emit('select', item.id, item)
         },
     }
 }

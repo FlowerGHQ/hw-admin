@@ -14,8 +14,8 @@
 
         <a-step status="finish">
             <template #icon>
-                <UserSelect @select="handleAddCustomerShow" :radioMode="true" btn-class="select-item-btn" btnType='link'>
-                    <i class="icon i_edit"/> {{ $t('crm_c.add') }}
+                <UserSelect @select="handleAddCustomerShow" :radioMode="true" btn-class="select-item-btn" btnType='link' :btnText="btnText">
+                    <i class="icon i_edit"/> {{ btnText }}
                 </UserSelect>
             </template>
         </a-step>
@@ -41,7 +41,12 @@ export default {
         defAuditUserList:{
             type: Array,
             default: () => { return [] }
+        },
+        btnText: {
+            type: String,
+            default: '审核人'
         }
+
 
     },
     data() {
