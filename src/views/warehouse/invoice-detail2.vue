@@ -163,7 +163,7 @@
                         <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                             <div class="key">{{ $t('i.code') }}:</div>
                             <div class="value">
-                                <a-input :placeholder="$t('def.input')" v-model:value="searchForm.code" @keydown.enter='getInvoiceList'/>
+                                <a-input :placeholder="$t('def.input')" v-model:value="searchForm.code" :disabled="this.searchForm.target_type === ''" @keydown.enter='getInvoiceList'/>
                             </div>
                         </a-col>
                     </a-row>
@@ -548,11 +548,7 @@ export default {
 
             childShow: false,
             childDate: [],
-            childColumns: [
-                {title: this.$t('n.name'), dataIndex: ['item', 'name']},
-                {title: this.$t('uid'), dataIndex: ['entity', 'uid'], key: 'uid' },
-                {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100,},
-            ],
+
             // 上传
             childInfoShow: false,
             // 上传
@@ -655,7 +651,14 @@ export default {
                 return true
             }
             return false
-        }
+        },
+        childColumns(){
+
+            let columns = [{title: this.$t('n.name'), dataIndex: ['item', 'name']},
+            {title: this.$t('uid'), dataIndex: ['entity', 'uid'], key: 'uid' },
+            {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100,}]
+            return columns
+        },
     },
     mounted() {
         this.id = Number(this.$route.query.id) || 0
