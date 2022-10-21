@@ -73,12 +73,6 @@
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">{{ $t('crm_o.contract_no') }}：</div> <!-- 合同编号 -->
-                    <div class="value">
-                        <a-input v-model:value="form.uid" :placeholder="$t('def.input')"/>
-                    </div>
-                </div>
-                <div class="form-item required">
                     <div class="key">{{ $t('crm_o.name') }}：</div> <!-- 合同名称 -->
                     <div class="value">
                         <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
@@ -273,7 +267,6 @@ export default {
             form: {
                 bo_id: '',
                 customer_id: '',
-                uid: '',
                 name: '',
                 date: '',
                 seller_signatory: '',
@@ -427,9 +420,7 @@ export default {
             if (!form.customer_id) {
                 return this.$message.warning(this.$t('def.input'))
             }
-            if (!form.uid) {
-                return this.$message.warning(this.$t('def.input'))
-            }
+
             if (!form.name) {
                 return this.$message.warning(this.$t('def.input'))
             }
