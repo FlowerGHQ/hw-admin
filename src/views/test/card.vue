@@ -23,7 +23,6 @@
                     :pagination='false'
                     :row-key="record => record.id"
                     :indentSize='0'
-                    :expandIconColumnIndex="expandIconColumnIndex"
                 >
                     <template #bodyCell="{ column, text , index, record }">
                         <template v-if="column.key === 'index'">
