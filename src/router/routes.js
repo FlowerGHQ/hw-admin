@@ -1974,6 +1974,31 @@ const routes = [
 
         ]
     },
+    { // 客户管理
+		path: '/test',
+		component: Layout,
+		redirect: '/test/demo',
+		name: 'test',
+		meta: {
+			title: '测试',
+			title_en: 'test',
+			icon: 'i_s_customer',
+			auth: ["crm-label.list"],
+
+		},
+		children: [
+			{
+				path: 'demo',
+				name: 'LabelList',
+				component: () => import('@/views/test/demo.vue'),
+				meta: {
+					title: '测试',
+					title_en: 'test test',
+                    auth: ["crm-label.list"],
+				}
+			},
+		]
+	},
 ];
 
 export default routes;
