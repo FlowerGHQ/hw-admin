@@ -1,6 +1,18 @@
 <template>
     <div class="list-container">
-        <div class="title">标签</div>
+        <div class="title">
+            <span>标签</span>
+            <div>
+                <div
+                    class="tab-item"
+                    :class="{'tab-current': currentTab === item.key}"
+                    v-for="(item, index) in titleTabs"
+                    :key="index"
+                    @click="clickTab(item.key)">
+                    {{ item.label }}
+                </div>
+            </div>
+        </div>
         <!-- <div class="contain"> -->
             <!-- table -->
             <div class="table-container" v-if="type === 1">
@@ -29,6 +41,7 @@
                     </template>
                 </a-table>
             </div>
+
             <!-- form -->
             <div class="table-container" v-if="type === 2">
                 <a-row :gutter="[20,0]">
@@ -73,6 +86,12 @@ export default {
     },
     data() {
         return {
+            titleTabs: [
+                { label: '按钮名称', key: 'key1' },
+                { label: '按钮名称', key: 'key2' },
+                { label: '按钮名称', key: 'key3' }
+            ],
+            currentTab: '',
             formList: [
                 { label: '标签名称', icon: '', key: 'name' },
                 { label: '标签名称', icon: '', key: 'name' },
@@ -101,36 +120,48 @@ export default {
     },
     mounted() {
         const ths = this;
-        this.initChart({});
         window.onresize =  () => {
             ths.resetChart();
         }
     },
     methods: {
+        // 点击tab
+        clickTab(key) {
+            this.currentTab = key;
+            console.log('切换tab >>', key);
+        },
+        // 窗口缩放重制chart
         resetChart() {
             if(this.timer !== null) {
                 clearTimeout(this.timer);
             }
-            this.timer = setTimeout(function() {
+            this.timer = setTimeout(() => {
                 this.timer = null;
                 this.initChart();
             }, 500);
         },
+        // 初始化chart
         initChart(data) {
+            let el = document.getElementById(this.chartId);
             if (this.myChart && this.myChart.destroy) {
-                console.log('drawPurchaseChart destroy:')
-                this.myChart.destroy()
+                this.myChart.destroy();
+                el.innerHTML = '';
+                this.myChart = null;
             }
-            let width = document.getElementById(this.chartId).offsetWidth;
-            let rate = 300 / 200; //  宽/高
-            let chart = new Chart({
-                container: this.chartId,
-                autoFit: true,
-                height: width / rate,
-                width,
+            this.$nextTick(()=>{
+                let width = el.offsetWidth;
+                let rate = 300 / 200; //  宽/高
+                console.log('init chart width >>', width, width / rate)
+                let chart = new Chart({
+                    container: this.chartId,
+                    autoFit: true,
+                    height: width / rate,
+                    width,
+                })
+                chart.data(data)
+                this.myChart = chart;
+                console.log(this.myChart)
             })
-            chart.data(data)
-            this.myChart = chart
         },
     }
 };
@@ -142,6 +173,29 @@ export default {
     border-bottom: 2px solid #f0f2f5;
     font-size: 16px;
     font-weight: bold;
+    .flex(space-between, center, row);
+    .tab-item {
+        display: inline-block;
+        padding: 4px 8px;
+        border: 1px solid grey;
+        margin-right: 2px;
+        font-size: 12px;
+        user-select: none;
+        cursor: pointer;
+        &:first-child {
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+        }
+        &:last-child {
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+            margin-right: 0;
+        }
+    }
+    .tab-current {
+        border: 1px solid #006EF9;
+        color: #006EF9;
+    }
 }
 .contain {
     padding: 16px;
