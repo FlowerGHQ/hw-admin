@@ -1,10 +1,10 @@
 <template>
-    <div id="Dept">
+    <div id="CrmRegion">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">{{ $t('dept.list') }}</div>
+                <div class="title-area">{{ $t('crm_region.list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleModalShow({})" v-if="$auth('material-category.save')"><i class="icon i_add"/>{{ $t('dept.new_top') }}</a-button>
+                    <a-button type="primary" @click="handleModalShow({})" v-if="$auth('material-category.save')"><i class="icon i_add"/>{{ $t('crm_region.new_top') }}</a-button>
                 </div>
             </div>
             <div class="table-container">
@@ -25,7 +25,7 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type='link' @click="handleModalShow(record, record)" v-if="$auth('material-category.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                            <a-button type='link' @click="handleModalShow({parent_id: record.id}, null, record)" v-if="$auth('material-category.save')"><i class="icon i_add"/>{{ $t('dept.sub') }}</a-button>
+                            <a-button type='link' @click="handleModalShow({parent_id: record.id}, null, record)" v-if="$auth('material-category.save')"><i class="icon i_add"/>{{ $t('crm_region.sub') }}</a-button>
                             <a-button type='link' @click="handleDelete(record)" class="danger" v-if="$auth('material-category.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
@@ -33,7 +33,7 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="modalVisible" :title="editForm.id ? $t('dept.edit') : $t('dept.new')" @ok="handleModalSubmit">
+            <a-modal v-model:visible="modalVisible" :title="editForm.id ? $t('crm_region.edit') : $t('crm_region.new')" @ok="handleModalSubmit">
                 <div class="modal-content">
                     <div class="form-item required">
                         <div class="key">{{ $t('m.category_name') }}</div>
@@ -63,12 +63,6 @@
                       </div>
                     </div>
                     <div class="form-item">
-                      <div class="key">{{ $t('crm_c.phone') }}</div>
-                      <div class="value">
-                        <a-input v-model:value="editForm.phone" :placeholder="$t('def.input')+$t('crm_c.phone')"/>
-                      </div>
-                    </div>
-                    <div class="form-item">
                       <div class="key">{{ $t('crm_c.remark') }}</div>
                       <div class="value">
                         <a-input v-model:value="editForm.remark" :placeholder="$t('def.input')+$t('crm_c.remark')"/>
@@ -85,7 +79,7 @@ import Core from '../../core';
 import UserSelect from '@/components/crm/popup-btn/UserSelect.vue'
 
 export default {
-    name: 'Dept',
+    name: 'CrmRegion',
     components: {UserSelect},
     props: {},
     data() {
@@ -105,7 +99,6 @@ export default {
                 name: '',
                 admin_user_id: '',
                 admin_user_name: '',
-                phone: '',
                 remark: '',
             },
             userData: [],
@@ -115,11 +108,10 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                { title: this.$t('dept.name'), dataIndex: 'name' },
+                { title: this.$t('crm_region.name'), dataIndex: 'name' },
                 { title: this.$t('e.administrator'), dataIndex: 'admin_user_name' },
-                { title: this.$t('dept.user_count'), dataIndex: 'user_count' },
-                { title: this.$t('dept.customer_count'), dataIndex: 'customer_count' },
-                { title: this.$t('crm_c.phone'), dataIndex: 'phone' },
+                { title: this.$t('crm_region.user_count'), dataIndex: 'user_count' },
+                { title: this.$t('crm_region.customer_count'), dataIndex: 'customer_count' },
                 { title: this.$t('crm_c.remark'), dataIndex: 'remark' },
                 { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100, },
@@ -139,7 +131,7 @@ export default {
         getDataByParent(parent_id = 0, parentNode, node) {  // 通过父节点获取子级数据
             console.log('getDataByParent parent_id:', parent_id, 'parentNode', parentNode)
             this.loading = true;
-            Core.Api.Dept.list({
+            Core.Api.CRMGroup.list({
                 page: 0,
                 parent_id: parent_id,
             }).then(res => {
@@ -166,7 +158,7 @@ export default {
         getDataById(id = 0, node) {  // 通过本节点获取本级数据
             console.log('getDataById id:', id, 'node', node)
             this.loading = true;
-            Core.Api.Dept.list({
+            Core.Api.CRMGroup.list({
                 page: 0,
                 id: id,
             }).then(res => {
@@ -199,12 +191,11 @@ export default {
         },
 
         // 编辑与新增子类
-        handleModalShow({parent_id = 0, id, name, phone,admin_user_id, admin_user_name,remark}, node = null, parent = null) {
+        handleModalShow({parent_id = 0, id, name, admin_user_id, admin_user_name, remark}, node = null, parent = null) {
             this.editForm = {
                 id: id,
                 name: name,
                 parent_id: parent_id,
-                phone: phone,
                 admin_user_id: admin_user_id,
                 admin_user_name:admin_user_name,
                 remark: remark,
@@ -222,7 +213,7 @@ export default {
             }
             this.loading = true
             // let apiName = form.id ? 'update' : 'save';
-            Core.Api.Dept.save(form).then(res => {
+            Core.Api.CRMGroup.save(form).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 if (form.parent_id == 0) {
                     this.getDataById()
@@ -256,7 +247,7 @@ export default {
                 okType: 'danger',
                 cancelText: _this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.Dept.delete({
+                    Core.Api.CRMGroup.delete({
                         id: record.id,
                     }).then(res => {
                         console.log("handleDelete res", res)
