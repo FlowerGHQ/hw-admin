@@ -45,6 +45,35 @@
                     </div>
 
                 </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('crm_c.group') }}：</div> <!--区域 -->
+                    <div class="value">
+<!--                        <a-select-->
+<!--                            v-model:value="form.group_id"-->
+<!--                            show-search-->
+<!--                            :placeholder="$t('n.enter')"-->
+<!--                            :default-active-first-option="false"-->
+<!--                            :show-arrow="false"-->
+<!--                            :filter-option="false"-->
+<!--                            :not-found-content="null"-->
+<!--                            @search="handleGroupNameSearch"-->
+<!--                            allowClear-->
+<!--                        >-->
+<!--                            <a-select-option v-for=" item in groupOptions" :key="item.id" :value="item.id">-->
+<!--                                {{item.name}}-->
+<!--                            </a-select-option>-->
+<!--                        </a-select>-->
+
+                        <a-tree-select class="CategoryTreeSelect"
+                                       v-model:value="form.group_id"
+                                       :placeholder="$t('def.select')"
+                                       :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                                       :tree-data="groupOptions"
+                                       tree-default-expand-all
+                        />
+                    </div>
+
+                </div>
             </div>
         </div>
         <div class="form-block">
@@ -263,6 +292,7 @@ export default {
                 name: '',
                 phone: '',
                 level: '',
+                group_id: '',
                 purchase_intent: '',
                 test_drive_intent: '',
                 crm_dict_id: '',
@@ -317,6 +347,7 @@ export default {
             },
             labelList: [],
             labelIdList: [],
+            groupOptions: [],
         };
     },
     watch: {},
@@ -330,9 +361,11 @@ export default {
         if (this.form.id) {
             this.getCustomerDetail();
             this.getLabelList()
+
         } else {
             this.form.status = Number(this.$route.query.status) || 0
         }
+        this.handleGroupTree();
         this.getSourceList()
     },
     methods: {
@@ -356,8 +389,8 @@ export default {
                 }
                 this.defAddr = [d.province, d.city, d.county]
                 this.defAreaContinent = [d.continent || '', d.country || '', d.country_en || '']
-                this.handleContinentSelect(this.defAreaContinent)
-                this.handleAddressSelect(this.defAddr)
+                this.handleContinentSelect(this.defAreaContinent);
+                this.handleAddressSelect(this.defAddr);
 
 
             }).catch(err => {
@@ -539,6 +572,13 @@ export default {
                     this.labelIdList.push(it.id)
                 })
                 this.labelList = labelList
+            })
+        },
+        handleGroupTree(){
+            Core.Api.CRMGroupMember.structureByUser().then(res => {
+                this.groupOptions = res.list
+                console.log(res)
+
             })
         },
     }

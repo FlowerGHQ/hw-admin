@@ -17,6 +17,18 @@
                         </div>
                     </div>
                 </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
+                    <div class="key">{{ $t('crm_c.group') }}：</div> <!--区域 -->
+                    <div class="value">
+                        <a-tree-select class="CategoryTreeSelect"
+                                       v-model:value="searchForm.group_id"
+                                       :placeholder="$t('def.select')"
+                                       :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                                       :tree-data="groupOptions"
+                                       tree-default-expand-all
+                        />
+                    </div>
+                </a-col>
 <!--                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">类型:</div>
                     <div class="value">
@@ -135,6 +147,7 @@ export default {
             // 搜索
             searchForm: {
                 name: '',
+                group_id: '',
                 type: undefined,
                 org_id: Core.Data.getOrgId(),
                 org_type: Core.Data.getOrgType(),
@@ -145,6 +158,7 @@ export default {
             // 表格
             tableData: [],
             tableColumns: [
+                {title: 'n.name', dataIndex: ['account', 'name'], key: 'user'},
                 {title: 'n.name', dataIndex: ['account', 'name'], key: 'user'},
                 {title: 'u.account', dataIndex: ['account', 'username'], key: 'item'},
                 {title: 'n.phone', dataIndex: ['account', 'phone'], key: 'item'},
@@ -163,12 +177,14 @@ export default {
                 password: '',
                 new_password: '',
             },
+            groupOptions: [],
         };
     },
     watch: {},
     computed: {},
     mounted() {
         this.getTableData();
+        this.handleGroupTree()
     },
     methods: {
         routerChange(type, item = {}) {
@@ -287,7 +303,14 @@ export default {
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
-        }
+        },
+        handleGroupTree(){
+            Core.Api.CRMGroupMember.structureByUser().then(res => {
+                this.groupOptions = res.list
+                console.log(res)
+
+            })
+        },
     }
 };
 </script>

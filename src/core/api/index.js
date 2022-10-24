@@ -582,12 +582,19 @@ const apiList = {
 		save: ['PostJson', 'print-template/save'],//
 		delete: ['PostJson', 'print-template/delete'],//
 	},
-    Dept: { // 物料分类
-        tree: ['PostJson', 'dept/tree'],
+    Dept: { // EOS部门
+        // tree: ['PostJson', 'dept/tree'],
         list: ['PostJson', 'dept/list'],
         save: ['PostJson', 'dept/save'],
         detail: ['PostJson', 'dept/detail'],
         delete: ['PostJson', 'dept/delete'],
+    },
+    CRMGroup: { // CRM分组
+        // tree: ['PostJson', 'crm-group/tree'],
+        list: ['PostJson', 'crm-group/list'],
+        save: ['PostJson', 'crm-group/save'],
+        detail: ['PostJson', 'crm-group/detail'],
+        delete: ['PostJson', 'crm-group/delete'],
     },
 	CRMCustomer:{//CRM 客户
 		save: ['PostJson', 'crm-customer/save'],//
@@ -709,6 +716,22 @@ const apiList = {
 		delete: ['PostJson', 'crm-customer-portrait/delete'],//
 		detail: ['PostJson', 'crm-customer-portrait/detail'],//
 		detailCustomerId: ['PostJson', 'crm-customer-portrait/detail-customer-id'],//
+
+	},
+	CRMGroup: {
+		save: ['PostJson', 'crm-group/save'],//
+		list: ['PostJson', 'crm-group/list'],//
+		delete: ['PostJson', 'crm-group/delete'],//
+		detail: ['PostJson', 'crm-group/detail'],//
+		tree: ['PostJson', 'crm-group/tree'],//
+	},
+	CRMGroupMember: {
+		save: ['PostJson', 'crm-group-member/save'],//
+		list: ['PostJson', 'crm-group-member/list'],//
+		delete: ['PostJson', 'crm-group-member/delete'],//
+		detail: ['PostJson', 'crm-group-member/detail'],//
+		structure: ['PostJson', 'crm-group-member/structure'],//
+		structureByUser: ['PostJson', 'crm-group-member/structure-by-user'],//
 
 	},
 };

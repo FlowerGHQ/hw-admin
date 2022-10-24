@@ -1094,6 +1094,17 @@ const messages = {
             user_count: '员工数量',
             customer_count: '客户数量',
         },
+        crm_region: {
+            list: '区域列表',
+            name: '区域名称',
+            sub: '下级区域',
+            new_top: '新增顶级区域',
+            edit: '编辑区域',
+            new: '新增区域',
+            add: '添加区域管理员',
+            user_count: '员工数量',
+            customer_count: '客户数量',
+        },
 	    crm_c: {
 		    extended_information: '扩展信息',
 		    detail: '客户详情',
@@ -1147,7 +1158,7 @@ const messages = {
 		    rechecking : '查重',
 		    purchase_intent: '购买意向',
 		    test_drive_intent: '试驾意向',
-
+		    group: '区域',
 	    },
 	    crm_t: {
 		    track_record: '跟进记录',
@@ -1286,6 +1297,7 @@ const messages = {
 		    data: '试驾时间',
 		    channel: '预约渠道',
 		    status: '状态',
+		    dept_id: '门店',
 	    },
 	    crm_c_p: {
 		    buy_type:'购车方式',
