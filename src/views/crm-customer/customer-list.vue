@@ -103,7 +103,7 @@
                             {{ $Util.addressFilter(record, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'creator_name'">
-                            {{ record.create_user.name || '-' }}
+                            {{ record.create_user?  record.create_user.name || '-' : '-' }}
                         </template>
                         <template v-if="column.key === 'own_user_name'">
                             {{ record.own_user? record.own_user.name || '-' : '-' }}

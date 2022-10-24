@@ -228,6 +228,7 @@ export default {
         tableColumns() {
             let columns = [
                 {title: 'crm_o.name', dataIndex: 'name', key:'item', sorter: true},
+                {title: 'crm_o.contract_no', dataIndex: 'uid', key:'uid', sorter: true},
                 {title: 'crm_o.customer_name', dataIndex: 'customer_id', key:'customer_name', sorter: true},
                 {title: 'crm_o.own_user_name', dataIndex:  "own_user_id", key:'own_user_name', sorter: true},
                 {title: 'crm_o.status', dataIndex: 'status', key: 'util', util: 'CRMOrderStatusFilter', sorter: true},
