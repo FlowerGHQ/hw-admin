@@ -79,9 +79,11 @@
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">{{ $t('n.name') }}：</div>
+                    <div class="key">{{ $t('crm_d.dept_id') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.dept_id" :placeholder="$t('def.input')" />
+                        <a-select v-model:value="form.dept_id" :placeholder="$t('def.input')" >
+                            <a-select-option  :key="1" :value="1">浩万门店</a-select-option>
+                        </a-select>
                     </div>
 
                 </div>

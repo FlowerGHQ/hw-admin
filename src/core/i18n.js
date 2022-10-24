@@ -1297,6 +1297,7 @@ const messages = {
 		    data: '试驾时间',
 		    channel: '预约渠道',
 		    status: '状态',
+		    dept_id: '门店',
 	    },
 	    crm_c_p: {
 		    buy_type:'购车方式',
