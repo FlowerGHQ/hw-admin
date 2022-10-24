@@ -1094,6 +1094,17 @@ const messages = {
             user_count: '员工数量',
             customer_count: '客户数量',
         },
+        crm_region: {
+            list: '区域列表',
+            name: '区域名称',
+            sub: '下级区域',
+            new_top: '新增顶级区域',
+            edit: '编辑区域',
+            new: '新增区域',
+            add: '添加区域管理员',
+            user_count: '员工数量',
+            customer_count: '客户数量',
+        },
 	    crm_c: {
 		    extended_information: '扩展信息',
 		    detail: '客户详情',

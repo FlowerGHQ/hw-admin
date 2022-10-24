@@ -1775,6 +1775,16 @@ const routes = [
                     auth: ["crm-dict.list"],
 				}
 			},
+            {
+                path: 'region-list',
+                name: 'RegionList',
+                component: () => import('@/views/crm-setting/region-list.vue'),
+                meta: {
+                    title: '区域管理',
+                    title_en: 'Region',
+                    auth: ["crm-dict.list"],
+                }
+            },
 		]
 	},
     { // 客户管理
