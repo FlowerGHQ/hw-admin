@@ -1147,7 +1147,7 @@ const messages = {
 		    rechecking : '查重',
 		    purchase_intent: '购买意向',
 		    test_drive_intent: '试驾意向',
-
+		    group: '区域',
 	    },
 	    crm_t: {
 		    track_record: '跟进记录',
