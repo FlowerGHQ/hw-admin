@@ -36,21 +36,30 @@
         <a-row :gutter="[8,0]">
             <a-col :xs='24' :sm='24' :xl="12" :xxl='14'>
                 <a-row :gutter="[8,0]">
+<!--                    <a-col :span="24">-->
+<!--                        <Card />-->
+<!--                    </a-col>-->
                     <a-col :span="24">
-                        <Card />
+                        <SalesStatistics/>
+<!--                        <Card :type="2" :info="{}"/>-->
                     </a-col>
                     <a-col :span="24">
-                        <Card :type="2" :info="{}"/>
+                        <TrackStatistics/>
+<!--                        <Card :type="5" :info="{}"/>-->
+                    </a-col>
+                    <a-col :span="24">
+                        <BoStatistics/>
                     </a-col>
                 </a-row>
             </a-col>
             <a-col :xs='24' :sm='24' :xl="12" :xxl='10'>
                 <a-row :gutter="[8,0]">
                     <a-col :span="24">
-                        <Card :type="3"/>
+                        <ResultsList/>
+<!--                        <Card :type="3"/>-->
                     </a-col>
                     <a-col :span="24">
-                        <Card :type="4" :info="{}"/>
+<!--                        <Card :type="4" :info="{}"/>-->
                     </a-col>
                 </a-row>
             </a-col>
@@ -59,15 +68,24 @@
 </template>
 
 <script>
-import Core from '../../core';
 import Card from './card.vue';
+import SalesStatistics from './components/SalesStatistics.vue';
+import TrackStatistics from './components/TrackStatistics.vue';
+import ResultsList from './components/ResultsList.vue';
+import BoStatistics from './components/BoStatistics.vue';
+
 import TimeSearch from '@/components/common/TimeSearch.vue'
+
 
 export default {
     name: 'Demo',
     components: {
         Card,
-        TimeSearch
+        TimeSearch,
+        SalesStatistics,
+        TrackStatistics,
+        ResultsList,
+        BoStatistics,
     },
     props: {},
     data() {

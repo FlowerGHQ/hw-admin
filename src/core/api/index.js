@@ -718,13 +718,6 @@ const apiList = {
 		detailCustomerId: ['PostJson', 'crm-customer-portrait/detail-customer-id'],//
 
 	},
-	CRMGroup: {
-		save: ['PostJson', 'crm-group/save'],//
-		list: ['PostJson', 'crm-group/list'],//
-		delete: ['PostJson', 'crm-group/delete'],//
-		detail: ['PostJson', 'crm-group/detail'],//
-		tree: ['PostJson', 'crm-group/tree'],//
-	},
 	CRMGroupMember: {
 		save: ['PostJson', 'crm-group-member/save'],//
 		list: ['PostJson', 'crm-group-member/list'],//
@@ -734,6 +727,13 @@ const apiList = {
 		structureByUser: ['PostJson', 'crm-group-member/structure-by-user'],//
 
 	},
+	CRMDashboard: {
+		salesStatistics: ['PostJson', 'crm-dashboard/sales-statistics'],// 销售简报
+		trackStatistics: ['PostJson', 'crm-dashboard/track-statistics'],// 跟进统计
+		boStatistics: ['PostJson', 'crm-dashboard/bo-statistics'],// 商机统计
+		employeesSalesStatistics: ['PostJson', 'crm-dashboard/employees-sales-statistics'],// 个人 - 销售简报
+	}
+
 };
 
 export default new Api(baseUrl, apiList);

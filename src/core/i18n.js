@@ -1349,7 +1349,23 @@ const messages = {
             unpreset: '自定义｜可编辑',
 		    refresh: '刷新',
 	    },
-        sl: {  // 智能标签
+	    crm_dash: {
+		    new_customer_count: '新增客户',
+		    new_contact_count: '新增联系人',
+		    new_order_count: '新增合同',
+		    new_bo_count: '新增商机',
+		    win_bo_count: '赢单数量',
+		    new_test_driver_count: '新增试驾单',
+
+		    track_count: '写跟进次数',
+		    call_count: '打电话次数',
+		    visit_count: '上门拜访次数',
+		    pool_count: '跟进公海客户次数',
+		    customer_count: '跟进私人客户次数',
+		    bo_count: '跟进商机次数',
+	    },
+
+	    sl: {  // 智能标签
             list: '标签列表',
             save: '新建标签',
             classification: '标签分类',
