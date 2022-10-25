@@ -44,14 +44,96 @@
             <!-- form -->
             <div class="table-container" v-if="type === 2">
                 <a-row :gutter="[20,0]">
-                    <a-col v-for="(item, index) in formList" :key="index" :xs='24' :sm='12' :xl="12" :xxl='12'>
+<!--                    <a-col v-for="(item, index) in formList" :key="index" :xs='24' :sm='12' :xl="12" :xxl='12'>-->
+<!--                        <div class="form-item">-->
+<!--                            <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ item.label }}</span>-->
+<!--                            <span class="form-value">{{  this.form.new_customer_count || '-' }}</span>-->
+<!--                        </div>-->
+<!--                    </a-col>-->
+                    <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
                         <div class="form-item">
-                            <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ item.label }}</span>
-                            <span class="form-value">{{ info[item.key] || '-' }}</span>
+                            <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_customer_count") }}</span>
+                            <span class="form-value">{{  this.form.new_customer_count || '-' }}</span>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                        <div class="form-item">
+                            <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_contact_count") }}</span>
+                            <span class="form-value">{{  this.form.new_contact_count || '-' }}</span>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                        <div class="form-item">
+                            <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_order_count") }}</span>
+                            <span class="form-value">{{  this.form.new_order_count || '-' }}</span>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                        <div class="form-item">
+                            <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_bo_count") }}</span>
+                            <span class="form-value">{{  this.form.new_bo_count || '-' }}</span>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                        <div class="form-item">
+                            <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.win_bo_count") }}</span>
+                            <span class="form-value">{{  this.form.win_bo_count || '-' }}</span>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                        <div class="form-item">
+                            <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_test_driver_count") }}</span>
+                            <span class="form-value">{{  this.form.new_test_driver_count || '-' }}</span>
                         </div>
                     </a-col>
                 </a-row>
-            </div>
+        </div>
+        <div class="table-container" v-if="type === 5">
+            <a-row :gutter="[20,0]">
+                <!--                    <a-col v-for="(item, index) in formList" :key="index" :xs='24' :sm='12' :xl="12" :xxl='12'>-->
+                <!--                        <div class="form-item">-->
+                <!--                            <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ item.label }}</span>-->
+                <!--                            <span class="form-value">{{  this.form.new_customer_count || '-' }}</span>-->
+                <!--                        </div>-->
+                <!--                    </a-col>-->
+                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                    <div class="form-item">
+                        <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_customer_count") }}</span>
+                        <span class="form-value">{{  this.form.track_count || '-' }}</span>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                    <div class="form-item">
+                        <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_contact_count") }}</span>
+                        <span class="form-value">{{  this.form.call_count || '-' }}</span>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                    <div class="form-item">
+                        <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_order_count") }}</span>
+                        <span class="form-value">{{  this.form.visit_count || '-' }}</span>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                    <div class="form-item">
+                        <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_bo_count") }}</span>
+                        <span class="form-value">{{  this.form.pool_count || '-' }}</span>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                    <div class="form-item">
+                        <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.win_bo_count") }}</span>
+                        <span class="form-value">{{  this.form.customer_count || '-' }}</span>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                    <div class="form-item">
+                        <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_test_driver_count") }}</span>
+                        <span class="form-value">{{  this.form.bo_count || '-' }}</span>
+                    </div>
+                </a-col>
+            </a-row>
+        </div>
 
             <!-- echarts -->
             <div class="table-container" v-if="type === 3">
@@ -118,7 +200,26 @@ export default {
                 { label: '标签名称', key: 'key1' },
                 { label: '标签名称', key: 'key2' },
                 { label: '标签名称', key: 'key3' }
-            ]
+            ],
+            searchForm: {
+
+            },
+            form: {
+                new_customer_count: '',
+                new_contact_count: '',
+                new_order_count: '',
+                new_bo_count: '',
+                win_bo_count: '',
+                new_test_driver_count: '',
+
+                track_count: '',
+                call_count: '',
+                visit_count: '',
+                pool_count: '',
+                customer_count: '',
+                bo_count: '',
+            }
+
         };
     },
     watch: {},
@@ -140,6 +241,8 @@ export default {
         window.onresize =  () => {
             ths.resetChart();
         }
+        this.salesStatistics()
+        this.trackStatistics()
     },
     methods: {
         // 点击tab
@@ -180,6 +283,41 @@ export default {
                 console.log(this.myChart)
             })
         },
+
+        salesStatistics() {
+            Core.Api.CRMDashboard.salesStatistics({
+                ...this.searchForm
+            }).then(res => {
+                this.form.new_customer_count = res.new_customer_count
+                this.form.new_contact_count = res.new_contact_count
+                this.form.new_order_count = res.new_order_count
+                this.form.new_bo_count = res.new_bo_count
+                this.form.win_bo_count = res.win_bo_count
+                this.form.new_test_driver_count = res.new_test_driver_count
+
+            })
+        },
+        trackStatistics() {
+            Core.Api.CRMDashboard.trackStatistics({
+                ...this.searchForm
+            }).then(res => {
+                this.form.track_count = res.track_count
+                this.form.call_count = res.call_count
+                this.form.visit_count = res.visit_count
+                this.form.pool_count = res.pool_count
+                this.form.customer_count = res.customer_count
+                this.form.bo_count = res.bo_count
+
+            })
+        },
+        boStatistics() {
+            Core.Api.CRMDashboard.boStatistics({
+                ...this.searchForm
+            }).then(res => {
+                res.list
+            })
+        },
+
     }
 };
 </script>
