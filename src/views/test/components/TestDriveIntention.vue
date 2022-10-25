@@ -23,9 +23,9 @@ export default {
     components: {
     },
     props: {
-        tableData: {
+        searchForm: {
             type: Object,
-            default: ()=> []
+            default: ()=> {}
         },
     },
     data() {
@@ -37,16 +37,13 @@ export default {
         };
     },
     watch: {
-        tableData: {
+        searchForm: {
             deep: true,
             immediate: true,
-            handler() {
-                console.log("this.tableData", this.tableData)
-                // this.drawBoStatisticsChart(this.tableData)
-                // this.drawBoStatisticsChart()
-
+            handler(n) {
+                this.purchaseIntentStatistics()
             }
-        }
+        },
 
     },
     computed: {

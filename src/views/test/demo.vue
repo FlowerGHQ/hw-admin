@@ -1,36 +1,14 @@
 <template>
     <div id="DemoPage">
-        <div class="list-container">
-            <div class="title-container">
-                <div class="title-area">{{ $t('i.item_list') }}</div>
-            </div>
-
-            <div class="search-container">
-                <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :xl="12" :xxl='6' class="search-item">
-                        <div class="key">部门:</div>
-                        <div class="value">
-                            <a-input :placeholder="'请选择部门'" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :xl="12" :xxl='6' class="search-item">
-                        <div class="key">员工:</div>
-                        <div class="value">
-                            <a-select v-model:value="searchForm.type" :placeholder="'请选择员工'">
-                                <a-select-option v-for="(val, key) in itemTypeMap" :key="key" :value="key">{{ val[$i18n.locale]  }}</a-select-option>
-                            </a-select>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :xl="24" :xxl='12' class="search-item">
-                        <div class="key">{{ '周期' }}:</div>
-                        <div class="value"><TimeSearch @search="handleSearch" ref='TimeSearch'/></div>
-                    </a-col>
-                </a-row>
-                <div class="btn-area">
-                    <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
-                    <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
-                </div>
-            </div>
+        <div class="SearchRangePicker">
+            <a-tree-select class="CategoryTreeSelect"
+                           v-model:value="searchForm.group_id"
+                           :placeholder="$t('def.select') + $t('crm_c.group')"
+                           :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                           :tree-data="groupOptions"
+                           tree-default-expand-all
+            />
+            <a-range-picker v-model:value="time" @change="handleChange()" :allowClear="false"/>
         </div>
         <div></div>
         <a-row :gutter="[8,0]">
@@ -39,28 +17,28 @@
                     <a-col :span="24">
                     </a-col>
                     <a-col :span="24">
-                        <SalesStatistics/>
+                        <SalesStatistics :searchForm="searchForm"/>
                     </a-col>
                     <a-col :span="24">
-                        <TrackStatistics/>
+                        <TrackStatistics :searchForm="searchForm"/>
                     </a-col>
                     <a-col :span="24">
-                        <BoStatistics/>
+                        <BoStatistics :searchForm="searchForm"/>
                     </a-col>
                 </a-row>
             </a-col>
             <a-col :xs='24' :sm='24' :xl="12" :xxl='10'>
                 <a-row :gutter="[8,0]">
                     <a-col :span="24">
-                        <PerformanceList/>
+                        <PerformanceList :searchForm="searchForm"/>
                     </a-col>
                     <a-col :span="24">
                     </a-col>
                     <a-col :span="24">
-                        <PurchaseIntentIntention/>
+                        <PurchaseIntentIntention :searchForm="searchForm"/>
                     </a-col>
                     <a-col :span="24">
-                        <TestDriveIntention/>
+                        <TestDriveIntention :searchForm="searchForm"/>
                     </a-col>
                 </a-row>
             </a-col>
@@ -80,6 +58,7 @@ import TestDriveIntention from './components/TestDriveIntention.vue';
 
 import TimeSearch from '@/components/common/TimeSearch.vue'
 import Core from "../../core";
+import dayjs from "dayjs";
 
 
 export default {
@@ -98,13 +77,12 @@ export default {
     data() {
         return {
             searchForm: {
-                name: '',
-                code: '',
-                category_id: undefined,
+                group_id: undefined,
                 begin_time: '',
                 end_time: '',
-                type: undefined,
             },
+            time: [],
+            groupOptions: [],
         };
     },
     watch: {},
@@ -113,6 +91,7 @@ export default {
     created() {
     },
     mounted() {
+        this.handleGroupTree()
     },
     methods: {
         handleSearch() {  // 搜索
@@ -123,6 +102,34 @@ export default {
             this.$refs.TimeSearch.handleReset()
             // this.getTableData();
         },
+        handleGroupTree(){
+            Core.Api.CRMGroupMember.structureByUser().then(res => {
+                this.groupOptions = res.list
+                console.log(res)
+
+            })
+        },
+        handleChange() {
+            let begin_time = dayjs(this.time[0])
+            let end_time = dayjs((this.time[1]))
+            // let data = {
+            //     org_type: this.org_type,
+            //     begin_time: begin_time.startOf('day').unix(),
+            //     end_time: end_time.endOf('day').unix(),
+            // }
+            // let diff = end_time.diff(begin_time, 'days')
+            //
+            // let dateList = [begin_time.format('YYYY-MM-DD')]
+            // for (let i = 1; i <= diff; i++) {
+            //     dateList.push(dayjs(begin_time).add(i, 'days').format('YYYY-MM-DD'))
+            // }
+            // console.log('handleChange data:', data, 'dateList', dateList)
+            let searchForm = this.$Util.deepCopy(this.searchForm)
+            searchForm.begin_time = begin_time.startOf('day').unix();
+            searchForm.end_time = end_time.endOf('day').unix();
+            this.searchForm = searchForm
+            // this.$emit('search', data, dateList)
+        },
     }
 };
 </script>
@@ -130,5 +137,51 @@ export default {
 <style lang="less" scoped>
 .list-container {
     margin-bottom: 16px;
+}
+.SearchRangePicker {
+    margin-bottom: 20px;
+    width: 100%;
+    display: flex;
+    .org-type {
+        margin-right: 20px;
+        .type-item {
+            width: 88px;
+            text-align: center;
+            border-color: #EAECF2;
+            box-shadow: 0 0 0 0;
+            &::after, &::before {
+                background-color: #EAECF2;
+            }
+            &:hover {
+                color: @TC_P;
+            }
+            &.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+                color: @TC_P;
+                background: @BG_N;
+                border-color: @BC_P;
+                box-shadow: 0;
+                &::after, &::before {
+                    background-color: @BC_P;
+                }
+            }
+        }
+    }
+    .time-type {
+        margin-left: 20px;
+        .fac();
+        .type-item {
+            padding: 0;
+            + .type-item { margin-left: 24px; }
+            color: @TC_link;
+            cursor: pointer;
+            &:hover, &.active {
+                color: @TC_P;
+            }
+        }
+    }
+    .CategoryTreeSelect{
+        width: 200px;
+        margin-right: 20px;
+    }
 }
 </style>

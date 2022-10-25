@@ -24,18 +24,10 @@ export default {
     components: {
     },
     props: {
-        info: {
+        searchForm: {
             type: Object,
             default: ()=> {}
         },
-        tableData: {
-            type: Object,
-            default: ()=> [{ name: '1', winNum: '2', myGap: '3' }]
-        },
-        type: {
-            type: Number,
-            default: 1
-        }
     },
     data() {
         return {
@@ -46,7 +38,16 @@ export default {
 
         };
     },
-    watch: {},
+    watch: {
+        searchForm: {
+            deep: true,
+            immediate: true,
+            handler(n) {
+               this.boStatistics()
+            }
+        },
+
+    },
     computed: {
     },
     created() {

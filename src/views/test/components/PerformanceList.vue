@@ -54,18 +54,10 @@ export default {
     components: {
     },
     props: {
-        info: {
+        searchForm: {
             type: Object,
             default: ()=> {}
         },
-        tableData: {
-            type: Object,
-            default: ()=> [{ name: '1', winNum: '2', myGap: '3' }]
-        },
-        type: {
-            type: Number,
-            default: 1
-        }
     },
     data() {
         return {
@@ -76,14 +68,21 @@ export default {
             currentTab: '1',
 
 
-            searchForm: {
-                search_type: 1,
-            },
+            search_type: 1,
             tableData: [],
 
         };
     },
-    watch: {},
+    watch: {
+        searchForm: {
+            deep: true,
+            immediate: true,
+            handler(n) {
+                this.performanceList()
+            }
+        },
+
+    },
     computed: {
         tableColumns() {
             let tableColumns = [
@@ -104,13 +103,14 @@ export default {
         // 点击tab
         clickTab(key) {
             this.currentTab = key;
-            this.searchForm.search_type = key
+            this.search_type = key
             this.performanceList()
             console.log('切换tab >>', key);
         },
         performanceList() {
             Core.Api.CRMDashboard.performanceList({
-                ...this.searchForm
+                ...this.searchForm,
+                search_type: this.search_type,
             }).then(res => {
                 this.tableData = res.list
             })
