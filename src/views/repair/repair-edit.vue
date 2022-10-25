@@ -408,7 +408,7 @@ export default {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
-             if (!form.mileage) {
+             if (!form.mileage&& form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
                 this.$message.warning(this.$t('def.enter'))
                 return 0
             }
