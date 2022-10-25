@@ -1476,6 +1476,31 @@ const routes = [
         ]
     },
 	{ // 客户管理
+		path: '/test',
+		component: Layout,
+		redirect: '/test/demo',
+		name: 'test',
+		meta: {
+			title: 'CRM数据',
+			title_en: 'test',
+			icon: 'i_s_customer',
+			auth: ["crm-label.list"],
+
+		},
+		children: [
+			{
+				path: 'demo',
+				name: 'CrmDashboard',
+				component: () => import('@/views/crm-dashboard/demo.vue'),
+				meta: {
+					title: '数据看板',
+					title_en: 'test test',
+					auth: ["crm-label.list"],
+				}
+			},
+		]
+	},
+	{ // 客户管理
 		path: '/crm-customer',
 		component: Layout,
 		redirect: '/crm-customer/customer-list',
@@ -1788,9 +1813,9 @@ const routes = [
 		]
 	},
     { // 客户管理
-		path: '/smart-label',
+		path: '/crm-smart-label',
 		component: Layout,
-		redirect: '/smart-label/label-list',
+		redirect: '/crm-smart-label/label-list',
 		name: 'SmartLabel',
 		meta: {
 			title: '智能标签',
@@ -1807,7 +1832,7 @@ const routes = [
 				meta: {
 					title: '标签列表',
 					title_en: 'Label List',
-                    auth: ["crm-label.list"],
+                    // auth: ["crm-label.list"],
 				}
 			},
 		]
@@ -1984,31 +2009,7 @@ const routes = [
 
         ]
     },
-    { // 客户管理
-		path: '/test',
-		component: Layout,
-		redirect: '/test/demo',
-		name: 'test',
-		meta: {
-			title: '测试',
-			title_en: 'test',
-			icon: 'i_s_customer',
-			auth: ["crm-label.list"],
 
-		},
-		children: [
-			{
-				path: 'demo',
-				name: 'LabelList',
-				component: () => import('@/views/test/demo.vue'),
-				meta: {
-					title: '测试',
-					title_en: 'test test',
-                    auth: ["crm-label.list"],
-				}
-			},
-		]
-	},
 ];
 
 export default routes;
