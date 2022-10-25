@@ -40,7 +40,7 @@ switch (window.location.hostname) {
         URL_POINT = 'http://localhost:8889'
         break;
     default:
-        URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
+        // URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
         break;
 }
 // URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
@@ -1406,6 +1406,8 @@ let Const = {
                 "0005": "DTU连通性测试",
                 "0004": "电池电量测试",
                 "0003": "读取数据校验项",
+                "0006": "电池关闭测试",
+                "0007": "电池开启测试",
             }
         },
 
