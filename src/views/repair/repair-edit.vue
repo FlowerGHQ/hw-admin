@@ -420,19 +420,19 @@ export default {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
-            if (!form.channel) {
+            if (!form.channel && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
-            if (!form.repair_method) {
+            if (!form.repair_method && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
-            if (!form.vehicle_no) {
+            if (!form.vehicle_no && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
-            if (this.isExist === false) {
+            if (this.isExist === false && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
                 return this.$message.warning(this.$t('def.enter'))
             }
             if (form.id) {
