@@ -731,6 +731,11 @@ const apiList = {
 		salesStatistics: ['PostJson', 'crm-dashboard/sales-statistics'],// 销售简报
 		trackStatistics: ['PostJson', 'crm-dashboard/track-statistics'],// 跟进统计
 		boStatistics: ['PostJson', 'crm-dashboard/bo-statistics'],// 商机统计
+		purchaseIntentStatistics: ['PostJson', 'crm-dashboard/purchase-intent-statistics'],// 商机统计
+		testDriveIntentStatistics: ['PostJson', 'crm-dashboard/test-drive-intent-statistics'],// 商机统计
+		performanceList: ['PostJson', 'crm-dashboard/performance-list'],// 业绩榜单
+
+
 		employeesSalesStatistics: ['PostJson', 'crm-dashboard/employees-sales-statistics'],// 个人 - 销售简报
 	}
 

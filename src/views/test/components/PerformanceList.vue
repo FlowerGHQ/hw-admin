@@ -1,7 +1,7 @@
 <template>
     <div class="list-container">
         <div class="title">
-            <span>标签</span>
+            <span>业绩榜单</span>
             <div>
                 <div
                     class="tab-item"
@@ -15,7 +15,7 @@
         </div>
         <!-- <div class="contain"> -->
             <!-- table -->
-            <div class="table-container" >
+            <div class="table-container">
                 <a-table
                     :columns="tableColumns"
                     :data-source="tableData"
@@ -41,6 +41,7 @@
                 </a-table>
             </div>
 
+        <!-- </div> -->
     </div>
 </template>
 
@@ -69,23 +70,16 @@ export default {
     data() {
         return {
             titleTabs: [
-                { label: '按钮名称', key: 'key1' },
-                { label: '按钮名称', key: 'key2' },
-                { label: '按钮名称', key: 'key3' }
+                { label: '本月', key: '1' },
+                { label: '本年', key: '2' },
             ],
-            currentTab: '',
-            myChart: null,
-            chartId: 'echart',
-            timer: null,
-            infoTabs: [
-                { label: '标签名称', key: 'key1' },
-                { label: '标签名称', key: 'key2' },
-                { label: '标签名称', key: 'key3' }
-            ],
+            currentTab: '1',
+
+
             searchForm: {
-
+                search_type: 1,
             },
-
+            tableData: [],
 
         };
     },
@@ -94,9 +88,9 @@ export default {
         tableColumns() {
             let tableColumns = [
                 { title: '排名', dataIndex: 'index', key: 'index' },
-                { title: '人员名字', dataIndex: 'name', key: 'name' },
-                { title: '赢单数量', dataIndex: 'winNum', key: 'winNum' },
-                { title: '我的差距', dataIndex: 'myGap', key: 'myGap' },
+                { title: '人员名字', dataIndex: 'user_name', key: 'name' },
+                { title: '赢单数量', dataIndex: 'count', key: 'winNum' },
+                { title: '合同总金额', dataIndex: 'money', key: 'myGap' },
             ]
             return tableColumns
         },
@@ -104,22 +98,23 @@ export default {
     created() {
     },
     mounted() {
+        this.performanceList()
     },
     methods: {
         // 点击tab
         clickTab(key) {
             this.currentTab = key;
+            this.searchForm.search_type = key
+            this.performanceList()
             console.log('切换tab >>', key);
         },
-
-        boStatistics() {
-            Core.Api.CRMDashboard.boStatistics({
+        performanceList() {
+            Core.Api.CRMDashboard.performanceList({
                 ...this.searchForm
             }).then(res => {
-                res.list
+                this.tableData = res.list
             })
-        },
-
+        }
     }
 };
 </script>

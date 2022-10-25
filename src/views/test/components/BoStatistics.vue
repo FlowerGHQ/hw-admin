@@ -1,17 +1,7 @@
 <template>
     <div class="list-container">
         <div class="title">
-            <span>标签</span>
-            <div>
-                <div
-                    class="tab-item"
-                    :class="{'tab-current': currentTab === item.key}"
-                    v-for="(item, index) in titleTabs"
-                    :key="index"
-                    @click="clickTab(item.key)">
-                    {{ item.label }}
-                </div>
-            </div>
+            <span>商机分析</span>
         </div>
 
             <!-- echarts -->
@@ -112,32 +102,6 @@ export default {
         //     })
         // },
 
-        salesStatistics() {
-            Core.Api.CRMDashboard.salesStatistics({
-                ...this.searchForm
-            }).then(res => {
-                this.form.new_customer_count = res.new_customer_count
-                this.form.new_contact_count = res.new_contact_count
-                this.form.new_order_count = res.new_order_count
-                this.form.new_bo_count = res.new_bo_count
-                this.form.win_bo_count = res.win_bo_count
-                this.form.new_test_driver_count = res.new_test_driver_count
-
-            })
-        },
-        trackStatistics() {
-            Core.Api.CRMDashboard.trackStatistics({
-                ...this.searchForm
-            }).then(res => {
-                this.form.track_count = res.track_count
-                this.form.call_count = res.call_count
-                this.form.visit_count = res.visit_count
-                this.form.pool_count = res.pool_count
-                this.form.customer_count = res.customer_count
-                this.form.bo_count = res.bo_count
-
-            })
-        },
         getStatusDetail() {    // 获取 表格 数据
             this.loading = true;
             Core.Api.CRMBoStatusGroup.detail({
@@ -173,7 +137,7 @@ export default {
                     res.list.forEach(it => {
                         console.log("status",item.status)
                         console.log("status",it.status)
-                        if (index+1 === it.status){
+                        if (index === it.status){
                             dv.push({action: item.zh, pv: it.count, money: it.money, percent:it.rate/100})
                         }
                     })
@@ -225,6 +189,7 @@ export default {
                     '<span style="background-color:{color};" class="g2-tooltip-marker"></span>' +
                     '{name}<br/>' +
                     '<span style="padding-left: 16px;line-height: 16px;">数量：{pv}</span><br/>' +
+                    '<span style="padding-left: 16px;line-height: 16px;">金额：{money}</span><br/>' +
                     '<span style="padding-left: 16px;line-height: 16px;">转换率：{percent}</span><br/>' +
                     '</li>',
             });
@@ -242,7 +207,7 @@ export default {
                     'action*pv',
                     (action, pv) => {
                         return {
-                            content: `${action} ${pv}`,
+                            content: `${action} ${pv}个`,
                         };
                     },
                     {
@@ -255,11 +220,12 @@ export default {
                         },
                     }
                 )
-                .tooltip('action*pv*percent', (action, pv, percent) => {
+                .tooltip('action*pv*percent*money', (action, pv, percent,money) => {
                     return {
                         name: action,
                         percent: +percent * 100 + '%',
                         pv,
+                        money
                     };
                 })
                 .animate({

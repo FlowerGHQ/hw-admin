@@ -36,16 +36,13 @@
         <a-row :gutter="[8,0]">
             <a-col :xs='24' :sm='24' :xl="12" :xxl='14'>
                 <a-row :gutter="[8,0]">
-<!--                    <a-col :span="24">-->
-<!--                        <Card />-->
-<!--                    </a-col>-->
+                    <a-col :span="24">
+                    </a-col>
                     <a-col :span="24">
                         <SalesStatistics/>
-<!--                        <Card :type="2" :info="{}"/>-->
                     </a-col>
                     <a-col :span="24">
                         <TrackStatistics/>
-<!--                        <Card :type="5" :info="{}"/>-->
                     </a-col>
                     <a-col :span="24">
                         <BoStatistics/>
@@ -55,11 +52,15 @@
             <a-col :xs='24' :sm='24' :xl="12" :xxl='10'>
                 <a-row :gutter="[8,0]">
                     <a-col :span="24">
-                        <ResultsList/>
-<!--                        <Card :type="3"/>-->
+                        <PerformanceList/>
                     </a-col>
                     <a-col :span="24">
-<!--                        <Card :type="4" :info="{}"/>-->
+                    </a-col>
+                    <a-col :span="24">
+                        <PurchaseIntentIntention/>
+                    </a-col>
+                    <a-col :span="24">
+                        <TestDriveIntention/>
                     </a-col>
                 </a-row>
             </a-col>
@@ -71,10 +72,14 @@
 import Card from './card.vue';
 import SalesStatistics from './components/SalesStatistics.vue';
 import TrackStatistics from './components/TrackStatistics.vue';
-import ResultsList from './components/ResultsList.vue';
+import PerformanceList from './components/PerformanceList.vue';
 import BoStatistics from './components/BoStatistics.vue';
+import PurchaseIntentIntention from './components/PurchaseIntentIntention.vue';
+import TestDriveIntention from './components/TestDriveIntention.vue';
+
 
 import TimeSearch from '@/components/common/TimeSearch.vue'
+import Core from "../../core";
 
 
 export default {
@@ -84,8 +89,10 @@ export default {
         TimeSearch,
         SalesStatistics,
         TrackStatistics,
-        ResultsList,
+        PerformanceList,
         BoStatistics,
+        PurchaseIntentIntention,
+        TestDriveIntention
     },
     props: {},
     data() {
@@ -115,29 +122,6 @@ export default {
             Object.assign(this.searchForm, this.$options.data().searchForm)
             this.$refs.TimeSearch.handleReset()
             // this.getTableData();
-        },
-        getTableData() {  // 获取 表格 数据
-            // this.loading = true;
-            // let flag_spread = 0
-            // if (this.searchForm.name !== '' || this.searchForm.code !== '') {
-            //     flag_spread = 1
-            // }
-            // Core.Api.Item.list({
-            //     ...this.searchForm,
-            //     flag_spread,
-            //     page: this.currPage,
-            //     page_size: this.pageSize
-            // }).then(res => {
-            //     console.log("getTableData res:", res)
-            //     this.expandIconColumnIndex = flag_spread == 1 ? -1 : 0
-            //     this.total = res.count;
-            //     this.tableData = res.list;
-            // }).catch(err => {
-            //     console.log('getTableData err:', err)
-            // }).finally(() => {
-            //     this.loading = false;
-            //     this.expandedRowKeys = []
-            // });
         },
     }
 };
