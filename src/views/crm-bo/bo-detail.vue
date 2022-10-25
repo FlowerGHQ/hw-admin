@@ -4,7 +4,7 @@
                 <div class="title-area">{{  $t('crm_b.detail')  }}
             </div>
             <div class="btns-area">
-                <a-button @click="nextStep" v-if="detail.status + 1 < groupStatusTableData.length && detail.status !== STATUS.LOSE && $auth('crm-bo.update-status')" ><i class="icon i_audit"/>{{$t('crm_b.next_step')}}</a-button>
+                <a-button @click="nextStep" v-if="detail.status + 2 < groupStatusTableData.length && detail.status !== STATUS.LOSE && $auth('crm-bo.update-status')" ><i class="icon i_audit"/>{{$t('crm_b.next_step')}}</a-button>
                 <a-button @click="loseTheOrder" v-if="detail.status !== STATUS.LOSE && $auth('crm-bo.update-status')"><i class="icon i_audit"/>{{$t('crm_b.lost_order')}}</a-button>
                 <a-button @click="winTheOrder"  v-if="detail.status !== STATUS.LOSE && detail.status !== STATUS.WIN && $auth('crm-bo.update-status')" ><i class="icon i_audit"/>{{$t('crm_b.win_order')}}</a-button>
                 <a-button @click="reactivation"  v-if="detail.status === STATUS.LOSE && $auth('crm-bo.reactivation')"><i class="icon i_audit"/>{{$t('crm_b.reactivation')}}</a-button>
