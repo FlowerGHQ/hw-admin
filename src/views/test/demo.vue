@@ -23,7 +23,7 @@
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="24" :xxl='12' class="search-item">
                         <div class="key">{{ '周期' }}:</div>
-                        <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
+                        <div class="value"><TimeSearch @search="handleSearch" ref='TimeSearch'/></div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
@@ -50,7 +50,7 @@
                         <Card :type="3"/>
                     </a-col>
                     <a-col :span="24">
-                        <!-- <Card :type="3"/> -->
+                        <Card :type="4" :info="{}"/>
                     </a-col>
                 </a-row>
             </a-col>

@@ -52,10 +52,23 @@
                     </a-col>
                 </a-row>
             </div>
-            <!-- echarts -->
 
+            <!-- echarts -->
             <div class="table-container" v-if="type === 3">
                 <div :id="chartId" class="chart" :ref='chartId'></div>
+            </div>
+
+            <!-- dataInfo -->
+            <div class="table-container" v-if="type === 4">
+                <div class="data-body">
+                    <i class="icon i_add" style="margin-right:16px;font-size:32px;color:blue"/>
+                    <div class="data-contain">
+                        <div class="info-item" v-for="(item, index) in infoTabs" :key="index">
+                            <span class="label">{{ item.label }}</span>
+                            <span class="value">{{ info[item.key] || '1个' }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         <!-- </div> -->
     </div>
@@ -101,6 +114,11 @@ export default {
             myChart: null,
             chartId: 'echart',
             timer: null,
+            infoTabs: [
+                { label: '标签名称', key: 'key1' },
+                { label: '标签名称', key: 'key2' },
+                { label: '标签名称', key: 'key3' }
+            ]
         };
     },
     watch: {},
@@ -215,5 +233,28 @@ export default {
 .chart {
     width: 100%;
     height: auto;
+}
+.data-body {
+    .flex(flex-start, center, row);
+    .icon {
+        text-align: center;
+    }
+}
+.data-contain {
+    flex-grow: 1;
+    width: auto;
+    .flex(space-between, center, row);
+    .info-item {
+        .flex(space-between, center);
+        .label {
+            font-size: 12px;
+            color: grey;
+        }
+        .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: black;
+        }
+    }
 }
 </style>
