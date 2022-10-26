@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     <div class="table-container">
-                        <a-button type="primary" ghost @click="handleEditShow()" class="panel-btn"><i class="icon i_add"/>{{ $t('a.new_retailer') }}</a-button>
+                        <a-button type="primary" ghost @click="handleEditShow()" class="panel-btn"><i class="icon i_add"/>{{ $t('u.save') }}</a-button>
                         <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                             :row-key="record => record.id" :pagination='false'
                             v-model:expandedRowKeys='expandedRowKeys'>
@@ -117,7 +117,7 @@
             </a-row>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="modalVisible"  :title="editForm? $t('crm_region.edit') : $t('crm_region.new')" width='860px'>
+            <a-modal v-model:visible="modalVisible"  :title="$t('u.save')" width='860px'>
                 <div class="modal-content">
                     <div class="search-container">
                         <a-row class="search-area">
@@ -156,7 +156,7 @@
                             </div>
                     </div>
                     <div class="table-container">
-                        <UserTable :columns="userTableColumns" :checkMode="true" :dataSource="userTableData" @submit="handleSelectItem"></UserTable>
+                        <UserTable :columns="userTableColumns" :checkMode="true" :dataSource="userTableData" :default-checked="editForm.user_list" @submit="handleSelectItem"/>
                     </div>
                     <div class="paging-container">
                         <a-pagination
@@ -266,8 +266,8 @@ export default {
                 {title: this.$t('e.name'), dataIndex: ['account', 'name'], key: 'item'},
                 {title: this.$t('e.account'), dataIndex: ['account', 'username'], key: 'item'},
                 {title: this.$t('n.phone'), dataIndex: ['account', 'phone']},
-                {title: this.$t('crm_group.name'),  dataIndex: 'crm_group_member_list', key:'crm_group_member_list'},
-                {title: this.$t('crm_group.administrator'), dataIndex: 'flag_admin_group', key: 'flag_admin_group', align: 'center'},
+                // {title: this.$t('crm_group.name'),  dataIndex: 'crm_group_member_list', key:'crm_group_member_list'},
+                // {title: this.$t('crm_group.administrator'), dataIndex: 'flag_admin_group', key: 'flag_admin_group', align: 'center'},
             ]
             return columns
         },
