@@ -1434,7 +1434,9 @@ const messages = {
                 'crm-order': 'CRM合同订单',
                 'crm-order-income': 'CRM回款单',
                 'crm-label': 'CRM标签',
-                'crm-dict': 'CRM数据字典'
+                'crm-dict': 'CRM数据字典',
+                'crm-test-drive.list': 'CRM试驾单',
+                'crm-group': '区域',
             },
             'distributor': {
                 'list': '查看分销商列表',
@@ -1710,11 +1712,21 @@ const messages = {
             },
             'crm-dict': {
                 'list': '查看字典列表',
-                'save': '编辑词条',
-                'delete': '删除词条',
-                'preset': '设置词条预置',
-                'status': '设置词条状态',
-
+                'save': '编辑字典词条',
+                'delete': '删除字典词条',
+                'set': '设置字典词条',
+            },
+            'crm-test-drive': {
+                'list': '查看试驾单列表',
+                'save': '编辑试驾单',
+                'detail': '试驾单详情',
+                'delete': '删除试驾单',
+            },
+            'crm-group': {
+                'list': '查看区域列表',
+                'save': '编辑区域',
+                'detail': '区域详情',
+                'delete': '删除区域',
             },
         },
         error_code: {

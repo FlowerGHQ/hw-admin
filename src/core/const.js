@@ -897,8 +897,10 @@ let Const = {
         { list: [], select: [], key: 'crm-bo-status', name: 'CRM商机阶段' },
         { list: [], select: [], key: 'crm-order', name: 'CRM合同订单' },
         { list: [], select: [], key: 'crm-order-income', name: 'CRM回款单' },
+        { list: [], select: [], key: 'crm-test-drive', name: 'CRM试驾单' },
         { list: [], select: [], key: 'crm-label', name: 'CRM标签' },
         { list: [], select: [], key: 'crm-dict', name: 'CRM数据字典' },
+        { list: [], select: [], key: 'crm-test-drive', name: 'CRM区域' },
 
     ],
 
