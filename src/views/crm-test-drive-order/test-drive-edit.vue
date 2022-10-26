@@ -35,6 +35,19 @@
                     </div>
 
                 </div>
+                <div class="form-item required" v-if="form.id == 0">
+                    <div class="key">{{ $t('crm_c.group') }}：</div>
+                    <div class="value">
+                        <a-tree-select class="CategoryTreeSelect"
+                                       v-model:value="form.group_id"
+                                       :placeholder="$t('def.select')"
+                                       :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                                       :tree-data="groupOptions"
+                                       tree-default-expand-all
+                        />
+                    </div>
+
+                </div>
                 <div class="form-item"  v-if="form.id == 0">
                     <div class="key">{{ $t('crm_c.gender') }}：</div>
                     <div class="value">
@@ -305,6 +318,7 @@ export default {
                 name: '',
                 phone: '',
                 level: '',
+                group_id: '',
                 gender: '',
                 birthday: '',
                 customer_type: Core.Const.CRM_CUSTOMER.TYPE.INDIVIDUAL,
@@ -344,6 +358,7 @@ export default {
 
             isExist: '', // 名称输入框提示
             sourceList: [],
+            groupOptions: [],
 
         };
     },
@@ -363,6 +378,7 @@ export default {
             this.form.status = Number(this.$route.query.status) || 0
         }
         this.getSourceList()
+        this.handleGroupTree()
     },
     methods: {
         routerChange(type, item) {
@@ -448,6 +464,9 @@ export default {
             if (!form.level) {
                 return this.$message.warning(this.$t('def.enter'))
             }
+            if (!form.group_id) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
             if (!form.test_drive_time) {
                 return this.$message.warning(this.$t('def.enter'))
             }
@@ -491,6 +510,13 @@ export default {
             this.form.customer_id = id
             this.getCustomerDetail()
 
+        },
+        handleGroupTree(){
+            Core.Api.CRMGroupMember.structureByUser().then(res => {
+                this.groupOptions = res.list
+                console.log(res)
+
+            })
         },
 
     }

@@ -1489,11 +1489,21 @@ const routes = [
 		},
 		children: [
 			{
-				path: 'demo',
+				path: 'dashboard',
 				name: 'CrmDashboard',
-				component: () => import('@/views/crm-dashboard/demo.vue'),
+				component: () => import('@/views/crm-dashboard/dashboard.vue'),
 				meta: {
 					title: '数据看板',
+					title_en: 'test test',
+					auth: ["crm-label.list"],
+				}
+			},
+			{
+				path: 'employees-home',
+				name: 'EmployeesHome',
+				component: () => import('@/views/crm-dashboard/employees-home.vue'),
+				meta: {
+					title: '首页',
 					title_en: 'test test',
 					auth: ["crm-label.list"],
 				}
@@ -1810,6 +1820,16 @@ const routes = [
                     auth: ["crm-dict.list"],
                 }
             },
+			{
+				path: 'region-employees-list',
+				name: 'RegionEmployeesList',
+				component: () => import('@/views/crm-setting/region-employees-list.vue'),
+				meta: {
+					title: '区域员工管理',
+					title_en: 'Region',
+					auth: ["crm-dict.list"],
+				}
+			},
 		]
 	},
     { // 客户管理
