@@ -27,7 +27,7 @@ router.beforeEach((to, from, next) => {
         /* let sys_name = Core.Data.getLoginType() === 1 ? '管理 | ' : '运营 | '
         document.title = sys_name + to.meta.title */
         let org_name = Core.Util.userTypeFilter(Core.Data.getLoginType())
-        document.title = org_name + ' | ' + to.meta.title
+        document.title = "EOS" + ' | ' + to.meta.title
     }
     if (to.path === '/login') {
         // 去登录页面直接放行

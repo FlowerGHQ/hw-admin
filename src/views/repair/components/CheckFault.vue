@@ -9,7 +9,7 @@
                     <a-checkbox v-for="(value,key) of faultMap" :key='key' :value='key' @change="handleFaultSelect">{{ value }}</a-checkbox>
                 </a-checkbox-group>
                 <div class="title-fault">
-                    <FaultEdit :id="id" ref="FaultEdit" @saveFault="getFaultData" btn-type="primary" />
+                    <FaultEdit :id="id" ref="FaultEdit" @saveFault="getFaultData" btn-type="primary" >{{ $t('r.new_fault') }}</FaultEdit>
                 </div>
             </div>
         </a-collapse-panel>
@@ -30,6 +30,9 @@
                         <template #bodyCell="{ column , record ,index, text}">
                             <template v-if="column.key === 'item'">
                                 {{ text || '-' }}
+                            </template>
+                            <template v-if="column.key === 'name'">
+                                {{ $i18n.locale === 'zh' ? record.name : record.name_en }}
                             </template>
                             <template v-if="column.dataIndex === 'price'">
                                 € <a-input-number v-model:value="record.price" style="width: 82px;"
@@ -108,7 +111,7 @@
     </a-collapse>
     <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
         <template #expandIcon ><i class="icon i_expan_l"/> </template>
-        <a-collapse-panel key="Remark" header="备注" class="gray-collapse-panel">
+        <a-collapse-panel key="Remark" :header="$t('r.remark')" class="gray-collapse-panel">
             <div class="panel-content">
                 <div class="form-item required textarea">
                     <div class="value">
@@ -176,7 +179,7 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: 'n.name', dataIndex: 'name', key: 'item'},
+                {title: 'n.name', dataIndex: 'name', key: 'name'},
                 {title: 'i.code', dataIndex: 'code', key: 'item'},
                 {title: 'i.amount', key: 'amount'},
                 {title: 'i.unit_price', dataIndex: 'price'},

@@ -75,15 +75,28 @@
                     </template>
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail'">
-                            <a-button type="link" @click="routerChange('detail', record)">
-                                <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" :fallback="$t('def.none')"/>
-                                {{ text || '-' }}
-                            </a-button>
+
                             <!-- <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" fallback='无'/>
                             {{ text || '-' }} -->
                             <!-- <a-button type="link" @click="routerChange('detail', record)">
                                 <div class="ell" style="max-width: 150px">{{ text || '-' }}</div>
                             </a-button> -->
+
+                                <a-button type="link" @click="routerChange('detail', record)">
+                                     <span v-if="record.type === ITEM_TYPE.PRODUCT">
+                                        <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" :fallback="$t('def.none')"/>
+                                         {{ record.item? record.item.name || '-' : '-' }}
+                                     </span>
+                                    <span v-if="record.type === ITEM_TYPE.COMPONENT">
+                                        {{ record.material? record.material.name || '-' : '-' }}
+                                    </span>
+                                </a-button>
+
+                        </template>
+                        <template v-if="column.key === 'code'">
+                            <span v-if="record.type === ITEM_TYPE.PRODUCT"> {{ record.item? record.item.code || '-' : '-' }}</span>
+                            <span v-if="record.type === ITEM_TYPE.COMPONENT">  {{ record.material? record.material.code || '-' : '-' }}</span>
+
                         </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
@@ -278,8 +291,8 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: 'n.name', dataIndex: ['item', 'name'], key: 'detail'},
-                {title: 'p.code', dataIndex: ['item', 'code'], key: 'item'},
+                {title: 'n.name', dataIndex: 'name', key: 'detail'},
+                {title: 'p.code', dataIndex: 'code', key: 'code'},
                 {title: 'v.number', dataIndex: 'uid', key: 'item'},
                 {title: 'i.spec', dataIndex: 'attr', key: 'attr'},
                 {title: 'v.type', dataIndex: 'org_type'},

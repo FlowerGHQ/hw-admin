@@ -55,6 +55,30 @@ const routes = [
 
         ]
     },
+    // { // 看板
+    //     path: '/test-report',
+    //     component: Layout,
+    //     name: 'TestReport',
+    //     redirect: '/test-report/list',
+    //     meta: {
+    //         title: '测试报告',
+    //         title_en: 'Test Report',
+    //         icon: 'i_s_dashboard',
+    //         not_sub_menu: true,
+    //     },
+    //     children: [
+    //         {
+    //             path: 'list',
+    //             name: 'TestReportList',
+    //             component: () => import('@/views/test-report/test-report-list.vue'),
+    //             meta: {
+    //                 title: '测试报告',
+    //                 title_en: 'Test Report List',
+    //                 roles: [LOGIN_TYPE.ADMIN],
+    //             }
+    //         },
+    //     ]
+    // },
 
     { // 维修单 结算下载
         path: '/repair/invoice-download',
@@ -278,7 +302,7 @@ const routes = [
             },
         ]
     },
-/*    { // 分销商管理 - 分销商端
+    /* { // 分销商管理 - 分销商端
         path: '/distributor/distributor-detail-sp',
         component: Layout,
         meta: {
@@ -616,7 +640,7 @@ const routes = [
             }
         ]
     },*/
-   /* { // 门店管理 - 门店端
+    /* { // 门店管理 - 门店端
         path: '/store/store-detail-sp',
         component: Layout,
         meta: {
@@ -792,18 +816,18 @@ const routes = [
                     auth: ['entity.list'],
                 }
             },
-            // {
-            //     path: 'part-list',
-            //     name: 'PartList',
-            //     component: () => import('@/views/entity/entity-list.vue'),
-            //     meta: {
-            //         title: '零部件列表',
-            //         title_en: 'Parts',
-            //         roles: [LOGIN_TYPE.ADMIN],
-            //         type: "part",
-            //         auth: ['entity.list'],
-            //     }
-            // },
+            {
+                path: 'part-list',
+                name: 'PartList',
+                component: () => import('@/views/entity/entity-list.vue'),
+                meta: {
+                    title: '零部件列表',
+                    title_en: 'Parts',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    type: "part",
+                    auth: ['entity.list'],
+                }
+            },
             {
                 path: 'entity-detail',
                 name: 'EntityDetail',
@@ -988,6 +1012,28 @@ const routes = [
             auth: ['production-order.list', 'bom.list'],
 		},
 		children: [
+			{
+				path: 'device-list',
+				name: 'DeviceList',
+				component: () => import('@/views/manufacture/device-list.vue'),
+				meta: {
+					title: '设备列表',
+					title_en: 'Vehicles',
+					roles: [LOGIN_TYPE.ADMIN],
+					type: "vehicle",
+					// auth: ['entity.list'],
+				}
+			},
+			{
+				path: 'testRepor-list',
+				name: 'TestReportList',
+				component: () => import('@/views/test-report/test-report-list.vue'),
+				meta: {
+					title: '测试报告',
+					title_en: 'Test Report List',
+					roles: [LOGIN_TYPE.ADMIN],
+				}
+			},
 			{
 				path: 'bom-list',
 				name: 'BomList',

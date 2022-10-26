@@ -781,15 +781,16 @@ p {
     .fac();
     margin-bottom: 16px;
     .key {
-        width: 150px;
+        width: 100px;
         box-sizing: border-box;
-        //white-space: nowrap;
+        white-space: pre-wrap;
         color: @TC_I;
         font-size: @fz_sm;
         word-wrap: break-word;
-        white-space: pre-wrap;
     }
     .value {
+        color: @TC_I;
+        font-size: @fz_sm;
         width: calc(~'100% - 86px');
         min-width: 200px;
         > .ant-input, > .ant-select, > .ant-picker,

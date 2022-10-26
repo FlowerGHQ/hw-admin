@@ -308,6 +308,7 @@ export default {
             let columns = [
                 {zh: '全  部', en: 'All', value: '0', color: 'primary',  key: '0'},
                 {zh: '已拆单', en: 'Split orders', value: '0', color: 'yellow',  key: '50'},
+                {zh: '订单待审核', en: 'Order pending review', value: '0', color: 'yellow',  key: '60'},
                 {zh: '待支付', en: 'Wait to pay', value: '0', color: 'yellow',  key: '100'},
                 {zh: '待审核', en: 'Wait to audit', value: '0', color: 'yellow',  key: '630'},
                 {zh: '待发货', en: 'Wait for delivery', value: '0', color: 'orange',  key: '200'},

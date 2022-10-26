@@ -30,7 +30,7 @@
 <!--                            <p class="sub-info" v-if="record.attr_list && record.attr_list.length">{{$Util.itemSpecFilter(record.item.attr_list)}}</p>-->
                             <a-tooltip placement="top" :title='$Util.itemSpecFilter(record.item.attr_list)'>
                                 <div class="ell" style="max-width: 120px" v-if="record.attr_list && record.attr_list.length">
-                                    {{$Util.itemSpecFilter(record.item.attr_list)}}
+                                    {{$Util.itemSpecFilter(record.item.attr_list, $i18n.locale)}}
                                 </div>
                             </a-tooltip>
                         </template>

@@ -12,7 +12,7 @@
                 <div class="desc-title">
                     <div class="title-area">
                         <img :src="$Util.imageFilter(detail.image, 3)" />
-                        <span class="title">{{ detail.name }}</span>
+                        <span class="title">{{  lang==='zh' ?detail.name : detail.name_en }}</span>
                     </div>
                 </div>
                 <a-row class="desc-detail">

@@ -10,12 +10,16 @@ let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' //
 let URL_POINT = 'https://eos-api.hw.innotick.com'
 
 switch (window.location.hostname) {
+    case 'eos.horwincloud.com':
+        URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
+        break;
+    case 'eos-dev.horwincloud.com':
+        URL_POINT = 'http://eos-dev-api.horwincloud.com' // 正式服
+        break;
     case 'eos.hw.innotick.com':
         URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服
         break;
-    case 'eos-dev.hw.innotick.com':
-        URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
-        break;
+
     case "10.0.0.205":
     case "10.0.0.132":
         // URL_POINT = 'http://10.0.0.194:8889'
@@ -46,7 +50,7 @@ switch (window.location.hostname) {
         URL_POINT = 'http://localhost:8889'
         break;
     default:
-        URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
+        // URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
         break;
 }
 // URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
@@ -389,6 +393,18 @@ let Const = {
             REFUSE: 2
         },
     },
+	INVOICE_ITEM:{
+		TARGET_TYPE: {
+			ITEM: 10,
+			MATERIAL: 30,
+		},
+		TARGET_TYPE_MAP: {
+			'10':  { key: 10, zh: '商品', en: 'Item' },
+			'30':  { key: 30, zh: '物料', en: 'Material' },
+			// '3':  { key: 3, zh: '维修转单', en: '1' },
+
+		},
+	},
     REPAIR_ITEM: { //维修商品
         TYPE: {
             ADD: 1,
@@ -409,11 +425,11 @@ let Const = {
 			INIT:0,
 			WAIT_AFTER_SALES_AUDIT: 100,
 			AFTER_SALES_AUDIT_FAIL: 110,
-			WAIT_QUALITY_AUDIT: 200,
-			QUALITY_AUDIT_FAIL: 210,
-			WAIT_FEEDBACK: 300,
-			WAIT_FEEDBACK_AUDIT: 400,
-			FEEDBACK_AUDIT_FAIL: 410,
+			WAIT_AFTER_SALES_DESC: 150,
+			WAIT_FEEDBACK: 200,
+			WAIT_QUALITY_AUDIT: 300,
+			QUALITY_AUDIT_FAIL: 310,
+			WAIT_AFTER_FEEDBACK: 400,
 			CLOSE: 500,
 			AUDIT_FAIL: -10,
 			CANCEL: -1,
@@ -422,11 +438,11 @@ let Const = {
 			'0': { key: 0, color: 'yellow', zh: '待提交', en: 'Pending submission'},
 			'100': { key: 100, color: 'blue', zh: '等待平台售后审核', en: 'Awaiting after-sales audit'},
 			'110': { key: 110, color: 'blue', zh: '待修改', en: 'Pending modification'},
-			'200': { key: 200, color: 'orange', zh: '等待平台质量审核', en: 'Awaiting quality audit'},
-			'210': { key: 210, color: 'orange', zh: '待修改',en: 'Pending modification'},
-			'300': { key: 300, color: 'purple', zh: '等待反馈', en: 'Awaiting feedback'},
-			'400': { key: 400, color: 'purple', zh: '等待审核反馈', en: 'Awaiting audit feedback'},
-			'410': { key: 410, color: 'purple', zh: '反馈待修改', en: 'Feedback to be modified'},
+			'150': { key: 150, color: 'blue', zh: '等待售后填写故障信息', en: 'Waiting for after-sale filling'},
+			'200': { key: 200, color: 'orange', zh: '等待质量反馈', en: 'Waiting for quality feedback'},
+			'300': { key: 300, color: 'purple', zh: '等待质量审核', en: 'Waiting for quality audit'},
+			'310': { key: 300, color: 'purple', zh: '等待修改反馈', en: 'Waiting for modification feedback'},
+			'400': { key: 400, color: 'purple', zh: '等待售后反馈', en: 'Waiting for after-sales feedback'},
 			'500': { key: 500, color: 'blue', zh: '已完成', en: 'Finished'},
 			'-10': { key: -10, color: 'blue', zh: '审核失败',en: 'Audit failed'},
 			'-1': { key: -1, color: 'gray', zh: '已取消', en: 'Canceled'},
@@ -567,6 +583,7 @@ let Const = {
         STATUS: {
             INIT: 0,
 	        SPLIT: 50,
+	        WAIT_AUDIT: 60,
             WAIT_PAY: 100,
             WAIT_DELIVER: 200,
 	        ORDER_TRANSFERRED: 250,
@@ -582,6 +599,7 @@ let Const = {
         STATUS_MAP: {
             '0':   { value: '0', key: 0,    color: 'red',    zh: '未知', en: 'Unknown'},
 	        '50': { value: '0', key: 50,  color: 'green', zh: '已拆单', en: 'Separate bill'},
+	        '60': { value: '0', key: 60,  color: 'green', zh: '等待审核', en: 'Waiting for audit'},
             '100': { value: '0', key: 100,  color: 'orange', zh: '待支付', en: 'Wait to pay'},
             '200': { value: '0', key: 200,  color: 'orange', zh: '待发货', en: 'Wait for delivery'},
             '250': { value: '0', key: 400,  color: 'blue',   zh: '已转单', en: 'Order transferred'},
@@ -955,7 +973,9 @@ let Const = {
             CLOSE: 40, //已完成
 	        DELIVERY: 50, //已发货
             RECEIVED: 60, //已收货
+	        AUDIT_BACK: -5,//退回
             AUDIT_REFUSE: -10,//审核失败
+
             CANCEL: -20, // 取消
         },
         STATUS_MAP: {
@@ -1131,6 +1151,20 @@ let Const = {
 			'3': {key: 3, zh: '预出入库', en: 'Pre-warehousing'},
 			'4': {key: 4, zh: '预分销出入库', en: 'Pre-distribution warehousing'},
 		}
+	},
+	DEVICE: {
+		STATUS_MAP: {
+			'100': {key: 100, zh: '初始', en: 'Init'},
+			'200': {key: 200, zh: '已转换', en: 'conversion'},
+		},
+		TYPE_MAP: {
+			'1': {key: 1, zh: '整车', en: 'Vehicle'},
+			'2': {key: 2, zh: '零部件', en: 'Parts'},
+		},
+		TYPE: {
+			VEHICLE: 1,
+			PARTS: 2,
+		},
 	},
     AFTERSALES: { // 售后
         STATUS: {
@@ -1389,6 +1423,7 @@ let Const = {
 		    ITEM_CATEGORY: 2,
 	    }
 	},
+
 	CRM_CUSTOMER: {
 		TYPE: {
 			INDIVIDUAL: 1,
@@ -1845,6 +1880,45 @@ let Const = {
 			'30': { key: 30, zh: '不了解', en: ''},
 		},
 	},
+
+    // 测试
+    TEST: {
+        SPACE_MAP: {
+            '26005': { value: 26005, text: 'BMS-26005'}
+        },
+
+        TYPE: {
+            BMS_PLUG_IN_MACHINE: 10001,
+        },
+        TYPE_MAP: {
+            '10001': { value: 10001, key: 't.test_case.bms_plug_in_machine', text: 'BMS外挂整机测试'}
+        },
+
+        TYPE_CASE_MAP: {
+            '10001': {
+                "0001": "扫电池条码",
+                "0002": "连接设备",
+                "0005": "DTU连通性测试",
+                "0004": "电池电量测试",
+                "0003": "读取数据校验项",
+                "0006": "电池关闭测试",
+                "0007": "电池开启测试",
+            }
+        },
+
+        STATUS: {
+            INIT: 0,
+            RUNNING: 100,
+            PASS: 200,
+            FAIL: -100,
+        },
+        STATUS_MAP: {
+            '0':    { value: 0,    text: '初始化', color: 'gray' },
+            '100':  { value: 100,  text: '测试中', color: 'blue' },
+            '200':  { value: 200,  text: '已通过', color: 'green' },
+            '-100': { value: -100, text: '未通过', color: 'red' },
+        }
+    },
 };
 
 export default Const;

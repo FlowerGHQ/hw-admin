@@ -9,6 +9,7 @@
                 <a-radio-group v-model:value="form.status">
                     <a-radio :value="sPass">{{ $t('n.pass') }}</a-radio>
                     <a-radio :value="sRefuse">{{ $t('n.fail') }}</a-radio>
+                    <a-radio :value="sBack" v-show="sBack !== undefined">{{ $t('n.back') }}</a-radio>
                 </a-radio-group>
             </div>
             <div class="form-item textarea required" v-if="form.status === sRefuse">
@@ -53,6 +54,7 @@ export default {
         currentAuditProcessId: {},
         sPass: {},
         sRefuse: {},
+        sBack: {},
         apiList: {},
     },
     data() {

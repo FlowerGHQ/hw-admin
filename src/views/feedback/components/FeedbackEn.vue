@@ -1,80 +1,35 @@
 <template>
-<div class="CheckFault">
-    <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right" v-if="detail.source_id <= 0 ">
-        <template #expandIcon><i class="icon i_expan_l"/></template>
-        <a-collapse-panel key="affirm" :header="$t('r.problem')" class="gray-collapse-panel">
-            <div class="panel-content affirm">
-                <div class="title"><i class="icon i_warning"/>{{ $t('n.all_total') }}&nbsp;{{ faultSelect.length }}&nbsp;{{ $t('r.faults') }}</div>
-                <a-checkbox-group class="fault_select" :value="faultSelect">
-                    <a-checkbox v-for="(value,key) of faultMap" :key='key' :value='key' @change="handleFaultSelect">{{ value }}</a-checkbox>
-                </a-checkbox-group>
-                <div class="title-fault">
-                    <FaultEdit :id="id" ref="FaultEdit" @saveFault="getFaultData" btn-type="primary" >{{ $t('r.new_fault') }}</FaultEdit>
-                </div>
-            </div>
-        </a-collapse-panel>
-        <a-collapse-panel key="change" :header="$t('r.replacement_items')" class="gray-collapse-panel">
-            <div class="panel-content change">
-                <div class="fault-item" v-for="fault of faultSelect" :key="fault">
-                    <div class="fault-title">
-                        <span class="fault-name">{{ $t('r.fault') }}：{{ faultMap[fault] }}</span>
-                        <ItemSelect @select="handleAddFailItem" :fault-name="fault"
-                            :disabled-checked='failData[fault].map(i => i.id)'
-                            btn-type='primary' :btn-text="$t('i.add')" btn-class="fault-btn" v-if="$auth('repair-order.save')"/>
-                    </div>
-                    <a-table :columns="tableColumns" :data-source="failData[fault]" :scroll="{ x: true }"
-                        :row-key="record => record.id" :pagination='false' size="small">
-                        <template #headerCell="{title}">
-                            {{ $t(title) }}
-                        </template>
-                        <template #bodyCell="{ column , record ,index, text}">
-                            <template v-if="column.dataIndex === 'name'">
-                                {{ $i18n.locale === 'zh' ? record.name : record.name_en }}
-                            </template>
-                            <template v-if="column.key === 'item'">
-                                {{ text || '-' }}
-                            </template>
-                            <template v-if="column.dataIndex === 'price'">
-                                € <a-input-number v-model:value="record.price" style="width: 82px;"
-                                    :min="0" :precision="2" :placeholder="$t('n.please_input')"/>
-                            </template>
-
-                            <template v-if="column.key === 'amount'">
-                                <a-input-number v-model:value="record.amount" style="width: 66px;"
-                                    :min="1" :precision="0" :placeholder="$t('n.please_input')" @change="handleItemAmountChange(fault, index)"/> {{ $t('in.item') }}
-                            </template>
-
-                            <template v-if="column.key === 'total_price'">
-                                € {{ $Util.countFilter(record.price * record.amount, 1) }}
-                            </template>
-
-
-                            <template v-if="column.dataIndex === 'operation'">
-                                <a-button type="link" class="danger" @click="handleFailItemDelete(index, fault)"><i class="icon i_delete"/>{{ $t('def.remove') }}</a-button>
-                            </template>
-                        </template>
-                    </a-table>
-                </div>
-                <SimpleImageEmpty :desc="$t('r.type')" v-if='!faultSelect.length'/>
-            </div>
-        </a-collapse-panel>
-    </a-collapse>
+<div class="Feedback">
     <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
         <template #expandIcon ><i class="icon i_expan_l"/> </template>
-        <a-collapse-panel key="Remark" :header="$t('n.elaborate')" class="gray-collapse-panel">
+        <a-collapse-panel key="feedback" :header="$t('fe.after_feedback')" class="gray-collapse-panel">
             <div class="panel-content">
-                <div class="form-item">
-                    <div class="key">{{ $t('fe.feedback_title') }}:</div>
+                <div class="form-item textarea">
+                    <div class="key">{{ $t('fe.title') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="title" :placeholder="$t('def.input')"/>
+                        <a-textarea v-model:value="detail.fault_en"
+                                    :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500' disabled/>
                     </div>
                 </div>
                 <div class="form-item textarea">
-                    <div class="key">{{ $t('fe.feedback_desc') }}:</div>
+                    <div class="key">{{ $t('fe.maintenance') }}:</div>
                     <div class="value">
-                        <a-textarea v-model:value="desc" :placeholder="$t('r.fault_description')"
-                                    :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500'/>
-                        <span class="content-length">{{ desc.length }}/500</span>
+                        <a-textarea v-model:value="detail.solution_en"
+                                    :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500' disabled/>
+                    </div>
+                </div>
+                <div class="form-item textarea">
+                    <div class="key">{{ $t('fe.solution') }}:</div>
+                    <div class="value">
+                        <a-textarea v-model:value="detail.solution_en"
+                                    :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500' disabled/>
+                    </div>
+                </div>
+                <div class="form-item textarea">
+                    <div class="key">{{ $t('fe.demand') }}:</div>
+                    <div class="value">
+                        <a-textarea v-model:value="detail.requirement_en"
+                                    :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500' disabled/>
                     </div>
                 </div>
             </div>
@@ -120,7 +75,7 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            activeKey: ['affirm', 'Remark'],
+            activeKey: ['feedback'],
             faultMap: {}, // 存放所有可能的故障
             faultSelect: [], // 存放 被选中的故障
             failData: {}, // 存放 零部件更换 商品信息
@@ -134,7 +89,7 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: 'n.name', dataIndex: 'name', key: 'name'},
+                {title: 'n.name', dataIndex: 'name', key: 'item'},
                 {title: 'i.code', dataIndex: 'code', key: 'item'},
                 {title: 'i.amount', key: 'amount'},
                 {title: 'i.unit_price', dataIndex: 'price'},
@@ -248,15 +203,10 @@ export default {
             this.handleItemAmountChange(name)
         },
         handleSubmit() {
-          if (this.detail.source_id <= 0){
-            if (!this.faultSelect.length) {
-              this.$message.warning(this.$t('def.enter'))
-              return
-            }
-            this.handleFaultSubmit()
-          }
             this.handleSaveTitle()
-
+            if (this.detail.source_id <= 0){
+                this.handleFaultSubmit()
+            }
 
 
         },
@@ -264,7 +214,9 @@ export default {
         handleFaultSubmit() {
             console.log('this.faultSelect: ', this.faultSelect);
             let itemList = []
-
+            if (!this.faultSelect.length) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
             for (const fault of this.faultSelect) {
                 if (this.failData[fault].length == 0) {
                     return this.$message.warning(this.$t('def.enter'))
@@ -311,7 +263,11 @@ export default {
 </script>
 
 <style lang="less">
-.CheckFault {
+.Feedback {
+    textarea.ant-input.ant-input-disabled {
+        background: #fff;
+        color: #000;
+    }
     .panel-content.change {
         .fault-item {
             margin-bottom: 30px;

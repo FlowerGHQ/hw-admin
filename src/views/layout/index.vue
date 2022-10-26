@@ -211,6 +211,8 @@ export default {
     mounted() {
         this.loginType = Core.Data.getLoginType()
         this.getUnreadCount();
+        this.$i18n.locale = Core.Data.getLang()
+        this.$store.state.lang = Core.Data.getLang()
     },
     methods: {
         routerChange(type) {

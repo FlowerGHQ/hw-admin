@@ -25,6 +25,9 @@
 <!--                        <template v-if="column.dataIndex === 'item_fault_id'">
                             {{ faultMap[text] || '-' }}
                         </template>-->
+                        <template v-if="column.dataIndex === 'name'">
+                            {{ $i18n.locale === 'zh' ? record.item.name : record.item.name_en }}
+                        </template>
                         <template v-if="column.key === 'service_type'">
                             {{ $Util.repairServiceFilter(detail.service_type,  $i18n.locale) }}
                         </template>
@@ -106,7 +109,7 @@ export default {
         tableColumns() {
             let tableColumns = [
                 {title: 'r.fault_cause', dataIndex: 'item_fault_name'},
-                {title: 'r.item_name', dataIndex: ['item','name'], key: 'item'},
+                {title: 'r.item_name', dataIndex: 'name', key: 'item'},
                 {title: 'i.code', dataIndex: ['item','code'], key: 'item'},
                 {title: 'i.amount', dataIndex: 'amount'},
                 {title: 'i.unit_price', dataIndex: 'price'},

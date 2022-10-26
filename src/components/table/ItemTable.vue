@@ -30,14 +30,15 @@
             <template v-if="column.key === 'category_list'">
                           <span v-for="(category, index) in text">
                               <span v-if="index !== 0">,</span>
-                              {{category.category_name}}
+
+                              {{ $i18n.locale === 'zh' ? category.category_name: category.category_name_en}}
                           </span>
             </template>
             <template v-if="column.key === 'count'">
                 {{text ? text + $t('m.pcs') : '-'}}
             </template>
             <template v-if="column.key === 'spec'">
-                {{ $Util.itemSpecFilter(text)}}
+                {{ $Util.itemSpecFilter(text,$i18n.locale)}}
             </template>
             <template v-if="column.key === 'supplier_list'"  >
                 <template v-for="item of record.supplier_list">

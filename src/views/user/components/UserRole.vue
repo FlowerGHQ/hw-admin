@@ -164,7 +164,7 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             form.user_id = this.detail.id
             if (!form.role_id) {
-                return this.$message.warning('请选择角色')
+                return this.$message.warning(this.$t('u.choose_role'))
             }
 
             Core.Api.Authority.allotRole(form).then(() => {
@@ -179,10 +179,10 @@ export default {
 
             let _this = this;
             this.$confirm({
-                title: '确定要删除该角色吗？',
-                okText: '确定',
+                title: _this.$t('u.sure_delete_role'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Authority.deleteUserRole({
                         id:item.id

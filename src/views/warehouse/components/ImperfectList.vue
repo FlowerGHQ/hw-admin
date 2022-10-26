@@ -16,6 +16,9 @@
                         <template v-if="column.dataIndex === 'service_type'">
                             {{ $Util.repairServiceFilter(text, $i18n.locale) }}
                         </template>
+                        <template v-if="column.key === 'name'">
+                            {{ $i18n.locale == 'zh' ? record.item.name : record.item.name_en}}
+                        </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
@@ -88,7 +91,7 @@ export default {
                 {title: this.$t('r.sn'), dataIndex: 'source_uid', key: 'detail'},
                 {title: this.$t('r.warranty'), dataIndex: 'service_type'},
                 {title: this.$t('r.unit'), dataIndex: 'source_org_name'},
-                {title: this.$t('r.item'), dataIndex: ['item','name'], key: 'item'},
+                {title: this.$t('r.item'), dataIndex: 'name', key: 'name'},
                 {title: this.$t('i.code'), dataIndex: ['item','code'], key: 'item'},
                 {title: this.$t('r.fault_cause'), dataIndex: 'item_fault_name', key: 'item'},
                 // {title: '故障件实例', dataIndex: 'entity_uid', key: 'item'},

@@ -10,7 +10,8 @@
             <div class="panel-content desc-container">
                 <div class="desc-title">
                     <div class="title-area">
-                        <span class="title">{{ detail.item ? detail.item.name : '-' }}</span>
+                        <span class="title" v-if="detail.type === Core.Const.ITEM.TYPE.PRODUCT">{{ detail.item ? detail.item.name : '-' }}</span>
+                        <span class="title" v-if="detail.type === Core.Const.ITEM.TYPE.COMPONENT">{{ detail.material ? detail.material.name : '-' }}</span>
                     </div>
                 </div>
                 <a-row class="desc-detail">
@@ -71,6 +72,7 @@ export default {
     props: {},
     data() {
         return {
+            Core,
             // 加载
             loading: false,
             id: '',
