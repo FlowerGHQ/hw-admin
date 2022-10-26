@@ -92,7 +92,7 @@
                                     {{ $Util.timeFilter(text) }}
                                 </template>
                                 <template v-if="column.key === 'operation'">
-                                    <a-button type='link' @click="handleDelete(record.id)" class="danger" v-if="$auth('user.delete','MANAGER')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                                    <a-button type='link' @click="handleDelete(record.group_id)" class="danger" v-if="$auth('user.delete','MANAGER')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                                 </template>
                             </template>
                         </a-table>
@@ -115,6 +115,45 @@
                 </a-col>
             </a-row>
         </div>
+<!--        <template class="modal-container">-->
+<!--            <a-modal v-model:visible="modalVisible" :title="editForm.id ? $t('crm_region.edit') : $t('crm_region.new')" @ok="handleModalSubmit">-->
+<!--                <div class="modal-content">-->
+<!--                    <div class="form-item required">-->
+<!--                        <div class="key">{{ $t('m.category_name') }}</div>-->
+<!--                        <div class="value">-->
+<!--                            <a-input v-model:value="editForm.name" :placeholder="$t('def.input')+$t('m.category_name')"/>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="form-item required">-->
+<!--                        <div class="key">{{ $t('e.administrator') }}</div>-->
+<!--                        <div class="value">-->
+<!--                            &lt;!&ndash;                        <a-input v-model:value="editForm.admin_user_id" :placeholder="$t('def.input')+$t('e.administrator')"/>&ndash;&gt;-->
+
+<!--                            <a-select-->
+<!--                                v-model:value="editForm.admin_user_id"-->
+<!--                                show-search-->
+<!--                                :placeholder="$t('def.select')+$t('e.administrator')"-->
+<!--                                :default-active-first-option="false"-->
+<!--                                :show-arrow="false"-->
+<!--                                :filter-option="false"-->
+<!--                                :not-found-content="null"-->
+<!--                                @search="getUserData"-->
+<!--                            >-->
+<!--                                <a-select-option v-for=" item in userData" :key="item.id" :value="item.id">-->
+<!--                                    {{ item.account ? item.account.name : '-' }}-->
+<!--                                </a-select-option>-->
+<!--                            </a-select>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="form-item">-->
+<!--                        <div class="key">{{ $t('crm_c.remark') }}</div>-->
+<!--                        <div class="value">-->
+<!--                            <a-input v-model:value="editForm.remark" :placeholder="$t('def.input')+$t('crm_c.remark')"/>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </a-modal>-->
+<!--        </template>-->
     </div>
 </template>
 
@@ -172,9 +211,9 @@ export default {
             ]
             if (this.searchForm.group_id){
                 columns.push( {title: this.$t('crm_group.administrator'), dataIndex: 'flag_admin_group', key: 'flag_admin_group', align: 'center'})
+                columns.push( {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100,})
             }
 
-            columns.push( {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100,})
 
             return columns
         },
@@ -282,7 +321,7 @@ export default {
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.User.delete({id}).then(() => {
+                    Core.Api.CRMGroupMember.delete({id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
