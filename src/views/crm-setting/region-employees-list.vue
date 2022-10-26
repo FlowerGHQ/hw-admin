@@ -445,6 +445,7 @@ export default {
                 this.loading = false;
                 Object.assign(this.editForm, this.$options.data().editForm)
                 this.modalVisible = false;
+                this.getTableData()
             });
         }
 
