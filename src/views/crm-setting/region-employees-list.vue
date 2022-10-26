@@ -60,6 +60,7 @@
                         </div>
                     </div>
                     <div class="table-container">
+                        <a-button type="primary" ghost @click="handleEditShow()" class="panel-btn"><i class="icon i_add"/>{{ $t('a.new_retailer') }}</a-button>
                         <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                             :row-key="record => record.id" :pagination='false'
                             v-model:expandedRowKeys='expandedRowKeys'>
@@ -115,62 +116,97 @@
                 </a-col>
             </a-row>
         </div>
-<!--        <template class="modal-container">-->
-<!--            <a-modal v-model:visible="modalVisible" :title="editForm.id ? $t('crm_region.edit') : $t('crm_region.new')" @ok="handleModalSubmit">-->
-<!--                <div class="modal-content">-->
-<!--                    <div class="form-item required">-->
-<!--                        <div class="key">{{ $t('m.category_name') }}</div>-->
-<!--                        <div class="value">-->
-<!--                            <a-input v-model:value="editForm.name" :placeholder="$t('def.input')+$t('m.category_name')"/>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="form-item required">-->
-<!--                        <div class="key">{{ $t('e.administrator') }}</div>-->
-<!--                        <div class="value">-->
-<!--                            &lt;!&ndash;                        <a-input v-model:value="editForm.admin_user_id" :placeholder="$t('def.input')+$t('e.administrator')"/>&ndash;&gt;-->
-
-<!--                            <a-select-->
-<!--                                v-model:value="editForm.admin_user_id"-->
-<!--                                show-search-->
-<!--                                :placeholder="$t('def.select')+$t('e.administrator')"-->
-<!--                                :default-active-first-option="false"-->
-<!--                                :show-arrow="false"-->
-<!--                                :filter-option="false"-->
-<!--                                :not-found-content="null"-->
-<!--                                @search="getUserData"-->
-<!--                            >-->
-<!--                                <a-select-option v-for=" item in userData" :key="item.id" :value="item.id">-->
-<!--                                    {{ item.account ? item.account.name : '-' }}-->
-<!--                                </a-select-option>-->
-<!--                            </a-select>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="form-item">-->
-<!--                        <div class="key">{{ $t('crm_c.remark') }}</div>-->
-<!--                        <div class="value">-->
-<!--                            <a-input v-model:value="editForm.remark" :placeholder="$t('def.input')+$t('crm_c.remark')"/>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </a-modal>-->
-<!--        </template>-->
+        <template class="modal-container">
+            <a-modal v-model:visible="modalVisible"  :title="editForm? $t('crm_region.edit') : $t('crm_region.new')" width='860px'>
+                <div class="modal-content">
+                    <div class="search-container">
+                        <a-row class="search-area">
+                            <a-col :xs='24' :sm='24' :md='12' class="search-item">
+                                <div class="key">{{ $t('n.name') }}:</div>
+                                <div class="value">
+                                    <div class="value">
+                                        <a-input :placeholder="$t('def.input')" v-model:value="userSearchForm.name" @keydown.enter='handleSearch'/>
+                                    </div>
+                                </div>
+                            </a-col>
+                            <a-col :xs='24' :sm='24' :md='12' class="search-item">
+                                <div class="key"><span>{{ $t('n.phone') }}:</span></div>
+                                <div class="value">
+                                    <a-input :placeholder="$t('def.input')" v-model:value="userSearchForm.phone" @keydown.enter='handleSearch'/>
+                                </div>
+                            </a-col>
+                        </a-row>
+                        <div class="btn-area">
+                            <a-button @click="userHandleSearch" type="primary">{{ $t('def.search') }}</a-button>
+                            <a-button @click="userHandleSearchReset">{{ $t('def.reset') }}</a-button>
+                        </div>
+                    </div>
+                    <div class="operate-container">
+                            <div class="form-item required">
+                                <div class="key">{{ $t('crm_c.group') }}：</div> <!--区域 -->
+                                <div class="value">
+                                    <a-tree-select class="CategoryTreeSelect"
+                                                   v-model:value="editForm.group_id"
+                                                   :placeholder="$t('def.select')"
+                                                   :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                                                   :tree-data="groupOptions"
+                                                   tree-default-expand-all
+                                    />
+                                </div>
+                            </div>
+                    </div>
+                    <div class="table-container">
+                        <UserTable :columns="userTableColumns" :checkMode="true" :dataSource="userTableData" @submit="handleSelectItem"></UserTable>
+                    </div>
+                    <div class="paging-container">
+                        <a-pagination
+                            v-model:current="userCurrPage"
+                            :page-size='userPageSize'
+                            :total="userTotal"
+                            show-quick-jumper
+                            show-size-changer
+                            show-less-items
+                            :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
+                            :hide-on-single-page='false'
+                            :pageSizeOptions="['10', '20', '30', '40']"
+                            @change="userPageChange"
+                            @showSizeChange="userPageSizeChange"
+                        />
+                    </div>
+                </div>
+                <template #footer>
+                    <a-button type="primary" @click="batchAddMember">确定</a-button>
+                    <a-button @click="modalVisible = false">取消</a-button>
+                </template>
+            </a-modal>
+        </template>
     </div>
 </template>
 
 <script>
 import Core from '../../core';
-import UserSelect from '@/components/crm/popup-btn/UserSelect.vue'
+import UserTable from '@/components/table/UserTable.vue'
 import TimeSearch from '@/components/common/TimeSearch.vue'
 export default {
     name: 'CrmRegion',
-    components: {UserSelect,TimeSearch},
+    components: {UserTable,TimeSearch},
     props: {},
     data() {
         return {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
+            // 分页
+            currPage: 1,
+            pageSize: 20,
+            total: 0,
+            // 分页
+            userCurrPage: 1,
+            userPageSize: 20,
+            userTotal: 0,
+
             tableData: [],
+            userTableData: [],
             expandedRowKeys: [],
             adminUserList: [],
             editNode: null,
@@ -185,6 +221,14 @@ export default {
                 org_type: Core.Data.getOrgType(),
                 begin_time: '',
                 end_time: '',
+            },
+            userSearchForm: {
+                name: '',
+                phone: '',
+            },
+            editForm: {
+                group_id: '',
+                user_list:[],
             },
             userData: [],
             expandedKeys: ['0-0-0', '0-0-1'],
@@ -215,6 +259,16 @@ export default {
             }
 
 
+            return columns
+        },
+        userTableColumns() {
+            let columns = [
+                {title: this.$t('e.name'), dataIndex: ['account', 'name'], key: 'item'},
+                {title: this.$t('e.account'), dataIndex: ['account', 'username'], key: 'item'},
+                {title: this.$t('n.phone'), dataIndex: ['account', 'phone']},
+                {title: this.$t('crm_group.name'),  dataIndex: 'crm_group_member_list', key:'crm_group_member_list'},
+                {title: this.$t('crm_group.administrator'), dataIndex: 'flag_admin_group', key: 'flag_admin_group', align: 'center'},
+            ]
             return columns
         },
     },
@@ -330,13 +384,69 @@ export default {
                 },
             });
         },
+
         // 编辑密码
-        handleEditShow(item) {
-            this.passShow = true;
-            if (item) {
-                this.form.id = item.account_id
-            }
+        handleEditShow() {
+            this.getUserTableData();
+            this.modalVisible = true;
         },
+        getUserTableData() {    // 获取 表格 数据
+            this.loading = true;
+            Core.Api.User.list({
+                ...this.searchForm,
+                page: this.userCurrPage,
+                page_size: this.userPageSize
+            }).then(res => {
+                console.log("getTableData res", res)
+                this.userTotal = res.count;
+                this.userTableData = res.list;
+            }).catch(err => {
+                console.log('getTableData err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        userPageChange(curr) {    // 页码改变
+            this.userCurrPage = curr
+            this.getUserTableData()
+        },
+        userPageSizeChange(current, size) {    // 页码尺寸改变
+            console.log('pageSizeChange size:', size)
+            this.userPageSize = size
+            this.getUserTableData()
+        },
+        userHandleSearch() {    // 搜索
+            this.userPageChange(1);
+        },
+        userHandleSearchReset() {    // 重置搜索
+            Object.assign(this.userSearchForm, this.$options.data().userSearchForm)
+            this.selectedKeys = []
+            this.userPageChange(1);
+        },
+
+        handleSelectItem(ids, items) {
+            console.log('handleSelectItem ids, items:', ids, items)
+            // this.selectItems = items
+            this.editForm.user_list = ids
+        },
+        batchAddMember(){
+            if (!this.editForm.user_list) {
+                return this.$message.warning(this.$t('def.input')+this.$t('dept.name'))
+            }
+            if (!this.editForm.group_id) {
+                return this.$message.warning(this.$t('def.input')+this.$t('dept.name'))
+            }
+            Core.Api.CRMGroup.batchAddMember({
+                target_id_list: this.editForm.user_list,
+                group_id: this.editForm.group_id,
+            }).then(res => {
+            }).catch(err => {
+            }).finally(() => {
+                this.loading = false;
+                Object.assign(this.editForm, this.$options.data().editForm)
+                this.modalVisible = false;
+            });
+        }
 
     }
 };

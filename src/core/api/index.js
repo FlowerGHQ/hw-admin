@@ -607,6 +607,8 @@ const apiList = {
         save: ['PostJson', 'crm-group/save'],
         detail: ['PostJson', 'crm-group/detail'],
         delete: ['PostJson', 'crm-group/delete'],
+	    batchAddMember: ['PostJson', 'crm-group/batch-add-member'],
+
     },
 	CRMCustomer:{//CRM 客户
 		save: ['PostJson', 'crm-customer/save'],//
