@@ -1435,7 +1435,7 @@ const messages = {
                 'crm-order-income': 'CRM回款单',
                 'crm-label': 'CRM标签',
                 'crm-dict': 'CRM数据字典',
-                'crm-test-drive.list': 'CRM试驾单',
+                'crm-test-drive': 'CRM试驾单',
                 'crm-group': '区域',
             },
             'distributor': {

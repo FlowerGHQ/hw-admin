@@ -900,7 +900,7 @@ let Const = {
         { list: [], select: [], key: 'crm-test-drive', name: 'CRM试驾单' },
         { list: [], select: [], key: 'crm-label', name: 'CRM标签' },
         { list: [], select: [], key: 'crm-dict', name: 'CRM数据字典' },
-        { list: [], select: [], key: 'crm-test-drive', name: 'CRM区域' },
+        { list: [], select: [], key: 'crm-group', name: 'CRM区域' },
 
     ],
 
