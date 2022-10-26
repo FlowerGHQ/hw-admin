@@ -24,6 +24,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
+                            <a-button type="link" @click="handleSalesAreaByIdsShow(record.id)"><i class="icon i_edit"/> {{ $t('ar.set_sales') }} </a-button>
                             <a-button type='link'  @click="routerChange('explored', record)"><i class="icon i_edit"/>{{ $t('i.edit_view') }}
                             </a-button>
                             <a-button type='link' @click="handleModalShow(record, record)"><i class="icon i_edit"/>{{ $t('i.edit_name') }}
@@ -68,6 +69,22 @@
                     </div>
                 </div>
             </a-modal>
+            <a-modal v-model:visible="salesAreaVisible" :title="$t('ar.set_sale')" class="field-select-modal" :width="630" :after-close='handleSalesAreaByIdsClose'>
+                <div class="modal-content">
+                    <div class="form-item required">
+                        <div class="key">{{ $t('d.sales_area') }}</div>
+                        <div class="value">
+                            <a-select v-model:value="salesAreaIds" mode="multiple" :placeholder="$t('def.select')">
+                                <a-select-option v-for="(val,key) in salesList" :key="key" :value="val.id">{{ val.name }}</a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                </div>
+                <template #footer>
+                    <a-button type="primary" @click="handleSalesAreaByIdsConfirm">{{ $t('def.sure') }}</a-button>
+                    <a-button @click="handleSalesAreaByIdsClose">{{ $t('def.cancel') }}</a-button>
+                </template>
+            </a-modal>
         </template>
     </div>
 </template>
@@ -100,6 +117,10 @@ export default {
                 index: '',
                 index_key: '',
             },
+
+            salesAreaVisible: false,
+            salesList: [],
+            salesAreaIds: [],
         };
     },
     watch: {},
@@ -278,6 +299,34 @@ export default {
                         _this.loading = false;
                     });
                 },
+            });
+        },
+        handleSalesAreaByIdsShow(id) {
+            this.categoryId = id
+            this.getSalesAreaList();
+            this.salesAreaVisible = true;
+        },
+        handleSalesAreaByIdsClose() {
+            this.salesAreaVisible = false;
+            this.salesList = [];
+            this.salesAreaIds = [];
+            this.categoryId = '';
+        },
+        handleSalesAreaByIdsConfirm() {
+            if (this.salesAreaIds.length <= 0){
+                return this.$message.error(this.$t('n.choose') + this.$t('d.sales_area'));
+            }
+            Core.Api.Item.saveSalesAreaByCategory({
+                category_id: this.categoryId,
+                sales_area_id_list: this.salesAreaIds,
+            }).then(res =>{
+                this.handleSalesAreaByIdsClose();
+            })
+
+        },
+        getSalesAreaList() {
+            Core.Api.SalesArea.list().then(res => {
+                this.salesList = res.list;
             });
         },
     }

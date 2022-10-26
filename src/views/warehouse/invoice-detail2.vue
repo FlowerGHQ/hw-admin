@@ -41,7 +41,7 @@
                 </template>
 
                 <AuditHandle v-if="(detail.status === STATUS.FINANCE_PASS || (detail.status === STATUS.WAIT_AUDIT && detail.type === TYPE.IN)) && $auth('invoice.warehouse-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"
-                                       :sPass="STATUS.AUDIT_PASS" :sRefuse="STATUS.AUDIT_REFUSE" @submit="getInvoiceDetail" ><i class="icon i_audit"/>{{$t('in.warehouse_audit')}}</AuditHandle>
+                                       :sPass="STATUS.AUDIT_PASS" :sRefuse="STATUS.AUDIT_REFUSE" :sBack="STATUS.AUDIT_BACK" @submit="getInvoiceDetail" ><i class="icon i_audit"/>{{$t('in.warehouse_audit')}}</AuditHandle>
                 <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS && detail.type === TYPE.IN && $auth('invoice.save')"><i class="icon i_confirm"/>{{type_ch}}{{$t('in.finish')}}</a-button>
                 <template v-if="detail.type === TYPE.OUT">
                     <AuditHandle v-if="detail.status === STATUS.WAIT_AUDIT && $auth('invoice.finance-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"
@@ -130,6 +130,7 @@
         <!-- 无实例 -->
         <a-collapse-panel key="ItemList" :header="$t('i.product_information')" class="gray-collapse-panel" collapsible="disabled">
             <template #extra>
+
                 <template  v-if="detail.status === STATUS.INIT && !addMode && $auth('invoice.save')">
                     <ItemSelect btnType='link' :btnText="$t('i.add')"  :purchaseId="detail.type == TYPE.IN ? detail.source_id : 0"
                                 :sourceType="detail.type == TYPE.IN ? detail.source_type : 0"  :warehouseId="0" :disabledChecked="disabledChecked"
@@ -152,6 +153,28 @@
                 <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('item')">{{ $t('in.add') }}</a-button>
             </template>
             <div class="panel-content">
+                <div class="search-container">
+                    <a-row class="search-area">
+                        <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                            <div class="key">{{ $t('i.type') }}:</div>
+                            <div class="value">
+                                <a-select v-model:value="searchForm.target_type" :placeholder="$t('def.select')">
+                                    <a-select-option v-for="(val, key) in TARGET_TYPE_MAP" :key="key" :value="key">{{ val[$i18n.locale]  }}</a-select-option>
+                                </a-select>
+                            </div>
+                        </a-col>
+                        <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                            <div class="key">{{ $t('i.code') }}:</div>
+                            <div class="value">
+                                <a-input :placeholder="$t('def.input')" v-model:value="searchForm.code" :disabled="this.searchForm.target_type === ''" @keydown.enter='getInvoiceList'/>
+                            </div>
+                        </a-col>
+                    </a-row>
+                    <div class="btn-area">
+                        <a-button @click="getInvoiceList" type="primary">{{ $t('def.search') }}</a-button>
+                        <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
+                    </div>
+                </div>
                 <div class="table-container">
                     <a-table :columns="itemTableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
                         :row-key="record => record.id" :pagination='false'>
@@ -459,7 +482,7 @@ import JsBarcode from 'jsbarcode'
 import data from "../../core/data";
 
 const STOCK_RECORD = Core.Const.STOCK_RECORD
-
+const TARGET_TYPE_MAP = Core.Const.INVOICE_ITEM.TARGET_TYPE_MAP
 const TYPE = STOCK_RECORD.TYPE
 const STATUS = STOCK_RECORD.STATUS
 const SOURCE_TYPE = STOCK_RECORD.SOURCE_TYPE
@@ -481,6 +504,7 @@ export default {
             COMMODITY_TYPE,
             SOURCE_TYPE,
             STATUS,
+            TARGET_TYPE_MAP,
             TYPE,
             // 加载
             loading: false,
@@ -506,6 +530,10 @@ export default {
                 addCount: '',
                 maxCount: '',
                 addItem: {},
+            },
+            searchForm: {
+                code: '',
+                target_type: "",
             },
             exportDisabled: false,
 
@@ -634,7 +662,14 @@ export default {
                 return true
             }
             return false
-        }
+        },
+        childColumns(){
+
+            let columns = [{title: this.$t('n.name'), dataIndex: ['item', 'name']},
+            {title: this.$t('uid'), dataIndex: ['entity', 'uid'], key: 'uid' },
+            {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100,}]
+            return columns
+        },
     },
     mounted() {
         this.id = Number(this.$route.query.id) || 0
@@ -808,6 +843,8 @@ export default {
         getInvoiceList() {
             this.loading = true;
             Core.Api.InvoiceItem.list({
+                code: this.searchForm.code,
+                target_type: this.searchForm.target_type,
                 invoice_id: this.id,
                 page: this.currPage,
                 page_size: this.pageSize
@@ -1289,15 +1326,19 @@ export default {
         //循环生成条形码
         generateJSBarcodeImg(uid){
 
-                // 根据动态id，动态赋值，动态生成条形码
-                JsBarcode('#jsbarcodeImg',uid, {
-                    format: 'CODE39',
-                    width: 2,
-                    height: 80,
-                    displayValue: false
-                })
+            // 根据动态id，动态赋值，动态生成条形码
+            JsBarcode('#jsbarcodeImg',uid, {
+                format: 'CODE39',
+                width: 2,
+                height: 80,
+                displayValue: false
+            })
 
-            }
+        },
+        handleSearchReset() {  // 重置搜索
+            Object.assign(this.searchForm, this.$options.data().searchForm)
+            this.pageChange(1);
+        },
 
     }
 };

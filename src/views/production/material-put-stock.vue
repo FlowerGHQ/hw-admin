@@ -247,6 +247,10 @@ export default {
                     this.form.target_type = Core.Const.WAREHOUSE_TRANSFER.COMMODITY_TYPE.MATERIALS
                     this.form.stock_target_type = Core.Const.STOCK.TARGET_TYPE.MATERIAL
                 }
+                console.log("check")
+                Core.Api.WarehouseLocationStock.check({target_id: this.form.target_id, target_type: this.form.stock_target_type, warehouse_id: this.warehouse_id}).then(res => {
+                    console.log("res",res)
+                })
                 // this.form.id = res.detail.id;
                 this.form.flag_entity = res.detail.flag_entity;
                 this.handleWarehouseChange()
