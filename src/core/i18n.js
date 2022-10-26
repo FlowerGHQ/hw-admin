@@ -1105,6 +1105,9 @@ const messages = {
             user_count: '员工数量',
             customer_count: '客户数量',
         },
+	    crm_region_e: {
+		    list: '区域员工列表',
+	    },
 	    crm_c: {
 		    extended_information: '扩展信息',
 		    detail: '客户详情',
@@ -1209,8 +1212,10 @@ const messages = {
 		    interested_models: '意向车型',
 	    },
 	    crm_group: {
+		    name: '区域',
 		    edit_type: '修改权限',
 		    type: '权限',
+		    administrator: '区域管理员',
 	    },
 	    crm_g: {
 		    business_opportunities_phase: '商机阶段',

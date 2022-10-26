@@ -159,7 +159,6 @@ export default {
             tableData: [],
             tableColumns: [
                 {title: 'n.name', dataIndex: ['account', 'name'], key: 'user'},
-                {title: 'n.name', dataIndex: ['account', 'name'], key: 'user'},
                 {title: 'u.account', dataIndex: ['account', 'username'], key: 'item'},
                 {title: 'n.phone', dataIndex: ['account', 'phone'], key: 'item'},
                 {title: 'n.email', dataIndex: ['account', 'email'], key: 'item'},

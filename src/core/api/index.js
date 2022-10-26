@@ -47,6 +47,7 @@ const apiList = {
         detail: ['PostJson', 'user/detail'],
         delete: ['PostJson', 'user/delete'],
         setAdmin: ['PostJson', 'user/set-admin'],
+	    listGroup: ['PostJson', 'user/list-group'],
     },
     Account: {
         list: ['PostJson', 'account/list'], // 账户列表
