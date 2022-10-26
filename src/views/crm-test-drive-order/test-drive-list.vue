@@ -234,6 +234,7 @@ export default {
                 {title: 'crm_d.channel', dataIndex: 'channel', key:'channel', sorter: true},
                 {title: 'crm_d.status', dataIndex: 'status', key:'status', sorter: true},
                 {title: 'r.creator_name', dataIndex: 'create_user_id', key:'creator_name',sorter: true},
+                {title: 'crm_c.group', dataIndex: 'group_name', key:'group_name'},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
             return columns

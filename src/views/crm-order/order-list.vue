@@ -235,6 +235,7 @@ export default {
                 {title: 'crm_o.paid_money_progress', dataIndex: 'paid_money_progress', key:'item'},
                 {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
                 {title: 'crm_o.create_user', dataIndex: "create_user_id", key: 'create_user_name', sorter: true},
+                {title: 'crm_c.group', dataIndex: 'group_name', key:'group_name'},
                 {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]

@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('crm_region.list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleModalShow({})" v-if="$auth('material-category.save')"><i class="icon i_add"/>{{ $t('crm_region.new_top') }}</a-button>
+                    <a-button type="primary" @click="handleModalShow({})" v-if="$auth('crm-group.save')"><i class="icon i_add"/>{{ $t('crm_region.new_top') }}</a-button>
                 </div>
             </div>
             <div class="table-container">
@@ -24,9 +24,9 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="handleModalShow(record, record)" v-if="$auth('material-category.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                            <a-button type='link' @click="handleModalShow({parent_id: record.id}, null, record)" v-if="$auth('material-category.save')"><i class="icon i_add"/>{{ $t('crm_region.sub') }}</a-button>
-                            <a-button type='link' @click="handleDelete(record)" class="danger" v-if="$auth('material-category.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                            <a-button type='link' @click="handleModalShow(record, record)" v-if="$auth('crm-group.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type='link' @click="handleModalShow({parent_id: record.id}, null, record)" v-if="$auth('crm-group.save')"><i class="icon i_add"/>{{ $t('crm_region.sub') }}</a-button>
+                            <a-button type='link' @click="handleDelete(record)" class="danger" v-if="$auth('crm-group.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>

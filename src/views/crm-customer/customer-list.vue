@@ -241,6 +241,7 @@ export default {
                 {title: 'crm_c.level', dataIndex: 'level', key:'level', sorter: true},
                 {title: 'crm_c.type', dataIndex: 'type', key:'type', sorter: true},
                 {title: 'r.creator_name', dataIndex: 'create_user_id', key:'creator_name',sorter: true},
+                {title: 'crm_c.group', dataIndex: 'group_name', key:'group_name'},
                 {title: 'crm_c.order_success_count', dataIndex: 'order_count', key:'order_count'},
                 {title: 'ad.specific_address', dataIndex: 'address', sorter: true},
                 {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},

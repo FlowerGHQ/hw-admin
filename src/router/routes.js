@@ -1863,7 +1863,7 @@ const routes = [
                 meta: {
                     title: '区域管理',
                     title_en: 'Region',
-                    auth: ["crm-dict.list"],
+                    auth: ["crm-group.list"],
                 }
             },
 			{
@@ -1873,7 +1873,7 @@ const routes = [
 				meta: {
 					title: '区域员工管理',
 					title_en: 'Region',
-					auth: ["crm-dict.list"],
+					auth: ["crm-group.list"],
 				}
 			},
 		]

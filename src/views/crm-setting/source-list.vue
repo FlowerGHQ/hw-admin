@@ -51,8 +51,8 @@
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="handleModalShow(record)" v-if="record.editable !== 2 && $auth('crm-dict.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
                             <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="record.editable !== 2 && $auth('crm-dict.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
-                            <a-button type="link" @click="handlePreset(record.id, record.editable)" v-if="$auth('crm-dict.preset')"><i :class="record.editable === 2 ? 'icon i_close_c' : 'icon i_confirm'"/>{{ record.editable === 2 ? $t('crm_set.cancel_pre') : $t('crm_set.set_pre') }}</a-button>
-                            <a-button type="link" @click="handleStatus(record.id, record.status)" v-if="$auth('crm-dict.status')"><i :class="record.status === 1 ? 'icon i_close_c' : 'icon i_confirm'"/>{{ record.status === 1 ? $t('crm_set.set_unable') : $t('crm_set.set_able') }}</a-button>
+                            <a-button type="link" @click="handlePreset(record.id, record.editable)" v-if="$auth('crm-dict.set')"><i :class="record.editable === 2 ? 'icon i_close_c' : 'icon i_confirm'"/>{{ record.editable === 2 ? $t('crm_set.cancel_pre') : $t('crm_set.set_pre') }}</a-button>
+                            <a-button type="link" @click="handleStatus(record.id, record.status)" v-if="$auth('crm-dict.set')"><i :class="record.status === 1 ? 'icon i_close_c' : 'icon i_confirm'"/>{{ record.status === 1 ? $t('crm_set.set_unable') : $t('crm_set.set_able') }}</a-button>
                         </template>
                     </template>
                 </a-table>
