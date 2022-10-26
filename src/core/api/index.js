@@ -749,7 +749,7 @@ const apiList = {
 
 
 		employeesSalesStatistics: ['PostJson', 'crm-dashboard/employees-sales-statistics'],// 个人 - 销售简报
-	}
+	},
 
     TestReport: { // 测试报告
         list: ['PostJson', 'report/list'],
