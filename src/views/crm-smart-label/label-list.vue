@@ -13,7 +13,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('sl.classification') }}：</div> <!-- 标签分类 -->
                         <div class="value">
-                            <a-select v-model:value="searchForm.target_type" :placeholder="$t('def.select')" @change="handleSearch">
+                            <a-select v-model:value="searchForm.category" :placeholder="$t('def.select')" @change="handleSearch">
                                 <a-select-option v-for="item of LABEl_CATEGORY_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
                             </a-select>
                         </div>
@@ -21,9 +21,8 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('sl.name') }}：</div> <!-- 标签名称 -->
                         <div class="value">
-                            <a-select v-model:value="searchForm.name" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of LABEl_CATEGORY_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
-                            </a-select>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+
                         </div>
                     </a-col>
 <!--                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">-->
@@ -56,9 +55,9 @@
                         <template v-if="column.key === 'category'">
                             {{ $Util.CRMLabelCategoryMapFilter(text, $i18n.locale) }}
                         </template>
-                        <template v-if="column.key === 'time'">
-                            {{ $Util.timeFilter(text) }}
-                        </template>
+<!--                        <template v-if="column.key === 'time'">-->
+<!--                            {{ $Util.timeFilter(text) }}-->
+<!--                        </template>-->
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="routerChange(record.target_type, record)" v-if="$auth('customer.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
                             <!-- <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('customer.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button> -->
@@ -89,34 +88,34 @@
 
             </div>
         </div>
-        <template class="modal-container">
-            <a-modal v-model:visible="modalVisible" :title="editForm.id ? $t('sl.edit') : $t('sl.save')" @ok="handleModalSubmit">
-                <div class="modal-content">
-                    <div class="form-item">
-                        <div class="key">{{ $t('sl.name') }}</div>
-                        <div class="value">
-                            <a-input v-model:value="editForm.name" :placeholder="$t('def.input')"/>
-                        </div>
-                    </div>
-                    <div class="form-item textarea">
-                        <div class="key">{{ $t('sl.remark') }}</div>
-                        <div class="value">
-                            <a-textarea v-model:value="editForm.remark" placeholder="请输入维修备注" :auto-size="{ minRows: 2, maxRows: 2 }"/>
-                        </div>
-                    </div>
-                    <div class="form-item" >
-                        <div class="key">{{ $t('sl.synchronize') }}：</div>
-                        <div class="value">
-                            <a-radio-group v-model:value="editForm.gender">
-                                <a-radio v-for="item in LABEl_CATEGORY_MAP" :value="item.value">
-                                    {{lang === 'zh' ? item.zh: item.en}}
-                                </a-radio>
-                            </a-radio-group>
-                        </div>
-                    </div>
-                </div>
-            </a-modal>
-        </template>
+<!--        <template class="modal-container">-->
+<!--            <a-modal v-model:visible="modalVisible" :title="editForm.id ? $t('sl.edit') : $t('sl.save')" @ok="handleModalSubmit">-->
+<!--                <div class="modal-content">-->
+<!--                    <div class="form-item">-->
+<!--                        <div class="key">{{ $t('sl.name') }}</div>-->
+<!--                        <div class="value">-->
+<!--                            <a-input v-model:value="editForm.name" :placeholder="$t('def.input')"/>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="form-item textarea">-->
+<!--                        <div class="key">{{ $t('sl.remark') }}</div>-->
+<!--                        <div class="value">-->
+<!--                            <a-textarea v-model:value="editForm.remark" placeholder="请输入维修备注" :auto-size="{ minRows: 2, maxRows: 2 }"/>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="form-item" >-->
+<!--                        <div class="key">{{ $t('sl.synchronize') }}：</div>-->
+<!--                        <div class="value">-->
+<!--                            <a-radio-group v-model:value="editForm.gender">-->
+<!--                                <a-radio v-for="item in LABEl_CATEGORY_MAP" :value="item.value">-->
+<!--                                    {{lang === 'zh' ? item.zh: item.en}}-->
+<!--                                </a-radio>-->
+<!--                            </a-radio-group>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </a-modal>-->
+<!--        </template>-->
     </div>
 </template>
 
@@ -140,6 +139,7 @@
                     begin_time: '',
                     end_time: '',
                     target_type: '',
+                    category: '',
                 },
                 // 加载
                 loading: false,
@@ -169,11 +169,11 @@
             },
             tableColumns() {
                 let columns = [
-                    {title: 'n.name', dataIndex: 'customer_name', key:'item'},
-                    {title: 'sl.principal', dataIndex: 'own_user_name', key:'item'},
+                    {title: 'crm_o.customer_name', dataIndex: 'customer_name', key:'item'},
+                    // {title: 'sl.principal', dataIndex: 'own_user_name', key:'item'},
                     {title: 'sl.classification', dataIndex:  "target_type", key:'category'},
                     {title: 'sl.name', dataIndex: 'labels', key: 'labels'},
-                    {title: 'd.create_time', dataIndex: 'create_time', key: 'time'},
+                    // {title: 'd.create_time', dataIndex: 'create_time', key: 'time'},
                     {title: 'def.operate', key: 'operation', fixed: 'right'},
                 ]
                 return columns
@@ -264,8 +264,6 @@
                 this.loading = true;
                 Core.Api.CRMLabelBind.labelList({
                     ...this.searchForm,
-                    order_by_fields: this.orderByFields,
-                    search_type: 30,
                     page: this.currPage,
                     page_size: this.pageSize
                 }).then(res => {

@@ -54,14 +54,13 @@
                                 </a>
                                 <template #overlay>
                                     <a-menu >
-                                        <a-menu-item @click="handleSynchronous(record.id,1)" :key="1" v-if="searchForm.category != 1">客户</a-menu-item>
-                                        <a-menu-item @click="handleSynchronous(record.id,2)" :key="2" v-if="searchForm.category != 2">商机</a-menu-item>
-                                        <a-menu-item @click="handleSynchronous(record.id,3)" :key="3" v-if="searchForm.category != 3">合同</a-menu-item>
-                                        <a-menu-item @click="handleSynchronous(record.id,4)" :key="4" v-if="searchForm.category != 4">回款单</a-menu-item>
+                                        <a-menu-item @click="handleSynchronous(record,1)" :key="1" v-if="searchForm.category != 1">客户</a-menu-item>
+                                        <a-menu-item @click="handleSynchronous(record,2)" :key="2" v-if="searchForm.category != 2">商机</a-menu-item>
+                                        <a-menu-item @click="handleSynchronous(record,3)" :key="3" v-if="searchForm.category != 3">合同</a-menu-item>
+                                        <a-menu-item @click="handleSynchronous(record,4)" :key="4" v-if="searchForm.category != 4">回款单</a-menu-item>
                                     </a-menu>
                                 </template>
                             </a-dropdown>
-                            <a-button type="link" @click="handleModalShow(record)" v-if="record.type !== 1 && $auth('crm-label.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
                             <a-button type="link" @click="handleModalShow(record)" v-if="record.type !== 1 && $auth('crm-label.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
                             <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="record.type !== 1 && $auth('crm-label.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
 <!--                            <a-button type="link" @click="handlePreset(record.id, record.type)" v-if="$auth('crm-dict.set')"><i :class="record.category === 1 ? 'icon i_close_c' : 'icon i_confirm'"/>{{ record.type === 1 ? $t('crm_set.cancel_pre') : $t('crm_set.set_pre') }}</a-button>-->
@@ -86,7 +85,7 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="modalShow" :title="editForm.id ? $t('sl.edit') : $t('sl.save')" @ok="handleModalSubmit">
+            <a-modal v-model:visible="modalShow" :title="editForm.id ? $t('sl.edit') : $t('sl.save')" @ok="handleModalSubmit(editForm.category)">
                 <div class="modal-content">
                     <div class="form-item">
                         <div class="key">{{ $t('sl.name') }}</div>
@@ -104,9 +103,9 @@
                         <div class="key">{{ $t('sl.synchronize') }}：</div>
                         <div class="value">
                             <a-radio-group v-model:value="editForm.category">
-                                <a-radio v-for="item in LABEl_CATEGORY_MAP" :value="item.value">
+                                <a-checkbox v-for="item in LABEl_CATEGORY_MAP" :value="item.value">
                                     {{item[$i18n.locale]}}
-                                </a-radio>
+                                </a-checkbox>
                             </a-radio-group>
                         </div>
                     </div>
@@ -147,8 +146,9 @@ export default {
                 id: '',
                 name: '',
                 name_en: '',
-                type: '',
                 category: '1',
+                category_list: '',
+                remark: '',
             },
         };
     },
@@ -247,7 +247,7 @@ export default {
             this.editForm = Core.Util.deepCopy(this.$options.data().editForm)
             this.modalShow = false
         },
-        handleModalSubmit() {
+        handleModalSubmit(category) {
             let form = Core.Util.deepCopy(this.editForm)
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'))
@@ -256,7 +256,7 @@ export default {
             //     return this.$message.warning(this.$t('def.enter'))
             // }
             this.loading = true
-            form.category = this.searchForm.category,
+            form.category = category
             Core.Api.CRMLabel.save(form).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.modalShow = false
@@ -307,8 +307,12 @@ export default {
                 },
             });
         },
-        handleSynchronous(id,key) {
-            console.log("id err", id,key);
+        handleSynchronous(record, key) {
+            this.editForm.name = record.name
+            this.editForm.name_en = ""
+            this.editForm.category = key
+            this.editForm.remark = ""
+            this.handleModalSubmit(key)
         },
 
 
