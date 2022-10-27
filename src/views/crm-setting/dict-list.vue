@@ -11,7 +11,7 @@
               <a-tabs v-model:activeKey="searchForm.type" @change='handleSearch'>
                 <a-tab-pane :key="item.type" v-for="item of typeList">
                   <template #tab>
-                    <div class="tabs-title">{{item[$i18n.locale]}}<span :class="item.color">{{item.value}}</span></div>
+                    <div class="tabs-title">{{item[$i18n.locale]}}</div>
                   </template>
                 </a-tab-pane>
               </a-tabs>

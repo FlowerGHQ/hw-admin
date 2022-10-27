@@ -11,7 +11,7 @@
               <a-tabs v-model:activeKey="searchForm.category" @change='handleSearch'>
                 <a-tab-pane :key="item.category" v-for="item of typeList">
                   <template #tab>
-                    <div class="tabs-title">{{item[$i18n.locale]}}<span :class="item.color">{{item.value}}</span></div>
+                    <div class="tabs-title">{{item[$i18n.locale]}}</div>
                   </template>
                 </a-tab-pane>
               </a-tabs>
@@ -47,6 +47,21 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
+                            <a-dropdown type="link">
+                                <a class="ant-dropdown-link operation-a" @click.prevent >
+                                    同步
+                                    <DownOutlined />
+                                </a>
+                                <template #overlay>
+                                    <a-menu >
+                                        <a-menu-item @click="handleSynchronous(record.id,1)" :key="1" v-if="searchForm.category != 1">客户</a-menu-item>
+                                        <a-menu-item @click="handleSynchronous(record.id,2)" :key="2" v-if="searchForm.category != 2">商机</a-menu-item>
+                                        <a-menu-item @click="handleSynchronous(record.id,3)" :key="3" v-if="searchForm.category != 3">合同</a-menu-item>
+                                        <a-menu-item @click="handleSynchronous(record.id,4)" :key="4" v-if="searchForm.category != 4">回款单</a-menu-item>
+                                    </a-menu>
+                                </template>
+                            </a-dropdown>
+                            <a-button type="link" @click="handleModalShow(record)" v-if="record.type !== 1 && $auth('crm-label.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
                             <a-button type="link" @click="handleModalShow(record)" v-if="record.type !== 1 && $auth('crm-label.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
                             <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="record.type !== 1 && $auth('crm-label.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
 <!--                            <a-button type="link" @click="handlePreset(record.id, record.type)" v-if="$auth('crm-dict.set')"><i :class="record.category === 1 ? 'icon i_close_c' : 'icon i_confirm'"/>{{ record.type === 1 ? $t('crm_set.cancel_pre') : $t('crm_set.set_pre') }}</a-button>-->
@@ -103,11 +118,12 @@
 
 <script>
 import Core from '../../core';
+import { DownOutlined } from '@ant-design/icons-vue';
 
 import CountryCascader from '@/components/common/CountryCascader.vue'
 export default {
     name: 'LabelManagement',
-    components: {CountryCascader},
+    components: {CountryCascader,DownOutlined},
     props: {},
     data() {
         return {
@@ -291,6 +307,9 @@ export default {
                 },
             });
         },
+        handleSynchronous(id,key) {
+            console.log("id err", id,key);
+        },
 
 
     }
@@ -298,5 +317,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #SalesAreaList {}
+ #LabelManagement {
+     .operation-a{
+        margin-right: 10px;
+         color: #006EF9;
+     }
+ }
 </style>
