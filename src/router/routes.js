@@ -1604,7 +1604,7 @@ const routes = [
 			{
 				path: 'customer-private-list',
 				name: 'CustomerPrivateList',
-				component: () => import('@/views/crm-customer/customer-list.vue'),
+				component: () => import('@/views/crm-customer/customer-list-copy.vue'),
 				meta: {
 					title: '私人客户',
 					title_en: 'Private clients',
