@@ -1823,7 +1823,42 @@ const routes = [
 			// },
 		]
 	},
-	{ // 客户管理
+    { // 智能标签
+        path: '/crm-smart-label',
+        component: Layout,
+        redirect: '/crm-smart-label/label-list',
+        name: 'SmartLabel',
+        meta: {
+            title: '智能标签',
+            title_en: 'Smart Label',
+            icon: 'i_s_customer',
+            auth: ["crm-label.list"],
+
+        },
+        children: [
+            {
+                path: 'label-list',
+                name: 'LabelList',
+                component: () => import('@/views/crm-smart-label/label-list.vue'),
+                meta: {
+                    title: '标签列表',
+                    title_en: 'Label List',
+                    // auth: ["crm-label.list"],
+                }
+            },
+            {
+                path: 'label-management',
+                name: 'LabelManagement',
+                component: () => import('@/views/crm-smart-label/label-management.vue'),
+                meta: {
+                    title: '标签管理',
+                    title_en: 'Label Management',
+                    // auth: ["crm-label.list"],
+                }
+            },
+        ]
+    },
+	{ // CRM设置
 		path: '/crm-setting',
 		component: Layout,
 		redirect: '/crm-setting/setting-list',
@@ -1847,9 +1882,9 @@ const routes = [
 				}
 			},
 			{
-				path: 'source-list',
-				name: 'SourceList',
-				component: () => import('@/views/crm-setting/source-list.vue'),
+				path: 'dict-list',
+				name: 'DictList',
+				component: () => import('@/views/crm-setting/dict-list.vue'),
 				meta: {
 					title: '字典选项',
 					title_en: 'Dictionary',
@@ -1874,31 +1909,6 @@ const routes = [
 					title: '区域员工管理',
 					title_en: 'Region',
 					auth: ["crm-group.list"],
-				}
-			},
-		]
-	},
-    { // 客户管理
-		path: '/crm-smart-label',
-		component: Layout,
-		redirect: '/crm-smart-label/label-list',
-		name: 'SmartLabel',
-		meta: {
-			title: '智能标签',
-			title_en: 'Smart Label',
-			icon: 'i_s_customer',
-			auth: ["crm-label.list"],
-
-		},
-		children: [
-			{
-				path: 'label-list',
-				name: 'LabelList',
-				component: () => import('@/views/smart-label/label-list.vue'),
-				meta: {
-					title: '标签列表',
-					title_en: 'Label List',
-                    // auth: ["crm-label.list"],
 				}
 			},
 		]

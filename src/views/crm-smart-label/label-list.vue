@@ -14,7 +14,7 @@
                         <div class="key">{{ $t('sl.classification') }}：</div> <!-- 标签分类 -->
                         <div class="value">
                             <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of LABEl_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                                <a-select-option v-for="item of LABEl_CATEGORY_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -22,7 +22,7 @@
                         <div class="key">{{ $t('sl.name') }}：</div> <!-- 标签名称 -->
                         <div class="value">
                             <a-select v-model:value="searchForm.name" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of LABEl_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                                <a-select-option v-for="item of LABEl_CATEGORY_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -30,7 +30,7 @@
                         <div class="key">{{ $t('r.creator_name') }}：</div> <!-- 创建人 -->
                         <div class="value">
                             <a-select v-model:value="searchForm.user_name" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of LABEl_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                                <a-select-option v-for="item of LABEl_CATEGORY_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -125,7 +125,7 @@
                         <div class="key">{{ $t('sl.synchronize') }}：</div>
                         <div class="value">
                             <a-radio-group v-model:value="editForm.gender">
-                                <a-radio v-for="item in LABEl_TYPE_MAP" :value="item.value">
+                                <a-radio v-for="item in LABEl_CATEGORY_MAP" :value="item.value">
                                     {{lang === 'zh' ? item.zh: item.en}}
                                 </a-radio>
                             </a-radio-group>
@@ -148,7 +148,7 @@
         data() {
             return {
                 loginType: Core.Data.getLoginType(),
-                LABEl_TYPE_MAP: Core.Const.LABEl.TYPE_MAP,
+                LABEl_CATEGORY_MAP: Core.Const.LABEl.CATEGORY_MAP,
                 orderByFields: {},
                 // 搜索
                 searchForm: {

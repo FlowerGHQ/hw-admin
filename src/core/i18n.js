@@ -1382,7 +1382,6 @@ const messages = {
 		    customer_count: '跟进私人客户次数',
 		    bo_count: '跟进商机次数',
 	    },
-
 	    sl: {  // 智能标签
             list: '标签列表',
             save: '新建标签',
@@ -1394,6 +1393,10 @@ const messages = {
             remark: '备注',
             synchronize: '同步新建',
 	        show:'标签展示',
+            management: '标签管理',
+            count: '标签使用数量',
+            label: '标签',
+
         },
         authority: {
             title: {

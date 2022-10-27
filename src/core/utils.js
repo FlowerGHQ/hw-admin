@@ -986,13 +986,22 @@ const Util = {
     },
     /* =============== CRM退款记录 ================ */
 
+    /* =============== CRM标签 ================ */
+    CRMLabelCategoryMapFilter(val,  to='zh') {
+        const MAP = Const.LABEl.CATEGORY_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== CRM标签 ================ */
+
     /* =============== CRM设置 ================ */
     CRMDictTypeMapFilter(val,  to='zh') {
         const MAP = Const.CRM_DICT.TYPE_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
-    /* =============== CRM退款记录 ================ */
+    /* =============== CRM设置 ================ */
+
 	/* =============== 试驾单 ================ */
 	CRMTestDriveChannelMapFilter(val,  to='zh') {
 		const MAP = Const.CRM_TEST_DRIVE.CHANNEL_MAP

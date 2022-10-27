@@ -1,15 +1,15 @@
 <template>
-    <div id="SalesAreaList">
+    <div id="LabelManagement">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">{{ $t('crm_set.list')}}</div>
+                <div class="title-area">{{ $t('sl.management')}}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleModalShow({})" v-if="$auth('crm-dict.save')"><i class="icon i_add"/>{{ $t('crm_set.save') + $Util.CRMDictTypeMapFilter(searchForm.type, $i18n.locale) + $t('crm_set.term') }}</a-button>
+                    <a-button type="primary" @click="handleModalShow({})" v-if="$auth('crm-dict.save')"><i class="icon i_add"/>{{ $t('crm_set.save') + $Util.CRMLabelCategoryMapFilter(searchForm.category, $i18n.locale) + $t('sl.label') }}</a-button>
                 </div>
             </div>
             <div class="tabs-container colorful">
-              <a-tabs v-model:activeKey="searchForm.type" @change='handleSearch'>
-                <a-tab-pane :key="item.type" v-for="item of typeList">
+              <a-tabs v-model:activeKey="searchForm.category" @change='handleSearch'>
+                <a-tab-pane :key="item.category" v-for="item of typeList">
                   <template #tab>
                     <div class="tabs-title">{{item[$i18n.locale]}}<span :class="item.color">{{item.value}}</span></div>
                   </template>
@@ -38,21 +38,18 @@
                         <template v-if="column.key === 'country'">
                             {{ text || '-' }}
                         </template>
-                        <template v-if="column.dataIndex === 'editable'">
-                          <div class="status status-bg status-tag" :class="text == 1 ? 'yellow' : 'blue'">
-                            {{ text == 1 ? $t('crm_set.unpreset') : $t('crm_set.preset') }}
+                        <template v-if="column.dataIndex === 'type'">
+                          <div class="status status-bg status-tag" :class="text == 1 ? 'blue' : 'yellow'">
+                            {{ text == 1 ? $t('crm_set.preset') : $t('crm_set.unpreset') }}
                           </div>
                         </template>
-                        <template v-if="column.dataIndex === 'status'">
-                          <div class="status status-bg status-tag" :class="text == 1 ? 'green' : 'grey'">
-                            {{ text == 1 ? $t('crm_set.able') : $t('crm_set.unable') }}
-                          </div>
+                        <template v-if="column.key === 'time'">
+                            {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleModalShow(record)" v-if="record.editable !== 2 && $auth('crm-dict.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="record.editable !== 2 && $auth('crm-dict.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
-                            <a-button type="link" @click="handlePreset(record.id, record.editable)" v-if="$auth('crm-dict.set')"><i :class="record.editable === 2 ? 'icon i_close_c' : 'icon i_confirm'"/>{{ record.editable === 2 ? $t('crm_set.cancel_pre') : $t('crm_set.set_pre') }}</a-button>
-                            <a-button type="link" @click="handleStatus(record.id, record.status)" v-if="$auth('crm-dict.set')"><i :class="record.status === 1 ? 'icon i_close_c' : 'icon i_confirm'"/>{{ record.status === 1 ? $t('crm_set.set_unable') : $t('crm_set.set_able') }}</a-button>
+                            <a-button type="link" @click="handleModalShow(record)" v-if="record.type !== 1 && $auth('crm-label.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="record.type !== 1 && $auth('crm-label.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+<!--                            <a-button type="link" @click="handlePreset(record.id, record.type)" v-if="$auth('crm-dict.set')"><i :class="record.category === 1 ? 'icon i_close_c' : 'icon i_confirm'"/>{{ record.type === 1 ? $t('crm_set.cancel_pre') : $t('crm_set.set_pre') }}</a-button>-->
                         </template>
                     </template>
                 </a-table>
@@ -74,32 +71,31 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="modalShow" :title="(editForm.id ? $t('crm_set.edit') : $t('crm_set.save')) + $t('crm_set.term')" :after-close="handleModalClose">
+            <a-modal v-model:visible="modalShow" :title="editForm.id ? $t('sl.edit') : $t('sl.save')" @ok="handleModalSubmit">
                 <div class="modal-content">
                     <div class="form-item">
-                        <div class="key">{{ $t('n.name') }}</div>
+                        <div class="key">{{ $t('sl.name') }}</div>
                         <div class="value">
                             <a-input v-model:value="editForm.name" :placeholder="$t('def.input')"/>
                         </div>
                     </div>
-                    <div class="form-item">
-                        <div class="key">{{ $t('n.name_en') }}</div>
+                    <div class="form-item textarea">
+                        <div class="key">{{ $t('sl.remark') }}</div>
                         <div class="value">
-                            <a-input v-model:value="editForm.name_en" :placeholder="$t('def.input')"/>
+                            <a-textarea v-model:value="editForm.remark" placeholder="请输入备注" :auto-size="{ minRows: 2, maxRows: 2 }"/>
                         </div>
                     </div>
-                    <div class="form-item">
-                        <div class="key">{{ $t('n.index') }}</div>
+                    <div class="form-item" >
+                        <div class="key">{{ $t('sl.synchronize') }}：</div>
                         <div class="value">
-                            <a-input v-model:value="editForm.weight" :placeholder="$t('def.input')"/>
+                            <a-radio-group v-model:value="editForm.category">
+                                <a-radio v-for="item in LABEl_CATEGORY_MAP" :value="item.value">
+                                    {{item[$i18n.locale]}}
+                                </a-radio>
+                            </a-radio-group>
                         </div>
                     </div>
-
                 </div>
-                <template #footer>
-                    <a-button @click="handleModalClose()">{{ $t('def.cancel') }}</a-button>
-                    <a-button @click="handleModalSubmit()" type="primary">{{ $t('def.sure') }}</a-button>
-                </template>
             </a-modal>
         </template>
     </div>
@@ -110,7 +106,7 @@ import Core from '../../core';
 
 import CountryCascader from '@/components/common/CountryCascader.vue'
 export default {
-    name: 'SalesAreaList',
+    name: 'LabelManagement',
     components: {CountryCascader},
     props: {},
     data() {
@@ -121,11 +117,12 @@ export default {
             currPage: 1,
             pageSize: 20,
             total: 0,
+            LABEl_CATEGORY_MAP: Core.Const.LABEl.CATEGORY_MAP,
             // 搜索
             searchForm: {
                 name: '',
                 name_en: '',
-                type: '1',
+                category: '1',
             },
             // 表格
             tableData: [],
@@ -134,10 +131,8 @@ export default {
                 id: '',
                 name: '',
                 name_en: '',
-                weight: '',
-                type: '1',
-                status: '',
-                editable: '',
+                type: '',
+                category: '1',
             },
         };
     },
@@ -145,20 +140,23 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: this.$t('crm_set.index'), dataIndex: 'weight'},
-                {title: this.$t('crm_set.name'), dataIndex: 'name'},
-                {title: this.$t('crm_set.name_en'), dataIndex: 'name_en'},
-                {title: this.$t('n.type'), dataIndex: 'editable'},
-                {title: this.$t('n.state'), dataIndex: 'status'},
+                {title: this.$t('sl.name'), dataIndex: 'name'},
+                {title: this.$t('sl.count'), dataIndex: 'count'},
+                {title: this.$t('def.remark'), dataIndex: 'remark'},
+                {title: this.$t('n.type'), dataIndex: 'type'},
+                {title: this.$t('crm_c.create_user'), dataIndex: 'create_user_name'},
+                {title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             return columns
         },
         typeList() {
-          let columns = [
-            {zh: '客户来源', en: 'Customer source',  type: '1'},
-            {zh: '试驾车型', en: 'Test drive model',  type: '2'},
-          ]
+            let columns = [
+                {zh: '客户', en: 'customer',  category: '1'},
+                {zh: '商机', en: 'bo',  category: '2'},
+                {zh: '合同订单', en: 'order',  category: '3'},
+                {zh: '回款单', en: 'income',  category: '4'},
+            ]
           return columns
         }
     },
@@ -191,8 +189,8 @@ export default {
         getTableData() {    // 获取 表格 数据
             this.loading = true;
             // return
-            Core.Api.CRMDict.list({
-                type: this.searchForm.type,
+            Core.Api.CRMLabel.list({
+                category: this.searchForm.category,
                 name: this.searchForm.name,
                 ...this.searchForm,
                 page: this.currPage,
@@ -216,7 +214,7 @@ export default {
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.CRMDict.delete({id}).then(() => {
+                    Core.Api.CRMLabel.delete({id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
@@ -238,13 +236,12 @@ export default {
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!form.name_en) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
+            // if (!form.name_en) {
+            //     return this.$message.warning(this.$t('def.enter'))
+            // }
             this.loading = true
-            let apiName = form.id ? 'update' : 'save';
-            form.type = this.searchForm.type,
-            Core.Api.CRMDict.save(form).then(res => {
+            form.category = this.searchForm.category,
+            Core.Api.CRMLabel.save(form).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.modalShow = false
             }).catch(err => {
@@ -265,7 +262,7 @@ export default {
             cancelText: this.$t('def.cancel'),
             onOk() {
               editable = editable === 2 ? 1 : 2
-              Core.Api.CRMDict.change({id, editable}).then(() => {
+              Core.Api.CRMLabel.change({id, editable}).then(() => {
                 _this.$message.success(_this.$t('pop_up.operate'));
                 _this.getTableData();
               }).catch(err => {
@@ -285,7 +282,7 @@ export default {
                 cancelText: this.$t('def.cancel'),
                 onOk() {
                   status = status === 1 ? 2 : 1
-                  Core.Api.CRMDict.change({id, status}).then(() => {
+                  Core.Api.CRMLabel.change({id, status}).then(() => {
                     _this.$message.success(_this.$t('pop_up.operate'));
                     _this.getTableData();
                   }).catch(err => {

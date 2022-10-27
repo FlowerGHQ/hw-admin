@@ -1775,15 +1775,17 @@ let Const = {
 	},
 
     LABEl: {
-        TYPE: {
+        CATEGORY: {
             CLIENT: 1,
             BUSINESS: 2,
             ORDER: 3,
+            ORDER_INCOME: 4,
         },
-        TYPE_MAP: {
+        CATEGORY_MAP: {
             '1': { key: 1, zh: '客户',en: 'Client', value: 1 },
 			'2': { key: 2, zh: '商机',en: 'Business', value: 2 },
             '3': { key: 3, zh: '合同订单',en: 'Contract order', value: 3 },
+            '4': { key: 4, zh: '回款单',en: 'Receipt', value: 4 },
         }
     },
 
