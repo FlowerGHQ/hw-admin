@@ -7,7 +7,7 @@
 
             </div>
             <div class="header-left"  :class="{'collapsed': collapsed}">
-                <a-radio-group v-model:value="tabPosition">
+                <a-radio-group v-model:value="tabPosition" @change="handleRouterSwitch">
                     <a-radio-button class="header-button" :value="ROUTER_TYPE.SALES"><img src="@images/router_type_1.png" class="router-type" alt="浩万"/>{{ $t('n.sales') }}</a-radio-button>
                     <a-radio-button class="header-button" :value="ROUTER_TYPE.AFTER"><img src="@images/router_type_2.png" class="router-type" alt="浩万"/>{{ $t('n.after') }}</a-radio-button>
                     <a-radio-button class="header-button" :value="ROUTER_TYPE.PRODUCTION"><img src="@images/router_type_3.png" class="router-type" alt="浩万"/>{{ $t('n.production') }}</a-radio-button>
@@ -236,6 +236,7 @@ export default {
         this.getUnreadCount();
         this.$i18n.locale = Core.Data.getLang()
         this.$store.state.lang = Core.Data.getLang()
+        this.tabPosition = Core.Data.getTabPosition()
     },
     methods: {
         routerChange(type) {
@@ -334,7 +335,8 @@ export default {
             console.log('this.$i18n.locale',this.$i18n.locale)
         },
         handleRouterSwitch() {
-
+            console.log("tabPosition",this.tabPosition)
+            Core.Data.setTabPosition(this.tabPosition)
         },
     }
 };

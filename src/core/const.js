@@ -73,7 +73,8 @@ let Const = {
 	    KEY_CURRENCY: 'org.currency',
 
         KEY_FIELD_DISPLAY: 'field.display',
-        KEY_LANGUAGE: 'language'
+        KEY_LANGUAGE: 'language',
+	    TAB_POSITION: 'tab.position',
     },
     DEFULT_IMG: {
         1: defult_img,

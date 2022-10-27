@@ -149,6 +149,13 @@ class StorageHandler {
         let field = this.getItem(Const.DATA.KEY_FIELD_DISPLAY) || {}
         return key ? (field[key] || []) : {}
     }
+	setTabPosition(value) {
+		this.setItem(Const.DATA.TAB_POSITION, value);
+	}
+	getTabPosition() {
+		return this.getItem(Const.DATA.TAB_POSITION)
+	}
+
 }
 
 export default new StorageHandler();
