@@ -204,6 +204,7 @@ const apiList = {
         detail: ['PostJson', 'repair/detail'], // 工单详情
 	    check: ['PostJson', 'repair/check'], // 确认
 	    audit: ['PostJson', 'repair/audit'], // 审批
+	    delete: ['PostJson', 'repair/delete'], // 审批
         statusList: ['PostJson', 'repair/status-list'], // 保存
 	    repair: ['PostJson', 'repair/repair'], // 维修结束
 	    secondDoor: ['PostJson', 'repair/second-door'], // 二次上门
