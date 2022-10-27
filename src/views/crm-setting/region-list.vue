@@ -36,9 +36,9 @@
             <a-modal v-model:visible="modalVisible" :title="editForm.id ? $t('crm_region.edit') : $t('crm_region.new')" @ok="handleModalSubmit">
                 <div class="modal-content">
                     <div class="form-item required">
-                        <div class="key">{{ $t('m.category_name') }}</div>
+                        <div class="key">{{ $t('crm_region.name') }}</div>
                         <div class="value">
-                            <a-input v-model:value="editForm.name" :placeholder="$t('def.input')+$t('m.category_name')"/>
+                            <a-input v-model:value="editForm.name" :placeholder="$t('def.input')+$t('crm_region.name')"/>
                         </div>
                     </div>
                     <div class="form-item required">
