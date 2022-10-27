@@ -408,7 +408,7 @@ export default {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
-             if (!form.mileage) {
+            if ((form.mileage == undefined || form.mileage == '' || form.mileage == null )&& form.device_type == 1) {
                 this.$message.warning(this.$t('def.enter'))
                 return 0
             }
@@ -420,15 +420,15 @@ export default {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
-            if (!form.channel) {
+            if (!form.channel && form.device_type == 1) {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
-            if (!form.repair_method) {
+            if (!form.repair_method&& form.device_type == 1) {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
-            if (!form.vehicle_no) {
+            if (!form.vehicle_no && form.device_type == 1) {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
