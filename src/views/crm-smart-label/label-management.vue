@@ -34,7 +34,7 @@
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, text , record}">
+                    <template #bodyCell="{ column, text , record,index}">
                         <template v-if="column.key === 'country'">
                             {{ text || '-' }}
                         </template>
@@ -47,18 +47,33 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-dropdown type="link">
+                            <a-dropdown type="link" :trigger="['']" v-model:visible="menuShow[index]" @click="handleMenuShow(index)">
                                 <a class="ant-dropdown-link operation-a" @click.prevent >
                                     同步
                                     <DownOutlined />
                                 </a>
                                 <template #overlay>
-                                    <a-menu >
-                                        <a-menu-item @click="handleSynchronous(record,1)" :key="1" v-if="searchForm.category != 1">客户</a-menu-item>
-                                        <a-menu-item @click="handleSynchronous(record,2)" :key="2" v-if="searchForm.category != 2">商机</a-menu-item>
-                                        <a-menu-item @click="handleSynchronous(record,3)" :key="3" v-if="searchForm.category != 3">合同</a-menu-item>
-                                        <a-menu-item @click="handleSynchronous(record,4)" :key="4" v-if="searchForm.category != 4">回款单</a-menu-item>
-                                    </a-menu>
+                                    <a-checkbox-group>
+                                            <a-menu class="synchronous-menu">
+                                                <a-menu-item v-if="searchForm.category != 1" class="synchronous-menu-item">
+                                                    <a-checkbox :value="1" >客户</a-checkbox>
+                                                </a-menu-item>
+                                                <a-menu-item v-if="searchForm.category != 2">
+                                                    <a-checkbox :value="2" v-if="searchForm.category != 2">商机</a-checkbox>
+                                                </a-menu-item>
+                                                <a-menu-item v-if="searchForm.category != 3">
+                                                    <a-checkbox :value="3" v-if="searchForm.category != 3">合同</a-checkbox>
+                                                </a-menu-item>
+                                                <a-menu-item v-if="searchForm.category != 4">
+                                                    <a-checkbox :value="4" v-if="searchForm.category != 4">回款单</a-checkbox>
+                                                </a-menu-item>
+                                                <a-menu-item>
+                                                    <a-button @click="handleMenuShow(index)">确定</a-button>
+                                                    <a-button @click="handleMenuShow(index)">取消</a-button>
+                                                </a-menu-item>
+                                            </a-menu>
+                                        </a-checkbox-group>
+
                                 </template>
                             </a-dropdown>
                             <a-button type="link" @click="handleModalShow(record)" v-if="record.type !== 1 && $auth('crm-label.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
@@ -150,6 +165,7 @@ export default {
                 category_list: '',
                 remark: '',
             },
+            menuShow: [],
         };
     },
     watch: {},
@@ -215,6 +231,9 @@ export default {
                 console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
+                this.tableData.forEach(it => {
+                    this.menuShow.push(false)
+                })
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {
@@ -314,6 +333,10 @@ export default {
             this.editForm.remark = ""
             this.handleModalSubmit(key)
         },
+        handleMenuShow(index){
+            this.menuShow[index] = !this.menuShow[index]
+        }
+
 
 
     }
@@ -325,6 +348,18 @@ export default {
      .operation-a{
         margin-right: 10px;
          color: #006EF9;
+
+     }
+
+
+ }
+ .synchronous-menu{
+     border: 1px solid #ddd;
+     border-radius: 3%;
+     .synchronous-menu-item{
+         border: 1px solid #ddd;
+         border-radius: 3%;
+
      }
  }
 </style>
