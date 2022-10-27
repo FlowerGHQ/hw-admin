@@ -2,11 +2,19 @@
 <a-config-provider :locale="zhCN" :autoInsertSpaceInButton='false'>
     <a-layout id="Layout">
         <a-layout-header class="layout-header">
-            <div class="header-left" @click="collapsed = !collapsed" :class="{'collapsed': collapsed}">
-                <img src="@images/header-logo2.png" class="logo" alt="浩万"/>
-                <a-divider type="vertical"/>
-                <a-tag color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType][$i18n.locale] }}</a-tag>
+            <div class="header-left"  :class="{'collapsed': collapsed}">
+                <img src="@images/header-logo2.png" class="logo" @click="collapsed = !collapsed" alt="浩万"/>
+
             </div>
+            <div class="header-left"  :class="{'collapsed': collapsed}">
+                <a-radio-group v-model:value="tabPosition">
+                    <a-radio-button class="header-button" :value="ROUTER_TYPE.SALES"><img src="@images/router_type_1.png" class="router-type" alt="浩万"/>{{ $t('n.sales') }}</a-radio-button>
+                    <a-radio-button class="header-button" :value="ROUTER_TYPE.AFTER"><img src="@images/router_type_2.png" class="router-type" alt="浩万"/>{{ $t('n.after') }}</a-radio-button>
+                    <a-radio-button class="header-button" :value="ROUTER_TYPE.PRODUCTION"><img src="@images/router_type_3.png" class="router-type" alt="浩万"/>{{ $t('n.production') }}</a-radio-button>
+                    <a-radio-button class="header-button" :value="ROUTER_TYPE.CRM"><img src="@images/router_type_4.png" class="router-type" alt="浩万"/>{{ $t('n.crm') }}</a-radio-button>
+                </a-radio-group>
+            </div>
+
             <div class="header-right">
 <!--                <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>-->
                 <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
@@ -19,6 +27,8 @@
                     </a-badge>
                 </a-button>
                 <a-divider type="vertical"/>
+                <a-tag color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType][$i18n.locale] }}</a-tag>
+<!--                <a-divider type="vertical"/>-->
                 <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
                     <a-button class="user-info" type="link">
                         <a-avatar class="user-avatar" :src="$Util.imageFilter(user.avatar, 3)" :size='30'>
@@ -121,6 +131,7 @@ export default {
 
             loginType: Core.Data.getLoginType(),
             USER_TYPE: Core.Const.USER.TYPE_MAP,
+            ROUTER_TYPE: Core.Const.LOGIN.ROUTER_TYPE,
             collapsed: false,
             openKeys: [],
             selectedKeys: [],
@@ -136,7 +147,9 @@ export default {
             unread: {
                 master: '',
                 org: '',
-            }
+            },
+            tabPosition: 1
+
         };
     },
     computed: {
@@ -157,6 +170,16 @@ export default {
                     return i
                 })
             })
+            // 选择模块进行路由过滤
+            if (this.loginType === LOGIN_TYPE.ADMIN){
+                let newShowList = []
+                SIDER.ADMIN.forEach(item => {
+                    if (item.type != undefined ? item.type.indexOf(this.tabPosition) != -1: true){
+                        newShowList.push(item)
+                    }
+                })
+                showList = newShowList;
+            }
             console.log('computed showList:', showList)
             return showList
         },
@@ -310,6 +333,9 @@ export default {
             this.$i18n.locale = this.$store.state.lang
             console.log('this.$i18n.locale',this.$i18n.locale)
         },
+        handleRouterSwitch() {
+
+        },
     }
 };
 </script>
@@ -332,7 +358,7 @@ export default {
     height: 100vh;
 
     .layout-header {
-        height: 50px;
+        height: 64px;
         background: #FFFFFF;
         border-bottom: 1px solid rgba(82, 91, 103, 0.2);
         padding: 0 20px;
@@ -344,6 +370,36 @@ export default {
                 width: 115px;
                 height: 30px;
             }
+            .router-type{
+                width: 30px;
+                height: 30px;
+                margin-top: -5px;
+                margin-right: 10px;
+            }
+            .header-button{
+                padding-top: 5px;
+                height: 40px;
+                width: 104px;
+                border: 0px;
+                text-align: center;
+                align-items: center;
+                .ant-radio-button-wrapper{
+                    display:none;
+                }
+            }
+            .ant-radio-button-wrapper:focus{
+                border: 0px;
+            }
+            .ant-radio-button-wrapper:not(:first-child)::before {
+                border: 0px solid #d9d9d9;
+                border-radius: 2px 0 0 2px;
+                background: #fff;
+            }
+            .ant-radio-button-wrapper-checked {
+                background-color: #F3F6F8;
+                border: 0px;
+            }
+
         }
 
         .header-right {

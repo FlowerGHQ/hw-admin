@@ -4,6 +4,7 @@ import Util from "../core/utils"
 import Layout from '../views/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE
+const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE
 const PURCHASE_SEARCH_TYPE = Const.PURCHASE.SEARCH_TYPE
 const REFUND_QUERY_TYPE = Const.AFTERSALES.QUERY_TYPE
 
@@ -95,6 +96,7 @@ const routes = [
         component: Layout,
         redirect: '/distributor/distributor-list',
         name: 'DistributorManagement',
+	    type: [ROUTER_TYPE.SALES,ROUTER_TYPE.AFTER],
         meta: {
             title: '分销管理',
             title_en: 'Distribution',

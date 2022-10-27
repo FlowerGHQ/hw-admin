@@ -188,6 +188,12 @@ let Const = {
             AGENT: 20,
             STORE: 30,
         },
+	    ROUTER_TYPE: {
+		    SALES: 1,
+		    AFTER: 2,
+			PRODUCTION: 3,
+		    CRM: 4,
+	    },
     },
 	FLAG: {
 		YES:1,

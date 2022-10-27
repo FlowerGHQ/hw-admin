@@ -166,6 +166,10 @@ const messages = {
             auth_type: '权限类型',
             auth_obj: '权限对象',
             enter_search: '请输入搜索内容',
+	        crm: 'CRM',
+	        after: '售前',
+	        sales: '售后',
+	        production: '生产',
         },
         a: { // 零售商
             new_retailer: '新建零售商',
@@ -2017,6 +2021,10 @@ const messages = {
             auth_type: 'Authority type',
             auth_obj: 'Authority object',
             enter_search: 'Enter search content',
+	        crm: 'CRM',
+	        after: 'After',
+	        sales: 'Sales',
+	        production: "Production",
         },
         a: {
             new_retailer: 'Add retailer',
