@@ -53,7 +53,7 @@
                                     <DownOutlined />
                                 </a>
                                 <template #overlay>
-                                    <a-checkbox-group>
+                                    <a-checkbox-group v-model:value="category_list">
                                             <a-menu class="synchronous-menu">
                                                 <a-menu-item v-if="searchForm.category != 1" class="synchronous-menu-item">
                                                     <a-checkbox :value="1" >客户</a-checkbox>
@@ -166,6 +166,7 @@ export default {
                 remark: '',
             },
             menuShow: [],
+            category_list:[],
         };
     },
     watch: {},
@@ -335,6 +336,8 @@ export default {
         },
         handleMenuShow(index){
             this.menuShow[index] = !this.menuShow[index]
+            console.log("category_list",this.category_list)
+            this.category_list = []
         }
 
 
@@ -350,16 +353,13 @@ export default {
          color: #006EF9;
 
      }
-
-
- }
- .synchronous-menu{
-     border: 1px solid #ddd;
-     border-radius: 3%;
-     .synchronous-menu-item{
-         border: 1px solid #ddd;
+     .ant-menu-root.ant-menu-vertical {
+         box-shadow: none;
+         border: 1px solid #f0f0f0;
          border-radius: 3%;
+     }
+
 
      }
- }
+
 </style>
