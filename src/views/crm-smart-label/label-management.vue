@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('sl.management')}}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleModalShow({})" v-if="$auth('crm-dict.save')"><i class="icon i_add"/>{{ $t('crm_set.save') + $Util.CRMLabelCategoryMapFilter(searchForm.category, $i18n.locale) + $t('sl.label') }}</a-button>
+                    <a-button type="primary" @click="handleModalShow({}, false)" v-if="$auth('crm-dict.save')"><i class="icon i_add"/>{{ $t('sl.save') }}</a-button>
                 </div>
             </div>
             <div class="tabs-container colorful">
@@ -53,7 +53,7 @@
                                     <DownOutlined />
                                 </a>
                                 <template #overlay>
-                                    <a-checkbox-group v-model:value="category_list">
+                                    <a-checkbox-group v-model:value="editForm.category_list">
                                             <a-menu class="synchronous-menu">
                                                 <a-menu-item v-if="searchForm.category != 1" class="synchronous-menu-item">
                                                     <a-checkbox :value="1" >客户</a-checkbox>
@@ -68,7 +68,7 @@
                                                     <a-checkbox :value="4" v-if="searchForm.category != 4">回款单</a-checkbox>
                                                 </a-menu-item>
                                                 <a-menu-item>
-                                                    <a-button @click="handleMenuShow(index)">确定</a-button>
+                                                    <a-button @click="handleSubmitContent(record)">确定</a-button>
                                                     <a-button @click="handleMenuShow(index)">取消</a-button>
                                                 </a-menu-item>
                                             </a-menu>
@@ -76,7 +76,7 @@
 
                                 </template>
                             </a-dropdown>
-                            <a-button type="link" @click="handleModalShow(record)" v-if="record.type !== 1 && $auth('crm-label.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type="link" @click="handleModalShow(record, true)" v-if="record.type !== 1 && $auth('crm-label.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
                             <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="record.type !== 1 && $auth('crm-label.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
 <!--                            <a-button type="link" @click="handlePreset(record.id, record.type)" v-if="$auth('crm-dict.set')"><i :class="record.category === 1 ? 'icon i_close_c' : 'icon i_confirm'"/>{{ record.type === 1 ? $t('crm_set.cancel_pre') : $t('crm_set.set_pre') }}</a-button>-->
                         </template>
@@ -100,8 +100,18 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="modalShow" :title="editForm.id ? $t('sl.edit') : $t('sl.save')" @ok="handleModalSubmit(editForm.category)">
+            <a-modal v-model:visible="modalShow" :title="editForm.id ? $t('sl.edit') : $t('sl.save')" @ok="handleModalSubmit()" @cancel="handleModalClose()">
                 <div class="modal-content">
+                    <div class="form-item" >
+                        <div class="key">{{ $t('sl.classification') }} </div>
+                        <div class="value">
+                            <a-checkbox-group v-model:value="editForm.category_list" :disabled="falgEdit">
+                                <a-checkbox v-for="item in LABEl_CATEGORY_MAP" :value="item.value">
+                                    {{ item[$i18n.locale] }}
+                                </a-checkbox>
+                            </a-checkbox-group>
+                        </div>
+                    </div>
                     <div class="form-item">
                         <div class="key">{{ $t('sl.name') }}</div>
                         <div class="value">
@@ -114,16 +124,7 @@
                             <a-textarea v-model:value="editForm.remark" placeholder="请输入备注" :auto-size="{ minRows: 2, maxRows: 2 }"/>
                         </div>
                     </div>
-                    <div class="form-item" >
-                        <div class="key">{{ $t('sl.synchronize') }}：</div>
-                        <div class="value">
-                            <a-radio-group v-model:value="editForm.category">
-                                <a-checkbox v-for="item in LABEl_CATEGORY_MAP" :value="item.value">
-                                    {{item[$i18n.locale]}}
-                                </a-checkbox>
-                            </a-radio-group>
-                        </div>
-                    </div>
+
                 </div>
             </a-modal>
         </template>
@@ -157,12 +158,13 @@ export default {
             // 表格
             tableData: [],
             modalShow: false,
+            falgEdit: false,
             editForm: {
                 id: '',
                 name: '',
                 name_en: '',
                 category: '1',
-                category_list: '',
+                category_list: [],
                 remark: '',
             },
             menuShow: [],
@@ -259,33 +261,40 @@ export default {
                 },
             });
         },
-        handleModalShow(record) {
+        handleModalShow(record, falgEdit) {
+            this.falgEdit = falgEdit
             this.editForm =  Core.Util.deepCopy(record)
             this.modalShow = true
         },
         handleModalClose() {
-            this.editForm = Core.Util.deepCopy(this.$options.data().editForm)
+            // this.editForm = Core.Util.deepCopy(this.$options.data().editForm)
             this.modalShow = false
+            Object.assign(this.editForm, this.$options.data().editForm)
         },
-        handleModalSubmit(category) {
+        handleModalSubmit() {
+
             let form = Core.Util.deepCopy(this.editForm)
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            // if (!form.name_en) {
-            //     return this.$message.warning(this.$t('def.enter'))
-            // }
+            if (!this.falgEdit && (!form.category_list || form.category_list.length === 0)) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
             this.loading = true
-            form.category = category
-            Core.Api.CRMLabel.save(form).then(res => {
+            let apiName = this.falgEdit ? 'save' : 'batchSave';
+            Core.Api.CRMLabel[apiName](form).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.modalShow = false
             }).catch(err => {
                 console.log('handleModalSubmit err:', err)
             }).finally(() => {
                 this.loading = false
+                this.editForm.category_list = []
+                this.editForm.category = ''
+                this.editForm.name = []
+                this.editForm.name_en = []
+                this.editForm.remark = ''
             })
-
         },
 
         // 是否预置
@@ -327,17 +336,19 @@ export default {
                 },
             });
         },
-        handleSynchronous(record, key) {
-            this.editForm.name = record.name
-            this.editForm.name_en = ""
-            this.editForm.category = key
-            this.editForm.remark = ""
-            this.handleModalSubmit(key)
-        },
+        // 操作栏同步按钮
         handleMenuShow(index){
             this.menuShow[index] = !this.menuShow[index]
-            console.log("category_list",this.category_list)
-            this.category_list = []
+            this.editForm.category_list = []
+            this.editForm.name_en = ""
+            this.editForm.remark = ""
+        },
+        // 操作栏同步 提交按钮
+        handleSubmitContent(record){
+            this.editForm.name = record.name
+            this.falgEdit = false
+            this.handleModalSubmit()
+            this.menuShow = []
         }
 
 
