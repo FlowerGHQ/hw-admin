@@ -519,6 +519,8 @@ export default {
         handleCustomerIdSearch(type){
             Core.Api.CRMCustomer.detail({id: this.form.customer_id}).then(res => {
                 this.CRMCustomer = res.detail
+                this.detail.group_id = this.CRMCustomer.group_id
+                console.log("group_id", this.CRMCustomer.group_id)
                 // this.handleCustomerNameSearch(res.name)
                 if (type === 'init'){
                     this.handleCustomerNameSearch(res.name)
