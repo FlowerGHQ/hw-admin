@@ -95,7 +95,7 @@
                 </div>
             </a-col>
         </a-row>
-        <a-modal v-model:visible="batchShow" :title="$t('crm_c.distribute_customer')" :after-close='handleBatchClose'>
+        <a-modal v-model:visible="batchShow" :title="$t('crm_b.distribute_bo')" :after-close='handleBatchClose'>
             <div class="form-item required">
                 <div class="key">{{ $t('crm_b.customer_name') }}：</div>
                 <div class="value">
@@ -236,7 +236,7 @@ export default {
                     this.form[key] = d[key]
                 }
                 this.defAddr = [d.province, d.city, d.county]
-
+                this.getUserData("")
                 // this.defArea = [d.continent || '', d.country || '']
             }).catch(err => {
                 console.log('getCustomerDetail err', err)
@@ -336,7 +336,8 @@ export default {
         },
         getUserData(query){
             this.loading = true;
-            Core.Api.User.list({
+            Core.Api.User.listGroup({
+                group_id: this.detail.group_id,
                 name: query,
                 org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
             }).then(res => {

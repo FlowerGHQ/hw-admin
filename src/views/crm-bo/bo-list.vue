@@ -46,7 +46,7 @@
                 </div>
             </div>
             <div class="operate-container">
-                <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-bo.transfer')">{{ $t('crm_c.transfer') }}</a-button>
+<!--                <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-bo.transfer')">{{ $t('crm_c.transfer') }}</a-button>-->
                 <a-button type="danger" @click="handleBatchDelete" v-if="$auth('crm-bo.delete')">{{ $t('crm_c.delete') }}</a-button>
             </div>
             <div class="table-container">
@@ -83,6 +83,7 @@
                         </template>
 
                         <template v-if="column.key === 'operation'">
+                            <a-button type="link" @click="handleBatch('transfer',record)" v-if="$auth('crm-bo.transfer')">{{ $t('crm_c.transfer') }}</a-button>
                             <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('crm-bo.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
 <!--                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('crm-bo.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>-->
 <!--                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('crm-bo.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>-->
@@ -175,6 +176,7 @@ export default {
             selectedRowKeys: [],
             selectedRowItems: [],
             selectedRowItemsAll: [],
+            device: [],
         };
     },
     watch: {},
@@ -220,7 +222,6 @@ export default {
     mounted() {
         this.getGroupStatusDetail()
         this.getTableData();
-        this.getUserData()
     },
     methods: {
         routerChange(type, item = {}) {
@@ -324,20 +325,20 @@ export default {
                 this.loading = false;
             });
         },
-        handleBatch(type) {
-            if (this.selectedRowKeys.length === 0) {
-                return this.$message.warning(this.$t('crm_c.select'))
-            }
+        handleBatch(type,item) {
+            this.detail = item
             this.batchType = type;
             this.batchShow = true;
+            this.getUserData()
         },
         handleBatchClose() {
-
+            this.batchForm.own_user_id = undefined;
+            this.detail = {}
             this.batchShow = false;
             this.batchType = '';
         },
         handleBatchSubmit() {
-            if (this.selectedRowKeys.length === 0) {
+            if (this.detail.id === 0) {
                 return this.$message.warning(this.$t('crm_c.select'))
             }
             if (!this.batchForm.own_user_id) {
@@ -345,8 +346,8 @@ export default {
             }
             switch (this.batchType){
                 case "transfer":
-                    Core.Api.CRMBo.batchTransfer({
-                        id_list: this.selectedRowKeys,
+                    Core.Api.CRMBo.transfer({
+                        id_list: this.detail.id,
                         own_user_id: this.batchForm.own_user_id,
                     }).then(() => {
                         this.$message.success(this.$t('crm_c.transfer_success'));
@@ -360,8 +361,10 @@ export default {
 
         },
         getUserData(query){
+
             this.loading = true;
             Core.Api.User.list({
+                group_id: this.device.group_id,
                 name: query,
                 org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
             }).then(res => {

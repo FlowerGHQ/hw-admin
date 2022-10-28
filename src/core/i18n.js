@@ -1227,6 +1227,7 @@ const messages = {
 		    select_item: '销售信息',
 		    discount_price: '销售单价',
 		    interested_models: '意向车型',
+		    distribute_bo: '移交商机',
 	    },
 	    crm_group: {
 		    name: '区域',
