@@ -6,7 +6,7 @@
                 <img src="@images/header-logo2.png" class="logo" @click="collapsed = !collapsed" alt="浩万"/>
 
             </div>
-            <div class="header-left"  :class="{'collapsed': collapsed}">
+            <div class="header-left"  :class="{'collapsed': collapsed}" v-if="loginType === Core.Const.USER.TYPE.ADMIN">
                 <a-radio-group v-model:value="tabPosition" @change="handleRouterSwitch">
                     <a-radio-button class="header-button" :value="ROUTER_TYPE.SALES"><img src="@images/router_type_1.png" class="router-type" alt="浩万"/>{{ $t('n.sales') }}</a-radio-button>
                     <a-radio-button class="header-button" :value="ROUTER_TYPE.AFTER"><img src="@images/router_type_2.png" class="router-type" alt="浩万"/>{{ $t('n.after') }}</a-radio-button>
@@ -125,6 +125,7 @@ export default {
     },
     data() {
         return {
+            Core,
             zhCN,
             enUS,
             breadcrumbList: [],

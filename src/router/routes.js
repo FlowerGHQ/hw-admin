@@ -1517,8 +1517,8 @@ const routes = [
         },
         children: [
             {
-                path: 'customer-list',
-                name: 'CustomerList',
+                path: 'customer-lists',
+                name: 'CustomerLists',
                 component: () => import('@/views/customer/customer-list.vue'),
                 meta: {
                     title: '客户列表',
