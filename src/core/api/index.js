@@ -668,6 +668,7 @@ const apiList = {
 		delete: ['PostJson', 'crm-label/delete'],//
 		batchSave: ['PostJson', 'crm-label/batch-save'],//
 		detail: ['PostJson', 'crm-label/detail'],//
+        change: ['PostJson', 'crm-label/change'],//
 	},
 	CRMTrackRecord:{//CRM跟进记录
 		save: ['PostJson', 'crm-track-record/save'],//

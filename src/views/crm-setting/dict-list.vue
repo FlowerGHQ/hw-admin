@@ -242,7 +242,7 @@ export default {
                 return this.$message.warning(this.$t('def.enter'))
             }
             this.loading = true
-            let apiName = form.id ? 'update' : 'save';
+            // let apiName = form.id ? 'update' : 'save';
             form.type = this.searchForm.type,
             Core.Api.CRMDict.save(form).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'))
