@@ -78,7 +78,7 @@
                             </a-dropdown>
                             <a-button type="link" @click="handleModalShow(record, true)" v-if="record.type !== 1 && $auth('crm-label.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
                             <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="record.type !== 1 && $auth('crm-label.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
-<!--                            <a-button type="link" @click="handlePreset(record.id, record.type)" v-if="$auth('crm-dict.set')"><i :class="record.category === 1 ? 'icon i_close_c' : 'icon i_confirm'"/>{{ record.type === 1 ? $t('crm_set.cancel_pre') : $t('crm_set.set_pre') }}</a-button>-->
+                            <a-button type="link" @click="handlePreset(record.id, record.type)" v-if="$auth('crm-dict.set')"><i :class="record.category === 1 ? 'icon i_close_c' : 'icon i_confirm'"/>{{ record.type === 1 ? $t('crm_set.cancel_pre') : $t('crm_set.set_pre') }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -298,16 +298,16 @@ export default {
         },
 
         // 是否预置
-        handlePreset(id, editable) {
+        handlePreset(id, type) {
             let _this = this;
             this.$confirm({
-            title: editable === 2 ? _this.$t('pop_up.sure_cancel_pre') : _this.$t('pop_up.sure_set_pre'),
+            title: type === 1 ? _this.$t('sl.sure_cancel_pre') : _this.$t('sl.sure_set_pre'),
             okText: _this.$t('def.sure'),
             okType: 'danger',
             cancelText: this.$t('def.cancel'),
             onOk() {
-              editable = editable === 2 ? 1 : 2
-              Core.Api.CRMLabel.change({id, editable}).then(() => {
+                type = type === 2 ? 1 : 2
+              Core.Api.CRMLabel.change({id, type}).then(() => {
                 _this.$message.success(_this.$t('pop_up.operate'));
                 _this.getTableData();
               }).catch(err => {
@@ -327,7 +327,7 @@ export default {
                 cancelText: this.$t('def.cancel'),
                 onOk() {
                   status = status === 1 ? 2 : 1
-                  Core.Api.CRMLabel.change({id, status}).then(() => {
+                  Core.Api.CRMLabel.change({id, type}).then(() => {
                     _this.$message.success(_this.$t('pop_up.operate'));
                     _this.getTableData();
                   }).catch(err => {

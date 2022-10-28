@@ -1400,6 +1400,8 @@ const messages = {
             management: '标签管理',
             count: '标签使用数量',
             label: '标签',
+            sure_set_pre: '确定设为预置吗？确定后该标签将不可再被修改',
+            sure_cancel_pre: '确定取消预置吗？确定后该标签将可自由修改',
 
         },
         authority: {
