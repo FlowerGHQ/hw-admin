@@ -3,15 +3,15 @@
     <a-layout id="Layout">
         <a-layout-header class="layout-header">
             <div class="header-left"  :class="{'collapsed': collapsed}">
-                <img src="@images/header-logo2.png" class="logo" @click="collapsed = !collapsed" alt="浩万"/>
+                <img src="@images/header-logo3.png" class="logo" @click="collapsed = !collapsed" alt="浩万"/>
 
             </div>
             <div class="header-left"  :class="{'collapsed': collapsed}" v-if="loginType === Core.Const.USER.TYPE.ADMIN">
                 <a-radio-group v-model:value="tabPosition" @change="handleRouterSwitch">
-                    <a-radio-button class="header-button" :value="ROUTER_TYPE.SALES"><img src="@images/router_type_1.png" class="router-type" alt="浩万"/>{{ $t('n.sales') }}</a-radio-button>
+                    <a-radio-button class="header-button" :value="ROUTER_TYPE.SALES"><img src="@images/router_type_3.png" class="router-type" alt="浩万"/>{{ $t('n.sales') }}</a-radio-button>
                     <a-radio-button class="header-button" :value="ROUTER_TYPE.AFTER"><img src="@images/router_type_2.png" class="router-type" alt="浩万"/>{{ $t('n.after') }}</a-radio-button>
-                    <a-radio-button class="header-button" :value="ROUTER_TYPE.PRODUCTION"><img src="@images/router_type_3.png" class="router-type" alt="浩万"/>{{ $t('n.production') }}</a-radio-button>
-                    <a-radio-button class="header-button" :value="ROUTER_TYPE.CRM"><img src="@images/router_type_4.png" class="router-type" alt="浩万"/>{{ $t('n.crm') }}</a-radio-button>
+                    <a-radio-button class="header-button" :value="ROUTER_TYPE.PRODUCTION"><img src="@images/router_type_4.png" class="router-type" alt="浩万"/>{{ $t('n.production') }}</a-radio-button>
+                    <a-radio-button class="header-button" :value="ROUTER_TYPE.CRM"><img src="@images/router_type_1.png" class="router-type" alt="浩万"/>{{ $t('n.crm') }}</a-radio-button>
                 </a-radio-group>
             </div>
 
@@ -237,7 +237,7 @@ export default {
         this.getUnreadCount();
         this.$i18n.locale = Core.Data.getLang()
         this.$store.state.lang = Core.Data.getLang()
-        this.tabPosition = Core.Data.getTabPosition()
+        this.tabPosition = Core.Data.getTabPosition() || 1
     },
     methods: {
         routerChange(type) {
@@ -382,7 +382,6 @@ export default {
             .header-button{
                 padding-top: 5px;
                 height: 40px;
-                width: 104px;
                 border: 0px;
                 text-align: center;
                 align-items: center;

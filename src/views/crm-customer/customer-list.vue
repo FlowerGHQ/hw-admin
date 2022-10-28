@@ -68,12 +68,12 @@
             </div>
             <div class="operate-container" v-if="operMode ==='high_seas'">
                 <a-button type="primary" @click="handleBatchObtain" v-if="$auth('crm-customer.obtain')">{{ $t('crm_c.obtain') }}</a-button>
-                <a-button type="primary" @click="handleBatch('distribute')" v-if="$auth('crm-customer.distribute')">{{ $t('crm_c.distribute') }}</a-button>
+<!--                <a-button type="primary" @click="handleBatch('distribute')" v-if="$auth('crm-customer.distribute')">{{ $t('crm_c.distribute') }}</a-button>-->
                 <a-button type="danger" @click="handleBatchDelete" v-if="$auth('crm-customer.delete')">{{ $t('crm_c.delete') }}</a-button>
             </div>
             <div class="operate-container" v-if="operMode ==='private'">
                 <a-button type="primary" @click="handleBatchReturnPool" v-if="$auth('crm-customer.return-pool')">{{ $t('crm_c.return_pool') }}</a-button>
-                <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-customer.transfer')">{{ $t('crm_c.transfer') }}</a-button>
+<!--                <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-customer.transfer')">{{ $t('crm_c.transfer') }}</a-button>-->
                 <a-button type="danger" @click="handleBatchDelete" v-if="$auth('crm-customer.delete')">{{ $t('crm_c.delete') }}</a-button>
             </div>
             <div class="table-container">

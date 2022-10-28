@@ -80,7 +80,6 @@ export default {
                     font-weight: 400;
                     color: #8090A6;
                     transform: scale(20%);
-                    font-weight: 100;
                     letter-spacing: -1px;
                 }
             }

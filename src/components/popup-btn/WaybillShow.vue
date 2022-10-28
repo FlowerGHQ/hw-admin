@@ -151,7 +151,7 @@ export default {
 
     .desc, .time {
         font-size: 12px;
-        font-weight: 400;
+        font-weight: 500;
         color: #6C6C6C;
         line-height: 20px;
         margin: 6px 0;

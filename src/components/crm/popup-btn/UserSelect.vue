@@ -117,7 +117,15 @@ export default {
         checkMode: {
             type: Boolean,
             default: true,
-        }
+        },
+        regionId: {
+            type: Number,
+            default: 0
+        },
+        flagAdmin: {
+            type: Boolean,
+            default: false,
+        },
 
     },
     data() {
@@ -193,6 +201,8 @@ export default {
                 org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
                 name: this.searchForm.name,
                 phone: this.searchForm.phone,
+                region_id: this.regionId,
+                flag_admin: this.flagAdmin,
 
             }).then(res => {
                 this.tableData = res.list
