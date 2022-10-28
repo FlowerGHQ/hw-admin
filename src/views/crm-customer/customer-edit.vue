@@ -36,15 +36,7 @@
                         {{ $t('crm_c.rechecking') }}
                     </CustomerSelect>
                 </div>
-                <div class="form-item required">
-                    <div class="key">{{ $t('crm_c.level') }}：</div>
-                    <div class="value">
-                        <a-select v-model:value="form.level" :placeholder="$t('def.input')" >
-                            <a-select-option v-for="item of CRM_LEVEL_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
-                        </a-select>
-                    </div>
 
-                </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_c.group') }}：</div> <!--区域 -->
                     <div class="value">
@@ -81,6 +73,15 @@
                 <div class="title-colorful">{{ $t('crm_c.extended_information') }}</div>
             </div>
             <div class="form-content">
+                <div class="form-item">
+                    <div class="key">{{ $t('crm_c.level') }}：</div>
+                    <div class="value">
+                        <a-select v-model:value="form.level" :placeholder="$t('def.input')" >
+                            <a-select-option v-for="item of CRM_LEVEL_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                        </a-select>
+                    </div>
+
+                </div>
                 <div class="form-item">
                     <div class="key">{{ $t('crm_c.purchase_intent') }}：</div>
                     <div class="value">
@@ -422,9 +423,7 @@ export default {
             if (!form.type) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!form.level) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
+
            /* if (!form.province || !form.city || !form.county || !form.address) {
                 // return this.$message.warning('请完善客户地址')
             }*/

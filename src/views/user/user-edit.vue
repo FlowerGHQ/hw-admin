@@ -26,14 +26,14 @@
                     <a-input-password v-model:value="form.password" :placeholder="$t('def.input')" autocomplete="off"/>
                 </div>
             </div>
-            <div class="form-item required">
+            <div class="form-item">
                 <div class="key">{{ $t('n.phone') }}:</div>
                 <div class="value">
                     <a-input v-model:value="form.phone" :placeholder="$t('def.input')"/>
                 </div>
             </div>
             </template>
-            <div class="form-item required">
+            <div class="form-item">
                 <div class="key">{{ $t('n.email') }}:</div>
                 <div class="value">
                     <a-input v-model:value="form.email" :placeholder="$t('def.input')"/>
@@ -164,12 +164,6 @@ export default {
                 if (!form.password) {
                     return this.$message.warning(this.$t('def.enter'))
                 }
-            }
-            if (!form.phone) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.email) {
-                return this.$message.warning(this.$t('def.enter'))
             }
             Core.Api.Account[apiName](form).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
