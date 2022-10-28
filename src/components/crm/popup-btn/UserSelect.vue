@@ -118,13 +118,9 @@ export default {
             type: Boolean,
             default: true,
         },
-        regionId: {
+        groupId: {
             type: Number,
             default: 0
-        },
-        flagAdmin: {
-            type: Boolean,
-            default: false,
         },
 
     },
@@ -197,20 +193,32 @@ export default {
         },
 
         getTableData() {
-            Core.Api.User.list({
-                org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
-                name: this.searchForm.name,
-                phone: this.searchForm.phone,
-                region_id: this.regionId,
-                flag_admin: this.flagAdmin,
+            if (this.groupId != 0){
+                Core.Api.CRMGroup.getGroupAdmin({
+                    group_id: this.groupId
+                }).then(res => {
+                    this.tableData = res.list
+                }).catch(err => {
+                    console.log('Purchase.itemList err', err)
+                }).finally(() => {
+                    this.loading = false;
+                });
+            } else {
+                Core.Api.User.list({
+                    org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
+                    name: this.searchForm.name,
+                    phone: this.searchForm.phone,
 
-            }).then(res => {
-                this.tableData = res.list
-            }).catch(err => {
-                console.log('Purchase.itemList err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+                }).then(res => {
+                    this.tableData = res.list
+                }).catch(err => {
+                    console.log('Purchase.itemList err', err)
+                }).finally(() => {
+                    this.loading = false;
+                });
+            }
+
+
 
         },
         pageChange(curr) {  // 页码改变

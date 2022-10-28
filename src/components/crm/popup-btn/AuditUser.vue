@@ -14,7 +14,7 @@
 
         <a-step status="finish">
             <template #icon>
-                <UserSelect @select="handleAddCustomerShow" :regionId="regionId" :flagAdmin="true" :radioMode="true" btn-class="select-item-btn" btnType='link' :btnText="btnText">
+                <UserSelect @select="handleAddCustomerShow" :group-id="groupId" :radioMode="true" btn-class="select-item-btn" btnType='link' :btnText="btnText">
                     <i class="icon i_edit"/> {{ btnText }}
                 </UserSelect>
             </template>
@@ -46,7 +46,7 @@ export default {
             type: String,
             default: '审核人'
         },
-        regionId: {
+        groupId: {
             type: Number,
             default: 0
         },

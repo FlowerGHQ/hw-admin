@@ -92,7 +92,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_o.approval_process') }}：</div>
                     <!--  disabled -->
-                    <AuditUser :def-audit-user-list="auditUserList" :regionId="detail.group_id" @list="handleAuditUserIdList" :btn-text="$t('crm_o.add_reviewer')"></AuditUser>
+                    <AuditUser :def-audit-user-list="auditUserList" :group-id="detail.group_id" @list="handleAuditUserIdList" :btn-text="$t('crm_o.add_reviewer')"></AuditUser>
                 </div>
         </div>
         </div>

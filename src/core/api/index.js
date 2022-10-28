@@ -608,6 +608,8 @@ const apiList = {
         detail: ['PostJson', 'crm-group/detail'],
         delete: ['PostJson', 'crm-group/delete'],
 	    batchAddMember: ['PostJson', 'crm-group/batch-add-member'],
+	    getGroupAdmin: ['PostJson', 'crm-group/get-group-admin'],
+
 
     },
 	CRMCustomer:{//CRM 客户
