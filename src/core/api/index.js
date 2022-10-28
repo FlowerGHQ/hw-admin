@@ -741,7 +741,7 @@ const apiList = {
 		detail: ['PostJson', 'crm-group-member/detail'],//
 		structure: ['PostJson', 'crm-group-member/structure'],//
 		structureByUser: ['PostJson', 'crm-group-member/structure-by-user'],//
-
+		structureByUserGroup: ['PostJson', 'crm-group-member/structure-by-user-group'],//
 	},
 	CRMDashboard: {
 		salesStatistics: ['PostJson', 'crm-dashboard/sales-statistics'],// 销售简报

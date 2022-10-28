@@ -112,6 +112,9 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
+                            <a-button type="link" @click="handleBatch('distribute',record)" v-if="$auth('crm-customer.distribute') && operMode ==='high_seas'">{{ $t('crm_c.distribute') }}</a-button>
+                            <a-button type="link" @click="handleBatch('transfer',record)" v-if="$auth('crm-customer.transfer') && operMode ==='private'">{{ $t('crm_c.transfer') }}</a-button>
+
                             <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('crm-customer.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
 <!--                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('crm-customer.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>-->
 <!--                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('crm-customer.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>-->
@@ -143,17 +146,37 @@
         </div>
         <a-modal v-model:visible="batchShow" :title="$t('crm_c.distribute_customer')" :after-close='handleBatchClose'>
             <div class="form-item required">
+                <div class="key">{{ $t('crm_b.customer_name') }}：</div>
+                <div class="value">
+                    {{detail.name}}
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_group.name') }}：</div>
+                <div class="value">
+                    <a-tree-select class="CategoryTreeSelect"
+                                   v-model:value="group_id"
+                                   :placeholder="$t('def.select')"
+                                   :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                                   :tree-data="groupOptions"
+                                   @change="getUserData('')"
+                                   tree-default-expand-all
+                    />
+                </div>
+            </div>
+            <div class="form-item required">
                 <div class="key">{{ $t('crm_b.own_user_name') }}：</div>
                 <div class="value">
                     <a-select
                         v-model:value="batchForm.own_user_id"
                         show-search
-                        :placeholder="$t('def.input')+$t('n.warehouse')"
+                        :placeholder="$t('def.select')+$t('crm_b.own_user_name')"
                         :default-active-first-option="false"
                         :show-arrow="false"
                         :filter-option="false"
                         :not-found-content="null"
                         @search="getUserData"
+                        :disabled="!group_id"
                     >
                         <a-select-option v-for=" item in userData" :key="item.id" :value="item.id">
                             {{ item.account ? item.account.name : '-' }}
@@ -166,6 +189,33 @@
                 <a-button @click="handleBatchClose">{{ $t('def.cancel') }}</a-button>
             </template>
         </a-modal>
+
+
+<!--        <a-modal v-model:visible="batchShow" :title="$t('crm_c.distribute_customer')" :after-close='handleBatchClose'>-->
+<!--            <div class="form-item required">-->
+<!--                <div class="key">{{ $t('crm_b.own_user_name') }}：</div>-->
+<!--                <div class="value">-->
+<!--                    <a-select-->
+<!--                        v-model:value="batchForm.own_user_id"-->
+<!--                        show-search-->
+<!--                        :placeholder="$t('def.input')+$t('n.warehouse')"-->
+<!--                        :default-active-first-option="false"-->
+<!--                        :show-arrow="false"-->
+<!--                        :filter-option="false"-->
+<!--                        :not-found-content="null"-->
+<!--                        @search="getUserData"-->
+<!--                    >-->
+<!--                        <a-select-option v-for=" item in userData" :key="item.id" :value="item.id">-->
+<!--                            {{ item.account ? item.account.name : '-' }}-->
+<!--                        </a-select-option>-->
+<!--                    </a-select>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <template #footer>-->
+<!--                <a-button @click="handleBatchSubmit" type="primary">{{ $t('def.ok') }}</a-button>-->
+<!--                <a-button @click="handleBatchClose">{{ $t('def.cancel') }}</a-button>-->
+<!--            </template>-->
+<!--        </a-modal>-->
     </div>
 </template>
 
@@ -217,6 +267,11 @@ export default {
             selectedRowItems: [],
             selectedRowItemsAll: [],
             createUserOptions: [], // 创建人列表
+            group_id: undefined,
+            groupOptions: [],
+            detail: {
+
+            },
         };
     },
     watch: {
@@ -374,7 +429,8 @@ export default {
         },
         getUserData(query){
             this.loading = true;
-            Core.Api.User.list({
+            Core.Api.User.listGroup({
+                group_id: this.group_id,
                 name: query,
                 org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
             }).then(res => {
@@ -448,20 +504,23 @@ export default {
         },
 
 
-        handleBatch(type) {
-            if (this.selectedRowKeys.length === 0) {
-                return this.$message.warning(this.$t('crm_c.select'))
-            }
+        handleBatch(type,item) {
+            this.detail = item;
+
+            this.handleGroupTree()
             this.batchType = type;
             this.batchShow = true;
         },
         handleBatchClose() {
-
+            this.group_id = undefined;
+            this.batchForm.own_user_id = undefined;
+            this.groupOptions = []
+            this.detail = {};
             this.batchShow = false;
             this.batchType = '';
         },
         handleBatchSubmit() {
-            if (this.selectedRowKeys.length === 0) {
+            if (this.detail.id === 0) {
                 return this.$message.warning(this.$t('crm_c.select'))
             }
             if (!this.batchForm.own_user_id) {
@@ -469,8 +528,8 @@ export default {
             }
             switch (this.batchType){
                 case "distribute":
-                    Core.Api.CRMCustomer.batchDistribute({
-                        id_list: this.selectedRowKeys,
+                    Core.Api.CRMCustomer.distribute({
+                        id: this.detail.id,
                         own_user_id: this.batchForm.own_user_id,
                     }).then(() => {
                         this.$message.success($t('crm_c.distribute_success'));
@@ -481,8 +540,8 @@ export default {
                     })
                     break;
                 case "transfer":
-                    Core.Api.CRMCustomer.batchTransfer({
-                        id_list: this.selectedRowKeys,
+                    Core.Api.CRMCustomer.transfer({
+                        id: this.detail.id,
                         own_user_id: this.batchForm.own_user_id,
                     }).then(() => {
                         this.$message.success(this.$t('crm_c.transfer_success'));
@@ -500,6 +559,15 @@ export default {
                 create_user_name: name,
             }).then(res => {
                 this.createUserOptions = res.list
+            })
+        },
+        handleGroupTree(){
+            Core.Api.CRMGroupMember.structureByUserGroup({
+                group_id: this.detail.group_id
+            }).then(res => {
+                this.groupOptions = res.list
+                console.log(res)
+
             })
         },
 

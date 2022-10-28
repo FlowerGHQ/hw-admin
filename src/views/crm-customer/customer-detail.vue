@@ -115,7 +115,19 @@
                 </div>
             </div>
             <div class="form-item required">
-
+                <div class="key">{{ $t('crm_group.name') }}：</div>
+                <div class="value">
+                    <a-tree-select class="CategoryTreeSelect"
+                                   v-model:value="group_id"
+                                   :placeholder="$t('def.select')"
+                                   :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                                   :tree-data="groupOptions"
+                                   @change="getUserData('')"
+                                   tree-default-expand-all
+                    />
+                </div>
+            </div>
+            <div class="form-item required">
                 <div class="key">{{ $t('crm_b.own_user_name') }}：</div>
                 <div class="value">
                     <a-select
@@ -127,6 +139,7 @@
                         :filter-option="false"
                         :not-found-content="null"
                         @search="getUserData"
+                        :disabled="!group_id"
                     >
                         <a-select-option v-for=" item in userData" :key="item.id" :value="item.id">
                             {{ item.account ? item.account.name : '-' }}
@@ -188,7 +201,8 @@ export default {
             batchShow: false,
             userData: [],
             trackMemberDetail: undefined,
-
+            groupOptions: [],
+            group_id: undefined,
         };
     },
     watch: {},
@@ -206,6 +220,7 @@ export default {
             this.getCustomerDetail();
             this.getTargetByUserId();
         }
+
     },
     methods: {
         routerChange(type, item) {
@@ -256,7 +271,7 @@ export default {
                 if (this.detail.status === Core.Const.CRM_CUSTOMER.STATUS.POOL){
                     this.tabActiveKey = "InformationInfo";
                 }
-
+                this.handleGroupTree()
 
                 // this.defArea = [d.continent || '', d.country || '']
             }).catch(err => {
@@ -326,7 +341,8 @@ export default {
         },
         getUserData(query){
             this.loading = true;
-            Core.Api.User.list({
+            Core.Api.User.listGroup({
+                group_id: this.group_id,
                 name: query,
                 org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
             }).then(res => {
@@ -410,6 +426,15 @@ export default {
         getCrmActionRecordTableData(){
             console.log("getCrmActionRecordTableData");
             this.$refs.TrackRecord.getCrmActionRecordTableData();
+        },
+        handleGroupTree(){
+            Core.Api.CRMGroupMember.structureByUserGroup({
+                group_id: this.detail.group_id
+            }).then(res => {
+                this.groupOptions = res.list
+                console.log(res)
+
+            })
         },
 
     }

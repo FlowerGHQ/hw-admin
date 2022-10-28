@@ -1549,7 +1549,7 @@ const routes = [
         type: [ROUTER_TYPE.CRM],
 		meta: {
 			title: 'CRM数据',
-			title_en: 'test',
+			title_en: 'CRM Data',
 			icon: 'i_s_customer',
 			auth: ["crm-label.list"],
 
@@ -1561,20 +1561,20 @@ const routes = [
 				component: () => import('@/views/crm-dashboard/dashboard.vue'),
 				meta: {
 					title: '数据看板',
-					title_en: 'test test',
+					title_en: 'Data Board',
 					auth: ["crm-label.list"],
 				}
 			},
-			{
-				path: 'employees-home',
-				name: 'EmployeesHome',
-				component: () => import('@/views/crm-dashboard/employees-home.vue'),
-				meta: {
-					title: '首页',
-					title_en: 'test test',
-					auth: ["crm-label.list"],
-				}
-			},
+			// {
+			// 	path: 'employees-home',
+			// 	name: 'EmployeesHome',
+			// 	component: () => import('@/views/crm-dashboard/employees-home.vue'),
+			// 	meta: {
+			// 		title: '首页',
+			// 		title_en: 'Index',
+			// 		auth: ["crm-label.list"],
+			// 	}
+			// },
 		]
 	},
 	{ // 客户管理
@@ -2011,15 +2011,15 @@ const routes = [
                     parent: '/authority/auth-user-list',
                 }
             },*/
-            {
-                path: 'dept-list',
-                name: 'DeptList',
-                component: () => import('@/views/system/dept-list.vue'),
-                meta: {
-                    title: '部门管理',
-                    title_en: 'Dept',
-                }
-            },
+            // {
+            //     path: 'dept-list',
+            //     name: 'DeptList',
+            //     component: () => import('@/views/system/dept-list.vue'),
+            //     meta: {
+            //         title: '部门管理',
+            //         title_en: 'Dept',
+            //     }
+            // },
             {
                 path: 'auth-role-list',
                 name: 'RoleList',
