@@ -489,7 +489,7 @@ export default {
                         id_list: this.selectedRowKeys,
                         own_user_id: this.batchForm.own_user_id,
                     }).then(() => {
-                        this.$message.success($t('crm_c.distribute_success'));
+                        this.$message.success(this.$t('crm_c.distribute_success'));
                         this.getTableData();
                         this.handleBatchClose();
                     }).catch(err => {
