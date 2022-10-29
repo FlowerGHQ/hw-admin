@@ -194,7 +194,7 @@ export default {
                     case this.TYPE.CUSTOMER_TO_OTHERS: return user + " 将客户移交给了: " + item.user_name; break;
                     case this.TYPE.CREATE_BO: return user + " 创建了新的商机：" + item.bo_name; break;
                     case this.TYPE.DELETE_BO: return user + " 删除了商机：" + item.bo_name; break;
-                    case this.TYPE.UPDATE_BO_STATUS: return user + " 更新了商机阶段："; break;
+                    case this.TYPE.UPDATE_BO_STATUS: return user + " 更新了商机阶段：" + item.bo_status; break;
                     case this.TYPE.BO_TO_OTHERS: return user + " 将商机移交给了: " + item.user_name; break;
                     case this.TYPE.CREATE_ORDER: return user + " 创建了新的合同订单: " + item.order_name; break;
                     case this.TYPE.DELETE_ORDER: return user + " 删除了合同订单: " + item.order_name; break;
