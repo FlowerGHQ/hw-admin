@@ -265,6 +265,7 @@ export default {
                 ...form,
                 audit_user_id_list: audit_user_id_list,
                 label_id_list: this.labelIdList,
+                money: this.form.money * 100
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.$router.go(-1)

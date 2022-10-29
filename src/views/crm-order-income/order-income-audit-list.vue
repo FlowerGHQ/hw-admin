@@ -2,7 +2,7 @@
     <div id="OrderList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">{{ $t('crm_oi.list') }}</div>
+                <div class="title-area">{{ $t('crm_oi.audit_list') }}</div>
                 <div class="btns-area">
                     <a-button type="primary" @click="routerChange('edit')" v-if="$auth('crm-order-income.save')"><i class="icon i_add"/>{{ $t('crm_oi.save') }}</a-button>
                 </div>
@@ -260,7 +260,7 @@ export default {
                 order_by_fields: this.orderByFields,
                 page: this.currPage,
                 page_size: this.pageSize,
-                search_type: 10,
+                search_type: 20,
             }).then(res => {
                 console.log("getTableData res:", res)
                 this.total = res.count;

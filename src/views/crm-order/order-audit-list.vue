@@ -2,7 +2,7 @@
     <div id="OrderList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">{{ $t('crm_o.list') }}</div>
+                <div class="title-area">{{ $t('crm_o.audit_list') }}</div>
                 <div class="btns-area">
                     <a-button type="primary" @click="routerChange('edit')" v-if="$auth('crm-order.save')"><i class="icon i_add"/>{{ $t('crm_o.save') }}</a-button>
                 </div>
@@ -313,7 +313,7 @@ export default {
             Core.Api.CRMOrder.list({
                 ...this.searchForm,
                 order_by_fields: this.orderByFields,
-                search_type: 10,
+                search_type: 20,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {

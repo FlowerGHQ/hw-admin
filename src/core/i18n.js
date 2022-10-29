@@ -1286,7 +1286,7 @@ const messages = {
 			create_order: '保存并创建订单',
 		    approval_process: '审核流程',
 		    add_reviewer: '添加审核人',
-
+            audit_list: '待审合同列表',
 	    },
 	    crm_oi: {
 			list: '回款单列表',
@@ -1307,6 +1307,7 @@ const messages = {
 		    own_user_name: "回款单负责人",
 		    delete: '删除回款单',
 		    error:'拒绝原因',
+            audit_list: '待审回款单列表',
 	    },
 	    crm_d: {
 		    list: '试驾单列表',

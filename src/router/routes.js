@@ -1728,6 +1728,16 @@ const routes = [
                     auth: ["crm-order.list"],
 				}
 			},
+            {
+                path: 'order-audit-list',
+                name: 'OrderAuditList',
+                component: () => import('@/views/crm-order/order-audit-list.vue'),
+                meta: {
+                    title: '待审列表',
+                    title_en: 'Business opportunities list',
+                    auth: ["crm-order.list"],
+                }
+            },
 			{
 				path: 'order-edit',
 				name: 'OrderEdit',
@@ -1776,6 +1786,16 @@ const routes = [
                     auth: ["crm-order-income.list"],
 				}
 			},
+            {
+                path: 'order-income-audit-list',
+                name: 'OrderIncomeaAuditList',
+                component: () => import('@/views/crm-order-income/order-income-audit-list.vue'),
+                meta: {
+                    title: '待审列表',
+                    title_en: 'Business opportunities list',
+                    auth: ["crm-order-income.list"],
+                }
+            },
 			{
 				path: 'order-income-edit',
 				name: 'OrderIncomeEdit',

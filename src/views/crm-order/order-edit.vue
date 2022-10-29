@@ -486,6 +486,7 @@ export default {
             console.log('form',form)
             Core.Api.CRMOrder.save({
                 ...form,
+                money: this.contractAmount * 100,
                 audit_user_id_list: audit_user_id_list,
                 label_id_list: this.labelIdList,
             }).then(() => {
