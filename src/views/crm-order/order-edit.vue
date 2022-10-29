@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">{{ $t('crm_b.name') }}：</div> <!-- 所属客户 -->
+                    <div class="key">{{ $t('crm_b.bo') }}：</div> <!-- 所属客户 -->
                     <div class="value">
                         <a-select
                             v-model:value="form.bo_id"
@@ -512,6 +512,7 @@ export default {
             })
         },
         handleCustomerChange(){
+            this.auditUserList = []
             this.handleCustomerIdSearch()
             this.boOptions = [];
             this.form.bo_id = '';
@@ -544,6 +545,7 @@ export default {
             })
         },
         getDetailItemList(source_id, source_type){
+            this.auditUserList = []
             this.loading = true;
             Core.Api.CRMItemBind.list({
                 source_id: source_id,

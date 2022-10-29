@@ -27,8 +27,9 @@
                             :filter-option="false"
                             :not-found-content="null"
                             @search="handleOrderNameSearch"
+                            @change="handleOrderIdSearch('change')"
                             allowClear
-                            :disabled="order_id !== ''"
+                            :disabled="order_id !== '' && order_id !== 0"
                         >
                             <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
                                 {{item.name}}
@@ -92,7 +93,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_o.approval_process') }}：</div>
                     <!--  disabled -->
-                    <AuditUser :def-audit-user-list="auditUserList" :group-id="detail.group_id" @list="handleAuditUserIdList" :btn-text="$t('crm_o.add_reviewer')"></AuditUser>
+                    <AuditUser :def-audit-user-list="auditUserList" :group-id="order_detail.group_id" @list="handleAuditUserIdList" :btn-text="$t('crm_o.add_reviewer')"></AuditUser>
                 </div>
         </div>
         </div>
@@ -163,6 +164,7 @@ export default {
             auditUserList: [],
             labelList: [],
             labelIdList: [],
+            order_detail: {},
         };
     },
     watch: {},
@@ -180,8 +182,11 @@ export default {
             this.getLabelList()
         } else if (this.order_id !=0){
             this.form.order_id = this.order_id
+            this.handleOrderIdSearch("init")
+        } else {
+            this.handleOrderNameSearch()
         }
-        this.handleOrderNameSearch()
+
     },
     methods: {
         routerChange(type, item) {
@@ -206,6 +211,7 @@ export default {
                 for (const key in this.form) {
                     this.form[key] = this.detail[key]
                 }
+                this.handleOrderIdSearch("init")
                 let auditUserList= []
                 this.detail.audit_user_list.forEach(item => {
                     let param = {
@@ -289,6 +295,19 @@ export default {
         handleOrderNameSearch(name){
             Core.Api.CRMOrder.list({name: name, search_type: Core.Const.CRM_ORDER.SEARCH_TYPE.PERSONAL}).then(res => {
                 this.itemOptions = res.list
+
+            })
+        },
+        handleOrderIdSearch(type){
+            Core.Api.CRMOrder.detail({id: this.form.order_id}).then(res => {
+                this.order_detail = res.detail;
+                let customer_name = res.detail.customer_name
+                if (type === 'init'){
+                    this.handleOrderNameSearch(customer_name)
+                }
+                if (type === 'change'){
+                    this.auditUserList = []
+                }
 
             })
         },
