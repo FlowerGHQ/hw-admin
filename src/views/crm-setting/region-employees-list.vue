@@ -16,13 +16,10 @@
                             <div class="category-content">
                                 <!--                        <a-input-search v-model:value="searchValue" style="margin-bottom: 8px" placeholder="Search" />-->
                                 <a-tree
+                                    v-if="groupOptions.length"
                                     v-model:value="checkedKeys"
-                                    :disable-checkbox="false"
-                                    :expanded-keys="expandedKeys"
-                                    :auto-expand-parent="autoExpandParent"
-                                    :selected-keys="selectedKeys"
+                                    :default-expand-all="true"
                                     :tree-data="groupOptions"
-                                    @expand="onExpand"
                                     @select="onSelect"
                                 />
                             </div>
@@ -233,8 +230,7 @@ export default {
             userData: [],
             expandedKeys: ['0-0-0', '0-0-1'],
             autoExpandParent: true,
-            checkedKeys: ['0-0-0'],
-            selectedKeys: [],
+            checkedKeys: [],
             groupOptions: [],
         };
     },
@@ -285,13 +281,13 @@ export default {
                 console.log(res)
             })
         },
-        onExpand(expandedKeys) {
-            console.log('onExpand', expandedKeys);
-            // if not set autoExpandParent to false, if children expanded, parent can not collapse.
-            // or, you can remove all expanded children keys.
-            this.expandedKeys = expandedKeys;
-            this.autoExpandParent = false;
-        },
+        // onExpand(expandedKeys) {
+        //     console.log('onExpand', expandedKeys);
+        //     // if not set autoExpandParent to false, if children expanded, parent can not collapse.
+        //     // or, you can remove all expanded children keys.
+        //     this.expandedKeys = expandedKeys;
+        //     this.autoExpandParent = false;
+        // },
         onCheck(checkedKeys) {
             console.log('onCheck', checkedKeys);
             this.checkedKeys = checkedKeys;

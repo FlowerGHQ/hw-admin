@@ -27,15 +27,6 @@
                     </CustomerSelect>
                 </div>
                 <div class="form-item required" v-if="form.id == 0">
-                    <div class="key">{{ $t('crm_c.level') }}：</div>
-                    <div class="value">
-                        <a-select v-model:value="form.level" :placeholder="$t('def.input')" >
-                            <a-select-option v-for="item of CRM_LEVEL_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
-                        </a-select>
-                    </div>
-
-                </div>
-                <div class="form-item required" v-if="form.id == 0">
                     <div class="key">{{ $t('crm_c.group') }}：</div>
                     <div class="value">
                         <a-tree-select class="CategoryTreeSelect"
@@ -290,7 +281,6 @@ export default {
             Core,
             loginType: Core.Data.getLoginType(),
             CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
-            CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
             CRM_GENDER_MAP: Core.Const.CRM_CUSTOMER.GENDER_MAP,
 
             BUY_TYPE_MAP: Core.Const.CRM_TEST_DRIVE.BUY_TYPE_MAP,
@@ -317,7 +307,6 @@ export default {
                 //用户信息
                 name: '',
                 phone: '',
-                level: '',
                 group_id: '',
                 gender: '',
                 birthday: '',
@@ -370,10 +359,15 @@ export default {
     },
     mounted() {
         this.id = Number(this.$route.query.id) || 0
+        this.customer_id = Number(this.$route.query.customer_id) || 0
         this.form.id = this.id
+        this.form.customer_id = this.customer_id
         if (this.form.id) {
             this.getCrmTestDriveOrder()
             // this.getCustomerDetail();
+        } else if (this.form.customer_id){
+            this.getCustomerDetail();
+            this.getCustomerPortraitDetail();
         } else {
             this.form.status = Number(this.$route.query.status) || 0
         }
@@ -422,7 +416,6 @@ export default {
                 this.form.customer_status = this.detail.status;
                 this.form.name = this.detail.name;
                 this.form.phone = this.detail.phone;
-                this.form.level = this.detail.level;
 
             }).catch(err => {
                 console.log('getCustomerDetail err', err)
@@ -461,9 +454,7 @@ export default {
             if (!form.phone) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!form.level) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
+
             if (!form.group_id) {
                 return this.$message.warning(this.$t('def.enter'))
             }

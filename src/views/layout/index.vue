@@ -378,11 +378,14 @@ export default {
                 height: 30px;
                 margin-top: -5px;
                 margin-right: 10px;
+
             }
             .header-button{
                 padding-top: 5px;
                 height: 40px;
                 border: 0px;
+                padding-left: 20px;
+                padding-right: 20px;
                 text-align: center;
                 align-items: center;
                 .ant-radio-button-wrapper{

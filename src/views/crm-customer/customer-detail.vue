@@ -48,6 +48,7 @@
                     </a-col>
 
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
+                        <a-button type="primary" @click="routerChange('test-drive')" v-if="$auth('crm-customer.save')">{{ $t('crm_d.save') }}</a-button>
                         <template v-if="detail.status === STATUS.POOL">
                             <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord"/>
                             <CustomerAdd :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id"  @select="getCRMContactList"/>
@@ -253,6 +254,14 @@ export default {
                     })
                     window.open(routeUrl.href, '_self')
                     break;
+                case 'test-drive':    // 编辑
+                    routeUrl = this.$router.resolve({
+                        path: "/crm-test-drive-order/test-drive-edit",
+                        query: {customer_id: this.detail.id}
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+
             }
         },
         getCustomerDetail() {
