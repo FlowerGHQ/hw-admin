@@ -16,11 +16,10 @@
             <a-descriptions-item :label="$t('crm_o.remark')" class="label">{{detail.remark}}</a-descriptions-item>
         </a-descriptions>
         <a-descriptions title="销售信息" bordered :column="2" size="small" class="pannel">
-            <a-descriptions-item :label="$t('crm_o.total_price')" class="label">{{detail.total_price}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.discount_rate')" class="label">{{detail.discount_rate}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.discount_amount')" class="label">{{detail.discount_amount}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.other_cost')" class="label">{{detail.other_cost}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.money')" class="label">{{detail.money}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_o.total_price')" class="label">{{Core.Util.countFilter(detail.total_price)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_o.discount_amount')" class="label">{{Core.Util.countFilter(detail.discount_amount)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_o.other_cost')" class="label">{{Core.Util.countFilter(detail.other_cost)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_o.money')" class="label">{{Core.Util.countFilter(detail.money)}}</a-descriptions-item>
         </a-descriptions>
         <p>注：合同金额=产品合计金额*整单折扣+其他费用-优惠金额</p>
         <a-descriptions title="数据权限" bordered :column="2" size="small" class="pannel">
@@ -53,6 +52,7 @@ export default {
     },
     data() {
         return {
+            Core,
             USER_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载

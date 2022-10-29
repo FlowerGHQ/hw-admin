@@ -454,8 +454,17 @@ export default {
             // if (!form.discount_amount) {
             //     return this.$message.warning(this.$t('def.input'))
             // }
+            form.item_bind_list = this.$Util.deepCopy(this.tableData)
+            form.item_bind_list.forEach(it =>{
+                it.discount_price = it.discount_price * 100
+                it.total_price = it.total_price * 100
+            })
+            form.total_price = this.total_price * 100
+            form.other_cost = this.other_cost * 100
+            form.discount_amount = this.discount_amount * 100
+            form.contractAmount = this.contractAmount * 100
             form.date = form.date ? dayjs(form.date).unix() : 0 // 日期转时间戳
-            form.item_bind_list = this.tableData
+
             if ( this.form.bo_id !== ""){
                 form.source_id = this.form.bo_id
                 form.source_type = Core.Const.CRM_ORDER.SOURCE_TYPE.BO
@@ -473,7 +482,6 @@ export default {
             console.log('form',form)
             Core.Api.CRMOrder.save({
                 ...form,
-                money: this.contractAmount,
                 audit_user_id_list: audit_user_id_list,
                 label_id_list: this.labelIdList,
             }).then(() => {

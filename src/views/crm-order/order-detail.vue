@@ -94,9 +94,9 @@
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
-                            <CRMItem :detail="detail" :sourceId="detail.id" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.ORDER" ref ="CRMItem"/>
-                            <CrmOrderIncome :detail="detail" :orderId="detail.id" ref ="CrmOrderIncome"/>
-                            <CRMAttachmentFile :target_id="id" :target_type="CRM_ORDER_FILE" />
+                            <CRMItem  v-if="id>0" :detail="detail" :sourceId="detail.id" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.ORDER" ref ="CRMItem"/>
+                            <CrmOrderIncome v-if="id>0" :detail="detail" :orderId="detail.id" ref ="CrmOrderIncome"/>
+                            <CRMAttachmentFile v-if="id>0" :target_id="id" :target_type="CRM_ORDER_FILE" />
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -105,10 +105,10 @@
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="tabActiveKey">
                         <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.team_members')">
-                            <Group :targetId="id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.ORDER" :detail="detail" ref ="Group"/>
+                            <Group v-if="id>0" :targetId="id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.ORDER" :detail="detail" ref ="Group"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.dynamic')">
-                            <ActionRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.ORDER" :detail="detail" ref ="ActionRecord"/>
+                            <ActionRecord v-if="id>0" :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.ORDER" :detail="detail" ref ="ActionRecord"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -202,6 +202,7 @@ export default {
             },
             flag_message: false,
             audit_message: '',
+            id:"",
         };
     },
     watch: {},

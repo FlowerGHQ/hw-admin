@@ -69,16 +69,16 @@
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="activeKey">
                         <a-tab-pane key="TrackRecord" :tab="$t('crm_t.track_record')">
-                            <CRMTrackRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :detail="detail" ref ="CRMTrackRecord"/>
+                            <CRMTrackRecord  v-if="id>0" :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :detail="detail" ref ="CRMTrackRecord"/>
                         </a-tab-pane>
                         <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.summary_information')">
-                            <CustomerSituation :detail="detail"/>
+                            <CustomerSituation  v-if="id>0" :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
 
-                            <CRMItem :detail="detail" :sourceId="detail.id" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.BO" ref ="CRMItem"/>
-                            <CRMContact :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" :flagOWN="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN"  ref ="CRMContact"/>
-                            <CRMOrder :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" ref ="CRMOrder"/>
+                            <CRMItem :detail="detail"  v-if="id>0" :sourceId="detail.id" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.BO" ref ="CRMItem"/>
+                            <CRMContact :detail="detail" v-if="id>0"  :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" :flagOWN="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN"  ref ="CRMContact"/>
+                            <CRMOrder :detail="detail" v-if="id>0" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" ref ="CRMOrder"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -87,10 +87,10 @@
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="tabActiveKey">
                         <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.team_members')">
-                            <Group :targetId="id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" :detail="detail" ref ="Group"/>
+                            <Group  v-if="id>0" :targetId="id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" :detail="detail" ref ="Group"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.dynamic')">
-                            <ActionRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :detail="detail" ref ="ActionRecord"/>
+                            <ActionRecord  v-if="id>0" :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :detail="detail" ref ="ActionRecord"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>

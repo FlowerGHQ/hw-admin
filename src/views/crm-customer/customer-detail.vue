@@ -87,10 +87,10 @@
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
-                            <CRMTestDrive :detail="detail" :customerId="detail.id" ref="CRMTestDrive"/>
-                            <CRMContact :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :flagOWN="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN" ref="CRMContact"/>
-                            <CRMBo :detail="detail" :customerId="detail.id" ref ="CRMBo"/>
-                            <CRMOrder :detail="detail" :customerId="detail.id"  ref ="CRMOrder"/>
+                            <CRMTestDrive  v-if="id>0" :detail="detail" :customerId="detail.id" ref="CRMTestDrive"/>
+                            <CRMContact  v-if="id>0" :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :flagOWN="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN" ref="CRMContact"/>
+                            <CRMBo  v-if="id>0" :detail="detail" :customerId="detail.id" ref ="CRMBo"/>
+                            <CRMOrder   v-if="id>0" :detail="detail" :customerId="detail.id"  ref ="CRMOrder"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -99,10 +99,10 @@
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="tabActiveKey">
                         <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.team_members')" v-if="detail.status !== Core.Const.CRM_CUSTOMER.STATUS.POOL">
-                            <Group :targetId="id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :detail="detail" ref ="Group"/>
+                            <Group  v-if="id>0" :targetId="id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :detail="detail" ref ="Group"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.dynamic')">
-                            <ActionRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :detail="detail" ref ="ActionRecord"/>
+                            <ActionRecord  v-if="id>0" :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :detail="detail" ref ="ActionRecord"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>

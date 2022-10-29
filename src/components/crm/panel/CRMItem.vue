@@ -152,6 +152,7 @@ export default {
                     it.total_price = it.discount_price * it.amount
                 })
                 this.tableData = res.list
+                this.total = res.count
 
             }).catch(err => {
                 console.log('getCustomerDetail err', err)
