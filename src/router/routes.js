@@ -1550,7 +1550,7 @@ const routes = [
 		meta: {
 			title: 'CRM数据',
 			title_en: 'CRM Data',
-			icon: 'i_s_customer',
+			icon: 'i_crm_data',
 			auth: ["crm-label.list"],
 
 		},
@@ -1666,7 +1666,7 @@ const routes = [
 		meta: {
 			title: '商机',
 			title_en: 'Business Opportunity',
-			icon: 'i_s_customer',
+			icon: 'i_crm_bo',
 			auth: ["crm-bo.list"],
 
 		},
@@ -1714,7 +1714,7 @@ const routes = [
 		meta: {
 			title: '合同订单',
 			title_en: 'Contract Order',
-			icon: 'i_s_customer',
+			icon: 'i_crm_order',
             auth: ["crm-order.list"],
 		},
 		children: [
@@ -1772,7 +1772,7 @@ const routes = [
 		meta: {
 			title: '回款单',
 			title_en: 'Receipt',
-			icon: 'i_s_customer',
+			icon: 'i_crm_order_income',
             auth: ["crm-order-income.list"],
 		},
 		children: [
@@ -1830,7 +1830,7 @@ const routes = [
         meta: {
 			title: '试驾单',
 			title_en: 'Test Drive',
-			icon: 'i_s_customer',
+			icon: 'i_crm_test_drive',
 			auth: ["crm-order-income.list"],
 		},
 		children: [
@@ -1878,7 +1878,7 @@ const routes = [
         meta: {
             title: '智能标签',
             title_en: 'Smart Label',
-            icon: 'i_s_customer',
+            icon: 'i_crm_label',
             auth: ["crm-label.list"],
 
         },
@@ -1914,7 +1914,7 @@ const routes = [
 		meta: {
 			title: 'CRM设置',
 			title_en: 'CRM Setting',
-			icon: 'i_s_customer',
+			icon: 'i_crm_setting',
 			// auth: ["crm-customer.list"],
 
 		},
@@ -1970,7 +1970,7 @@ const routes = [
         meta: {
             title: '系统管理',
             title_en: 'Systems',
-            icon: 'i_s_temp',
+            icon: 'i_setting',
             auth: ['MANAGER'],
         },
         children: [

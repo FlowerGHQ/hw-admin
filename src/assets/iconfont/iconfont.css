@@ -1,8 +1,8 @@
 @font-face {
   font-family: "icon"; /* Project id 3000141 */
-  src: url('iconfont.woff2?t=1666690270193') format('woff2'),
-       url('iconfont.woff?t=1666690270193') format('woff'),
-       url('iconfont.ttf?t=1666690270193') format('truetype');
+  src: url('iconfont.woff2?t=1667052640595') format('woff2'),
+       url('iconfont.woff?t=1667052640595') format('woff'),
+       url('iconfont.ttf?t=1667052640595') format('truetype');
 }
 
 .icon {
@@ -13,8 +13,32 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.i_a-Group1000001724:before {
-  content: "\e603";
+.i_crm_data:before {
+  content: "\e605";
+}
+
+.i_crm_order:before {
+  content: "\e606";
+}
+
+.i_crm_test_drive:before {
+  content: "\e607";
+}
+
+.i_crm_bo:before {
+  content: "\e608";
+}
+
+.i_crm_setting:before {
+  content: "\e609";
+}
+
+.i_crm_label:before {
+  content: "\e60a";
+}
+
+.i_crm_order_income:before {
+  content: "\e60b";
 }
 
 .i_test:before {
