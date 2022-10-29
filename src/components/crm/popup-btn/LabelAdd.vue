@@ -107,9 +107,6 @@ export default {
             if (!form.name_en) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!form.remark) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
             Core.Api.CRMLabel.save({
                 ...form,
                 category: this.category,
