@@ -388,6 +388,10 @@ export default {
                 for (const key in this.form) {
                     this.form[key] = this.detail[key]
                 }
+                this.form.total_price =this.$Util.countFilter(this.form.total_price)
+                this.form.other_cost =this.$Util.countFilter(this.form.other_cost)
+                this.form.discount_amount =this.$Util.countFilter(this.form.discount_amount)
+
                 if (this.detail.source_type === Core.Const.CRM_ORDER.SOURCE_TYPE.BO){
                     this.form.bo_id = this.detail.source_id
                     this.handleBoIdSearch();
@@ -459,10 +463,10 @@ export default {
                 it.discount_price = it.discount_price * 100
                 it.total_price = it.total_price * 100
             })
-            form.total_price = this.total_price * 100
-            form.other_cost = this.other_cost * 100
-            form.discount_amount = this.discount_amount * 100
-            form.contractAmount = this.contractAmount * 100
+            form.total_price = this.form.total_price * 100
+            form.other_cost = this.form.other_cost * 100
+            form.discount_amount = this.form.discount_amount * 100
+            form.money = this.contractAmount * 100
             form.date = form.date ? dayjs(form.date).unix() : 0 // 日期转时间戳
 
             if ( this.form.bo_id !== ""){
