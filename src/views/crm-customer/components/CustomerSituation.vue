@@ -43,6 +43,8 @@
             <a-descriptions-item :label="$t('crm_c_p.green_energy_understand')" class="label">{{$Util.CRMTestDriveGreenEnergyUnderstandMapFilter(customerPortrait.green_energy_understand)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c_p.electric_two_wheeler_understand')" class="label">{{$Util.CRMTestDriveElectricTwoWheelerUnderstandMapFilter(customerPortrait.electric_two_wheeler_understand)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c_p.pre_order_car_type')" class="label">{{$Util.CRMPreOrderCarTypeMapFilter(customerPortrait.pre_order_car_type)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c_p.pre_order_city')" class="label">{{customerPortrait.pre_order_city}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c_p.pre_order_time')" class="label">{{$Util.timeFilter(customerPortrait.pre_order_time)}}</a-descriptions-item>
         </a-descriptions>
         <a-descriptions title="商机信息" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('crm_c.order_success_count')" class="label">{{detail.order_count}}</a-descriptions-item>

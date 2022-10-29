@@ -1344,6 +1344,8 @@ const messages = {
 		    green_energy_understand	:'新能源认知度',
 		    electric_two_wheeler_understand	:'电动两轮认知度',
 		    pre_order_car_type: '留资意向车型',
+		    pre_order_city: '留资城市',
+		    pre_order_time: '留资时间',
 	    },
 	    crm_refund: {
 		    list: '退款单列表',

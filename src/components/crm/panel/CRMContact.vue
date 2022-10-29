@@ -18,7 +18,7 @@
                     </template>
                     <template v-if="column.key === 'operation'" >
                         <template v-if="$auth('ADMIN')">
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('file.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('file.delete') && flagOWN"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </template>
@@ -61,6 +61,10 @@ export default {
             type: Number,
             default: 0
         },
+        flagOWN: {
+            type: Boolean,
+            default: false
+        }
     },
     data() {
         return {

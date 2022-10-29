@@ -1,7 +1,7 @@
 <template>
 <div class="InformationInfo gray-panel no-margin">
     <div class="panel-title">
-        <div class="title">{{ $t('crm_b.bo') }}</div>
+        <div class="title">{{ $t('crm_d.list') }}</div>
     </div>
     <div class="panel-content">
         <div>

@@ -63,9 +63,9 @@
                                 <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button>
                                 <a-button @click="routerChange('bo-save')" v-if="$auth('crm-bo.save')">新建商机</a-button>
                                 <a-button @click="routerChange('order-save')" v-if="$auth('crm-order.save')">新建订单</a-button>
+                                <CustomerAdd :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id" @select="getCRMContactList" :addCustomerBtn="true"/>
                             </template>
                             <template v-if="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN">
-                                <CustomerAdd :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id" @select="getCRMContactList" :addCustomerBtn="true"/>
                                 <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-customer.transfer')">{{ $t('crm_c.transfer') }}</a-button>
                                 <a-button type="danger" @click="handleReturnPool" v-if="$auth('crm-customer.return-pool')">{{ $t('crm_c.return_pool') }}</a-button>
                             </template>
@@ -87,7 +87,7 @@
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
                             <CRMTestDrive :detail="detail" :customerId="detail.id" ref="CRMTestDrive"/>
-                            <CRMContact :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" ref="CRMContact"/>
+                            <CRMContact :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :flagOWN="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN" ref="CRMContact"/>
                             <CRMBo :detail="detail" :customerId="detail.id" ref ="CRMBo"/>
                             <CRMOrder :detail="detail" :customerId="detail.id"  ref ="CRMOrder"/>
                         </a-tab-pane>
