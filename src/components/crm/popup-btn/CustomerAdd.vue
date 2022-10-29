@@ -168,6 +168,10 @@ export default {
             type: Number,
             default: 0
         },
+        groupId: {
+            type: Number,
+            default: 0
+        },
         selectBtn: {
             type: Boolean,
             default: false,
@@ -328,6 +332,7 @@ export default {
                 ...areaContinent,
                 target_id: this.targetId,
                 target_type: this.targetType,
+                group_id: this.groupId,
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.handleModalClose();
