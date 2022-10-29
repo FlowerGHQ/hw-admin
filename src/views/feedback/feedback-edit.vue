@@ -328,7 +328,7 @@ export default {
         // 检查表单输入
         checkFormInput(form,area) {
 
-            if (!form.mileage) {
+            if (form.mileage == undefined || form.mileage == '' || form.mileage == null) {
                 this.$message.warning(this.$t('def.enter'))
                 return 0
             }

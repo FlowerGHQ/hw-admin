@@ -8,6 +8,9 @@
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION">
                         <i class="icon i_edit"/>{{ $t('def.edit') }}
                     </a-button>
+                    <a-button type="primary" ghost @click="handleDelete()" v-if="detail.status == STATUS.WAIT_DETECTION || detail.status == STATUS.AUDIT_FAIL">
+                        <i class="icon i_edit"/>{{ $t('def.delete') }}
+                    </a-button>
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.AUDIT_FAIL">
                         {{ $t('def.re_edit') }}
                     </a-button>
@@ -393,6 +396,22 @@ export default {
             Object.assign(this.repairForm, this.$options.data().repairForm)
         },
 
+        handleDelete() {
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('p.determine_cancel'),
+                okText: _this.$t('pop_up.yes'),
+                okType: 'danger',
+                cancelText: _this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.Repair.delete({id: _this.id}).then(() => {
+                        _this.$message.success(_this.$t('pop_up.save_success'))
+                        _this.getRepairDetail()
+
+                    })
+                },
+            });
+        },
         // 工单 结算
         handleSettlement() {
             let _this = this;
