@@ -288,6 +288,7 @@ export default {
                 for (const key in this.form) {
                     this.form[key] = d[key]
                 }
+                this.form.money = this.$Util.countFilter(this.form.money)
                 this.handleCustomerIdSearch()
 
             }).catch(err => {
@@ -347,6 +348,13 @@ export default {
             //     }
             //     console.log('area1234556',area)
             // }
+            form.item_bind_list = this.$Util.deepCopy(this.tableData)
+            form.item_bind_list.forEach(it =>{
+                it.discount_price = it.discount_price * 100
+                it.total_price = it.total_price * 100
+            })
+            form.money = this.form.money * 100
+
             Core.Api.CRMBo.save({
                 ...form,
                 item_bind_list: this.tableData,
