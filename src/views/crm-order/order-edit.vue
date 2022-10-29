@@ -155,7 +155,7 @@
                                 {{ $t('in.item') }}
                             </template>
                             <template v-if="column.key === 'discount'">
-                                <a-input-number v-model:value="record.discount" :min="0" :precision="2" placeholder="0.00" :placeholder="$t('def.input')" @change="checkDiscount(record, 'discount')"/>%
+                                <a-input-number v-model:value="record.discount" :min="0" :max="100" :precision="2" placeholder="0.00" :placeholder="$t('def.input')" @change="checkDiscount(record, 'discount')"/>%
                             </template>
 
                             <template v-if="column.key === 'total_price'">
