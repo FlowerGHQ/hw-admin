@@ -1068,6 +1068,13 @@ const Util = {
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
+	CRMPreOrderCarTypeMapFilter(val,  to='zh') {
+		const MAP = Const.CRM_TEST_DRIVE.PRE_ORDER_CAR_TYPE_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+
+
 
 
 

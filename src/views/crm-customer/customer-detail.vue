@@ -65,7 +65,7 @@
                                 <a-button @click="routerChange('order-save')" v-if="$auth('crm-order.save')">新建订单</a-button>
                             </template>
                             <template v-if="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN">
-                                <CustomerAdd :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @select="getCRMContactList" :addCustomerBtn="true"/>
+                                <CustomerAdd :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id" @select="getCRMContactList" :addCustomerBtn="true"/>
                                 <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-customer.transfer')">{{ $t('crm_c.transfer') }}</a-button>
                                 <a-button type="danger" @click="handleReturnPool" v-if="$auth('crm-customer.return-pool')">{{ $t('crm_c.return_pool') }}</a-button>
                             </template>
@@ -316,7 +316,7 @@ export default {
                         id: this.detail.id,
                         own_user_id: this.batchForm.own_user_id,
                     }).then(() => {
-                        this.$message.success(this.$t('pop_up.delete_success'));
+                        this.$message.success(this.$t('crm_c.distribute_success'));
                         this.getCustomerDetail();
                         this.getTargetByUserId();
                         this.handleBatchClose();
@@ -329,7 +329,7 @@ export default {
                         id: this.detail.id,
                         own_user_id: this.batchForm.own_user_id,
                     }).then(() => {
-                        this.$message.success(this.$t('pop_up.delete_success'));
+                        this.$message.success(this.$t('crm_c.transfer_success'));
                         this.getCustomerDetail();
                         this.getTargetByUserId();
                         this.handleBatchClose();

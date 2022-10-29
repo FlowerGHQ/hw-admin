@@ -1890,6 +1890,10 @@ let Const = {
 			'20': { key: 20, zh: '出行便捷', en: ''},
 			'30': { key: 30, zh: '不了解', en: ''},
 		},
+		PRE_ORDER_CAR_TYPE_MAP: {
+			'1': { key: 1, zh: 'SENMENTI O', en: 'SENMENTI O'},
+			'2': { key: 2, zh: 'SENMENTI X', en: 'SENMENTI X'},
+		},
 	},
 
     // 测试

@@ -1343,6 +1343,7 @@ const messages = {
 		    pay_attention_to	:'重视方向',
 		    green_energy_understand	:'新能源认知度',
 		    electric_two_wheeler_understand	:'电动两轮认知度',
+		    pre_order_car_type: '留资意向车型',
 	    },
 	    crm_refund: {
 		    list: '退款单列表',
