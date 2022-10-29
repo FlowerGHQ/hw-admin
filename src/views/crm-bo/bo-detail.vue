@@ -24,7 +24,7 @@
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_b.money') }}：</span>
-                        <span class="value">{{detail.money}}</span>
+                        <span class="value">{{detail.money / 100}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_b.estimated_deal_time') }}：</span>

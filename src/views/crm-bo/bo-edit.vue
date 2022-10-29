@@ -357,6 +357,7 @@ export default {
 
             Core.Api.CRMBo.save({
                 ...form,
+                money: this.form.money * 100,
                 item_bind_list: this.tableData,
                 label_id_list: this.labelIdList,
             }).then((res) => {
