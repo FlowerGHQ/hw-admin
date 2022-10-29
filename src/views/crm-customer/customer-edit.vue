@@ -21,14 +21,14 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('n.name') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" :placeholder="$t('def.input')" />
+                        <a-input v-model:value="form.name" :placeholder="$t('def.input')" :disabled="form.id > 0"/>
                     </div>
 
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('n.phone') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerBlur"/>
+                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerBlur" :disabled="form.id > 0"/>
                     </div>
                     <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
                     <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
@@ -414,6 +414,9 @@ export default {
             }
 
             console.log("areaContinent", areaContinent)
+            if (!this.$Util.ifPhoneFilter(form.phone)){
+                return this.$message.warning(this.$t('def.error_phone'))
+            }
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'))
             }

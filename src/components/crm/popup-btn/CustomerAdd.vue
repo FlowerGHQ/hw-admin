@@ -302,6 +302,9 @@ export default {
             if (!form.phone) {
                 return this.$message.warning(this.$t('def.enter'))
             }
+            if (!this.$Util.ifPhoneFilter(form.phone)){
+                return this.$message.warning(this.$t('def.error_phone'))
+            }
             if (!form.type) {
                 return this.$message.warning(this.$t('def.enter'))
             }

@@ -411,6 +411,14 @@ const Util = {
             return item.role === undefined || item.role.includes(role)
         })
     },
+	ifPhoneFilter(val){
+		let phoneReg = /^1(3|4|5|6|7|8|9)\d{9}$/;
+		if (phoneReg.test(val)){
+			return true;
+		} else {
+			return false;
+		}
+	},
 
     /* =============== 通用过滤器 ================ */
 

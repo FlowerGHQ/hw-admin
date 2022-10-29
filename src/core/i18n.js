@@ -959,6 +959,7 @@ const messages = {
             inaccessible: '当前身份无法访问',
             uploaded: '上传成功',
 	        export_as_supplier_report: '以供应商报表方式导出',
+	        error_phone: '手机号输入不正确',
 
 
         },
@@ -2818,7 +2819,7 @@ const messages = {
             inaccessible: 'Current identity inaccessible',
             uploaded: 'Uploaded successfully',
 	        export_as_supplier_report: 'Export as a supplier report',
-
+	        error_phone: 'The mobile phone number is not entered correctly',
         },
         search: {
             repair_sn: 'Search Sn',
