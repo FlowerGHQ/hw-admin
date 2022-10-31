@@ -31,7 +31,7 @@
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_o.money') }}：</span>
-                        <span class="value">{{ detail.money || '-'  }}</span>
+                        <span class="value">{{ $Util.countFilter(detail.money) || '-'  }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_o.paid_money_progress') }}：</span>
