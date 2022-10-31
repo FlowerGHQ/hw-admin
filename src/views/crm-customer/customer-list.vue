@@ -428,6 +428,7 @@ export default {
             });
         },
         getUserData(query){
+            this.batchForm.own_user_id = undefined
             this.loading = true;
             Core.Api.User.listGroup({
                 group_id: this.group_id,

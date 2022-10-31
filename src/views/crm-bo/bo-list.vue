@@ -109,17 +109,43 @@
         </div>
         <a-modal v-model:visible="batchShow" :title="$t('crm_c.distribute_customer')" :after-close='handleBatchClose'>
             <div class="form-item required">
+                <div class="key">{{ $t('crm_b.customer_name') }}：</div>
+                <div class="value">
+                    {{detail.customer_name}}
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_b.name') }}：</div>
+                <div class="value">
+                    {{detail.name}}
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_group.name') }}：</div>
+                <div class="value">
+                    <a-tree-select class="CategoryTreeSelect"
+                                   v-model:value="group_id"
+                                   :placeholder="$t('def.select')"
+                                   :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                                   :tree-data="groupOptions"
+                                   @change="getUserData('')"
+                                   tree-default-expand-all
+                    />
+                </div>
+            </div>
+            <div class="form-item required">
                 <div class="key">{{ $t('crm_b.own_user_name') }}：</div>
                 <div class="value">
                     <a-select
                         v-model:value="batchForm.own_user_id"
                         show-search
-                        :placeholder="$t('def.input')+$t('n.warehouse')"
+                        :placeholder="$t('def.input')"
                         :default-active-first-option="false"
                         :show-arrow="false"
                         :filter-option="false"
                         :not-found-content="null"
                         @search="getUserData"
+                        :disabled="!group_id"
                     >
                         <a-select-option v-for=" item in userData" :key="item.id" :value="item.id">
                             {{ item.account ? item.account.name : '-' }}
@@ -176,7 +202,9 @@ export default {
             selectedRowKeys: [],
             selectedRowItems: [],
             selectedRowItemsAll: [],
-            device: [],
+            detail: [],
+            groupOptions: [],
+            group_id: undefined,
         };
     },
     watch: {},
@@ -329,7 +357,7 @@ export default {
             this.detail = item
             this.batchType = type;
             this.batchShow = true;
-            this.getUserData()
+            this.handleGroupTree();
         },
         handleBatchClose() {
             this.batchForm.own_user_id = undefined;
@@ -361,10 +389,10 @@ export default {
 
         },
         getUserData(query){
-
+            this.batchForm.own_user_id = undefined
             this.loading = true;
-            Core.Api.User.list({
-                group_id: this.device.group_id,
+            Core.Api.User.listGroup({
+                group_id: this.group_id,
                 name: query,
                 org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
             }).then(res => {
@@ -395,6 +423,15 @@ export default {
                     })
                 },
             });
+        },
+        handleGroupTree(){
+            Core.Api.CRMGroupMember.structureByUserGroup({
+                group_id: this.detail.group_id
+            }).then(res => {
+                this.groupOptions = res.list
+                console.log(res)
+
+            })
         },
     }
 };

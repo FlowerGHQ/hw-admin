@@ -124,6 +124,7 @@
                             {{ $Util[column.util](text, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'operation'">
+                            <a-button type="link" @click="handleBatch('transfer',record)" >{{ $t('crm_c.transfer') }}</a-button>
                             <a-button type="link" @click="routerChange('detail', record)" v-if="$auth('crm-order.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
                         </template>
                     </template>
@@ -146,6 +147,32 @@
             </div>
         </div>
         <a-modal v-model:visible="batchShow" :title="$t('crm_c.distribute_customer')" :after-close='handleBatchClose'>
+
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_b.customer_name') }}：</div>
+                <div class="value">
+                    {{detail.customer_name}}
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_o.name') }}：</div>
+                <div class="value">
+                    {{detail.name}}
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_group.name') }}：</div>
+                <div class="value">
+                    <a-tree-select class="CategoryTreeSelect"
+                                   v-model:value="group_id"
+                                   :placeholder="$t('def.select')"
+                                   :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                                   :tree-data="groupOptions"
+                                   @change="getUserData('')"
+                                   tree-default-expand-all
+                    />
+                </div>
+            </div>
             <div class="form-item required">
                 <div class="key">{{ $t('crm_b.own_user_name') }}：</div>
                 <div class="value">
@@ -158,6 +185,7 @@
                         :filter-option="false"
                         :not-found-content="null"
                         @search="getUserData"
+                        :disabled="!group_id"
                     >
                         <a-select-option v-for=" item in userData" :key="item.id" :value="item.id">
                             {{ item.account ? item.account.name : '-' }}
@@ -221,6 +249,8 @@ export default {
             selectedRowKeys: [],
             selectedRowItems: [],
             selectedRowItemsAll: [],
+            groupOptions: [],
+            group_id: undefined,
         };
     },
     watch: {},
@@ -372,15 +402,15 @@ export default {
                 },
             });
         },
-        handleBatch(type) {
-            if (this.selectedRowKeys.length === 0) {
-                return this.$message.warning(this.$t('crm_c.select'))
-            }
+        handleBatch(type,item) {
+            this.detail = item
             this.batchType = type;
             this.batchShow = true;
+            this.handleGroupTree();
         },
         handleBatchClose() {
-
+            this.batchForm.own_user_id = undefined;
+            this.detail = {}
             this.batchShow = false;
             this.batchType = '';
         },
@@ -429,8 +459,10 @@ export default {
             });
         },
         getUserData(query){
+            this.batchForm.own_user_id = undefined
             this.loading = true;
             Core.Api.User.list({
+                group_id: this.group_id,
                 name: query,
                 org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
             }).then(res => {
@@ -441,6 +473,15 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
+        },
+        handleGroupTree(){
+            Core.Api.CRMGroupMember.structureByUserGroup({
+                group_id: this.detail.group_id
+            }).then(res => {
+                this.groupOptions = res.list
+                console.log(res)
+
+            })
         },
     }
 };
