@@ -1,7 +1,7 @@
 <template>
 <div class="InformationInfo gray-panel no-margin">
     <div class="panel-title">
-        <div class="title">{{ $t('crm_b.bo') }}</div>
+        <div class="title">{{ $t('crm_oi.refund_record') }}</div>
     </div>
     <div class="panel-content">
         <div>
@@ -15,8 +15,8 @@
                                                     <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                                                 </a-tooltip>
                                             </template>-->
-                    <template v-if="column.key === 'item'">
-                        {{ text || '-' }}
+                    <template v-if="column.key === 'money'">
+                        {{ text / 100 || '-' }}
                     </template>
                     <template v-if="column.key === 'type'">
                         {{ $Util.CRMRefundRecordTypeMapFilter(text) }}
@@ -88,10 +88,10 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: 'crm_refund.type', dataIndex: 'type', key:'type', sorter: true},
+                {title: 'crm_refund.type', dataIndex: 'type', key:'type'},
                 // {title: 'crm_b.customer_name', dataIndex: 'customer_name', key:'customer_name', sorter: true},
-                {title: 'crm_refund.money', dataIndex: 'money', key:'type', sorter: true},
-                {title: 'crm_refund.remark', dataIndex: 'remark', key:'remark', sorter: true},
+                {title: 'crm_refund.money', dataIndex: 'money', key:'money'},
+                {title: 'crm_refund.remark', dataIndex: 'remark', key:'remark'},
                 // {title: 'crm_b.estimated_deal_time', dataIndex: 'estimated_deal_time', key: 'estimated_deal_time', sorter: true},
                 // {title: 'r.creator_name', dataIndex: 'creator_name', key: 'time', sorter: true},
                 // {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},

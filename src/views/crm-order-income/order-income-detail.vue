@@ -31,7 +31,7 @@
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_oi.money') }}：</span>
-                        <span class="value">{{ detail.money || '-'  }}</span>
+                        <span class="value">{{ detail.money / 100 || '-'  }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_oi.date') }}：</span>
@@ -406,7 +406,7 @@ export default {
             Core.Api.CRMRefundRecord.save({
                 order_income_id: this.detail.id,
                 type: this.refundForm.type,
-                money: this.refundForm.money,
+                money: this.refundForm.money * 100,
                 remark: this.refundForm.remark,
 
             }).then(() => {
