@@ -1308,6 +1308,7 @@ const messages = {
 		    delete: '删除回款单',
 		    error:'拒绝原因',
             audit_list: '待审回款单列表',
+            refund_record: '退款记录',
 	    },
 	    crm_d: {
 		    list: '试驾单列表',
