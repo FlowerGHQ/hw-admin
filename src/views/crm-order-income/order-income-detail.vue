@@ -23,7 +23,16 @@
                 <a-row class="desc-detail">
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_oi.order') }}：</span>
-                        <span class="value">{{ detail.order? detail.order.name || '-'  :  '-'  }}</span>
+                        <span class="value">
+                            <template v-if="$auth('crm-order.detail')">
+                                <a-button type="link" @click="routerChange('detail-order',detail)" >
+                                     {{ detail.order? detail.order.name || '-'  :  '-'  }}
+                                 </a-button>
+                            </template>
+                             <template v-else>
+                                    {{ detail.order? detail.order.name || '-'  :  '-'  }}
+                             </template>
+                        </span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_oi.status') }}：</span>
@@ -257,6 +266,13 @@ export default {
                 case 'back':    // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/crm-order-income/order-income-list",
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'detail-order':  // 详情
+                    routeUrl = this.$router.resolve({
+                        path: "/crm-order/order-detail",
+                        query: { id: item.order_id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
