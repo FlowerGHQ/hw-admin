@@ -1180,6 +1180,7 @@ const messages = {
 		    purchase_intent: '购买意向',
 		    test_drive_intent: '试驾意向',
 		    group: '区域',
+		    transfer_success: "转让成功",
 	    },
 	    crm_t: {
 		    track_record: '跟进记录',

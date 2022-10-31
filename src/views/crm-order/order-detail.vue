@@ -43,8 +43,7 @@
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                         <template v-if="trackMemberDetail!= null ? trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
-                                <a-button type="primary" @click="handleBatch('transfer')">{{ $t('crm_c.transfer') }}</a-button>
-                                <a-button type="danger" @click="handleDelete(detail.id)">{{ $t('crm_c.return_pool') }}</a-button>
+                            <a-button type="primary" @click="handleBatch('transfer')">{{ $t('crm_c.transfer') }}</a-button>
                         </template>
                         <template v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
                             <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order.save')">编辑</a-button>
@@ -114,6 +113,57 @@
                 </div>
             </a-col>
         </a-row>
+        <a-modal v-model:visible="batchShow" :title="$t('crm_b.distribute_bo')" :after-close='handleBatchClose'>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_b.customer_name') }}：</div>
+                <div class="value">
+                    {{detail.customer_name}}
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_o.name') }}：</div>
+                <div class="value">
+                    {{detail.name}}
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_group.name') }}：</div>
+                <div class="value">
+                    <a-tree-select class="CategoryTreeSelect"
+                                   v-model:value="group_id"
+                                   :placeholder="$t('def.select')"
+                                   :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                                   :tree-data="groupOptions"
+                                   @change="getUserData('')"
+                                   tree-default-expand-all
+                    />
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_b.own_user_name') }}：</div>
+                <div class="value">
+                    <a-select
+                        v-model:value="batchForm.own_user_id"
+                        show-search
+                        :placeholder="$t('def.input')"
+                        :default-active-first-option="false"
+                        :show-arrow="false"
+                        :filter-option="false"
+                        :not-found-content="null"
+                        @search="getUserData"
+                        :disabled="!group_id"
+                    >
+                        <a-select-option v-for=" item in userData" :key="item.id" :value="item.id">
+                            {{ item.account ? item.account.name : '-' }}
+                        </a-select-option>
+                    </a-select>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handleBatchSubmit" type="primary">{{ $t('def.ok') }}</a-button>
+                <a-button @click="handleBatchClose">{{ $t('def.cancel') }}</a-button>
+            </template>
+        </a-modal>
     </div>
 </template>
 
@@ -185,6 +235,7 @@ export default {
                     type: 'file',
                 },
             },
+            activeKey: 'CustomerSituation',
             tabActiveKey: "CustomerSituation",
             trackMemberDetail: undefined,
             batchForm: {
@@ -203,6 +254,8 @@ export default {
             flag_message: false,
             audit_message: '',
             id:"",
+            groupOptions: [],
+            group_id: undefined,
         };
     },
     watch: {},
@@ -300,7 +353,7 @@ export default {
                         this.audit_message = item.remark
                     }
                 })
-
+                this.handleGroupTree()
 
 
                 // this.defArea = [d.continent || '', d.country || '']
@@ -418,10 +471,12 @@ export default {
             })
         },
         getUserData(query){
+            this.batchForm.own_user_id = undefined
             this.loading = true;
-            Core.Api.User.list({
+            Core.Api.User.listGroup({
                 name: query,
                 org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
+                group_id: this.group_id,
             }).then(res => {
                 console.log("getTableData res:", res)
                 this.userData = res.list;
@@ -430,6 +485,15 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
+        },
+        handleGroupTree(){
+            Core.Api.CRMGroupMember.structureByUserGroup({
+                group_id: this.detail.group_id
+            }).then(res => {
+                this.groupOptions = res.list
+                console.log(res)
+
+            })
         },
     }
 };

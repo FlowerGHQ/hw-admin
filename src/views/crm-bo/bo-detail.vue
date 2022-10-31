@@ -47,17 +47,17 @@
                     </a-col>
 
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                            <span v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
+                            <template v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
                                 <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" @submit="getCRMTrackRecord"/>
                                 <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_CONTACT_BIND.TARGET_TYPE.BO_ADD_CUSTOMER" :addCustomerBtn="true"/>
                                 <a-button @click="routerChange('edit')" v-if="$auth('crm-bo.save')">{{ $t('n.edit') }}</a-button>
                                 <a-button @click="routerChange('order-save')" v-if="$auth('crm-order.save')">新建订单</a-button>
 
-                            </span>
-                            <span v-if="trackMemberDetail!= null ? trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
+                            </template>
+                            <template v-if="trackMemberDetail!= null ? trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
                                 <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-bo.transfer')">{{ $t('crm_c.transfer') }}</a-button>
                                 <a-button type="danger" @click="handleDelete">{{ $t('crm_c.delete') }}</a-button>
-                            </span>
+                            </template>
 
                     </a-col>
                 </a-row>
@@ -110,17 +110,31 @@
                 </div>
             </div>
             <div class="form-item required">
+                <div class="key">{{ $t('crm_group.name') }}：</div>
+                <div class="value">
+                    <a-tree-select class="CategoryTreeSelect"
+                                   v-model:value="group_id"
+                                   :placeholder="$t('def.select')"
+                                   :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                                   :tree-data="groupOptions"
+                                   @change="getUserData('')"
+                                   tree-default-expand-all
+                    />
+                </div>
+            </div>
+            <div class="form-item required">
                 <div class="key">{{ $t('crm_b.own_user_name') }}：</div>
                 <div class="value">
                     <a-select
                         v-model:value="batchForm.own_user_id"
                         show-search
-                        :placeholder="$t('def.input')+$t('n.warehouse')"
+                        :placeholder="$t('def.input')"
                         :default-active-first-option="false"
                         :show-arrow="false"
                         :filter-option="false"
                         :not-found-content="null"
                         @search="getUserData"
+                        :disabled="!group_id"
                     >
                         <a-select-option v-for=" item in userData" :key="item.id" :value="item.id">
                             {{ item.account ? item.account.name : '-' }}
@@ -180,6 +194,8 @@ export default {
                 own_user_id: '',
             },
             userData: [],
+            groupOptions: [],
+            group_id: undefined,
         };
     },
     watch: {},
@@ -237,7 +253,7 @@ export default {
                     this.form[key] = d[key]
                 }
                 this.defAddr = [d.province, d.city, d.county]
-                this.getUserData("")
+                this.handleGroupTree()
                 // this.defArea = [d.continent || '', d.country || '']
             }).catch(err => {
                 console.log('getCustomerDetail err', err)
@@ -292,7 +308,7 @@ export default {
                         id: this.detail.id,
                         own_user_id: this.batchForm.own_user_id,
                     }).then(() => {
-                        this.$message.success(this.$t('pop_up.delete_success'));
+                        this.$message.success(this.$t('crm_c.transfer_success'));
                         this.getBoDetail();
                         this.handleBatchClose();
                     }).catch(err => {
@@ -336,9 +352,10 @@ export default {
             this.$refs.ActionRecord.getTableData();
         },
         getUserData(query){
+            this.batchForm.own_user_id = undefined
             this.loading = true;
             Core.Api.User.listGroup({
-                group_id: this.detail.group_id,
+                group_id: this.group_id,
                 name: query,
                 org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
             }).then(res => {
@@ -417,8 +434,16 @@ export default {
                     })
                 },
             });
-        }
+        },
+        handleGroupTree(){
+            Core.Api.CRMGroupMember.structureByUserGroup({
+                group_id: this.detail.group_id
+            }).then(res => {
+                this.groupOptions = res.list
+                console.log(res)
 
+            })
+        },
 
     }
 };
