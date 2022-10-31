@@ -576,7 +576,7 @@ export default {
                 company_uid: form.company_uid,
                 waybill_uid: form.waybill_uid,
             }).then(res => {
-                this.$message.success($t('af.shipped'))
+                this.$message.success(this.$t('af.shipped'))
                 this.deliverShow = false
                 this.getOrderDetail()
                 this.getWaybillDetail();

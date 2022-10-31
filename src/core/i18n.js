@@ -1180,6 +1180,7 @@ const messages = {
 		    purchase_intent: '购买意向',
 		    test_drive_intent: '试驾意向',
 		    group: '区域',
+		    transfer_success: "转让成功",
 	    },
 	    crm_t: {
 		    track_record: '跟进记录',
@@ -1287,6 +1288,8 @@ const messages = {
 		    approval_process: '审核流程',
 		    add_reviewer: '添加审核人',
             audit_list: '待审合同列表',
+            income_money: '已回款',
+            refunded_amount: '已退款',
 	    },
 	    crm_oi: {
 			list: '回款单列表',
@@ -1308,6 +1311,7 @@ const messages = {
 		    delete: '删除回款单',
 		    error:'拒绝原因',
             audit_list: '待审回款单列表',
+            order_uid: '合同订单号',
 	    },
 	    crm_d: {
 		    list: '试驾单列表',
@@ -1353,8 +1357,13 @@ const messages = {
 		    list: '退款单列表',
 			save: "保存退款单",
 		    type: '退款类型',
-		    money: '退款金额',
+		    money: '本次退款金额',
 		    remark: '退款说明',
+            refund_record: '退款记录',
+            refunded: '已退款金额',
+            total_amount: '订单总金额',
+            refunded_amount: '已退金额',
+            time: '退款时间',
 	    },
 	    crm_r: {
 		    from_customer: '来自客户',

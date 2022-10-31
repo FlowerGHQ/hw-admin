@@ -26,7 +26,7 @@
                         {{ $t('crm_c.rechecking') }}
                     </CustomerSelect>
                 </div>
-                <div class="form-item required" v-if="form.id == 0">
+                <div class="form-item required">
                     <div class="key">{{ $t('crm_c.group') }}：</div>
                     <div class="value">
                         <a-tree-select class="CategoryTreeSelect"
@@ -34,6 +34,7 @@
                                        :placeholder="$t('def.select')"
                                        :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
                                        :tree-data="groupOptions"
+                                       :disabled="(form.id > 0 || form.customer_id > 0) && this.form.group_id > 0"
                                        tree-default-expand-all
                         />
                     </div>
@@ -416,6 +417,7 @@ export default {
                 this.form.customer_status = this.detail.status;
                 this.form.name = this.detail.name;
                 this.form.phone = this.detail.phone;
+                this.form.group_id = this.detail.group_id
 
             }).catch(err => {
                 console.log('getCustomerDetail err', err)

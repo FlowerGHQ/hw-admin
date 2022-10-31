@@ -110,7 +110,7 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'money'">
-                            {{ text / 100 + '元' || '-' }}
+                            {{ $Util.countFilter(text)+ '元' || '-' }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}

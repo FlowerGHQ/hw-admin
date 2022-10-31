@@ -23,7 +23,16 @@
                 <a-row class="desc-detail">
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_oi.order') }}：</span>
-                        <span class="value">{{ detail.order? detail.order.name || '-'  :  '-'  }}</span>
+                        <span class="value">
+                            <template v-if="$auth('crm-order.detail')">
+                                <a-button type="link" @click="routerChange('detail-order',detail)" >
+                                     {{ detail.order? detail.order.name || '-'  :  '-'  }}
+                                 </a-button>
+                            </template>
+                             <template v-else>
+                                    {{ detail.order? detail.order.name || '-'  :  '-'  }}
+                             </template>
+                        </span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_oi.status') }}：</span>
@@ -31,7 +40,7 @@
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_oi.money') }}：</span>
-                        <span class="value">{{ detail.money || '-'  }}</span>
+                        <span class="value">{{$Util.countFilter(detail.money) + '元'}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_oi.date') }}：</span>
@@ -41,10 +50,16 @@
                         <span class="key">{{ $t('crm_oi.own_user_name') }}：</span>
                         <span class="value">{{ detail.own_user_name || '-'}}</span>
                     </a-col>
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('crm_refund.refunded') }}：</span>
+                        <span class="value">{{$Util.countFilter(detail.refunded) + '元'}}</span>
+                    </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                        <a-button @click="handleRefundShow" v-if="$auth('crm-order-income.refund')">退款</a-button>
-                        <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order-income.save')">编辑</a-button>
-                        <a-button @click="handleDelete(detail.id)" v-if="$auth('crm-order-income.delete')">删除</a-button>
+                        <span v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
+                            <a-button @click="handleRefundShow" v-if="$auth('crm-order-income.refund')">退款</a-button>
+                            <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order-income.save')">编辑</a-button>
+                            <a-button @click="handleDelete(detail.id)" v-if="$auth('crm-order-income.delete')">删除</a-button>
+                        </span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                         <span class="key">{{ $t('sl.show') }}：</span>
@@ -86,8 +101,8 @@
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
-                            <CrmRefundRecord :detail="detail" :orderId="detail.id" ref ="CrmRefundRecord"/>
-                            <CRMAttachmentFile :target_id="id" :target_type="CRM_ORDER_INCOME_FILE" />
+                            <CrmRefundRecord v-if="detail.id > 0" :detail="detail" :orderIncomeId="detail.id" ref ="CrmRefundRecord"/>
+                            <CRMAttachmentFile v-if="detail.id > 0" :target_id="id" :target_type="CRM_ORDER_INCOME_FILE" />
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -96,7 +111,7 @@
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="tabActiveKey">
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.dynamic')">
-                            <ActionRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.ORDER_INCOME" :detail="detail" ref ="ActionRecord"/>
+                            <ActionRecord v-if="detail.id > 0" :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.ORDER_INCOME" :detail="detail" ref ="ActionRecord"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -177,6 +192,7 @@ export default {
             loading: false,
             detail: {},
             TrackRecordShow: false,
+            trackMemberDetail: undefined,
             trackRecordForm: {
                 type: '',
                 content: "",
@@ -237,6 +253,7 @@ export default {
         this.id = Number(this.$route.query.id) || 0
         if (this.id) {
             this.getOrderDetail();
+
         }
     },
     methods: {
@@ -253,6 +270,13 @@ export default {
                 case 'back':    // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/crm-order-income/order-income-list",
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'detail-order':  // 详情
+                    routeUrl = this.$router.resolve({
+                        path: "/crm-order/order-detail",
+                        query: { id: item.order_id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -285,6 +309,7 @@ export default {
                     }
 
                 })
+                this.getTargetByUserId();
                 // this.defArea = [d.continent || '', d.country || '']
             }).catch(err => {
                 console.log('getOrderDetail err', err)
@@ -401,7 +426,7 @@ export default {
             Core.Api.CRMRefundRecord.save({
                 order_income_id: this.detail.id,
                 type: this.refundForm.type,
-                money: this.refundForm.money,
+                money: this.refundForm.money * 100,
                 remark: this.refundForm.remark,
 
             }).then(() => {
@@ -411,6 +436,15 @@ export default {
                 console.log('handleSubmit err:', err)
             })
 
+        },
+        getTargetByUserId() {
+            Core.Api.CRMTrackMember.getTargetByUserId({
+                target_id: this.detail.order_id,
+                target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.ORDER,
+            }).then(res => {
+                this.trackMemberDetail = res.detail
+                console.log("trackMemberDetail", this.trackMemberDetail);
+            })
         },
     }
 };

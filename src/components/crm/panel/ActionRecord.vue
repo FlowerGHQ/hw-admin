@@ -174,7 +174,13 @@ export default {
             if (content === ""){
                 return ""
             }
-            let item = JSON.parse(content)
+            let item = {}
+            try {
+                item = JSON.parse(content)
+            } catch (e) {
+
+            }
+
             // console.log("type", type)
             // console.log("item", item)
             if(type >= 1000 && type < 2000) {

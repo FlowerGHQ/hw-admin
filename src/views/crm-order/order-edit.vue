@@ -549,14 +549,16 @@ export default {
             this.handleCustomerIdSearch()
         },
         handleBoIdSearch(){
-            Core.Api.CRMBo.detail({id: this.form.bo_id}).then(res => {
-                console.log("res.customer_id",res.detail.customer_id)
-                this.form.customer_id = res.detail.customer_id
-                let customer_name = res.detail.customer_name
-                this.handleCustomerNameSearch(customer_name)
-                this.handleBoNameSearch(res.detail.name)
-                this.handleCustomerIdSearch()
-            })
+            if (this.form.bo_id > 0){
+                Core.Api.CRMBo.detail({id: this.form.bo_id}).then(res => {
+                    console.log("res.customer_id",res.detail.customer_id)
+                    this.form.customer_id = res.detail.customer_id
+                    let customer_name = res.detail.customer_name
+                    this.handleCustomerNameSearch(customer_name)
+                    this.handleBoNameSearch(res.detail.name)
+                    this.handleCustomerIdSearch()
+                })
+            }
         },
         getDetailItemList(source_id, source_type){
             this.auditUserList = []

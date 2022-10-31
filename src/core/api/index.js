@@ -610,8 +610,16 @@ const apiList = {
         delete: ['PostJson', 'crm-group/delete'],
 	    batchAddMember: ['PostJson', 'crm-group/batch-add-member'],
 	    getGroupAdmin: ['PostJson', 'crm-group/get-group-admin'],
-
-
+    },
+    CRMGroupMember: {
+        save: ['PostJson', 'crm-group-member/save'],//
+        list: ['PostJson', 'crm-group-member/list'],//
+        delete: ['PostJson', 'crm-group-member/delete'],//
+        detail: ['PostJson', 'crm-group-member/detail'],//
+        structure: ['PostJson', 'crm-group-member/structure'],//
+        structureByUser: ['PostJson', 'crm-group-member/structure-by-user'],//
+        structureByUserGroup: ['PostJson', 'crm-group-member/structure-by-user-group'],//
+        users: ['PostJson', 'crm-group-member/users'],//
     },
 	CRMCustomer:{//CRM 客户
 		save: ['PostJson', 'crm-customer/save'],//
@@ -737,15 +745,7 @@ const apiList = {
 		detailCustomerId: ['PostJson', 'crm-customer-portrait/detail-customer-id'],//
 
 	},
-	CRMGroupMember: {
-		save: ['PostJson', 'crm-group-member/save'],//
-		list: ['PostJson', 'crm-group-member/list'],//
-		delete: ['PostJson', 'crm-group-member/delete'],//
-		detail: ['PostJson', 'crm-group-member/detail'],//
-		structure: ['PostJson', 'crm-group-member/structure'],//
-		structureByUser: ['PostJson', 'crm-group-member/structure-by-user'],//
-		structureByUserGroup: ['PostJson', 'crm-group-member/structure-by-user-group'],//
-	},
+
 	CRMDashboard: {
 		salesStatistics: ['PostJson', 'crm-dashboard/sales-statistics'],// 销售简报
 		trackStatistics: ['PostJson', 'crm-dashboard/track-statistics'],// 跟进统计

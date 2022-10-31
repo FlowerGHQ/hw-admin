@@ -88,7 +88,7 @@
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
                             <CRMTestDrive  v-if="id>0" :detail="detail" :customerId="detail.id" ref="CRMTestDrive"/>
-                            <CRMContact  v-if="id>0" :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :flagOWN="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN" ref="CRMContact"/>
+                            <CRMContact  v-if="id>0" :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :flagOWN="trackMemberDetail != null ?trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN: false" ref="CRMContact"/>
                             <CRMBo  v-if="id>0" :detail="detail" :customerId="detail.id" ref ="CRMBo"/>
                             <CRMOrder   v-if="id>0" :detail="detail" :customerId="detail.id"  ref ="CRMOrder"/>
                         </a-tab-pane>
@@ -349,6 +349,7 @@ export default {
             }
         },
         getUserData(query){
+            this.batchForm.own_user_id = undefined
             this.loading = true;
             Core.Api.User.listGroup({
                 group_id: this.group_id,

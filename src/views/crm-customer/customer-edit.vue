@@ -571,7 +571,7 @@ export default {
                         id: it.label_id,
                         name: it.label
                     })
-                    this.labelIdList.push(it.id)
+                    this.labelIdList.push(it.label_id)
                 })
                 this.labelList = labelList
             })

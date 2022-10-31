@@ -90,7 +90,7 @@
                                     {{ $Util.timeFilter(text) }}
                                 </template>
                                 <template v-if="column.key === 'operation'">
-                                    <a-button type='link' @click="handleDelete(record.group_id)" class="danger" v-if="$auth('crm-group.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                                    <a-button type='link' @click="handleDelete(record.crm_group_member_id)" class="danger" v-if="$auth('crm-group.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                                 </template>
                             </template>
                         </a-table>

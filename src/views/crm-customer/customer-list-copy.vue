@@ -198,7 +198,7 @@
         <!--                    <a-select-->
         <!--                        v-model:value="batchForm.own_user_id"-->
         <!--                        show-search-->
-        <!--                        :placeholder="$t('def.input')+$t('n.warehouse')"-->
+        <!--                        :placeholder="$t('def.input')"-->
         <!--                        :default-active-first-option="false"-->
         <!--                        :show-arrow="false"-->
         <!--                        :filter-option="false"-->
@@ -532,7 +532,7 @@ export default {
                         id: this.detail.id,
                         own_user_id: this.batchForm.own_user_id,
                     }).then(() => {
-                        this.$message.success($t('crm_c.distribute_success'));
+                        this.$message.success(this.$t('crm_c.distribute_success'));
                         this.getTableData();
                         this.handleBatchClose();
                     }).catch(err => {
