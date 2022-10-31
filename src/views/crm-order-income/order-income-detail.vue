@@ -42,9 +42,11 @@
                         <span class="value">{{ detail.own_user_name || '-'}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                        <a-button @click="handleRefundShow" v-if="$auth('crm-order-income.refund')">退款</a-button>
-                        <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order-income.save')">编辑</a-button>
-                        <a-button @click="handleDelete(detail.id)" v-if="$auth('crm-order-income.delete')">删除</a-button>
+                        <span v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
+                            <a-button @click="handleRefundShow" v-if="$auth('crm-order-income.refund')">退款</a-button>
+                            <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order-income.save')">编辑</a-button>
+                            <a-button @click="handleDelete(detail.id)" v-if="$auth('crm-order-income.delete')">删除</a-button>
+                        </span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                         <span class="key">{{ $t('sl.show') }}：</span>
@@ -86,8 +88,8 @@
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
-                            <CrmRefundRecord :detail="detail" :orderId="detail.id" ref ="CrmRefundRecord"/>
-                            <CRMAttachmentFile :target_id="id" :target_type="CRM_ORDER_INCOME_FILE" />
+                            <CrmRefundRecord v-if="detail.id > 0" :detail="detail" :orderIncomeId="detail.id" ref ="CrmRefundRecord"/>
+                            <CRMAttachmentFile v-if="detail.id > 0" :target_id="id" :target_type="CRM_ORDER_INCOME_FILE" />
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -177,6 +179,7 @@ export default {
             loading: false,
             detail: {},
             TrackRecordShow: false,
+            trackMemberDetail: undefined,
             trackRecordForm: {
                 type: '',
                 content: "",
@@ -237,6 +240,7 @@ export default {
         this.id = Number(this.$route.query.id) || 0
         if (this.id) {
             this.getOrderDetail();
+
         }
     },
     methods: {
@@ -285,6 +289,7 @@ export default {
                     }
 
                 })
+                this.getTargetByUserId();
                 // this.defArea = [d.continent || '', d.country || '']
             }).catch(err => {
                 console.log('getOrderDetail err', err)
@@ -411,6 +416,15 @@ export default {
                 console.log('handleSubmit err:', err)
             })
 
+        },
+        getTargetByUserId() {
+            Core.Api.CRMTrackMember.getTargetByUserId({
+                target_id: this.detail.order_id,
+                target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.ORDER,
+            }).then(res => {
+                this.trackMemberDetail = res.detail
+                console.log("trackMemberDetail", this.trackMemberDetail);
+            })
         },
     }
 };

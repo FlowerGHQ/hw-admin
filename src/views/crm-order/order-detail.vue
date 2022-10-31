@@ -42,16 +42,16 @@
                         <span class="value">{{ detail.own_user_name || '-'}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                        <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order.save')">编辑</a-button>
-                        <a-button @click="handleDelete(detail.id)" type="danger" v-if="$auth('crm-order.delete')">删除</a-button>
-                        <a-button @click="routerChange('income')" v-if="$auth('crm-order-income.save')">新建回款单</a-button>
-                        <span v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
-                                <a-button @click="routerChange('edit')" v-if="$auth('crm-order.save')">{{ $t('n.edit') }}</a-button>
-                            </span>
-                        <span v-if="trackMemberDetail!= null ? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
+                        <template v-if="trackMemberDetail!= null ? trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
                                 <a-button type="primary" @click="handleBatch('transfer')">{{ $t('crm_c.transfer') }}</a-button>
                                 <a-button type="danger" @click="handleDelete(detail.id)">{{ $t('crm_c.return_pool') }}</a-button>
-                        </span>
+                        </template>
+                        <template v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
+                            <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order.save')">编辑</a-button>
+                            <a-button @click="handleDelete(detail.id)" type="danger" v-if="$auth('crm-order.delete')">删除</a-button>
+                            <a-button @click="routerChange('income')" v-if="$auth('crm-order-income.save')">新建回款单</a-button>
+                        </template>
+
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                         <span class="key">{{ $t('sl.show') }}：</span>
@@ -215,6 +215,7 @@ export default {
         this.id = Number(this.$route.query.id) || 0
         if (this.id) {
             this.getOrderDetail();
+            this.getTargetByUserId()
         }
     },
     methods: {
