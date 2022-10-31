@@ -8,7 +8,7 @@
             <a-descriptions-item :label="$t('crm_o.name')" class="label">{{detail.order? detail.order.name || '-'  :  '-' }}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_oi.uid')" class="label">{{detail.uid}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_oi.date')" class="label">{{$Util.timeFilter(detail.date,3) || '-'}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_oi.money')" class="label">${{detail.money}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_oi.money')" class="label">{{$Util.countFilter(detail.money)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_oi.type')" class="label">{{$Util.CRMOrderIncomeTypeFilter(detail.type) || '-'}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_oi.payment_type')" class="label">{{$Util.CRMOrderIncomePaymentTypeFilter(detail.payment_type) || '-'}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_oi.status')" class="label">{{$Util.CRMOrderIncomeStatusFilter(detail.status) || '-'}}</a-descriptions-item>
