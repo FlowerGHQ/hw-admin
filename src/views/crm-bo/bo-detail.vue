@@ -47,17 +47,17 @@
                     </a-col>
 
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                            <span v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
+                            <template v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
                                 <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" @submit="getCRMTrackRecord"/>
                                 <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_CONTACT_BIND.TARGET_TYPE.BO_ADD_CUSTOMER" :addCustomerBtn="true"/>
                                 <a-button @click="routerChange('edit')" v-if="$auth('crm-bo.save')">{{ $t('n.edit') }}</a-button>
                                 <a-button @click="routerChange('order-save')" v-if="$auth('crm-order.save')">新建订单</a-button>
 
-                            </span>
-                            <span v-if="trackMemberDetail!= null ? trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
+                            </template>
+                            <template v-if="trackMemberDetail!= null ? trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
                                 <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-bo.transfer')">{{ $t('crm_c.transfer') }}</a-button>
                                 <a-button type="danger" @click="handleDelete">{{ $t('crm_c.delete') }}</a-button>
-                            </span>
+                            </template>
 
                     </a-col>
                 </a-row>
