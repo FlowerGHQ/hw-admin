@@ -16,7 +16,7 @@
                                                 </a-tooltip>
                                             </template>-->
                     <template v-if="column.key === 'money'">
-                        {{ text / 100 || '-' }}
+                        {{ $Util.countFilter(text) || '-' }}
                     </template>
                     <template v-if="column.key === 'type'">
                         {{ $Util.CRMRefundRecordTypeMapFilter(text) }}

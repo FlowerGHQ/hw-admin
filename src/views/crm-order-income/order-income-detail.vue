@@ -31,7 +31,7 @@
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_oi.money') }}：</span>
-                        <span class="value">{{ detail.money / 100 || '-'  }}</span>
+                        <span class="value">{{ $Util.countFilter(detail.money) || '-'  }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_oi.date') }}：</span>
@@ -98,7 +98,7 @@
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="tabActiveKey">
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.dynamic')">
-                            <ActionRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.ORDER_INCOME" :detail="detail" ref ="ActionRecord"/>
+                            <ActionRecord v-if="detail.id > 0" :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.ORDER_INCOME" :detail="detail" ref ="ActionRecord"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>
