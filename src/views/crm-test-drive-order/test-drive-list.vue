@@ -379,7 +379,7 @@ export default {
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.CRMCustomer.delete({id}).then(() => {
+                    Core.Api.CRMTestDriveOrder.delete({id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'))
                         _this.getTableData();
                     }).catch(err => {

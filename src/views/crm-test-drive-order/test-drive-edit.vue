@@ -26,7 +26,7 @@
                         {{ $t('crm_c.rechecking') }}
                     </CustomerSelect>
                 </div>
-                <div class="form-item required" v-if="form.id == 0">
+                <div class="form-item required">
                     <div class="key">{{ $t('crm_c.group') }}：</div>
                     <div class="value">
                         <a-tree-select class="CategoryTreeSelect"
