@@ -31,7 +31,7 @@
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_oi.money') }}：</span>
-                        <span class="value">{{ $Util.countFilter(detail.money) || '-'  }}</span>
+                        <span class="value">{{$Util.countFilter(detail.money) + '元'}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_oi.date') }}：</span>
@@ -40,6 +40,10 @@
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_oi.own_user_name') }}：</span>
                         <span class="value">{{ detail.own_user_name || '-'}}</span>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('crm_refund.refunded') }}：</span>
+                        <span class="value">{{$Util.countFilter(detail.refunded) + '元'}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                         <span v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">

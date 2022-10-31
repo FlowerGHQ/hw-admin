@@ -106,11 +106,26 @@
                                 <a-button type="link" @click="routerChange('detail', record)" v-if="$auth('crm-order-income.detail')">{{text || '-'}}</a-button>
                             </a-tooltip>
                         </template>
+                        <template v-if="column.key === 'uid'">
+                            <a-tooltip placement="top" :title='text'>
+                                <a-button type="link" @click="routerChange('detail', record)" v-if="text !== ''">{{text }}</a-button>
+                                <a-button type="link" disabled v-else>-</a-button>
+                            </a-tooltip>
+                        </template>
+                        <template v-if="column.key === 'order_uid'">
+                            <a-tooltip placement="top" :title='text'>
+                                <a-button type="link" @click="routerChange('detail-order', record)" v-if="text !== ''">{{text }}</a-button>
+                                <a-button type="link" disabled v-else>-</a-button>
+                            </a-tooltip>
+                        </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'money'">
                             {{$Util.countFilter(text ) + '元' || '-' }}
+                        </template>
+                        <template v-if="column.key === 'refunded'">
+                            {{ text / 100 + '元' || '-' }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -191,9 +206,11 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: 'crm_oi.uid', dataIndex:  "uid", key:'item', sorter: true},
+                {title: 'crm_oi.uid', dataIndex:  "uid", key:'uid', sorter: true},
+                {title: 'crm_oi.order_uid', dataIndex:  ["order","uid"], key:'order_uid', sorter: true},
                 {title: 'crm_oi.status', dataIndex: 'status', key: 'util', util: 'CRMOrderIncomeStatusFilter', sorter: true},
                 {title: 'crm_oi.money', dataIndex: 'money', key: 'money', sorter: true},
+                {title: 'crm_o.refunded_amount', dataIndex: 'refunded', key:'refunded'},
                 {title: 'crm_oi.date', dataIndex: 'date', key: 'time', sorter: true},
                 {title: 'crm_oi.type', dataIndex: 'type', key:'util', util: 'CRMOrderIncomeTypeFilter', sorter: true},
                 {title: 'crm_oi.payment_type', dataIndex: 'payment_type', key:'util', util: 'CRMOrderIncomePaymentTypeFilter', sorter: true},
@@ -226,8 +243,17 @@ export default {
                     })
                     window.open(routeUrl.href, '_self')
                     break;
+                case 'detail-order': {
+                    routeUrl = this.$router.resolve({
+                        path: "/crm-order/order-detail",
+                        query: { id: item.order.id }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                }
             }
         },
+
         pageChange(curr) {    // 页码改变
             this.currPage = curr
             this.getTableData()
