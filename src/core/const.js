@@ -46,8 +46,6 @@ switch (window.location.hostname) {
         URL_POINT = 'http://10.0.0.9:8889'
         break;
     case "10.0.0.66":
-    case "localhost":
-        URL_POINT = 'http://localhost:8889'
         break;
     default:
 	    URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服

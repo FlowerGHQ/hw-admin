@@ -203,7 +203,7 @@ export default {
                 .adjust('symmetric')
                 .position('action*percent')
                 .shape('funnel')
-                .color('action', ['#0050B3', '#1890FF', '#40A9FF', '#69C0FF', '#BAE7FF'])
+                .color('action', ['#5F86FC', '#6F92FC', '#8FAAFD', '#AFC2FD', '#41D0E9','#DDE1F0'])
                 .label(
                     'action*pv',
                     (action, pv) => {
