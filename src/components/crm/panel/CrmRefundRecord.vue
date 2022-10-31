@@ -1,7 +1,7 @@
 <template>
 <div class="InformationInfo gray-panel no-margin">
     <div class="panel-title">
-        <div class="title">{{ $t('crm_oi.refund_record') }}</div>
+        <div class="title">{{ $t('crm_refund.refund_record') }}</div>
     </div>
     <div class="panel-content">
         <div>
@@ -16,10 +16,19 @@
                                                 </a-tooltip>
                                             </template>-->
                     <template v-if="column.key === 'money'">
-                        {{ $Util.countFilter(text) || '-' }}
+                        {{ $Util.countFilter(text) + '元' }}
+                    </template>
+                    <template v-if="column.key === 'total_amount'">
+                        {{ $Util.countFilter(text) + '元' }}
+                    </template>
+                    <template v-if="column.key === 'refunded_amount'">
+                        {{ $Util.countFilter(text) + '元' }}
                     </template>
                     <template v-if="column.key === 'type'">
                         {{ $Util.CRMRefundRecordTypeMapFilter(text) }}
+                    </template>
+                    <template v-if="column.key === 'time'">
+                        {{ $Util.timeFilter(text) }}
                     </template>
 
                     <template v-if="column.key === 'operation'">
@@ -91,10 +100,12 @@ export default {
                 {title: 'crm_refund.type', dataIndex: 'type', key:'type'},
                 // {title: 'crm_b.customer_name', dataIndex: 'customer_name', key:'customer_name', sorter: true},
                 {title: 'crm_refund.money', dataIndex: 'money', key:'money'},
+                {title: 'crm_refund.total_amount', dataIndex: 'total_amount', key:'total_amount'},
+                {title: 'crm_refund.refunded_amount', dataIndex: 'refunded_amount', key:'refunded_amount'},
                 {title: 'crm_refund.remark', dataIndex: 'remark', key:'remark'},
                 // {title: 'crm_b.estimated_deal_time', dataIndex: 'estimated_deal_time', key: 'estimated_deal_time', sorter: true},
                 // {title: 'r.creator_name', dataIndex: 'creator_name', key: 'time', sorter: true},
-                // {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
+                {title: 'crm_refund.time', dataIndex: 'create_time', key: 'time'},
                 // {title: 'crm_c.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
                 // {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
