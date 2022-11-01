@@ -58,7 +58,7 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
-                        <div class="key">{{ $t('crm_d.data') }}：</div>
+                        <div class="key">{{ $t('crm_d.test_drive_time') }}：</div>
                         <div class="value">
                             <a-range-picker v-model:value="createTime" valueFormat='YYYY-MM-DD HH:mm:ss' @change="handleTimeSearch" :show-time="defaultTime" :allow-clear='false'>
                                 <template #suffixIcon><i class="icon i_calendar"/></template>
@@ -229,7 +229,7 @@ export default {
             let columns = [
                 {title: 'n.name', dataIndex: 'customer_id', key:'customer', sorter: true},
                 {title: 'n.phone', dataIndex: ['customer', 'phone'], key:'phone'},
-                {title: 'crm_d.data', dataIndex: 'test_drive_time', key:'time'},
+                {title: 'crm_d.test_drive_time', dataIndex: 'test_drive_time', key:'time'},
                 {title: 'crm_d.crm_dict_id', dataIndex: ['crm_dict', 'name'], key:'item'},
                 {title: 'crm_d.channel', dataIndex: 'channel', key:'channel', sorter: true},
                 {title: 'crm_d.status', dataIndex: 'status', key:'status', sorter: true},

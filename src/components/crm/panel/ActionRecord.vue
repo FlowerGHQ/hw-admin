@@ -211,19 +211,28 @@ export default {
                     case this.TYPE.DELETE_CONTACT: return user + " 删除了联系人: " + item.contact_name; break;
                     case this.TYPE.ADD_MEMBER: return user + " 添加团队成员: " + item.user_name; break;
                     case this.TYPE.DELETE_MEMBER: return user + " 删除团队成员: " + item.user_name; break;
-                    case this.TYPE.ADD_TRACK_RECORD: return user + " 添加了新的跟进记录"; break;
-                    case this.TYPE.DELETE_TRACK_RECORD: return user + " 删除了跟进记录"; break;
-                    case this.TYPE.ADD_LABEL: return user + " 添加了标签: " + item.label; break;
-                    case this.TYPE.DELETE_LABEL: return user + " 删除了标签: " + item.label; break;
+                    case this.TYPE.UPDATE_MEMBER: return user + " 修改团队成员 " + item.user_name + "的权限" ; break;
+                    case this.TYPE.ADD_TRACK_RECORD: return user + " 添加了新的跟进记录：" + item.track_content; break;
+                    case this.TYPE.DELETE_TRACK_RECORD: return user + " 删除了跟进记录：" + item.track_content; break;
+                    // case this.TYPE.ADD_LABEL: return user + " 添加了标签: " + item.label; break;
+                    // case this.TYPE.DELETE_LABEL: return user + " 删除了标签: " + item.label; break;
+                    case this.TYPE.CREATE_TEST_DRIVE_ORDER: return user + " 新建试驾单，试驾时间：" + this.$Util.timeFilter(item.time); break;
+                    case this.TYPE.DELETE_TEST_DRIVE_ORDER: return user + " 删除试驾单，原定试驾时间：：" + this.$Util.timeFilter(item.time); break;
+                    case this.TYPE.TEST_DRIVE_FINISH: return user + " 完成试驾：" + item.track_content; break;
+                    case this.TYPE.TEST_DRIVE_CANCEL: return user + " 取消试驾，原定试驾时间：：" + this.$Util.timeFilter(item.time); break;
+                    case this.TYPE.TEST_DRIVE_EXPIRED: return user + " 试驾过期，原定试驾时间：：" + this.$Util.timeFilter(item.time); break;
+                    case this.TYPE.CREATE_PORTRAIT: return user + "新建用户画像";
+                    case this.TYPE.DELETE_PORTRAIT: return user + " 删除用户画像"; break;
                 }
             } else if(type >= 3000 && type < 4000) {
                 item = item.content
                 let con = ""
                 item.forEach(it => {
                   switch (it.key) {
-                    case "crm_c.crm_dict_id" :
-                    case "crm_t.contact_customer_id" :
-                      con += "将 " + this.$t(it.key)+" 从【" + record.old_value + "】更新为【" + record.new_value + "】, "; break;
+                    // case "crm_c.crm_dict_id" :
+                    // case "crm_t.contact_customer_id" :
+                    // case "crm_c.group" :
+                    //       con += "将 " + this.$t(it.key)+" 从【" + record.old_value + "】更新为【" + record.new_value + "】, "; break;
                     default :  con += "将 " + this.$t(it.key)+" 从【" + this.valueParsing(it.key, it.old_value) + "】更新为【" + this.valueParsing(it.key, it.new_value) + "】, "
                   }
                 })
@@ -275,6 +284,10 @@ export default {
                 case "crm_c.industry" : return this.$Util.CRMCustomerIndustryFilter(value, this.lang)
                 case "crm_c.gender" : return this.$Util.CRMCustomerGenderFilter(value, this.lang)
                 case "crm_c.marital_status" : return this.$Util.CRMCustomerMaritalStatusFilter(value, this.lang)
+                case "crm_c.company_size" : return this.$Util.CRMCompanySizeMapMapFilter(value, this.lang)
+                case "crm_c.purchase_intent" : return this.$Util.CRMCustomerPurchaseIntentFilter(value, this.lang)
+                case "crm_c.test_drive_intent" : return this.$Util.CRMCustomerTestDriveIntentFilter(value, this.lang)
+
                 // 商机
                 case "crm_b.source" : return this.$Util.CRMBoSourceMapFilter(value, this.lang)
                 case "crm_b.track_status" : return this.$Util.CRMTrackStatusMapFilter(value, this.lang)
@@ -294,7 +307,21 @@ export default {
                 case "crm_t.next_track_time" : return this.$Util.timeFilter(value)
                 case "crm_t.intent" : return this.$Util.CRMTrackRecordIntentFilter(value, this.lang)
 
+                // 试驾单
+                case "crm_d.test_drive_time" : return this.$Util.timeFilter(value)
 
+                // 用户画像
+                case "crm_c_p.buy_type" : return this.$Util.CRMTestDriveBuyTypeMapFilter(value, this.lang)
+                case "crm_c_p.travel_range" : return this.$Util.CRMTestDriveTravelRangeMapFilter(value, this.lang)
+                case "crm_c_p.driver_license" : return this.$Util.CRMTestDriveDriverLicenseMapFilter(value, this.lang)
+                case "crm_c_p.moto_tour_intention" : return this.$Util.CRMTestDriveMotoExpMapFilter(value, this.lang)
+                case "crm_c_p.pay_attention_to" : return this.$Util.CRMTestDrivePayAttentionToMapFilter(value, this.lang)
+                case "crm_c_p.green_energy_understand" : return this.$Util.CRMTestDriveGreenEnergyUnderstandMapFilter(value, this.lang)
+                case "crm_c_p.electric_two_wheeler_understand" : return this.$Util.CRMTestDriveElectricTwoWheelerUnderstandMapFilter(value, this.lang)
+                case "crm_c_p.rental_demand" : return this.$Util.CRMTestDriveRentalDemandMapFilter(value, this.lang)
+                case "crm_c_p.green_car_owner" : return this.$Util.CRMTestDriveGreenCarOwnerMapFilter(value, this.lang)
+                case "crm_c_p.ride_exp" : return this.$Util.CRMTestDriveRideExpMapFilter(value, this.lang)
+                case "crm_c_p.moto_exp" : return this.$Util.CRMTestDriveMotoExpMapFilter(value, this.lang)
             }
             return value
         }

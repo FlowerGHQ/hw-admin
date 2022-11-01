@@ -1179,7 +1179,7 @@ const messages = {
 		    rechecking : '查重',
 		    purchase_intent: '购买意向',
 		    test_drive_intent: '试驾意向',
-		    group: '区域',
+            group: '区域',
 		    transfer_success: "转让成功",
 	    },
 	    crm_t: {
@@ -1323,7 +1323,7 @@ const messages = {
 		    drive_information: '客户信息',
 		    user_portrait: '用户画像',
 		    crm_dict_id: '试驾车型',
-		    data: '试驾时间',
+            test_drive_time: '试驾时间',
 		    channel: '预约渠道',
 		    status: '状态',
 		    dept_id: '门店',

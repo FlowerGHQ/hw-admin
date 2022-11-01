@@ -1488,13 +1488,13 @@ let Const = {
 			'30': { key: 30, zh: '7天未跟进',en: '7 days without follow up', value: 30 },
 		},
 		COMPANY_SIZE_MAP: {
-			'100': { key: 100, zh: '0 - 20',en: '0 - 20', value: 100 },
-			'200': { key: 200, zh: '21 - 50',en: '21 - 50', value: 200 },
-			'300': { key: 300, zh: '51 - 100',en: '51 - 100', value: 300 },
-			'400': { key: 400, zh: '101 - 200',en: '101 - 200', value: 400 },
-			'500': { key: 500, zh: '201 - 500',en: '201 - 500', value: 500 },
-			'600': { key: 600, zh: '501 - 1000',en: '501 - 1000', value: 600 },
-			'700': { key: 700, zh: '1001 - 2000',en: '1001 - 2000', value: 700 },
+			'100': { key: 100, zh: '0 - 20人',en: '0 - 20', value: 100 },
+			'200': { key: 200, zh: '21 - 50人',en: '21 - 50', value: 200 },
+			'300': { key: 300, zh: '51 - 100人',en: '51 - 100', value: 300 },
+			'400': { key: 400, zh: '101 - 200人',en: '101 - 200', value: 400 },
+			'500': { key: 500, zh: '201 - 500人',en: '201 - 500', value: 500 },
+			'600': { key: 600, zh: '501 - 1000人',en: '501 - 1000', value: 600 },
+			'700': { key: 700, zh: '1001 - 2000人',en: '1001 - 2000', value: 700 },
 			'800': { key: 800, zh: '2000人以上',en: 'More than 2000', value: 800 },
 		},
 
@@ -1709,11 +1709,22 @@ let Const = {
 			DELETE_CONTACT : 2013,         // 删除联系人
 			ADD_MEMBER : 2014,             // 添加团队成员
 			DELETE_MEMBER : 2015,          // 删除团队成员
+            UPDATE_MEMBER : 2016,          // 修改团队成员权限
 			ADD_TRACK_RECORD : 2018,       // 添加跟进记录
 			DELETE_TRACK_RECORD : 2019,    // 删除跟进记录
-			ADD_LABEL : 2016,              // 添加标签
-			DELETE_LABEL : 2017,           // 删除标签
+			ADD_LABEL : 2020,              // 添加标签
+			DELETE_LABEL : 2021,           // 删除标签
 
+            CREATE_TEST_DRIVE_ORDER : 2022,   // 新建试驾单
+            DELETE_TEST_DRIVE_ORDER : 2023,   // 删除试驾单
+            TEST_DRIVE_FINISH : 2024,         // 完成试驾
+            TEST_DRIVE_CANCEL : 2025,         // 取消试驾
+            TEST_DRIVE_EXPIRED : 2026,        // 过期未试驾
+            CREATE_PORTRAIT : 2027,           // 新建用户画像
+            DELETE_PORTRAIT : 2028,           // 删除用户画像
+
+            ORDER_TO_OTHERS : 2029,           // 将合同订单转交给
+            
 // 修改操作
 			REVISE_CUSTOMER : 3001,        // 修改客户信息
 			REVISE_CONTACT : 3002,         // 修改联系人
@@ -1721,7 +1732,9 @@ let Const = {
 			REVISE_BO : 3004,              // 修改商机
 			REVISE_ORDER : 3005,           // 修改订单
 			REVISE_ORDER_INCOME : 3006,    // 修改回款单
-
+            REVISE_TEST_DRIVE_ORDER : 3007, // 修改试驾单
+            REVISE_PORTRAIT : 3008,         // 修改用户画像
+            
 		},
 		TYPE_MAP:{
 				'1001': { key:1001, zh:'新建客户',en:'CREATE_CUSTOMER', value:1001},
@@ -1729,20 +1742,20 @@ let Const = {
 				'1003': { key:1003, zh:'领取客户',en:'OBTAIN_CUSTOMER', value:1003},
 				'2001': { key:2001, zh:'分配客户',en:'DISTRIBUTE_CUSTOMER', value:2001},
 				'1004': { key:1004, zh:'退回公海',en:'RETURN_POOL', value:1004},
-				'2002': { key:2002, zh:'将客户移交给',en:'CUSTOMER_TO_OTHERS', value:2002},
+				'2002': { key:2002, zh:'移交客户',en:'CUSTOMER_TO_OTHERS', value:2002},
 
 				'2003': { key:2003, zh:'新建商机',en:'CREATE_BO', value:2003},
 				'2004': { key:2004, zh:'删除商机',en:'DELETE_BO', value:2004},
 				'2005': { key:2005, zh:'更新商机阶段',en:'UPDATE_BO_STATUS', value:2005},
-				'2006': { key:2006, zh:'将商机移交给',en:'BO_TO_OTHERS', value:2006},
+				'2006': { key:2006, zh:'移交商机',en:'BO_TO_OTHERS', value:2006},
 
 				'2007': { key:2007, zh:'新建订单',en:'CREATE_ORDER', value:2007},
 				'2008': { key:2008, zh:'删除订单',en:'DELETE_ORDER', value:2008},
 				'1005': { key:1005, zh:'新建回款单',en:'CREATE_ORDER_INCOME', value:1005},
 				'1006': { key:1006, zh:'删除回款单',en:'DELETE_ORDER_INCOME', value:1006},
-				'1007': { key:1007, zh:'审核人...审核通过',en:'AUDIT_PASS', value:1007},
-				'1008': { key:1008, zh:'审核人...审核拒绝',en:'AUDIT_REFUSE', value:1008},
-				'2009': { key:2009, zh:'向客户退款',en:'REFUND', value:2009},
+				'1007': { key:1007, zh:'审核通过',en:'AUDIT_PASS', value:1007},
+				'1008': { key:1008, zh:'审核拒绝',en:'AUDIT_REFUSE', value:1008},
+				'2009': { key:2009, zh:'退款',en:'REFUND', value:2009},
 				'2010': { key:2010, zh:'取消退款',en:'CANCEL_REFUND', value:2010},
 
 				'2011': { key:2011, zh:'创建联系人',en:'CREATE_CONTACT', value:2011},
@@ -1750,10 +1763,19 @@ let Const = {
 				'2013': { key:2013, zh:'删除联系人',en:'DELETE_CONTACT', value:2013},
 				'2014': { key:2014, zh:'添加团队成员',en:'ADD_MEMBER', value:2014},
 				'2015': { key:2015, zh:'删除团队成员',en:'DELETE_MEMBER', value:2015},
+                '2016': { key:2016, zh:'修改团队成员权限',en:'DELETE_MEMBER', value:2016},
 				'2018': { key:2018, zh:'添加跟进记录',en:'ADD_TRACK_RECORD', value:2018},
 				'2019': { key:2019, zh:'删除跟进记录',en:'DELETE_TRACK_RECORD', value:2019},
-				'2016': { key:2016, zh:'添加标签',en:'ADD_LABEL', value:2016},
-				'2017': { key:2017, zh:'删除标签',en:'DELETE_LABEL', value:2017},
+				'2020': { key:2020, zh:'添加标签',en:'ADD_LABEL', value:2020},
+				'2021': { key:2021, zh:'删除标签',en:'DELETE_LABEL', value:2021},
+                '2022': { key:2022, zh:'新建试驾单',en:'ADD_LABEL', value:2022},
+                '2023': { key:2023, zh:'删除试驾单',en:'DELETE_LABEL', value:2023},
+                '2024': { key:2024, zh:'完成试驾',en:'ADD_LABEL', value:2024},
+                '2025': { key:2025, zh:'取消试驾',en:'DELETE_LABEL', value:2025},
+                '2026': { key:2026, zh:'过期未试驾',en:'ADD_LABEL', value:2026},
+                '2027': { key:2027, zh:'新建用户画像',en:'DELETE_LABEL', value:2027},
+                '2028': { key:2028, zh:'删除用户画像',en:'DELETE_LABEL', value:2028},
+                '2029': { key:2029, zh:'转交合同订单',en:'DELETE_LABEL', value:2029},
 
 				'3001': { key:3001, zh:'修改客户信息',en:'REVISE_CUSTOMER', value:3001},
 				'3002': { key:3002, zh:'修改联系人',en:'REVISE_CONTACT', value:3002},
@@ -1761,6 +1783,8 @@ let Const = {
 				'3004': { key:3004, zh:'修改商机',en:'REVISE_BO', value:3004},
 				'3005': { key:3005, zh:'修改订单',en:'REVISE_ORDER', value:3005},
 				'3006': { key:3006, zh:'修改回款单',en:'REVISE_ORDER_INCOME', value:3006},
+                '3007': { key:3007, zh:'修改试驾单',en:'REVISE_ORDER_INCOME', value:3007},
+                '3008': { key:3008, zh:'修改用户画像',en:'REVISE_ORDER_INCOME', value:3008},
 
 
 		}

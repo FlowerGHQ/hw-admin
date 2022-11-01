@@ -104,7 +104,7 @@ export default {
             let columns = [
                 {title: 'n.name', dataIndex: 'customer_id', key:'customer', sorter: true},
                 {title: 'n.phone', dataIndex: ['customer', 'phone'], key:'phone'},
-                {title: 'crm_d.data', dataIndex: 'test_drive_time', key:'time'},
+                {title: 'crm_d.test_drive_time', dataIndex: 'test_drive_time', key:'time'},
                 {title: 'crm_d.crm_dict_id', dataIndex: ['crm_dict', 'name'], key:'item'},
                 {title: 'crm_d.channel', dataIndex: 'channel', key:'channel', sorter: true},
                 {title: 'crm_d.status', dataIndex: 'status', key:'status', sorter: true},

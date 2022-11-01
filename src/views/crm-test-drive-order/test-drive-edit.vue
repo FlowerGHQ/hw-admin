@@ -76,7 +76,7 @@
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">{{ $t('crm_d.data') }}：</div>
+                    <div class="key">{{ $t('crm_d.test_drive_time') }}：</div>
                     <div class="value">
                         <a-date-picker v-model:value="form.test_drive_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" :placeholder="$t('def.input')">
                             <template #suffixIcon><i class="icon i_calendar"/></template>

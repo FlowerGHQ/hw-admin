@@ -38,7 +38,7 @@
                 </div>
 
                 <div class="form-item required">
-                    <div class="key">{{ $t('crm_c.group') }}：</div> <!--区域 -->
+                    <div class="key">{{ $t('crm_group.name') }}：</div> <!--区域 -->
                     <div class="value">
 <!--                        <a-select-->
 <!--                            v-model:value="form.group_id"-->
