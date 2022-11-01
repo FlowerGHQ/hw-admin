@@ -16,9 +16,12 @@ switch (window.location.hostname) {
     case 'eos-dev.horwincloud.com':
         URL_POINT = 'http://eos-dev-api.horwincloud.com' // 新测试服
         break;
-    case 'eos.hw.innotick.com':
-        URL_POINT = 'https://eos-api.hw.innotick.com' // 老正式服
-        break;
+    // case 'eos.hw.innotick.com':
+    //     URL_POINT = 'https://eos-api.hw.innotick.com' // 老正式服
+    //     break;
+    // case 'eos-dev.hw.innotick.com':
+    //     URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 老测试服
+    //     break;
 
 	case "10.0.0.230":
 		URL_POINT = 'http://10.0.0.230:8889'
@@ -35,7 +38,7 @@ switch (window.location.hostname) {
 	    URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服
         break;
 }
-// URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
+
 let Const = {
     NET: {
         URL_POINT: URL_POINT,
