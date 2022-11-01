@@ -41,6 +41,7 @@
                                 {{$t('u.select_all')}}
 
                             </a-checkbox>
+                            <br>
                             <a-checkbox-group v-model:value="item.select"  @change="onChange(item.select, item.key, item.list)">
                                 <a-checkbox v-for=" it in item.list" :value="it.value">{{$t('authority.'+it.label) }}</a-checkbox>
                             </a-checkbox-group>
@@ -212,6 +213,20 @@ export default {
 
 <style lang="less">
 #AuthRoleEdit {
+    .form-block .form-item .value{
+        max-width: 100%;
+        width: 100%;
+    }
+    .ant-checkbox-wrapper + .ant-checkbox-wrapper {
+        margin-left: 0px;
+    }
+    div.ant-checkbox-group{
+        display:inline;
+    }
+    div.ant-checkbox-group .ant-checkbox-wrapper{
+        display:inline-flex;
+    }
+
     .ant-checkbox + span {
         padding-right: 8px;
         padding-left: 8px;
