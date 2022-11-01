@@ -137,7 +137,6 @@ export default {
             openKeys: [],
             selectedKeys: [],
             passShow: false,
-
             user: Core.Data.getUser() || {},
             form: {
                 id: '',
@@ -238,6 +237,7 @@ export default {
         this.$i18n.locale = Core.Data.getLang()
         this.$store.state.lang = Core.Data.getLang()
         this.tabPosition = Core.Data.getTabPosition() || 1
+        this.handleRouterSwitch();
     },
     methods: {
         routerChange(type) {
@@ -336,8 +336,23 @@ export default {
             console.log('this.$i18n.locale',this.$i18n.locale)
         },
         handleRouterSwitch() {
+
             console.log("tabPosition",this.tabPosition)
             Core.Data.setTabPosition(this.tabPosition)
+            if (this.tabPosition === this.ROUTER_TYPE.CRM){
+                this.$router.replace('/crm-dashboard');
+            } else {
+                if (this.loginType === Core.Const.USER.TYPE.ADMIN){
+                    setTimeout(() => {
+                        this.$router.replace({ path: '/dashboard', query: {from: 'login'} })
+                    }, 1000)
+                } else {
+                    setTimeout(() => {
+                        this.$router.replace({ path: '/dashboard/index', query: {from: 'login'} })
+                    }, 1000)
+                }
+            }
+
         },
     }
 };

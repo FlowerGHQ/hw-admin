@@ -1542,10 +1542,10 @@ const routes = [
 
     // CRM
 	{ // 客户管理
-		path: '/test',
+		path: '/crm-dashboard',
 		component: Layout,
-		redirect: '/test/demo',
-		name: 'test',
+		redirect: '/crm-dashboard/dashboard',
+		name: 'crm-dashboard',
         type: [ROUTER_TYPE.CRM],
 		meta: {
 			title: 'CRM数据',
