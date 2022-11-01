@@ -1,44 +1,41 @@
 <template>
     <div id="DemoPage">
         <div class="SearchRangePicker">
-            <a-tree-select class="CategoryTreeSelect"
-                           v-model:value="searchForm.group_id"
-                           :placeholder="$t('def.select') + $t('crm_c.group')"
-                           :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-                           :tree-data="groupOptions"
-                           tree-default-expand-all
-            />
-            <a-range-picker v-model:value="time" @change="handleChange()" :allowClear="false"/>
+            <a-tree-select class="CategoryTreeSelect" v-model:value="searchForm.group_id"
+                :placeholder="$t('def.select') + $t('crm_c.group')"
+                :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }" :tree-data="groupOptions"
+                tree-default-expand-all />
+            <a-range-picker v-model:value="time" @change="handleChange()" :allowClear="false" />
         </div>
         <div></div>
-        <a-row :gutter="[8,0]">
+        <a-row :gutter="[8, 0]">
             <a-col :xs='24' :sm='24' :xl="12" :xxl='14'>
                 <a-row :gutter="[8,0]">
                     <a-col :span="24">
                     </a-col>
                     <a-col :span="24">
-                        <SalesStatistics :searchForm="searchForm"/>
+                        <SalesStatistics :searchForm="searchForm" />
                     </a-col>
                     <a-col :span="24">
-                        <TrackStatistics :searchForm="searchForm"/>
+                        <TrackStatistics :searchForm="searchForm" />
                     </a-col>
                     <a-col :span="24">
-                        <BoStatistics :searchForm="searchForm"/>
+                        <BoStatistics :searchForm="searchForm" />
                     </a-col>
                 </a-row>
             </a-col>
             <a-col :xs='24' :sm='24' :xl="12" :xxl='10'>
                 <a-row :gutter="[8,0]">
                     <a-col :span="24">
-                        <PerformanceList :searchForm="searchForm"/>
+                        <PerformanceList :searchForm="searchForm" />
                     </a-col>
                     <a-col :span="24">
                     </a-col>
                     <a-col :span="24">
-                        <PurchaseIntentIntention :searchForm="searchForm"/>
+                        <PurchaseIntentIntention :searchForm="searchForm" />
                     </a-col>
                     <a-col :span="24">
-                        <TestDriveIntention :searchForm="searchForm"/>
+                        <TestDriveIntention :searchForm="searchForm" />
                     </a-col>
                 </a-row>
             </a-col>
@@ -102,7 +99,7 @@ export default {
             this.$refs.TimeSearch.handleReset()
             // this.getTableData();
         },
-        handleGroupTree(){
+        handleGroupTree() {
             Core.Api.CRMGroupMember.structureByUser().then(res => {
                 this.groupOptions = res.list
                 console.log(res)
@@ -138,48 +135,66 @@ export default {
 .list-container {
     margin-bottom: 16px;
 }
+
 .SearchRangePicker {
     margin-bottom: 20px;
     width: 100%;
     display: flex;
+
     .org-type {
         margin-right: 20px;
+
         .type-item {
             width: 88px;
             text-align: center;
             border-color: #EAECF2;
             box-shadow: 0 0 0 0;
-            &::after, &::before {
+
+            &::after,
+            &::before {
                 background-color: #EAECF2;
             }
+
             &:hover {
                 color: @TC_P;
             }
+
             &.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
                 color: @TC_P;
                 background: @BG_N;
                 border-color: @BC_P;
                 box-shadow: 0;
-                &::after, &::before {
+
+                &::after,
+                &::before {
                     background-color: @BC_P;
                 }
             }
         }
     }
+
     .time-type {
         margin-left: 20px;
         .fac();
+
         .type-item {
             padding: 0;
-            + .type-item { margin-left: 24px; }
+
+            +.type-item {
+                margin-left: 24px;
+            }
+
             color: @TC_link;
             cursor: pointer;
-            &:hover, &.active {
+
+            &:hover,
+            &.active {
                 color: @TC_P;
             }
         }
     }
-    .CategoryTreeSelect{
+
+    .CategoryTreeSelect {
         width: 200px;
         margin-right: 20px;
     }

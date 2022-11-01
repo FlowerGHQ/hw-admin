@@ -3,43 +3,39 @@
         <div class="title">
             <span>业绩榜单</span>
             <div>
-                <div
-                    class="tab-item"
-                    :class="{'tab-current': currentTab === item.key}"
-                    v-for="(item, index) in titleTabs"
-                    :key="index"
-                    @click="clickTab(item.key)">
-                    {{ item.label }}
+                <div class="select-item">
+                    <a-select default-value="1" style="width: 80px" @change="handleChange">
+                        <a-select-option value="1">
+                            本月
+                        </a-select-option>
+                        <a-select-option value="2">
+                            本年
+                        </a-select-option>
+                    </a-select>
                 </div>
             </div>
         </div>
         <!-- <div class="contain"> -->
-            <!-- table -->
-            <div class="table-container">
-                <a-table
-                    :columns="tableColumns"
-                    :data-source="tableData"
-                    :scroll="{ x: true }"
-                    :pagination='false'
-                    :row-key="record => record.id"
-                    :indentSize='0'
-                >
-                    <template #bodyCell="{ column, text , index, record }">
-                        <template v-if="column.key === 'index'">
-                            <span>{{index + 1}}</span>
-                        </template>
-                        <template v-if="column.key === 'name'">
-                            <span>{{ text }}</span>
-                        </template>
-                        <template v-if="column.key === 'winNum'">
-                            <span>{{ text }}</span>
-                        </template>
-                        <template v-if="column.key === 'myGap'">
-                            <span>{{ text }}</span>
-                        </template>
+        <!-- table -->
+        <div class="table-container">
+            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :pagination='false'
+                :row-key="record => record.id" :indentSize='0'>
+                <template #bodyCell="{ column, text, index, record }">
+                    <template v-if="column.key === 'index'">
+                        <span>{{ index + 1 }}</span>
                     </template>
-                </a-table>
-            </div>
+                    <template v-if="column.key === 'name'">
+                        <span>{{ text }}</span>
+                    </template>
+                    <template v-if="column.key === 'winNum'">
+                        <span>{{ text }}</span>
+                    </template>
+                    <template v-if="column.key === 'myGap'">
+                        <span>{{ text }}</span>
+                    </template>
+                </template>
+            </a-table>
+        </div>
 
         <!-- </div> -->
     </div>
@@ -56,21 +52,13 @@ export default {
     props: {
         searchForm: {
             type: Object,
-            default: ()=> {}
+            default: () => { }
         },
     },
     data() {
         return {
-            titleTabs: [
-                { label: '本月', key: '1' },
-                { label: '本年', key: '2' },
-            ],
-            currentTab: '1',
-
-
             search_type: 1,
             tableData: [],
-
         };
     },
     watch: {
@@ -100,6 +88,10 @@ export default {
         this.performanceList()
     },
     methods: {
+        handleChange(value) {
+            this.search_type = value
+            this.performanceList();
+        },
         // 点击tab
         clickTab(key) {
             this.currentTab = key;
@@ -126,65 +118,80 @@ export default {
     font-size: 16px;
     font-weight: bold;
     .flex(space-between, center, row);
-    .tab-item {
-        display: inline-block;
-        padding: 4px 8px;
-        border: 1px solid grey;
-        margin-right: 2px;
-        font-size: 12px;
-        user-select: none;
-        cursor: pointer;
-        &:first-child {
-            border-top-left-radius: 4px;
-            border-bottom-left-radius: 4px;
-        }
-        &:last-child {
-            border-top-right-radius: 4px;
-            border-bottom-right-radius: 4px;
-            margin-right: 0;
-        }
-    }
-    .tab-current {
-        border: 1px solid #006EF9;
-        color: #006EF9;
-    }
+
+    // .tab-item {
+    //     display: inline-block;
+    //     padding: 4px 8px;
+    //     border: 1px solid grey;
+    //     margin-right: 2px;
+    //     font-size: 12px;
+    //     user-select: none;
+    //     cursor: pointer;
+
+    //     &:first-child {
+    //         border-top-left-radius: 4px;
+    //         border-bottom-left-radius: 4px;
+    //     }
+
+    //     &:last-child {
+    //         border-top-right-radius: 4px;
+    //         border-bottom-right-radius: 4px;
+    //         margin-right: 0;
+    //     }
+    // }
+
+//     .tab-current {
+//         border: 1px solid #006EF9;
+//         color: #006EF9;
+//     }
 }
+
 .contain {
     padding: 16px;
 }
+
 .form-item {
     // border: 1px solid red;
     border-bottom: 1px solid #f0f2f5;
     padding: 16px 0;
     .flex(space-between, center, row);
+
     .form-label {
         font-size: 14px;
     }
+
     .form-value {
         color: #006EF9;
         font-size: 20px;
     }
 }
+
 .chart {
     width: 100%;
     height: auto;
 }
+
 .data-body {
     .flex(flex-start, center, row);
+
     .icon {
         text-align: center;
     }
 }
+
 .data-contain {
     flex-grow: 1;
     width: auto;
     .flex(space-between, center, row);
+
     .info-item {
         .flex(space-between, center);
+
         .label {
             font-size: 12px;
             color: grey;
         }
+
         .value {
             font-size: 24px;
             font-weight: bold;

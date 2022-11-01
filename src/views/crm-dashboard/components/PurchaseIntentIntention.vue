@@ -4,10 +4,10 @@
             <span>客户购买意向</span>
         </div>
 
-            <!-- echarts -->
-            <div class="table-container" >
-                <div id="PurchaseIntentchartId" class="chart" ref='PurchaseIntentchartId'></div>
-            </div>
+        <!-- echarts -->
+        <div class="table-container">
+            <div id="PurchaseIntentchartId" class="chart" ref='PurchaseIntentchartId'></div>
+        </div>
 
 
         <!-- </div> -->
@@ -25,7 +25,7 @@ export default {
     props: {
         searchForm: {
             type: Object,
-            default: ()=> {}
+            default: () => { }
         },
     },
     data() {
@@ -64,12 +64,6 @@ export default {
         this.$refs.PurchaseIntentchartId.innerHTML = ''
     },
     methods: {
-        // 点击tab
-        clickTab(key) {
-            this.currentTab = key;
-            console.log('切换tab >>', key);
-        },
-
         drawBoStatisticsChart(data) {
             if (this.boStatisticsChart.destroy) {
                 console.log('drawPurchaseChart destroy:')
@@ -78,27 +72,47 @@ export default {
             const chart = new Chart({
                 container: 'PurchaseIntentchartId',
                 autoFit: true,
-                height: 300,
+                height: 380,
             });
 
             chart.data(data);
             chart.scale('type', {
                 nice: true,
             });
-
+            chart.coordinate('theta', {
+                radius: 0.75,
+                innerRadius: 0.6,
+            });
             chart.tooltip({
                 showTitle: false,
                 showMarkers: false,
                 itemTpl:
-                    '<li style="margin-bottom:4px;list-style-type:none;padding: 0;">' +
+                    '<li style="margin-bottom:0px;list-style-type:none;padding: 0;">' +
                     '<span style="background-color:{color};" class="g2-tooltip-marker"></span>' +
                     '数量：{value}<br/>' +
                     '</li>',
             });
-            chart.interaction('active-region');
+            chart
+                .interval()
+                .adjust('stack')
+                .position('value')
+                .color('type')
+                .shape('slice-shape');
 
-            chart.interval().position('type*value');
-
+            chart.interaction('element-active');
+            chart
+                .annotation()
+                .text({
+                    position: ['50%', '56%'],
+                    content: '客户购买意向',
+                    style: {
+                        fontSize: 14,
+                        fill: '#000000',
+                        textAlign: 'center',
+                        fontWeight:900
+                    },
+                    offsetY: -20,
+                })
             chart.render();
             this.boStatisticsChart = chart
         },
@@ -111,7 +125,7 @@ export default {
                 // this.testDriveIntentList = res.list;
                 const dv = []
                 res.list.forEach(res => {
-                    dv.push({type: this.$Util.CRMCustomerTestDriveIntentFilter(res.type),value: res.value})
+                    dv.push({ type: this.$Util.CRMCustomerTestDriveIntentFilter(res.type), value: res.value })
                 })
                 this.drawBoStatisticsChart(dv)
 
@@ -134,6 +148,7 @@ export default {
     font-size: 16px;
     font-weight: bold;
     .flex(space-between, center, row);
+
     .tab-item {
         display: inline-block;
         padding: 4px 8px;
@@ -142,57 +157,71 @@ export default {
         font-size: 12px;
         user-select: none;
         cursor: pointer;
+
         &:first-child {
             border-top-left-radius: 4px;
             border-bottom-left-radius: 4px;
         }
+
         &:last-child {
             border-top-right-radius: 4px;
             border-bottom-right-radius: 4px;
             margin-right: 0;
         }
     }
+
     .tab-current {
         border: 1px solid #006EF9;
         color: #006EF9;
     }
 }
+
 .contain {
     padding: 16px;
 }
+
 .form-item {
     // border: 1px solid red;
     border-bottom: 1px solid #f0f2f5;
     padding: 16px 0;
     .flex(space-between, center, row);
+
     .form-label {
         font-size: 14px;
     }
+
     .form-value {
         color: #006EF9;
         font-size: 20px;
     }
 }
+
 .chart {
     width: 100%;
     height: auto;
 }
+
 .data-body {
     .flex(flex-start, center, row);
+
     .icon {
         text-align: center;
     }
 }
+
 .data-contain {
     flex-grow: 1;
     width: auto;
     .flex(space-between, center, row);
+
     .info-item {
         .flex(space-between, center);
+
         .label {
             font-size: 12px;
             color: grey;
         }
+
         .value {
             font-size: 24px;
             font-weight: bold;
