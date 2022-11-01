@@ -11,41 +11,25 @@ let URL_POINT = 'https://eos-api.hw.innotick.com'
 
 switch (window.location.hostname) {
     case 'eos.horwincloud.com':
-        URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
+        URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         break;
     case 'eos-dev.horwincloud.com':
-        URL_POINT = 'http://eos-dev-api.horwincloud.com' // 正式服
+        URL_POINT = 'http://eos-dev-api.horwincloud.com' // 新测试服
         break;
     case 'eos.hw.innotick.com':
-        URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服
+        URL_POINT = 'https://eos-api.hw.innotick.com' // 老正式服
         break;
 
-    case "10.0.0.205":
-    case "10.0.0.132":
-        // URL_POINT = 'http://10.0.0.194:8889'
-        URL_POINT = 'http://10.0.0.188:8889'
-        URL_POINT = 'http://10.0.0.187:8889'
-        // URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 测试服
-        // URL_POINT = 'https://eos-api.hw.innotick.com' // 正式服
-        break;
-    case "10.0.0.107":
-        URL_POINT = 'http://10.0.0.107:8889'
-	    // URL_POINT = 'http://eos-api.hw.innotick.com' // 测试服
-        break;
 	case "10.0.0.230":
 		URL_POINT = 'http://10.0.0.230:8889'
 		// URL_POINT = 'http://eos-api.hw.innotick.com' // 测试服
 		// URL_POINT = 'http://eos-dev-api.horwincloud.com' // 正式服
 		break;
-    case "192.168.31.224":
-        // URL_POINT = 'https://eos-api.horwincloud.com' // 正式服
-        // URL_POINT = 'http://192.168.31.224:8889'
-        URL_POINT = 'http://eos-dev-api.horwincloud.com' // 正式服
+    case "10.0.0.107":
+        URL_POINT = 'http://10.0.0.107:8889'
         break;
-    case "10.0.0.9":
-        URL_POINT = 'http://10.0.0.9:8889'
-        break;
-    case "10.0.0.66":
+    case "localhost":
+        URL_POINT = 'http://localhost:8889'
         break;
     default:
 	    URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服
