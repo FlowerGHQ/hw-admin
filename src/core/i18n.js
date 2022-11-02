@@ -168,7 +168,7 @@ const messages = {
             enter_search: '请输入搜索内容',
 	        crm: 'CRM',
 	        after: '售后',
-	        sales: '售前',
+	        sales: '销售',
 	        production: '生产',
         },
         a: { // 零售商
