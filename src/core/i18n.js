@@ -1763,51 +1763,67 @@ const messages = {
             1003:'手机号不能为空',
             1004:'密码不能为空',
             1005:'姓名不能为空',
+
             1101:'登录类型有误',
             1102:'验证码不能为空',
             1103:'密码不正确',
             1104:'账号不存在',
             1105:'该账号被禁用',
             1106:'用户不存在',
+
             1201:'修改密码失败，旧密码错',
             1210:'新密码不能与旧密码相同',
+
             1301:'角色不存在',
             1302:'用户的角色不存在',
+
             1401:'手机号格式错误',
             1402:'短信模板发送失败',
             1403:'邮箱不能为空',
             1404:'邮件模板发送失败',
             1405:'邮箱地址格式错误',
+
             2001:'系统异常',
             2002:'非法操作',
-            2003:'禁止重复操作',
+            2003:'请勿重复操作',
             2004:'对象不存在',
             2005:'{param}为系统保留字段',
-            2006:'该部门存在下级部门, 请先删除下级部门',
+
             2101:'无权限',
             2102:'权限不存在',
             2103:'该用户未分配权限',
+
             2201:'参数不能为空',
             2202:'参数非法',
             2203:'参数不能为0',
             2204:'缺少参数',
+
             2301:'审核状态不正确',
             2302:'审核结果不正确',
+
             2401:'操作日志不存在',
+
             2501:'机构类型不正确',
+
             2601:'正在导入中，请稍候重试',
             2602:'请选择正确格式的Excel文件',
             2603:'表格数据格式不正确',
             2604:'导出数据超过一万',
+
             2701:'文件为空',
+
             10500:'错误的货币类型',
             10510:'默认的货币类型已选择，请重新选择',
             10520:'请先设置好该货币单位商品采购价格',
+
             11010:'余额不足',
             11020:'错误的资金变动方式',
+
             12010:'物流单号{uid}已存在',
             12020:'物流信息不存在',
+
             20010:'名称{name}重复',
+
             21010:'商品不存在',
             21011:'商品编码不能重复',
             21012:'商品编码{code}不存在',
@@ -1825,13 +1841,16 @@ const messages = {
             21030:'分类名{name}重复',
             21031:'分类英文名{name}重复',
             21032:'商品已在该仓库中',
+
             21110:'实例编码{uid}已存在',
             21120:'请选择所属商品',
             21130:'商品实例不存在',
             21140:'车架号不能为空',
             21150:'实例数量已满，无需再添加',
+
             21210:'该规格已存在',
             21220:'同一型号的商品的规格需要保持相同',
+
             21310:'支付金额与实际价格不符',
             21320:'当前采购单已转单',
             21410:'订单错误',
@@ -1839,22 +1858,28 @@ const messages = {
             21430:'订单状态错误',
             21440:'订单待支付',
             21450:'付款金额错误',
+
             22010:'退款金额不能小于等于0',
             22020:'退款金额不能大于订单支付金额',
             22030:'未知的退款类型',
             22040:'已经提交过申请，请耐心等待退款结果',
             22050:'只有未审核的退款能够修改',
+
             23010:'维修商品数量不能为0',
             23020:'转单的商品不能删除',
             23030:'车辆不存在',
             23050:'请选择次品仓',
+
             23110:'故障名称{name}已存在',
             23120:'故障编号{uid}已存在',
+
             23210:'结算清单{sn}不存在',
+
             24000:'质量反馈单明细数量为0',
             24010:'质量反馈单状态不正确',
             24020:'每个维修单只能有一个反馈单',
             24030:'质量反馈未完成，请先完成质量反馈!',
+
             25010:'出入库单不存在',
             25011:'未找到对应的出入库明细',
             25012:'入库数量不能大于采购数量',
@@ -1872,6 +1897,7 @@ const messages = {
             25024:'批次库存不足',
             25025:'发货批次不存在',
 	        25026:'实际出库数量不能为0',
+
             25110:'{name}库存不足',
             25111:'该商品未绑定库位关系',
             25112:'该库位数量不允许为负',
@@ -1882,19 +1908,75 @@ const messages = {
             25117:'当前库位还有库存，请出库后删除',
             25118:'库位号[{uid}]已有商品，请出库后再更改商品',
             25210:'只能修改待审核的调货单',
+
             27010:'BOM表已存在',
             27020:'BOM表不存在',
+
             28010:'物料不存在',
             28020:'物料类别不存在',
+
             28110:'供货商地址格式不正确',
             28120:'错误的供应商状态',
             28130:'错误的供应商类型',
             28140:'错误的付款期限类型',
             28150:'供应商物料不存在',
-            30001:'手机号已重复',
-            34001:'请选择区域',
-            34002:'区域不存在',
-            34003:'您不属于该区域，无法操作',
+
+            30001: '手机号已重复',
+            30002: '您不是该客户的负责人，无法操作',
+            30003: '该客户不是公海客户，无法领取',
+            30004: '该客户不是公海客户，无法分配',
+            30005: '客户不存在',
+            30006: '预设不可以修改',
+
+            31001: '商机越界',
+            31002: '商机不存在',
+
+            32001: '审核通过的合同订单无法修改',
+            32002: '该订单已审核完成',
+            32003: '该订单未指定审核人',
+
+            33001: '合同订单审核未完成，无法创建回款单',
+            33002: '审核完成的回款单无法修改',
+            33003: '该回款单已审核完成',
+            33004: '该回款单未指定审核人',
+            33005: '审核未通过的回款单无法进行退款操作',
+            33006: '退款金额不能大于回款单金额',
+
+            34001: '您还未设置自己的所属区域，无法向您展示试驾单',
+
+            35001: '请选择区域',
+            35002: '区域不存在',
+            35003: '您不属于该区域，无法操作',
+            35004: '您还未设置自己的所属区域，无法向您展示公海客户',
+            35005: '您不是区域管理员，无法操作',
+            35006: '该客户未设置所属区域，无法进行任何操作',
+            35007: '只能在同区域内转让，所选员工不属于该区域，无法操作',
+            35008: '客户的所属区域不存在，请更新客户的区域',
+            35009: '商机的所属区域不存在，请新商机区域',
+            35010: '请选择管理员',
+            35011: '该员工不属于当前区域，只能将区域内的员工设为管理员',
+            35012: '该区域存在下级区域',
+            35013: '该区域存在除管理员以外的其他成员，请先清空成员(不包括管理员)',
+            35014: '该区域存在客户，请先清空客户',
+
+            37001: '只读权限无法删除联系人',
+            37002: '无法删除联系人',
+
+            38001: '已经完成审核的审核人无法删除',
+            38002: '非法操作，请刷新页面',
+            38003: '已经完成审核的步骤无法添加审核人',
+            38004: '您不是当前审核人，无法审核',
+
+            39001: '预置词条不可编辑、不可删除',
+            39002: '选项错误',
+
+            40001: '非负责人无法操作',
+            40002: '只读权限无法操作',
+            40003: '当前团队无负责人',
+            40004: '不可修改负责人的权限',
+            40005: '您不是团队成员',
+            40006: '您不是团队负责人，无法删除团队成员',
+            40007: '无法删除负责人',
         },
     },
 
@@ -3486,10 +3568,62 @@ const messages = {
             28140:'Wrong type of payment term',
             28150:'The supplier material does not exist',
 
-            30001:'手机号已重复',
-            34001:'请选择区域',
-            34002:'区域不存在',
-            34003:'您不属于该区域，无法操作',
+            30001: 'Phone number has been duplicated',
+            30002: 'You are not the owner of this customer and cannot operate',
+            30003: 'The customer is not a high seas customer and cannot claim',
+            30004: 'The customer is not a high seas customer and cannot be assigned',
+            30005: 'Customer does not exist',
+            30006: 'Presets cannot be modified',
+
+            31001: 'Business opportunity steps out of bounds',
+            31002: 'Opportunity does not exist',
+
+            32001: 'The approved contract order cannot be modified',
+            32002: 'The order has been reviewed',
+            32003: 'No reviewer specified for this order',
+
+            33001: 'The contract order review has not been completed, and the payment receipt cannot be created',
+            33002: 'Receipts that have been reviewed cannot be modified',
+            33003: 'The receipt has been reviewed',
+            33004: 'The receipt does not specify a reviewer',
+            33005: 'Refunds cannot be processed for unapproved payment receipts',
+            33006: 'The refund amount cannot be greater than the payment receipt amount',
+
+            34001: 'You haven\'t set your own region to show you the test drive order',
+
+            35001: 'Please select a region',
+            35002: 'Region does not exist',
+            35003: 'You do not belong to this area and cannot operate',
+            35004: 'You haven\'t set up your own region to show you high seas customers',
+            35005: 'You are not a regional administrator and cannot operate',
+            35006: 'This customer has no region set and cannot perform any operations',
+            35007: 'It can only be transferred within the same area, the selected employee does not belong to this area and cannot be operated',
+            35008: 'The customer\'s region does not exist, please update the customer\'s region',
+            35009: 'The area to which the opportunity belongs does not exist, please create a new opportunity area',
+            35010: 'Please select an administrator',
+            35011: 'The employee does not belong to the current area, only employees in the area can be set as administrators',
+            35012: 'Subordinate areas exist in this area',
+            35013: 'There are other members except administrators in this area, please clear the members first (excluding administrators)',
+            35014: 'There are customers in this area, please clear the customers first',
+
+            37001: 'Read only permission cannot delete contacts',
+            37002: 'Unable to delete contacts',
+
+            38001: 'Reviewers who have completed review cannot be deleted',
+            38002: 'Illegal operation, please refresh the page',
+            38003: 'Steps that have already been reviewed cannot add reviewers',
+            38004: 'You are not the current reviewer and cannot review',
+
+            39001: 'Preset entries cannot be edited or deleted',
+            39002: 'Wrong option',
+
+            40001: 'Non-responsible person cannot operate',
+            40002: 'Read only permission cannot operate',
+            40003: 'The current team does not have a leader',
+            40004: 'The authority of the person in charge cannot be modified',
+            40005: 'you are not a team member',
+            40006: 'You are not a team leader and cannot delete team members',
+            40007: 'Unable to delete owner',
         },
     },
 }
