@@ -55,8 +55,13 @@
                 </template>
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.dataIndex === 'flag_admin'">
-                        {{ text ? $t('i.yes') : $t('i.no') }}
+                        <template v-if="$auth('user.set-admin') && orgType === Core.Const.LOGIN.ORG_TYPE.ADMIN">
+                            <a-switch :checked="!!record.flag_admin" :checked-children="$t('i.yes')" :un-checked-children="$t('i.no')" @click="handleManagerChange(record)"/>
+                        </template>
+                        <template v-else> {{ text ? $t('i.yes') : $t('i.no') }}</template>
                     </template>
+
+
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}
                     </template>
@@ -136,6 +141,7 @@ export default {
     props: {},
     data() {
         return {
+            Core,
             orgType: Core.Data.getOrgType(),
             USER_TYPE: Core.Const.USER.TYPE,
             // 加载
@@ -309,6 +315,19 @@ export default {
                 console.log(res)
 
             })
+        },
+        handleManagerChange(record){
+            this.loading = true;
+            Core.Api.User.setPlatformAdmin({
+                id: record.id,
+                flag_admin: record.flag_admin ? 0 : 1
+            }).then(() => {
+                this.getTableData();
+            }).catch(err => {
+                console.log('handleManagerChange err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
         },
     }
 };

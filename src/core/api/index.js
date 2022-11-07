@@ -48,8 +48,10 @@ const apiList = {
         listAll: ['PostJson', 'user/list-name'],
         detail: ['PostJson', 'user/detail'],
         delete: ['PostJson', 'user/delete'],
-        setAdmin: ['PostJson', 'user/set-admin'],
+	    setAdmin: ['PostJson', 'user/set-admin'],
 	    listGroup: ['PostJson', 'user/list-group'],
+	    setPlatformAdmin: ['PostJson', 'user/set-platform-admin'],
+
     },
     Account: {
         list: ['PostJson', 'account/list'], // 账户列表
