@@ -46,9 +46,9 @@
                             <a-button type="primary" @click="handleBatch('transfer')">{{ $t('crm_c.transfer') }}</a-button>
                         </template>
                         <template v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
-                            <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order.save')">编辑</a-button>
-                            <a-button @click="handleDelete(detail.id)" type="danger" v-if="$auth('crm-order.delete')">删除</a-button>
-                            <a-button @click="routerChange('income')" v-if="$auth('crm-order-income.save')">新建回款单</a-button>
+                            <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order.save')">{{$t('def.edit')}}</a-button>
+                            <a-button @click="handleDelete(detail.id)" type="danger" v-if="$auth('crm-order.delete')">{{$t('def.delete')}}</a-button>
+                            <a-button @click="routerChange('income')" v-if="$auth('crm-order-income.save')">{{$t('crm_oi.save')}}</a-button>
                         </template>
 
                     </a-col>

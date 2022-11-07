@@ -4,7 +4,7 @@
         <div class="title">{{ $t('crm_c.summary_information') }}</div>
     </div>
     <div class="panel-content">
-        <a-descriptions title="基本信息" bordered :column="2" size="small" class="pannel">
+        <a-descriptions :title="$t('n.information')" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('n.name')" class="label">{{detail.name}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.level')" class="label">{{$Util.CRMCustomerLevelFilter(detail.level, $i18n.locale)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.purchase_intent')" class="label">{{$Util.CRMCustomerPurchaseIntentFilter(detail.purchase_intent, $i18n.locale)}}</a-descriptions-item>
@@ -13,7 +13,7 @@
             <a-descriptions-item :label="$t('crm_c.industry')" class="label">{{$Util.CRMCustomerIndustryFilter(detail.industry, $i18n.locale)}}</a-descriptions-item>
 <!--            <a-descriptions-item :label="$t('crm_c.track_status')" class="label">{{$Util.CRMTrackStatusMapFilter(detail.track_status, $i18n.locale)}}</a-descriptions-item>-->
         </a-descriptions>
-        <a-descriptions title="客户信息" bordered :column="2" size="small" class="pannel" v-if="detail.type === Core.Const.CRM_CUSTOMER.TYPE.INDIVIDUAL">
+        <a-descriptions :title="$t('crm_c.client_information')" bordered :column="2" size="small" class="pannel" v-if="detail.type === Core.Const.CRM_CUSTOMER.TYPE.INDIVIDUAL">
             <a-descriptions-item :label="$t('crm_c.gender')" class="label">{{$Util.CRMCustomerGenderFilter(detail.gender, $i18n.locale)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.birthday')" class="label">{{detail.birthday}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.hobby')" class="label">{{detail.hobby}}</a-descriptions-item>
@@ -22,7 +22,7 @@
             <a-descriptions-item :label="$t('crm_c.nationality')" class="label">{{detail.country}}</a-descriptions-item>
         </a-descriptions>
 
-        <a-descriptions title="客户信息" bordered :column="2" size="small" class="pannel" v-if="detail.type === Core.Const.CRM_CUSTOMER.TYPE.UNIT">
+        <a-descriptions :title="$t('n.client_information')" bordered :column="2" size="small" class="pannel" v-if="detail.type === Core.Const.CRM_CUSTOMER.TYPE.UNIT">
             <a-descriptions-item :label="$t('crm_c.company_size')" class="label">{{$Util.CRMCompanySizeMapMapFilter(detail.company_size)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.company_license_id')" class="label">{{detail.company_license_id}}</a-descriptions-item>
         </a-descriptions>
@@ -46,11 +46,11 @@
             <a-descriptions-item :label="$t('crm_c_p.pre_order_city')" class="label">{{customerPortrait.pre_order_city}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c_p.pre_order_time')" class="label">{{$Util.timeFilter(customerPortrait.pre_order_time)}}</a-descriptions-item>
         </a-descriptions>
-        <a-descriptions title="商机信息" bordered :column="2" size="small" class="pannel">
+        <a-descriptions :title="$t('crm_c.business_information')" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('crm_c.order_success_count')" class="label">{{detail.order_count}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.order_success_price')" class="label">{{detail.order_price}}</a-descriptions-item>
         </a-descriptions>
-        <a-descriptions title="数据权限" bordered :column="2" size="small" class="pannel">
+        <a-descriptions :title="$t('crm_c.data_access')" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('crm_c.create_user')" class="label">{{detail.create_user != null? detail.create_user.name: '-'}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.create_time')" class="label">{{$Util.timeFilter(detail.create_time) || '-'}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.update_user')" class="label">{{detail.update_user_name}}</a-descriptions-item>

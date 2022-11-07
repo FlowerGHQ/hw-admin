@@ -1,7 +1,7 @@
 <template>
     <div class="list-container">
         <div class="title">
-            <span>客户购买意向</span>
+            <span>{{$t('crm_dash.purchase_intention')}}</span>
         </div>
 
         <!-- echarts -->

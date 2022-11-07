@@ -1,5 +1,5 @@
 <template>
-<a-range-picker v-model:value="createTime" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false'>
+<a-range-picker v-model:value="createTime" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false' :placeholder="[$t('crm_def.start_time'),$t('crm_def.end_time')]">
     <template #suffixIcon><i class="icon i_calendar"/></template>
 </a-range-picker>
 </template>

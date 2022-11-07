@@ -1,7 +1,7 @@
 <template>
     <div class="list-container">
         <div class="title">
-            <span>销售简报</span>
+            <span>{{$t('crm_dash.sale_presentation')}}</span>
         </div>
         <div class="table-container">
             <a-row :gutter="[20,0]">

@@ -1,7 +1,7 @@
 <template>
     <div class="list-container">
         <div class="title">
-            <span>客户试驾意向</span>
+            <span>{{$t('crm_dash.test_drive_intention')}}</span>
         </div>
 
         <!-- echarts -->

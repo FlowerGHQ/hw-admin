@@ -1,15 +1,15 @@
 <template>
     <div class="list-container">
         <div class="title">
-            <span>业绩榜单</span>
+            <span>{{$t('crm_dash.results_list')}}</span>
             <div>
                 <div class="select-item">
                     <a-select default-value="1" style="width: 80px" @change="handleChange">
                         <a-select-option value="1">
-                            本月
+                            {{$t('crm_def.month')}}
                         </a-select-option>
                         <a-select-option value="2">
-                            本年
+                            {{$t('crm_def.year')}}
                         </a-select-option>
                     </a-select>
                 </div>

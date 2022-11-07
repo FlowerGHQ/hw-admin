@@ -1,7 +1,7 @@
 <template>
     <div class="list-container">
         <div class="title">
-            <span>跟进统计</span>
+            <span>{{$t('crm_dash.fol_statistics')}}</span>
         </div>
         <div class="table-container">
             <a-row :gutter="[20,0]">

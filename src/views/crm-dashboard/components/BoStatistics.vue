@@ -1,7 +1,7 @@
 <template>
     <div class="list-container">
         <div class="title">
-            <span>商机分析</span>
+            <span>{{$t('crm_dash.business_analysis')}}</span>
         </div>
 
             <!-- echarts -->

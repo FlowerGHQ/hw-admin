@@ -8,7 +8,7 @@
         <div class="list" >
             <div  class="day-content" >
                 <div class="day-item tag" >
-                    <div class="tag-bg">今天</div>
+                    <div class="tag-bg">{{今天}}</div>
                 </div>
             </div>
         </div>
@@ -26,7 +26,7 @@
 <!--                            <div class="line grey">来自客户:{{ item.contact? item.contact.name : "-"}}</div>-->
                         </div>
                         <div class="foot">
-                            <div class="line">操作人:{{ item.operator_name }}</div>
+                            <div class="line">{{$t('n.operator')}}:{{ item.operator_name }}</div>
                         </div>
                     </div>
                 </div>

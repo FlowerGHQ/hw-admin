@@ -5,7 +5,7 @@
                 :placeholder="$t('def.select') + $t('crm_c.group')"
                 :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }" :tree-data="groupOptions"
                 tree-default-expand-all />
-            <a-range-picker v-model:value="time" @change="handleChange()" :allowClear="false" />
+            <a-range-picker v-model:value="time" @change="handleChange()" :allowClear="false" :placeholder="[$t('crm_def.start_time'),$t('crm_def.end_time')]"/>
         </div>
         <div></div>
         <a-row :gutter="[8, 0]">
