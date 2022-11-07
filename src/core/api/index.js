@@ -50,7 +50,7 @@ const apiList = {
         delete: ['PostJson', 'user/delete'],
 	    setAdmin: ['PostJson', 'user/set-admin'],
 	    listGroup: ['PostJson', 'user/list-group'],
-	    setPlatformAdmin: ['PostJson', 'user/ set-platform-admin'],
+	    setPlatformAdmin: ['PostJson', 'user/set-platform-admin'],
 
     },
     Account: {
