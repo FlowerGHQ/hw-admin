@@ -1602,16 +1602,27 @@ const routes = [
 				}
 			},
 			{
-				path: 'customer-private-list',
-				name: 'CustomerPrivateList',
-				component: () => import('@/views/crm-customer/customer-list-copy.vue'),
+				path: 'private-customer-list',
+				name: 'PrivateCustomerList',
+				component: () => import('@/views/crm-customer/customer-list.vue'),
 				meta: {
-					title: '私人客户',
-					title_en: 'Private clients',
+					title: '我的客户',
+					title_en: 'My customers',
 					type: 'private',
                     auth: ["crm-customer.list"],
 				}
 			},
+            {
+                path: 'region-customer-list',
+                name: 'RegionCustomerList',
+                component: () => import('@/views/crm-customer/customer-list.vue'),
+                meta: {
+                    title: '区域客户',
+                    title_en: 'Regional customers',
+                    type: 'region',
+                    auth: ["crm-customer.list"],
+                }
+            },
 			{
 				path: 'customer-edit',
 				name: 'CustomerEdit',

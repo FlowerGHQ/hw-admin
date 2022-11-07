@@ -1433,6 +1433,11 @@ let Const = {
 			INVALID: 30,
 			NOT_YET_A_CUSTOMER: 0,
 		},
+        SEARCH_TYPE: {
+            POOL: 10,
+            PRIVATE: 20,
+            REGION: 30,
+        },
 		LEVEL_MAP: {
 			'10': { key: 10, zh: '重点客户',en: 'Focus on the customer', value: 10 },
 			'20': { key: 20, zh: '普通客户',en: 'Regular customer', value: 20 },
