@@ -1548,8 +1548,8 @@ const routes = [
 		name: 'crm-dashboard',
         type: [ROUTER_TYPE.CRM],
 		meta: {
-			title: 'CRM数据',
-			title_en: 'CRM Data',
+			title: '数据',
+			title_en: 'Data',
 			icon: 'i_crm_data',
 			auth: ["crm-label.list"],
 
@@ -1912,8 +1912,8 @@ const routes = [
 		name: 'CRMSettingManagement',
         type: [ROUTER_TYPE.CRM],
 		meta: {
-			title: 'CRM设置',
-			title_en: 'CRM Setting',
+			title: '系统设置',
+			title_en: 'Systems Setting',
 			icon: 'i_crm_setting',
 			// auth: ["crm-customer.list"],
 
