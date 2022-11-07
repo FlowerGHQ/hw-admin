@@ -7,7 +7,7 @@ import defult_file from '@images/defult_file.png'
 
 // let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' // 正式
 let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' //
-let URL_POINT = 'https://eos-api.hw.innotick.com'
+let URL_POINT = 'http://eos-dev-api.horwincloud.com'
 
 switch (window.location.hostname) {
     case 'eos.horwincloud.com':
