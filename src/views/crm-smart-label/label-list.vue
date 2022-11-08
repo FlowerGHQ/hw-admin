@@ -137,7 +137,7 @@
                     begin_time: '',
                     end_time: '',
                     target_type: '',
-                    category: '',
+                    category: undefined,
                 },
                 // 加载
                 loading: false,
