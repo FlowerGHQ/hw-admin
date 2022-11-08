@@ -26,6 +26,17 @@
 
                 </div>
                 <div class="form-item required">
+                    <div class="key">{{ $t('n.select_country') }}：</div>
+                    <div class="value">
+                        <a-select v-model:value="form.phoneAreaCode" :placeholder="$t('def.input')" >
+                            <a-select-option v-for="item of phoneAreaCodeList" :key="item.phoneAreaCode" :value="item.phoneAreaCode">
+                                <span  class="phoneAreaCode">{{ item.phoneAreaCode }}</span>
+                                {{lang === 'zh' ? item.name: item.enName}}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">{{ $t('n.phone') }}：</div>
                     <div class="value">
                         <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerBlur" :disabled="form.id > 0"/>
@@ -261,6 +272,7 @@ import CountryCascader from '@/components/common/CountryCascader.vue'
 import AddressCascader from '@/components/common/AddressCascader.vue';
 import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
 import LabelSelect from '@/components/crm/popup-btn/LabelSelect.vue';
+import phoneAreaCode from '@/assets/js/phoneAreaCode/phoneAreaCode.js'
 
 import dayjs from "dayjs";
 
@@ -309,6 +321,8 @@ export default {
                 remark: '',
                 status: Core.Const.CRM_CUSTOMER.STATUS.POOL,
                 address: '',
+
+                phoneAreaCode: ''
             },
             defAddr: [],
             areaList: [],
@@ -349,6 +363,8 @@ export default {
             labelList: [],
             labelIdList: [],
             groupOptions: [],
+
+            phoneAreaCodeList: []  //手机号地区
         };
     },
     watch: {},
@@ -358,6 +374,8 @@ export default {
         }
     },
     mounted() {
+        // console.log('111',phoneAreaCode);
+        this.phoneAreaCodeList = phoneAreaCode
         this.form.id = Number(this.$route.query.id) || 0
         if (this.form.id) {
             this.getCustomerDetail();
@@ -418,7 +436,10 @@ export default {
             }
 
             console.log("areaContinent", areaContinent)
-            if (!this.$Util.ifPhoneFilter(form.phone)){
+            if (!form.phoneAreaCode) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!this.$Util.ifPhoneFilter(form.phone,form.phoneAreaCode)){
                 return this.$message.warning(this.$t('def.error_phone'))
             }
             if (!form.name) {
@@ -591,7 +612,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scope>
 #CustomerEdit {
 
     .icon {
@@ -603,11 +624,16 @@ export default {
     }
 
 }
+
+.phoneAreaCode {
+    display: inline-block !important;
+    width: 50px !important;
+}
 .form-item {
     .fac();
 
     .ant-input {
-        width: calc(~'100% - 24px');
+        // width: calc(~'100% - 24px');
     }
 
     i.icon {
@@ -624,6 +650,9 @@ export default {
     .i_close_c {
         color: @red;
         font-size: 18px;
+    }
+    .key {
+        width: 120px !important;
     }
 }
 </style>
