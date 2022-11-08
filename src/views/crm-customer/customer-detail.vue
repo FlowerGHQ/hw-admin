@@ -118,7 +118,7 @@
                                 <CustomerAdd :btnText="$t('crm_c.add')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id"  @select="getCRMContactList" />
                             </CRMContact>
                         </a-tab-pane>
-                        <a-tab-pane key="Opportunity" :tab="$t('crm_b.bo')">
+                        <a-tab-pane key="Opportunity" :tab="$t('crm_b.new_bo')">
                             <CRMBo  v-if="id>0" :detail="detail" :customerId="detail.id" ref ="CRMBo">
                                 <a-button type="primary" @click="routerChange('edit')" v-if="$auth('crm-bo.save')"><i class="icon i_add"/>{{ $t('crm_b.save') }}</a-button>
                             </CRMBo>

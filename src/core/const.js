@@ -17,12 +17,12 @@ switch (window.location.hostname) {
     case 'eos-dev.horwincloud.com':
         URL_POINT = 'http://eos-dev-api.horwincloud.com' // 新测试服
         break;
-    // case 'eos.hw.innotick.com':
-    //     URL_POINT = 'https://eos-api.hw.innotick.com' // 老正式服
-    //     break;
-    // case 'eos-dev.hw.innotick.com':
-    //     URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 老测试服
-    //     break;
+    case 'eos.hw.innotick.com':
+        URL_POINT = 'http://eos-api.horwincloud.com' // 老正式服
+        break;
+    case 'eos-dev.hw.innotick.com':
+        URL_POINT = 'http://eos-dev-api.horwincloud.com' // 老测试服
+        break;
 
 	case "10.0.0.231":
 		URL_POINT = 'http://10.0.0.231:8889'
