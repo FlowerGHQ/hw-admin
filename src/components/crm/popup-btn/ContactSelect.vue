@@ -1,9 +1,9 @@
 <template>
-    <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
+    <a-button class="ContactSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
         <slot>{{ btnText }}</slot>
     </a-button>
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'
-        class="ItemSelectModal">
+        class="ContactSelectModal">
         <div class="modal-content">
             <div class="search-container">
                 <a-row class="search-area">
@@ -252,7 +252,7 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.ItemSelectBtn {
+.ContactSelectBtn {
     margin-left: 8px;
     &.ant-btn-link {
         line-height: 1;
@@ -266,7 +266,7 @@ export default {
         }
     }
 }
-.ItemSelectModal {
+.ContactSelectModal {
     .tip {
         height: 30px;
         line-height: 30px;

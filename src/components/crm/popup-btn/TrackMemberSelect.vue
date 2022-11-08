@@ -1,9 +1,9 @@
 <template>
-    <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
+    <a-button class="TrackMemberSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
         <slot>{{ btnText }}</slot>
     </a-button>
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'
-        class="ItemSelectModal">
+        class="TrackMemberSelectModal">
         <div class="modal-content">
             <div class="search-container">
                 <a-row class="search-area">
@@ -204,7 +204,7 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.ItemSelectBtn {
+.TrackMemberSelectBtn {
     &.ant-btn-link {
         line-height: 1;
         height: 1em;
@@ -217,7 +217,7 @@ export default {
         }
     }
 }
-.ItemSelectModal {
+.TrackMemberSelectModal {
     .form-item{
         max-width: 250px;
     }
