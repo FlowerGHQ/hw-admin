@@ -136,18 +136,18 @@
                         </div>
                     </div>
                     <div class="operate-container">
-                            <div class="form-item required">
-                                <div class="key">{{ $t('crm_c.group') }}：</div> <!--区域 -->
-                                <div class="value">
-                                    <a-tree-select class="CategoryTreeSelect"
-                                        v-model:value="editForm.group_id"
-                                        :placeholder="$t('def.select')"
-                                        :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-                                        :tree-data="groupOptions"
-                                        tree-default-expand-all
-                                    />
-                                </div>
+                        <div class="form-item required">
+                            <div class="key">{{ $t('crm_c.group') }}：</div> <!--区域 -->
+                            <div class="value">
+                                <a-tree-select class="CategoryTreeSelect"
+                                    v-model:value="editForm.group_id"
+                                    :placeholder="$t('def.select')"
+                                    :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                                    :tree-data="groupOptions"
+                                    tree-default-expand-all
+                                />
                             </div>
+                        </div>
                     </div>
                     <div class="table-container">
                         <UserTable :columns="userTableColumns" :checkMode="true" :dataSource="userTableData" :default-checked="editForm.user_list" @submit="handleSelectItem"/>

@@ -108,7 +108,7 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                { title: this.$t('crm_region.name'), dataIndex: 'name' },
+                { title: this.$t('crm_region.name'), dataIndex: 'name', width: '300px' },
                 { title: this.$t('e.administrator'), dataIndex: 'admin_user_name' },
                 { title: this.$t('crm_region.user_count'), dataIndex: 'user_count' },
                 { title: this.$t('crm_region.customer_count'), dataIndex: 'customer_count' },
