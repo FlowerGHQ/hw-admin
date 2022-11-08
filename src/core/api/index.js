@@ -621,6 +621,7 @@ const apiList = {
         structure: ['PostJson', 'crm-group-member/structure'],//
         structureByUser: ['PostJson', 'crm-group-member/structure-by-user'],//
         structureByUserGroup: ['PostJson', 'crm-group-member/structure-by-user-group'],//
+
         users: ['PostJson', 'crm-group-member/users'],//
     },
 	CRMCustomer:{//CRM 客户
@@ -632,6 +633,9 @@ const apiList = {
 		distribute: ['PostJson', 'crm-customer/distribute'],//
 		returnPool: ['PostJson', 'crm-customer/return-pool'],//
 		transfer: ['PostJson', 'crm-customer/transfer'],//
+
+
+		batchGroup: ['PostJson', 'crm-customer/batch-group'],
 		batchDelete: ['PostJson', 'crm-customer/batch-delete'],
 		batchObtain: ['PostJson', 'crm-customer/batch-obtain'],
 		batchDistribute: ['PostJson', 'crm-customer/batch-distribute'],

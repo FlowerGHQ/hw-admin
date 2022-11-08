@@ -104,19 +104,19 @@
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
                         <a-tab-pane key="TestDriveList" :tab="$t('crm_d.list')">
-                             <CRMTestDrive  v-if="id>0" :detail="detail" :customerId="detail.id" ref="CRMTestDrive">
+                            <CRMTestDrive  v-if="id>0" :detail="detail" :customerId="detail.id" ref="CRMTestDrive">
                                 <a-button type="primary" @click="routerChange('test-drive')" v-if="$auth('crm-customer.save')">{{ $t('crm_d.save') }}</a-button>
-                             </CRMTestDrive>
+                            </CRMTestDrive>
                         </a-tab-pane>
                         <a-tab-pane key="ContacPerson" :tab="$t('crm_t.contact_customer')">
-                              <CRMContact  v-if="id>0" :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :flagOWN="trackMemberDetail != null ?trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN: false" ref="CRMContact">
-                                  <CustomerAdd :btnText="$t('crm_c.add')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id"  @select="getCRMContactList" />
-                              </CRMContact>
+                            <CRMContact  v-if="id>0" :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :flagOWN="trackMemberDetail != null ?trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN: false" ref="CRMContact">
+                                <CustomerAdd :btnText="$t('crm_c.add')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id"  @select="getCRMContactList" />
+                            </CRMContact>
                         </a-tab-pane>
                         <a-tab-pane key="Opportunity" :tab="$t('crm_b.bo')">
-                              <CRMBo  v-if="id>0" :detail="detail" :customerId="detail.id" ref ="CRMBo">
+                            <CRMBo  v-if="id>0" :detail="detail" :customerId="detail.id" ref ="CRMBo">
                                 <a-button type="primary" @click="routerChange('edit')" v-if="$auth('crm-bo.save')"><i class="icon i_add"/>{{ $t('crm_b.save') }}</a-button>
-                              </CRMBo>
+                            </CRMBo>
                         </a-tab-pane>
                         <a-tab-pane key="ContractList" :tab="$t('crm_o.list')">
                             <CRMOrder   v-if="id>0" :detail="detail" :customerId="detail.id"  ref ="CRMOrder">
@@ -150,12 +150,12 @@
                 <div class="key">{{ $t('crm_group.name') }}：</div>
                 <div class="value">
                     <a-tree-select class="CategoryTreeSelect"
-                                   v-model:value="group_id"
-                                   :placeholder="$t('def.select')"
-                                   :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-                                   :tree-data="groupOptions"
-                                   @change="getUserData('')"
-                                   tree-default-expand-all
+                        v-model:value="group_id"
+                        :placeholder="$t('def.select')"
+                        :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                        :tree-data="groupOptions"
+                        @change="getUserData('')"
+                        tree-default-expand-all
                     />
                 </div>
             </div>
@@ -197,18 +197,14 @@ import CRMOrder from '@/components/crm/panel/CRMOrder.vue';
 import CRMTrackRecord from '@/components/crm/panel/CRMTrackRecord.vue';
 import CRMTestDrive from '@/components/crm/panel/CRMTestDrive.vue';
 
-
 import Group from '@/components/crm/panel/Group.vue';
 import ActionRecord from '@/components/crm/panel/ActionRecord.vue';
-
-
 
 import CustomerAdd from '@/components/crm/popup-btn/CustomerAdd.vue';
 import FollowUpShow from '@/components/crm/popup-btn/FollowUpShow.vue';
 
-import dayjs from "dayjs";
-import {get} from "lodash";
 import LabelList from '@/components/crm/common/LabelList.vue';
+
 export default {
     name: 'CustomerEdit',
     components: { CustomerAdd, FollowUpShow, CRMContact, CRMBo, CRMTrackRecord, Group, CRMOrder, ActionRecord, CustomerSituation,LabelList,CRMTestDrive},
@@ -235,6 +231,7 @@ export default {
             trackMemberDetail: undefined,
             groupOptions: [],
             group_id: undefined,
+            id: '',
         };
     },
     watch: {},

@@ -28,7 +28,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('n.select_country') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.phone_country_code" :placeholder="$t('def.input')" @select="setPhoneCountryCode" :disabled="form.id > 0 && form.phone != ''">
+                        <a-select v-model:value="form.phone_country_code" :placeholder="$t('def.input')" @select="setPhoneCountryCode" :disabled="form.id > 0 && form.phone_country_code != ''">
                             <a-select-option v-for="item of phoneCountryCodeList" :key="item.phoneAreaCode" :value="item.phoneAreaCode">
                                 <span  class="phoneCountryCode">{{ item.phoneAreaCode }}</span>
                                 {{lang === 'zh' ? item.name: item.enName}}

@@ -48,11 +48,7 @@
 
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                             <template v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
-                                <FollowUpShow :btnText="$t('crm_c.add_follow_records')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" @submit="getCRMTrackRecord"/>
-                                <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_CONTACT_BIND.TARGET_TYPE.BO_ADD_CUSTOMER" :addCustomerBtn="true"/>
                                 <a-button @click="routerChange('edit')" v-if="$auth('crm-bo.save')">{{ $t('n.edit') }}</a-button>
-                                <a-button @click="routerChange('order-save')" v-if="$auth('crm-order.save')">{{ $t('crm_o.save') }}</a-button>
-
                             </template>
                             <template v-if="trackMemberDetail!= null ? trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
                                 <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-bo.transfer')">{{ $t('crm_c.transfer') }}</a-button>
@@ -69,16 +65,25 @@
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="activeKey">
                         <a-tab-pane key="TrackRecord" :tab="$t('crm_t.track_record')">
-                            <CRMTrackRecord  v-if="id>0" :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :detail="detail" ref ="CRMTrackRecord"/>
+                            <CRMTrackRecord  v-if="id>0" :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" :detail="detail" ref ="CRMTrackRecord">
+                                <FollowUpShow :btnText="$t('crm_c.add_follow_records')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" @submit="getCRMTrackRecord"/>
+                            </CRMTrackRecord>
                         </a-tab-pane>
                         <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.summary_information')">
                             <CustomerSituation  v-if="id>0" :detail="detail"/>
                         </a-tab-pane>
-                        <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
-
-                            <CRMItem :detail="detail"  v-if="id>0" :sourceId="detail.id" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.BO" ref ="CRMItem"/>
-                            <CRMContact :detail="detail" v-if="id>0"  :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" :flagOWN="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN"  ref ="CRMContact"/>
-                            <CRMOrder :detail="detail" v-if="id>0" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" ref ="CRMOrder"/>
+                        <a-tab-pane key="SalesInformation" :tab="$t('crm_b.select_item')">
+                            <CRMItem :detail="detail"  v-if="id>0" :sourceId="detail.id" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.BO" ref ="CRMItem"></CRMItem>
+                        </a-tab-pane>
+                        <a-tab-pane key="ContactPerson" :tab="$t('crm_t.contact_customer')">
+                            <CRMContact :detail="detail" v-if="id>0"  :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" :flagOWN="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN"  ref ="CRMContact">
+                                <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_CONTACT_BIND.TARGET_TYPE.BO_ADD_CUSTOMER" :addCustomerBtn="true"/>
+                            </CRMContact>
+                        </a-tab-pane>
+                        <a-tab-pane key="OrderList" :tab="$t('crm_o.list')">
+                            <CRMOrder :detail="detail" v-if="id>0" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" ref ="CRMOrder">
+                                <a-button type="primary" @click="routerChange('order-save')" v-if="$auth('crm-order.save')">{{ $t('crm_o.save') }}</a-button>
+                            </CRMOrder>
                         </a-tab-pane>
                     </a-tabs>
                 </div>

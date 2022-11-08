@@ -53,27 +53,20 @@
                                     <DownOutlined />
                                 </a>
                                 <template #overlay>
-                                    <a-checkbox-group v-model:value="editForm.category_list">
-                                            <a-menu class="synchronous-menu">
-                                                <a-menu-item v-if="searchForm.category != 1" class="synchronous-menu-item">
-                                                    <a-checkbox :value="1" >客户</a-checkbox>
-                                                </a-menu-item>
-                                                <a-menu-item v-if="searchForm.category != 2">
-                                                    <a-checkbox :value="2" v-if="searchForm.category != 2">商机</a-checkbox>
-                                                </a-menu-item>
-                                                <a-menu-item v-if="searchForm.category != 3">
-                                                    <a-checkbox :value="3" v-if="searchForm.category != 3">合同</a-checkbox>
-                                                </a-menu-item>
-                                                <a-menu-item v-if="searchForm.category != 4">
-                                                    <a-checkbox :value="4" v-if="searchForm.category != 4">回款单</a-checkbox>
-                                                </a-menu-item>
-                                                <a-menu-item>
-                                                    <a-button @click="handleSubmitContent(record)">确定</a-button>
-                                                    <a-button @click="handleMenuShow(index)">取消</a-button>
-                                                </a-menu-item>
-                                            </a-menu>
-                                        </a-checkbox-group>
-
+                                    <a-menu class="synchronous-menu">
+                                        <a-menu-item  class="synchronous-menu-item">
+                                            <a-checkbox-group v-model:value="editForm.category_list">
+                                                <a-checkbox :value="1" v-if="searchForm.category != 1">客户</a-checkbox>
+                                                <a-checkbox :value="2" v-if="searchForm.category != 2">商机</a-checkbox>
+                                                <a-checkbox :value="3" v-if="searchForm.category != 3">合同</a-checkbox>
+                                                <a-checkbox :value="4" v-if="searchForm.category != 4">回款单</a-checkbox>
+                                            </a-checkbox-group>
+                                        </a-menu-item>
+                                        <a-menu-item>
+                                            <a-button size="small" type="primary" @click="handleSubmitContent(record)">确定</a-button>
+                                            <a-button size="small" @click="handleMenuShow(index)">取消</a-button>
+                                        </a-menu-item>
+                                    </a-menu>
                                 </template>
                             </a-dropdown>
                             <a-button type="link" @click="handleModalShow(record, true)" v-if="record.type !== 1 && $auth('crm-label.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
