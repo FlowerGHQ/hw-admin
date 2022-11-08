@@ -11,6 +11,10 @@
                              btnType='primary' :api-list="['CRMOrderIncome', 'audit']" :id="detail.id" @submit="getOrderDetail"
                              :s-pass="Core.Const.FLAG.YES" :s-refuse="Core.Const.FLAG.NO" :current-audit-process-id="detail.current_audit_process_id" no-refuse><i class="icon i_audit"/>{{ $t('n.audit') }}
                 </AuditHandle>
+                <span v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
+                            <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order-income.save')">{{$t('def.edit')}}</a-button>
+                            <a-button @click="handleDelete(detail.id)" v-if="$auth('crm-order-income.delete')">{{$t('def.delete')}}</a-button>
+                        </span> 
             </div>
         </div>
         <div class="gray-panel">
@@ -55,10 +59,10 @@
                         <span class="value">{{$Util.countFilter(detail.refunded) + '元'}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                        <span v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
+                        <!-- <span v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
                             <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order-income.save')">{{$t('def.edit')}}</a-button>
                             <a-button @click="handleDelete(detail.id)" v-if="$auth('crm-order-income.delete')">{{$t('def.delete')}}</a-button>
-                        </span>
+                        </span> -->
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                         <span class="key">{{ $t('sl.show') }}：</span>
