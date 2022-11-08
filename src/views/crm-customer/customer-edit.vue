@@ -28,9 +28,9 @@
                 <div class="form-item required" v-if="form.id === 0 || form.phone_country_code === ''">
                     <div class="key">{{ $t('n.select_country') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.phone_country_code" :placeholder="$t('def.input')" @select="setPhoneCountryCode" :disabled="form.id > 0 && form.phone_country_code != ''">
-                            <a-select-option v-for="item of phoneCountryCodeList" :key="item.phoneAreaCode" :value="item.phoneAreaCode">
-                                <span class="phoneCountryCode">{{ item.phoneAreaCode }}</span>
+                        <a-select v-model:value="form.phone_country_code" :placeholder="$t('def.input')" @select="setPhoneCountryCode" :disabled="form.id > 0 && form.phone_country_code != ''" show-search option-filter-prop="key" allow-clear>
+                            <a-select-option v-for="item of phoneCountryCodeList" :key="item.phoneAreaCode+item.name+item.enName" :value="item.phoneAreaCode"  >
+                                <span  class="phoneCountryCode">{{ item.phoneAreaCode }}</span>
                                 {{lang === 'zh' ? item.name: item.enName}}
                             </a-select-option>
                         </a-select>
@@ -455,19 +455,19 @@ export default {
 
             console.log("areaContinent", areaContinent)
             if (!form.phone_country_code) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.choose') + ":" + this.$t('crm_c.phone_country_code') )
             }
             if (!this.$Util.ifPhoneFilter(form.phone,form.phone_country_code)){
                 return this.$message.warning(this.$t('def.error_phone'))
             }
             if (!form.name) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.enter') + ":" + this.$t('crm_c.name') )
             }
             if (!form.phone && !form.email) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.enter') + ":" + this.$t('n.email') + " Or " +  this.$t('n.phone')  )
             }
             if (!form.type) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.enter')+ ":" + this.$t('crm_c.type') )
             }
 
            /* if (!form.province || !form.city || !form.county || !form.address) {
@@ -648,7 +648,11 @@ export default {
         },
         setGroupId(val) {
             Core.Data.setGroupId(val)
-        }
+        },
+        filterOption(input, option) {
+            return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+
+        },
     }
 };
 </script>

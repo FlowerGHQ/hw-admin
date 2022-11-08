@@ -2052,7 +2052,7 @@ const messages = {
             phone: 'Phone',
             email: 'Email',
             country: 'Nation',
-            enter: 'Please enter distributor name or short name',
+            enter: 'Please enter',
             area: 'Area',
             choose: 'Please choose ',
             information: 'Basic Information',

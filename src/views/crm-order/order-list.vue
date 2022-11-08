@@ -234,10 +234,10 @@ export default {
             searchForm: {
                 name: '',
                 customer_name:'',
-                own_user_id:'',
+                own_user_id:undefined,
                 create_user_name:'',
-                paid_money_progress: '',
-                status:'',
+                paid_money_progress: undefined,
+                status:undefined,
                 begin_time: '',
                 end_time: '',
                 type: '',

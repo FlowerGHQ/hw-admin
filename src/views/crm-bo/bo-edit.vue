@@ -374,19 +374,19 @@ export default {
         handleSubmit(router = 'back') {
             let form = Core.Util.deepCopy(this.form)
             if (!form.customer_id) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_b.customer_name'))
             }
             if (!form.name) {
-                return this.$message.warning(this.$t('def.enter'))
+                 return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_b.name'))
             }
             if (!form.money) {
-                return this.$message.warning(this.$t('def.enter'))
+                 return this.$message.warning(this.$t('n.choose')+":"+this.$t('crm_b.money'))
             }
             if (form.status === "" || form.status === undefined) {
-                return this.$message.warning(this.$t('def.enter'))
+                 return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_b.status'))
             }
             if (!form.estimated_deal_time) {
-                return this.$message.warning(this.$t('def.enter'))
+                 return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_b.estimated_deal_time'))
             }
 
             form.estimated_deal_time = form.estimated_deal_time ? dayjs(form.estimated_deal_time).unix() : 0 // 日期转时间戳
