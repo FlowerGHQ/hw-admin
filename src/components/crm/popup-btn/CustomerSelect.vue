@@ -20,9 +20,15 @@
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
+                    <a-col :xs='24' :sm='24' :md='12' class="search-item">
+                        <div class="key"><span>{{ $t('n.email') }}:</span></div>
+                        <div class="value">
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.email" @keydown.enter='handleSearch'/>
+                        </div>
+                    </a-col>
                 </a-row>
                 <div class="btn-area">
-                    <a-button @click="handleSearch" :disabled="searchForm.phone === '' && selectCustomer" type="primary">{{ $t('def.search') }}</a-button>
+                    <a-button @click="handleSearch" :disabled="searchForm.phone === '' && searchForm.email === '' && selectCustomer" type="primary">{{ $t('def.search') }}</a-button>
                     <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
@@ -118,6 +124,10 @@ export default {
             type: String,
             default: ''
         },
+        email: {
+            type: String,
+            default: ''
+        },
         checkMode: {
             type: Boolean,
             default: true,
@@ -140,6 +150,7 @@ export default {
             total: 0,
             searchForm: {
                 phone: '',
+                email: '',
                 name: '',
             },
 
@@ -156,6 +167,13 @@ export default {
             handler(phone) {
                 this.searchForm.phone = this.phone;
             }
+        },
+        email: {
+            deep: true,
+            immediate: true,
+            handler(email) {
+                this.searchForm.email = this.email;
+            }
         }
     },
     computed: {
@@ -163,11 +181,14 @@ export default {
             let tableColumns = [
                 {title: this.$t('n.name'), dataIndex: 'name', key: 'name'},
                 {title: this.$t('n.phone'), dataIndex: 'phone', key: 'phone' },
+                {title: this.$t('n.email'), dataIndex: 'email', key: 'email' },
                 {title: this.$t('crm_c.type'), dataIndex: 'type', key:'type'},
 
             ]
             if (this.selectCustomer){
-                tableColumns.push({title: this.$t('crm_c.own_user_name'), dataIndex: ['own_user','name'], key: 'name' }, {title: this.$t('def.operate'), key: 'operation', fixed: 'right'})
+                tableColumns.push(
+                    {title: this.$t('crm_c.own_user_name'), dataIndex: ['own_user','name'], key: 'name' },
+                    {title: this.$t('def.operate'), key: 'operation', fixed: 'right'})
             }
 
             return tableColumns
@@ -208,6 +229,7 @@ export default {
             Core.Api.CRMCustomer.list({
                 name: this.searchForm.name,
                 phone: this.searchForm.phone,
+                email: this.searchForm.email,
                 target_id: this.targetId,
                 target_type: this.targetType,
                 page: this.currPage,
@@ -231,6 +253,7 @@ export default {
         },
         handleSearchReset() {
             this.searchForm.phone = ''
+            this.searchForm.emial = ''
             this.searchForm.name = ''
             this.pageChange(1)
         },

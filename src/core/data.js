@@ -155,7 +155,18 @@ class StorageHandler {
 	getTabPosition() {
 		return this.getItem(Const.DATA.TAB_POSITION)
 	}
-
+	setPhoneCountryCode(value) {
+        this.setItem(Const.DATA.PHONE_COUNTRY_CODE, value);
+    }
+	getPhoneCountryCode() {
+		return this.getItem(Const.DATA.PHONE_COUNTRY_CODE)
+	}
+    setGroupId(value) {
+        this.setItem(Const.DATA.GROUP_ID, value);
+    }
+    getGroupId() {
+		return this.getItem(Const.DATA.GROUP_ID)
+	}
 }
 
 export default new StorageHandler();
