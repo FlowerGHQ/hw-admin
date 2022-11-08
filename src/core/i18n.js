@@ -2168,7 +2168,7 @@ const messages = {
             auth_obj: 'Authority Object',
             enter_search: 'Enter search content',
 	        crm: 'CRM',
-	        after: 'After',
+	        after: 'After Sales',
 	        sales: 'Sales',
 	        production: "Production",
             select_country: 'Country/Region'

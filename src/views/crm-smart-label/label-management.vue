@@ -289,6 +289,7 @@ export default {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.modalShow = false
             }).catch(err => {
+                this.getTableData();
                 console.log('handleModalSubmit err:', err)
             }).finally(() => {
                 this.loading = false
