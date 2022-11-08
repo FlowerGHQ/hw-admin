@@ -5,7 +5,7 @@
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='560px'
         class="ItemSelectModal">
         <div class="modal-content">
-            <LabelAdd :category="category" v-if="addCustomerBtn" @select="getTableData"/>
+            <LabelAdd :category="category" v-if="addCustomerBtn" @select="getTableData" :btnText="$t('sl.add')"/>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
