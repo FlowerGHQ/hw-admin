@@ -81,7 +81,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_o.signing_date') }}：</div> <!-- 签约日期 -->
                     <div class="value">
-                        <a-date-picker v-model:value="form.date" valueFormat='YYYY-MM-DD' placeholder="选择日期"/>
+                        <a-date-picker v-model:value="form.date" valueFormat='YYYY-MM-DD' :placeholder="$t('crm_def.select_date')"/>
                     </div>
                 </div>
                 <div class="form-item required">
