@@ -1697,6 +1697,7 @@ let Const = {
 			DISTRIBUTE_CUSTOMER : 2001,    // 分配客户
 			RETURN_POOL : 1004,            // 退回公海
 			CUSTOMER_TO_OTHERS : 2002,     // 将客户移交给
+			MODIFYING_REGION : 1010,       // 修改区域
 
 			CREATE_BO : 2003,              // 新建商机
 			DELETE_BO : 2004,              // 删除商机
