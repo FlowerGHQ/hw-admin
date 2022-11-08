@@ -25,7 +25,7 @@
                     </div>
 
                 </div>
-                <div class="form-item required" v-if="form.id = 0 || form.phone_country_code === ''">
+                <div class="form-item required" v-if="form.id === 0 || form.phone_country_code === ''">
                     <div class="key">{{ $t('n.select_country') }}：</div>
                     <div class="value">
                         <a-select v-model:value="form.phone_country_code" :placeholder="$t('def.input')" @select="setPhoneCountryCode" :disabled="form.id > 0 && form.phone_country_code != ''">
@@ -36,7 +36,7 @@
                         </a-select>
                     </div>
                 </div>
-                <div class="form-item required" v-if="form.id = 0 || form.phone === ''">
+                <div class="form-item required" v-if="form.id === 0 || form.phone === ''">
                     <div class="key">{{ $t('n.phone') }}：</div>
                     <div class="value">
                         <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerPhoneBlur" :disabled="form.id > 0 && form.phone != ''"/>
@@ -47,7 +47,7 @@
                         {{ $t('crm_c.rechecking') }}
                     </CustomerSelect>
                 </div>
-                <div class="form-item required" v-if="form.id = 0 || form.email === ''">
+                <div class="form-item required" v-if="form.id === 0 || form.email === ''">
                     <div class="key">{{ $t('n.email') }}：</div>
                     <div class="value">
                         <a-input v-model:value="form.email" :placeholder="$t('def.input')" @blur="handleCustomerEmailBlur" :disabled="form.id > 0 && form.email != ''"/>
