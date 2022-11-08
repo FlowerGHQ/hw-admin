@@ -28,7 +28,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('n.select_country') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.phoneAreaCode" :placeholder="$t('def.input')" >
+                        <a-select v-model:value="form.phoneAreaCode" :placeholder="$t('def.input')" @select="setPhoneAreaCode">
                             <a-select-option v-for="item of phoneAreaCodeList" :key="item.phoneAreaCode" :value="item.phoneAreaCode">
                                 <span  class="phoneAreaCode">{{ item.phoneAreaCode }}</span>
                                 {{lang === 'zh' ? item.name: item.enName}}
@@ -73,6 +73,7 @@
                                        :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
                                        :tree-data="groupOptions"
                                        tree-default-expand-all
+                                       @select="setGroupId"
                         />
                     </div>
 
@@ -386,6 +387,8 @@ export default {
         }
         this.handleGroupTree();
         this.getSourceList()
+        if(Core.Data.getPhoneAreaCode()) this.form.phoneAreaCode = Core.Data.getPhoneAreaCode()
+        if(Core.Data.getGroupId()) this.form.group_id = Core.Data.getGroupId()
     },
     methods: {
         routerChange(type, item) {
@@ -608,6 +611,13 @@ export default {
 
             })
         },
+        // 存国家和区域数据
+        setPhoneAreaCode(val) {
+            Core.Data.setPhoneAreaCode(val)
+        },
+        setGroupId(val) {
+            Core.Data.setGroupId(val)
+        }
     }
 };
 </script>
