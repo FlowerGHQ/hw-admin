@@ -5,7 +5,7 @@
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'
         class="ItemSelectModal">
         <div class="modal-content">
-            <CustomerAdd :targetId="targetId" :targetType="targetType" v-if="addCustomerBtn" @select="getTableData"/>
+            <CustomerAdd :btnText="$t('crm_c.add')"  :targetId="targetId" :targetType="targetType" v-if="addCustomerBtn" @select="getTableData"/>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!selectCustomer">

@@ -20,6 +20,9 @@
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :pagination='false'
                 :row-key="record => record.id" :indentSize='0'>
+                <template #headerCell="{title}">
+                    {{ $t(title) }}
+                </template>
                 <template #bodyCell="{ column, text, index, record }">
                     <template v-if="column.key === 'index'">
                         <span>{{ index + 1 }}</span>
@@ -74,10 +77,10 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                { title: '排名', dataIndex: 'index', key: 'index' },
-                { title: '人员名字', dataIndex: 'user_name', key: 'name' },
-                { title: '赢单数量', dataIndex: 'count', key: 'winNum' },
-                { title: '合同总金额', dataIndex: 'money', key: 'myGap' },
+                { title: 'crm_def.ranking', dataIndex: 'index', key: 'index' },
+                { title: 'crm_def.staff_name', dataIndex: 'user_name', key: 'name' },
+                { title: 'crm_def.win_number', dataIndex: 'count', key: 'winNum' },
+                { title: 'crm_def.total_contract_amount', dataIndex: 'money', key: 'myGap' },
             ]
             return tableColumns
         },

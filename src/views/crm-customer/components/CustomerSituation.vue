@@ -9,7 +9,7 @@
             <a-descriptions-item :label="$t('crm_c.level')" class="label">{{$Util.CRMCustomerLevelFilter(detail.level, $i18n.locale)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.purchase_intent')" class="label">{{$Util.CRMCustomerPurchaseIntentFilter(detail.purchase_intent, $i18n.locale)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.test_drive_intent')" class="label">{{$Util.CRMCustomerTestDriveIntentFilter(detail.test_drive_intent, $i18n.locale)}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('n.source')" class="label">{{detail.source}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('n.source')" class="label">{{$i18n.locale === 'zh'?detail.source:detail.source_en}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.industry')" class="label">{{$Util.CRMCustomerIndustryFilter(detail.industry, $i18n.locale)}}</a-descriptions-item>
 <!--            <a-descriptions-item :label="$t('crm_c.track_status')" class="label">{{$Util.CRMTrackStatusMapFilter(detail.track_status, $i18n.locale)}}</a-descriptions-item>-->
         </a-descriptions>
