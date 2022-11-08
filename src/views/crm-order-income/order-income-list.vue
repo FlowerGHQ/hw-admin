@@ -49,18 +49,11 @@
                             <a-input-group compact>
                                 <a-input
                                     v-model:value="searchForm.money_interval_low"
-                                    style="width: 100px; text-align: center"
                                     :placeholder="$t('def.input')"
                                 />
-                                <a-input
-                                    v-model:value="value13"
-                                    style="width: 30px; border-left: 0; pointer-events: none; background-color: #fff"
-                                    placeholder="-"
-                                    disabled
-                                />
+                                <a-input class='range' placeholder="-" disabled />
                                 <a-input
                                     v-model:value="searchForm.money_interval_high"
-                                    style="width: 100px; text-align: center; border-left: 0"
                                     :placeholder="$t('def.input')"
                                 />
                             </a-input-group>
@@ -181,11 +174,11 @@ export default {
             // 搜索
             searchForm: {
                 uid: '',
-                status: '',
+                status: undefined,
                 phone:'',
-                type: '',
-                payment_type: '',
-                create_user_id: '',
+                type: undefined,
+                payment_type: undefined,
+                create_user_id: undefined,
                 money_interval_low: '',
                 money_interval_high: '',
                 date_begin_time: '',

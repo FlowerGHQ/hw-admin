@@ -170,7 +170,7 @@ const messages = {
 	        after: '售后',
 	        sales: '销售',
 	        production: '生产',
-            select_country: '选择国家或地区'
+            select_country: '国家/地区'
         },
         a: { // 零售商
             new_retailer: '新建零售商',
@@ -2052,7 +2052,7 @@ const messages = {
             phone: 'Phone',
             email: 'Email',
             country: 'Nation',
-            enter: 'Please enter distributor name or short name',
+            enter: 'Please enter',
             area: 'Area',
             choose: 'Please choose ',
             information: 'Basic Information',
@@ -2171,7 +2171,7 @@ const messages = {
 	        after: 'After',
 	        sales: 'Sales',
 	        production: "Production",
-            select_country: 'Select the country or region'
+            select_country: 'Country/Region'
         },
         a: {
             new_retailer: 'Add Retailer',

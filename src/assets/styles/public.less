@@ -633,6 +633,23 @@ label.ant-checkbox-wrapper {
     }
 }
 
+.ant-input-group.ant-input-group-compact {
+    .ant-input {
+        width: calc(50% - 15px);
+        text-align: center;
+        &:nth-child(3) {
+            border-left: 0;
+        }
+    }
+    .ant-input.range {
+        border-color: @BC_N;
+        width: 30px;
+        border-left: 0;
+        pointer-events: none;
+        background-color: #fff;
+    }
+}
+
 // 选择框
 div.ant-select:not(.ant-select-customize-input) {
     .ant-select-selector {
@@ -871,6 +888,20 @@ p {
         font-weight: 400;
         color: @TC_tip;
         line-height: 17px;
+    }
+
+    &.with-btn {
+        .value {
+            .fac();
+            position: relative;
+            padding-right: 100px;
+            .btn {
+                position: absolute;
+                width: 100px;
+                text-align: right;
+                right: 0;
+            }
+        }
     }
 }
 
@@ -1116,10 +1147,9 @@ p {
         padding: 24px 0 8px 0;
         display: flex;
         .form-title {
-            width: 22%;
-            // padding-left: 11%;
+            width: 18%;
             text-align: right;
-            padding-right: 1em;
+            padding-right: 2em;
             box-sizing: border-box;
             font-weight: 500;
             font-size: 16px;
@@ -1545,6 +1575,27 @@ p {
             width: 120px;
         }
         .value { width: calc(100% - 120px); }
+    }
+
+    .edit-container {
+        .form-block {
+            .form-content.key130 {
+                .key { width: 130px; }
+                .value { width: calc(100% - 130px); }
+            }
+            .form-content.key140 {
+                .key { width: 140px; }
+                .value { width: calc(100% - 140px); }
+            }
+            .form-content.key150 {
+                .key { width: 150px; }
+                .value { width: calc(100% - 150px); }
+            }
+            .form-content.key160 {
+                .key { width: 160px; }
+                .value { width: calc(100% - 160px); }
+            }
+        }
     }
 }
 #Layout.zh {

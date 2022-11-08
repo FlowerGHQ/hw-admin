@@ -1,5 +1,5 @@
 <template>
-    <div id="OrderEdit" class="edit-container">
+    <div id="OrderIncomeEdit" class="edit-container" :class="$i18n.locale">
         <div class="title-container">
             <div class="title-area">{{ form.id ? $t('crm_oi.edit') : $t('crm_oi.save') }}</div>
         </div>
@@ -7,13 +7,13 @@
             <div class="form-title">
                 <div class="title-colorful">{{ $t('n.information') }}</div>
             </div>
-            <div class="form-content">
-<!--                <div class="form-item required">-->
-<!--                    <div class="key">{{ $t('crm_oi.belong_order') }}：</div> &lt;!&ndash; 归属合同订单 &ndash;&gt;-->
-<!--                    <div class="value">-->
-<!--                        <a-input v-model:value="form.order_id" :placeholder="$t('def.input')"/>-->
-<!--                    </div>-->
-<!--                </div>-->
+            <div class="form-content key130">
+                <!-- <div class="form-item required">-->
+                <!--     <div class="key">{{ $t('crm_oi.belong_order') }}：</div> &lt;!&ndash; 归属合同订单 &ndash;&gt;-->
+                <!--     <div class="value">-->
+                <!--         <a-input v-model:value="form.order_id" :placeholder="$t('def.input')"/>-->
+                <!--     </div>-->
+                <!-- </div>-->
 
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_oi.belong_order') }}：</div> <!-- 所属客户 -->
@@ -92,8 +92,9 @@
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_o.approval_process') }}：</div>
-                    <!--  disabled -->
-                    <AuditUser :def-audit-user-list="auditUserList" :group-id="order_detail.group_id" @list="handleAuditUserIdList" :btn-text="$t('crm_o.add_reviewer')"></AuditUser>
+                    <div class="value">
+                        <AuditUser :def-audit-user-list="auditUserList" :group-id="order_detail.group_id" @list="handleAuditUserIdList" :btn-text="$t('crm_o.add_reviewer')"></AuditUser>
+                    </div>
                 </div>
         </div>
         </div>
@@ -115,7 +116,7 @@ import AuditUser from '@/components/crm/popup-btn/AuditUser.vue'
 import dayjs from "dayjs";
 import LabelSelect from '@/components/crm/popup-btn/LabelSelect.vue';
 export default {
-    name: 'OrderEdit',
+    name: 'OrderIncomeEdit',
     components: { ChinaAddressCascader, CountryCascader, AddressCascader, UploadFileWithList, AuditUser,LabelSelect},
     props: {},
     data() {
@@ -239,22 +240,22 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             // let area = Core.Util.deepCopy(this.area)
             if (!form.order_id) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.enter') + ":" + this.$t('crm_oi.belong_order'))
             }
             if (!form.uid) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.enter')+ ":" + this.$t('crm_oi.uid'))
             }
             if (!form.money) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.enter')+ ":" + this.$t('crm_oi.money'))
             }
             if (!form.date) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.enter')+ ":" + this.$t('crm_oi.date'))
             }
             if (!form.payment_type) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.choose')+ ":" + this.$t('crm_oi.payment_type'))
             }
             if (!form.type) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.choose')+ ":" + this.$t('crm_oi.type'))
             }
             // form.birthday = form.birthday ? dayjs(form.birthday).unix() : 0 // 日期转时间戳
             form.date = form.date ? dayjs(form.date).unix() : 0 // 日期转时间戳
@@ -375,7 +376,7 @@ export default {
 </script>
 
 <style lang="less">
-#OrderEdit {
+#OrderIncomeEdit {
     .customer-tag {
         margin-top: 10px;
 

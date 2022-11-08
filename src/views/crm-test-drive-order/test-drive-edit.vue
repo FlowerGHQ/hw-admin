@@ -1,5 +1,5 @@
 <template>
-    <div id="TestDriveEdit" class="edit-container">
+    <div id="TestDriveEdit" class="edit-container" :class="$i18n.locale">
         <div class="title-container">
             <div class="title-area">{{ form.id ? $t('crm_d.edit') : $t('crm_d.save') }}</div>
         </div>
@@ -15,27 +15,29 @@
                     </div>
 
                 </div>
-                <div class="form-item required">
+                <div class="form-item required with-btn">
                     <div class="key">{{ $t('n.phone') }}：</div>
                     <div class="value">
                         <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerBlur" :disabled="form.id > 0 || form.customer_id > 0"/>
+                        <div class="btn">
+                            <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
+                            <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
+                            <CustomerSelect v-if="form.id == 0" @select="selectItem" :select-btn="true" :radioMode="true" :phone="form.phone" :check-mode="false" :select-customer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
+                                {{ $t('crm_c.rechecking') }}
+                            </CustomerSelect>
+                        </div>
                     </div>
-                    <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
-                    <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
-                    <CustomerSelect v-if="form.id == 0" @select="selectItem" :select-btn="true" :radioMode="true" :phone="this.form.phone" :check-mode="false" :select-customer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
-                        {{ $t('crm_c.rechecking') }}
-                    </CustomerSelect>
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_c.group') }}：</div>
                     <div class="value">
                         <a-tree-select class="CategoryTreeSelect"
-                                       v-model:value="form.group_id"
-                                       :placeholder="$t('def.select')"
-                                       :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-                                       :tree-data="groupOptions"
-                                       :disabled="(form.id > 0 || form.customer_id > 0) && this.form.group_id > 0"
-                                       tree-default-expand-all
+                            v-model:value="form.group_id"
+                            :placeholder="$t('def.select')"
+                            :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                            :tree-data="groupOptions"
+                            :disabled="(form.id > 0 || form.customer_id > 0) && form.group_id > 0"
+                            tree-default-expand-all
                         />
                     </div>
 
@@ -64,15 +66,15 @@
                 <div class="title-colorful">{{ $t('crm_d.drive_information') }}</div>
             </div>
             <div class="form-content">
-                <div class="form-item required">
+                <div class="form-item required with-btn">
                     <div class="key">{{ $t('crm_d.crm_dict_id') }}：</div>
                     <div class="value">
                         <a-select v-model:value="form.crm_dict_id" :placeholder="$t('def.input')" >
                             <a-select-option v-for="item of sourceList" :key="item.id" :value="item.id">{{lang === 'zh' ? item.name: item.name_en}}</a-select-option>
                         </a-select>
-                    </div>
-                    <div class="sp">
-                        <a-button type="link"  @click="getSourceList()">{{ $t('crm_set.refresh') }}</a-button>
+                        <div class="btn">
+                            <a-button type="link"  @click="getSourceList()">{{ $t('crm_set.refresh') }}</a-button>
+                        </div>
                     </div>
                 </div>
                 <div class="form-item required">
@@ -98,166 +100,164 @@
             <div class="form-title">
                 <div class="title-colorful">{{ $t('crm_d.user_portrait') }}</div>
             </div>
-            <div class="form-content">
-                <a-row>
-                    <a-col :xs='24' :sm='24' :md='12'>
-                        <div class="form-item ">
-                            <div class="key">{{ $t('crm_c_p.buy_type') }}：</div>
-                            <div class="value">
-                                <a-select v-model:value="form.buy_type" :placeholder="$t('def.input')" >
-                                    <a-select-option v-for="item of BUY_TYPE_MAP" :key="item.key" :value="item.key">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
-                                </a-select>
-                            </div>
+            <a-row class="form-content long-key">
+                <a-col :xs='24' :sm='24' :md='24' :lg='12'>
+                    <div class="form-item ">
+                        <div class="key">{{ $t('crm_c_p.buy_type') }}：</div>
+                        <div class="value">
+                            <a-select v-model:value="form.buy_type" :placeholder="$t('def.input')" >
+                                <a-select-option v-for="item of BUY_TYPE_MAP" :key="item.key" :value="item.key">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                            </a-select>
                         </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :md='12'>
-                        <div class="form-item ">
-                            <div class="key">{{ $t('crm_c_p.rental_demand') }}：</div>
-                            <div class="value">
-                                <a-radio-group v-model:value="form.rental_demand">
-                                    <a-radio v-for="item in RENTAL_DEMAND_MAP" :value="item.key">
-                                        {{lang === 'zh' ? item.zh: item.en}}
-                                    </a-radio>
-                                </a-radio-group>
-                            </div>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :md='24' :lg='12'>
+                    <div class="form-item ">
+                        <div class="key">{{ $t('crm_c_p.rental_demand') }}：</div>
+                        <div class="value">
+                            <a-radio-group v-model:value="form.rental_demand">
+                                <a-radio v-for="item in RENTAL_DEMAND_MAP" :value="item.key">
+                                    {{lang === 'zh' ? item.zh: item.en}}
+                                </a-radio>
+                            </a-radio-group>
                         </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :md='12'>
-                        <div class="form-item ">
-                            <div class="key">{{ $t('crm_c_p.city') }}：</div>
-                            <div class="value">
-                                <a-input v-model:value="form.city" :placeholder="$t('def.input')"/>
-                            </div>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :md='24' :lg='12'>
+                    <div class="form-item ">
+                        <div class="key">{{ $t('crm_c_p.city') }}：</div>
+                        <div class="value">
+                            <a-input v-model:value="form.city" :placeholder="$t('def.input')"/>
                         </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :md='12'>
-                        <div class="form-item ">
-                            <div class="key">{{ $t('crm_c_p.travel_range') }}：</div>
-                            <div class="value">
-                                <a-select v-model:value="form.travel_range" :placeholder="$t('def.input')" >
-                                    <a-select-option v-for="item of TRAVEL_RANGE_MAP" :key="item.key" :value="item.key">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
-                                </a-select>
-                            </div>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :md='24' :lg='12'>
+                    <div class="form-item ">
+                        <div class="key">{{ $t('crm_c_p.travel_range') }}：</div>
+                        <div class="value">
+                            <a-select v-model:value="form.travel_range" :placeholder="$t('def.input')" >
+                                <a-select-option v-for="item of TRAVEL_RANGE_MAP" :key="item.key" :value="item.key">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                            </a-select>
                         </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :md='12'>
-                        <div class="form-item ">
-                            <div class="key">{{ $t('crm_c_p.other_brand_model') }}：</div>
-                            <div class="value">
-                                <a-input v-model:value="form.other_brand_model" :placeholder="$t('def.input')"/>
-                            </div>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :md='24' :lg='12'>
+                    <div class="form-item ">
+                        <div class="key">{{ $t('crm_c_p.other_brand_model') }}：</div>
+                        <div class="value">
+                            <a-input v-model:value="form.other_brand_model" :placeholder="$t('def.input')"/>
                         </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :md='12'>
-                        <div class="form-item ">
-                            <div class="key">{{ $t('crm_c_p.park_and_charging_pile') }}：</div>
-                            <div class="value">
-                                <a-input v-model:value="form.park_and_charging_pile" :placeholder="$t('def.input')"/>
-                            </div>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :md='24' :lg='12'>
+                    <div class="form-item ">
+                        <div class="key">{{ $t('crm_c_p.park_and_charging_pile') }}：</div>
+                        <div class="value">
+                            <a-input v-model:value="form.park_and_charging_pile" :placeholder="$t('def.input')"/>
                         </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :md='12'>
-                        <div class="form-item ">
-                            <div class="key">{{ $t('crm_c_p.family_member') }}：</div>
-                            <div class="value">
-                                <a-input v-model:value="form.family_member" :placeholder="$t('def.input')"/>
-                            </div>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :md='24' :lg='12'>
+                    <div class="form-item ">
+                        <div class="key">{{ $t('crm_c_p.family_member') }}：</div>
+                        <div class="value">
+                            <a-input v-model:value="form.family_member" :placeholder="$t('def.input')"/>
                         </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :md='12'>
-                        <div class="form-item ">
-                            <div class="key">{{ $t('crm_c_p.green_car_owner') }}：</div>
-                            <div class="value">
-                                <a-radio-group v-model:value="form.green_car_owner">
-                                    <a-radio v-for="item in GREEN_CAR_OWNER_MAP" :value="item.key">
-                                        {{lang === 'zh' ? item.zh: item.en}}
-                                    </a-radio>
-                                </a-radio-group>
-                            </div>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :md='24' :lg='12'>
+                    <div class="form-item ">
+                        <div class="key">{{ $t('crm_c_p.green_car_owner') }}：</div>
+                        <div class="value">
+                            <a-radio-group v-model:value="form.green_car_owner">
+                                <a-radio v-for="item in GREEN_CAR_OWNER_MAP" :value="item.key">
+                                    {{lang === 'zh' ? item.zh: item.en}}
+                                </a-radio>
+                            </a-radio-group>
                         </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :md='12'>
-                        <div class="form-item ">
-                            <div class="key">{{ $t('crm_c_p.driver_license') }}：</div>
-                            <div class="value">
-                                <a-radio-group v-model:value="form.driver_license">
-                                    <a-radio v-for="item in DRIVER_LICENSE_MAP" :value="item.key">
-                                        {{lang === 'zh' ? item.zh: item.en}}
-                                    </a-radio>
-                                </a-radio-group>
-                            </div>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :md='24' :lg='12'>
+                    <div class="form-item ">
+                        <div class="key">{{ $t('crm_c_p.driver_license') }}：</div>
+                        <div class="value">
+                            <a-radio-group v-model:value="form.driver_license">
+                                <a-radio v-for="item in DRIVER_LICENSE_MAP" :value="item.key">
+                                    {{lang === 'zh' ? item.zh: item.en}}
+                                </a-radio>
+                            </a-radio-group>
                         </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :md='12'>
-                        <div class="form-item ">
-                            <div class="key">{{ $t('crm_c_p.ride_exp') }}：</div>
-                            <div class="value">
-                                <a-radio-group v-model:value="form.ride_exp">
-                                    <a-radio v-for="item in RIDE_EXP_MAP" :value="item.key">
-                                        {{lang === 'zh' ? item.zh: item.en}}
-                                    </a-radio>
-                                </a-radio-group>
-                            </div>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :md='24' :lg='12'>
+                    <div class="form-item ">
+                        <div class="key">{{ $t('crm_c_p.ride_exp') }}：</div>
+                        <div class="value">
+                            <a-radio-group v-model:value="form.ride_exp">
+                                <a-radio v-for="item in RIDE_EXP_MAP" :value="item.key">
+                                    {{lang === 'zh' ? item.zh: item.en}}
+                                </a-radio>
+                            </a-radio-group>
                         </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :md='12'>
-                        <div class="form-item ">
-                            <div class="key">{{ $t('crm_c_p.moto_exp') }}：</div>
-                            <div class="value">
-                                <a-radio-group v-model:value="form.moto_exp">
-                                    <a-radio v-for="item in MOTO_EXP_MAP" :value="item.key">
-                                        {{lang === 'zh' ? item.zh: item.en}}
-                                    </a-radio>
-                                </a-radio-group>
-                            </div>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :md='24' :lg='12'>
+                    <div class="form-item ">
+                        <div class="key">{{ $t('crm_c_p.moto_exp') }}：</div>
+                        <div class="value">
+                            <a-radio-group v-model:value="form.moto_exp">
+                                <a-radio v-for="item in MOTO_EXP_MAP" :value="item.key">
+                                    {{lang === 'zh' ? item.zh: item.en}}
+                                </a-radio>
+                            </a-radio-group>
                         </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :md='12'>
-                        <div class="form-item ">
-                            <div class="key">{{ $t('crm_c_p.moto_tour_intention') }}：</div>
-                            <div class="value">
-                                <a-radio-group v-model:value="form.moto_tour_intention">
-                                    <a-radio v-for="item in MOTO_TOUR_INTENTION_MAP" :value="item.key">
-                                        {{lang === 'zh' ? item.zh: item.en}}
-                                    </a-radio>
-                                </a-radio-group>
-                            </div>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :md='24' :lg='12'>
+                    <div class="form-item ">
+                        <div class="key">{{ $t('crm_c_p.moto_tour_intention') }}：</div>
+                        <div class="value">
+                            <a-radio-group v-model:value="form.moto_tour_intention">
+                                <a-radio v-for="item in MOTO_TOUR_INTENTION_MAP" :value="item.key">
+                                    {{lang === 'zh' ? item.zh: item.en}}
+                                </a-radio>
+                            </a-radio-group>
                         </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :md='12'>
-                        <div class="form-item ">
-                            <div class="key">{{ $t('crm_c_p.pay_attention_to') }}：</div>
-                            <div class="value">
-                                <a-radio-group v-model:value="form.pay_attention_to">
-                                    <a-radio v-for="item in PAY_ATTENTION_TO_MAP" :value="item.key">
-                                        {{lang === 'zh' ? item.zh: item.en}}
-                                    </a-radio>
-                                </a-radio-group>
-                            </div>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :md='24' :lg='12'>
+                    <div class="form-item ">
+                        <div class="key">{{ $t('crm_c_p.pay_attention_to') }}：</div>
+                        <div class="value">
+                            <a-radio-group v-model:value="form.pay_attention_to">
+                                <a-radio v-for="item in PAY_ATTENTION_TO_MAP" :value="item.key">
+                                    {{lang === 'zh' ? item.zh: item.en}}
+                                </a-radio>
+                            </a-radio-group>
                         </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :md='12'>
-                        <div class="form-item ">
-                            <div class="key">{{ $t('crm_c_p.green_energy_understand') }}：</div>
-                            <div class="value">
-                                <a-select v-model:value="form.green_energy_understand" :placeholder="$t('def.input')" >
-                                    <a-select-option v-for="item of GREEN_ENERGY_UNDERSTAND_MAP" :key="item.key" :value="item.key">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
-                                </a-select>
-                            </div>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :md='24' :lg='12'>
+                    <div class="form-item ">
+                        <div class="key">{{ $t('crm_c_p.green_energy_understand') }}：</div>
+                        <div class="value">
+                            <a-select v-model:value="form.green_energy_understand" :placeholder="$t('def.input')" >
+                                <a-select-option v-for="item of GREEN_ENERGY_UNDERSTAND_MAP" :key="item.key" :value="item.key">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                            </a-select>
                         </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='24' :md='12'>
-                        <div class="form-item ">
-                            <div class="key">{{ $t('crm_c_p.electric_two_wheeler_understand') }}：</div>
-                            <div class="value">
-                                <a-select v-model:value="form.electric_two_wheeler_understand" :placeholder="$t('def.input')" >
-                                    <a-select-option v-for="item of ELECTRIC_TWO_WHEELER_UNDERSTAND_MAP" :key="item.key" :value="item.key">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
-                                </a-select>
-                            </div>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :md='24' :lg='12'>
+                    <div class="form-item ">
+                        <div class="key">{{ $t('crm_c_p.electric_two_wheeler_understand') }}：</div>
+                        <div class="value">
+                            <a-select v-model:value="form.electric_two_wheeler_understand" :placeholder="$t('def.input')" >
+                                <a-select-option v-for="item of ELECTRIC_TWO_WHEELER_UNDERSTAND_MAP" :key="item.key" :value="item.key">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                            </a-select>
                         </div>
-                    </a-col>
-                </a-row>
-            </div>
+                    </div>
+                </a-col>
+            </a-row>
         </div>
 
         <div class="form-btns">
@@ -300,48 +300,48 @@ export default {
             // 加载
             loading: false,
             detail: {},
-            id: '',
+            id: undefined,
             form: {
-                id: '',
+                id: undefined,
 
-                customer_id:'',
+                customer_id:undefined,
                 //用户信息
-                name: '',
-                phone: '',
-                group_id: '',
-                gender: '',
-                birthday: '',
+                name: undefined,
+                phone: undefined,
+                group_id: undefined,
+                gender: undefined,
+                birthday: undefined,
                 customer_type: Core.Const.CRM_CUSTOMER.TYPE.INDIVIDUAL,
                 customer_status: Core.Const.CRM_CUSTOMER.STATUS.POOL,
 
 
 
                 //用户画像
-                customer_portrait_id: '',
-                buy_type	:'',
-                rental_demand	:'',
-                country	:'',
-                province	:'',
-                city	:'',
-                country_en	:'',
-                province_en	:'',
-                city_en	:'',
-                travel_range	:'',
-                other_brand_model	:'',
-                park_and_charging_pile	:'',
-                family_member	:'',
-                green_car_owner	:'',
-                driver_license	:'',
-                ride_exp	:'',
-                moto_exp	:'',
-                moto_tour_intention	:'',
-                pay_attention_to	:'',
-                green_energy_understand	:'',
-                electric_two_wheeler_understand	:'',
+                customer_portrait_id: undefined,
+                buy_type	:undefined,
+                rental_demand	:undefined,
+                country	:undefined,
+                province	:undefined,
+                city	:undefined,
+                country_en	:undefined,
+                province_en	:undefined,
+                city_en	:undefined,
+                travel_range	:undefined,
+                other_brand_model	:undefined,
+                park_and_charging_pile	:undefined,
+                family_member	:undefined,
+                green_car_owner	:undefined,
+                driver_license	:undefined,
+                ride_exp	:undefined,
+                moto_exp	:undefined,
+                moto_tour_intention	:undefined,
+                pay_attention_to	:undefined,
+                green_energy_understand	:undefined,
+                electric_two_wheeler_understand	:undefined,
                 //试驾信息
-                test_drive_time: '',
-                crm_dict_id: '',
-                dept_id: '',
+                test_drive_time: undefined,
+                crm_dict_id: undefined,
+                dept_id: undefined,
                 channel:Core.Const.CRM_TEST_DRIVE.SALES_ENTRY,
 
             },
@@ -529,6 +529,17 @@ export default {
     .customer-tag {
         margin-top: 10px;
 
+    }
+
+    .form-content.long-key {
+        .key { width: 115px; }
+        .value { width: calc(100% - 120px); }
+    }
+    &.en {
+        .form-content.long-key {
+            .key { width: 200px; }
+            .value { width: calc(100% - 200px); }
+        }
     }
 
 }

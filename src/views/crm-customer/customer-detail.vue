@@ -34,6 +34,14 @@
                 </div>
                 <a-row class="desc-detail">
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('n.phone') }}：</span>
+                        <span class="value">{{detail.phone}} <span @click="handleChecking()" v-if="detail.status !== STATUS.CUSTOMER"><i class="icon i_eyes"/></span></span>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('n.email') }}：</span>
+                        <span class="value">{{detail.email}} <span @click="handleChecking()" v-if="detail.status !== STATUS.CUSTOMER"><i class="icon i_eyes"/></span></span>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_c.level') }}：</span>
                         <span class="value">{{ $Util.CRMCustomerLevelFilter(detail.level, $i18n.locale) || '-'  }}</span>
                     </a-col>
@@ -41,10 +49,7 @@
                         <span class="key">{{ $t('crm_c.type') }}：</span>
                         <span class="value">{{ $Util.CRMCustomerTypeFilter(detail.type, $i18n.locale) || '-'  }}</span>
                     </a-col>
-                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('n.phone') }}：</span>
-                        <span class="value">{{detail.phone}}</span>
-                    </a-col>
+
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_c.own_user_name') }}：</span>
                         <span class="value">{{detail.own_user ? detail.own_user.name : "-"}}</span>
@@ -470,6 +475,16 @@ export default {
                 group_id: this.detail.group_id
             }).then(res => {
                 this.groupOptions = res.list
+                console.log(res)
+
+            })
+        },
+        handleChecking(){
+            Core.Api.CRMCustomer.checking({
+                id:this.detail.id
+            }).then(res => {
+                this.detail.phone = res.detail.phone
+                this.detail.email = res.detail.email
                 console.log(res)
 
             })

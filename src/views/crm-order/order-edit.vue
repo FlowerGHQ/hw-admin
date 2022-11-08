@@ -1,5 +1,5 @@
 <template>
-    <div id="OrderEdit" class="edit-container">
+    <div id="OrderEdit" class="edit-container" :class="$i18n.locale">
         <div class="title-container">
             <div class="title-area">{{ form.id ? $t('crm_o.edit') : $t('crm_o.save') }}</div>
         </div>
@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">{{ $t('crm_b.bo') }}：</div> <!-- 所属客户 -->
+                    <div class="key">{{ $t('crm_b.bo') }}：</div> <!-- 商机 -->
                     <div class="value">
                         <a-select
                             v-model:value="form.bo_id"
@@ -172,22 +172,18 @@
                         </template>
                     </a-table>
                 </div>
-
-
                 <div class="form-item">
                     <div class="key">{{ $t('crm_o.total_amount') }}：</div>
                     <div class="value">
                         <a-input-number v-model:value="form.total_price" :min="0" :precision="2" placeholder="0.00" :disabled="moneyDisabled" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-
-
-<!--                <div class="form-item">-->
-<!--                    <div class="key">{{ $t('crm_o.whole_discount') }}：</div>-->
-<!--                    <div class="value">-->
-<!--                        <a-input v-model:value="form.discount_rate" :placeholder="$t('def.input')"/>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <!-- <div class="form-item"> -->
+                <!--     <div class="key">{{ $t('crm_o.whole_discount') }}：</div> -->
+                <!--     <div class="value"> -->
+                <!--         <a-input v-model:value="form.discount_rate" :placeholder="$t('def.input')"/> -->
+                <!--     </div> -->
+                <!-- </div> -->
                 <div class="form-item">
                     <div class="key">{{ $t('crm_o.other_fee') }}：</div>
                     <div class="value">
@@ -429,26 +425,25 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             let area = Core.Util.deepCopy(this.area)
             if (!form.customer_id) {
-                return this.$message.warning(this.$t('def.input'))
+                return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_o.belone_customer'))
             }
-
             if (!form.name) {
-                return this.$message.warning(this.$t('def.input'))
+                return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_o.name'))
             }
             if (!form.date) {
-                return this.$message.warning(this.$t('def.select'))
+                return this.$message.warning(this.$t('n.choose')+":"+this.$t('crm_o.signing_date'))
             }
             if (!form.seller_signatory) {
-                return this.$message.warning(this.$t('def.input'))
+                return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_o.seller_signatory'))
             }
             if (!form.type) {
-                return this.$message.warning(this.$t('def.select'))
+                return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_o.contract_type'))
             }
             if (!form.buyer_signatory) {
-                return this.$message.warning(this.$t('def.input'))
+                return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_o.buyer_signatory'))
             }
             if (!form.remark) {
-                return this.$message.warning(this.$t('def.input'))
+               return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_o.remark'))
             }
             // if (!form.item_bind_list) {
             //     return this.$message.warning(this.$t('def.select'))
@@ -673,9 +668,11 @@ export default {
     .icon {
         font-size: 12px;
     }
-}
-.block {
-    display: block;
-    padding: 0 20px;
+    .block {
+        display: block;
+        padding: 0 20px;
+    }
+
+    
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
+    <a-button class="EntitySelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
         <slot>{{ btnText }}</slot>
     </a-button>
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'>
@@ -176,7 +176,7 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.ItemSelectBtn {
+.EntitySelectBtn {
     &.ant-btn-link {
         line-height: 1;
         height: 1em;
