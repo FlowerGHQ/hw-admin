@@ -92,9 +92,18 @@
                         <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.summary_information')">
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
-                        <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
+                        <!-- <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
                             <CRMItem  v-if="id>0" :detail="detail" :sourceId="detail.id" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.ORDER" ref ="CRMItem"/>
                             <CrmOrderIncome v-if="id>0" :detail="detail" :orderId="detail.id" ref ="CrmOrderIncome"/>
+                            <CRMAttachmentFile v-if="id>0" :target_id="id" :target_type="CRM_ORDER_FILE" />
+                        </a-tab-pane> -->
+                        <a-tab-pane key="salesinfo" :tab="$t('crm_o.sales_info')">
+                            <CRMItem  v-if="id>0" :detail="detail" :sourceId="detail.id" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.ORDER" ref ="CRMItem"/>
+                        </a-tab-pane>
+                        <a-tab-pane key="RemittanceList" :tab="$t('crm_oi.list')">
+                            <CrmOrderIncome v-if="id>0" :detail="detail" :orderId="detail.id" ref ="CrmOrderIncome"/>
+                        </a-tab-pane>
+                        <a-tab-pane key="AttachmentsList" :tab="$t('n.attachment_list')">
                             <CRMAttachmentFile v-if="id>0" :target_id="id" :target_type="CRM_ORDER_FILE" />
                         </a-tab-pane>
                     </a-tabs>
