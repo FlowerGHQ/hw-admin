@@ -1595,8 +1595,8 @@ const routes = [
 				name: 'CustomerList',
 				component: () => import('@/views/crm-customer/customer-list.vue'),
 				meta: {
-					title: '公海客户',
-					title_en: 'Community Customer',
+					title: '未分配客户',
+					title_en: 'Unassigned Customer',
 					type: 'high_seas',
 					auth: ["crm-customer.list"],
 				}
@@ -1607,7 +1607,7 @@ const routes = [
 				component: () => import('@/views/crm-customer/customer-list.vue'),
 				meta: {
 					title: '我的客户',
-					title_en: 'My customers',
+					title_en: 'My Customers',
 					type: 'private',
                     auth: ["crm-customer.list"],
 				}
@@ -1618,7 +1618,7 @@ const routes = [
                 component: () => import('@/views/crm-customer/customer-list.vue'),
                 meta: {
                     title: '区域客户',
-                    title_en: 'Regional customers',
+                    title_en: 'Regional Customers',
                     type: 'region',
                     auth: ["crm-customer.list"],
                 }
@@ -1688,7 +1688,7 @@ const routes = [
 				component: () => import('@/views/crm-bo/bo-list.vue'),
 				meta: {
 					title: '商机列表',
-					title_en: 'Opportunities list',
+					title_en: 'Opportunities List',
                     auth: ["crm-bo.list"],
 				}
 			},
@@ -1745,7 +1745,7 @@ const routes = [
                 component: () => import('@/views/crm-order/order-audit-list.vue'),
                 meta: {
                     title: '待审列表',
-                    title_en: 'Pending list',
+                    title_en: 'Pending List',
                     auth: ["crm-order.list"],
                 }
             },
@@ -1793,7 +1793,7 @@ const routes = [
 				component: () => import('@/views/crm-order-income/order-income-list.vue'),
 				meta: {
 					title: '回款单列表',
-					title_en: 'Payment Receipt list',
+					title_en: 'Payment Receipt List',
                     auth: ["crm-order-income.list"],
 				}
 			},
@@ -1803,7 +1803,7 @@ const routes = [
                 component: () => import('@/views/crm-order-income/order-income-audit-list.vue'),
                 meta: {
                     title: '待审列表',
-                    title_en: 'Pending list',
+                    title_en: 'Pending List',
                     auth: ["crm-order-income.list"],
                 }
             },
@@ -1825,7 +1825,7 @@ const routes = [
 				meta: {
 					hidden: true,
 					title: '回款单详情',
-					title_en: 'Payment Receipt phase',
+					title_en: 'Payment Receipt Phase',
 					parent: '/crm-order-income/order-income-list',
                     auth: ["crm-order-income.detail"],
 				}
@@ -1936,7 +1936,7 @@ const routes = [
 				component: () => import('@/views/crm-setting/group-status.vue'),
 				meta: {
 					title: '商机阶段',
-					title_en: 'Opportunity stage',
+					title_en: 'Opportunity Stage',
                     auth: ["crm-bo-status.list"],
 				}
 			},
@@ -2076,7 +2076,7 @@ const routes = [
                 component: () => import('@/views/system/allot-org-auth.vue'),
                 meta: {
                     title: '权限管理',
-                    title_en: 'Authority ',
+                    title_en: 'Authority Management',
                     roles: [LOGIN_TYPE.ADMIN],
                 }
             },
