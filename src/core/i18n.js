@@ -3408,7 +3408,7 @@ const messages = {
         sl: {  // 智能标签
             list: 'Label List',
             save: 'New label',
-	        add: 'Add tags',
+	        add: 'Add Label',
             classification: 'Label classification',
             name : 'Label name',
             name_en: 'Label English name',

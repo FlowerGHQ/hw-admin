@@ -6,7 +6,24 @@
 <!--                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
 <!--                </a-tag>-->
 
-            </div>
+                </div>
+                <div class="btns-area">
+                        <template v-if="detail.status === STATUS.POOL">
+                            <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button>
+                            <a-button type="primary" @click="handleObtain" v-if="$auth('crm-customer.obtain')">{{ $t('crm_c.obtain') }}</a-button>
+                            <a-button type="primary" @click="handleBatch('distribute')" v-if="$auth('crm-customer.distribute')">{{ $t('crm_c.distribute') }}</a-button>
+                            <a-button type="danger" @click="handleDelete" v-if="$auth('crm-customer.delete')">{{ $t('crm_c.delete') }}</a-button>
+                        </template>
+                        <template v-if="detail.status === STATUS.CUSTOMER &&  trackMemberDetail!== undefined  &&  trackMemberDetail!== null  &&  trackMemberDetail!== ''">
+                            <template v-if="trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ">
+                                <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button>
+                            </template>
+                            <template v-if="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN">
+                                <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-customer.transfer')">{{ $t('crm_c.transfer') }}</a-button>
+                                <a-button type="danger" @click="handleReturnPool" v-if="$auth('crm-customer.return-pool')">{{ $t('crm_c.return_pool') }}</a-button>
+                            </template>
+                        </template>
+                </div>
         </div>
         <div class="gray-panel">
             <div class="panel-content desc-container">
@@ -48,7 +65,10 @@
                     </a-col>
 
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
+                        <!-- <a-button type="primary" @click="routerChange('test-drive')" v-if="$auth('crm-customer.save')">{{ $t('crm_d.save') }}</a-button>
                         <template v-if="detail.status === STATUS.POOL">
+                            <FollowUpShow :btnText="$t('crm_c.add_follow_records')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord" />
+                            <CustomerAdd :btnText="$t('crm_c.add')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id"  @select="getCRMContactList" />
                             <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button>
                             <a-button type="primary" @click="handleObtain" v-if="$auth('crm-customer.obtain')">{{ $t('crm_c.obtain') }}</a-button>
                             <a-button type="primary" @click="handleBatch('distribute')" v-if="$auth('crm-customer.distribute')">{{ $t('crm_c.distribute') }}</a-button>
@@ -66,8 +86,7 @@
                                 <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-customer.transfer')">{{ $t('crm_c.transfer') }}</a-button>
                                 <a-button type="danger" @click="handleReturnPool" v-if="$auth('crm-customer.return-pool')">{{ $t('crm_c.return_pool') }}</a-button>
                             </template>
-
-                        </template>
+                        </template> -->
                     </a-col>
                 </a-row>
             </div>
