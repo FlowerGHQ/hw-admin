@@ -429,6 +429,13 @@ const Util = {
         //     }
         // }
 	},
+    phoneEncryption(val){   //手机号加密
+        if(val.length === 11){
+            return val.replace(/^(\d{3})\d{4}(\d+)/, '$1****$2');
+        }else{
+            return val.replace(/^(\d{3})(\d+)/, '$1****')
+        }
+    },
 
     /* =============== 通用过滤器 ================ */
 

@@ -48,12 +48,8 @@
                     </a-col>
 
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                        <a-button type="primary" @click="routerChange('test-drive')" v-if="$auth('crm-customer.save')">{{ $t('crm_d.save') }}</a-button>
                         <template v-if="detail.status === STATUS.POOL">
-                            <FollowUpShow :btnText="$t('crm_c.add_follow_records')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord" />
-                            <CustomerAdd :btnText="$t('crm_c.add')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id"  @select="getCRMContactList" />
                             <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button>
-
                             <a-button type="primary" @click="handleObtain" v-if="$auth('crm-customer.obtain')">{{ $t('crm_c.obtain') }}</a-button>
                             <a-button type="primary" @click="handleBatch('distribute')" v-if="$auth('crm-customer.distribute')">{{ $t('crm_c.distribute') }}</a-button>
                             <a-button type="danger" @click="handleDelete" v-if="$auth('crm-customer.delete')">{{ $t('crm_c.delete') }}</a-button>
@@ -81,16 +77,32 @@
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="activeKey">
                         <a-tab-pane key="TrackRecord" :tab="$t('crm_t.track_record')">
-                            <CRMTrackRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :detail="detail" ref ="CRMTrackRecord"/>
+                            <CRMTrackRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :detail="detail" ref ="CRMTrackRecord">
+                                <FollowUpShow :btnText="$t('crm_c.add_follow_records')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord" />
+                            </CRMTrackRecord>
                         </a-tab-pane>
                         <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.summary_information')">
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
-                        <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
-                            <CRMTestDrive  v-if="id>0" :detail="detail" :customerId="detail.id" ref="CRMTestDrive"/>
-                            <CRMContact  v-if="id>0" :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :flagOWN="trackMemberDetail != null ?trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN: false" ref="CRMContact"/>
-                            <CRMBo  v-if="id>0" :detail="detail" :customerId="detail.id" ref ="CRMBo"/>
-                            <CRMOrder   v-if="id>0" :detail="detail" :customerId="detail.id"  ref ="CRMOrder"/>
+                        <a-tab-pane key="TestDriveList" :tab="$t('crm_d.list')">
+                             <CRMTestDrive  v-if="id>0" :detail="detail" :customerId="detail.id" ref="CRMTestDrive">
+                                <a-button type="primary" @click="routerChange('test-drive')" v-if="$auth('crm-customer.save')">{{ $t('crm_d.save') }}</a-button>
+                             </CRMTestDrive>
+                        </a-tab-pane>
+                        <a-tab-pane key="ContacPerson" :tab="$t('crm_t.contact_customer')">
+                              <CRMContact  v-if="id>0" :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :flagOWN="trackMemberDetail != null ?trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN: false" ref="CRMContact">
+                                  <CustomerAdd :btnText="$t('crm_c.add')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id"  @select="getCRMContactList" />
+                              </CRMContact>
+                        </a-tab-pane>
+                        <a-tab-pane key="Opportunity" :tab="$t('crm_b.bo')">
+                              <CRMBo  v-if="id>0" :detail="detail" :customerId="detail.id" ref ="CRMBo">
+                                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('crm-bo.save')"><i class="icon i_add"/>{{ $t('crm_b.save') }}</a-button>
+                              </CRMBo>
+                        </a-tab-pane>
+                        <a-tab-pane key="ContractList" :tab="$t('crm_o.list')">
+                            <CRMOrder   v-if="id>0" :detail="detail" :customerId="detail.id"  ref ="CRMOrder">
+                                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('crm-order.save')"><i class="icon i_add"/>{{ $t('crm_o.save') }}</a-button>
+                            </CRMOrder>
                         </a-tab-pane>
                     </a-tabs>
                 </div>
