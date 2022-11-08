@@ -288,6 +288,7 @@ export default {
             Core.Api.CRMLabel[apiName](form).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.modalShow = false
+                this.getTableData();
             }).catch(err => {
                 this.getTableData();
                 console.log('handleModalSubmit err:', err)
