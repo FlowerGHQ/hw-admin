@@ -95,27 +95,3 @@ export default {
 }
 </script>
 
-<style lang='less' scoped>
-.ItemSelectBtn {
-    margin-left: 8px;
-    &.ant-btn-link {
-        line-height: 1;
-        height: 1em;
-    }
-    .ant-modal-content {
-        .ant-modal-body {
-            .hint-count {
-                margin-bottom: 5px;
-            }
-        }
-    }
-}
-.ItemSelectModal {
-    .tip {
-        height: 30px;
-        line-height: 30px;
-        margin-left: 10px;
-        font-size: 12px;
-    }
-}
-</style>
