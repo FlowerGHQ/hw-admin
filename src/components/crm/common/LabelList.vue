@@ -1,5 +1,6 @@
 <template>
     <a-tag v-for="(label,index) in tableData" color="blue" class="customer-tag" @close="handleClose(label.id)" :closable="true">
+        <template #closeIcon><i class="icon i_m_error"></i></template>
         {{ lang ==="zh"? label.label : label.label_en}}
     </a-tag>
     <LabelSelect :btnText="$t('sl.add')" :category="targetType" add-customer-btn="true" btnType="link" @select="handleAddLabelShow" :disabled-checked="tableData">
@@ -97,9 +98,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.LabelList {
 
-
+.customer-tag {
+    margin-right: 8px;
 }
-
 </style>

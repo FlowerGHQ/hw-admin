@@ -234,7 +234,6 @@ export default {
 
 <style lang='less' scoped>
 .LabelSelectBtn {
-    margin-left: 8px;
     &.ant-btn-link {
         line-height: 1;
         height: 1em;

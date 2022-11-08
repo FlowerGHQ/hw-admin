@@ -236,6 +236,7 @@
                         <LabelSelect :btnText="$t('sl.add')" :category="Core.Const.CRM_LABEL.CATEGORY.CUSTOMER" add-customer-btn="true" @select="handleAddLabelShow" :disabled-checked="labelIdList" />
                         <br/>
                         <a-tag v-for="(label,index) in labelList" color="blue" closable @close="handleDeleteLabel(index)" class="customer-tag">
+                            <template #closeIcon><i class="icon i_m_error"></i></template>
                             {{lang ==="zh"? label.name : label.name_en}}
                         </a-tag>
                     </div>

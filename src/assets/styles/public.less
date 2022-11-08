@@ -795,6 +795,19 @@ p {
     margin: 0;
 }
 
+.ant-tag.customer-tag {
+    font-size: 10px;
+    box-sizing: border-box;
+    height: 18px;
+    .fcc();
+    display: inline-flex;
+    padding: 0 4px;
+    .i_close_b, .i_m_error {
+        font-size: 10px;
+        color: @primary;
+    }
+}
+
 /* ===================================== */
 
 .panel-title .search-area .search-item, /* 面板搜索项 无key */
@@ -1321,7 +1334,7 @@ p {
         .detail-item {
             .fac();
             margin-bottom: 8px;
-            span, .ant-btn-link {
+            > span, .ant-btn-link {
                 display: inline-block;
                 height: 22px;
                 font-size: 14px;

@@ -526,10 +526,6 @@ export default {
     .icon {
         font-size: 12px;
     }
-    .customer-tag {
-        margin-top: 10px;
-
-    }
 
     .form-content.long-key {
         .key { width: 115px; }
