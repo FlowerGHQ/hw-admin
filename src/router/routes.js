@@ -1596,7 +1596,7 @@ const routes = [
 				component: () => import('@/views/crm-customer/customer-list.vue'),
 				meta: {
 					title: '未分配客户',
-					title_en: 'Unassigned Customer',
+					title_en: 'Unassigned Customers',
 					type: 'high_seas',
 					auth: ["crm-customer.list"],
 				}
