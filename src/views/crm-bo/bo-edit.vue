@@ -337,8 +337,13 @@ export default {
                 this.detail = d
                 this.detail.estimated_deal_time = this.detail.estimated_deal_time ? dayjs.unix(this.detail.estimated_deal_time).format('YYYY-MM-DD') : undefined
                 this.handleCustomerNameSearch(this.detail.customer_name)
+
                 for (const key in this.form) {
-                    this.form[key] = d[key]
+                    if (d[key] !== 0){
+                        this.form[key] = d[key]
+                    } else {
+                        this.form[key] = undefined
+                    }
                 }
                 this.form.money = this.$Util.countFilter(this.form.money)
                 this.handleCustomerIdSearch()

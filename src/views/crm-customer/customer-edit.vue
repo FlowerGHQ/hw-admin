@@ -404,7 +404,11 @@ export default {
                 this.detail = d
                 this.detail.birthday = this.detail.birthday ? dayjs.unix(this.detail.birthday).format('YYYY-MM-DD') : undefined
                 for (const key in this.form) {
-                    this.form[key] = d[key]
+                    if (d[key] !== 0){
+                        this.form[key] = d[key]
+                    } else {
+                        this.form[key] = undefined
+                    }
                 }
                 this.defAddr = [d.province, d.city, d.county]
                 this.defAreaContinent = [d.continent || '', d.country || '', d.country_en || '']

@@ -385,8 +385,15 @@ export default {
                 console.log('getOrderDetail res.detail', detail)
                 this.detail = detail
                 this.detail.date = detail.date ? dayjs.unix(detail.date).format('YYYY-MM-DD') : undefined
+                // for (const key in this.form) {
+                //     this.form[key] = this.detail[key]
+                // }
                 for (const key in this.form) {
-                    this.form[key] = this.detail[key]
+                    if (d[key] !== 0){
+                        this.form[key] =this.detail[key]
+                    } else {
+                        this.form[key] = undefined
+                    }
                 }
                 this.form.total_price =this.$Util.countFilter(this.form.total_price)
                 this.form.other_cost =this.$Util.countFilter(this.form.other_cost)
