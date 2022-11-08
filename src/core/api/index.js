@@ -633,6 +633,7 @@ const apiList = {
 		distribute: ['PostJson', 'crm-customer/distribute'],//
 		returnPool: ['PostJson', 'crm-customer/return-pool'],//
 		transfer: ['PostJson', 'crm-customer/transfer'],//
+		checking: ['PostJson', 'crm-customer/checking'],//
 
 
 		batchGroup: ['PostJson', 'crm-customer/batch-group'],

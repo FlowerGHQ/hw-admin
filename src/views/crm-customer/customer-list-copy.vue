@@ -68,7 +68,9 @@
             </div>
             <div class="operate-container" v-if="operMode ==='high_seas'">
                 <a-button type="primary" @click="handleBatchObtain" v-if="$auth('crm-customer.obtain')">{{ $t('crm_c.obtain') }}</a-button>
-                <!--                <a-button type="primary" @click="handleBatch('distribute')" v-if="$auth('crm-customer.distribute')">{{ $t('crm_c.distribute') }}</a-button>-->
+
+                <a-button type="primary" @click="handleBatchGroup('group')" v-if="$auth('crm-customer.save')">{{ $t('crm_c.group') }}</a-button>
+
                 <a-button type="danger" @click="handleBatchDelete" v-if="$auth('crm-customer.delete')">{{ $t('crm_c.delete') }}</a-button>
             </div>
             <div class="operate-container" v-if="operMode ==='private'">
@@ -82,16 +84,32 @@
                         {{ $t(title) }}
                     </template>
                     <template #bodyCell="{ column, text , record }">
-                        <!--                        <template v-if="column.key === 'detail'">
-                                                    <a-tooltip placement="top" :title='text'>
-                                                        <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
-                                                    </a-tooltip>
-                                                </template>-->
+                        <template v-if="column.key === 'detail'">
+                            <a-tooltip placement="top" :title='text'>
+                                <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
+                            </a-tooltip>
+                        </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'phone'">
-                            {{ text || '-' }}
+                            <template v-if="text !== ''">
+                                {{ text || '-' }}
+                                <span @click="handleChecking(record)"><i class="icon i_eyes"/></span>
+                            </template>
+                            <template v-else>
+                                {{ text || '-' }}
+                            </template>
+
+                        </template>
+                        <template v-if="column.key === 'email'">
+                            <template v-if="text !== ''">
+                                {{ text || '-' }}
+                                <span @click="handleChecking(record)"><i class="icon i_eyes"/></span>
+                            </template>
+                            <template v-else>
+                                {{ text || '-' }}
+                            </template>
                         </template>
                         <template v-if="column.key === 'type'">
                             {{ $Util.CRMCustomerTypeFilter(text, $i18n.locale) }}
@@ -189,31 +207,25 @@
         </a-modal>
 
 
-        <!--        <a-modal v-model:visible="batchShow" :title="$t('crm_c.distribute_customer')" :after-close='handleBatchClose'>-->
-        <!--            <div class="form-item required">-->
-        <!--                <div class="key">{{ $t('crm_b.own_user_name') }}：</div>-->
-        <!--                <div class="value">-->
-        <!--                    <a-select-->
-        <!--                        v-model:value="batchForm.own_user_id"-->
-        <!--                        show-search-->
-        <!--                        :placeholder="$t('def.input')"-->
-        <!--                        :default-active-first-option="false"-->
-        <!--                        :show-arrow="false"-->
-        <!--                        :filter-option="false"-->
-        <!--                        :not-found-content="null"-->
-        <!--                        @search="getUserData"-->
-        <!--                    >-->
-        <!--                        <a-select-option v-for=" item in userData" :key="item.id" :value="item.id">-->
-        <!--                            {{ item.account ? item.account.name : '-' }}-->
-        <!--                        </a-select-option>-->
-        <!--                    </a-select>-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--            <template #footer>-->
-        <!--                <a-button @click="handleBatchSubmit" type="primary">{{ $t('def.ok') }}</a-button>-->
-        <!--                <a-button @click="handleBatchClose">{{ $t('def.cancel') }}</a-button>-->
-        <!--            </template>-->
-        <!--        </a-modal>-->
+        <a-modal v-model:visible="batchGroupShow" :title="$t('crm_c.distribute_customer')" :after-close='handleBatchClose'>
+            <div class="form-item required">
+                <div class="key">{{ $t('crm_group.name') }}：</div>
+                <div class="value">
+                    <a-tree-select class="CategoryTreeSelect"
+                                   v-model:value="batchForm.group_id"
+                                   :placeholder="$t('def.select')"
+                                   :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                                   :tree-data="groupOptions"
+                                   @change="getUserData('')"
+                                   tree-default-expand-all
+                    />
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handleBatchGroupSubmit" type="primary">{{ $t('def.ok') }}</a-button>
+                <a-button @click="handleBatchGroupClose">{{ $t('def.cancel') }}</a-button>
+            </template>
+        </a-modal>
     </div>
 </template>
 
@@ -256,9 +268,11 @@ export default {
                 search_type: undefined,
             },
             batchForm: {
+                group_id: undefined,
                 own_user_id: undefined,
             },
             batchShow: false,
+            batchGroupShow: false,
             userData: [],
             // 表格
             tableData: [],
@@ -292,6 +306,7 @@ export default {
             let columns = [
                 {title: 'n.name', dataIndex: 'name', key:'detail', sorter: true},
                 {title: 'n.phone', dataIndex: 'phone', key:'phone', sorter: true},
+                {title: 'n.email', dataIndex: 'email', key:'email', sorter: true},
                 // {title: 'n.continent', dataIndex: 'continent', key:'item'},
                 {title: 'crm_c.level', dataIndex: 'level', key:'level', sorter: true},
                 {title: 'crm_c.type', dataIndex: 'type', key:'type', sorter: true},
@@ -493,6 +508,7 @@ export default {
                 },
             });
         },
+
         handleBatchReturnPool() {
             if (this.selectedRowKeys.length === 0) {
                 return this.$message.warning(this.$t('crm_c.select'))
@@ -513,7 +529,43 @@ export default {
                 },
             });
         },
+        handleBatchGroup(type) {
+            if (this.selectedRowKeys.length === 0) {
+                return this.$message.warning(this.$t('crm_c.select'))
+            }
+            this.handleGroupTree()
+            this.group_id = undefined;
+            this.batchType = type;
+            this.batchGroupShow = true;
 
+        },
+        handleBatchGroupClose() {
+            this.group_id = undefined;
+            this.batchGroupShow = false;
+            this.batchType = '';
+        },
+        handleBatchGroupSubmit() {
+            if (this.selectedRowKeys.length === 0) {
+                return this.$message.warning(this.$t('crm_c.select'))
+            }
+            this.batchGroupShow = true;
+
+            switch (this.batchType){
+                case "group":
+                    Core.Api.CRMCustomer.batchGroup({
+                        id_list: this.selectedRowKeys,
+                        group_id: this.batchForm.group_id,
+                    }).then(() => {
+                        this.$message.success(this.$t('crm_c.distribute_success'));
+                        this.getTableData();
+                        this.handleBatchGroupClose();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                    break;
+            }
+
+        },
 
         handleBatch(type,item) {
             this.detail = item;
@@ -573,18 +625,31 @@ export default {
             })
         },
         handleGroupTree(){
-            Core.Api.CRMGroupMember.structureByUserGroup({
-                group_id: this.detail.group_id
+            Core.Api.CRMGroupMember.structureByUser({
             }).then(res => {
                 this.groupOptions = res.list
                 console.log(res)
 
             })
         },
+        handleChecking(item){
+            Core.Api.CRMCustomer.checking({
+                id:item.id
+            }).then(res => {
+                item.phone = res.detail.phone
+                item.email = res.detail.email
+                console.log(res)
+
+            })
+        },
+
 
     }
 };
 </script>
 
 <style lang="less" scoped>
+.i_eyes{
+    font-size: 12px;
+}
 </style>
