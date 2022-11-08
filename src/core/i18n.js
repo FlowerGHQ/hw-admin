@@ -3136,7 +3136,7 @@ const messages = {
 		    select: 'Please Select',
 		    team_members: 'Team Members',
 		    dynamic: 'Dynamic',
-		    new_pool_c: 'New Unassigned Customer',
+		    new_pool_c: 'New Customer',
 		    crm_dict_id: 'Customer Source',
 		    distribute_success: 'Assign success',
 		    order_success_count: 'Successful Order Count',
