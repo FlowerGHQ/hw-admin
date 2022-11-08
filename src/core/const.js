@@ -1456,8 +1456,8 @@ let Const = {
 			'10': { key: 10, zh: '试驾意向低',en: 'Low Test Drive Intention', value: 10 },
 			'20': { key: 20, zh: '试驾意向中',en: 'Moderate Test Drive Intention', value: 20 },
 			'30': { key: 30, zh: '试驾意向高',en: 'High Test Drive Intention', value: 30 },
-			'40': { key: 40, zh: '预约试驾',en: 'Make an appointment to test drive', value: 40 },
-			'50': { key: 50, zh: '已试驾',en: 'Have a test drive', value: 50 },
+			'40': { key: 40, zh: '预约试驾',en: 'Make An Appointment To Test Drive', value: 40 },
+			'50': { key: 50, zh: '已试驾',en: 'Have A Test Drive', value: 50 },
 		},
 		SOURCE_MAP: {
 			'10': { key: 10, zh: '客户介绍',en: 'Customers', value: 10 },

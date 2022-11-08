@@ -1549,7 +1549,7 @@ const routes = [
         type: [ROUTER_TYPE.CRM],
 		meta: {
 			title: '数据',
-			title_en: 'Data',
+			title_en: 'Dashboard',
 			icon: 'i_crm_data',
 			auth: ["crm-label.list"],
 
@@ -1561,7 +1561,7 @@ const routes = [
 				component: () => import('@/views/crm-dashboard/dashboard.vue'),
 				meta: {
 					title: '数据看板',
-					title_en: 'Data Board',
+					title_en: 'Dashboard',
 					auth: ["crm-label.list"],
 				}
 			},
