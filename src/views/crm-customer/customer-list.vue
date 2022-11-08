@@ -82,16 +82,16 @@
                         {{ $t(title) }}
                     </template>
                     <template #bodyCell="{ column, text , record }">
-<!--                        <template v-if="column.key === 'detail'">
+                       <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
                                 <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                             </a-tooltip>
-                        </template>-->
+                        </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'phone'">
-                            {{ text || '-' }}
+                            {{ $Util.phoneEncryption(text) || '-' }}
                         </template>
                         <template v-if="column.key === 'type'">
                             {{ $Util.CRMCustomerTypeFilter(text, $i18n.locale) }}

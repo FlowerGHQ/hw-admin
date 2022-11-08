@@ -1147,7 +1147,7 @@ const messages = {
 		    company_license_id: '营业执照',
 		    track_status: '跟进状态',
 		    add: '添加联系人',
-            add_follow_records:'添加跟进记录',
+            add_follow_records:'写跟进',
 		    edit: '修改联系人',
 		    create_user: '创建人',
 		    create_time: '创建时间',
