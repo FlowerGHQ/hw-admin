@@ -2,6 +2,7 @@
 <div class="CRMTrackRecord gray-panel no-margin">
     <div class="panel-title">
         <div class="title">{{ $t('crm_t.track_record') }}</div>
+        <slot></slot>
     </div>
     <div class="panel-content">
         <div>

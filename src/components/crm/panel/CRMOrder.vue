@@ -2,6 +2,7 @@
 <div class="InformationInfo gray-panel no-margin">
     <div class="panel-title">
         <div class="title">{{ $t('crm_o.list') }}</div>
+        <slot></slot>
     </div>
     <div class="panel-content">
         <div>

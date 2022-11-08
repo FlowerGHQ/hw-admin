@@ -1,6 +1,6 @@
 <template>
     <a-button class="FollowUpShow" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
-        <slot>{{ btnText }}</slot>
+        <slot><i class="icon i_add"></i> {{btnText}}</slot>
     </a-button>
     <template class="modal-container">
         <a-modal v-model:visible="TrackRecordShow" :title="$t('crm_t.add_track_record')" :after-close='handleTrackRecordClose'>
@@ -116,7 +116,7 @@ export default {
     props: {
         btnText: {
             type: String,
-            default: '添加跟进记录'
+            default: '写跟进'
         },
         btnType: {
             type: String,

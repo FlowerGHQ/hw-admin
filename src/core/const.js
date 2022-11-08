@@ -7,6 +7,7 @@ import defult_file from '@images/defult_file.png'
 
 // let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' // 正式
 let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' //
+// let URL_POINT = 'http://eos-dev-api.horwincloud.com'
 let URL_POINT = 'http://eos-dev-api.horwincloud.com'
 
 switch (window.location.hostname) {
@@ -31,9 +32,9 @@ switch (window.location.hostname) {
     case "10.0.0.107":
         URL_POINT = 'http://10.0.0.107:8889'
         break;
-    case "localhost":
-        URL_POINT = 'http://localhost:8889'
-        break;
+    // case "localhost":
+    //     URL_POINT = 'http://localhost:8889'
+    //     break;
     default:
 	    URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服
         break;
@@ -1771,7 +1772,7 @@ let Const = {
 				'2014': { key:2014, zh:'添加团队成员',en:'ADD_MEMBER', value:2014},
 				'2015': { key:2015, zh:'删除团队成员',en:'DELETE_MEMBER', value:2015},
                 '2016': { key:2016, zh:'修改团队成员权限',en:'DELETE_MEMBER', value:2016},
-				'2018': { key:2018, zh:'添加跟进记录',en:'ADD_TRACK_RECORD', value:2018},
+				'2018': { key:2018, zh:'写跟进',en:'ADD_TRACK_RECORD', value:2018},
 				'2019': { key:2019, zh:'删除跟进记录',en:'DELETE_TRACK_RECORD', value:2019},
 				'2020': { key:2020, zh:'添加标签',en:'ADD_LABEL', value:2020},
 				'2021': { key:2021, zh:'删除标签',en:'DELETE_LABEL', value:2021},
