@@ -1,7 +1,7 @@
 <template>
 <div class="UploadImage">
     <div class="form-item file-upload">
-        <div class="key">附件:</div>
+        <div class="key">{{$t('crm_t.file')}}:</div>
         <div class="value">
             <a-button type="primary" @click="handleModalShow" v-if="can_upload">{{$t('n.upload_attachment')}}</a-button>
         </div>

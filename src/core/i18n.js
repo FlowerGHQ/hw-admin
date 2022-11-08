@@ -1407,6 +1407,7 @@ const messages = {
 	        staff_name: '人员名字',
 	        win_number: '赢单数量',
 	        total_contract_amount: '合同总金额',
+	        select_date: '选择日期',
 
         },
 	    crm_dash: {
@@ -3372,6 +3373,7 @@ const messages = {
 	        staff_name: 'Staff name',
 	        win_number: 'Win number',
 	        total_contract_amount: 'Total contract amount',
+	        select_date: 'Select a date',
         },
         crm_dash: {
             sale_presentation:'Sales presentation',
