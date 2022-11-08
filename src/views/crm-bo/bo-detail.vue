@@ -8,6 +8,13 @@
                 <a-button @click="loseTheOrder" v-if="detail.status !== STATUS.LOSE && $auth('crm-bo.update-status')"><i class="icon i_audit"/>{{$t('crm_b.lost_order')}}</a-button>
                 <a-button @click="winTheOrder"  v-if="detail.status !== STATUS.LOSE && detail.status !== STATUS.WIN && $auth('crm-bo.update-status')" ><i class="icon i_audit"/>{{$t('crm_b.win_order')}}</a-button>
                 <a-button @click="reactivation"  v-if="detail.status === STATUS.LOSE && $auth('crm-bo.reactivation')"><i class="icon i_audit"/>{{$t('crm_b.reactivation')}}</a-button>
+                <template v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
+                                <a-button @click="routerChange('edit')" v-if="$auth('crm-bo.save')">{{ $t('n.edit') }}</a-button>
+                            </template>
+                            <template v-if="trackMemberDetail!= null ? trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
+                                <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-bo.transfer')">{{ $t('crm_c.transfer') }}</a-button>
+                                <a-button type="danger" @click="handleDelete">{{ $t('crm_c.delete') }}</a-button>
+                            </template>
             </div>
         </div>
         <div class="gray-panel">
@@ -47,14 +54,13 @@
                     </a-col>
 
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                            <template v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
+                            <!-- <template v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
                                 <a-button @click="routerChange('edit')" v-if="$auth('crm-bo.save')">{{ $t('n.edit') }}</a-button>
                             </template>
                             <template v-if="trackMemberDetail!= null ? trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
                                 <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-bo.transfer')">{{ $t('crm_c.transfer') }}</a-button>
                                 <a-button type="danger" @click="handleDelete">{{ $t('crm_c.delete') }}</a-button>
-                            </template>
-
+                            </template> -->
                     </a-col>
                 </a-row>
 

@@ -93,7 +93,23 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'phone'">
-                            {{ $Util.phoneEncryption(text) || '-' }}
+                            <template v-if="text !== ''">
+                                {{ text || '-' }}
+                                <span @click="handleChecking(record)"><i class="icon i_eyes"/></span>
+                            </template>
+                            <template v-else>
+                                {{ text || '-' }}
+                            </template>
+
+                        </template>
+                        <template v-if="column.key === 'email'">
+                            <template v-if="text !== ''">
+                                {{ text || '-' }}
+                                <span @click="handleChecking(record)"><i class="icon i_eyes"/></span>
+                            </template>
+                            <template v-else>
+                                {{ text || '-' }}
+                            </template>
                         </template>
                         <template v-if="column.key === 'type'">
                             {{ $Util.CRMCustomerTypeFilter(text, $i18n.locale) }}
@@ -290,6 +306,7 @@ export default {
             let columns = [
                 {title: 'n.name', dataIndex: 'name', key:'detail', sorter: true},
                 {title: 'n.phone', dataIndex: 'phone', key:'phone', sorter: true},
+                {title: 'n.email', dataIndex: 'email', key:'email', sorter: true},
                 // {title: 'n.continent', dataIndex: 'continent', key:'item'},
                 {title: 'crm_c.level', dataIndex: 'level', key:'level', sorter: true},
                 {title: 'crm_c.type', dataIndex: 'type', key:'type', sorter: true},
@@ -615,10 +632,24 @@ export default {
 
             })
         },
+        handleChecking(item){
+            Core.Api.CRMCustomer.checking({
+                id:item.id
+            }).then(res => {
+                item.phone = res.detail.phone
+                item.email = res.detail.email
+                console.log(res)
+
+            })
+        },
+
 
     }
 };
 </script>
 
 <style lang="less" scoped>
+.i_eyes{
+    font-size: 12px;
+}
 </style>

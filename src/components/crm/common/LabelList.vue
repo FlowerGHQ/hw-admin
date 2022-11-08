@@ -1,8 +1,8 @@
 <template>
     <a-tag v-for="(label,index) in tableData" color="blue" class="customer-tag" @close="handleClose(label.id)" :closable="true">
-        {{ label.label }}
+        {{ lang ==="zh"? label.label : label.label_en}}
     </a-tag>
-    <LabelSelect :category="targetType" add-customer-btn="true" btnType="link" @select="handleAddLabelShow" :disabled-checked="tableData">
+    <LabelSelect :btnText="$t('sl.add')" :category="targetType" add-customer-btn="true" btnType="link" @select="handleAddLabelShow" :disabled-checked="tableData">
         <i class="icon i_add"/>{{ $t('i.addition') }}
     </LabelSelect>
 </template>

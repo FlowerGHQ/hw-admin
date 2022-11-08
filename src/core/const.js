@@ -1809,7 +1809,7 @@ let Const = {
         CATEGORY_MAP: {
             '1': { key: 1, zh: '客户',en: 'Client', value: 1 },
 			'2': { key: 2, zh: '商机',en: 'Business', value: 2 },
-            '3': { key: 3, zh: '合同订单',en: 'Contract order', value: 3 },
+            '3': { key: 3, zh: '合同订单',en: 'Contract Order', value: 3 },
             '4': { key: 4, zh: '回款单',en: 'Receipt', value: 4 },
         }
     },

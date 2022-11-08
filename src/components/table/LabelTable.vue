@@ -19,10 +19,8 @@
                     </a-tooltip>
                 </div>
             </template>
-            <template v-if="column.key === 'money'">
-                <span v-if="text >= 0">{{column.unit}}</span>
-                {{$Util.countFilter(text)}}
-<!--                {{column.unit}} {{$Util.countFilter(text)}}-->
+            <template v-if="column.key === 'name'">
+                {{$i18n.locale === 'zh' ? record.name : record.name_en  || '-' }}
             </template>
             <template v-if="column.key === 'operation'">
                 <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('crm-customer.detail') && record.status === CRM_STATUS.POOL"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>

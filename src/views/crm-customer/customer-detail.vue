@@ -6,7 +6,24 @@
 <!--                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
 <!--                </a-tag>-->
 
-            </div>
+                </div>
+                <div class="btns-area">
+                        <template v-if="detail.status === STATUS.POOL">
+                            <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button>
+                            <a-button type="primary" @click="handleObtain" v-if="$auth('crm-customer.obtain')">{{ $t('crm_c.obtain') }}</a-button>
+                            <a-button type="primary" @click="handleBatch('distribute')" v-if="$auth('crm-customer.distribute')">{{ $t('crm_c.distribute') }}</a-button>
+                            <a-button type="danger" @click="handleDelete" v-if="$auth('crm-customer.delete')">{{ $t('crm_c.delete') }}</a-button>
+                        </template>
+                        <template v-if="detail.status === STATUS.CUSTOMER &&  trackMemberDetail!== undefined  &&  trackMemberDetail!== null  &&  trackMemberDetail!== ''">
+                            <template v-if="trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ">
+                                <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button>
+                            </template>
+                            <template v-if="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN">
+                                <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-customer.transfer')">{{ $t('crm_c.transfer') }}</a-button>
+                                <a-button type="danger" @click="handleReturnPool" v-if="$auth('crm-customer.return-pool')">{{ $t('crm_c.return_pool') }}</a-button>
+                            </template>
+                        </template>
+                </div>
         </div>
         <div class="gray-panel">
             <div class="panel-content desc-container">
@@ -17,6 +34,14 @@
                 </div>
                 <a-row class="desc-detail">
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('n.phone') }}：</span>
+                        <span class="value">{{detail.phone}} <span @click="handleChecking()" v-if="detail.status !== STATUS.CUSTOMER"><i class="icon i_eyes"/></span></span>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('n.email') }}：</span>
+                        <span class="value">{{detail.email}} <span @click="handleChecking()" v-if="detail.status !== STATUS.CUSTOMER"><i class="icon i_eyes"/></span></span>
+                    </a-col>
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_c.level') }}：</span>
                         <span class="value">{{ $Util.CRMCustomerLevelFilter(detail.level, $i18n.locale) || '-'  }}</span>
                     </a-col>
@@ -24,10 +49,7 @@
                         <span class="key">{{ $t('crm_c.type') }}：</span>
                         <span class="value">{{ $Util.CRMCustomerTypeFilter(detail.type, $i18n.locale) || '-'  }}</span>
                     </a-col>
-                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('n.phone') }}：</span>
-                        <span class="value">{{detail.phone}}</span>
-                    </a-col>
+
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_c.own_user_name') }}：</span>
                         <span class="value">{{detail.own_user ? detail.own_user.name : "-"}}</span>
@@ -48,7 +70,10 @@
                     </a-col>
 
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
+                        <!-- <a-button type="primary" @click="routerChange('test-drive')" v-if="$auth('crm-customer.save')">{{ $t('crm_d.save') }}</a-button>
                         <template v-if="detail.status === STATUS.POOL">
+                            <FollowUpShow :btnText="$t('crm_c.add_follow_records')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord" />
+                            <CustomerAdd :btnText="$t('crm_c.add')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id"  @select="getCRMContactList" />
                             <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button>
                             <a-button type="primary" @click="handleObtain" v-if="$auth('crm-customer.obtain')">{{ $t('crm_c.obtain') }}</a-button>
                             <a-button type="primary" @click="handleBatch('distribute')" v-if="$auth('crm-customer.distribute')">{{ $t('crm_c.distribute') }}</a-button>
@@ -66,8 +91,7 @@
                                 <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-customer.transfer')">{{ $t('crm_c.transfer') }}</a-button>
                                 <a-button type="danger" @click="handleReturnPool" v-if="$auth('crm-customer.return-pool')">{{ $t('crm_c.return_pool') }}</a-button>
                             </template>
-
-                        </template>
+                        </template> -->
                     </a-col>
                 </a-row>
             </div>
@@ -451,6 +475,16 @@ export default {
                 group_id: this.detail.group_id
             }).then(res => {
                 this.groupOptions = res.list
+                console.log(res)
+
+            })
+        },
+        handleChecking(){
+            Core.Api.CRMCustomer.checking({
+                id:this.detail.id
+            }).then(res => {
+                this.detail.phone = res.detail.phone
+                this.detail.email = res.detail.email
                 console.log(res)
 
             })
