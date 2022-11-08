@@ -2,32 +2,46 @@
 <a-config-provider :locale="zhCN" :autoInsertSpaceInButton='false'>
     <a-layout id="Layout" :class="lang">
         <a-layout-header class="layout-header">
-            <div class="header-left"  :class="{'collapsed': collapsed}">
+            <div class="header-left" :class="{'collapsed': collapsed}">
                 <img src="@images/header-logo3.png" class="logo" @click="collapsed = !collapsed" alt="浩万"/>
-
             </div>
-            <div class="header-left"  :class="{'collapsed': collapsed}" v-if="loginType === Core.Const.USER.TYPE.ADMIN">
+            <div class="header-center" v-if="loginType === Core.Const.USER.TYPE.ADMIN">
                 <a-radio-group v-model:value="tabPosition" @change="handleRouterSwitch">
-                    <a-radio-button class="header-button" :value="ROUTER_TYPE.SALES"><img src="@images/router_type_3.png" class="router-type" alt="浩万"/>{{ $t('n.sales') }}</a-radio-button>
-                    <a-radio-button class="header-button" :value="ROUTER_TYPE.AFTER"><img src="@images/router_type_2.png" class="router-type" alt="浩万"/>{{ $t('n.after') }}</a-radio-button>
-                    <a-radio-button class="header-button" :value="ROUTER_TYPE.PRODUCTION"><img src="@images/router_type_4.png" class="router-type" alt="浩万"/>{{ $t('n.production') }}</a-radio-button>
-                    <a-radio-button class="header-button" :value="ROUTER_TYPE.CRM"><img src="@images/router_type_1.png" class="router-type" alt="浩万"/>{{ $t('n.crm') }}</a-radio-button>
+                    <a-radio-button class="header-button" :value="ROUTER_TYPE.SALES">
+                        <div class="router-type">
+                            <img src="@images/router_type_3.png" alt="浩万"/>{{ $t('n.sales') }}
+                        </div>
+                    </a-radio-button>
+                    <a-radio-button class="header-button" :value="ROUTER_TYPE.AFTER">
+                        <div class="router-type">
+                            <img src="@images/router_type_2.png" alt="浩万"/>{{ $t('n.after') }}
+                        </div>
+                    </a-radio-button>
+                    <a-radio-button class="header-button" :value="ROUTER_TYPE.PRODUCTION">
+                        <div class="router-type">
+                            <img src="@images/router_type_4.png" alt="浩万"/>{{ $t('n.production') }}
+                        </div>
+                    </a-radio-button>
+                    <a-radio-button class="header-button" :value="ROUTER_TYPE.CRM">
+                        <div class="router-type">
+                            <img src="@images/router_type_1.png" alt="浩万"/>{{ $t('n.crm') }}
+                        </div>
+                    </a-radio-button>
                 </a-radio-group>
             </div>
-
             <div class="header-right">
                 <!-- <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>-->
                 <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
                     <i class="icon" :class="lang =='zh' ? 'i_zh-en' : 'i_en-zh'"/>
                 </a-button>
                 <a-divider type="vertical"/>
-                <a-button class="notice" type="link">
+                <a-button class="notice PC" type="link">
                     <a-badge :count="unread.org + unread.master"  @click="routerChange('notice')">
                         <i class="icon i_notify" />
                     </a-badge>
                 </a-button>
-                <a-divider type="vertical"/>
-                <a-tag color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType][$i18n.locale] }}</a-tag>
+                <a-divider class="PC" type="vertical"/>
+                <a-tag class="PC" color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType][$i18n.locale] }}</a-tag>
                 <!-- <a-divider type="vertical"/>-->
                 <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
                     <a-button class="user-info" type="link">
@@ -149,7 +163,6 @@ export default {
                 org: '',
             },
             tabPosition: 1
-
         };
     },
     computed: {
@@ -238,6 +251,8 @@ export default {
         this.$store.state.lang = Core.Data.getLang()
         this.tabPosition = Core.Data.getTabPosition() || 1
         this.handleRouterSwitch();
+
+        window.onresize = this.handleWindowResize
     },
     methods: {
         routerChange(type) {
@@ -358,6 +373,16 @@ export default {
             }
 
         },
+
+
+        handleWindowResize(e) {
+            console.log('handleWindowResize e:', e)
+
+            console.log('window.innerWidth:', window.innerWidth)
+            if (window.innerWidth <= 830) {
+                this.collapsed = true
+            }
+        }
     }
 };
 </script>
@@ -389,29 +414,37 @@ export default {
         .header-left {
             .fcc();
             img.logo {
-                // width: 115px;
                 height: 34px;
             }
-            .router-type{
-                width: 30px;
-                height: 30px;
-                margin-top: -5px;
-                margin-right: 10px;
+        }
 
-            }
-            .header-button{
-                padding-top: 5px;
+        .header-center {
+            .fcc();
+
+            .header-button {
                 height: 40px;
                 border: 0px;
-                padding-left: 20px;
-                padding-right: 20px;
+                padding: 0 10px;
                 text-align: center;
                 align-items: center;
-                .ant-radio-button-wrapper{
+                .ant-radio-button-wrapper {
                     display:none;
                 }
             }
-            .ant-radio-button-wrapper:focus{
+
+            .router-type {
+                height: 100%;
+                width: 100%;
+                .fcc();
+                img {
+                    width: 30px;
+                    height: 30px;
+                    margin-right: 10px;
+                }
+            }
+
+
+            .ant-radio-button-wrapper:focus {
                 border: 0px;
             }
             .ant-radio-button-wrapper:not(:first-child)::before {
@@ -423,7 +456,6 @@ export default {
                 background-color: #F3F6F8;
                 border: 0px;
             }
-
         }
 
         .header-right {
@@ -436,6 +468,18 @@ export default {
                 .icon {
                     font-size: 20px;
                 }
+            }
+
+            height: 100%;
+            cursor: pointer;
+            .fjc();
+
+            i.icon {
+                font-size: 14px;
+            }
+            i.i_cart {
+                font-size: 25px;
+                color: @TC_header_item;
             }
         }
 
@@ -455,27 +499,6 @@ export default {
         .user-name {
             margin-left: 10px;
             color: @TC_header_name;
-        }
-
-        .header-right {
-            height: 100%;
-            cursor: pointer;
-            .fjc();
-
-            i.icon {
-                font-size: 14px;
-            }
-            i.i_cart {
-                font-size: 25px;
-                color: @TC_header_item;
-            }
-
-            //&:hover i.i_cart {
-            //    color: @TC_P;
-            //}
-            //&:hover i.i_notify {
-            //    color: @TC_P;
-            //}
         }
     }
 
@@ -618,6 +641,25 @@ export default {
         height: 100%;
         // height: calc(~"100% - 38px");
         overflow-y: auto;
+    }
+
+    @media (min-width: 820px) {
+    }
+    @media (max-width: 820px) {
+        .layout-header {
+            .header-center {
+                .header-button {
+                    .router-type {
+                        flex-direction: column;
+                        img {
+                            margin: 0 5px;
+                        }
+                        font-size: 10px;
+                        line-height: 1;
+                    }
+                }
+            }
+        }
     }
 }
 </style>

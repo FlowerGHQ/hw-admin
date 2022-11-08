@@ -4,48 +4,43 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('crm_region_e.list') }}</div>
                 <div class="btns-area">
-<!--                    <a-button type="primary" @click="handleModalShow({})" v-if="$auth('material-category.save')"><i class="icon i_add"/>{{ $t('crm_region.new_top') }}</a-button>-->
+                    <!-- <a-button type="primary" @click="handleModalShow({})" v-if="$auth('material-category.save')"><i class="icon i_add"/>{{ $t('crm_region.new_top') }}</a-button>-->
                 </div>
             </div>
             <a-row>
-                <a-col :xs='9' :sm='6' :xl="4" :xxl='3' class="search-item">
-                    <div class="group-container">
-                        <div class="category-container">
-
-<!--                            <div class="category-title" >区域</div>-->
-                            <div class="category-content">
-                                <!--                        <a-input-search v-model:value="searchValue" style="margin-bottom: 8px" placeholder="Search" />-->
-                                <a-tree
-                                    v-if="groupOptions.length"
-                                    v-model:value="checkedKeys"
-                                    :default-expand-all="true"
-                                    :tree-data="groupOptions"
-                                    @select="onSelect"
-                                />
-                            </div>
+                <a-col class="group-container" :xs='9' :sm='6' :xl="4" :xxl='3'>
+                    <div class="category-container">
+                        <!-- <div class="category-title" >区域</div>-->
+                        <div class="category-content">
+                            <!-- <a-input-search v-model:value="searchValue" style="margin-bottom: 8px" placeholder="Search" />-->
+                            <a-tree
+                                v-if="groupOptions.length"
+                                v-model:value="checkedKeys"
+                                :default-expand-all="true"
+                                :tree-data="groupOptions"
+                                @select="onSelect"
+                            />
                         </div>
                     </div>
                 </a-col>
-                <a-col :xs='15' :sm='18' :xl="20" :xxl='21' class="search-item">
+                <a-col :xs='15' :sm='18' :xl="20" :xxl='21'>
                     <div class="search-container">
                         <a-row class="search-area">
                             <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
                                 <div class="key">{{ $t('n.name') }}:</div>
                                 <div class="value">
-                                    <div class="value">
-                                        <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
-                                    </div>
+                                    <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                                 </div>
                             </a-col>
-                            <!--                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                                                <div class="key">类型:</div>
-                                                <div class="value">
-                                                    <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择员工类型" allow-clear>
-                                                        <a-select-option :value="orgType">普通员工</a-select-option>
-                                                        <a-select-option :value="USER_TYPE.WORKER">维修工</a-select-option>
-                                                    </a-select>
-                                                </div>
-                                            </a-col>-->
+                            <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                                <div class="key">类型:</div>
+                                <div class="value">
+                                    <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择员工类型" allow-clear>
+                                        <a-select-option :value="orgType">普通员工</a-select-option>
+                                        <a-select-option :value="USER_TYPE.WORKER">维修工</a-select-option>
+                                    </a-select>
+                                </div>
+                            </a-col>-->
                             <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                                 <div class="key">{{ $t('d.create_time') }}:</div>
                                 <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
@@ -56,8 +51,10 @@
                             <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                         </div>
                     </div>
-                    <div class="table-container">
+                    <div class="operate-container">
                         <a-button type="primary" ghost @click="handleEditShow()" class="panel-btn"><i class="icon i_add"/>{{ $t('u.save') }}</a-button>
+                    </div>
+                    <div class="table-container">
                         <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                             :row-key="record => record.id" :pagination='false'
                             v-model:expandedRowKeys='expandedRowKeys'>
@@ -143,11 +140,11 @@
                                 <div class="key">{{ $t('crm_c.group') }}：</div> <!--区域 -->
                                 <div class="value">
                                     <a-tree-select class="CategoryTreeSelect"
-                                                   v-model:value="editForm.group_id"
-                                                   :placeholder="$t('def.select')"
-                                                   :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-                                                   :tree-data="groupOptions"
-                                                   tree-default-expand-all
+                                        v-model:value="editForm.group_id"
+                                        :placeholder="$t('def.select')"
+                                        :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                                        :tree-data="groupOptions"
+                                        tree-default-expand-all
                                     />
                                 </div>
                             </div>
@@ -450,12 +447,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
-
-#CRMRegionEmployeesList{
-    .group-container{
-        margin-left: 20px;
+#CRMRegionEmployeesList {
+    .group-container {
+        box-sizing: border-box;
+        padding-left: 20px;
     }
 }
-
 </style>

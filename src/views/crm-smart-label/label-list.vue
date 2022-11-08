@@ -66,12 +66,10 @@
                     </template>
                 </a-table>
             </div>
-            <div class="paging-container">
+            <div class="paging-container with-operate">
                 <div class="tip">
-                    {{ $t('in.selected') + ` ${this.selectedRowItems.length} ` + $t('in.total')}}
+                    {{ $t('in.selected') + ` ${selectedRowItems.length} ` + $t('in.total')}}
                 </div>
-            </div>
-            <div class="paging-container">
                 <a-pagination
                     v-model:current="currPage"
                     :page-size='pageSize'

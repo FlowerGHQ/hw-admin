@@ -166,7 +166,7 @@ export default {
             // 搜索
             searchForm: {
                 uid: '',
-                status: '',
+                status: undefined,
                 phone:'',
                 type: '',
                 payment_type: '',
