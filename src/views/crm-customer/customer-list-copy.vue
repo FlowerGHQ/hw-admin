@@ -25,7 +25,7 @@
                         <div class="key">{{ $t('crm_c.type') }}：</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                                <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ lang === 'zh'?item.zh : item.en }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -52,7 +52,7 @@
                         <div class="key">{{ $t('crm_c.level') }}：</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.level" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of CRM_LEVEL_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                                <a-select-option v-for="item of CRM_LEVEL_MAP" :key="item.key" :value="item.value">{{ lang === 'zh'?item.zh : item.en}}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -243,20 +243,22 @@ export default {
             CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
             CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
             CRM_STATUS: Core.Const.CRM_CUSTOMER.STATUS,
+            SEARCH_TYPE: Core.Const.CRM_CUSTOMER.SEARCH_TYPE,
             total: 0,
             orderByFields: {},
             // 搜索
             searchForm: {
-                name: '',
-                phone:'',
-                level:'',
-                begin_time: '',
-                end_time: '',
-                type: '',
-                status: '',
+                name: undefined,
+                phone:undefined,
+                level:undefined,
+                begin_time: undefined,
+                end_time: undefined,
+                type: undefined,
+                status: undefined,
+                search_type: undefined,
             },
             batchForm: {
-                own_user_id: '',
+                own_user_id: undefined,
             },
             batchShow: false,
             userData: [],
@@ -282,8 +284,8 @@ export default {
                 let type = newRoute.meta ? newRoute.meta.type : ''
                 this.operMode = type
                 this.handleSearchReset(false);
-                this.getUserData()
-                this.getTableData();
+                // this.getUserData()
+                // this.getTableData();
             }
         },
     },
@@ -303,7 +305,7 @@ export default {
                 {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
-            if (this.operMode ==='private') {
+            if (this.operMode ==='private' || this.operMode ==='region') {
                 columns.splice(5, 0, {title: 'crm_b.own_user_name', dataIndex: "own_user_id", key:'own_user_name', sorter: true})
             }
             return columns
@@ -383,6 +385,16 @@ export default {
         },
         getTableData() {    // 获取 表格 数据
             this.loading = true;
+            if (this.operMode === 'high_seas' ) {
+                this.searchForm.status = this.CRM_STATUS.POOL
+                this.searchForm.search_type = this.SEARCH_TYPE.POOL
+            } else if (this.operMode === 'private' ) {
+                this.searchForm.status = this.CRM_STATUS.CUSTOMER
+                this.searchForm.search_type = this.SEARCH_TYPE.PRIVATE
+            } else if (this.operMode === 'region' ) {
+                this.searchForm.status = this.CRM_STATUS.CUSTOMER
+                this.searchForm.search_type = this.SEARCH_TYPE.REGION
+            }
             Core.Api.CRMCustomer.list({
                 ...this.searchForm,
                 order_by_fields: this.orderByFields,
@@ -428,6 +440,7 @@ export default {
             });
         },
         getUserData(query){
+            this.batchForm.own_user_id = undefined
             this.loading = true;
             Core.Api.User.listGroup({
                 group_id: this.group_id,

@@ -4,7 +4,7 @@
         <div class="title">{{ $t('crm_c.summary_information') }}</div>
     </div>
     <div class="panel-content">
-        <a-descriptions title="基本信息" bordered :column="2" size="small" class="pannel">
+        <a-descriptions :title="$t('crm_c.information')" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('n.name')" class="label">{{detail.name}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_b.money')" class="label">{{$Util.countFilter(detail.money)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_b.status')" class="label">{{detail.status}}</a-descriptions-item>
@@ -12,7 +12,7 @@
             <a-descriptions-item :label="$t('crm_b.source')" class="label">{{$Util.CRMBoSourceMapFilter(detail.source, $i18n.locale)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_b.remark')" class="label">{{detail.remark}}</a-descriptions-item>
         </a-descriptions>
-        <a-descriptions title="数据权限" bordered :column="2" size="small" class="pannel">
+        <a-descriptions :title="$t('crm_c.data_access')" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('crm_c.create_user')" class="label">{{detail.create_user != null? detail.create_user.name: '-'}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.create_time')" class="label">{{$Util.timeFilter(detail.create_time) || '-'}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.update_user')" class="label">{{detail.update_user_name}}</a-descriptions-item>

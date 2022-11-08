@@ -47,6 +47,9 @@ export default {
 
     },
     computed: {
+        lang() {
+            return this.$store.state.lang
+        },
     },
     created() {
     },
@@ -110,7 +113,7 @@ export default {
                 .annotation()
                 .text({
                     position: ['50%', '56%'],
-                    content: '客户试驾意向',
+                    content: 'Test Drive intention',
                     style: {
                         fontSize: 14,
                         fill: '#000000',
@@ -132,7 +135,7 @@ export default {
                 // this.testDriveIntentList = res.list;
                 const dv = []
                 res.list.forEach(res => {
-                    dv.push({ type: this.$Util.CRMCustomerPurchaseIntentFilter(res.type), value: res.value })
+                    dv.push({ type: this.$Util.CRMCustomerPurchaseIntentFilter(res.type, this.lang), value: res.value })
                 })
                 this.drawBoStatisticsChart(dv)
 

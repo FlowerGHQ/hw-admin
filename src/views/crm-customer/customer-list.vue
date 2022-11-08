@@ -25,7 +25,7 @@
                         <div class="key">{{ $t('crm_c.type') }}：</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                                <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ lang === 'zh'?item.zh : item.en }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -52,7 +52,7 @@
                         <div class="key">{{ $t('crm_c.level') }}：</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.level" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of CRM_LEVEL_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                                <a-select-option v-for="item of CRM_LEVEL_MAP" :key="item.key" :value="item.value">{{ lang === 'zh'?item.zh : item.en}}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -248,17 +248,17 @@ export default {
             orderByFields: {},
             // 搜索
             searchForm: {
-                name: '',
-                phone:'',
-                level:'',
-                begin_time: '',
-                end_time: '',
-                type: '',
-                status: '',
-                search_type: '',
+                name: undefined,
+                phone:undefined,
+                level:undefined,
+                begin_time: undefined,
+                end_time: undefined,
+                type: undefined,
+                status: undefined,
+                search_type: undefined,
             },
             batchForm: {
-                own_user_id: '',
+                own_user_id: undefined,
             },
             batchShow: false,
             userData: [],

@@ -81,7 +81,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_o.signing_date') }}：</div> <!-- 签约日期 -->
                     <div class="value">
-                        <a-date-picker v-model:value="form.date" valueFormat='YYYY-MM-DD' placeholder="选择日期"/>
+                        <a-date-picker v-model:value="form.date" valueFormat='YYYY-MM-DD' :placeholder="$t('crm_def.select_date')"/>
                     </div>
                 </div>
                 <div class="form-item required">
@@ -219,7 +219,7 @@
                 <div class="form-item textarea">
                     <div class="key">{{ $t('sl.name') }}</div>
                     <div class="value">
-                        <LabelSelect :category="Core.Const.CRM_LABEL.CATEGORY.ORDER" color="blue" add-customer-btn="true" @select="handleAddLabelShow" :disabled-checked="labelIdList"/>
+                        <LabelSelect :btnText="$t('sl.add')" :category="Core.Const.CRM_LABEL.CATEGORY.ORDER" color="blue" add-customer-btn="true" @select="handleAddLabelShow" :disabled-checked="labelIdList"/>
                         <br/>
                         <a-tag v-for="(label,index) in labelList" closable @close="handleDeleteLabel(index)" class="customer-tag">
                             {{ label.name }}

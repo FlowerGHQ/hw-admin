@@ -50,8 +50,8 @@
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                         <a-button type="primary" @click="routerChange('test-drive')" v-if="$auth('crm-customer.save')">{{ $t('crm_d.save') }}</a-button>
                         <template v-if="detail.status === STATUS.POOL">
-                            <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord"/>
-                            <CustomerAdd :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id"  @select="getCRMContactList"/>
+                            <FollowUpShow :btnText="$t('crm_c.add_follow_records')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord" />
+                            <CustomerAdd :btnText="$t('crm_c.add')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id"  @select="getCRMContactList" />
                             <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button>
 
                             <a-button type="primary" @click="handleObtain" v-if="$auth('crm-customer.obtain')">{{ $t('crm_c.obtain') }}</a-button>
@@ -60,11 +60,11 @@
                         </template>
                         <template v-if="detail.status === STATUS.CUSTOMER &&  trackMemberDetail!== undefined  &&  trackMemberDetail!== null  &&  trackMemberDetail!== ''">
                             <template v-if="trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ">
-                                <FollowUpShow :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord"/>
+                                <FollowUpShow :btnText="$t('crm_c.add_follow_records')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord"/>
                                 <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button>
                                 <a-button @click="routerChange('bo-save')" v-if="$auth('crm-bo.save')">{{$t('crm_b.save')}}</a-button>
-                                <a-button @click="routerChange('order-save')" v-if="$auth('crm-order.save')">新建订单</a-button>
-                                <CustomerAdd :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id" @select="getCRMContactList" :addCustomerBtn="true"/>
+                                <a-button @click="routerChange('order-save')" v-if="$auth('crm-order.save')">{{ $t('crm_o.save') }}</a-button>
+                                <CustomerAdd :btnText="$t('crm_c.add')"  :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id" @select="getCRMContactList" :addCustomerBtn="true"/>
                             </template>
                             <template v-if="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN">
                                 <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-customer.transfer')">{{ $t('crm_c.transfer') }}</a-button>

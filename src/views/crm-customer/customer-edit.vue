@@ -219,7 +219,7 @@
                 <div class="form-item textarea">
                     <div class="key">{{ $t('sl.name') }}</div>
                     <div class="value">
-                        <LabelSelect :category="Core.Const.CRM_LABEL.CATEGORY.CUSTOMER" add-customer-btn="true" @select="handleAddLabelShow" :disabled-checked="labelIdList"/>
+                        <LabelSelect :btnText="$t('sl.add')" :category="Core.Const.CRM_LABEL.CATEGORY.CUSTOMER" add-customer-btn="true" @select="handleAddLabelShow" :disabled-checked="labelIdList" />
                         <br/>
                         <a-tag v-for="(label,index) in labelList" color="blue" closable @close="handleDeleteLabel(index)" class="customer-tag">
                             {{ label.name }}
