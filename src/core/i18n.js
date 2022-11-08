@@ -1376,6 +1376,7 @@ const messages = {
             total_amount: '订单总金额',
             refunded_amount: '已退金额',
             time: '退款时间',
+            refund:'退款',
 	    },
 	    crm_r: {
 		    from_customer: '来自客户',
@@ -3344,6 +3345,7 @@ const messages = {
 		    total_amount: 'Total Order Amount',
 		    refunded_amount: 'Refunded Amount',
 		    time: 'Refund Time',
+            refund:'Refund',
 	    },
 	    crm_r: {
 		    from_customer: 'Source Customer',
