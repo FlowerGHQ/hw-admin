@@ -1,5 +1,5 @@
 <template>
-    <div id="OrderEdit" class="edit-container">
+    <div id="OrderEdit" class="edit-container" :class="$i18n.locale">
         <div class="title-container">
             <div class="title-area">{{ form.id ? $t('crm_o.edit') : $t('crm_o.save') }}</div>
         </div>
@@ -172,22 +172,18 @@
                         </template>
                     </a-table>
                 </div>
-
-
                 <div class="form-item">
                     <div class="key">{{ $t('crm_o.total_amount') }}：</div>
                     <div class="value">
                         <a-input-number v-model:value="form.total_price" :min="0" :precision="2" placeholder="0.00" :disabled="moneyDisabled" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-
-
-<!--                <div class="form-item">-->
-<!--                    <div class="key">{{ $t('crm_o.whole_discount') }}：</div>-->
-<!--                    <div class="value">-->
-<!--                        <a-input v-model:value="form.discount_rate" :placeholder="$t('def.input')"/>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <!-- <div class="form-item"> -->
+                <!--     <div class="key">{{ $t('crm_o.whole_discount') }}：</div> -->
+                <!--     <div class="value"> -->
+                <!--         <a-input v-model:value="form.discount_rate" :placeholder="$t('def.input')"/> -->
+                <!--     </div> -->
+                <!-- </div> -->
                 <div class="form-item">
                     <div class="key">{{ $t('crm_o.other_fee') }}：</div>
                     <div class="value">
@@ -672,9 +668,11 @@ export default {
     .icon {
         font-size: 12px;
     }
-}
-.block {
-    display: block;
-    padding: 0 20px;
+    .block {
+        display: block;
+        padding: 0 20px;
+    }
+
+    
 }
 </style>

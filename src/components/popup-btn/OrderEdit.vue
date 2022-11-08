@@ -1,5 +1,5 @@
 <template>
-    <div id="OrderEdit" class="edit-container">
+    <div class="OrderEdit edit-container">
         <div class="title-container">
             <div class="title-area">{{ form.id ?  $t('crm_o.edit')  : $t('crm_o.save') }}</div>
         </div>
@@ -405,5 +405,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

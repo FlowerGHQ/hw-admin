@@ -1,15 +1,15 @@
 <template>
     <div id="OrderDetail" class="edit-container">
         <div class="title-container">
-                <div class="title-area">{{  $t('crm_oi.detail')  }}
-<!--                <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>-->
-<!--                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
-<!--                </a-tag>-->
+            <div class="title-area">{{  $t('crm_oi.detail')  }}
+                <!-- <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>-->
+                <!--     {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
+                <!-- </a-tag>-->
             </div>
             <div class="btns-area">
                 <AuditHandle v-if="user.id === audit.audit_user_id"
-                             btnType='primary' :api-list="['CRMOrderIncome', 'audit']" :id="detail.id" @submit="getOrderDetail"
-                             :s-pass="Core.Const.FLAG.YES" :s-refuse="Core.Const.FLAG.NO" :current-audit-process-id="detail.current_audit_process_id" no-refuse><i class="icon i_audit"/>{{ $t('n.audit') }}
+                    btnType='primary' :api-list="['CRMOrderIncome', 'audit']" :id="detail.id" @submit="getOrderDetail"
+                    :s-pass="Core.Const.FLAG.YES" :s-refuse="Core.Const.FLAG.NO" :current-audit-process-id="detail.current_audit_process_id" no-refuse><i class="icon i_audit"/>{{ $t('n.audit') }}
                 </AuditHandle>
             </div>
         </div>
@@ -26,12 +26,12 @@
                         <span class="value">
                             <template v-if="$auth('crm-order.detail')">
                                 <a-button type="link" @click="routerChange('detail-order',detail)" >
-                                     {{ detail.order? detail.order.name || '-'  :  '-'  }}
-                                 </a-button>
-                            </template>
-                             <template v-else>
                                     {{ detail.order? detail.order.name || '-'  :  '-'  }}
-                             </template>
+                                </a-button>
+                            </template>
+                            <template v-else>
+                                {{ detail.order? detail.order.name || '-'  :  '-'  }}
+                            </template>
                         </span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>

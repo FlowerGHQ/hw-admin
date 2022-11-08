@@ -633,6 +633,23 @@ label.ant-checkbox-wrapper {
     }
 }
 
+.ant-input-group.ant-input-group-compact {
+    .ant-input {
+        width: calc(50% - 15px);
+        text-align: center;
+        &:nth-child(3) {
+            border-left: 0;
+        }
+    }
+    .ant-input.range {
+        border-color: @BC_N;
+        width: 30px;
+        border-left: 0;
+        pointer-events: none;
+        background-color: #fff;
+    }
+}
+
 // 选择框
 div.ant-select:not(.ant-select-customize-input) {
     .ant-select-selector {
@@ -1544,6 +1561,15 @@ p {
             width: 120px;
         }
         .value { width: calc(100% - 120px); }
+    }
+
+    .edit-container {
+        .form-block {
+            .form-content.key130 {
+                .key { width: 130px; }
+                .value { width: calc(100% - 130px); }
+            }
+        }
     }
 }
 #Layout.zh {
