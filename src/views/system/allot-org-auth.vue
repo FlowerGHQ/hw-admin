@@ -1,5 +1,5 @@
 <template>
-<div id="AllotOrgAuth">
+<div id="AllotOrgAuth" :class="lang">
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">{{ $t('n.org_auth') }}</div>
@@ -7,9 +7,9 @@
         <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
             <template #expandIcon></template>
             <a-collapse-panel v-for="(org,key) of orgType" :key="key" :header="$t('n.'+ org.name)" class="gray-collapse-panel">
-<!--                <div v-model:checked="checkAll"
-                       :indeterminate="indeterminate"
-                       @change="onCheckAllChange">  Check all</div>-->
+                <!-- <div v-model:checked="checkAll"
+                    :indeterminate="indeterminate"
+                    @change="onCheckAllChange">  Check all</div>-->
                 <template #extra>
                     <a-button @click.stop="handleEditShow(key)" type="link" v-if="!org.edit && $auth('authority.save')"><i class="icon i_edit"/>{{ $t('def.set') }}</a-button>
                     <template v-else>
@@ -59,7 +59,7 @@ export default {
     components: { SimpleImageEmpty },
     props: {},
     data() {
-      let _this = this;
+        let _this = this;
         return {
             activeKey: [],
 

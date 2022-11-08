@@ -7,26 +7,15 @@
                     <a-button type="primary" @click="routerChange('edit')" v-if="$auth('crm-customer.save')"><i class="icon i_add"/>{{ $t('crm_d.save') }}</a-button>
                 </div>
             </div>
-<!--            <div class="search-container">-->
-                <a-calendar v-model:value="calendar" @change="getCalendarDate" >
-<!--                    <template #headerRender="{ value: current, type, onChange, onTypeChange }">-->
-<!--                        -->
-<!--                    </template>-->
-                    <template #dateCellRender="{ current }">
-                        <ul class="events">
-                            <li v-for="item in getListData(current)" :key="item.content" >
-                                <a-badge :status="item.type" :text="item.content" />
-                            </li>
-                        </ul>
-                    </template>
-<!--                    <template #monthCellRender="{ current }">-->
-<!--                        <div v-if="getMonthData(current)" class="notes-month">-->
-<!--                            <section>{{ getMonthData(current) }}</section>-->
-<!--                            <span>Backlog number</span>-->
-<!--                        </div>-->
-<!--                    </template>-->
-                </a-calendar>
-<!--            </div>-->
+            <a-calendar v-model:value="calendar" @change="getCalendarDate" style="margin: 0 20px;">
+                <template #dateCellRender="{ current }">
+                    <ul class="events">
+                        <li v-for="item in getListData(current)" :key="item.content" >
+                            <a-badge :status="item.type" :text="item.content" />
+                        </li>
+                    </ul>
+                </template>
+            </a-calendar>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -72,7 +61,7 @@
                 </div>
             </div>
             <div class="operate-container" >
-<!--                <a-button type="primary" @click="handleBatch('distribute')" v-if="$auth('crm-customer.distribute')">{{ $t('crm_c.distribute') }}</a-button>-->
+                <!-- <a-button type="primary" @click="handleBatch('distribute')" v-if="$auth('crm-customer.distribute')">{{ $t('crm_c.distribute') }}</a-button>-->
                 <a-button type="danger" @click="handleBatchDelete" v-if="$auth('crm-customer.delete')">{{ $t('crm_c.delete') }}</a-button>
             </div>
             <div class="table-container">
@@ -115,12 +104,10 @@
                     </template>
                 </a-table>
             </div>
-            <div class="paging-container">
+            <div class="paging-container with-operate">
                 <div class="tip">
-                    {{ $t('in.selected') + ` ${this.selectedRowItems.length} ` + $t('in.total')}}
+                    {{ $t('in.selected') + ` ${selectedRowItems.length} ` + $t('in.total')}}
                 </div>
-            </div>
-            <div class="paging-container">
                 <a-pagination
                     v-model:current="currPage"
                     :page-size='pageSize'
@@ -137,6 +124,7 @@
 
             </div>
         </div>
+
         <a-modal v-model:visible="batchShow" :title="$t('crm_c.distribute_customer')" :after-close='handleBatchClose'>
             <div class="form-item required">
                 <div class="key">{{ $t('crm_b.own_user_name') }}：</div>
