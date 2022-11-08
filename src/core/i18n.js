@@ -2326,7 +2326,7 @@ const messages = {
         },
         e: {
             employee_list: 'Employee list',
-            new_employee: 'Creat new customer',
+            new_employee: 'Create New Customer',
             name: 'Name',
             account: 'Account',
             administrator: 'Administrator',
@@ -2869,7 +2869,7 @@ const messages = {
         },
         c: {//客户列表
             list: 'Customer list',
-            save: 'Creat new customer',
+            save: 'Create New Customer',
             edit: 'Edit customer',
         },
         role: {
