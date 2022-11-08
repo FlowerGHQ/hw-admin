@@ -1301,6 +1301,7 @@ const messages = {
             audit_list: '待审合同列表',
             income_money: '已回款',
             refunded_amount: '已退款',
+		    info: '订单信息',
 	    },
 	    crm_oi: {
 			list: '回款单列表',
