@@ -5,42 +5,42 @@
         </div>
         <div class="form-block">
             <div class="form-title">
-                <div class="title-colorful">订单信息</div>
+                <div class="title-colorful">{{$t('crm_o.info')}}</div>
             </div>
             <div class="form-content">
                 <div class="form-item required">
-                    <div class="key">所属客户：</div>
+                    <div class="key">{{$t('crm_o.belone_customer')}}：</div>
                     <div class="value">
                         <!-- customer_id -->
                         <a-input v-model:value="form.customer_id" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">合同编号：</div>
+                    <div class="key">{{$t('crm_o.contract_no')}}：</div>
                     <div class="value">
                         <a-input v-model:value="form.source_id" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">合同名称：</div>
+                    <div class="key">{{$t('crm_o.name')}}：</div>
                     <div class="value">
                         <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">签约日期：</div>
+                    <div class="key">{{$t('crm_o.signing_date')}}：</div>
                     <div class="value">
-                        <a-date-picker v-model:value="form.date" valueFormat='YYYY-MM-DD' placeholder="选择日期"/>
+                        <a-date-picker v-model:value="form.date" valueFormat='YYYY-MM-DD' :placeholder="$t('crm_def.select_date')"/>
                     </div>
                 </div>
                 <div class="form-item ">
-                    <div class="key">我方签约人：</div>
+                    <div class="key">{{$t('crm_o.seller_signatory')}}：</div>
                     <div class="value">
                         <a-input v-model:value="form.seller_signatory" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">合同类型:</div>
+                    <div class="key">{{$t('crm_o.contract_type')}}:</div>
                     <div class="value">
                         <a-select v-model:value="form.source_type" :placeholder="$t('def.select')" >
                             <a-select-option v-for="item of CRM_MARITAL_STATUS_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
@@ -48,13 +48,13 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">客方签约人：</div>
+                    <div class="key">{{$t('crm_o.buyer_signatory')}}：</div>
                     <div class="value">
                         <a-input v-model:value="form.buyer_signatory" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item textarea">
-                    <div class="key">备注：</div>
+                    <div class="key">{{$t('crm_o.remark')}}：</div>
                     <div class="value">
                         <a-textarea v-model:value="form.remark" :placeholder="$t('def.input')"
                                     :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
@@ -62,7 +62,7 @@
                     </div>
                 </div>
                 <div class="form-item file-upload">
-                    <div class="key">附件:</div>
+                    <div class="key">{{$t('crm_t.file')}}:</div>
                     <div class="value">
                         <a-upload name="file"
                             :file-list="upload.fileList" :action="upload.action"
@@ -70,7 +70,7 @@
                             :before-upload="handleImgCheck"
                             @change="handleFileChange">
                             <a-button class="file-upload-btn" type="primary" ghost v-if="upload.fileList.length < 1">
-                                <i class="icon i_upload"/> 点击上传文件
+                                <i class="icon i_upload"/> {{$t('f.upload')}}
                             </a-button>
                         </a-upload>
                     </div>
@@ -83,7 +83,7 @@
         </div>
         <div class="form-block">
             <div class="form-title">
-                <div class="title-colorful">销售信息</div>
+                <div class="title-colorful">{{$t('crm_b.select_item')}}</div>
             </div>
             <div class="form-content">
                 <div class="form-item textarea">
@@ -133,31 +133,31 @@
                     </a-table>
                 </div>
                 <div class="form-item">
-                    <div class="key">产品合计金额：</div>
+                    <div class="key">{{$('crm_o.total_price')}}：</div>
                     <div class="value">
                         <a-input v-model:value="form.total_price" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">整单折扣：</div>
+                    <div class="key">{{$('crm_o.discount_rate')}}：</div>
                     <div class="value">
                         <a-input v-model:value="form.discount_rate" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">其他费用：</div>
+                    <div class="key">{{$('crm_o.other_cost')}}：</div>
                     <div class="value">
                         <a-input v-model:value="form.other_cost" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">优惠金额：</div>
+                    <div class="key">{{$('crm_o.discount_amount')}}：</div>
                     <div class="value">
                         <a-input v-model:value="form.discount_amount" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">合同金额：</div>
+                    <div class="key">{{$('crm_o.money')}}：</div>
                     <div class="value">
                         <!--  disabled -->
                         <a-input :value="contractAmount" :placeholder="$t('def.input')"/>
@@ -169,7 +169,7 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary">保存</a-button>
+            <a-button @click="handleSubmit" type="primary">{{ $t('def.save') }}</a-button>
             <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
         </div>
     </div>
