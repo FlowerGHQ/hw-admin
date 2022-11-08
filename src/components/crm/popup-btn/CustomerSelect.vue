@@ -1,9 +1,9 @@
 <template>
-    <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
+    <a-button class="CustomerSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
         <slot>{{ btnText }}</slot>
     </a-button>
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'
-        class="ItemSelectModal">
+        class="CustomerSelectModal">
         <div class="modal-content">
             <CustomerAdd :btnText="$t('crm_c.add')"  :targetId="targetId" :targetType="targetType" v-if="addCustomerBtn" @select="getTableData"/>
             <div class="search-container">
@@ -272,7 +272,7 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.ItemSelectBtn {
+.CustomerSelectBtn {
     margin-left: 8px;
     &.ant-btn-link {
         line-height: 1;
@@ -286,7 +286,7 @@ export default {
         }
     }
 }
-.ItemSelectModal {
+.CustomerSelectModal {
     .tip {
         height: 30px;
         line-height: 30px;

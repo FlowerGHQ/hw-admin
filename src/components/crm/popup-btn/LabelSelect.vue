@@ -1,26 +1,25 @@
 <template>
-    <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
+    <a-button class="LabelSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
         <slot>{{ btnText }}</slot>
     </a-button>
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='560px'
-        class="ItemSelectModal">
+        class="LabelSelectModal">
         <div class="modal-content">
-            <LabelAdd :category="category" v-if="addCustomerBtn" @select="getTableData" :btnText="$t('sl.add')"/>
             <div class="search-container">
                 <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :md='12' class="search-item">
+                    <a-col :xs='24' :sm='24' :md='24' class="search-item">
                         <div class="key"><span>{{ $t('n.name') }}:</span></div>
                         <div class="value">
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
-
                 </a-row>
                 <div class="btn-area">
                     <a-button @click="handleSearch" :disabled="searchForm.name === '' && selectCustomer" type="primary">{{ $t('def.search') }}</a-button>
                     <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
+            <LabelAdd :category="category" v-if="addCustomerBtn" @select="getTableData" :btnText="$t('sl.save')"/>
             <div class="table-container">
                 <LabelTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :disabled-checked='disabledList' @submit="handleSelectItem" :radio-mode='radioMode' :check-mode="checkMode"/>
             </div>
@@ -234,7 +233,7 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.ItemSelectBtn {
+.LabelSelectBtn {
     margin-left: 8px;
     &.ant-btn-link {
         line-height: 1;
@@ -248,7 +247,7 @@ export default {
         }
     }
 }
-.ItemSelectModal {
+.LabelSelectModal {
     .tip {
         height: 30px;
         line-height: 30px;

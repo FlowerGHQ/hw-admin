@@ -1,9 +1,9 @@
 <template>
-    <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
+    <a-button class="LabelAddBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
         <slot>{{ btnText }}</slot>
     </a-button>
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='500px'
-        class="ItemSelectModal">
+        class="LabelAddModal">
         <div class="form-title">
 
             <div class="form-item required">
@@ -128,7 +128,7 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.ItemSelectBtn {
+.LabelAddBtn {
     &.ant-btn-link {
         line-height: 1;
         height: 1em;
@@ -141,7 +141,7 @@ export default {
         }
     }
 }
-.ItemSelectModal {
+.LabelAddModal {
     .tip {
         height: 30px;
         line-height: 30px;

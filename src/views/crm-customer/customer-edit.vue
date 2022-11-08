@@ -1,5 +1,5 @@
 <template>
-    <div id="CustomerEdit" class="edit-container">
+    <div id="CustomerEdit" class="edit-container" :class="$i18n.locale">
         <div class="title-container">
             <div class="title-area">{{ form.id ? $t('c.edit') : $t('c.save') }}</div>
         </div>
@@ -28,63 +28,67 @@
                 <div class="form-item required" v-if="form.id === 0 || form.phone_country_code === ''">
                     <div class="key">{{ $t('n.select_country') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.phone_country_code" :placeholder="$t('def.input')" @select="setPhoneCountryCode" :disabled="form.id > 0 && form.phone_country_code != ''">
-                            <a-select-option v-for="item of phoneCountryCodeList" :key="item.phoneAreaCode" :value="item.phoneAreaCode">
+                        <a-select v-model:value="form.phone_country_code" :placeholder="$t('def.input')" @select="setPhoneCountryCode" :disabled="form.id > 0 && form.phone_country_code != ''" show-search option-filter-prop="key" allow-clear>
+                            <a-select-option v-for="item of phoneCountryCodeList" :key="item.phoneAreaCode+item.name+item.enName" :value="item.phoneAreaCode"  >
                                 <span  class="phoneCountryCode">{{ item.phoneAreaCode }}</span>
                                 {{lang === 'zh' ? item.name: item.enName}}
                             </a-select-option>
                         </a-select>
                     </div>
                 </div>
-                <div class="form-item required" v-if="form.id === 0 || form.phone === ''">
+                <div class="form-item required with-btn" v-if="form.id === 0 || form.phone === ''">
                     <div class="key">{{ $t('n.phone') }}：</div>
                     <div class="value">
                         <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerPhoneBlur" :disabled="form.id > 0 && form.phone != ''"/>
+                        <div class="btn">
+                            <span v-if="isExistPhone == 1"><i class="icon i_confirm"/></span>
+                            <span v-else-if="isExistPhone == 2"><i class="icon i_close_c"/></span>
+                            <CustomerSelect :radioMode="true" :phone="this.form.phone" :check-mode="false" :select-customer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
+                                {{ $t('crm_c.rechecking') }}
+                            </CustomerSelect>
+                        </div>
                     </div>
-                    <span v-if="isExistPhone == 1"><i class="icon i_confirm"/></span>
-                    <span v-else-if="isExistPhone == 2"><i class="icon i_close_c"/></span>
-                    <CustomerSelect :radioMode="true" :phone="this.form.phone" :check-mode="false" :select-customer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
-                        {{ $t('crm_c.rechecking') }}
-                    </CustomerSelect>
                 </div>
-                <div class="form-item required" v-if="form.id === 0 || form.email === ''">
+                <div class="form-item required with-btn" v-if="form.id === 0 || form.email === ''">
                     <div class="key">{{ $t('n.email') }}：</div>
                     <div class="value">
                         <a-input v-model:value="form.email" :placeholder="$t('def.input')" @blur="handleCustomerEmailBlur" :disabled="form.id > 0 && form.email != ''"/>
+                        <div class="btn">
+                            <span v-if="isExistEmail == 1"><i class="icon i_confirm"/></span>
+                            <span v-else-if="isExistEmail == 2"><i class="icon i_close_c"/></span>
+                            <CustomerSelect :radioMode="true" :email="this.form.email" :check-mode="false" :select-customer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
+                                {{ $t('crm_c.rechecking') }}
+                            </CustomerSelect>
+                        </div>
                     </div>
-                    <span v-if="isExistEmail == 1"><i class="icon i_confirm"/></span>
-                    <span v-else-if="isExistEmail == 2"><i class="icon i_close_c"/></span>
-                    <CustomerSelect :radioMode="true" :email="this.form.email" :check-mode="false" :select-customer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
-                        {{ $t('crm_c.rechecking') }}
-                    </CustomerSelect>
                 </div>
 
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_group.name') }}：</div> <!--区域 -->
                     <div class="value">
-<!--                        <a-select-->
-<!--                            v-model:value="form.group_id"-->
-<!--                            show-search-->
-<!--                            :placeholder="$t('n.enter')"-->
-<!--                            :default-active-first-option="false"-->
-<!--                            :show-arrow="false"-->
-<!--                            :filter-option="false"-->
-<!--                            :not-found-content="null"-->
-<!--                            @search="handleGroupNameSearch"-->
-<!--                            allowClear-->
-<!--                        >-->
-<!--                            <a-select-option v-for=" item in groupOptions" :key="item.id" :value="item.id">-->
-<!--                                {{item.name}}-->
-<!--                            </a-select-option>-->
-<!--                        </a-select>-->
+                        <!-- <a-select-->
+                        <!--     v-model:value="form.group_id"-->
+                        <!--     show-search-->
+                        <!--     :placeholder="$t('n.enter')"-->
+                        <!--     :default-active-first-option="false"-->
+                        <!--     :show-arrow="false"-->
+                        <!--     :filter-option="false"-->
+                        <!--     :not-found-content="null"-->
+                        <!--     @search="handleGroupNameSearch"-->
+                        <!--     allowClear-->
+                        <!-- >-->
+                        <!--     <a-select-option v-for=" item in groupOptions" :key="item.id" :value="item.id">-->
+                        <!--         {{item.name}}-->
+                        <!--     </a-select-option>-->
+                        <!-- </a-select>-->
 
                         <a-tree-select class="CategoryTreeSelect"
-                                       v-model:value="form.group_id"
-                                       :placeholder="$t('def.select')"
-                                       :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-                                       :tree-data="groupOptions"
-                                       tree-default-expand-all
-                                       @select="setGroupId"
+                            v-model:value="form.group_id"
+                            :placeholder="$t('def.select')"
+                            :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                            :tree-data="groupOptions"
+                            tree-default-expand-all
+                            @select="setGroupId"
                         />
                     </div>
 
@@ -95,7 +99,7 @@
             <div class="form-title">
                 <div class="title-colorful">{{ $t('crm_c.extended_information') }}</div>
             </div>
-            <div class="form-content">
+            <div class="form-content key130">
                 <div class="form-item">
                     <div class="key">{{ $t('crm_c.level') }}：</div>
                     <div class="value">
@@ -124,16 +128,16 @@
 
                 </div>
 
-                <div class="form-item">
+                <div class="form-item with-btn">
                     <div class="key">{{ $t('crm_c.crm_dict_id') }}：</div>
                     <div class="value">
                         <a-select v-model:value="form.crm_dict_id" :placeholder="$t('def.input')" >
                             <a-select-option v-for="item of sourceList" :key="item.id" :value="item.id">{{lang === 'zh' ? item.name: item.name_en}}</a-select-option>
                         </a-select>
-                    </div>
-                    <div class="sp">
-                        <a-button type="link" v-if="$auth('crm-dict.save')" @click="handleSourceModalShow">{{ $t('crm_set.save' )}}</a-button>
-                        <a-button type="link"  @click="getSourceList()">{{ $t('crm_set.refresh') }}</a-button>
+                        <div class="btn">
+                            <a-button type="link" v-if="$auth('crm-dict.save')" @click="handleSourceModalShow">{{ $t('crm_set.save' )}}</a-button>
+                            <a-button type="link"  @click="getSourceList()">{{ $t('crm_set.refresh') }}</a-button>
+                        </div>
                     </div>
                 </div>
                 <div class="form-item" v-if="form.type === CRM_TYPE.UNIT">
@@ -158,7 +162,7 @@
                     <div class="key">{{ $t('crm_c.birthday') }}：</div>
                     <div class="value">
                         <a-date-picker v-model:value="form.birthday" valueFormat='YYYY-MM-DD' :placeholder="$t('def.input')"/>
-<!--                        <a-input v-model:value="form.birthday" :placeholder="$t('def.input')"/>-->
+                        <!-- <a-input v-model:value="form.birthday" :placeholder="$t('def.input')"/>-->
                     </div>
                 </div>
 
@@ -178,10 +182,9 @@
                 </div>
                 <div class="form-item" v-if="form.type === CRM_TYPE.INDIVIDUAL">
                     <div class="key">{{ $t('crm_c.nationality') }}:</div>
-<!--                    <div class="value">-->
-
-<!--                        <a-input v-model:value="form.nationality" :placeholder="$t('def.input')"/>-->
-<!--                    </div>-->
+                    <!-- <div class="value">-->
+                    <!--     <a-input v-model:value="form.nationality" :placeholder="$t('def.input')"/>-->
+                    <!-- </div>-->
                     <div class="value">
                         <CountryCascader v-model:value="areaListContinent" :def-area='defAreaContinent'/>
                     </div>
@@ -461,7 +464,7 @@ export default {
                 return this.$message.warning(this.$t('n.enter') + ":" + this.$t('crm_c.name') )
             }
             if (!form.phone && !form.email) {
-                return this.$message.warning(this.$t('n.enter') + ":" + this.$t('n.email') + "Or" +  this.$t('n.phone')  )
+                return this.$message.warning(this.$t('n.enter') + ":" + this.$t('n.email') + " Or " +  this.$t('n.phone')  )
             }
             if (!form.type) {
                 return this.$message.warning(this.$t('n.enter')+ ":" + this.$t('crm_c.type') )
@@ -645,7 +648,11 @@ export default {
         },
         setGroupId(val) {
             Core.Data.setGroupId(val)
-        }
+        },
+        filterOption(input, option) {
+            return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+
+        },
     }
 };
 </script>
@@ -670,10 +677,6 @@ export default {
 .form-item {
     .fac();
 
-    .ant-input {
-        // width: calc(~'100% - 24px');
-    }
-
     i.icon {
         display: inline-block;
         width: 24px;
@@ -690,7 +693,7 @@ export default {
         font-size: 18px;
     }
     .key {
-        width: 120px !important;
+        width: 120px;
     }
 }
 </style>
