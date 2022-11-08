@@ -16,7 +16,7 @@
             </div>
 
             <div class="header-right">
-<!--                <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>-->
+                <!-- <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>-->
                 <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
                     <i class="icon" :class="lang =='zh' ? 'i_zh-en' : 'i_en-zh'"/>
                 </a-button>
@@ -28,7 +28,7 @@
                 </a-button>
                 <a-divider type="vertical"/>
                 <a-tag color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType][$i18n.locale] }}</a-tag>
-<!--                <a-divider type="vertical"/>-->
+                <!-- <a-divider type="vertical"/>-->
                 <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
                     <a-button class="user-info" type="link">
                         <a-avatar class="user-avatar" :src="$Util.imageFilter(user.avatar, 3)" :size='30'>
@@ -76,7 +76,7 @@
             </div>
         </a-layout-header>
         <a-layout class="layout-container">
-            <a-layout-sider class="layout-sider" v-model:collapsed="collapsed" :width="144" :collapsedWidth='64' theme='light'>
+            <a-layout-sider class="layout-sider" v-model:collapsed="collapsed" :width="200" :collapsedWidth='64' theme='light'>
                 <a-menu theme="light" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" mode="inline"
                     :inlineCollapsed='collapsed' :inlineIndent='8'>
                     <template v-for="item of showList">
@@ -389,8 +389,8 @@ export default {
         .header-left {
             .fcc();
             img.logo {
-                width: 115px;
-                height: 30px;
+                // width: 115px;
+                height: 34px;
             }
             .router-type{
                 width: 30px;

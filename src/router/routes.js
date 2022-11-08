@@ -35,24 +35,24 @@ const routes = [
             // not_sub_menu: true,
         },
         children: [
-	        {
-		        path: 'index',
-		        name: 'Index',
-		        component: () => import('@/views/dashboard/Analytics.vue'),
-		        meta: {
-			        title: '首页',
-			        title_en: 'Index',
-			        roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
-		        }
-	        },
-        	{
-	            path: '',
-	            name: 'Dashboard',
-	            component: () => import('@/views/dashboard/Dashboard.vue'),
-	            meta: {
-	                title: '时效看板',
-	                title_en: 'RTDB',
-	            }
+            {
+                path: 'index',
+                name: 'Index',
+                component: () => import('@/views/dashboard/Analytics.vue'),
+                meta: {
+                    title: '首页',
+                    title_en: 'Index',
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
+                }
+            },
+            {
+                path: '',
+                name: 'Dashboard',
+                component: () => import('@/views/dashboard/Dashboard.vue'),
+                meta: {
+                    title: '时效看板',
+                    title_en: 'RTDB',
+                }
             },
 
         ]
@@ -98,12 +98,12 @@ const routes = [
         component: Layout,
         redirect: '/distributor/distributor-list',
         name: 'DistributorManagement',
-	    type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
+        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
         meta: {
             title: '分销管理',
             title_en: 'Distribution',
             icon: 'i_s_agent',
-	        auth: ["distributor.list", "agent.list", "store.list", "purchase-order.list", "sales-area.list"],
+            auth: ["distributor.list", "agent.list", "store.list", "purchase-order.list", "sales-area.list"],
         },
         children: [
             {
@@ -114,7 +114,7 @@ const routes = [
                     title: '分销商列表',
                     title_en: 'Distributors',
                     roles: [LOGIN_TYPE.ADMIN],
-	                auth: ["distributor.list"],
+                    auth: ["distributor.list"],
                 }
             },
             {
@@ -126,7 +126,7 @@ const routes = [
                     title: '分销商编辑',
                     parent: '/distributor/distributor-list',
                     roles: [LOGIN_TYPE.ADMIN],
-	                auth: ["distributor.save"],
+                    auth: ["distributor.save"],
 
                 }
             },
@@ -441,7 +441,7 @@ const routes = [
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
         meta: {
             title: '商品管理',
-            title_en: 'Product management',
+            title_en: 'Product',
             icon: 'i_s_item',
             roles: [LOGIN_TYPE.ADMIN],
             auth: ['item.list','item-category.list'],
@@ -537,7 +537,7 @@ const routes = [
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
         meta: {
             title: '实例管理',
-            title_en: 'Instance management',
+            title_en: 'Instance',
             icon: 'i_s_item',
             roles: [LOGIN_TYPE.ADMIN],
             auth: ['entity.list'],
@@ -737,7 +737,7 @@ const routes = [
         type: [ROUTER_TYPE.AFTER],
         meta: {
             title: '工单管理',
-            title_en: 'Maintenance work order',
+            title_en: 'Maintenance',
             icon: 'i_s_repair',
             auth: ['repair-order.list'],
         },
@@ -782,7 +782,7 @@ const routes = [
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
                     title: '待审核故障件',
-                    title_en: 'Pending dfective parts',
+                    title_en: 'Pending defective parts',
                     roles: [LOGIN_TYPE.ADMIN],
                     type: 'invoice',
                     auth: ['repair-order.list'],
@@ -794,7 +794,7 @@ const routes = [
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
                     title: '待入库故障件',
-                    title_en: 'Faulty parts to be put into storage',
+                    title_en: 'Wait recall parts',
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     type: 'fault',
                     auth: ['repair-order.save-to-invoice'],
@@ -1596,7 +1596,7 @@ const routes = [
 				component: () => import('@/views/crm-customer/customer-list.vue'),
 				meta: {
 					title: '公海客户',
-					title_en: 'Community Customer list',
+					title_en: 'Community Customer',
 					type: 'high_seas',
 					auth: ["crm-customer.list"],
 				}
@@ -1688,7 +1688,7 @@ const routes = [
 				component: () => import('@/views/crm-bo/bo-list.vue'),
 				meta: {
 					title: '商机列表',
-					title_en: 'Business opportunities list',
+					title_en: 'Opportunities list',
                     auth: ["crm-bo.list"],
 				}
 			},
