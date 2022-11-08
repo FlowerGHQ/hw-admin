@@ -60,7 +60,7 @@ let Const = {
         KEY_FIELD_DISPLAY: 'field.display',
         KEY_LANGUAGE: 'language',
 	    TAB_POSITION: 'tab.position',
-        PHONE_AREA_CODE: 'phone.area.code',
+	    PHONE_COUNTRY_CODE: 'phone.country.code',
         GROUP_ID: 'group.id',
     },
     DEFULT_IMG: {
