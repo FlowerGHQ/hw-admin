@@ -1,6 +1,6 @@
 <template>
 <a-config-provider :locale="zhCN" :autoInsertSpaceInButton='false'>
-    <a-layout id="Layout">
+    <a-layout id="Layout" :class="lang">
         <a-layout-header class="layout-header">
             <div class="header-left"  :class="{'collapsed': collapsed}">
                 <img src="@images/header-logo3.png" class="logo" @click="collapsed = !collapsed" alt="浩万"/>
