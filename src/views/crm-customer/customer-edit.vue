@@ -28,9 +28,9 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('n.select_country') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.phoneAreaCode" :placeholder="$t('def.input')" @select="setPhoneAreaCode">
-                            <a-select-option v-for="item of phoneAreaCodeList" :key="item.phoneAreaCode" :value="item.phoneAreaCode">
-                                <span  class="phoneAreaCode">{{ item.phoneAreaCode }}</span>
+                        <a-select v-model:value="form.phone_country_code" :placeholder="$t('def.input')" @select="setPhoneCountryCode" :disabled="form.id > 0 && form.phone != ''">
+                            <a-select-option v-for="item of phoneCountryCodeList" :key="item.phoneAreaCode" :value="item.phoneAreaCode">
+                                <span  class="phoneCountryCode">{{ item.phoneAreaCode }}</span>
                                 {{lang === 'zh' ? item.name: item.enName}}
                             </a-select-option>
                         </a-select>
@@ -39,11 +39,22 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('n.phone') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerBlur" :disabled="form.id > 0"/>
+                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerPhoneBlur" :disabled="form.id > 0 && form.phone != ''"/>
                     </div>
-                    <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
-                    <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
+                    <span v-if="isExistPhone == 1"><i class="icon i_confirm"/></span>
+                    <span v-else-if="isExistPhone == 2"><i class="icon i_close_c"/></span>
                     <CustomerSelect :radioMode="true" :phone="this.form.phone" :check-mode="false" :select-customer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
+                        {{ $t('crm_c.rechecking') }}
+                    </CustomerSelect>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('n.email') }}：</div>
+                    <div class="value">
+                        <a-input v-model:value="form.email" :placeholder="$t('def.input')" @blur="handleCustomerEmailBlur" :disabled="form.id > 0 && form.email != ''"/>
+                    </div>
+                    <span v-if="isExistEmail == 1"><i class="icon i_confirm"/></span>
+                    <span v-else-if="isExistEmail == 2"><i class="icon i_close_c"/></span>
+                    <CustomerSelect :radioMode="true" :email="this.form.email" :check-mode="false" :select-customer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
                         {{ $t('crm_c.rechecking') }}
                     </CustomerSelect>
                 </div>
@@ -273,7 +284,7 @@ import CountryCascader from '@/components/common/CountryCascader.vue'
 import AddressCascader from '@/components/common/AddressCascader.vue';
 import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
 import LabelSelect from '@/components/crm/popup-btn/LabelSelect.vue';
-import phoneAreaCode from '@/assets/js/phoneAreaCode/phoneAreaCode.js'
+import phoneCountryCode from '@/assets/js/phoneAreaCode/phoneAreaCode.js'
 
 import dayjs from "dayjs";
 
@@ -323,7 +334,7 @@ export default {
                 status: Core.Const.CRM_CUSTOMER.STATUS.POOL,
                 address: '',
 
-                phoneAreaCode: ''
+                phone_country_code: ''
             },
             defAddr: [],
             areaList: [],
@@ -343,7 +354,8 @@ export default {
             countryShow: false,
             sourceList: [],
 
-            isExist: '', // 名称输入框提示
+            isExistPhone: '', // 名称输入框提示
+            isExistEmail: '', // 名称输入框提示
 
             sourceModalShow: false,
             sourceForm: {
@@ -365,7 +377,7 @@ export default {
             labelIdList: [],
             groupOptions: [],
 
-            phoneAreaCodeList: []  //手机号地区
+            phoneCountryCodeList: []  //手机号地区
         };
     },
     watch: {},
@@ -375,8 +387,8 @@ export default {
         }
     },
     mounted() {
-        // console.log('111',phoneAreaCode);
-        this.phoneAreaCodeList = phoneAreaCode
+        // console.log('111',phoneCountryCode);
+        this.phoneCountryCodeList = phoneCountryCode
         this.form.id = Number(this.$route.query.id) || 0
         if (this.form.id) {
             this.getCustomerDetail();
@@ -387,7 +399,7 @@ export default {
         }
         this.handleGroupTree();
         this.getSourceList()
-        if(Core.Data.getPhoneAreaCode()) this.form.phoneAreaCode = Core.Data.getPhoneAreaCode()
+        if(Core.Data.getPhoneCountryCode()) this.form.phone_country_code = Core.Data.getPhoneCountryCode()
         if(Core.Data.getGroupId()) this.form.group_id = Core.Data.getGroupId()
     },
     methods: {
@@ -439,16 +451,16 @@ export default {
             }
 
             console.log("areaContinent", areaContinent)
-            if (!form.phoneAreaCode) {
+            if (!form.phone_country_code) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!this.$Util.ifPhoneFilter(form.phone,form.phoneAreaCode)){
+            if (!this.$Util.ifPhoneFilter(form.phone,form.phone_country_code)){
                 return this.$message.warning(this.$t('def.error_phone'))
             }
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!form.phone) {
+            if (!form.phone && !form.email) {
                 return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.type) {
@@ -514,15 +526,30 @@ export default {
                 this.sourceList = res.list
             })
         },
-        handleCustomerBlur() {  // 获取 车架号
-            if (!this.form.name) {
-                return this.isExist = ''
+        handleCustomerPhoneBlur() {  // 获取 车架号
+            if (!this.form.phone) {
+                return this.isExistPhone = ''
             }
             Core.Api.CRMCustomer.checkPhone({
                 id: this.form.id,
                 phone: this.form.phone,
             }).then(res => {
-                this.isExist = res.results ? 1 : 2
+                this.isExistPhone = res.results ? 1 : 2
+                console.log("handleVehicleBlur res", res)
+            }).catch(err => {
+                console.log('handleVehicleBlur err', err)
+            }).finally(() => {
+            });
+        },
+        handleCustomerEmailBlur() {  // 获取 车架号
+            if (!this.form.email) {
+                return this.isExistPhone = ''
+            }
+            Core.Api.CRMCustomer.checkPhone({
+                id: this.form.id,
+                phone: this.form.email,
+            }).then(res => {
+                this.isExistEmail = res.results ? 1 : 2
                 console.log("handleVehicleBlur res", res)
             }).catch(err => {
                 console.log('handleVehicleBlur err', err)
@@ -612,8 +639,8 @@ export default {
             })
         },
         // 存国家和区域数据
-        setPhoneAreaCode(val) {
-            Core.Data.setPhoneAreaCode(val)
+        setPhoneCountryCode(val) {
+            Core.Data.setPhoneCountryCode(val)
         },
         setGroupId(val) {
             Core.Data.setGroupId(val)
@@ -635,7 +662,7 @@ export default {
 
 }
 
-.phoneAreaCode {
+.phoneCountryCode {
     display: inline-block !important;
     width: 50px !important;
 }
