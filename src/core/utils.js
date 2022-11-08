@@ -411,16 +411,23 @@ const Util = {
             return item.role === undefined || item.role.includes(role)
         })
     },
-	ifPhoneFilter(val){
-        return true;
-		// let phoneReg = /^1(3|4|5|6|7|8|9)\d{9}$/;
-		// if (phoneReg.test(val)){
-		// 	return true;
-		// } else {
-		// 	return false;
-		// }
-
-
+	ifPhoneFilter(val,phoneAreaCode){
+        // return true;
+        // 国内限制手机号11位  国外限制手机号9位
+        if(phoneAreaCode === '+86') {
+            let phoneReg = /^1(3|4|5|6|7|8|9)\d{9}$/;
+            if (phoneReg.test(val)){
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if (val.length === 9){
+                return true;
+            } else {
+                return false;
+            }
+        }
 	},
 
     /* =============== 通用过滤器 ================ */
