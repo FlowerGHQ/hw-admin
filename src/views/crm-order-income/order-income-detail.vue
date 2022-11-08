@@ -11,6 +11,10 @@
                              btnType='primary' :api-list="['CRMOrderIncome', 'audit']" :id="detail.id" @submit="getOrderDetail"
                              :s-pass="Core.Const.FLAG.YES" :s-refuse="Core.Const.FLAG.NO" :current-audit-process-id="detail.current_audit_process_id" no-refuse><i class="icon i_audit"/>{{ $t('n.audit') }}
                 </AuditHandle>
+                <span v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
+                            <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order-income.save')">{{$t('def.edit')}}</a-button>
+                            <a-button @click="handleDelete(detail.id)" v-if="$auth('crm-order-income.delete')">{{$t('def.delete')}}</a-button>
+                        </span> 
             </div>
         </div>
         <div class="gray-panel">
@@ -55,11 +59,10 @@
                         <span class="value">{{$Util.countFilter(detail.refunded) + '元'}}</span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
-                        <span v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
-                            <a-button @click="handleRefundShow" v-if="$auth('crm-order-income.refund')">退款</a-button>
-                            <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order-income.save')">编辑</a-button>
-                            <a-button @click="handleDelete(detail.id)" v-if="$auth('crm-order-income.delete')">删除</a-button>
-                        </span>
+                        <!-- <span v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
+                            <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order-income.save')">{{$t('def.edit')}}</a-button>
+                            <a-button @click="handleDelete(detail.id)" v-if="$auth('crm-order-income.delete')">{{$t('def.delete')}}</a-button>
+                        </span> -->
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                         <span class="key">{{ $t('sl.show') }}：</span>
@@ -100,8 +103,12 @@
                         <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.summary_information')">
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
-                        <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
-                            <CrmRefundRecord v-if="detail.id > 0" :detail="detail" :orderIncomeId="detail.id" ref ="CrmRefundRecord"/>
+                        <a-tab-pane key="RefundRecord" :tab="$t('crm_refund.refund_record')">
+                            <CrmRefundRecord v-if="detail.id > 0" :detail="detail" :orderIncomeId="detail.id" ref ="CrmRefundRecord">
+                                <a-button type="primary" @click="handleRefundShow" v-if="$auth('crm-order-income.refund')">{{$t('crm_refund.refund')}}</a-button>
+                            </CrmRefundRecord>
+                        </a-tab-pane>
+                        <a-tab-pane key="InformationInfo" :tab="$t('n.attachment_list')">
                             <CRMAttachmentFile v-if="detail.id > 0" :target_id="id" :target_type="CRM_ORDER_INCOME_FILE" />
                         </a-tab-pane>
                     </a-tabs>

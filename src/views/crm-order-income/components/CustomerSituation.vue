@@ -4,7 +4,7 @@
         <div class="title">{{ $t('crm_c.summary_information') }}</div>
     </div>
     <div class="panel-content">
-        <a-descriptions title="基本信息" bordered :column="2" size="small" class="pannel">
+        <a-descriptions :title="$t('crm_c.information')" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('crm_o.name')" class="label">{{detail.order? detail.order.name || '-'  :  '-' }}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_oi.uid')" class="label">{{detail.uid}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_oi.date')" class="label">{{$Util.timeFilter(detail.date,3) || '-'}}</a-descriptions-item>
@@ -14,7 +14,7 @@
             <a-descriptions-item :label="$t('crm_oi.status')" class="label">{{$Util.CRMOrderIncomeStatusFilter(detail.status) || '-'}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_refund.refunded')" class="label">{{$Util.countFilter(detail.refunded) + '元'}}</a-descriptions-item>
         </a-descriptions>
-        <a-descriptions title="数据权限" bordered :column="2" size="small" class="pannel">
+        <a-descriptions :title="$t('crm_c.data_access')" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('crm_c.create_user')" class="label">{{detail.create_user_name}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.create_time')" class="label">{{$Util.timeFilter(detail.create_time) || '-'}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.update_user')" class="label">{{detail.update_user_name}}</a-descriptions-item>
