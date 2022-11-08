@@ -241,22 +241,22 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             // let area = Core.Util.deepCopy(this.area)
             if (!form.order_id) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.enter') + ":" + this.$t('crm_oi.belong_order'))
             }
             if (!form.uid) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.enter')+ ":" + this.$t('crm_oi.uid'))
             }
             if (!form.money) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.enter')+ ":" + this.$t('crm_oi.money'))
             }
             if (!form.date) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.enter')+ ":" + this.$t('crm_oi.date'))
             }
             if (!form.payment_type) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.choose')+ ":" + this.$t('crm_oi.payment_type'))
             }
             if (!form.type) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.choose')+ ":" + this.$t('crm_oi.type'))
             }
             // form.birthday = form.birthday ? dayjs(form.birthday).unix() : 0 // 日期转时间戳
             form.date = form.date ? dayjs(form.date).unix() : 0 // 日期转时间戳

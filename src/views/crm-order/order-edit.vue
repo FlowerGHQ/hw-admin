@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">{{ $t('crm_b.bo') }}：</div> <!-- 所属客户 -->
+                    <div class="key">{{ $t('crm_b.bo') }}：</div> <!-- 商机 -->
                     <div class="value">
                         <a-select
                             v-model:value="form.bo_id"
@@ -426,26 +426,25 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             let area = Core.Util.deepCopy(this.area)
             if (!form.customer_id) {
-                return this.$message.warning(this.$t('def.input'))
+                return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_o.belone_customer'))
             }
-
             if (!form.name) {
-                return this.$message.warning(this.$t('def.input'))
+                return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_o.name'))
             }
             if (!form.date) {
-                return this.$message.warning(this.$t('def.select'))
+                return this.$message.warning(this.$t('n.choose')+":"+this.$t('crm_o.signing_date'))
             }
             if (!form.seller_signatory) {
-                return this.$message.warning(this.$t('def.input'))
+                return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_o.seller_signatory'))
             }
             if (!form.type) {
-                return this.$message.warning(this.$t('def.select'))
+                return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_o.contract_type'))
             }
             if (!form.buyer_signatory) {
-                return this.$message.warning(this.$t('def.input'))
+                return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_o.buyer_signatory'))
             }
             if (!form.remark) {
-                return this.$message.warning(this.$t('def.input'))
+               return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_o.remark'))
             }
             // if (!form.item_bind_list) {
             //     return this.$message.warning(this.$t('def.select'))
