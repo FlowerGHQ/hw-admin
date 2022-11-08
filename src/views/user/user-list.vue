@@ -151,7 +151,7 @@ export default {
             // 搜索
             searchForm: {
                 name: '',
-                group_id: '',
+                group_id: undefined,
                 type: undefined,
                 org_id: Core.Data.getOrgId(),
                 org_type: Core.Data.getOrgType(),

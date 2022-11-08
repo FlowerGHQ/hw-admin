@@ -181,11 +181,11 @@ export default {
             // 搜索
             searchForm: {
                 uid: '',
-                status: '',
+                status: undefined,
                 phone:'',
-                type: '',
-                payment_type: '',
-                create_user_id: '',
+                type: undefined,
+                payment_type: undefined,
+                create_user_id: undefined,
                 money_interval_low: '',
                 money_interval_high: '',
                 date_begin_time: '',
