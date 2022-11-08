@@ -162,7 +162,7 @@ export default {
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: this.$t('n.name'), dataIndex: 'name', key: 'name'},
+                {title: this.$t('sl.name'), dataIndex: 'name', key: 'name'},
             ]
 
             return tableColumns
