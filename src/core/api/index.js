@@ -638,6 +638,7 @@ const apiList = {
 		batchReturnPool: ['PostJson', 'crm-customer/batch-return-pool'],
 		batchTransfer: ['PostJson', 'crm-customer/batch-transfer'],
 		checkPhone: ['PostJson', 'crm-customer/check-phone'],
+		checkEmail: ['PostJson', 'crm-customer/check-email'],
 	},
 	CRMBo:{//CRM 商机
 		save: ['PostJson', 'crm-bo/save'],//

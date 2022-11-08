@@ -51,7 +51,7 @@
                                 <FollowUpShow :btnText="$t('crm_c.add_follow_records')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.BO" @submit="getCRMTrackRecord"/>
                                 <CustomerSelect @select="handleAddCustomerShow" :targetId="detail.id" :targetType="Core.Const.CRM_CONTACT_BIND.TARGET_TYPE.BO_ADD_CUSTOMER" :addCustomerBtn="true"/>
                                 <a-button @click="routerChange('edit')" v-if="$auth('crm-bo.save')">{{ $t('n.edit') }}</a-button>
-                                <a-button @click="routerChange('order-save')" v-if="$auth('crm-order.save')">新建订单</a-button>
+                                <a-button @click="routerChange('order-save')" v-if="$auth('crm-order.save')">{{ $t('crm_o.save') }}</a-button>
 
                             </template>
                             <template v-if="trackMemberDetail!= null ? trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
