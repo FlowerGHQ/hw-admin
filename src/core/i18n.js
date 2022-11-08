@@ -1448,6 +1448,12 @@ const messages = {
             label: '标签',
             sure_set_pre: '确定设为预置吗？确定后该标签将不可再被修改',
             sure_cancel_pre: '确定取消预置吗？确定后该标签将可自由修改',
+		    client: '客户',
+		    business: '商机',
+		    contract_order: '合同订单',
+			receipt: '回款单',
+
+
 
         },
         authority: {
@@ -3102,7 +3108,7 @@ const messages = {
 		    list: 'Regional Employee List',
 	    },
 	    crm_c: {
-		    extended_information: 'Extended information',
+		    extended_information: 'Extended Information',
 		    detail: 'Customer Detail',
 		    level: 'Customer Level',
 		    type: 'Customer Type',
@@ -3110,11 +3116,11 @@ const messages = {
 		    phone: 'Phone',
 		    gender: 'Gender',
 		    birthday: 'Birthday',
-		    industry: 'Customer\' Industry',
+		    industry: 'Customer Industry',
 		    nationality: 'Nationality',
 		    hobby: 'Hobby',
-		    marital_status:'Marital status',
-		    income: 'Annual income',
+		    marital_status:'Marital Status',
+		    income: 'Annual Income',
 		    company_size: 'Company Size',
 		    company_license_id: 'Company Business License ID',
 		    track_status: 'Track Status',
@@ -3206,7 +3212,7 @@ const messages = {
 	        reactivation: 'Reactivate',
 	        whether_reactivation: 'Whether to reactivate',
 	        whether_reactivation_success: 'Reactivate',
-	        remark: 'remark',
+	        remark: 'Remark',
 	        select_item: 'Sales Information',
 	        discount_price: 'Sales unit price',
 	        interested_models: 'Intended model',
@@ -3404,7 +3410,7 @@ const messages = {
         sl: {  // 智能标签
             list: 'Label List',
             save: 'New label',
-	        add: 'Add tags',
+	        add: 'Add Label',
             classification: 'Label classification',
             name : 'Label name',
             name_en: 'Label English name',
@@ -3418,6 +3424,10 @@ const messages = {
             label: 'Label',
             sure_set_pre: 'Are you sure to set it to preset? After confirmation, the label cannot be modified.',
             sure_cancel_pre: 'Are you sure to cancel the preset? After confirmation, the label can be freely modified.',
+	        client: 'Client',
+	        business: 'Business',
+	        contract_order: 'Contract Order',
+	        receipt: 'Receipt',
         },
 	    authority: {
             title: {
