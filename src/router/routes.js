@@ -1698,7 +1698,7 @@ const routes = [
 				component: () => import('@/views/crm-bo/bo-edit.vue'),
 				meta: {
 					hidden: true,
-					title: '新建客户',
+					title: '修改商机',
 					parent: '/bo/bo-list',
                     auth: ["crm-bo.save"],
 				}
@@ -1709,7 +1709,7 @@ const routes = [
 				component: () => import('@/views/crm-bo/bo-detail.vue'),
 				meta: {
 					hidden: true,
-					title: '客户详情',
+					title: '商机详情',
 					parent: '/bo/bo-list',
                     auth: ["crm-bo.detail"],
 				}
@@ -1735,7 +1735,7 @@ const routes = [
 				component: () => import('@/views/crm-order/order-list.vue'),
 				meta: {
 					title: '合同列表',
-					title_en: 'Business opportunities list',
+					title_en: 'Contract Order list',
                     auth: ["crm-order.list"],
 				}
 			},
@@ -1745,7 +1745,7 @@ const routes = [
                 component: () => import('@/views/crm-order/order-audit-list.vue'),
                 meta: {
                     title: '待审列表',
-                    title_en: 'Business opportunities list',
+                    title_en: 'Pending list',
                     auth: ["crm-order.list"],
                 }
             },
@@ -1767,7 +1767,7 @@ const routes = [
 				meta: {
 					hidden: true,
 					title: '合同详情',
-					title_en: 'Business opportunities phase',
+					title_en: 'Contract Details',
 					parent: '/crm-order/order-list',
                     auth: ["crm-order.detail"],
 				}
@@ -1782,7 +1782,7 @@ const routes = [
         type: [ROUTER_TYPE.CRM],
 		meta: {
 			title: '回款单',
-			title_en: 'Receipt',
+			title_en: 'Payment Receipt',
 			icon: 'i_crm_order_income',
             auth: ["crm-order-income.list"],
 		},
@@ -1793,7 +1793,7 @@ const routes = [
 				component: () => import('@/views/crm-order-income/order-income-list.vue'),
 				meta: {
 					title: '回款单列表',
-					title_en: 'Business opportunities list',
+					title_en: 'Payment Receipt list',
                     auth: ["crm-order-income.list"],
 				}
 			},
@@ -1803,7 +1803,7 @@ const routes = [
                 component: () => import('@/views/crm-order-income/order-income-audit-list.vue'),
                 meta: {
                     title: '待审列表',
-                    title_en: 'Business opportunities list',
+                    title_en: 'Pending list',
                     auth: ["crm-order-income.list"],
                 }
             },
@@ -1825,7 +1825,7 @@ const routes = [
 				meta: {
 					hidden: true,
 					title: '回款单详情',
-					title_en: 'Business opportunities phase',
+					title_en: 'Payment Receipt phase',
 					parent: '/crm-order-income/order-income-list',
                     auth: ["crm-order-income.detail"],
 				}
@@ -1851,7 +1851,7 @@ const routes = [
 				component: () => import('@/views/crm-test-drive-order/test-drive-list.vue'),
 				meta: {
 					title: '试驾单列表',
-					title_en: 'Business opportunities list',
+					title_en: 'Test Drive List',
 					auth: ["crm-order-income.list"],
 				}
 			},
@@ -1936,7 +1936,7 @@ const routes = [
 				component: () => import('@/views/crm-setting/group-status.vue'),
 				meta: {
 					title: '商机阶段',
-					title_en: 'Business opportunities phase',
+					title_en: 'Opportunity stage',
                     auth: ["crm-bo-status.list"],
 				}
 			},
