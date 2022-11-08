@@ -209,7 +209,11 @@ export default {
                 this.detail.date = this.detail.date ? dayjs.unix(this.detail.date).format('YYYY-MM-DD') : undefined
                 this.detail.money = Core.Util.countFilter(this.detail.money )
                 for (const key in this.form) {
-                    this.form[key] = this.detail[key]
+                    if (d[key] !== 0){
+                        this.form[key] =this.detail[key]
+                    } else {
+                        this.form[key] = undefined
+                    }
                 }
                 this.handleOrderIdSearch("init")
                 let auditUserList= []
