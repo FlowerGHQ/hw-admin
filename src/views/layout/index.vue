@@ -337,6 +337,10 @@ export default {
         },
         handleRouterSwitch() {
 
+            if (Core.Data.getTabPosition() === this.tabPosition){
+                return
+            }
+
             console.log("tabPosition",this.tabPosition)
             Core.Data.setTabPosition(this.tabPosition)
             if (this.tabPosition === this.ROUTER_TYPE.CRM){

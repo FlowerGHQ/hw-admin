@@ -14,18 +14,30 @@
     </div>
     <div class="banner-cards">
         <div class="banner-card" v-for="(banner,i) in bannerList" :key="i" @click="routerChange('item',banner.first_level)">
-            <template v-if="banner.first_level !=='1'">
-                <img src="../../assets/images/default_banner-two.png" class="card-bg">
-                <p class="title">{{ $i18n.locale === 'zh' ? banner.content : banner.content_en }}</p>
-                <p class="info">{{ $i18n.locale === 'zh' ? banner.name : banner.name_en }}</p>
-                <arrow-right-outlined type="user" class="arrow"/>
-            </template>
-            <template v-else>
+            <template v-if="banner.first_level ==='1'">
                 <img src="../../assets/images/default_banner-five.jpeg" class="card-bg">
                 <!-- <p class="title-black">{{ $i18n.locale === 'zh' ? banner.content : banner.content_en }}</p>
                 <p class="info-black">{{ $i18n.locale === 'zh' ? banner.name : banner.name_en }}</p> -->
                 <arrow-right-outlined type="user" class="arrow-black"/>
             </template>
+            <template v-if="banner.first_level ==='2'">
+                <img src="../../assets/images/default_banner-five.png" class="card-bg">
+<!--                <p class="title">{{ $i18n.locale === 'zh' ? banner.content : banner.content_en }}</p>-->
+<!--                <p class="info">{{ $i18n.locale === 'zh' ? banner.name : banner.name_en }}</p>-->
+                <arrow-right-outlined type="user" class="arrow-black"/>
+            </template>
+            <template v-if="banner.first_level ==='3'">
+                <img src="../../assets/images/default_banner-two.png" class="card-bg">
+                <p class="title">{{ $i18n.locale === 'zh' ? banner.content : banner.content_en }}</p>
+                <p class="info">{{ $i18n.locale === 'zh' ? banner.name : banner.name_en }}</p>
+                <arrow-right-outlined type="user" class="arrow"/>
+            </template>
+<!--            <template v-else>-->
+<!--                <img src="../../assets/images/default_banner-five.jpeg" class="card-bg">-->
+<!--                &lt;!&ndash; <p class="title-black">{{ $i18n.locale === 'zh' ? banner.content : banner.content_en }}</p>-->
+<!--                <p class="info-black">{{ $i18n.locale === 'zh' ? banner.name : banner.name_en }}</p> &ndash;&gt;-->
+<!--                <arrow-right-outlined type="user" class="arrow-black"/>-->
+<!--            </template>-->
 <!--            <img src="../../assets/images/default_banner-two.png" class="card-bg" v-if="banner.first_level !=='vehicle'">-->
 <!--            <img src="../../assets/images/default_banner-five.jpeg" class="card-bg" v-else>-->
 <!--            <p class="title">{{ $i18n.locale === 'zh' ? banner.content : banner.content_en }}</p>-->
