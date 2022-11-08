@@ -25,7 +25,7 @@
                         <div class="key">{{ $t('crm_c.type') }}：</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                                <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ lang === 'zh'?item.zh : item.en }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -52,7 +52,7 @@
                         <div class="key">{{ $t('crm_c.level') }}：</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.level" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="item of CRM_LEVEL_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                                <a-select-option v-for="item of CRM_LEVEL_MAP" :key="item.key" :value="item.value">{{ lang === 'zh'?item.zh : item.en}}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>

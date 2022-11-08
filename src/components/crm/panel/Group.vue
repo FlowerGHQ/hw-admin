@@ -2,7 +2,7 @@
 <div class="InformationInfo gray-panel no-margin">
     <div class="panel-content">
         <div class="title">
-            <span>团队成员({{total}})</span>
+            <span>{{$t("crm_c.team_members")}}({{total}})</span>
             <div class="right-btn">
                 <TrackMemberSelect @select="handleGroupShow" btnType="link"><i class="icon i_add"/></TrackMemberSelect>
 <!--                <a-button type="link" @click="clickAdd"><i class="icon i_add"/></a-button>-->
@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="search">
-            <a-input-search v-model:value="search_name" :placeholder="'搜索成员和标签'" @search="handleSearch"/>
+            <a-input-search v-model:value="search_name" :placeholder="$t('crm_c.team_members')" @search="handleSearch"/>
         </div>
         <div class="list">
             <div class="list-item" v-for="(item, i) in tableData" :key="i">
@@ -19,7 +19,7 @@
                 </div>
                 <div class="item-right">
                     <div class="name">{{ item.user ? item.user.account ? item.user.account.name : '-' : '-'}}</div>
-                    <div class="type">{{ $Util.CRMGroupFilter(item.type)}}</div>
+                    <div class="type">{{ $Util.CRMGroupFilter(item.type, this.lang)}}</div>
                 </div>
                 <div class="item-button">
                     <div class="button" @click="handleTrackMemberShow(item)"><i class="icon i_edit"/></div>
@@ -33,7 +33,6 @@
                 :page-size="pageSize"
                 :total="total"
                 show-quick-jumper
-                show-size-changer
                 show-less-items
                 :show-total="(total) => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                 :hide-on-single-page="false"

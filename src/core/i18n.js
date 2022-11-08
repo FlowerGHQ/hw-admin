@@ -1189,6 +1189,9 @@ const messages = {
             client_information: '客户信息',
             business_information:'商机信息',
             data_access:'数据权限',
+		    search_members: '搜索成员和标签',
+
+
 	    },
 	    crm_t: {
 		    track_record: '跟进记录',
@@ -3152,6 +3155,7 @@ const messages = {
 		    client_information: 'client information',
 		    business_information:'Business information',
 		    data_access:'Data access',
+		    search_members: 'Search for members and tags',
 	    },
 	    crm_t: {
 		    track_record: 'Follow up records',
@@ -3222,6 +3226,7 @@ const messages = {
 	    crm_o: {
 		    list: 'Contract list',
 		    save: 'New contract',
+			edit: 'Edit contract',
 		    detail: 'Contract details',
 		    name: 'Contract title',
 		    customer_name: "Client's name",

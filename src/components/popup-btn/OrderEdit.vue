@@ -1,7 +1,7 @@
 <template>
     <div id="OrderEdit" class="edit-container">
         <div class="title-container">
-            <div class="title-area">{{ form.id ? '编辑订单' : '新建订单' }}</div>
+            <div class="title-area">{{ form.id ?  $t('crm_o.edit')  : $t('crm_o.save') }}</div>
         </div>
         <div class="form-block">
             <div class="form-title">
@@ -164,7 +164,7 @@
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div>注：合同金额=产品合计金额*整单折扣+其他费用-优惠金额</div>
+                    <div>{{$t('crm_o.money_tip')}}</div>
                 </div>
             </div>
         </div>

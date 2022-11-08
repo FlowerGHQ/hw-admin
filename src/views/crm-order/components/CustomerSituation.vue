@@ -4,25 +4,25 @@
         <div class="title">{{ $t('crm_c.summary_information') }}</div>
     </div>
     <div class="panel-content">
-        <a-descriptions title="基本信息" bordered :column="2" size="small" class="pannel">
+        <a-descriptions :title="$t('crm_c.information')" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('crm_o.contract_no')" class="label">{{detail.uid}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.name')" class="label">{{detail.name}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.signing_date')" class="label">{{$Util.timeFilter(detail.signing_date) || '-'}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.belone_customer')" class="label">{{detail.customer_name}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.contract_type')" class="label">{{$Util.CRMOrderTypeFilter(detail.type)}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.status')" class="label">{{$Util.CRMOrderStatusFilter(detail.status)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_o.contract_type')" class="label">{{$Util.CRMOrderTypeFilter(detail.type, lang)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_o.status')" class="label">{{$Util.CRMOrderStatusFilter(detail.status,lang)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.seller_signatory')" class="label">{{detail.seller_signatory}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.buyer_signatory')" class="label">{{detail.buyer_signatory}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.remark')" class="label">{{detail.remark}}</a-descriptions-item>
         </a-descriptions>
-        <a-descriptions title="销售信息" bordered :column="2" size="small" class="pannel">
+        <a-descriptions :title="$t('crm_o.sales_info')" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('crm_o.total_price')" class="label">{{Core.Util.countFilter(detail.total_price)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.discount_amount')" class="label">{{Core.Util.countFilter(detail.discount_amount)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.other_cost')" class="label">{{Core.Util.countFilter(detail.other_cost)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.money')" class="label">{{Core.Util.countFilter(detail.money)}}</a-descriptions-item>
         </a-descriptions>
-        <p>注：合同金额=产品合计金额*整单折扣+其他费用-优惠金额</p>
-        <a-descriptions title="数据权限" bordered :column="2" size="small" class="pannel">
+        <p>{{$t('crm_o.money_tip')}}</p>
+        <a-descriptions :title="$t('crm_o.data_access')" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('crm_c.create_user')" class="label">{{detail.create_user_name}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.create_time')" class="label">{{$Util.timeFilter(detail.create_time) || '-'}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.update_user')" class="label">{{detail.update_user_name}}</a-descriptions-item>
@@ -87,6 +87,9 @@ export default {
             }
             return columns
         },
+        lang(){
+            return this.$store.state.lang
+        }
     },
     mounted() {
         this.getTableData();
