@@ -86,7 +86,7 @@
                         <LabelSelect :btnText="$t('sl.add')" :category="Core.Const.CRM_LABEL.CATEGORY.ORDER_INCOME" add-customer-btn="true" @select="handleAddLabelShow" :disabled-checked="labelIdList"/>
                         <br/>
                         <a-tag v-for="(label,index) in labelList" closable color="blue" @close="handleDeleteLabel(index)" class="customer-tag">
-                            {{ label.name }}
+                            {{lang ==="zh"? label.label : label.label_en}}
                         </a-tag>
                     </div>
                 </div>
@@ -362,7 +362,8 @@ export default {
                 res.list.forEach(it => {
                     labelList.push({
                         id: it.label_id,
-                        name: it.label
+                        name: it.label,
+                        name_en: it.label_en,
                     })
                     this.labelIdList.push(it.id)
                 })
