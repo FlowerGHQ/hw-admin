@@ -1110,16 +1110,18 @@ p {
         padding: 24px 0 8px 0;
         display: flex;
         .form-title {
-            width: 20%;
-            padding-left: 11%;
+            width: 22%;
+            // padding-left: 11%;
+            text-align: right;
+            padding-right: 1em;
             box-sizing: border-box;
             font-weight: 500;
-            font-size: 14px;
+            font-size: 16px;
             line-height: 20px;
             color: #363D42;
         }
         .form-content {
-            width: 80%;
+            width: 78%;
         }
         .form-item {
             margin-bottom: 16px;
@@ -1142,7 +1144,7 @@ p {
             }
             &.rich_text {
                 .value {
-                    max-width: calc(~'100% - 186px');
+                    max-width: calc(100% - 100px);
                 }
             }
         }
@@ -1532,6 +1534,12 @@ p {
         }
         .value { width: calc(100% - 120px); }
     }
+    .form-item {
+        .key {
+            width: 120px;
+        }
+        .value { width: calc(100% - 120px); }
+    }
 }
 #Layout.zh {
 }
@@ -1556,6 +1564,34 @@ p {
             box-sizing: border-box;
             padding-right: 20px;
             padding-bottom: 20px;
+        }
+    }
+
+    .edit-container {
+        .form-block {
+            flex-wrap: wrap;
+            .form-title {
+                text-align: left;
+                width: 100%;
+                margin-bottom: 32px;
+                padding-left: 32px;
+                font-size: 20px;
+                font-weight: 600;
+                line-height: 1.2;
+            }
+            .form-content {
+                padding: 0 11%;
+                width: 100%;
+            }
+
+            .form-item {
+                &.rich_text {
+                    .value {
+                        max-width: 100%;
+                        width: 100% !important;
+                    }
+                }
+            }
         }
     }
 }

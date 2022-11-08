@@ -9,7 +9,7 @@
         </div>
         <div class="search-container">
             <a-row class="search-area">
-                <a-col :xs='12' :sm='12' :xl="8" :xxl='8' class="search-item">
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
                     <div class="key">{{ $t('n.name') }}:</div>
                     <div class="value">
                         <a-input v-model:value="searchForm.name" :placeholder="$t('def.input')"/>

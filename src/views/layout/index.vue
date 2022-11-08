@@ -253,6 +253,9 @@ export default {
         this.handleRouterSwitch();
 
         window.onresize = this.handleWindowResize
+        if (window.innerWidth <= 830) {
+            this.collapsed = true
+        }
     },
     methods: {
         routerChange(type) {
@@ -649,13 +652,16 @@ export default {
         .layout-header {
             .header-center {
                 .header-button {
+                    padding: 2px 10px;
                     .router-type {
                         flex-direction: column;
-                        img {
-                            margin: 0 5px;
-                        }
                         font-size: 10px;
                         line-height: 1;
+                        img {
+                            margin: 0 5px;
+                            width: 26px;
+                            height: 26px;
+                        }
                     }
                 }
             }
