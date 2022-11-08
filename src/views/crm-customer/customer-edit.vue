@@ -452,19 +452,19 @@ export default {
 
             console.log("areaContinent", areaContinent)
             if (!form.phone_country_code) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.choose') + ":" + this.$t('crm_c.phone_country_code') )
             }
             if (!this.$Util.ifPhoneFilter(form.phone,form.phone_country_code)){
                 return this.$message.warning(this.$t('def.error_phone'))
             }
             if (!form.name) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.enter') + ":" + this.$t('crm_c.name') )
             }
             if (!form.phone && !form.email) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.enter') + ":" + this.$t('n.email') + "Or" +  this.$t('n.phone')  )
             }
             if (!form.type) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('n.enter')+ ":" + this.$t('crm_c.type') )
             }
 
            /* if (!form.province || !form.city || !form.county || !form.address) {
