@@ -45,7 +45,7 @@
                 <!-- <a-divider type="vertical"/>-->
                 <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
                     <a-button class="user-info" type="link">
-                        <a-avatar class="user-avatar" :src="$Util.imageFilter(user.avatar, 3)" :size='30'>
+                        <a-avatar class="user-avatar PC" :src="$Util.imageFilter(user.avatar, 3)" :size='30'>
                             <template #icon><i  class="icon i_user"/></template>
                         </a-avatar>
                         <span class="user-name">{{ user.name }}</span>
