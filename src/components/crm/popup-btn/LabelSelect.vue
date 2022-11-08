@@ -5,22 +5,21 @@
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='560px'
         class="ItemSelectModal">
         <div class="modal-content">
-            <LabelAdd :category="category" v-if="addCustomerBtn" @select="getTableData" :btnText="$t('sl.add')"/>
             <div class="search-container">
                 <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :md='12' class="search-item">
+                    <a-col :xs='24' :sm='24' :md='24' class="search-item">
                         <div class="key"><span>{{ $t('n.name') }}:</span></div>
                         <div class="value">
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
-
                 </a-row>
                 <div class="btn-area">
                     <a-button @click="handleSearch" :disabled="searchForm.name === '' && selectCustomer" type="primary">{{ $t('def.search') }}</a-button>
                     <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
+            <LabelAdd :category="category" v-if="addCustomerBtn" @select="getTableData" :btnText="$t('sl.save')"/>
             <div class="table-container">
                 <LabelTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :disabled-checked='disabledList' @submit="handleSelectItem" :radio-mode='radioMode' :check-mode="checkMode"/>
             </div>

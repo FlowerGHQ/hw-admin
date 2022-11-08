@@ -889,6 +889,20 @@ p {
         color: @TC_tip;
         line-height: 17px;
     }
+
+    &.with-btn {
+        .value {
+            .fac();
+            position: relative;
+            padding-right: 100px;
+            .btn {
+                position: absolute;
+                width: 100px;
+                text-align: right;
+                right: 0;
+            }
+        }
+    }
 }
 
 // 手动 a-input-number的前后缀
@@ -1568,6 +1582,18 @@ p {
             .form-content.key130 {
                 .key { width: 130px; }
                 .value { width: calc(100% - 130px); }
+            }
+            .form-content.key140 {
+                .key { width: 140px; }
+                .value { width: calc(100% - 140px); }
+            }
+            .form-content.key150 {
+                .key { width: 150px; }
+                .value { width: calc(100% - 150px); }
+            }
+            .form-content.key160 {
+                .key { width: 160px; }
+                .value { width: calc(100% - 160px); }
             }
         }
     }

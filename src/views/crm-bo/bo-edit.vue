@@ -1,5 +1,5 @@
 <template>
-    <div id="CRMBoEdit" class="edit-container">
+    <div id="CRMBoEdit" class="edit-container" :class='$i18n.locale'>
         <div class="title-container">
             <div class="title-area">{{ form.id ? $t('crm_b.edit') : $t('crm_b.save') }}</div>
         </div>
@@ -7,7 +7,7 @@
             <div class="form-title">
                 <div class="title-colorful">{{ $t('n.information') }}</div>
             </div>
-            <div class="form-content">
+            <div class="form-content key150">
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_b.customer_name') }}：</div>
                     <div class="value">
@@ -65,9 +65,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="table-container">
+                <div class="form-item table-container no-mg">
                     <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                             :row-key="record => record.id" :pagination='false' size="small">
+                        :row-key="record => record.id" :pagination='false' size="small">
                         <template #headerCell="{title}">
                             {{ $t(title) }}
                         </template>
@@ -128,8 +128,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_b.estimated_deal_time') }}：</div>
                     <div class="value">
-                        <a-date-picker v-model:value="form.estimated_deal_time" valueFormat='YYYY-MM-DD'
-                                       :placeholder="$t('def.input')"/>
+                        <a-date-picker v-model:value="form.estimated_deal_time" valueFormat='YYYY-MM-DD' :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item">
@@ -146,64 +145,64 @@
                     <div class="key">{{ $t('crm_b.remark') }}</div>
                     <div class="value">
                         <a-textarea v-model:value="form.remark" :placeholder="$t('def.input')"
-                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
+                            :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
                         <span class="content-length">{{ form.remark }}/500</span>
                     </div>
                 </div>
-<!--                <div class="form-item textarea">-->
-<!--                    <div class="key">{{ $t('crm_b.select_item') }}</div>-->
-<!--                    <div class="value">-->
-<!--                        <div class="form-item file-upload">-->
-<!--                            <ItemSelect @select="handleAddFailItem"-->
-<!--                                        :disabled-checked='tableData.map(i => i.item_id)'-->
-<!--                                        btn-type='primary' :btn-text="$t('crm_b.interested_models')" btn-class="fault-btn"/>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="table-container">-->
-<!--                    <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"-->
-<!--                            :row-key="record => record.id" :pagination='false' size="small">-->
-<!--                        <template #headerCell="{title}">-->
-<!--                            {{ $t(title) }}-->
-<!--                        </template>-->
-<!--                        <template #bodyCell="{ column , record ,index, text}">-->
-<!--                            <template v-if="column.key === 'item'">-->
-<!--                                {{ text || '-' }}-->
-<!--                            </template>-->
-<!--                            <template v-if="column.dataIndex === 'price'">-->
-<!--                                $ {{ text || '-' }}-->
-<!--                                &lt;!&ndash;                                    <a-input-number v-model:value="record.price" style="width: 82px;"&ndash;&gt;-->
-<!--                                &lt;!&ndash;                                                      :min="0" :precision="2" placeholder="请输入"/>&ndash;&gt;-->
-<!--                            </template>-->
-<!--                            <template v-if="column.dataIndex === 'discount_price'">-->
-<!--                                $<a-input-number v-model:value="record.discount_price" :min="0" :precision="2" placeholder="0.00" :placeholder="$t('def.input')" @change="checkDiscount(record, 'discount_price')"/>-->
-<!--&lt;!&ndash;                                 <a-input-number v-model:value="record.discount_price" style="width: 150px;"&ndash;&gt;-->
-<!--&lt;!&ndash;                                                :min="0.00"  :precision="2" placeholder="请输入" @change="checkDiscount(record, 'discount_price')"/>&ndash;&gt;-->
+                <!--                <div class="form-item textarea">-->
+                <!--                    <div class="key">{{ $t('crm_b.select_item') }}</div>-->
+                <!--                    <div class="value">-->
+                <!--                        <div class="form-item file-upload">-->
+                <!--                            <ItemSelect @select="handleAddFailItem"-->
+                <!--                                        :disabled-checked='tableData.map(i => i.item_id)'-->
+                <!--                                        btn-type='primary' :btn-text="$t('crm_b.interested_models')" btn-class="fault-btn"/>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </div>-->
+                <!--                <div class="table-container">-->
+                <!--                    <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"-->
+                <!--                            :row-key="record => record.id" :pagination='false' size="small">-->
+                <!--                        <template #headerCell="{title}">-->
+                <!--                            {{ $t(title) }}-->
+                <!--                        </template>-->
+                <!--                        <template #bodyCell="{ column , record ,index, text}">-->
+                <!--                            <template v-if="column.key === 'item'">-->
+                <!--                                {{ text || '-' }}-->
+                <!--                            </template>-->
+                <!--                            <template v-if="column.dataIndex === 'price'">-->
+                <!--                                $ {{ text || '-' }}-->
+                <!--                                &lt;!&ndash;                                    <a-input-number v-model:value="record.price" style="width: 82px;"&ndash;&gt;-->
+                <!--                                &lt;!&ndash;                                                      :min="0" :precision="2" placeholder="请输入"/>&ndash;&gt;-->
+                <!--                            </template>-->
+                <!--                            <template v-if="column.dataIndex === 'discount_price'">-->
+                <!--                                $<a-input-number v-model:value="record.discount_price" :min="0" :precision="2" placeholder="0.00" :placeholder="$t('def.input')" @change="checkDiscount(record, 'discount_price')"/>-->
+                <!--&lt;!&ndash;                                 <a-input-number v-model:value="record.discount_price" style="width: 150px;"&ndash;&gt;-->
+                <!--&lt;!&ndash;                                                :min="0.00"  :precision="2" placeholder="请输入" @change="checkDiscount(record, 'discount_price')"/>&ndash;&gt;-->
 
-<!--                            </template>-->
-<!--                            <template v-if="column.key === 'amount'">-->
-<!--                                <a-input-number v-model:value="record.amount" style="width: 66px;"-->
-<!--                                                :min="1" :precision="0" placeholder="请输入" @change="checkDiscount(record, 'amount')"/>-->
-<!--                                {{ $t('in.item') }}-->
-<!--                            </template>-->
-<!--                            <template v-if="column.key === 'discount'">-->
-<!--                                <a-input-number v-model:value="record.discount" :min="0" :precision="2" :max="100" placeholder="0.00" :placeholder="$t('def.input')" @change="checkDiscount(record, 'discount')"/>%-->
-<!--                            </template>-->
+                <!--                            </template>-->
+                <!--                            <template v-if="column.key === 'amount'">-->
+                <!--                                <a-input-number v-model:value="record.amount" style="width: 66px;"-->
+                <!--                                                :min="1" :precision="0" placeholder="请输入" @change="checkDiscount(record, 'amount')"/>-->
+                <!--                                {{ $t('in.item') }}-->
+                <!--                            </template>-->
+                <!--                            <template v-if="column.key === 'discount'">-->
+                <!--                                <a-input-number v-model:value="record.discount" :min="0" :precision="2" :max="100" placeholder="0.00" :placeholder="$t('def.input')" @change="checkDiscount(record, 'discount')"/>%-->
+                <!--                            </template>-->
 
-<!--                            <template v-if="column.key === 'total_price'">-->
-<!--&lt;!&ndash;                                $ <a-input-number v-model:value="record.total_price" style="width: 150px;"&ndash;&gt;-->
-<!--&lt;!&ndash;                                                :min="0" :precision="2" placeholder="请输入" @change="checkDiscount(record, 'total_price')"/>&ndash;&gt;-->
-<!--                                ${{ $Util.countFilter(record.price * record.amount * record.discount / 100, 1) }}-->
-<!--                            </template>-->
+                <!--                            <template v-if="column.key === 'total_price'">-->
+                <!--&lt;!&ndash;                                $ <a-input-number v-model:value="record.total_price" style="width: 150px;"&ndash;&gt;-->
+                <!--&lt;!&ndash;                                                :min="0" :precision="2" placeholder="请输入" @change="checkDiscount(record, 'total_price')"/>&ndash;&gt;-->
+                <!--                                ${{ $Util.countFilter(record.price * record.amount * record.discount / 100, 1) }}-->
+                <!--                            </template>-->
 
-<!--                            <template v-if="column.dataIndex === 'operation'">-->
-<!--                                <a-button type="link" class="danger" @click="handleFailItemDelete(index)" v-if="$auth('crm-bo.delete')"><i-->
-<!--                                    class="icon i_delete"/>{{ $t('def.remove') }}-->
-<!--                                </a-button>-->
-<!--                            </template>-->
-<!--                        </template>-->
-<!--                    </a-table>-->
-<!--                </div>-->
+                <!--                            <template v-if="column.dataIndex === 'operation'">-->
+                <!--                                <a-button type="link" class="danger" @click="handleFailItemDelete(index)" v-if="$auth('crm-bo.delete')"><i-->
+                <!--                                    class="icon i_delete"/>{{ $t('def.remove') }}-->
+                <!--                                </a-button>-->
+                <!--                            </template>-->
+                <!--                        </template>-->
+                <!--                    </a-table>-->
+                <!--                </div>-->
                 <div class="form-item textarea">
                     <div class="key">{{ $t('sl.name') }}</div>
                     <div class="value">
@@ -552,6 +551,14 @@ export default {
     .customer-tag {
         margin-top: 10px;
 
+    }
+    .form-item {
+        .key {
+            width: 96px;
+        }
+        .value {
+            width: calc(100% - 96px);
+        }
     }
 
     .fault-title {

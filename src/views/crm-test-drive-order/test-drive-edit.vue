@@ -531,20 +531,6 @@ export default {
 
     }
 
-    .form-item.with-btn {
-        .value {
-            .fac();
-            position: relative;
-            padding-right: 100px;
-            .btn {
-                position: absolute;
-                width: 80px;
-                text-align: right;
-                right: 0;
-            }
-        }
-    }
-
     .form-content.long-key {
         .key { width: 115px; }
         .value { width: calc(100% - 120px); }
