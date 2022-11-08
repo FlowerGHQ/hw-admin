@@ -731,6 +731,9 @@ const apiList = {
     },
 	CRMLabelBind: {
 		list: ['PostJson', 'crm-label-bind/list'],//
+		save: ['PostJson', 'crm-label-bind/save'],//
+		saveList: ['PostJson', 'crm-label-bind/save-list'],//
+		delete: ['PostJson', 'crm-label-bind/delete'],//
         labelList: ['PostJson', 'crm-label-bind/label-list'],//
 	},
 	CRMTestDriveOrder: {

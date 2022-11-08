@@ -23,8 +23,8 @@ switch (window.location.hostname) {
     //     URL_POINT = 'http://eos-api-dev.hw.innotick.com' // 老测试服
     //     break;
 
-	case "10.0.0.230":
-		URL_POINT = 'http://10.0.0.230:8889'
+	case "10.0.0.231":
+		URL_POINT = 'http://10.0.0.231:8889'
 		// URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服
 		// URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
 		break;
@@ -1729,7 +1729,7 @@ let Const = {
             DELETE_PORTRAIT : 2028,           // 删除用户画像
 
             ORDER_TO_OTHERS : 2029,           // 将合同订单转交给
-            
+
 // 修改操作
 			REVISE_CUSTOMER : 3001,        // 修改客户信息
 			REVISE_CONTACT : 3002,         // 修改联系人
@@ -1739,7 +1739,7 @@ let Const = {
 			REVISE_ORDER_INCOME : 3006,    // 修改回款单
             REVISE_TEST_DRIVE_ORDER : 3007, // 修改试驾单
             REVISE_PORTRAIT : 3008,         // 修改用户画像
-            
+
 		},
 		TYPE_MAP:{
 				'1001': { key:1001, zh:'新建客户',en:'CREATE_CUSTOMER', value:1001},
