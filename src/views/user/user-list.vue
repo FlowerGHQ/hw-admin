@@ -12,24 +12,22 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
                     <div class="key">{{ $t('n.name') }}:</div>
                     <div class="value">
-                        <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
-                        </div>
+                        <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
                     <div class="key">{{ $t('crm_c.group') }}：</div> <!--区域 -->
                     <div class="value">
                         <a-tree-select class="CategoryTreeSelect"
-                                       v-model:value="searchForm.group_id"
-                                       :placeholder="$t('def.select')"
-                                       :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-                                       :tree-data="groupOptions"
-                                       tree-default-expand-all
+                            v-model:value="searchForm.group_id"
+                            :placeholder="$t('def.select')"
+                            :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                            :tree-data="groupOptions"
+                            tree-default-expand-all
                         />
                     </div>
                 </a-col>
-<!--                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">类型:</div>
                     <div class="value">
                         <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择员工类型" allow-clear>

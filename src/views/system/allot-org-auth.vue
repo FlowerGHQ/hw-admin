@@ -1,5 +1,5 @@
 <template>
-<div id="AllotOrgAuth" :class="lang">
+<div id="AllotOrgAuth" :class="$i18n.locale">
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">{{ $t('n.org_auth') }}</div>
@@ -186,6 +186,22 @@ export default {
             }
         }
     }
+    &.en {
+        .form-item {
+            .key {
+                width: 186px;
+                font-weight: 500;
+            }
+            .value {
+                width: calc(100% - 200px);
+                .authority-item {
+                    font-size: 12px;
+                    line-height: 32px;
+                    margin-right: 12px;
+                }
+            }
+        }
+    }
     .ant-collapse-extra {
         position: relative;
         .ant-btn {
@@ -197,6 +213,17 @@ export default {
             .icon {
                 font-size: 12px;
             }
+        }
+    }
+
+    .ant-checkbox-group {
+        flex-wrap: wrap;
+        .ant-checkbox-wrapper + .ant-checkbox-wrapper {
+            margin-left: 0;
+        }
+        .ant-checkbox-wrapper {
+            margin-right: 8px;
+            margin-bottom: 4px;
         }
     }
 }

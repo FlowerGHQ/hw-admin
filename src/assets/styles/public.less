@@ -590,21 +590,27 @@ div.ant-checkbox-group {
     font-size: 12px;
     min-height: 32px;
     .fac();
-
-    .ant-checkbox-wrapper {
-        font-size: 12px;
-        line-height: 16px;
-        color: #363D42;
-        .fac();
-        span.ant-checkbox {
+}
+label.ant-checkbox-wrapper {
+    font-size: 12px;
+    line-height: 16px;
+    color: #363D42;
+    .fac();
+    span.ant-checkbox {
+        width: 14px;
+        height: 14px;
+        top: 0 !important;
+        .ant-checkbox-inner {
             width: 14px;
             height: 14px;
-            top: 0 !important;
+            &::after {
+                left: 2px;
+            }
+        }
+        &.ant-checkbox-indeterminate {
             .ant-checkbox-inner {
-                width: 14px;
-                height: 14px;
                 &::after {
-                    left: 2px;
+                    left: 50%;
                 }
             }
         }

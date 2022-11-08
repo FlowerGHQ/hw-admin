@@ -1957,6 +1957,9 @@ const messages = {
             30004: '该客户不是公海客户，无法分配',
             30005: '客户不存在',
             30006: '预设不可以修改',
+	        30007: '邮箱已重复',
+	        30008: '手机号和邮箱不能为空',
+	        30009: '该客户不是公海客户，无法修改区域',
 
             31001: '商机越界',
             31002: '商机不存在',
@@ -3136,7 +3139,7 @@ const messages = {
 		    select: 'Please Select',
 		    team_members: 'Team Members',
 		    dynamic: 'Dynamic',
-		    new_pool_c: 'New Unassigned Customer',
+		    new_pool_c: 'New Customer',
 		    crm_dict_id: 'Customer Source',
 		    distribute_success: 'Assign success',
 		    order_success_count: 'Successful Order Count',
@@ -3882,6 +3885,9 @@ const messages = {
 	        30004:"This is not a shared customer to assign.",
 	        30005:"Customer does not exist.",
 	        30006:"Presets cannot be modified.",
+	        30007: 'Repeated email',
+	        30008: 'Phone or Email should not be empty',
+	        30009: "Customer is unassigned, area cann't be modified",
 
 	        31001:"Business opportunities cross the border.",
 	        31002:"Business opportunities does not exist.",
