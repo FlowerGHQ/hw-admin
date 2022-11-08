@@ -1924,7 +1924,7 @@ const routes = [
         type: [ROUTER_TYPE.CRM],
 		meta: {
 			title: '系统设置',
-			title_en: 'Systems Setting',
+			title_en: 'System Setting',
 			icon: 'i_crm_setting',
 			// auth: ["crm-customer.list"],
 
@@ -1980,7 +1980,7 @@ const routes = [
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION, ROUTER_TYPE.CRM],
         meta: {
             title: '系统管理',
-            title_en: 'Systems',
+            title_en: 'System Management',
             icon: 'i_setting',
             auth: ['MANAGER'],
         },
