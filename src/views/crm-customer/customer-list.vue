@@ -126,6 +126,10 @@
                         <template v-if="column.key === 'own_user_name'">
                             {{ record.own_user? record.own_user.name || '-' : '-' }}
                         </template>
+
+                        <template v-if="column.key === 'source_type'">
+                            {{ $Util.CRMCustomerSourceTypeFilter(text, $i18n.locale) }}
+                        </template>
                         <template v-if="column.dataIndex === 'label_list'">
                             <a-tag v-for="item in record.label_list" color="blue" class="customer-tag" >{{lang ==="zh" ? item.label : item.label_en}}</a-tag>
                         </template>

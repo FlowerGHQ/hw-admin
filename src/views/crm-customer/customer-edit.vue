@@ -233,7 +233,7 @@
                 <div class="form-item textarea">
                     <div class="key">{{ $t('sl.name') }}</div>
                     <div class="value">
-                        <LabelSelect :btnText="$t('sl.add')" :category="Core.Const.CRM_LABEL.CATEGORY.CUSTOMER" add-customer-btn="true" @select="handleAddLabelShow" :disabled-checked="labelIdList" />
+                        <LabelSelect :btnText="$t('sl.add')" :category="CATEGORY.CUSTOMER" add-customer-btn="true" @select="handleAddLabelShow" :disabled-checked="labelIdList" />
                         <br/>
                         <a-tag v-for="(label,index) in labelList" color="blue" closable @close="handleDeleteLabel(index)" class="customer-tag">
                             <template #closeIcon><i class="icon i_m_error"></i></template>
@@ -298,7 +298,7 @@ export default {
     props: {},
     data() {
         return {
-            Core,
+            CATEGORY: Core.Const.CRM_LABEL.CATEGORY,
             loginType: Core.Data.getLoginType(),
             CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
             CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
