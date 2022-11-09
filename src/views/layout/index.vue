@@ -358,22 +358,19 @@ export default {
             if (Core.Data.getTabPosition() === this.tabPosition){
                 return
             }
-
-            console.log("tabPosition",this.tabPosition)
             Core.Data.setTabPosition(this.tabPosition)
+            console.log("tabPosition",this.tabPosition)
+
             if (this.tabPosition === this.ROUTER_TYPE.CRM){
                 this.$router.replace('/crm-dashboard');
             } else {
                 if (this.loginType === Core.Const.USER.TYPE.ADMIN){
-                    setTimeout(() => {
-                        this.$router.replace({ path: '/dashboard', query: {from: 'login'} })
-                    }, 1000)
+                    this.$router.replace({ path: '/dashboard', query: {from: 'login'} })
                 } else {
-                    setTimeout(() => {
-                        this.$router.replace({ path: '/dashboard/index', query: {from: 'login'} })
-                    }, 1000)
+                    this.$router.replace({ path: '/dashboard/index', query: {from: 'login'} })
                 }
             }
+
 
         },
 
