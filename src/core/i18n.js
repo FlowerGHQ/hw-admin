@@ -1241,6 +1241,7 @@ const messages = {
 		    discount_price: '销售单价',
 		    interested_models: '意向车型',
 		    distribute_bo: '移交商机',
+            new_bo: '商机',
 	    },
 	    crm_group: {
 		    name: '区域',
@@ -3145,7 +3146,7 @@ const messages = {
 		    distribute_customer: 'Assign Customer',
 		    select: 'Please Select',
 		    team_members: 'Team Members',
-		    dynamic: 'Dynamic',
+		    dynamic: 'Activity',
 		    new_pool_c: 'New Customer',
 		    crm_dict_id: 'Customer Source',
 		    distribute_success: 'Assign Success',
@@ -3158,7 +3159,7 @@ const messages = {
 		    province: 'Province',
 		    city: 'City',
 		    county: 'Area',
-		    rechecking : 'Rechecking',
+		    rechecking : 'ReCheck',
 		    purchase_intent: 'Purchase Intention',
 		    test_drive_intent: 'Test Drive Intention',
 		    group: ' Area',
@@ -3217,6 +3218,7 @@ const messages = {
 	        discount_price: 'Sales unit price',
 	        interested_models: 'Intended Model',
 	        distribute_bo: 'Transfer business opportunity',
+            new_bo: 'New Business',
 	    },
 	    crm_group: {
 		    name: 'Area',
