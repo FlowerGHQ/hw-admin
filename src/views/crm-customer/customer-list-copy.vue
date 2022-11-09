@@ -93,20 +93,20 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'phone'">
-                            <template v-if="text !== ''">
+                            <div v-if="text !== ''" class="phone-hover">
                                 {{ text || '-' }}
-                                <span @click="handleChecking(record)"><i class="icon i_eyes"/></span>
-                            </template>
+                                <a-button type="link" v-if="!record.flag_eyes" class="switch" @click="handleChecking(record)"><i class="icon i_eyes"/></a-button>
+                            </div>
                             <template v-else>
                                 {{ text || '-' }}
                             </template>
 
                         </template>
                         <template v-if="column.key === 'email'">
-                            <template v-if="text !== ''">
+                            <div v-if="text !== ''" class="phone-hover">
                                 {{ text || '-' }}
-                                <span @click="handleChecking(record)"><i class="icon i_eyes"/></span>
-                            </template>
+                                <a-button type="link" v-if="!record.flag_eyes" class="switch" @click="handleChecking(record)"><i class="icon i_eyes"/></a-button>
+                            </div>
                             <template v-else>
                                 {{ text || '-' }}
                             </template>
@@ -638,6 +638,7 @@ export default {
             }).then(res => {
                 item.phone = res.detail.phone
                 item.email = res.detail.email
+                item.flag_eyes = true
                 console.log(res)
 
             })
@@ -649,7 +650,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.i_eyes{
-    font-size: 12px;
+#CustomerList{
+    .i_eyes {font-size: 12px;}
+    .phone-hover {
+        .switch {
+            opacity: 0;
+        }
+        &:hover {
+            .switch {
+                opacity: 1;
+            }
+        }
+    }
 }
+
 </style>
