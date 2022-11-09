@@ -1505,6 +1505,10 @@ let Const = {
 			'700': { key: 700, zh: '1001 - 2000人',en: '1001 - 2000', value: 700 },
 			'800': { key: 800, zh: '2000人以上',en: 'More than 2000', value: 800 },
 		},
+		SOURCE_TYPE_MAP: {
+			'1': { key: 1, zh: '预定小程序',en: 'Order Applets', value: 1 },
+			'2': { key: 2, zh: '后台注册',en: 'Background Registration', value: 2 },
+		},
 
 	},
     CRM_ORDER: {

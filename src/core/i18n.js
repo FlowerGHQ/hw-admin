@@ -1190,6 +1190,7 @@ const messages = {
             business_information:'商机信息',
             data_access:'数据权限',
 		    search_members: '搜索成员和标签',
+		    source_type: '来源类型',
 
 
 	    },
@@ -3169,6 +3170,7 @@ const messages = {
 		    business_information:'Business Information',
 		    data_access:'Data Access',
 		    search_members: 'Search for members and tags',
+		    source_type: 'Source Type',
 	    },
 	    crm_t: {
 		    track_record: 'Track Record',

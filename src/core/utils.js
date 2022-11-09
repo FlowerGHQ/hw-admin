@@ -925,6 +925,12 @@ const Util = {
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
+	CRMCustomerSourceTypeFilter(val,  to='zh') {
+		const MAP = Const.CRM_CUSTOMER.SOURCE_TYPE_MAP
+		let item = MAP[val + ''] || {}
+		console.log("item",val)
+		return item[to] || ''
+	},
 
 	/* =============== CRM客户管理 ================ */
 
