@@ -587,6 +587,7 @@ const messages = {
             amount: '变更后库存数量',
             type: '仓库类型',
 	        location: '库位管理',
+	        location_stock: '库位对应物料',
 	        area: '所在区',
 	        row: '所在排',
 	        layer: '所在行',
@@ -631,6 +632,9 @@ const messages = {
 	        out_uid: '调出库位号',
 	        out_item: '调出商品',
             warehouse_name: '仓库名称',
+	        location_detail: '查看库位库存',
+	        open_adjust: '开启调库',
+	        close_adjust: '关闭调库',
         },
         in: { // 出入库
             list: '出入库单列表',
@@ -2590,6 +2594,7 @@ const messages = {
             amount: 'Inventory after changed',
             type: 'Type of warehouse',
 	        location: 'Warehouse Location',
+	        location_stock: 'Corresponding materials in the storage location',
 	        area: 'Area',
 	        row: 'Row',
 	        layer: 'Layer',
@@ -2634,6 +2639,7 @@ const messages = {
 	        out_uid: 'Call up the storage location number',
 	        out_item: 'Bring up the goods',
             warehouse_name: 'Warehouse Name',
+	        location_detail: 'Check the inventory location',
         },
         in: {
             list: 'Inbound and outbound order list',
