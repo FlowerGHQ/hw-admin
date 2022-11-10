@@ -28,7 +28,7 @@
                 <div class="form-item required" v-if="form.id === 0 || form.phone_country_code === ''">
                     <div class="key">{{ $t('n.select_country') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.phone_country_code" :placeholder="$t('def.input')" @select="setPhoneCountryCode" :disabled="form.id > 0 && form.phone_country_code != ''" show-search option-filter-prop="key" allow-clear>
+                        <a-select v-model:value="form.phone_country_code" :placeholder="$t('def.input')" @select="setPhoneCountryCode"  :disabled="form.id > 0 && form.phone_country_code != ''" show-search option-filter-prop="key" allow-clear>
                             <a-select-option v-for="item of phoneCountryCodeList" :key="item.phoneAreaCode+item.name+item.enName" :value="item.phoneAreaCode"  >
                                 <span  class="phoneCountryCode">{{ item.phoneAreaCode }}</span>
                                 {{lang === 'zh' ? item.name: item.enName}}
@@ -39,7 +39,7 @@
                 <div class="form-item required with-btn" v-if="form.id === 0 || form.phone === ''">
                     <div class="key">{{ $t('n.phone') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerPhoneBlur" :disabled="form.id > 0 && form.phone != ''"/>
+                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerPhoneBlur" :disabled="(form.id > 0 && form.phone != undefined) ||  form.phone_country_code == undefined"/>
                         <div class="btn">
                             <span v-if="isExistPhone == 1"><i class="icon i_confirm"/></span>
                             <span v-else-if="isExistPhone == 2"><i class="icon i_close_c"/></span>
@@ -52,7 +52,7 @@
                 <div class="form-item required with-btn" v-if="form.id === 0 || form.email === ''">
                     <div class="key">{{ $t('n.email') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.email" :placeholder="$t('def.input')" @blur="handleCustomerEmailBlur" :disabled="form.id > 0 && form.email != ''"/>
+                        <a-input v-model:value="form.email" :placeholder="$t('def.input')" @blur="handleCustomerEmailBlur" :disabled="form.id > 0 && form.email != undefined"/>
                         <div class="btn">
                             <span v-if="isExistEmail == 1"><i class="icon i_confirm"/></span>
                             <span v-else-if="isExistEmail == 2"><i class="icon i_close_c"/></span>
@@ -534,9 +534,14 @@ export default {
             if (!this.form.phone) {
                 return this.isExistPhone = ''
             }
+            if (!this.form.phone_country_code) {
+                return this.isExistPhone = ''
+            }
             Core.Api.CRMCustomer.checkPhone({
                 id: this.form.id,
+                phone_country_code: this.form.phone_country_code,
                 phone: this.form.phone,
+
             }).then(res => {
                 this.isExistPhone = res.results ? 1 : 2
                 console.log("handleVehicleBlur res", res)
@@ -549,9 +554,9 @@ export default {
             if (!this.form.email) {
                 return this.isExistPhone = ''
             }
-            Core.Api.CRMCustomer.checkPhone({
+            Core.Api.CRMCustomer.checkEmail({
                 id: this.form.id,
-                phone: this.form.email,
+                email: this.form.email,
             }).then(res => {
                 this.isExistEmail = res.results ? 1 : 2
                 console.log("handleVehicleBlur res", res)
@@ -646,6 +651,7 @@ export default {
         // 存国家和区域数据
         setPhoneCountryCode(val) {
             Core.Data.setPhoneCountryCode(val)
+            this.handleCustomerPhoneBlur()
         },
         setGroupId(val) {
             Core.Data.setGroupId(val)

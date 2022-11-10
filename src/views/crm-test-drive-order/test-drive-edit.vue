@@ -15,6 +15,17 @@
                     </div>
 
                 </div>
+                <div class="form-item required" v-if="form.id === 0 || form.phone_country_code === ''">
+                    <div class="key">{{ $t('n.select_country') }}：</div>
+                    <div class="value">
+                        <a-select v-model:value="form.phone_country_code" :placeholder="$t('def.input')" @select="setPhoneCountryCode" :disabled="form.id > 0 && form.phone_country_code != ''" show-search option-filter-prop="key" allow-clear>
+                            <a-select-option v-for="item of phoneCountryCodeList" :key="item.phoneAreaCode+item.name+item.enName" :value="item.phoneAreaCode"  >
+                                <span  class="phoneCountryCode">{{ item.phoneAreaCode }}</span>
+                                {{lang === 'zh' ? item.name: item.enName}}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </div>
                 <div class="form-item required with-btn">
                     <div class="key">{{ $t('n.phone') }}：</div>
                     <div class="value">
@@ -28,6 +39,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_c.group') }}：</div>
                     <div class="value">
@@ -38,6 +50,7 @@
                             :tree-data="groupOptions"
                             :disabled="(form.id > 0 || form.customer_id > 0) && form.group_id > 0"
                             tree-default-expand-all
+                            @select="setGroupId"
                         />
                     </div>
 
@@ -308,6 +321,7 @@ export default {
                 //用户信息
                 name: undefined,
                 phone: undefined,
+                phone_country_code: undefined,
                 group_id: undefined,
                 gender: undefined,
                 birthday: undefined,
@@ -374,6 +388,8 @@ export default {
         }
         this.getSourceList()
         this.handleGroupTree()
+        if(Core.Data.getPhoneCountryCode()) this.form.phone_country_code = Core.Data.getPhoneCountryCode()
+        if(Core.Data.getGroupId()) this.form.group_id = Core.Data.getGroupId()
     },
     methods: {
         routerChange(type, item) {
@@ -487,6 +503,7 @@ export default {
             Core.Api.CRMCustomer.checkPhone({
                 id: this.form.id,
                 phone: this.form.phone,
+                phone_country_code: this.from.phone_country_code,
             }).then(res => {
                 this.isExist = res.results ? 1 : 2
                 console.log("handleVehicleBlur res", res)
@@ -514,6 +531,13 @@ export default {
                 console.log(res)
 
             })
+        },
+        // 存国家和区域数据
+        setPhoneCountryCode(val) {
+            Core.Data.setPhoneCountryCode(val)
+        },
+        setGroupId(val) {
+            Core.Data.setGroupId(val)
         },
 
     }
