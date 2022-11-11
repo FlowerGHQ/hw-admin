@@ -1440,6 +1440,7 @@ let Const = {
             POOL: 10,
             PRIVATE: 20,
             REGION: 30,
+	        PRIVATE_CUSTOMER_BY_USER: 40,
         },
 		LEVEL_MAP: {
 			'10': { key: 10, zh: '重点客户',en: 'Key Customer', value: 10 },
