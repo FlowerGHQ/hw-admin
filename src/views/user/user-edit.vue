@@ -39,14 +39,14 @@
                     <a-input v-model:value="form.email" :placeholder="$t('def.input')"/>
                 </div>
             </div>
-<!--            <div class="form-item" v-if="$auth('MANAGER') && loginType == org_type">-->
-<!--                <div class="key">用户角色:</div>-->
-<!--                <div class="value">-->
-<!--                    <a-select v-model:value="form.role_id" placeholder="请选择用户角色">-->
-<!--                        <a-select-option v-for="(item,index) of roleList" :key="index" :value="item.id">{{item.name}}</a-select-option>-->
-<!--                    </a-select>-->
-<!--                </div>-->
-<!--            </div>-->
+            <div class="form-item" v-if="$auth('MANAGER') && loginType === org_type && !form.id">
+                <div class="key">用户角色:</div>
+                <div class="value">
+                    <a-select v-model:value="form.role_ids" placeholder="请选择用户角色" mode="multiple">
+                        <a-select-option v-for="(item,index) of roleList" :key="index" :value="item.id">{{item.name}}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
         </div>
     </div>
     <div class="form-btns">
@@ -91,6 +91,7 @@ export default {
                 password: '',
                 phone: '',
                 email: '',
+                role_ids : [],
             },
             groupOptions: [],
         };
@@ -135,7 +136,7 @@ export default {
                     id: d.account_id,
                     user_id: d.id,
 
-                    // role_id: d.role_id || undefined,
+                    role_ids: d.role_ids || [],
                     org_id: d.org_id,
                     org_type: d.org_type,
                     type: d.type,
