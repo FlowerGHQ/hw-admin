@@ -31,9 +31,22 @@
                     <div class="value">
                         <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerBlur" :disabled="form.id > 0 || form.customer_id > 0"/>
                         <div class="btn">
-                            <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
-                            <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
+                            <span v-if="isExistPhone == 1"><i class="icon i_confirm"/></span>
+                            <span v-else-if="isExistPhone == 2"><i class="icon i_close_c"/></span>
                             <CustomerSelect v-if="form.id == 0" @select="selectItem" :select-btn="true" :radioMode="true" :phone="form.phone" :check-mode="false" :select-customer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
+                                {{ $t('crm_c.rechecking') }}
+                            </CustomerSelect>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-item required with-btn" v-if="form.id === 0 || form.email === ''">
+                    <div class="key">{{ $t('n.email') }}：</div>
+                    <div class="value">
+                        <a-input v-model:value="form.email" :placeholder="$t('def.input')" @blur="handleCustomerEmailBlur" :disabled="form.id > 0 && form.email != undefined"/>
+                        <div class="btn">
+                            <span v-if="isExistEmail == 1"><i class="icon i_confirm"/></span>
+                            <span v-else-if="isExistEmail == 2"><i class="icon i_close_c"/></span>
+                            <CustomerSelect :radioMode="true" :email="this.form.email" :check-mode="false" :select-customer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
                                 {{ $t('crm_c.rechecking') }}
                             </CustomerSelect>
                         </div>
@@ -285,6 +298,7 @@ import Core from '../../core';
 
 import dayjs from "dayjs";
 import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
+import phoneCountryCode from '@/assets/js/phoneAreaCode/phoneAreaCode.js'
 
 export default {
     name: 'TestDriveEdit',
@@ -360,7 +374,8 @@ export default {
 
             },
 
-            isExist: '', // 名称输入框提示
+            isExistPhone: '', // 名称输入框提示
+            isExistEmail: '', // 名称输入框提示
             sourceList: [],
             groupOptions: [],
 
@@ -373,6 +388,7 @@ export default {
         }
     },
     mounted() {
+        this.phoneCountryCodeList = phoneCountryCode
         this.id = Number(this.$route.query.id) || 0
         this.customer_id = Number(this.$route.query.customer_id) || 0
         this.form.id = this.id
@@ -497,15 +513,33 @@ export default {
             })
         },
         handleCustomerBlur() {  // 获取 车架号
-            if (!this.form.name) {
-                return this.isExist = ''
+            if (!this.form.phone) {
+                return this.isExistPhone = ''
+            }
+            if (!this.form.phone_country_code) {
+                return this.isExistPhone = ''
             }
             Core.Api.CRMCustomer.checkPhone({
                 id: this.form.id,
                 phone: this.form.phone,
-                phone_country_code: this.from.phone_country_code,
+                phone_country_code: this.form.phone_country_code,
             }).then(res => {
-                this.isExist = res.results ? 1 : 2
+                this.isExistPhone = res.results ? 1 : 2
+                console.log("handleVehicleBlur res", res)
+            }).catch(err => {
+                console.log('handleVehicleBlur err', err)
+            }).finally(() => {
+            });
+        },
+        handleCustomerEmailBlur() {  // 获取 车架号
+            if (!this.form.email) {
+                return this.isExistEmail = ''
+            }
+            Core.Api.CRMCustomer.checkEmail({
+                id: this.form.id,
+                email: this.form.email,
+            }).then(res => {
+                this.isExistEmail = res.results ? 1 : 2
                 console.log("handleVehicleBlur res", res)
             }).catch(err => {
                 console.log('handleVehicleBlur err', err)

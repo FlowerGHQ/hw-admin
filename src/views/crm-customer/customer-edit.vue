@@ -552,7 +552,7 @@ export default {
         },
         handleCustomerEmailBlur() {  // 获取 车架号
             if (!this.form.email) {
-                return this.isExistPhone = ''
+                return this.isExistEmail = ''
             }
             Core.Api.CRMCustomer.checkEmail({
                 id: this.form.id,
