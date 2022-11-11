@@ -131,7 +131,7 @@ let Const = {
         },
     ],
 
-    USER: { // 员工、账号、用户
+    USER: { // 用户、账号、用户
         TYPE: {
             ADMIN: 10, // 管理员
             DISTRIBUTOR: 15, //分销商
@@ -870,7 +870,7 @@ let Const = {
         { list: [], select: [], key: 'fault', name: '故障件' },
         { list: [], select: [], key: 'account', name: '账户管理' },
         { list: [], select: [], key: 'customer', name: '客户管理' },
-        { list: [], select: [], key: 'user', name: '员工管理' },
+        { list: [], select: [], key: 'user', name: '用户管理' },
 	    { list: [], select: [], key: 'refund', name: '退款' },
         { list: [], select: [], key: 'warehouse', name: '仓库' },
         { list: [], select: [], key: 'invoice', name: '出入库单' },

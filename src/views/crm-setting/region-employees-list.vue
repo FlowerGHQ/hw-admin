@@ -35,8 +35,8 @@
                             <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                                 <div class="key">类型:</div>
                                 <div class="value">
-                                    <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择员工类型" allow-clear>
-                                        <a-select-option :value="orgType">普通员工</a-select-option>
+                                    <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择用户类型" allow-clear>
+                                        <a-select-option :value="orgType">普通用户</a-select-option>
                                         <a-select-option :value="USER_TYPE.WORKER">维修工</a-select-option>
                                     </a-select>
                                 </div>

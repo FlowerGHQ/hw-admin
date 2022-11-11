@@ -40,9 +40,9 @@
                 </div>
             </div>
 <!--            <div class="form-item" v-if="$auth('MANAGER') && loginType == org_type">-->
-<!--                <div class="key">员工角色:</div>-->
+<!--                <div class="key">用户角色:</div>-->
 <!--                <div class="value">-->
-<!--                    <a-select v-model:value="form.role_id" placeholder="请选择员工角色">-->
+<!--                    <a-select v-model:value="form.role_id" placeholder="请选择用户角色">-->
 <!--                        <a-select-option v-for="(item,index) of roleList" :key="index" :value="item.id">{{item.name}}</a-select-option>-->
 <!--                    </a-select>-->
 <!--                </div>-->
@@ -76,14 +76,14 @@ export default {
 
             roleList: [],
 
-            org_type: '', // 想要编辑的 员工的组织类型
+            org_type: '', // 想要编辑的 用户的组织类型
             form: {
                 id: '',
                 user_id: '',
 
                 org_id: '', // 组织ID
                 org_type: '', // 组织类型 平台、代理、经销、门店
-                type: '', // 账号类型 维修工、普通员工（和org_type保持一致）
+                type: '', // 账号类型 维修工、普通用户（和org_type保持一致）
                 // role_id: undefined,
 
                 name: '',

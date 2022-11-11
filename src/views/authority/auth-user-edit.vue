@@ -31,7 +31,7 @@
                     </div>
                 </div>
 <!--                <div class="form-item required">
-                    <div class="key">员工</div>
+                    <div class="key">用户</div>
                     <div class="value">
                         <a-select v-model:value="form.user_ids" mode="tags"  placeholder="请选择权限对象">
                             <a-select-option v-for="item of userList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
