@@ -69,8 +69,15 @@
                                     {{ text || '-' }}
                                 </template>
                                 <template v-if="column.key === 'flag_admin_group'">
-                                    {{ text === 1? '是': '否' || '-' }}
+                                    <template v-if="$auth('user.set-admin') && admin_user_id === loginUser.id">
+                                        <a-switch :checked="!!record.flag_admin_group" :checked-children="$t('i.yes')" :un-checked-children="$t('i.no')" @click="handleSetAdmin(record)"/>
+                                    </template>
+                                    <template v-else>
+                                        {{ text === 1? '是': '否' || '-' }}
+                                    </template>
+
                                 </template>
+
                                 <template v-if="column.key === 'crm_group_member_list'">
                                     <span v-for="it in text">
                                         {{it.group_name}},
@@ -188,6 +195,7 @@ export default {
     data() {
         return {
             loginType: Core.Data.getLoginType(),
+            loginUser: Core.Data.getUser(),
             // 加载
             loading: false,
             // 分页
@@ -229,6 +237,7 @@ export default {
             autoExpandParent: true,
             checkedKeys: [],
             groupOptions: [],
+            admin_user_id: undefined,
         };
     },
     watch: {
@@ -291,6 +300,7 @@ export default {
         },
         onSelect(selectedKeys, info) {
             console.log('onSelect', info);
+            this.admin_user_id = info.node.admin_user_id
             this.selectedKeys = selectedKeys;
             this.searchForm.group_id = selectedKeys[0];
             this.handleSearch()
@@ -440,7 +450,20 @@ export default {
                 this.modalVisible = false;
                 this.getTableData()
             });
-        }
+        },
+        handleSetAdmin(record){
+            this.loading = true;
+            Core.Api.CRMGroupMember.setAdmin({
+                id: record.id,
+                flag_admin: record.flag_admin_group ? 0 : 1
+            }).then(() => {
+                this.getTableData();
+            }).catch(err => {
+                console.log('handleManagerChange err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
 
     }
 };

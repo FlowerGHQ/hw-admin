@@ -623,6 +623,7 @@ const apiList = {
         structureByUserGroup: ['PostJson', 'crm-group-member/structure-by-user-group'],//
 
         users: ['PostJson', 'crm-group-member/users'],//
+	    setAdmin: ['PostJson', 'crm-group-member/set-admin'],
     },
 	CRMCustomer:{//CRM 客户
 		save: ['PostJson', 'crm-customer/save'],//
