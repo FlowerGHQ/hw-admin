@@ -335,6 +335,7 @@ export default {
                 //用户信息
                 name: undefined,
                 phone: undefined,
+                email: undefined,
                 phone_country_code: undefined,
                 group_id: undefined,
                 gender: undefined,
@@ -378,6 +379,7 @@ export default {
             isExistEmail: '', // 名称输入框提示
             sourceList: [],
             groupOptions: [],
+            phoneCountryCodeList: [],
 
         };
     },
@@ -449,6 +451,9 @@ export default {
                 this.form.customer_status = this.detail.status;
                 this.form.name = this.detail.name;
                 this.form.phone = this.detail.phone;
+                this.form.email = this.detail.email;
+                this.form.phone_country_code = this.detail.phone_country_code;
+
                 this.form.group_id = this.detail.group_id
 
             }).catch(err => {
