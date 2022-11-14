@@ -1517,7 +1517,7 @@ const routes = [
         },
         children: [
             {
-                path: 'eos-customer-list',
+                path: 'customer-list',
                 name: 'EOSCustomerList',
                 component: () => import('@/views/customer/customer-list.vue'),
                 meta: {
@@ -1533,7 +1533,7 @@ const routes = [
                 meta: {
                     hidden: true,
                     title: '新建客户',
-                    parent: '/eos-customer/eos-customer-list',
+                    parent: '/eos-customer/customer-list',
                     auth: ["customer.save"],
                 }
             },
