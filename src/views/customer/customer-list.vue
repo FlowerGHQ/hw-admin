@@ -159,7 +159,7 @@ export default {
             switch (type) {
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/customer/customer-edit",
+                        path: "/eos-customer/eos-customer-edit",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
