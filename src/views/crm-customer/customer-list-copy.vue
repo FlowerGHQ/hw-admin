@@ -94,7 +94,7 @@
                         </template>
                         <template v-if="column.key === 'phone'">
                             <div v-if="text !== ''" class="phone-hover">
-                                {{ text || '-' }}
+                                {{record.phone_country_code}} {{ text || '-' }}
                                 <a-button type="link" v-if="!record.flag_eyes" class="switch" @click="handleChecking(record)"><i class="icon i_eyes"/></a-button>
                             </div>
                             <template v-else>
@@ -126,6 +126,14 @@
                         <template v-if="column.key === 'own_user_name'">
                             {{ record.own_user? record.own_user.name || '-' : '-' }}
                         </template>
+
+                        <template v-if="column.key === 'source_type'">
+                            {{ $Util.CRMCustomerSourceTypeFilter(text, $i18n.locale) }}
+                        </template>
+                        <template v-if="column.dataIndex === 'label_list'">
+                            <a-tag v-for="item in record.label_list" color="blue" class="customer-tag" >{{lang ==="zh" ? item.label : item.label_en}}</a-tag>
+                        </template>
+
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
@@ -307,6 +315,8 @@ export default {
                 {title: 'n.name', dataIndex: 'name', key:'detail', sorter: true},
                 {title: 'n.phone', dataIndex: 'phone', key:'phone', sorter: true},
                 {title: 'n.email', dataIndex: 'email', key:'email', sorter: true},
+                {title: 'sl.label', dataIndex: 'label_list', key:'label_list'},
+
                 // {title: 'n.continent', dataIndex: 'continent', key:'item'},
                 {title: 'crm_c.level', dataIndex: 'level', key:'level', sorter: true},
                 {title: 'crm_c.type', dataIndex: 'type', key:'type', sorter: true},
@@ -315,6 +325,7 @@ export default {
                 {title: 'crm_c.order_success_count', dataIndex: 'order_count', key:'order_count'},
                 {title: 'ad.specific_address', dataIndex: 'address', sorter: true},
                 {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
+                {title: 'crm_c.source_type', dataIndex: 'source_type', key: 'source_type', sorter: true},
                 {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
@@ -341,6 +352,9 @@ export default {
                     // this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
                 },
             };
+        },
+        lang() {
+            return this.$store.state.lang
         },
     },
     mounted() {

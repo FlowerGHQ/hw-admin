@@ -12,7 +12,7 @@ import { createI18n } from 'vue-i18n'
  * d: 分销商
  * i: 商品
  * v: 实例
- * e: 员工
+ * e: 用户
  * p: 采购
  * s: 门店
  * ar: 销售区域
@@ -321,10 +321,10 @@ const messages = {
             edit: '编辑分销商',
             agent: '零售商数',
             store: '门店数',
-            user: '员工数',
+            user: '用户数',
             revenue: '累计营收',
             orders: '累计订单数',
-            manage_employees: '员工管理',
+            manage_employees: '用户管理',
             order: '订单列表',
             address: '收货地址',
             manage_agent: '零售商管理',
@@ -333,16 +333,16 @@ const messages = {
             item: '商品价格',
             name_short_name: '名称或简称',
         },
-        e: { // 员工
-            employee_list: '员工列表',
-            new_employee: '新增员工',
+        e: { // 用户
+            employee_list: '用户列表',
+            new_employee: '新增用户',
             name: '姓名',
             account: '账号',
             administrator: '管理员',
             login_time: '上次登录时间',
             select_permission: '请选择用户权限类型',
             select_warehouse: '请选择仓库',
-            select_employees: '请选择员工',
+            select_employees: '请选择用户',
         },
         i: { // 商品
             commodity_management: '商品管理',
@@ -853,15 +853,15 @@ const messages = {
             cancel_refund: '确认要取消本次退款吗',
             create_refund: '创建退款单',
         },
-        u: { //员工
-            list: '员工列表',
-            save: '新增员工',
-            edit: '编辑员工',
+        u: { //用户
+            list: '用户列表',
+            save: '新增用户',
+            edit: '编辑用户',
             reset: '重置密码',
             account: '账号',
-            role: '员工角色',
+            role: '用户角色',
             login: '上次登录时间',
-            detail: '员工详情',
+            detail: '用户详情',
             password: '密码',
             new_password: '请输入新密码',
             again: '请再次确认密码',
@@ -1116,7 +1116,7 @@ const messages = {
             edit: '编辑部门',
             new: '新增部门',
             add: '添加管理员',
-            user_count: '员工数量',
+            user_count: '用户数量',
             customer_count: '客户数量',
         },
         crm_region: {
@@ -1127,11 +1127,11 @@ const messages = {
             edit: '编辑区域',
             new: '新增区域',
             add: '添加区域管理员',
-            user_count: '员工数量',
+            user_count: '用户数量',
             customer_count: '客户数量',
         },
 	    crm_region_e: {
-		    list: '区域员工列表',
+		    list: '区域用户列表',
 	    },
 	    crm_c: {
 		    extended_information: '扩展信息',
@@ -1194,6 +1194,7 @@ const messages = {
             business_information:'商机信息',
             data_access:'数据权限',
 		    search_members: '搜索成员和标签',
+		    source_type: '来源类型',
 
 
 	    },
@@ -1477,7 +1478,7 @@ const messages = {
                 'fault': '故障件',
                 'account': '账户管理',
                 'customer': '客户管理',
-                'user': '员工管理',
+                'user': '用户管理',
                 'refund': '退款',
                 'warehouse': '仓库',
                 'invoice': '出入库单',
@@ -1548,10 +1549,10 @@ const messages = {
                 'delete': '删除客户'
             },
             'user': {
-                'list': '查看员工列表',
-                'save': '编辑员工',
-                'detail': '员工详情',
-                'delete': '删除员工',
+                'list': '查看用户列表',
+                'save': '编辑用户',
+                'detail': '用户详情',
+                'delete': '删除用户',
                 'set-admin': '设置管理员'
             },
             'item': {
@@ -1996,11 +1997,11 @@ const messages = {
             35004: '您还未设置自己的所属区域，无法向您展示公海客户',
             35005: '您不是区域管理员，无法操作',
             35006: '该客户未设置所属区域，无法进行任何操作',
-            35007: '只能在同区域内转让，所选员工不属于该区域，无法操作',
+            35007: '只能在同区域内转让，所选用户不属于该区域，无法操作',
             35008: '客户的所属区域不存在，请更新客户的区域',
             35009: '商机的所属区域不存在，请新商机区域',
             35010: '请选择管理员',
-            35011: '该员工不属于当前区域，只能将区域内的员工设为管理员',
+            35011: '该用户不属于当前区域，只能将区域内的用户设为管理员',
             35012: '该区域存在下级区域',
             35013: '该区域存在除管理员以外的其他成员，请先清空成员(不包括管理员)',
             35014: '该区域存在客户，请先清空客户',
@@ -2328,10 +2329,10 @@ const messages = {
             edit: 'Edit Distribution',
             agent: 'Number of retailers ',
             store: 'Number of stores',
-            user: 'Number of employee count',
+            user: 'Number of user count',
             revenue: 'Cumulative Revenue',
             orders: 'Cumulative number of orders',
-            manage_employees: 'Employees',
+            manage_employees: 'Users',
             order: 'Orders',
             address: 'Shipping Addresses',
             manage_agent: 'Retailers',
@@ -2341,7 +2342,7 @@ const messages = {
             name_short_name: 'Name / Short',
         },
         e: {
-            employee_list: 'Employee List',
+            employee_list: 'User List',
             new_employee: 'Create New Customer',
             name: 'Name',
             account: 'Account',
@@ -2349,7 +2350,7 @@ const messages = {
             login_time: 'Last login time',
             select_permission: 'Please select a user permission type',
             select_warehouse: 'Please select warehouse',
-            select_employees: 'Please select employees',
+            select_employees: 'Please select user',
         },
         i: {
             commodity_management: 'Product management',
@@ -2855,15 +2856,15 @@ const messages = {
             cancel_refund: 'Are you sure you want to cancel this refund',
             create_refund: 'Create a refund order',
         },
-        u: { //员工
-            list: 'Employee List',
-            save: 'New Employee',
-            edit: 'Edit Employee',
+        u: { //用户
+            list: 'User List',
+            save: 'New User',
+            edit: 'Edit User',
             reset: 'Reset Password',
             account: 'Account',
             role: 'Role',
             login: 'Last login time',
-            detail: 'Employee Details',
+            detail: 'User Details',
             password: 'Password',
             new_password: 'Please enter a new password.',
             again: 'Please confirm the password again.',
@@ -3109,11 +3110,11 @@ const messages = {
 		    edit: 'Edit Area',
 		    new: 'New Area',
 		    add: 'Add Area Administrator',
-		    user_count: 'Number of Employees',
+		    user_count: 'Number of User',
 		    customer_count: 'Number of Customers',
 	    },
 	    crm_region_e: {
-		    list: 'Regional Employee List',
+		    list: 'Regional User List',
 	    },
 	    crm_c: {
 		    extended_information: 'Extended Information',
@@ -3152,7 +3153,7 @@ const messages = {
 		    obtain_success: 'Assign operation success',
 		    distribute_customer: 'Assign Customer',
 		    select: 'Please Select',
-		    team_members: 'Team Members',
+		    team_members: 'Track Team',
 		    dynamic: 'Activity',
 		    new_pool_c: 'New Customer',
 		    crm_dict_id: 'Customer Source',
@@ -3160,8 +3161,8 @@ const messages = {
 		    order_success_count: 'Successful Order Count',
 		    order_success_price: 'Successful Order Value',
 
-		    own_user_name: "Head",
-		    pre_own_user: 'The former head',
+		    own_user_name: "Tracker",
+		    pre_own_user: 'The Former Tracker',
 		    remark: 'Remark',
 		    province: 'Province',
 		    city: 'City',
@@ -3176,9 +3177,10 @@ const messages = {
 		    business_information:'Business Information',
 		    data_access:'Data Access',
 		    search_members: 'Search for members and tags',
+		    source_type: 'Source Type',
 	    },
 	    crm_t: {
-		    track_record: 'Track Records',
+		    track_record: 'Track Record',
 		    add_track_record: 'Add Track Record',
 		    type: 'Track Type',
 		    content: 'Content',
@@ -3197,8 +3199,8 @@ const messages = {
         crm_b: {
         	bo: 'Business',
             detail: 'Business Detail',
-	        edit: 'Edit',
-        	save: 'New',
+	        edit: 'Edit Business',
+        	save: 'New Business',
 			list: 'Business List',
 		    name: 'Business Name',
 		    customer_name: "Customer Name",
@@ -3245,13 +3247,13 @@ const messages = {
 		    down: 'Move down',
 	    },
 	    crm_o: {
-		    list: 'Contract List',
+		    list: 'Contract',
 		    save: 'New Contract',
 			edit: 'Edit Contract',
 		    detail: 'Contract Details',
 		    name: 'Contract Title',
 		    customer_name: "Client Name",
-		    own_user_name: "Principal",
+		    own_user_name: "Tracker",
 		    status: 'Contract Status',
 		    collection_schedule: 'Payment Progress',
 		    create_user: 'Founder',
@@ -3310,7 +3312,7 @@ const messages = {
 	    },
 
         crm_d: {
-		    list: 'Test Drive List',
+		    list: 'Test Drive',
 		    name: 'Name',
 		    save: 'New Test Drive Order',
 		    edit: 'Edit',
@@ -3933,11 +3935,11 @@ const messages = {
 	        35004:"You haven't set up your own region to show you share customers.",
 	        35005:"You are not a regional administrator to operate.",
 	        35006:"This client has no region set and cannot perform any operations.",
-	        35007:"It can only be transferred within the same region. The selected employee is not in this area and cannot be operated.",
+	        35007:"It can only be transferred within the same region. The selected user is not in this area and cannot be operated.",
 	        35008:"The customer's region does not exist, please update accordingly.",
 	        35009:"The region to which the opportunity belongs does not exist, please create a new one.",
 	        35010:"Please select the administrator.",
-	        35011:"The employee does not belong to the current region, and only employees in the region can be set as administrators.",
+	        35011:"The employee does not belong to the current region, and only user in the region can be set as administrators.",
 	        35012:"Subordinate region exist for this region.",
 	        35013:"There are other members except administrators in this region, please clear the members first (excluding administrators).",
 	        35014:"There are customers in this region, please clear the customers first.",

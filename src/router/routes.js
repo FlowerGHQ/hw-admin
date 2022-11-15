@@ -1517,8 +1517,8 @@ const routes = [
         },
         children: [
             {
-                path: 'customer-lists',
-                name: 'CustomerLists',
+                path: 'customer-list',
+                name: 'EOSCustomerList',
                 component: () => import('@/views/customer/customer-list.vue'),
                 meta: {
                     title: '客户列表',
@@ -1527,8 +1527,8 @@ const routes = [
                 }
             },
             {
-                path: 'customer-edit',
-                name: 'CustomerEdit',
+                path: 'eos-customer-edit',
+                name: 'EOSCustomerEdit',
                 component: () => import('@/views/customer/customer-edit.vue'),
                 meta: {
                     hidden: true,
@@ -1965,8 +1965,8 @@ const routes = [
 				name: 'RegionEmployeesList',
 				component: () => import('@/views/crm-setting/region-employees-list.vue'),
 				meta: {
-					title: '区域员工管理',
-					title_en: 'Region',
+					title: '区域用户管理',
+					title_en: 'Region User',
 					auth: ["crm-group.list"],
 				}
 			},
@@ -1990,8 +1990,8 @@ const routes = [
                 name: 'UserList',
                 component: () => import('@/views/user/user-list.vue'),
                 meta: {
-                    title: '员工列表',
-                    title_en: 'Employees',
+                    title: '用户列表',
+                    title_en: 'User',
                 }
             },
             {
@@ -2000,7 +2000,7 @@ const routes = [
                 component: () => import('@/views/user/user-edit.vue'),
                 meta: {
                     hidden: true,
-                    title: '员工编辑',
+                    title: '用户编辑',
                     parent: '/user/user-list',
                 }
             },
@@ -2010,7 +2010,7 @@ const routes = [
                 component: () => import('@/views/user/user-detail.vue'),
                 meta: {
                     hidden: true,
-                    title: '员工详情',
+                    title: '用户详情',
                     parent: '/user/user-list',
                 }
             },
@@ -2020,7 +2020,7 @@ const routes = [
                 component: () => import('@/views/user/components/UserScope.vue'),
                 meta: {
                     hidden: true,
-                    title: '员工详情',
+                    title: '用户详情',
                     parent: '/user/user-list',
                 }
             },

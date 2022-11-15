@@ -131,7 +131,7 @@ let Const = {
         },
     ],
 
-    USER: { // 员工、账号、用户
+    USER: { // 用户、账号、用户
         TYPE: {
             ADMIN: 10, // 管理员
             DISTRIBUTOR: 15, //分销商
@@ -870,7 +870,7 @@ let Const = {
         { list: [], select: [], key: 'fault', name: '故障件' },
         { list: [], select: [], key: 'account', name: '账户管理' },
         { list: [], select: [], key: 'customer', name: '客户管理' },
-        { list: [], select: [], key: 'user', name: '员工管理' },
+        { list: [], select: [], key: 'user', name: '用户管理' },
 	    { list: [], select: [], key: 'refund', name: '退款' },
         { list: [], select: [], key: 'warehouse', name: '仓库' },
         { list: [], select: [], key: 'invoice', name: '出入库单' },
@@ -1444,6 +1444,7 @@ let Const = {
             POOL: 10,
             PRIVATE: 20,
             REGION: 30,
+	        PRIVATE_CUSTOMER_BY_USER: 40,
         },
 		LEVEL_MAP: {
 			'10': { key: 10, zh: '重点客户',en: 'Key Customer', value: 10 },
@@ -1508,6 +1509,10 @@ let Const = {
 			'600': { key: 600, zh: '501 - 1000人',en: '501 - 1000', value: 600 },
 			'700': { key: 700, zh: '1001 - 2000人',en: '1001 - 2000', value: 700 },
 			'800': { key: 800, zh: '2000人以上',en: 'More than 2000', value: 800 },
+		},
+		SOURCE_TYPE_MAP: {
+			'1': { key: 1, zh: '预定小程序',en: 'Order Applets', value: 1 },
+			'2': { key: 2, zh: '后台注册',en: 'Background Registration', value: 2 },
 		},
 
 	},

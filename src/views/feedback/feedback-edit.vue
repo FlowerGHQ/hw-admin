@@ -198,7 +198,7 @@ export default {
                     break;
                 case 'customer':  // 新建客户
                     routeUrl = this.$router.resolve({
-                        path: "/customer/customer-edit",
+                        path: "/eos-customer/eos-customer-edit",
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
