@@ -105,8 +105,7 @@
                 />
             </div>
         </div>
-        <a-modal v-model:visible="modalLocationShow" :title="$t('wa.location_detail')" class="attachment-file-upload-modal" :after-close="handleLocationClose" width="
-860px">
+        <a-modal v-model:visible="modalLocationShow" :title="$t('wa.location_detail')" class="attachment-file-upload-modal" :after-close="handleLocationClose" width="860px">
 
             <div class="form-title">
                 <div class="form-item ">
@@ -191,7 +190,7 @@
                             <a-input-number v-model:value="record.adjust_amount" style="width: 120px;" :max="record.amount"
                                             :min="1" :precision="0" placeholder="请输入数量" :disabled="record.disabled"/> {{record.unit || '件'}}
                         </template>
-                        <template v-if="column.key === 'operation'">
+                        <template v-if="column.key === 'operation' && !adjustMode">
                             <a-button type="link" @click="handleLocationDelete(record.id)" v-if="$auth('agent.save')">{{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
@@ -613,6 +612,8 @@ export default {
 
         handleLocationClose() {
             this.modalLocationShow = false;
+            this.selectedRowKeys = [];
+            this.adjustMode = false;
             Object.assign(this.itemForm, this.$options.data().itemForm)
             Object.assign(this.form, this.$options.data().form)
             Object.assign(this.adjustForm, this.$options.data().adjustForm)
@@ -635,7 +636,6 @@ export default {
                 adjust_stock_list: this.locationTableData,
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
-                this.handleModalClose()
                 this.getTableData();
                 this.getTableLocationData();
                 // this.$emit('submit')
@@ -736,26 +736,26 @@ export default {
             }
             this.upload.fileList = fileList
         },
-        handleAdjustSubmit() {
-            if (!this.adjustForm.warehouse_location_id) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!this.adjustForm.in_warehouse_location_id) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-
-            Core.Api.WarehouseLocationStock.adjust({
-                warehouse_location_id: this.adjustForm.warehouse_location_id,
-                in_warehouse_location_id: this.adjustForm.in_warehouse_location_id,
-            }).then(res => {
-                this.getTableData();
-                this.handleMaterialClose();
-                this.warehouseLocationChange();
-                this.warehouseLocationInChange();
-                this.$message.success(this.$t('pop_up.save_success'))
-
-            })
-        },
+        // handleAdjustSubmit() {
+        //     if (!this.adjustForm.warehouse_location_id) {
+        //         return this.$message.warning(this.$t('def.enter'))
+        //     }
+        //     if (!this.adjustForm.in_warehouse_location_id) {
+        //         return this.$message.warning(this.$t('def.enter'))
+        //     }
+        //
+        //     Core.Api.WarehouseLocationStock.adjust({
+        //         warehouse_location_id: this.adjustForm.warehouse_location_id,
+        //         in_warehouse_location_id: this.adjustForm.in_warehouse_location_id,
+        //     }).then(res => {
+        //         this.getTableData();
+        //         this.handleMaterialClose();
+        //         this.warehouseLocationChange();
+        //         this.warehouseLocationInChange();
+        //         this.$message.success(this.$t('pop_up.save_success'))
+        //
+        //     })
+        // },
         warehouseLocationChange(){
             Core.Api.WarehouseLocationStock.detailByWarehouseLocation({
                 warehouse_location_id: this.adjustForm.warehouse_location_id,
