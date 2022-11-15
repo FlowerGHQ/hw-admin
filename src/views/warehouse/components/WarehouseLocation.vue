@@ -178,7 +178,7 @@
                             <!--                            </a-button>-->
                         </template>
                         <template v-if="column.key === 'uid'">
-                            {{ record.warehouse_location.uid || '-' }}
+                            {{ record.warehouse_location_uid || '-' }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -654,6 +654,9 @@ export default {
             }).then(res => {
                 console.log("getTableData res", res);
                 this.locationTotal = res.count;
+                res.list.forEach(res => {
+                    res.disabled = true
+                })
                 this.locationTableData = res.list;
             }).catch(err => {
                 console.log("getTableData err", err);

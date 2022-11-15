@@ -1939,6 +1939,7 @@ const messages = {
             25024:'批次库存不足',
             25025:'发货批次不存在',
 	        25026:'实际出库数量不能为0',
+	        25027:'该库位库存不为0',
 
             25110:'{name}库存不足',
             25111:'该商品未绑定库位关系',
@@ -3879,6 +3880,7 @@ const messages = {
             25024:'Insufficient batch stock',
             25025:'Shipment batch does not exist',
 	        25026:'The actual outbound quantity cannot be 0',
+	        25027:'The inventory in this repository is not 0',
             25110:'{name} is inventory shortage',
             25111:'The commodity is not bound to the location relationship',
             25112:'The quantity of the bin location is not allowed to be negative',
