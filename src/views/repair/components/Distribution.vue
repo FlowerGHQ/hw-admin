@@ -68,7 +68,7 @@ export default {
             loading: false,
 
             activeKey: ['affirm', 'change'],
-            staffList: [], // 员工列表
+            staffList: [], // 用户列表
             form: {
                 id: '',
 
@@ -105,7 +105,7 @@ export default {
             }
         },
 
-        // 获取 员工列表
+        // 获取 用户列表
         getStaffList(val) {
             console.log(Core.Data.getUser().org_type)
             Core.Api.User.list({
