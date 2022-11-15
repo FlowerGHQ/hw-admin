@@ -1147,7 +1147,11 @@ let Const = {
 			'2': {key: 2, zh: '已卖出', en: 'Sold'},
 			'3': {key: 3, zh: '预出入库', en: 'Pre-warehousing'},
 			'4': {key: 4, zh: '预分销出入库', en: 'Pre-distribution warehousing'},
-		}
+		},
+		TYPE_MAP: {
+			'1': {key: 1, zh: '商品编码', en: 'Code'},
+			'2': {key: 2, zh: '商品名称', en: 'Name'},
+		},
 	},
 	DEVICE: {
 		STATUS_MAP: {
