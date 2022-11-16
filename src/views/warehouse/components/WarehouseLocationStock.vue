@@ -13,7 +13,7 @@
                             <a-col :xs='24' :sm='24' :xl="16" :xxl='8' class="search-item">
                                 <div class="key">{{ $t('i.code') }}：</div>
                                 <div class="value">
-                                    <a-radio-group v-model:value="searchForm.target_type">
+                                    <a-radio-group v-model:value="searchForm.target_type" @change="searchForm.target_id = undefined">
                                         <a-radio v-for="item of TARGET_TYPE_MAP" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>
                                     </a-radio-group>
                                 </div>
