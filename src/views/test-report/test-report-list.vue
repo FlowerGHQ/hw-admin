@@ -2,7 +2,7 @@
 <div id="TestReportList">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">{{ $t('no.list') }}
+            <div class="title-area">测试报告
             </div>
         </div>
         <div class="search-container" v-if="$auth('ADMIN')">
