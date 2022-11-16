@@ -14,8 +14,17 @@
                             <a-col :xs='24' :sm='24' :xl="16" :xxl='8' class="search-item">
                                 <div class="key">{{ $t('i.code') }}：</div>
                                 <div class="value">
+                                    <a-radio-group v-model:value="searchForm.target_type">
+                                        <a-radio v-for="item of TARGET_TYPE_MAP" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>
+                                    </a-radio-group>
+                                </div>
+                            </a-col>
+                            <a-col :xs='24' :sm='24' :xl="16" :xxl='8' class="search-item">
+                                <div class="key">{{ $t('i.code') }}：</div>
+                                <div class="value">
                                     <a-select
-                                        v-model:value="searchForm.item_id"
+                                        :disabled="searchForm.target_type === undefined"
+                                        v-model:value="searchForm.target_id"
                                         show-search
                                         placeholder="code"
                                         :default-active-first-option="false"
@@ -24,7 +33,7 @@
                                         :not-found-content="null"
                                         @search="handleItemSearch"
                                     >
-                                        <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
+                                        <a-select-option v-for=" item in searchItemOptions" :key="item.id" :value="item.id">
                                             {{ item.code }} - {{ item.name }}
                                         </a-select-option>
                                     </a-select>
@@ -242,7 +251,7 @@
                             :show-arrow="false"
                             :filter-option="false"
                             :not-found-content="null"
-                            @search="handleItemSearch"
+                            @search="handleItemFormSearch"
                             :disabled="itemForm.target_type === ''"
                         >
                             <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
@@ -366,9 +375,9 @@ export default {
             adjustModalShow: false,
             warehouseLocationOptions: [],
             searchForm: {
-                uid: '',
-                target_id: '',
-                target_type: "",
+                uid: undefined,
+                target_id: undefined,
+                target_type: undefined,
             },
             form: {
                 warehouse_id: '',
@@ -395,6 +404,7 @@ export default {
 
             tableData: [],
             itemOptions: [],
+            searchItemOptions: [],
             upload: {
                 action: Core.Const.NET.URL_POINT + "/admin/1/warehouse-location/import",
                 fileList: [],
@@ -529,7 +539,8 @@ export default {
             Core.Api.WarehouseLocation.list({
                 warehouse_id: this.warehouseId,
                 uid: this.searchForm.uid,
-                item_id: this.searchForm.item_id,
+                target_id: this.searchForm.target_id,
+                target_type: this.searchForm.target_type,
                 page: this.currPage,
                 page_size: this.pageSize,
             }).then(res => {
@@ -582,7 +593,7 @@ export default {
                 console.log('handleModalSubmit err', err)
             })
         },
-        handleItemSearch(code) {
+        handleItemFormSearch(code) {
 
             if (this.itemForm.target_type === this.TARGET_TYPE.ITEM){
                 Core.Api.Item.list({code: code,flag_spread: 1}).then(res => {
@@ -595,6 +606,20 @@ export default {
                 })
             }
         },
+        handleItemSearch(code) {
+            if (this.searchForm.target_type === this.TARGET_TYPE.ITEM){
+                Core.Api.Item.list({code: code,flag_spread: 1}).then(res => {
+                    this.searchItemOptions = res.list
+                })
+            }
+            if (this.searchForm.target_type === this.TARGET_TYPE.MATERIAL){
+                Core.Api.Material.list({code: code,flag_spread: 1}).then(res => {
+                    this.searchItemOptions = res.list
+                })
+            }
+
+        },
+
         handleUidSearch(uid) {
             Core.Api.WarehouseLocation.list({uid: uid,warehouse_id: this.detail.warehouse_id}).then(res => {
                 this.warehouseLocationOptions = res.list
