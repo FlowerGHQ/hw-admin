@@ -35,11 +35,19 @@
                 <a-row class="desc-detail">
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('n.phone') }}：</span>
-                        <span class="value">{{detail.phone}} <span @click="handleChecking()" v-if="detail.status !== STATUS.CUSTOMER"><i class="icon i_eyes"/></span></span>
+                        <span class="value phone-hover">
+                            {{detail.phone_country_code}} {{detail.phone}}
+                             <a-button type="link" v-if="(!detail.flag_eyes) && detail.status !== STATUS.CUSTOMER" class="switch" @click="handleChecking()"><i class="icon i_eyes"/></a-button>
+
+                        </span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('n.email') }}：</span>
-                        <span class="value">{{detail.email}} <span @click="handleChecking()" v-if="detail.status !== STATUS.CUSTOMER"><i class="icon i_eyes"/></span></span>
+                        <span class="value phone-hover">
+                            {{detail.email}}
+                            <a-button type="link" v-if="(!detail.flag_eyes) && detail.status !== STATUS.CUSTOMER" class="switch" @click="handleChecking()"><i class="icon i_eyes"/></a-button>
+
+                        </span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_c.level') }}：</span>
@@ -118,7 +126,7 @@
                                 <CustomerAdd :btnText="$t('crm_c.add')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id"  @select="getCRMContactList" />
                             </CRMContact>
                         </a-tab-pane>
-                        <a-tab-pane key="Opportunity" :tab="$t('crm_b.bo')">
+                        <a-tab-pane key="Opportunity" :tab="$t('crm_b.new_bo')">
                             <CRMBo  v-if="id>0" :detail="detail" :customerId="detail.id" ref ="CRMBo">
                                 <a-button type="primary" @click="routerChange('edit')" v-if="$auth('crm-bo.save')"><i class="icon i_add"/>{{ $t('crm_b.save') }}</a-button>
                             </CRMBo>
@@ -485,6 +493,7 @@ export default {
             }).then(res => {
                 this.detail.phone = res.detail.phone
                 this.detail.email = res.detail.email
+                this.detail.flag_eyes = true
                 console.log(res)
 
             })
@@ -495,10 +504,21 @@ export default {
 </script>
 
 <style lang="less">
-.CustomerEdit {
+#CustomerDetail {
 
     .icon {
         font-size: 12px;
+    }
+    .i_eyes {font-size: 12px;}
+    .phone-hover {
+        .switch {
+            opacity: 0;
+        }
+        &:hover {
+            .switch {
+                opacity: 1;
+            }
+        }
     }
 }
 </style>

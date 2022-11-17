@@ -15,19 +15,44 @@
                     </div>
 
                 </div>
+                <div class="form-item required" v-if="form.id === 0 || form.phone_country_code === ''">
+                    <div class="key">{{ $t('n.select_country') }}：</div>
+                    <div class="value">
+                        <a-select v-model:value="form.phone_country_code" :placeholder="$t('def.input')" @select="setPhoneCountryCode" :disabled="form.id > 0 && form.phone_country_code != ''" show-search option-filter-prop="key" allow-clear>
+                            <a-select-option v-for="item of phoneCountryCodeList" :key="item.phoneAreaCode+item.name+item.enName" :value="item.phoneAreaCode"  >
+                                <span  class="phoneCountryCode">{{ item.phoneAreaCode }}</span>
+                                {{lang === 'zh' ? item.name: item.enName}}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </div>
                 <div class="form-item required with-btn">
                     <div class="key">{{ $t('n.phone') }}：</div>
                     <div class="value">
                         <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerBlur" :disabled="form.id > 0 || form.customer_id > 0"/>
                         <div class="btn">
-                            <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
-                            <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
+                            <span v-if="isExistPhone == 1"><i class="icon i_confirm"/></span>
+                            <span v-else-if="isExistPhone == 2"><i class="icon i_close_c"/></span>
                             <CustomerSelect v-if="form.id == 0" @select="selectItem" :select-btn="true" :radioMode="true" :phone="form.phone" :check-mode="false" :select-customer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
                                 {{ $t('crm_c.rechecking') }}
                             </CustomerSelect>
                         </div>
                     </div>
                 </div>
+                <div class="form-item required with-btn" v-if="form.id === 0 || form.email === ''">
+                    <div class="key">{{ $t('n.email') }}：</div>
+                    <div class="value">
+                        <a-input v-model:value="form.email" :placeholder="$t('def.input')" @blur="handleCustomerEmailBlur" :disabled="form.id > 0 && form.email != undefined"/>
+                        <div class="btn">
+                            <span v-if="isExistEmail == 1"><i class="icon i_confirm"/></span>
+                            <span v-else-if="isExistEmail == 2"><i class="icon i_close_c"/></span>
+                            <CustomerSelect :radioMode="true" :email="this.form.email" :check-mode="false" :select-customer="true" btn-class="select-item-btn" btnType='link' :btnText="$t('crm_c.rechecking')">
+                                {{ $t('crm_c.rechecking') }}
+                            </CustomerSelect>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-item required">
                     <div class="key">{{ $t('crm_c.group') }}：</div>
                     <div class="value">
@@ -38,6 +63,7 @@
                             :tree-data="groupOptions"
                             :disabled="(form.id > 0 || form.customer_id > 0) && form.group_id > 0"
                             tree-default-expand-all
+                            @select="setGroupId"
                         />
                     </div>
 
@@ -272,6 +298,7 @@ import Core from '../../core';
 
 import dayjs from "dayjs";
 import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
+import phoneCountryCode from '@/assets/js/phoneAreaCode/phoneAreaCode.js'
 
 export default {
     name: 'TestDriveEdit',
@@ -308,6 +335,8 @@ export default {
                 //用户信息
                 name: undefined,
                 phone: undefined,
+                email: undefined,
+                phone_country_code: undefined,
                 group_id: undefined,
                 gender: undefined,
                 birthday: undefined,
@@ -346,9 +375,11 @@ export default {
 
             },
 
-            isExist: '', // 名称输入框提示
+            isExistPhone: '', // 名称输入框提示
+            isExistEmail: '', // 名称输入框提示
             sourceList: [],
             groupOptions: [],
+            phoneCountryCodeList: [],
 
         };
     },
@@ -359,6 +390,7 @@ export default {
         }
     },
     mounted() {
+        this.phoneCountryCodeList = phoneCountryCode
         this.id = Number(this.$route.query.id) || 0
         this.customer_id = Number(this.$route.query.customer_id) || 0
         this.form.id = this.id
@@ -374,6 +406,8 @@ export default {
         }
         this.getSourceList()
         this.handleGroupTree()
+        if(Core.Data.getPhoneCountryCode()) this.form.phone_country_code = Core.Data.getPhoneCountryCode()
+        if(Core.Data.getGroupId()) this.form.group_id = Core.Data.getGroupId()
     },
     methods: {
         routerChange(type, item) {
@@ -417,6 +451,9 @@ export default {
                 this.form.customer_status = this.detail.status;
                 this.form.name = this.detail.name;
                 this.form.phone = this.detail.phone;
+                this.form.email = this.detail.email;
+                this.form.phone_country_code = this.detail.phone_country_code;
+
                 this.form.group_id = this.detail.group_id
 
             }).catch(err => {
@@ -481,14 +518,33 @@ export default {
             })
         },
         handleCustomerBlur() {  // 获取 车架号
-            if (!this.form.name) {
-                return this.isExist = ''
+            if (!this.form.phone) {
+                return this.isExistPhone = ''
+            }
+            if (!this.form.phone_country_code) {
+                return this.isExistPhone = ''
             }
             Core.Api.CRMCustomer.checkPhone({
                 id: this.form.id,
                 phone: this.form.phone,
+                phone_country_code: this.form.phone_country_code,
             }).then(res => {
-                this.isExist = res.results ? 1 : 2
+                this.isExistPhone = res.results ? 1 : 2
+                console.log("handleVehicleBlur res", res)
+            }).catch(err => {
+                console.log('handleVehicleBlur err', err)
+            }).finally(() => {
+            });
+        },
+        handleCustomerEmailBlur() {  // 获取 车架号
+            if (!this.form.email) {
+                return this.isExistEmail = ''
+            }
+            Core.Api.CRMCustomer.checkEmail({
+                id: this.form.id,
+                email: this.form.email,
+            }).then(res => {
+                this.isExistEmail = res.results ? 1 : 2
                 console.log("handleVehicleBlur res", res)
             }).catch(err => {
                 console.log('handleVehicleBlur err', err)
@@ -515,6 +571,13 @@ export default {
 
             })
         },
+        // 存国家和区域数据
+        setPhoneCountryCode(val) {
+            Core.Data.setPhoneCountryCode(val)
+        },
+        setGroupId(val) {
+            Core.Data.setGroupId(val)
+        },
 
     }
 };
@@ -525,10 +588,6 @@ export default {
 
     .icon {
         font-size: 12px;
-    }
-    .customer-tag {
-        margin-top: 10px;
-
     }
 
     .form-content.long-key {

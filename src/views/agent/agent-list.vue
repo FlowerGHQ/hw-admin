@@ -26,7 +26,7 @@
                             show-search
                             style="width: 100%"
                             :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-                            placeholder="Please select"
+                            placeholder="Please Select"
                             allow-clear
                             treeDefaultExpandAll
                             :tree-data="treeData"

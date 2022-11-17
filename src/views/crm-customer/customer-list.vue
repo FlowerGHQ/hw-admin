@@ -96,20 +96,20 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'phone'">
-                            <template v-if="text !== ''">
-                                {{ text || '-' }}
-                                <span @click="handleChecking(record)"><i class="icon i_eyes"/></span>
-                            </template>
+                            <div v-if="text !== ''" class="phone-hover">
+                                {{record.phone_country_code}} {{ text || '-' }}
+                                <a-button type="link" v-if="!record.flag_eyes" class="switch" @click="handleChecking(record)"><i class="icon i_eyes"/></a-button>
+                            </div>
                             <template v-else>
                                 {{ text || '-' }}
                             </template>
 
                         </template>
                         <template v-if="column.key === 'email'">
-                            <template v-if="text !== ''">
+                            <div v-if="text !== ''" class="phone-hover">
                                 {{ text || '-' }}
-                                <span @click="handleChecking(record)"><i class="icon i_eyes"/></span>
-                            </template>
+                              <a-button type="link" v-if="!record.flag_eyes" class="switch" @click="handleChecking(record)"><i class="icon i_eyes"/></a-button>
+                            </div>
                             <template v-else>
                                 {{ text || '-' }}
                             </template>
@@ -129,6 +129,14 @@
                         <template v-if="column.key === 'own_user_name'">
                             {{ record.own_user? record.own_user.name || '-' : '-' }}
                         </template>
+
+                        <template v-if="column.key === 'source_type'">
+                            {{ $Util.CRMCustomerSourceTypeFilter(text, $i18n.locale) }}
+                        </template>
+                        <template v-if="column.dataIndex === 'label_list'">
+                            <a-tag v-for="item in record.label_list" color="blue" class="customer-tag" >{{lang ==="zh" ? item.label : item.label_en}}</a-tag>
+                        </template>
+
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
@@ -312,6 +320,8 @@ export default {
                 {title: 'n.name', dataIndex: 'name', key:'detail', sorter: true},
                 {title: 'n.phone', dataIndex: 'phone', key:'phone', sorter: true},
                 {title: 'n.email', dataIndex: 'email', key:'email', sorter: true},
+                {title: 'sl.label', dataIndex: 'label_list', key:'label_list'},
+
                 // {title: 'n.continent', dataIndex: 'continent', key:'item'},
                 {title: 'crm_c.level', dataIndex: 'level', key:'level', sorter: true},
                 {title: 'crm_c.type', dataIndex: 'type', key:'type', sorter: true},
@@ -320,6 +330,8 @@ export default {
                 {title: 'crm_c.order_success_count', dataIndex: 'order_count', key:'order_count'},
                 {title: 'ad.specific_address', dataIndex: 'address', sorter: true},
                 {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
+                {title: 'crm_c.remark', dataIndex: 'remark', key: 'remark', sorter: true},
+                {title: 'crm_c.source_type', dataIndex: 'source_type', key: 'source_type', sorter: true},
                 {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
@@ -346,6 +358,9 @@ export default {
                     // this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
                 },
             };
+        },
+        lang() {
+            return this.$store.state.lang
         },
     },
     mounted() {
@@ -647,6 +662,7 @@ export default {
             }).then(res => {
                 item.phone = res.detail.phone
                 item.email = res.detail.email
+                item.flag_eyes = true
                 console.log(res)
 
             })
@@ -658,8 +674,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.i_eyes{
-    font-size: 12px;
+#CustomerList{
+    .i_eyes {font-size: 12px;}
+    .phone-hover {
+        .switch {
+            opacity: 0;
+        }
+        &:hover {
+            .switch {
+                opacity: 1;
+            }
+        }
+    }
 }
 .search-text{
     margin-left: 30px;

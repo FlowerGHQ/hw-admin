@@ -42,7 +42,7 @@ const apiList = {
 	    exportSalesQuantityStatistics: ['GetJson', 'purchase-order/export-sales-quantity-statistics'], // 导出数据
 	    exportAccessoriesOrder: ['GetJson', 'purchase-order/export-accessories-order'], // 导出数据
     },
-    User: { // 员工
+    User: { // 用户
         save: ['PostJson', 'user/save'],
         list: ['PostJson', 'user/list'],
         listAll: ['PostJson', 'user/list-name'],
@@ -78,9 +78,9 @@ const apiList = {
 
         allotOrgAuth: ['PostJson', 'authority/save-org-type-authority'], // 向组织分配 可分配权限
         allotAuth: ['PostJson', 'authority/save-role-authority'], // 向角色分配权限
-        allotRole: ['PostJson', 'authority/save-user-role'], // 向员工账号分配角色
-        allotUser: ['PostJson', 'authority/save-user-authority'], // 向员工账户分配权限
-        deleteUserRole: ['PostJson', 'authority/delete-user-role'], // 向员工账号分配角色
+        allotRole: ['PostJson', 'authority/save-user-role'], // 向用户账号分配角色
+        allotUser: ['PostJson', 'authority/save-user-authority'], // 向用户账户分配权限
+        deleteUserRole: ['PostJson', 'authority/delete-user-role'], // 向用户账号分配角色
 
         listUserRole: ['PostJson', 'authority/list-user-role'], // 查看所有对应用户的所有角色
 
@@ -623,6 +623,7 @@ const apiList = {
         structureByUserGroup: ['PostJson', 'crm-group-member/structure-by-user-group'],//
 
         users: ['PostJson', 'crm-group-member/users'],//
+	    setAdmin: ['PostJson', 'crm-group-member/set-admin'],
     },
 	CRMCustomer:{//CRM 客户
 		save: ['PostJson', 'crm-customer/save'],//

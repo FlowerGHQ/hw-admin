@@ -241,6 +241,7 @@ export default {
                 {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
                 {title: 'crm_o.create_user', dataIndex: "create_user_id", key: 'create_user_name', sorter: true},
                 {title: 'crm_c.group', dataIndex: 'group_name', key:'group_name'},
+                {title: 'crm_c.remark', dataIndex: 'remark', key: 'remark', sorter: true},
                 {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]

@@ -11,6 +11,7 @@
             <a-descriptions-item :label="$t('crm_b.estimated_deal_time')" class="label">{{$Util.timeFilter(detail.estimated_deal_time, 3)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_b.source')" class="label">{{$Util.CRMBoSourceMapFilter(detail.source, $i18n.locale)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_b.remark')" class="label">{{detail.remark}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.remark')" class="label">{{detail.remark}}</a-descriptions-item>
         </a-descriptions>
         <a-descriptions :title="$t('crm_c.data_access')" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('crm_c.create_user')" class="label">{{detail.create_user != null? detail.create_user.name: '-'}}</a-descriptions-item>

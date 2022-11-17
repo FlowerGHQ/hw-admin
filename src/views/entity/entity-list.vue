@@ -150,10 +150,24 @@
                 <div class="modal-content">
                     <div class="form-item required">
                         <div class="key">{{ $t('i.code') }}:</div>
+                        <a-radio-group v-model:value="type">
+                            <a-radio v-for="item in TYPE_MAP" :value="item.key">
+                                {{lang === 'zh' ? item.zh: item.en}}
+                            </a-radio>
+                        </a-radio-group>
+                    </div>
+                    <div class="form-item required" v-if="type === 1 ">
+                        <div class="key">{{ $t('i.code') }}:</div>
                         <a-input v-model:value="editForm.item_code" :placeholder="$t('i.commodity_code')" @blur="handleItemCodeBlur"/>
                         <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
                         <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                     </div>
+
+                    <div class="form-item required" v-if="type === 2 ">
+                        <div class="key">{{ $t('r.item_name') }}:</div>
+                        <a-input v-model:value="editForm.name" :placeholder="$t('def.input')" />
+                    </div>
+
                     <div class="form-item required">
                         <div class="key">{{ $t(titleType) + $t('n.serial_number')}}</div>
                         <a-input v-model:value="editForm.uid" :placeholder="$t('n.please_input') + $t(titleType) + $t('n.serial_number')"/>
@@ -191,6 +205,7 @@ import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue';
 import TimeSearch from '@/components/common/TimeSearch.vue'
 
 const ITEM_TYPE = Core.Const.ITEM.TYPE
+const TYPE_MAP = Core.Const.ENTITY.TYPE_MAP
 
 export default {
     name: 'EntityList',
@@ -200,7 +215,9 @@ export default {
     props: {},
     data() {
         return {
+            type: 1,
             ITEM_TYPE,
+            TYPE_MAP,
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
             // 加载
             loading: false,
@@ -246,6 +263,7 @@ export default {
                 id: '',
                 uid: '',
                 item_code: '',
+                name: '',
             },
             selectedRowKeys: [],
             selectedRowItems: [],
@@ -315,6 +333,9 @@ export default {
                 },
             };
         },
+        lang() {
+            return this.$store.state.lang
+        }
     },
     mounted() {
         this.getTableData();
@@ -456,7 +477,12 @@ export default {
             if (!form.uid) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!form.item_code) {
+            if (!form.item_code && this.type === 1) {
+                form.name = ''
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.name && this.type === 2) {
+                form.item_code = ''
                 return this.$message.warning(this.$t('def.enter'))
             }
             if (this.isExist == 2) {

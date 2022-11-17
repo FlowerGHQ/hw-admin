@@ -626,13 +626,13 @@ const Util = {
     },
     /* =============== 采购单 && 售后管理 && 退款管理  ================ */
 
-    /* =============== 员工/账号/用户 ================ */
+    /* =============== 用户/账号/用户 ================ */
     userTypeFilter(val, to='zh') {
         const MAP = Const.USER.TYPE_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
-    /* =============== 员工/账号/用户 ================ */
+    /* =============== 用户/账号/用户 ================ */
 
 
     /* =============== 物流信息 ================ */
@@ -923,6 +923,12 @@ const Util = {
 	CRMCompanySizeMapMapFilter(val,  to='zh') {
 		const MAP = Const.CRM_CUSTOMER.COMPANY_SIZE_MAP
 		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+	CRMCustomerSourceTypeFilter(val,  to='zh') {
+		const MAP = Const.CRM_CUSTOMER.SOURCE_TYPE_MAP
+		let item = MAP[val + ''] || {}
+		console.log("item",val)
 		return item[to] || ''
 	},
 

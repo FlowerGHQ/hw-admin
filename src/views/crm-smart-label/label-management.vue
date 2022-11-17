@@ -49,22 +49,22 @@
                         <template v-if="column.key === 'operation'">
                             <a-dropdown type="link" :trigger="['']" v-model:visible="menuShow[index]" @click="handleMenuShow(index)">
                                 <a class="ant-dropdown-link operation-a" @click.prevent >
-                                    同步
+                                    {{$t('sl.synchronize')}}
                                     <DownOutlined />
                                 </a>
                                 <template #overlay>
                                     <a-menu class="synchronous-menu">
                                         <a-menu-item  class="synchronous-menu-item">
                                             <a-checkbox-group v-model:value="editForm.category_list">
-                                                <a-checkbox :value="1" v-if="searchForm.category != 1">客户</a-checkbox>
-                                                <a-checkbox :value="2" v-if="searchForm.category != 2">商机</a-checkbox>
-                                                <a-checkbox :value="3" v-if="searchForm.category != 3">合同</a-checkbox>
-                                                <a-checkbox :value="4" v-if="searchForm.category != 4">回款单</a-checkbox>
+                                                <a-checkbox :value="1" v-if="searchForm.category != 1">{{$t('sl.client')}}</a-checkbox>
+                                                <a-checkbox :value="2" v-if="searchForm.category != 2">{{$t('sl.business')}}</a-checkbox>
+                                                <a-checkbox :value="3" v-if="searchForm.category != 3">{{$t('sl.contract_order')}}</a-checkbox>
+                                                <a-checkbox :value="4" v-if="searchForm.category != 4">{{$t('sl.receipt')}}</a-checkbox>
                                             </a-checkbox-group>
                                         </a-menu-item>
                                         <a-menu-item>
-                                            <a-button size="small" type="primary" @click="handleSubmitContent(record)">确定</a-button>
-                                            <a-button size="small" @click="handleMenuShow(index)">取消</a-button>
+                                            <a-button size="small" type="primary" @click="handleSubmitContent(record)">{{$t('def.ok')}}</a-button>
+                                            <a-button size="small" @click="handleMenuShow(index)">{{$t('def.cancel')}}</a-button>
                                         </a-menu-item>
                                     </a-menu>
                                 </template>
@@ -111,10 +111,16 @@
                             <a-input v-model:value="editForm.name" :placeholder="$t('def.input')"/>
                         </div>
                     </div>
+                    <div class="form-item">
+                        <div class="key">{{ $t('sl.name_en') }}</div>
+                        <div class="value">
+                            <a-input v-model:value="editForm.name_en" :placeholder="$t('def.input')"/>
+                        </div>
+                    </div>
                     <div class="form-item textarea">
                         <div class="key">{{ $t('sl.remark') }}</div>
                         <div class="value">
-                            <a-textarea v-model:value="editForm.remark" placeholder="请输入备注" :auto-size="{ minRows: 2, maxRows: 2 }"/>
+                            <a-textarea v-model:value="editForm.remark" :placeholder="$t('sl.remark')" :auto-size="{ minRows: 2, maxRows: 2 }"/>
                         </div>
                     </div>
 
@@ -169,6 +175,7 @@ export default {
         tableColumns() {
             let columns = [
                 {title: this.$t('sl.name'), dataIndex: 'name'},
+                {title: this.$t('sl.name_en'), dataIndex: 'name_en'},
                 {title: this.$t('sl.count'), dataIndex: 'count'},
                 {title: this.$t('def.remark'), dataIndex: 'remark'},
                 {title: this.$t('n.type'), dataIndex: 'type'},
@@ -180,10 +187,10 @@ export default {
         },
         typeList() {
             let columns = [
-                {zh: '客户', en: 'customer',  category: '1'},
-                {zh: '商机', en: 'bo',  category: '2'},
-                {zh: '合同订单', en: 'order',  category: '3'},
-                {zh: '回款单', en: 'income',  category: '4'},
+                {zh: '客户', en: 'Customer',  category: '1'},
+                {zh: '商机', en: 'Bo',  category: '2'},
+                {zh: '合同订单', en: 'Order',  category: '3'},
+                {zh: '回款单', en: 'Income',  category: '4'},
             ]
           return columns
         }
@@ -270,6 +277,9 @@ export default {
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'))
             }
+            if (!form.name_en) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
             if (!this.falgEdit && (!form.category_list || form.category_list.length === 0)) {
                 return this.$message.warning(this.$t('def.enter'))
             }
@@ -278,7 +288,9 @@ export default {
             Core.Api.CRMLabel[apiName](form).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.modalShow = false
+                this.getTableData();
             }).catch(err => {
+                this.getTableData();
                 console.log('handleModalSubmit err:', err)
             }).finally(() => {
                 this.loading = false
