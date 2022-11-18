@@ -25,7 +25,7 @@
                     </div>
 
                 </div>
-                <div class="form-item required" v-if="form.id === 0 || form.country_code === ''">
+                <div class="form-item required" >
                     <div class="key">{{ $t('n.select_country') }}：</div>
                     <div class="value">
                         <a-select v-model:value="form.country_code" :placeholder="$t('def.input')" @select="setPhoneCountryCode"  :disabled="form.id > 0 && form.country_code != ''" show-search option-filter-prop="key" allow-clear>
@@ -375,7 +375,6 @@ export default {
                 continent: '',
                 country: '',
                 country_en: '',
-                country_code: '',
             },
             labelList: [],
             labelIdList: [],
