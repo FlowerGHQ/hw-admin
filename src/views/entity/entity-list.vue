@@ -149,7 +149,7 @@
                 :after-close='handleVehicleClose'>
                 <div class="modal-content">
                     <div class="form-item required">
-                        <div class="key">{{ $t('i.code') }}:</div>
+                        <div class="key">{{ $t('i.type') }}:</div>
                         <a-radio-group v-model:value="type">
                             <a-radio v-for="item in TYPE_MAP" :value="item.key">
                                 {{lang === 'zh' ? item.zh: item.en}}
