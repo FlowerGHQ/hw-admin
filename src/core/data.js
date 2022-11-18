@@ -155,11 +155,11 @@ class StorageHandler {
 	getTabPosition() {
 		return this.getItem(Const.DATA.TAB_POSITION)
 	}
-	setPhoneCountryCode(value) {
-        this.setItem(Const.DATA.PHONE_COUNTRY_CODE, value);
+	setCountryCode(value) {
+        this.setItem(Const.DATA.COUNTRY_CODE, value);
     }
-	getPhoneCountryCode() {
-		return this.getItem(Const.DATA.PHONE_COUNTRY_CODE)
+	getCountryCode() {
+		return this.getItem(Const.DATA.COUNTRY_CODE)
 	}
     setGroupId(value) {
         this.setItem(Const.DATA.GROUP_ID, value);
