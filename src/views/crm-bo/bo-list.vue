@@ -218,6 +218,7 @@ export default {
                 {title: 'crm_b.estimated_deal_time', dataIndex: 'estimated_deal_time', key: 'estimated_deal_time', sorter: true},
                 {title: 'r.creator_name', dataIndex: 'create_user_id', key: 'create_user', sorter: true},
                 {title: 'crm_c.group', dataIndex: 'group_name', key:'group_name'},
+                {title: 'crm_c.remark', dataIndex: 'remark', key: 'remark', sorter: true},
                 {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
                 {title: 'crm_c.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},

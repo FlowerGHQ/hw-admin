@@ -12,7 +12,7 @@
             <a-descriptions-item :label="$t('n.source')" class="label">{{$i18n.locale === 'zh'?detail.source:detail.source_en}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.industry')" class="label">{{$Util.CRMCustomerIndustryFilter(detail.industry, $i18n.locale)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.source_type')" class="label">{{$Util.CRMCustomerSourceTypeFilter(detail.source_type, $i18n.locale)}}</a-descriptions-item>
-<!--            <a-descriptions-item :label="$t('crm_c.track_status')" class="label">{{$Util.CRMTrackStatusMapFilter(detail.track_status, $i18n.locale)}}</a-descriptions-item>-->
+            <a-descriptions-item :label="$t('crm_c.remark')" class="label">{{detail.remark}}</a-descriptions-item>
         </a-descriptions>
         <a-descriptions :title="$t('crm_c.client_information')" bordered :column="2" size="small" class="pannel" v-if="detail.type === Core.Const.CRM_CUSTOMER.TYPE.INDIVIDUAL">
             <a-descriptions-item :label="$t('crm_c.gender')" class="label">{{$Util.CRMCustomerGenderFilter(detail.gender, $i18n.locale)}}</a-descriptions-item>
