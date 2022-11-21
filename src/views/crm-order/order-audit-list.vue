@@ -9,7 +9,7 @@
             </div>
             <div class="search-container">
                 <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" >
                         <div class="key">{{ $t('crm_o.name') }}：</div> <!-- 合同名称 -->
                         <div class="value">
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
@@ -21,7 +21,7 @@
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.customer_name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_o.own_user_name') }}：</div> <!-- 负责人 -->
                         <div class="value">
                             <a-select
@@ -40,7 +40,7 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_o.status') }}：</div> <!-- 合同状态 -->
                         <div class="value">
                             <a-select v-model:value="searchForm.status" :placeholder="$t('def.select')" @change="handleSearch">
@@ -48,7 +48,7 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_o.collection_schedule') }}：</div> <!-- 回款进度 -->
                         <div class="value">
                             <a-select v-model:value="searchForm.paid_money_progress" :placeholder="$t('def.select')" @change="handleSearch">
@@ -56,7 +56,7 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_o.create_user') }}：</div> <!-- 创建人 -->
                         <div class="value">
                             <a-select
@@ -75,9 +75,12 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="16" :xxl='9' class="search-item" v-if="show">
                         <div class="key">{{ $t('d.create_time') }}：</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="2" :xxl='2' class="search-item search-text" @click="moreSearch">
+                        {{search_text}}<span :class="{'collapsed-title': show}"></span>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
@@ -186,6 +189,8 @@ export default {
     data() {
         return {
             loginType: Core.Data.getLoginType(),
+            show:false,
+            search_text:'高级搜索',
             // 加载
             loading: false,
             // 分页
@@ -266,6 +271,10 @@ export default {
         this.getTableData();
     },
     methods: {
+        moreSearch(){
+            this.show = !this.show
+            this.search_text = this.show?'收起搜索':'高级搜索'
+        },
         routerChange(type, item = {}) {
             let routeUrl = ''
             switch (type) {
@@ -449,4 +458,9 @@ export default {
 
 <style lang="less" scoped>
 // #OrderList {}
+.search-text{
+    margin-left: 30px;
+    color: #006EF9;
+    cursor: pointer;
+}
 </style>

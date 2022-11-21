@@ -128,12 +128,12 @@
                         </a-tab-pane>
                         <a-tab-pane key="Opportunity" :tab="$t('crm_b.new_bo')">
                             <CRMBo  v-if="id>0" :detail="detail" :customerId="detail.id" ref ="CRMBo">
-                                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('crm-bo.save')"><i class="icon i_add"/>{{ $t('crm_b.save') }}</a-button>
+                                <a-button type="primary" @click="routerChange('add-crm-bo')" v-if="$auth('crm-bo.save')"><i class="icon i_add"/>{{ $t('crm_b.save') }}</a-button>
                             </CRMBo>
                         </a-tab-pane>
                         <a-tab-pane key="ContractList" :tab="$t('crm_o.list')">
                             <CRMOrder   v-if="id>0" :detail="detail" :customerId="detail.id"  ref ="CRMOrder">
-                                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('crm-order.save')"><i class="icon i_add"/>{{ $t('crm_o.save') }}</a-button>
+                                <a-button type="primary" @click="routerChange('add-order')" v-if="$auth('crm-order.save')"><i class="icon i_add"/>{{ $t('crm_o.save') }}</a-button>
                             </CRMOrder>
                         </a-tab-pane>
                     </a-tabs>
@@ -295,10 +295,24 @@ export default {
                     })
                     window.open(routeUrl.href, '_self')
                     break;
-                case 'test-drive':    // 编辑
+                case 'test-drive':    // 新建试驾单
                     routeUrl = this.$router.resolve({
                         path: "/crm-test-drive-order/test-drive-edit",
                         query: {customer_id: this.detail.id}
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'add-crm-bo':  // 修改
+                    routeUrl = this.$router.resolve({
+                        path: "/crm-bo/bo-edit",
+                        query: { customer_id: this.detail.id }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'add-order':  // 修改
+                    routeUrl = this.$router.resolve({
+                        path: "/crm-order/order-edit",
+                        query: { customer_id: this.detail.id }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
