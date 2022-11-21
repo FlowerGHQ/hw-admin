@@ -617,6 +617,7 @@ export default {
                 case "distribute":
                     Core.Api.CRMCustomer.distribute({
                         id: this.detail.id,
+                        group_id: this.group_id,
                         own_user_id: this.batchForm.own_user_id,
                     }).then(() => {
                         this.$message.success(this.$t('crm_c.distribute_success'));

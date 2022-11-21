@@ -419,7 +419,7 @@ export default {
             this.upload.fileList = fileList
         },
         getSalesAreaList() {
-            Core.Api.SalesArea.list().then(res => {
+            Core.Api.SalesArea.list({page:0}).then(res => {
                 this.salesList = res.list;
             });
         },
