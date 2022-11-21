@@ -1282,7 +1282,7 @@ const messages = {
 		    buyer_signatory: '客户方签约人',
 		    remark: '备注',
 		    money: '合同金额',
-		    money_tip: '注:合同金额=产品总金额+其他费用-折扣金额',
+		    money_tip: '注:合同金额=产品总金额+其他费用-优惠金额',
 		    sales_info: '销售信息',
 		    choose_product: '选择一个产品',
 		    price_list: '价格表的价格',

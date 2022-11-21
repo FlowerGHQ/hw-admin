@@ -15,7 +15,7 @@
         <div class="list">
             <div class="list-item" v-for="(item, i) in tableData" :key="i">
                 <div class="item-left">
-                    <img class="avatar" src="" alt="">
+                    <img class="avatar" src="@images/Group.png" alt="">
                 </div>
                 <div class="item-right">
                     <div class="name">{{ item.user ? item.user.account ? item.user.account.name : '-' : '-'}}</div>
