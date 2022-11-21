@@ -81,7 +81,11 @@
                 <a-tab-pane key="WarehouseLocation" :tab="$t('wa.location')">
                     <WarehouseLocation :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
                                  v-if="activeKey === 'WarehouseLocation'"/>
-                </a-tab-pane>.
+                </a-tab-pane>
+                <a-tab-pane key="WarehouseLocationStock" :tab="$t('wa.location_stock')">
+                    <WarehouseLocationStock :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
+                                       v-if="activeKey === 'WarehouseLocationStock'"/>
+                </a-tab-pane>
             </a-tabs>
         </div>
 
@@ -96,13 +100,14 @@ import StockList from "./components/StockList.vue";
 import StockRecord from "./components/StockRecord.vue";
 import ImperfectList from "./components/ImperfectList.vue";
 import WarehouseLocation from "./components/WarehouseLocation.vue";
+import WarehouseLocationStock from "./components/WarehouseLocationStock.vue";
 
 
 const WAREHOUSE_TYPE = Core.Const.WAREHOUSE.TYPE
 
 export default {
     name: "WarehouseDetail",
-    components: {StockList, StockRecord, ImperfectList, WarehouseLocation},
+    components: {StockList, StockRecord, ImperfectList, WarehouseLocation, WarehouseLocationStock},
     props: {},
     data() {
         return {

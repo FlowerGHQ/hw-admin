@@ -935,7 +935,11 @@ let Const = {
 		TARGET_TYPE: {
 			ITEM: 1,
 			MATERIAL: 2,
-		}
+		},
+		TARGET_TYPE_MAP: {
+			'1': { key: 1, zh: '商品', en: 'Item'},
+			'2': { key: 2, zh: '物料', en: 'Materiel'},
+		},
 	},
     STOCK_RECORD: { // 出入库明细
         COMMODITY_TYPE: {
@@ -945,7 +949,7 @@ let Const = {
             CUSTOMIZE: 40,
         },
         COMMODITY_TYPE_MAP: {
-            '10': { key: 10, zh: '商品', en: 'No instance'},
+            '10': { key: 10, zh: '商品', en: 'Item'},
             '30': { key: 30, zh: '物料', en: 'Materiel'},
         },
 	    COMMODITY_TYPE_OLD_MAP: {
