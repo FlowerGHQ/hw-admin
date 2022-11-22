@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "2076220",
+      "name": " 下拉箭头小",
+      "font_class": "xialajiantouxiao",
+      "unicode": "e87e",
+      "unicode_decimal": 59518
+    },
+    {
+      "icon_id": "2076268",
+      "name": "收起箭头小",
+      "font_class": "shouqijiantouxiao",
+      "unicode": "e892",
+      "unicode_decimal": 59538
+    },
+    {
       "icon_id": "32567987",
       "name": "crm_data",
       "font_class": "crm_data",

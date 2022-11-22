@@ -21,7 +21,7 @@
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_c.type') }}：</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" @change="handleSearch">
@@ -29,8 +29,8 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">{{ $t('crm_o.create_user') }}：</div> <!-- 创建人 -->
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
+                    <div class="key">{{ $t('crm_o.create_user') }}：</div>
                     <div class="value">
                         <a-select
                             v-model:value="searchForm.create_user_id"
@@ -48,7 +48,7 @@
                         </a-select>
                     </div>
                 </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_c.level') }}：</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.level" :placeholder="$t('def.select')" @change="handleSearch">
@@ -56,9 +56,14 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="14" :xxl='14' class="search-item" v-if="show">
                         <div class="key">{{ $t('d.create_time') }}：</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
+                    </a-col>
+                     <a-col :xs='24' :sm='24' :xl="2" :xxl='3' class="search-item search-text" @click="moreSearch">
+                        {{show? $t('search.stow'):$t('search.advanced_search')}}
+                        <i class="icon i_xialajiantouxiao" style="margin-left:5px" v-if="!show"></i>
+                        <i class="icon i_shouqijiantouxiao" style="margin-left:5px" v-else></i>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
@@ -131,7 +136,7 @@
                             {{ $Util.CRMCustomerSourceTypeFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.dataIndex === 'label_list'">
-                            <a-tag v-for="item in record.label_list" color="blue" class="customer-tag" >{{lang ==="zh" ? item.label : item.label_en}}</a-tag>
+                            <a-tag v-for="(item,index) in record.label_list" :key="index" color="blue" class="customer-tag" >{{lang ==="zh" ? item.label : item.label_en}}</a-tag>
                         </template>
 
                         <template v-if="column.key === 'time'">
@@ -240,8 +245,6 @@
 <script>
 import Core from '../../core';
 import TimeSearch from '../../components/common/TimeSearch.vue'
-
-
 export default {
     name: 'CustomerList',
     components: {
@@ -252,6 +255,7 @@ export default {
         return {
 
             loginType: Core.Data.getLoginType(),
+            show:false,
             // 加载
             loading: false,
             // 分页
@@ -310,6 +314,7 @@ export default {
         },
     },
     computed: {
+
         tableColumns() {
             let columns = [
                 {title: 'n.name', dataIndex: 'name', key:'detail', sorter: true},
@@ -363,6 +368,10 @@ export default {
         this.getTableData();
     },
     methods: {
+        moreSearch(){
+            this.show = !this.show
+
+        },
         routerChange(type, item = {}) {
             let routeUrl = ''
             switch (type) {
@@ -678,5 +687,9 @@ export default {
         }
     }
 }
-
+.search-text{
+    margin-left: 30px;
+    color: #006EF9;
+    cursor: pointer;
+}
 </style>

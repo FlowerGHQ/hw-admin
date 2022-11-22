@@ -21,13 +21,13 @@
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_b.own_user_name') }}：</div>
                         <div class="value">
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_b.status') }}：</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.status" :placeholder="$t('def.select')" @change="handleSearch">
@@ -35,9 +35,14 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item" v-if="show">
                         <div class="key">{{ $t('d.create_time') }}：</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="2" :xxl='3' class="search-item search-text" @click="moreSearch">
+                        {{show? $t('search.stow'):$t('search.advanced_search')}}
+                        <i class="icon i_xialajiantouxiao" style="margin-left:5px" v-if="!show"></i>
+                        <i class="icon i_shouqijiantouxiao" style="margin-left:5px" v-else></i>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
@@ -174,6 +179,7 @@ export default {
     data() {
         return {
             loginType: Core.Data.getLoginType(),
+            show:false,
             // 加载
             loading: false,
             // 分页
@@ -253,6 +259,9 @@ export default {
         this.getTableData();
     },
     methods: {
+        moreSearch(){
+            this.show = !this.show
+        },
         routerChange(type, item = {}) {
             let routeUrl = ''
             switch (type) {
@@ -440,4 +449,9 @@ export default {
 
 <style lang="less" scoped>
 // #CustomerList {}
+.search-text{
+    margin-left: 30px;
+    color: #006EF9;
+    cursor: pointer;
+}
 </style>

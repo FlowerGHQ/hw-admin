@@ -30,7 +30,7 @@
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_d.status') }}：</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.status" :placeholder="$t('def.select')" @change="handleSearch">
@@ -38,7 +38,7 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_d.crm_dict_id') }}：</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.crm_dict_id" :placeholder="$t('def.select')" @change="handleSearch">
@@ -46,13 +46,18 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="16" :xxl='14' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_d.test_drive_time') }}：</div>
                         <div class="value">
                             <a-range-picker v-model:value="createTime" valueFormat='YYYY-MM-DD HH:mm:ss' @change="handleTimeSearch" :show-time="defaultTime" :allow-clear='false'>
                                 <template #suffixIcon><i class="icon i_calendar"/></template>
                             </a-range-picker>
                         </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="2" :xxl='3' class="search-item search-text" @click="moreSearch">
+                        {{show? $t('search.stow'):$t('search.advanced_search')}}
+                        <i class="icon i_xialajiantouxiao" style="margin-left:5px" v-if="!show"></i>
+                        <i class="icon i_shouqijiantouxiao" style="margin-left:5px" v-else></i>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
@@ -170,6 +175,7 @@ export default {
         return {
 
             loginType: Core.Data.getLoginType(),
+            show:false,
             // 加载
             loading: false,
             // 分页
@@ -256,6 +262,9 @@ export default {
         dayjs.locale('zh-cn')
     },
     methods: {
+        moreSearch(){
+            this.show = !this.show
+        },
         routerChange(type, item = {}) {
             let routeUrl = ''
             switch (type) {
@@ -559,4 +568,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.search-text{
+    margin-left: 30px;
+    color: #006EF9;
+    cursor: pointer;
+}
 </style>

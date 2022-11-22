@@ -23,7 +23,7 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_oi.type') }}：</div> <!-- 回款类型 -->
                         <div class="value">
                             <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" @change="handleSearch">
@@ -31,7 +31,7 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_oi.payment_type') }}：</div> <!-- 支付方式 -->
                         <div class="value">
                             <a-select v-model:value="searchForm.payment_type" :placeholder="$t('def.select')" @change="handleSearch">
@@ -39,11 +39,11 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_oi.date') }}：</div> <!-- 回款日期 -->
                         <div class="value"><TimeSearch @search="handleOtherSearch" :keys="dateTime" ref='DateTimeSearch'/></div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_oi.money') }}：</div> <!-- 回款金额 -->
                         <div class="value">
                             <a-input-group compact>
@@ -59,7 +59,7 @@
                             </a-input-group>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_oi.create_user') }}：</div> <!-- 创建人 -->
                         <div class="value">
                             <a-select
@@ -78,9 +78,14 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item" v-if="show">
                         <div class="key">{{ $t('d.create_time') }}：</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="2" :xxl='3' class="search-item search-text" @click="moreSearch" >
+                        {{show? $t('search.stow'):$t('search.advanced_search')}}
+                        <i class="icon i_xialajiantouxiao" style="margin-left:5px" v-if="!show"></i>
+                        <i class="icon i_shouqijiantouxiao" style="margin-left:5px" v-else></i>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
@@ -148,6 +153,7 @@ export default {
     data() {
         return {
             loginType: Core.Data.getLoginType(),
+            show:false,
             // 加载
             loading: false,
             // 分页
@@ -202,6 +208,9 @@ export default {
         this.getTableData();
     },
     methods: {
+        moreSearch(){
+            this.show = !this.show
+        },
         routerChange(type, item = {}) {
             let routeUrl = ''
             switch (type) {
@@ -307,4 +316,9 @@ export default {
 
 <style lang="less" scoped>
 // #OrderList {}
+.search-text{
+    margin-left: 30px;
+    color: #006EF9;
+    cursor: pointer;
+}
 </style>

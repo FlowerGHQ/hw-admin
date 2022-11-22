@@ -977,6 +977,8 @@ const messages = {
             select_store: '请选择所属门店',
             select_a_first: '请先选择所属零售商',
             enter_sn: '请输入序号',
+            advanced_search:'高级搜索',
+            stow:'收起'
         },
         pop_up: {
             reason: '原因',
@@ -1243,6 +1245,9 @@ const messages = {
 		    interested_models: '意向车型',
 		    distribute_bo: '移交商机',
             new_bo: '商机',
+            back:'不允许回退',
+            current:'正在当前步骤',
+            complete_previous:'请先完成上一步'
 	    },
 	    crm_group: {
 		    name: '区域',
@@ -1282,7 +1287,7 @@ const messages = {
 		    buyer_signatory: '客户方签约人',
 		    remark: '备注',
 		    money: '合同金额',
-		    money_tip: '注:合同金额=产品总金额+其他费用-折扣金额',
+		    money_tip: '注:合同金额=产品总金额+其他费用-优惠金额',
 		    sales_info: '销售信息',
 		    choose_product: '选择一个产品',
 		    price_list: '价格表的价格',
@@ -2972,7 +2977,8 @@ const messages = {
             select_store: 'Please select the Store',
             select_a_first: 'Please select a Agent first',
             enter_sn: 'Please enter serial number',
-
+            advanced_search:'Advanced Search',
+            stow:'Stow'
         },
         pop_up: {
             reason: 'Reason',
@@ -3221,6 +3227,9 @@ const messages = {
 	        interested_models: 'Intended Model',
 	        distribute_bo: 'Transfer business opportunity',
             new_bo: 'New Business',
+            back:'Fallback Not Allowed',
+            current:'Current Step In Progress',
+            complete_previous:'Please Complete The Previous Step First'
 	    },
 	    crm_group: {
 		    name: 'Area',
