@@ -15,7 +15,7 @@
                 <span class="time" v-if="item.time">{{ $Util.timeFilter(item.time) }}</span>
             </div>
         </div>
-        <a-button style="margin:5px 0 0 35px" @click="reactivation"  v-if="current === STATUS.LOSE && $auth('crm-bo.reactivation')"><i class="icon i_audit"/>{{$t('crm_b.reactivation')}}</a-button>
+        <span class="reactivation" @click="reactivation"  v-if="current === STATUS.LOSE && $auth('crm-bo.reactivation')">{{$t('crm_b.reactivation')}}</span>
         <span class="lose" @click="loseTheOrder" v-else>{{$t('crm_b.lost_order')}}</span>
     </div>
 </div>
@@ -228,6 +228,18 @@ export default {
             background-color: #feeaeb;
             margin-left: 40px;
             color:red;
+            cursor: pointer;
+        }
+        .reactivation{
+            display: inline-block;
+            width: 100px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            border-radius: 20px;
+            background-color: #1dbf8a;
+            margin-left: 40px;
+            color:#ffffff;
             cursor: pointer;
         }
     }
