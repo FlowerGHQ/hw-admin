@@ -1245,6 +1245,9 @@ const messages = {
 		    interested_models: '意向车型',
 		    distribute_bo: '移交商机',
             new_bo: '商机',
+            back:'不允许回退',
+            current:'正在当前步骤',
+            complete_previous:'请先完成上一步'
 	    },
 	    crm_group: {
 		    name: '区域',
@@ -3224,6 +3227,9 @@ const messages = {
 	        interested_models: 'Intended Model',
 	        distribute_bo: 'Transfer business opportunity',
             new_bo: 'New Business',
+            back:'Fallback Not Allowed',
+            current:'Current Step In Progress',
+            complete_previous:'Please Complete The Previous Step First'
 	    },
 	    crm_group: {
 		    name: 'Area',
