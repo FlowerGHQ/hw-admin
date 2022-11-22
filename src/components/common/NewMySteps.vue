@@ -16,7 +16,7 @@
             </div>
         </div>
         <a-button style="margin:5px 0 0 35px" @click="reactivation"  v-if="current === STATUS.LOSE && $auth('crm-bo.reactivation')"><i class="icon i_audit"/>{{$t('crm_b.reactivation')}}</a-button>
-        <span class="lose" @click="loseTheOrder" v-else>输单</span>
+        <span class="lose" @click="loseTheOrder" v-else>{{$t('crm_b.lost_order')}}</span>
     </div>
 </div>
 </template>
