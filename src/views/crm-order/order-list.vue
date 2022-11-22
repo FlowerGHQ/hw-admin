@@ -4,6 +4,16 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('crm_o.list') }}</div>
                 <div class="btns-area">
+                    <a-upload name="file" class="file-uploader"
+                              :file-list="upload.fileList" :action="upload.action"
+                              :show-upload-list='false'
+                              :headers="upload.headers" :data='upload.data'
+                              accept=".xlsx,.xls"
+                              @change="handleMatterChange">
+                        <a-button type="primary" ghost class="file-upload-btn">
+                            <i class="icon i_add"/>{{ $t('i.import') }}
+                        </a-button>
+                    </a-upload>
                     <a-button type="primary" @click="routerChange('edit')" v-if="$auth('crm-order.save')"><i class="icon i_add"/>{{ $t('crm_o.save') }}</a-button>
                 </div>
             </div>
@@ -256,6 +266,17 @@ export default {
             selectedRowItemsAll: [],
             groupOptions: [],
             group_id: undefined,
+            upload: {
+                action: Core.Const.NET.URL_POINT + "/admin/1/crm-order/import-shop",
+                fileList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'xlsx',
+                },
+            },
         };
     },
     watch: {},
@@ -492,6 +513,18 @@ export default {
                 console.log(res)
 
             })
+        },
+        // 上传文件
+        handleMatterChange({file, fileList}) {
+            console.log("handleMatterChange status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                if (file.response && file.response.code > 0) {
+                    return this.$message.error(this.$t(file.response.code + ''))
+                } else {
+                    return this.$message.success(this.$t('i.uploaded'));
+                }
+            }
+            this.upload.fileList = fileList
         },
     }
 };
