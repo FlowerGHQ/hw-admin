@@ -18,8 +18,8 @@
                 <div class="form-item required" v-if="form.id === 0 || form.phone_country_code === ''">
                     <div class="key">{{ $t('n.select_country') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.phone_country_code" :placeholder="$t('def.input')" @select="setPhoneCountryCode" :disabled="form.id > 0 && form.phone_country_code != ''" show-search option-filter-prop="key" allow-clear>
-                            <a-select-option v-for="item of phoneCountryCodeList" :key="item.phoneAreaCode+item.name+item.enName" :value="item.phoneAreaCode"  >
+                        <a-select v-model:value="form.country_code" :placeholder="$t('def.input')" @select="setPhoneCountryCode" :disabled="form.id > 0 && form.phone_country_code != ''" show-search option-filter-prop="key" allow-clear>
+                            <a-select-option v-for="item of phoneCountryCodeList" :key="item.phoneAreaCode+item.name+item.enName" :value="item.code"  >
                                 <span  class="phoneCountryCode">{{ item.phoneAreaCode }}</span>
                                 {{lang === 'zh' ? item.name: item.enName}}
                             </a-select-option>
@@ -336,6 +336,7 @@ export default {
                 name: undefined,
                 phone: undefined,
                 email: undefined,
+                country_code: undefined,
                 phone_country_code: undefined,
                 group_id: undefined,
                 gender: undefined,
@@ -406,7 +407,14 @@ export default {
         }
         this.getSourceList()
         this.handleGroupTree()
-        if(Core.Data.getPhoneCountryCode()) this.form.phone_country_code = Core.Data.getPhoneCountryCode()
+        if(Core.Data.getCountryCode()){
+            this.form.country_code = Core.Data.getCountryCode()
+            this.phoneCountryCodeList.forEach(item => {
+                if (item.code === this.form.country_code){
+                    this.form.phone_country_code = item.phoneAreaCode
+                }
+            })
+        }
         if(Core.Data.getGroupId()) this.form.group_id = Core.Data.getGroupId()
     },
     methods: {
@@ -452,6 +460,7 @@ export default {
                 this.form.name = this.detail.name;
                 this.form.phone = this.detail.phone;
                 this.form.email = this.detail.email;
+                this.form.country_code = this.detail.country_code;
                 this.form.phone_country_code = this.detail.phone_country_code;
 
                 this.form.group_id = this.detail.group_id

@@ -61,7 +61,7 @@ let Const = {
         KEY_FIELD_DISPLAY: 'field.display',
         KEY_LANGUAGE: 'language',
 	    TAB_POSITION: 'tab.position',
-	    PHONE_COUNTRY_CODE: 'phone.country.code',
+	    COUNTRY_CODE: 'country.code',
         GROUP_ID: 'group.id',
     },
     DEFULT_IMG: {

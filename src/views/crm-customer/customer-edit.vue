@@ -25,11 +25,11 @@
                     </div>
 
                 </div>
-                <div class="form-item required" v-if="form.id === 0 || form.phone_country_code === ''">
+                <div class="form-item required" >
                     <div class="key">{{ $t('n.select_country') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.phone_country_code" :placeholder="$t('def.input')" @select="setPhoneCountryCode"  :disabled="form.id > 0 && form.phone_country_code != ''" show-search option-filter-prop="key" allow-clear>
-                            <a-select-option v-for="item of phoneCountryCodeList" :key="item.phoneAreaCode+item.name+item.enName" :value="item.phoneAreaCode"  >
+                        <a-select v-model:value="form.country_code" :placeholder="$t('def.input')" @select="setPhoneCountryCode"  :disabled="form.id > 0 && form.country_code != ''" show-search option-filter-prop="key" allow-clear>
+                            <a-select-option v-for="item of phoneCountryCodeList" :key="item.phoneAreaCode+item.name+item.enName" :value="item.code"  >
                                 <span  class="phoneCountryCode">{{ item.phoneAreaCode }}</span>
                                 {{lang === 'zh' ? item.name: item.enName}}
                             </a-select-option>
@@ -39,7 +39,7 @@
                 <div class="form-item required with-btn" v-if="form.id === 0 || form.phone === ''">
                     <div class="key">{{ $t('n.phone') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerPhoneBlur" :disabled="(form.id > 0 && form.phone != undefined) ||  form.phone_country_code == undefined"/>
+                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerPhoneBlur" :disabled="(form.id > 0 && form.phone != undefined) ||  form.country_code == undefined"/>
                         <div class="btn">
                             <span v-if="isExistPhone == 1"><i class="icon i_confirm"/></span>
                             <span v-else-if="isExistPhone == 2"><i class="icon i_close_c"/></span>
@@ -337,8 +337,8 @@ export default {
                 remark: '',
                 status: Core.Const.CRM_CUSTOMER.STATUS.POOL,
                 address: '',
-
-                phone_country_code: ''
+                country_code: '',
+                phone_country_code: '',
             },
             defAddr: [],
             areaList: [],
@@ -375,7 +375,6 @@ export default {
                 continent: '',
                 country: '',
                 country_en: '',
-                country_code: '',
             },
             labelList: [],
             labelIdList: [],
@@ -403,7 +402,14 @@ export default {
         }
         this.handleGroupTree();
         this.getSourceList()
-        if(Core.Data.getPhoneCountryCode()) this.form.phone_country_code = Core.Data.getPhoneCountryCode()
+        if(Core.Data.getCountryCode()){
+            this.form.country_code = Core.Data.getCountryCode()
+            this.phoneCountryCodeList.forEach(item => {
+                if (item.code === this.form.country_code){
+                    this.form.phone_country_code = item.phoneAreaCode
+                }
+            })
+        }
         if(Core.Data.getGroupId()) this.form.group_id = Core.Data.getGroupId()
     },
     methods: {
@@ -455,7 +461,7 @@ export default {
             }
 
             console.log("areaContinent", areaContinent)
-            if (!form.phone_country_code) {
+            if (!form.country_code) {
                 return this.$message.warning(this.$t('n.choose') + ":" + this.$t('crm_c.phone_country_code') )
             }
             if (!this.$Util.ifPhoneFilter(form.phone,form.phone_country_code)){
@@ -650,7 +656,12 @@ export default {
         },
         // 存国家和区域数据
         setPhoneCountryCode(val) {
-            Core.Data.setPhoneCountryCode(val)
+            this.phoneCountryCodeList.forEach(item => {
+                if (item.code === val){
+                    this.form.phone_country_code = item.phoneAreaCode
+                }
+            })
+            Core.Data.setCountryCode(val)
             this.handleCustomerPhoneBlur()
         },
         setGroupId(val) {
