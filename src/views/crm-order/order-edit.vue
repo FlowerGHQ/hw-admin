@@ -386,7 +386,7 @@ export default {
                 //     this.form[key] = this.detail[key]
                 // }
                 for (const key in this.form) {
-                    if (d[key] !== 0){
+                    if (detail[key] !== 0){
                         this.form[key] =this.detail[key]
                     } else {
                         this.form[key] = undefined
@@ -674,6 +674,6 @@ export default {
         padding: 0 20px;
     }
 
-    
+
 }
 </style>
