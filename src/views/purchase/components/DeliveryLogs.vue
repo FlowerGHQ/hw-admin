@@ -557,7 +557,6 @@ export default {
 
             if (this.$auth('ADMIN')) {
                 adminRequire = [
-                    {key: 'express_type', msg: this.$t('p.choose_express')},
                     {key: 'port', msg: this.$t('p.enter_harbor')},
                     {key: 'delivery_address', msg: this.$t('p.fill_address')},
                     {key: 'delivery_time', msg: this.$t('wb.delivery_time')},
