@@ -127,8 +127,9 @@
                         <ItemSelect @select="handleAddFailItem"
                                     :disabled-checked='tableData.map(i => i.item_id)'
                                     btn-type='primary' :btn-text="$t('i.add')" btn-class="fault-btn"
+                                    :dis="moneyType"
                                     v-if="$auth('repair-order.save')"/>
-                                    <a-select v-model:value="moneyType"  style="width:100px;margin-left:20px" @change="moneyChange">
+                                    <a-select v-model:value="moneyType"  style="width:120px;margin-left:20px" @change="moneyChange" :placeholder="$t('def.select')">
                                         <a-select-option v-for="item of MoneyTypeList" :key="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
                                     </a-select>
                     </div>
@@ -309,7 +310,7 @@ export default {
             moneyDisabled: 'false',
             labelList: [],
             labelIdList: [],
-            moneyType:'',
+            moneyType:undefined,
             MoneyTypeList:Core.Const.MONEYTYPE.TYPE_MAP,
         };
     },
@@ -531,10 +532,13 @@ export default {
         async handleAddFailItem(ids, items) {
             for (let i = 0; i < items.length; i++) {
                 const element = items[i];
+                switch(this.moneyType){
+                    case 'usd': element.price = element.fob_usd / 100;break;
+                    case 'eur': element.price = element.fob_eur / 100;break;
+                }
                 element.item_id = element.id
                 element.id = 0
                 element.amount = 1
-                element.price = element.fob_usd / 100
                 element.discount = 100
                 element.discount_price = element.price
                 element.remark = ''
