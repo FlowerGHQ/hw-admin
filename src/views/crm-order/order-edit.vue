@@ -128,6 +128,9 @@
                                     :disabled-checked='tableData.map(i => i.item_id)'
                                     btn-type='primary' :btn-text="$t('i.add')" btn-class="fault-btn"
                                     v-if="$auth('repair-order.save')"/>
+                                    <a-select v-model:value="moneyType"  style="width:100px;margin-left:20px" @change="moneyChange">
+                                        <a-select-option v-for="item of MoneyTypeList" :key="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                                    </a-select>
                     </div>
                     <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                              :row-key="record => record.id" :pagination='false' size="small">
@@ -139,12 +142,12 @@
                                 {{ text || '-' }}
                             </template>
                             <template v-if="column.dataIndex === 'price'">
-                                $ {{ text || '-' }}
+                               {{moneyT}}  {{ text || '-' }}
                                 <!--                                    <a-input-number v-model:value="record.price" style="width: 82px;"-->
                                 <!--                                                      :min="0" :precision="2" placeholder="请输入"/>-->
                             </template>
                             <template v-if="column.dataIndex === 'discount_price'">
-                                $<a-input-number v-model:value="record.discount_price" :min="0" :precision="2" placeholder="0.00" :placeholder="$t('def.input')" @change="checkDiscount(record, 'discount_price')"/>
+                                {{moneyT}} <a-input-number v-model:value="record.discount_price" :min="0" :precision="2" placeholder="0.00" :placeholder="$t('def.input')" @change="checkDiscount(record, 'discount_price')"/>
                                 <!--                                 <a-input-number v-model:value="record.discount_price" style="width: 150px;"-->
                                 <!--                                                :min="0.00"  :precision="2" placeholder="请输入" @change="checkDiscount(record, 'discount_price')"/>-->
 
@@ -161,7 +164,7 @@
                             <template v-if="column.key === 'total_price'">
                                 <!--                                $ <a-input-number v-model:value="record.total_price" style="width: 150px;"-->
                                 <!--                                                :min="0" :precision="2" placeholder="请输入" @change="checkDiscount(record, 'total_price')"/>-->
-                                ${{ $Util.countFilter(record.price * record.amount * record.discount / 100, 1) }}
+                                {{moneyT}} {{ $Util.countFilter(record.price * record.amount * record.discount / 100, 1) }}
                             </template>
 
                             <template v-if="column.dataIndex === 'operation'">
@@ -217,7 +220,7 @@
                     <div class="value">
                         <LabelSelect :btnText="$t('sl.add')" :category="Core.Const.CRM_LABEL.CATEGORY.ORDER" color="blue" add-customer-btn="true" @select="handleAddLabelShow" :disabled-checked="labelIdList"/>
                         <br/>
-                        <a-tag v-for="(label,index) in labelList" closable @close="handleDeleteLabel(index)" class="customer-tag">
+                        <a-tag v-for="(label,index) in labelList" :key="index" closable @close="handleDeleteLabel(index)" class="customer-tag">
                             <template #closeIcon><i class="icon i_m_error"></i></template>
                             {{lang ==="zh"? label.label : label.label_en}}
                         </a-tag>
@@ -306,7 +309,8 @@ export default {
             moneyDisabled: 'false',
             labelList: [],
             labelIdList: [],
-
+            moneyType:'',
+            MoneyTypeList:Core.Const.MONEYTYPE.TYPE_MAP,
         };
     },
     watch: {
@@ -323,6 +327,9 @@ export default {
     computed: {
         lang() {
             return this.$store.state.lang
+        },
+        moneyT(){
+            return this.moneyType === 'usd' ? '$':'€'
         },
         tableColumns() {
             let tableColumns = [
@@ -364,6 +371,16 @@ export default {
         }
     },
     methods: {
+        moneyChange(){  //货币切换
+         Core.Api.MoneyChange.switch({
+            currency:this.moneyType,
+            item_bind_list:this.tableData
+         }).then(res=>{
+            console.log(this.moneyType,this.tableData);
+         }).catch(err=>{
+            console.log(err);
+         })
+        },
         routerChange(type, item) {
             switch (type) {
                 case 'back':    // 详情

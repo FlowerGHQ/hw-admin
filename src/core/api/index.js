@@ -774,6 +774,9 @@ const apiList = {
         list: ['PostJson', 'report/list'],
 		detail: ['PostJson', 'report/detail'],
     },
+    MoneyChange:{
+        switch:['PostJson', 'crm-order/switch-currency']
+    }
 };
 
 export default new Api(baseUrl, apiList);
