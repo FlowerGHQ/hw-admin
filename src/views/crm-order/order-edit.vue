@@ -376,6 +376,13 @@ export default {
             currency:this.moneyType,
             item_bind_list:this.tableData
          }).then(res=>{
+           res.list.forEach(it =>{
+              it.name = it.item_name
+              it.code = it.item_code
+              it.price = it.price / 100
+              it.discount_price = it.discount_price / 100
+           })
+           this.tableData = res.list
             console.log(this.moneyType,this.tableData);
          }).catch(err=>{
             console.log(err);
