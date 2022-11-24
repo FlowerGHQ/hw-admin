@@ -7,7 +7,7 @@
         <a-descriptions :title="$t('crm_c.information')" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('n.name')" class="label">{{detail.name}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_b.money')" class="label">{{$Util.countFilter(detail.money)}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_b.status')" class="label">{{detail.status}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_b.status')" class="label">{{currentStepText}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_b.estimated_deal_time')" class="label">{{$Util.timeFilter(detail.estimated_deal_time, 3)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_b.source')" class="label">{{$Util.CRMBoSourceMapFilter(detail.source, $i18n.locale)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_b.remark')" class="label">{{detail.remark}}</a-descriptions-item>
@@ -39,8 +39,11 @@ export default {
     props: {
         detail:{
             type: Object,
+        },
+        currentStepText:{
+            type:String,
+            default:''
         }
-
     },
     data() {
         return {

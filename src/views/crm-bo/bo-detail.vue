@@ -76,7 +76,7 @@
                             </CRMTrackRecord>
                         </a-tab-pane>
                         <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.summary_information')">
-                            <CustomerSituation  v-if="id>0" :detail="detail"/>
+                            <CustomerSituation  v-if="id>0" :detail="detail" :currentStepText="currentStepText"/>
                         </a-tab-pane>
                         <a-tab-pane key="SalesInformation" :tab="$t('crm_b.select_item')">
                             <CRMItem :detail="detail"  v-if="id>0" :sourceId="detail.id" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.BO" ref ="CRMItem"></CRMItem>
@@ -213,6 +213,20 @@ export default {
     computed: {
         lang() {
             return this.$store.state.lang
+        },
+        currentStepText(){
+            console.log('this.groupStatusTableData',this.groupStatusTableData,this.detail.status);
+            if(this.detail.status === 100){
+                return this.$i18n.locale === 'en'? 'Win order':'赢单'
+            }
+            if(this.detail.status === -100){
+                return this.$i18n.locale === 'en'? 'Lose order':'输单'
+            }
+            const it = this.groupStatusTableData.filter((item,index)=>{
+                return index === this.detail.status
+            })
+            console.log(it.value);
+            return it[0]?this.$i18n.locale === 'en'?it[0].en:it[0].zh:''
         }
     },
     created() {
@@ -455,7 +469,6 @@ export default {
 
             })
         },
-
     }
 };
 </script>

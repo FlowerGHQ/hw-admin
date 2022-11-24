@@ -104,7 +104,7 @@
                         <a-input v-model:value="form.buyer_signatory" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item ">
                     <div class="key">{{ $t('crm_o.remark') }}：</div> <!-- 备注 -->
                     <div class="value">
                         <a-textarea v-model:value="form.remark" :placeholder="$t('def.input')"
@@ -468,9 +468,9 @@ export default {
             if (!form.buyer_signatory) {
                 return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_o.buyer_signatory'))
             }
-            if (!form.remark) {
-               return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_o.remark'))
-            }
+            // if (!form.remark) {
+            //    return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_o.remark'))
+            // }
             // if (!form.item_bind_list) {
             //     return this.$message.warning(this.$t('def.select'))
             // }

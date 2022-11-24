@@ -42,7 +42,7 @@ export default {
     },
     methods:{
         nextStep(i,c){
-            if(this.current === this.STATUS.LOSE) return
+            if(this.current === this.STATUS.LOSE) return // 输单无法点击
             if(i<c) return this.$message.warning(this.$t('crm_b.back'))  //回退
             if(i===c) return this.$message.warning(this.$t('crm_b.current')) //正在当前步骤
             if(i!== c+1 && i!== this.stepsList.length - 1) return this.$message.warning(this.$t('crm_b.complete_previous')) //跳过下一步
