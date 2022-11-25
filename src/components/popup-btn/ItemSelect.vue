@@ -1,5 +1,5 @@
 <template>
-    <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
+    <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass" :disabled="!dis">
         <slot>{{ btnText }}</slot>
     </a-button>
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'
@@ -111,6 +111,10 @@ export default {
         purchaseId: {
             type: Number,
             default: 0
+        },
+        dis:{
+            type:String,
+            default:''
         }
     },
     data() {

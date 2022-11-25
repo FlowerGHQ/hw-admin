@@ -83,7 +83,9 @@
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="2" :xxl='3' class="search-item search-text" @click="moreSearch">
-                        {{search_text}}<span :class="{'collapsed-title': show}"></span>
+                        {{show? $t('search.stow'):$t('search.advanced_search')}}
+                        <i class="icon i_xialajiantouxiao" style="margin-left:5px" v-if="!show"></i>
+                        <i class="icon i_shouqijiantouxiao" style="margin-left:5px" v-else></i>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
@@ -118,10 +120,10 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'money'">
-                            {{$Util.countFilter(text ) + '元' || '-' }}
+                             {{record.mType}}{{$Util.countFilter(text )  || '-' }}
                         </template>
                         <template v-if="column.key === 'refunded'">
-                            {{ text / 100 + '元' || '-' }}
+                             {{record.mType}}{{ text / 100 || '-' }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -167,7 +169,6 @@ export default {
         return {
             loginType: Core.Data.getLoginType(),
             show:false,
-            search_text:'高级搜索',
             // 加载
             loading: false,
             // 分页
@@ -226,7 +227,6 @@ export default {
     methods: {
         moreSearch(){
             this.show = !this.show
-            this.search_text = this.show?'收起搜索':'高级搜索'
         },
         routerChange(type, item = {}) {
             let routeUrl = ''
@@ -293,6 +293,12 @@ export default {
                 console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
+                this.tableData.map((item,index)=>{
+                    switch(item.currency){
+                        case 'usd': item.mType = '$';break;
+                        case 'eur': item.mType = '€';break;
+                    }
+                })
                 console.log("🚀 ~ file: order-list.vue ~ line 229 ~ getTableData ~ this.tableData", this.tableData)
             }).catch(err => {
                 console.log('getTableData err:', err)

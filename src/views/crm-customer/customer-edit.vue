@@ -25,21 +25,24 @@
                     </div>
 
                 </div>
+
                 <div class="form-item required" >
                     <div class="key">{{ $t('n.select_country') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.country_code" :placeholder="$t('def.input')" @select="setPhoneCountryCode"  :disabled="form.id > 0 && form.country_code != ''" show-search option-filter-prop="key" allow-clear>
+                        <a-select v-model:value="form.country_code" :placeholder="$t('def.input')" @select="setPhoneCountryCode"  :disabled="form.id > 0 && detail.country_code != ''" show-search option-filter-prop="key" allow-clear>
                             <a-select-option v-for="item of phoneCountryCodeList" :key="item.phoneAreaCode+item.name+item.enName" :value="item.code"  >
+
                                 <span  class="phoneCountryCode">{{ item.phoneAreaCode }}</span>
                                 {{lang === 'zh' ? item.name: item.enName}}
                             </a-select-option>
                         </a-select>
                     </div>
                 </div>
-                <div class="form-item required with-btn" v-if="form.id === 0 || form.phone === ''">
+                <div class="form-item required with-btn" >
                     <div class="key">{{ $t('n.phone') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerPhoneBlur" :disabled="(form.id > 0 && form.phone != undefined) ||  form.country_code == undefined"/>
+                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerPhoneBlur" :disabled="(form.id > 0 && detail.phone != undefined) ||  form.country_code == undefined"/>
+
                         <div class="btn">
                             <span v-if="isExistPhone == 1"><i class="icon i_confirm"/></span>
                             <span v-else-if="isExistPhone == 2"><i class="icon i_close_c"/></span>
@@ -49,10 +52,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-item required with-btn" v-if="form.id === 0 || form.email === ''">
+                <div class="form-item required with-btn">
                     <div class="key">{{ $t('n.email') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.email" :placeholder="$t('def.input')" @blur="handleCustomerEmailBlur" :disabled="form.id > 0 && form.email != undefined"/>
+                        <a-input v-model:value="form.email" :placeholder="$t('def.input')" @blur="handleCustomerEmailBlur" :disabled="form.id > 0 && detail.email != undefined"/>
                         <div class="btn">
                             <span v-if="isExistEmail == 1"><i class="icon i_confirm"/></span>
                             <span v-else-if="isExistEmail == 2"><i class="icon i_close_c"/></span>
@@ -314,7 +317,6 @@ export default {
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
             // 加载
             loading: false,
-            detail: {},
             form: {
                 id: '',
                 type: '',
@@ -339,6 +341,31 @@ export default {
                 address: '',
                 country_code: '',
                 phone_country_code: '',
+            },
+            detail: {
+                id: '',
+                type: '',
+                name: '',
+                phone: '',
+                level: '',
+                group_id: '',
+                purchase_intent: '',
+                test_drive_intent: '',
+                crm_dict_id: '',
+                company_size: '',
+                company_license_id:'',
+                gender: '',
+                birthday: '',
+                industry: '',
+                nationality: '',
+                hobby: '',
+                marital_status: '',
+                income: '',
+                remark: '',
+                status: Core.Const.CRM_CUSTOMER.STATUS.POOL,
+                address: '',
+
+                phone_country_code: ''
             },
             defAddr: [],
             areaList: [],

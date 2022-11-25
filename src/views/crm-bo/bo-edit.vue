@@ -61,7 +61,11 @@
                         <div class="form-item file-upload">
                             <ItemSelect @select="handleAddFailItem"
                                         :disabled-checked='tableData.map(i => i.item_id)'
+                                        :dis="moneyType"
                                         btn-type='primary' :btn-text="$t('crm_b.interested_models')" btn-class="fault-btn"/>
+                                        <a-select v-model:value="moneyType"  style="width:120px;margin-left:20px" @change="moneyChange" :placeholder="$t('def.select')">
+                                        <a-select-option v-for="item of MoneyTypeList" :key="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                                    </a-select>
                         </div>
                     </div>
                 </div>
@@ -76,12 +80,12 @@
                                 {{ text || '-' }}
                             </template>
                             <template v-if="column.dataIndex === 'price'">
-                                $ {{ text || '-' }}
+                                {{moneyT}} {{ text || '-' }}
                                 <!--                                    <a-input-number v-model:value="record.price" style="width: 82px;"-->
                                 <!--                                                      :min="0" :precision="2" placeholder="请输入"/>-->
                             </template>
                             <template v-if="column.dataIndex === 'discount_price'">
-                                $<a-input-number v-model:value="record.discount_price" :min="0" :precision="2" placeholder="0.00" :placeholder="$t('def.input')" @change="checkDiscount(record, 'discount_price')"/>
+                                {{moneyT}}<a-input-number v-model:value="record.discount_price" :min="0" :precision="2" placeholder="0.00" :placeholder="$t('def.input')" @change="checkDiscount(record, 'discount_price')"/>
                                 <!--                                 <a-input-number v-model:value="record.discount_price" style="width: 150px;"-->
                                 <!--                                                :min="0.00"  :precision="2" placeholder="请输入" @change="checkDiscount(record, 'discount_price')"/>-->
 
@@ -98,7 +102,7 @@
                             <template v-if="column.key === 'total_price'">
                                 <!--                                $ <a-input-number v-model:value="record.total_price" style="width: 150px;"-->
                                 <!--                                                :min="0" :precision="2" placeholder="请输入" @change="checkDiscount(record, 'total_price')"/>-->
-                                ${{ $Util.countFilter(record.price * record.amount * record.discount / 100, 1) }}
+                                {{moneyT}}{{ $Util.countFilter(record.price * record.amount * record.discount / 100, 1) }}
                             </template>
 
                             <template v-if="column.dataIndex === 'operation'">
@@ -263,6 +267,8 @@ export default {
             itemOptions: [],
             labelList: [],
             labelIdList: [],
+            moneyType:undefined,
+            MoneyTypeList:Core.Const.MONEYTYPE.TYPE_MAP,
 
         };
     },
@@ -280,6 +286,12 @@ export default {
     computed: {
         lang() {
             return this.$store.state.lang
+        },
+        moneyT(){
+            switch(this.moneyType){
+                case 'usd': return '$';break;
+                case 'eur': return '€';break;
+            }
         },
         tableColumns() {
             let columns = [
@@ -311,6 +323,23 @@ export default {
 
     },
     methods: {
+        moneyChange(){  //货币切换
+         Core.Api.MoneyChange.switch({
+            currency:this.moneyType,
+            item_bind_list:this.tableData
+         }).then(res=>{
+           res.list.forEach(it =>{
+              it.name = it.item_name
+              it.code = it.item_code
+              it.price = it.price / 100
+              it.discount_price = it.discount_price / 100
+           })
+           this.tableData = res.list
+            console.log(this.moneyType,this.tableData);
+         }).catch(err=>{
+            console.log(err);
+         })
+        },
         routerChange(type, item) {
             switch (type) {
                 case 'back':    // 详情
@@ -414,6 +443,7 @@ export default {
 
             Core.Api.CRMBo.save({
                 ...form,
+                currency:this.moneyType,
                 money: this.form.money * 100,
                 item_bind_list: this.tableData,
                 label_id_list: this.labelIdList,
@@ -430,13 +460,16 @@ export default {
         async handleAddFailItem(ids, items) {
             for (let i = 0; i < items.length; i++) {
                 const element = items[i];
+                switch(this.moneyType){
+                    case 'usd': element.price = element.fob_usd / 100;break;
+                    case 'eur': element.price = element.fob_eur / 100;break;
+                }
                 element.item_id = element.id
                 element.id = 0
                 element.amount = 1
-                element.price = element.fob_usd / 100
-                element.discount_price = element.fob_usd / 100
-                element.total_price = element.fob_usd / 100 * element.amount
                 element.discount = 100
+                element.discount_price = element.price
+                element.total_price = element.price / 100 * element.amount
             }
             console.log('handleAddFailItem items:', items)
             this.tableData.push(...items)

@@ -4,6 +4,16 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('crm_o.list') }}</div>
                 <div class="btns-area">
+                    <a-upload name="file" class="file-uploader"
+                              :file-list="upload.fileList" :action="upload.action"
+                              :show-upload-list='false'
+                              :headers="upload.headers" :data='upload.data'
+                              accept=".xlsx,.xls"
+                              @change="handleMatterChange">
+                        <a-button type="primary" ghost class="file-upload-btn">
+                            <i class="icon i_add"/>{{ $t('i.import') }}
+                        </a-button>
+                    </a-upload>
                     <a-button type="primary" @click="routerChange('edit')" v-if="$auth('crm-order.save')"><i class="icon i_add"/>{{ $t('crm_o.save') }}</a-button>
                 </div>
             </div>
@@ -75,12 +85,14 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="16" :xxl='9' class="search-item" v-if="show">
+                    <a-col :xs='24' :sm='24' :xl="16" :xxl='8' class="search-item" v-if="show">
                         <div class="key">{{ $t('d.create_time') }}：</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="2" :xxl='2' class="search-item search-text" @click="moreSearch">
-                        {{search_text}}<span :class="{'collapsed-title': show}"></span>
+                    <a-col :xs='24' :sm='24' :xl="2" :xxl='3' class="search-item search-text" @click="moreSearch">
+                        {{show? $t('search.stow'):$t('search.advanced_search')}}
+                        <i class="icon i_xialajiantouxiao" style="margin-left:5px" v-if="!show"></i>
+                        <i class="icon i_shouqijiantouxiao" style="margin-left:5px" v-else></i>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
@@ -113,7 +125,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'money'">
-                            {{$Util.countFilter(text ) + '元' || '-' }}
+                            {{record.mType}}{{$Util.countFilter(text )  || '-' }}
                         </template>
 <!--                        <template v-if="column.key === 'income_money'">-->
 <!--                            {{$Util.countFilter(text ) + '元' || '-' }}-->
@@ -223,7 +235,6 @@ export default {
         return {
             loginType: Core.Data.getLoginType(),
             show:false,
-            search_text:'高级搜索',
             // 加载
             loading: false,
             // 分页
@@ -261,6 +272,17 @@ export default {
             selectedRowItemsAll: [],
             groupOptions: [],
             group_id: undefined,
+            upload: {
+                action: Core.Const.NET.URL_POINT + "/admin/1/crm-order/import-shop",
+                fileList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'xlsx',
+                },
+            },
         };
     },
     watch: {},
@@ -312,7 +334,6 @@ export default {
     methods: {
         moreSearch(){
             this.show = !this.show
-            this.search_text = this.show?'收起搜索':'高级搜索'
         },
         routerChange(type, item = {}) {
             let routeUrl = ''
@@ -369,6 +390,12 @@ export default {
                 console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
+                this.tableData.map((item,index)=>{
+                    switch(item.currency){
+                        case 'usd': item.mType = '$';break;
+                        case 'eur': item.mType = '€';break;
+                    }
+                })
                 console.log("🚀 ~ file: order-list.vue ~ line 229 ~ getTableData ~ this.tableData", this.tableData)
             }).catch(err => {
                 console.log('getTableData err:', err)
@@ -501,6 +528,18 @@ export default {
                 console.log(res)
 
             })
+        },
+        // 上传文件
+        handleMatterChange({file, fileList}) {
+            console.log("handleMatterChange status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                if (file.response && file.response.code > 0) {
+                    return this.$message.error(this.$t(file.response.code + ''))
+                } else {
+                    return this.$message.success(this.$t('i.uploaded'));
+                }
+            }
+            this.upload.fileList = fileList
         },
     }
 };

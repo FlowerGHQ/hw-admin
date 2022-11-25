@@ -104,7 +104,7 @@
                         <a-input v-model:value="form.buyer_signatory" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item ">
                     <div class="key">{{ $t('crm_o.remark') }}：</div> <!-- 备注 -->
                     <div class="value">
                         <a-textarea v-model:value="form.remark" :placeholder="$t('def.input')"
@@ -127,7 +127,11 @@
                         <ItemSelect @select="handleAddFailItem"
                                     :disabled-checked='tableData.map(i => i.item_id)'
                                     btn-type='primary' :btn-text="$t('i.add')" btn-class="fault-btn"
+                                    :dis="moneyType"
                                     v-if="$auth('repair-order.save')"/>
+                                    <a-select v-model:value="moneyType"  style="width:120px;margin-left:20px" @change="moneyChange" :placeholder="$t('def.select')">
+                                        <a-select-option v-for="item of MoneyTypeList" :key="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
+                                    </a-select>
                     </div>
                     <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                              :row-key="record => record.id" :pagination='false' size="small">
@@ -139,12 +143,12 @@
                                 {{ text || '-' }}
                             </template>
                             <template v-if="column.dataIndex === 'price'">
-                                $ {{ text || '-' }}
+                               {{moneyT}}  {{ text || '-' }}
                                 <!--                                    <a-input-number v-model:value="record.price" style="width: 82px;"-->
                                 <!--                                                      :min="0" :precision="2" placeholder="请输入"/>-->
                             </template>
                             <template v-if="column.dataIndex === 'discount_price'">
-                                $<a-input-number v-model:value="record.discount_price" :min="0" :precision="2" placeholder="0.00" :placeholder="$t('def.input')" @change="checkDiscount(record, 'discount_price')"/>
+                                {{moneyT}} <a-input-number v-model:value="record.discount_price" :min="0" :precision="2" placeholder="0.00" :placeholder="$t('def.input')" @change="checkDiscount(record, 'discount_price')"/>
                                 <!--                                 <a-input-number v-model:value="record.discount_price" style="width: 150px;"-->
                                 <!--                                                :min="0.00"  :precision="2" placeholder="请输入" @change="checkDiscount(record, 'discount_price')"/>-->
 
@@ -161,7 +165,7 @@
                             <template v-if="column.key === 'total_price'">
                                 <!--                                $ <a-input-number v-model:value="record.total_price" style="width: 150px;"-->
                                 <!--                                                :min="0" :precision="2" placeholder="请输入" @change="checkDiscount(record, 'total_price')"/>-->
-                                ${{ $Util.countFilter(record.price * record.amount * record.discount / 100, 1) }}
+                                {{moneyT}} {{ $Util.countFilter(record.price * record.amount * record.discount / 100, 1) }}
                             </template>
 
                             <template v-if="column.dataIndex === 'operation'">
@@ -217,7 +221,7 @@
                     <div class="value">
                         <LabelSelect :btnText="$t('sl.add')" :category="Core.Const.CRM_LABEL.CATEGORY.ORDER" color="blue" add-customer-btn="true" @select="handleAddLabelShow" :disabled-checked="labelIdList"/>
                         <br/>
-                        <a-tag v-for="(label,index) in labelList" closable @close="handleDeleteLabel(index)" class="customer-tag">
+                        <a-tag v-for="(label,index) in labelList" :key="index" closable @close="handleDeleteLabel(index)" class="customer-tag">
                             <template #closeIcon><i class="icon i_m_error"></i></template>
                             {{lang ==="zh"? label.label : label.label_en}}
                         </a-tag>
@@ -273,8 +277,8 @@ export default {
                 discount_amount: '',
 
                 remark:'',
-                source_id: '',
-                source_type: '',
+                target_id: '',
+                target_type: '',
                 item_bind_list: [],
                 attachment_list: [],
             },
@@ -306,7 +310,8 @@ export default {
             moneyDisabled: 'false',
             labelList: [],
             labelIdList: [],
-
+            moneyType:undefined,
+            MoneyTypeList:Core.Const.MONEYTYPE.TYPE_MAP,
         };
     },
     watch: {
@@ -323,6 +328,12 @@ export default {
     computed: {
         lang() {
             return this.$store.state.lang
+        },
+        moneyT(){
+            switch(this.moneyType){
+                case 'usd': return '$';break;
+                case 'eur': return '€';break;
+            }
         },
         tableColumns() {
             let tableColumns = [
@@ -364,6 +375,23 @@ export default {
         }
     },
     methods: {
+        moneyChange(){  //货币切换
+         Core.Api.MoneyChange.switch({
+            currency:this.moneyType,
+            item_bind_list:this.tableData
+         }).then(res=>{
+           res.list.forEach(it =>{
+              it.name = it.item_name
+              it.code = it.item_code
+              it.price = it.price / 100
+              it.discount_price = it.discount_price / 100
+           })
+           this.tableData = res.list
+            console.log(this.moneyType,this.tableData);
+         }).catch(err=>{
+            console.log(err);
+         })
+        },
         routerChange(type, item) {
             switch (type) {
                 case 'back':    // 详情
@@ -386,7 +414,7 @@ export default {
                 //     this.form[key] = this.detail[key]
                 // }
                 for (const key in this.form) {
-                    if (d[key] !== 0){
+                    if (detail[key] !== 0){
                         this.form[key] =this.detail[key]
                     } else {
                         this.form[key] = undefined
@@ -396,8 +424,8 @@ export default {
                 this.form.other_cost =this.$Util.countFilter(this.form.other_cost)
                 this.form.discount_amount =this.$Util.countFilter(this.form.discount_amount)
 
-                if (this.detail.source_type === Core.Const.CRM_ORDER.SOURCE_TYPE.BO){
-                    this.form.bo_id = this.detail.source_id
+                if (this.detail.target_type === Core.Const.CRM_ORDER.TARGET_TYPE.BO){
+                    this.form.bo_id = this.detail.target_id
                     this.handleBoIdSearch();
                 }
                 let auditUserList= []
@@ -443,9 +471,9 @@ export default {
             if (!form.buyer_signatory) {
                 return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_o.buyer_signatory'))
             }
-            if (!form.remark) {
-               return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_o.remark'))
-            }
+            // if (!form.remark) {
+            //    return this.$message.warning(this.$t('n.enter')+":"+this.$t('crm_o.remark'))
+            // }
             // if (!form.item_bind_list) {
             //     return this.$message.warning(this.$t('def.select'))
             // }
@@ -473,11 +501,11 @@ export default {
             form.date = form.date ? dayjs(form.date).unix() : 0 // 日期转时间戳
 
             if ( this.form.bo_id !== ""){
-                form.source_id = this.form.bo_id
-                form.source_type = Core.Const.CRM_ORDER.SOURCE_TYPE.BO
+                form.target_id = this.form.bo_id
+                form.target_type = Core.Const.CRM_ORDER.TARGET_TYPE.BO
             } else {
-                form.source_id = this.form.customer_id
-                form.source_type = Core.Const.CRM_ORDER.SOURCE_TYPE.CUSTOMER
+                form.target_id = this.form.customer_id
+                form.target_type = Core.Const.CRM_ORDER.TARGET_TYPE.CUSTOMER
             }
             let audit_user_id_list = []
             this.auditUserList.forEach(it => {
@@ -489,6 +517,7 @@ export default {
             console.log('form',form)
             Core.Api.CRMOrder.save({
                 ...form,
+                currency:this.moneyType,
                 money: this.contractAmount * 100,
                 audit_user_id_list: audit_user_id_list,
                 label_id_list: this.labelIdList,
@@ -507,10 +536,13 @@ export default {
         async handleAddFailItem(ids, items) {
             for (let i = 0; i < items.length; i++) {
                 const element = items[i];
+                switch(this.moneyType){
+                    case 'usd': element.price = element.fob_usd / 100;break;
+                    case 'eur': element.price = element.fob_eur / 100;break;
+                }
                 element.item_id = element.id
                 element.id = 0
                 element.amount = 1
-                element.price = element.fob_usd / 100
                 element.discount = 100
                 element.discount_price = element.price
                 element.remark = ''
@@ -674,6 +706,6 @@ export default {
         padding: 0 20px;
     }
 
-    
+
 }
 </style>

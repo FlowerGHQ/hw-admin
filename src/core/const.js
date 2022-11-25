@@ -36,7 +36,8 @@ switch (window.location.hostname) {
     //     URL_POINT = 'http://localhost:8889'
     //     break;
     default:
-	    URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服
+	   // URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
+       URL_POINT = 'http://10.0.0.205:8889'
         break;
 }
 
@@ -1526,7 +1527,7 @@ let Const = {
 		    AUDIT: 10,
 		    ALL: 30,
 	    },
-	    SOURCE_TYPE: {
+	    TARGET_TYPE: {
 		    CUSTOMER: 1,
 		    BO: 2,
 	    },
@@ -1965,6 +1966,16 @@ let Const = {
             '-100': { value: -100, text: '未通过', color: 'red' },
         }
     },
+    MONEYTYPE:{
+        TYPE_MAP:{
+            '1':{value:'usd',zh:'美元',en:'dollar'},
+            '2':{value:'eur',zh:'欧元',en:'euro'},
+        },
+        TYPE:{
+            DOLLAR:1,
+            EURO:2
+        }
+    }
 };
 
 export default Const;
