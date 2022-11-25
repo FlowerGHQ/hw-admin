@@ -108,7 +108,7 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'money'">
-                            {{ $Util.countFilter(text)+ '元' || '-' }}
+                            {{record.mType}}{{ $Util.countFilter(text)|| '-' }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -267,6 +267,12 @@ export default {
                 console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
+                this.tableData.map((item,index)=>{
+                    switch(item.currency){
+                        case 'usd': item.mType = '$';break;
+                        case 'eur': item.mType = '€';break;
+                    }
+                })
                 console.log("🚀 ~ file: order-list.vue ~ line 229 ~ getTableData ~ this.tableData", this.tableData)
             }).catch(err => {
                 console.log('getTableData err:', err)
