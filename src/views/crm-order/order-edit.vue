@@ -277,8 +277,8 @@ export default {
                 discount_amount: '',
 
                 remark:'',
-                source_id: '',
-                source_type: '',
+                target_id: '',
+                target_type: '',
                 item_bind_list: [],
                 attachment_list: [],
             },
@@ -421,8 +421,8 @@ export default {
                 this.form.other_cost =this.$Util.countFilter(this.form.other_cost)
                 this.form.discount_amount =this.$Util.countFilter(this.form.discount_amount)
 
-                if (this.detail.source_type === Core.Const.CRM_ORDER.SOURCE_TYPE.BO){
-                    this.form.bo_id = this.detail.source_id
+                if (this.detail.target_type === Core.Const.CRM_ORDER.TARGET_TYPE.BO){
+                    this.form.bo_id = this.detail.target_id
                     this.handleBoIdSearch();
                 }
                 let auditUserList= []
@@ -498,11 +498,11 @@ export default {
             form.date = form.date ? dayjs(form.date).unix() : 0 // 日期转时间戳
 
             if ( this.form.bo_id !== ""){
-                form.source_id = this.form.bo_id
-                form.source_type = Core.Const.CRM_ORDER.SOURCE_TYPE.BO
+                form.target_id = this.form.bo_id
+                form.target_type = Core.Const.CRM_ORDER.TARGET_TYPE.BO
             } else {
-                form.source_id = this.form.customer_id
-                form.source_type = Core.Const.CRM_ORDER.SOURCE_TYPE.CUSTOMER
+                form.target_id = this.form.customer_id
+                form.target_type = Core.Const.CRM_ORDER.TARGET_TYPE.CUSTOMER
             }
             let audit_user_id_list = []
             this.auditUserList.forEach(it => {

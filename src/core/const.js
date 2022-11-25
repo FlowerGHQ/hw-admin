@@ -1523,7 +1523,7 @@ let Const = {
 		    AUDIT: 10,
 		    ALL: 30,
 	    },
-	    SOURCE_TYPE: {
+	    TARGET_TYPE: {
 		    CUSTOMER: 1,
 		    BO: 2,
 	    },
