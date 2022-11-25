@@ -288,7 +288,10 @@ export default {
             return this.$store.state.lang
         },
         moneyT(){
-            return this.moneyType === 'usd' ? '$':'€'
+            switch(this.moneyType){
+                case 'usd': return '$';break;
+                case 'eur': return '€';break;
+            }
         },
         tableColumns() {
             let columns = [
@@ -440,6 +443,7 @@ export default {
 
             Core.Api.CRMBo.save({
                 ...form,
+                currency:this.moneyType,
                 money: this.form.money * 100,
                 item_bind_list: this.tableData,
                 label_id_list: this.labelIdList,

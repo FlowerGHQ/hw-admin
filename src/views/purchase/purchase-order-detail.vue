@@ -336,7 +336,7 @@
                     </div>
                 </div>
                 <div class="form-item img-upload">
-                    <div class="key">{{ $t('p.attachment') }}</div>
+                    <div class="key">xxx{{ $t('p.attachment') }}</div>
                     <div class="value">
                         <!-- <a-upload name="file" class="image-uploader"-->
                         <!--     list-type="picture-card" accept='image/*'-->
@@ -352,6 +352,7 @@
                                 :file-list="upload.fileList" :action="upload.action"
                                 :headers="upload.headers" :data='upload.data'
                                 :before-upload="handleFileCheck"
+                                @remove="handleremove"
                                 @change="handleFileChange">
                             <a-button type="primary" ghost class="file-upload-btn" v-if="upload.fileList.length < 1">
                                 <i class="icon i_upload"/> {{ $t('f.choose') }}
@@ -368,7 +369,7 @@
                 </div>
             </div>
             <template #footer>
-                <a-button @click="handlePayment" type="primary" :disabled="loading">{{ $t('def.sure') }}</a-button>
+                <a-button @click="handlePayment" type="primary">{{ $t('def.sure') }}</a-button>
                 <a-button @click="paymentShow = false">{{ $t('def.cancel') }}</a-button>
             </template>
         </a-modal>
@@ -905,6 +906,11 @@ export default {
                 this.upload.data.type = 'file'
             }
             return true
+        },
+        //删除文件
+        handleremove(){
+            console.log(this.upload.fileList)
+            // this.form.path = ''
         },
         // 上传文件
         handleFileChange({file, fileList}) {

@@ -330,7 +330,10 @@ export default {
             return this.$store.state.lang
         },
         moneyT(){
-            return this.moneyType === 'usd' ? '$':'€'
+            switch(this.moneyType){
+                case 'usd': return '$';break;
+                case 'eur': return '€';break;
+            }
         },
         tableColumns() {
             let tableColumns = [
@@ -514,6 +517,7 @@ export default {
             console.log('form',form)
             Core.Api.CRMOrder.save({
                 ...form,
+                currency:this.moneyType,
                 money: this.contractAmount * 100,
                 audit_user_id_list: audit_user_id_list,
                 label_id_list: this.labelIdList,

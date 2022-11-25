@@ -17,13 +17,13 @@
                                                 </a-tooltip>
                                             </template>-->
                     <template v-if="column.key === 'money'">
-                        {{ $Util.countFilter(text) + '元' }}
+                        {{record.mType}}{{ $Util.countFilter(text)}}
                     </template>
                     <template v-if="column.key === 'total_amount'">
-                        {{ $Util.countFilter(text) + '元' }}
+                        {{record.mType}}{{ $Util.countFilter(text)}}
                     </template>
                     <template v-if="column.key === 'refunded_amount'">
-                        {{ $Util.countFilter(text) + '元' }}
+                        {{record.mType}}{{ $Util.countFilter(text)}}
                     </template>
                     <template v-if="column.key === 'type'">
                         {{ $Util.CRMRefundRecordTypeMapFilter(text) }}
@@ -159,6 +159,12 @@ export default {
                 console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
+                this.tableData.map((item,index)=>{
+                    switch(item.currency){
+                        case 'usd': item.mType = '$';break;
+                        case 'eur': item.mType = '€';break;
+                    }
+                })
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {
