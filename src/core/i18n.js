@@ -1197,6 +1197,8 @@ const messages = {
             data_access:'数据权限',
 		    search_members: '搜索成员和标签',
 		    source_type: '来源类型',
+		    last_track_time: '本次跟进时间',
+		    next_track_time: '下次跟进时间',
 
 
 	    },
@@ -3184,6 +3186,8 @@ const messages = {
 		    data_access:'Data Access',
 		    search_members: 'Search for members and tags',
 		    source_type: 'Source Type',
+		    last_track_time: 'Last Track Time',
+		    next_track_time: 'Next Track Time',
 	    },
 	    crm_t: {
 		    track_record: 'Track Record',

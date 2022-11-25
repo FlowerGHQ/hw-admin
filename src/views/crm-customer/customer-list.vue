@@ -330,6 +330,8 @@ export default {
                 {title: 'crm_c.order_success_count', dataIndex: 'order_count', key:'order_count'},
                 {title: 'ad.specific_address', dataIndex: 'address', sorter: true},
                 {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
+                {title: 'crm_c.last_track_time', dataIndex: 'last_track_time', key: 'time', sorter: true},
+                {title: 'crm_c.next_track_time', dataIndex: 'next_track_time', key: 'time', sorter: true},
                 {title: 'crm_c.remark', dataIndex: 'remark', key: 'remark', sorter: true},
                 {title: 'crm_c.source_type', dataIndex: 'source_type', key: 'source_type', sorter: true},
                 {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
