@@ -24,8 +24,8 @@ switch (window.location.hostname) {
         URL_POINT = 'http://eos-dev-api.horwincloud.com' // 老测试服
         break;
 
-	case "10.0.0.231":
-		URL_POINT = 'http://10.0.0.231:8889'
+	case "10.0.0.207":
+		URL_POINT = 'http://10.0.0.207:8889'
 		// URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服
 		// URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
 		break;
@@ -838,6 +838,12 @@ let Const = {
 	    ]
     },
     SYSTEM: { //系统
+	    PRINT_TEMPLATE: {
+		    TYPE_MAP: {
+			    '1': {key: 1, zh: '物料', en: 'Material'},
+			    '2': {key: 2, zh: '整车', en: 'vehicle',},
+		    },
+	    },
         FILE: {
             TARGET_TYPE: {
                 SYSTEM: 1,

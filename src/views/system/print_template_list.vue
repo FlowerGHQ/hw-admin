@@ -15,6 +15,14 @@
                         <a-input v-model:value="searchForm.name" :placeholder="$t('def.input')"/>
                     </div>
                 </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                  <div class="key">{{ $t('n.type') }}：</div>
+                  <div class="value">
+                    <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')">
+                      <a-select-option v-for="item of TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                    </a-select>
+                  </div>
+                </a-col>
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='16' class="search-item">
                     <div class="key">{{ $t('d.create_time') }}:</div>
                     <div class="value">
@@ -111,12 +119,14 @@ export default {
             // 搜索
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             create_time: [],
-            typeMap: Core.Const.SYSTEM.FILE.TARGET_TYPE_MAP,
+            TYPE_MAP: Core.Const.SYSTEM.PRINT_TEMPLATE.TYPE_MAP,
             modalShow: false,
             searchForm: {
+                type: undefined,
                 name: '',
             },
             dialogForm:{
+                type: undefined,
                 name: '',
                 data: '',
             },
@@ -129,6 +139,7 @@ export default {
         tableColumns() {
             let columns = [
                 {title: 'n.name', dataIndex: 'name', key: 'item'},
+                {title: 'n.type', dataIndex: 'type', key: 'type'},
                 {title: 'd.create_time', dataIndex: 'createTime', key: 'time'},
                 {title: 'def.operate', key: 'operation', fixed: 'right'},
             ]
