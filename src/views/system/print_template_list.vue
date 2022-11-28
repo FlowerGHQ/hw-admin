@@ -19,7 +19,7 @@
                   <div class="key">{{ $t('n.type') }}：</div>
                   <div class="value">
                     <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')">
-                      <a-select-option v-for="item of TYPE_MAP" :key="item.key" :value="item.value">{{ item.zh }}</a-select-option>
+                      <a-select-option v-for="item of TYPE_MAP" :key="item.key" :value="item.value">{{ lang === 'zh'?item.zh : item.en}}</a-select-option>
                     </a-select>
                   </div>
                 </a-col>
@@ -48,6 +48,9 @@
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
+                    <template v-if="column.key === 'type'">
+                        {{ $Util.printTemplateTypeMapFilter(text) }}
+                    </template>
                     <template v-if="column.key === 'operation'" >
                         <template v-if="$auth('ADMIN')">
                             <a-button type="link" @click="handleUpdate(record)" v-if="$auth('file.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
@@ -73,10 +76,18 @@
             />
         </div>
         <a-modal v-model:visible="modalShow" :title="$t('pt.set_script')" :after-close='closeVisible'>
-            <div class="form-item">
+            <div class="form-item required">
                 <div class="key">{{ $t('pt.name') }}：</div>
                 <div class="value" style="width: 100%">
                     <a-input v-model:value="dialogForm.name" :placeholder="$t('pt.enter_product_name')"></a-input>
+                </div>
+            </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('n.type') }}：</div>
+                <div class="value" style="width: 100%">
+                    <a-select v-model:value="dialogForm.type" :placeholder="$t('def.select')">
+                        <a-select-option v-for="item of TYPE_MAP" :key="item.key" :value="item.value">{{ lang === 'zh'?item.zh : item.en}}</a-select-option>
+                    </a-select>
                 </div>
             </div>
             <div class="form-item textarea required" >
@@ -147,6 +158,9 @@ export default {
                 columns.splice(1,1)
             }
             return columns
+        },
+        lang() {
+            return this.$store.state.lang
         },
     },
     mounted() {

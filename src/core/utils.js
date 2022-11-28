@@ -671,6 +671,11 @@ const Util = {
         const item = MAP[val] || {}
         return item[to] || '未知'
     },
+	printTemplateTypeMapFilter(val,  to='zh') {
+		const MAP = Const.SYSTEM.PRINT_TEMPLATE.TYPE_MAP
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
     /* =============== 系统管理 ================ */
 
 
@@ -1104,6 +1109,7 @@ const Util = {
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
+
 
 
 
