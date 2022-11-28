@@ -28,7 +28,7 @@
                                         <div class="line">{{ item.content }}</div>
                                     </div>
                                 </a-col>
-                                <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='12'>
+                                <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='12' v-if="item.intent != undefined">
                                     <div class="content">
                                         <div class="line grey">{{$t('crm_t.intent')}}:</div>
                                         <div class="line">{{$Util.CRMTrackRecordIntentFilter( item.intent) }}</div>
@@ -36,13 +36,13 @@
                                 </a-col>
                             </a-row>
                             <a-row>
-                                <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='12'>
+                                <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='12' v-if="item.contact != undefined">
                                     <div class="content">
                                         <div class="line grey">{{$t('crm_t.contact_customer')}}:</div>
                                         <div class="line">{{ item.contact? item.contact.name : "-" }}</div>
                                     </div>
                                 </a-col>
-                                <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='12'>
+                                <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='12' v-if="item.next_track_time != 0">
                                     <div class="content">
                                         <div class="line grey">{{$t('crm_t.next_track_time')}}:</div>
                                         <div class="line">{{ $Util.timeFilter(item.next_track_time) }}</div>
@@ -50,7 +50,7 @@
                                 </a-col>
                             </a-row>
                             <a-row>
-                              <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='12'>
+                              <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='12' v-if="item.next_track_plan != ''">
                                   <div class="content">
                                     <div class="line grey">{{$t('crm_t.next_track_plan')}}:</div>
                                     <div class="line">{{ item.next_track_plan }}</div>
@@ -58,20 +58,20 @@
                               </a-col>
                             </a-row>
                             <div class="content">
-                                <div class="line grey">{{$t('crm_t.images')}}:</div>
+                                <div class="line grey" v-if="item.image_attachment_list != ''">{{$t('crm_t.images')}}:</div>
                                 <div class="line">
                                     <a-image v-for="it in item.image_attachment_list" class="image" :src="$Util.imageFilter(it.path)" :fallback="$t('def.none')"/>
                                 </div>
                             </div>
                             <div class="content">
-                                <div class="line grey">{{$t('crm_t.file')}}:</div>
+                                <div class="line grey" v-if="item.file_attachment_list != ''">{{$t('crm_t.file')}}:</div>
                                 <div class="line">
                                     <div class="list" v-for="i in item.file_attachment_list">
                                         <a @click="handleDownload(i)">{{ i.name }}</a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="foot">
+                            <div class="foot" v-if="item.create_user_name != undefined">
                                 <div class="line">{{$t('crm_t.operator')}}:{{ item.create_user_name }}</div>
                                 <div class="content">
 <!--                                    {{$t('crm_t.operator')}}:{{ item.create_user_name }}-->
