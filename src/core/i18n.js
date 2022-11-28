@@ -870,6 +870,7 @@ const messages = {
             role_assign: '角色分配',
             authority: '权限管理',
             resource: '资源管理',
+	        customer: '客户管理',
             view_auth: '权限查看',
             resource_name: '资源名称',
             resource_content: '资源内容',
