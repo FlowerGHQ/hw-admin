@@ -205,7 +205,7 @@ export default {
             this.loading = true;
 
             this.searchForm.status = this.CRM_STATUS.CUSTOMER
-            this.searchForm.search_type = this.SEARCH_TYPE.PRIVATE_CUSTOMER_BY_USER
+            this.searchForm.search_type = this.SEARCH_TYPE.PRIVATE_CUSTOMER_BY_OTHER_USER
 
             Core.Api.CRMCustomer.list({
                 ...this.searchForm,

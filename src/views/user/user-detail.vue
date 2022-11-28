@@ -56,7 +56,7 @@
                     <UserScopeList type='item' :userId="id" :detail="detail" @submit="getUserDetail"
                               v-if="activeKey === 'UserScope'"/>
                 </a-tab-pane>
-                <a-tab-pane key="CustomerList" :tab="$t('u.resource')">
+                <a-tab-pane key="CustomerList" :tab="$t('u.customer')">
                     <CustomerList type='item' :userId="id" :detail="detail" @submit="getUserDetail"
                                    v-if="activeKey === 'CustomerList'"/>
                 </a-tab-pane>
