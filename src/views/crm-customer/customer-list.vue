@@ -315,7 +315,7 @@
       <div class="paging-container with-operate">
         <div class="tip">
           {{
-            $t("in.selected") + ` ${selectedRowItems.length} ` + $t("in.total")
+            $t("in.selected") + ` ${selectedRowKeys.length} ` + $t("in.total")
           }}
         </div>
         <a-pagination
@@ -572,24 +572,19 @@ export default {
       return {
         type: "checkbox",
         selectedRowKeys: this.selectedRowKeys,
-        preserveSelectedRowKeys: true,
-        onChange: (selectedRowKeys, selectedRows) => {
+        onChange: (selectRowKeys, selectedRows) => {
           // 表格 选择 改变
-          this.selectedRowKeys = selectedRowKeys;
-          this.selectedRowItemsAll.push(...selectedRows);
-          let selectedRowItems = [];
-          selectedRowKeys.forEach((id) => {
-            let element = this.selectedRowItemsAll.find((i) => i.id == id);
-            selectedRowItems.push(element);
-          });
-          this.selectedRowItems = selectedRowItems;
-          console.log(
-            "rowSelection this.selectedRowKeys:",
-            this.selectedRowKeys,
-            "selectedRowItems:",
-            selectedRowItems
-          );
-          // this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
+          // 修改的代码
+          this.selectedRowKeys = selectRowKeys;
+          // 原先的代码
+          // this.selectedRowKeys = selectRowKeys;
+          // this.selectedRowItemsAll.push(...selectedRows);
+          // let selectedRowItem = [];
+          // selectedRowKeys.forEach((id) => {
+          //   let element = this.selectedRowItemsAll.find((i) => i.id == id);
+          //   selectedRowItem.push(element);
+          // });
+          // this.selectedRowItems = selectedRowItem;
         },
       };
     },
@@ -631,7 +626,6 @@ export default {
     },
     pageSizeChange(current, size) {
       // 页码尺寸改变
-      console.log("pageSizeChange size:", size);
       this.pageSize = size;
       this.getTableData();
     },
@@ -678,9 +672,10 @@ export default {
         page_size: this.pageSize,
       })
         .then((res) => {
-          console.log("getTableData res:", res);
           this.total = res.count;
           this.tableData = res.list;
+          // 切换的时候清除 // table的选择
+          this.selectedRowKeys = [];
         })
         .catch((err) => {
           console.log("getTableData err:", err);
@@ -729,7 +724,6 @@ export default {
         org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
       })
         .then((res) => {
-          console.log("getTableData res:", res);
           this.userData = res.list;
         })
         .catch((err) => {
@@ -911,7 +905,6 @@ export default {
     handleGroupTree() {
       Core.Api.CRMGroupMember.structureByUser({}).then((res) => {
         this.groupOptions = res.list;
-        console.log(res);
       });
     },
     handleChecking(item) {
@@ -921,7 +914,6 @@ export default {
         item.phone = res.detail.phone;
         item.email = res.detail.email;
         item.flag_eyes = true;
-        console.log(res);
       });
     },
   },
