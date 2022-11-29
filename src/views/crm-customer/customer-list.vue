@@ -281,7 +281,7 @@
               >
             </template>
 
-            <template v-if="column.key === 'time'">
+            <template v-if="column.type === 'time'">
               {{ $Util.timeFilter(text) }}
             </template>
             <template v-if="column.key === 'operation'">
@@ -523,19 +523,22 @@ export default {
         {
           title: "d.create_time",
           dataIndex: "create_time",
-          key: "time",
+          key: "create_time",
+          type: 'time',
           sorter: true,
         },
         {
           title: "crm_c.last_track_time",
           dataIndex: "last_track_time",
-          key: "time",
+          key: "last_track_time",
+          type: 'time',
           sorter: true,
         },
         {
           title: "crm_c.next_track_time",
           dataIndex: "next_track_time",
-          key: "time",
+          key: "next_track_time",
+          type: 'time',
           sorter: true,
         },
         {
@@ -685,6 +688,7 @@ export default {
         });
     },
     getTableDataSorter(paginate, sort, filter) {
+      console.log('getTableDataSorter filter:', filter)
       this.orderByFields = {};
       switch (filter.order) {
         case "ascend":
