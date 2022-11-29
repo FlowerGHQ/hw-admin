@@ -32,12 +32,10 @@ switch (window.location.hostname) {
     case "10.0.0.107":
         URL_POINT = 'http://10.0.0.107:8889'
         break;
-    // case "localhost":
-    //     URL_POINT = 'http://localhost:8889'
-    //     break;
     default:
-	   // URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
-       URL_POINT = 'http://10.0.0.205:8889'
+	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
+        // URL_POINT = 'http://10.0.0.205:8889'
+        // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         break;
 }
 
